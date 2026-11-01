@@ -101,6 +101,12 @@ function createCampaignRoom({
   }
   // One regional engagement at a time. Choices belong to this exact queue item,
   // never to a player's next battle or to a client-selected region.
+  function hostControlsAI(room) {
+    const roster = members(room);
+    const seated = roster.filter(member => Number.isInteger(member.seat));
+    return seated.length > 0 && seated.every(member => member.bot) &&
+      roster.some(member => member.id === room.hostId && member.seat === null && !member.bot);
+  }
   function preparation(room) {
     const state = room.campaign;
     if (!state || room.started || state.winner !== null || state.phase !== "encounters") return null;
@@ -140,10 +146,10 @@ function createCampaignRoom({
       })),
     };
   }
-  // Automatic progress is authoritative and never requires a spectator's request.
+  // A spectator host controls strategic pacing when both armies consist only of AI.
   function automaticPhase(room) {
     const state = room.campaign;
-    if (!state || room.started || room.campaignLobby || room.returnCountdown || state.winner !== null)
+    if (!state || room.started || room.campaignLobby || room.returnCountdown || state.winner !== null || hostControlsAI(room))
       return null;
     const seated = members(room).filter((member) => Number.isInteger(member.seat));
     if (![0, 1].every((team) => seated.some((member) => G.seatTeam(member.seat) === team)))
@@ -174,6 +180,7 @@ function createCampaignRoom({
       stopRound: room.campaignBattle?.stopRound || null,
       startRound: room.campaignBattle?.startRound || null,
       delegatedSeats: room.campaignBattle?.delegatedSeats || [],
+      hostControlsAI: hostControlsAI(room),
       commanders: [0, 1].map((team) => C.commander(members(room), team)),
     };
   }
@@ -265,13 +272,12 @@ function createCampaignRoom({
       "请选择适合当前席位数的地面局地战地图",
     );
     const settings = {
-      ...G.campaignRoomSettings({ mapId }),
+      ...G.campaignRoomSettings({ mapId, fogMode: room.settings.fogMode }),
       mapId,
       mode: "campaign",
       costLimit: 99999,
       unitCostLimit: 99999,
       unitLimit: 72,
-      fogMode: "full",
       shareAlliedUnits: false,
       campaignCommanders: [0, 1].map((team) => C.commander(members(room), team)),
     };
@@ -448,6 +454,7 @@ function createCampaignRoom({
     game.aiOptions = settings.campaignOptions;
     room.settings = settings;
     room.game = game;
+    room.game.fogMode = settings.fogMode;
     room.game.winner = null;
     room.started = true;
     room.startedFromSave = true; // Suppress ordinary account rewards; campaign income is settled separately.
@@ -479,9 +486,13 @@ function createCampaignRoom({
       );
     room.turnNotBefore = 0;
     room.returnAt = room.returnCountdown = room.playback = room.battle = null;
-    room.log = Records.clone(encounter.battleSave?.log || []);
-    room.teamLogs = Records.clone(encounter.battleSave?.teamLogs || {});
-    room.logNames = Records.clone(encounter.battleSave?.logNames || []);
+    const archive = encounter.battleSave || state.battleLogs?.[regionId];
+    room.log = Records.clone(archive?.log || []);
+    room.teamLogs = Records.clone(archive?.teamLogs || {});
+    room.logNames = Records.clone(archive?.logNames || []);
+    // Active battles keep their log in battleSave; completed regions use battleLogs.
+    // Do not serialize two copies of the same growing regional history.
+    if (state.battleLogs) delete state.battleLogs[regionId];
     room.logTeamIds = [0, 1];
     const directionNames = { west: "西", east: "东", north: "北", south: "南" };
     for (const actor of incomingDeployment) {
@@ -506,13 +517,36 @@ function createCampaignRoom({
       planner.resumeCharges(room);
     log(
       room,
-      "战略局地战：" +
+      `第${state.turn}大回合 · ${encounter.battleSave ? "书接上回，继续此前局地战" : "新的战役"} · 战略局地战：` +
         ctx.world.regions.find((region) => region.id === regionId).name +
         "，本阶段最多" +
         state.rounds +
         "回合。",
     );
     if (game.round >= room.campaignBattle.stopRound && pauseBattle) pauseBattle(room);
+  }
+  function archiveLog(room, encounter) {
+    (room.campaign.battleLogs ||= {})[encounter.region] = Records.clone({
+      log: room.log || [], teamLogs: room.teamLogs || {}, logNames: room.logNames || [],
+    });
+  }
+  function logReturnReason(room) {
+    const battle = room.campaignBattle;
+    if (battle.returnReasonLogged) return;
+    const name = ctx.world.regions.find(region => region.id === battle.region)?.name || battle.region;
+    const captured = room.game.campaignBattlefield?.capturedBaseTeam;
+    const reason = [0, 1].includes(captured)
+      ? `已经完成战略目的：队伍${captured + 1}占领敌军基地`
+      : [0, 1].includes(room.game.winner)
+        ? `已经完成战略目的：队伍${room.game.winner + 1}消灭敌方作战部队`
+        : room.game.round >= battle.stopRound
+          ? `达到本阶段局地战回合上限（${room.campaign.rounds}回合），保留战场与损伤`
+          : "局地战阶段中断，保留战场与损伤";
+    const text = `第${room.campaign.turn}大回合 · ${name} · ${reason}，返回战略大地图。`;
+    log(room, text);
+    room.campaign.history.push(text);
+    room.campaign.history = room.campaign.history.slice(-100);
+    battle.returnReasonLogged = true;
   }
   function writeBriefing(room, encounter, final = false) {
     const state = room.campaign, battle = room.campaignBattle;
@@ -557,6 +591,7 @@ function createCampaignRoom({
   function checkpoint(room) {
     const state = room.campaign,
       encounter = state.encounters.find((item) => item.region === room.campaignBattle.region);
+    logReturnReason(room);
     captureArmies(state, encounter, room.game);
     writeBriefing(room, encounter, true);
     const settled = new Set(encounter.settled);
@@ -573,6 +608,7 @@ function createCampaignRoom({
     const captured = room.game.campaignBattlefield?.capturedBaseTeam;
     if ([0, 1].includes(captured)) region.owner = captured;
     if (!C.disputed(state, encounter.region)) {
+      archiveLog(room, encounter);
       const survivor = state.units.find((unit) => !unit.destroyed && unit.region === region.id);
       if (survivor) region.owner = survivor.team;
       state.encounters = state.encounters.filter((item) => item !== encounter);
@@ -698,6 +734,7 @@ function createCampaignRoom({
     const encounter = room.campaign.encounters.find(
       (item) => item.region === room.campaignBattle.region,
     );
+    logReturnReason(room);
     encounter.battleSave = battlefieldSave(room);
     captureArmies(room.campaign, encounter, encounter.battleSave.game);
   }
@@ -839,7 +876,25 @@ function createCampaignRoom({
       }
       return;
     }
+    if (msg.action === "campaign_start_battle") {
+      check(hostControlsAI(room) && member.id === room.hostId, "只有房主可开始AI交战");
+      check(!room.campaignLobby && !room.returnCountdown, "请先继续战役");
+      const pending = preparation(room);
+      check(pending && pending.id === msg.preparationId && pending.region === msg.region,
+        "局地战准备已变化，请重新确认");
+      check(!msg.mapId || msg.mapId === pending.mapId, "本场局地战地图已确定");
+      begin(room, pending.region, pending.mapId);
+      return;
+    }
     check(!room.started, "请先完成当前局地战阶段");
+    if (msg.action === "campaign_ready" && hostControlsAI(room)) {
+      check(member.id === room.hostId, "只有房主可结束战略阶段");
+      check(!room.campaignLobby && !room.returnCountdown && room.campaign.phase === "strategy" &&
+        room.campaign.winner === null && msg.turn === room.campaign.turn && msg.ready === true,
+        "战略阶段已变化，请重新确认");
+      C.advance(ctx, room.campaign, members(room));
+      return;
+    }
     C.action(ctx, room.campaign, members(room), member.seat, msg);
   }
   return {

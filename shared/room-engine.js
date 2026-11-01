@@ -36,7 +36,7 @@ function createRoomEngine({
   let campaignAdapter = null;
   const automatedRequests = new WeakSet();
   const delegated = (room, seat) =>
-    Number.isInteger(seat) && !!room.campaignBattle?.delegatedSeats?.includes(seat);
+    Number.isInteger(seat) && !!(room.campaignBattle?.delegatedSeats || room.delegatedSeats)?.includes(seat);
   const aiControlled = (room, player) => !!player && (player.bot || delegated(room, player.seat));
   function automate(ws, msg) {
     automatedRequests.add(msg);
@@ -526,7 +526,7 @@ function createRoomEngine({
     if (!room.matchId) return [];
     if (logsUnlocked(room)) return ["global", ...logTeamIds(room).map(logPerspective)];
     const team = viewTeam(member);
-    return team === null ? [] : [logPerspective(team)];
+    return team === null ? (member?.seat === null ? ["global"] : []) : [logPerspective(team)];
   }
   // 公开快照不包含随机 seed；席位 token 不放入广播。
   const safeGame = (game, recipient, intel) => {
@@ -862,6 +862,7 @@ function createRoomEngine({
       settings: room.settings,
       assembly: room.phase === "assembly" ? assemblyView(room, recipient) : null,
       turnDone: room.turnDone,
+      delegatedSeats: room.campaignBattle?.delegatedSeats || room.delegatedSeats || [],
       matchId: room.matchId,
       returnAt: room.returnAt,
       returnCountdown: room.returnCountdown || null,
@@ -1122,6 +1123,7 @@ function createRoomEngine({
     room.game = G.create(false, randomSeed());
     delete room.aiFormationSeed;
     room.started = false;
+    room.delegatedSeats = [];
     room.phase = "waiting";
     room.pending = room.battle = null;
     planner.reset(room);
@@ -1797,6 +1799,7 @@ function createRoomEngine({
     campaignTimers.set(room, entry);
   }
   const aiMovement = new WeakMap();
+  const aiUnitMovement = new WeakMap();
   const movementTiming =
     typeof MovementTiming !== "undefined" ? MovementTiming : require("./movement-timing.js");
   const aiMoveJitter = () => Math.min(1000, Math.max(0, Math.floor(randomAIMoveDelay())));
@@ -1809,6 +1812,14 @@ function createRoomEngine({
       moves.set(seat, move);
     }
     return move.until;
+  }
+  function aiUnitMoves(room) {
+    let entry = aiUnitMovement.get(room);
+    if (!entry || entry.matchId !== room.matchId || entry.round !== room.game.round) {
+      entry = { matchId: room.matchId, round: room.game.round, units: new Map() };
+      aiUnitMovement.set(room, entry);
+    }
+    return entry.units;
   }
   function formationPlayer(room, player) {
     if (!player?.bot || player.formationPreset || room.resumeSave || room.startedFromSave)
@@ -1922,6 +1933,7 @@ function createRoomEngine({
     };
   }
   function loadSavedRoom(room, save) {
+    room.delegatedSeats = [];
     const count = G.getMap(save.settings.mapId).spawns.length;
     const lobbyGame = G.create(false, randomSeed(), Array(count).fill(null), false, save.settings);
     room.resumeSave = Records.clone(save);
@@ -2196,8 +2208,9 @@ function createRoomEngine({
     room.revision++;
     room.lastEvent = { id: randomId(), type: "battle_end" };
   }
-  function nextAIAction(room, onlySeat = null) {
+  function nextAIAction(room, onlySeat = null, excluded = new Set()) {
     const allowed = (player) => player && (onlySeat === null || player.seat === onlySeat);
+    const available = (unit) => !excluded.has(unit.id) && (aiUnitMoves(room).get(unit.id) || 0) <= Date.now();
     if (!room.started || !connected(room).every(Boolean)) return null;
     if (room.phase === "battle")
       return room.battle.ready.every(Boolean) ? { finishBattle: true } : null;
@@ -2290,7 +2303,7 @@ function createRoomEngine({
         action: "confirm_move",
         fields: { unitId: pendingMover.id },
       };
-    for (const passenger of room.game.units.filter((u) => u.embarked && u.hp > 0)) {
+    for (const passenger of room.game.units.filter((u) => u.embarked && u.hp > 0 && available(u))) {
       const owner = room.seats[G.controllerOf(room.game, passenger)];
       if (!aiControlled(room, owner) || !allowed(owner) || room.turnDone[owner.seat]) continue;
       const point = G.aiLaunchChoice(room.game, passenger);
@@ -2311,6 +2324,7 @@ function createRoomEngine({
       const owner = room.seats[G.controllerOf(room.game, passenger)];
       if (
         !aiControlled(room, owner) ||
+        !available(passenger) ||
         !allowed(owner) ||
         passenger.team !== room.game.team ||
         room.turnDone[owner.seat]
@@ -2320,6 +2334,7 @@ function createRoomEngine({
       if (transport) return { player: owner, ...transport };
     }
     const canPlanMore = (unit) => {
+      if (!available(unit)) return false;
       if (!unit.acted) return true;
       if (!unit.plan || G.actionPoints(unit) <= 0) return false;
       return room.game.units.some(
@@ -2353,7 +2368,8 @@ function createRoomEngine({
           aiControlled(room, player) &&
           allowed(player) &&
           G.seatTeam(player.seat) === room.game.team &&
-          !room.turnDone[player.seat],
+          !room.turnDone[player.seat] &&
+          !room.game.units.some(u => G.controllerOf(room.game, u) === player.seat && u.hp > 0 && !available(u)),
       );
       return unfinished ? { player: unfinished, action: "end_turn", fields: {} } : null;
     }
@@ -2623,11 +2639,12 @@ function createRoomEngine({
     const timer = setTimeout(() => {
       aiTimers.delete(room);
       if (rooms.get(room.code) !== room || room.revision !== revision) return;
-      function advancePlayer(onlySeat = null) {
+      function advancePlayer(onlySeat = null, excluded = new Set()) {
         let intent;
         try {
-          intent = nextAIAction(room, onlySeat);
+          intent = nextAIAction(room, onlySeat, excluded);
           if (!intent) return;
+          if (intent.fields?.unitId) excluded.add(intent.fields.unitId);
           if (intent.finishBattle) {
             finishBattle(room);
             broadcast(room);
@@ -2647,14 +2664,10 @@ function createRoomEngine({
             event.unitId === intent.fields?.unitId &&
             event.path?.length
           ) {
-            let moves = aiMovement.get(room);
-            if (!moves) aiMovement.set(room, (moves = new Map()));
-            moves.set(intent.player.seat, {
-              matchId: room.matchId,
-              round: room.game.round,
-              until: Date.now() + movementTiming.duration(event.path) + aiMoveJitter(),
-            });
+            aiUnitMoves(room).set(event.unitId,
+              Date.now() + movementTiming.duration(event.path) + aiMoveJitter());
           }
+          return intent;
         } catch (error) {
           console.error("AI action failed", room.code, intent?.action, error);
           // A rejected bot command must never terminate the shared server.
@@ -2684,9 +2697,21 @@ function createRoomEngine({
       }
       if (room.phase === "idle") {
         const round = room.game.round;
-        for (const player of bots) {
-          if (room.phase !== "idle" || room.game.round !== round) break;
-          if (aiMoveUntil(room, player.seat) <= Date.now()) advancePlayer(player.seat);
+        const lanes = bots.map(player => {
+          const army = room.game.units.filter(u => u.hp > 0 && G.controllerOf(room.game, u) === player.seat);
+          // Small armies retain one moving actor; large armies can overlap up to four.
+          const parallel = army.length < 8 ? 1 : Math.min(4, Math.ceil(army.length / 4));
+          return { player, army, parallel, excluded: new Set(), stopped: false };
+        });
+        // Round-robin across players before opening another unit slot for anyone.
+        for (let slot = 0; slot < 4; slot++) {
+          for (const lane of lanes) {
+            const { player, army, parallel, excluded } = lane;
+            if (room.phase !== "idle" || room.game.round !== round) break;
+            if (room.turnDone[player.seat] || lane.stopped || slot >= parallel || aiMoveUntil(room, player.seat) > Date.now()) continue;
+            const moving = army.filter(u => (aiUnitMoves(room).get(u.id) || 0) > Date.now()).length;
+            if (moving >= parallel || !advancePlayer(player.seat, excluded)) lane.stopped = true;
+          }
         }
       } else advancePlayer();
       // Every AI owns its animation wait; another player's movement cannot block it.
@@ -2878,7 +2903,7 @@ function createRoomEngine({
       return;
     }
     if (
-      room.campaignBattle &&
+      room.started &&
       !automatedRequests.has(msg) &&
       (delegated(room, seat) ||
         (msg.unitId && delegated(room, G.controllerOf(room.game, unit(room, msg.unitId) || {})))) &&
@@ -2888,6 +2913,7 @@ function createRoomEngine({
         "playback_ready",
         "campaign_export",
         "campaign_delegate",
+        "set_ai_delegate",
         "return_room",
         "download_log",
         "spectate",
@@ -2903,6 +2929,36 @@ function createRoomEngine({
           ? "战局已中断，正在返回战略地图"
           : "正在返回房间，请稍候。",
       );
+    if (msg.action === "set_ai_delegate") {
+      if (!room.started || room.game.winner !== null || room.replay ||
+          !["idle", "deployment", "reaction", "playback", "battle"].includes(room.phase))
+        throw Error("当前没有进行中的战斗");
+      if (!Number.isInteger(seat) || room.seats[seat] !== member || member.bot)
+        throw Error("只有参战玩家可切换自己的AI委任");
+      if (typeof msg.delegate !== "boolean") throw Error("AI委任状态无效");
+      if (msg.matchId !== room.matchId || msg.round !== room.game.round ||
+          !Number.isSafeInteger(msg.revision) || msg.revision > room.revision)
+        throw Error("战局已更新，请重新操作");
+      cancelSeatMoves(room, seat);
+      if (room.campaignBattle) campaign().handle(room, member, { ...msg, action: "campaign_delegate" });
+      else {
+        const seats = new Set(room.delegatedSeats || []);
+        if (msg.delegate) seats.add(seat); else seats.delete(seat);
+        room.delegatedSeats = [...seats];
+        if (msg.delegate && room.phase === "deployment" && G.confirmDeployment(room.game, seat)) {
+          room.phase = "idle";
+          recordPilotParticipation(room);
+        }
+        log(room, `${member.name} ${msg.delegate ? "开启" : "关闭"}AI托管。`, { teams: [G.seatTeam(seat)] });
+      }
+      const event = room.phase === "reaction" && !room.reactions?.length
+        ? resolvePlans(room) : { type: "delegation_changed" };
+      room.revision++;
+      cache.set(id, true);
+      room.lastEvent = { id: randomId(), ...event };
+      broadcast(room, id, member);
+      return;
+    }
     if (msg.action.startsWith("campaign_")) {
       const samePreparation =
         msg.action === "campaign_enter" &&
@@ -3517,6 +3573,8 @@ function createRoomEngine({
           )
             throw Error("这个队伍已有玩家");
           if (movingMember.seat !== destination) {
+            room.delegatedSeats = (room.delegatedSeats || [])
+              .filter(seat => seat !== destination && seat !== movingMember.seat);
             if (room.campaign) {
               movingMember.campaignTeam =
                 destination === null

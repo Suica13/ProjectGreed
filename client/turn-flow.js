@@ -65,35 +65,28 @@ const TurnFlow = (() => {
     active = true;
     overlay.hidden = false;
     update();
-    const messages = [
-      { text: `队伍${fromTeam + 1}结束回合`, team: fromTeam },
-      { text: `回合${round}`, team: toTeam },
-      { text: `队伍${toTeam + 1}开始行动`, team: toTeam },
-    ];
+    card.replaceChildren(
+      element("div", "turn-cutin-round", I18n.text(`第${round}回合`)),
+      element("div", "turn-cutin-team", I18n.text(`队伍${toTeam + 1}`)),
+    );
+    card.dataset.team = toTeam;
     try {
-      for (const message of messages) {
-        if (stamp !== generation) return;
-        card.textContent = message.text;
-        card.dataset.team = message.team;
-        animation = card.animate(
-          [
-            { transform: "translateX(110vw)", offset: 0 },
-            { transform: "translateX(0)", offset: 0.28 },
-            { transform: "translateX(0)", offset: 0.72 },
-            { transform: "translateX(-110vw)", offset: 1 },
-          ],
-          {
-            duration:
-              Rules.turnTransitionMs /
-              (3 * (window.ReplayPlayer?.active ? window.ReplayPlayer.speed : 1)),
-            easing: "linear",
-            fill: "both",
-          },
-        );
-        if (replayPaused) animation.pause();
-        await animation.finished;
-        animation.cancel();
-      }
+      animation = card.animate(
+        [
+          { transform: "translateX(110vw)", offset: 0 },
+          { transform: "translateX(0)", offset: 0.28 },
+          { transform: "translateX(0)", offset: 0.72 },
+          { transform: "translateX(-110vw)", offset: 1 },
+        ],
+        {
+          duration: Rules.turnTransitionMs / (window.ReplayPlayer?.active ? window.ReplayPlayer.speed : 1),
+          easing: "linear",
+          fill: "both",
+        },
+      );
+      if (replayPaused) animation.pause();
+      await animation.finished;
+      animation.cancel();
     } catch {
       // 离开游戏、断线或新快照取消旧演出。
     } finally {

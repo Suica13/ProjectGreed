@@ -18,6 +18,8 @@ for(const width of [1440,390]) test(`campaign map drawer leaves chat usable at $
   room.revision++;testEngine.broadcast(room);
  });
  const drawer=page.locator("#campaignEncounterDialog");await expect(drawer).toBeVisible();
+ const compact=await drawer.evaluate(el=>{const body=el.querySelector('.campaign-encounter-body'),rect=el.getBoundingClientRect();return {overflow:body.scrollHeight-body.clientHeight,counts:[...el.querySelectorAll('.campaign-encounter-count strong')].map(n=>{const b=n.getBoundingClientRect();return b.top>=rect.top&&b.bottom<=rect.bottom;})};});
+ expect(compact.overflow).toBeLessThanOrEqual(2);expect(compact.counts).toEqual([true,true]);
  await page.locator(".campaign-header-utilities").getByRole("button",{name:"设置",exact:true}).click();
  await expect(page.locator("#clientSettingsDialog")).toBeVisible();await page.locator("#closeClientSettings").click();
  await page.locator(".campaign-header-utilities").getByRole("button",{name:"玩家席位",exact:true}).click();
@@ -35,7 +37,8 @@ for(const width of [1440,390]) test(`campaign map drawer leaves chat usable at $
  await expect(page.locator("#campaignChatLines")).toContainText("交战面板中仍可聊天");
  await expect(page.locator(".campaign-region-count")).toHaveCount(43);
  expect(await page.evaluate(()=>CAMPAIGN_WORLD.regions.every(region=>
-   document.querySelector(`[data-region-label="${region.id}"] .campaign-region-name`).textContent===I18n.text(region.name)))).toBe(true);
+   document.querySelector(`[data-region-label="${region.id}"] .campaign-region-name`).textContent===
+     (CAMPAIGN_WORLD.settings.headquarters.some(base=>base.region===region.id)?'★ ':'')+I18n.text(region.name)))).toBe(true);
  await drawer.getByRole("button",{name:"展开详情",exact:true}).click();await expect(drawer).toHaveAttribute("data-expanded","true");
  await page.waitForTimeout(350);
  await expect(drawer.locator(".campaign-encounter-body")).toBeVisible();
@@ -43,8 +46,9 @@ for(const width of [1440,390]) test(`campaign map drawer leaves chat usable at $
  await page.screenshot({path:`tmp/campaign-map-drawer-${width}.png`});
  await drawer.getByRole("button",{name:"手动指挥",exact:true}).click();
  await expect.poll(()=>page.evaluate(()=>Net.started)).toBe(true);
+ expect(await page.evaluate(()=>Net.snapshot.game.fogMode)).toBe("disabled");
  await expect(page.locator("#hudCampaignRegion")).toBeVisible();
- await expect(page.locator("#hudCampaignRegion")).toHaveText("贾布罗");
+ await expect(page.locator("#hudCampaignRegion")).toHaveText("★ 贾布罗");
  expect(await page.locator("#hudCampaignRegion").evaluate(el=>el.previousElementSibling.id)).toBe("hudToggleLegend");
  const before=await page.evaluate(()=>({turn:Net.snapshot.campaign.turn,round:Net.snapshot.game.round,stop:Net.snapshot.campaign.stopRound}));
  await page.locator("#roomSettings").click();
@@ -58,5 +62,17 @@ for(const width of [1440,390]) test(`campaign map drawer leaves chat usable at $
  await drawer.getByRole("button",{name:"手动指挥",exact:true}).click();await expect.poll(()=>page.evaluate(()=>Net.started)).toBe(true);
  expect(await page.evaluate(()=>Net.snapshot.game.round)).toBe(before.round);
  expect(await page.evaluate(()=>Net.snapshot.campaign.stopRound)).toBe(before.stop);
+ await expect.poll(()=>page.evaluate(()=>Net.awaiting)).toBe(null);
+ await page.evaluate(()=>Net.request('switch_seat',{seat:null}));
+ await expect.poll(()=>page.evaluate(()=>Net.seat)).toBe(null);
+ await expect.poll(()=>page.evaluate(()=>Net.awaiting)).toBe(null);
+ await page.evaluate(()=>Net.request('spectate',{team:null}));
+ await expect.poll(()=>page.evaluate(()=>Net.snapshot.viewTeam)).toBe(null);
+ await page.locator('#openMatchRecords').click();
+ await expect(page.locator('#downloadBattleLog')).toBeEnabled();
+ const downloaded=page.waitForEvent('download');await page.locator('#downloadBattleLog').click();
+ const download=await downloaded;
+ expect(download.suggestedFilename()).toContain('battle-log-global');
+ expect(require('node:fs').readFileSync(await download.path(),'utf8')).toContain('第1大回合');
  expect(errors).toEqual([]);
 });

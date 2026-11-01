@@ -1,6 +1,15 @@
 /* 规划箭头和地图移动都是本地演出，不阻塞队友的操作。 */
 const PlanningUI = (() => {
   const moves = new Map();
+  window.addEventListener("presentation-speed-change", ({ detail: { previous, speed } }) => {
+    const now = performance.now(), ratio = speed / previous;
+    for (const move of moves.values()) {
+      if (move.start !== null) move.start = now - (now - move.start) / ratio;
+      move.step /= ratio;
+      if (move.start !== null && getUnit(move.id)?.pendingMove)
+        setTimeout(update, Math.max(0, move.start + move.path.length * move.step - now) + 20);
+    }
+  });
   function reset() {
     moves.clear();
     lockStarts.clear();

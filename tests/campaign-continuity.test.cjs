@@ -103,8 +103,45 @@ test("regional re-entry preserves the full battlefield and every actor, includin
     expected,
     "no unit, field, RNG stream or turn state is rebuilt for a continuing battlefield",
   );
-  assert.deepEqual(room.log.slice(1), oldLog);
+  assert.match(room.log[0], /第2大回合.*书接上回/);
+  assert.match(room.log[1], /返回战略大地图/);
+  assert.deepEqual(room.log.slice(2), oldLog);
   assert.equal(room.campaignBattle.stopRound, expected.round + room.campaign.rounds);
+});
+
+test("regional logs retain return reasons across pauses, campaign saves and newly started battles", () => {
+  const { room, adapter, enter, members } = fixture();
+  room.log.unshift("此前局地战的战斗记录");
+  room.game.round = room.campaignBattle.stopRound;
+  adapter.freeze(room);
+  adapter.freeze(room);
+  assert.equal(room.log.filter(line => line.includes("达到本阶段局地战回合上限")).length, 1);
+  adapter.checkpoint(room);
+  assert(room.campaign.history.some(line => line.includes("回合上限") && line.includes("返回战略大地图")));
+  const imported = C.validate(ctx, Records.clone(room.campaign), members);
+  assert(imported.encounters[0].battleSave.log.includes("此前局地战的战斗记录"));
+  assert.equal(imported.battleLogs.canada, undefined, "active logs are stored once in battleSave");
+  assert.equal(C.view(imported, 0).battleLogs, undefined, "private archives must never enter public snapshots");
+  const malformed = Records.clone(imported);
+  malformed.battleLogs.canada = {log:[123],teamLogs:{},logNames:[]};
+  assert.throws(() => C.validate(ctx, malformed, members), /地区战斗日志无效/);
+  room.campaign = imported;
+  room.campaign.phase = "encounters";
+  enter();
+  assert.match(room.log[0], /第2大回合.*书接上回/);
+  for (const actor of room.game.units) if (actor.team === 1) actor.hp = 0;
+  room.game.winner = 0;
+  adapter.checkpoint(room);
+  assert.equal(room.campaign.encounters.length, 0);
+  assert(room.campaign.battleLogs.canada.log.some(line => line.includes("已经完成战略目的")));
+  C.addUnit(ctx, room.campaign, 1, "canada", "MS_06F");
+  room.campaign.phase = "encounters";
+  room.campaign.encounters = [{ region: "canada", turn: room.campaign.turn - 1, battleSave: null, roster: {}, settled: [] }];
+  enter();
+  assert.match(room.log[0], /第3大回合.*新的战役/);
+  assert(room.log.includes("此前局地战的战斗记录"));
+  assert(room.log.some(line => line.includes("达到本阶段局地战回合上限")));
+  assert(room.log.some(line => line.includes("已经完成战略目的")));
 });
 
 test("mid-battle campaign export retains escaped units and completed player actions through import", () => {

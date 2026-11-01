@@ -1,8 +1,10 @@
 ﻿"""Generate missing 5v5 regional maps; preserve authored maps and reference overrides."""
+import argparse
 import copy
 import hashlib
 import json
 import math
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -49,7 +51,47 @@ def make_layout(region, lookup, width, height):
     return dict(regionId=region['id'], nodes=nodes, gates=gates, links=links)
 
 
+def resize_local_map(battle):
+    """Reduce regional dimensions once; keep all terrain/objective coordinates in bounds."""
+    if battle.get('regionalScale') == 0.75:
+        return False
+    old_width, old_height = battle['width'], battle['height']
+    width, height = round(old_width * 0.75), round(old_height * 0.75)
+    sx, sy = width / old_width, height / old_height
+    battle['tiles'] = [[battle['tiles'][min(old_height-1, int(y / sy))][min(old_width-1, int(x / sx))]
+                        for x in range(width)] for y in range(height)]
+    for spawn in battle['spawns']:
+        spawn.update(x=min(width-1, round(spawn['x'] * sx)), y=min(height-1, round(spawn['y'] * sy)))
+    for area in battle.get('deploymentAreas', []):
+        right = min(width, round((area['x'] + area['width']) * sx))
+        bottom = min(height, round((area['y'] + area['height']) * sy))
+        area.update(x=round(area['x'] * sx), y=round(area['y'] * sy))
+        area.update(width=max(1, right-area['x']), height=max(1, bottom-area['y']))
+    expansion = battle.get('deploymentExpansion')
+    if expansion:
+        left, right = max(1, round(expansion['addedLeft'] * sx)), max(1, round(expansion['addedRight'] * sx))
+        top, bottom = round(expansion.get('addedTop', 0) * sy), round(expansion.get('addedBottom', 0) * sy)
+        expansion.update(baseWidth=width-left-right, addedLeft=left, addedRight=right,
+                         baseHeight=height-top-bottom, addedTop=top, addedBottom=bottom)
+    layout = battle['strategic']
+    for node in layout['nodes'] + layout['gates']:
+        node.update(x=min(width-2, max(1, round(node['x'] * sx))),
+                    y=min(height-2, max(1, round(node['y'] * sy))))
+        if node.get('side') == 'west': node['x'] = 1
+        if node.get('side') == 'east': node['x'] = width-2
+        if node.get('side') == 'north': node['y'] = 1
+        if node.get('side') == 'south': node['y'] = height-2
+    battle.update(width=width, height=height, regionalScale=0.75)
+    return True
+
+
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--resize-existing', action='store_true', help='Apply the regional 75% dimensions once to existing local maps.')
+    parser.add_argument('--rebuild-geography', action='store_true', help='Rebuild the regional terrain from world projection and physical geography.')
+    parser.add_argument('--dependencies', help='Generation-only Shapely/numpy package directory.')
+    args = parser.parse_args()
+    if args.dependencies: sys.path.insert(0, args.dependencies)
     world = read(DEST / 'world.json')
     template = read(ROOT / 'assets/maps/encounter/military_base_5v5.json')
     info = DEST / 'scenario.json'
@@ -58,11 +100,31 @@ def main():
     if scenario['id'] != SCENARIO_ID:
         raise ValueError('Scenario ID must match its folder')
     lookup = {region['id']: region for region in world['regions']}
+    geography = None
+    if args.rebuild_geography:
+        from regional_geography import RegionalGeography
+        geography = RegionalGeography(world)
     for region in world['regions']:
         filename = 'local-battles/' + region['id'] + '_5v5.json'
         scenario['regions'].setdefault(region['id'], dict(map=filename))
         target = DEST / filename
         if target.exists():
+            if args.resize_existing or args.rebuild_geography:
+                battle = read(target)
+                changed = resize_local_map(battle) if args.resize_existing else False
+                if args.rebuild_geography:
+                    # Start from the fixed objective template so rebuilding is idempotent.
+                    battle['strategic'] = make_layout(region, lookup, template['width'], template['height'])
+                    for point in battle['strategic']['nodes'] + battle['strategic']['gates']:
+                        point['x'] = round(point['x'] * battle['width'] / template['width'])
+                        point['y'] = round(point['y'] * battle['height'] / template['height'])
+                        if point.get('side') == 'west': point['x'] = 1
+                        if point.get('side') == 'east': point['x'] = battle['width']-2
+                        if point.get('side') == 'north': point['y'] = 1
+                        if point.get('side') == 'south': point['y'] = battle['height']-2
+                    geography.generate(region, battle)
+                    changed = True
+                if changed: write(target, battle)
             continue
         battle = copy.deepcopy(template)
         battle.update(id=SCENARIO_ID + '_' + region['id'] + '_5v5', name=region['name'] + ' · 局地战5v5',
@@ -73,6 +135,11 @@ def main():
         battle['tiles'] = [['forest' if (x * 73 + y * 47 + seed) % 19 == 0 else 'plain'
                             for x in range(width)] for y in range(height)]
         battle['strategic'] = make_layout(region, lookup, width, height)
+        resize_local_map(battle)
+        if geography is None:
+            from regional_geography import RegionalGeography
+            geography = RegionalGeography(world)
+        geography.generate(region, battle)
         write(target, battle)
     write(info, scenario)
     index_file = DEST.parent / 'index.json'

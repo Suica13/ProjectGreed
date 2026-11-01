@@ -12,7 +12,7 @@ window.CampaignUI = (() => {
     autosaveTimer = null;
   const selectedUnits = new Set();
   let moveDraft = null, forceSide = "friendly", forceDetailsRegion = null, resumeForceDetails = false;
-  const mapScale = 1.25, labelScale = 1 / mapScale;
+  const mapScale = 1.25, labelScale = 0.75 / mapScale;
   const replies = new Map();
   const storageKey = "projectgreed.campaign.backup.v1";
   const node = (tag, text = "", css = "") => element(tag, css, text);
@@ -30,6 +30,8 @@ window.CampaignUI = (() => {
   function state() {
     return Net.snapshot?.campaign;
   }
+  const headquarters = region => CAMPAIGN_WORLD.settings.headquarters?.some(base => base.region === region.id);
+  const regionName = region => (headquarters(region) ? "★ " : "") + I18n.text(region.name);
   const campaignPilots = createCampaignPilotUI({ state, command, node, button });
   const campaignConsole = createCampaignConsole({ panel, state, node, button });
   const intelligenceDialog = node(
@@ -366,9 +368,9 @@ window.CampaignUI = (() => {
       ctx.lineWidth = 3;
       ctx.strokeStyle = "#102030";
       ctx.setLineDash([]);
-      ctx.strokeText(I18n.text(region.name), x, y + 17);
+      ctx.strokeText(regionName(region), x, y + 17);
       ctx.fillStyle = "#fff";
-      ctx.fillText(I18n.text(region.name), x, y + 17);
+      ctx.fillText(regionName(region), x, y + 17);
     }
     canvas.setAttribute("aria-label", CAMPAIGN_WORLD.name);
   }
@@ -473,7 +475,7 @@ window.CampaignUI = (() => {
     )) {
       const width = Math.min(
           190,
-          Math.max(116, measure.measureText(I18n.text(region.name)).width + 18),
+          Math.max(116, measure.measureText(regionName(region)).width + 18),
         ) * labelScale,
         height = 32 * labelScale;
       const [x, y] = region.center,
@@ -586,7 +588,7 @@ window.CampaignUI = (() => {
             "font-size": 12,
             "font-weight": region.factory ? 700 : 500,
           },
-          I18n.text(region.name),
+          regionName(region),
         ),
       );
 
@@ -847,6 +849,7 @@ window.CampaignUI = (() => {
       occupied.push({ x, y });
       const label = shape("g", {
         class: "campaign-movement-label",
+        transform: `translate(${x},${y}) scale(0.75) translate(${-x},${-y})`,
         "data-movement": move.id,
         role: "button",
         tabindex: 0,
@@ -994,7 +997,7 @@ window.CampaignUI = (() => {
       (item) => item.scrollTop,
     );
     const header = node("header", "", "campaign-encounter-header"),
-      title = node("h2", region.name + " · " + I18n.text("交战状态"));
+      title = node("h2", regionName(region) + " · " + I18n.text("交战状态"));
     title.id = "campaignEncounterTitle";
     encounterDialog.setAttribute("aria-labelledby", title.id);
     const expand = button(encounterExpanded ? "收起详情" : "展开详情", () => {
@@ -1155,7 +1158,12 @@ window.CampaignUI = (() => {
     }
     const footer = node("footer", "", "campaign-encounter-footer");
     const actions = node("div", "", "campaign-encounter-actions");
-    for (const [delegate, label] of [
+    if (s.hostControlsAI) {
+      actions.classList.add("campaign-host-battle-actions");
+      actions.append(button("开始交战", () => command("campaign_start_battle", {
+        region: region.id, mapId: maps.value, preparationId: preparation.id,
+      }), !pending || Net.memberId !== Net.snapshot.hostId));
+    } else for (const [delegate, label] of [
       [true, "AI委任"],
       [false, "手动指挥"],
     ]) {
@@ -1165,7 +1173,7 @@ window.CampaignUI = (() => {
     }
     footer.append(
       markers,
-      node("small", canEnter ? "所有参战玩家准备后开始局地战" : "等待参战玩家准备"),
+      node("small", s.hostControlsAI ? "等待房主开始交战" : canEnter ? "所有参战玩家准备后开始局地战" : "等待参战玩家准备"),
       actions,
     );
     encounterDialog.replaceChildren(header, body, footer);
@@ -1196,13 +1204,15 @@ window.CampaignUI = (() => {
         moveDraft.ids.some((id) => {
           const unit = s.units.find((u) => u.id === id);
           return !unit || unit.destroyed || unit.pendingTransfer || unit.region !== moveDraft.from ||
-            !selectedUnits.has(id) || !CampaignRules.controls(s, Net.snapshot.members, Net.seat, unit);
+            !selectedUnits.has(id) || !CampaignRules.canRedeploy(s, unit) || !CampaignRules.controls(s, Net.snapshot.members, Net.seat, unit);
         }))) moveDraft = null;
     const targetScroll = map.querySelector(".campaign-move-targets")?.scrollTop || 0;
     map.querySelector(".campaign-move-dock")?.remove();
     map.dataset.moveDraft = String(!!moveDraft);
     const finish = map.querySelector(".campaign-end-turn");
-    if (finish) finish.disabled = !!moveDraft || !!Net.awaiting || s.phase !== "strategy" || Net.seat === null || s.winner !== null || s.ready.includes(Net.seat);
+    if (finish) finish.disabled = !!moveDraft || !!Net.awaiting || s.phase !== "strategy" ||
+      (s.hostControlsAI ? Net.memberId !== Net.snapshot.hostId : Net.seat === null) ||
+      s.winner !== null || s.ready.includes(Net.seat);
     regionEffect(svg, moveDraft?.destination || null, "campaign-move-outline", "data-move-region");
     const signature = moveDraft?.destination ? moveDraft.from + ":" + moveDraft.destination : "";
     let arrow = svg?.querySelector(".campaign-move-preview");
@@ -1254,7 +1264,7 @@ window.CampaignUI = (() => {
       const choice = button("", () => { moveDraft.destination = id; renderMoveDraft(); });
       choice.dataset.destination = id;
       choice.setAttribute("aria-pressed", String(id === moveDraft.destination));
-      choice.append(node("strong", region.name), node("small", ["EFSF", "ZEON"][owner] + " · " + regionStrengthReport(s, id)));
+      choice.append(node("strong", regionName(region)), node("small", ["EFSF", "ZEON"][owner] + " · " + regionStrengthReport(s, id)));
       targets.append(choice);
     }
     dock.append(actions, targets);
@@ -1289,6 +1299,8 @@ window.CampaignUI = (() => {
   function chooseOrder(kind, ids, region) {
     embarkingArmy = null;
     if (kind === "move") {
+      if (ids.some((id) => !CampaignRules.canRedeploy(state(), state().units.find((unit) => unit.id === id))))
+        throw Error("交战中的部队不能调动");
       if (forceDetailsDialog.open) {
         resumeForceDetails = true;
         forceDetailsDialog.close();
@@ -1477,7 +1489,7 @@ window.CampaignUI = (() => {
     if (!s || !region) return forceDetailsDialog.close();
     const top = forceDetailsDialog.querySelector(".campaign-force-list")?.scrollTop || 0;
     const header = node("header", "", "campaign-order-header");
-    header.append(node("h3", region.name + " · " + I18n.text("区域部队")),
+    header.append(node("h3", regionName(region) + " · " + I18n.text("区域部队")),
       button("关闭", () => { resumeForceDetails = false; forceDetailsDialog.close(); }, false, true));
     const locked = s.phase !== "strategy" || Net.seat === null || s.winner !== null || s.ready.includes(Net.seat);
     forceDetailsDialog.replaceChildren(header, regionForces(s, region, locked, true));
@@ -1560,7 +1572,7 @@ window.CampaignUI = (() => {
               selected.map((unit) => unit.id),
               region,
             ),
-          !selected.length,
+          !selected.length || selected.some((unit) => !CampaignRules.canRedeploy(s, unit)),
         ),
         button(
           "转交",
@@ -1608,6 +1620,15 @@ window.CampaignUI = (() => {
       portrait.src = unitIcon(unit.unitId + "__" + unit.kitId);
       portrait.alt = "";
       portrait.loading = "lazy";
+      portrait.setAttribute("role", "checkbox");
+      portrait.setAttribute("aria-checked", String(input.checked));
+      portrait.setAttribute("aria-disabled", String(input.disabled));
+      portrait.tabIndex = input.disabled ? -1 : 0;
+      const toggleSelection = () => { if (!input.disabled) input.click(); };
+      portrait.onclick = toggleSelection;
+      portrait.onkeydown = (event) => {
+        if (event.key === " " || event.key === "Enter") { event.preventDefault(); toggleSelection(); }
+      };
       const copy = node("div", "", "campaign-force-copy");
       const heading = node("div", "", "campaign-force-heading");
       const name = node("strong", m?.name || unit.unitId);
@@ -1630,6 +1651,8 @@ window.CampaignUI = (() => {
           "small",
           pending
             ? "等待接收"
+            : !CampaignRules.canRedeploy(s, unit) && !unit.pendingTransfer
+              ? "交战中"
             : unit.moveTo
               ? "→ " + CAMPAIGN_WORLD.regions.find((item) => item.id === unit.moveTo)?.name
               : unit.aboard
@@ -1697,7 +1720,7 @@ window.CampaignUI = (() => {
       CAMPAIGN_WORLD.regions[0];
     selectedRegion = region.id;
     const owner = s.regions.find((item) => item.id === region.id)?.owner ?? region.owner;
-    const heading = node("h3", region.name);
+    const heading = node("h3", regionName(region));
     heading.title = I18n.text(owner === 0 ? "地球联邦军" : "吉翁公国军") + " · " + I18n.text(CAMPAIGN_WORLD.settings.headquarters?.some((base) => base.region === region.id) ? "指挥部" : region.factory ? "生产据点" : "普通区域");
     const revenue = node("div", "", "campaign-region-revenue resource-balance");
     revenue.title = I18n.text("每回合收入");
@@ -1753,7 +1776,7 @@ window.CampaignUI = (() => {
     }
     if (tab === "orders") {
       const orders = node("div", "", "campaign-order-list");
-      for (const order of s.orders.filter((order) => order.team === team)) {
+      for (const order of s.orders.filter((order) => order.team === team && order.region === region.id)) {
         const player = Net.snapshot.members.find((member) => member.seat === order.ownerSeat);
         const row = node("div", "", "campaign-order");
         row.append(
@@ -1909,7 +1932,7 @@ window.CampaignUI = (() => {
       node(
         "small",
         (s.phase === "strategy"
-          ? `已结束指令 ${s.ready.length}/${humans.length}`
+          ? (s.hostControlsAI ? I18n.text("由房主结束战略阶段") : `已结束指令 ${s.ready.length}/${humans.length}`)
           : I18n.text("待处理战场 ") +
             s.encounters.filter(
               (item) => item.turn < s.turn && CampaignRules.disputed(s, item.region),
@@ -1925,7 +1948,7 @@ window.CampaignUI = (() => {
         if (current?.turn === s.turn && current.phase === "strategy" && !current.ready.includes(Net.seat))
           command("campaign_ready", {ready:true});
       },
-      s.phase !== "strategy" || Net.seat === null || s.winner !== null || s.ready.includes(Net.seat),
+      s.phase !== "strategy" || (s.hostControlsAI ? Net.memberId !== Net.snapshot.hostId : Net.seat === null) || s.winner !== null || s.ready.includes(Net.seat),
     );
     finish.className = "campaign-green-command campaign-end-turn";
     header.append(overview, status, balances);
@@ -2068,24 +2091,39 @@ window.CampaignUI = (() => {
   backup.hidden = true;
   byId("startRoomGame").parentElement.append(backup);
   const delegationToggle = button("开启AI委任（本阶段）", () => {
-    command("campaign_delegate", { delegate: !state()?.delegatedSeats?.includes(Net.seat) });
+    command("set_ai_delegate", { delegate: !(Net.snapshot?.delegatedSeats || state()?.delegatedSeats)?.includes(Net.seat) });
   });
   delegationToggle.id = "campaignDelegationToggle";
   delegationToggle.className = "campaign-delegation-toggle";
   delegationToggle.hidden = true;
   byId("showLog").after(delegationToggle);
+  const presentationSpeed = button("", () => {
+    const previous = MovementTiming.presentationSpeed;
+    const speeds = MovementTiming.speeds;
+    const speed = speeds[(speeds.indexOf(previous) + 1) % speeds.length];
+    MovementTiming.setPresentationSpeed(speed);
+    window.dispatchEvent(new CustomEvent("presentation-speed-change", { detail: { previous, speed } }));
+    refreshBattleControls();
+  }, false, true);
+  presentationSpeed.id = "battlePresentationSpeed";
+  presentationSpeed.hidden = true;
+  delegationToggle.after(presentationSpeed);
   const battleSave = button("保存战役", () => command("campaign_export"));
   battleSave.id = "saveCampaignBattle";
   battleSave.hidden = true;
   document.querySelector("#matchRecordsDialog .record-actions").prepend(battleSave);
   function refreshBattleControls(snapshot = Net.snapshot) {
-    const inBattle = !!snapshot?.campaign && snapshot.started && !window.ReplayPlayer?.active;
-    const delegated = snapshot?.campaign?.delegatedSeats?.includes(Net.seat);
+    const inBattle = snapshot?.started && !window.ReplayPlayer?.active;
+    const delegated = (snapshot?.delegatedSeats || snapshot?.campaign?.delegatedSeats)?.includes(Net.seat);
     delegationToggle.hidden = !inBattle;
-    delegationToggle.textContent = I18n.text(delegated ? "AI委任中（本阶段）" : "开启AI委任（本阶段）");
+    delegationToggle.textContent = I18n.text(snapshot?.campaign
+      ? (delegated ? "AI委任中（本阶段）" : "开启AI委任（本阶段）")
+      : (delegated ? "AI托管中" : "开启AI托管"));
     delegationToggle.setAttribute("aria-pressed", String(!!delegated));
     delegationToggle.disabled = !Number.isInteger(Net.seat) || !!Net.awaiting ||
       !!snapshot?.returnCountdown || snapshot?.game?.winner !== null;
+    presentationSpeed.hidden = !snapshot?.started;
+    presentationSpeed.textContent = I18n.text("演出速度") + " ×" + MovementTiming.presentationSpeed.toFixed(1);
     battleSave.hidden = !snapshot?.campaign || Net.memberId !== snapshot.hostId || !!window.ReplayPlayer?.active;
     battleSave.disabled = !!Net.awaiting;
   }

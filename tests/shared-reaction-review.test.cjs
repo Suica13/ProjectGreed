@@ -4,7 +4,7 @@ const { WebSocket, WebSocketServer } = require("ws");
 const G = require("../shared/rules.js");
 const { createRoomEngine } = require("../shared/room-engine.js");
 
-for (const shared of [true, false]) test(`response review barrier applies only to shared units (${shared})`, async (t) => {
+for (const [shared, delegate] of [[true, false], [false, false], [true, true]]) test(`response review barrier applies only to shared units (${shared}, delegated ${delegate})`, async (t) => {
   let sequence = 0;
   const frames = [];
   const wire = new WebSocketServer({ host: "127.0.0.1", port: 0 });
@@ -82,6 +82,15 @@ for (const shared of [true, false]) test(`response review barrier applies only t
   }
   assert.equal(room.phase, "reaction");
   assert.deepEqual(room.game.units.map((unit) => unit.hp), before);
+  if (delegate) {
+    const revision = room.revision;
+    await act(first, "set_ai_delegate", { delegate: true }, revision);
+    assert.equal(room.phase, "reaction");
+    await act(second, "set_ai_delegate", { delegate: true }, revision);
+    assert.deepEqual(room.delegatedSeats, [1, 3]);
+    assert.notEqual(room.phase, "reaction");
+    return;
+  }
   let reviewId = room.reactionReviewId;
   await act(first, "confirm_responses", { reviewId });
   assert.equal(room.phase, "reaction");

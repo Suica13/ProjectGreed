@@ -1,6 +1,11 @@
 /* Fixed native three-part presentation; hit range belongs to the shared rules. */
 const IrradiationFX = (() => {
   const active = new Map();
+  window.addEventListener("presentation-speed-change", ({ detail: { previous, speed } }) => {
+    const now = performance.now();
+    for (const beam of active.values())
+      if (beam.start !== null) beam.start = now - (now - beam.start) * previous / speed;
+  });
   function reset() {
     active.clear();
   }

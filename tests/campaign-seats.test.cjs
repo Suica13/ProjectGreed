@@ -129,7 +129,8 @@ test("campaign team changes synchronize faction and allow spectating/AI takeover
   assert.equal(room.seats[2], null);
 
   const ally = room.campaign.units.find((unit) => unit.ownerSeat === 0 && !unit.state?.embarked);
-  const enemy = room.campaign.units.find((unit) => unit.ownerSeat === 1 && !unit.state?.embarked);
+  const enemy = C.addUnit({ G, production: require("../shared/production-data.cjs") },
+    room.campaign, 1, "canada_east", "MS_06F");
   ally.region = enemy.region = "canada_east";
   const reinforcement = C.addUnit(
     { G, production: require("../shared/production-data.cjs") },
@@ -234,6 +235,11 @@ test("campaign team changes synchronize faction and allow spectating/AI takeover
   actor.y = point.y;
   actor.actionPoints = 10;
   actor.acted = false;
+  // Authenticated capture is tested on an undefended post, independent of map generation.
+  for (const [index, enemy] of room.game.units.filter(unit => unit.team !== actor.team).entries()) {
+    enemy.x = 2 + index * 3;
+    enemy.y = G.mapHeight(room.game) - 4;
+  }
   room.game.campaignBattlefield.owners[point.id] = 1;
   room.game.campaignBattlefield.version++;
   await assert.rejects(

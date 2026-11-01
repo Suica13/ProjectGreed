@@ -81,11 +81,8 @@ test("manual language selection persists offline and covers formation, deploymen
     await page.locator("#confirmDeployment").click();
     await page.locator("#confirmDeployment").click();
     await page.evaluate(() => endTurn());
-    await expect(page.locator("#turnCutinCard")).toHaveText("Team 1 ends its turn");
-    await expect(page.locator("#turnCutinCard")).toHaveText("Turn 2", { timeout: 2500 });
-    await expect(page.locator("#turnCutinCard")).toHaveText("Team 2 begins its turn", {
-      timeout: 2500,
-    });
+    await expect(page.locator("#turnCutinCard .turn-cutin-round")).toHaveText("Turn 2");
+    await expect(page.locator("#turnCutinCard .turn-cutin-team")).toHaveText("Team 2");
     await expect(page.locator("#turnCutin")).toBeHidden();
     await page.evaluate(() => openMenu());
     await chooseLanguage(page, "zh");

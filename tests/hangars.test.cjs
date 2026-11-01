@@ -551,3 +551,37 @@ for (const ap of [0,1,3,5,8]) test(`emergency evacuation halves remaining AP onc
   G.hangars.evacuate(g);
   assert.equal(u.actionPoints,remaining);
 });
+
+
+test("AI unloads a healthy capturer at an undefended nearby objective without enemy contact",()=>{
+ const {g,carrier,u,h}=fixture();
+ g.units=g.units.filter(actor=>actor.team===0);
+ G.hangars.embark(g,u,carrier,h.id);
+ g.round+=2;u.acted=false;u.moved=false;u.actionPoints=G.modelOf(u).actionPoints;
+ assert.equal(G.hangars.shouldLaunch(g,u),false);
+ const point=G.hangars.launchCells(g,u)[0];assert(point);
+ g.campaignBattlefield={defender:1,version:0,capturedBaseTeam:null,adjacentOwners:{},
+  layout:{nodes:[{id:"base",kind:"base",x:40,y:35},{id:"post",kind:"outpost",x:point.x,y:point.y}],gates:[],links:[]},
+  owners:{base:0,post:1}};
+ assert.equal(G.hangars.shouldLaunch(g,u),true);
+ const chosen=G.aiLaunchChoice(g,u);assert(chosen);
+ G.hangars.launch(g,u,chosen.x,chosen.y);
+ assert.equal(G.campaignBattlefield.canCapture(G,g,u)?.id,"post");
+ G.campaignBattlefield.capture(G,g,u);
+ assert.equal(g.campaignBattlefield.owners.post,0);
+});
+
+test("objective unloading still requires a nearby point, a capturer and recovery readiness",()=>{
+ const {g,carrier,u,h}=fixture();g.units=g.units.filter(actor=>actor.team===0);
+ G.hangars.embark(g,u,carrier,h.id);
+ g.round+=2;u.acted=false;u.moved=false;u.actionPoints=G.modelOf(u).actionPoints;
+ const point=G.hangars.launchCells(g,u)[0];
+ g.campaignBattlefield={layout:{nodes:[{id:"post",kind:"outpost",x:point.x,y:point.y}]},owners:{post:1}};
+ u.hp=1;assert.equal(G.hangars.shouldLaunch(g,u),false);u.hp=G.modelOf(u).hp;
+ g.campaignBattlefield.layout.nodes[0].x=G.mapWidth(g)-2;
+ assert.equal(G.hangars.shouldLaunch(g,u),false);
+ g.campaignBattlefield.layout.nodes[0].x=point.x;
+ const old=u.model;u.model=Object.keys(G.models).find(id=>id.startsWith("FF_B2__"));
+ u.hp=G.modelOf(u).hp;u.en=G.modelOf(u).en;
+ assert.equal(G.hangars.shouldLaunch(g,u),false);u.model=old;
+});

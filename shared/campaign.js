@@ -182,6 +182,7 @@ const CampaignRules = (() => {
       orders: [],
       transfers: [],
       encounters: [],
+      battleLogs: {},
       marches: [],
       history: [],
       regions: ctx.world.regions.map((region) => ({ id: region.id, owner: region.owner })),
@@ -244,6 +245,10 @@ const CampaignRules = (() => {
     return state.encounters.some(
       (encounter) => encounter.region === unit.region && encounter.turn === state.turn,
     );
+  }
+  function canRedeploy(state, unit) {
+    return !!unit && !unit.destroyed && !unit.pendingTransfer &&
+      !busy(state, unit) && !disputed(state, unit.region);
   }
   function charge(team, price) {
     if (team.money < price.money || team.supplies < price.supplies) return false;
@@ -623,7 +628,7 @@ const CampaignRules = (() => {
           "请由运输单位的控制者或总指挥官调动搭载部队",
         );
         for (const unit of units) {
-          check(!busy(state, unit), "交战中的部队本轮不能重新调动");
+          check(command.region === null || canRedeploy(state, unit), "交战中的部队不能调动");
           check(
             !state.transfers.some((transfer) => transfer.ids.includes(unit.id)),
             "请先完成或取消控制权转交",
@@ -851,6 +856,10 @@ const CampaignRules = (() => {
       state.history.push(`战略第${state.turn}回合 · 队伍${state.teams.indexOf(pool) + 1} · 研发完成：${node?.name || order.techId}`);
       return false;
     });
+    // Disputed regions stay locked between local battle segments too. Old saved
+    // orders must not allow an army or its cargo to escape during settlement.
+    for (const unit of state.units)
+      if (!canRedeploy(state, unit)) unit.moveTo = null;
     // Embarked armies follow their carrier, including AI transport orders.
     for (let depth = 0; depth < 4; depth++)
       for (const unit of state.units.filter((unit) => !unit.destroyed && unit.state?.embarked)) {
@@ -999,7 +1008,7 @@ const CampaignRules = (() => {
   }
   function view(state, team = null, ctx = { G: typeof Rules !== "undefined" ? Rules : require("./rules.js") }) {
     // Strip private battle data before cloning: large saved battlefields never enter snapshots.
-    const { marches = [], ...publicState } = state;
+    const { marches = [], battleLogs, ...publicState } = state;
     const result = copy({
       ...publicState,
       encounters: state.encounters.map(({ battleSave, roster, settled, briefedRound, briefedDestroyed, ...encounter }) => ({
@@ -1058,11 +1067,8 @@ const CampaignRules = (() => {
     for (const unit of state.units.filter((u) => !u.destroyed && (u.moveTo || u.pendingTransfer) &&
         (team === null || u.team === team)))
       addMovement(unit, unit.region, unit.moveTo || unit.pendingTransfer.to);
-    for (const report of marches.filter((report) => report.turn >= state.turn - 1)) {
-      const unit = state.units.find((u) => u.id === report.armyId && !u.destroyed);
-      if (!unit || ((team === null || unit.team === team) && (unit.moveTo || unit.pendingTransfer))) continue;
-      addMovement(unit, report.from, report.to);
-    }
+    // Completed marches are history, not moving armies. Only active orders and
+    // pending edge transfers above can produce movement markers.
     result.movements = [...moving.values()]
       .filter((move) => team === null || move.team === team || progress >= 25)
       .map(({ units, ...move }) => ({
@@ -1338,6 +1344,19 @@ const CampaignRules = (() => {
     );
     check(value.nextId > maxId, "战役编号计数无效");
     const clean = copy(value);
+    check(value.battleLogs === undefined || (value.battleLogs && typeof value.battleLogs === "object" &&
+      !Array.isArray(value.battleLogs)), "地区战斗日志无效");
+    clean.battleLogs = {};
+    for (const [regionId, archive] of Object.entries(value.battleLogs || {})) {
+      const lines = value => Array.isArray(value) && value.length <= 100000 &&
+        value.every(line => typeof line === "string" && line.length <= 20000);
+      check(ctx.world.regions.some(region => region.id === regionId) && archive &&
+        lines(archive.log) && lines(archive.logNames) && archive.teamLogs &&
+        typeof archive.teamLogs === "object" && !Array.isArray(archive.teamLogs) &&
+        Object.entries(archive.teamLogs).every(([team, entries]) => ["0", "1"].includes(team) && lines(entries)),
+        "地区战斗日志无效");
+      clean.battleLogs[regionId] = copy({log:archive.log, teamLogs:archive.teamLogs, logNames:archive.logNames});
+    }
     // Reports are derived per recipient; never restore client report fields as authoritative data.
     delete clean.intel;
     delete clean.intelRegions;
@@ -1405,6 +1424,7 @@ const CampaignRules = (() => {
     controller,
     controls,
     disputed,
+    canRedeploy,
     view,
     validate,
   };

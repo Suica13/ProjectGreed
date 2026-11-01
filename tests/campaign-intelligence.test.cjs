@@ -157,7 +157,7 @@ test("campaign archives retain intelligence and safely initialize legacy archive
 });
 
 
-test("enemy movement reports appear only after settlement and survive campaign export", () => {
+test("completed marches no longer produce movement windows after settlement or import", () => {
   const s = reports(100);
   const before = C.view(s, 0);
   assert(!before.movements.some((m) => m.team === 1));
@@ -165,11 +165,7 @@ test("enemy movement reports appear only after settlement and survive campaign e
   C.advance(ctx, s, members);
   const view = C.view(s, 0);
   assert.equal(view.intelRegions.find((r) => r.id === "europe_central").counts[1], 20);
-  const report = view.movements.find((m) => m.team === 1);
-  assert(report);
-  assert.equal(report.from, "odessa");
-  assert.equal(report.to, "europe_central");
-  assert.equal(report.unitIds.length, 20);
+  assert(!view.movements.some((m) => m.team === 1), "arrived units are not moving armies");
   assert(!Object.hasOwn(view, "marches"));
   const imported = C.validate(ctx, s, members);
   assert.deepEqual(imported.marches, s.marches);

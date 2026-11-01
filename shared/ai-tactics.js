@@ -82,6 +82,33 @@ const AITactics = (() => {
     phase.players.set(seat, decision);
     return decision;
   }
+  function captureCapable(G, unit) {
+    return G.modelOf(unit).movementType !== "air" &&
+      (!unit.flying || G.unitSkills(unit).some((skill) => skill.type === "flight"));
+  }
+  function captureGoal(G, game, unit, origin = unit, nearby = true) {
+    if (!game.campaignBattlefield || !captureCapable(G, unit)) return null;
+    const field = game.campaignBattlefield;
+    const targets = field.layout.nodes.filter((point) => field.owners[point.id] !== unit.team &&
+      (!nearby || distance(origin, point) <= Math.max(6, G.modelOf(unit).move + 2)) &&
+      !game.units.some((enemy) => enemy.team !== unit.team && G.onMap(enemy) &&
+        G.cells(enemy).some((cell) => Math.max(Math.abs(cell.x-point.x), Math.abs(cell.y-point.y)) <= 1)));
+    return targets.sort((a,b) => distance(origin,a)-distance(origin,b))[0] || null;
+  }
+  function forUnit(G, game, unit, decision) {
+    if (!game.campaignBattlefield) return decision;
+    if (captureCapable(G, unit)) {
+      const target = captureGoal(G, game, unit);
+      return target ? { ...decision, goal: target } : decision;
+    }
+    const passenger = game.units.find((u) => u.hp > 0 && u.embarked?.carrierId === unit.id &&
+      captureCapable(G,u) && G.hangars.readyToLaunch(u));
+    const target = passenger && captureGoal(G, game, passenger, unit, false);
+    // Transports deliver capturers. Aircraft without capturers continue fighting
+    // instead of inheriting the ground squad's occupation destination.
+    const goal = target || (decision.enemies.length ? center(decision.enemies) : decision.origin);
+    return { ...decision, goal, avoidObjective: true };
+  }
   function positionScore(G, game, unit, cell, decision) {
     const { state, origin, difficulty } = decision;
     let goal = decision.goal;
@@ -101,6 +128,9 @@ const AITactics = (() => {
       const nearest = friends.length ? Math.min(...friends.map((u) => distance(cell, u))) : 0;
       score -= Math.max(0, nearest - 4) * (difficulty === "easy" ? 0.08 : 0.25);
     }
+    if (decision.avoidObjective && game.campaignBattlefield.layout.nodes.some((point) =>
+      G.cells(unit, cell.x, cell.y).some((tile) => Math.max(Math.abs(tile.x-point.x), Math.abs(tile.y-point.y)) <= 1)))
+      score -= 12;
     score += (G.terrain[game.tiles[cell.y]?.[cell.x]]?.cover || 0) * (cautious ? 0.025 : 0.006);
     if (difficulty === "hard" && cautious) {
       const threats = decision.enemies;
@@ -241,6 +271,6 @@ const AITactics = (() => {
       }
     }
   }
-  return { settings, power, decide, positionScore, strategic };
+  return { settings, power, decide, forUnit, captureGoal, captureCapable, positionScore, strategic };
 })();
 if (typeof module !== "undefined") module.exports = AITactics;

@@ -2621,5 +2621,14 @@
   "出售／解散": "Sell / Disband",
   "返还资金": "Funds refunded",
   "没有可用的格纳库": "No available hangar",
-  "当前不能出售／解散：请先完成调动、交战、转交或清空格纳库": "Cannot sell/disband: finish movement, combat or transfer, and empty the hangar first."
+  "当前不能出售／解散：请先完成调动、交战、转交或清空格纳库": "Cannot sell/disband: finish movement, combat or transfer, and empty the hangar first.",
+  "第{number}回合": "Turn {number}",
+  "已经完成战略目的": "Strategic objective completed",
+  "返回战略大地图剩余{seconds}秒": "Returning to the strategic map in {seconds} seconds",
+  "AI托管中": "AI control active",
+  "开启AI托管": "Enable AI control",
+  "演出速度": "Animation speed",
+  "开始交战": "Start battle",
+  "等待房主开始交战": "Waiting for the host to start battle",
+  "由房主结束战略阶段": "The host ends the strategic phase"
 }

@@ -87,6 +87,7 @@ regions=spec['regions']
 for r in regions:
     r['center']=[round(v,1) for v in project(*r['lonLat'])]
 land_territories=[]
+geometries={}
 for r in regions:
     if r['kind']=='sea':
         rx,ry={'hawaii':(32,29),'north_atlantic':(42,38),'south_atlantic':(39,43),'indian_ocean':(55,48),'south_pacific':(39,43)}[r['id']]
@@ -102,14 +103,59 @@ for r in regions:
             if group==other_group:points=halfplane(points,r['center'],other['center'])
         geometry=make_valid(Polygon(points)).intersection(scopes[group])
         land_territories.append(geometry)
+    geometries[r['id']]=geometry
     r['path']=path(geometry)
     assert r['path'],r['id']
     largest=max(polygons(geometry),key=lambda polygon:polygon.area)
     r['polygon']=[[round(x,1),round(y,1)] for x,y in list(largest.exterior.coords)[:-1]]
+# Geographic constraints override nearest-capital cells in East Asia. Islands
+# remain whole; Japan cannot absorb continental Korea or northern China.
+boundary_spec = spec.get('eastAsiaBoundaries')
+if boundary_spec:
+    boundaries=json.loads((ROOT/boundary_spec['source']).read_text(encoding='utf-8'))
+    country={f['properties']['id']:make_valid(shape(f['geometry'])) for f in boundaries['features']}
+    def domain(code):
+        native=country[code]
+        # Snap whole offshore islands to their region despite coastline simplification.
+        islands=[p for p in polygons(land) if p.area < 100 and p.intersection(native).area > p.area * .5]
+        return projected(unary_union([land.intersection(native.buffer(.15)),*islands]))
+    china=domain('CHN')
+    split_y=project(0,boundary_spec['northSouthLatitude'])[1]
+    forced={
+        'beijing':china.intersection(box(0,0,width,split_y)),
+        'china':china.intersection(box(0,split_y,width,height)),
+        'japan':domain('JPN'),
+    }
+    korea_region=boundary_spec.get('koreanRegion','beijing')
+    taiwan_region=boundary_spec.get('taiwanRegion','china')
+    forced[korea_region]=forced[korea_region].union(domain('KOR')).union(domain('PRK'))
+    forced[taiwan_region]=forced[taiwan_region].union(domain('TWN'))
+    reserved=unary_union(list(forced.values()))
+    for region in regions:
+        if region['kind']=='land':
+            geometries[region['id']]=forced.get(region['id'],geometries[region['id']].difference(reserved))
+    uncovered=projected(land).difference(unary_union([
+        geometries[r['id']] for r in regions if r['kind']=='land']+[projected(new_zealand)]))
+    # Reassign only land released by old oversized cells; other regions retain
+    # their existing boundaries. The locked East Asian regions cannot expand back.
+    candidates=[r for r in regions if r['kind']=='land' and r['id'] not in forced and
+                not any(r['id'] in ids for ids in groups.values())]
+    for region in candidates:
+        points=[(0,0),(width,0),(width,height),(0,height)]
+        for other in candidates:
+            if region['id']!=other['id']:points=halfplane(points,region['center'],other['center'])
+        addition=make_valid(Polygon(points)).intersection(uncovered)
+        geometries[region['id']]=geometries[region['id']].union(addition)
+    land_territories=[geometries[r['id']] for r in regions if r['kind']=='land']
+    for region in regions:
+        geometry=geometries[region['id']]
+        region['path']=path(geometry)
+        largest=max(polygons(geometry),key=lambda polygon:polygon.area)
+        region['polygon']=[[round(x,1),round(y,1)] for x,y in list(largest.exterior.coords)[:-1]]
 # The continental partition must cover the original land without gaps or overlaps.
 coverage=unary_union([*land_territories, projected(new_zealand)])
 assert coverage.symmetric_difference(projected(land)).area < .1, "Uncovered coastline"
 assert abs(sum(area.area for area in land_territories)-unary_union(land_territories).area) < .1, "Overlapping land regions"
-world.update(width=width,height=height,regions=regions,geographyVersion=2,coastalCutouts=spec.get('coastalCutouts',[]),landPath=path(projected(land)),legacyRegionIds=spec['legacyRegionIds'],references=spec['references'])
+world.update(width=width,height=height,regions=regions,geographyVersion=3,coastalCutouts=spec.get('coastalCutouts',[]),landPath=path(projected(land)),legacyRegionIds=spec['legacyRegionIds'],references=spec['references'])
 (ROOT/'assets/maps/strategy/earth_0079_mid/world.json').write_text(json.dumps(world,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print('Built',len(regions),'Earth regions with coastline paths')

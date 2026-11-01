@@ -184,6 +184,10 @@ const MapEffects = (() => {
     active = [],
     callbacks = new Set();
   let sequence = 0;
+  window.addEventListener("presentation-speed-change", ({ detail: { previous, speed } }) => {
+    const now = performance.now();
+    for (const item of active) item.start = now - (now - item.start) * previous / speed;
+  });
   function capture(view) {
     if (!view) return;
     const battleId = view.networkId || (view.effectId ||= "local-" + ++sequence);

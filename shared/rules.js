@@ -33,7 +33,7 @@ const Tactics = (() => {
     minovskyAt,
     spaceAt: (g, x, y) => cellEnvironment(g, x, y) === "space",
   });
-  const turnTransitionMs = 3600;
+  const turnTransitionMs = 1200;
   const W = catalog.map.width,
     H = catalog.map.height;
   const maxCostLimit = 99999;
@@ -280,6 +280,7 @@ const Tactics = (() => {
       mapId: settings.mapId || "military_base_5v5",
       mode: "campaign",
       scenarioId: "earth_0079_mid",
+      fogMode: settings.fogMode ?? "disabled",
       costLimit: maxCostLimit,
       campaignOptions: aiTactics.settings(settings.campaignOptions),
       unitCostLimit: maxCostLimit,
@@ -3270,7 +3271,7 @@ const Tactics = (() => {
       best = null;
     const weapons = modelOf(u).weapons,
       pressure = aiTargetPressure(g, u.team),
-      strategy = aiTactics.decide(Tactics, g, u),
+      strategy = aiTactics.forUnit(Tactics, g, u, aiTactics.decide(Tactics, g, u)),
       positionScore = (cell) => aiTactics.positionScore(Tactics, g, u, cell, strategy),
       cautious = ["gather", "defend"].includes(strategy.state);
     // AI navigation knows enemy positions even through fog. Keep actual sight
@@ -3407,6 +3408,7 @@ const Tactics = (() => {
     reachable,
     movementCost,
     sensors,
+    captureObjective: (g, unit, origin) => aiTactics.captureGoal(Tactics, g, unit, origin),
   });
   return {
     sensors,

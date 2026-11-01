@@ -103,13 +103,13 @@ const Net = (() => {
       .find(Boolean);
   const canControl = (unit) =>
     !window.ReplayPlayer?.active &&
-    !n.snapshot?.campaign?.delegatedSeats?.includes(n.seat) &&
-    !n.snapshot?.campaign?.delegatedSeats?.includes(
+    !(n.snapshot?.delegatedSeats || n.snapshot?.campaign?.delegatedSeats)?.includes(n.seat) &&
+    !(n.snapshot?.delegatedSeats || n.snapshot?.campaign?.delegatedSeats)?.includes(
       Rules.controllerOf(n.snapshot?.game || {}, unit || {}),
     ) &&
     Rules.canControlUnit(n.snapshot?.settings, n.snapshot?.members, n.seat, unit);
   function canAct() {
-    if (BattleAssets.loading || n.snapshot?.campaign?.delegatedSeats?.includes(n.seat))
+    if (BattleAssets.loading || (n.snapshot?.delegatedSeats || n.snapshot?.campaign?.delegatedSeats)?.includes(n.seat))
       return false;
     if (window.ReplayPlayer?.active) return false;
     return (
@@ -648,7 +648,7 @@ const Net = (() => {
     document.body.classList.toggle("campaign-room", s.settings.mode === "campaign");
     document.body.classList.toggle(
       "campaign-delegated",
-      !!s.campaign?.delegatedSeats?.includes(n.seat),
+      !!(s.delegatedSeats || s.campaign?.delegatedSeats)?.includes(n.seat),
     );
     window.MenuShell?.refresh();
     if (!s.campaign && s.settings.mode !== "campaign") Formation.alignWithRoom(s);

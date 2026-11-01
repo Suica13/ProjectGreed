@@ -53,17 +53,20 @@ const BattlePrompts = (() => {
   };
   function renderReturn() {
     const seconds = Math.max(0, Math.ceil((deadline - performance.now()) / 1000));
+    const objectiveCompleted = [0, 1].includes(Net.snapshot?.game?.winner) ||
+      [0, 1].includes(Net.snapshot?.game?.campaignBattlefield?.capturedBaseTeam);
     byId("roomReturnTitle").textContent = I18n.text(
       returnToCampaign
-        ? Net.snapshot?.game?.campaignBattlefield?.capturedBaseTeam !== null &&
-          Net.snapshot?.game?.campaignBattlefield?.capturedBaseTeam !== undefined
-          ? "基地已被占领，返回战略地图"
+        ? objectiveCompleted
+          ? "已经完成战略目的"
           : "战局中断，返回战略地图"
         : "即将返回房间",
     );
     byId("roomReturnMessage").textContent = I18n.text(
       returnToCampaign
-        ? `${seconds}秒后所有玩家一起返回战略地图`
+        ? objectiveCompleted
+          ? `返回战略大地图剩余${seconds}秒`
+          : `${seconds}秒后所有玩家一起返回战略地图`
         : `${seconds}秒后所有玩家一起返回房间`,
     );
   }

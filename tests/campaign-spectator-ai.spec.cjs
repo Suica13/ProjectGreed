@@ -1,7 +1,7 @@
 const { test, expect } = require("@playwright/test");
 const { pathToFileURL } = require("node:url");
 const path = require("node:path");
-test("spectating an AI-only campaign automatically advances strategic planning", async ({ page }) => {
+test("spectator host explicitly ends AI-only strategic planning", async ({ page }) => {
   await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
   await expect(page.locator("#openSkirmish")).toBeEnabled();
   await page.locator("#openSkirmish").click();
@@ -16,12 +16,16 @@ test("spectating an AI-only campaign automatically advances strategic planning",
   await page.locator("#campaignBecomeSpectator").click();
   await expect.poll(() => page.evaluate(() => Net.seat)).toBe(null);
   await page.locator("#campaignSeatsDialog").getByRole("button", { name: "关闭", exact: true }).click();
+  await page.waitForTimeout(800);
+  expect(await page.evaluate(() => Net.snapshot.campaign.turn)).toBe(1);
+  const finish=page.locator('.campaign-end-turn');await expect(finish).toBeEnabled();
+  await finish.click();await page.locator('#gameDialog').getByRole('button',{name:'确定',exact:true}).click();
   await expect.poll(() => page.evaluate(() => Net.snapshot.campaign.turn), { timeout: 10000 }).toBeGreaterThan(1);
   expect(await page.evaluate(() => Net.snapshot.members.filter(m => Number.isInteger(m.seat)).every(m => m.bot))).toBe(true);
 });
 
 
-test("automatic local battles show the battlefield instead of forcing spectator seats open", async ({ page }) => {
+test("host-started AI local battles show one centered start button and then the battlefield", async ({ page }) => {
   await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
   await expect(page.locator("#openSkirmish")).toBeEnabled();
   await page.evaluate(() => {
@@ -51,6 +55,12 @@ test("automatic local battles show the battlefield instead of forcing spectator 
     s.encounters=[{region:"canada_east",turn:0,battleSave:null,roster:{},settled:[]}];
     room.campaignLobby=false;room.revision++;testEngine.broadcast(room);
   });
+  const drawer=page.locator('#campaignEncounterDialog');await expect(drawer).toBeVisible();
+  await expect(drawer.getByRole('button',{name:'AI委任',exact:true})).toHaveCount(0);
+  await expect(drawer.getByRole('button',{name:'手动指挥',exact:true})).toHaveCount(0);
+  const start=drawer.getByRole('button',{name:'开始交战',exact:true});await expect(start).toBeEnabled();
+  await page.waitForTimeout(800);expect(await page.evaluate(()=>Net.started)).toBe(false);
+  await start.click();
   await expect.poll(() => page.evaluate(() => Net.started)).toBe(true);
   await expect(page.locator("#gameScene")).toBeVisible();
   await expect(page.locator("#roomPreparation")).toBeHidden();

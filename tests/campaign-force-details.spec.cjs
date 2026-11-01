@@ -28,7 +28,15 @@ for(const width of [1440,390]) test(`regional side tabs and expanded movement fl
   const dialog=page.locator("#campaignForceDetailsDialog");await expect(dialog).toBeVisible();
   await dialog.locator('[data-force-side="friendly"]').click();
   await expect(dialog.locator('.campaign-force-card input')).toBeEnabled();
-  await dialog.locator('.campaign-force-card input').check();
+  await dialog.locator('.campaign-force-portrait').click();
+  await expect(dialog.locator('.campaign-force-card input')).toBeChecked();
+  await expect(dialog.getByRole("button",{name:"调动",exact:true})).toBeDisabled();
+  await page.evaluate(()=>{
+    const room=[...testEngine.rooms.values()][0];
+    room.campaign.units.find(u=>u.id===enemyArmy).destroyed=true;
+    room.revision++;testEngine.broadcast(room);
+  });
+  await expect(dialog.getByRole("button",{name:"调动",exact:true})).toBeEnabled();
   await dialog.getByRole("button",{name:"调动",exact:true}).click();
   await expect(dialog).not.toBeVisible();await expect(page.locator("#campaignMoveDock")).toBeVisible();
   await page.locator('[data-destination="andes"]').click();
@@ -48,6 +56,6 @@ for(const width of [1440,390]) test(`regional side tabs and expanded movement fl
     return {width:svg.getBoundingClientRect().width,fitted,boxWidth:box.getBoundingClientRect().width};
   });
   expect(geometry.width/geometry.fitted).toBeCloseTo(1.25*1.25,2);
-  expect(geometry.boxWidth).toBeCloseTo(116*geometry.fitted*1.25/1200,0);
+  expect(geometry.boxWidth).toBeCloseTo(116*geometry.fitted*1.25/1200*0.75,0);
   expect(errors).toEqual([]);
 });

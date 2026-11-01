@@ -1,7 +1,7 @@
 /* 格纳库只保存现有单位的搭载关系；不复制单位，不恢复资源。 */
 "use strict";
 const UnitHangars = {
-  create({ modelOf, ownerOf, cells, fits, mapWidth, mapHeight, reachable, movementCost, sensors }) {
+  create({ modelOf, ownerOf, cells, fits, mapWidth, mapHeight, reachable, movementCost, sensors, captureObjective = () => null }) {
     const onMap = (u) => !!u && u.hp > 0 && !u.embarked;
     const deploying = (g) => !!g.deployment && !g.deployment.every(Boolean);
     const of = (u) => modelOf(u).hangars || [];
@@ -244,7 +244,8 @@ const UnitHangars = {
     }
     function shouldLaunch(g, u) {
       const carrier = g.units.find((c) => c.id === u.embarked?.carrierId);
-      return !!carrier && readyToLaunch(u) && inContact(g, carrier);
+      return !!carrier && readyToLaunch(u) &&
+        (inContact(g, carrier) || !!captureObjective(g, u, carrier));
     }
     function needsRecovery(u) {
       const m = modelOf(u);
@@ -261,6 +262,8 @@ const UnitHangars = {
       const enemies = g.units.filter((e) => onMap(e) && e.team !== u.team);
       const distance = Math.min(...enemies.map((e) => edgeDistance(u, e)));
       const longJourney = enemies.length > 0 && distance > m.move * 2 + attackReach(u);
+      // Healthy capturers finish nearby objectives before boarding for a long trip.
+      if (!repair && captureObjective(g, u, u)) return null;
       if (!repair && !longJourney) return null;
       const candidates = g.units.filter(
         (c) =>

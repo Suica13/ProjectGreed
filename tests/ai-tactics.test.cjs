@@ -126,13 +126,13 @@ function strategicOrders(state, members, world = ctx.world) {
   });
 }
 
-test("650 COST eastern Canada does not assault New York's starting core garrison", () => {
+test("325 COST eastern Canada does not assault New York's reduced starting core garrison", () => {
   const members=[{seat:0,bot:true},{seat:1}];
   const state=C.create(ctx,members);state.turn=3;
   const own=state.units.filter(u=>u.region==="canada_east");
   const cost=units=>units.reduce((n,u)=>n+G.models[u.unitId+"__"+u.kitId].cost,0);
-  assert.equal(cost(own),650);
-  assert.equal(cost(state.units.filter(u=>u.region==="new_york")),1550);
+  assert.equal(cost(own),325);
+  assert.equal(cost(state.units.filter(u=>u.region==="new_york")),850);
   strategicOrders(state,members);
   assert(own.every(u=>u.moveTo!=="new_york"));
   assert(own.filter(u=>!u.moveTo).length>=2,"frontier keeps a garrison");
@@ -166,4 +166,24 @@ test("Canadian local gates use current strategic ownership rather than fixed tea
   state.regions.find(r=>r.id==="canada_east").owner=1;
   field=G.campaignBattlefield.create(G,state,"canada");
   assert.equal(field.adjacentOwners.canada_east,1,"red means that adjacent region has been captured");
+});
+
+
+test("aircraft bypass occupation goals while ground units keep capturing and transports deliver cargo",()=>{
+ const {game,unit}=battle(4,4);
+ const aircraft={...unit,id:"air",model:Object.keys(G.models).find(id=>id.startsWith("FF_B2__"))};
+ game.units.push(aircraft);
+ const shared=A.decide(G,game,aircraft),air=A.forUnit(G,game,aircraft,shared);
+ assert.equal(air.avoidObjective,true);assert.notEqual(air.goal.kind,"outpost");
+ const post=game.campaignBattlefield.layout.nodes.find(n=>n.kind==="outpost");
+ const inside={x:post.x,y:post.y},outside={x:post.x+3,y:post.y};
+ assert(A.positionScore(G,game,aircraft,outside,air)>A.positionScore(G,game,aircraft,inside,air));
+ assert.equal(A.captureCapable(G,unit),true);assert.equal(A.captureCapable(G,aircraft),false);
+ const transport={...unit,id:"transport",model:Object.keys(G.models).find(id=>id.startsWith("Medea__"))};
+ game.units.push(transport);
+ const passenger={...unit,id:"passenger",embarked:{carrierId:transport.id},hp:G.modelOf(unit).hp,en:G.modelOf(unit).en};
+ game.units.push(passenger);
+ const delivery=A.forUnit(G,game,transport,shared);
+ assert(delivery.goal.kind==="outpost"||delivery.goal.kind==="base");
+ assert.equal(delivery.avoidObjective,true);
 });

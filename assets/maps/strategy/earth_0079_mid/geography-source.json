@@ -252,7 +252,8 @@
       "links": [
         "belfast",
         "europe_central",
-        "russia_west"
+        "russia_west",
+        "odessa"
       ],
       "legacyParent": "europe"
     },
@@ -338,7 +339,8 @@
         "europe_south",
         "russia_west",
         "kazakhstan",
-        "arabia"
+        "arabia",
+        "scandinavia"
       ],
       "labelOffset": [
         16,
@@ -431,7 +433,9 @@
         "russia_west",
         "siberia",
         "china",
-        "arabia"
+        "arabia",
+        "india",
+        "beijing"
       ],
       "legacyParent": "odessa"
     },
@@ -449,7 +453,9 @@
         "siberia",
         "russia_east",
         "china",
-        "japan"
+        "japan",
+        "kazakhstan",
+        "india"
       ],
       "labelOffset": [
         13,
@@ -510,7 +516,8 @@
         "kazakhstan",
         "india",
         "north_africa",
-        "indian_ocean"
+        "indian_ocean",
+        "kilimanjaro"
       ]
     },
     {
@@ -527,7 +534,9 @@
         "china",
         "arabia",
         "madras",
-        "southeast_asia"
+        "southeast_asia",
+        "kazakhstan",
+        "beijing"
       ],
       "legacyParent": "madras",
       "labelOffset": [
@@ -667,7 +676,8 @@
         "north_africa",
         "central_africa",
         "south_africa",
-        "indian_ocean"
+        "indian_ocean",
+        "arabia"
       ]
     },
     {
@@ -861,5 +871,11 @@
       ],
       "note": "战略地图示意：位于特林顿标记上方，与东侧海洋相通；尺寸为本项目可视化配置，并非设定中的精确经纬度或半径。"
     }
-  ]
+  ],
+  "eastAsiaBoundaries": {
+    "source": "assets/geography/ne_110m_east_asia.geojson",
+    "northSouthLatitude": 34,
+    "koreanRegion": "beijing",
+    "taiwanRegion": "china"
+  }
 }

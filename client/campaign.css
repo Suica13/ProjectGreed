@@ -460,6 +460,11 @@
 .campaign-encounter-actions button {
   padding: 13px 5px;
 }
+.campaign-encounter-actions.campaign-host-battle-actions {
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+}
+.campaign-host-battle-actions button { width: min(320px, 100%); }
 #gameScene .log-tabs .campaign-delegation-toggle[aria-pressed="true"] {
   background: #25435c;
   border-color: #80c9f3;
@@ -2461,7 +2466,18 @@ body[data-page="campaign"] #openClientSettings {
 .campaign-force-details-dialog[open] { display:flex; flex-direction:column; gap:12px; }
 .campaign-force-details-dialog > .campaign-forces { display:flex; flex-direction:column; flex:1; min-height:0; overflow:hidden; }
 .campaign-force-details-dialog .campaign-selection-toolbar { flex:none; }
-.campaign-force-details-dialog .campaign-force-list { flex:1; min-height:0; overflow-y:scroll; align-content:start; }
-@media(min-width:900px) {
-  .campaign-force-details-dialog .campaign-force-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
+.campaign-force-details-dialog .campaign-force-list { display:grid; grid-template-columns:minmax(0,1fr); flex:1; min-height:0; overflow-y:scroll; align-content:start; }
+
+.campaign-force-portrait[role="checkbox"] { cursor:pointer; }
+.campaign-force-portrait[aria-disabled="true"] { cursor:default; }
+.campaign-force-portrait[aria-checked="true"] { outline:2px solid #8bd1ff; outline-offset:1px; }
+.campaign-world > .campaign-encounter-dialog[open][data-expanded="false"] {
+  height:auto; max-height:100%; padding:10px; gap:6px; grid-template-rows:auto auto auto;
 }
+.campaign-encounter-dialog[data-expanded="false"] .campaign-encounter-header h2 { font-size:15px; margin:0; }
+.campaign-encounter-dialog[data-expanded="false"] .campaign-encounter-body { overflow:visible; min-height:0; }
+.campaign-encounter-dialog[data-expanded="false"] .campaign-encounter-count { display:flex; align-items:center; justify-content:space-between; gap:6px; padding:6px 8px; }
+.campaign-encounter-dialog[data-expanded="false"] .campaign-encounter-count strong { font-size:19px; white-space:nowrap; }
+.campaign-encounter-dialog[data-expanded="false"] .campaign-encounter-footer { gap:4px; padding-top:4px; }
+.campaign-encounter-dialog[data-expanded="false"] .campaign-encounter-readiness { gap:4px; }
+.campaign-encounter-dialog[data-expanded="false"] .campaign-encounter-actions button { padding:6px 10px; }

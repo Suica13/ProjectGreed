@@ -221,11 +221,14 @@ window.CampaignWorkspace = (() => {
     }
     content.append(info);
     const footer = node("footer", "", "campaign-purchase");
+    const localOrders = state().orders.filter((order) => order.region === regionId);
+    const reserved = localOrders.filter((order) => ["queued", "working"].includes(order.status)).length;
+    const capacity = CampaignRules.productionCapacity(context(), regionId);
     footer.append(
       node("strong", "每批生产价格"),
       money(price),
       node("p", `每批${price.quantity}台 · ${price.turns}大回合`),
-      node("p", `并行生产槽位 ${state().orders.filter((order) => order.region === regionId && order.status === "working").length}/${CampaignRules.productionCapacity(context(), regionId)}`),
+      node("p", `并行生产槽位 ${Math.min(reserved, capacity)}/${capacity} · 排队${Math.max(0, reserved - capacity)}`),
     );
     const basePrice = CampaignRules.quote(context(), prefab.id);
     const body = {

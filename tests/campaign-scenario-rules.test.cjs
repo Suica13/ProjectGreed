@@ -8,9 +8,9 @@ test("scenario starts with the specified resources, regional garrisons and produ
  const s=C.create(ctx,members);
  for(const p of s.teams) {assert.equal(p.money,25000);assert.equal(p.supplies,50000);}
  for(const r of ctx.world.regions) {
-  const roster=r.factory ? (r.owner===0 ? {Type61:18,FF_B2:6,Medea:2,FF_6:4,FF_S3:2} :
-    {MS_06F:4,MS_06S:2,FatUncle:1,ZN_Heli:2,Dopp:2,MTank:3}) :
-    (r.owner===0 ? {Type61:6,FF_B2:2,FF_6:2} : {MS_06F:2,MTank:2,ZN_Heli:1});
+  const roster=r.factory ? (r.owner===0 ? {Type61:9,FF_B2:3,Medea:1,FF_6:2,FF_S3:1} :
+    {MS_06F:2,MS_06S:1,FatUncle:1,ZN_Heli:1,Dopp:1,MTank:1}) :
+    (r.owner===0 ? {Type61:3,FF_B2:1,FF_6:1} : {MS_06F:1,MTank:1,ZN_Heli:1});
   const actual={};for(const u of s.units.filter(u=>u.region===r.id)) actual[u.unitId]=(actual[u.unitId]||0)+1;
   assert.deepEqual(actual,roster);
  }
@@ -129,4 +129,29 @@ test("dismissal rejects enemy, moving, pending and occupied-carrier units, but a
  s.transfers=[{id:"x",ids:[pax.id],to:2}];assert.throws(()=>act(s,0,"campaign_dismiss",{armyId:pax.id}));s.transfers=[];
  act(s,0,"campaign_dismiss",{armyId:pax.id});assert(C.canDismiss(ctx,s,members,0,carrier));
  assert.doesNotThrow(()=>C.validate(ctx,s,members));
+});
+
+
+test("contested armies and cargo cannot redeploy between battle segments or through stale saved orders",()=>{
+ const s=C.create(ctx,members);s.units=[];
+ const carrier=C.addUnit(ctx,s,0,"jaburo","Medea");
+ const passenger=C.addUnit(ctx,s,0,"jaburo","Type61");
+ const enemy=C.addUnit(ctx,s,1,"jaburo","MS_06F");
+ const reserve=C.addUnit(ctx,s,0,"andes","Type61");
+ const option=C.embarkOptions(ctx,s,passenger).find(o=>o.carrierId===carrier.id);assert(option);
+ act(s,0,"campaign_embark",{armyId:passenger.id,carrierId:carrier.id,hangarId:option.hangarId});
+ s.encounters=[{region:"jaburo",turn:s.turn-1,battleSave:null,roster:{},settled:[]}];
+ assert.equal(C.canRedeploy(s,carrier),false);
+ assert.equal(C.canRedeploy(C.view(s,0),carrier),false,"public contested marker also locks UI");
+ assert.throws(()=>act(s,0,"campaign_move",{ids:[carrier.id],region:"andes"}),/交战/);
+ assert.throws(()=>act(s,0,"campaign_move",{ids:[reserve.id,carrier.id],region:"jaburo"}),/交战/);
+ assert.equal(reserve.moveTo,null,"mixed batch rejects atomically");
+ carrier.moveTo=passenger.moveTo="andes";
+ C.advance(ctx,s,members);
+ assert.equal(carrier.region,"jaburo");assert.equal(passenger.region,"jaburo");
+ assert.equal(carrier.moveTo,null);assert.equal(passenger.moveTo,null);
+ enemy.destroyed=true;s.encounters=[];s.phase="strategy";
+ assert.equal(C.canRedeploy(s,carrier),true);
+ act(s,0,"campaign_move",{ids:[carrier.id],region:"andes"});
+ assert.equal(carrier.moveTo,"andes");
 });

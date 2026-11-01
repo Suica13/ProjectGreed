@@ -28,25 +28,32 @@ function fixture(t, delay = 60, spectateBeforeStart = false) {
   return { engine, room, act };
 }
 
-test("AI-only planning advances without spectator input, survives repeated sync and stops on human takeover", async t => {
+test("AI-only planning waits for its spectator host, advances once and stops on human takeover", async t => {
   const { engine, room, act } = fixture(t);
   const start = room.campaign.turn;
-  // Room broadcasts must not continually postpone the same automatic step.
+  // Neither broadcasts nor the old AI timer may advance a host-controlled phase.
   const sync = setInterval(() => engine.broadcast(room), 5);
   t.after(() => clearInterval(sync));
-  await until(() => room.campaign.turn > start);
+  await pause(180);
+  assert.equal(room.campaign.turn, start);
   clearInterval(sync);
+  act("campaign_ready", {turn:start, ready:true, id:"host-strategic-step"});
+  const after = JSON.stringify(room.campaign);
+  act("campaign_ready", {turn:start, ready:true, id:"host-strategic-step"});
+  assert.equal(JSON.stringify(room.campaign), after, "retries must not settle a second strategic turn");
+  assert(room.campaign.history.some(line=>line.includes("生产、收入与调动已结算")));
   assert.equal(room.started, false);
   act("switch_seat", { seat: 0 });
   const humanTurn = room.campaign.turn;
   await pause(180);
   assert.equal(room.campaign.turn, humanTurn, "seated humans must still explicitly finish their turn");
   act("switch_seat", { seat: null });
-  await until(() => room.campaign.turn > humanTurn || room.started);
+  await pause(180);
+  assert.equal(room.campaign.turn, humanTurn);
 });
 
-test("AI-only encounters enter automatically, while suspended campaigns remain in their lobby", async t => {
-  const { engine, room } = fixture(t);
+test("AI-only encounters wait for their spectator host, while suspended campaigns remain in their lobby", async t => {
+  const { engine, room, act } = fixture(t);
   room.campaignLobby = true;
   const initial = room.campaign.turn;
   engine.broadcast(room);
@@ -62,7 +69,19 @@ test("AI-only encounters enter automatically, while suspended campaigns remain i
   assert.equal(room.started, false, "suspension must also block automatic battle entry");
   room.campaignLobby = false;
   engine.broadcast(room);
-  await until(() => room.started);
+  await pause(150);
+  assert.equal(room.started,false);
+  const preparation=room.campaignPreparation;
+  const guest={readyState:1};
+  engine.join(guest,{mode:"join",room:room.code,name:"Other spectator",characterFaction:"PMC"});
+  engine.action(guest,{id:"guest-spectate",revision:room.revision,action:"switch_seat",seat:null});
+  const fields={region:preparation.region,mapId:preparation.mapId,preparationId:preparation.id};
+  assert.throws(()=>engine.action(guest,{id:"guest-start-battle",revision:room.revision,
+    action:"campaign_start_battle",...fields}),/只有房主/);
+  act("campaign_start_battle",{...fields,id:"host-start-battle"});
+  const matchId=room.matchId;
+  act("campaign_start_battle",{...fields,id:"host-start-battle"});
+  assert.equal(room.matchId,matchId);
   assert.equal(room.campaignBattle.region, "canada_east");
   assert.equal(room.phase, "idle", "AI deployment must not wait for a spectator");
   assert.deepEqual(room.campaignBattle.delegatedSeats, []);

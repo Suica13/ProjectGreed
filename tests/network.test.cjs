@@ -3447,18 +3447,22 @@ test("spectator perspective and permissioned log downloads work over WebSocket a
     watcher = await client();
   await blue.hello("create", "LOGVIEWS");
   await red.hello("join", "LOGVIEWS");
-  await readyMatch(blue, red, app);
+  await readyMatch(blue, red, app, false, {
+    formation: [{unitId:"Type61",kitId:"standard"}], licenses: {Type61:true},
+  });
   await watcher.hello("join", "LOGVIEWS");
   const room = app.rooms.get("LOGVIEWS");
   room.teamLogs[0].unshift("blue-only");
   room.teamLogs[1].unshift("red-only");
   room.log.unshift("global-only");
   assert.equal((await blue.act("download_log", { perspective: "global" })).type, "error");
+  assert.equal((await watcher.act("download_log", { perspective: "global" })).log[0], "global-only");
   const state = await watcher.act("spectate", { team: 1 });
   assert.equal(state.viewTeam, 1);
   assert.equal(state.game.intel.team, 1);
   assert.equal(state.log[0], "red-only");
   assert.equal((await watcher.act("download_log", { perspective: "team:1" })).log[0], "red-only");
+  assert.equal((await watcher.act("download_log", { perspective: "global" })).type, "error");
   const token = watcher.joined.token;
   watcher.close();
   const resumed = await client();

@@ -125,3 +125,5 @@
 联邦或吉翁任一阵营的0079E、0079L及0083整棵科技树全部完成，才免费开放AEUG、TITANS、NEO_ZEON三个BASE科技。不得只判断主线、单条支线或排除0083；服务端与客户端共用Development.normalizeResearch裁定。三个0087第二页首项暂为999999科技点，原值记录在sourceCosts.points及temporaryPointOverride.nativePoints中。跨阵营复用机体沿用原JSON人工配置，通过availableFactions开放；新机体标记0087。断言：tests/0087-import.test.cjs。完整清单与缺失机制由tools/report-0087.py从当前JSON生成。
 
 - 米迪亚、米迪亚改、胖叔叔、胖叔叔改（含部署形态）耐久为现有平衡基值的50%；先按原有规则计算耐久，再减半，不再次按500取整。由 `tools/v17_balance.py` 从保留基值重新计算，禁止重复减半。
+
+- 航空炸弹（所有主分类的 bomb 子分类）伤害在当前基准上统一×0.75，按25取整；由 `shared/conversion-rules.json` 分类规则控制，保留原始载荷、发数和已有单机差值，不影响核弹。

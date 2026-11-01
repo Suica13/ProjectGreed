@@ -231,7 +231,7 @@
         "maxRange": -1
       },
       "bomb": {
-        "damage": 1,
+        "damage": 0.75,
         "accuracy": 1,
         "ap": 1,
         "en": 1,
@@ -493,7 +493,7 @@
         "maxRange": -1
       },
       "bomb": {
-        "damage": 1,
+        "damage": 0.75,
         "accuracy": 1,
         "ap": 1,
         "en": 1,
@@ -755,7 +755,7 @@
         "maxRange": -1
       },
       "bomb": {
-        "damage": 1,
+        "damage": 0.75,
         "accuracy": 1,
         "ap": 1,
         "en": 1,
@@ -1017,7 +1017,7 @@
         "maxRange": -1
       },
       "bomb": {
-        "damage": 1,
+        "damage": 0.75,
         "accuracy": 1,
         "ap": 1,
         "en": 1,
@@ -1279,7 +1279,7 @@
         "maxRange": -1
       },
       "bomb": {
-        "damage": 1,
+        "damage": 0.75,
         "accuracy": 1,
         "ap": 1,
         "en": 1,
@@ -1541,7 +1541,7 @@
         "maxRange": -1
       },
       "bomb": {
-        "damage": 1,
+        "damage": 0.75,
         "accuracy": 1,
         "ap": 1,
         "en": 1,

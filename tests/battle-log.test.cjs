@@ -20,6 +20,7 @@ function chatFixture() {
         this.options = [];
       },
       setAttribute() {},
+      addEventListener() {},
       add(option) {
         this.options.push(option);
       },

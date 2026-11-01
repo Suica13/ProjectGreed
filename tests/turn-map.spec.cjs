@@ -12,7 +12,7 @@ async function offline(page) {
   await page.locator("#confirmDeployment").click();
   await page.locator("#confirmDeployment").click();
 }
-test("exhausted offline turns wait for manual end and show three ordered right-to-left cutins with a center hold", async ({
+test("exhausted offline turns wait for manual end and show one two-line right-to-left cutin with a center hold", async ({
   page,
 }) => {
   await offline(page);
@@ -35,14 +35,14 @@ test("exhausted offline turns wait for manual end and show three ordered right-t
   expect(await page.evaluate(() => performance.now() - window.exhaustedAt)).toBeGreaterThanOrEqual(
     1000,
   );
-  await expect(page.locator("#turnCutinCard")).toHaveText("队伍1结束回合");
+  await expect(page.locator("#turnCutinCard")).toHaveText("第2回合队伍2");
   await expect(page.locator("#endTurn")).toBeDisabled();
   const positions = await page.evaluate(() => {
     const card = byId("turnCutinCard"),
       animation = card.getAnimations()[0],
       positions = [];
     animation.pause();
-    for (const time of [50, 500, 800, 1100]) {
+    for (const time of [150, 1500, 2400, 3300]) {
       animation.currentTime = time;
       positions.push(card.getBoundingClientRect().x);
     }
@@ -54,11 +54,7 @@ test("exhausted offline turns wait for manual end and show three ordered right-t
   expect(positions.positions[2]).toBeCloseTo(positions.center, 0);
   expect(positions.positions[3]).toBeLessThan(0);
   await expect(page.locator("#turnCutin")).toBeHidden({ timeout: 6000 });
-  expect(await page.evaluate(() => window.turnMessages)).toEqual([
-    "队伍1结束回合",
-    "回合2",
-    "队伍2开始行动",
-  ]);
+  expect(await page.evaluate(() => window.turnMessages)).toEqual(["第2回合队伍2"]);
   expect(await page.evaluate(() => [game.team, game.round, TurnFlow.active])).toEqual([
     1,
     2,
@@ -197,7 +193,7 @@ test("both network teams see one cutin per authoritative turn and repeated snaps
     await expect.poll(() => page.evaluate(() => phase)).toBe("idle");
     await page.evaluate(() => Net.request("end_turn"));
     for (const client of [page, other]) {
-      await expect(client.locator("#turnCutinCard")).toHaveText("队伍1结束回合");
+      await expect(client.locator("#turnCutinCard")).toHaveText("第2回合队伍2");
       await client.evaluate(() => {
         Net.applySnapshot(Net.snapshot);
         Net.applySnapshot(Net.snapshot);

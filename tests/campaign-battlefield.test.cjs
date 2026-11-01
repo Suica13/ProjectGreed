@@ -33,6 +33,8 @@ test("all 43 regions reference editable 5v5 maps with one base, six posts and co
       map = G.getMap(entry.mapId),
       layout = entry.layout;
     assert.equal(map.playersPerTeam, 5);
+    assert.equal(map.width, 57);
+    assert.equal(map.height, 68);
     assert.equal(map.spawns.length, 10);
     assert.equal(layout.nodes.filter((n) => n.kind === "base").length, 1);
     assert.equal(layout.nodes.filter((n) => n.kind === "outpost").length, 6);
