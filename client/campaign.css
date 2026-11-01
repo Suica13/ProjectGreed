@@ -2435,3 +2435,33 @@ body[data-page="campaign"] #openClientSettings {
   height: min(290px, 65%);
   max-height: 100%;
 }
+
+/* Isolate the large coastline scene and avoid laying out off-screen army cards on phones. */
+.campaign-map-scroll { contain: paint; }
+.campaign-map-scroll.is-dragging :is(.campaign-march-arrow, .campaign-moving-armies > path) {
+  animation-play-state: paused;
+}
+@media (max-width: 700px), (pointer: coarse) {
+  .campaign-force-card {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 86px;
+  }
+}
+
+/* Regional forces share the same side filters and controls in the sidebar and dialog. */
+.campaign-force-tabs { display:flex; gap:6px; flex:none; margin-bottom:8px; }
+.campaign-force-tabs button { flex:1; min-width:0; }
+.campaign-force-tabs button[aria-pressed="true"] { background:#35556d; border-color:#88ceff; color:#fff; }
+.campaign-force-tabs .campaign-forces-expand { flex:0 0 auto; }
+.campaign-force-details-dialog {
+  width:min(1100px,calc(100vw - 24px)); height:min(800px,calc(100dvh - 24px));
+  max-width:calc(100vw - 24px); max-height:calc(100dvh - 24px);
+  padding:16px; box-sizing:border-box; background:#18232f; color:#eaf2fa; border:1px solid #81bbdf;
+}
+.campaign-force-details-dialog[open] { display:flex; flex-direction:column; gap:12px; }
+.campaign-force-details-dialog > .campaign-forces { display:flex; flex-direction:column; flex:1; min-height:0; overflow:hidden; }
+.campaign-force-details-dialog .campaign-selection-toolbar { flex:none; }
+.campaign-force-details-dialog .campaign-force-list { flex:1; min-height:0; overflow-y:scroll; align-content:start; }
+@media(min-width:900px) {
+  .campaign-force-details-dialog .campaign-force-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
+}

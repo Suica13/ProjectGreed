@@ -24,6 +24,29 @@ const Chat = (() => {
       channel: "roomChatChannel",
     },
   ];
+  const scrollPositions = new Map();
+  function scrollPosition(view) {
+    if (!scrollPositions.has(view.lines))
+      scrollPositions.set(view.lines, { top: 0, bottom: true, visible: false });
+    return scrollPositions.get(view.lines);
+  }
+  function captureScroll() {
+    for (const view of views) {
+      const list = byId(view.lines), position = scrollPosition(view);
+      if (!list.clientHeight) continue;
+      position.top = list.scrollTop;
+      position.bottom = list.scrollHeight - list.scrollTop - list.clientHeight < 40;
+    }
+  }
+  function restoreScroll(force = true) {
+    for (const view of views) {
+      const list = byId(view.lines), position = scrollPosition(view);
+      const visible = list.clientHeight > 0;
+      if (visible && (force || !position.visible))
+        list.scrollTop = position.bottom ? list.scrollHeight : position.top;
+      position.visible = visible;
+    }
+  }
   const connected = () => Net.active && Net.socket?.readyState === WebSocket.OPEN && !!Net.memberId;
   function seat() {
     return Net.snapshot?.you?.seat !== undefined ? Net.snapshot.you.seat : Net.seat;
@@ -64,6 +87,7 @@ const Chat = (() => {
     }
   }
   function refreshStatus() {
+    restoreScroll(false);
     refreshExports();
     refreshChannels();
     const writable =
@@ -76,12 +100,13 @@ const Chat = (() => {
     renderStatus();
   }
   function render() {
+    captureScroll();
     refreshChannels();
     // 服务端已按身份过滤权限；发送频道不再筛选聊天历史。
     const visible = messages;
     for (const view of views) {
       const list = byId(view.lines);
-      const nearBottom = list.scrollHeight - list.scrollTop - list.clientHeight < 40;
+      const position = scrollPosition(view);
       const nodes = visible.map((message) => {
         const row = element("div", "chat-line");
         row.dataset.channel = message.channel || "all";
@@ -114,7 +139,8 @@ const Chat = (() => {
       });
       if (!nodes.length) nodes.push(element("p", "muted", "暂无聊天消息"));
       list.replaceChildren(...nodes);
-      if (nearBottom) list.scrollTop = list.scrollHeight;
+      if (list.clientHeight)
+        list.scrollTop = position.bottom ? list.scrollHeight : position.top;
     }
     refreshStatus();
   }
@@ -291,6 +317,7 @@ const Chat = (() => {
     selectTab("log");
     matchId = null;
     messages = [];
+    scrollPositions.clear();
     pending = retry = null;
     selectedChannel = "all";
     for (const view of views) byId(view.input).value = "";
@@ -308,6 +335,13 @@ const Chat = (() => {
     }
   }
   function bindView(view) {
+    byId(view.lines).addEventListener("scroll", () => {
+      const list = byId(view.lines), position = scrollPosition(view);
+      // Hidden chat views have zero geometry; never overwrite their saved position.
+      if (!list.clientHeight) return;
+      position.top = list.scrollTop;
+      position.bottom = list.scrollHeight - list.scrollTop - list.clientHeight < 40;
+    });
     byId(view.channel).onchange = () => selectChannel(byId(view.channel).value);
     byId(view.form).onsubmit = (event) => {
       event.preventDefault();
@@ -375,6 +409,8 @@ const Chat = (() => {
   render();
   return {
     registerView,
+    captureScroll,
+    restoreScroll,
     setSnapshot,
     setLog,
     saveLog,

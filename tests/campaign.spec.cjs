@@ -74,7 +74,7 @@ for (const viewport of [
     expect(await page.evaluate(() => {
       const s = Net.snapshot.campaign;
       return CAMPAIGN_WORLD.regions.every((region) => {
-        const label = document.querySelector(`[data-region-label="${region.id}"]`).textContent;
+        const label = document.querySelector(`[data-region-label="${region.id}"] .campaign-region-name`).textContent;
         return label === I18n.text(region.name);
       });
     })).toBe(true);
@@ -89,7 +89,7 @@ for (const viewport of [
     expect(economy.income).toEqual(economy.expected);
     await expect(page.locator(".campaign-region-income")).toHaveCount(0);
     await expect(page.locator(".campaign-region-cost")).toHaveCount(0);
-    await expect(page.locator(".campaign-region-count")).toHaveCount(0);
+    await expect(page.locator(".campaign-region-count")).toHaveCount(43);
     await expect(page.locator(".campaign-map-commands .campaign-end-turn")).toBeVisible();
     const impactBay = await page.evaluate(() => {
       const world = CAMPAIGN_WORLD;
@@ -384,7 +384,7 @@ for (const viewport of [
     await expect(page.getByRole("button", { name: "调动", exact: true })).toBeDisabled();
     await expect(page.getByRole("button", { name: "转交", exact: true })).toBeVisible();
     await expect(page.locator(".campaign-force-list")).not.toContainText("COST");
-    await expect(page.locator(".campaign-region-count")).toHaveCount(0);
+    await expect(page.locator(".campaign-region-count")).toHaveCount(43);
     expect(
       await page.locator(".campaign-force-list").evaluate((el) => getComputedStyle(el).overflowY),
     ).toBe("scroll");
@@ -523,7 +523,7 @@ for (const viewport of [
     await moveDock.locator('[data-destination="andes"]').click();
     await expect(page.locator("#campaignConfirmMove")).toBeVisible();
     await expect(page.locator('.campaign-move-outline[data-move-region="andes"]')).toHaveCount(1);
-    await expect(page.locator(".campaign-move-outline .campaign-encounter-particle")).toHaveCount(16);
+    await expect(page.locator(".campaign-move-outline .campaign-encounter-particle")).toHaveCount(viewport.width <= 700 ? 4 : 16);
     await expect(page.locator(".campaign-move-preview .campaign-march-arrow")).not.toHaveCount(0);
     expect(await page.evaluate((id) => Net.snapshot.campaign.units.find((u) => u.id === id).moveTo, movingArmyId)).toBe(beforeOrder);
     expect(await page.locator("#campaignConfirmMove").evaluate((button) => {
@@ -702,7 +702,7 @@ for (const viewport of [
     const mapFrame = await page.locator(".campaign-world").boundingBox();
     expect(Math.abs(compact.y + compact.height - mapFrame.y - mapFrame.height)).toBeLessThan(2);
     await expect(page.locator(".campaign-encounter-outline")).toHaveCount(1);
-    await expect(page.locator(".campaign-encounter-particle")).toHaveCount(16);
+    await expect(page.locator(".campaign-encounter-particle")).toHaveCount(viewport.width <= 700 ? 4 : 16);
     expect(await page.evaluate(() => {
       const effect = document.querySelector(".campaign-encounter-outline");
       const labels = document.querySelector(".campaign-world-labels");

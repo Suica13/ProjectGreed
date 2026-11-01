@@ -268,3 +268,31 @@ test("dismissing an archived battlefield unit removes its saved actor before the
  assert(!Object.values(encounter.roster).includes(army.id));
  assert.doesNotThrow(()=>C.validate(ctx,room.campaign,members));
 });
+
+
+test("local round briefings deduplicate losses, survive saves and add a segment summary",()=>{
+  const {room,adapter,members,enter}=fixture();
+  const actor=room.game.units.find(u=>G.modelOf(u).prefabId==="RGM_79");
+  const cost=G.modelOf(actor).cost;actor.hp=0;
+  room.game.round=2;adapter.boundary(room);
+  let briefs=room.campaign.history.filter(line=>line.includes("回合简报"));
+  assert.equal(briefs.length,1);assert.match(briefs[0],/加拿大西部.*第1回合/);
+  assert(briefs[0].includes(`队伍1损失1台/${cost}C`));
+  adapter.boundary(room);
+  assert.equal(room.campaign.history.filter(line=>line.includes("回合简报")).length,1);
+  room.phase="idle";
+  const saved=adapter.handle(room,members[0],{action:"campaign_export"}).save;C.validate(ctx,saved,members);
+  assert.equal(saved.encounters[0].briefedRound,1);
+  assert(saved.encounters[0].briefedDestroyed.includes(actor.campaignId));
+  adapter.suspend(room);adapter.handle(room,members[0],{action:"campaign_resume"});enter();
+  adapter.boundary(room);
+  assert.equal(room.campaign.history.filter(line=>line.includes("回合简报")).length,1);
+  room.game.round=3;adapter.boundary(room);
+  briefs=room.campaign.history.filter(line=>line.includes("回合简报"));
+  assert.equal(briefs.length,2);assert.match(briefs[1],/队伍1损失0台\/0C/);
+  adapter.checkpoint(room);
+  const summary=room.campaign.history.find(line=>line.includes("阶段简报"));
+  assert(summary.includes(`队伍1损失1台/${cost}C`));
+  assert.match(summary,/保留战场与损伤/);
+  assert.equal(room.campaign.encounters[0].briefedRound,undefined);
+});

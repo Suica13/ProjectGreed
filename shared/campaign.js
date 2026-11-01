@@ -1002,7 +1002,7 @@ const CampaignRules = (() => {
     const { marches = [], ...publicState } = state;
     const result = copy({
       ...publicState,
-      encounters: state.encounters.map(({ battleSave, roster, settled, ...encounter }) => ({
+      encounters: state.encounters.map(({ battleSave, roster, settled, briefedRound, briefedDestroyed, ...encounter }) => ({
         ...encounter,
         hasBattle: !!battleSave,
         mapId: battleSave?.game.mapId || null,
@@ -1104,7 +1104,8 @@ const CampaignRules = (() => {
       result.history = result.history.filter(
         (line) =>
           new RegExp(`^战略第\\d+回合 · 队伍${team + 1} ·`).test(line) ||
-          /^战略第\d+回合：生产、收入与调动已结算$/.test(line),
+          /^战略第\d+回合：生产、收入与调动已结算$/.test(line) ||
+          /^\[局地战(?:回合|阶段)简报\]/.test(line),
       );
     }
     return result;
@@ -1278,6 +1279,10 @@ const CampaignRules = (() => {
         "生产订单无效",
       );
     for (const encounter of value.encounters) {
+      check((encounter.briefedRound === undefined || integer(encounter.briefedRound, 0, 100000000)) &&
+        (encounter.briefedDestroyed === undefined || (Array.isArray(encounter.briefedDestroyed) &&
+          encounter.briefedDestroyed.length <= 5000 && encounter.briefedDestroyed.every(
+            (id) => typeof id === "string" && id.length <= 100))), "局地战简报记录无效");
       check(
         encounter.delegatedSeats === undefined ||
           (Array.isArray(encounter.delegatedSeats) &&

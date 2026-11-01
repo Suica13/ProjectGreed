@@ -113,8 +113,57 @@ test("strategic attack cadence is halved at every aggression setting", () => {
         busy:()=>false,disputed:()=>false,available:()=>false,controller:(_,u)=>u.ownerSeat,
         startResearch:()=>{},quote:()=>null,
       });
-      if(state.units[0].moveTo==="new_york") attacks++;
+      if(state.units.some(u=>u.moveTo==="new_york")) attacks++;
     }
     assert.equal(attacks,expected,aggression);
   }
+});
+
+function strategicOrders(state, members, world = ctx.world) {
+  A.strategic({...ctx, world}, state, members, {
+    busy:()=>false, disputed:()=>false, available:()=>false,
+    controller:(_,u)=>u.ownerSeat, startResearch:()=>{}, quote:()=>null,
+  });
+}
+
+test("650 COST eastern Canada does not assault New York's starting core garrison", () => {
+  const members=[{seat:0,bot:true},{seat:1}];
+  const state=C.create(ctx,members);state.turn=3;
+  const own=state.units.filter(u=>u.region==="canada_east");
+  const cost=units=>units.reduce((n,u)=>n+G.models[u.unitId+"__"+u.kitId].cost,0);
+  assert.equal(cost(own),650);
+  assert.equal(cost(state.units.filter(u=>u.region==="new_york")),1550);
+  strategicOrders(state,members);
+  assert(own.every(u=>u.moveTo!=="new_york"));
+  assert(own.filter(u=>!u.moveTo).length>=2,"frontier keeps a garrison");
+});
+
+test("border assaults retain defenders and cheap actor count cannot substitute for COST", () => {
+  const members=[{seat:0,bot:true},{seat:1}];
+  const state=C.create(ctx,members);state.units=[];state.turn=3;
+  for(let i=0;i<10;i++) C.addUnit(ctx,state,0,"canada_east","Type61");
+  for(let i=0;i<3;i++) C.addUnit(ctx,state,1,"new_york","MS_06F");
+  const world={...ctx.world,regions:[
+    {...ctx.world.regions.find(r=>r.id==="canada_east"),links:["new_york"],factory:false},
+    {...ctx.world.regions.find(r=>r.id==="new_york"),links:["canada_east"],factory:false},
+  ]};
+  strategicOrders(state,members,world);
+  assert(state.units.filter(u=>u.team===0).every(u=>!u.moveTo),"weak vehicle swarm stays home");
+  state.units=state.units.filter(u=>u.team===0);
+  strategicOrders(state,members,world);
+  assert(state.units.some(u=>u.moveTo==="new_york"),"a viable attack is still possible");
+  assert(state.units.filter(u=>!u.moveTo).length>=2);
+  const stayingCost=state.units.filter(u=>!u.moveTo).reduce((n,u)=>n+G.models[u.unitId+"__"+u.kitId].cost,0);
+  assert(stayingCost>=125,"at least a quarter of force stays on the frontier");
+});
+
+test("Canadian local gates use current strategic ownership rather than fixed team colors", () => {
+  const state=C.create(ctx,[{seat:0},{seat:1}]);
+  assert.equal(state.regions.find(r=>r.id==="canada").owner,0);
+  assert.equal(state.regions.find(r=>r.id==="canada_east").owner,0);
+  let field=G.campaignBattlefield.create(G,state,"canada");
+  assert.equal(field.adjacentOwners.canada_east,0);
+  state.regions.find(r=>r.id==="canada_east").owner=1;
+  field=G.campaignBattlefield.create(G,state,"canada");
+  assert.equal(field.adjacentOwners.canada_east,1,"red means that adjacent region has been captured");
 });

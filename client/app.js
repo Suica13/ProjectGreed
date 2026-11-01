@@ -35,7 +35,10 @@ let pageView = "menu";
 let animationFrameId = null;
 // 页面生命周期：Menu 和房间准备只显示界面，不启动战斗 Canvas 绘制。
 function setPageView(view) {
-  if (view !== pageView) window.dispatchEvent(new Event("page-changing"));
+  if (view !== pageView) {
+    Chat.captureScroll();
+    window.dispatchEvent(new Event("page-changing"));
+  }
   if (view !== "game") TurnFlow.reset();
   if (view !== "game" && pageView === "game" && battleView) {
     if (battleView.mapBattle) MapCombat.suspend(battleView);
@@ -53,6 +56,7 @@ function setPageView(view) {
   byId("encyclopediaScreen").hidden = view !== "encyclopedia";
   byId("roomSettings").hidden = !Net.active;
   window.MenuShell?.refresh();
+  Chat.restoreScroll();
   if (view !== "game")
     for (const id of ["reaction", "battle", "victory", "help"]) byId(id).hidden = true;
   window.HangarUI?.refresh();

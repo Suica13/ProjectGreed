@@ -1995,3 +1995,6 @@ body.replay-active #gameScene .hud-terrain-strip {
 .reaction-review-row { display: flex; align-items: center; gap: 12px; margin: 8px 0; }
 .reaction-review-row span { flex: 1; }
 #confirmReactionReview { width: 100%; margin-top: 12px; }
+
+#hudCampaignRegion { flex:none; color:#b9d6ec; font-size:12px; padding-inline:6px; white-space:nowrap; }
+#hudCampaignRegion[hidden] { display:none; }

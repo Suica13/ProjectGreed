@@ -259,6 +259,11 @@ const BattleHUD = (() => {
     const active = pageView === "game",
       unit = getUnit(selected),
       inCombat = ["battle", "reaction", "reaction_wait", "playback_wait", "moving"].includes(phase);
+    const regionId = Net.snapshot?.campaign?.activeRegion;
+    const region = active && regionId && CAMPAIGN_WORLD.regions.find((item) => item.id === regionId);
+    const regionLabel = byId("hudCampaignRegion");
+    regionLabel.hidden = !region;
+    regionLabel.textContent = region ? I18n.text(region.name) : "";
     document.body.classList.toggle("battle-hud-active", active);
     if (active) refreshRoomStatus();
     const headerButtons = scene.querySelector(".header-buttons");

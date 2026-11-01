@@ -744,7 +744,9 @@ const Net = (() => {
       byId("finalAssemblyPanel").hidden = true;
       byId("roomLobbyContent").hidden = false;
       byId("roomActions").hidden = false;
-      setPageView(!wasStarted && n.seat === null ? "room" : "game");
+      // Campaign encounters open on the battlefield for participants and spectators.
+      // The seats page remains an explicit player action during local battles.
+      setPageView(!s.campaign && !wasStarted && n.seat === null ? "room" : "game");
     }
     if (pageView === "room" && s.phase === "finished") setPageView("game");
     if (pageView === "room") {

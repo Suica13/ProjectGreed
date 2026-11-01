@@ -4,6 +4,7 @@ import copy
 import math
 
 TANK_HP = {"Type61": 7500, "Type61A5": 8500}
+TRANSPORT_HULL_FAMILIES = {"Medea", "MedeaKai", "FatUncle", "FatUncleKai"}
 SQUAD_WEAPON = "Squad_Combined_Weapons"
 
 
@@ -70,6 +71,10 @@ def apply(prefab):
     else:
         base_hp = source.setdefault("v17BaseHp", stats["hp"])
         stats["hp"] = TANK_HP.get(prefab["id"], rounded_hp(base_hp * 1.25))
+        # Recompute from the retained baseline; repeated imports cannot halve twice.
+        if prefab.get("formOf", prefab["id"]) in TRANSPORT_HULL_FAMILIES:
+            stats["hp"] = max(1, math.ceil(stats["hp"] * 0.5))
+            source["transportHullMultiplier"] = 0.5
     if prefab["id"].startswith("Army_Squad_"):
         stats["cost"] = 0
         if "costBalance" in prefab:

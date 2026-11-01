@@ -302,7 +302,7 @@
     "ImportedIdle": "../../animations/ImportedIdle.json"
   },
   "stats": {
-    "hp": 31500,
+    "hp": 15750,
     "en": 7500,
     "move": 0,
     "mobility": 50,
@@ -439,7 +439,8 @@
     "v17BaseHp": 25000,
     "technologyEra": "0079E",
     "actionTurnSpeed": 1.5,
-    "mobilityMoveTarget": 0
+    "mobilityMoveTarget": 0,
+    "transportHullMultiplier": 0.5
   },
   "presentation": {
     "shield": false,

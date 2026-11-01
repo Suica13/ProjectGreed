@@ -129,10 +129,23 @@ const AITactics = (() => {
         const m = ctx.G.models[u.unitId + "__" + u.kitId];
         return m && u.campaignDurability ? { ...m, hp: Math.ceil(m.hp * u.campaignDurability) } : m;
       },
-      force = (units) => power(units.map((u) => ({ ...u, hp: u.state?.hp })), model),
+      // Strategic strength uses actual COST, not the tactical per-actor bonus:
+      // ten cheap vehicles must not look stronger just because there are ten actors.
+      force = (units) => units.reduce((total, u) => {
+        const m = model(u), health = Math.max(0, Math.min(1,
+          (u.state?.hp ?? m.hp) / Math.max(1, m.hp)));
+        return total + Math.max(0, m.cost) * (0.25 + health * 0.75) * (u.campaignDurability ?? 1);
+      }, 0),
       minGroup = { low: 6, normal: 4, high: 3 }[options.aggression],
       // Low / normal / high attack on 1/6, 1/3 and 1/2 of turns respectively.
       attackTurn = state.turn % ({ low: 6, normal: 3, high: 2 }[options.aggression]) === 0;
+    const passengers = new Map();
+    for (const unit of alive) {
+      const carrierId = unit.state?.embarked?.carrierId;
+      if (!carrierId) continue;
+      if (!passengers.has(carrierId)) passengers.set(carrierId, []);
+      passengers.get(carrierId).push(unit);
+    }
     // Research is a team decision, not multiplied by the number of AI seats.
     for (const team of new Set(bots.map((p) => ctx.G.seatTeam(p.seat)))) {
       const pool = state.teams[team];
@@ -155,10 +168,36 @@ const AITactics = (() => {
           enemyNeighbors = region.links.filter((id) => holder(id).owner !== team),
           targets = enemyNeighbors.map((id) => ({ id, units: alive.filter((u) => u.region === id && u.team !== team) }))
             .sort((a, b) => force(a.units) - force(b.units));
+        // A carrier and its passengers are one movement group, but every passenger
+        // contributes to strength. Keep a frontier reserve instead of evacuating it.
+        const bundle = (root) => {
+          const result = [root], seen = new Set([root.id]);
+          for (let i = 0; i < result.length; i++)
+            for (const unit of passengers.get(result[i].state?.id) || [])
+              if (unit.region === regionId && unit.team === team && !seen.has(unit.id)) {
+                result.push(unit);
+                seen.add(unit.id);
+              }
+          return result;
+        };
+        const bundles = new Map(group.map((u) => [u, bundle(u)]));
+        const detachment = group.slice();
+        if (enemyNeighbors.length) {
+          const reserveTarget = force(group.flatMap((u) => bundles.get(u))) * 0.25;
+          let reserve = 0, roots = 0;
+          const weakest = group.slice().sort((a, b) => force(bundles.get(a)) - force(bundles.get(b)));
+          for (const unit of weakest) {
+            if (roots >= 2 && reserve >= reserveTarget) break;
+            reserve += force(bundles.get(unit));
+            roots++;
+            detachment.splice(detachment.indexOf(unit), 1);
+          }
+        }
+        const departing = detachment.flatMap((u) => bundles.get(u));
         let next = null;
-        if (group.length >= minGroup && attackTurn) {
-          const target = targets.find((t) => force(group) >= force(t.units) *
-            (options.difficulty === "easy" ? 0.7 : 1.1));
+        if (detachment.length >= minGroup && attackTurn) {
+          const target = targets.find((t) => force(departing) >= force(t.units) *
+            (options.difficulty === "easy" ? 1.5 : options.difficulty === "hard" ? 1.1 : 1.25));
           if (target) next = target.id;
         }
         if (!enemyNeighbors.length || group.length < minGroup) {
@@ -173,7 +212,7 @@ const AITactics = (() => {
             if (next) break;
           }
         }
-        for (const unit of group) unit.moveTo = next;
+        for (const unit of group) unit.moveTo = next && detachment.includes(unit) ? next : null;
       }
       const factories = world.regions.filter((r) => r.factory && holder(r.id).owner === team &&
         !helpers.disputed(state, r.id));

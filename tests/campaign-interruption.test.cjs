@@ -197,6 +197,8 @@ test("ten visible campaign turns wait for spectator playback, freeze and return 
     assert.equal(frame.returnCountdown, null);
     assert.equal(frame.campaign.activeRegion, null);
     assert.equal(frame.campaign.turn, 2);
+    assert(frame.campaign.history.some(line=>line.includes("局地战阶段简报")));
+    assert.equal(frame.campaign.history.filter(line=>line.includes("局地战回合简报")).length,10);
   }
   const persisted = room.campaign.encounters.find(
     (encounter) => encounter.region === preparation.region,

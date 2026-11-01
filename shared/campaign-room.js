@@ -140,6 +140,30 @@ function createCampaignRoom({
       })),
     };
   }
+  // Automatic progress is authoritative and never requires a spectator's request.
+  function automaticPhase(room) {
+    const state = room.campaign;
+    if (!state || room.started || room.campaignLobby || room.returnCountdown || state.winner !== null)
+      return null;
+    const seated = members(room).filter((member) => Number.isInteger(member.seat));
+    if (![0, 1].every((team) => seated.some((member) => G.seatTeam(member.seat) === team)))
+      return null;
+    if (state.phase === "strategy" && seated.every((member) => member.bot))
+      return { key: state.turn + ":strategy", type: "strategy" };
+    if (state.phase === "encounters") {
+      const pending = preparation(room);
+      if (pending?.participants.length && pending.participants.every((player) => player.ready))
+        return { key: state.turn + ":" + pending.id, type: "encounter", region: pending.region, mapId: pending.mapId };
+    }
+    return null;
+  }
+  function advanceAutomatic(room, expectedKey) {
+    const next = automaticPhase(room);
+    if (!next || next.key !== expectedKey) return null;
+    if (next.type === "strategy") C.advance(ctx, room.campaign, members(room));
+    else begin(room, next.region, next.mapId);
+    return { type: "campaign_changed" };
+  }
   function view(room, team = null) {
     if (!room.campaign) return null;
     return {
@@ -490,10 +514,51 @@ function createCampaignRoom({
     );
     if (game.round >= room.campaignBattle.stopRound && pauseBattle) pauseBattle(room);
   }
+  function writeBriefing(room, encounter, final = false) {
+    const state = room.campaign, battle = room.campaignBattle;
+    const round = room.game.winner === null ? room.game.round - 1 : room.game.round;
+    if (!final && (round < battle.startRound || round <= (encounter.briefedRound || 0))) return;
+    const settled = new Set(encounter.settled), losses = new Map();
+    for (const actor of room.game.units) {
+      const id = actor.campaignId || encounter.roster[actor.id] || "actor:" + actor.id;
+      if (actor.hp <= 0 && !settled.has(id))
+        losses.set(id, { team: actor.team, cost: G.modelOf(actor).cost });
+    }
+    // Removed actors can also be losses (e.g. destroyed cargo); transfers are not.
+    for (const id of Object.values(encounter.roster)) {
+      const army = state.units.find((unit) => unit.id === id);
+      if (army?.destroyed && !settled.has(id))
+        losses.set(id, { team: army.team, cost: C.model(ctx, army).cost });
+    }
+    const previous = new Set(final ? [] : encounter.briefedDestroyed || []);
+    const totals = [0, 1].map((team) => {
+      const lost = [...losses].filter(([id, item]) => item.team === team && !previous.has(id));
+      return `队伍${team + 1}损失${lost.length}台/${lost.reduce((n, [, item]) => n + item.cost, 0)}C`;
+    });
+    const name = ctx.world.regions.find((item) => item.id === encounter.region)?.name || encounter.region;
+    let result = "";
+    if (final) {
+      const captured = room.game.campaignBattlefield?.capturedBaseTeam;
+      result = [0, 1].includes(captured) ? `队伍${captured + 1}占领基地` :
+        [0, 1].includes(room.game.winner) ? `队伍${room.game.winner + 1}获胜` : "战局中断，保留战场与损伤";
+    }
+    state.history.push(`[局地战${final ? "阶段简报" : "回合简报"}] 第${state.turn}大回合 · ${name} · ` +
+      (final ? `第${battle.startRound}—${Math.max(battle.startRound, round)}回合 · ` : `第${round}回合 · `) +
+      totals.join("；") + (result ? "；" + result : ""));
+    state.history = state.history.slice(-100);
+    if (final) {
+      delete encounter.briefedRound;
+      delete encounter.briefedDestroyed;
+    } else {
+      encounter.briefedRound = round;
+      encounter.briefedDestroyed = [...losses.keys()];
+    }
+  }
   function checkpoint(room) {
     const state = room.campaign,
       encounter = state.encounters.find((item) => item.region === room.campaignBattle.region);
     captureArmies(state, encounter, room.game);
+    writeBriefing(room, encounter, true);
     const settled = new Set(encounter.settled);
     // Local battles persist losses and crew experience, but award no resources or technology.
     for (const actor of room.game.units) {
@@ -514,11 +579,7 @@ function createCampaignRoom({
     } else {
       encounter.battleSave = battlefieldSave(room);
     }
-    state.history.push(
-      ctx.world.regions.find((item) => item.id === region.id).name +
-        "：局地战阶段结束，已保留战场与损伤",
-    );
-    state.history = state.history.slice(-100);
+
     if (
       !state.encounters.some((item) => C.disputed(state, item.region) && item.turn < state.turn)
     ) {
@@ -642,6 +703,8 @@ function createCampaignRoom({
   }
   function boundary(room) {
     if (!room.campaignBattle) return null;
+    const encounter = room.campaign.encounters.find((item) => item.region === room.campaignBattle.region);
+    writeBriefing(room, encounter);
     if (room.game.winner !== null || room.game.round >= room.campaignBattle.stopRound)
       return pauseBattle ? pauseBattle(room) : checkpoint(room);
     resetTurns(room);
@@ -794,6 +857,8 @@ function createCampaignRoom({
     refreshControl,
     finishDeployment,
     preparation,
+    automaticPhase,
+    advanceAutomatic,
     controls: (room, seat, actor) =>
       actor &&
       room.campaign &&

@@ -33,9 +33,9 @@ for(const width of [1440,390]) test(`campaign map drawer leaves chat usable at $
  expect(box.y+box.height).toBeLessThanOrEqual(chat.y+1);
  await page.locator("#campaignChatInput").fill("交战面板中仍可聊天");await page.locator("#campaignChatSend").click();
  await expect(page.locator("#campaignChatLines")).toContainText("交战面板中仍可聊天");
- await expect(page.locator(".campaign-region-count")).toHaveCount(0);
+ await expect(page.locator(".campaign-region-count")).toHaveCount(43);
  expect(await page.evaluate(()=>CAMPAIGN_WORLD.regions.every(region=>
-   document.querySelector(`[data-region-label="${region.id}"]`).textContent===I18n.text(region.name)))).toBe(true);
+   document.querySelector(`[data-region-label="${region.id}"] .campaign-region-name`).textContent===I18n.text(region.name)))).toBe(true);
  await drawer.getByRole("button",{name:"展开详情",exact:true}).click();await expect(drawer).toHaveAttribute("data-expanded","true");
  await page.waitForTimeout(350);
  await expect(drawer.locator(".campaign-encounter-body")).toBeVisible();
@@ -43,6 +43,9 @@ for(const width of [1440,390]) test(`campaign map drawer leaves chat usable at $
  await page.screenshot({path:`tmp/campaign-map-drawer-${width}.png`});
  await drawer.getByRole("button",{name:"手动指挥",exact:true}).click();
  await expect.poll(()=>page.evaluate(()=>Net.started)).toBe(true);
+ await expect(page.locator("#hudCampaignRegion")).toBeVisible();
+ await expect(page.locator("#hudCampaignRegion")).toHaveText("贾布罗");
+ expect(await page.locator("#hudCampaignRegion").evaluate(el=>el.previousElementSibling.id)).toBe("hudToggleLegend");
  const before=await page.evaluate(()=>({turn:Net.snapshot.campaign.turn,round:Net.snapshot.game.round,stop:Net.snapshot.campaign.stopRound}));
  await page.locator("#roomSettings").click();
  await expect(page.locator("#roomLeaveGame")).toBeVisible();

@@ -1053,6 +1053,7 @@ function createRoomEngine({
       if (member !== actor) send(member.ws, state(room, ack, member, intelCache));
     broadcastRooms();
     scheduleAutoEnd(room);
+    scheduleCampaignAutomation(room);
     scheduleAI(room);
   }
   function destroyRoom(room) {
@@ -1065,6 +1066,8 @@ function createRoomEngine({
     resultTimers.delete(room);
     clearTimeout(aiTimers.get(room));
     aiTimers.delete(room);
+    clearTimeout(campaignTimers.get(room)?.timer);
+    campaignTimers.delete(room);
     clearHostTimer(room);
     for (const member of members(room)) clearReconnect(member);
     rooms.delete(room.code);
@@ -1767,6 +1770,32 @@ function createRoomEngine({
   // AI uses the same validated intents as players. Its controller is only an
   // internal address, never a WebSocket or a reconnectable human identity.
   const aiTimers = new Map();
+  const campaignTimers = new Map();
+  function scheduleCampaignAutomation(room) {
+    const next = room.campaign ? campaign().automaticPhase(room) : null;
+    const previous = campaignTimers.get(room);
+    if (next && previous?.campaign === room.campaign && previous.key === next.key) return;
+    if (previous) clearTimeout(previous.timer);
+    campaignTimers.delete(room);
+    if (!next) return;
+    const entry = { campaign: room.campaign, key: next.key, timer: null };
+    entry.timer = setTimeout(() => {
+      if (campaignTimers.get(room) !== entry) return;
+      campaignTimers.delete(room);
+      if (rooms.get(room.code) !== room || room.campaign !== entry.campaign) return;
+      try {
+        const event = campaign().advanceAutomatic(room, entry.key);
+        if (!event) return;
+        room.revision++;
+        room.lastEvent = { id: randomId(), ...event };
+        broadcast(room);
+      } catch (error) {
+        console.error("Campaign AI advance failed", room.code, error);
+      }
+    }, Math.max(1, aiDelayMs));
+    entry.timer.unref?.();
+    campaignTimers.set(room, entry);
+  }
   const aiMovement = new WeakMap();
   const movementTiming =
     typeof MovementTiming !== "undefined" ? MovementTiming : require("./movement-timing.js");
@@ -4255,6 +4284,8 @@ function createRoomEngine({
     returnTimers.clear();
     for (const timer of resultTimers.values()) clearTimeout(timer);
     for (const timer of aiTimers.values()) clearTimeout(timer);
+    for (const entry of campaignTimers.values()) clearTimeout(entry.timer);
+    campaignTimers.clear();
     for (const entry of autoEndTimers.values()) clearTimeout(entry.timer);
     for (const entry of hostTimers.values()) clearTimeout(entry.timer);
     hostTimers.clear();
