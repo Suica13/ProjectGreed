@@ -677,6 +677,7 @@ body.campaign-room #roomMapPreview {
   padding: 2px 8px 2px 2px;
 }
 .campaign-catalog-card {
+  position: relative;
   display: grid;
   width: 100%;
   grid-template-columns: 76px minmax(0, 1fr);
@@ -891,7 +892,8 @@ body.campaign-room #roomMapPreview {
 .campaign-tech-node[data-status="researched"] {
   border-style: dashed;
 }
-.campaign-tech-node:not([data-status="researched"])::after {
+.campaign-tech-node[data-status="locked"]::after,
+.campaign-catalog-card[data-developed="false"]::after {
   content: "";
   position: absolute;
   inset: 0;

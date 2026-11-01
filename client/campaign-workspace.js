@@ -85,6 +85,7 @@ window.CampaignWorkspace = (() => {
     const row = action("", () => chooseUnit(prefab.id));
     row.className = "campaign-catalog-card";
     row.dataset.unitId = prefab.id;
+    row.dataset.developed = String(CampaignRules.available(context(), state(), team(), prefab.id));
     row.setAttribute("aria-pressed", String(selectedUnit === prefab.id));
     row.append(icon(unitIcon(m.id || prefab.id + "__" + price.kitId), "campaign-catalog-icon"));
     const content = node("span", "", "campaign-card-copy");

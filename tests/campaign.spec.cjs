@@ -613,6 +613,10 @@ for (const viewport of [
     await expect(workspace.locator(".campaign-purchase")).toContainText("资金");
     await expect(workspace.locator(".campaign-purchase")).toContainText("物资");
     await expect(workspace.locator(".campaign-purchase")).toContainText("每批3台");
+    expect(await workspace.locator('[data-unit-id="Type61"]').evaluate((el) => getComputedStyle(el,"::after").content)).toBe("none");
+    const lockedUnit = workspace.locator('.campaign-catalog-card[data-developed="false"]').first();
+    expect(await lockedUnit.evaluate((el) => getComputedStyle(el,"::after").backgroundColor)).toBe("rgba(0, 0, 0, 0.58)");
+    expect(await lockedUnit.evaluate((el) => getComputedStyle(el,"::after").pointerEvents)).toBe("none");
     const before = await page.evaluate(() => Net.snapshot.campaign.teams[0].money);
     await workspace.locator(".campaign-purchase > button").click();
     await expect.poll(() => page.evaluate(() => Net.snapshot.campaign.orders.length)).toBe(1);
@@ -640,11 +644,10 @@ for (const viewport of [
     const mask = await workspace
       .locator('[data-tech-id="Tech_EFSF_0079_AntiMSPlan"]')
       .evaluate((el) => ({
-        background: getComputedStyle(el, "::after").backgroundColor,
-        pointer: getComputedStyle(el, "::after").pointerEvents,
+        content: getComputedStyle(el, "::after").content,
       }));
-    expect(mask.background).toBe("rgba(0, 0, 0, 0.58)");
-    expect(mask.pointer).toBe("none");
+    expect(mask.content).toBe("none");
+    expect(await workspace.locator('.campaign-tech-node[data-status="locked"]').first().evaluate((el) => getComputedStyle(el,"::after").backgroundColor)).toBe("rgba(0, 0, 0, 0.58)");
     await expect(workspace.locator(".campaign-inspector h3")).toHaveText("反MS计划");
     await expect(workspace.locator(".campaign-unlock-unit")).not.toHaveCount(0);
     await expect(workspace.locator(".campaign-purchase")).toContainText("6,000");
