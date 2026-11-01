@@ -745,7 +745,7 @@ const CampaignRules = (() => {
           "该科技不能开发",
         );
         check(
-          pool.technology >= node.points &&
+          pool.technology >= researchPoints(ctx, node) &&
             pool.money >= (node.money || 0) &&
             pool.supplies >= (node.supplies || 0),
           "研发资源不足",
@@ -783,13 +783,32 @@ const CampaignRules = (() => {
   }
   function startResearch(ctx, state, team, node) {
     const pool = state.teams[team];
-    check(!pool.researched.includes(node.id) && !(pool.researchQueue || []).some((order) => order.techId === node.id), "该科技已开发或正在研发");
-    check(node.requires.every((id) => pool.researched.includes(id)), "前置科技未完成");
-    check(pool.technology >= node.points && pool.money >= (node.money || 0) && pool.supplies >= (node.supplies || 0), "研发资源不足");
-    pool.technology -= node.points;
+    check(
+      !pool.researched.includes(node.id) &&
+        !(pool.researchQueue || []).some((order) => order.techId === node.id),
+      "该科技已开发或正在研发",
+    );
+    check(
+      node.requires.every((id) => pool.researched.includes(id)),
+      "前置科技未完成",
+    );
+    const points = researchPoints(ctx, node);
+    check(
+      pool.technology >= points &&
+        pool.money >= (node.money || 0) &&
+        pool.supplies >= (node.supplies || 0),
+      "研发资源不足",
+    );
+    pool.technology -= points;
     pool.money -= node.money || 0;
     pool.supplies -= node.supplies || 0;
-    (pool.researchQueue ||= []).push({techId:node.id, remaining:ctx.world.settings.researchTurns || 2});
+    (pool.researchQueue ||= []).push({
+      techId: node.id,
+      remaining: ctx.world.settings.researchTurns || 2,
+    });
+  }
+  function researchPoints(ctx, node) {
+    return Math.ceil(node.points * (ctx.world.settings.researchPointMultiplier ?? 0.5));
   }
   function ensureArmyState(ctx, state, unit) {
     if (unit.state) return unit.state;
@@ -848,7 +867,7 @@ const CampaignRules = (() => {
     }
   }
   function advance(ctx, state, members) {
-    ctx.G.aiTactics.strategic(ctx, state, members, { busy, disputed, available, quote, charge, controller, startResearch });
+    ctx.G.aiTactics.strategic(ctx, state, members, { busy, disputed, available, quote, charge, controller, startResearch, researchPoints });
     for (const pool of state.teams) pool.researchQueue = (pool.researchQueue || []).filter((order) => {
       if (--order.remaining > 0) return true;
       if (!pool.researched.includes(order.techId)) pool.researched.push(order.techId);
@@ -1411,7 +1430,7 @@ const CampaignRules = (() => {
     recoverReserves,
     regionIncome,
     income,
-    productionCapacity, updateVictory, startResearch, embarkOptions,
+    productionCapacity, updateVictory, startResearch, researchPoints, embarkOptions,
     available,
     quote,
     equipmentQuote,

@@ -2230,7 +2230,7 @@
     {
       "id": "Tech_NEO_ZEON_0087_BaseTech",
       "name": "基础科技",
-      "description": "解锁提坦斯基础单位",
+      "description": "解锁新吉翁基础单位",
       "icon": "assets/tech-icons/Tech_NEO_ZEON_0087_BaseTech.png",
       "row": "mid",
       "column": 1,

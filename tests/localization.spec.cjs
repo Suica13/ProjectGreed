@@ -33,7 +33,7 @@ test("browser environment selects Japanese or English and unsupported locales fa
 });
 test("manual language selection persists offline and covers formation, deployment, unit names and turn cutins", async ({
   browser,
-}) => {
+}, testInfo) => {
   const context = await browser.newContext({ locale: "en-US" });
   await context.setOffline(true);
   await context.addInitScript(() => {
@@ -74,7 +74,7 @@ test("manual language selection persists offline and covers formation, deploymen
     await expect(page.locator('[data-unit-id="RGM_79"]')).toContainText("GM");
     await page.locator("#closeFormationPicker").click();
     await expect(page.locator("#saveFormation")).toHaveText("Back");
-    await page.screenshot({ path: ".openai/formation-en.png" });
+    await page.screenshot({ path: testInfo.outputPath("formation-en.png") });
     await page.locator("#shellLobby").click();
     await openPresentationFixture(page, false);
     await expect(page.locator("#confirmDeployment")).toHaveText("Confirm deployment (B)");

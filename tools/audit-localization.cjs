@@ -19,6 +19,8 @@ const errors = [],
 function check(record, label, fields = ["name"]) {
   for (const language of ["en", "ja"])
     for (const field of fields) {
+      // Descriptions are optional on user-created maps; empty source text needs no translation.
+      if (field === "description" && !record[field]?.trim()) continue;
       const value = record.localization?.[language]?.[field];
       if (!value?.trim()) errors.push(`${label}/${language}/${field}`);
       else if (language === "en" && /[\u3400-\u9fff]/.test(value))

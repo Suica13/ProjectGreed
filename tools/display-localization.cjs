@@ -5,6 +5,7 @@ function createLocalizer() {
   const read = (file) => JSON.parse(fs.readFileSync(path.join(__dirname, "..", file), "utf8"));
   const units = read("assets/localization/units.json");
   const pilots = read("assets/localization/pilots.json");
+  const weapons = read("assets/localization/weapons.json");
   const dictionaries = { en: read("client/locales/en.json"), ja: read("client/locales/ja.json") };
   function record(value, override = {}) {
     if (!value) return value;
@@ -34,12 +35,22 @@ function createLocalizer() {
   }
   function prefab(value) {
     record(value, units[value.id]);
-    for (const item of [
-      ...Object.values(value.weapons || {}),
-      ...(value.weaponKits || []),
-      ...(value.skills || []),
-    ])
-      record(item);
+    for (const [id, weapon] of Object.entries(value.weapons || {})) {
+      const names = weapons[id];
+      // Fill imported fallback names without overwriting an administrator's custom label.
+      const original = weapon.name.replace(/\s+Lv\.\d+/g, "");
+      if (names && (original === id.replaceAll("_", " ") || original === names.zh)) {
+        const suffix = weapon.level > 1 ? " Lv." + weapon.level : "";
+        weapon.localization ??= {};
+        for (const [language, name] of Object.entries(names)) {
+          weapon.localization[language] ??= {};
+          weapon.localization[language].name = name + suffix;
+        }
+        weapon.name = names.zh + suffix;
+      }
+      record(weapon);
+    }
+    for (const item of [...(value.weaponKits || []), ...(value.skills || [])]) record(item);
     return value;
   }
   function pilotCatalog(value) {

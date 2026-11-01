@@ -180,9 +180,33 @@ const AITactics = (() => {
     for (const team of new Set(bots.map((p) => ctx.G.seatTeam(p.seat)))) {
       const pool = state.teams[team];
       for (let i = 0; i < (options.difficulty === "hard" ? 2 : 1); i++) {
-        const node = ctx.development.nodes(pool.faction).find((n) => !pool.researched.includes(n.id) && !(pool.researchQueue || []).some((order) => order.techId === n.id) &&
-          n.requires.every((id) => pool.researched.includes(id)) && n.points <= pool.technology &&
-          (n.money || 0) <= pool.money && (n.supplies || 0) <= pool.supplies);
+        const points = (node) =>
+          helpers.researchPoints ? helpers.researchPoints(ctx, node) : node.points;
+        const nodes = ctx.development.nodes(pool.faction);
+        const compare = (a, b) => (a.page || 0) - (b.page || 0) || a.column - b.column;
+        const main = nodes
+          .filter(
+            (node) =>
+              node.row === "mid" &&
+              !pool.researched.includes(node.id) &&
+              !(pool.researchQueue || []).some((order) => order.techId === node.id),
+          )
+          .sort(compare)[0];
+        const node = nodes
+          .filter(
+            (n) =>
+              !pool.researched.includes(n.id) &&
+              !(pool.researchQueue || []).some((order) => order.techId === n.id) &&
+              n.requires.every((id) => pool.researched.includes(id)),
+          )
+          .sort((a, b) => Number(a.row !== "mid") - Number(b.row !== "mid") || compare(a, b))
+          .find(
+            (n) =>
+              points(n) <= pool.technology &&
+              (n.money || 0) <= pool.money &&
+              (n.supplies || 0) <= pool.supplies &&
+              (!main || n.row === "mid" || pool.technology - points(n) >= points(main)),
+          );
         if (!node) break;
         helpers.startResearch(ctx, state, team, node);
       }

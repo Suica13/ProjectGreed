@@ -195,7 +195,7 @@ test("technology costs are spent from the campaign pool; invalid archived resour
   state.teams[0].technology = 100000;
   C.action(ctx, state, players, 2, { action: "campaign_research", turn: 1, techId: tech.id });
   assert.equal(state.teams[0].money, 100000 - tech.money);
-  assert.equal(state.teams[0].technology, 100000 - tech.points);
+  assert.equal(state.teams[0].technology, 100000 - C.researchPoints(ctx, tech));
   assert(!state.teams[0].researched.includes(tech.id));
   assert.equal(state.teams[0].researchQueue[0].remaining, 2);
   C.advance(ctx, state, players);
@@ -441,7 +441,7 @@ test("legacy 20-region campaigns retain armies, resources and control on the exp
     treasury = structuredClone(state.teams);
   const imported = C.validate(ctx, state, players);
   assert.equal(imported.regions.length, 43);
-  assert.equal(imported.geographyVersion, 2);
+  assert.equal(imported.geographyVersion, ctx.world.geographyVersion);
   assert.equal(imported.regions.find((region) => region.id === "canada_east").owner, 1);
   assert.deepEqual(imported.teams, treasury);
   assert.equal(imported.units.length, armies.length);

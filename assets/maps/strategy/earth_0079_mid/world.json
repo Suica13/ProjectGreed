@@ -17704,7 +17704,8 @@
         "Dopp": 1,
         "MTank": 1
       }
-    }
+    },
+    "researchPointMultiplier": 0.5
   },
   "id": "earth_0079_mid",
   "geographyVersion": 3,

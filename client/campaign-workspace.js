@@ -24,7 +24,10 @@ window.CampaignWorkspace = (() => {
   const team = () => (Number.isInteger(Net.seat) ? Rules.seatTeam(Net.seat) : 0);
   const pool = () => state().teams[team()];
   const editable = () =>
-    Number.isInteger(Net.seat) && state()?.phase === "strategy" && state().winner === null && !state().ready.includes(Net.seat);
+    Number.isInteger(Net.seat) &&
+    state()?.phase === "strategy" &&
+    state().winner === null &&
+    !state().ready.includes(Net.seat);
   function action(label, callback, disabled = false, local = false) {
     const button = node("button", label);
     button.type = "button";
@@ -222,13 +225,18 @@ window.CampaignWorkspace = (() => {
     content.append(info);
     const footer = node("footer", "", "campaign-purchase");
     const localOrders = state().orders.filter((order) => order.region === regionId);
-    const reserved = localOrders.filter((order) => ["queued", "working"].includes(order.status)).length;
+    const reserved = localOrders.filter((order) =>
+      ["queued", "working"].includes(order.status),
+    ).length;
     const capacity = CampaignRules.productionCapacity(context(), regionId);
     footer.append(
       node("strong", "每批生产价格"),
       money(price),
       node("p", `每批${price.quantity}台 · ${price.turns}大回合`),
-      node("p", `并行生产槽位 ${Math.min(reserved, capacity)}/${capacity} · 排队${Math.max(0, reserved - capacity)}`),
+      node(
+        "p",
+        `并行生产槽位 ${Math.min(reserved, capacity)}/${capacity} · 排队${Math.max(0, reserved - capacity)}`,
+      ),
     );
     const basePrice = CampaignRules.quote(context(), prefab.id);
     const body = {
@@ -294,7 +302,11 @@ window.CampaignWorkspace = (() => {
           .filter(Boolean);
         if (
           needle &&
-          !(tech.name + tech.description + unlocks.map(name).join(" "))
+          !(
+            I18n.localized(tech) +
+            I18n.localized(tech, "description") +
+            unlocks.map(name).join(" ")
+          )
             .toLowerCase()
             .includes(needle)
         )
@@ -309,15 +321,30 @@ window.CampaignWorkspace = (() => {
         });
         card.className = "campaign-tech-node";
         card.dataset.techId = tech.id;
-        card.dataset.status = researched ? "researched" : pending ? "researching" : available ? "available" : "locked";
+        card.dataset.status = researched
+          ? "researched"
+          : pending
+            ? "researching"
+            : available
+              ? "available"
+              : "locked";
         card.setAttribute("aria-pressed", String(selectedTech === tech.id));
         card.style.gridColumn = { top: 1, mid: 2, bot: 3 }[tech.row] || 2;
         card.style.gridRow = offset + tech.column;
         card.append(
           icon(tech.icon, "campaign-tech-icon"),
           node("strong", tech.name),
-          node("small", researched ? "已开发" : pending ? `研发中 · 剩余${pending.remaining}回合` : available ? "可以开发" : "前置科技未完成"),
-          node("small", `科技 ${formatNumber(tech.points)}`),
+          node(
+            "small",
+            researched
+              ? "已开发"
+              : pending
+                ? `研发中 · 剩余${pending.remaining}回合`
+                : available
+                  ? "可以开发"
+                  : "前置科技未完成",
+          ),
+          node("small", `科技 ${formatNumber(CampaignRules.researchPoints(context(), tech))}`),
           money(tech),
         );
         grid.append(card);
@@ -398,23 +425,25 @@ window.CampaignWorkspace = (() => {
     const footer = node("footer", "", "campaign-purchase");
     footer.append(
       node("strong", "开发费用"),
-      node("p", `科技 ${formatNumber(tech.points)}`),
+      node("p", `科技 ${formatNumber(CampaignRules.researchPoints(context(), tech))}`),
       money(tech),
     );
     const researched = pool().researched.includes(tech.id),
       pending = pool().researchQueue?.find((order) => order.techId === tech.id),
       available = tech.requires.every((id) => pool().researched.includes(id));
     const affordable =
-      pool().technology >= tech.points &&
+      pool().technology >= CampaignRules.researchPoints(context(), tech) &&
       pool().money >= (tech.money || 0) &&
       pool().supplies >= (tech.supplies || 0);
     const status = researched
       ? "已开发"
-      : pending ? `研发中 · 剩余${pending.remaining}回合` : !available
-        ? "前置科技未完成"
-        : !affordable
-          ? "研发资源不足"
-          : "可以开发";
+      : pending
+        ? `研发中 · 剩余${pending.remaining}回合`
+        : !available
+          ? "前置科技未完成"
+          : !affordable
+            ? "研发资源不足"
+            : "可以开发";
     footer.append(
       node("p", status),
       node("p", `研发需要${CAMPAIGN_WORLD.settings.researchTurns || 2}个战略回合`),

@@ -1,0 +1,117 @@
+{
+  "ZN_EMS_05M_TMS": {
+    "zh": "导弹发射器（右）",
+    "en": "Missile Launcher (Right)",
+    "ja": "ミサイル発射器（右）"
+  },
+  "ZN_EMS_05M_TMS_L": {
+    "zh": "导弹发射器（左）",
+    "en": "Missile Launcher (Left)",
+    "ja": "ミサイル発射器（左）"
+  },
+  "EF_AMS_Squad_AMS": {
+    "zh": "反MS导弹发射器",
+    "en": "Anti-MS Missile Launcher",
+    "ja": "対MSミサイル発射器"
+  },
+  "EF_170mmCannon": {
+    "zh": "170mm加农炮",
+    "en": "170mm Cannon",
+    "ja": "170mmキャノン"
+  },
+  "EF_RGM_86R_SMS": {
+    "zh": "肩部导弹发射器（右）",
+    "en": "Shoulder Missile Launcher (Right)",
+    "ja": "肩部ミサイル発射器（右）"
+  },
+  "EF_RGM_86R_SMS_L": {
+    "zh": "肩部导弹发射器（左）",
+    "en": "Shoulder Missile Launcher (Left)",
+    "ja": "肩部ミサイル発射器（左）"
+  },
+  "EF_RGM_86R_Nouvel_SMS": {
+    "zh": "肩部导弹发射器（右）",
+    "en": "Shoulder Missile Launcher (Right)",
+    "ja": "肩部ミサイル発射器（右）"
+  },
+  "EF_RGM_86R_Nouvel_SMS_L": {
+    "zh": "肩部导弹发射器（左）",
+    "en": "Shoulder Missile Launcher (Left)",
+    "ja": "肩部ミサイル発射器（左）"
+  },
+  "AEUG_FA_010S_BodyMS": {
+    "zh": "内藏导弹发射器（右1）",
+    "en": "Internal Missile Launcher (Right 1)",
+    "ja": "内蔵ミサイル発射器（右1）"
+  },
+  "AEUG_FA_010S_BodyMS_L": {
+    "zh": "内藏导弹发射器（左1）",
+    "en": "Internal Missile Launcher (Left 1)",
+    "ja": "内蔵ミサイル発射器（左1）"
+  },
+  "AEUG_FA_010S_BodyMS_R2": {
+    "zh": "内藏导弹发射器（右2）",
+    "en": "Internal Missile Launcher (Right 2)",
+    "ja": "内蔵ミサイル発射器（右2）"
+  },
+  "AEUG_FA_010S_BodyMS_L2": {
+    "zh": "内藏导弹发射器（左2）",
+    "en": "Internal Missile Launcher (Left 2)",
+    "ja": "内蔵ミサイル発射器（左2）"
+  },
+  "AEUG_FA_010S_BodyMS_R3": {
+    "zh": "内藏导弹发射器（右3）",
+    "en": "Internal Missile Launcher (Right 3)",
+    "ja": "内蔵ミサイル発射器（右3）"
+  },
+  "AEUG_FA_010S_BodyMS_L3": {
+    "zh": "内藏导弹发射器（左3）",
+    "en": "Internal Missile Launcher (Left 3)",
+    "ja": "内蔵ミサイル発射器（左3）"
+  },
+  "Common_ShieldMS": {
+    "zh": "盾牌导弹发射器",
+    "en": "Shield Missile Launcher",
+    "ja": "シールド・ミサイル発射器"
+  },
+  "TITANS_RX_121_BodyMS": {
+    "zh": "内藏导弹发射器（右）",
+    "en": "Internal Missile Launcher (Right)",
+    "ja": "内蔵ミサイル発射器（右）"
+  },
+  "TITANS_RX_121_BodyMS_L": {
+    "zh": "内藏导弹发射器（左）",
+    "en": "Internal Missile Launcher (Left)",
+    "ja": "内蔵ミサイル発射器（左）"
+  },
+  "TITANS_PMX_001_AntiShipMS": {
+    "zh": "对舰导弹发射器（右）",
+    "en": "Anti-Ship Missile Launcher (Right)",
+    "ja": "対艦ミサイル発射器（右）"
+  },
+  "TITANS_PMX_001_AntiShipMS_L": {
+    "zh": "对舰导弹发射器（左）",
+    "en": "Anti-Ship Missile Launcher (Left)",
+    "ja": "対艦ミサイル発射器（左）"
+  },
+  "NZN_AMX_102_SMS": {
+    "zh": "肩部导弹发射器（右）",
+    "en": "Shoulder Missile Launcher (Right)",
+    "ja": "肩部ミサイル発射器（右）"
+  },
+  "NZN_AMX_102_SMS_L": {
+    "zh": "肩部导弹发射器（左）",
+    "en": "Shoulder Missile Launcher (Left)",
+    "ja": "肩部ミサイル発射器（左）"
+  },
+  "NZN_AMX_102_BodyMS": {
+    "zh": "内藏导弹发射器（右）",
+    "en": "Internal Missile Launcher (Right)",
+    "ja": "内蔵ミサイル発射器（右）"
+  },
+  "NZN_AMX_102_BodyMS_L": {
+    "zh": "内藏导弹发射器（左）",
+    "en": "Internal Missile Launcher (Left)",
+    "ja": "内蔵ミサイル発射器（左）"
+  }
+}

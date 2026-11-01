@@ -10,6 +10,7 @@ window.CampaignUI = (() => {
     lastRevision = -1;
   let autosaved = "",
     autosaveTimer = null;
+  let focusedPreparation = null;
   const selectedUnits = new Set();
   let moveDraft = null, forceSide = "friendly", forceDetailsRegion = null, resumeForceDetails = false;
   const mapScale = 1.25, labelScale = 0.75 / mapScale;
@@ -1886,6 +1887,13 @@ window.CampaignUI = (() => {
   function render() {
     const s = state();
     if (!s) return;
+    const preparationKey = s.preparation ? s.turn + ":" + s.preparation.id : null;
+    if (preparationKey && preparationKey !== focusedPreparation) {
+      selectedRegion = s.preparation.region;
+      selectedUnits.clear();
+      tab = "units";
+    }
+    focusedPreparation = preparationKey;
     const scroll = [".campaign-detail", ".campaign-map-scroll", ".campaign-force-list"].map(
       (selector) => {
         const item = panel.querySelector(selector);
