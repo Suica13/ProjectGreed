@@ -139,7 +139,8 @@ for (const initialHp of [100000])
     const launchConfirm = {id:"launch-confirm-once",unitId:lead.id};
     await act(host,"confirm_move",launchConfirm,launchRevision);
     await act(host,"confirm_move",launchConfirm,launchRevision);
-    assert.ok(boarding.every(u => !u.embarked && !u.pendingMove && u.actionPoints===7.5));
+    // AP is reference data only; a confirmed launch must not spend it.
+    assert.ok(boarding.every(u => !u.embarked && !u.pendingMove && u.actionPoints===10));
     assert.equal(G.squadMembers(room.game,lead).length,3);
     room.game.units = previousUnits;
     await assert.rejects(act(first, "move", { unitId: a.id, x: 5, y: 6 }));

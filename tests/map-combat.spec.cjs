@@ -85,6 +85,7 @@ async function at(page, value) {
       source: f.event.from,
       target: f.event.to,
       time: f.time,
+      cellPixels: Rules.mapCellPixels,
       deathAt: f.plan.deathAt,
       events: battleView.events.length,
       nativeClips: f.weapon.attack.animations.map((item) => item.clip).filter(Boolean),
@@ -99,8 +100,8 @@ test("map melee approaches vertically, plays its native swing and keeps real gri
   await stage(page);
   const move = await at(page, -0.15);
   const source = move.units.find((u) => u.id === move.source);
-  expect(source.pose.x).toBeCloseTo(10.5 * 192);
-  expect(source.pose.y).toBeGreaterThan(7.5 * 192);
+  expect(source.pose.x).toBeCloseTo(10.5 * move.cellPixels);
+  expect(source.pose.y).toBeGreaterThan(7.5 * move.cellPixels);
   expect(source.x).toBe(10);
   expect(source.y).toBe(7);
   const swing = await at(page, 1.3);
@@ -538,7 +539,7 @@ test("the last of four battles finishes automatically after a vertical cannon Mi
   expect(result.stateUnchanged).toBe(true);
 });
 
-test("each attacking and countering unit gets its own delay, preserved across pause and resume", async ({
+test("initial actor staggering is bounded and does not repeat between volleys, including pause/resume", async ({
   page,
 }) => {
   await stage(page);
@@ -558,8 +559,8 @@ test("each attacking and countering unit gets its own delay, preserved across pa
       });
     Object.assign(a, { x: 8, y: 8 });
     Object.assign(target, { x: 10, y: 8 });
-    Object.assign(other, { x: 8, y: 14 });
-    Object.assign(otherTarget, { x: 10, y: 14 });
+    Object.assign(other, { x: 8, y: Math.min(11,game.tiles.length-2) });
+    Object.assign(otherTarget, { x: 10, y: Math.min(11,game.tiles.length-2) });
     for (const row of game.tiles) row.fill("plain");
     const battles = [];
     for (const [from, to, stance] of [
@@ -572,6 +573,7 @@ test("each attacking and countering unit gets its own delay, preserved across pa
         events = Rules.fight(game, from, to, { ...weapon, hit: 0 }, stance, weapon.id);
       battles.push({ id: "delay-" + from.id, a: from.id, b: to.id, actors, before, events });
     }
+    battles[0].events.push(structuredClone(battles[0].events[0]));
     const before = JSON.stringify(game),
       originalNow = performance.now.bind(performance);
     let clock = 10000,
@@ -598,23 +600,28 @@ test("each attacking and countering unit gets its own delay, preserved across pa
         return MapCombat.frames.map((f) => f.event.from);
       };
       checkpoints.push(step(10000));
-      checkpoints.push(step(10199));
-      checkpoints.push(step(10201));
-      step(10250);
+      checkpoints.push(step(10023));
+      checkpoints.push(step(10025));
+      step(10030);
       const pausedTime = MapCombat.frames.find((f) => f.event.from === a.id).time;
       MapCombat.suspend(battleView);
-      step(15250);
+      step(15030);
       const timeDuringPause = MapCombat.frames.find((f) => f.event.from === a.id).time;
       MapCombat.resume(battleView);
-      checkpoints.push(step(15490));
-      checkpoints.push(step(15510));
+      checkpoints.push(step(15059));
+      checkpoints.push(step(15061));
       const primary = MapCombat.frames.find((f) => f.event.from === a.id);
       primary.time = primary.plan.duration;
       primary.lastNow = clock;
       MapCombat.update(clock);
-      checkpoints.push(step(clock + 799));
+      checkpoints.push(step(clock + 95));
       checkpoints.push(step(clock + 2));
+      const reply = MapCombat.frames.find(f=>f.event.from===target.id);
+      reply.time=reply.plan.duration;reply.lastNow=clock;
+      MapCombat.update(clock);MapCombat.update(clock);
+      const resumedImmediately=MapCombat.frames.some(f=>f.event.from===a.id);
       return {
+        resumedImmediately,
         checkpoints,
         ids: { a: a.id, other: other.id, counter: target.id },
         draws,
@@ -631,7 +638,8 @@ test("each attacking and countering unit gets its own delay, preserved across pa
       phase = "idle";
     }
   });
-  expect(result.eventCounts).toEqual([2, 1]);
+  expect(result.eventCounts).toEqual([3, 1]);
+  expect(result.resumedImmediately).toBe(true);
   expect(result.draws).toBe(3);
   expect(result.checkpoints[0]).toEqual([]);
   expect(result.checkpoints[1]).toEqual([]);

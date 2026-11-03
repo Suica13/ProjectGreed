@@ -120,9 +120,15 @@ function globals(prefab, rules) {
   ]) {
     delete weapon.onHitAPLoss;
     weapon.attackRounds ??= Classes.baseRounds(weapon);
+    // Native Sniper_Aim spawns a slow marker helper, not the visible damage shot.
+    // Retain that native payload for audit; the paid shot uses its real rifle's
+    // projectile artwork and speed, with the same global conversion applied once.
+    const flightSource = weapon.special?.type === "snipe"
+      ? prefab.weapons?.[weapon.special.baseWeapon] : null;
+    if (flightSource?.projectile) weapon.projectile = structuredClone(flightSource.projectile);
     if (weapon.projectile && !["mortar", "irradiation"].includes(Classes.classify(weapon))) {
       // Always start from retained MOD data, never divide an already converted speed.
-      const payloadSpeed = weapon.nativePayload?.ProjectileSpeed;
+      const payloadSpeed = (flightSource || weapon).nativePayload?.ProjectileSpeed;
       const nativeSpeed = payloadSpeed > 0 ? payloadSpeed : weapon.projectile.nativeSpeed ?? weapon.projectile.speed;
       weapon.projectile.nativeSpeed = nativeSpeed;
       weapon.projectile.speed = nativeSpeed * w.projectileSpeed;

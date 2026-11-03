@@ -1,0 +1,30 @@
+const {test,expect}=require('@playwright/test');
+const {pathToFileURL}=require('node:url'),path=require('node:path');
+for(const width of [1440,390])test('six automatic triangle portrait controls at '+width+'px',async({page})=>{
+ await page.setViewportSize({width,height:900});const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto(pathToFileURL(path.resolve('public/client.html')).href);await expect(page.locator('#openSkirmish')).toBeEnabled();
+ await page.evaluate(async()=>{
+   Net.leave();session++;
+   const e={unitId:'Type61',kitId:'standard'};game=Rules.create(false,1,[[e],[e]],false,{fogMode:'disabled'});
+   const source=game.units[0],enemy=game.units[1];
+   const members=Array.from({length:6},(_,i)=>({...structuredClone(source),id:'ui-'+i,x:5,y:5,squadId:'six',squadSlot:i}));
+   Object.assign(enemy,{x:5,y:8});game.units=[...members,enemy];game.tiles.forEach(row=>row.fill('plain'));game.deployment=null;
+   phase='idle';pending=moving=battleView=null;selected=members[0].id;mode='select';squadSingleMove=false;
+   await SpriteRenderer.ensureModels(game.units.map(u=>u.model));setPageView('game');update();
+ });
+ const strip=page.locator('.battle-squad-strip');await expect(strip).toBeVisible();
+ await expect(strip.locator('[data-squad-member]')).toHaveCount(6);
+ await expect(page.locator('#squadArrange')).toHaveCount(0);
+ await expect(strip.locator('.squad-row-label')).toHaveCount(0);
+ const all=await page.locator('#squadSelectAll').boundingBox(),portraits=await strip.locator('.squad-portraits').boundingBox();
+ expect(all.x+all.width).toBeLessThanOrEqual(portraits.x);
+ await strip.locator('[data-squad-member="ui-4"]').click();
+ expect(await page.evaluate(()=>({id:selected,single:squadSingleMove}))).toEqual({id:'ui-4',single:true});
+ await page.locator('#squadSelectAll').click();expect(await page.evaluate(()=>squadSingleMove)).toBe(false);
+ expect(await strip.locator(':scope > button').count()).toBe(0);
+ const fight=await strip.locator('#squadCombatMode').boundingBox(),portrait=await strip.locator('[data-squad-member]').first().boundingBox();
+ expect(Math.abs(fight.y-portrait.y)).toBeLessThanOrEqual(1);
+ expect(Math.abs(fight.height-portrait.height)).toBeLessThanOrEqual(1);
+ const box=await strip.boundingBox();expect(box.x).toBeGreaterThanOrEqual(0);expect(box.x+box.width).toBeLessThanOrEqual(width);
+ expect(errors).toEqual([]);
+});

@@ -2231,3 +2231,26 @@ body.replay-active #gameScene .hud-terrain-strip {
     height: 31px;
   }
 }
+
+#gameScene .squad-members {align-items:center;}
+
+#gameScene .battle-squad-strip {display:block;}
+#gameScene .squad-left {display:flex;flex-direction:column;gap:6px;align-items:flex-start;min-width:0;}
+#gameScene .squad-left>strong {font-size:12px;max-width:100px;}
+#gameScene #squadCombatMode { flex:0 0 auto; align-self:flex-start; height:44px; }
+
+#gameScene[data-target-switch="true"] #hudUnitPanel[data-planning="true"] {display:flex !important;}
+
+/* Reserve the actual portrait-strip height, including wrapped editing hints. */
+#gameScene #hudUnitPanel[data-planning="true"],
+.battle-hud-active #reaction {
+  bottom:max(calc(var(--hud-dock) + 64px),var(--squad-strip-clearance,0px));
+}
+
+.squad-portraits { display:flex; flex-wrap:wrap; gap:4px; min-width:0; }
+
+#gameScene .squad-members { display:flex; gap:6px; min-width:0; width:100%; }
+#gameScene #squadSelectAll { flex:0 0 auto; align-self:center; }
+
+#gameScene .squad-portraits { flex:1 1 auto; }
+@media(max-width:600px){#gameScene #squadCombatMode{height:37px;}}

@@ -360,7 +360,8 @@ const Tactics = (() => {
     if (
       model.movementType === "naval" &&
       restrictions.mapId &&
-      !getMap(restrictions.mapId).navalDeployment
+      !getMap(restrictions.mapId).navalDeployment &&
+      getMap(restrictions.mapId).scope !== "strategic"
     )
       return "not_allowed";
     if (
@@ -660,10 +661,14 @@ const Tactics = (() => {
     // 达到正常适应性即可进入预算竞争；不能因少数廉价机体的适应性更高，
     // 将所有正常适应性的高级机体永久排除。全员不足100%时仍优先最高适应性。
     const preferredAdaptation = Math.min(100, bestAdaptation);
-    const minimumRate = Math.min(...coreChoices.map(costPerPoint));
-    const preferredMinimum = Math.min(
-      ...coreChoices.filter((model) => adaptation(model) >= preferredAdaptation).map(costPerPoint),
-    );
+    // Choose a backbone quality floor before spending anything. Unspent slots
+    // are preferable to padding a late-tech army with obsolete cheap vehicles.
+    const backbone = coreChoices.filter(model => frontlineMS(model) && model.cost <= maxCost);
+    const primaryBackbone = backbone.filter(model => mainlineUnits.has(model.prefabId) && !commander(model));
+    const backbonePool = primaryBackbone.length ? primaryBackbone : backbone;
+    const backboneTier = Math.max(...backbonePool.map(technologyRank));
+    const backboneQuality = Math.max(0, ...backbonePool.filter(model => technologyRank(model) === backboneTier).map(costPerPoint));
+    const minimumCombatQuality = backboneQuality * 0.55;
     // Each three non-ship units unlock one independent 50% command-slot roll.
     // A separate seeded stream keeps the decision stable across previews and reconnects.
     const commandAllowances = [0];
@@ -687,27 +692,10 @@ const Tactics = (() => {
     let remaining = maxCost;
     let remainingPoints = unitLimit;
     for (let i = 0; i < count; i++) {
-      // Budget by formation points: an MS takes two and a ship takes four.
-      // Reserving by headcount underspends whenever heavier units fill the roster.
+      // Capacity remains a ceiling, not a target to fill with cheap units.
+      // Stop when no useful legal platform fits the remaining budget or points.
       const fillablePoints = Math.floor(remainingPoints / minimumWeight) * minimumWeight;
       if (!fillablePoints) break;
-      let reserveMinimum =
-        remaining >= preferredMinimum * fillablePoints ? preferredMinimum : minimumRate;
-      if (restrictions.mapId && getMap(restrictions.mapId).navalDeployment) {
-        // 混合海陆出生带需保留能跨水的一格单位预算，避免末尾只剩水格却买不起空军。
-        const flexibleMinimum = Math.min(
-          ...choices
-            .filter(
-              (m) =>
-                !m.footprint &&
-                ["air", "hover", "amphibious"].includes(m.movementType) &&
-                adaptation(m) >= preferredAdaptation,
-            )
-            .map(costPerPoint),
-        );
-        if (remaining >= flexibleMinimum * fillablePoints)
-          reserveMinimum = Math.max(reserveMinimum, flexibleMinimum);
-      }
       const placementCache = new Map();
       const commanderCount = entries.filter((entry) => commander(formationModel(entry))).length;
       const nonShipCount = entries.filter((entry) => !formationModel(entry).ship).length;
@@ -725,6 +713,7 @@ const Tactics = (() => {
       const legal = choices.filter((model) => {
         if (hasFrontline && lightAircraft(model) && aircraftPoints >= aircraftPointLimit) return false;
         if (model.ship && ships >= desiredShips && coreChoices.some((m) => !m.ship)) return false;
+        if (transport(model) && transports >= desiredTransports) return false;
         // Keep at least three combat platforms per supply unit; never spend the army on logistics.
         if (
           support(model) &&
@@ -736,11 +725,10 @@ const Tactics = (() => {
         if (commander(model) && commanderCount >= commandAllowance) return false;
         if (infantry(model) && infantryCount >= Math.max(1, Math.ceil(unitLimit / 6))) return false;
         if (formationWeight(model) > remainingPoints) return false;
-        if (
-          model.cost >
-          remaining - reserveMinimum * Math.max(0, fillablePoints - formationWeight(model))
-        )
-          return false;
+        if (model.cost > remaining) return false;
+        if (!model.ship && !support(model) && backbone.length &&
+            (!frontlineMS(model) && !model.unitTags?.includes("MA") || costPerPoint(model) < minimumCombatQuality)) return false;
+        if (model.ship && entries.reduce((sum,entry)=>sum+(formationModel(entry).ship?formationModel(entry).cost:0),0)+model.cost > maxCost*0.35) return false;
         if (!restrictions.mapId) return true;
         const shape = JSON.stringify([
           model.footprint || null,
@@ -763,8 +751,7 @@ const Tactics = (() => {
           if (
             sharedAreaSize &&
             entries.reduce((total, entry) => total + size(entry), 0) +
-              size(candidate) +
-              Math.max(0, fillablePoints - formationWeight(model)) >
+              size(candidate) >
               sharedAreaSize
           ) {
             placementCache.set(shape, false);
@@ -809,6 +796,10 @@ const Tactics = (() => {
       }, 0);
       const frontline = preferred.filter(frontlineMS);
       if (frontline.length && frontlinePoints < frontlineTarget) preferred = frontline;
+      // Three backbone selections for each elite selection. BASE-tech aircraft
+      // and branch prototypes cannot replace the main-line MS core.
+      const primary = preferred.filter(model => frontlineMS(model) && mainlineUnits.has(model.prefabId) && !commander(model));
+      if (primary.length && combatCount % 4 !== 3) preferred = primary;
       const leaders = preferred.filter(commander);
       if (leaders.length && commanderCount < commandAllowance) preferred = leaders;
       // Try the latest affordable technology first. Once every platform there
@@ -822,34 +813,10 @@ const Tactics = (() => {
       );
       // Select a competitive price per point first, then diversify within that
       // tier. A new cheap platform must not crowd out an affordable combat MS.
-      const budgetPerPoint = remaining / fillablePoints;
       const highestCost = Math.max(...preferred.map(costPerPoint));
-      let affordableTier;
-      if (budgetPerPoint >= highestCost) {
-        // 预算充足时选择最高价格档附近的机体，保留同档多样性。
-        affordableTier = preferred.filter((model) => costPerPoint(model) >= highestCost * 0.65);
-      } else {
-        affordableTier = preferred.filter(
-          (model) =>
-            costPerPoint(model) >= budgetPerPoint * 0.75 &&
-            costPerPoint(model) <= budgetPerPoint * 1.25,
-        );
-        if (!affordableTier.length) {
-          const closestCost = preferred.reduce((best, model) => {
-            const price = costPerPoint(model);
-            const distance = Math.abs(price - budgetPerPoint);
-            const bestDistance = Math.abs(best - budgetPerPoint);
-            return distance < bestDistance || (distance === bestDistance && price > best)
-              ? price
-              : best;
-          }, costPerPoint(preferred[0]));
-          affordableTier = preferred.filter(
-            (model) =>
-              costPerPoint(model) >= closestCost * 0.75 &&
-              costPerPoint(model) <= closestCost * 1.25,
-          );
-        }
-      }
+      // Spend on useful platforms, not a target average dictated by empty slots.
+      // Role quotas and the quality floor stop luxury units or leftovers taking over.
+      let affordableTier = preferred.filter(model => costPerPoint(model) >= highestCost * 0.65);
       // Narrow price bands must not force another copy while comparable unused platforms exist.
       if (affordableTier.every((model) => copies(model.prefabId) > 0)) {
         const tierPrice = Math.max(...affordableTier.map(costPerPoint));
@@ -1379,7 +1346,7 @@ const Tactics = (() => {
     const steps = Math.trunc((leadership - 100) / 25);
     return {
       radius: Math.max(1, 3 + steps),
-      effect: Math.max(0, 0.1 + steps * 0.01),
+      effect: Math.max(0, 0.1 + steps * 0.0125),
       kinds: model.commandAuras || [],
     };
   }
@@ -1466,6 +1433,12 @@ const Tactics = (() => {
       )
       .sort((a, b) => (a.squadSlot ?? 0) - (b.squadSlot ?? 0) || a.id.localeCompare(b.id));
   }
+  const squadCapacity = unit => Math.max(1, modelOf(unit).transport?.slotCost || 1);
+  const squadFits = members => members.length <= 6 && members.reduce((sum,u) => sum+squadCapacity(u),0) <= 6;
+  const squadEvasion = (g, unit) => squadEligible(unit) ? Math.round(12 * (6-Math.min(6,squadMembers(g,unit).length))/5) : 0;
+  function squadTarget(g, candidates) {
+    return candidates.length ? candidates[Math.floor(random(g)*candidates.length)] : null;
+  }
   function squadEligible(unit) {
     const size = dimensions(unit),
       model = modelOf(unit);
@@ -1500,7 +1473,7 @@ const Tactics = (() => {
         onMap(other) && !other.embarked && !members.includes(other) && occupies(other, x, y),
     );
     const destination = squadMembers(g, target);
-    return members.length + destination.length <= 3 &&
+    return squadFits([...members, ...destination]) &&
       occupants.every((other) => destination.includes(other)) &&
       destination.every((other) => !other.plan && !other.pendingMove)
       ? target
@@ -1514,9 +1487,11 @@ const Tactics = (() => {
       members.findIndex((member) => member.id === unit.id),
     );
     if (members.length < 2) return { x: 0, y: 0, scale: 1 };
-    const x = members.length === 2 ? (index ? 0.22 : -0.22) : (index - 1) * 0.3;
-    const y = members.length === 2 ? 0 : index === 1 ? -0.12 : 0.12;
-    // A shallow triangle is only a visual arrangement; all members share the same rules.
+    // Compact triangles are presentation only; every member is equally targetable.
+    const points = members.length === 2 ? [[-.22,0],[.22,0]]
+      : members.length === 3 ? [[-.3,.12],[0,-.12],[.3,.12]]
+      : [[0,-.28],[-.18,0],[.18,0],[-.36,.28],[0,.28],[.36,.28]];
+    const [x,y] = points[index] || [0,0];
     const angle = ((facing ?? members[0].angle ?? 0) * Math.PI) / 180;
     return {
       x: x * Math.cos(angle) - y * Math.sin(angle),
@@ -1529,10 +1504,8 @@ const Tactics = (() => {
       throw Error("该小队无法加入：成员、控制权或容量已变化");
     const destination = squadMembers(g, target).filter((other) => !members.includes(other));
     const id = target.squadId || "squad-" + target.id;
-    [...destination, ...members].forEach((other, index) => {
-      other.squadId = id;
-      other.squadSlot = index;
-      other.origin = null;
+    [...destination,...members].forEach((other,index)=>{
+      other.squadId=id;other.squadSlot=index;other.origin=null;
     });
   }
   function fits(
@@ -1700,8 +1673,10 @@ const Tactics = (() => {
         terrainCells.set(movement, { cells, area: new Set(cells.map((c) => key(c.x, c.y))) });
       }
       const available = terrainCells.get(movement);
+      const stagingWorld = staging && models[model].movementType === "naval"
+        ? {...placed, tiles:placed.tiles.map(row=>row.map(()=>"water"))} : placed;
       const position = available.cells.find((cell) =>
-        fits(placed, probe, cell.x, cell.y, heading, false, seat, available.area),
+        fits(stagingWorld, probe, cell.x, cell.y, heading, false, seat, available.area),
       );
       if (!position) return null;
       placed.units.push({ ...probe, ...position });
@@ -2737,8 +2712,10 @@ const Tactics = (() => {
               ? 0.75
               : 1) *
             sensorFactor *
-            (w.type !== "melee" && smokeAt(g, b) ? 0.75 : 1),
-        ),
+            (w.type !== "melee" && smokeAt(g, b) ? 0.75 : 1) +
+            (attacker.pilotModifiers?.awakeningHit ?? 0),
+        ) -
+          (defender.pilotModifiers?.awakeningEvasion ?? 0) - squadEvasion(g, b),
       ),
       defenseMultiplier = response === "defend" ? 1.25 : 1,
       finalDamageMultiplier =
@@ -3554,7 +3531,7 @@ const Tactics = (() => {
     const members = squadMembers(g, u);
     if (
       !members.every(squadEligible) ||
-      members.length >= 3 ||
+      (members.length >= 6 || members.reduce((sum,m)=>sum+squadCapacity(m),0) >= 6) ||
       members.some((m) => m.moved || m.acted || m.plan || m.pendingMove)
     )
       return null;
@@ -3795,6 +3772,7 @@ const Tactics = (() => {
     captureObjective: (g, unit, origin) => aiTactics.captureGoal(Tactics, g, unit, origin),
     squadMembers,
     squadEligible,
+    squadFits,
     environmentOf,
     squadJoinTarget,
     joinSquad,
@@ -3912,6 +3890,10 @@ const Tactics = (() => {
     squadEligible,
     squadJoinTarget,
     squadOffset,
+    squadCapacity,
+    squadFits,
+    squadEvasion,
+    squadTarget,
     joinSquad,
     mapCellPixels: 160,
     fits,

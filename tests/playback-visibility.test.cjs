@@ -16,6 +16,8 @@ test("playback retains actors visible before resolution, excludes unseen fire an
       visibleActorIds: ["a", "b", "ground"],
     },
   ]);
+  assert.deepEqual(Array.from(context.api.units(),u=>u.id),["a"],"seeding alone must not expose playback actors outside playback");
+  context.battleView={mapBattle:true};
   assert.deepEqual(
     Array.from(context.api.units(), (u) => u.id),
     ["a", "b"],

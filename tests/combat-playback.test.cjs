@@ -8,7 +8,7 @@ function runtime() {
       { id: "a", name: "A", hp: 100 },
       { id: "b", name: "B", hp: 100 },
     ];
-  const calls = { shows: [], snapshots: 0, requests: [] };
+  const calls = { shows: [], snapshots: 0, requests: [], seeded: [], starts: [] };
   const context = {
     battleView: null,
     phase: "idle",
@@ -28,9 +28,9 @@ function runtime() {
       },
     },
     MapCombat: {
-      reset: () => {},
-      seed: () => {},
-      begin: (view) => calls.shows.push(view.networkId),
+      reset: () => { calls.seeded = []; },
+      seed: (battles) => { calls.seeded.push(...battles.map(b=>b.id)); },
+      begin: (view) => { calls.shows.push(view.networkId); calls.starts.push([...calls.seeded]); },
       resume: () => {},
       suspend: () => {
         calls.suspended = true;
@@ -110,6 +110,18 @@ test("unfinished reconnects replay the active batch; a viewer who already confir
   second.context.Net.snapshot = snapshot(["viewer"]);
   second.playback.receive(second.context.Net.snapshot, false);
   assert.equal(second.playback.queued, 0);
+});
+
+test("queued batches seed only their own actors when playback starts, after the previous reset",()=>{
+ const {context,playback,calls}=runtime();
+ context.Net.snapshot=snapshot();playback.receive(context.Net.snapshot,true);playback.show();
+ assert.deepEqual(calls.starts[0],['one','two']);
+ const next=snapshot();next.playback.id='second-batch';next.combats=[battle('next')];
+ context.Net.snapshot=next;playback.receive(next,true);
+ assert.deepEqual(calls.seeded,['one','two']);
+ playback.finish();playback.show();
+ assert.deepEqual(calls.starts[1],['next']);
+ assert.equal(context.battleView.networkId,'second-batch');
 });
 
 test("irradiation playback waits for the beam and native death effects before acknowledging", () => {

@@ -67,3 +67,7 @@ Bazooka_SG、BZ_SG和Bazooka_ShotgunMode为扩散火箭筒。沿母弹Projectile
 ## 左手连续射击动画修正（2026-11-03）
 
 原MOD的Common_ArmMG_L、NZN_AMX_101_ArmMG等左手发射链，第一发Common_Shoot_A_L之后误调用右手Common_Shoot_A_FA。native_presentation.correct_left_firing只对明确依赖单左臂且已使用左手起始动作的射击链，将后续Common_Shoot_A_FA改为已有Common_Shoot_A_L；保留逐发延迟、载荷、EN、弹数、显示索引与炮口，不修改右手、双臂齐射或格斗。双臂拆分后的PairedFire动画和枪口采样由同一修正流程生成。
+
+## 蓄力狙击辅助弹
+
+原MOD的Sniper_Aim辅助单位承载锁定标记与延迟触发，不是飞行伤害弹。保留其nativePayload供审计，锁定标记使用SniperLock逐帧绘制；实际发射使用special.baseWeapon对应的弹丸贴图和原生弹速，再应用全局弹速规则。不能把LockTarget整张序列图画成弹丸，也不能使用辅助单位的1～1.35弹速，否则会使全员演出屏障长时间无法结束。

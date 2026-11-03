@@ -171,8 +171,8 @@ const HangarUI = (() => {
             item.classList.toggle("is-selected",launchSelection.has(u.id));
             const toggle = () => {
               if (launchSelection.has(u.id)) launchSelection.delete(u.id);
-              else if (launchSelection.size < 3) launchSelection.add(u.id);
-              else return note("每个小队最多3台单位");
+              else if (Rules.squadFits([...launchSelection].map(id=>getUnit(id)).concat(u))) launchSelection.add(u.id);
+              else return note("每个小队最多6台单位、6容量点");
               render();
             };
             icon.onclick = toggle;
@@ -208,7 +208,7 @@ const HangarUI = (() => {
       const valid = new Set(Rules.hangars.cargo(game,selectedUnit).filter(u => allowed(u) && !u.acted).map(u => u.id));
       for (const id of launchSelection) if (!valid.has(id)) launchSelection.delete(id);
       const actions = element("div","hangar-launch-selection");
-      actions.append(element("span","",I18n.text("已选择") + " " + launchSelection.size + " / 3"),
+      actions.append(element("span","",I18n.text("已选择") + " " + launchSelection.size + " / 6"),
         button("小队出击",() => startLaunch([...launchSelection],selectedUnit),!launchSelection.size));
       actions.dataset.squadLaunch = "";
       content.prepend(actions);

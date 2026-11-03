@@ -1,0 +1,20 @@
+const test=require('node:test'),assert=require('node:assert/strict');
+const G=require('../shared/rules'),C=require('../shared/campaign'),Records=require('../shared/match-records');
+const {createCampaignRoom}=require('../shared/campaign-room'),{createAttackPlanner}=require('../shared/attack-plans');
+const catalog=G.catalog,scenario=catalog.scenarios.earth_0079_mid;
+for(const ship of ['BurkeClass','U_Type_Submarine'])test('Eastern Canada supports actual coastal deployment of '+ship,()=>{
+ const members=[{id:'host',seat:0},{id:'enemy',seat:1}],ctx={G,world:scenario.world,production:require('../shared/production-data.cjs'),development:require('../shared/development')};
+ const state=C.create(ctx,members);state.units=[];
+ C.addUnit(ctx,state,0,'canada_east',ship);
+ const attacker=C.addUnit(ctx,state,1,'canada_east','MS_06F');attacker.entryFrom='canada';
+ state.phase='encounters';state.encounters=[{region:'canada_east',turn:0,battleSave:null,roster:{},settled:[]}];
+ let id=0;const room={hostId:'host',campaign:state,seats:[...members,...Array(8).fill(null)],settings:{mode:'campaign'},started:false,phase:'waiting',chat:[]};
+ const adapter=createCampaignRoom({G,Records,randomId:()=>String(++id),randomSeed:()=>1,members:()=>members,planner:createAttackPlanner(G,()=>String(++id)),log:()=>{}});
+ const map=G.getMap(scenario.regions.canada_east.mapId),tiles=JSON.stringify(map.tiles);
+ const prep=adapter.view(room).preparation;
+ for(const member of members)adapter.handle(room,member,{action:'campaign_enter',region:'canada_east',preparationId:prep.id,mapId:map.id,delegate:false});
+ assert.equal(room.started,true);assert(room.game.units.some(u=>u.team===1));
+ const actor=room.game.units.find(u=>G.modelOf(u).prefabId===ship);assert(actor);
+ assert(G.cells(actor).every(c=>room.game.tiles[c.y][c.x]==='water'));
+ assert.equal(JSON.stringify(map.tiles),tiles);assert.equal(JSON.stringify(room.game.tiles),tiles);
+});

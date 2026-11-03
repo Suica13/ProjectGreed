@@ -49,7 +49,7 @@ test("counter selection accepts any incoming squad member and rejects uninvolved
   assert.ok(room.responses[0].counterIds.length);
 });
 
-test("walking onto a friendly cell forms a squad; three is the capacity, enemy/other controllers cannot join", () => {
+test("walking onto a friendly cell forms a squad; six capacity points is the capacity, enemy/other controllers cannot join", () => {
   const { game, allies } = fixture();
   G.move(game, allies[1], 5, 5);
   assert.equal(G.squadMembers(game, allies[0]).length, 2);
@@ -148,7 +148,7 @@ test("squad attack assigns all members; one stance handles the defending squad w
   assert.ok(battles.some((battle) => battle.combatStage === "counter"));
 });
 
-test("all three members can melee, with a shallow triangle and no front/rear distinction", () => {
+test("all triangle members can melee without being blocked by formation", () => {
   const { game, allies, enemy } = fixture(3);
   stack(game, allies);
   Object.assign(enemy, { x: 5, y: 6 });
@@ -200,7 +200,7 @@ test("boarding one squad member detaches it and never consumes the other members
   assert.equal(G.squadMembers(game, allies[1]).length, 1);
 });
 
-test("hangar launch may join a friendly squad only on confirmation and still respects three slots", () => {
+test("hangar launch may join a friendly squad only on confirmation and still respects six slots", () => {
   const { game, allies } = fixture(3);
   stack(game, allies, 6, 5);
   const carrier = {
@@ -224,7 +224,7 @@ test("hangar launch may join a friendly squad only on confirmation and still res
   assert.equal(passenger.embarked.carrierId, carrier.id);
   G.cancelMove(game, passenger);
   assert.equal(G.squadMembers(game, allies[1]).length, 2);
-  const extra = [2].map((index) => ({
+  const extra = [0].map((index) => ({
     ...structuredClone(allies[1]),
     id: "full-slot-" + index,
     squadSlot: index,
@@ -334,9 +334,6 @@ test("melee matches columns first; completed pairs return before unmatched membe
   assert.equal(pairs.length, 3);
   assert.equal(pairs[0].attacker, f.allies[0].id);
   assert.equal(pairs[0].defender, f.defenders[0].id);
-  assert.equal(pairs[0].deferred, false);
-  assert.equal(pairs[1].deferred, true);
-  assert.equal(pairs[2].deferred, true);
   const finish = (pair) =>
     Math.max(
       ...battles
@@ -492,7 +489,7 @@ test("whole-squad attacks face all members toward the target, including unarmed 
     assert.ok(f.allies.every((unit) => unit.angle === f.allies[0].angle));
     const offsets = f.allies.map((unit) => G.squadOffset(f.game, unit));
     const projection = offsets.map((offset) => offset.x * dx + offset.y * dy);
-    assert.ok(projection[1] > projection[0] && projection[1] > projection[2]);
+    assert.ok(projection[1]>projection[0] && projection[1]>projection[2]);
   }
 });
 

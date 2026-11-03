@@ -34,7 +34,7 @@ test("AI joins the same chassis before a closer different type, using normal mov
   assert.ok(third);
   G.move(game, own[3], third.x, third.y);
   assert.equal(G.squadMembers(game, own[2]).length, 3);
-  assert.equal(G.aiSquadChoice(game, own[1]), null);
+  assert.equal(G.aiSquadChoice(game, own[1]),null);
 });
 
 test("AI fights rather than assembling when it already has a legal firing opportunity", () => {

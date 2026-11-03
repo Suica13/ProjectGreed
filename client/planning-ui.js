@@ -331,6 +331,16 @@ const AttackControls = (() => {
     const plan = groupDraft(unit);
     return (plan && getUnit(plan.targetId)) || getUnit(Rules.attackOrders(unit)[0]?.target);
   }
+  function hasPlan(unit) { return members(unit).some(member=>!!member.plan); }
+  function editable(unit) {
+    return !!unit && members(unit).every(member=>member.attackSkillRound!==game.round &&
+      (!member.acted || member.plan || member.squadOrder));
+  }
+  function cancelPlan(unit) {
+    if(!editable(unit) || !hasPlan(unit) || !Net.active) return;
+    Net.request("cancel_attack",{unitId:unit.id,single:squadSingleMove});
+    reset();mode="select";update();
+  }
   function canTarget(unit, target) {
     return (
       !!unit &&
@@ -338,7 +348,7 @@ const AttackControls = (() => {
       target.team !== unit.team &&
       Rules.onMap(target) &&
       !target.embarked &&
-      !(unit.acted && !unit.plan) &&
+      editable(unit) &&
       members(unit).some((member) =>
         Rules.automaticWeapons(game, member, target).some(
           (w) => squadCombatMode !== "shooting" || w.type !== "melee",
@@ -350,16 +360,20 @@ const AttackControls = (() => {
     if (
       !unit ||
       unit.team !== game.team ||
-      (unit.acted && !unit.plan) ||
+      !editable(unit) ||
       isBusy() ||
       isAI() ||
       (Net.active && (!Net.canControl(unit) || !Net.canAct()))
     )
       return;
     reset();
+    const order=members(unit).flatMap(member=>Rules.attackOrders(member))[0];
+    const target=order && getUnit(order.target);
+    if(target && canTarget(unit,target)) {choose(unit,target);return;}
     mode = "attack-target";
     weaponId = null;
     update();
+    window.BattleHUD?.setTab("weapons");
   }
   function choose(unit, target) {
     if (!canTarget(unit, target)) return false;
@@ -449,6 +463,11 @@ const AttackControls = (() => {
   }
   function render(panel, unit, canCommand) {
     if (current) current.cache = {};
+    if(unit && hasPlan(unit) && editable(unit) && Net.active) {
+      const remove=element("button","","取消攻击计划");
+      remove.id="cancelConfirmedAttack";remove.disabled=!canCommand;
+      remove.onclick=()=>cancelPlan(unit);panel.append(remove);
+    }
     const target = targetFor(unit);
     if (!target || target.hp <= 0) {
       if (current) reset();
@@ -472,6 +491,10 @@ const AttackControls = (() => {
         panel.append(startButton);
         return;
       }
+      const picker=element("div","hud-attack-editor");picker.id="attackEditor";
+      const remove=panel.querySelector("#cancelConfirmedAttack");
+      if(remove)picker.append(remove);
+      panel.append(picker);panel=picker;
       panel.append(element("p", "helper", "选择目标后自动使用所有可用且符合射程的武器。"));
       const seen = new Set();
       for (const enemy of game.units.filter((t) => canTarget(unit, t))) {
@@ -538,12 +561,20 @@ const AttackControls = (() => {
       mode = "select";
       update();
     };
-    actions.append(confirm, cancel);
+    const change=element("button","","更换目标");
+    change.id="changeConfirmedTarget";change.disabled=!canCommand;
+    change.onclick=()=>{reset();mode="attack-target";update();window.BattleHUD?.setTab("weapons");};
+    actions.append(confirm,change,cancel);
+    const remove=panel.querySelector("#cancelConfirmedAttack");
+    if(remove) actions.append(remove);
     editor.append(heading, list, actions);
     panel.append(editor);
   }
   return {
     memberCard,
+    editable,
+    hasPlan,
+    cancelPlan,
     reset,
     draft,
     targetFor,
@@ -556,7 +587,10 @@ const AttackControls = (() => {
     mapDraft,
     changing: () => mode === "attack-target",
     resumeTarget: () => {
-      mode = "attack-weapons";
+      const unit=getUnit(selected), order=unit && members(unit).flatMap(member=>Rules.attackOrders(member))[0];
+      const target=order && getUnit(order.target);
+      if(!current && target && canTarget(unit,target)) {choose(unit,target);return;}
+      mode=current ? "attack-weapons" : "select";
       update();
     },
   };

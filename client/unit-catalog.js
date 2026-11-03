@@ -56,10 +56,20 @@ const UnitCatalog = (() => {
     faction = PlayerProfile.faction(),
     allows = (prefab) => Development.allows(faction, prefab.id),
   ) {
-    const minimumCost = (prefab) =>
-      Math.min(...prefab.weaponKits.map((kit) => prefab.stats.cost + kit.cost));
+    // Each sort gets its own cache so later research and editor changes stay fresh.
+    const costs = new Map(),
+      unlocked = new Map();
+    const minimumCost = (prefab) => {
+      if (!costs.has(prefab.id))
+        costs.set(prefab.id, Math.min(...prefab.weaponKits.map((kit) => prefab.stats.cost + kit.cost)));
+      return costs.get(prefab.id);
+    };
+    const developed = (prefab) => {
+      if (!unlocked.has(prefab.id)) unlocked.set(prefab.id, allows(prefab));
+      return unlocked.get(prefab.id);
+    };
     return (a, b) =>
-      Number(allows(b)) - Number(allows(a)) ||
+      Number(developed(b)) - Number(developed(a)) ||
       minimumCost(a) - minimumCost(b) ||
       a.name.localeCompare(b.name, I18n.language, { numeric: true, sensitivity: "base" }) ||
       a.id.localeCompare(b.id, "en");

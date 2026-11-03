@@ -123,20 +123,16 @@ function createServer({
   });
   const stateEncoders = new WeakMap();
   const { createEncoder } = require("./shared/state-wire.js");
-  const send = (ws, data) => {
-    if (ws?.readyState !== WebSocket.OPEN) return;
-    // Never drop a delta frame: reconnect instead if a peer cannot drain its queue.
-    if (ws.bufferedAmount > 8 * 1024 * 1024) {
-      ws.terminate();
-      return;
-    }
-    let encoded;
-    if (data.type === "state" && ws.stateDelta === 1) {
-      if (!stateEncoders.has(ws)) stateEncoders.set(ws, createEncoder());
-      encoded = stateEncoders.get(ws).encode(data);
-    } else encoded = JSON.stringify(data);
-    ws.send(encoded);
-  };
+  const outbox = require("./tools/state-outbox.cjs").createStateOutbox({
+    encode(ws, data) {
+      if (data.type === "state" && ws.stateDelta === 1) {
+        if (!stateEncoders.has(ws)) stateEncoders.set(ws, createEncoder());
+        return stateEncoders.get(ws).encode(data);
+      }
+      return JSON.stringify(data);
+    },
+  });
+  const send = (ws, data) => outbox.send(ws, data);
   const activities = require("./tools/server-activities.cjs").createActivityService({
     rules,
     send,
@@ -304,6 +300,7 @@ function createServer({
     });
   }
   async function close() {
+    outbox.close();
     clearInterval(heartbeat);
     clearInterval(activityTimer);
     engine.close();

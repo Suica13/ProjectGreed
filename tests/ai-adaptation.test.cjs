@@ -80,14 +80,15 @@ function withPool(run) {
   }
 }
 
-test("AI reserves enough for a full compatible roster and falls back when budget requires it", () =>
+test("AI prefers strong compatible platforms and may leave slots empty", () =>
   withPool(() => {
     for (let seed = 0; seed < 40; seed++) {
       const preferred = G.randomFormation(seed, 450, {}, 3);
-      assert.equal(preferred.length, 3);
-      assert.ok(preferred.every((entry) => entry.unitId === "best"));
+      assert.equal(preferred.length, 2);
+      assert.ok(preferred.every((entry) => modelOf(entry).adaptability.ground === 100));
+      assert.ok(preferred.some(entry=>entry.unitId==="expensive"));
       const fallback = G.randomFormation(seed, 400, {}, 3);
-      assert.equal(fallback.length, 3);
+      assert.equal(fallback.length, 2);
       assert.equal(
         fallback.filter((entry) => modelOf(entry).adaptability.ground === 100).length,
         2,
@@ -100,7 +101,7 @@ test("AI reserves enough for a full compatible roster and falls back when budget
     assert.deepEqual(G.randomFormation(1, 300, { unitCostLimit: 25 }, 3), []);
   }));
 
-test("AI fleets reserve deployment space for every slot, including 200 percent unit counts and mixed naval forces", () => {
+test("AI rosters fit deployment space even when strong platforms leave capacity unused", () => {
   for (const mapId of ["asteroid_crossing_1v1", "outer_orbit_5v5", "coastal_supply_2v2"]) {
     const settings = { mapId, costLimit: 20000, unitCostLimit: 5000 },
       map = G.getMap(mapId);
@@ -108,7 +109,7 @@ test("AI fleets reserve deployment space for every slot, including 200 percent u
       for (let seed = 1; seed <= 12; seed++) {
         const restrictions = G.formationRestrictions(settings, seat);
         const army = G.randomFormation(seed, 20000, restrictions, 24);
-        assert.equal(G.formationPoints(army), 24, mapId + ":" + seat + ":" + seed);
+        assert(G.formationPoints(army)>0 && G.formationPoints(army)<=24, mapId + ":" + seat + ":" + seed);
         const formations = map.spawns.map((_, index) => (index === seat ? army : null));
         const game = G.create(false, seed, formations, true, {
           ...settings,

@@ -550,14 +550,17 @@ const PilotSystem = (() => {
   }
   function modifiers(unit, model) {
     const stats = of(unit, model).stats;
-    const awakening = stats.awakening >= 100 ? 1.075 : 1;
+    const awakening = stats.awakening >= 100 ? 10 : 0;
     return {
-      shooting: factor(stats.shooting, 0.25) * awakening,
-      melee: factor(stats.melee, 0.25) * awakening,
-      defense: Math.max(0.05, 1 - (stats.defense - 100) * 0.0025),
-      move: factor(stats.speed, 0.5),
-      accuracy: factor(stats.accuracy, 0.25),
-      reaction: factor(stats.reaction, 0.25),
+      shooting: factor(stats.shooting, 0.3125),
+      melee: factor(stats.melee, 0.3125),
+      defense: Math.max(0.05, 1 - (stats.defense - 100) * 0.003125),
+      move: factor(stats.speed, 0.625),
+      attackRounds: factor(stats.speed, 0.25),
+      awakeningHit: awakening,
+      awakeningEvasion: awakening,
+      accuracy: factor(stats.accuracy, 0.3125),
+      reaction: factor(stats.reaction, 0.3125),
     };
   }
   return {

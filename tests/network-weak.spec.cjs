@@ -177,3 +177,17 @@ test("receipt stops action resends and waits for matching state before releasing
  await page.evaluate(()=>Net.receive({...structuredClone(weakBaseline),revision:Net.revision+1},weakSocket));
  assert.equal(await page.evaluate(()=>Net.awaiting),null);
 });
+
+test("a transient send exception retries the exact same request instead of leaving controls blocked",async({page})=>{
+ await fixture(page);await page.clock.install();
+ const id=await page.evaluate(()=>{
+   const send=weakSocket.send;let first=true;
+   weakSocket.send=raw=>{if(first){first=false;throw Error('temporary send failure');}send(raw);};
+   Net.request('set_ready',{ready:true,formation:Formation.current()});return Net.awaiting.id;
+ });
+ await page.clock.fastForward(1100);
+ assert.equal(await page.evaluate(()=>weakSent.length),1);
+ assert.equal(await page.evaluate(()=>weakSent[0].id),id);
+ await page.evaluate(()=>Net.receive({...structuredClone(weakBaseline),revision:Net.revision+1,ack:Net.awaiting.id},weakSocket));
+ assert.equal(await page.evaluate(()=>Net.awaiting),null);
+});

@@ -37,7 +37,6 @@ const CombatPlayback = (() => {
     const battles = [...(snapshot.combats || []), ...(snapshot.effectCombats || [])];
     if (battles.length) {
       queue.push({ id: batch.id, battles });
-      MapCombat.seed(battles);
     } else finished.add(batch.id);
   }
   function active() {
@@ -82,6 +81,7 @@ const CombatPlayback = (() => {
     };
     phase = "battle";
     byId("reaction").hidden = true;
+    MapCombat.seed(next.battles);
     MapCombat.begin(battleView);
     return true;
   }

@@ -9,12 +9,20 @@ const AutomaticFire = (() => {
       counter && weapon.type === "melee"
         ? Math.min(1, Classes.rounds(weapon))
         : Classes.rounds(weapon);
-    return Math.floor(count * (unit?.forcedExitRound === game.round ? 0.5 : 1));
+    if (count <= 0) return 0;
+    const model = unit ? G.modelOf(unit) : null;
+    const mobility = Math.max(0, model?.speed ?? 100) / 100;
+    const pilot = model?.pilotModifiers?.attackRounds ?? 1;
+    const limit = weapon.type === "melee" || weapon.slot === "skill" ||
+      Classes.wristWeapon(weapon) || Classes.headVulcan(weapon) || weapon.pilotRequirements?.length
+      ? 1 : weapon.maxUsesPerTurn ?? Infinity;
+    const scaled = Math.min(limit, Math.max(1, Math.round(count * mobility * pilot)));
+    return Math.floor(scaled * (unit?.forcedExitRound === game.round ? 0.5 : 1));
   };
   function weapons(G, game, unit, target, counter = false) {
     if (!unit || !target) return [];
     const usable = G.modelOf(unit).weapons.filter((w) => {
-      if (w.slot === "skill" || w.special?.type === "snipe") return false;
+      if ((w.slot === "skill" && Classes.classify(w) !== "ram") || w.special?.type === "snipe") return false;
       if (!roundCount(G, game, unit, w, counter)) return false;
       const aimCell = G.attackAimCell(game, unit, target, [w]);
       if (!aimCell) return false;
@@ -186,7 +194,7 @@ const AutomaticFire = (() => {
             0.25,
             weapon.attack.duration / speed,
             lead + Math.max(...weapon.attack.shots) / speed + flight(G, from, to, weapon),
-          ) + 0.35;
+          ) + (weapon.type === "melee" ? 0.12 : 0.04);
         const run = {
           from: from.id,
           to: to.id,
@@ -266,7 +274,7 @@ const AutomaticFire = (() => {
           stageEnd: finish,
           meleeExchange: pair,
         });
-      cursor = finish + (last ? pair.retreat : 0) + 0.15;
+      cursor = finish + (last ? pair.retreat : 0) + 0.04;
       const slot = stageSlots.at(-1);
       if (slot?.start === stageStart) slot.end = Math.max(slot.end, cursor);
       else stageSlots.push({ start: stageStart, end: cursor });
@@ -433,7 +441,7 @@ const AutomaticFire = (() => {
                 (unit) => unit && G.onMap(unit) && G.canAttack(game, from, unit, candidateWeapon),
               );
             if (candidates.length) {
-              chosen = candidates[Math.floor(G.random(game) * candidates.length)];
+              chosen = G.squadTarget(game, candidates);
               run.volleyTargets.set(job.round, chosen.id);
             }
           }
@@ -535,7 +543,7 @@ const AutomaticFire = (() => {
           if (occupant && occupant.team !== from.team && G.onMap(occupant)) {
             const members = G.squadMembers(game, occupant);
             to =
-              members.length > 1 ? members[Math.floor(G.random(game) * members.length)] : occupant;
+              members.length > 1 ? G.squadTarget(game, members) : occupant;
           } else {
             to = {
               ...structuredClone(to),
@@ -696,11 +704,11 @@ const AutomaticFire = (() => {
       let keepUntil = emitted.length
         ? Math.max(
             ...emitted.map((battle) => battle._stageEnd + (battle.meleeExchange?.retreat || 0)),
-          ) + 0.15
+          ) + 0.04
         : slot.start;
       for (const battle of battles)
         if (battle.timelineStart <= slot.start)
-          keepUntil = Math.max(keepUntil, battle.events[0].impactAt + 0.15);
+          keepUntil = Math.max(keepUntil, battle.events[0].impactAt + 0.04);
       if (keepUntil < slot.end - 0.000001) cuts.push({ start: keepUntil, end: slot.end });
     }
     cuts.sort((a, b) => a.start - b.start);

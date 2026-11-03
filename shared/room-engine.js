@@ -2337,7 +2337,8 @@ function createRoomEngine({
       const transport = G.hangars.recoveryOrder(room.game, passenger);
       if (transport) return { player: owner, ...transport };
     }
-    const canPlanMore = (unit) => available(unit) && !unit.acted;
+    const canPlanMore = (unit) =>
+      available(unit) && !unit.acted && !unit.plan && unit.attackSkillRound !== room.game.round;
     const player = room.seats.find(
       (p) =>
         aiControlled(room, p) &&
@@ -2516,13 +2517,12 @@ function createRoomEngine({
         );
       })
     )
-      return { player, action: "wait", fields: { unitId: u.id } };
+      return { player, action: "wait", fields: { unitId: u.id, single: true } };
     const choice = u.plan ? null : G.aiChoice(room.game, u);
     if (choice?.rotation)
       return { player, action: "rotate", fields: { unitId: u.id, direction: choice.rotation } };
     if (choice && !u.moved && (choice.x !== u.x || choice.y !== u.y))
       return { player, action: "move", fields: { unitId: u.id, x: choice.x, y: choice.y } };
-    if (u.plan) return { player, action: "wait", fields: { unitId: u.id } };
     const pressure = G.aiTargetPressure(room.game, u.team);
     let best = null;
     for (const target of room.game.units.filter(
@@ -2553,7 +2553,7 @@ function createRoomEngine({
           )
             best = { target, weapon, score, remaining, useful, assignedAttackers };
         }
-    if (!best) return { player, action: "wait", fields: { unitId: u.id } };
+    if (!best) return { player, action: "wait", fields: { unitId: u.id, single: true } };
     const weapons =
       best.weapon.slot === "skill" ? [best.weapon] : G.automaticQueue(room.game, u, best.target);
 
@@ -2662,6 +2662,7 @@ function createRoomEngine({
             unit &&
             !unit.acted &&
             !unit.plan &&
+            unit.attackSkillRound !== room.game.round &&
             G.onMap(unit) &&
             unit.team === room.game.team
           ) {
@@ -2672,6 +2673,7 @@ function createRoomEngine({
                 round: room.game.round,
                 action: "wait",
                 unitId: unit.id,
+                single: true,
               });
             } catch (fallbackError) {
               console.error("AI fallback failed", room.code, fallbackError);
@@ -3793,7 +3795,7 @@ function createRoomEngine({
         } else {
           const carrier = unit(room, passenger.embarked?.carrierId);
           const ids = msg.unitIds || [passenger.id];
-          if (!Array.isArray(ids) || ids.length > 3 || ids[0] !== passenger.id) throw Error("无效出击小队");
+          if (!Array.isArray(ids) || ids.length > 6 || ids[0] !== passenger.id) throw Error("无效出击小队");
           const members = ids.map(id => ownUnit(room, seat, id, true));
           if (room.campaignBattle && room.phase === "deployment" && members.some(u => !u.campaignDeploying))
             throw Error("原战场存活部队不能重新部署");

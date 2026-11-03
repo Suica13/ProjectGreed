@@ -260,6 +260,12 @@ const BattleHUD = (() => {
     const value = byId("spectatorView").value;
     Net.request("spectate", { team: value === "global" ? null : Number(value) });
   };
+  function updateSquadClearance() {
+    const clearance=squadStrip.hidden ? 0 : Math.ceil(scene.getBoundingClientRect().bottom-squadStrip.getBoundingClientRect().top+8);
+    scene.style.setProperty("--squad-strip-clearance",clearance+"px");
+  }
+  if(window.ResizeObserver) new ResizeObserver(updateSquadClearance).observe(squadStrip);
+  window.addEventListener("resize",updateSquadClearance);
   function refresh() {
     const active = pageView === "game",
       unit = getUnit(selected),
@@ -269,16 +275,17 @@ const BattleHUD = (() => {
       squad = squadUnit ? Rules.squadMembers(game, squadUnit) : [],
       responseMember = reacting ? counterDraft(squadUnit).memberId : null;
     squadStrip.hidden =
-      !active || (!reacting && squad.length < 2) || !!pendingMovement() || (inCombat && !reacting);
+      !active || !squad.length || !squad.every(Rules.squadEligible) || !!pendingMovement() || (inCombat && !reacting);
     squadStrip.replaceChildren();
     if (!squadStrip.hidden) {
-      const heading = element("strong", "", I18n.text("小队") + ` ${squad.length}/3`);
+      const heading = element("strong", "", I18n.text("小队") + ` ${squad.length}/6 · ${squad.reduce((sum,u)=>sum+Rules.squadCapacity(u),0)}/6`);
       const members = element("div", "squad-members");
       const all = element("button", "", I18n.text("全队"));
       all.id = "squadSelectAll";
       all.setAttribute("aria-pressed", String(reacting ? !responseMember : !squadSingleMove));
       all.onclick = () => (reacting ? selectCounterMember(null) : select(unit.id));
-      members.append(all);
+      const left=element("div","squad-left");
+      const formation = element("div", "squad-portraits");
       for (const member of squad) {
         const button = element("button", "", "");
         button.dataset.squadMember = member.id;
@@ -293,11 +300,13 @@ const BattleHUD = (() => {
         image.src = unitIcon(member.model, member.pilot);
         image.alt = unitName(member);
         button.append(image);
-        button.onclick = () =>
-          reacting ? selectCounterMember(member.id) : select(member.id, { single: true });
-        members.append(button);
+        button.onclick = () => reacting ? selectCounterMember(member.id) : select(member.id, { single: true });
+        formation.append(button);
       }
-      squadStrip.append(heading, members);
+      members.append(all,formation);
+      left.append(heading,members);
+      squadStrip.append(left);
+      heading.title=I18n.text("回避加成")+" +"+Rules.squadEvasion(game,squadUnit)+"%";
       if (phase === "idle" && unit.team === game.team && (!Net.active || Net.canControl(unit))) {
         const fight = element(
           "button",
@@ -305,12 +314,12 @@ const BattleHUD = (() => {
           I18n.text(squadCombatMode === "shooting" ? "射击战" : "格斗战"),
         );
         fight.id = "squadCombatMode";
-        fight.disabled = isBusy() || unit.acted || (Net.active && !Net.canAct());
+        fight.disabled = isBusy() || !AttackControls.editable(unit) || (Net.active && !Net.canAct());
         fight.onclick = () => {
           squadCombatMode = squadCombatMode === "shooting" ? "melee" : "shooting";
           update();
         };
-        squadStrip.append(fight);
+        members.append(fight);
       }
     }
     const regionId = Net.snapshot?.campaign?.activeRegion;
@@ -403,7 +412,7 @@ const BattleHUD = (() => {
     const attackPlanner = byId("hudAttackPlanner"),
       editor = byId("attackEditor");
     attackPlanner.replaceChildren();
-    attackPlanner.hidden = !actionActive || mode !== "attack-weapons" || !editor;
+    attackPlanner.hidden = !actionActive || !["attack-weapons","attack-target"].includes(mode) || !editor;
     if (!attackPlanner.hidden) attackPlanner.append(editor);
     // 攻击编排临时使用同一个右侧栏，不改变信息开关。
     panel.hidden =
@@ -444,7 +453,7 @@ const BattleHUD = (() => {
       const canCommand =
         own &&
         phase === "idle" &&
-        !(unit.acted && !unit.plan) &&
+        !(unit.acted && !unit.plan && !unit.squadOrder) &&
         !isAI() &&
         (!Net.active || Net.canAct()) &&
         !isBusy();
@@ -521,6 +530,7 @@ const BattleHUD = (() => {
       byId("hudToggleLegend").setAttribute("aria-expanded", "false");
     }
     applyTab();
+    updateSquadClearance();
   }
   window.BattleHUD = { refresh, refreshRoomStatus, setTab, clearSelection };
   refresh();

@@ -646,12 +646,12 @@ function renderPanel() {
     canCommand =
       own &&
       !pendingMovement() &&
-      (!u.acted || !!u.plan) &&
+      (!u.acted || !!u.plan || !!u.squadOrder) &&
       !isBusy() &&
       !isAI() &&
       (!Net.active || Net.canAct());
   const canSkillCommand =
-    own && !pendingMovement() && !isBusy() && !isAI() && (!Net.active || Net.canAct());
+    own && !u.acted && !u.plan && !u.squadOrder && !pendingMovement() && !isBusy() && !isAI() && (!Net.active || Net.canAct());
   panel.replaceChildren();
   let head = element("div", "unit-card-head");
   head.innerHTML = /* HTML */ `<img src="${unitIcon(u.model, u.pilot)}" alt="" />
@@ -894,7 +894,7 @@ function renderPanel() {
         weaponId = null;
         update();
       },
-      !canCommand,
+      !canCommand || u.acted || !!u.plan || !!u.squadOrder,
     ],
     [
       "移动",
@@ -908,12 +908,12 @@ function renderPanel() {
     [
       "攻击",
       () => AttackControls.start(u),
-      !canCommand || !game.units.some((target) => AttackControls.canTarget(u, target)),
+      !canCommand || !AttackControls.editable(u) || (!AttackControls.hasPlan(u) && !game.units.some((target) => AttackControls.canTarget(u, target))),
     ],
     [
       "技能",
       () => window.BattleHUD?.setTab("skills"),
-      !canSkillCommand ||
+      !canSkillCommand || u.acted || !!u.plan || !!u.squadOrder ||
         (!m.weapons.some((w) => w.slot === "skill") && !Rules.unitSkills(u).length),
     ],
     [
@@ -2353,7 +2353,7 @@ byId("map").onclick = async (e) => {
     target.team !== u.team &&
     u.team === game.team &&
     (!Net.active || Net.canControl(u)) &&
-    (!u.acted || u.plan) &&
+    (!u.acted || u.plan || u.squadOrder) &&
     ["select", "move", "attack-target", "attack-weapons"].includes(mode) &&
     AttackControls.canTarget(u, target)
   ) {
@@ -3199,19 +3199,33 @@ byId("closeHelp").onclick = () => {
   byId("help").hidden = true;
 };
 // 每帧入口：独立预览接管自己的绘制，实际游戏绘制正常地图与战斗。
+let lastRenderError = null;
 function tick(now) {
   animationFrameId = null;
-  if (window.ReplayPlayer?.active) now = window.ReplayPlayer.tick(now);
-  clock = now / 1000;
-  if (assetsReady) {
-    if (window.GamePreview?.active) window.GamePreview.tick(now);
-    else if (pageView === "game") {
-      MapCombat.update(now);
-      drawMap(now);
-      drawBattle(now);
+  try {
+    if (window.ReplayPlayer?.active) now = window.ReplayPlayer.tick(now);
+    clock = now / 1000;
+    if (assetsReady) {
+      if (window.GamePreview?.active) window.GamePreview.tick(now);
+      else if (pageView === "game") {
+        MapCombat.update(now);
+        drawMap(now);
+        drawBattle(now);
+      }
     }
+  } catch (error) {
+    // Keep refresh and network/UI recovery alive without changing authoritative combat.
+    const message = String(error?.stack || error);
+    if (message !== lastRenderError) {
+      lastRenderError = message;
+      console.error("Battle rendering failed", error);
+      GameDialog.alert(I18n.text("战斗画面绘制异常") + "\n" + String(error?.message || error));
+    }
+    const canvas = byId("map");
+    canvas.width = canvas.width; // Clear any unbalanced canvas clipping state.
+  } finally {
+    if (pageView === "game" || window.isLayoutPreview) startRendering();
   }
-  if (pageView === "game" || window.isLayoutPreview) startRendering();
 }
 window.addEventListener("language-change", () => {
   update();

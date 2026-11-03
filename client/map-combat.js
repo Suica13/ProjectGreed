@@ -4,6 +4,20 @@ const MapCombat = (() => {
     meleeExchanges = new Map();
   const dodgeTracks = new Map();
   const formationOffsets = new Map();
+  const pendingExits = new Set(), startedActors = new Set();
+  let stateCache = null, poseCache = new WeakMap(), contactCache = new WeakMap();
+  function invalidateFrame() {
+    stateCache = null;
+    poseCache = new WeakMap();
+    contactCache = new WeakMap();
+  }
+  function contactsFor(item) {
+    const cached = contactCache.get(item);
+    if (cached?.time === item.time) return cached.contacts;
+    const contacts = WeaponEffects.arrived(item.plan,item.time);
+    contactCache.set(item,{time:item.time,contacts});
+    return contacts;
+  }
   let dodgeClock = 0,
     dodgeLastNow = null;
   const visibleActors = new Set();
@@ -18,6 +32,9 @@ const MapCombat = (() => {
     initialIField = new Map();
   const clone = (value) => JSON.parse(JSON.stringify(value));
   function reset() {
+    invalidateFrame();
+    pendingExits.clear();
+    startedActors.clear();
     displayed.clear();
     meleeExchanges.clear();
     visibleActors.clear();
@@ -44,6 +61,9 @@ const MapCombat = (() => {
     }
   }
   function begin(view, random = Math.random) {
+    invalidateFrame();
+    pendingExits.clear();
+    startedActors.clear();
     frame = null;
     view.mapBattle = true;
     // The authoritative snapshot already contains combat deaths. Keep the initial
@@ -53,8 +73,16 @@ const MapCombat = (() => {
     for (const [id, unit] of displayed) roster.set(id, unit);
     const visualGame = { ...game, units: [...roster.values()] };
     formationOffsets.clear();
-    for (const unit of visualGame.units)
-      formationOffsets.set(unit.id, Rules.squadOffset(visualGame, unit));
+    const groups = new Map();
+    for (const unit of visualGame.units) {
+      if (!unit.squadId) continue;
+      if (!groups.has(unit.squadId)) groups.set(unit.squadId, []);
+      groups.get(unit.squadId).push(unit);
+    }
+    for (const unit of visualGame.units) {
+      const group = unit.squadId ? { ...visualGame, units: groups.get(unit.squadId) } : visualGame;
+      formationOffsets.set(unit.id, Rules.squadOffset(group, unit));
+    }
     meleeExchanges.clear();
     for (const battle of view.battles || [])
       if (battle.meleeExchange) {
@@ -71,8 +99,11 @@ const MapCombat = (() => {
     unitStartDelays.clear();
     for (const battle of view.battles || [])
       for (const event of battle.events)
-        if (!unitStartDelays.has(event.from)) unitStartDelays.set(event.from, random());
+        if (!unitStartDelays.has(event.from)) unitStartDelays.set(event.from, random() * 0.12);
     // A nuclear launch produces one damage record per victim, but one visual blast.
+    for (const battle of view.battles || [])
+      for (const event of battle.events)
+        for (const exit of event.evacuations || []) pendingExits.add(exit.unitId);
     const nuclearLaunches = new Set();
     const orderedBattles = [...(view.battles || [])].sort((a, b) =>
       Number.isInteger(a.combatWave) && Number.isInteger(b.combatWave)
@@ -149,17 +180,18 @@ const MapCombat = (() => {
           ]);
         earlier.push({ lane, index, event });
       });
+    const firstFieldHealth = new Map();
+    for (const battle of view.battles || [])
+      for (const event of battle.events)
+        if (event.iFieldBefore !== undefined && !firstFieldHealth.has(event.to))
+          firstFieldHealth.set(event.to,event.iFieldBefore);
     for (const [id, unit] of displayed) {
       initialHp.set(id, unit.hp);
       initialShield.set(id, unit.shield);
       initialEn.set(id, unit.en);
       initialIField.set(
         id,
-        unit.iFieldHp ??
-          (view.battles || [])
-            .flatMap((b) => b.events)
-            .find((e) => e.to === id && e.iFieldBefore !== undefined)?.iFieldBefore ??
-          0,
+        unit.iFieldHp ?? firstFieldHealth.get(id) ?? 0,
       );
       initialParts.set(id, { ...unit.brokenParts });
     }
@@ -209,13 +241,21 @@ const MapCombat = (() => {
       if (dodgeClock < pair.start) continue;
       const anchor = meleeAnchor(pair);
       if (!anchor) continue;
+      // The approach/hold interval can have no active firing lane. Sample the
+      // shared dodge track here too, so counterfire cannot suddenly add an old
+      // ranged dodge that was missing while only choreography was visible.
+      const track = dodgeTracks.get(pair.attacker);
+      const dodge = track ? WeaponEffects.dodge(
+        null, {moves:track.moves, initialSlot:track.initialSlot}, dodgeClock,
+        null, {unit:displayed.get(pair.attacker), scale:track.base.scale},
+      ) : result.get(pair.attacker)?.dodge;
       if (dodgeClock > pair.end) {
         const pose = result.get(pair.attacker);
         if (pose && health(pair.attacker) > 0)
           result.set(pair.attacker, {
             ...pose,
-            x: anchor.origin.x + (pose.dodge?.x || 0),
-            y: anchor.origin.y + (pose.dodge?.y || 0),
+            x: anchor.origin.x + (dodge?.x || 0),
+            y: anchor.origin.y + (dodge?.y || 0),
           });
         continue;
       }
@@ -234,8 +274,9 @@ const MapCombat = (() => {
         moving = !dead && progress > 0 && progress < 1;
       result.set(pair.attacker, {
         ...pose,
-        x: anchor.origin.x + (anchor.engaged.x - anchor.origin.x) * progress,
-        y: anchor.origin.y + (anchor.engaged.y - anchor.origin.y) * progress + (pose.dodge?.y || 0),
+        x: anchor.origin.x + (anchor.engaged.x - anchor.origin.x) * progress + (dodge?.x || 0),
+        y: anchor.origin.y + (anchor.engaged.y - anchor.origin.y) * progress + (dodge?.y || 0),
+        dodge,
         angle: anchor.angle,
         moving: moving || !!pose.moving,
         ...(moving
@@ -286,6 +327,13 @@ const MapCombat = (() => {
       [target, "targetDodgeSlot"],
     ]) {
       const previous = previousPoses.get(actor.unit.id);
+      // Closing into melee is choreography, not a dodge. Reinterpreting the
+      // approach displacement as evasion teleports the attacker on counterfire.
+      if (event.meleeExchange) {
+        event[field] = (previous?.dodge?.y || 0) / (ART.presentation.dodgeDistance * actor.scale);
+        if (field === "sourceDodgeSlot") event.sourceDodgeX = previous?.dodge?.x || 0;
+        continue;
+      }
       if (previous)
         event[field] = Math.max(
           -1.35,
@@ -301,10 +349,16 @@ const MapCombat = (() => {
             y: (event.impactCell.y + 0.5) * Rules.mapCellPixels,
           }
         : target;
-    const aim = (Math.atan2(impact.x - source.x, -(impact.y - source.y)) * 180) / Math.PI;
-    // Body facing uses authority's cell centers; squad offsets only affect visual aim.
-    Rules.faceTarget(source.unit, target.unit);
-    Rules.faceTarget(target.unit, source.unit);
+    const firingX = source.x + (event.sourceDodgeX || 0);
+    const firingY = source.y + (event.sourceDodgeSlot || 0) * ART.presentation.dodgeDistance * source.scale;
+    const targetY = impact.y + (impact === target
+      ? (event.targetDodgeSlot || 0) * ART.presentation.dodgeDistance * target.scale : 0);
+    const aim = (Math.atan2(impact.x - firingX, -(targetY - firingY)) * 180) / Math.PI;
+    const canTurn = unit => !Rules.modelOf(unit).ship && !Rules.modelOf(unit).fixedWeaponFacing;
+    // Body, animated muzzle and projectile share the visible world-space target.
+    // Ship hulls and fixed emplacements keep their facing and aim their turrets.
+    if (canTurn(source.unit)) source.unit.angle = aim;
+    if (canTurn(target.unit)) target.unit.angle = (aim + 180) % 360;
     source.angle = source.unit.angle;
     source.aimAngle = aim;
     source.unit.aimAngle = aim;
@@ -319,7 +373,8 @@ const MapCombat = (() => {
       start,
       track: dodgeTracks.get(event.to),
     });
-    frame = { view, index: view.index, event, source, target, weapon, plan, time: 0 };
+    frame = { view, index: view.index, event, source, target, weapon, plan, time: 0,
+      shotsByIndex:new Map(plan.shots.map(shot=>[shot.index,shot])) };
     byId("mapCombatStatus").textContent = event.effectsOnly
       ? I18n.text("战斗演出")
       : `${unitName(source.unit)} → ${event.empty ? "空地" : unitName(target.unit)} · ${weapon.name}`;
@@ -386,6 +441,14 @@ const MapCombat = (() => {
     if (current.time >= current.plan.duration) commit(view);
   }
   function framePoses() {
+    if (!frame) return new Map();
+    const cached = poseCache.get(frame);
+    if (cached?.time === frame.time) return cached.poses;
+    const result = computeFramePoses();
+    poseCache.set(frame, {time:frame.time, poses:result});
+    return result;
+  }
+  function computeFramePoses() {
     const result = new Map();
     if (!frame || !battleView?.mapBattle) return result;
     const { source, target, plan, event, weapon, time } = frame;
@@ -457,10 +520,10 @@ const MapCombat = (() => {
         moving: true,
       };
     const dodge = WeaponEffects.dodge(event, plan, time, source, target);
-    const arrived = WeaponEffects.arrived(plan, time),
+    const arrived = contactsFor(frame),
       latest = arrived.at(-1);
     const stagger = latest?.hit && time < latest.at + 0.18;
-    const hp = WeaponEffects.health(event, plan, time, target.unit.hp);
+    const hp = Math.max(0, (event.before ?? target.unit.hp) - arrived.reduce((sum,c)=>sum+c.damage,0));
     const dying = plan.deathSoundAt !== null && time >= plan.deathSoundAt;
     if (!event.nuclearFollowup) result.set(source.unit.id, sourcePose);
     result.set(target.unit.id, {
@@ -481,7 +544,7 @@ const MapCombat = (() => {
           : 0,
       moving: dodge.active,
       hp,
-      shield: WeaponEffects.shield(event, plan, time, target.unit.shield),
+      shield: Math.max(0, (event.shieldBefore ?? target.unit.shield) - arrived.reduce((sum,c)=>sum+(c.shieldDamage || 0),0)),
       dying,
       keepVisible: plan.deathHideAt !== null && time < plan.deathHideAt,
       hidden: plan.deathHideAt !== null && time >= plan.deathHideAt,
@@ -492,6 +555,7 @@ const MapCombat = (() => {
   }
   // 同一波全体单位并行；全部攻击演完才反击，全部反击演完才进入下一波。
   function update(now) {
+    invalidateFrame();
     if (globalThis.BattleAssets?.loading) {
       dodgeLastNow = null;
       for (const lane of lanes) {
@@ -528,9 +592,11 @@ const MapCombat = (() => {
         } else {
           lane.delayElapsed += (Math.max(0, now - (lane.delayAt ?? now)) / 1000) * rate;
           lane.delayAt = now;
-          const startDelay = unitStartDelays.get(lane.view.events[lane.view.index].from) || 0;
+          const actorId = lane.view.events[lane.view.index].from;
+          const startDelay = startedActors.has(actorId) ? 0 : unitStartDelays.get(actorId) || 0;
           if (lane.delayElapsed < startDelay) continue;
           lane.started = true;
+          startedActors.add(actorId);
           lane.frame = setup(lane.view, dodgeClock - (lane.delayElapsed - startDelay));
           // 保留跨越起播时刻的这一帧时间，低帧率下也不会把延迟额外拉长。
           lane.frame.lastNow = now - ((lane.delayElapsed - startDelay) * 1000) / rate;
@@ -551,19 +617,21 @@ const MapCombat = (() => {
         lane.finished.push(frame);
         commit(lane.view, true);
         lane.frame = null;
-        // 先攻结束后，反击由反击单位自己的随机延迟决定起播时间。
+        // Only an actor's first appearance is staggered; later volleys start immediately.
         lane.started = false;
         lane.delayElapsed = 0;
         lane.delayAt = now;
       }
     }
     frame = lanes.find((lane) => !lane.view.completed)?.frame || null;
-    byId("mapCombatStatus").textContent =
+    const statusText =
       I18n.text("交战演出") +
       " · " +
       lanes.filter((lane) => !lane.view.completed).length +
       "/" +
       lanes.length;
+    const status = byId("mapCombatStatus");
+    if (status.textContent !== statusText) status.textContent = statusText;
     if (
       lanes.every((lane) => lane.view.completed) &&
       [...meleeExchanges.values()].every((pair) => dodgeClock >= pair.end)
@@ -654,51 +722,47 @@ const MapCombat = (() => {
     }
     return composed;
   }
-  function health(id, shield = false) {
-    let value = (shield ? initialShield : initialHp).get(id);
-    if (value === undefined) return undefined;
-    for (const lane of lanes)
-      for (const item of [...lane.finished, ...(lane.frame ? [lane.frame] : [])])
-        if (item.event.to === id)
-          value -= WeaponEffects.arrived(item.plan, item.time).reduce(
-            (sum, contact) => sum + (shield ? contact.shieldDamage || 0 : contact.damage),
-            0,
-          );
-    return Math.max(0, value);
+  // One traversal per rendered frame, rather than one traversal per unit/field.
+  function statistics() {
+    if (stateCache) return stateCache;
+    const values = new Map(), exits = new Set();
+    function state(id) {
+      if (!values.has(id)) values.set(id, {
+        hp:initialHp.get(id), shield:initialShield.get(id), en:initialEn.get(id),
+        iFieldHp:initialIField.get(id), parts:{...initialParts.get(id)}, impact:Infinity,
+      });
+      return values.get(id);
+    }
+    const sources = lanes.length ? lanes : frame ? [{finished:[],frame,view:frame.view}] : [];
+    for (const lane of sources) {
+      for (const item of [...lane.finished, ...(lane.frame ? [lane.frame] : [])]) {
+        const target = state(item.event.to), source = state(item.event.from);
+        const contacts = contactsFor(item);
+        for (const contact of contacts) {
+          if (target.hp !== undefined) target.hp -= contact.damage || 0;
+          if (target.shield !== undefined) target.shield -= contact.shieldDamage || 0;
+          if (target.iFieldHp !== undefined) target.iFieldHp -= contact.iFieldDamage || 0;
+          for (const part of contact.brokenParts || []) target.parts[part] = true;
+          if (item === lane.frame && !lane.view.completed && contact.iFieldDamage > 0)
+            target.impact = Math.min(target.impact, item.time - contact.at);
+        }
+        if (source.en !== undefined && item.time >= (item.plan.shots[0]?.at ?? 0))
+          source.en -= item.event.energySpent ?? item.weapon.en;
+        if (item.time >= item.plan.duration || contacts.some(contact => contact.after <= 0))
+          for (const exit of item.event.evacuations || []) exits.add(exit.unitId);
+      }
+    }
+    for (const value of values.values())
+      for (const field of ["hp","shield","en"])
+        if (value[field] !== undefined) value[field] = Math.max(0, value[field]);
+    stateCache = {values,exits};
+    return stateCache;
   }
-  function fieldHealth(id) {
-    let value = initialIField.get(id);
-    if (value === undefined) return undefined;
-    for (const lane of lanes)
-      for (const item of [...lane.finished, ...(lane.frame ? [lane.frame] : [])])
-        if (item.event.to === id)
-          value -= WeaponEffects.arrived(item.plan, item.time).reduce(
-            (sum, contact) => sum + (contact.iFieldDamage || 0),
-            0,
-          );
-    return value;
+  // Melee choreography must use the same merged damage as the visible roster.
+  function health(id) {
+    return statistics().values.get(id)?.hp ?? initialHp.get(id) ?? displayed.get(id)?.hp ?? 0;
   }
-  function fieldImpact(id) {
-    let age = Infinity;
-    for (const item of lanes.length
-      ? lanes.filter((l) => l.frame && !l.view.completed).map((l) => l.frame)
-      : frame
-        ? [frame]
-        : [])
-      if (item.event.to === id)
-        for (const contact of WeaponEffects.arrived(item.plan, item.time))
-          if (contact.iFieldDamage > 0) age = Math.min(age, item.time - contact.at);
-    return age;
-  }
-  function energy(id) {
-    let value = initialEn.get(id);
-    if (value === undefined) return undefined;
-    for (const lane of lanes)
-      for (const item of [...lane.finished, ...(lane.frame ? [lane.frame] : [])])
-        if (item.event.from === id && item.time >= (item.plan.shots[0]?.at ?? 0))
-          value -= item.event.energySpent ?? item.weapon.en;
-    return Math.max(0, value);
-  }
+  function fieldImpact(id) { return statistics().values.get(id)?.impact ?? Infinity; }
   function draw(ctx, geometry, underlay = false) {
     if (!lanes.length) drawSingle(ctx, geometry, underlay);
     else {
@@ -711,35 +775,12 @@ const MapCombat = (() => {
       frame = saved;
     }
   }
-  function visibleParts(unit) {
-    const state = { ...(initialParts.get(unit.id) || unit.brokenParts) };
-    const items = lanes.length
-      ? lanes.flatMap((lane) => [...lane.finished, ...(lane.frame ? [lane.frame] : [])])
-      : frame
-        ? [frame]
-        : [];
-    for (const item of items)
-      if (item.event.to === unit.id)
-        for (const contact of WeaponEffects.arrived(item.plan, item.time))
-          for (const part of contact.brokenParts || []) state[part] = true;
-    return state;
-  }
   function units() {
     if (!battleView?.mapBattle)
       return game.units.filter(u => !u.embarked || u.embarked.exposed || u.pendingMove?.launch);
-    const pose = poses();
-    const pendingExits = new Set(),
-      visibleExits = new Set();
-    for (const lane of lanes) {
-      for (const event of lane.view.events)
-        for (const exit of event.evacuations || []) pendingExits.add(exit.unitId);
-      for (const item of [...lane.finished, ...(lane.frame ? [lane.frame] : [])])
-        if (
-          item.time >= item.plan.duration ||
-          WeaponEffects.arrived(item.plan, item.time).some((contact) => contact.after <= 0)
-        )
-          for (const exit of item.event.evacuations || []) visibleExits.add(exit.unitId);
-    }
+    // Also refresh when inspection tools seek a frame without advancing its clock.
+    stateCache = null;
+    const pose = poses(), stats = statistics();
     // Actors were authorized when combat happened. The final fog snapshot can
     // omit them after a scout dies; keep them only for this playback's lifetime.
     const roster = new Map(game.units.map((unit) => [unit.id, unit]));
@@ -749,18 +790,19 @@ const MapCombat = (() => {
       .filter(
         (u) =>
           (!u.embarked || u.embarked.exposed || u.pendingMove?.launch) &&
-          (!pendingExits.has(u.id) || visibleExits.has(u.id)),
+          (!pendingExits.has(u.id) || stats.exits.has(u.id)),
       )
       .map((unit) => {
         const visual = displayed.get(unit.id) || unit;
         const effect = pose.get(unit.id);
+        const state = stats.values.get(unit.id);
         return {
           ...visual,
-          brokenParts: visibleParts(visual),
-          hp: (lanes.length ? health(unit.id) : effect?.hp) ?? visual.hp,
-          shield: (lanes.length ? health(unit.id, true) : effect?.shield) ?? visual.shield,
-          en: (lanes.length ? energy(unit.id) : undefined) ?? visual.en,
-          iFieldHp: (lanes.length ? fieldHealth(unit.id) : undefined) ?? visual.iFieldHp,
+          brokenParts: state?.parts ?? initialParts.get(unit.id) ?? visual.brokenParts,
+          hp: (lanes.length ? state?.hp ?? initialHp.get(unit.id) : effect?.hp) ?? visual.hp,
+          shield: (lanes.length ? state?.shield ?? initialShield.get(unit.id) : effect?.shield) ?? visual.shield,
+          en: (lanes.length ? state?.en ?? initialEn.get(unit.id) : undefined) ?? visual.en,
+          iFieldHp: (lanes.length ? state?.iFieldHp ?? initialIField.get(unit.id) : undefined) ?? visual.iFieldHp,
           model: effect?.model ?? unit.model,
           mapDying: effect?.keepVisible,
           mapPose: effect,
@@ -795,7 +837,7 @@ const MapCombat = (() => {
       return;
     }
     for (const [index, contact] of (event.nuclearFollowup ? [] : plan.contacts).entries()) {
-      const contactShot = plan.shots.find((shot) => shot.index === contact.shotIndex);
+      const contactShot = frame.shotsByIndex.get(contact.shotIndex);
       const scatterPoint =
         contact.clusterRole === "carrier"
           ? contactShot?.splitPoint

@@ -28,6 +28,8 @@ const Net = (() => {
     byId("networkStatus").textContent = t;
     byId("netBadge").textContent = t;
   };
+  let reconnectTimer = null, reconnectAttempts = 0;
+  function cancelReconnect() { clearTimeout(reconnectTimer); reconnectTimer = null; }
   let connectionTimer = null,
     pingStarted = null,
     foregroundSyncAt = -Infinity;
@@ -41,6 +43,8 @@ const Net = (() => {
     if (!disconnectDialog.open) disconnectDialog.showModal();
   }
   function closeDisconnect() {
+    cancelReconnect();
+    reconnectAttempts = 0;
     clearTimeout(connectionTimer);
     connectionTimer = null;
     if (disconnectDialog.open) disconnectDialog.close();
@@ -213,7 +217,10 @@ const Net = (() => {
             }),
       );
     } catch {
-      return; // Resume retains the unresolved intent.
+      actionTimer = setTimeout(() => {
+        if (n.socket === socket && n.awaiting === request) sendPending();
+      }, 1000);
+      return;
     }
     request.attempts++;
     const delay = Math.min(
@@ -336,6 +343,8 @@ const Net = (() => {
     TurnFlow.reset();
     MapCamera.reset();
     MapEffects.reset();
+    cancelReconnect();
+    reconnectAttempts = 0;
     n.manual = true;
     Lobby.close();
     if (notify && n.socket?.readyState === WebSocket.OPEN)
@@ -406,6 +415,11 @@ const Net = (() => {
     } else if (msg.type === "action_receipt") {
       if (msg.id !== n.awaiting?.id || !Number.isSafeInteger(msg.revision)) return;
       n.awaiting.receiptRevision = msg.revision;
+      clearTimeout(actionTimer);
+      const waiting = n.awaiting;
+      actionTimer = setTimeout(() => {
+        if(n.socket === socket && n.awaiting === waiting) sendPending();
+      }, Math.max(750, (n.pingMs || 0) * 2));
       if (n.snapshot && n.revision >= msg.revision) {
         finishAction(msg.id, true);
         update();
@@ -481,6 +495,7 @@ const Net = (() => {
     status("离线常规战");
   }
   function connect(mode = "join", auto = false, roomCode = null, credentials = {}) {
+    cancelReconnect();
     if (!PlayerProfile.selected()) return note("请先选择角色阵营。");
     if (window.isLayoutPreview) return;
     if (!assetsReady) {
@@ -606,9 +621,13 @@ const Net = (() => {
       }
       phase = "disconnected";
       byId("reaction").hidden = true;
-      status("连接中断，请点击重连。");
+      status("连接中断，正在自动重连…");
       update();
       showDisconnect();
+      const delay = Math.min(15000,1000 * 2 ** Math.min(4,reconnectAttempts++)) + Math.random()*250;
+      reconnectTimer = setTimeout(() => {
+        if(n.socket === socket && n.active && !n.manual && !n.connecting) connect("resume",true);
+      },delay);
     };
   }
   // 服务端快照是联机状态来源，按阶段恢复地图、应战或战斗画面。
@@ -921,6 +940,10 @@ const Net = (() => {
     if (!document.hidden) keepAlive(true);
   });
   window.addEventListener("focus", () => keepAlive(true));
+  window.addEventListener("online", () => {
+    if(n.active && !n.local && !n.manual && !n.connecting && n.token && n.socket?.readyState===WebSocket.CLOSED) connect("resume",true);
+    else keepAlive(true);
+  });
   document.addEventListener("resume", () => keepAlive(true));
 
   function isSpectator() {

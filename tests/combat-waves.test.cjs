@@ -103,6 +103,10 @@ test("automatic attackers and counters alternate volleys on the launch/impact ti
         ),
     );
     assert(battles.filter((b) => b.combatStage === "counter").every((b) => b.b === a.id));
+    const readyAt = Math.max(.25, G.weaponStats(gun,a).attack.duration / (G.catalog.presentation.animationSpeed || 1),
+      ...events.filter(e=>e.timelineStart===0).map(e=>e.impactAt));
+    const replyAt = Math.min(...battles.filter(b=>b.combatStage==="counter").map(b=>b.timelineStart));
+    assert(replyAt-readyAt <= .081, "No half-second padding between ranged stages: " + (replyAt-readyAt));
   } finally {
     f.close();
   }

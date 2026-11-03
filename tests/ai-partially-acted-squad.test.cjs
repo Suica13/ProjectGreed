@@ -76,3 +76,57 @@ for (const state of ["waited", "attack-skill", "planned", "ready"])
         assert.equal(reserved.attackSkillRound, room.game.round);
     }
   });
+
+for (const fallback of [false, true])
+  test(`AI ${fallback ? "failure fallback" : "ordinary wait"} preserves a squadmate's locked attack skill`, async (t) => {
+    let sequence = 0;
+    const errors = [];
+    t.mock.method(console, "error", (...args) => errors.push(args));
+    const engine = createRoomEngine({
+      rules: G,
+      randomId: () => "locked-" + ++sequence,
+      randomToken: () => "token-" + ++sequence,
+      randomSeed: () => 1,
+      aiDelayMs: 1,
+      randomAIMoveDelay: () => 0,
+      send: () => {},
+    });
+    t.after(() => engine.close());
+    const clients = [{ readyState: 1 }, { readyState: 1 }];
+    engine.join(clients[0], { mode: "create", room: "LOCKED", characterFaction: "PMC" });
+    engine.join(clients[1], { mode: "join", room: "LOCKED", characterFaction: "PMC" });
+    const room = engine.rooms.get("LOCKED");
+    const entry = { unitId: "RGM_79", kitId: "machine_gun" };
+    room.game = G.create(false, 1, [[entry, entry], [entry]], false, {fogMode:"disabled"});
+    room.game.tiles.forEach(row => row.fill("plain"));
+    Object.assign(room, {started:true,matchId:"locked-actions",phase:"idle",activeSeats:[true,true],
+      turnDone:[false,false],turnNotBefore:0,plans:[],planSequence:0,responses:[],reactions:[],pending:null});
+    const [locked, ready, enemy] = room.game.units;
+    for (const [index,unit] of [locked,ready].entries()) Object.assign(unit,{
+      x:5,y:5,squadId:"locked-squad",squadSlot:index,moved:true,acted:false,en:10000});
+    Object.assign(enemy,{x:fallback?6:25,y:5,hp:100000});
+    const weapon=G.modelOf(locked).weapons[0];
+    const intent={attacker:locked.id,target:enemy.id,weapon:weapon.id,weapons:[weapon.id],seat:0,order:1};
+    room.plans=[intent];
+    Object.assign(locked,{acted:true,attackSkillRound:room.game.round,plan:{target:enemy.id,weapon:weapon.id,weapons:[weapon.id]}});
+    const originalPlan=structuredClone(locked.plan), originalOrders=structuredClone(room.plans);
+    let rejected=0;
+    if(fallback) {
+      const original=G.firePlan;
+      t.mock.method(G,"firePlan",(...args)=>{
+        if(args[1]?.id===ready.id && !rejected++) throw Error("injected attack validation failure");
+        return original(...args);
+      });
+    }
+    room.seats[0].bot=true;
+    engine.broadcast(room);
+    const deadline=Date.now()+2500;
+    while(!ready.acted && Date.now()<deadline) await new Promise(resolve=>setTimeout(resolve,10));
+    assert.equal(ready.acted,true,"AI must finish the idle member rather than retry forever");
+    assert.equal(ready.plan,undefined);
+    assert.deepEqual(locked.plan,originalPlan);
+    assert.deepEqual(room.plans,originalOrders);
+    assert.equal(locked.attackSkillRound,room.game.round);
+    assert.equal(errors.filter(args=>args[0]==="AI fallback failed").length,0);
+    assert.equal(errors.filter(args=>args[0]==="AI action failed").length,fallback?1:0);
+  });

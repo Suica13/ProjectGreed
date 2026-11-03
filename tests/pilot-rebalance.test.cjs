@@ -77,7 +77,7 @@ test("training spending, reset and level cap retain current validation", () => {
 });
 
 const near = (a, b) => assert.ok(Math.abs(a - b) < 1e-9, `${a} != ${b}`);
-test("all stat scaling gains are halved around 100, with awakening bonus halved", () => {
+test("attribute gains increase by 25 percent and awakening grants accuracy/evasion", () => {
   const unit = (patch) => ({ pilot: { stats: { ...P.baseStats(), awakening: 60, ...patch } } });
   const base = P.modifiers(unit({}));
   for (const [stat, field] of [
@@ -86,27 +86,27 @@ test("all stat scaling gains are halved around 100, with awakening bonus halved"
     ["accuracy", "accuracy"],
     ["reaction", "reaction"],
   ]) {
-    near(P.modifiers(unit({ [stat]: 110 }))[field], 1.025);
-    near(P.modifiers(unit({ [stat]: 200 }))[field], 1.25);
-    near(P.modifiers(unit({ [stat]: 90 }))[field], 0.975);
+    near(P.modifiers(unit({ [stat]: 110 }))[field], 1.03125);
+    near(P.modifiers(unit({ [stat]: 200 }))[field], 1.3125);
+    near(P.modifiers(unit({ [stat]: 90 }))[field], 0.96875);
   }
   near(base.shooting, 1);
-  near(P.modifiers(unit({ defense: 110 })).defense, 0.975);
-  near(P.modifiers(unit({ defense: 200 })).defense, 0.75);
+  near(P.modifiers(unit({ defense: 110 })).defense, 0.96875);
+  near(P.modifiers(unit({ defense: 200 })).defense, 0.6875);
   near(P.modifiers(unit({ speed: 110 })).reaction, 1);
-  near(P.modifiers(unit({ awakening: 100 })).shooting, 1.075);
-  near(P.modifiers(unit({ awakening: 100 })).melee, 1.075);
+  near(P.modifiers(unit({ awakening: 100 })).shooting, 1);
+  near(P.modifiers(unit({ awakening: 100 })).melee, 1);
 });
-test("leadership retains range steps and base effect while halving effect growth", () => {
+test("leadership retains range steps and base effect while improving effect growth by 25 percent", () => {
   const G = require("../shared/rules.js");
   const model = Object.values(G.models).find((m) => m.commandAuras?.length);
   const u = { model: model.prefabId + "__" + model.kitId, pilot: { stats: P.baseStats() } };
   for (const [leadership, radius, effect] of [
-    [75, 2, 0.09],
+    [75, 2, 0.0875],
     [100, 3, 0.1],
-    [125, 4, 0.11],
-    [150, 5, 0.12],
-    [200, 7, 0.14],
+    [125, 4, 0.1125],
+    [150, 5, 0.125],
+    [200, 7, 0.15],
   ]) {
     u.pilot.stats.leadership = leadership;
     const aura = G.commandAura(u);

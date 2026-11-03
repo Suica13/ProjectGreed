@@ -107,7 +107,7 @@ test("all usable one-round weapons fire regardless of AP or expected damage", ()
     plan.weapons.map((w) => w.id),
     ["expensive", "efficient"],
   );
-  assert.equal(plan.ap, 0);
+  assert.equal(Object.hasOwn(plan, "ap"), false);
   assert.equal(plan.en, 2);
   assert.equal(JSON.stringify(f.game), before);
   f.planner.plan(f.room, f.a, f.b, null, 0);
@@ -279,6 +279,28 @@ test("compiled melee requirements retain the 125 gate and leave fallback ram exe
       ),
     ),
   );
+});
+
+test("a ram in the original skill slot is automatic when no other melee is usable",()=>{
+ const f=fixture();f.b.x=f.a.x+1;
+ const ram=structuredClone(G.models.RGM_79__machine_gun.weapons.find(w=>w.id==='Common_Push_A'));
+ f.model.weapons=[ram];
+ assert.deepEqual(G.firePlan(f.game,f.a,f.b).weapons.map(w=>w.id),[ram.id]);
+ f.planner.plan(f.room,f.a,f.b,null,0,'melee');
+ assert(finish(f).some(b=>b.events.some(e=>e.from===f.a.id&&e.weapon===ram.id)));
+});
+
+test("a usable ordinary melee excludes ram, and shooting mode or range never forces ram",()=>{
+ const f=fixture();f.b.x=f.a.x+1;
+ const ram={...f.make('Common_Push_A',99,1000),type:'melee',weaponClass:'ram',slot:'skill',projectile:null,min:1,max:1};
+ const sword={...ram,id:'sword',weaponClass:'melee',slot:'secondary'};
+ f.model.weapons=[sword,ram];
+ assert.deepEqual(G.firePlan(f.game,f.a,f.b).weapons.map(w=>w.id),['sword']);
+ sword.pilotRequirements=[{stat:'melee',value:999}];
+ assert.deepEqual(G.firePlan(f.game,f.a,f.b).weapons.map(w=>w.id),[ram.id]);
+ assert.equal(G.firePlan(f.game,f.a,f.b,{combatMode:'shooting'}).weapons.length,0);
+ f.b.x=f.a.x+3;
+ assert.equal(G.firePlan(f.game,f.a,f.b).weapons.length,0);
 });
 test("sniper still locks for the next own turn, without an attack AP charge", () => {
   const f = fixture(),

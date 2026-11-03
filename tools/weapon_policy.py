@@ -103,7 +103,8 @@ def configure_sniper(prefab):
             continue
         base_id, base = match
         if weapon.get("projectile") and base.get("projectile"):
-            weapon["projectile"]["speed"] = base["projectile"]["speed"]
+            # Aim helpers carry LockTarget sheets; only real bullets are rendered as projectiles.
+            weapon["projectile"] = copy.deepcopy(base["projectile"])
         # 伤害、耗能、步骤使用原生技能；仅保留回合制蓄力与命中倍率规则。
         weapon.update(
             name="狙击蓄力", slot="skill", changeHeldWeapon=False, noCounter=True, hitScale=2,

@@ -14,6 +14,7 @@ const UnitHangars = {
     captureObjective = () => null,
     squadMembers = (g, u) => [u],
     squadEligible = () => false,
+    squadFits = members => members.length <= 6,
     environmentOf = (g, u) => u.environment,
     squadJoinTarget = () => null,
     joinSquad = () => {},
@@ -304,7 +305,7 @@ const UnitHangars = {
       return { type: "launch", unitId: u.id, carrierId, x, y, from, path };
     }
     function launchSquadCells(g, members) {
-      if (!members.length || members.length > 3) return [];
+      if (!members.length || !squadFits(members)) return [];
       const root = members[0];
       if (
         members.length > 1 &&
@@ -323,21 +324,16 @@ const UnitHangars = {
         (c) =>
           others.every((keys) => keys.has(c.x + "," + c.y)) &&
           (!c.squadTarget ||
-            members.length +
-              squadMembers(
-                g,
-                g.units.find((u) => u.id === c.squadTarget),
-              ).length <=
-              3),
+            squadFits([...members, ...squadMembers(g, g.units.find(u => u.id === c.squadTarget))])),
       );
     }
     function launchGroupPlan(g, members, x, y) {
       if (
         !members.length ||
-        members.length > 3 ||
+        !squadFits(members) ||
         new Set(members.map((u) => u.id)).size !== members.length
       )
-        throw Error("请选择1至3台出击单位");
+        throw Error("请选择不超过6台且合计不超过6容量点的出击单位");
       const root = members[0],
         carrierId = root.embarked?.carrierId;
       if (

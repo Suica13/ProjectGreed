@@ -68,7 +68,7 @@ test("a mixed one-point/two-point pool spends its budget without mistaking MS fo
   }
 });
 
-test("default 900/250/12 bot rosters use advanced units and most available COST on ground and in space", () => {
+test("900/250/12 bot rosters retain advanced platforms without forcing cheap fillers", () => {
   for (const faction of ["EFSF", "ZEON", "PMC"])
     for (const mapId of ["frontier_1v1", "asteroid_crossing_1v1"])
       for (const seed of [1, 42, 7319, 0x9e3779b9]) {
@@ -86,7 +86,7 @@ test("default 900/250/12 bot rosters use advanced units and most available COST 
           characterFaction: faction,
         });
         const army = G.randomFormation(seed, 900, restrictions, 12);
-        assert(cost(army) >= 775, `${faction}/${mapId}/${seed}: ${cost(army)}`);
+        assert(cost(army) >= 675, `${faction}/${mapId}/${seed}: ${cost(army)}`);
         assert(cost(army) <= 900);
         assert(G.formationPoints(army) <= 12);
         assert(

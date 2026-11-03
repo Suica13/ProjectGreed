@@ -879,6 +879,7 @@ const WeaponEffects = (() => {
     if (weapon.remote) drawRemotes(ctx, weapon, plan, time, source, size);
     drawMuzzle(ctx, weapon, plan, time, source, event, pose);
     if (!weapon.projectile) return;
+    const viewport = ctx.canvas && ctx.getTransform?.();
     for (const shot of plan.shots) {
       const projectile = shot.isFragment ? weapon.projectile.cluster : weapon.projectile;
       const image = SpriteRenderer.images[projectile.asset];
@@ -898,16 +899,19 @@ const WeaponEffects = (() => {
         offset = ["bomb", "mortar"].includes(weapon.projectile.motion)
           ? 0
           : (source.projectileForwardOffset ?? weapon.projectile.forwardOffset) * source.scale;
+      const x = shot.origin.x + dx * travel + Math.cos(angle) * offset;
+      const y = shot.origin.y + dy * travel + Math.sin(angle) * offset -
+        (weapon.projectile.motion === "mortar" ? Math.sin(Math.PI * Math.min(1, travel)) * 80 * source.scale : 0);
+      if (viewport) {
+        // Conservative bounds include rotation, camera scale and device pixels.
+        const px = viewport.a*x + viewport.c*y + viewport.e;
+        const py = viewport.b*x + viewport.d*y + viewport.f;
+        const radius = Math.hypot(image.width,image.height) * Math.abs(scale) / 2 *
+          Math.max(Math.abs(viewport.a)+Math.abs(viewport.c),Math.abs(viewport.b)+Math.abs(viewport.d));
+        if (px+radius<0 || py+radius<0 || px-radius>ctx.canvas.width || py-radius>ctx.canvas.height) continue;
+      }
       ctx.save();
-      ctx.translate(
-        shot.origin.x + dx * travel + Math.cos(angle) * offset,
-        shot.origin.y +
-          dy * travel +
-          Math.sin(angle) * offset -
-          (weapon.projectile.motion === "mortar"
-            ? Math.sin(Math.PI * Math.min(1, travel)) * 80 * source.scale
-            : 0),
-      );
+      ctx.translate(x,y);
       ctx.rotate(angle + Math.PI / 2 + ((weapon.projectile.rotation || 0) * Math.PI) / 180);
       ctx.scale(scale, scale);
       ctx.imageSmoothingEnabled = false;
