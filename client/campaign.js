@@ -1767,26 +1767,34 @@ window.CampaignUI = (() => {
           UnitModels[a.unitId + "__" + a.kitId].cost - UnitModels[b.unitId + "__" + b.kitId].cost ||
           a.id.localeCompare(b.id, undefined, { numeric: true }),
       );
-    const sorted = units;
+    const sorted = units, armyIds = new Set(sorted.map(unit => unit.id)), cargoByCarrier = new Map();
+    for (const unit of sorted) {
+      if (!unit.carrierArmyId) continue;
+      if (!cargoByCarrier.has(unit.carrierArmyId)) cargoByCarrier.set(unit.carrierArmyId, []);
+      cargoByCarrier.get(unit.carrierArmyId).push(unit);
+    }
+    for (const cargo of cargoByCarrier.values())
+      cargo.sort((a,b) => (a.hangarId || "").localeCompare(b.hangarId || ""));
     units = [];
     const displayedCargo = new Set();
     function appendCargo(carrier) {
       if (displayedCargo.has(carrier.id)) return;
       displayedCargo.add(carrier.id);
       units.push(carrier);
-      for (const child of sorted.filter((unit) => unit.carrierArmyId === carrier.id)
-        .sort((a, b) => (a.hangarId || "").localeCompare(b.hangarId || ""))) appendCargo(child);
+      for (const child of cargoByCarrier.get(carrier.id) || []) appendCargo(child);
     }
-    sorted.filter((unit) => !unit.carrierArmyId || !sorted.some((carrier) => carrier.id === unit.carrierArmyId))
+    sorted.filter((unit) => !unit.carrierArmyId || !armyIds.has(unit.carrierArmyId))
       .forEach(appendCargo);
+    const transferIds = new Set(s.transfers.flatMap(transfer => transfer.ids));
     const controllable = units.filter(
       (unit) =>
         !locked &&
-        !s.transfers.some((transfer) => transfer.ids.includes(unit.id)) &&
+        !transferIds.has(unit.id) &&
         CampaignRules.controls(s, Net.snapshot.members, Net.seat, unit),
     );
+    const controllableIds = new Set(controllable.map(unit => unit.id));
     for (const id of selectedUnits)
-      if (!controllable.some((unit) => unit.id === id)) selectedUnits.delete(id);
+      if (!controllableIds.has(id)) selectedUnits.delete(id);
     const selected = controllable.filter((unit) => selectedUnits.has(unit.id));
     const toolbar = node("div", "", "campaign-selection-toolbar");
     const selection = node("div", "", "campaign-selection-summary");

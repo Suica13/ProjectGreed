@@ -12,7 +12,7 @@ const fleet = () => [
 test("formation preloads count normal cost and unit limits and reject invalid or overloaded manifests atomically", () => {
   const f = fleet(),
     clean = G.validateFormation(f, Infinity, 6);
-  assert.deepEqual(clean, f);
+  assert.deepEqual(clean, f.map(({customName, ...entry}) => entry));
   assert.notEqual(clean[1].preload, f[1].preload);
   assert.throws(() => G.validateFormation(f, carrierModel.cost, 6), /COST/);
   const capacity = Array.from({ length: 4 }, () => ({
@@ -43,9 +43,9 @@ test("preloaded units spawn inside their native hangars without consuming deploy
   const g = G.create(false, 1, [fleet(), [gm]], true, { costLimit: 99999, unitCostLimit: 99999 }),
     c = g.units.find((u) => u.id === "0-0"),
     p = g.units.find((u) => u.id === "0-1");
-  assert.deepEqual(p.embarked, { carrierId: c.id, hangarId: h.id, boardRound: null });
+  assert.deepEqual(p.embarked, { carrierId: c.id, hangarId: h.id, boardRound: null, exposed: false });
   assert.equal(G.hangars.used(g, c, h.id), 2);
-  assert.equal(G.unitName(p), "载员[A01]");
+  assert.equal(G.unitName(p), G.modelOf(p).name);
   assert(!G.onMap(p));
   assert(G.onMap(c));
   assert.equal(p.en, G.modelOf(p).en);

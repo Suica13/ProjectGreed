@@ -109,7 +109,7 @@ const AITactics = (() => {
     const goal = target || (decision.enemies.length ? center(decision.enemies) : decision.origin);
     return { ...decision, goal, avoidObjective: true };
   }
-  function positionScore(G, game, unit, cell, decision) {
+  function positionScorer(G, game, unit, decision) {
     const { state, origin, difficulty } = decision;
     let goal = decision.goal;
     const index = decision.squad.indexOf(unit.id),
@@ -122,21 +122,30 @@ const AITactics = (() => {
         y: goal.y + (goal.x - origin.x) / separation * width * side };
     }
     const cautious = ["gather", "defend"].includes(state);
-    let score = -distance(cell, goal) * (cautious ? 0.85 : 0.45);
-    if (decision.squad.length > 1 && state !== "overrun") {
-      const friends = decision.friends.filter((u) => u.id !== unit.id);
-      const nearest = friends.length ? Math.min(...friends.map((u) => distance(cell, u))) : 0;
-      score -= Math.max(0, nearest - 4) * (difficulty === "easy" ? 0.08 : 0.25);
-    }
-    if (decision.avoidObjective && game.campaignBattlefield.layout.nodes.some((point) =>
-      G.cells(unit, cell.x, cell.y).some((tile) => Math.max(Math.abs(tile.x-point.x), Math.abs(tile.y-point.y)) <= 1)))
-      score -= 12;
-    score += (G.terrain[game.tiles[cell.y]?.[cell.x]]?.cover || 0) * (cautious ? 0.025 : 0.006);
-    if (difficulty === "hard" && cautious) {
-      const threats = decision.enemies;
-      score -= threats.filter((u) => distance(cell, u) <= 6).length * 0.4;
-    }
-    return score;
+    const friends = decision.friends.filter((friend) => friend.id !== unit.id);
+    const objectiveOffsets = decision.avoidObjective ? G.cells(unit, 0, 0) : [];
+    return (cell) => {
+      let score = -distance(cell, goal) * (cautious ? 0.85 : 0.45);
+      if (decision.squad.length > 1 && state !== "overrun") {
+        let nearest = friends.length ? Infinity : 0;
+        for (const friend of friends) nearest = Math.min(nearest, distance(cell, friend));
+        score -= Math.max(0, nearest - 4) * (difficulty === "easy" ? 0.08 : 0.25);
+      }
+      if (decision.avoidObjective && game.campaignBattlefield.layout.nodes.some((point) =>
+        objectiveOffsets.some((tile) => Math.max(Math.abs(tile.x+cell.x-point.x), Math.abs(tile.y+cell.y-point.y)) <= 1)))
+        score -= 12;
+      score += (G.terrain[game.tiles[cell.y]?.[cell.x]]?.cover || 0) * (cautious ? 0.025 : 0.006);
+      if (difficulty === "hard" && cautious) {
+        const threats = decision.enemies;
+        let nearby = 0;
+        for (const threat of threats) if (distance(cell, threat) <= 6) nearby++;
+        score -= nearby * 0.4;
+      }
+      return score;
+    };
+  }
+  function positionScore(G, game, unit, cell, decision) {
+    return positionScorer(G, game, unit, decision)(cell);
   }
   function firstStep(world, from, target, allowed = () => true) {
     const queue = [{ id: from, first: null }], visited = new Set([from]);
@@ -159,12 +168,16 @@ const AITactics = (() => {
         const m = ctx.G.models[u.unitId + "__" + u.kitId];
         return m && u.campaignDurability ? { ...m, hp: Math.ceil(m.hp * u.campaignDurability) } : m;
       },
+      unitPower = new Map(),
       // Strategic strength uses actual COST, not the tactical per-actor bonus:
       // ten cheap vehicles must not look stronger just because there are ten actors.
       force = (units) => units.reduce((total, u) => {
-        const m = model(u), health = Math.max(0, Math.min(1,
-          (u.state?.hp ?? m.hp) / Math.max(1, m.hp)));
-        return total + Math.max(0, m.cost) * (0.25 + health * 0.75) * (u.campaignDurability ?? 1);
+        if (!unitPower.has(u)) {
+          const m = model(u), health = Math.max(0, Math.min(1,
+            (u.state?.hp ?? m.hp) / Math.max(1, m.hp)));
+          unitPower.set(u, Math.max(0, m.cost) * (0.25 + health * 0.75) * (u.campaignDurability ?? 1));
+        }
+        return total + unitPower.get(u);
       }, 0),
       minGroup = { low: 6, normal: 4, high: 3 }[options.aggression],
       // Low / normal / high attack on 1/6, 1/3 and 1/2 of turns respectively.
@@ -299,6 +312,6 @@ const AITactics = (() => {
       }
     }
   }
-  return { settings, power, decide, forUnit, captureGoal, captureCapable, positionScore, strategic };
+  return { settings, power, decide, forUnit, captureGoal, captureCapable, positionScore, positionScorer, strategic };
 })();
 if (typeof module !== "undefined") module.exports = AITactics;

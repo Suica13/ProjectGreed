@@ -2327,7 +2327,6 @@ const Tactics = (() => {
           weapon.maxUses
       )
         throw Error("该武器的使用次数已经耗尽");
-    const ap = weapons.reduce((n, w) => n + actionCost(w), 0);
     const en = weapons.reduce((n, w) => n + weaponStats(w, u).en, 0);
     // Automatic ordinary attacks do not consume or require AP.
     if (en > budget.en) throw Error("武器序列总EN不足");
@@ -2341,7 +2340,6 @@ const Tactics = (() => {
     if (weapons.some((w) => w.slot === "skill") && weapons.length !== 1)
       throw Error("技能武器须独立使用");
     validatePilotWeaponQueue(u, weapons);
-    const ap = weapons.reduce((n, w) => n + actionCost(w), 0);
     const en = weapons.reduce((n, w) => n + weaponStats(w, u).en, 0);
 
     if (en > u.en) throw Error("反击武器序列总EN不足");
@@ -3555,16 +3553,19 @@ const Tactics = (() => {
   }
   // Count both committed damage and attackers so AI spreads fire across viable targets.
   function aiTargetPressure(g, team) {
-    const pressure = new Map();
+    const pressure = new Map(), unitsById = new Map(g.units.map(unit => [unit.id, unit]));
     for (const attacker of g.units) {
       if (attacker.team !== team || !onMap(attacker)) continue;
-      for (const plan of attackOrders(attacker)) {
-        const target = g.units.find((unit) => unit.id === plan.target);
+      const orders = attackOrders(attacker);
+      if (!orders.length) continue;
+      const weaponsById = new Map(modelOf(attacker).weapons.map(weapon => [weapon.id, weapon]));
+      for (const plan of orders) {
+        const target = unitsById.get(plan.target);
         if (!target || !onMap(target) || target.team === team) continue;
         const commitment = pressure.get(target.id) || { damage: 0, attackers: 0 };
         let assigned = false;
         for (const id of plan.weapons || [plan.weapon]) {
-          const weapon = modelOf(attacker).weapons.find((entry) => entry.id === id);
+          const weapon = weaponsById.get(id);
           if (!weapon || (weapon.special?.type === "snipe" && !plan.charged)) continue;
           const result = estimate(g, attacker, target, weapon);
           const expected = (result.damage * result.hit) / 100;
@@ -3593,17 +3594,18 @@ const Tactics = (() => {
     const enemies = g.units.filter((e) => e.team !== u.team && onMap(e));
     const nearest = (point) =>
       enemies.length ? Math.min(...enemies.map((e) => dist(point, e))) : 0;
-    const allowance = Math.max(1, modelOf(u).move * 0.25);
+    const moveRange = modelOf(u).move, controller = controllerOf(g, u);
+    const allowance = Math.max(1, moveRange * 0.25), currentNearest = nearest(u);
     const candidates = g.units.filter(
       (other) =>
         other !== u &&
         onMap(other) &&
         !other.embarked &&
         other.team === u.team &&
-        controllerOf(g, other) === controllerOf(g, u) &&
-        dist(u, other) <= modelOf(u).move + 1 &&
+        controllerOf(g, other) === controller &&
+        dist(u, other) <= moveRange + 1 &&
         squadJoinTarget(g, u, other.x, other.y, members)?.id === other.id &&
-        nearest(other) <= nearest(u) + allowance,
+        nearest(other) <= currentNearest + allowance,
     );
     if (!candidates.length) return null;
     if (
@@ -3616,7 +3618,7 @@ const Tactics = (() => {
       const route = routes.get(key(other.x, other.y));
       if (!route) continue;
       const destination = squadMembers(g, other);
-      if (!destination.every((member) => !member.acted && !member.moved && available(member))) continue;
+      if (!destination.every((member) => !member.acted && !member.plan && !member.pendingMove && available(member))) continue;
       const same = destination.reduce((sum, member) => sum + members.filter(
         (source) => modelOf(source).prefabId === modelOf(member).prefabId).length, 0);
       const speeds = [...members, ...destination].map((member) => modelOf(member).move);
@@ -3626,7 +3628,7 @@ const Tactics = (() => {
     }
     return best;
   }
-  function aiChoice(g, u, destinations = null) {
+  function aiChoice(g, u, destinations = null, collectCandidate = null) {
     let cells =
         destinations ??
         (u.moved ? [{ x: u.x, y: u.y, cost: 0, path: [] }] : [...reachable(g, u).values()]),
@@ -3635,7 +3637,7 @@ const Tactics = (() => {
     const weapons = modelOf(u).weapons,
       pressure = aiTargetPressure(g, u.team),
       strategy = aiTactics.forUnit(Tactics, g, u, aiTactics.decide(Tactics, g, u)),
-      positionScore = (cell) => aiTactics.positionScore(Tactics, g, u, cell, strategy),
+      positionScore = aiTactics.positionScorer(Tactics, g, u, strategy),
       cautious = ["gather", "defend"].includes(strategy.state);
     // AI navigation knows enemy positions even through fog. Keep actual sight
     // separate so this knowledge does not grant attacks against unseen targets.
@@ -3709,7 +3711,8 @@ const Tactics = (() => {
         near = enemies.length
           ? Math.min(...enemies.map((e) => dist(virtual, e)))
           : Math.hypot(c.x - (u.team === 0 ? mapWidth(g) - 3 : 2), c.y - mapHeight(g) / 2);
-      let score = positionScore(c) - c.cost * 0.025,
+      const tacticalScore = positionScore(c);
+      let score = tacticalScore - c.cost * 0.025,
         target = null,
         weapon = null,
         assignedAttackers = Infinity;
@@ -3725,7 +3728,7 @@ const Tactics = (() => {
               remaining = Math.max(0, e.hp - (commitment?.damage || 0)),
               expected = (ex.damage * ex.hit) / 100,
               s =
-                positionScore(c) +
+                tacticalScore +
                 2 +
                 Math.min(expected, remaining) / (cautious ? 4000 : 1000) +
                 (remaining > 0 ? Math.min(1, expected / remaining) * 0.6 : 0) -
@@ -3738,6 +3741,7 @@ const Tactics = (() => {
               assignedAttackers = commitment?.attackers || 0;
             }
           }
+      if (collectCandidate) collectCandidate(c, { ...c, score, target, weapon, assignedAttackers });
       if (
         !best ||
         score > best.score ||
@@ -3794,13 +3798,16 @@ const Tactics = (() => {
       moved: true,
       actionPoints: actionPoints(u),
     };
-    const best = aiChoice(g, passenger, destinations);
+    // Evaluate exits together. Reuse each result when adding squad-joining preference,
+    // instead of rerunning enemy scans, pressure estimates and strategy per exit.
+    const candidates = new Map();
+    const best = aiChoice(g, passenger, destinations, (point, choice) => candidates.set(point, choice));
     // Prefer joining a nearby compatible squad on launch, without sacrificing
     // an available attack or marching back away from the engagement.
     const grouped = destinations.filter((point) => point.squadTarget);
     for (const point of grouped) {
       const target = g.units.find((member) => member.id === point.squadTarget);
-      const candidate = aiChoice(g, passenger, [point]);
+      const candidate = candidates.get(point);
       if (!candidate || (best?.target && !candidate.target)) continue;
       const same = squadMembers(g, target).some((member) => modelOf(member).prefabId === modelOf(u).prefabId);
       const score = candidate.score + (same ? 1 : 0.35);

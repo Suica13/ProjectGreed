@@ -8,45 +8,49 @@ const Formation = (() => {
   const sessionSaves = new Map();
   const pilotStorageKey = "projectgreed.custom-pilots.v2.";
   const pilotStores = {};
-  for (const faction of ["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"]) {
-    let saved = null;
-    try {
-      saved = JSON.parse(localStorage.getItem(pilotStorageKey + faction));
-    } catch {}
-    pilotStores[faction] = {
-      pilots: (Array.isArray(saved?.pilots) ? saved.pilots : []).flatMap((p) => {
-        try {
-          return [PilotSystem.custom({ ...p, faction })];
-        } catch {
-          return [];
-        }
-      }),
-      awards: Array.isArray(saved?.awards) ? saved.awards : [],
-    };
-  }
-  // Claim the old shared roster once; keep the original data as a migration backup.
-  try {
-    if (!localStorage.getItem(pilotStorageKey + "migrated")) {
-      const old = JSON.parse(localStorage.getItem("projectgreed.custom-pilots.v1"));
-      if (Array.isArray(old?.pilots)) {
-        const target = pilotStores[group];
-        for (const p of old.pilots) {
-          try {
-            if (!target.pilots.some((x) => x.id === p.id))
-              target.pilots.push(PilotSystem.custom({ ...p, faction: group }));
-          } catch {}
-        }
-        target.awards = [...new Set([...target.awards, ...(old.awards || [])])];
-        localStorage.setItem(pilotStorageKey + group, JSON.stringify(target));
-      }
-      localStorage.setItem(pilotStorageKey + "migrated", group);
-    }
-  } catch {}
   const sharedPilotKey = "projectgreed.custom-pilots.v3.shared";
   let pilotStore;
   try {
     pilotStore = JSON.parse(localStorage.getItem(sharedPilotKey));
   } catch {}
+  // Modern saves need no reads or parsing of the six obsolete faction rosters.
+  const migratePilots = !Array.isArray(pilotStore?.pilots) || !Array.isArray(pilotStore?.awards);
+  if (migratePilots) {
+    for (const faction of ["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"]) {
+      let saved = null;
+      try {
+        saved = JSON.parse(localStorage.getItem(pilotStorageKey + faction));
+      } catch {}
+      pilotStores[faction] = {
+        pilots: (Array.isArray(saved?.pilots) ? saved.pilots : []).flatMap((p) => {
+          try {
+            return [PilotSystem.custom({ ...p, faction })];
+          } catch {
+            return [];
+          }
+        }),
+        awards: Array.isArray(saved?.awards) ? saved.awards : [],
+      };
+    }
+    // Claim the old shared roster once; keep the original data as a migration backup.
+    try {
+      if (!localStorage.getItem(pilotStorageKey + "migrated")) {
+        const old = JSON.parse(localStorage.getItem("projectgreed.custom-pilots.v1"));
+        if (Array.isArray(old?.pilots)) {
+          const target = pilotStores[group];
+          for (const p of old.pilots) {
+            try {
+              if (!target.pilots.some((x) => x.id === p.id))
+                target.pilots.push(PilotSystem.custom({ ...p, faction: group }));
+            } catch {}
+          }
+          target.awards = [...new Set([...target.awards, ...(old.awards || [])])];
+          localStorage.setItem(pilotStorageKey + group, JSON.stringify(target));
+        }
+        localStorage.setItem(pilotStorageKey + "migrated", group);
+      }
+    } catch {}
+  }
   if (!Array.isArray(pilotStore?.pilots) || !Array.isArray(pilotStore?.awards)) {
     const pilots = new Map();
     for (const store of Object.values(pilotStores))
@@ -140,6 +144,7 @@ const Formation = (() => {
     developmentPreviewFocus = null,
     pilotIndex = null;
   const pickerKits = new Map();
+  let catalogRevision = 0;
   const catalogFilters = { faction: "", era: "", type: "" };
   const current = () =>
     !squads[index].units.length
@@ -403,7 +408,10 @@ const Formation = (() => {
       detailIndex = null;
       byId("formationUnitPicker").hidden = false;
       byId("formationMain").inert = true;
-      renderCatalog();
+      const list = byId("formationCatalog");
+      const card = list.querySelector(`[data-unit-id="${inspectedId}"]`);
+      if (!card || list.dataset.revision !== String(catalogRevision) ||
+          card.dataset.previewKit !== (pickerKits.get(inspectedId) || "")) renderCatalog();
       (
         byId("formationCatalog").querySelector(`[data-detail-unit-id="${inspectedId}"]`) ||
         byId("closeFormationPicker")
@@ -1022,7 +1030,7 @@ const Formation = (() => {
   function render() {
     saveDraft();
     byId("formationGroup").disabled = Net.active && Net.snapshot?.settings?.mode === "quick";
-    const unitCostLimit = restrictions().unitCostLimit;
+    const unitCostLimit = restrictions().unitCostLimit, draftPoints = points(draft);
     const unitCostRule = element(
       "span",
       "formation-unit-cost-limit" + (Number.isFinite(unitCostLimit) ? " has-limit" : ""),
@@ -1033,18 +1041,18 @@ const Formation = (() => {
       element(
         "span",
         "",
-        `${points(draft)} / ${unitLimit()} 点（${draft.length} 台）· 编组COST: ${cost(draft)} / ${displayLimit(budget())}`,
+        `${draftPoints} / ${unitLimit()} 点（${draft.length} 台）· 编组COST: ${cost(draft)} / ${displayLimit(budget())}`,
       ),
       document.createTextNode(" · "),
       unitCostRule,
     );
     byId("formationBudget").title = byId("formationBudget").textContent;
-    byId("formationBudget").classList.toggle("danger-text", points(draft) > unitLimit());
+    byId("formationBudget").classList.toggle("danger-text", draftPoints > unitLimit());
     byId("addFormationUnit").disabled =
-      points(draft) + pickerWeight() > unitLimit() ||
+      draftPoints + pickerWeight() > unitLimit() ||
       !byId("formationPrefab").value ||
       !canAddUnit(Rules.catalog.prefabs.find((p) => p.id === byId("formationPrefab").value));
-    byId("openFormationPicker").disabled = points(draft) >= unitLimit();
+    byId("openFormationPicker").disabled = draftPoints >= unitLimit();
     renderPickerCost();
     const plan = draft.length
       ? Rules.planFormation(draft, budget(), restrictions(), Rules.catalog.formation.maxUnits)
@@ -1060,16 +1068,19 @@ const Formation = (() => {
       scrollTop = list.scrollTop;
     list.replaceChildren();
     // 仅调整显示顺序，保留保存序号、搭载引用和 OVER COST 的末尾优先规则。
-    const displayOrder = [],
-      visited = new Set();
+    const displayOrder = [], visited = new Set(), cargoByHangar = new Map();
+    draft.forEach((entry, i) => {
+      if (!entry.preload) return;
+      const key = entry.preload.carrierIndex + "/" + entry.preload.hangarId;
+      if (!cargoByHangar.has(key)) cargoByHangar.set(key, []);
+      cargoByHangar.get(key).push(i);
+    });
     function appendCargo(i) {
       if (visited.has(i)) return;
       visited.add(i);
       displayOrder.push(i);
       for (const h of Rules.formationModel(draft[i]).hangars || [])
-        draft.forEach((cargo, j) => {
-          if (preloadMatches(cargo, i, h.id)) appendCargo(j);
-        });
+        for (const j of cargoByHangar.get(i + "/" + h.id) || []) appendCargo(j);
     }
     draft.forEach((entry, i) => {
       if (!entry.preload) appendCargo(i);
@@ -1530,6 +1541,14 @@ const Formation = (() => {
   };
   byId("formationSearch").oninput = () => renderCatalog();
   byId("formationStock").onchange = () => renderCatalog();
+  function selectCatalogUnit(prefab, card) {
+    byId("formationPrefab").value = prefab.id;
+    const previous = byId("formationCatalog").querySelector('[aria-selected="true"]');
+    if (previous !== card) previous?.setAttribute("aria-selected", "false");
+    card.setAttribute("aria-selected", "true");
+    byId("addFormationUnit").disabled = points(draft) + pickerWeight() > unitLimit() || !canAddUnit(prefab);
+    renderPickerCost();
+  }
   function renderCatalog() {
     const query = byId("formationSearch").value.trim().toLocaleLowerCase();
     const prefabs = UnitCatalog.select(query, catalogFilters, PlayerProfile.allows)
@@ -1548,6 +1567,7 @@ const Formation = (() => {
       const card = element("button", "catalog-unit");
       card.dataset.buttonSound = "off";
       card.dataset.unitId = prefab.id;
+      card.dataset.previewKit = pickerKits.get(prefab.id) || "";
       card.disabled = !!prefab.wip;
       if (prefab.wip) card.title = "WIP";
       card.setAttribute("role", "option");
@@ -1557,6 +1577,8 @@ const Formation = (() => {
         prefab.id + "__" + (Economy.defaultKit(prefab.id) || prefab.weaponKits[0].id),
       );
       image.alt = prefab.name;
+      image.loading = "lazy";
+      image.decoding = "async";
       const title = element("strong", "", prefab.code + " " + prefab.name);
       const info = element("span", "catalog-unit-info");
       const costs = prefab.weaponKits.map((k) => prefab.stats.cost + k.cost);
@@ -1590,8 +1612,7 @@ const Formation = (() => {
       card.append(portrait, info);
       card.onclick = () => {
         GameAudio.selectUnit(prefab);
-        byId("formationPrefab").value = prefab.id;
-        renderCatalog();
+        selectCatalogUnit(prefab, card);
       };
       const details = element("button", "catalog-detail", "详情");
       details.dataset.detailUnitId = prefab.id;
@@ -1600,8 +1621,7 @@ const Formation = (() => {
       details.setAttribute("aria-label", `${prefab.code} ${prefab.name} · ${I18n.text("详情")}`);
       details.onclick = () => {
         GameAudio.selectUnit(prefab);
-        byId("formationPrefab").value = prefab.id;
-        renderCatalog();
+        selectCatalogUnit(prefab, card);
         detailIndex = null;
         detailFromPicker = !byId("formationUnitPicker").hidden;
         byId("formationUnitPicker").hidden = true;
@@ -1635,6 +1655,7 @@ const Formation = (() => {
     }
     if (!prefabs.length) list.append(element("p", "empty", "没有符合筛选的单位"));
     list.scrollTop = scroll;
+    list.dataset.revision = String(catalogRevision);
     byId("addFormationUnit").disabled =
       !prefabs.length ||
       points(draft) + pickerWeight() > unitLimit() ||
@@ -2188,10 +2209,12 @@ const Formation = (() => {
     }
   };
   window.addEventListener("development-changed", () => {
+    catalogRevision++;
     if (pageView === "formation") renderPilotRoster();
     if (aceRecruit.open) renderAceRecruitment();
   });
   window.addEventListener("economy-changed", () => {
+    catalogRevision++;
     if (aceRecruit.open) renderAceRecruitment();
   });
   function renderPilotRoster() {
