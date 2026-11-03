@@ -91,6 +91,11 @@ def native_weapon(prefab, weapon, unit_data):
         conditions = action.get("requireConditional","")
         required = [PARTS[name] for name in re.findall(r"memory\.(head|backpack|armL|armR|legL|legR)Breaked\s*==\s*false",conditions)]
         events.append({"at":at,"shots":count,"muzzleIndex":min(barrels.index(turret_id),len(weapon.get("muzzle",{}).get("mounts",[0]))-1),"nativeBarrel":turret_id,"damageComponents":components,"accuracy":values.get("WeaponAccuracy",100),"partBreakModifier":values.get("PartBreakModifier",1),"nativePayload":values,"requiredParts":required})
+        if weapon.get("type") == "melee":
+            events[-1]["swingEffects"] = [name.strip() for name in action.get("spawnEffects", "").split(",")
+                if name.strip().startswith("Cqb_Fire_")]
+        if values.get("ProjectileAttackTimesDamageModifier", 1) < 1 and values.get("ProjectileAttackTimes", 0) > 1:
+            events[-1]["penetrationCount"] = values["ProjectileAttackTimes"]
         # Cluster bazookas emit a carrier first, then native child pellets. Both payloads
         # are authoritative strikes; the client only chooses their presentation paths.
         ident = raw.split('*',1)[0].strip()
@@ -131,6 +136,8 @@ def native_weapon(prefab, weapon, unit_data):
         if key not in data or key in stack:
             return at
         action=section(data,key)
+        if action.get("playAnimation") in animations:
+            events.append({"at": at, "animation": action["playAnimation"]})
         visited_actions.append(key)
         display = re.search(r"\bnowWeaponIndex\s*=\s*(-?\d+)(?![\d.])", action.get("setUnitMemory", ""))
         if display:

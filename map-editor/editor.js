@@ -1,7 +1,8 @@
-/* Standalone map authoring. No server or browser storage is required. */
+/* Standalone map authoring. Browser storage is optional and only remembers language. */
 const MapEditor = (() => {
   "use strict";
   const M = MapDocument,
+    t = MapEditorI18n.text,
     $ = (id) => document.getElementById(id);
   let doc = M.create(),
     layerId = doc.layers[0].id,
@@ -17,6 +18,7 @@ const MapEditor = (() => {
     hover = null,
     space = false,
     dirty = false;
+  let atlasZoom = 1;
   let camera = { x: 20, y: 20, zoom: 1 },
     pendingFrame = false,
     filePurpose = "map",
@@ -39,7 +41,7 @@ const MapEditor = (() => {
   const activeRule = () => doc.rules.find((r) => r.id === ruleId);
   const number = (id) => Number($(id).value);
   function status(text) {
-    $("status").textContent = text;
+    MapEditorI18n.bind($("status"), text);
   }
   function node(tag, text, className) {
     const e = document.createElement(tag);
@@ -49,15 +51,15 @@ const MapEditor = (() => {
   }
   function message(title, text, confirm = null) {
     const dialog = $("editorDialog");
-    $("dialogTitle").textContent = title;
-    $("dialogMessage").textContent = text;
+    $("dialogTitle").textContent = t(title);
+    $("dialogMessage").textContent = t(text);
     const actions = $("dialogActions");
     actions.replaceChildren();
-    const close = node("button", confirm ? "取消" : "确认");
+    const close = node("button", t(confirm ? "取消" : "确认"));
     close.onclick = () => dialog.close();
     actions.append(close);
     if (confirm) {
-      const ok = node("button", "确认", "primary");
+      const ok = node("button", t("确认"), "primary");
       ok.onclick = () => {
         dialog.close();
         run(confirm);
@@ -144,13 +146,18 @@ const MapEditor = (() => {
       });
     select.value = value;
   }
-  for (const id of ["defaultTerrain", "tileTerrain"])
-    options(
-      $(id),
-      Object.entries(M.terrains).map(([k, v]) => [k, v.name]),
-      "plain",
-    );
   function refresh() {
+    for (const id of ["defaultTerrain", "tileTerrain"])
+      options($(id), Object.entries(M.terrains).map(([k, v]) => [k, t(v.name)]), $(id).value || "plain");
+    $("unitCount").textContent = t(`预置单位：${(doc.units || []).length}`);
+    $("unitList").replaceChildren();
+    for (const u of doc.units || []) {
+      const row = node("div", undefined, "unit-row");
+      row.append(node("span", `${u.name || u.unitId} · ${t("队伍" + (u.team + 1))} · (${u.x}, ${u.y})`));
+      const remove = node("button", t("删除"));
+      remove.onclick = () => { checkpoint(); doc.units = doc.units.filter(v => v.id !== u.id); changed("已删除单位"); };
+      row.append(remove); $("unitList").append(row);
+    }
     for (const [id, value] of Object.entries({
       mapId: doc.id,
       mapName: doc.name,
@@ -168,11 +175,11 @@ const MapEditor = (() => {
       $(id).value = value;
     $("modeRegular").checked = doc.supportedModes.includes("regular");
     $("modeQuick").checked = doc.supportedModes.includes("quick");
-    $("playerCount").textContent = "共 " + doc.spawns.length + " 名玩家 · " + doc.maxTeams + " 队";
+    $("playerCount").textContent = t("共 " + doc.spawns.length + " 名玩家 · " + doc.maxTeams + " 队");
     const seat = Math.min(Number($("spawnSeat").value) || 0, doc.spawns.length - 1);
     options(
       $("spawnSeat"),
-      doc.spawns.map((s, i) => [i, "队伍" + (s.team + 1) + " / 玩家" + s.position]),
+      doc.spawns.map((s, i) => [i, t("队伍" + (s.team + 1) + " / 玩家" + s.position)]),
       String(seat),
     );
     refreshSpawn();
@@ -181,7 +188,7 @@ const MapEditor = (() => {
       : "builtin";
     options(
       $("tilesetList"),
-      [["builtin", "地形色块"], ...doc.tilesets.map((s) => [s.id, s.name])],
+      [["builtin", t("地形色块")], ...doc.tilesets.map((s) => [s.id, s.name])],
       selectedSet,
     );
     const visibleTiles = doc.tiles.filter((t) =>
@@ -220,10 +227,10 @@ const MapEditor = (() => {
       button.append(
         node(
           "small",
-          (l.visible ? "显示" : "隐藏") +
+          t(l.visible ? "显示" : "隐藏") +
             " · " +
-            (l.placement === "above" ? "单位上方" : "单位下方") +
-            (l.decorative ? " · 装饰" : ""),
+            t(l.placement === "above" ? "单位上方" : "单位下方") +
+            (l.decorative ? " " + t("· 装饰") : ""),
         ),
       );
       button.onclick = () => {
@@ -252,7 +259,7 @@ const MapEditor = (() => {
     $("redo").disabled = !future.length;
     options(
       $("paintRule"),
-      [["", "单Tile / 多格画笔"], ...doc.rules.map((r) => [r.id, r.name])],
+      [["", t("单Tile / 多格画笔")], ...doc.rules.map((r) => [r.id, r.name])],
       ruleId,
     );
     refreshRule();
@@ -292,7 +299,7 @@ const MapEditor = (() => {
         weight.min = "0.01";
         weight.step = "0.1";
         weight.value = v.weight;
-        weight.setAttribute("aria-label", "候选" + (i + 1) + "权重");
+        weight.setAttribute("aria-label", t("候选" + (i + 1) + "权重"));
         weight.onchange = () =>
           run(() => {
             if (!(Number(weight.value) > 0)) throw Error("权重必须大于0。");
@@ -315,7 +322,7 @@ const MapEditor = (() => {
       rule.tiles.forEach((id, i) => {
         const button = node(
           "button",
-          ["左上", "上", "右上", "左", "中心", "右", "左下", "下", "右下"][i],
+          t(["左上", "上", "右上", "左", "中心", "右", "左下", "下", "右下"][i]),
         );
         button.title = doc.tiles.find((t) => t.id === id)?.name || id;
         button.style.borderTop =
@@ -354,7 +361,10 @@ const MapEditor = (() => {
     if (!set) return;
     const image = renderer.image(set.image);
     if (!image) return;
-    const scale = Math.min(1, 1024 / Math.max(set.width, set.height));
+    const scale = Math.min(1, 4096 / Math.max(set.width, set.height));
+    canvas.style.width = set.width * atlasZoom + "px";
+    canvas.style.height = set.height * atlasZoom + "px";
+    $("atlasZoom").textContent = Math.round(atlasZoom * 100) + "%";
     canvas.width = Math.round(set.width * scale);
     canvas.height = Math.round(set.height * scale);
     const c = canvas.getContext("2d");
@@ -378,6 +388,24 @@ const MapEditor = (() => {
       }
     }
   }
+  function setAtlasZoom(value) {
+    atlasZoom = Math.max(0.05, Math.min(16, value)); drawAtlas();
+  }
+  $("atlasPlus").onclick = () => setAtlasZoom(atlasZoom * 1.5);
+  $("atlasMinus").onclick = () => setAtlasZoom(atlasZoom / 1.5);
+  $("atlasActual").onclick = () => setAtlasZoom(1);
+  $("atlasFit").onclick = () => {
+    const set = doc.tilesets.find(s => s.id === $("tilesetList").value);
+    if (set) setAtlasZoom(Math.min($("atlasViewport").clientWidth / set.width, $("atlasViewport").clientHeight / set.height));
+  };
+  $("atlasExpand").onclick = () => { $("atlasPanel").classList.toggle("expanded"); drawAtlas(); };
+  $("atlasViewport").addEventListener("wheel", e => {
+    e.preventDefault(); const v = $("atlasViewport"), r = v.getBoundingClientRect();
+    const x = e.clientX - r.left, y = e.clientY - r.top, before = atlasZoom;
+    const px = (v.scrollLeft + x) / before, py = (v.scrollTop + y) / before;
+    setAtlasZoom(atlasZoom * (e.deltaY < 0 ? 1.2 : 1 / 1.2));
+    v.scrollLeft = px * atlasZoom - x; v.scrollTop = py * atlasZoom - y;
+  }, {passive:false});
   function atlasTile(event) {
     const set = doc.tilesets.find((s) => s.id === $("tilesetList").value);
     if (!set) return null;
@@ -558,6 +586,14 @@ const MapEditor = (() => {
         ctx.font = "bold 11px sans-serif";
         ctx.fillText(s.team + 1 + "-" + s.position, ox + s.x * cw, oy + s.y * ch - 2);
       }
+    }
+    for (const u of doc.units || []) {
+      const x = ox + u.x * cw, y = oy + u.y * ch;
+      if (x + cw < 0 || y + ch < 0 || x > viewport.clientWidth || y > viewport.clientHeight) continue;
+      ctx.fillStyle = ["#439aff", "#f26868", "#6cdb91", "#edc764"][u.team % 4];
+      ctx.fillRect(x + cw * .15, y + ch * .15, cw * .7, ch * .7);
+      ctx.fillStyle = "#fff"; ctx.font = "12px sans-serif";
+      ctx.fillText(`${u.team + 1}: ${u.name || u.unitId}`, x, y - 3);
     }
     const bounds =
       drag && ["rect", "select", "deployment"].includes(drag.tool)
@@ -747,7 +783,7 @@ const MapEditor = (() => {
   function validate() {
     const issues = M.gameIssues(doc);
     $("validation").replaceChildren(
-      ...(issues.length ? issues : ["地图可导出为两队对战地图。"]).map((t) => node("li", t)),
+      ...(issues.length ? issues : ["地图可导出为两队对战地图。"]).map((value) => node("li", t(value))),
     );
     status(
       issues.length ? "检查发现" + issues.length + "项问题，可保存工程继续编辑" : "地图检查通过",
@@ -879,10 +915,24 @@ const MapEditor = (() => {
   $("importMap").onclick = () => pickFile("map");
   $("addAtlas").onclick = () => pickFile("atlas");
   $("addImage").onclick = () => pickFile("image");
+  $("generateUnits").onclick = () => run(() => {
+    const units = MapAuthoring.parseUnits($("unitText").value, doc, MapEditorUnits);
+    checkpoint(); doc.units = [...(doc.units || []), ...units.map(u => ({...u,id:M.uid("unit")}))];
+    changed(`已生成${units.length}个单位`);
+  });
   $("exportProject").onclick = () =>
     run(() => {
       M.validate(doc);
-      download(doc, ".pgmap.json");
+      if (!$("bundleResources").checked) { download(doc, ".pgmap.json"); return; }
+      const {files, manifest} = MapAuthoring.resourceFiles(doc);
+      const json = JSON.stringify(doc);
+      if (new Blob([json]).size > 64 * 1024 * 1024) throw Error("工程超过64MB，请减少图片资源");
+      const blob = MapAuthoring.zip([{name:doc.id + ".pgmap.json",data:json}, ...files,
+        {name:"resources.json",data:JSON.stringify(manifest,null,2)},
+        {name:"README.txt",data:"解压后导入 .pgmap.json 继续编辑。工程内嵌所有地图图片，resources/ 同时提供原始图片；resources.json 记录对应关系。单位是目录引用，不包含游戏完整单位素材。"}]);
+      const url = URL.createObjectURL(blob), a = node("a"); a.href = url; a.download = doc.id + ".pgmap.zip";
+      document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url),1000);
+      dirty = false; status(`已打包工程与${files.length}个图片资源`);
     });
   $("exportGame").onclick = () =>
     run(() => {
@@ -1185,7 +1235,14 @@ const MapEditor = (() => {
     if (file) run(() => importFile(file, file.type.startsWith("image/") ? "image" : "map"));
   };
   new ResizeObserver(drawSoon).observe(viewport);
-  refresh();
+  MapEditorI18n.init(() => {
+    refresh();
+    if ($("validation").children.length) {
+      const issues = M.gameIssues(doc);
+      $("validation").replaceChildren(...(issues.length ? issues : ["地图可导出为两队对战地图。"]).map(value => node("li", t(value))));
+    }
+    drawSoon();
+  });
   requestAnimationFrame(fit);
   return {
     get document() {

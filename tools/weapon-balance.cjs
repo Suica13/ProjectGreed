@@ -34,8 +34,7 @@ function applyWeaponBalance(prefab, rules = require("../shared/conversion-rules.
     if (prefab.stats?.ship && Classes.machineGun(weapon, id)) target /= 0.75;
     if (
       (prefab.stats?.ship || prefab.unitTags?.includes("MA")) &&
-      Classes.mainClass(weapon, id) === "hand" &&
-      Classes.classify(weapon, id) === "beam"
+      Classes.classify(weapon, id) === "beam_rifle"
     )
       target = 1;
     Conversion.scaleDamage(weapon, target / (weapon.classDamageScale ?? 1));

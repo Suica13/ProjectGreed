@@ -72,9 +72,17 @@ def apply(prefab):
         base_hp = source.setdefault("v17BaseHp", stats["hp"])
         stats["hp"] = TANK_HP.get(prefab["id"], rounded_hp(base_hp * 1.25))
         # Recompute from the retained baseline; repeated imports cannot halve twice.
-        if prefab.get("formOf", prefab["id"]) in TRANSPORT_HULL_FAMILIES:
-            stats["hp"] = max(1, math.ceil(stats["hp"] * 0.5))
-            source["transportHullMultiplier"] = 0.5
+        family = prefab.get("formOf", prefab["id"])
+        if family in TRANSPORT_HULL_FAMILIES:
+            multiplier = 1 if family in {"MedeaKai", "FatUncleKai"} else 0.75
+            stats["hp"] = max(1, math.ceil(stats["hp"] * multiplier))
+            source["transportHullMultiplier"] = multiplier
+            if multiplier == 1:
+                balance = prefab.setdefault("costBalance", {})
+                base_cost = balance.setdefault("transportCostBeforeIncrease", stats["cost"])
+                stats["cost"] = base_cost + 25
+                balance["published"] = stats["cost"]
+                balance["tacticalOverride"] = "Upgraded transport: full tactical hull and COST +25"
     if prefab["id"].startswith("Army_Squad_"):
         stats["cost"] = 0
         if "costBalance" in prefab:

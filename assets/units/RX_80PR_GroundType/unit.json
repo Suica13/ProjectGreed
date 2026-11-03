@@ -555,7 +555,7 @@
   },
   "stats": {
     "hp": 53000,
-    "en": 450,
+    "en": 900,
     "move": 6,
     "mobility": 125,
     "cost": 950,
@@ -646,7 +646,7 @@
   },
   "sourceStats": {
     "enBeforeReduction": 900,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "hp": 42500,
     "walkSpeed": 0.65,
     "boostSpeed": 1.5,
@@ -723,6 +723,28 @@
     "Common_Push_A": {
       "ref": "Common_Push_A__lv2",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Push_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Kick_White_R"
+              ],
+              "delay": 0.45
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Push_A"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
@@ -744,7 +766,10 @@
             "y": 0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "EF_90mmMG": {
       "ref": "EF_90mmMG__lv2",
@@ -1019,6 +1044,46 @@
     "EF_BeamSaber_AF_Fast_A": {
       "ref": "EF_BeamSaber_AF_Fast_A__lv2",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Melee_A_Fast",
+              "delay": 0
+            },
+            {
+              "weaponDisplayIndex": 1,
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_1_Pink_R"
+              ],
+              "delay": 0.51
+            },
+            {
+              "animation": "Common_Melee_F_Fast",
+              "delay": 0.51
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_1_Pink_L"
+              ],
+              "delay": 0.25
+            },
+            {
+              "delay": 1.4
+            }
+          ],
+          "startAnimation": "Common_Melee_A_Fast"
+        },
         "requiredParts": [
           "rightArm"
         ],
@@ -1039,7 +1104,10 @@
             "y": 0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "Common_DoubleVulcan_MS": {
       "ref": "Common_DoubleVulcan_MS__lv2",

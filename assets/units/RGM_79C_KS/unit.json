@@ -527,7 +527,7 @@
   },
   "stats": {
     "hp": 30000,
-    "en": 375.0,
+    "en": 750.0,
     "move": 7,
     "mobility": 130.0,
     "cost": 375,
@@ -639,7 +639,7 @@
     "movementBeforeMobility": 6,
     "mobilityMoveTarget": 7,
     "enBeforeReduction": 750.0,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "adaptability": {
       "ground": 100.0,
       "space": 100.0,
@@ -693,6 +693,28 @@
     "Common_Push_A": {
       "ref": "Common_Push_A__lv1",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Push_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Kick_White_R"
+              ],
+              "delay": 0.45
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Push_A"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
@@ -714,7 +736,10 @@
             "y": 0.0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "EF_90mmMG": {
       "ref": "EF_90mmMG__lv2",
@@ -806,6 +831,32 @@
     "EF_BeamSaber_A": {
       "ref": "EF_BeamSaber_A__lv2",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Melee_A",
+              "delay": 0
+            },
+            {
+              "weaponDisplayIndex": 1,
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_1_Pink_R"
+              ],
+              "delay": 0.6
+            },
+            {
+              "delay": 1.4
+            }
+          ],
+          "startAnimation": "Common_Melee_A"
+        },
         "requiredParts": [
           "rightArm"
         ],
@@ -826,7 +877,10 @@
             "y": 0.0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "Common_DoubleVulcan_MS": {
       "ref": "Common_DoubleVulcan_MS__lv1",

@@ -37815,7 +37815,7 @@
       "sourceHit": 65,
       "hitMultiplier": 1,
       "hitBonus": 0,
-      "slot": "skill",
+      "slot": "weapon",
       "clip": "Common_Cannon_Shoot_A",
       "damagePerShot": 5000,
       "damageComponents": {
@@ -37948,13 +37948,12 @@
         ]
       },
       "category": "mortar",
-      "noCounter": true,
+      "noCounter": false,
       "special": {
-        "type": "mortar",
-        "radius": 1,
-        "emptyCells": true
+        "type": "blast",
+        "radius": 0
       },
-      "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
+      "description": "常规曲射武器，攻击目标单元格内的敌军。",
       "actionCost": 5,
       "level": 1,
       "levelSource": "Units/BattleUnits/Weapon/Shell/Common_Mortar.gw"
@@ -37970,7 +37969,7 @@
       "sourceHit": 85,
       "hitMultiplier": 1,
       "hitBonus": 0,
-      "slot": "skill",
+      "slot": "weapon",
       "clip": "Common_Cannon_Shoot_A",
       "damagePerShot": 2500,
       "damageComponents": {
@@ -38056,13 +38055,12 @@
         "BZ_Fire_1_S"
       ],
       "category": "mortar",
-      "noCounter": true,
+      "noCounter": false,
       "special": {
-        "type": "mortar",
-        "radius": 1,
-        "emptyCells": true
+        "type": "blast",
+        "radius": 0
       },
-      "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
+      "description": "常规曲射武器，攻击目标单元格内的敌军。",
       "nativePayload": {
         "ShellDamage": 2500,
         "DpDamage": 100,
@@ -38144,7 +38142,7 @@
       "sourceHit": 75,
       "hitMultiplier": 1,
       "hitBonus": 0,
-      "slot": "skill",
+      "slot": "weapon",
       "clip": "Common_Cannon_Shoot_A",
       "damagePerShot": 3500,
       "damageComponents": {
@@ -38288,13 +38286,12 @@
         ]
       },
       "category": "mortar",
-      "noCounter": true,
+      "noCounter": false,
       "special": {
-        "type": "mortar",
-        "radius": 1,
-        "emptyCells": true
+        "type": "blast",
+        "radius": 0
       },
-      "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
+      "description": "常规曲射武器，攻击目标单元格内的敌军。",
       "actionCost": 5,
       "level": 1,
       "levelSource": "Units/BattleUnits/Weapon/Shell/Common_Mortar_Bombing_Shell.gw"
@@ -38310,7 +38307,7 @@
       "sourceHit": 75,
       "hitMultiplier": 1,
       "hitBonus": 0,
-      "slot": "skill",
+      "slot": "weapon",
       "clip": "Common_Cannon_Shoot_A",
       "damagePerShot": 2000,
       "damageComponents": {
@@ -38387,13 +38384,12 @@
         "BZ_Fire_1"
       ],
       "category": "mortar",
-      "noCounter": true,
+      "noCounter": false,
       "special": {
-        "type": "mortar",
-        "radius": 1,
-        "emptyCells": true
+        "type": "blast",
+        "radius": 0
       },
-      "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
+      "description": "常规曲射武器，攻击目标单元格内的敌军。",
       "nativePayload": {
         "ShellDamage": 2000,
         "DpDamage": 150,
@@ -38476,7 +38472,7 @@
       "sourceHit": 65,
       "hitMultiplier": 1,
       "hitBonus": 0,
-      "slot": "skill",
+      "slot": "weapon",
       "clip": null,
       "damagePerShot": 3500,
       "damageComponents": {
@@ -38595,13 +38591,12 @@
         ]
       },
       "category": "mortar",
-      "noCounter": true,
+      "noCounter": false,
       "special": {
-        "type": "mortar",
-        "radius": 1,
-        "emptyCells": true
+        "type": "blast",
+        "radius": 0
       },
-      "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
+      "description": "常规曲射武器，攻击目标单元格内的敌军。",
       "actionCost": 5,
       "level": 1,
       "levelSource": "Units/BattleUnits/Weapon/Shell/Common_Mortar_Type61_SPG.gw",
@@ -38628,7 +38623,7 @@
       "sourceHit": 65,
       "hitMultiplier": 1,
       "hitBonus": 0,
-      "slot": "skill",
+      "slot": "weapon",
       "clip": "Common_Cannon_Shoot_A",
       "damagePerShot": 10000,
       "damageComponents": {
@@ -38788,13 +38783,12 @@
         ]
       },
       "category": "mortar",
-      "noCounter": true,
+      "noCounter": false,
       "special": {
-        "type": "mortar",
-        "radius": 1,
-        "emptyCells": true
+        "type": "blast",
+        "radius": 0
       },
-      "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
+      "description": "常规曲射武器，攻击目标单元格内的敌军。",
       "actionCost": 5,
       "level": 1,
       "levelSource": "Units/BattleUnits/Weapon/Shell/Common_Mortar_YMS_16M.gw"
@@ -38810,7 +38804,7 @@
       "sourceHit": 75,
       "hitMultiplier": 1,
       "hitBonus": 0,
-      "slot": "skill",
+      "slot": "weapon",
       "clip": "Common_Cannon_Shoot_A",
       "damagePerShot": 3000,
       "damageComponents": {
@@ -38913,13 +38907,12 @@
         "Common_MortarDouble_L"
       ],
       "category": "mortar",
-      "noCounter": true,
+      "noCounter": false,
       "special": {
-        "type": "mortar",
-        "radius": 1,
-        "emptyCells": true
+        "type": "blast",
+        "radius": 0
       },
-      "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
+      "description": "常规曲射武器，攻击目标单元格内的敌军。",
       "nativePayload": {
         "offsetRandomXY": 120,
         "ShellDamage": 3000,
@@ -38992,7 +38985,7 @@
       "sourceHit": 75,
       "hitMultiplier": 1,
       "hitBonus": 0,
-      "slot": "skill",
+      "slot": "weapon",
       "clip": "Common_Cannon_Shoot_A",
       "damagePerShot": 3500,
       "damageComponents": {
@@ -39152,13 +39145,12 @@
         ]
       },
       "category": "mortar",
-      "noCounter": true,
+      "noCounter": false,
       "special": {
-        "type": "mortar",
-        "radius": 1,
-        "emptyCells": true
+        "type": "blast",
+        "radius": 0
       },
-      "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
+      "description": "常规曲射武器，攻击目标单元格内的敌军。",
       "actionCost": 5,
       "level": 2,
       "levelSource": "Units/BattleUnits/Weapon/Shell/Common_MortarDouble_Lv2.gw"
@@ -39174,7 +39166,7 @@
       "sourceHit": 65,
       "hitMultiplier": 1,
       "hitBonus": 0,
-      "slot": "skill",
+      "slot": "weapon",
       "clip": "Common_Cannon_Shoot_A",
       "damagePerShot": 2500,
       "damageComponents": {
@@ -39311,13 +39303,12 @@
         "Common_MortarDouble_B4_L"
       ],
       "category": "mortar",
-      "noCounter": true,
+      "noCounter": false,
       "special": {
-        "type": "mortar",
-        "radius": 1,
-        "emptyCells": true
+        "type": "blast",
+        "radius": 0
       },
-      "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
+      "description": "常规曲射武器，攻击目标单元格内的敌军。",
       "nativePayload": {
         "offsetRandomXY": 120,
         "ShellDamage": 2500,
@@ -39390,7 +39381,7 @@
       "sourceHit": 65,
       "hitMultiplier": 1,
       "hitBonus": 0,
-      "slot": "skill",
+      "slot": "weapon",
       "clip": "Common_Cannon_Shoot_A",
       "damagePerShot": 2500,
       "damageComponents": {
@@ -39523,13 +39514,12 @@
         "BZ_Fire_1"
       ],
       "category": "mortar",
-      "noCounter": true,
+      "noCounter": false,
       "special": {
-        "type": "mortar",
-        "radius": 1,
-        "emptyCells": true
+        "type": "blast",
+        "radius": 0
       },
-      "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
+      "description": "常规曲射武器，攻击目标单元格内的敌军。",
       "nativePayload": {
         "offsetRandomXY": 120,
         "ShellDamage": 2500,
@@ -39602,7 +39592,7 @@
       "sourceHit": 65,
       "hitMultiplier": 1,
       "hitBonus": 0,
-      "slot": "skill",
+      "slot": "weapon",
       "clip": "Common_Cannon_Shoot_A",
       "damagePerShot": 2750,
       "damageComponents": {
@@ -39767,13 +39757,12 @@
         ]
       },
       "category": "mortar",
-      "noCounter": true,
+      "noCounter": false,
       "special": {
-        "type": "mortar",
-        "radius": 1,
-        "emptyCells": true
+        "type": "blast",
+        "radius": 0
       },
-      "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
+      "description": "常规曲射武器，攻击目标单元格内的敌军。",
       "actionCost": 5,
       "level": 1,
       "levelSource": "Units/BattleUnits/Weapon/Shell/Common_MortarDouble_Bombing_Shell.gw"
@@ -39789,7 +39778,7 @@
       "sourceHit": 65,
       "hitMultiplier": 1,
       "hitBonus": 0,
-      "slot": "skill",
+      "slot": "weapon",
       "clip": "Common_Cannon_Shoot_A",
       "damagePerShot": 3500,
       "damageComponents": {
@@ -39954,13 +39943,12 @@
         ]
       },
       "category": "mortar",
-      "noCounter": true,
+      "noCounter": false,
       "special": {
-        "type": "mortar",
-        "radius": 1,
-        "emptyCells": true
+        "type": "blast",
+        "radius": 0
       },
-      "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
+      "description": "常规曲射武器，攻击目标单元格内的敌军。",
       "actionCost": 5,
       "level": 2,
       "levelSource": "Units/BattleUnits/Weapon/Shell/Common_MortarDouble_Bombing_Shell_Lv2.gw"
@@ -39976,7 +39964,7 @@
       "sourceHit": 65,
       "hitMultiplier": 1,
       "hitBonus": 0,
-      "slot": "skill",
+      "slot": "weapon",
       "clip": "Common_Cannon_Shoot_A",
       "damagePerShot": 2750,
       "damageComponents": {
@@ -40137,13 +40125,12 @@
         ]
       },
       "category": "mortar",
-      "noCounter": true,
+      "noCounter": false,
       "special": {
-        "type": "mortar",
-        "radius": 1,
-        "emptyCells": true
+        "type": "blast",
+        "radius": 0
       },
-      "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
+      "description": "常规曲射武器，攻击目标单元格内的敌军。",
       "actionCost": 5,
       "level": 1,
       "levelSource": "Units/BattleUnits/Weapon/Shell/Common_MortarDouble_Bombing_Shell.gw"
@@ -40159,7 +40146,7 @@
       "sourceHit": 65,
       "hitMultiplier": 1,
       "hitBonus": 0,
-      "slot": "skill",
+      "slot": "weapon",
       "clip": "Common_Cannon_Shoot_A",
       "damagePerShot": 3500,
       "damageComponents": {
@@ -40320,13 +40307,12 @@
         ]
       },
       "category": "mortar",
-      "noCounter": true,
+      "noCounter": false,
       "special": {
-        "type": "mortar",
-        "radius": 1,
-        "emptyCells": true
+        "type": "blast",
+        "radius": 0
       },
-      "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
+      "description": "常规曲射武器，攻击目标单元格内的敌军。",
       "actionCost": 5,
       "level": 2,
       "levelSource": "Units/BattleUnits/Weapon/Shell/Common_MortarDouble_Bombing_Shell_Lv2.gw"
@@ -40342,7 +40328,7 @@
       "sourceHit": 75,
       "hitMultiplier": 1,
       "hitBonus": 0,
-      "slot": "skill",
+      "slot": "weapon",
       "clip": "Common_Cannon_Shoot_A",
       "damagePerShot": 3000,
       "damageComponents": {
@@ -40441,13 +40427,12 @@
         "BZ_Fire_1"
       ],
       "category": "mortar",
-      "noCounter": true,
+      "noCounter": false,
       "special": {
-        "type": "mortar",
-        "radius": 1,
-        "emptyCells": true
+        "type": "blast",
+        "radius": 0
       },
-      "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
+      "description": "常规曲射武器，攻击目标单元格内的敌军。",
       "nativePayload": {
         "offsetRandomXY": 120,
         "ShellDamage": 3000,
@@ -40520,7 +40505,7 @@
       "sourceHit": 75,
       "hitMultiplier": 1,
       "hitBonus": 0,
-      "slot": "skill",
+      "slot": "weapon",
       "clip": "Common_Cannon_Shoot_A",
       "damagePerShot": 3500,
       "damageComponents": {
@@ -40676,13 +40661,12 @@
         ]
       },
       "category": "mortar",
-      "noCounter": true,
+      "noCounter": false,
       "special": {
-        "type": "mortar",
-        "radius": 1,
-        "emptyCells": true
+        "type": "blast",
+        "radius": 0
       },
-      "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
+      "description": "常规曲射武器，攻击目标单元格内的敌军。",
       "actionCost": 5,
       "level": 2,
       "levelSource": "Units/BattleUnits/Weapon/Shell/Common_MortarDouble_Lv2.gw"
@@ -40698,7 +40682,7 @@
       "sourceHit": 75,
       "hitMultiplier": 1,
       "hitBonus": 0,
-      "slot": "skill",
+      "slot": "weapon",
       "clip": "Common_Cannon_Shoot_A",
       "damagePerShot": 3000,
       "damageComponents": {
@@ -40819,13 +40803,12 @@
         "Common_MortarDouble_RX_75_L"
       ],
       "category": "mortar",
-      "noCounter": true,
+      "noCounter": false,
       "special": {
-        "type": "mortar",
-        "radius": 1,
-        "emptyCells": true
+        "type": "blast",
+        "radius": 0
       },
-      "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
+      "description": "常规曲射武器，攻击目标单元格内的敌军。",
       "nativePayload": {
         "offsetRandomXY": 100,
         "ShellDamage": 3000,
@@ -40909,7 +40892,7 @@
       "sourceHit": 75,
       "hitMultiplier": 1,
       "hitBonus": 0,
-      "slot": "skill",
+      "slot": "weapon",
       "clip": "Common_Cannon_Shoot_A",
       "damagePerShot": 3000,
       "damageComponents": {
@@ -41026,13 +41009,12 @@
         "BZ_Fire_1"
       ],
       "category": "mortar",
-      "noCounter": true,
+      "noCounter": false,
       "special": {
-        "type": "mortar",
-        "radius": 1,
-        "emptyCells": true
+        "type": "blast",
+        "radius": 0
       },
-      "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
+      "description": "常规曲射武器，攻击目标单元格内的敌军。",
       "nativePayload": {
         "offsetRandomXY": 100,
         "ShellDamage": 3000,
@@ -41105,7 +41087,7 @@
       "sourceHit": 75,
       "hitMultiplier": 1,
       "hitBonus": 0,
-      "slot": "skill",
+      "slot": "weapon",
       "clip": null,
       "damagePerShot": 2500,
       "damageComponents": {
@@ -41261,13 +41243,12 @@
         ]
       },
       "category": "mortar",
-      "noCounter": true,
+      "noCounter": false,
       "special": {
-        "type": "mortar",
-        "radius": 1,
-        "emptyCells": true
+        "type": "blast",
+        "radius": 0
       },
-      "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
+      "description": "常规曲射武器，攻击目标单元格内的敌军。",
       "actionCost": 5,
       "level": 1,
       "levelSource": "Units/BattleUnits/Weapon/Shell/Common_MortarDouble_RX_75R.gw",
@@ -41294,7 +41275,7 @@
       "sourceHit": 75,
       "hitMultiplier": 1,
       "hitBonus": 0,
-      "slot": "skill",
+      "slot": "weapon",
       "clip": "Common_Cannon_Shoot_A",
       "damagePerShot": 2500,
       "damageComponents": {
@@ -41468,13 +41449,12 @@
         ]
       },
       "category": "mortar",
-      "noCounter": true,
+      "noCounter": false,
       "special": {
-        "type": "mortar",
-        "radius": 1,
-        "emptyCells": true
+        "type": "blast",
+        "radius": 0
       },
-      "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
+      "description": "常规曲射武器，攻击目标单元格内的敌军。",
       "actionCost": 5,
       "level": 1,
       "levelSource": "Units/BattleUnits/Weapon/Shell/Common_MortarDouble_RX_75R.gw"
@@ -42188,7 +42168,7 @@
       "sourceHit": 75,
       "hitMultiplier": 1,
       "hitBonus": 0,
-      "slot": "skill",
+      "slot": "weapon",
       "clip": null,
       "damagePerShot": 2250,
       "damageComponents": {
@@ -42478,13 +42458,12 @@
         "BZ_Fire_1"
       ],
       "category": "mortar",
-      "noCounter": true,
+      "noCounter": false,
       "special": {
-        "type": "mortar",
-        "radius": 1,
-        "emptyCells": true
+        "type": "blast",
+        "radius": 0
       },
-      "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
+      "description": "常规曲射武器，攻击目标单元格内的敌军。",
       "nativePayload": {
         "offsetRandomXY": 100,
         "ShellDamage": 3000,
@@ -42564,7 +42543,7 @@
       "sourceHit": 75,
       "hitMultiplier": 1,
       "hitBonus": 0,
-      "slot": "skill",
+      "slot": "weapon",
       "clip": null,
       "damagePerShot": 3000,
       "damageComponents": {
@@ -42770,13 +42749,12 @@
         "BZ_Fire_1"
       ],
       "category": "mortar",
-      "noCounter": true,
+      "noCounter": false,
       "special": {
-        "type": "mortar",
-        "radius": 1,
-        "emptyCells": true
+        "type": "blast",
+        "radius": 0
       },
-      "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
+      "description": "常规曲射武器，攻击目标单元格内的敌军。",
       "nativePayload": {
         "offsetRandomXY": 100,
         "ShellDamage": 4000,
@@ -42856,7 +42834,7 @@
       "sourceHit": 75,
       "hitMultiplier": 1,
       "hitBonus": 0,
-      "slot": "skill",
+      "slot": "weapon",
       "clip": null,
       "damagePerShot": 2250,
       "damageComponents": {
@@ -43146,13 +43124,12 @@
         "BZ_Fire_1"
       ],
       "category": "mortar",
-      "noCounter": true,
+      "noCounter": false,
       "special": {
-        "type": "mortar",
-        "radius": 1,
-        "emptyCells": true
+        "type": "blast",
+        "radius": 0
       },
-      "description": "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。",
+      "description": "常规曲射武器，攻击目标单元格内的敌军。",
       "nativePayload": {
         "offsetRandomXY": 100,
         "ShellDamage": 3000,

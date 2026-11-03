@@ -5,6 +5,20 @@ const HangarUI = (() => {
   dialog.setAttribute("aria-label", "格纳库");
   document.body.append(dialog);
   let statusUnit = null, confirmingLaunch = false;
+  const launchSelection = new Set();
+  let launchingIds = [], launchLocationKey = null;
+  function commonLaunchCells(ids) {
+    const members = ids.map(getUnit).filter(Boolean);
+    return members.length === ids.length ? Rules.hangars.launchSquadCells(game,members) : [];
+  }
+  function startLaunch(ids, carrier) {
+    const locations = commonLaunchCells(ids);
+    if (!locations.length) return note("所选单位没有共同的出击落点");
+    launchingIds = ids; launching = ids[0]; launchLocations = locations;
+    launchLocationKey = null;
+    selected = carrier.id; mode = "hangar-launch"; weaponId = null;
+    dialog.close(); update();
+  }
   let inspected = null,
     launching = null,
     boarding = null,
@@ -34,8 +48,8 @@ const HangarUI = (() => {
     try {
       const u = getUnit(fields.unitId);
       if (action === "embark")
-        Rules.hangars.embark(game, u, getUnit(fields.carrierId), fields.hangarId);
-      else PlanningUI.move(Rules.hangars.previewLaunch(game, u, fields.x, fields.y));
+        Rules.hangars.embarkSquad(game, u, getUnit(fields.carrierId), fields.hangarId, fields.single === true);
+      else PlanningUI.move(Rules.hangars.previewLaunchSquad(game, (fields.unitIds || [u.id]).map(getUnit), fields.x, fields.y));
       addLog(`${logUnit(u)} ${action === "embark" ? "搭载" : "出击"}。`);
       update();
     } catch (error) {
@@ -45,7 +59,7 @@ const HangarUI = (() => {
   function board(u, carrier, h) {
     cancel();
     dialog.close();
-    request("embark", { unitId: u.id, carrierId: carrier.id, hangarId: h.id });
+    request("embark", { unitId: u.id, carrierId: carrier.id, hangarId: h.id, single: squadSingleMove });
   }
   function row(u, hangar = null) {
     const box = element("div", "hangar-unit");
@@ -148,20 +162,30 @@ const HangarUI = (() => {
           const inspect = button("查看状态", () => { statusUnit = u.id; render(); });
           inspect.dataset.inspectCargo = u.id;
           item.append(inspect);
-          const locations = allowed(u) ? Rules.hangars.launchCells(game, u) : [];
+          const ready = allowed(u) && !u.acted && (phase === "deployment" || u.embarked?.boardRound !== game.round);
+          if (carrierMode && ready) {
+            const icon = item.querySelector("img");
+            icon.setAttribute("role","button"); icon.tabIndex = 0;
+            icon.setAttribute("aria-label",I18n.text("选择出击单位") + " · " + unitName(u));
+            icon.setAttribute("aria-pressed",String(launchSelection.has(u.id)));
+            item.classList.toggle("is-selected",launchSelection.has(u.id));
+            const toggle = () => {
+              if (launchSelection.has(u.id)) launchSelection.delete(u.id);
+              else if (launchSelection.size < 3) launchSelection.add(u.id);
+              else return note("每个小队最多3台单位");
+              render();
+            };
+            icon.onclick = toggle;
+            icon.onkeydown = e => { if (["Enter"," "].includes(e.key)) { e.preventDefault(); toggle(); } };
+          }
           if (carrierMode)
             item.append(
               button(
                 "出击",
                 () => {
-                  launching = u.id;
-                  selected = carrier.id;
-                  mode = "hangar-launch";
-                  weaponId = null;
-                  dialog.close();
-                  update();
+                  startLaunch([u.id],carrier);
                 },
-                !locations.length,
+                !ready,
               ),
             );
           section.append(item);
@@ -170,7 +194,7 @@ const HangarUI = (() => {
           const embark = button(
             "搭乘",
             () => board(selectedUnit, carrier, h),
-            !allowed(selectedUnit) || !Rules.hangars.canEmbark(game, selectedUnit, carrier, h.id),
+            !allowed(selectedUnit) || !Rules.hangars.boardingPlan(game, squadSingleMove ? [selectedUnit] : Rules.squadMembers(game, selectedUnit), carrier, h.id),
           );
           embark.dataset.boardId = selectedUnit.id;
           section.append(embark);
@@ -179,6 +203,15 @@ const HangarUI = (() => {
           section.append(element("p", "helper", "暂无载员"));
         content.append(section);
       }
+    }
+    if (carrierMode) {
+      const valid = new Set(Rules.hangars.cargo(game,selectedUnit).filter(u => allowed(u) && !u.acted).map(u => u.id));
+      for (const id of launchSelection) if (!valid.has(id)) launchSelection.delete(id);
+      const actions = element("div","hangar-launch-selection");
+      actions.append(element("span","",I18n.text("已选择") + " " + launchSelection.size + " / 3"),
+        button("小队出击",() => startLaunch([...launchSelection],selectedUnit),!launchSelection.size));
+      actions.dataset.squadLaunch = "";
+      content.prepend(actions);
     }
     const cargo = getUnit(statusUnit);
     if (cargo && carriers.some(c => cargo.embarked?.carrierId === c.id)) {
@@ -201,9 +234,7 @@ const HangarUI = (() => {
       const weapons = element("section", "hangar-section");
       weapons.append(element("h4", "", "武器状态"));
       for (const weapon of m.weapons) {
-        const item = element("div", "weapon");
-        item.innerHTML = htmlWeapon(weapon, cargo);
-        weapons.append(WeaponInfo.card(weapon,item,{unit:cargo}));
+        weapons.append(WeaponInfo.card(weapon,null,{unit:cargo}));
       }
       content.append(weapons);
     } else statusUnit = null;
@@ -218,7 +249,7 @@ const HangarUI = (() => {
   }
   function boardingTargets(u) {
     return game.units.filter((c) =>
-      Rules.hangars.of(c).some((h) => Rules.hangars.canEmbark(game, u, c, h.id)),
+      Rules.hangars.of(c).some((h) => Rules.hangars.boardingPlan(game, squadSingleMove ? [u] : Rules.squadMembers(game, u), c, h.id)),
     );
   }
   function startBoarding(u) {
@@ -232,6 +263,7 @@ const HangarUI = (() => {
   }
   function open(u) {
     statusUnit = null;
+    if (inspected !== u.id) launchSelection.clear();
     if (!Rules.hangars.of(u).length) {
       if (!allowed(u) || !boardingTargets(u).length) return;
       startBoarding(u);
@@ -246,7 +278,7 @@ const HangarUI = (() => {
     if (
       !carrier &&
       !game.units.some((c) =>
-        Rules.hangars.of(c).some((h) => Rules.hangars.canEmbark(game, u, c, h.id)),
+        Rules.hangars.of(c).some((h) => Rules.hangars.boardingPlan(game, squadSingleMove ? [u] : Rules.squadMembers(game, u), c, h.id)),
       )
     )
       return null;
@@ -262,6 +294,7 @@ const HangarUI = (() => {
   function cancel() {
     launching = boarding = boardingCarrier = reopenCarrier = null;
     confirmingLaunch = false;
+    launchingIds = []; launchLocationKey = null;
     launchLocations = [];
     if (["hangar-launch", "hangar-board"].includes(mode)) mode = "select";
   }
@@ -300,7 +333,14 @@ const HangarUI = (() => {
       cancel();
       dialog.close();
     }
-    launchLocations = launching ? Rules.hangars.launchCells(game, getUnit(launching)) : [];
+    if (launching) {
+      const key = JSON.stringify([launchingIds,game.round,game.deployment,
+        game.units.map(u => [u.id,u.model,u.x,u.y,u.hp,u.angle,u.squadId,u.moved,u.acted,u.embarked,u.brokenParts])]);
+      if (key !== launchLocationKey) {
+        launchLocations = commonLaunchCells(launchingIds.length ? launchingIds : [launching]);
+        launchLocationKey = key;
+      }
+    } else launchLocations = [];
     if (dialog.open) render();
   }
   function cells() {
@@ -335,7 +375,7 @@ const HangarUI = (() => {
     }
     reopenCarrier = getUnit(launching)?.embarked?.carrierId || null;
     selected = launching;
-    request("launch", { unitId: launching, x: cell.x, y: cell.y });
+    request("launch", { unitId: launching, unitIds: launchingIds.length ? launchingIds : [launching], x: cell.x, y: cell.y });
     return true;
   }
   dialog.addEventListener("cancel", () => {

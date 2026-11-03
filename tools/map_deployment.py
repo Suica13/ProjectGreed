@@ -25,6 +25,8 @@ def trim_deployment_areas(data):
 
 
 def widen_map(data):
+    if data.get("encounterScale", {}).get("version") == 1:
+        return data
     previous = data.get("deploymentExpansion", {})
     if previous.get("version") == 2:
         return trim_deployment_areas(data)

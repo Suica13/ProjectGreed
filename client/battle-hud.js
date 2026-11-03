@@ -23,7 +23,7 @@ const BattleHUD = (() => {
   byId("mapWrap").append(phaseControls, topControls);
   const capturePoint = element("button", "primary", "占领");
   capturePoint.id = "hudCapturePoint";
-  capturePoint.title = "占领据点：消耗5AP，空中单位不可占领，据点内有敌军时不可占领";
+  capturePoint.title = "占领据点：不消耗AP，空中单位不可占领，据点内有敌军时不可占领";
   const transferRegion = element("button", "", "转移");
   transferRegion.id = "hudTransferRegion";
   const transferControl = element("button", "", "转交控制权");
@@ -44,6 +44,10 @@ const BattleHUD = (() => {
     } else AttackControls.resumeTarget();
   };
   const confirmMove = element("button", "primary", "确认移动");
+  const squadStrip = element("div", "battle-squad-strip");
+  squadStrip.id = "hudSquad";
+  squadStrip.hidden = true;
+  byId("mapWrap").append(squadStrip);
   confirmMove.id = "hudConfirmMove";
   confirmMove.hidden = true;
   confirmMove.onclick = () => finishMovement(true);
@@ -54,6 +58,7 @@ const BattleHUD = (() => {
       "move-confirm",
       "attack-target",
       "attack-weapons",
+      "target",
       "target",
       "hangar-launch",
       "hangar-board",
@@ -259,12 +264,64 @@ const BattleHUD = (() => {
     const active = pageView === "game",
       unit = getUnit(selected),
       inCombat = ["battle", "reaction", "reaction_wait", "playback_wait", "moving"].includes(phase);
+    const reacting = phase === "reaction" && pending,
+      squadUnit = reacting ? getUnit(pending.target) : unit,
+      squad = squadUnit ? Rules.squadMembers(game, squadUnit) : [],
+      responseMember = reacting ? counterDraft(squadUnit).memberId : null;
+    squadStrip.hidden =
+      !active || (!reacting && squad.length < 2) || !!pendingMovement() || (inCombat && !reacting);
+    squadStrip.replaceChildren();
+    if (!squadStrip.hidden) {
+      const heading = element("strong", "", I18n.text("小队") + ` ${squad.length}/3`);
+      const members = element("div", "squad-members");
+      const all = element("button", "", I18n.text("全队"));
+      all.id = "squadSelectAll";
+      all.setAttribute("aria-pressed", String(reacting ? !responseMember : !squadSingleMove));
+      all.onclick = () => (reacting ? selectCounterMember(null) : select(unit.id));
+      members.append(all);
+      for (const member of squad) {
+        const button = element("button", "", "");
+        button.dataset.squadMember = member.id;
+        button.setAttribute(
+          "aria-pressed",
+          String(
+            reacting ? responseMember === member.id : squadSingleMove && member.id === selected,
+          ),
+        );
+        button.title = unitName(member);
+        const image = document.createElement("img");
+        image.src = unitIcon(member.model, member.pilot);
+        image.alt = unitName(member);
+        button.append(image);
+        button.onclick = () =>
+          reacting ? selectCounterMember(member.id) : select(member.id, { single: true });
+        members.append(button);
+      }
+      squadStrip.append(heading, members);
+      if (phase === "idle" && unit.team === game.team && (!Net.active || Net.canControl(unit))) {
+        const fight = element(
+          "button",
+          "",
+          I18n.text(squadCombatMode === "shooting" ? "射击战" : "格斗战"),
+        );
+        fight.id = "squadCombatMode";
+        fight.disabled = isBusy() || unit.acted || (Net.active && !Net.canAct());
+        fight.onclick = () => {
+          squadCombatMode = squadCombatMode === "shooting" ? "melee" : "shooting";
+          update();
+        };
+        squadStrip.append(fight);
+      }
+    }
     const regionId = Net.snapshot?.campaign?.activeRegion;
-    const region = active && regionId && CAMPAIGN_WORLD.regions.find((item) => item.id === regionId);
+    const region =
+      active && regionId && CAMPAIGN_WORLD.regions.find((item) => item.id === regionId);
     const regionLabel = byId("hudCampaignRegion");
     regionLabel.hidden = !region;
     regionLabel.textContent = region
-      ? (CAMPAIGN_WORLD.settings.headquarters?.some(base => base.region === region.id) ? "★ " : "") + I18n.text(region.name)
+      ? (CAMPAIGN_WORLD.settings.headquarters?.some((base) => base.region === region.id)
+          ? "★ "
+          : "") + I18n.text(region.name)
       : "";
     document.body.classList.toggle("battle-hud-active", active);
     if (active) refreshRoomStatus();
@@ -403,12 +460,19 @@ const BattleHUD = (() => {
       transferControl.hidden = !own || !game.campaignBattlefield || phase !== "idle";
       transferControl.disabled = !canCommand || !!unit.plan || !!unit.pendingMove;
       transferControl.onclick = async () => {
-        const recipients = (Net.snapshot?.members || []).filter((member) =>
-          Number.isInteger(member.seat) && Rules.seatTeam(member.seat) === unit.team && member.seat !== Rules.ownerOf(unit));
+        const recipients = (Net.snapshot?.members || []).filter(
+          (member) =>
+            Number.isInteger(member.seat) &&
+            Rules.seatTeam(member.seat) === unit.team &&
+            member.seat !== Rules.ownerOf(unit),
+        );
         const to = await GameDialog.choose({
-          title: "转交控制权", message: "选择接收玩家，搭载单位会随运输单位一并转交。",
-          actions: [{ label: "取消", value: null }, ...recipients.map((member) =>
-            ({ label: member.name, value: member.seat }))],
+          title: "转交控制权",
+          message: "选择接收玩家，搭载单位会随运输单位一并转交。",
+          actions: [
+            { label: "取消", value: null },
+            ...recipients.map((member) => ({ label: member.name, value: member.seat })),
+          ],
         });
         if (Number.isInteger(to)) Net.request("unit_control_transfer", { unitId: unit.id, to });
       };

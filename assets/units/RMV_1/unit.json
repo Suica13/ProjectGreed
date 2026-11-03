@@ -185,7 +185,7 @@
   },
   "stats": {
     "hp": 12500,
-    "en": 375,
+    "en": 750,
     "move": 4,
     "mobility": 75,
     "cost": 200,
@@ -288,7 +288,7 @@
   },
   "sourceStats": {
     "enBeforeReduction": 750,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "hp": 10000,
     "walkSpeed": 0.55,
     "boostSpeed": 0.75,
@@ -362,6 +362,9 @@
     "Common_MortarDouble": {
       "ref": "Common_MortarDouble__lv1",
       "overrides": {
+        "slot": "skill",
+        "noCounter": true,
+        "description": "迫击炮技能：攻击目标单元格，每回合一次，使用后本回合不能普通攻击。",
         "requiredParts": [
           "rightArm"
         ],
@@ -397,12 +400,16 @@
               }
             }
           ]
-        }
+        },
+        "maxUsesPerTurn": 1
       }
     },
     "Common_MortarDouble_L": {
       "ref": "Common_MortarDouble_L__lv1",
       "overrides": {
+        "slot": "skill",
+        "noCounter": true,
+        "description": "迫击炮技能：攻击目标单元格，每回合一次，使用后本回合不能普通攻击。",
         "requiredParts": [
           "rightArm"
         ],
@@ -445,7 +452,8 @@
             "paired_weapon"
           ],
           "mergedInto": "Common_MortarDouble"
-        }
+        },
+        "maxUsesPerTurn": 1
       }
     },
     "EF_RMV_1_Cannon": {
@@ -511,6 +519,28 @@
     "Common_Push_A": {
       "ref": "Common_Push_A__lv1",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Push_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Kick_White_R"
+              ],
+              "delay": 0.45
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Push_A"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
@@ -532,7 +562,10 @@
             "y": 0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     }
   },
   "mechanics": [

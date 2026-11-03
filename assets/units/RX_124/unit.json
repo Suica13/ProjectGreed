@@ -387,7 +387,7 @@
   },
   "stats": {
     "hp": 62500,
-    "en": 500.0,
+    "en": 1000.0,
     "move": 8,
     "mobility": 190.0,
     "cost": 1200,
@@ -514,7 +514,7 @@
     "movementBeforeMobility": 8,
     "mobilityMoveTarget": 9,
     "enBeforeReduction": 1000.0,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "adaptability": {
       "ground": 100.0,
       "space": 100.0,
@@ -568,6 +568,28 @@
     "Common_Push_A": {
       "ref": "Common_Push_A__lv3",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Push_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Kick_White_R"
+              ],
+              "delay": 0.45
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Push_A"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
@@ -589,7 +611,10 @@
             "y": 0.0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "TITANS_ShieldBoostedRifle": {
       "ref": "TITANS_ShieldBoostedRifle__lv1",
@@ -623,6 +648,30 @@
     "TITANS_ShieldBoostedRifle_Winch": {
       "ref": "TITANS_ShieldBoostedRifle_Winch__lv1",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Melee_B",
+              "delay": 0
+            },
+            {
+              "weaponDisplayIndex": 0,
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 3.0,
+              "requiredParts": [],
+              "swingEffects": [],
+              "delay": 0.5
+            },
+            {
+              "delay": 0.5
+            }
+          ],
+          "startAnimation": "Common_Melee_B"
+        },
         "requiredParts": [
           "rightArm"
         ],
@@ -643,7 +692,10 @@
             "y": 17.0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "EF_BeamSaber_BF_B": {
       "ref": "EF_BeamSaber_BF_B__lv3",
@@ -651,11 +703,11 @@
         "attack": {
           "steps": [
             {
-              "weaponDisplayIndex": 2,
+              "animation": "Common_Melee_B",
               "delay": 0
             },
             {
-              "animation": "Common_Melee_B",
+              "weaponDisplayIndex": 2,
               "delay": 0
             },
             {
@@ -663,6 +715,9 @@
               "muzzleIndex": 0,
               "partBreakModifier": 0.75,
               "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Pink_R"
+              ],
               "delay": 0.4
             },
             {
@@ -674,13 +729,16 @@
               "muzzleIndex": 0,
               "partBreakModifier": 1.25,
               "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_1_Pink_L"
+              ],
               "delay": 0.3
             },
             {
               "delay": 1.4
             }
           ],
-          "startAnimation": null
+          "startAnimation": "Common_Melee_B"
         },
         "displayIndex": 2,
         "requiredParts": [
@@ -703,11 +761,54 @@
             "y": 0.0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "TITANS_ShieldBoostedRifle_Cqb_BF_B": {
       "ref": "TITANS_ShieldBoostedRifle_Cqb_BF_B__lv1",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Melee_B",
+              "delay": 0
+            },
+            {
+              "weaponDisplayIndex": 1,
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Yellow_R_L"
+              ],
+              "delay": 0.4
+            },
+            {
+              "animation": "Common_Melee_F",
+              "delay": 0.6
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_1_Yellow_L_L"
+              ],
+              "delay": 0.3
+            },
+            {
+              "delay": 1.4
+            }
+          ],
+          "startAnimation": "Common_Melee_B"
+        },
         "requiredParts": [
           "rightArm"
         ],
@@ -728,7 +829,10 @@
             "y": 0.0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "Common_DoubleVulcan_MS": {
       "ref": "Common_DoubleVulcan_MS__lv3",

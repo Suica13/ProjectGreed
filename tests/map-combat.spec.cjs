@@ -11,10 +11,27 @@ async function stage(page, death = false) {
   await page.evaluate((death) => {
     // This fixture tests melee presentation explicitly, independent of saved formations.
     Net.leave();
-    game = Rules.create(false, 1, [
-      [{ unitId: "RX_78_2", kitId: PRODUCTION_CATALOG.defaultKits.RX_78_2 }],
-      [{ unitId: "MS_06F", kitId: PRODUCTION_CATALOG.defaultKits.MS_06F }],
-    ], false, { costLimit:99999, unitCostLimit:99999 });
+    game = Rules.create(
+      false,
+      1,
+      [
+        [
+          { unitId: "RX_78_2", kitId: PRODUCTION_CATALOG.defaultKits.RX_78_2 },
+          { unitId: "RX_78_2", kitId: PRODUCTION_CATALOG.defaultKits.RX_78_2 },
+          { unitId: "RX_78_2", kitId: PRODUCTION_CATALOG.defaultKits.RX_78_2 },
+        ],
+        [
+          { unitId: "MS_06F", kitId: PRODUCTION_CATALOG.defaultKits.MS_06F },
+          { unitId: "MS_06F", kitId: PRODUCTION_CATALOG.defaultKits.MS_06F },
+        ],
+      ],
+      false,
+      { costLimit: 99999, unitCostLimit: 99999 },
+    );
+    // Legacy replay presentation fixture: range is independent from current combat balance.
+    for (const model of Object.values(UnitModels))
+      for (const weapon of model.weapons)
+        if (weapon.type !== "melee") weapon.max = Math.max(weapon.max, 20);
     game.deployment = null;
     setPageView("game");
     const a = game.units[0],
@@ -70,7 +87,7 @@ async function at(page, value) {
       time: f.time,
       deathAt: f.plan.deathAt,
       events: battleView.events.length,
-      nativeClips: f.weapon.attack.animations.map(item => item.clip).filter(Boolean),
+      nativeClips: f.weapon.attack.animations.map((item) => item.clip).filter(Boolean),
     };
   }, value);
 }
@@ -82,15 +99,15 @@ test("map melee approaches vertically, plays its native swing and keeps real gri
   await stage(page);
   const move = await at(page, -0.15);
   const source = move.units.find((u) => u.id === move.source);
-  expect(source.pose.x).toBeCloseTo(10.5 * 64);
-  expect(source.pose.y).toBeGreaterThan(7.5 * 64);
+  expect(source.pose.x).toBeCloseTo(10.5 * 192);
+  expect(source.pose.y).toBeGreaterThan(7.5 * 192);
   expect(source.x).toBe(10);
   expect(source.y).toBe(7);
   const swing = await at(page, 1.3);
   expect(swing.nativeClips).toContain(swing.units.find((u) => u.id === swing.source).pose.clip);
   expect(swing.events).toBe(2);
   await expect(page.locator("#battle")).toBeHidden();
-  await page.screenshot({ path: ".openai/map-combat-melee.png" });
+  await page.screenshot({ path: "tmp/map-combat-melee.png" });
   await page.locator("#roomSettings").evaluate(() => {
     setPageView("room");
   });
@@ -117,7 +134,7 @@ test("map death keeps the unit during electricity and hides its sprite when the 
   expect(target.pose.hidden).toBe(false);
   const explosion = await at(page, "explosion");
   expect(explosion.units.find((u) => u.id === explosion.target).pose.hidden).toBe(true);
-  await page.screenshot({ path: ".openai/map-combat-death.png" });
+  await page.screenshot({ path: "tmp/map-combat-death.png" });
   expect(errors).toEqual([]);
 });
 
@@ -527,6 +544,7 @@ test("each attacking and countering unit gets its own delay, preserved across pa
   await stage(page);
   const result = await page.evaluate(() => {
     game.winner = null;
+    MovementTiming.setPresentationSpeed(1);
     const [a, other] = game.units.filter((u) => u.team === 0),
       [target, otherTarget] = game.units.filter((u) => u.team === 1);
     for (const unit of [a, other, target, otherTarget])
@@ -607,6 +625,7 @@ test("each attacking and countering unit gets its own delay, preserved across pa
       };
     } finally {
       performance.now = originalNow;
+      MovementTiming.setPresentationSpeed(1.5);
       MapCombat.reset();
       battleView = null;
       phase = "idle";
@@ -684,17 +703,22 @@ test("warship sprite remains through the last explosion and disappears only afte
   expect(result[3]).toEqual({ hidden: true, keepVisible: false, draws: 0 });
 });
 
-
-test("battle clocks run at 1.5x and preserve the quick playback multiplier",async({page})=>{
+test("battle clocks run at 1.5x and preserve the quick playback multiplier", async ({ page }) => {
   await stage(page);
-  const speeds=await page.evaluate(()=>{
-    const f=MapCombat.frame,now=performance.now();
-    byId("quick").checked=false;f.lastNow=now;
-    const before=f.time;MapCombat.update(now+100);const normal=f.time-before;
-    byId("quick").checked=true;MapCombat.update(now+200);const quick=f.time-before-normal;
-    byId("quick").checked=false;
-    return {normal,quick};
+  const speeds = await page.evaluate(() => {
+    const f = MapCombat.frame,
+      now = performance.now();
+    byId("quick").checked = false;
+    f.lastNow = now;
+    const before = f.time;
+    MapCombat.update(now + 100);
+    const normal = f.time - before;
+    byId("quick").checked = true;
+    MapCombat.update(now + 200);
+    const quick = f.time - before - normal;
+    byId("quick").checked = false;
+    return { normal, quick };
   });
-  expect(speeds.normal).toBeCloseTo(.15,8);
-  expect(speeds.quick).toBeCloseTo(.15/.35,8);
+  expect(speeds.normal).toBeCloseTo(0.15, 8);
+  expect(speeds.quick).toBeCloseTo(0.15 / 0.35, 8);
 });

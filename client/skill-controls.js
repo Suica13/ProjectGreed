@@ -37,11 +37,8 @@ const SkillControls = (() => {
       },
     ];
   }
-  const actionLabel = (skill) =>
-    skill.actionCost
-      ? `${I18n.text("消耗")} ${skill.actionCost} AP`
-      : I18n.text(skill.consumeAction ? "消耗本次行动" : "不消耗行动");
-  function description(skill) {
+  const actionLabel = skill => I18n.text(skill.consumeAction ? "消耗本次行动" : "不消耗行动");
+  function sourceDescription(skill) {
     if (skill.owner === "pilot") {
       if (skill.passive)
         return I18n.text("被动：免除EXAM系统的耐久自损；EN消耗、持续时间和头部损毁解除规则不变。");
@@ -108,7 +105,7 @@ const SkillControls = (() => {
       return `以自身为中心散布半径 ${skill.radius} 格的米诺夫斯基粒子，持续两个完整回合周期。区域内所有防守单位的回避率乘以 1.25，反侦测距离 +5 格；来袭导弹与迫击炮命中率再乘以 0.75。消耗 ${skill.enCost} EN、${skill.actionCost} AP，冷却 ${skill.cooldownTurns} 个自身回合。`;
     if (skill.type === "resupply")
       return I18n.text(
-        "消耗自身25%最大EN与2 AP，为一台相邻友军恢复50%最大EN，每个己方回合限用一次。",
+        "消耗自身10%最大EN与2 AP，为相邻目标格内所有友军恢复50%最大EN，每个己方回合限用一次。",
       );
     if (skill.type === "repair")
       return `范围 ${skill.range} · 友军HP +${skill.hpRecoveryPercent}% · EN +${skill.enRecoveryPercent}% · 盾牌 +${skill.shieldRecoveryPercent}% · 消耗EN ${skill.enCost}和本次行动；不修复破损部位。`;
@@ -126,7 +123,27 @@ const SkillControls = (() => {
       actionLabel(skill)
     );
   }
+  function description(skill) {
+    const note = skill.type === "emp" ? " " + I18n.text("AP机制未启用，AP减益暂不影响行动。") : "";
+    return (sourceDescription(skill) + note)
+      .replace(/(?:AP\s*\d+(?:\.\d+)?|\d+(?:\.\d+)?\s*AP)(?:\s*[、,，·与和])?/g, "")
+      .replace(/(?:消耗|消費)\s*[、,，·]/g, "消耗");
+  }
   function render(list, unit, canCommand) {
+    for (const weapon of Rules.modelOf(unit).weapons.filter(w => w.slot === "skill")) {
+      const card = WeaponInfo.card(weapon,null,{unit});
+      const use = element("button", "", weapon.special?.type === "snipe" ? "锁定狙击目标" : "使用技能");
+      use.dataset.weaponSkill = weapon.id;
+      use.disabled = !canCommand || unit.acted || !!unit.plan ||
+        unit.attackSkillRound === game.round || !Rules.canUse(unit,weapon);
+      use.onclick = () => {
+        AttackControls.reset();
+        mode = "target"; weaponId = weapon.id;
+        squadSingleMove = true;
+        update();
+      };
+      card.append(use); list.append(card);
+    }
     let pilotHeading = false;
     for (const skill of Rules.unitSkills(unit)) {
       if (skill.owner === "pilot" && !pilotHeading) {

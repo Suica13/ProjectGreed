@@ -18,7 +18,7 @@ test("every weapon has a valid balance class, including skill weapons and physic
     }
   assert(count > 1000);
   for (const [sourceName, category, type, expected] of [
-    ["Common_ArmBR_Pink", "beam_rifle", "beam", "beam"],
+    ["Common_ArmBR_Pink", "beam_rifle", "beam", "beam_gun"],
     ["Common_ArmBeamSaber_B", "melee", "melee", "melee"],
     ["Common_DoubleVulcan_MS", "machine_gun", "shell", "small_vulcan"],
     ["Common_DoubleVulcan_FF_4", "machine_gun", "shell", "small_vulcan"],
@@ -38,7 +38,7 @@ test("explicit classes control balance without changing source damage channels o
   );
   const source = raw.weapons.EF_RX_78_2_BR;
   for (const [kind, scale, cost, range] of [
-    ["wrist", 0.75, 3, 2],
+    ["beam_gun", 1, 4, 4],
     ["beam_rifle", 1.5, 4, 4],
     ["machine_gun", 0.75, 4, 4],
     ["bazooka", 1.25, 6, 4],
@@ -48,9 +48,9 @@ test("explicit classes control balance without changing source damage channels o
     p.weapons.EF_RX_78_2_BR.weaponClass = kind;
     applyWeaponBalance(p);
     const weapon = p.weapons.EF_RX_78_2_BR;
-    assert.equal(weapon.damagePerShot, source.damagePerShot * scale);
+    assert.equal(weapon.damagePerShot, source.damagePerShot * scale * 0.75);
     assert.equal(weapon.actionCost, cost);
-    assert.equal(weapon.max, range);
+    assert.equal(weapon.max, Math.max(1, Math.ceil(range / 2)));
     assert.equal(weapon.type, source.type);
     assert.deepEqual(weapon.nativePayload, source.nativePayload);
     assert.deepEqual(
@@ -70,18 +70,18 @@ test("common and unit-specific classifications persist, rebase, audit and reject
   const ref = f.read("assets/units/RX_78_2/unit.json").weapons.EF_RX_78_2_BR.ref;
   const before = f.store.getWeapon(ref),
     source = structuredClone(f.read("assets/weapons.json").definitions[ref]);
-  before.weapon.weaponClass = "wrist";
+  before.weapon.weaponClass = "beam_gun";
   const saved = f.store.saveWeapon(before);
   assert(saved.auditLog);
-  assert.equal(f.read("assets/weapons.json").definitions[ref].weaponClass, "wrist");
+  assert.equal(f.read("assets/weapons.json").definitions[ref].weaponClass, "beam_gun");
   assert.equal(f.read("assets/weapons.json").definitions[ref].damagePerShot, source.damagePerShot);
-  assert.equal(f.store.getUnit("RX_78_2").unit.weapons.EF_RX_78_2_BR.actionCost, 3);
+  assert.equal(f.store.getUnit("RX_78_2").unit.weapons.EF_RX_78_2_BR.actionCost, 4);
   const unit = f.store.getUnit("RX_78_2");
   unit.id = unit.unit.id;
   unit.unit.weapons.EF_RX_78_2_BR.weaponClass = "sniper";
   f.store.saveUnit(unit);
-  assert.equal(f.store.getUnit("RX_78_2").unit.weapons.EF_RX_78_2_BR.max, 5);
-  assert.equal(f.read("assets/weapons.json").definitions[ref].weaponClass, "wrist");
+  assert.equal(f.store.getUnit("RX_78_2").unit.weapons.EF_RX_78_2_BR.max, 3);
+  assert.equal(f.read("assets/weapons.json").definitions[ref].weaponClass, "beam_gun");
   const invalid = f.store.getWeapon(ref),
     revision = f.store.revision();
   invalid.weapon.weaponClass = "unknown";
@@ -97,18 +97,18 @@ test("irradiation templates support classification-only edits without baking con
     ([, w]) => w.sourceWeapon && w.type === "irradiation",
   );
   const data = f.store.getWeapon(ref);
-  data.weapon.weaponClass = "wrist";
+  data.weapon.weaponClass = "beam_gun";
   f.store.saveWeapon(data);
   assert.deepEqual(f.read("assets/weapons.json").definitions[ref], {
     ...original,
-    weaponClass: "wrist",
+    weaponClass: "beam_gun",
   });
   const skill = f
     .catalog()
     .prefabs.flatMap((p) => p.skills || [])
     .find((s) => s.sourceWeapon === original.sourceWeapon);
-  assert.equal(skill.actionCost, 3);
-  assert.equal(skill.range, 2);
+  assert.equal(skill.actionCost, original.actionCost * 2);
+  assert.equal(skill.range, Math.ceil((original.range + 1) / 2));
   const invalid = f.store.getWeapon(ref);
   invalid.weapon.actionCost += 1;
   assert.throws(() => f.store.saveWeapon(invalid), /仅支持/);

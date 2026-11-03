@@ -26,9 +26,16 @@ const WeaponAudio = (() => {
       volumeGains.delete(node);
     }
   }
-  function stop() {
+  // Page/room changes stop scene audio, but let button feedback finish.
+  // Hiding or leaving the browser page still stops every channel.
+  function stop(includeUI = false) {
     current = null;
-    stopNodes();
+    if (includeUI) stopNodes();
+    else {
+      stopNodes("battle");
+      stopNodes("tail");
+      stopNodes("map");
+    }
   }
   function stopBattle() {
     current = null;
@@ -179,8 +186,8 @@ const WeaponAudio = (() => {
   window.addEventListener("pointerdown", unlock, { capture: true });
   window.addEventListener("keydown", unlock, { capture: true });
   document.addEventListener("visibilitychange", () => {
-    if (document.hidden) stop();
+    if (document.hidden) stop(true);
   });
-  window.addEventListener("pagehide", stop);
+  window.addEventListener("pagehide", () => stop(true));
   return { unlock, sync, stop, stopBattle, setBattleMuted, play, releaseBattle };
 })();

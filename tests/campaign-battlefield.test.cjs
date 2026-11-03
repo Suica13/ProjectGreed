@@ -52,7 +52,7 @@ test("all 43 regions reference editable 5v5 maps with one base, six posts and co
   }
   assert(Object.values(G.catalog.maps).filter((m) => m.scope !== "strategic").length >= 17);
 });
-test("capture costs exactly five AP, rejects air/cargo/insufficient AP, and a base capture wins", () => {
+test("capture ignores AP but still rejects air/cargo and a base capture wins", () => {
   const { game, unit, field } = fixture(),
     post = field.layout.nodes[1];
   unit.x = post.x;
@@ -66,11 +66,9 @@ test("capture costs exactly five AP, rejects air/cargo/insufficient AP, and a ba
   unit.embarked = { carrierId: "test" };
   assert.equal(B.canCapture(G, game, unit), null);
   delete unit.embarked;
-  unit.actionPoints = 4.5;
-  assert.throws(() => B.capture(G, game, unit), /无法占领/);
-  unit.actionPoints = 9;
+  unit.actionPoints = 0;
   B.capture(G, game, unit);
-  assert.equal(unit.actionPoints, 4);
+  assert.equal(unit.actionPoints, 0);
   assert.equal(field.owners[post.id], 0);
   assert.throws(() => B.capture(G, game, unit), /无法占领/);
   const base = field.layout.nodes[0];

@@ -62,6 +62,7 @@ const CampaignPilots = (() => {
           unit.state.shield = Math.min(unit.state.shield || 0, target.shield.hp);
           delete unit.state.defaultFormModel;
           delete unit.state.heldWeapon;
+          delete unit.state.weaponDisplayIndex;
           delete unit.state.plan;
         }
       }

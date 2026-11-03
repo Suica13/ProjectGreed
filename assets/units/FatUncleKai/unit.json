@@ -175,11 +175,11 @@
     "ImportedIdle": "../../animations/ImportedIdle.json"
   },
   "stats": {
-    "hp": 15750,
-    "en": 7500,
+    "hp": 31500,
+    "en": 15000,
     "move": 9,
     "mobility": 110,
-    "cost": 250,
+    "cost": 275,
     "counterLimit": 1,
     "accuracy": 100,
     "partStructuralStrength": 100,
@@ -265,7 +265,7 @@
   },
   "sourceStats": {
     "enBeforeReduction": 15000,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "hp": 25000,
     "walkSpeed": 1.75,
     "boostSpeed": 2.5,
@@ -304,7 +304,7 @@
     },
     "v17BaseHp": 25000,
     "supplyTacticalPolicy": {
-      "enCostPercent": 25,
+      "enCostPercent": 10,
       "enRecoveryPercent": 50,
       "actionCost": 2,
       "usesPerOwnTurn": 1
@@ -312,7 +312,7 @@
     "technologyEra": "0079E",
     "actionTurnSpeed": 1.5,
     "mobilityMoveTarget": 10,
-    "transportHullMultiplier": 0.5
+    "transportHullMultiplier": 1
   },
   "presentation": {
     "shield": false,
@@ -376,36 +376,13 @@
   "costBalance": {
     "nativeLevel": 1000,
     "levelMultiplier": 0.25,
-    "published": 250
+    "published": 275,
+    "transportCostBeforeIncrease": 250,
+    "tacticalOverride": "Upgraded transport: full tactical hull and COST +25"
   },
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
   "skills": [
-    {
-      "id": "adjacent_en_supply",
-      "type": "resupply",
-      "name": "EN补给",
-      "localization": {
-        "en": {
-          "name": "EN Resupply"
-        },
-        "ja": {
-          "name": "EN補給"
-        }
-      },
-      "description": "消耗自身25%最大EN与2 AP，为一台相邻友军恢复50%最大EN，每个己方回合限用一次。",
-      "range": 1,
-      "actionCost": 2,
-      "enCostPercent": 25,
-      "enRecoveryPercent": 50,
-      "cooldownTurns": 1,
-      "consumeAction": false,
-      "effect": "Flash_1_N",
-      "sound": {
-        "file": "../../sounds/Action_8.ogg",
-        "volume": 0.5
-      }
-    },
     {
       "id": "EnterDeployMode",
       "type": "transform",
@@ -443,6 +420,31 @@
         "ja": {
           "name": "展開"
         }
+      }
+    },
+    {
+      "id": "adjacent_en_supply",
+      "type": "resupply",
+      "name": "EN补给",
+      "localization": {
+        "en": {
+          "name": "EN Resupply"
+        },
+        "ja": {
+          "name": "EN補給"
+        }
+      },
+      "description": "消耗自身10%最大EN与2 AP，为相邻目标格内所有友军恢复50%最大EN，每个己方回合限用一次。",
+      "range": 1,
+      "actionCost": 2,
+      "enCostPercent": 10,
+      "enRecoveryPercent": 50,
+      "cooldownTurns": 1,
+      "consumeAction": false,
+      "effect": "Flash_1_N",
+      "sound": {
+        "file": "../../sounds/Action_8.ogg",
+        "volume": 0.5
       }
     }
   ],

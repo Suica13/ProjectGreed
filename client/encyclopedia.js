@@ -12,7 +12,7 @@ const Encyclopedia = (() => {
     JSON.stringify([
       weapon.sourceName || weapon.id,
       weapon.level,
-      WeaponClasses.paths(weapon),
+      WeaponClasses.tags(weapon),
       weapon.damage,
       weapon.shotCount,
       weapon.en,
@@ -54,12 +54,7 @@ const Encyclopedia = (() => {
       ["locked", "未解锁"],
     ]);
     if (tab === "units") UnitCatalog.populateTypeFilter(field("Type"), field("Type").value);
-    else
-      options("Type", [
-        ["", "全部类型"],
-        ...Object.entries(WeaponClasses.mainLabels).map(([key, name]) => ["main:" + key, name]),
-        ...Object.entries(categories),
-      ]);
+    else options("Type", [["", "全部类型"], ...Object.entries(categories)]);
     options("Level", [
       ["", "全部等级"],
       ...[
@@ -248,10 +243,7 @@ const Encyclopedia = (() => {
         .filter(
           ({ weapon, users }) =>
             [...users].some((id) => ids.has(id)) &&
-            (!field("Type").value ||
-              (field("Type").value.startsWith("main:")
-                ? WeaponClasses.mainTags(weapon).includes(field("Type").value.slice(5))
-                : WeaponClasses.tags(weapon).includes(field("Type").value))) &&
+            (!field("Type").value || WeaponClasses.tags(weapon).includes(field("Type").value)) &&
             (!field("Level").value || weapon.level === Number(field("Level").value)) &&
             (!query ||
               [
@@ -266,6 +258,10 @@ const Encyclopedia = (() => {
         .sort((a, b) =>
           a.weapon.name.localeCompare(b.weapon.name, I18n.language, { numeric: true }),
         );
+    }
+    if (tab === "weapons" && pendingFocusKey) {
+      const index = records.findIndex((record) => record.key === pendingFocusKey);
+      if (index > 0) records.unshift(...records.splice(index, 1));
     }
     list.replaceChildren();
     list.dataset.tab = tab;

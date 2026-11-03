@@ -272,6 +272,34 @@ const SpriteRenderer = (() => {
       seed = (phase % 628) / 100;
     return Math.sin(t * 2.1 + seed) * 1.1 + Math.sin(t * 3.7 + seed * 1.3) * 0.3;
   }
+  const modelRadii = new Map();
+  function radius(model) {
+    if (modelRadii.has(model)) return modelRadii.get(model);
+    const unit = models[model], motion = {};
+    // Enclose all poses and layers, including long weapons and engine flames.
+    for (const animation of Object.values(unit.animations))
+      for (const [bone, fields] of Object.entries(animation.curves || {})) {
+        motion[bone] ||= {x:0,y:0,height:0};
+        for (const key of ["x","y","height"])
+          for (const [,value] of fields[key] || []) motion[bone][key] = Math.max(motion[bone][key],Math.abs(value));
+      }
+    let result = 0;
+    for (const layer of unit.decals) {
+      const image = images[layer.asset];
+      // Missing assets may finish loading later; never cache an incomplete bound.
+      if (!image) return Infinity;
+      const bone = unit.bones[layer.bone], delta = motion[layer.bone] || {}, offset = layer.offset || {};
+      const width = layer.frameWidth || Math.floor(image.width/(layer.frames || 1)),
+        height = layer.frameHeight || image.height;
+      result = Math.max(result,
+        Math.hypot(bone.x,bone.y) + (delta.x || 0)+(delta.y || 0)+(delta.height || 0) +
+        Math.hypot(offset.x || 0,offset.y || 0) + Math.hypot(layer.worldOffset?.x || 0,layer.worldOffset?.y || 0) +
+        Math.abs(layer.height || 0) + Math.hypot(width*Math.abs((layer.scale ?? 1)*(layer.scaleX ?? 1)),
+          height*Math.abs((layer.scale ?? 1)*(layer.scaleY ?? 1)))/2);
+    }
+    modelRadii.set(model,result);
+    return result;
+  }
   function draw(
     ctx,
     model,
@@ -555,6 +583,7 @@ const SpriteRenderer = (() => {
 
   return {
     draw,
+    radius,
     load,
     loadMenu,
     ensureAssets,

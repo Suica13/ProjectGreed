@@ -119,6 +119,12 @@ test("standalone editor paints an atlas, nine-slice and random rules, embeds ima
   expect(
     await page.evaluate(() => MapEditor.activeLayer.image.src.startsWith("data:image/png;base64,")),
   ).toBe(true);
+  // Resource bundles are now the default; verify ZIP, then exercise legacy JSON.
+  const bundleDownload = page.waitForEvent("download");
+  await page.locator("#exportProject").click();
+  const bundle = await fs.readFile(await (await bundleDownload).path());
+  expect(bundle.readUInt32LE(0)).toBe(0x04034b50);
+  await page.locator("#bundleResources").uncheck();
   const projectDownload = page.waitForEvent("download");
   await page.locator("#exportProject").click();
   const project = JSON.parse(await fs.readFile(await (await projectDownload).path(), "utf8"));

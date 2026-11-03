@@ -602,7 +602,7 @@
   },
   "stats": {
     "hp": 50000,
-    "en": 375,
+    "en": 750,
     "move": 8,
     "mobility": 195,
     "cost": 750,
@@ -717,7 +717,7 @@
     "accuracy": 155,
     "partStructuralStrength": 125,
     "enBeforeReduction": 750,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "adaptability": {
       "ground": 100,
       "space": 100,
@@ -773,6 +773,28 @@
     "Common_Push_A": {
       "ref": "Common_Push_A__lv2",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Push_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Kick_White_R"
+              ],
+              "delay": 0.45
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Push_A"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
@@ -794,7 +816,10 @@
             "y": 0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "EF_GroundTypeBeamRifle_Blue": {
       "ref": "EF_GroundTypeBeamRifle_Blue__lv1",
@@ -1006,6 +1031,78 @@
     "EF_BeamSaber_Double_AALDF": {
       "ref": "EF_BeamSaber_Double_AALDF__lv2",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Melee_A",
+              "delay": 0
+            },
+            {
+              "weaponDisplayIndex": 1,
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_1_Pink_R"
+              ],
+              "delay": 0.6
+            },
+            {
+              "animation": "Common_Melee_A_L",
+              "delay": 0.5
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [
+                "leftArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_1_Pink_L"
+              ],
+              "delay": 0.3
+            },
+            {
+              "animation": "Common_Melee_Double_F",
+              "delay": 0.4
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_1_Pink_R"
+              ],
+              "delay": 0.3
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [
+                "leftArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_1_Pink_L"
+              ],
+              "delay": 0.0
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Melee_A"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_AALDF.gw",
@@ -1028,11 +1125,106 @@
           "leftArm",
           "rightArm"
         ]
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "EF_BeamSaber_Double_DE": {
       "ref": "EF_BeamSaber_Double_DE__lv1",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "weaponDisplayIndex": 11,
+              "delay": 0
+            },
+            {
+              "animation": "Common_Melee_Double_G",
+              "delay": 0.2
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_1_Pink_R_S"
+              ],
+              "delay": 0.32
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [
+                "leftArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_1_Pink_L_S"
+              ],
+              "delay": 0.0
+            },
+            {
+              "animation": "Common_Pose_A",
+              "delay": 0.12
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_1_Pink_R_S"
+              ],
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [
+                "leftArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_1_Pink_L_S"
+              ],
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_1_Pink_R_S"
+              ],
+              "delay": 0.12
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [
+                "leftArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_1_Pink_L_S"
+              ],
+              "delay": 0.0
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Melee_Double_G"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_DE.gw",
@@ -1066,7 +1258,10 @@
           "leftArm",
           "rightArm"
         ]
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "Common_DoubleVulcan_MS": {
       "ref": "Common_DoubleVulcan_MS__lv2",

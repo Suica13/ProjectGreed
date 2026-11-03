@@ -2198,7 +2198,7 @@
           <button data-ui-node="node-66" class="response" id="responseCounter">
             <strong data-ui-node="node-67">反击</strong
             ><small data-ui-node="node-68"
-              >每回合只能选择一个敌人反击一次，命中率×0.75。</small
+              >自动使用可用武器反击，不消耗AP；受到格斗时回击。命中率×0.75。</small
             ></button
           ><button data-ui-node="node-69" class="response" id="responseDefend">
             <strong data-ui-node="node-70">防御</strong
@@ -2218,7 +2218,7 @@
           >反击目标<select id="counterTarget" aria-label="反击目标"></select
         ></label>
         <div data-ui-node="node-76" id="estimate" class="estimate"></div>
-        <p class="muted response-note">先攻方先结算；防守方被击破则无法反击。</p>
+        <p class="muted response-note">射击结束后轮流格斗；完成格斗及回击后返回。</p>
         <button data-ui-node="node-79" id="confirmResponse" class="primary">确认应战</button>
       </aside>
     </div>
@@ -5288,7 +5288,8 @@
       __UNIT_SENSORS__;
       __AI_TACTICS__;
       __CAMPAIGN_BATTLEFIELD__;
-      __CORE__;
+      __AUTOMATIC_FIRE__
+    __CORE__;
       __WEAPON_INFO__;
       __RENDERER__;
       __SPRITE_EFFECTS__;

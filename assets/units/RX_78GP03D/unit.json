@@ -707,7 +707,7 @@
   },
   "stats": {
     "hp": 219000,
-    "en": 1050,
+    "en": 2100,
     "move": 9,
     "mobility": 120,
     "cost": 2250,
@@ -827,7 +827,7 @@
     "accuracy": 145,
     "unitLevel": 9000,
     "enBeforeReduction": 2100,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "tacticalMoveBeforeBonus": 9,
     "adaptability": {
       "ground": 10,
@@ -1052,6 +1052,32 @@
     "Common_ArmBeamSaber_XL_F_GP_03D": {
       "ref": "Common_ArmBeamSaber_XL_F_GP_03D__lv1",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Melee_F_GP_03D",
+              "delay": 0
+            },
+            {
+              "weaponDisplayIndex": 1,
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_1_Pink_R_XXL"
+              ],
+              "delay": 0.5
+            },
+            {
+              "delay": 1.5
+            }
+          ],
+          "startAnimation": "Common_Melee_F_GP_03D"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/Common_ArmBeamSaber_XL_F_GP_03D.gw",
@@ -1070,7 +1096,10 @@
             "y": 0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     }
   },
   "mechanics": [

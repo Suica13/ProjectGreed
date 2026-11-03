@@ -7,6 +7,12 @@
 - `strategy/<剧本ID>/geography-source.json`：可重新生成地理轮廓的源设定。
 - `strategy/<剧本ID>/local-battles/`：各区块的5v5局地战地图。当前43张为可直接编辑的基础地图，不是原作地图复刻。
 
+## 遭遇战地图缩放
+
+现有遭遇战地图长、宽各取原来的75%并四舍五入到整格，仅处理`encounter/`。`tools/compact-encounter-maps.cjs`同步缩放地形格、逐格环境、出生点、部署区、TileMap数据和图片图层的逻辑边界，保留图片内容、图层顺序和透明度。`encounterScale`记录原尺寸并防止重复缩小；旧部署扩展脚本也会识别该标记。
+
+缩图后部署区必要时向地图内部加宽，保证每个席位仍能放下72点普通单位或18艘2×2战舰。战略大地图与剧本局地战文件不参与本次缩放。执行`node tools/compact-encounter-maps.cjs --check`只校验，去掉`--check`才写回。
+
 ## 区块引用与复用
 
 所有路径相对于剧本目录。区块默认引用自己的局地战地图：

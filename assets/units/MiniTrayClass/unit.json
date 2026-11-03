@@ -187,7 +187,7 @@
   },
   "stats": {
     "hp": 34500,
-    "en": 3000,
+    "en": 6000,
     "move": 7,
     "mobility": 57.5,
     "cost": 500,
@@ -442,7 +442,7 @@
   },
   "sourceStats": {
     "enBeforeReduction": 6000,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "hp": 45000,
     "walkSpeed": 0.5,
     "boostSpeed": 0.65,
@@ -493,7 +493,11 @@
     "shipBalanceMultiplier": 0.7,
     "shipFactionHullMultiplier": 1.1,
     "shipFactionAccuracyMultiplier": 1.1,
-    "shipFactionEvasionMultiplier": 1.15
+    "shipFactionEvasionMultiplier": 1.15,
+    "shipFootprintBeforeCompaction": {
+      "width": 1,
+      "height": 2
+    }
   },
   "presentation": {
     "shield": false,

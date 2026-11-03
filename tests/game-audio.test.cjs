@@ -192,5 +192,13 @@ test("acknowledged production, deployment and research use native operation soun
   for (const action of ["campaign_produce", "campaign_research", "deploy", "confirm_deployment", "cancel_move"])
     audio.actionAccepted(action);
   await flush();
-  assert.deepEqual(played, ["presentation/productionSound", "presentation/researchSound", "presentation/deploymentSound", "presentation/deploymentSound"]);
+  assert.deepEqual(played, ["presentation/productionSound", "presentation/researchSound", "presentation/selectUnitSound", "presentation/deploymentSound"]);
+});
+
+test("accepted deployment placement uses the selected unit's faction cue", async () => {
+  const { audio, played } = runtime();
+  audio.actionAccepted("deploy", { model: "RGM_79__machine_gun" });
+  audio.actionAccepted("deploy", { model: "MS_06F__machine_gun" });
+  await flush();
+  assert.deepEqual(played, ["presentation/selectEfsfMsSound", "presentation/selectZeonMsSound"]);
 });

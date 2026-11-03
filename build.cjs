@@ -75,6 +75,11 @@ html = html.replace(
     ja: JSON.parse(read("client/locales/ja.json")),
   }),
 );
+function clientCatalogData() {
+  const catalog = require("./tools/load-catalog.cjs").loadCatalog({ embedMusic: true });
+  require("./tools/export-combat-rules.cjs").writeReport(catalog);
+  return JSON.stringify(require("./shared/asset-pool.js").pack(catalog)).replace(/</g, "\\u003c");
+}
 for (const [key, file] of [
   ["TILEMAP_VIEW", "shared/tilemap-view.js"],
   ["TILEMAP_RENDERER", "client/tilemap-renderer.js"],
@@ -109,6 +114,7 @@ for (const [key, file] of [
   ["SFS_UI", "client/sfs-ui.js"],
   ["AI_TACTICS", "shared/ai-tactics.js"],
   ["CAMPAIGN_BATTLEFIELD", "shared/campaign-battlefield.js"],
+  ["AUTOMATIC_FIRE", "shared/automatic-fire.js"],
   ["CORE", "shared/rules.js"],
   ["WEAPON_SEQUENCE", "shared/weapon-sequence.js"],
   ["WEAPON_CLASSES", "shared/weapon-classes.js"],
@@ -153,11 +159,7 @@ for (const [key, file] of [
 ])
   html = html.replace("__" + key + "__", () =>
     key === "DATA"
-      ? JSON.stringify(
-          require("./shared/asset-pool.js").pack(
-            require("./tools/load-catalog.cjs").loadCatalog({ embedMusic: true }),
-          ),
-        ).replace(/</g, "\\u003c")
+      ? clientCatalogData()
       : inlineScript(read(file)),
   );
 html = html.replace("</body>", () => `<style>${read("client/campaign.css")}</style><script>const CAMPAIGN_WORLD=ART.scenarios.earth_0079_mid.world;${inlineScript(read("client/campaign-workspace.js"))}${inlineScript(read("client/campaign-pilots.js"))}${inlineScript(read("client/campaign-console.js"))}${inlineScript(read("client/campaign.js"))}</script></body>`);
@@ -218,3 +220,5 @@ for (const [name, content] of outputs)
   console.log("Built " + name + ": " + Buffer.byteLength(content) + " bytes");
 
 require("./tools/build-map-editor.cjs").buildMapEditor(root);
+
+require("./tools/build-unit-editor.cjs").buildUnitEditor(root);

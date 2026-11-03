@@ -12,6 +12,7 @@ test("AI uses map environment and team restrictions while preserving slots, budg
       const restrictions = G.formationRestrictions(
         {
           mapId,
+          mode: "quick",
           unitCostLimit: 500,
           teamRestrictions: { 0: { bannedFactions, bannedEras: [] } },
         },
@@ -21,12 +22,12 @@ test("AI uses map environment and team restrictions while preserving slots, budg
       const kits = new Set();
       for (let seed = 1; seed <= 40; seed++) {
         const army = G.randomFormation(seed, 3000, restrictions, 6);
-        assert.equal(army.length, 6);
+        assert.equal(G.formationPoints(army), 6);
         assert.deepEqual(army, G.randomFormation(seed, 3000, restrictions, 6));
         G.validateFormation(army, 3000, 6);
         for (const entry of army) {
           const model = modelOf(entry);
-          assert.equal(model.adaptability[environment], 100);
+          assert.ok(model.adaptability[environment] >= 100);
           assert.ok(model.cost <= 500);
           assert.ok(!bannedFactions.includes(model.faction));
           kits.add(entry.kitId);
@@ -41,7 +42,7 @@ test("AI uses map environment and team restrictions while preserving slots, budg
       3000,
       {
         environment: "space",
-        bannedEras: ["0079"],
+        bannedFactions: ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"],
       },
       6,
     ),
@@ -107,7 +108,7 @@ test("AI fleets reserve deployment space for every slot, including 200 percent u
       for (let seed = 1; seed <= 12; seed++) {
         const restrictions = G.formationRestrictions(settings, seat);
         const army = G.randomFormation(seed, 20000, restrictions, 24);
-        assert.equal(army.length, 24, mapId + ":" + seat + ":" + seed);
+        assert.equal(G.formationPoints(army), 24, mapId + ":" + seat + ":" + seed);
         const formations = map.spawns.map((_, index) => (index === seat ? army : null));
         const game = G.create(false, seed, formations, true, {
           ...settings,
@@ -117,7 +118,7 @@ test("AI fleets reserve deployment space for every slot, including 200 percent u
           .filter((u) => !u.embarked)
           .flatMap((u) => G.cells(u).map((c) => G.key(c.x, c.y)));
         assert.equal(new Set(occupied).size, occupied.length);
-        assert.equal(game.units.length, 24);
+        assert.equal(game.units.filter(u => u.ownerSeat === seat).length, army.length);
       }
   }
 });

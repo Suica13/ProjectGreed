@@ -907,11 +907,33 @@
   border-radius: 4px;
   background: #080a0eed;
 }
-#gameScene .sfs-passengers[hidden] { display: none; }
-#gameScene .sfs-passenger { flex: 0 0 58px; width: 58px; height: 58px; padding: 3px; border: 1px solid #8594a7; background: #353a42; }
-#gameScene .sfs-passenger.selected { border-color: #74d3ff; }
-#gameScene .sfs-passenger img { width: 100%; height: 100%; object-fit: contain; }
-#gameScene .sfs-empty { display: grid; place-items: center; width: 58px; height: 58px; color: #aeb5be; font-size: 12px; }
+#gameScene .sfs-passengers[hidden] {
+  display: none;
+}
+#gameScene .sfs-passenger {
+  flex: 0 0 58px;
+  width: 58px;
+  height: 58px;
+  padding: 3px;
+  border: 1px solid #8594a7;
+  background: #353a42;
+}
+#gameScene .sfs-passenger.selected {
+  border-color: #74d3ff;
+}
+#gameScene .sfs-passenger img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+#gameScene .sfs-empty {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  color: #aeb5be;
+  font-size: 12px;
+}
 #gameScene .tech-reward-stack {
   position: absolute;
   z-index: 12;
@@ -939,11 +961,21 @@
   animation: tech-reward-show 180ms ease both;
   transition: transform 180ms ease;
 }
-#gameScene .tech-reward-toast:nth-last-child(2) { transform: translateY(-4px) scale(0.92); }
-#gameScene .tech-reward-toast:nth-last-child(3) { transform: translateY(-8px) scale(0.84); }
+#gameScene .tech-reward-toast:nth-last-child(2) {
+  transform: translateY(-4px) scale(0.92);
+}
+#gameScene .tech-reward-toast:nth-last-child(3) {
+  transform: translateY(-8px) scale(0.84);
+}
 @keyframes tech-reward-show {
-  0% { opacity: 0; translate: 0 10px; }
-  100% { opacity: 1; translate: 0 0; }
+  0% {
+    opacity: 0;
+    translate: 0 10px;
+  }
+  100% {
+    opacity: 1;
+    translate: 0 0;
+  }
 }
 #gameScene #hudCancelAction,
 #gameScene #hudConfirmMove {
@@ -1847,19 +1879,36 @@ body.replay-active #gameScene .hud-terrain-strip {
 
 /* Keep zoom directly below phase information on every screen size. */
 #gameScene .hud-phase-controls {
-  position:absolute; z-index:11; top:12px; left:16px;
-  display:flex; flex-direction:column; align-items:flex-start; gap:6px;
-  width:min(490px,calc(100% - 380px)); pointer-events:none;
+  position: absolute;
+  z-index: 11;
+  top: 12px;
+  left: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  width: min(490px, calc(100% - 380px));
+  pointer-events: none;
 }
 #gameScene .hud-phase-controls > .phase-row {
-  position:static; max-width:100%; width:100%; box-sizing:border-box;
+  position: static;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
 }
 #gameScene .hud-phase-controls > .map-camera-controls {
-  position:static; max-width:100%; box-sizing:border-box; flex-wrap:wrap;
-  pointer-events:auto;
+  position: static;
+  max-width: 100%;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+  pointer-events: auto;
 }
-@media(max-width:1100px), (max-height:600px) and (orientation:landscape) {
-  #gameScene .hud-phase-controls { top:8px; left:8px; width:calc(50% - 16px); }
+@media (max-width: 1100px), (max-height: 600px) and (orientation: landscape) {
+  #gameScene .hud-phase-controls {
+    top: 8px;
+    left: 8px;
+    width: calc(50% - 16px);
+  }
 }
 
 /* Camera controls stay immediately to the left of the turn confirmation. */
@@ -1903,14 +1952,36 @@ body.replay-active #gameScene .hud-terrain-strip {
   display: none !important;
 }
 @media (max-width: 720px) {
-  #gameScene .hud-top-controls { top: 6px; right: 6px; gap: 4px; }
-  #gameScene .hud-top-controls .map-camera-controls { gap: 2px; }
-  #gameScene .hud-top-controls .map-camera-controls button { min-width: 26px; padding-inline: 5px; }
-  #gameScene .hud-top-controls #hudTurnActions button { font-size: 11px; padding: 8px; }
+  #gameScene .hud-top-controls {
+    top: 6px;
+    right: 6px;
+    gap: 4px;
+  }
+  #gameScene .hud-top-controls .map-camera-controls {
+    gap: 2px;
+  }
+  #gameScene .hud-top-controls .map-camera-controls button {
+    min-width: 26px;
+    padding-inline: 5px;
+  }
+  #gameScene .hud-top-controls #hudTurnActions button {
+    font-size: 11px;
+    padding: 8px;
+  }
 }
 
-.pilot-skills-heading { margin-top:12px; border-top:1px solid #527492; padding-top:10px; }
-.pilot-skill-icon { width:34px; height:34px; object-fit:contain; float:left; margin:0 8px 4px 0; }
+.pilot-skills-heading {
+  margin-top: 12px;
+  border-top: 1px solid #527492;
+  padding-top: 10px;
+}
+.pilot-skill-icon {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  float: left;
+  margin: 0 8px 4px 0;
+}
 
 /* Each team keeps its own scroll position while the observer inspects both rosters. */
 #gameScene #unitRoster {
@@ -1926,13 +1997,19 @@ body.replay-active #gameScene .hud-terrain-strip {
   flex: 1 1 0;
   overflow: hidden;
 }
-#gameScene .roster-team[hidden] { display: none; }
+#gameScene .roster-team[hidden] {
+  display: none;
+}
 #gameScene #unitRoster.split-teams .roster-team {
   border: 1px solid #526477;
   background: #1b222c;
 }
-#gameScene #unitRoster.split-teams .roster-team[data-team="0"] { border-color: #67bfff; }
-#gameScene #unitRoster.split-teams .roster-team[data-team="1"] { border-color: #ef7b88; }
+#gameScene #unitRoster.split-teams .roster-team[data-team="0"] {
+  border-color: #67bfff;
+}
+#gameScene #unitRoster.split-teams .roster-team[data-team="1"] {
+  border-color: #ef7b88;
+}
 #gameScene .roster-team-heading {
   margin: 0;
   padding: 7px 9px;
@@ -1940,9 +2017,14 @@ body.replay-active #gameScene .hud-terrain-strip {
   font-size: 14px;
   border-bottom: 1px solid #526477;
 }
-#gameScene .roster-team[data-team="0"] .roster-team-heading { color: #8fd2ff; }
-#gameScene .roster-team[data-team="1"] .roster-team-heading { color: #ff9aa5; }
-#gameScene #allies, #gameScene #enemies {
+#gameScene .roster-team[data-team="0"] .roster-team-heading {
+  color: #8fd2ff;
+}
+#gameScene .roster-team[data-team="1"] .roster-team-heading {
+  color: #ff9aa5;
+}
+#gameScene #allies,
+#gameScene #enemies {
   display: block;
   flex: 1 1 0;
   min-height: 0;
@@ -1950,9 +2032,16 @@ body.replay-active #gameScene .hud-terrain-strip {
   overscroll-behavior: contain;
   padding: 4px;
 }
-#gameScene #enemies[hidden] { display: none; }
-#victory > .modal { max-height: 90dvh; overflow-y: auto; }
-#victoryRecords { margin: 6px 8px 6px 0; }
+#gameScene #enemies[hidden] {
+  display: none;
+}
+#victory > .modal {
+  max-height: 90dvh;
+  overflow-y: auto;
+}
+#victoryRecords {
+  margin: 6px 8px 6px 0;
+}
 #victoryUnitIcons .result-unit-icons {
   display: flex;
   flex-wrap: wrap;
@@ -1966,8 +2055,12 @@ body.replay-active #gameScene .hud-terrain-strip {
   border: 1px solid #67bfff;
   background: #202730;
 }
-#victoryUnitIcons .result-team-losses[data-team="1"] { border-color: #ef7b88; }
-#victoryUnitIcons h4 { margin: 0 0 8px; }
+#victoryUnitIcons .result-team-losses[data-team="1"] {
+  border-color: #ef7b88;
+}
+#victoryUnitIcons h4 {
+  margin: 0 0 8px;
+}
 
 #roomMain #teamSlots.observer-teams > .team-slot {
   max-height: 36dvh;
@@ -1991,10 +2084,150 @@ body.replay-active #gameScene .hud-terrain-strip {
   border: 1px solid #67c4fb;
   border-radius: 8px;
 }
-.reaction-review-panel[hidden] { display: none; }
-.reaction-review-row { display: flex; align-items: center; gap: 12px; margin: 8px 0; }
-.reaction-review-row span { flex: 1; }
-#confirmReactionReview { width: 100%; margin-top: 12px; }
+.reaction-review-panel[hidden] {
+  display: none;
+}
+.reaction-review-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0;
+}
+.reaction-review-row span {
+  flex: 1;
+}
+#confirmReactionReview {
+  width: 100%;
+  margin-top: 12px;
+}
 
-#hudCampaignRegion { flex:none; color:#b9d6ec; font-size:12px; padding-inline:6px; white-space:nowrap; }
-#hudCampaignRegion[hidden] { display:none; }
+#hudCampaignRegion {
+  flex: none;
+  color: #b9d6ec;
+  font-size: 12px;
+  padding-inline: 6px;
+  white-space: nowrap;
+}
+#hudCampaignRegion[hidden] {
+  display: none;
+}
+
+/* Shared-cell squad controls stay clear of the command dock on narrow screens. */
+#gameScene .battle-squad-strip {
+  position: absolute;
+  z-index: 35;
+  left: 50%;
+  bottom: 66px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px;
+  max-width: min(94%, 620px);
+  background: #161d27f2;
+  border: 1px solid #65b9ec;
+  border-radius: 5px;
+}
+#gameScene .battle-squad-strip[hidden] {
+  display: none;
+}
+#gameScene .squad-members {
+  display: flex;
+  gap: 3px;
+}
+#gameScene .squad-members button {
+  padding: 2px;
+  min-width: 38px;
+  background: #303741;
+}
+#gameScene .squad-members button[aria-pressed="true"] {
+  border-color: #70d5ff;
+  box-shadow: 0 0 4px #70d5ff;
+}
+#gameScene .hud-attack-member {
+  min-width: 0;
+  margin: 8px 0;
+  padding: 8px;
+  border: 1px solid #65839a;
+  border-radius: 5px;
+  background: #1d2733;
+}
+#gameScene .hud-attack-member-heading {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  align-items: center;
+  gap: 3px 8px;
+  margin-bottom: 8px;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+#gameScene .hud-attack-member-heading img {
+  grid-row: 1 / 3;
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  background: #34383e;
+  border: 1px solid #7995aa;
+}
+#gameScene .hud-attack-member-heading strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#gameScene .hud-attack-member-heading span {
+  font-size: 12px;
+  color: #c1d5e5;
+}
+#gameScene .hud-attack-member-weapons {
+  display: grid;
+  gap: 6px;
+}
+#gameScene .hud-attack-member-weapons .weapon {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  min-height: 0;
+  height: auto;
+}
+#gameScene .hud-attack-member-weapons .weapon p {
+  margin: 0;
+}
+#gameScene .hud-attack-member-weapons .weapon-card {
+  padding: 7px;
+}
+#gameScene .hud-attack-member-weapons .weapon-inspector {
+  margin-top: 5px;
+  padding-top: 4px;
+}
+#gameScene .squad-members img {
+  display: block;
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+}
+#gameScene .squad-members small {
+  font-size: 10px;
+}
+@media (max-width: 600px) {
+  .battle-hud-active #reaction {
+    bottom: calc(var(--hud-dock) + 124px);
+  }
+  #gameScene #hudUnitPanel[data-planning="true"] {
+    bottom: calc(var(--hud-dock) + 124px);
+  }
+  #gameScene .battle-squad-strip {
+    bottom: 66px;
+    width: 94%;
+    gap: 4px;
+  }
+  #gameScene .squad-members img {
+    width: 31px;
+    height: 31px;
+  }
+}

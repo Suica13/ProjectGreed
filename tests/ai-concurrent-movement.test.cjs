@@ -50,7 +50,7 @@ test("different AI players stagger independently without waiting for another ani
   room.game.tiles.forEach(row=>row.fill("plain"));
   for(const unit of room.game.units) {
     const seat=G.ownerOf(unit);
-    Object.assign(unit,{x:unit.team===0?5:25,y:5+Math.floor(seat/2)*8});
+    Object.assign(unit,{x:unit.team===0?5:25,y:5+Math.floor(seat/2)*8,fullBoost:{moveBonus:4,mobilityMultiplier:1}});
   }
   room.turnNotBefore=0;
   const deadline=Date.now()+4000;
@@ -75,4 +75,42 @@ test("all movement lengths and combat playback use a single 1.5x presentation ra
  assert.equal(Timing.combatRate(),1.5);
  assert.equal(Timing.combatRate(true),1.5/0.35);
  assert.equal(Timing.combatRate(true,true),1.5,"replay speed is already applied by its virtual clock");
+});
+
+test("large AI armies launch commands on separate ticks with round-robin fairness", async t => {
+  let serial=0;
+  const seen=new Set(), moves=[];
+  const engine=createRoomEngine({rules:G,randomId:()=>"paced-"+(++serial),randomSeed:()=>1,
+    randomToken:()=>"paced-token-"+(++serial),randomAIMoveDelay:()=>0,aiDelayMs:1,
+    send:(ws,frame)=>{const event=frame.lastEvent;if(event?.type==="move"&&!seen.has(event.id)){
+      seen.add(event.id);moves.push({id:event.unitId,time:Date.now(),revision:frame.revision});
+    }}});
+  t.after(()=>engine.close());
+  const clients=Array.from({length:4},()=>({readyState:1}));
+  engine.join(clients[0],{mode:"create",room:"PACED",characterFaction:"PMC",licenses:{Type61:true}});
+  const room=engine.rooms.get("PACED");
+  function act(seat,action,fields={}){engine.action(clients[seat],{id:"paced-action-"+(++serial),
+    revision:room.revision,round:room.game?.round,action,...fields});}
+  act(0,"configure_room",{...G.defaultRoomSettings(),mapId:"crossroads_2v2",fogMode:"disabled"});
+  for(const ws of clients.slice(1))engine.join(ws,{mode:"join",room:room.code,characterFaction:"PMC",licenses:{Type61:true}});
+  const formation=Array.from({length:8},()=>({unitId:"Type61",kitId:"standard"}));
+  for(let seat=0;seat<4;seat++)act(seat,"set_ready",{ready:true,formation});
+  act(0,"start_game",{formation});
+  for(let seat=0;seat<4;seat++)act(seat,"confirm_formation");
+  for(let seat=0;seat<3;seat++)act(seat,"confirm_deployment");
+  room.seats[0].bot=room.seats[2].bot=true;act(3,"confirm_deployment");
+  room.game.tiles.forEach(row=>row.fill("plain"));
+  const indices={};
+  for(const unit of room.game.units){const seat=G.ownerOf(unit),index=indices[seat]||0;indices[seat]=index+1;
+    Object.assign(unit,{x:unit.team===0?3+index%4:23+index%4,y:3+Math.floor(index/4)+Math.floor(seat/2)*7,
+      fullBoost:{moveBonus:4,mobilityMultiplier:1}});
+  }
+  room.turnNotBefore=0;
+  const deadline=Date.now()+6000;
+  while(moves.length<6&&Date.now()<deadline)await new Promise(resolve=>setTimeout(resolve,10));
+  assert.ok(moves.length>=4,"both large armies must continue acting");
+  const gaps=moves.slice(1).map((entry,index)=>entry.time-moves[index].time);
+  assert.ok(gaps.every(gap=>gap>=100),"no same-tick command bursts: "+gaps.join(","));
+  const owners=moves.map(event=>G.ownerOf(room.game.units.find(u=>u.id===event.id)));
+  assert.deepEqual(owners.slice(0,2),[0,2],"one player cannot occupy all launch slots first");
 });

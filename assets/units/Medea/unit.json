@@ -299,8 +299,8 @@
     "ImportedIdle": "../../animations/ImportedIdle.json"
   },
   "stats": {
-    "hp": 12500,
-    "en": 7500,
+    "hp": 18750,
+    "en": 15000,
     "move": 8,
     "mobility": 115,
     "cost": 250,
@@ -429,7 +429,7 @@
   },
   "sourceStats": {
     "enBeforeReduction": 15000,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "hp": 20000,
     "walkSpeed": 1.5,
     "boostSpeed": 2,
@@ -469,7 +469,7 @@
     },
     "v17BaseHp": 20000,
     "supplyTacticalPolicy": {
-      "enCostPercent": 25,
+      "enCostPercent": 10,
       "enRecoveryPercent": 50,
       "actionCost": 2,
       "usesPerOwnTurn": 1
@@ -477,7 +477,7 @@
     "technologyEra": "0079E",
     "actionTurnSpeed": 1.0,
     "mobilityMoveTarget": 8,
-    "transportHullMultiplier": 0.5
+    "transportHullMultiplier": 0.75
   },
   "presentation": {
     "shield": false,
@@ -597,31 +597,6 @@
   },
   "skills": [
     {
-      "id": "adjacent_en_supply",
-      "type": "resupply",
-      "name": "EN补给",
-      "localization": {
-        "en": {
-          "name": "EN Resupply"
-        },
-        "ja": {
-          "name": "EN補給"
-        }
-      },
-      "description": "消耗自身25%最大EN与2 AP，为一台相邻友军恢复50%最大EN，每个己方回合限用一次。",
-      "range": 1,
-      "actionCost": 2,
-      "enCostPercent": 25,
-      "enRecoveryPercent": 50,
-      "cooldownTurns": 1,
-      "consumeAction": false,
-      "effect": "Flash_1_N",
-      "sound": {
-        "file": "../../sounds/Action_8.ogg",
-        "volume": 0.5
-      }
-    },
-    {
       "id": "EnterDeployMode",
       "type": "transform",
       "deploymentMode": true,
@@ -658,6 +633,31 @@
         "ja": {
           "name": "展開"
         }
+      }
+    },
+    {
+      "id": "adjacent_en_supply",
+      "type": "resupply",
+      "name": "EN补给",
+      "localization": {
+        "en": {
+          "name": "EN Resupply"
+        },
+        "ja": {
+          "name": "EN補給"
+        }
+      },
+      "description": "消耗自身10%最大EN与2 AP，为相邻目标格内所有友军恢复50%最大EN，每个己方回合限用一次。",
+      "range": 1,
+      "actionCost": 2,
+      "enCostPercent": 10,
+      "enRecoveryPercent": 50,
+      "cooldownTurns": 1,
+      "consumeAction": false,
+      "effect": "Flash_1_N",
+      "sound": {
+        "file": "../../sounds/Action_8.ogg",
+        "volume": 0.5
       }
     }
   ],

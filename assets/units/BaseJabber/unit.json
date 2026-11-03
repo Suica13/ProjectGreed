@@ -153,7 +153,7 @@
   },
   "stats": {
     "hp": 22000,
-    "en": 375.0,
+    "en": 750.0,
     "move": 9,
     "mobility": 120.0,
     "cost": 250,
@@ -263,7 +263,7 @@
     "accuracy": 100.0,
     "unitLevel": 1000.0,
     "enBeforeReduction": 750.0,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "tacticalMoveBeforeBonus": 9,
     "actionTurnSpeed": 1.75,
     "mobilityMoveTarget": 10,

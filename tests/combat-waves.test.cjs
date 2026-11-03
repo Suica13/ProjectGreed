@@ -1,6 +1,7 @@
 const test = require("node:test"),
   assert = require("node:assert/strict"),
   G = require("../shared/rules.js");
+const Classes = require("../shared/weapon-classes.js");
 const { createAttackPlanner } = require("../shared/attack-plans.js");
 function fixture() {
   const e = { unitId: "Type61", kitId: "standard" };
@@ -79,90 +80,35 @@ function fixture() {
     close: () => delete G.models.wave_test,
   };
 }
-test("all attackers alternate per-unit weapon waves with defenders, retaining long counter tails and one counter budget", () => {
+test("automatic attackers and counters alternate volleys on the launch/impact timeline", () => {
   const f = fixture();
   try {
     const { room, planner, a, ally, b, gun } = f;
-    planner.plan(room, a, b, [gun, gun, gun], 0);
-    planner.plan(room, ally, b, [gun], 0);
+    planner.plan(room, a, b, null, 0);
+    planner.plan(room, ally, b, null, 0);
     const [request] = planner.prepare(room);
-    planner.chooseBatch(
-      room,
-      request.id,
-      [a.id, ally.id, a.id, a.id, a.id].map((targetId) => ({ targetId, weaponIds: [gun.id] })),
-    );
-    const en = b.en,
-      ap = a.actionPoints;
-    const battles = planner.resolve(room);
-    assert.deepEqual(
-      battles.map((b) => [b.combatWave, b.combatStage]),
-      [
-        [0, "attack"],
-        [0, "attack"],
-        [0, "counter"],
-        [1, "attack"],
-        [1, "counter"],
-        [2, "attack"],
-        [2, "counter"],
-        [3, "counter"],
-        [4, "counter"],
-      ],
-    );
+    planner.chooseBatch(room, request.id, [{ targetId: a.id }]);
+    const energy = b.en,
+      battles = planner.resolve(room),
+      events = battles.flatMap((b) => b.events);
+    const count = Classes.rounds(gun);
+    assert.equal(battles.length, count * 3);
     assert.equal(b.counterCount, 1);
-    assert.equal(b.en, en - 5 * G.weaponStats(gun, b).en);
-    assert.equal(a.actionPoints, ap);
-    assert.deepEqual(
-      battles.filter((b) => b.combatStage === "counter").map((b) => b.b),
-      [a.id, ally.id, a.id, a.id, a.id],
+    assert.equal(b.en, energy - count * G.weaponStats(gun, b).en);
+    assert(battles.every((b) => b.crossfire));
+    assert(
+      Math.min(...events.filter((e) => e.from === b.id).map((e) => e.fireAt)) >
+        Math.max(
+          ...events.filter((e) => e.from === a.id && e.timelineStart === 0).map((e) => e.impactAt),
+        ),
     );
+    assert(battles.filter((b) => b.combatStage === "counter").every((b) => b.b === a.id));
   } finally {
     f.close();
   }
 });
-test("a counter killing the attacker suppresses its later waves without spending their EN", () => {
-  const f = fixture();
-  try {
-    const { room, game, planner, a, ally, b, gun } = f;
-    const harmless = {
-      ...gun,
-      id: "harmless",
-      damageComponents: { shell: 0 },
-      attack: {
-        ...gun.attack,
-        strikes: [{ ...gun.attack.strikes[0], damageComponents: { shell: 0 } }],
-      },
-    };
-    const lethal = {
-      ...gun,
-      id: "lethal",
-      attack: {
-        ...gun.attack,
-        strikes: Array.from({ length: 10 }, () => ({
-          ...gun.attack.strikes[0],
-          damageComponents: { shell: 10000 },
-        })),
-      },
-    };
-    G.models.wave_test = { ...G.models.wave_test, weapons: [harmless, lethal] };
-    a.hp = 1;
-    planner.plan(room, a, b, [harmless, harmless], 0);
-    const [request] = planner.prepare(room);
-    planner.choose(room, request.id, "counter", [lethal.id], a.id);
-    const en = a.en;
-    const battles = planner.resolve(room);
-    assert.equal(a.hp, 0);
-    assert.equal(a.en, en - G.weaponStats(harmless, a).en);
-    assert.deepEqual(
-      battles.map((b) => b.combatStage),
-      ["attack", "counter"],
-    );
-    assert.equal(ally.hp, 1000000);
-    assert.equal(game.winner, null);
-  } finally {
-    f.close();
-  }
-});
-test("stun applies one non-stacking 25 percent AP loss next own turn, then clears", () => {
+
+test("stun retains one non-stacking penalty flag but inactive AP budgets stay unchanged", () => {
   const f = fixture();
   try {
     const { game, a, b, gun } = f;
@@ -174,11 +120,11 @@ test("stun applies one non-stacking 25 percent AP loss next own turn, then clear
     }
     assert.equal(b.apPenaltyNextTurn, 0.25);
     G.end(game);
-    assert.equal(b.actionPoints, 3);
+    assert.equal(b.actionPoints, G.actionBudget(b));
     assert.equal(b.apPenaltyNextTurn, undefined);
     G.end(game);
     G.end(game);
-    assert.equal(b.actionPoints, 5);
+    assert.equal(b.actionPoints, G.actionBudget(b));
   } finally {
     f.close();
   }
@@ -197,7 +143,7 @@ test("EMP uses the same percentage flag as stun weapons", () => {
     G.useSkill(game, a, skill.id, a.x, a.y);
     assert.equal(b.apPenaltyNextTurn, 0.25);
     G.end(game);
-    assert.equal(b.actionPoints, 6);
+    assert.equal(b.actionPoints, G.actionBudget(b));
   } finally {
     f.close();
   }
@@ -217,7 +163,7 @@ test("sniper locks this turn and fires automatically only at the beginning of th
   game.fogMode = "disabled";
   const [a, b] = game.units;
   Object.assign(a, { x: 10, y: 10 });
-  Object.assign(b, { x: 14, y: 10, hp: 1000000 });
+  Object.assign(b, { x: 16, y: 10, hp: 1000000 });
   const weapon = G.modelOf(a).weapons.find((w) => w.special?.type === "snipe");
   const planner = createAttackPlanner(G, () => "snipe-id"),
     room = { game, matchId: "snipe" };
@@ -241,7 +187,7 @@ test("sniper locks this turn and fires automatically only at the beginning of th
   planner.choose(room, request.id, "evade");
   const battles = planner.resolve(room);
   assert.equal(battles.length, 1);
-  assert.equal(battles[0].combatWave, 0);
+  assert.equal(battles[0].crossfire, true);
   assert.equal(a.en, en - G.weaponStats(weapon, a).en);
   assert.equal(a.snipeOrder, undefined);
 });
@@ -261,7 +207,7 @@ for (const movement of ["inside", "outside", "destroyed"])
     game.fogMode = "disabled";
     const [a, b, other] = game.units;
     Object.assign(a, { x: 10, y: 10 });
-    Object.assign(b, { x: 14, y: 10 });
+    Object.assign(b, { x: 16, y: 10 });
     Object.assign(other, { x: 30, y: 20 });
     const w = G.modelOf(a).weapons.find((w) => w.special?.type === "snipe");
     const planner = createAttackPlanner(G, () => "snipe-move"),
@@ -272,13 +218,13 @@ for (const movement of ["inside", "outside", "destroyed"])
     planner.resolve(room);
     const en = a.en;
     G.end(game);
-    b.x = movement === "outside" ? 25 : 15;
+    b.x = movement === "outside" ? 25 : 17;
     if (movement === "destroyed") b.hp = 0;
     G.end(game);
     planner.resumeCharges(room);
     assert.equal(room.plans.length, movement === "inside" ? 1 : 0);
     if (movement === "inside") {
-      assert.deepEqual(room.plans[0].aimCell, { x: 15, y: 10 });
+      assert.deepEqual(room.plans[0].aimCell, { x: 17, y: 10 });
       const [request] = planner.prepare(room);
       assert(request);
       planner.choose(room, request.id, "evade");
@@ -287,33 +233,72 @@ for (const movement of ["inside", "outside", "destroyed"])
     } else assert.equal(a.en, en);
   });
 
-test("repeated blast counters keep distinct launches across waves and charge EN once per blast",()=>{
- const f=fixture();try{
-  const {room,planner,a,ally,b,gun}=f;
-  const blast={...gun,id:"counter-blast",special:{type:"blast",radius:1,shape:"cross"}};
-  G.models.wave_test={...G.models.wave_test,weapons:[gun,blast]};ally.x=a.x+1;
-  planner.plan(room,a,b,[gun],0);const [request]=planner.prepare(room);
-  planner.choose(room,request.id,"counter",[blast.id,blast.id,blast.id],a.id);
-  const en=b.en;const battles=planner.resolve(room).filter(b=>b.combatStage==="counter");
-  assert.equal(battles.length,3);assert(battles.every(b=>b.events.length===2));
-  assert.equal(new Set(battles.flatMap(b=>b.events.map(e=>e.blastId))).size,3);
-  assert.equal(b.en,en-3*G.weaponStats(blast,b).en);assert.equal(b.counterCount,1);
- }finally{f.close();}
+test("automatic blast counters charge EN once per volley regardless of victim count", () => {
+  const f = fixture();
+  try {
+    const { room, planner, a, ally, b, gun } = f;
+    const blast = {
+      ...gun,
+      id: "counter-blast",
+      special: { type: "blast", radius: 1, shape: "cross" },
+    };
+    G.models.wave_test = { ...G.models.wave_test, weapons: [gun, blast] };
+    ally.x = a.x + 1;
+    planner.plan(room, a, b, null, 0);
+    const [request] = planner.prepare(room);
+    planner.choose(room, request.id, "counter", [], a.id);
+    const en = b.en;
+    const battles = planner.resolve(room).filter((b) => b.combatStage === "counter");
+    const events = battles.flatMap((b) => b.events).filter((e) => e.weapon === blast.id);
+    assert.equal(events.length, Classes.rounds(blast) * 2);
+    assert.equal(
+      b.en,
+      en -
+        Classes.rounds(gun) * G.weaponStats(gun, b).en -
+        Classes.rounds(blast) * G.weaponStats(blast, b).en,
+    );
+    assert.equal(b.counterCount, 1);
+  } finally {
+    f.close();
+  }
 });
 
-for (const counter of [false,true]) test(`gated blast resolves every victim and spends one turn use, counter=${counter}`,()=>{
- const f=fixture();try{
-  const {room,planner,a,ally,b,other,gun}=f;
-  const blast={...gun,id:"gated-blast",pilotRequirements:[{stat:"accuracy",operator:">=",value:0}],special:{type:"blast",radius:1,shape:"cross"}};
-  G.models.wave_test={...G.models.wave_test,weapons:[gun,blast]};
-  const actor=counter?b:a;
-  if(counter) {ally.x=a.x+1;planner.plan(room,a,b,[gun],0);}
-  else {other.x=b.x+1;planner.plan(room,a,b,[blast],0);}
-  for(const request of planner.prepare(room))
-   planner.choose(room,request.id,counter?"counter":"evade",counter?[blast.id]:[],a.id);
-  const events=planner.resolve(room).flatMap(b=>b.events).filter(e=>e.weapon===blast.id);
-  assert.equal(events.length,2);
-  assert.equal(actor.pilotWeaponTurnUses[blast.id],1);
-  assert.equal(G.canUse(actor,blast),false);
- }finally{f.close();}
-});
+for (const counter of [false, true])
+  test(`gated blast resolves every victim and spends one turn use, counter=${counter}`, () => {
+    const f = fixture();
+    try {
+      const { room, planner, a, ally, b, other, gun } = f;
+      const blast = {
+        ...gun,
+        id: "gated-blast",
+        pilotRequirements: [{ stat: "accuracy", operator: ">=", value: 0 }],
+        special: { type: "blast", radius: 1, shape: "cross" },
+      };
+      G.models.wave_test = { ...G.models.wave_test, weapons: [gun, blast] };
+      const actor = counter ? b : a;
+      if (counter) {
+        ally.x = a.x + 1;
+        planner.plan(room, a, b, [gun], 0);
+      } else {
+        other.x = b.x + 1;
+        planner.plan(room, a, b, [blast], 0);
+      }
+      for (const request of planner.prepare(room))
+        planner.choose(
+          room,
+          request.id,
+          counter ? "counter" : "evade",
+          counter ? [blast.id] : [],
+          a.id,
+        );
+      const events = planner
+        .resolve(room)
+        .flatMap((b) => b.events)
+        .filter((e) => e.weapon === blast.id && e.from === actor.id);
+      assert.equal(events.length, 2);
+      assert.equal(actor.pilotWeaponTurnUses[blast.id], 1);
+      assert.equal(G.canUse(actor, blast), false);
+    } finally {
+      f.close();
+    }
+  });

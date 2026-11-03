@@ -442,7 +442,7 @@ const Formation = (() => {
     const carrier = draft[pickerContext.carrierIndex],
       model = carrier && Rules.formationModel(carrier),
       h = model?.hangars.find((h) => h.id === pickerContext.hangarId);
-    if (!h || prefab.hangars?.length) return false;
+    if (!h) return false;
     const used = draft
       .filter((e) => preloadMatches(e, pickerContext.carrierIndex, h.id))
       .reduce(
@@ -499,11 +499,19 @@ const Formation = (() => {
     const field = byId("formationDetailCarrierField"),
       select = byId("formationDetailCarrier"),
       hint = byId("formationDetailCarrierHint");
-    field.hidden = !!model.hangars.length;
+    field.hidden = false;
     select.replaceChildren(new Option(I18n.text("不搭载（独立部署）"), ""));
     if (field.hidden) return;
     draft.forEach((carrier, carrierIndex) => {
-      if (carrierIndex === detailIndex || carrier.preload) return;
+      if (carrierIndex === detailIndex) return;
+      const ancestors = new Set();
+      let parent = carrierIndex;
+      while (draft[parent] && !ancestors.has(parent)) {
+        ancestors.add(parent);
+        if (!draft[parent].preload) break;
+        parent = draft[parent].preload.carrierIndex;
+      }
+      if (ancestors.has(detailIndex)) return;
       const cm = Rules.formationModel(carrier);
       for (const h of cm.hangars) {
         const cargo = draft
@@ -529,6 +537,8 @@ const Formation = (() => {
           JSON.stringify({ carrierIndex, hangarId: h.id }),
         );
         option.setAttribute("data-i18n-ignore", "");
+        option.dataset.hangarLabel = hangarLabel(carrierIndex, h.id);
+        option.dataset.capacityLabel = `${I18n.text("剩余容量")} ${h.capacity - used}/${h.capacity}`;
         select.add(option);
       }
     });
@@ -659,6 +669,67 @@ const Formation = (() => {
       container.append(cell);
     }
   }
+  const boardingPicker = element("dialog", "formation-boarding-dialog");
+  boardingPicker.id = "formationBoardingDialog";
+  document.body.append(boardingPicker);
+  function openBoarding(index) {
+    const entry = draft[index];
+    if (!entry) return;
+    const previous = detailIndex;
+    detailIndex = index;
+    renderCarrierChoice(entry, Rules.formationModel(entry));
+    const options = [...byId("formationDetailCarrier").options].map(o => ({
+      value: o.value, text: o.text,
+      hangar: o.dataset.hangarLabel, capacity: o.dataset.capacityLabel,
+    }));
+    detailIndex = previous;
+    let choice = entry.preload ? JSON.stringify(entry.preload) : "";
+    const title = element("h3", "", I18n.text("搭乘") + " · " + Rules.formationModel(entry).name),
+      list = element("div", "formation-boarding-options"),
+      footer = element("footer"), close = element("button", "", "关闭"),
+      confirm = element("button", "", "搭乘");
+    close.onclick = () => boardingPicker.close();
+    const carriers = new Map();
+    for (const option of options) {
+      const button = element("button", "formation-boarding-option");
+      button.dataset.carrierChoice = option.value;
+      button.setAttribute("aria-pressed", String(option.value === choice));
+      let container = list;
+      if (option.value) {
+        const { carrierIndex } = JSON.parse(option.value);
+        if (!carriers.has(carrierIndex)) {
+          const carrier = draft[carrierIndex], group = element("section", "formation-boarding-carrier"),
+            heading = element("h4", "formation-boarding-carrier-heading"), image = element("img");
+          group.dataset.carrierIndex = carrierIndex;
+          image.src = unitIcon(Rules.formationModelId(carrier), carrier.customPilot);
+          image.alt = "";
+          heading.append(image, element("span", "", `${carrierIndex + 1}. ${Rules.formationModel(carrier).name}`));
+          group.append(heading); list.append(group); carriers.set(carrierIndex, group);
+        }
+        container = carriers.get(carrierIndex);
+        button.append(element("span", "", option.hangar), element("small", "muted", option.capacity));
+      } else button.textContent = option.text;
+      button.onclick = () => {
+        choice = option.value;
+        for (const row of list.querySelectorAll("[data-carrier-choice]"))
+          row.setAttribute("aria-pressed", String(row === button));
+        confirm.textContent = I18n.text(choice ? "搭乘" : "独立部署");
+      };
+      container.append(button);
+    }
+    confirm.onclick = () => {
+      try {
+        const next = {...draft[index]};
+        if (choice) next.preload = JSON.parse(choice); else delete next.preload;
+        Rules.validateFormation(draft.map((e,i) => i === index ? next : e),Infinity,Rules.catalog.formation.maxUnits);
+        draft[index] = next;
+        GameAudio.play("changeEquipmentSound");
+        boardingPicker.close(); render();
+      } catch(error) { note(error.message); }
+    };
+    footer.append(close,confirm);boardingPicker.replaceChildren(title,list,footer);boardingPicker.showModal();
+  }
+  window.addEventListener("page-changing", () => boardingPicker.close());
   function pilotButtonText(button, prefix, entry, model) {
     const name = entry.customPilot?.name || PilotSystem.defaultName(model);
     button.classList.add("formation-pilot-button");
@@ -989,16 +1060,20 @@ const Formation = (() => {
       scrollTop = list.scrollTop;
     list.replaceChildren();
     // 仅调整显示顺序，保留保存序号、搭载引用和 OVER COST 的末尾优先规则。
-    const displayOrder = draft.flatMap((entry, i) =>
-      entry.preload
-        ? []
-        : [
-            i,
-            ...(Rules.formationModel(entry).hangars || []).flatMap((h) =>
-              draft.flatMap((cargo, j) => (preloadMatches(cargo, i, h.id) ? [j] : [])),
-            ),
-          ],
-    );
+    const displayOrder = [],
+      visited = new Set();
+    function appendCargo(i) {
+      if (visited.has(i)) return;
+      visited.add(i);
+      displayOrder.push(i);
+      for (const h of Rules.formationModel(draft[i]).hangars || [])
+        draft.forEach((cargo, j) => {
+          if (preloadMatches(cargo, i, h.id)) appendCargo(j);
+        });
+    }
+    draft.forEach((entry, i) => {
+      if (!entry.preload) appendCargo(i);
+    });
     displayOrder.forEach((i, position) => {
       const entry = draft[i],
         previous = draft[displayOrder[position - 1]];
@@ -1134,7 +1209,10 @@ const Formation = (() => {
       pilotButtonText(pilot, "驾驶员", entry, model);
       pilot.setAttribute("aria-haspopup", "dialog");
       pilot.onclick = () => openPilot(i);
-      actions.append(details, pilot, remove);
+      const board = element("button", "formation-board-button", entry.preload ? "搭乘中" : "搭乘");
+      board.dataset.boardFormation = String(i);
+      board.onclick = () => openBoarding(i);
+      actions.append(details, board, pilot, remove);
       row.append(portrait, label, actions, stockLine);
       list.append(row);
     });
@@ -2901,10 +2979,26 @@ const Deployment = (() => {
     byId("confirmDeployment").textContent =
       seat !== null && game.deployment[seat] ? "已确认，等待对方" : "确认部署 (B)";
   }
-  function click(cell) {
+  async function click(cell) {
     if (phase !== "deployment" || Net.awaiting || !cell) return;
     const target = Rules.at(game, cell.x, cell.y),
       u = getUnit(selected);
+    if (target && target !== u && canEditUnit(u) && canEditUnit(target) &&
+        Rules.squadJoinTarget(game,u,target.x,target.y,[u])) {
+      const stamp=session;
+      const choice=await GameDialog.choose({title:"合并小队",message:unitName(u)+" → "+unitName(target),
+        actions:[{label:"取消",value:"cancel"},{label:"选择单位",value:"select"},
+          {label:"合并小队",value:"join",primary:true}]});
+      if (stamp !== session || !canEditUnit(u) || !canEditUnit(target)) return;
+      if (choice === "select") { selected=target.id;GameAudio.selectUnit(target);update();return; }
+      if (choice !== "join") return;
+      if (Net.active) Net.request("deploy",{unitId:u.id,x:target.x,y:target.y});
+      else {
+        try { Rules.deploy(game,team(),u.id,target.x,target.y);GameAudio.selectUnit(u); }
+        catch(error) { note(error.message); }
+      }
+      squadSingleMove=false;update();return;
+    }
     if (target && canEditUnit(target)) {
       GameAudio.selectUnit(target);
       selected = target.id;
@@ -2917,7 +3011,7 @@ const Deployment = (() => {
     else {
       try {
         Rules.deploy(game, team(), u.id, anchor.x, anchor.y);
-        GameAudio.play("deploymentSound");
+        GameAudio.selectUnit(u);
         update();
       } catch {
         note("请在己方出生区的空格部署。");
@@ -2928,7 +3022,7 @@ const Deployment = (() => {
     if (pendingMovement()) return;
     if (!canEdit()) return;
     if (Net.active) return Net.request("confirm_deployment");
-    if (game.ai) game.deployment[1] = true;
+    if (game.ai && !game.deployment[1]) { Rules.aiDeployment(game, 1); Rules.confirmDeployment(game, 1); }
     const finished = Rules.confirmDeployment(game, team());
     GameAudio.play("deploymentSound");
     if (finished) {

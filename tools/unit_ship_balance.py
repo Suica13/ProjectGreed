@@ -8,6 +8,18 @@ DAMAGE_FACTOR = 0.75
 ACCURACY_FACTOR = 0.65
 
 
+def apply_footprint(prefab):
+    """All tactical ships occupy 1x2 or 2x2; native art is unchanged."""
+    if not prefab["stats"].get("ship"):
+        return
+    previous = prefab["stats"].get("footprint")
+    if not previous:
+        return
+    prefab.setdefault("sourceStats", {}).setdefault("shipFootprintBeforeCompaction", dict(previous))
+    prefab["stats"]["footprint"] = dict(width=2 if previous["width"] > 1 else 1, height=2)
+
+
+
 def federation_ship(prefab):
     return any(tag in prefab.get("tags", []) for tag in ("EFSF", "AEUG", "TITANS"))
 

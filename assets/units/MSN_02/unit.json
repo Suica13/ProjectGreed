@@ -290,7 +290,7 @@
   },
   "stats": {
     "hp": 75000,
-    "en": 600,
+    "en": 1200,
     "move": 8,
     "mobility": 165,
     "cost": 1125,
@@ -399,7 +399,7 @@
     "accuracy": 135,
     "partStructuralStrength": 125,
     "enBeforeReduction": 1200,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "adaptability": {
       "ground": 25,
       "space": 100,
@@ -456,6 +456,28 @@
     "Common_Push_A": {
       "ref": "Common_Push_A__lv2",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Push_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Kick_White_R"
+              ],
+              "delay": 0.45
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Push_A"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
@@ -477,7 +499,10 @@
             "y": 0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "ZN_MSN_02_BeamCannon": {
       "ref": "ZN_MSN_02_BeamCannon__lv1",
@@ -1404,6 +1429,32 @@
     "Common_Cqb_A": {
       "ref": "Common_Cqb_A__lv2",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Melee_A",
+              "delay": 0
+            },
+            {
+              "weaponDisplayIndex": 1,
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_1_White_R"
+              ],
+              "delay": 0.6
+            },
+            {
+              "delay": 1.4
+            }
+          ],
+          "startAnimation": "Common_Melee_A"
+        },
         "requiredParts": [
           "rightArm"
         ],
@@ -1424,7 +1475,10 @@
             "y": 0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "ZN_MSN_02_HandFunnel": {
       "ref": "ZN_MSN_02_HandFunnel__lv1",

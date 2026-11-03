@@ -453,3 +453,14 @@ dialog::backdrop {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* Atlas has independent pixel zoom; never squeeze the source into the sidebar. */
+main { grid-template-columns: 310px minmax(260px, 1fr) 245px; }
+#atlasViewport { overflow: auto; height: 300px; background: #111720; border: 1px solid var(--border); }
+#atlasCanvas { max-width: none; width: auto; height: auto; border: 0; }
+#atlasPanel.expanded { position: fixed; inset: 70px 3vw 40px; z-index: 20; background: #202733; padding: 12px; display: flex; flex-direction: column; box-shadow: 0 0 0 100vmax #0009; }
+#atlasPanel.expanded #atlasViewport { flex: 1; min-height: 0; }
+#unitList { max-height: 320px; overflow: auto; }
+.unit-row { display: flex; align-items: center; gap: 6px; margin: 6px 0; }
+.unit-row span { flex: 1; overflow-wrap: anywhere; }
+@media(max-width: 760px) { main { grid-template-columns: minmax(0,1fr) minmax(0,1fr); } #atlasPanel.expanded { inset: 10px; } }

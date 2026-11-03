@@ -433,7 +433,7 @@
   },
   "stats": {
     "hp": 94000,
-    "en": 625.0,
+    "en": 1250.0,
     "move": 9,
     "mobility": 215.0,
     "cost": 2075,
@@ -552,7 +552,7 @@
     "movementBeforeMobility": 9,
     "mobilityMoveTarget": 10,
     "enBeforeReduction": 1250.0,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "adaptability": {
       "ground": 100.0,
       "space": 100.0,
@@ -606,6 +606,28 @@
     "Common_Push_A": {
       "ref": "Common_Push_A__lv3",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Push_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Kick_White_R"
+              ],
+              "delay": 0.45
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Push_A"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
@@ -627,7 +649,10 @@
             "y": 0.0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "TITANS_PMX_003_BR": {
       "ref": "TITANS_PMX_003_BR__lv1",
@@ -664,11 +689,11 @@
         "attack": {
           "steps": [
             {
-              "weaponDisplayIndex": 1,
+              "animation": "Common_Melee_B",
               "delay": 0
             },
             {
-              "animation": "Common_Melee_B",
+              "weaponDisplayIndex": 1,
               "delay": 0
             },
             {
@@ -677,6 +702,9 @@
               "partBreakModifier": 1.25,
               "requiredParts": [
                 "rightArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_2_Yellow_R_L"
               ],
               "delay": 0.4
             },
@@ -691,6 +719,9 @@
               "requiredParts": [
                 "leftArm"
               ],
+              "swingEffects": [
+                "Cqb_Fire_2_Yellow_L_L"
+              ],
               "delay": 0.4
             },
             {
@@ -704,6 +735,9 @@
               "requiredParts": [
                 "rightArm"
               ],
+              "swingEffects": [
+                "Cqb_Fire_1_Yellow_R_L"
+              ],
               "delay": 0.3
             },
             {
@@ -713,13 +747,16 @@
               "requiredParts": [
                 "leftArm"
               ],
+              "swingEffects": [
+                "Cqb_Fire_1_Yellow_L_L"
+              ],
               "delay": 0.0
             },
             {
               "delay": 1.0
             }
           ],
-          "startAnimation": null
+          "startAnimation": "Common_Melee_B"
         },
         "changeHeldWeapon": true,
         "requiredParts": [],
@@ -745,7 +782,10 @@
           "leftArm",
           "rightArm"
         ]
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     }
   },
   "mechanics": [

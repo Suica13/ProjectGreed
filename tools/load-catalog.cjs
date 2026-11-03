@@ -1,3 +1,4 @@
+const WeaponClasses = require("../shared/weapon-classes.js");
 const WeaponStore = require("./weapon-store.cjs");
 /* Build and server share this loader. Paths in unit.json are relative to that prefab. */
 const fs = require("node:fs");
@@ -409,7 +410,6 @@ function loadCatalog({
     "battleHold",
     "battleFadeOut",
     "deathDelay",
-    "projectileSpeed",
     "dodgeDistance",
     "dodgeOut",
     "mapCellScale",
@@ -477,6 +477,7 @@ function loadCatalog({
       prefab = WeaponStore.expandPrefab(raw, weaponDefinitionsOverride || undefined);
     if (prefab.enabled === false) continue;
     localize.prefab(prefab);
+    require("./unit-footprint.cjs").compactShipFootprint(prefab);
     require("./weapon-balance.cjs").applyWeaponBalance(prefab, conversion);
     Adjust.unit(prefab, adjustments, raw.weapons);
     require("./weapon-level-labels.cjs").applyWeaponLevelLabels(prefab);
@@ -623,7 +624,7 @@ function loadCatalog({
       throw Error("Invalid mechanics audit: " + prefab.id);
     UnitSkills.validate(prefab.skills, prefab.id);
     for (const skill of prefab.skills || [])
-      if (["repair", "recon"].includes(skill.type) && skill.enCost > prefab.stats.en)
+      if (["repair", "recon"].includes(skill.type) && skill.enCost > Math.max(prefab.stats.en, prefab.sourceStats?.enBeforeReduction || 0))
         throw Error("Repair exceeds maximum EN: " + prefab.id);
     for (const skill of prefab.skills || []) {
       validateLocalization(skill.localization, prefab.id + "/" + skill.id);
@@ -905,7 +906,16 @@ function loadCatalog({
                 throw Error(prefab.id + "/" + key + ": " + error.message);
               }
             })();
+          for (const step of weapon.attack.steps)
+            if (step.swingEffects !== undefined &&
+                (!Array.isArray(step.swingEffects) || step.swingEffects.length > 16 ||
+                 step.swingEffects.some(id => typeof id !== "string" || !result.effects[id])))
+              throw Error("Invalid per-strike melee effects: " + key);
           if (!result.effects[weapon?.hitEffect]) throw Error("Missing hit effect: " + key);
+          if (weapon.hitEffects !== undefined &&
+              (!Array.isArray(weapon.hitEffects) || !weapon.hitEffects.length ||
+               weapon.hitEffects.some(id => typeof id !== "string" || !result.effects[id])))
+            throw Error("Invalid combined hit effects: " + key);
           if (
             weapon.muzzleEffects !== undefined &&
             (!Array.isArray(weapon.muzzleEffects) ||
@@ -922,13 +932,15 @@ function loadCatalog({
               weapon.swingEffects.some((id) => !result.effects[id]))
           )
             throw Error("Missing melee swing effect: " + key);
+          if (!Number.isInteger(weapon.attackRounds) || weapon.attackRounds < 0 || weapon.attackRounds > 20)
+            throw Error("Invalid weapon attack rounds: " + key);
           if (!weapon || (weapon.clip !== null && !animations[weapon.clip]))
             throw Error("Missing weapon/animation: " + key);
           if (
             "ammo" in weapon ||
             !Number.isFinite(weapon.en) ||
             weapon.en < 0 ||
-            weapon.en > prefab.stats.en
+            weapon.en > Math.max(prefab.stats.en, prefab.sourceStats?.enBeforeReduction || 0)
           )
             throw Error("Weapons must use EN: " + key);
           if (
@@ -1162,6 +1174,19 @@ function loadCatalog({
             : {}),
           asset: textureKeys[layer.texture],
         };
+      });
+      const meleeWeapons = weapons.filter((w) => w.type === "melee");
+      const normalMelee = meleeWeapons.filter((w) => WeaponClasses.classify(w) !== "ram");
+      const ungatedMelee = normalMelee.filter((w) => !w.pilotRequirements?.length);
+      // Leave a basic melee option usable by ordinary pilots. Utility whips do
+      // not take that slot ahead of a conventional sword; native gates stay intact.
+      const basicMelee = ungatedMelee.find((w) =>
+        w.rangeRole !== "tether_melee" && !w.onHitAPLoss) || ungatedMelee[0];
+      meleeWeapons.forEach((w) => {
+        if (normalMelee.length > 1 && normalMelee.includes(w) && w !== basicMelee && !w.pilotRequirements?.length)
+          w.pilotRequirements = [{ stat: "melee", operator: ">=", value: 125 }];
+        if (w.pilotRequirements?.length) w.maxUsesPerTurn = 1;
+        else if (w.maxUsesPerTurn === 1) delete w.maxUsesPerTurn;
       });
       result.models[id] = {
         ...prefab.stats,

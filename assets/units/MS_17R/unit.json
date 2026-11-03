@@ -473,7 +473,7 @@
   },
   "stats": {
     "hp": 44000,
-    "en": 475,
+    "en": 950,
     "move": 8,
     "mobility": 155,
     "cost": 750,
@@ -582,7 +582,7 @@
     "accuracy": 130,
     "partStructuralStrength": 125,
     "enBeforeReduction": 950,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "adaptability": {
       "ground": 100,
       "space": 100,
@@ -638,6 +638,28 @@
     "Common_Push_A": {
       "ref": "Common_Push_A__lv2",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Push_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Kick_White_R"
+              ],
+              "delay": 0.45
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Push_A"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
@@ -659,7 +681,10 @@
             "y": 0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "ZN_MS_17R_BR": {
       "ref": "ZN_MS_17R_BR__lv1",
@@ -782,6 +807,52 @@
     "ZN_YMS_15_BeamSaber_B3": {
       "ref": "ZN_YMS_15_BeamSaber_B3__lv1",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Melee_B3",
+              "delay": 0
+            },
+            {
+              "weaponDisplayIndex": 1,
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Yellow_R_S"
+              ],
+              "delay": 0.3
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Yellow_R_S"
+              ],
+              "delay": 0.3
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Yellow_R_S"
+              ],
+              "delay": 0.3
+            },
+            {
+              "delay": 1.25
+            }
+          ],
+          "startAnimation": "Common_Melee_B3"
+        },
         "requiredParts": [
           "rightArm"
         ],
@@ -802,7 +873,10 @@
             "y": 0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     }
   },
   "mechanics": [

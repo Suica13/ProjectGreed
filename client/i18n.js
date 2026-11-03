@@ -224,9 +224,14 @@ const I18n = (() => {
   function start() {
     observer = new MutationObserver((records) => {
       observer.disconnect();
-      for (const record of records) {
-        if (record.type === "childList") for (const node of record.addedNodes) translateNode(node);
-        else translateNode(record.target);
+      const roots = new Set();
+      for (const record of records)
+        for (const node of record.type === "childList" ? record.addedNodes : [record.target])
+          if (node.isConnected) roots.add(node);
+      for (const node of roots) {
+        let parent = node.parentNode;
+        while (parent && !roots.has(parent)) parent = parent.parentNode;
+        if (!parent) translateNode(node);
       }
       observe();
     });

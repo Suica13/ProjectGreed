@@ -388,7 +388,7 @@
   },
   "stats": {
     "hp": 44000,
-    "en": 375,
+    "en": 750,
     "move": 6,
     "mobility": 125,
     "cost": 500,
@@ -478,7 +478,7 @@
   },
   "sourceStats": {
     "enBeforeReduction": 750,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "hp": 35000,
     "walkSpeed": 0.65,
     "boostSpeed": 1.35,
@@ -556,6 +556,28 @@
     "Common_Push_A": {
       "ref": "Common_Push_A__lv2",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Push_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Kick_White_R"
+              ],
+              "delay": 0.45
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Push_A"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
@@ -577,11 +599,15 @@
             "y": 0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "Common_MortarDouble": {
       "ref": "Common_MortarDouble__lv2",
       "overrides": {
+        "slot": "skill",
         "attack": {
           "steps": [
             {
@@ -660,6 +686,8 @@
           ],
           "startAnimation": null
         },
+        "noCounter": true,
+        "description": "迫击炮技能：攻击目标单元格，每回合一次，使用后本回合不能普通攻击。",
         "requiredParts": [
           "backpack"
         ],
@@ -695,12 +723,14 @@
               }
             }
           ]
-        }
+        },
+        "maxUsesPerTurn": 1
       }
     },
     "Common_MortarDouble_L": {
       "ref": "Common_MortarDouble_L__lv2",
       "overrides": {
+        "slot": "skill",
         "attack": {
           "steps": [
             {
@@ -779,6 +809,8 @@
           ],
           "startAnimation": null
         },
+        "noCounter": true,
+        "description": "迫击炮技能：攻击目标单元格，每回合一次，使用后本回合不能普通攻击。",
         "requiredParts": [
           "backpack"
         ],
@@ -821,7 +853,8 @@
             "paired_weapon"
           ],
           "mergedInto": "Common_MortarDouble"
-        }
+        },
+        "maxUsesPerTurn": 1
       }
     },
     "Common_DoubleCannon": {
@@ -1037,11 +1070,11 @@
         "attack": {
           "steps": [
             {
-              "weaponDisplayIndex": 1,
+              "animation": "Common_Melee_B",
               "delay": 0
             },
             {
-              "animation": "Common_Melee_B",
+              "weaponDisplayIndex": 1,
               "delay": 0
             },
             {
@@ -1049,6 +1082,9 @@
               "muzzleIndex": 0,
               "partBreakModifier": 0.5,
               "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_White_R_S"
+              ],
               "delay": 0.4
             },
             {
@@ -1060,13 +1096,16 @@
               "muzzleIndex": 0,
               "partBreakModifier": 1,
               "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_1_White_L_S"
+              ],
               "delay": 0.3
             },
             {
               "delay": 1.4
             }
           ],
-          "startAnimation": null
+          "startAnimation": "Common_Melee_B"
         },
         "changeHeldWeapon": true,
         "requiredParts": [
@@ -1090,7 +1129,10 @@
           }
         },
         "displayIndex": 1
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "Common_DoubleVulcan_MS": {
       "ref": "Common_DoubleVulcan_MS__lv2",

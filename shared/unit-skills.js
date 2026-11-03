@@ -240,7 +240,7 @@ const UnitSkills = (() => {
           skill.range !== 1 ||
           skill.actionCost !== 2 ||
           skill.cooldownTurns !== 1 ||
-          skill.enCostPercent !== 25 ||
+          skill.enCostPercent !== 10 ||
           skill.enRecoveryPercent !== 50 ||
           skill.consumeAction !== false
         )
@@ -318,6 +318,7 @@ const UnitSkills = (() => {
     } = G;
     const of = (unit) => [...(models[unit.model]?.skills || []), ...pilots.skillsOf(unit)];
     const usageKey = (unit, skill) => models[unit.model].prefabId + "/" + skill.id;
+    const turnKey = skill => skill.type === "transform" ? "transformation" : skill.type === "flight" ? "flight" : skill.id;
     const energyCost = (unit, skill) =>
       skill.enCost ?? (modelOf(unit).en * skill.enCostPercent) / 100;
     function canUse(game, unit, skillId) {
@@ -325,26 +326,24 @@ const UnitSkills = (() => {
       return (
         !!skill &&
         !skill.passive &&
+        unit.skillTurnUses?.[turnKey(skill)] !== game.round &&
+        (skill.type !== "irradiation" ||
+          !G.attackRounds ||
+          G.attackRounds(game, unit, skill) > 0) &&
         (skill.type !== "pilot_buff" ||
           (unit.en >= skill.enCost && !unit.pilotBuffs?.[skill.id])) &&
         (!["smoke", "emp"].includes(skill.type) || unit.en >= skill.enCost) &&
         (unit.skillReadyRound?.[skill.id] ?? 0) <= game.round &&
-        (!skill.actionCost ||
-          (unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) >= skill.actionCost) &&
         (!["resupply", "beam_diffusion", "irradiation"].includes(skill.type) ||
           unit.en >= energyCost(unit, skill)) &&
         (!skill.requiresSfsMS || G.hasSfsMS(game, unit)) &&
         !parts.unavailable(unit, skill).length &&
         (skill.type !== "transform" || !Object.values(unit.brokenParts || {}).some(Boolean)) &&
         (skill.type !== "flight" ||
-          ((unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) >= skill.actionCost &&
-            !skill.requiredParts.some((part) => unit.brokenParts?.[part]) &&
+          (!skill.requiredParts.some((part) => unit.brokenParts?.[part]) &&
             G.environmentOf(game, unit) !== "space" &&
             (!unit.flying || fits(game, { ...unit, flying: false }, unit.x, unit.y)))) &&
-        (skill.type !== "overboost" ||
-          (!unit.overBoost &&
-            unit.en >= skill.enCost &&
-            (unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) >= skill.actionCost)) &&
+        (skill.type !== "overboost" || (!unit.overBoost && unit.en >= skill.enCost)) &&
         (skill.type !== "fullboost" || (!unit.fullBoost && unit.en >= skill.enCost)) &&
         (skill.type !== "overdrive" ||
           (!unit.overdrive &&
@@ -383,9 +382,7 @@ const UnitSkills = (() => {
       actionCost = 0,
     ) {
       const model = config.unitId + "__" + (config.kitMap?.[oldModel.kitId] ?? config.kitId);
-      const remainingAP = consumeAction
-        ? 0
-        : Math.max(0, (unit.actionPoints ?? oldModel.actionPoints ?? 5) - actionCost);
+      const remainingAP = unit.actionPoints ?? oldModel.actionPoints ?? 5;
       const next = {
         id,
         model,
@@ -393,12 +390,21 @@ const UnitSkills = (() => {
         y,
         team: unit.team,
         ownerSeat: unit.ownerSeat ?? unit.team,
+        ...(id === unit.id && unit.squadId
+          ? { squadId: unit.squadId, squadSlot: unit.squadSlot }
+          : {}),
         environment: unit.environment,
         performance: unit.performance ?? 1,
-        ...(unit.campaignDurability !== undefined ? { campaignDurability: unit.campaignDurability } : {}),
+        ...(unit.campaignDurability !== undefined
+          ? { campaignDurability: unit.campaignDurability }
+          : {}),
         pilot: unit.pilot,
+        ...(unit.forcedExitRound !== undefined ? { forcedExitRound: unit.forcedExitRound } : {}),
+        ...(unit.weaponTurnUses ? { weaponTurnUses: { ...unit.weaponTurnUses } } : {}),
         ...(unit.pilotBuffs ? { pilotBuffs: structuredClone(unit.pilotBuffs) } : {}),
         ...(unit.skillReadyRound ? { skillReadyRound: { ...unit.skillReadyRound } } : {}),
+        ...(unit.skillTurnUses ? { skillTurnUses: { ...unit.skillTurnUses } } : {}),
+        ...(unit.attackSkillRound !== undefined ? { attackSkillRound: unit.attackSkillRound } : {}),
         ...(unit.deploymentUnitId
           ? { deploymentUnitId: unit.deploymentUnitId, deploymentModel: unit.deploymentModel }
           : {}),
@@ -416,7 +422,7 @@ const UnitSkills = (() => {
           : {}),
         brokenParts: config.repairAllParts ? {} : { ...unit.brokenParts },
         moved: consumeAction || unit.moved,
-        acted: consumeAction || unit.acted || remainingAP === 0,
+        acted: consumeAction || unit.acted,
         actionPoints: remainingAP,
         origin: null,
         plan: null,
@@ -463,6 +469,7 @@ const UnitSkills = (() => {
           ]),
         );
       next.heldWeapon = nextModel.weapons[0]?.id ?? null;
+      delete next.weaponDisplayIndex;
       return next;
     }
     function prepare(game, unit, skill) {
@@ -640,7 +647,6 @@ const UnitSkills = (() => {
         const budgetChange = (modelOf(unit).actionPoints ?? 5) - previousBudget;
         if (budgetChange) {
           unit.actionPoints = Math.max(0, remainingAP + budgetChange);
-          unit.acted = unit.actionPoints <= 0;
         }
         unit.skillReadyRound = {
           ...unit.skillReadyRound,
@@ -661,9 +667,6 @@ const UnitSkills = (() => {
       if (skill.type === "irradiation") {
         const event = G.irradiate(game, unit, skill, x, y);
         unit.en -= energyCost(unit, skill);
-        unit.actionPoints =
-          (unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) - skill.actionCost;
-        unit.acted = unit.actionPoints <= 0;
         unit.origin = null;
         unit.skillReadyRound = {
           ...unit.skillReadyRound,
@@ -679,9 +682,6 @@ const UnitSkills = (() => {
           expiresRound: game.round + skill.durationRounds,
         });
         unit.en -= skill.enCost;
-        unit.actionPoints =
-          (unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) - skill.actionCost;
-        unit.acted = unit.actionPoints <= 0;
         unit.origin = null;
         unit.skillReadyRound = {
           ...unit.skillReadyRound,
@@ -709,8 +709,6 @@ const UnitSkills = (() => {
         );
         for (const target of affected) target.apPenaltyNextTurn = 0.25;
         unit.en -= skill.enCost;
-        unit.actionPoints =
-          (unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) - skill.actionCost;
         unit.origin = null;
         unit.skillReadyRound = {
           ...unit.skillReadyRound,
@@ -730,22 +728,30 @@ const UnitSkills = (() => {
         };
       }
       if (skill.type === "resupply") {
-        const target = game.units.find(
+        const targets = game.units.filter(
           (other) =>
+            other !== unit &&
             other.hp > 0 &&
             !other.embarked &&
             other.team === unit.team &&
             unitCells(other).some((cell) => cell.x === x && cell.y === y),
         );
-        const before = { hp: target.hp, en: target.en, shield: target.shield };
-        target.en = Math.min(
-          modelOf(target).en,
-          target.en + (modelOf(target).en * skill.enRecoveryPercent) / 100,
-        );
+        const changes = targets.map((target) => {
+          const before = { hp: target.hp, en: target.en, shield: target.shield };
+          target.en = Math.min(
+            modelOf(target).en,
+            target.en + (modelOf(target).en * skill.enRecoveryPercent) / 100,
+          );
+          target.origin = null;
+          return {
+            targetId: target.id,
+            before,
+            after: { hp: target.hp, en: target.en, shield: target.shield },
+          };
+        });
+        const target = targets[0],
+          before = changes[0].before;
         unit.en -= energyCost(unit, skill);
-        unit.actionPoints =
-          (unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) - skill.actionCost;
-        if (unit.actionPoints <= 0) unit.acted = true;
         unit.skillReadyRound = { ...unit.skillReadyRound, [skill.id]: game.round + 2 };
         unit.origin = null;
         target.origin = null;
@@ -754,6 +760,7 @@ const UnitSkills = (() => {
           skillId,
           unitId: unit.id,
           resultId: unit.id,
+          targets: changes,
           targetId: target.id,
           before,
           after: { hp: target.hp, en: target.en, shield: target.shield },
@@ -765,8 +772,6 @@ const UnitSkills = (() => {
       }
       if (skill.type === "flight") {
         unit.flying = !unit.flying;
-        unit.actionPoints =
-          (unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) - skill.actionCost;
         unit.origin = null;
         return {
           type: "skill",
@@ -781,8 +786,6 @@ const UnitSkills = (() => {
       }
       if (skill.type === "overboost") {
         unit.en -= skill.enCost;
-        unit.actionPoints =
-          (unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) - skill.actionCost;
         unit.overBoost = {
           skillId: skill.id,
           startedRound: game.round,
@@ -796,7 +799,6 @@ const UnitSkills = (() => {
         };
         if (skill.consumeAction) {
           unit.acted = true;
-          unit.actionPoints = 0;
         }
         unit.origin = null;
         return {
@@ -849,10 +851,10 @@ const UnitSkills = (() => {
         unit.model = skill.formUnitId + "__" + skill.formKits[models[baseModel].kitId];
         if (!models[unit.model].weapons.some((w) => w.id === unit.heldWeapon))
           unit.heldWeapon = models[unit.model].weapons[0]?.id || null;
+        delete unit.weaponDisplayIndex;
         unit.origin = null;
         if (skill.consumeAction) {
           unit.acted = true;
-          unit.actionPoints = 0;
         }
         return {
           type: "skill",
@@ -876,8 +878,6 @@ const UnitSkills = (() => {
           expiresRound: game.round + skill.durationRounds,
         });
         unit.en -= energyCost(unit, skill);
-        unit.actionPoints =
-          (unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) - skill.actionCost;
         unit.origin = null;
         return {
           type: "skill",
@@ -906,8 +906,6 @@ const UnitSkills = (() => {
           expiresRound: game.round + skill.durationRounds,
         });
         unit.en -= skill.enCost;
-        unit.actionPoints =
-          (unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) - skill.actionCost;
         unit.skillReadyRound = {
           ...unit.skillReadyRound,
           [skill.id]: game.round + skill.cooldownTurns * 2,
@@ -918,7 +916,6 @@ const UnitSkills = (() => {
         };
         if (skill.consumeAction) {
           unit.acted = true;
-          unit.actionPoints = 0;
         }
         unit.origin = null;
         return {
@@ -959,9 +956,6 @@ const UnitSkills = (() => {
             ...unit.skillReadyRound,
             [skill.id]: game.round + skill.cooldownTurns * 2,
           };
-        if (skill.actionCost)
-          unit.actionPoints =
-            (unit.actionPoints ?? modelOf(unit).actionPoints ?? 5) - skill.actionCost;
         unit.en -= skill.enCost;
         unit.skillUses = {
           ...unit.skillUses,
@@ -969,7 +963,6 @@ const UnitSkills = (() => {
         };
         if (skill.consumeAction) {
           unit.acted = true;
-          unit.actionPoints = 0;
         }
         for (const other of game.units)
           if ((other.ownerSeat ?? other.team) === (unit.ownerSeat ?? unit.team))
@@ -1012,7 +1005,6 @@ const UnitSkills = (() => {
         };
         if (skill.consumeAction) {
           unit.acted = true;
-          unit.actionPoints = 0;
         }
         for (const other of game.units)
           if ((other.ownerSeat ?? other.team) === (unit.ownerSeat ?? unit.team))
@@ -1095,6 +1087,7 @@ const UnitSkills = (() => {
         unit.shield = Math.min(unit.shield, base.shield.hp);
         if (!base.weapons.some((w) => w.id === unit.heldWeapon))
           unit.heldWeapon = base.weapons[0]?.id;
+        delete unit.weaponDisplayIndex;
         changed = true;
       }
       if (changed) {
@@ -1113,6 +1106,7 @@ const UnitSkills = (() => {
       unit.shield = Math.min(unit.shield, base.shield.hp);
       if (!base.weapons.some((w) => w.id === unit.heldWeapon))
         unit.heldWeapon = base.weapons[0]?.id ?? null;
+      delete unit.weaponDisplayIndex;
       unit.origin = null;
       return true;
     }
@@ -1126,7 +1120,18 @@ const UnitSkills = (() => {
           unit.pilotBuffs = active;
       }
     }
-    return { of, canUse, targets, use, endOverdrive, revertDamaged, tickPilotBuffs };
+    function useOnce(game, unit, id, x, y) {
+      const skill = of(unit).find(s => s.id === id);
+      const event = use(game, unit, id, x, y);
+      const result = game.units.find(other => other.id === event.resultId) || unit;
+      result.skillTurnUses = { ...unit.skillTurnUses, ...result.skillTurnUses, [turnKey(skill)]: game.round };
+      if (skill.type === "irradiation") {
+        result.attackSkillRound = game.round;
+        result.acted = true;
+      }
+      return event;
+    }
+    return { of, canUse, targets, use: useOnce, endOverdrive, revertDamaged, tickPilotBuffs };
   }
   return { validate, create };
 })();

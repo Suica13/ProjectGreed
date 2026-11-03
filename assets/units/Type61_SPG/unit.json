@@ -145,7 +145,7 @@
   },
   "stats": {
     "hp": 5500,
-    "en": 175,
+    "en": 350,
     "move": 5,
     "mobility": 60,
     "cost": 75,
@@ -234,7 +234,7 @@
   },
   "sourceStats": {
     "enBeforeReduction": 350,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "hp": 4500,
     "walkSpeed": 0.5,
     "boostSpeed": 1,
@@ -309,6 +309,9 @@
     "Common_Mortar_Type61_SPG": {
       "ref": "Common_Mortar_Type61_SPG__lv1",
       "overrides": {
+        "slot": "skill",
+        "noCounter": true,
+        "description": "迫击炮技能：攻击目标单元格，每回合一次，使用后本回合不能普通攻击。",
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Shell/Common_Mortar_Type61_SPG.gw",
@@ -330,7 +333,8 @@
               }
             }
           ]
-        }
+        },
+        "maxUsesPerTurn": 1
       }
     }
   },

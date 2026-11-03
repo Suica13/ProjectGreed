@@ -465,7 +465,7 @@
   },
   "stats": {
     "hp": 69000,
-    "en": 675.0,
+    "en": 1350.0,
     "move": 9,
     "mobility": 210.0,
     "cost": 2000,
@@ -590,7 +590,7 @@
     "movementBeforeMobility": 9,
     "mobilityMoveTarget": 10,
     "enBeforeReduction": 1350.0,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "adaptability": {
       "ground": 100.0,
       "space": 100.0,
@@ -644,6 +644,28 @@
     "Common_Push_A": {
       "ref": "Common_Push_A__lv3",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Push_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Kick_White_R"
+              ],
+              "delay": 0.45
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Push_A"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
@@ -665,7 +687,10 @@
             "y": 0.0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "TITANS_ShieldBoostedRifle_Double": {
       "ref": "TITANS_ShieldBoostedRifle_Double__lv1",
@@ -763,6 +788,42 @@
     "TITANS_ShieldBoostedRifle_Double_Winch": {
       "ref": "TITANS_ShieldBoostedRifle_Double_Winch__lv1",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Cannon_Shoot_A",
+              "delay": 0
+            },
+            {
+              "weaponDisplayIndex": 0,
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 3.0,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "swingEffects": [],
+              "delay": 0.5
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 3.0,
+              "requiredParts": [
+                "leftArm"
+              ],
+              "swingEffects": [],
+              "delay": 0.05
+            },
+            {
+              "delay": 0.5
+            }
+          ],
+          "startAnimation": "Common_Cannon_Shoot_A"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/TITANS_ShieldBoostedRifle_Double_Winch.gw",
@@ -790,11 +851,50 @@
           "leftArm",
           "rightArm"
         ]
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "TITANS_ShieldBoostedRifle_Double_Winch_L": {
       "ref": "TITANS_ShieldBoostedRifle_Double_Winch_L__lv1",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Cannon_Shoot_A",
+              "delay": 0
+            },
+            {
+              "weaponDisplayIndex": 0,
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 3.0,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "swingEffects": [],
+              "delay": 0.5
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 3.0,
+              "requiredParts": [
+                "leftArm"
+              ],
+              "swingEffects": [],
+              "delay": 0.05
+            },
+            {
+              "delay": 0.5
+            }
+          ],
+          "startAnimation": "Common_Cannon_Shoot_A"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/TITANS_ShieldBoostedRifle_Double_Winch.gw",
@@ -829,11 +929,82 @@
           "leftArm",
           "rightArm"
         ]
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "TITANS_ShieldBoostedRifle_Double_Cqb_DBDF": {
       "ref": "TITANS_ShieldBoostedRifle_Double_Cqb_DBDF__lv1",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Melee_Double_B",
+              "delay": 0
+            },
+            {
+              "weaponDisplayIndex": 1,
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_2_Yellow_R_L"
+              ],
+              "delay": 0.6
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [
+                "leftArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_2_Yellow_L_L"
+              ],
+              "delay": 0.0
+            },
+            {
+              "animation": "Common_Melee_Double_F",
+              "delay": 0.4
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_1_Yellow_R_L"
+              ],
+              "delay": 0.3
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [
+                "leftArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_1_Yellow_L_L"
+              ],
+              "delay": 0.0
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Melee_Double_B"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/TITANS_ShieldBoostedRifle_Double_Cqb_DBDF.gw",
@@ -856,7 +1027,10 @@
           "leftArm",
           "rightArm"
         ]
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "Common_DoubleVulcan_MS": {
       "ref": "Common_DoubleVulcan_MS__lv3",

@@ -475,18 +475,18 @@
     "radius": 4,
     "spawns": [
       {
-        "x": 6,
-        "y": 9
+        "x": 4,
+        "y": 7
       },
       {
-        "x": 45,
-        "y": 9
+        "x": 34,
+        "y": 7
       }
     ]
   },
   "map": {
-    "width": 52,
-    "height": 18
+    "width": 39,
+    "height": 14
   },
   "music": "music/playlist.json",
   "maps": [

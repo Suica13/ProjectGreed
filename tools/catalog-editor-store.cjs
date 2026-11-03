@@ -155,6 +155,8 @@ function createEditorStore(root = path.resolve(__dirname, ".."), validate = null
     ])
       if (next[key] !== undefined && (!Number.isFinite(next[key]) || next[key] < 0))
         throw Error("武器数值无效：" + key);
+    if (!Number.isInteger(next.attackRounds) || next.attackRounds < 0 || next.attackRounds > 20)
+      throw Error("攻击轮数须为0到20的整数");
     require("../shared/weapon-classes.js").classify(next);
     if (next.min > next.max) throw Error("最小射程不能大于最大射程");
     if (!next.name?.trim()) throw Error("请填写武器名称");
@@ -217,7 +219,7 @@ function createEditorStore(root = path.resolve(__dirname, ".."), validate = null
     let candidate;
     if (original.sourceWeapon) {
       candidate = structuredClone(current);
-      for (const field of ["weaponClass", "weaponMainClass", "weaponSubClass"]) {
+      for (const field of ["weaponClass"]) {
         if (payload.weapon[field] === undefined) delete candidate[field];
         else candidate[field] = payload.weapon[field];
       }
@@ -329,13 +331,13 @@ function createEditorStore(root = path.resolve(__dirname, ".."), validate = null
       if (raw && require("../shared/weapon-classes.js").isWeaponSkill(skill) && previous) {
         const comparison = { ...skill },
           old = { ...previous };
-        for (const field of ["weaponClass", "weaponMainClass", "weaponSubClass"]) {
+        for (const field of ["weaponClass"]) {
           delete comparison[field];
           delete old[field];
         }
         if (equal(comparison, old)) {
           const result = structuredClone(raw);
-          for (const field of ["weaponClass", "weaponMainClass", "weaponSubClass"]) {
+          for (const field of ["weaponClass"]) {
             if (skill[field] === undefined) delete result[field];
             else result[field] = skill[field];
           }

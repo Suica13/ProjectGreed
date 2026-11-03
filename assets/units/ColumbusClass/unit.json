@@ -186,7 +186,7 @@
   },
   "stats": {
     "hp": 38500,
-    "en": 7500,
+    "en": 15000,
     "move": 6,
     "mobility": 57.5,
     "cost": 250,
@@ -210,7 +210,7 @@
     "ship": true,
     "footprint": {
       "width": 1,
-      "height": 3
+      "height": 2
     },
     "modules": [
       {
@@ -362,7 +362,7 @@
   },
   "sourceStats": {
     "enBeforeReduction": 15000,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "hp": 50000,
     "walkSpeed": 0.65,
     "boostSpeed": 0.95,
@@ -404,7 +404,7 @@
       "antiDetection": -200
     },
     "supplyTacticalPolicy": {
-      "enCostPercent": 25,
+      "enCostPercent": 10,
       "enRecoveryPercent": 50,
       "actionCost": 2,
       "usesPerOwnTurn": 1
@@ -416,7 +416,11 @@
     "shipBalanceMultiplier": 0.7,
     "shipFactionHullMultiplier": 1.1,
     "shipFactionAccuracyMultiplier": 1.1,
-    "shipFactionEvasionMultiplier": 1.15
+    "shipFactionEvasionMultiplier": 1.15,
+    "shipFootprintBeforeCompaction": {
+      "width": 1,
+      "height": 3
+    }
   },
   "presentation": {
     "shield": false,
@@ -579,10 +583,10 @@
           "name": "EN補給"
         }
       },
-      "description": "消耗自身25%最大EN与2 AP，为一台相邻友军恢复50%最大EN，每个己方回合限用一次。",
+      "description": "消耗自身10%最大EN与2 AP，为相邻目标格内所有友军恢复50%最大EN，每个己方回合限用一次。",
       "range": 1,
       "actionCost": 2,
-      "enCostPercent": 25,
+      "enCostPercent": 10,
       "enRecoveryPercent": 50,
       "cooldownTurns": 1,
       "consumeAction": false,

@@ -203,7 +203,7 @@
   },
   "stats": {
     "hp": 250000,
-    "en": 1100,
+    "en": 2200,
     "move": 7,
     "mobility": 85,
     "cost": 2000,
@@ -326,7 +326,7 @@
     "accuracy": 135,
     "unitLevel": 8000,
     "enBeforeReduction": 2200,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "tacticalMoveBeforeBonus": 6,
     "adaptability": {
       "ground": 75,
@@ -3109,6 +3109,26 @@
     "ZN_MA_08_Shock_A": {
       "ref": "ZN_MA_08_Shock_A__lv1",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "ZN_MA_08_Shock_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.5,
+              "requiredParts": [],
+              "swingEffects": [],
+              "delay": 0.65
+            },
+            {
+              "delay": 2.5
+            }
+          ],
+          "startAnimation": "ZN_MA_08_Shock_A"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/ZN_MA_08_Shock_A.gw",
@@ -3127,7 +3147,10 @@
             "y": 55
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "Common_DoubleVulcan_MA_08": {
       "ref": "Common_DoubleVulcan_MA_08__lv1",

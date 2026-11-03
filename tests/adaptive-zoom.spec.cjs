@@ -56,8 +56,8 @@ for (const size of [
       return rows;
     });
     for (const r of results) {
-      expect(r.tile).toBeGreaterThanOrEqual(160);
-      expect(r.tile).toBeLessThan(160 + r.base * 0.5 + 0.001);
+      expect(r.tile).toBeGreaterThanOrEqual(400);
+      expect(r.tile).toBeLessThan(400 + r.base * 0.5 + 0.001);
       expect(r.zoom).toBe(r.max);
       expect(r.cell).toMatchObject({ x: r.x, y: r.y });
     }
@@ -72,8 +72,59 @@ for (const size of [
     await page.mouse.click(pos.x, pos.y);
     expect(await page.evaluate(() => selected)).toBe("0-0");
     await page.locator("#mapZoomReset").click();
-    const fit = await page.evaluate(() => Math.round(100 / (ART.presentation.mapCellScale || 1)) + "%");
+    const fit = await page.evaluate(
+      () =>
+        Math.round(100 / ((ART.presentation.mapCellScale || 1) * (Rules.mapCellPixels / 64))) + "%",
+    );
     await expect(page.locator("#mapZoomLabel")).toHaveText(fit);
     expect(errors).toEqual([]);
+  });
+}
+
+for (const input of ["mouse", "touch"]) {
+  test(`map pans at every zoom with ${input} without issuing clicks`, async ({ page }) => {
+    await page.setViewportSize({ width: 1600, height: 1000 });
+    await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
+    await expect.poll(() => page.evaluate(() => assetsReady)).toBe(true);
+    await page.evaluate(() => {
+      Net.leave();
+      game = Rules.create(false, 1, [
+        [{ unitId: "RGM_79", kitId: "machine_gun" }],
+        [{ unitId: "RGM_79", kitId: "machine_gun" }],
+      ]);
+      phase = "idle";
+      mode = "select";
+      selected = null;
+      moving = battleView = null;
+      setPageView("game");
+      window.panClicks = 0;
+      byId("map").addEventListener("click", () => window.panClicks++);
+    });
+    const session = input === "touch" ? await page.context().newCDPSession(page) : null;
+    for (const level of ["minimum", "fit", "normal", "maximum"]) {
+      const before = await page.evaluate((level) => {
+        MapCamera.reset();
+        if (level === "minimum") { MapCamera.fit(); MapCamera.setZoom(0); }
+        if (level === "fit") MapCamera.fit();
+        if (level === "maximum") MapCamera.setZoom(1e6);
+        const box = byId("map").getBoundingClientRect();
+        return { ox: mapGeo.ox, oy: mapGeo.oy, x: box.left + box.width / 2, y: box.top + box.height / 2 };
+      }, level);
+      if (session) {
+        await session.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x: before.x, y: before.y }] });
+        await session.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: [{ x: before.x + 30, y: before.y + 20 }] });
+        await session.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+      } else {
+        await page.mouse.move(before.x, before.y);
+        await page.mouse.down();
+        await page.mouse.move(before.x + 30, before.y + 20, { steps: 4 });
+        await page.mouse.up();
+      }
+      const after = await page.evaluate(() => ({ ox: mapGeo.ox, oy: mapGeo.oy, clicks: window.panClicks }));
+      expect(after.ox - before.ox, level).toBeCloseTo(30, 0);
+      expect(after.oy - before.oy, level).toBeCloseTo(20, 0);
+      expect(after.clicks).toBe(0);
+    }
+    await session?.detach();
   });
 }

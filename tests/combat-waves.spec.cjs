@@ -1,7 +1,7 @@
 const { test, expect } = require("@playwright/test");
 const { pathToFileURL } = require("node:url"),
   path = require("node:path");
-test("all units finish each attack/counter wave before the next starts, including a longer counter tail", async ({
+test("automatic attack and counter volleys alternate and complete with shuffled network records", async ({
   page,
 }) => {
   const errors = [];
@@ -70,68 +70,53 @@ test("all units finish each attack/counter wave before the next starts, includin
     planner.plan(room, a, b, [gun, gun, gun], 0);
     planner.plan(room, ally, b, [gun], 0);
     const [request] = planner.prepare(room);
-    planner.chooseBatch(
-      room,
-      request.id,
-      [a.id, ally.id, a.id, a.id, a.id].map((targetId) => ({ targetId, weaponIds: [gun.id] })),
-    );
+    planner.chooseBatch(room, request.id, [{ targetId: a.id }]);
     const battles = planner.resolve(room),
-      starts = {},
-      ends = {};
-    // Hidden-effect records are merged separately by the network client: input order is not guaranteed.
-    const mixed = [...battles].reverse();
+      mixed = [...battles].reverse();
     MapCombat.seed(mixed);
     battleView = {
       battles: mixed,
       mapBattle: true,
       actors: mixed.flatMap((b) => b.actors),
       events: mixed.flatMap((b) => b.events),
+      completed: false,
     };
     phase = "battle";
     setPageView("game");
     byId("quick").checked = true;
-    MapCombat.begin(battleView, () => 0);
-    const zero = performance.now(),
-      original = CombatPlayback.finish;
-    let finished = 0,
-      previous = new Set();
-    CombatPlayback.finish = () => finished++;
-    try {
-      for (let i = 0; i < 3000 && !finished; i++) {
-        const now = zero + i * 50;
-        MapCombat.update(now);
-        const active = new Set(MapCombat.frames.map((f) => f.view.id));
-        for (const id of active) starts[id] ??= now;
-        for (const id of previous) if (!active.has(id)) ends[id] = now;
-        previous = active;
-      }
-      const stages = battles.map((b) => ({
-        id: b.id,
-        wave: b.combatWave,
-        stage: b.combatStage,
-        start: starts[b.id],
-        end: ends[b.id],
-      }));
-      return { finished, stages };
-    } finally {
-      CombatPlayback.finish = original;
-      Rules.models[modelId] = base;
-      MapCombat.reset();
-      battleView = null;
+    const original = CombatPlayback.finish;
+    let finished = false,
+      overlap = false;
+    CombatPlayback.finish = () => {
+      finished = true;
+    };
+    const zero = performance.now();
+    MapCombat.begin(battleView, () => 1);
+    for (let elapsed = 0; elapsed < 60000 && !finished; elapsed += 30) {
+      MapCombat.update(zero + elapsed);
+      const stages = new Set(
+        MapCombat.frames
+          .filter((f) => f.plan.shots.some((shot) => f.time >= shot.at && f.time <= shot.impactAt))
+          .map((f) => f.view.combatStage),
+      );
+      if (stages.has("attack") && stages.has("counter")) overlap = true;
     }
+    CombatPlayback.finish = original;
+    MapCombat.reset();
+    battleView = null;
+    phase = "idle";
+    return {
+      finished,
+      overlap,
+      crossfire: battles.every((b) => b.crossfire),
+      counters: battles.filter((b) => b.combatStage === "counter").map((b) => b.b),
+      target: a.id,
+    };
   });
-  expect(result.finished).toBe(1);
-  expect(result.stages).toHaveLength(9);
-  for (const stage of result.stages) {
-    expect(stage.start, JSON.stringify(stage)).toBeDefined();
-    expect(stage.end, JSON.stringify(stage)).toBeDefined();
-    const earlier = result.stages.filter(
-      (b) =>
-        b.wave < stage.wave ||
-        (b.wave === stage.wave && stage.stage === "counter" && b.stage === "attack"),
-    );
-    for (const other of earlier) expect(stage.start).toBeGreaterThanOrEqual(other.end);
-  }
-  expect(result.stages.filter((b) => b.wave === 4 && b.stage === "counter")).toHaveLength(1);
+  expect(result.finished).toBe(true);
+  expect(result.overlap).toBe(false);
+  expect(result.crossfire).toBe(true);
+  expect(result.counters.length).toBeGreaterThan(0);
+  expect(result.counters.every((id) => id === result.target)).toBe(true);
   expect(errors).toEqual([]);
 });

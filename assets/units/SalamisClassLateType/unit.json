@@ -382,7 +382,7 @@
   },
   "stats": {
     "hp": 77000,
-    "en": 6000,
+    "en": 12000,
     "move": 8,
     "mobility": 80.5,
     "cost": 750,
@@ -651,7 +651,7 @@
     ],
     "footprint": {
       "width": 2,
-      "height": 3
+      "height": 2
     },
     "supplyAura": {
       "range": 2,
@@ -752,7 +752,7 @@
     "accuracy": 115,
     "unitLevel": 3000,
     "enBeforeReduction": 12000,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "tacticalMoveBeforeBonus": 5,
     "adaptability": {
       "ground": 10,
@@ -775,7 +775,11 @@
     "shipBalanceMultiplier": 0.7,
     "shipFactionHullMultiplier": 1.1,
     "shipFactionAccuracyMultiplier": 1.1,
-    "shipFactionEvasionMultiplier": 1.15
+    "shipFactionEvasionMultiplier": 1.15,
+    "shipFootprintBeforeCompaction": {
+      "width": 2,
+      "height": 3
+    }
   },
   "presentation": {
     "shield": false,

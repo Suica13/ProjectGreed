@@ -418,7 +418,7 @@
   },
   "stats": {
     "hp": 75000,
-    "en": 600.0,
+    "en": 1200.0,
     "move": 9,
     "mobility": 185.0,
     "cost": 1500,
@@ -537,7 +537,7 @@
     "movementBeforeMobility": 9,
     "mobilityMoveTarget": 10,
     "enBeforeReduction": 1200.0,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "adaptability": {
       "ground": 100.0,
       "space": 100.0,
@@ -591,6 +591,28 @@
     "Common_Push_A": {
       "ref": "Common_Push_A__lv2",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Push_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Kick_White_R"
+              ],
+              "delay": 0.45
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Push_A"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
@@ -612,7 +634,10 @@
             "y": 0.0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "NZN_AGX_04A1_LBR": {
       "ref": "NZN_AGX_04A1_LBR__lv1",
@@ -675,6 +700,117 @@
     "Common_ArmMG_L": {
       "ref": "Common_ArmMG_L__lv1",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "weaponDisplayIndex": 3,
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1,
+              "requiredParts": [],
+              "delay": 0.1
+            },
+            {
+              "animation": "Common_Shoot_A_L",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1,
+              "requiredParts": [],
+              "delay": 0.05
+            },
+            {
+              "animation": "Common_Shoot_A_L",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1,
+              "requiredParts": [],
+              "delay": 0.05
+            },
+            {
+              "animation": "Common_Shoot_A_L",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1,
+              "requiredParts": [],
+              "delay": 0.05
+            },
+            {
+              "animation": "Common_Shoot_A_L",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1,
+              "requiredParts": [],
+              "delay": 0.05
+            },
+            {
+              "animation": "Common_Shoot_A_L",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1,
+              "requiredParts": [],
+              "delay": 0.05
+            },
+            {
+              "animation": "Common_Shoot_A_L",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1,
+              "requiredParts": [],
+              "delay": 0.05
+            },
+            {
+              "animation": "Common_Shoot_A_L",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1,
+              "requiredParts": [],
+              "delay": 0.05
+            },
+            {
+              "animation": "Common_Shoot_A_L",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1,
+              "requiredParts": [],
+              "delay": 0.05
+            },
+            {
+              "animation": "Common_Shoot_A_L",
+              "delay": 0
+            },
+            {
+              "delay": 0.3
+            }
+          ],
+          "startAnimation": null
+        },
         "requiredParts": [
           "leftArm"
         ],
@@ -711,6 +847,46 @@
     "EF_BeamSaber_BF_Yellow_B": {
       "ref": "EF_BeamSaber_BF_Yellow_B__lv2",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Melee_B",
+              "delay": 0
+            },
+            {
+              "weaponDisplayIndex": 1,
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Yellow_R"
+              ],
+              "delay": 0.4
+            },
+            {
+              "animation": "Common_Melee_F",
+              "delay": 0.6
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_1_Yellow_L"
+              ],
+              "delay": 0.3
+            },
+            {
+              "delay": 1.4
+            }
+          ],
+          "startAnimation": "Common_Melee_B"
+        },
         "requiredParts": [
           "rightArm"
         ],
@@ -731,7 +907,10 @@
             "y": 0.0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "Common_DoubleVulcan_MS": {
       "ref": "Common_DoubleVulcan_MS__lv2",

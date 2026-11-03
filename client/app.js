@@ -336,7 +336,9 @@ function update() {
   const key = session + ":" + selected;
   const views =
     renderedPanelSelection === key
-      ? ["hudUnitPanel", "unitPanel", "hudAttackPlanner"].map((id) => capturePanelView(byId(id)))
+      ? ["hudUnitPanel", "unitPanel", "hudAttackPlanner"].map(byId).filter(Boolean)
+          .filter((root, i, roots) => !roots.some(other => other !== root && other.contains(root)))
+          .map(capturePanelView)
       : [];
   try {
     updateContents();
@@ -493,7 +495,14 @@ function renderReactionReview() {
   confirm.onclick = () => Net.request("confirm_responses", { reviewId: review.id });
   panel.append(confirm);
 }
+let rosterCache = null;
 function renderRoster(busy) {
+  const key = JSON.stringify([session,selected,busy,phase === "deployment",Net.seat,Net.snapshot?.viewTeam,
+    Net.snapshot?.seats,I18n.language,game.ai,
+    game.units.map(u => [u.id,u.model,u.team,u.ownerSeat,u.hp,u.en,u.shield,u.pilot,
+      u.moved,u.acted,u.pendingMove,u.plan,u.embarked,u.performance])]);
+  if (rosterCache?.game === game && rosterCache.key === key) return;
+  rosterCache = {game,key};
   const viewerTeam = Net.active
     ? (Net.snapshot?.viewTeam ?? (Net.seat === null ? null : Rules.seatTeam(Net.seat)))
     : game.ai
@@ -743,7 +752,7 @@ function renderPanel() {
     }
     stats.prepend(pilotLine, xp, pilotStats);
   } else stats.prepend(pilotLine, pilotStats);
-  stats.append(element("div", "", `行动点 ${Rules.actionPoints(u)}/${Rules.actionBudget(u)}`));
+  stats.append(element("div", "", `${I18n.text("AP（未启用）")} ${Rules.actionPoints(u)}/${Rules.actionBudget(u)}`));
   overview.append(stats);
   const partStatus = element("div", "rule-box");
   partStatus.id = "unitPartStatus";
@@ -799,7 +808,7 @@ function renderPanel() {
     effects.push(I18n.text("背包损毁：移动力-25%（向下取整，至少1格）"));
   if (penalty.resistancePenalty)
     effects.push(I18n.text("四肢损毁：抗性降低") + " " + penalty.resistancePenalty + "%");
-  if (u.apPenaltyNextTurn) effects.push(I18n.text("硬直：下回合AP减少25%"));
+  if (u.apPenaltyNextTurn) effects.push(I18n.text("硬直AP记录（AP机制未启用）"));
   if (u.burning) effects.push(I18n.text("燃烧中"));
   if (m.iField)
     partStatus.append(
@@ -877,10 +886,10 @@ function renderPanel() {
       "待机",
       () => {
         if (Net.active) {
-          Net.request("wait", { unitId: u.id });
+          Net.request("wait", { unitId: u.id, single: squadSingleMove });
           return;
         }
-        Rules.wait(game, u);
+        Rules.wait(game, u, squadSingleMove);
         addLog(`${logUnit(u)} 待机。`);
         mode = "select";
         weaponId = null;
@@ -981,7 +990,7 @@ function renderPanel() {
   const skillSection = element("section", "hud-tab-pane");
   skillSection.dataset.hudPane = "skills";
   panel.append(skillSection);
-  weaponSection.append(element("div", "section-title", "ATTACK / 选择目标与攻击序列"));
+  weaponSection.append(element("div", "section-title", "ATTACK / 自动交火"));
   if (m.supplyAura)
     panel.append(
       element(
@@ -1023,27 +1032,13 @@ function renderPanel() {
     if (skills) container.append(element("div", "section-title", "SKILLS / 技能"));
     if (!skills) {
       AttackControls.render(container, u, canCommand);
+      const loadout = element("div", "weapon-list");
+      loadout.dataset.fullLoadout = "true";
+      for (const item of m.weapons) loadout.append(WeaponInfo.card(item,null,{unit:u}));
+      container.append(loadout);
       continue;
     }
     let list = element("div", "weapon-list");
-    for (const w of m.weapons.filter((w) => (w.slot === "skill") === skills)) {
-      let b = element("button", "weapon" + (weaponId === w.id ? " active" : ""));
-      b.innerHTML = htmlWeapon(w, u);
-      if (w.description) b.append(element("span", "helper", w.description));
-      const enoughAP = Rules.actionCost(w) <= Rules.actionPoints(u) + (u.plan?.actionCost ?? 0);
-      b.disabled = !canCommand || !Rules.canUse(u, w) || !enoughAP;
-      b.classList.toggle("part-disabled", Rules.brokenWeaponParts(u, w).length > 0);
-      b.setAttribute("aria-label", (skills ? "技能 " : "攻击武器 ") + w.name);
-      b.onclick = () => {
-        GameAudio.play("selectWeaponSound");
-        AttackControls.reset();
-        weaponId = w.id;
-        mode = "target";
-        if (w.changeHeldWeapon !== false) u.heldWeapon = w.id;
-        update();
-      };
-      list.append(WeaponInfo.card(w, b, { unit: u }));
-    }
     if (skills) SkillControls.render(list, u, canSkillCommand);
     container.append(list);
   }
@@ -1069,31 +1064,37 @@ function renderPanel() {
       targetContainer.append(button);
     }
   }
-  let info = u.plan
-    ? "已确认的目标计划将在本队结束规划后依次执行；剩余AP可继续用于其他目标，也可修改或移除已有计划。"
+  let info = u.attackSkillRound === game.round
+    ? "已使用攻击类技能，本回合不能普通攻击或取消攻击。"
+    : u.plan
+    ? "已确认单一目标；本队结束规划后自动交火，可修改或取消目标。"
     : u.acted
       ? "本单位行动已经结束。"
       : !own
         ? "当前是对手的单位，可查看其射程与资源。"
         : u.moved
           ? "已移动：仍可攻击或待机。攻击后不可再移动。"
-          : "移动可选；确认攻击计划后不可再移动，剩余AP可继续规划其他目标。";
+          : "移动可选；选择单一目标后自动安排所有可用武器。";
   weaponSection.append(element("div", "rule-box", info));
   if (Net.active && u.plan && Net.canControl(u) && phase === "idle") {
     const cancel = element("button", "", "取消全部攻击计划");
     cancel.id = "cancelAttackPlan";
-    cancel.disabled = !Net.canAct();
-    cancel.onclick = () => Net.request("cancel_attack", { unitId: u.id });
+    cancel.disabled = !Net.canAct() || u.attackSkillRound === game.round;
+    cancel.onclick = () => Net.request("cancel_attack", { unitId: u.id, single: squadSingleMove });
     weaponSection.append(cancel);
   }
 }
-function select(id) {
+let squadSingleMove = false,
+  squadCombatMode = "melee";
+function select(id, { single = false } = {}) {
   if (pendingMovement()) return;
   if (isBusy()) return;
   let u = getUnit(id);
   if (!u || u.hp <= 0) return;
   GameAudio.selectUnit(u);
   selected = id;
+  squadSingleMove = single;
+  if (Rules.squadMembers(game, u).length < 2) squadCombatMode = "melee";
   AttackControls.reset();
   weaponId = null;
   mode = "select";
@@ -1118,6 +1119,8 @@ function mapRanges(chosen, canMove, deploymentSeat, showAttack = false) {
   if (!canMove && deploymentSeat === null && !showAttack) return emptyMapRanges;
   const state = JSON.stringify([
     chosen?.id,
+    squadSingleMove,
+    squadCombatMode,
     canMove,
     deploymentSeat,
     showAttack,
@@ -1138,6 +1141,8 @@ function mapRanges(chosen, canMove, deploymentSeat, showAttack = false) {
       u.angle,
       u.team,
       u.ownerSeat,
+      u.squadId,
+      u.squadSlot,
       u.hp,
       u.moved,
       u.acted,
@@ -1166,7 +1171,7 @@ function mapRanges(chosen, canMove, deploymentSeat, showAttack = false) {
   const moveCells = canMove
     ? chosen.embarked?.exposed
       ? new Map(Rules.hangars.launchCells(game, chosen).map((p) => [Rules.key(p.x, p.y), p]))
-      : Rules.reachable(game, chosen)
+      : Rules.reachable(game, chosen, null, squadSingleMove)
     : new Map();
   const displayCell = (c) => {
     const size = chosen ? Rules.dimensions(chosen) : { width: 1, height: 1 };
@@ -1179,9 +1184,17 @@ function mapRanges(chosen, canMove, deploymentSeat, showAttack = false) {
     [...moveCells.values()].filter((c) => c.path.length).map(displayCell),
   );
   const deploymentCells =
-      deploymentSeat === null ? [] : Rules.deploymentCells(game, deploymentSeat,
-        !game.campaignBattlefield || (chosen?.campaignDeploying &&
-          Rules.campaignBattlefield.deploymentSeat(game, chosen) === deploymentSeat) ? chosen : null),
+      deploymentSeat === null
+        ? []
+        : Rules.deploymentCells(
+            game,
+            deploymentSeat,
+            !game.campaignBattlefield ||
+              (chosen?.campaignDeploying &&
+                Rules.campaignBattlefield.deploymentSeat(game, chosen) === deploymentSeat)
+              ? chosen
+              : null,
+          ),
     allowedFootprint = new Set(deploymentCells.map((c) => Rules.key(c.x, c.y))),
     deploymentArea = new Set(
       deploymentCells
@@ -1205,45 +1218,46 @@ function mapRanges(chosen, canMove, deploymentSeat, showAttack = false) {
   const attackArea = new Set(),
     attackTargets = new Set();
   if (showAttack && chosen) {
-    // 射程可随预览落点更新；视野与索敌仍使用未确认的裁定状态。
-    const attackOrigin = chosen.pendingMove
-      ? {
-          ...chosen,
-          x: chosen.pendingMove.x,
-          y: chosen.pendingMove.y,
-          angle: chosen.pendingMove.angle,
-          pendingMove: null,
-        }
-      : chosen;
-    const budget = Rules.actionPoints(chosen) + (chosen.plan?.actionCost ?? 0);
-    const weapons = Rules.modelOf(chosen).weapons.filter(
-      (w) => w.slot !== "skill" && Rules.canUse(chosen, w) && Rules.actionCost(w) <= budget,
-    );
-    const radius = Math.max(0, ...weapons.map((w) => w.max)),
-      size = Rules.dimensions(attackOrigin);
-    for (
-      let y = Math.max(0, attackOrigin.y - radius);
-      y < Math.min(Rules.mapHeight(game), attackOrigin.y + size.height + radius);
-      y++
-    )
+    for (const member of squadSingleMove ? [chosen] : Rules.squadMembers(game, chosen)) {
+      // 射程可随预览落点更新；视野与索敌仍使用未确认的裁定状态。
+      const attackOrigin = chosen.pendingMove
+        ? {
+            ...member,
+            x: chosen.pendingMove.x,
+            y: chosen.pendingMove.y,
+            angle: chosen.pendingMove.angle,
+            pendingMove: null,
+          }
+        : member;
+      const weapons = Rules.modelOf(member).weapons.filter(
+        (w) => Rules.canUse(member, w) && (squadCombatMode !== "shooting" || w.type !== "melee"),
+      );
+      const radius = Math.max(0, ...weapons.map((w) => w.max)),
+        size = Rules.dimensions(attackOrigin);
       for (
-        let x = Math.max(0, attackOrigin.x - radius);
-        x < Math.min(Rules.mapWidth(game), attackOrigin.x + size.width + radius);
-        x++
-      ) {
-        const cell = { x, y };
-        if (
-          weapons.some(
-            (w) =>
-              Rules.inRange(attackOrigin, cell, w) &&
-              Rules.availableStrikes(attackOrigin, w, cell).length,
+        let y = Math.max(0, attackOrigin.y - radius);
+        y < Math.min(Rules.mapHeight(game), attackOrigin.y + size.height + radius);
+        y++
+      )
+        for (
+          let x = Math.max(0, attackOrigin.x - radius);
+          x < Math.min(Rules.mapWidth(game), attackOrigin.x + size.width + radius);
+          x++
+        ) {
+          const cell = { x, y };
+          if (
+            weapons.some(
+              (w) =>
+                Rules.inRange(attackOrigin, cell, w) &&
+                Rules.availableStrikes(attackOrigin, w, cell).length,
+            )
           )
-        )
-          attackArea.add(Rules.key(x, y));
-      }
-    for (const target of game.units)
-      if (weapons.some((w) => Rules.canAttack(game, attackOrigin, target, w)))
-        attackTargets.add(target.id);
+            attackArea.add(Rules.key(x, y));
+        }
+      for (const target of game.units)
+        if (weapons.some((w) => Rules.canAttack(game, attackOrigin, target, w)))
+          attackTargets.add(target.id);
+    }
   }
   return (mapRangeCache = {
     game,
@@ -1489,6 +1503,31 @@ function drawCampaignSupply(ctx, ox, oy, tile) {
 }
 function drawMap(now) {
   const battleSettings = BattleScene.settings();
+  // Lifetime is exactly one draw: simulation changes can never reuse a stale model.
+  const frameModels = new WeakMap(), frameSquads = new Map();
+  function frameModelOf(unit) {
+    if (!frameModels.has(unit)) frameModels.set(unit,Rules.modelOf(unit));
+    return frameModels.get(unit);
+  }
+  const squadKey = unit => JSON.stringify([unit.squadId,unit.team,Rules.controllerOf(game,unit),unit.x,unit.y]);
+  for (const unit of game.units) {
+    if (!unit.squadId || !Rules.onMap(unit) || unit.embarked) continue;
+    const key = squadKey(unit);
+    if (!frameSquads.has(key)) frameSquads.set(key,[]);
+    frameSquads.get(key).push(unit);
+  }
+  for (const members of frameSquads.values())
+    members.sort((a,b) => (a.squadSlot ?? 0)-(b.squadSlot ?? 0) || a.id.localeCompare(b.id));
+  const launchMembers = new Map();
+  for (const root of game.units) {
+    const ids = root.pendingMove?.squadLaunchIds;
+    if (!ids) continue;
+    const group = ids.map(id=>getUnit(id)).filter(Boolean);
+    for (const member of group) launchMembers.set(member.id,group);
+  }
+  const frameMembersOf = unit => launchMembers.get(unit?.id) ||
+    (unit?.squadId ? frameSquads.get(squadKey(unit)) || [] : unit ? [unit] : []);
+  const selectedSquad = new Set(frameMembersOf(getUnit(selected)).map(unit => unit.id));
   let c = byId("map"),
     box = c.getBoundingClientRect(),
     dpr = window.GameViewport?.pixelRatio(box.width, box.height) || window.devicePixelRatio || 1;
@@ -1690,7 +1729,12 @@ function drawMap(now) {
     ctx.restore();
   };
   SpriteEffects.setFogClip(visibilityClip, ctx);
-  const mapUnitPoses = [];
+  const mapUnitPoses = [],
+    selectionMarks = [];
+  const squadPendingMoves = new Map();
+  for (const actor of game.units)
+    for (const id of actor.pendingMove?.squadIds || [])
+      squadPendingMoves.set(id, actor.pendingMove);
   drawVisibleEffects(() => MapCombat.drawUnderlay(ctx, mapGeo));
   const authoredMap = Rules.getMap(game.mapId);
   let aboveLayerDrawn = false;
@@ -1701,20 +1745,21 @@ function drawMap(now) {
   )) {
     if ((u.hp <= 0 && !u.mapDying) || u.mapPose?.hidden) continue;
     const motion = PlanningUI.motion(u, now) || (moving?.id === u.id ? moving : null);
-    const visualUnit = u.pendingMove
+    const pendingSquadMove = u.pendingMove || squadPendingMoves.get(u.id);
+    const visualUnit = pendingSquadMove
       ? {
           ...u,
-          ...(u.pendingMove.launch ? { embarked: undefined } : {}),
-          x: u.pendingMove.x,
-          y: u.pendingMove.y,
-          angle: u.pendingMove.angle,
+          ...(pendingSquadMove.launch ? { embarked: undefined } : {}),
+          x: pendingSquadMove.x,
+          y: pendingSquadMove.y,
+          angle: pendingSquadMove.angle,
         }
       : u;
     const unitCenter = Rules.center(visualUnit),
       unitSize = Rules.dimensions(u);
     let pos = mapPosition(unitCenter.x, unitCenter.y),
       angle = visualUnit.angle,
-      anim = Rules.modelOf(u).presentation.idle,
+      anim = frameModelOf(u).presentation.idle,
       t = now / 1000,
       groundCell = { x: visualUnit.x, y: visualUnit.y };
     if (!!motion) {
@@ -1731,19 +1776,27 @@ function drawMap(now) {
         from.x + (to.x - from.x) * frac + (unitSize.width - 1) / 2,
         from.y + (to.y - from.y) * frac + (unitSize.height - 1) / 2,
       );
-      if (!Rules.modelOf(u).ship)
+      if (!frameModelOf(u).ship)
         angle = (Math.atan2(to.x - from.x, -(to.y - from.y)) * 180) / Math.PI;
       anim = SpriteRenderer.movement(u.model);
       t = (now - motion.start) / 1000;
     }
     const combatPose = u.mapPose;
+    const formationMembers = frameMembersOf(u);
+    const formationLeader = formationMembers[0] || u;
+    const formationOffset = MapCombat.formationOffset(u, PlanningUI.facing(formationLeader,formationLeader.angle,frameModelOf(formationLeader)), formationMembers);
+    pos.x += formationOffset.x * tile;
+    pos.y += formationOffset.y * tile;
     if (combatPose) {
-      pos = mapPosition(combatPose.x / 64 - 0.5, combatPose.y / 64 - 0.5);
+      pos = mapPosition(
+        combatPose.x / Rules.mapCellPixels - 0.5,
+        combatPose.y / Rules.mapCellPixels - 0.5,
+      );
       angle = combatPose.angle;
       anim = combatPose.clip;
       t = combatPose.time;
     }
-    if (!combatPose) angle = PlanningUI.facing(u, angle);
+    if (!combatPose) angle = PlanningUI.facing(u, angle, frameModelOf(u));
     const skillPose = !combatPose && SkillEffects.pose(u, now);
     if (skillPose) {
       angle = skillPose.angle;
@@ -1757,20 +1810,24 @@ function drawMap(now) {
       if (parent && slot) {
         const rad = (parent.angle * Math.PI) / 180;
         const scale =
-          (tile / 64) *
-          1.2 *
+          (tile / Rules.mapCellPixels) *
+          ART.presentation.unitMapScale *
           (battleSettings.mapScale / (ART.presentation.mapCellScale || 1)) *
-          Rules.modelOf(carrier).presentation.mapScale;
+          frameModelOf(carrier).presentation.mapScale;
         const { x, y, height } = slot.offset;
         pos = {
           x: parent.pos.x + (x * Math.cos(rad) + y * Math.sin(rad)) * scale,
           y: parent.pos.y + (x * Math.sin(rad) - y * Math.cos(rad) - height) * scale,
         };
         groundCell = parent.groundCell;
-        if (!combatPose && !skillPose) angle = PlanningUI.facing(u, parent.angle);
+        if (!combatPose && !skillPose) angle = PlanningUI.facing(u, parent.angle, frameModelOf(u));
       }
     }
     EnvironmentVisuals.observe(u, groundCell, now);
+    const visualScale = (tile/Rules.mapCellPixels) * ART.presentation.unitMapScale *
+      (battleSettings.mapScale/(ART.presentation.mapCellScale || 1)) * frameModelOf(u).presentation.mapScale * formationOffset.scale;
+    const radius = SpriteRenderer.radius(u.model)*visualScale + tile;
+    if (!combatPose && !skillPose && (pos.x+radius < 0 || pos.y+radius < 0 || pos.x-radius > w || pos.y-radius > h)) continue;
     mapUnitPoses.push({
       u,
       pos,
@@ -1782,6 +1839,8 @@ function drawMap(now) {
       combatPose,
       skillPose,
       groundCell,
+      formationOffset,
+      visualScale,
     });
   }
   // Ground overlays are drawn before every unit, including moving and dodging units.
@@ -1791,14 +1850,15 @@ function drawMap(now) {
   const unitThumbnails = !immersive && MapCamera.unitThumbnails;
   byId("map").dataset.unitThumbnails = String(unitThumbnails);
   if (!immersive && !unitThumbnails)
-    for (const { u, pos } of mapUnitPoses) UnitIdentity.drawRing(ctx, u, pos, tile);
+    for (const { u, pos } of mapUnitPoses)
+      UnitIdentity.drawRing(ctx, u, pos, (tile * 64) / Rules.mapCellPixels);
   const airbornePose = (pose) =>
     !!pose.u.flying ||
-    Rules.modelOf(pose.u).movementType === "air" ||
+    frameModelOf(pose.u).movementType === "air" ||
     (pose.u.embarked?.exposed &&
       (() => {
         const carrier = getUnit(pose.u.embarked.carrierId);
-        return carrier && (carrier.flying || Rules.modelOf(carrier).movementType === "air");
+        return carrier && (carrier.flying || frameModelOf(carrier).movementType === "air");
       })());
   mapUnitPoses.sort((a, b) => Number(!!airbornePose(a)) - Number(!!airbornePose(b)));
   let smokeDrawn = false;
@@ -1813,6 +1873,8 @@ function drawMap(now) {
     combatPose,
     skillPose,
     groundCell,
+    formationOffset,
+    visualScale,
   } of mapUnitPoses) {
     if (authoredMap.tileMap && !aboveLayerDrawn && airbornePose({ u })) {
       drawAboveLayer();
@@ -1824,6 +1886,7 @@ function drawMap(now) {
     }
     ctx.save();
     const environmentPose = EnvironmentVisuals.pose(u, groundCell);
+    const spriteTile = (tile * 64) / Rules.mapCellPixels;
     if (
       ClientSettings.unitShadows() &&
       Rules.cellEnvironment(game, groundCell.x, groundCell.y) !== "space"
@@ -1831,10 +1894,10 @@ function drawMap(now) {
       ctx.fillStyle = "rgba(0,0,0,0.28)";
       ctx.beginPath();
       ctx.ellipse(
-        pos.x + tile * 0.05,
-        pos.y + tile * 0.12,
-        tile * unitSize.width * 0.3,
-        tile * unitSize.height * 0.12,
+        pos.x + spriteTile * 0.05,
+        pos.y + spriteTile * 0.12,
+        spriteTile * unitSize.width * 0.3,
+        spriteTile * unitSize.height * 0.12,
         0,
         0,
         Math.PI * 2,
@@ -1842,20 +1905,28 @@ function drawMap(now) {
       ctx.fill();
     }
     ctx.globalAlpha = environmentPose.alpha;
-    if (!immersive && (u.id === selected || (phase === "reaction" && pending?.target === u.id))) {
-      ctx.strokeStyle = "#e1edaa";
-      ctx.lineWidth = 2;
-      ctx.strokeRect(
-        pos.x - tile * (unitSize.width / 2 - 0.07),
-        pos.y - tile * (unitSize.height / 2 - 0.07),
-        tile * (unitSize.width - 0.14),
-        tile * (unitSize.height - 0.14),
-      );
+    if (
+      !immersive &&
+      (u.id === selected ||
+        (!squadSingleMove &&
+          selected &&
+          selectedSquad.has(u.id)) ||
+        (phase === "reaction" && pending?.target === u.id))
+    ) {
+      selectionMarks.push({
+        unitId: u.id,
+        kind: "selected",
+        group:
+          !squadSingleMove ||
+          phase === "reaction" ||
+          mode.startsWith("attack") ||
+          mode === "target",
+      });
     }
     let turretStatus = null;
     if (
       !immersive &&
-      Rules.modelOf(u).ship &&
+      frameModelOf(u).ship &&
       !combatPose &&
       ["idle", "reaction"].includes(phase)
     ) {
@@ -1871,7 +1942,7 @@ function drawMap(now) {
           : selected === u.id
             ? weaponId || draft?.weapons?.at(-1) || u.plan?.weapon
             : null);
-      const weapon = Rules.modelOf(u).weapons.find((w) => w.id === id);
+      const weapon = frameModelOf(u).weapons.find((w) => w.id === id);
       if (target && weapon) {
         const available = new Set(Rules.availableStrikes(u, weapon, target).map((s) => s.moduleId));
         const inRange = Rules.inRange(u, target, weapon);
@@ -1901,10 +1972,7 @@ function drawMap(now) {
         u.model,
         pos.x,
         pos.y + (combatPose ? 0 : tile * (0.035 + environmentPose.offset)),
-        (tile / 64) *
-          1.2 *
-          (battleSettings.mapScale / (ART.presentation.mapCellScale || 1)) *
-          Rules.modelOf(u).presentation.mapScale,
+        visualScale,
         angle,
         anim,
         t,
@@ -1913,13 +1981,13 @@ function drawMap(now) {
         (u.shield ?? 1) > 0,
         !!motion || !!combatPose?.moving,
         u.brokenParts,
-        combatPose?.aimAngle ?? u.aimAngle ?? angle,
+        combatPose?.aimAngle ?? skillPose?.angle ?? u.aimAngle ?? angle,
         combatPose?.attacking ?? null,
         Rules.cellEnvironment(game, groundCell.x, groundCell.y) !== "space" &&
           game.tiles[groundCell.y]?.[groundCell.x] !== "water",
         Rules.cellEnvironment(game, groundCell.x, groundCell.y),
         combatPose?.attackWeapon ?? null,
-        combatPose?.weaponDisplayIndex ?? skillPose?.weaponDisplayIndex ?? null,
+        combatPose?.weaponDisplayIndex ?? skillPose?.weaponDisplayIndex ?? u.weaponDisplayIndex ?? null,
         combatPose?.flying ?? !!u.flying,
         turretStatus,
         false,
@@ -1930,13 +1998,16 @@ function drawMap(now) {
         MapCombat.fieldImpact(u.id),
         IrradiationFX.fieldImpact(u.id, now),
       );
-      if (Rules.modelOf(u).iField && fieldImpact < ART.effects.I_Field_2.duration)
+      if (frameModelOf(u).iField && fieldImpact < ART.effects.I_Field_2.duration)
         SpriteEffects.draw(
           ctx,
           "I_Field_2",
           pos.x,
           pos.y,
-          (tile / 64) * 1.2 * Rules.modelOf(u).presentation.mapScale,
+          (tile / Rules.mapCellPixels) *
+            ART.presentation.unitMapScale *
+            frameModelOf(u).presentation.mapScale *
+            formationOffset.scale,
           fieldImpact,
         );
       if (u.burning && u.hp > 0) {
@@ -1947,7 +2018,7 @@ function drawMap(now) {
             "Burned_Hit_1",
             pos.x,
             pos.y,
-            tile / 64,
+            tile / Rules.mapCellPixels,
             (now / 1000) % effect.duration,
           );
       }
@@ -1956,27 +2027,27 @@ function drawMap(now) {
         u,
         pos.x,
         pos.y + (combatPose ? 0 : tile * (0.035 + environmentPose.offset)),
-        (tile / 64) *
-          1.2 *
-          (battleSettings.mapScale / (ART.presentation.mapCellScale || 1)) *
-          Rules.modelOf(u).presentation.mapScale,
+        visualScale,
         now / 1000,
       );
     }
     ctx.restore();
     if (immersive) continue;
     let hpw =
-        tile * 0.72 * battleSettings.mapBarScale * (Rules.modelOf(u).ship ? unitSize.width : 1),
+        spriteTile *
+        0.72 *
+        battleSettings.mapBarScale *
+        (frameModelOf(u).ship ? unitSize.width : 1),
       barx = pos.x - hpw / 2,
-      bary = pos.y + tile * (Rules.modelOf(u).ship ? unitSize.height / 2 - 0.12 : 0.36);
+      bary = pos.y + spriteTile * (frameModelOf(u).ship ? unitSize.height / 2 - 0.12 : 0.36);
     ctx.fillStyle = "#07141c";
     ctx.fillRect(barx, bary, hpw, 4);
     ctx.fillStyle = u.team ? "#ed9685" : "#83d6ee";
-    ctx.fillRect(barx, bary, hpw * Math.max(0, Math.min(1, u.hp / Rules.modelOf(u).hp)), 4);
+    ctx.fillRect(barx, bary, hpw * Math.max(0, Math.min(1, u.hp / frameModelOf(u).hp)), 4);
     ctx.fillStyle = "#07141c";
     ctx.fillRect(barx, bary + 6, hpw, 3);
     ctx.fillStyle = "#efd568";
-    const enRatio = Math.max(0, Math.min(1, u.en / Math.max(1, Rules.modelOf(u).en)));
+    const enRatio = Math.max(0, Math.min(1, u.en / Math.max(1, frameModelOf(u).en)));
     ctx.fillRect(barx, bary + 6, hpw * enRatio, 3);
     if (
       u.acted &&
@@ -1996,9 +2067,9 @@ function drawMap(now) {
       ctx.fillText("E", barx + hpw - 1, bary - 2);
       ctx.restore();
     }
-    if (MapCamera.pilotLabels && u.pilot?.name) {
+    if (MapCamera.pilotLabels && u.pilot?.name && (u.pilot.custom || u.pilot.aceId)) {
       ctx.fillStyle = u.acted && u.team === game.team ? "#8fa0a5" : "#dfebed";
-      const nameSize = Math.max(7, tile * 0.14) * battleSettings.mapLabelSize;
+      const nameSize = Math.max(7, spriteTile * 0.14) * battleSettings.mapLabelSize;
       ctx.font = `${nameSize}px system-ui`;
       ctx.textAlign = "center";
       ctx.save();
@@ -2018,7 +2089,7 @@ function drawMap(now) {
       ctx,
       u,
       pos.x,
-      bary + 16 + Math.max(7, tile * 0.14) * battleSettings.mapLabelSize,
+      bary + 16 + Math.max(7, spriteTile * 0.14) * battleSettings.mapLabelSize,
       now,
     );
     if (
@@ -2026,11 +2097,18 @@ function drawMap(now) {
       (mode === "target" && weapon && chosen && Rules.canAttack(game, chosen, u, weapon)) ||
       (chosen && AttackControls.draft(chosen)?.targetId === u.id)
     ) {
-      let p = 0.7 + 0.3 * Math.sin(now / 200);
-      ctx.strokeStyle = `rgba(255,140,115,${p})`;
-      ctx.lineWidth = 2;
-      ctx.strokeRect(pos.x - tile * 0.45, pos.y - tile * 0.45, tile * 0.9, tile * 0.9);
+      selectionMarks.push({ unitId: u.id, kind: "target", group: true });
     }
+  }
+  if (!immersive) {
+    ctx.save();
+    ctx.lineWidth = 2;
+    for (const box of PlanningUI.selectionFrames(mapUnitPoses, selectionMarks, tile)) {
+      ctx.strokeStyle =
+        box.kind === "target" ? `rgba(255,140,115,${0.7 + 0.3 * Math.sin(now / 200)})` : "#e1edaa";
+      ctx.strokeRect(box.x, box.y, box.width, box.height);
+    }
+    ctx.restore();
   }
   if (!aboveLayerDrawn) drawAboveLayer();
   // Hidden actors contribute effects only; never silhouettes, bars or selectable units.
@@ -2049,7 +2127,7 @@ function drawMap(now) {
         x: from.x + (to.x - from.x) * fraction + (size.width - 1) / 2,
         y: from.y + (to.y - from.y) * fraction + (size.height - 1) / 2,
       };
-      if (!Rules.modelOf(actor).ship)
+      if (!frameModelOf(actor).ship)
         angle = (Math.atan2(to.x - from.x, -(to.y - from.y)) * 180) / Math.PI;
     }
     const point = mapPosition(location.x, location.y);
@@ -2061,10 +2139,10 @@ function drawMap(now) {
     EnvironmentVisuals.observe(actor, cell, now);
     const presentation = EnvironmentVisuals.pose(actor, cell);
     const scale =
-      (tile / 64) *
-      1.2 *
+      (tile / Rules.mapCellPixels) *
+      ART.presentation.unitMapScale *
       (battleSettings.mapScale / (ART.presentation.mapCellScale || 1)) *
-      Rules.modelOf(actor).presentation.mapScale;
+      frameModelOf(actor).presentation.mapScale;
     SpriteRenderer.draw(
       ctx,
       actor.model,
@@ -2072,7 +2150,7 @@ function drawMap(now) {
       point.y + tile * presentation.offset,
       scale,
       angle,
-      motion ? SpriteRenderer.movement(actor.model) : Rules.modelOf(actor).presentation.idle,
+      motion ? SpriteRenderer.movement(actor.model) : frameModelOf(actor).presentation.idle,
       motion ? (now - motion.start) / 1000 : now / 1000,
       actor.heldWeapon,
       true,
@@ -2084,7 +2162,7 @@ function drawMap(now) {
       presentation.environment === "ground",
       Rules.cellEnvironment(game, cell.x, cell.y),
       null,
-      null,
+      actor.weaponDisplayIndex ?? null,
       actor.flying,
       null,
       true,
@@ -2124,10 +2202,10 @@ function drawMap(now) {
     const { u, pos, angle, anim, t, groundCell } = pose;
     const environment = EnvironmentVisuals.pose(u, groundCell);
     const scale =
-      (tile / 64) *
-      1.2 *
+      (tile / Rules.mapCellPixels) *
+      ART.presentation.unitMapScale *
       (battleSettings.mapScale / (ART.presentation.mapCellScale || 1)) *
-      Rules.modelOf(u).presentation.mapScale;
+      frameModelOf(u).presentation.mapScale;
     return {
       x: pos.x,
       y:
@@ -2223,6 +2301,20 @@ byId("map").onclick = async (e) => {
   }
   if (SkillControls.click(cell, u)) return;
   window.SFSUI?.inspect(target);
+  if (
+    target &&
+    u &&
+    target !== u &&
+    mode === "move" &&
+    Rules.reachable(game, u, null, squadSingleMove).get(Rules.key(cell.x, cell.y))?.squadTarget
+  ) {
+    try {
+      await performMove(u, cell.x, cell.y);
+    } catch (error) {
+      note(error.message);
+    }
+    return;
+  }
   // Friendly carrier cells are movement endpoints before they are selections.
   if (
     target &&
@@ -2231,7 +2323,7 @@ byId("map").onclick = async (e) => {
     target.team === u.team &&
     mode === "move" &&
     !u.embarked &&
-    Rules.reachable(game, u).get(Rules.key(cell.x, cell.y))?.boarding
+    Rules.reachable(game, u, null, squadSingleMove).get(Rules.key(cell.x, cell.y))?.boarding
   ) {
     try {
       await performMove(u, cell.x, cell.y);
@@ -2287,7 +2379,7 @@ byId("map").onclick = async (e) => {
       (Net.active && !Net.canControl(u)) ||
       u.acted ||
       u.moved ||
-      !Rules.reachable(game, u).has(Rules.key(anchor.x, anchor.y))
+      !Rules.reachable(game, u, null, squadSingleMove).has(Rules.key(anchor.x, anchor.y))
     ) {
       window.BattleHUD?.clearSelection();
       return;
@@ -2311,11 +2403,18 @@ byId("map").onclick = async (e) => {
 };
 async function performMove(u, x, y) {
   if (Net.active) {
-    Net.request("move", { unitId: u.id, x, y });
+    Net.request("move", { unitId: u.id, x, y, single: squadSingleMove });
     return;
   }
   let from = { x: u.x, y: u.y },
-    path = Rules.previewMove(game, u, x, y);
+    path = Rules.previewMove(game, u, x, y, Rules.ownerOf(u), squadSingleMove);
+  PlanningUI.move({
+    unitId: u.id,
+    from,
+    path,
+    squadIds: u.pendingMove.squadIds,
+    squadPaths: u.pendingMove.squadPaths,
+  });
   GameAudio.moveUnit(u);
   phase = "moving";
   moving = {
@@ -2338,7 +2437,7 @@ function pendingMovement() {
   if (window.ReplayPlayer?.active) return null;
   return game.units.find(
     (unit) =>
-      unit.pendingMove &&
+      unit.pendingMove && !unit.pendingMove.launchMemberOf &&
       (Net.active
         ? unit.pendingMove.seat === Net.seat
         : phase === "deployment"
@@ -2357,21 +2456,32 @@ function finishMovement(confirm) {
     else addLog(`${logUnit(unit)} 移动至${Rules.columnLabel(unit.x)}${unit.y + 1}。`);
   } else Rules.cancelMove(game, unit);
   PlanningUI.stop(unit.id);
+  if (Rules.squadMembers(game, unit).length < 2) squadCombatMode = "melee";
   mode = "select";
   update();
 }
 // a = 攻击方，b = 防守方，w = 武器。联机只发请求，离线进入本地应战。
 function beginAttack(a, b, w, weapons = [w]) {
-  try {
-    Rules.attackQueue(game, a, b, weapons);
-  } catch (error) {
-    note(error.message);
-    return;
-  }
+  const offensiveSkill = w?.slot === "skill";
+  if (!offensiveSkill && !squadSingleMove && !Rules.automaticSquadQueue(game, a, b).length)
+    a =
+      Rules.squadMembers(game, a).find(
+        (member) => Rules.automaticSquadQueue(game, member, b).length,
+      ) || a;
+  const plannedMembers = offensiveSkill ? [{unit:a,weapons:[w]}] : (squadSingleMove ? [a] : Rules.squadMembers(game,a)).map(member => ({
+    unit: member,
+    weapons: Rules.firePlan(game, member, b, { combatMode: squadCombatMode }).weapons,
+  })).filter(plan=>plan.weapons.length);
+  if (!plannedMembers.length) return note(I18n.text("没有满足射程、EN与部位条件的武器"));
+  if (!plannedMembers.some(plan=>plan.unit.id===a.id)) a=plannedMembers[0].unit;
+  weapons=plannedMembers.find(plan=>plan.unit.id===a.id).weapons;
+  w = weapons[0];
   if (Net.active) {
     if (Net.canAct() && Net.canControl(a) && phase === "idle" && !Net.awaiting) {
       Net.request("attack", {
         unitId: a.id,
+        combatMode: squadCombatMode,
+        single: offensiveSkill || squadSingleMove,
         targetId: b.id,
         aimCell: b.aimCell,
         targetCell: b.groundTarget ? { x: b.x, y: b.y } : undefined,
@@ -2387,19 +2497,28 @@ function beginAttack(a, b, w, weapons = [w]) {
     }
     return;
   }
-  if (phase !== "idle" || !Rules.canAttack(game, a, b, w) || a.acted) return;
+  if (phase !== "idle" || !weapons.length || a.acted) return;
   GameAudio.play("lockonSound");
-  Rules.faceTarget(a, b);
+  for (const member of squadSingleMove ? [a] : Rules.squadMembers(game, a))
+    Rules.faceTarget(member, b);
   Rules.faceTarget(b, a);
   pending = {
+    single: offensiveSkill || squadSingleMove,
+    offensiveSkill,
+    combatMode: squadCombatMode,
     aimCell: b.aimCell,
     attacker: a.id,
     target: b.id,
     weapon: w.id,
     weapons: weapons.map((w) => w.id),
+    attacks: plannedMembers.map(plan=>({attacker:plan.unit.id,target:b.id,
+      weapon:plan.weapons[0].id,weapons:plan.weapons.map(w=>w.id),
+      noCounter:plan.weapons.every(w=>w.noCounter)})),
   };
   phase = "reaction";
-  let legal = Rules.modelOf(b).weapons.filter((c) => Rules.canCounter(game, b, a, c));
+  let legal = Rules.squadMembers(game, b).flatMap((member) =>
+    Rules.firePlan(game,member,a,{counter:true,combatMode:"melee"}).weapons,
+  );
   response = legal.length ? "counter" : "defend";
   counterId = legal[0]?.id || null;
   if (game.ai && b.team === 1) {
@@ -2429,14 +2548,57 @@ function counterDraft(unit) {
   if (!counterDraftState || counterDraftState.key !== key || counterDraftState.session !== session)
     counterDraftState = { key, session, ids: counterId ? [counterId] : [] };
   const draft = counterDraftState;
-  if (!draft.entries) {
-    const targets = pending.counterTargets || [{ attacker: pending.attacker }];
-    const targetId = targets.some((entry) => entry.attacker === counterTargetId)
-      ? counterTargetId
-      : pending.attacker;
-    draft.entries = draft.ids.map((weaponId) => ({ weaponId, targetId }));
+  draft.memberId ??= null;
+  draft.groupResponse ??= response;
+  draft.groupTargetId ??= pending.attacker;
+  draft.memberResponses ??= {};
+  const targets = Rules.counterTargetEntries(game, pending);
+  const targetId = targets.some((entry) => entry.attacker === counterTargetId)
+    ? counterTargetId
+    : pending.attacker;
+  if (draft.autoTargetId !== targetId || draft.autoUnitId !== unit.id) {
+    draft.autoIds = Rules.firePlan(game,unit,getUnit(targetId),{
+      counter:true,combatMode:"melee",
+    }).weapons.map(w=>w.id);
+    draft.autoTargetId = targetId; draft.autoUnitId = unit.id;
   }
+  draft.ids = draft.autoIds;
+  draft.entries = draft.ids.map((weaponId) => ({ weaponId, targetId }));
   return draft;
+}
+function counterMembers() {
+  const root = getUnit(pending.target),
+    state = counterDraft(root);
+  return state.memberId ? [getUnit(state.memberId)] : Rules.squadMembers(game, root);
+}
+function counterChoices() {
+  const root = getUnit(pending.target),
+    state = counterDraft(root);
+  return Rules.squadMembers(game, root).map((unit) => ({
+    unitId: unit.id,
+    response: state.memberResponses[unit.id]?.response ?? state.groupResponse,
+    counterTargetId: state.memberResponses[unit.id]?.counterTargetId ?? state.groupTargetId,
+  }));
+}
+function selectCounterMember(id) {
+  if (Net.awaiting || (Net.active && !Net.canControl(getUnit(pending.target)))) return;
+  const state = counterDraft(getUnit(pending.target));
+  if (id && !Rules.squadMembers(game, getUnit(pending.target)).some((unit) => unit.id === id))
+    return;
+  state.memberId = id;
+  response = state.memberResponses[id]?.response ?? state.groupResponse;
+  counterTargetId = state.memberResponses[id]?.counterTargetId ?? state.groupTargetId;
+  renderReaction();
+  update();
+}
+function saveCounterChoice() {
+  const state = counterDraft(getUnit(pending.target));
+  if (state.memberId) state.memberResponses[state.memberId] = { response, counterTargetId };
+  else {
+    state.groupResponse = response;
+    state.groupTargetId = counterTargetId;
+    state.memberResponses = {};
+  }
 }
 function counterWeapons(unit) {
   return counterDraft(unit)
@@ -2444,10 +2606,10 @@ function counterWeapons(unit) {
     .map((entry) => getWeapon(unit, entry.weaponId));
 }
 function counterOrders(unit) {
-  return counterDraft(unit).entries.map((entry) => ({
-    targetId: entry.targetId,
-    weaponIds: [entry.weaponId],
-  }));
+  const entries = counterDraft(unit).entries;
+  return entries.length
+    ? [{ targetId: entries[0].targetId, weaponIds: entries.map((e) => e.weaponId) }]
+    : [];
 }
 function renderCounterSummary(panel, unit) {
   panel.replaceChildren();
@@ -2485,25 +2647,32 @@ function renderReaction() {
       options: pending.counterOptions,
     },
   ];
-  const b = getUnit(pending.target);
+  const scope = counterMembers(),
+    b = scope[0];
   const available = (entry) =>
-    Rules.modelOf(b).weapons.filter(
-      (weapon) =>
-        Rules.canCounter(game, b, getUnit(entry.attacker), weapon) &&
-        (!entry.options || entry.options.includes(weapon.id)),
+    scope.flatMap((member) =>
+      Rules.firePlan(game,member,getUnit(entry.attacker),{
+        counter:true,combatMode:"melee",
+      }).weapons,
     );
   const legalTargets = legalCounterTargets();
-  if (!targets.some((entry) => entry.attacker === counterTargetId))
-    counterTargetId = targets[0].attacker;
+  const targetOptions = [];
+  for (const entry of Rules.counterTargetEntries(game, pending)) {
+    const unit = getUnit(entry.attacker);
+    const members = Rules.squadMembers(game, unit);
+    if (!targetOptions.some((other) => members.some((member) => member.id === other.attacker)))
+      targetOptions.push(entry);
+  }
+  if (!targetOptions.some((entry) => entry.attacker === counterTargetId))
+    counterTargetId = legalTargets[0]?.attacker || targets[0].attacker;
   const selectedTarget = targets.find((entry) => entry.attacker === counterTargetId) || targets[0];
   const incoming = response === "counter" ? selectedTarget : targets[0];
   const a = getUnit(incoming.attacker),
     w = Rules.eventWeapon(a, incoming);
-  const selectedEnemy = getUnit(selectedTarget.attacker);
   byId("counterTargetWrap").hidden = response !== "counter";
   const select = byId("counterTarget");
   select.replaceChildren(
-    ...targets.map((entry) => {
+    ...targetOptions.map((entry) => {
       const unit = getUnit(entry.attacker),
         owner = UnitIdentity.owner(unit);
       const option = new Option(
@@ -2561,7 +2730,7 @@ function renderReaction() {
       const card = element(
         "button",
         "incoming-entry" +
-          (response === "counter" && entry.attacker === counterTargetId ? " selected" : ""),
+          (response === "counter" && Rules.squadMembers(game, unit).some((member) => member.id === counterTargetId) ? " selected" : ""),
       );
       card.type = "button";
       card.dataset.unitId = unit.id;
@@ -2580,138 +2749,47 @@ function renderReaction() {
     }),
   );
   incomingList.scrollTop = previousScroll;
-  byId("defenderInfo").replaceChildren(fighter(b));
+  byId("defenderInfo").replaceChildren(
+    element(
+      "strong",
+      "",
+      scope.length > 1 ? I18n.text("全队") + ` · ${scope.length}` : unitName(b),
+    ),
+  );
   for (const [id, value] of [
     ["responseCounter", "counter"],
     ["responseDefend", "defend"],
     ["responseEvade", "evade"],
   ])
     byId(id).classList.toggle("active", response === value);
-  byId("responseCounter").disabled = !targets.some((entry) => available(entry).length);
-  const draft = counterDraft(b),
-    queue = counterWeapons(b),
-    allQueue = draft.entries.map((entry) => getWeapon(b, entry.weaponId));
-  const spentAP = allQueue.reduce((sum, w) => sum + Rules.actionCost(w), 0),
-    spentEN = allQueue.reduce((sum, w) => sum + Rules.weaponStats(w, b).en, 0);
-  byId("counterActionPoints").textContent =
-    `反击行动点 ${Rules.counterActionBudget(b) - spentAP}/${Rules.counterActionBudget(b)} · EN ${spentEN}/${b.en}`;
-  byId("counterList").replaceChildren();
-  if (response === "counter") {
-    const planned = element("div", "counter-queue");
-    planned.id = "counterQueue";
-    planned.append(
-      element("div", "section-title", "反击武器序列"),
-      element("p", "helper", "点击武器追加反击，可重复加入。"),
-    );
-    draft.entries.forEach((entry, index) => {
-      const row = element("div", "attack-plan-line");
-      const enemy = getUnit(entry.targetId);
-      row.append(
-        element("span", "weapon-plan-index", String(index + 1)),
-        element("span", "attack-plan-weapon", getWeapon(b, entry.weaponId)?.name || entry.weaponId),
-        element("span", "attack-plan-arrow", "→"),
-        element("span", "attack-plan-target", enemy ? unitName(enemy) : I18n.text("目标已不可见")),
-      );
-      planned.append(row);
-    });
-    const clear = element("button", "", "清空计划");
-    clear.id = "clearCounterQueue";
-    clear.disabled = !!Net.awaiting || !allQueue.length;
-    clear.onclick = () => {
-      draft.entries = [];
-      draft.ids = [];
-      renderReaction();
-    };
-    const change = element("button", "", "更换目标");
-    change.id = "changeCounterTarget";
-    change.disabled =
-      !!Net.awaiting ||
-      !legalTargets.some((entry) => {
-        const enemy = getUnit(entry.attacker);
-        return available(entry).some((weapon) => {
-          try {
-            Rules.counterPlan(game, b, [
-              ...counterOrders(b),
-              { targetId: enemy.id, weaponIds: [weapon.id] },
-            ]);
-            return true;
-          } catch {
-            return false;
-          }
-        });
-      });
-    change.onclick = () => {
-      draft.pickingTarget = true;
-      update();
-    };
-    planned.append(clear, change);
-    if (!allQueue.length) planned.append(element("p", "helper", "尚未添加武器"));
-    byId("counterList").append(planned, element("div", "section-title", "可用武器"));
-    for (const cw of Rules.modelOf(b).weapons) {
-      let button = element("button", "weapon" + (cw.id === counterId ? " active" : ""));
-      const candidate = available(selectedTarget).some((w) => w.id === cw.id)
-        ? selectedTarget
-        : null;
-      const enemy = candidate && getUnit(candidate.attacker);
-      button.innerHTML = htmlWeapon(cw, b, enemy || selectedEnemy, "counter", true);
-      button.dataset.addCounterWeapon = cw.id;
-      button.disabled = !!Net.awaiting || !candidate;
-      if (!button.disabled) {
-        try {
-          Rules.counterPlan(game, b, [
-            ...counterOrders(b),
-            { targetId: enemy.id, weaponIds: [cw.id] },
-          ]);
-        } catch {
-          button.disabled = true;
-        }
-      }
-      button.setAttribute("aria-label", "反击武器 " + cw.name);
-      button.onclick = () => {
-        GameAudio.play("selectWeaponSound");
-        counterId = cw.id;
-        counterTargetId = candidate.attacker;
-        draft.entries.push({ weaponId: cw.id, targetId: candidate.attacker });
-        draft.ids = counterWeapons(b).map((weapon) => weapon.id);
-        renderReaction();
-      };
-      byId("counterList").append(
-        WeaponInfo.card(cw, button, {
-          unit: b,
-          target: enemy || selectedEnemy,
-          response: "counter",
-          isCounter: true,
-        }),
-      );
-    }
-  }
-  const forecasts =
-    response === "counter"
-      ? draft.entries.map((entry) =>
-          attackForecast(b, getUnit(entry.targetId), getWeapon(b, entry.weaponId), "counter", true),
-        )
-      : [];
-  const counter = forecasts.length
-    ? {
-        damage: forecasts.reduce((sum, item) => sum + item.damage, 0),
-        hit: forecasts.reduce((sum, item) => sum + item.hit, 0) / forecasts.length,
-      }
-    : null;
-  byId("incomingEstimate").replaceChildren(
-    element("span", "", "来袭单位"),
-    document.createTextNode(" " + targets.length),
+  byId("responseCounter").disabled = !targetOptions.some(
+    (entry) => !entry.noCounter && available(entry).length,
   );
-  byId("estimate").innerHTML =
-    `<span>${counter ? `反击：命中 <strong>${formatNumber(Math.round(counter.hit * 10) / 10)}%</strong><br>命中后约 <strong class="blue">${formatNumber(counter.damage)}</strong> 伤害` : "本次不进行反击"}</span>`;
-  let validQueue = true;
-  if (response === "counter") {
-    try {
-      Rules.counterPlan(game, b, counterOrders(b));
-    } catch {
-      validQueue = false;
-    }
+  const choices = counterChoices();
+  byId("counterActionPoints").textContent = I18n.text("按类型轮数自动使用可用武器，不消耗AP；射击结束后进行格斗。");
+  byId("counterList").replaceChildren();
+  for (const member of scope) {
+    const choice = choices.find((entry) => entry.unitId === member.id),
+      enemy = getUnit(choice.counterTargetId),
+      queue =
+        choice.response === "counter" ? Rules.firePlan(game, member, enemy, {
+          counter: true, combatMode: "melee",
+        }).weapons : [];
+    AttackControls.memberCard(byId("counterList"), member, enemy, queue, { isCounter: true,
+      emptyMessage: choice.response === "counter" ? "无可用武器" : "本次不进行反击",
+
+    });
+    const label =
+      choice.response === "counter" ? "反击" : choice.response === "defend" ? "防御" : "回避";
+    byId("counterList")
+      .lastElementChild.querySelector("header")
+      .append(element("small", "", I18n.text(label)));
   }
-  byId("confirmResponse").disabled = !!Net.awaiting || !validQueue;
+  byId("estimate").textContent = I18n.text(
+    response === "counter" ? "射击结束后格斗；仅对前来格斗的敌人回击。" : "本次不进行反击",
+  );
+  byId("incomingEstimate").textContent = I18n.text("来袭单位") + " " + targets.length;
+  byId("confirmResponse").disabled = !!Net.awaiting;
 }
 for (const [id, value] of [
   ["responseCounter", "counter"],
@@ -2720,6 +2798,7 @@ for (const [id, value] of [
 ])
   byId(id).onclick = () => {
     response = value;
+    saveCounterChoice();
     renderReaction();
   };
 // 地图、左侧列表、下拉框统一走同一条合法目标选择路径。
@@ -2727,12 +2806,18 @@ function legalCounterTargets() {
   if (phase !== "reaction" || !pending || response !== "counter") return [];
   const defender = getUnit(pending.target);
   if (!defender) return [];
-  const entries = pending.counterTargets || [
-    { attacker: pending.attacker, options: pending.counterOptions },
-  ];
+  const entries = Rules.counterTargetEntries(game, pending);
   return entries.filter((entry) => {
     const enemy = getUnit(entry.attacker);
-    return enemy && Rules.onMap(enemy) && enemy.team !== defender.team;
+    return (
+      !entry.noCounter &&
+      enemy &&
+      Rules.onMap(enemy) &&
+      enemy.team !== defender.team &&
+      counterMembers().some((member) => Rules.firePlan(game,member,enemy,{
+        counter:true,combatMode:"melee",
+      }).weapons.length)
+    );
   });
 }
 function selectCounterTarget(id) {
@@ -2740,7 +2825,10 @@ function selectCounterTarget(id) {
   if (Net.active && !Net.canControl(getUnit(pending.target))) return false;
   const defender = getUnit(pending.target),
     draft = counterDraft(defender);
-  counterTargetId = id;
+  const members = Rules.squadMembers(game, getUnit(id));
+  counterTargetId = Rules.counterTargetEntries(game, pending)
+    .find((entry) => members.some((member) => member.id === entry.attacker)).attacker;
+  saveCounterChoice();
   draft.ids = counterWeapons(defender).map((weapon) => weapon.id);
   counterId = draft.ids.at(-1) || null;
   draft.pickingTarget = false;
@@ -2753,75 +2841,94 @@ byId("counterTarget").onchange = () => selectCounterTarget(byId("counterTarget")
 byId("confirmResponse").onclick = () => commitAttack();
 // 确认应战：离线调用规则结算；联机等待服务端返回事件。
 function commitAttack() {
+  if (!pending || (!Net.active && phase !== "reaction")) return;
+  const squadResponses = counterChoices(),
+    state = counterDraft(getUnit(pending.target));
   if (Net.active) {
     Net.request("respond", {
-      response,
+      response: state.groupResponse,
       counterId,
-      counterIds: counterDraft(getUnit(pending.target)).ids,
-      counterTargetId,
-      counterOrders: response === "counter" ? counterOrders(getUnit(pending.target)) : undefined,
+      counterTargetId: state.groupTargetId,
+      squadResponses,
     });
     return;
   }
   if (phase !== "reaction" || !pending) return;
-  let a = getUnit(pending.attacker),
+  const a = getUnit(pending.attacker),
     b = getUnit(pending.target),
-    w = Rules.eventWeapon(a, pending),
-    before = Object.fromEntries(game.units.map((u) => [u.id, u.hp]));
-  let events;
+    room = { game, matchId: "local-preview" };
+  let sequence = 0;
+  const planner = createAttackPlanner(Rules, () => "local-" + ++sequence);
+  let battles;
   try {
-    if (pending.weapons?.length > 1) {
-      const room = { game, matchId: "local-preview" };
-      let seq = 0;
-      const planner = createAttackPlanner(Rules, () => "local-" + ++seq);
-      planner.reset(room);
-      planner.plan(
+    planner.reset(room);
+    planner.plan(
+      room,
+      a,
+      b,
+      pending.offensiveSkill ? [getWeapon(a,pending.weapon)] : null,
+      Rules.ownerOf(a),
+      pending.combatMode || squadCombatMode,
+      pending.single === true,
+    );
+    const requests = planner.prepare(room);
+    while (room.reactions.length) {
+      const request = room.reactions[0];
+      planner.choose(
         room,
-        a,
-        { ...b, aimCell: pending.aimCell },
-        pending.weapons.map((id) => getWeapon(a, id)),
-        Rules.ownerOf(a),
+        request.id,
+        state.groupResponse,
+        [],
+        state.groupTargetId,
+        squadResponses,
       );
-      const [request] = planner.prepare(room);
-      planner.choose(room, request.id, response, counterDraft(b).ids, a.id);
-      events = planner.resolve(room).flatMap((battle) => battle.events);
-    } else events = Rules.fight(game, a, b, w, response, counterDraft(b).ids);
-  } catch (e) {
-    note(e.message);
+    }
+    battles = planner.resolve(room);
+  } catch (error) {
+    note(error.message);
     return;
   }
   byId("reaction").hidden = true;
-  phase = "battle";
-  selected = a.id;
+  selected = null;
   mode = "select";
   weaponId = null;
+  if (!battles.length) {
+    pending = null;
+    phase = "idle";
+    update();
+    return;
+  }
+  phase = "battle";
+  const actors = battles.flatMap((battle) => battle.actors);
   battleView = {
     a: a.id,
     b: b.id,
-    events,
+    actors,
+    battles,
+    events: battles.flatMap((b) => b.events),
     index: 0,
     start: performance.now(),
-    displayHp: before,
+    displayHp: Object.fromEntries(actors.map((u) => [u.id, u.hp])),
     completed: false,
   };
-  setNamedText(byId("battleTitle"), unitName(a) + " vs " + unitName(b));
-  BattleWindow.show(battleView);
-  byId("continueBattle").disabled = true;
-  byId("skipBattle").disabled = false;
-  byId("battleSummary").textContent = "";
+  MapCombat.reset();
+  MapCombat.seed(battles);
+  MapCombat.begin(battleView);
   update();
 }
+
 function battleEventDuration() {
   const event = battleView.events[Math.min(battleView.index, battleView.events.length - 1)];
   return (
-    BattleScene.duration(
+    (BattleScene.duration(
       event,
       battleUnit(battleView.a),
       battleUnit(battleView.b),
       byId("battleCanvas"),
     ) *
-    1000 *
-    (byId("quick").checked ? 0.35 : 1) / MovementTiming.presentationSpeed
+      1000 *
+      (byId("quick").checked ? 0.35 : 1)) /
+    MovementTiming.presentationSpeed
   );
 }
 function logEvent(event) {
@@ -2972,7 +3079,7 @@ byId("continueBattle").onclick = () => {
 function finishBattle() {
   WeaponAudio.releaseBattle();
   if (!battleView?.completed) return;
-  MapEffects.capture(battleView);
+  if (!battleView.mapBattle) MapEffects.capture(battleView);
   if (Net.active) {
     CombatPlayback.finish();
     return;
@@ -3040,7 +3147,8 @@ function showVictory() {
     return;
   }
   phase = "victory";
-  byId("victoryTitle").textContent = teamName(game.winner) + "胜利";
+  byId("victoryTitle").textContent =
+    game.winner === -1 ? I18n.text("双方全灭，平局") : teamName(game.winner) + "胜利";
   byId("victoryNote").textContent =
     `第${game.round}回合，全歼敌方小队。存活单位 ${game.units.filter((u) => u.team === game.winner && u.hp > 0).length} 台。`;
   byId("victory").hidden = false;
@@ -3082,7 +3190,9 @@ byId("cancelLeave").onclick = () => {
   byId("leaveConfirm").close();
   byId("leaveConfirm").hidden = true;
 };
-byId("leaveConfirm").addEventListener("cancel", () => { byId("leaveConfirm").hidden = true; });
+byId("leaveConfirm").addEventListener("cancel", () => {
+  byId("leaveConfirm").hidden = true;
+});
 byId("confirmLeave").onclick = openMenu;
 byId("helpBtn").onclick = () => {
   byId("help").hidden = false;

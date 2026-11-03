@@ -153,7 +153,7 @@
   },
   "stats": {
     "hp": 15000,
-    "en": 300,
+    "en": 600,
     "move": 8,
     "mobility": 140,
     "cost": 200,
@@ -264,7 +264,7 @@
     "accuracy": 125,
     "unitLevel": 750,
     "enBeforeReduction": 600,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "tacticalMoveBeforeBonus": 9,
     "adaptability": {
       "ground": 10,

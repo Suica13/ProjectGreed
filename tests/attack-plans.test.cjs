@@ -1,285 +1,137 @@
 const test = require("node:test"),
   assert = require("node:assert/strict");
-const G = require("../shared/rules.js"),
-  { createAttackPlanner } = require("../shared/attack-plans.js");
+const G = require("../shared/rules");
+const { createAttackPlanner } = require("../shared/attack-plans");
 function fixture() {
-  const entry = { unitId: "RGM_79", kitId: "machine_gun" };
-  const game = G.create(false, 1, [
-    [entry, entry],
-    [entry, entry],
-  ]);
+  const e = { unitId: "RGM_79", kitId: "machine_gun" },
+    game = G.create(
+      false,
+      1,
+      [
+        [e, e],
+        [e, e],
+      ],
+      false,
+      { fogMode: "disabled" },
+    );
+  game.tiles.forEach((row) => row.fill("plain"));
   game.units.forEach((u, i) =>
-    Object.assign(u, { x: i < 2 ? 2 : 4, y: (i % 2) + 3, hp: 100000, shield: 0 }),
+    Object.assign(u, { x: i < 2 ? 5 : 6, y: 5 + (i % 2), hp: 100000, en: 10000, shield: 0 }),
   );
-  for (const u of game.units) game.tiles[u.y][u.x] = "plain";
-  let sequence = 0;
-  const planner = createAttackPlanner(G, () => String(++sequence));
-  const room = { game, matchId: "match" };
+  let n = 0;
+  const planner = createAttackPlanner(G, () => String(++n)),
+    room = { game, matchId: "planner" };
   planner.reset(room);
   return {
-    room,
     planner,
+    room,
     a: game.units[0],
     ally: game.units[1],
     b: game.units[2],
     other: game.units[3],
-    weapon: G.models[game.units[0].model].weapons[0],
   };
 }
-test("attack planning reserves actions without spending energy, drawing randomness or dealing damage; cancellation is reversible", () => {
-  const { room, planner, a, b, weapon } = fixture(),
-    before = [a.en, b.hp, room.game.seed];
-  planner.plan(room, a, b, weapon, 0);
-  assert.deepEqual([a.en, b.hp, room.game.seed], before);
-  assert.equal(a.acted, true);
-  assert.equal(room.pending, null);
-  planner.plan(room, a, b, weapon, 0);
+test("planning is reversible and changes neither RNG, HP, EN nor AP", () => {
+  const { room, planner, a, b } = fixture(),
+    before = [room.game.seed, a.en, b.hp, a.actionPoints];
+  planner.plan(room, a, b, null, 0);
+  planner.plan(room, a, b, null, 0);
   assert.equal(room.plans.length, 1);
+  assert.deepEqual([room.game.seed, a.en, b.hp, a.actionPoints], before);
   planner.cancel(room, a);
   assert.equal(a.acted, false);
   assert.equal(a.plan, undefined);
   assert.equal(room.plans.length, 0);
 });
-test("responses execute in planned order, independently of local playback, and reject duplicate or stale choices", () => {
-  const { room, planner, a, ally, b, other, weapon } = fixture();
-  planner.plan(room, a, b, weapon, 0);
-  planner.plan(room, ally, other, weapon, 0);
-  const first = planner.next(room);
-  assert.equal(first.attacker, a.id);
-  assert.throws(() => planner.respond(room, "stale", "defend"));
-  assert.equal(room.combats.length, 0);
-  const battle = planner.respond(room, first.id, "defend");
-  assert.ok(battle.events.length);
-  assert.equal(a.en, G.modelOf(a).en - weapon.en);
-  assert.equal(room.combats.length, 1);
-  assert.throws(() => planner.respond(room, first.id, "defend"));
-  const second = planner.next(room);
-  assert.equal(second.attacker, ally.id);
-  assert.notEqual(second.id, first.id);
-  planner.respond(room, second.id, "evade");
-  assert.equal(room.combats.length, 2);
-  assert.equal(planner.next(room), null);
-  assert.equal(room.game.team, 0, "only the room engine advances teams");
-});
-test("dead or invalid targets are skipped without charging resources or substituting another target", () => {
-  const { room, planner, a, ally, b, other, weapon } = fixture();
-  planner.plan(room, a, b, weapon, 0);
-  planner.plan(room, ally, other, weapon, 0);
-  b.hp = 0;
-  const next = planner.next(room);
-  assert.equal(next.attacker, ally.id);
-  assert.equal(a.en, G.modelOf(a).en);
-  assert.equal(a.plan, undefined);
-  other.x = 20;
-  assert.throws(() => planner.respond(room, next.id, "defend"));
-  assert.equal(ally.en, G.modelOf(ally).en);
-  assert.equal(ally.acted, true);
-});
-
-test("canceling a plan restores the option to undo a move until another unit moves", () => {
-  const { room, planner, a, b, ally, weapon } = fixture();
-  G.move(room.game, a, 2, 2);
-  planner.plan(room, a, b, weapon, 0);
-  planner.cancel(room, a);
-  assert.equal(G.canUndo(room.game, a), true);
-  G.move(room.game, ally, 1, 4);
-  assert.equal(G.canUndo(room.game, a), false);
-});
-
-test("one response covers focused fire and explicitly selects which attacker is countered", () => {
-  const { room, planner, a, ally, b, other, weapon } = fixture();
-  planner.plan(room, a, b, weapon, 0);
-  planner.plan(room, ally, b, weapon, 0);
-  const seed = room.game.seed,
-    pending = planner.next(room);
-  assert.equal(pending.attacks.length, 2);
-  assert.throws(() => planner.resolve(room), /未完成/);
-  assert.throws(() => planner.choose(room, pending.id, "counter", weapon.id, other.id), /反击目标/);
-  planner.choose(room, pending.id, "counter", weapon.id, ally.id);
-  assert.equal(room.combats.length, 0);
-  assert.equal(a.en, G.modelOf(a).en);
-  assert.equal(b.en, G.modelOf(b).en);
-  assert.equal(b.hp, 100000);
-  assert.equal(room.game.seed, seed);
-  assert.equal(planner.next(room), null);
-  const battles = planner.resolve(room);
+test("responses are collected without damage and reject stale or duplicate reaction IDs", () => {
+  const { room, planner, a, ally, b, other } = fixture();
+  planner.plan(room, a, b, null, 0);
+  planner.plan(room, ally, other, null, 0);
+  const requests = planner.prepare(room),
+    before = room.game.units.map((u) => u.hp);
+  assert.equal(requests.length, 2);
+  assert.throws(() => planner.choose(room, "stale", "defend"));
+  planner.choose(room, requests[0].id, "defend");
+  assert.throws(() => planner.resolve(room));
   assert.deepEqual(
-    battles.map((b) => b.a),
-    [a.id, ally.id, b.id],
+    room.game.units.map((u) => u.hp),
+    before,
   );
-  assert.equal(battles[0].events.length, 1);
-  assert.equal(battles[1].events.length, 1);
-  assert.equal(battles[2].combatStage, "counter");
-  assert.equal(battles[2].events[0].from, b.id);
-  assert.equal(battles[2].events[0].to, ally.id);
-  assert.equal(b.counterCount, 1);
+  assert.throws(() => planner.choose(room, requests[0].id, "defend"));
+  planner.choose(room, requests[1].id, "evade");
+  assert(planner.resolve(room).length > 0);
+  assert.equal(room.game.team, 0, "only the room engine advances turns");
 });
-
-test("a target destroyed by an earlier result cancels later planned attacks without charging their EN", () => {
-  const { room, planner, a, ally, b, weapon } = fixture();
-  b.hp = 1;
-  room.game.seed = 0;
-  planner.plan(room, a, b, weapon, 0);
-  planner.plan(room, ally, b, weapon, 0);
-  planner.choose(room, planner.next(room).id, "defend");
-  planner.next(room);
-  const battles = planner.resolve(room);
-  assert.equal(b.hp, 0);
-  assert.equal(battles.length, 1);
-  assert.equal(ally.en, G.modelOf(ally).en);
+test("dead or out-of-range targets are skipped without resource charges", () => {
+  const { room, planner, a, ally, b, other } = fixture();
+  planner.plan(room, a, b, null, 0);
+  planner.plan(room, ally, other, null, 0);
+  const energy = a.en;
+  b.hp = 0;
+  other.x = 30;
+  assert.equal(planner.prepare(room).length, 0);
+  assert.equal(planner.resolve(room).length, 0);
+  assert.equal(a.en, energy);
+  assert.equal(a.plan, undefined);
   assert.equal(ally.plan, undefined);
 });
-
+test("canceling a plan restores move undo until another unit moves", () => {
+  const { room, planner, a, ally, b } = fixture();
+  G.move(room.game, a, 5, 4);
+  planner.plan(room, a, b, null, 0);
+  planner.cancel(room, a);
+  assert.equal(G.canUndo(room.game, a), true);
+  G.move(room.game, ally, 4, 6);
+  assert.equal(G.canUndo(room.game, a), false);
+});
+test("focused fire has one response and counters only attacking squads", () => {
+  const { room, planner, a, ally, b, other } = fixture();
+  planner.plan(room, a, b, null, 0);
+  planner.plan(room, ally, b, null, 0);
+  const [request] = planner.prepare(room);
+  assert.equal(request.attacks.length, 2);
+  assert.throws(() => planner.choose(room, request.id, "counter", [], other.id));
+  planner.choose(room, request.id, "counter", [], ally.id);
+  const battles = planner.resolve(room),
+    counters = battles.filter((b) => b.combatStage === "counter");
+  assert(counters.length > 0);
+  assert(counters.every((battle) => [a.id, ally.id].includes(battle.events[0].to)));
+  assert.equal(b.counterCount, 1);
+});
 for (const response of ["defend", "evade"])
-  test(`focused fire uses one ${response} choice for every incoming attack`, () => {
-    const { room, planner, a, ally, b, weapon } = fixture();
-    planner.plan(room, a, b, weapon, 0);
-    planner.plan(room, ally, b, weapon, 0);
-    const pending = planner.next(room);
-    assert.equal(pending.attacks.length, 2);
-    planner.choose(room, pending.id, response);
-    assert.equal(planner.next(room), null);
-    const battles = planner.resolve(room);
-    assert.equal(battles.length, 2);
-    assert.deepEqual(
-      battles.map((b) => b.events.length),
-      [1, 1],
-    );
-    assert.deepEqual(
-      battles.map((b) => b.events[0].response),
-      [response, response],
+  test("focused fire shares " + response + " across all attackers", () => {
+    const { room, planner, a, ally, b } = fixture();
+    planner.plan(room, a, b, null, 0);
+    planner.plan(room, ally, b, null, 0);
+    const [request] = planner.prepare(room);
+    planner.choose(room, request.id, response);
+    assert(
+      planner.resolve(room).every((battle) => battle.events.every((e) => e.response === response)),
     );
     assert.equal(b.counterCount || 0, 0);
   });
-
-test("planned weapons persist in snapshots and cancellation; built-in weapons preserve the held weapon", () => {
-  const { room, planner, a, b, weapon } = fixture();
-  b.x = a.x + 1;
-  b.y = a.y;
-  const melee = G.modelOf(a).weapons.find((w) => w.type === "melee"),
-    builtIn = G.modelOf(a).weapons.find((w) => w.changeHeldWeapon === false);
-  assert.ok(melee);
-  assert.ok(builtIn);
-  planner.plan(room, a, b, melee, 0);
-  assert.equal(a.heldWeapon, melee.id);
-  assert.equal(JSON.parse(JSON.stringify(room.game)).units[0].heldWeapon, melee.id);
-  b.x = a.x + builtIn.min;
-  planner.plan(room, a, b, builtIn, 0);
-  assert.equal(a.heldWeapon, melee.id, "head vulcans do not replace the held weapon");
-  planner.cancel(room, a);
-  assert.equal(
-    a.heldWeapon,
-    melee.id,
-    "canceling an attack does not reset the displayed equipment",
-  );
-  b.x = a.x + weapon.min;
-  planner.plan(room, a, b, weapon, 0);
-  assert.equal(a.heldWeapon, weapon.id, "a new handheld weapon replaces the previous display");
-});
-
-test("a defender killed by the primary volley never emits a counter or spends counter energy", () => {
-  const { room, planner, a, b, weapon } = fixture();
-  b.hp = 1;
-  b.shield = 0;
-  room.game.seed = 1;
-  const energy = b.en;
-  planner.plan(room, a, b, weapon, 0);
-  const pending = planner.next(room);
-  planner.choose(room, pending.id, "counter", weapon.id, a.id);
-  const battles = planner.resolve(room);
-  assert.equal(b.hp, 0);
-  assert.equal(b.en, energy);
-  assert.equal(b.counterCount, 0);
-  assert.equal(battles.length, 1);
-  assert.equal(battles[0].events.length, 1);
-  assert.ok(battles[0].events.every((event) => event.from !== b.id));
-});
-
-test("multi-target drafts reserve shared AP atomically and refunds target replacement correctly", () => {
-  const { room, planner, a, b, other } = fixture();
-  other.x = 3;
-  other.y = 3;
-  const weapon = G.modelOf(a).weapons.find(
-    (w) =>
-      G.actionCost(w) === 1 &&
-      G.canAttack(room.game, a, b, w) &&
-      G.canAttack(room.game, a, other, w),
-  );
-  assert(weapon);
-  const initial = structuredClone(a),
-    seed = room.game.seed;
-  assert.throws(() =>
-    planner.planBatch(
-      room,
-      a,
-      [
-        { targetId: b.id, weaponIds: [weapon.id] },
-        { targetId: other.id, weaponIds: Array(6).fill(weapon.id) },
-      ],
-      0,
-    ),
-  );
-  assert.deepEqual(a, initial);
+test("multi-target submissions are rejected atomically and weapon lists cannot choose the loadout", () => {
+  const { room, planner, a, b, other } = fixture(),
+    before = structuredClone(a);
+  assert.throws(() => planner.planBatch(room, a, [{ targetId: b.id }, { targetId: other.id }], 0));
+  assert.deepEqual(a, before);
   assert.equal(room.plans.length, 0);
-  planner.planBatch(
-    room,
-    a,
-    [
-      { targetId: b.id, weaponIds: [weapon.id] },
-      { targetId: other.id, weaponIds: [weapon.id] },
-    ],
-    0,
+  planner.planBatch(room, a, [{ targetId: b.id, weaponIds: ["client-forged-weapon"] }], 0);
+  assert.deepEqual(
+    room.plans[0].weapons,
+    G.automaticQueue(room.game, a, b).map((w) => w.id),
   );
-  assert.equal(a.actionPoints, G.actionBudget(a) - 2);
-  assert.equal(G.attackOrders(a).length, 2);
-  assert.equal(a.en, initial.en);
-  assert.equal(room.game.seed, seed);
-  planner.planBatch(room, a, [{ targetId: b.id, weaponIds: [weapon.id, weapon.id] }], 0);
-  assert.equal(a.actionPoints, G.actionBudget(a) - 3);
-  planner.cancel(room, a, other.id);
-  assert.equal(a.actionPoints, G.actionBudget(a) - 2);
-  planner.cancel(room, a);
-  assert.equal(a.actionPoints, G.actionBudget(a));
 });
-
-test("multi-target counters preserve targets and consume one shared reaction after all offense", () => {
-  const { room, planner, a, ally, b, other, weapon } = fixture();
-  ally.x = 3;
-  ally.y = 3;
-  const counter = G.modelOf(b).weapons.find(
-    (w) =>
-      G.actionCost(w) === 1 &&
-      G.canCounter(room.game, b, a, w) &&
-      G.canCounter(room.game, b, ally, w),
-  );
-  assert(counter);
-  planner.plan(room, a, b, weapon, 0);
-  planner.plan(room, ally, b, counter, 0);
-  const [request] = planner.prepare(room),
-    energy = b.en;
+test("multi-target counters are rejected before modifying reaction choices", () => {
+  const { room, planner, a, ally, b } = fixture();
+  planner.plan(room, a, b, null, 0);
+  planner.plan(room, ally, b, null, 0);
+  const [request] = planner.prepare(room);
   assert.throws(() =>
-    planner.chooseBatch(room, request.id, [{ targetId: other.id, weaponIds: [counter.id] }]),
+    planner.chooseBatch(room, request.id, [{ targetId: a.id }, { targetId: ally.id }]),
   );
   assert.equal(room.responses.length, 0);
-  assert.throws(() =>
-    planner.chooseBatch(room, request.id, [
-      { targetId: a.id, weaponIds: Array(5).fill(counter.id) },
-    ]),
-  );
-  const orders = [a.id, ally.id, a.id].map((targetId) => ({ targetId, weaponIds: [counter.id] }));
-  planner.chooseBatch(room, request.id, orders);
-  assert.equal(b.en, energy);
-  assert.throws(() => planner.chooseBatch(room, request.id, orders));
-  const battles = planner.resolve(room),
-    events = battles.flatMap((b) => b.events);
-  assert.deepEqual(
-    events.map((e) => e.from),
-    [a.id, ally.id, b.id, b.id, b.id],
-  );
-  assert.deepEqual(
-    events.slice(2).map((e) => e.to),
-    [a.id, ally.id, a.id],
-  );
-  assert.equal(b.counterCount, 1);
-  assert.equal(b.en, energy - 3 * G.weaponStats(counter, b).en);
+  assert.equal(room.pending.id, request.id);
+  planner.chooseBatch(room, request.id, [{ targetId: a.id }]);
+  assert(planner.resolve(room).length);
 });

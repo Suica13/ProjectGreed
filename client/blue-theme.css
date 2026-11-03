@@ -2338,3 +2338,48 @@ body > #formationPilotPanel {
 .weapon-rule-grid dt, .weapon-rule-grid dd { margin:0; }
 .weapon-rule-grid dd { text-align:right; }
 .weapon-rule-body p { font-size:12px; line-height:1.5; margin:5px 0; }
+
+body.menu-shell-active #formationScreen #formationUnits .formation-row > .formation-row-actions {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+#formationUnits .formation-row-actions .formation-board-button { grid-column:1; grid-row:2; }
+#formationUnits .formation-row-actions .formation-pilot-button { grid-column:2; grid-row:2; }
+#formationUnits .formation-row-actions .formation-detail-button { grid-column:1; grid-row:1; }
+#formationUnits .formation-row-actions > button:last-child { grid-column:2; grid-row:1; }
+.formation-boarding-dialog { width:min(540px,92vw); max-height:85dvh; }
+.formation-boarding-options { display:grid; gap:8px; overflow:auto; max-height:60dvh; }
+.formation-boarding-option { display:flex; align-items:center; gap:12px; text-align:left; }
+.formation-boarding-carrier { display:grid; gap:6px; min-width:0; }
+.formation-boarding-carrier-heading { display:flex; align-items:center; gap:10px; margin:6px 0 0; font-size:inherit; }
+.formation-boarding-carrier-heading img { flex-shrink:0; width:48px; height:48px; object-fit:contain; background:#303944; border:1px solid #687988; }
+.formation-boarding-carrier-heading span { min-width:0; overflow-wrap:anywhere; }
+.formation-boarding-carrier .formation-boarding-option { margin-left:28px; justify-content:space-between; flex-wrap:wrap; }
+.formation-boarding-option[aria-pressed="true"], .hangar-unit.is-selected { outline:2px solid #71caff; background:#263b50; }
+.formation-boarding-dialog footer { display:flex; justify-content:flex-end; gap:12px; margin-top:16px; }
+.hangar-unit > img[role="button"] { cursor:pointer; border:2px solid transparent; }
+.hangar-unit.is-selected > img { border-color:#71caff; }
+.hangar-launch-selection { display:flex; align-items:center; justify-content:space-between; gap:10px; margin:8px 0; }
+
+.fire-plan-controls { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+.fire-plan-controls > select { flex:1 1 140px; min-width:0; }
+.fire-plan-sequence { flex:1 0 100%; display:grid; gap:4px; }
+.fire-plan-step { display:flex; align-items:center; gap:4px; }
+.fire-plan-step > span { flex:1; min-width:0; overflow-wrap:anywhere; }
+.fire-plan-step > button { flex:0 0 auto; padding:4px 8px; min-height:28px; }
+
+/* Response information expands vertically; every stat stays in its own row. */
+#gameScene .hud-attack-member-heading > :not(img) {
+  grid-column:2; position:static; min-width:0; height:auto; line-height:1.5;
+}
+#gameScene .hud-attack-member-heading img { grid-column:1; grid-row:1 / span 4; align-self:start; }
+#gameScene .hud-attack-member-heading > span,
+#gameScene .hud-attack-member-heading > small { display:block; white-space:normal; overflow-wrap:anywhere; }
+#gameScene .hud-attack-member-weapons { clear:both; min-height:0; }
+#gameScene .hud-attack-member-weapons > .helper { position:static; margin:4px 0; height:auto; }
+
+/* One damage formula and one round count per attack/response weapon. */
+#gameScene .weapon-summary-compact { display:flex; flex-wrap:wrap; align-items:center; gap:4px 10px; }
+#gameScene .weapon-summary-compact .weapon-summary-heading { flex:1 1 100%; }
+#gameScene .weapon-summary-compact .weapon-damage-line,
+#gameScene .weapon-summary-compact .weapon-accuracy { display:flex; flex-wrap:wrap; align-items:center; gap:4px; margin:0; }
+#gameScene .weapon-summary-compact .weapon-attributes { flex:1 1 100%; }

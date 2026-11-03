@@ -608,7 +608,7 @@
   },
   "stats": {
     "hp": 94000,
-    "en": 675.0,
+    "en": 1350.0,
     "move": 8,
     "mobility": 180.0,
     "cost": 2125,
@@ -738,7 +738,7 @@
     "movementBeforeMobility": 8,
     "mobilityMoveTarget": 9,
     "enBeforeReduction": 1350.0,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "adaptability": {
       "ground": 100.0,
       "space": 100.0,
@@ -822,6 +822,28 @@
     "Common_Push_A": {
       "ref": "Common_Push_A__lv3",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Push_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Kick_White_R"
+              ],
+              "delay": 0.45
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Push_A"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
@@ -843,7 +865,10 @@
             "y": 0.0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "AEUG_FA_00100S_DoubleBeamCannon": {
       "ref": "AEUG_FA_00100S_DoubleBeamCannon__lv1",
@@ -1055,6 +1080,78 @@
     "EF_BeamSaber_Double_BBLDF_Yellow": {
       "ref": "EF_BeamSaber_Double_BBLDF_Yellow__lv3",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Melee_B",
+              "delay": 0
+            },
+            {
+              "weaponDisplayIndex": 1,
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_2_Yellow_R"
+              ],
+              "delay": 0.4
+            },
+            {
+              "animation": "Common_Melee_B_L",
+              "delay": 0.5
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [
+                "leftArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_2_Yellow_L"
+              ],
+              "delay": 0.4
+            },
+            {
+              "animation": "Common_Melee_Double_F",
+              "delay": 0.4
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_1_Yellow_R"
+              ],
+              "delay": 0.3
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [
+                "leftArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_1_Yellow_L"
+              ],
+              "delay": 0.0
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Melee_B"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_BBLDF_Yellow.gw",
@@ -1077,7 +1174,10 @@
           "leftArm",
           "rightArm"
         ]
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "Common_DoubleVulcan_MS_Beam_Blue": {
       "ref": "Common_DoubleVulcan_MS_Beam_Blue__lv3",

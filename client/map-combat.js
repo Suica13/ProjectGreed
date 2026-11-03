@@ -1,7 +1,9 @@
 /* 大地图交战演出：使用地图坐标和已裁定逐发结果，不修改权威战局。 */
 const MapCombat = (() => {
-  const restingPoses = new Map();
-  const dodgeStarts = new Map();
+  const restingPoses = new Map(),
+    meleeExchanges = new Map();
+  const dodgeTracks = new Map();
+  const formationOffsets = new Map();
   let dodgeClock = 0,
     dodgeLastNow = null;
   const visibleActors = new Set();
@@ -17,9 +19,11 @@ const MapCombat = (() => {
   const clone = (value) => JSON.parse(JSON.stringify(value));
   function reset() {
     displayed.clear();
+    meleeExchanges.clear();
     visibleActors.clear();
     restingPoses.clear();
-    dodgeStarts.clear();
+    dodgeTracks.clear();
+    formationOffsets.clear();
     dodgeClock = 0;
     dodgeLastNow = null;
     unitStartDelays.clear();
@@ -42,10 +46,27 @@ const MapCombat = (() => {
   function begin(view, random = Math.random) {
     frame = null;
     view.mapBattle = true;
+    // The authoritative snapshot already contains combat deaths. Keep the initial
+    // visible roster's slots until playback ends, rather than stacking dead members
+    // at slot zero or reflowing survivors midway through counterfire.
+    const roster = new Map(game.units.map((unit) => [unit.id, unit]));
+    for (const [id, unit] of displayed) roster.set(id, unit);
+    const visualGame = { ...game, units: [...roster.values()] };
+    formationOffsets.clear();
+    for (const unit of visualGame.units)
+      formationOffsets.set(unit.id, Rules.squadOffset(visualGame, unit));
+    meleeExchanges.clear();
+    for (const battle of view.battles || [])
+      if (battle.meleeExchange) {
+        const pair = battle.meleeExchange;
+        meleeExchanges.set(pair.id || pair.attacker + ":" + pair.defender, pair);
+      }
     const now = performance.now();
-    dodgeStarts.clear();
+    dodgeTracks.clear();
     dodgeClock = 0;
-    dodgeLastNow = now;
+    // Initial UI and asset preparation must never consume the opening volley.
+    // Establish the playback epoch only when a map frame can actually be shown.
+    dodgeLastNow = null;
     // 每台执行攻击或反击的单位独立抽取一次，本地随机数不使用战斗判定 seed。
     unitStartDelays.clear();
     for (const battle of view.battles || [])
@@ -78,7 +99,7 @@ const MapCombat = (() => {
     lanes = visualBattles.map((battle) => ({
       view: { ...battle, index: 0, displayHp: { ...battle.before }, start: now },
       delayElapsed: 0,
-      delayAt: now,
+      delayAt: null,
       started: false,
       frame: null,
       finished: [],
@@ -89,6 +110,7 @@ const MapCombat = (() => {
     const earlier = [];
     for (const lane of lanes)
       lane.view.events.forEach((event, index) => {
+        if (lane.view.crossfire) return;
         const queueDependencies = earlier.filter(
           (entry) =>
             entry.lane !== lane &&
@@ -146,6 +168,87 @@ const MapCombat = (() => {
     byId("mapCombatControls").hidden = false;
     // 演出沿用玩家当前的镜头位置与倍率。
   }
+  function formationOffset(unit, facing = null, members = null) {
+    return (
+      (battleView?.mapBattle && formationOffsets.get(unit.id)) ||
+      Rules.squadOffset(game, unit, facing, members)
+    );
+  }
+  function meleeAnchor(pair) {
+    const a = displayed.get(pair.attacker),
+      b = displayed.get(pair.defender);
+    if (!a || !b) return null;
+    const point = (u) => ({
+      x: (Rules.center(u).x + 0.5 + formationOffset(u).x) * Rules.mapCellPixels,
+      y:
+        (Rules.center(u).y + 0.5 + formationOffset(u).y + EnvironmentVisuals.pose(u, u).offset) *
+        Rules.mapCellPixels,
+    });
+    const origin = point(a),
+      target = point(b),
+      distance = Math.hypot(target.x - origin.x, target.y - origin.y);
+    const scale = (u) =>
+      ART.presentation.unitMapScale *
+      (BattleScene.settings().mapScale / (ART.presentation.mapCellScale || 1)) *
+      Rules.modelOf(u).presentation.mapScale *
+      formationOffset(u).scale;
+    const gap = Math.min(distance * 0.45, 20 * (scale(a) + scale(b))),
+      ratio = distance ? Math.max(0, 1 - gap / distance) : 0;
+    return {
+      origin,
+      target,
+      engaged: {
+        x: origin.x + (target.x - origin.x) * ratio,
+        y: origin.y + (target.y - origin.y) * ratio,
+      },
+      angle: (Math.atan2(target.x - origin.x, -(target.y - origin.y)) * 180) / Math.PI,
+    };
+  }
+  function meleePoses(result) {
+    for (const pair of meleeExchanges.values()) {
+      if (dodgeClock < pair.start) continue;
+      const anchor = meleeAnchor(pair);
+      if (!anchor) continue;
+      if (dodgeClock > pair.end) {
+        const pose = result.get(pair.attacker);
+        if (pose && health(pair.attacker) > 0)
+          result.set(pair.attacker, {
+            ...pose,
+            x: anchor.origin.x + (pose.dodge?.x || 0),
+            y: anchor.origin.y + (pose.dodge?.y || 0),
+          });
+        continue;
+      }
+      const dead = health(pair.attacker) <= 0,
+        approach = pair.approach || 0.35,
+        retreat = pair.retreat || 0.35;
+      let progress = dead
+        ? 1
+        : dodgeClock < pair.start + approach
+          ? (dodgeClock - pair.start) / approach
+          : dodgeClock < pair.end - retreat
+            ? 1
+            : Math.max(0, (pair.end - dodgeClock) / retreat);
+      progress = (1 - Math.cos(Math.PI * Math.max(0, Math.min(1, progress)))) / 2;
+      const pose = result.get(pair.attacker) || {},
+        moving = !dead && progress > 0 && progress < 1;
+      result.set(pair.attacker, {
+        ...pose,
+        x: anchor.origin.x + (anchor.engaged.x - anchor.origin.x) * progress,
+        y: anchor.origin.y + (anchor.engaged.y - anchor.origin.y) * progress + (pose.dodge?.y || 0),
+        angle: anchor.angle,
+        moving: moving || !!pose.moving,
+        ...(moving
+          ? {
+              clip: SpriteRenderer.movement(displayed.get(pair.attacker).model),
+              time: dodgeClock - pair.start,
+            }
+          : {}),
+        ...(dodgeClock >= pair.end && !dead ? { clip: null, moving: false } : {}),
+      });
+    }
+    return result;
+  }
   function setup(view, start = dodgeClock) {
     const event = { ...view.events[view.index] };
     const previousPoses = poses();
@@ -153,17 +256,29 @@ const MapCombat = (() => {
       const unit = displayed.get(id) || view.actors.find((unit) => unit.id === id);
       return {
         unit,
-        x: (Rules.center(unit).x + 0.5) * 64,
-        y: (Rules.center(unit).y + 0.5 + EnvironmentVisuals.pose(unit, unit).offset) * 64,
+        x: (Rules.center(unit).x + 0.5 + formationOffset(unit).x) * Rules.mapCellPixels,
+        y:
+          (Rules.center(unit).y +
+            0.5 +
+            formationOffset(unit).y +
+            EnvironmentVisuals.pose(unit, unit).offset) *
+          Rules.mapCellPixels,
         scale:
-          1.2 *
+          ART.presentation.unitMapScale *
           (BattleScene.settings().mapScale / (ART.presentation.mapCellScale || 1)) *
-          Rules.modelOf(unit).presentation.mapScale,
-        projectileForwardOffset: 0,
-        arenaWidth: Rules.mapWidth(game) * 64,
-        arenaHeight: Rules.mapHeight(game) * 64,
+          Rules.modelOf(unit).presentation.mapScale *
+          formationOffset(unit).scale,
+        arenaWidth: Rules.mapWidth(game) * Rules.mapCellPixels,
+        arenaHeight: Rules.mapHeight(game) * Rules.mapCellPixels,
       };
     });
+    if (event.meleeExchange) {
+      const anchor = meleeAnchor(event.meleeExchange);
+      const attacker = actors.find((actor) => actor.unit.id === event.meleeExchange.attacker);
+      if (anchor && attacker) Object.assign(attacker, anchor.engaged);
+      const defender = actors.find((actor) => actor.unit.id === event.meleeExchange.defender);
+      if (anchor && defender) Object.assign(defender, anchor.target);
+    }
     const [source, target] = actors;
     // Use the actual visible dodge position across weapon queues and counter delays.
     for (const [actor, field] of [
@@ -173,30 +288,36 @@ const MapCombat = (() => {
       const previous = previousPoses.get(actor.unit.id);
       if (previous)
         event[field] = Math.max(
-          -1,
-          Math.min(1, (previous.y - actor.y) / (ART.presentation.dodgeDistance * actor.scale)),
+          -1.35,
+          Math.min(1.35, (previous.y - actor.y) / (ART.presentation.dodgeDistance * actor.scale)),
         );
+      if (previous && field === "sourceDodgeSlot") event.sourceDodgeX = previous.x - actor.x;
     }
     const weapon = Rules.eventWeapon(source.unit, event);
     const impact =
       ["nuke", "blast"].includes(weapon.special?.type) && event.impactCell
-        ? { x: (event.impactCell.x + 0.5) * 64, y: (event.impactCell.y + 0.5) * 64 }
+        ? {
+            x: (event.impactCell.x + 0.5) * Rules.mapCellPixels,
+            y: (event.impactCell.y + 0.5) * Rules.mapCellPixels,
+          }
         : target;
     const aim = (Math.atan2(impact.x - source.x, -(impact.y - source.y)) * 180) / Math.PI;
-    source.angle =
-      Rules.modelOf(source.unit).ship || Rules.modelOf(source.unit).fixedWeaponFacing
-        ? source.unit.angle
-        : aim;
+    // Body facing uses authority's cell centers; squad offsets only affect visual aim.
+    Rules.faceTarget(source.unit, target.unit);
+    Rules.faceTarget(target.unit, source.unit);
+    source.angle = source.unit.angle;
     source.aimAngle = aim;
     source.unit.aimAngle = aim;
-    target.angle =
-      Rules.modelOf(target.unit).ship || Rules.modelOf(target.unit).fixedWeaponFacing
-        ? target.unit.angle
-        : aim + 180;
-    if (!dodgeStarts.has(event.to)) dodgeStarts.set(event.to, []);
+    target.angle = target.unit.angle;
+    if (!dodgeTracks.has(event.to))
+      dodgeTracks.set(event.to, {
+        moves: [],
+        initialSlot: event.targetDodgeSlot || 0,
+        base: { x: target.x, y: target.y, scale: target.scale },
+      });
     const plan = WeaponEffects.plan(weapon, source, target, event, {
       start,
-      starts: dodgeStarts.get(event.to),
+      track: dodgeTracks.get(event.to),
     });
     frame = { view, index: view.index, event, source, target, weapon, plan, time: 0 };
     byId("mapCombatStatus").textContent = event.effectsOnly
@@ -214,6 +335,8 @@ const MapCombat = (() => {
         time: 0,
         moving: false,
         hidden: pose.hidden,
+        heldWeapon: pose.heldWeapon,
+        weaponDisplayIndex: pose.weaponDisplayIndex,
       });
     const event = view.events[view.index],
       target = displayed.get(event.to),
@@ -228,15 +351,19 @@ const MapCombat = (() => {
       if (event.partsAfter) target.brokenParts = { ...event.partsAfter };
     }
     // EN 的显示以此次交战结束值为准；最终状态仍由服务端快照覆盖。
+    if (source && frame) {
+      const weapon = frame.weapon, finalDisplay = weapon.attack.displayStates?.at(-1)?.index;
+      if (weapon.changeHeldWeapon !== false) source.heldWeapon = event.heldWeapon ?? event.weapon;
+      if (finalDisplay !== undefined || weapon.changeHeldWeapon !== false)
+        source.weaponDisplayIndex = finalDisplay ?? weapon.displayIndex ?? 0;
+      const pose = restingPoses.get(source.id);
+      if (pose) Object.assign(pose, { heldWeapon: source.heldWeapon, weaponDisplayIndex: source.weaponDisplayIndex });
+    }
     if (source)
       source.en = Math.max(
         0,
         source.en - (event.energySpent ?? getWeapon(source, event.weapon).en),
       );
-    if (source && frame && !Rules.modelOf(source).ship && !Rules.modelOf(source).fixedWeaponFacing)
-      source.angle = frame.source.angle;
-    if (target && frame && !Rules.modelOf(target).ship && !Rules.modelOf(target).fixedWeaponFacing)
-      target.angle = frame.target.angle;
     view.displayHp[event.to] = event.after;
     view.index++;
     frame = null;
@@ -291,7 +418,11 @@ const MapCombat = (() => {
     const moving = plan.melee && ["approach", "return"].includes(stage);
     let sourcePose = {
       targetId: target.unit.id,
-      x: animation.x + (distance ? ((target.x - source.x) / distance) * reach : 0),
+      firing: true,
+      x:
+        animation.x +
+        (distance ? ((target.x - source.x) / distance) * reach : 0) -
+        (plan.sourceX || 0) * progress,
       y:
         animation.y +
         (distance ? ((target.y - source.y) / distance) * reach : 0) -
@@ -315,7 +446,7 @@ const MapCombat = (() => {
             plan.shots.some((shot) => shot.remoteIndex === path.index),
         )
         .flatMap((path) => path.unit.hideLayers || []),
-      weaponDisplayIndex: animation.weaponDisplayIndex,
+      weaponDisplayIndex: animation.weaponDisplayIndex ?? (weapon.changeHeldWeapon === false ? source.unit.weaponDisplayIndex : weapon.displayIndex),
       attacking: time >= plan.lead && time <= plan.lead + weapon.attack.duration / plan.actionSpeed,
     };
     if (plan.bomb)
@@ -361,7 +492,19 @@ const MapCombat = (() => {
   }
   // 同一波全体单位并行；全部攻击演完才反击，全部反击演完才进入下一波。
   function update(now) {
-    const dodgeRate = MovementTiming.combatRate(byId("quick").checked, !!window.ReplayPlayer?.active);
+    if (globalThis.BattleAssets?.loading) {
+      dodgeLastNow = null;
+      for (const lane of lanes) {
+        lane.delayAt = now;
+        if (lane.frame) lane.frame.lastNow = now;
+      }
+      if (frame) frame.lastNow = now;
+      return;
+    }
+    const dodgeRate = MovementTiming.combatRate(
+      byId("quick").checked,
+      !!window.ReplayPlayer?.active,
+    );
     if (battleView?.mapBattle && battleView.suspendedAt === undefined && pageView === "game")
       dodgeClock += (Math.max(0, now - (dodgeLastNow ?? now)) / 1000) * dodgeRate;
     dodgeLastNow = now;
@@ -378,17 +521,24 @@ const MapCombat = (() => {
         continue;
       }
       if (!lane.started) {
-        lane.delayElapsed += (Math.max(0, now - lane.delayAt) / 1000) * rate;
-        lane.delayAt = now;
-        const startDelay = unitStartDelays.get(lane.view.events[lane.view.index].from) || 0;
-        if (lane.delayElapsed < startDelay) continue;
-        lane.started = true;
-        lane.frame = setup(lane.view, dodgeClock - (lane.delayElapsed - startDelay));
-        // 保留跨越起播时刻的这一帧时间，低帧率下也不会把延迟额外拉长。
-        lane.frame.lastNow = now - ((lane.delayElapsed - startDelay) * 1000) / rate;
+        if (lane.view.crossfire) {
+          if (dodgeClock < lane.view.timelineStart) continue;
+          lane.started = true;
+          lane.frame = setup(lane.view, lane.view.timelineStart);
+        } else {
+          lane.delayElapsed += (Math.max(0, now - (lane.delayAt ?? now)) / 1000) * rate;
+          lane.delayAt = now;
+          const startDelay = unitStartDelays.get(lane.view.events[lane.view.index].from) || 0;
+          if (lane.delayElapsed < startDelay) continue;
+          lane.started = true;
+          lane.frame = setup(lane.view, dodgeClock - (lane.delayElapsed - startDelay));
+          // 保留跨越起播时刻的这一帧时间，低帧率下也不会把延迟额外拉长。
+          lane.frame.lastNow = now - ((lane.delayElapsed - startDelay) * 1000) / rate;
+        }
       }
       frame = lane.frame || setup(lane.view);
-      frame.time += (Math.max(0, now - (frame.lastNow ?? now)) / 1000) * rate;
+      if (lane.view.crossfire) frame.time = dodgeClock - lane.view.timelineStart;
+      else frame.time += (Math.max(0, now - (frame.lastNow ?? now)) / 1000) * rate;
       frame.lastNow = now;
       frame.heard ||= new Set();
       for (const [index, cue] of frame.plan.cues.entries())
@@ -414,22 +564,80 @@ const MapCombat = (() => {
       lanes.filter((lane) => !lane.view.completed).length +
       "/" +
       lanes.length;
-    if (lanes.every((lane) => lane.view.completed)) {
+    if (
+      lanes.every((lane) => lane.view.completed) &&
+      [...meleeExchanges.values()].every((pair) => dodgeClock >= pair.end)
+    ) {
       battleView.completed = true;
       WeaponAudio.releaseBattle();
       CombatPlayback.finish();
     }
   }
+  function dodgePoses(result) {
+    for (const [id, track] of dodgeTracks) {
+      const pose = result.get(id),
+        unit = displayed.get(id);
+      if (
+        !pose ||
+        !unit ||
+        pose.dying ||
+        pose.hidden ||
+        !track.moves.length ||
+        dodgeClock < track.moves[0].at
+      )
+        continue;
+      if (
+        [...meleeExchanges.values()].some(
+          (pair) =>
+            (pair.attacker === id || pair.defender === id) &&
+            dodgeClock >= pair.start &&
+            dodgeClock < pair.end,
+        )
+      )
+        continue;
+      const dodge = WeaponEffects.dodge(
+        null,
+        { moves: track.moves, initialSlot: track.initialSlot },
+        dodgeClock,
+        null,
+        { unit, scale: track.base.scale },
+      );
+      result.set(id, {
+        ...pose,
+        x: track.base.x + dodge.x,
+        y: track.base.y + dodge.y,
+        dodge,
+        moving: pose.moving || dodge.active,
+        ...(dodge.active && !pose.attacking
+          ? {
+              clip: Rules.modelOf(unit).presentation.dodge,
+              time: dodge.time * ART.presentation.animationSpeed,
+            }
+          : {}),
+      });
+    }
+    return result;
+  }
   function poses() {
-    if (!lanes.length) return new Map([...restingPoses, ...framePoses()]);
+    if (!lanes.length) return dodgePoses(new Map([...restingPoses, ...framePoses()]));
     const result = new Map(restingPoses),
-      priority = new Map(),
+      priority = new Map(
+        [...restingPoses].filter(([, pose]) => pose.hidden).map(([id]) => [id, 7]),
+      ),
       saved = frame;
     for (const lane of lanes)
       if (lane.frame && !lane.view.completed) {
         frame = lane.frame;
         for (const [id, pose] of framePoses()) {
-          const weight = pose.hidden ? 4 : pose.dying ? 3 : id === frame.event.from ? 2 : 1;
+          const weight = pose.hidden
+            ? 7
+            : pose.dying
+              ? 6
+              : id === frame.event.from
+                ? 5
+                : pose.moving
+                  ? 3
+                  : 1;
           if ((priority.get(id) || 0) <= weight) {
             result.set(id, pose);
             priority.set(id, weight);
@@ -437,7 +645,14 @@ const MapCombat = (() => {
         }
       }
     frame = saved;
-    return result;
+    const composed = meleePoses(dodgePoses(result));
+    // An older volley may finish after a newer incoming attack. Keep the most
+    // recent command/attack facing, rather than restoring that lane's old angle.
+    for (const [id, pose] of composed) {
+      const unit = displayed.get(id);
+      if (unit && !pose.firing) pose.angle = unit.angle;
+    }
+    return composed;
   }
   function health(id, shield = false) {
     let value = (shield ? initialShield : initialHp).get(id);
@@ -481,7 +696,7 @@ const MapCombat = (() => {
     for (const lane of lanes)
       for (const item of [...lane.finished, ...(lane.frame ? [lane.frame] : [])])
         if (item.event.from === id && item.time >= (item.plan.shots[0]?.at ?? 0))
-          value -= item.weapon.en;
+          value -= item.event.energySpent ?? item.weapon.en;
     return Math.max(0, value);
   }
   function draw(ctx, geometry, underlay = false) {
@@ -510,6 +725,8 @@ const MapCombat = (() => {
     return state;
   }
   function units() {
+    if (!battleView?.mapBattle)
+      return game.units.filter(u => !u.embarked || u.embarked.exposed || u.pendingMove?.launch);
     const pose = poses();
     const pendingExits = new Set(),
       visibleExits = new Set();
@@ -559,7 +776,7 @@ const MapCombat = (() => {
       sourcePose = pose.get(source.unit.id);
     ctx.save();
     ctx.translate(geometry.ox, geometry.oy);
-    ctx.scale(geometry.tile / 64, geometry.tile / 64);
+    ctx.scale(geometry.tile / Rules.mapCellPixels, geometry.tile / Rules.mapCellPixels);
     const facing = Math.atan2(target.y - source.y, target.x - source.x);
     if (!event.nuclearFollowup)
       WeaponEffects.draw(
@@ -585,10 +802,11 @@ const MapCombat = (() => {
           : contact.clusterRole === "fragment"
             ? contactShot?.destination
             : null;
-      if (weapon.swingEffects?.length)
+      const swingEffects = contact.swingEffects ?? weapon.swingEffects;
+      if (swingEffects?.length)
         SpriteEffects.draw(
           ctx,
-          weapon.swingEffects[index % weapon.swingEffects.length],
+          contact.swingEffects ?? swingEffects[index % swingEffects.length],
           sourcePose.x,
           sourcePose.y,
           source.scale,
@@ -605,8 +823,13 @@ const MapCombat = (() => {
           ctx,
           contact.clusterRole === "fragment"
             ? weapon.projectile.cluster.hitEffect
-            : weapon.hitEffect,
-          scatterPoint?.x ?? plan.blastPoint?.x ?? target.x,
+            : (weapon.hitEffects || weapon.hitEffect),
+          scatterPoint?.x ??
+            plan.blastPoint?.x ??
+            target.x +
+              WeaponEffects.dodgeOffset(plan, contact.at).x *
+                target.scale *
+                ART.presentation.dodgeDistance,
           scatterPoint?.y ??
             plan.blastPoint?.y ??
             target.y +
@@ -717,6 +940,7 @@ const MapCombat = (() => {
     begin,
     update,
     units,
+    formationOffset,
     fieldImpact,
     draw,
     drawUnderlay: (ctx, geometry) => draw(ctx, geometry, true),

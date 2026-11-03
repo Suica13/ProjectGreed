@@ -24,6 +24,8 @@ def read(path):
 
 def write(path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
+    if path == ASSETS / "effects/effects.json" and path.exists():
+        data = {**read(path), **data}
     path.write_text(dump_source_json(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 def asset(source, target):

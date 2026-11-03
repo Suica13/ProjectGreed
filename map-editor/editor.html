@@ -15,17 +15,23 @@
         <button id="newMap">新建</button><button id="importMap">导入地图</button>
         <button id="exportProject">导出工程</button
         ><button id="exportGame" class="primary">导出游戏地图</button>
-        <button id="help">使用说明</button>
+        <label class="check"><input id="bundleResources" type="checkbox" checked />打包外部资源 ZIP</label><button id="help">使用说明</button><a href="unit-editor.html" target="_blank" rel="noopener">MS 单位编辑器</a>
       </nav>
     </header>
     <main>
       <aside class="left">
         <div class="tabs">
           <button data-tab="map" class="active">地图</button><button data-tab="tiles">图块</button
-          ><button data-tab="rules">规则</button>
+          ><button data-tab="rules">规则</button><button data-tab="units">单位</button>
         </div>
         <div class="sidebar-scroll">
           <section data-page="map">
+            <label>语言<select id="editorLanguage">
+              <option value="auto">跟随系统</option>
+              <option value="zh">简体中文</option>
+              <option value="en">English</option>
+              <option value="ja">日本語</option>
+            </select></label>
             <h2>地图设置</h2>
             <label>ID<input id="mapId" value="custom_map" spellcheck="false" /></label>
             <label>名称<input id="mapName" value="新地图" /></label>
@@ -109,7 +115,11 @@
               图片会嵌入导出的文件。图集点击选Tile，Shift框选可制作多格画笔，Ctrl点击可加入随机规则。
             </p>
             <div id="terrainPalette" class="palette"></div>
-            <canvas id="atlasCanvas" hidden aria-label="图集选择器"></canvas>
+            <div id="atlasPanel">
+              <div class="toolbar"><button id="atlasMinus">−</button><output id="atlasZoom">100%</output><button id="atlasPlus">+</button><button id="atlasFit">适应</button><button id="atlasActual">1:1</button><button id="atlasExpand">展开 / 收起</button></div>
+              <div id="atlasViewport"><canvas id="atlasCanvas" hidden aria-label="图集选择器"></canvas></div>
+              <p class="hint">滚轮缩放；滚动条查看图集；Shift 拖动框选。展开后可大幅预览。</p>
+            </div>
             <label>图块精确选择<select id="tileList"></select></label>
             <h2>所选Tile属性</h2>
             <label>名称<input id="tileName" /></label>
@@ -129,6 +139,14 @@
             <p class="hint">
               属性作用于当前Tile的所有引用；多格画笔可通过“图块精确选择”逐项调整。动态标记暂不触发事件。
             </p>
+          </section>
+          <section data-page="units" hidden>
+            <h2>文本生成预置单位</h2>
+            <p class="hint">每行：单位 ID 或完整名称, 队伍, X, Y, 数量（可省略，默认1）。队伍从1开始，坐标从0开始。多个单位从指定格向右依次排列，行末换行。# 开头为注释。</p>
+            <label>批量配置<textarea id="unitText" rows="8" placeholder="RGM_79, 1, 2, 3, 3&#10;MS_06F, 2, 30, 10, 2"></textarea></label>
+            <button id="generateUnits" class="primary">生成单位</button>
+            <p id="unitCount"></p><div id="unitList"></div>
+            <p class="hint">预置单位保存在工程中，画布显示队伍与名称。普通对战尚未接入地图预置单位生成。</p>
           </section>
           <section data-page="rules" hidden>
             <h2>图块规则</h2>

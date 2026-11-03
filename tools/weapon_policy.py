@@ -295,9 +295,9 @@ def configure(prefab, native):
                 weapon["requiredParts"] = copy.deepcopy(cannon.get("requiredParts", []))
                 weapon["muzzle"] = copy.deepcopy(cannon["muzzle"])
                 weapon["changeHeldWeapon"] = False
-            weapon.update(slot="skill", noCounter=True, special={"type": "mortar", "radius": 1, "emptyCells": True})
+            weapon.update(slot="skill", noCounter=True, maxUsesPerTurn=1, special={"type": "blast", "radius": 0})
             weapon["projectile"].update(motion="mortar",rotation=0)
-            weapon["description"] = "向目标九宫格随机落弹，空格落空；被击中的敌人只能防御或回避。"
+            weapon["description"] = "迫击炮技能：攻击目标单元格，每回合一次，使用后本回合不能普通攻击。"
         if kind == "bomb" and prefab["stats"].get("movementType") in ["air", "hover"]:
             weapon.setdefault("projectile", {})["motion"] = "bomb"
             weapon["special"] = {"type": "bomb"}
@@ -321,6 +321,8 @@ def configure(prefab, native):
     attach(prefab, native)
     from paired_weapons import configure as pair_weapons
     pair_weapons(prefab)
+    from native_presentation import correct_left_firing
+    correct_left_firing(prefab)
     prefab["stats"].setdefault("actionPoints", 10)
     for key, weapon in prefab["weapons"].items():
         weapon["actionCost"] = action_cost(prefab, key, weapon)
@@ -349,4 +351,10 @@ def configure(prefab, native):
     from native_big_zam import apply as apply_big_zam
     from unit_classification import apply as apply_classification
     from native_weapon_levels import apply as apply_levels
+    from native_melee_effects import apply as apply_melee_effects
+    apply_melee_effects(prefab, native)
+    from native_beam_bazookas import apply as apply_beam_bazookas
+    apply_beam_bazookas(prefab, native)
+    from unit_ship_balance import apply_footprint
+    apply_footprint(prefab)
     return apply_levels(finalize_weapon_slots(apply_classification(apply_big_zam(prefab, native))))

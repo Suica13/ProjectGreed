@@ -92,6 +92,12 @@ const CombatPlayback = (() => {
       return;
     }
     if (!battleView) return;
+    if (!Net.active && !battleView.networkId) {
+      battleView.completed = true;
+      MapCombat.reset();
+      finishBattle();
+      return;
+    }
     finished.add(battleView.networkId);
     battleView = null;
     MapCombat.reset();

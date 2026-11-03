@@ -109,7 +109,10 @@ const Net = (() => {
     ) &&
     Rules.canControlUnit(n.snapshot?.settings, n.snapshot?.members, n.seat, unit);
   function canAct() {
-    if (BattleAssets.loading || (n.snapshot?.delegatedSeats || n.snapshot?.campaign?.delegatedSeats)?.includes(n.seat))
+    if (
+      BattleAssets.loading ||
+      (n.snapshot?.delegatedSeats || n.snapshot?.campaign?.delegatedSeats)?.includes(n.seat)
+    )
       return false;
     if (window.ReplayPlayer?.active) return false;
     return (
@@ -180,7 +183,8 @@ const Net = (() => {
     if (!n.awaiting || n.awaiting.id !== id) return false;
     clearTimeout(actionTimer);
     actionTimer = null;
-    if (accepted) GameAudio.actionAccepted?.(n.awaiting.action);
+    if (accepted) GameAudio.actionAccepted?.(n.awaiting.action,
+      n.snapshot?.game?.units.find(unit => unit.id === n.awaiting.fields?.unitId));
     n.awaiting = null;
     queueMicrotask(drainActions);
     return true;
@@ -864,7 +868,7 @@ const Net = (() => {
         if (selected === event.unitId && mode === "move") mode = "select";
       }
       if (event.type === "move_cancel" || (event.type === "move" && sawMovePreview))
-        PlanningUI.stop(event.unitId);
+        for (const id of event.squadIds || [event.unitId]) PlanningUI.stop(id);
       if (event.type === "skill" && s.phase === "idle" && online && n.applied)
         SkillControls.applied(event);
       if (

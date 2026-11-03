@@ -300,7 +300,7 @@
   },
   "stats": {
     "hp": 69000,
-    "en": 600.0,
+    "en": 1200.0,
     "move": 8,
     "mobility": 175.0,
     "cost": 1200,
@@ -410,7 +410,7 @@
     "movementBeforeMobility": 7,
     "mobilityMoveTarget": 8,
     "enBeforeReduction": 1200.0,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "adaptability": {
       "ground": 100.0,
       "space": 25.0,
@@ -464,6 +464,28 @@
     "Common_Push_A": {
       "ref": "Common_Push_A__lv3",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Push_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Kick_White_R"
+              ],
+              "delay": 0.45
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Push_A"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
@@ -485,7 +507,10 @@
             "y": 0.0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "NZN_AMX_109_BSG": {
       "ref": "NZN_AMX_109_BSG__lv1",
@@ -610,6 +635,46 @@
     "Common_Cqb_Double_A": {
       "ref": "Common_Cqb_Double_A__lv3",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Melee_Double_A",
+              "delay": 0
+            },
+            {
+              "weaponDisplayIndex": 1,
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_1_White_R"
+              ],
+              "delay": 0.6
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [
+                "leftArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_1_White_L"
+              ],
+              "delay": 0.0
+            },
+            {
+              "delay": 1.4
+            }
+          ],
+          "startAnimation": "Common_Melee_Double_A"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_Double_A.gw",
@@ -632,7 +697,10 @@
           "leftArm",
           "rightArm"
         ]
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     }
   },
   "mechanics": [

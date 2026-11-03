@@ -9,11 +9,12 @@ const GameAudio = (() => {
     generation++;
   }
   function play(key) {
-    playSound(ART.presentation[key]);
+    playSound(ART.presentation[key], "ui");
   }
-  function actionAccepted(action) {
+  function actionAccepted(action, unit = null) {
+    if (action === "deploy") return selectUnit(unit);
     const key = { campaign_produce: "productionSound", campaign_research: "researchSound",
-      deploy: "deploymentSound", confirm_deployment: "deploymentSound" }[action];
+      confirm_deployment: "deploymentSound" }[action];
     if (key) play(key);
   }
   function selectUnit(unit) {
@@ -27,10 +28,10 @@ const GameAudio = (() => {
     const key = presentation.moveSoundKey;
     if (key) play(key);
   }
-  function playSound(sound) {
+  function playSound(sound, channel = "map") {
     const stamp = generation;
     WeaponAudio.unlock().then(() => {
-      if (stamp === generation) WeaponAudio.play(sound);
+      if (stamp === generation) WeaponAudio.play(sound, undefined, 1, channel);
     });
   }
   function emit(key, sound) {

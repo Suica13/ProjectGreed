@@ -2,27 +2,27 @@ const test = require("node:test"),
   assert = require("node:assert/strict"),
   G = require("../shared/rules.js");
 const entry = { unitId: "RGM_79", kitId: "machine_gun" };
-test("enemy orthogonal zones cost at least three; allies, diagonal units and dead enemies do not exert control", () => {
+test("approaching enemy zones uses terrain movement; leaving controlled cells costs three", () => {
   const g = G.create(false, 1, [[entry], [entry]]),
     [a, b] = g.units;
   g.tiles = Array.from({ length: 18 }, () => Array(24).fill("plain"));
   Object.assign(a, { x: 2, y: 4 });
   Object.assign(b, { x: 5, y: 4 });
-  assert.equal(G.movementCost(g, a, 4, 4), 3);
+  assert.equal(G.movementCost(g, a, 4, 4, true), 3);
   assert.equal(G.movementCost(g, a, 4, 3), 1);
-  assert.equal(G.reachable(g, a).get("4,4").cost, 4);
+  assert.equal(G.reachable(g, a).get("4,4").cost, 2);
   assert.equal(
-    G.reachable(g, a).get("5,3").cost,
-    6,
-    "the extra movement point permits a six-cost route",
+    G.reachable(g, a).get("4,3").cost,
+    3,
+    "approaching from a diagonal does not incur control-zone cost",
   );
   g.tiles[4][4] = "forest";
-  assert.equal(G.movementCost(g, a, 4, 4), 3);
+  assert.equal(G.movementCost(g, a, 4, 4, true), 3);
   g.tiles[4][4] = "rock";
   assert.equal(G.movementCost(g, a, 4, 4), Infinity);
   g.tiles[4][4] = "plain";
   g.units.push({ ...b, id: "extra", x: 4, y: 3 });
-  assert.equal(G.movementCost(g, a, 4, 4), 3, "zones do not stack");
+  assert.equal(G.movementCost(g, a, 4, 4, true), 3, "zones do not stack");
   g.units.pop();
   b.hp = 0;
   assert.equal(G.movementCost(g, a, 4, 4), 1);

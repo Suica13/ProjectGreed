@@ -4,6 +4,8 @@ const test = require("node:test"),
   fs = require("node:fs");
 test("irradiation hides stored passengers until impact and never resurrects a destroyed fog actor", () => {
   const context = vm.createContext({
+    window: { addEventListener() {} },
+    Rules: { mapCellPixels: 160 },
     MovementTiming: require("../shared/movement-timing.js"),
     performance: { now: () => 0 },
     ART: {
@@ -65,6 +67,7 @@ test("native charge anchor follows the rendered actor, firing audio is separate 
     charges = [],
     images = [];
   const context = vm.createContext({
+    window: { addEventListener() {} },
     MovementTiming: require("../shared/movement-timing.js"),
     ART: {
       models: { hull: { presentation: { mapScale: 1 } } },
@@ -80,6 +83,7 @@ test("native charge anchor follows the rendered actor, firing audio is separate 
         ["Charge", "Start", "Mid", "End"].map((part) => [part, { width: 280, height: 84 }]),
       ),
       muzzle: (_model, weapon, actor) => {
+        assert.equal(actor.aimAngle, 90, "skill target overrides stale turret aim");
         const offset = weapon.muzzle.mounts[0].offset;
         return { x: actor.x + offset.y * actor.scale, y: actor.y + offset.x * actor.scale };
       },
@@ -115,7 +119,7 @@ test("native charge anchor follows the rendered actor, firing audio is separate 
     rotate() {},
     drawImage: (...args) => images.push(args),
   };
-  const actor = () => ({ x: 100, y: 200, scale: 0.5, angle: 90, clip: "native", time: 0.5 });
+  const actor = () => ({ x: 100, y: 200, scale: 0.5, angle: 90, aimAngle: 270, clip: "native", time: 0.5 });
   const position = (x, y) => ({ x: x * 40, y: y * 40 });
   context.fx.draw(ctx, 0, position, 40, actor);
   assert.deepEqual(charges, [{ x: 125, y: 204.5, scale: 0.65 }]);

@@ -524,7 +524,7 @@
   },
   "stats": {
     "hp": 40000,
-    "en": 475,
+    "en": 950,
     "move": 6,
     "mobility": 120,
     "cost": 450,
@@ -641,7 +641,7 @@
     "accuracy": 125,
     "partStructuralStrength": 120,
     "enBeforeReduction": 950,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "adaptability": {
       "ground": 25,
       "space": 100,
@@ -697,6 +697,28 @@
     "Common_Push_A": {
       "ref": "Common_Push_A__lv1",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Push_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Kick_White_R"
+              ],
+              "delay": 0.45
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Push_A"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
@@ -718,7 +740,10 @@
             "y": 0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "ZN_120mmMG": {
       "ref": "ZN_120mmMG__lv1",
@@ -804,7 +829,11 @@
               }
             }
           ]
-        }
+        },
+        "hitEffects": [
+          "Beam_Exp_1_Yellow",
+          "Beam_Hit_2_Yellow"
+        ]
       }
     },
     "ZN_MS_09_ChestBeam": {
@@ -839,10 +868,32 @@
     "ZN_HeatSaber_A": {
       "ref": "ZN_HeatSaber_A__lv1",
       "overrides": {
-        "swingEffects": [
-          "Cqb_Fire_1_Pink_R",
-          "Cqb_Fire_1_Pink_L"
-        ],
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Melee_A",
+              "delay": 0
+            },
+            {
+              "weaponDisplayIndex": 1,
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_1_Yellow_R"
+              ],
+              "delay": 0.6
+            },
+            {
+              "delay": 1.4
+            }
+          ],
+          "startAnimation": "Common_Melee_A"
+        },
         "requiredParts": [
           "rightArm"
         ],
@@ -865,6 +916,7 @@
         }
       },
       "remove": [
+        "swingEffects",
         "localization"
       ]
     }

@@ -113,6 +113,10 @@ const WeaponInfo = (() => {
     return list;
   }
   // All weapon surfaces use the compiled strikes, including multi-hit and mixed payloads.
+  const roundsFor = (weapon, unit) =>
+    unit && typeof game !== "undefined" && Rules.attackRounds
+      ? Rules.attackRounds(game, unit, weapon)
+      : WeaponClasses.rounds(weapon);
   function summary(source, options = {}) {
     const { unit, target, response = "counter", isCounter = false } = options;
     const weapon = unit ? Rules.weaponStats(source, unit) : source;
@@ -142,7 +146,7 @@ const WeaponInfo = (() => {
     heading.append(node("strong", "weapon-name", weapon.name));
     const tags = node("div", "weapon-attributes");
     for (const attribute of attributes) tags.append(node("span", "weapon-attribute", attribute));
-    for (const path of WeaponClasses.paths(weapon)) tags.prepend(classBadge(weapon, path));
+    if (!options.compact) for (const kind of WeaponClasses.tags(weapon)) tags.prepend(classBadge(weapon, kind));
     heading.append(tags);
     const damageLine = node("div", "weapon-damage-line");
     damageLine.append(node("span", "weapon-stat-label", "基础伤害"));
@@ -167,10 +171,12 @@ const WeaponInfo = (() => {
       unit && target ? attackForecast(unit, target, weapon, response, isCounter) : null;
     const accuracy = node("div", "weapon-accuracy");
     accuracy.append(
-      node("span", "weapon-stat-label", "AP"),
-      node("strong", "weapon-ap-cost", String(Rules.actionCost(weapon))),
       node("span", "weapon-stat-label", "命中"),
       node("strong", "", number(forecast?.hit ?? weapon.hit) + "%"),
+    );
+    accuracy.append(
+      node("span", "weapon-stat-label", "攻击轮数"),
+      node("strong", "weapon-rounds", String(options.rounds ?? roundsFor(weapon, unit))),
     );
     if (forecast) {
       accuracy.classList.add("attack-forecast");
@@ -178,6 +184,16 @@ const WeaponInfo = (() => {
       accuracy.dataset.hit = forecast.hit;
     }
     root.append(heading, damageLine, accuracy);
+    if (options.compact) {
+      root.classList.add("weapon-summary-compact");
+      heading.querySelector(".weapon-attributes")?.remove();
+      damageLine.querySelector(".weapon-stat-label").textContent = I18n.text("伤害");
+      const labels = accuracy.querySelectorAll(".weapon-stat-label");
+      labels[0].textContent = I18n.text("命中率");
+      labels[1].remove();
+      accuracy.querySelector(".weapon-rounds").after(node("span", "", I18n.text("轮")));
+      root.append(tags);
+    }
     for (const requirement of weapon.pilotRequirements || []) {
       const label = I18n.text(PilotSystem.labels[requirement.stat] || requirement.stat);
       const current = unit ? PilotSystem.of(unit).stats[requirement.stat] : null;
@@ -200,9 +216,21 @@ const WeaponInfo = (() => {
         ),
       );
     }
+    if (Number.isInteger(weapon.maxUsesPerTurn))
+      root.append(
+        node(
+          "div",
+          "weapon-pilot-requirement",
+          I18n.text("每回合使用上限") + " " + weapon.maxUsesPerTurn,
+        ),
+      );
     if (weapon.onHitAPLoss)
       root.append(
-        node("div", "weapon-pilot-requirement", I18n.text("命中后使目标下回合AP减少25%，不叠加")),
+        node(
+          "div",
+          "weapon-pilot-requirement",
+          I18n.text("原效果：下回合AP减少25%（AP机制未启用）"),
+        ),
       );
     if (weapon.burn)
       root.append(
@@ -240,7 +268,7 @@ const WeaponInfo = (() => {
     const stats = node("dl", "weapon-detail-stats");
     const rows = [
       ["射程", weapon.min + "–" + weapon.max],
-      ["AP", Rules.actionCost(weapon)],
+      ["攻击轮数", roundsFor(weapon, unit)],
       ["EN", amount(weapon.en)],
     ];
     if (unit) rows.push(["剩余 EN", amount(unit.en)]);
@@ -248,6 +276,15 @@ const WeaponInfo = (() => {
       rows.push([
         "本回合可用次数",
         unit ? (unit.pilotWeaponTurnUses?.[weapon.id] ? "0/1" : "1/1") : "1",
+      ]);
+    if (Number.isInteger(weapon.maxUsesPerTurn))
+      rows.push([
+        "本回合可用次数",
+        unit
+          ? Math.max(0, weapon.maxUsesPerTurn - (unit.weaponTurnUses?.[weapon.id] || 0)) +
+            "/" +
+            weapon.maxUsesPerTurn
+          : weapon.maxUsesPerTurn,
       ]);
     if (Number.isInteger(weapon.maxUses))
       rows.push([
@@ -318,19 +355,9 @@ const WeaponInfo = (() => {
     details.append(body);
     return details;
   }
-  function classBadge(
-    weapon,
-    path = { main: WeaponClasses.mainClass(weapon), sub: WeaponClasses.classify(weapon) },
-  ) {
-    const badge = node(
-      "span",
-      "weapon-class-tag",
-      I18n.text(WeaponClasses.mainLabels[path.main]) +
-        " / " +
-        I18n.text(WeaponClasses.labels[path.sub]),
-    );
-    badge.dataset.weaponMainClass = path.main;
-    badge.dataset.weaponClass = path.sub;
+  function classBadge(weapon, kind = WeaponClasses.classify(weapon)) {
+    const badge = node("span", "weapon-class-tag", I18n.text(WeaponClasses.labels[kind]));
+    badge.dataset.weaponClass = kind;
     return badge;
   }
   function conversionRules(weapon) {
@@ -342,16 +369,16 @@ const WeaponInfo = (() => {
       const config = Rules.catalog.conversionRules;
       if (config) {
         const table = node("dl", "weapon-rule-grid");
-        for (const row of WeaponClasses.rules(weapon, config))
+        for (const row of WeaponClasses.rules(weapon, config).filter(row => window.CatalogDeveloper || !/AP/.test(row.label)))
           table.append(node("dt", "", I18n.text(row.label)), node("dd", "", I18n.text(row.value)));
         body.append(table);
       }
       for (const text of [
         "分类只控制数值换算，不改变伤害属性、枪口或发射演出。",
-        "基础AP和射程沿用源数据；通用射程加值只增加最大射程。头部与腕部武器使用固定AP和射程。",
-        "主手光束武器默认伤害×1.5，腕部光束武器×0.75，其余部位光束武器×1。战舰与MA保留排除规则，战舰不重复叠加机枪减伤。",
+        "AP按武器类型换算，腕部和头部使用专门费用；舰炮保留原费用。通用射程加值只增加最大射程。",
+        "光束步枪伤害×1.5，其他光束武器按各自类型规则计算。战舰与MA保留排除规则，战舰不重复叠加机枪减伤。",
         "AP按0.5点四舍五入，伤害按25点取整；EN倍率不为1时向上取整。人工数值差值在换算后应用。",
-      ])
+      ].filter(text => window.CatalogDeveloper || !/^AP/.test(text)))
         body.append(node("p", "", I18n.text(text)));
     });
     panel.append(body);
@@ -369,6 +396,14 @@ const WeaponInfo = (() => {
   function card(weapon, content = null, options = {}) {
     const wrapper = node("article", "weapon-card");
     wrapper.dataset.weaponId = weapon.id;
+    if (content) {
+      const rounds = node("div", "weapon-accuracy");
+      rounds.append(
+        node("span", "weapon-stat-label", "攻击轮数"),
+        node("strong", "weapon-rounds", String(options.rounds ?? roundsFor(weapon, options.unit))),
+      );
+      content.append(rounds);
+    }
     wrapper.append(content || summary(weapon, options), inspector(weapon, options));
     if (options.encyclopediaLink) {
       wrapper.querySelector(".weapon-summary-heading")?.append(encyclopediaLink(weapon));

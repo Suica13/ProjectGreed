@@ -664,7 +664,7 @@
   },
   "stats": {
     "hp": 77000,
-    "en": 7500,
+    "en": 15000,
     "move": 6,
     "mobility": 69,
     "cost": 1250,
@@ -1161,7 +1161,7 @@
     ],
     "footprint": {
       "width": 2,
-      "height": 3
+      "height": 2
     },
     "commandAuras": [
       {
@@ -1276,7 +1276,7 @@
     "accuracy": 115,
     "unitLevel": 5000,
     "enBeforeReduction": 15000,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "tacticalMoveBeforeBonus": 3,
     "adaptability": {
       "ground": 10,
@@ -1299,7 +1299,11 @@
     "shipBalanceMultiplier": 0.7,
     "shipFactionHullMultiplier": 1.1,
     "shipFactionAccuracyMultiplier": 1.1,
-    "shipFactionEvasionMultiplier": 1.15
+    "shipFactionEvasionMultiplier": 1.15,
+    "shipFootprintBeforeCompaction": {
+      "width": 2,
+      "height": 3
+    }
   },
   "presentation": {
     "shield": false,

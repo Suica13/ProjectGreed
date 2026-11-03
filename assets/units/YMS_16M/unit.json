@@ -367,7 +367,7 @@
   },
   "stats": {
     "hp": 44000,
-    "en": 450,
+    "en": 900,
     "move": 7,
     "mobility": 100,
     "cost": 750,
@@ -476,7 +476,7 @@
     "accuracy": 135,
     "partStructuralStrength": 115,
     "enBeforeReduction": 900,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "adaptability": {
       "ground": 100,
       "space": 10,
@@ -537,11 +537,11 @@
         "attack": {
           "steps": [
             {
-              "weaponDisplayIndex": 0,
+              "animation": "Common_Push_A",
               "delay": 0
             },
             {
-              "animation": "Common_Push_A",
+              "weaponDisplayIndex": 0,
               "delay": 0
             },
             {
@@ -549,13 +549,16 @@
               "muzzleIndex": 0,
               "partBreakModifier": 0.75,
               "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Kick_White_R"
+              ],
               "delay": 0.45
             },
             {
-              "delay": 1
+              "delay": 1.0
             }
           ],
-          "startAnimation": null
+          "startAnimation": "Common_Push_A"
         },
         "requiredParts": [],
         "source": {
@@ -579,11 +582,17 @@
             "y": 0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "Common_Mortar_YMS_16M": {
       "ref": "Common_Mortar_YMS_16M__lv1",
       "overrides": {
+        "slot": "skill",
+        "noCounter": true,
+        "description": "迫击炮技能：攻击目标单元格，每回合一次，使用后本回合不能普通攻击。",
         "requiredParts": [
           "rightArm"
         ],
@@ -607,7 +616,8 @@
               }
             }
           ]
-        }
+        },
+        "maxUsesPerTurn": 1
       }
     },
     "ZN_YMS_16M_Cannon_AP": {

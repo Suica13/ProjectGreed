@@ -57,19 +57,19 @@ test("pilot mobility scales movement and half-point AP independently from reacti
   );
 });
 test("fractional movement budget is used by pathfinding and AP initializes/refills at the scaled budget", () => {
-  const { g, u } = world(150);
-  assert.equal(G.modelOf(u, g).move, 7.5);
-  assert.equal(u.actionPoints, 12);
+  const { g, u } = world(125);
+  assert.equal(G.modelOf(u, g).move, 4.5);
+  assert.equal(u.actionPoints, 11);
   const cells = G.reachable(g, u);
-  assert(cells.has("17,10"));
-  assert(!cells.has("18,10"));
+  assert(cells.has("14,10"));
+  assert(!cells.has("15,10"));
   u.actionPoints = 0;
   G.end(g);
   G.end(g);
-  assert.equal(u.actionPoints, 12);
-  assert.equal(G.counterActionBudget(u), 9);
+  assert.equal(u.actionPoints, 11);
+  assert.equal(G.counterActionBudget(u), 8.5);
 });
-test("scaled AP permits a third 4-AP attack and cancellation refunds exactly the reservation", () => {
+test("automatic attack leaves the proportional AP budget intact, including cancellation", () => {
   const { g, u, b } = world(150);
   Object.assign(b, { x: 12, y: 10 });
   const gun = G.modelOf(u).weapons.find((w) => w.id === "EF_90mmMG");
@@ -79,8 +79,9 @@ test("scaled AP permits a third 4-AP attack and cancellation refunds exactly the
     room = { game: g, matchId: "ratio" };
   planner.reset(room);
   planner.plan(room, u, b, [gun, gun, gun], 0);
-  assert.equal(u.actionPoints, 0);
-  assert.throws(() => planner.plan(room, u, b, [gun, gun, gun, gun], 0));
+  assert.equal(u.actionPoints, 12);
+  planner.plan(room, u, b, [gun, gun, gun, gun], 0);
+  assert.equal(u.actionPoints, 12);
   planner.cancel(room, u);
   assert.equal(u.actionPoints, 12);
 });

@@ -117,6 +117,7 @@ function compose(prefab, group, animations) {
         shots: 1,
         muzzleIndex: c.index,
         channelId: c.channel.id,
+        ...(c.shot.swingEffects ? { swingEffects: copy(c.shot.swingEffects) } : {}),
         requiredParts: required,
         damageComponents: copy(c.shot.damageComponents || c.raw.damageComponents),
         accuracy: c.shot.accuracy ?? c.raw.hit,
@@ -160,8 +161,7 @@ function compose(prefab, group, animations) {
     en: channels.reduce((n, c) => n + c.energy, 0),
     pairedChannels: channels.map((c) => ({
       id: c.channel.id,
-      weaponMainClass: require("../shared/weapon-classes.js").mainClass(c.raw),
-      weaponSubClass: require("../shared/weapon-classes.js").classify(c.raw),
+      weaponClass: require("../shared/weapon-classes.js").classify(c.raw),
       requiredParts: c.channel.requiredParts,
       en: c.energy,
     })),

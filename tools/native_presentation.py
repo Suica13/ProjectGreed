@@ -40,7 +40,30 @@ def correct_shared_weapon_layers(prefab, native):
     left["requiredParts"] = ["leftArm"]
 
 
+def correct_left_firing(prefab):
+    """Native left-arm bursts accidentally switch to a right-arm FA clip."""
+    changed = False
+    for key, weapon in prefab.get("weapons", {}).items():
+        parts = weapon.get("requiredParts", [])
+        channels = [channel for group in prefab.get("pairedWeapons", [])
+                    for channel in group["channels"] if channel["weaponId"] == key]
+        limbs = {channel.get("limb") for channel in channels}
+        single_left = limbs == {"leftArm"} if channels else "leftArm" in parts and "rightArm" not in parts
+        steps = weapon.get("attack", {}).get("steps", [])
+        if (weapon.get("type") == "melee" or not single_left
+                or not any(step.get("animation") == "Common_Shoot_A_L" for step in steps)):
+            continue
+        if "Common_Shoot_A_L" not in prefab["animations"]:
+            raise ValueError("Missing native left firing animation: " + prefab["id"])
+        for step in steps:
+            if step.get("animation") == "Common_Shoot_A_FA":
+                step["animation"] = "Common_Shoot_A_L"
+                changed = True
+    return changed
+
+
 def correct(prefab, native):
+    correct_left_firing(prefab)
     from native_movement_effects import correct_effects
     correct_effects(prefab, native)
     if prefab["stats"].get("modules"):
@@ -143,7 +166,7 @@ def correct(prefab, native):
             kit["name"] = "导弹套件" if missile else "加农炮套件"
             # 导弹套件不能携带加农炮的迫击炮分支。
             if missile:
-                kit["weapons"] = [key for key in kit["weapons"] if prefab["weapons"][key].get("special",{}).get("type") != "mortar"]
+                kit["weapons"] = [key for key in kit["weapons"] if prefab["weapons"][key].get("category") != "mortar"]
         for layer in layers:
             if layer["name"] in ["RX_77_2_Cannon", "RX_77_2_SML"]:
                 missile = layer["name"].endswith("SML")

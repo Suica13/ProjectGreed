@@ -10,7 +10,7 @@ const WeaponEffects = (() => {
   function firingPose(weapon, source, event, originalTime) {
     const animation = WeaponSequence.pose(weapon, originalTime);
     return {
-      x: source.x,
+      x: source.x + (event?.sourceDodgeX || 0),
       y: source.y + (event?.sourceDodgeSlot || 0) * ART.presentation.dodgeDistance * source.scale,
       angle: source.angle,
       clip: animation.clip,
@@ -186,8 +186,8 @@ const WeaponEffects = (() => {
     if (nuclear)
       target = {
         ...target,
-        x: (event.impactCell.x + 0.5) * 64,
-        y: (event.impactCell.y + 0.5) * 64,
+        x: (event.impactCell.x + 0.5) * Rules.mapCellPixels,
+        y: (event.impactCell.y + 0.5) * Rules.mapCellPixels,
       };
     // 每发未命中子弹从发射起最多等待两秒；连射中的后续子弹独立计时。
     const missTimeout = 2,
@@ -200,11 +200,16 @@ const WeaponEffects = (() => {
       lead =
         weapon.projectile?.motion === "bomb"
           ? 0.6
-          : weapon.type === "melee" && weapon.projectile?.motion !== "tether"
+          : weapon.type === "melee" &&
+              weapon.projectile?.motion !== "tether" &&
+              !event?.meleeExchange
             ? 0.35
             : 0,
       sourceY = (event?.sourceDodgeSlot || 0) * ART.presentation.dodgeDistance * source.scale,
-      initialSlot = nuclear ? 0 : event?.targetDodgeSlot || 0;
+      initialSlot = nuclear
+        ? 0
+        : (dodgeSchedule?.track?.initialSlot ?? event?.targetDodgeSlot ?? 0),
+      timeOffset = dodgeSchedule?.track ? dodgeSchedule.start : 0;
     const remotes = remotePaths(weapon, source, target, event);
     const shots = weapon.attack.shots.map((originalAt, index) => {
       const at = lead + originalAt / speed,
@@ -285,8 +290,7 @@ const WeaponEffects = (() => {
                     Math.hypot(destination.x - origin.x, destination.y - origin.y) /
                       (weapon.projectile.speed *
                         60 *
-                        source.scale *
-                        ART.presentation.projectileSpeed),
+                        source.scale),
                   )
                 : 0;
       return {
@@ -351,10 +355,19 @@ const WeaponEffects = (() => {
           shot.flight = Math.max(
             0.12,
             Math.hypot(shot.destination.x - shot.origin.x, shot.destination.y - shot.origin.y) /
-              (cluster.speed * 60 * source.scale * ART.presentation.projectileSpeed),
+              (cluster.speed * 60 * source.scale),
           );
           shot.impactAt = shot.at + shot.flight;
         }
+    }
+    // Crossfire uses the server clock, independent of zoom and animation speed.
+    if (event?.crossfire) {
+      for (const shot of shots) {
+        const timing = event.shotTimings?.[shot.index] || event;
+        shot.at = timing.fireAt - event.timelineStart;
+        shot.impactAt = timing.impactAt - event.timelineStart;
+        shot.flight = Math.max(0, shot.impactAt - shot.at);
+      }
     }
     const steps = weapon.attack.strikes;
     const contacts = steps
@@ -376,23 +389,26 @@ const WeaponEffects = (() => {
         return {
           ...step,
           ...result,
-          at: Math.min(
-            shot.impactAt + (step.hitIndex * (weapon.attack.hitInterval || 0)) / speed,
-            timedProjectile && !result.hit ? shot.at + missTimeout : Infinity,
-          ),
+          at: event?.crossfire
+            ? shot.impactAt
+            : Math.min(
+                shot.impactAt + (step.hitIndex * (weapon.attack.hitInterval || 0)) / speed,
+                timedProjectile && !result.hit ? shot.at + missTimeout : Infinity,
+              ),
         };
       })
       .filter((contact) => contact.executed !== false)
       .sort((a, b) => a.at - b.at);
     const moves =
         event?.empty || nuclear ? [] : dodgeMoves(contacts, initialSlot, event, dodgeSchedule),
-      motion = { moves, initialSlot };
+      motion = { moves, initialSlot, timeOffset };
     // Aim at the defender's current lane, without adding artificial Miss deviation.
-    for (const shot of shots)
+    for (const shot of shots) {
+      const offset = dodgeOffset(motion, shot.impactAt);
+      shot.destination.x += offset.x * ART.presentation.dodgeDistance * target.scale;
       shot.destination.y =
-        target.y +
-        position(motion, shot.impactAt) * ART.presentation.dodgeDistance * target.scale +
-        shot.spreadY;
+        target.y + offset.y * ART.presentation.dodgeDistance * target.scale + shot.spreadY;
+    }
     for (const shot of shots)
       if (shot.isFragment) {
         const carrier = shots[shot.carrierIndex];
@@ -467,15 +483,22 @@ const WeaponEffects = (() => {
       deathSoundAt = null,
       deathEnd = null,
       deathEvents = null;
+    for (const contact of contacts) {
+      for (const effect of contact.swingEffects || []) {
+        cues.push({ at: contact.at, sound: SpriteEffects.sound(effect) });
+        end = Math.max(end, contact.at + ART.effects[effect].duration / speed);
+      }
+    }
     for (const [index, contact] of contacts.entries())
       if (nuclear || contact.hit || ["bomb", "mortar"].includes(weapon.projectile?.motion)) {
         const impactEffect =
           contact.clusterRole === "fragment"
             ? weapon.projectile.cluster.hitEffect
-            : weapon.hitEffect;
+            : (weapon.hitEffects || weapon.hitEffect);
         if (!event?.nuclearFollowup)
           cues.push({ at: contact.at, sound: SpriteEffects.sound(impactEffect, index) });
-        end = Math.max(end, contact.at + ART.effects[impactEffect].duration / effectSpeed);
+        for (const effect of Array.isArray(impactEffect) ? impactEffect : [impactEffect])
+          end = Math.max(end, contact.at + ART.effects[effect].duration / effectSpeed);
       }
     for (const contact of contacts)
       if (ART.models[target.unit.model].modules?.length && contact.brokenParts?.length) {
@@ -519,7 +542,7 @@ const WeaponEffects = (() => {
         : null;
     if (bomb) end = Math.max(end, bomb.returnAt + bomb.retreat);
     const melee =
-      weapon.type === "melee" && weapon.projectile?.motion !== "tether"
+      weapon.type === "melee" && weapon.projectile?.motion !== "tether" && !event?.meleeExchange
         ? {
             approach: lead,
             retreatAt: Math.max(
@@ -539,6 +562,12 @@ const WeaponEffects = (() => {
           ...activeShots.map((shot) => shot.at + missTimeout),
         ),
       );
+    duration = Math.max(
+      duration,
+      ...moves
+        .filter((move) => move.at >= timeOffset && move.at <= timeOffset + Math.max(0, ...impacts))
+        .map((move) => move.at + move.duration - timeOffset),
+    );
     return {
       blastPoint: nuclear ? { x: target.x, y: target.y } : null,
       lead,
@@ -558,6 +587,8 @@ const WeaponEffects = (() => {
       deathHideAt: deathEvents?.keepSpriteUntilEnd ? deathEnd : deathAt,
       moves,
       initialSlot,
+      timeOffset,
+      sourceX: event?.sourceDodgeX || 0,
       sourceY,
       actionSpeed: speed,
       duration: Math.max(duration, ...remotes.map((path) => path.end)),
@@ -600,62 +631,99 @@ const WeaponEffects = (() => {
       time: Math.max(0, stageTime),
     };
   }
-  function position(plan, time) {
+  function sampleDodge(move, time) {
+    const t = Math.max(0, Math.min(1, (time - move.at) / move.duration)),
+      t2 = t * t,
+      t3 = t2 * t;
+    const h0 = 2 * t3 - 3 * t2 + 1,
+      h1 = t3 - 2 * t2 + t,
+      h2 = -2 * t3 + 3 * t2;
+    const d0 = 6 * t2 - 6 * t,
+      d1 = 3 * t2 - 4 * t + 1,
+      d2 = -d0;
+    const tangent = (move.velocity || 0) * move.duration,
+      tangentX = (move.velocityX || 0) * move.duration;
+    return {
+      x: h0 * (move.fromX || 0) + h1 * tangentX + (move.bend || 0) * Math.sin(Math.PI * t) ** 2,
+      y: h0 * move.from + h1 * tangent + h2 * move.to,
+      vx:
+        t >= 1
+          ? 0
+          : (d0 * (move.fromX || 0) +
+              d1 * tangentX +
+              (move.bend || 0) * Math.PI * Math.sin(2 * Math.PI * t)) /
+            move.duration,
+      vy: t >= 1 ? 0 : (d0 * move.from + d1 * tangent + d2 * move.to) / move.duration,
+    };
+  }
+  function dodgeOffset(plan, time) {
+    time += plan.timeOffset || 0;
     const move = plan.moves.filter((move) => move.at <= time).at(-1);
-    if (!move) return plan.initialSlot;
-    const t = Math.max(0, Math.min(1, (time - move.at) / move.duration));
-    return move.from + ((move.to - move.from) * (1 - Math.cos(Math.PI * t))) / 2;
+    return move ? sampleDodge(move, time) : { x: 0, y: plan.initialSlot, vx: 0, vy: 0 };
+  }
+  function position(plan, time) {
+    return dodgeOffset(plan, time).y;
   }
   function dodgeMoves(contacts, initialSlot, event, schedule) {
-    const misses = [],
-      moves = [];
-    // 同一目标每秒最多开始一次闪避；其他 Miss 只让子弹沿原弹道穿过。
-    for (const contact of contacts) {
-      if (contact.hit || contact.at - (misses.at(-1)?.at ?? -Infinity) < 1) continue;
-      const at = (schedule?.start || 0) + contact.at;
-      if (schedule?.starts.some((previous) => Math.abs(at - previous) < 1)) continue;
-      misses.push(contact);
-      schedule?.starts.push(at);
-    }
-    let goal = initialSlot,
-      hash = 2166136261;
+    const moves = schedule?.track?.moves || [],
+      offset = schedule?.track ? schedule.start : 0;
+    let hash = 2166136261;
     for (const char of `${event?.from}:${event?.to}:${event?.weapon}:${event?.before}`)
       hash = Math.imul(hash ^ char.charCodeAt(0), 16777619) >>> 0;
-    misses.forEach((contact, index) => {
+    for (const contact of contacts) {
+      if (contact.hit) continue;
+      // Start before contact where flight time permits. Bursts share a short
+      // evasive movement instead of restarting the clip for every projectile.
+      const at = offset + Math.max(0, contact.at - 0.12);
+      if (moves.some((move) => Math.abs(move.at - at) < 0.38)) continue;
       hash = (Math.imul(hash, 1664525) + 1013904223) >>> 0;
-      const next = [-1, 0, 1].includes(contact.dodgeTo)
+      const previous = dodgeOffset({ moves, initialSlot }, at);
+      const side = [-1, 1].includes(contact.dodgeTo)
         ? contact.dodgeTo
-        : goal === 0
-          ? hash < 0x80000000
+        : previous.y
+          ? -Math.sign(previous.y)
+          : hash < 0x80000000
             ? -1
-            : 1
-          : 0;
-      const from = position({ moves, initialSlot }, contact.at);
+            : 1;
       moves.push({
-        at: contact.at,
-        from,
-        to: next,
-        duration: Math.max(
-          0.001,
-          Math.min(ART.presentation.dodgeOut, (misses[index + 1]?.at ?? Infinity) - contact.at),
-        ),
+        at,
+        from: previous.y,
+        to: side * (0.72 + (hash % 100) / 250),
+        duration: 0.34 + ((hash >>> 8) % 100) / 700,
+        bend: (hash & 1 ? 1 : -1) * (0.16 + ((hash >>> 16) % 40) / 200),
       });
-      goal = next;
-    });
+      moves.sort((a, b) => a.at - b.at);
+      // Shared target tracks may gain an earlier move from another firing lane.
+      // Reconnect tangents so every viewer sees continuous position and velocity.
+      for (let index = 0; index < moves.length; index++) {
+        const move = moves[index],
+          before = index
+            ? sampleDodge(moves[index - 1], move.at)
+            : { x: 0, y: initialSlot, vx: 0, vy: 0 };
+        Object.assign(move, {
+          from: before.y,
+          fromX: before.x,
+          velocity: before.vy,
+          velocityX: before.vx,
+        });
+      }
+    }
     return moves;
   }
   function dodge(event, plan, time, source, target) {
-    const move = plan.moves.filter((move) => move.at <= time).at(-1),
+    const clock = time + (plan.timeOffset || 0),
+      move = plan.moves.filter((move) => move.at <= clock).at(-1),
       clip = ART.models[target.unit.model].presentation.dodge,
       duration =
         SpriteRenderer.models[target.unit.model].animations[clip].duration /
         ART.presentation.animationSpeed;
+    const offset = dodgeOffset(plan, time);
     return {
-      x: 0,
-      y: position(plan, time) * target.scale * ART.presentation.dodgeDistance,
-      active: Boolean(move && time < move.at + duration),
+      x: offset.x * target.scale * ART.presentation.dodgeDistance,
+      y: offset.y * target.scale * ART.presentation.dodgeDistance,
+      active: Boolean(move && clock < move.at + move.duration),
       started: Boolean(move),
-      time: move ? time - move.at : 0,
+      time: move ? Math.min(1, (clock - move.at) / move.duration) * duration : 0,
     };
   }
   function arrived(plan, time) {
@@ -857,6 +925,7 @@ const WeaponEffects = (() => {
     meleeMotion,
     tetherState,
     dodge,
+    dodgeOffset,
     position,
     animationSpeed,
     health,

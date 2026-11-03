@@ -90,6 +90,7 @@ const WeaponSequence = (() => {
         for (let n = 0; n < count; n++) {
           shots.push(time);
           shotProperties.push({
+            ...(step.swingEffects ? { swingEffects: [...step.swingEffects] } : {}),
             ...(step.clusterRole
               ? { clusterRole: step.clusterRole, clusterGroup: step.clusterGroup }
               : {}),

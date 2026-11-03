@@ -220,7 +220,7 @@
   },
   "stats": {
     "hp": 87500,
-    "en": 4500,
+    "en": 9000,
     "move": 6,
     "mobility": 50,
     "cost": 1000,
@@ -244,7 +244,7 @@
     "ship": true,
     "footprint": {
       "width": 1,
-      "height": 3
+      "height": 2
     },
     "modules": [
       {
@@ -498,7 +498,7 @@
   },
   "sourceStats": {
     "enBeforeReduction": 9000,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "hp": 125000,
     "walkSpeed": 0.5,
     "boostSpeed": 0.75,
@@ -548,7 +548,11 @@
     "shipBalanceMultiplier": 0.7,
     "shipFactionHullMultiplier": 1,
     "shipFactionAccuracyMultiplier": 1,
-    "shipFactionEvasionMultiplier": 1
+    "shipFactionEvasionMultiplier": 1,
+    "shipFootprintBeforeCompaction": {
+      "width": 1,
+      "height": 3
+    }
   },
   "presentation": {
     "shield": false,
@@ -585,6 +589,9 @@
     "Common_Turret_Mortar_DabudeClass": {
       "ref": "Common_Turret_Mortar_DabudeClass__lv1",
       "overrides": {
+        "slot": "skill",
+        "noCounter": true,
+        "description": "迫击炮技能：攻击目标单元格，每回合一次，使用后本回合不能普通攻击。",
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/DabudeClass/DabudeClass_Turret_Cannon.ini",
@@ -644,7 +651,8 @@
               "alternatingOffsetX": 14
             }
           ]
-        }
+        },
+        "maxUsesPerTurn": 1
       }
     },
     "DabudeClass_Turret_Cannon": {

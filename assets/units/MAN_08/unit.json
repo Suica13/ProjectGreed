@@ -232,7 +232,7 @@
   },
   "stats": {
     "hp": 94000,
-    "en": 500,
+    "en": 1000,
     "move": 7,
     "mobility": 135,
     "cost": 950,
@@ -341,7 +341,7 @@
     "accuracy": 115,
     "unitLevel": 3750,
     "enBeforeReduction": 1000,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "tacticalMoveBeforeBonus": 6,
     "adaptability": {
       "ground": 10,
@@ -396,6 +396,28 @@
     "Common_Push_L_A": {
       "ref": "Common_Push_L_A__lv2",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Push_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Kick_White_R"
+              ],
+              "delay": 0.45
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Push_A"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_L_A.gw",
@@ -414,7 +436,10 @@
             "y": 0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "ZN_MAN_08_BeamCannon": {
       "ref": "ZN_MAN_08_BeamCannon__lv1",

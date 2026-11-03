@@ -7,6 +7,8 @@ const Tactics = (() => {
   const catalog =
     typeof ART !== "undefined" ? ART : require("../tools/load-catalog.cjs").loadCatalog();
   const models = catalog.models;
+  const automaticFire =
+    typeof AutomaticFire !== "undefined" ? AutomaticFire : require("./automatic-fire.js");
   const aiTactics = typeof AITactics !== "undefined" ? AITactics : require("./ai-tactics.js");
   const campaignBattlefield =
     typeof CampaignBattlefield !== "undefined"
@@ -174,12 +176,7 @@ const Tactics = (() => {
           models[clean[preload.carrierIndex].unitId + "__" + clean[preload.carrierIndex].kitId],
         passenger = models[clean[index].unitId + "__" + clean[index].kitId],
         hangar = carrier.hangars?.find((h) => h.id === preload.hangarId);
-      if (
-        !hangar ||
-        passenger.hangars?.length ||
-        entries[preload.carrierIndex].preload ||
-        !hangar.allowedTags.some((tag) => passenger.transport?.loadTags.includes(tag))
-      )
+      if (!hangar || !hangar.allowedTags.some((tag) => passenger.transport?.loadTags.includes(tag)))
         throw Error("该单位不能预先搭载至此格纳库");
       const key = preload.carrierIndex + "/" + preload.hangarId,
         used =
@@ -189,6 +186,16 @@ const Tactics = (() => {
       capacity.set(key, used);
       clean[index].preload = { carrierIndex: preload.carrierIndex, hangarId: preload.hangarId };
     });
+    for (let i = 0; i < clean.length; i++) {
+      const seen = new Set([i]);
+      let current = clean[i];
+      while (current.preload) {
+        const parent = current.preload.carrierIndex;
+        if (seen.has(parent)) throw Error("不能循环搭载");
+        seen.add(parent);
+        current = clean[parent];
+      }
+    }
     if (cost > maxCost) throw Error("编组 COST 超出上限");
     return clean;
   }
@@ -377,7 +384,11 @@ const Tactics = (() => {
     unitLimit = catalog.formation.maxUnits,
   ) {
     const clean = validateFormation(entries, Infinity, catalog.formation.maxUnits);
-    const costs = clean.map((entry) => formationModel(entry).cost + pilots.cost(entry.customPilot));
+    // Pilot cost consumes the formation budget only. Per-unit restrictions
+    // below always inspect the chassis model, never this combined budget cost.
+    const unitCosts = clean.map((entry) => formationModel(entry).cost);
+    const pilotCosts = clean.map((entry) => pilots.cost(entry.customPilot));
+    const costs = unitCosts.map((value, index) => value + pilotCosts[index]);
     const totalCost = costs.reduce((sum, value) => sum + value, 0);
     const reasons = {};
     clean.forEach((entry, index) => {
@@ -562,21 +573,13 @@ const Tactics = (() => {
     }
     return rules;
   }
-  // Keep half of the previous ship-preference slots, using a separate seeded stream.
-  // Unlike rounding a halved quota up, this permits zero ships in small formations.
+  // Reserve a modest fleet component independently of technology and aircraft prices.
+  // Small armies still spend their limited budget on frontline units.
   function aiShipQuota(count, seed) {
-    const interval = 6 + ((seed >>> 0) % 3);
-    const previousQuota = count >= 6 ? Math.max(1, Math.floor(count / interval)) : 0;
-    let shipSeed = (seed ^ 0x85ebca6b) >>> 0;
-    for (let warmup = 0; warmup < 4; warmup++)
-      shipSeed = (Math.imul(shipSeed, 1664525) + 1013904223) >>> 0;
-    let quota = 0;
-    for (let slot = 0; slot < previousQuota; slot++) {
-      shipSeed = (Math.imul(shipSeed, 1664525) + 1013904223) >>> 0;
-      if (shipSeed < 0x80000000) quota++;
-    }
-    return quota;
+    if (count < 8) return 0;
+    return Math.max(1, Math.floor(count / (7 + ((seed >>> 0) % 2))));
   }
+
   function randomFormation(
     seed = 7319,
     maxCost = catalog.formation.maxCost,
@@ -603,6 +606,10 @@ const Tactics = (() => {
       !!model.supplyAura ||
       model.unitTags?.includes("Support") ||
       model.skills?.some((skill) => ["repair", "resupply"].includes(skill.type));
+    const transport = (model) => !model.ship && support(model) && model.hangars?.length > 0;
+    const lightAircraft = (model) =>
+      !model.ship && !support(model) && !model.unitTags?.includes("MS") &&
+      model.unitTags?.includes("Aircraft");
     const frontlineMS = (model) =>
       model.unitTags?.includes("MS") && !model.unitTags.includes("Recon") && !support(model);
     const commander = (model) =>
@@ -630,6 +637,19 @@ const Tactics = (() => {
           .flatMap((node) => node.unlocks),
       ),
     );
+    // Use the earliest unlocking node, not COST or a weapon's level, as the
+    // platform's technology tier. Later duplicate unlocks do not upgrade it.
+    const technologyRanks = new Map();
+    for (const faction of ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"])
+      for (const node of development.nodes(faction)) {
+        const era = Number(String(node.era || "0079").slice(0, 4));
+        const rank = era * 10000 + (node.page || 0) * 100 + (node.column || 0);
+        for (const id of node.unlocks)
+          technologyRanks.set(id, Math.min(technologyRanks.get(id) ?? Infinity, rank));
+      }
+    const knownRanks = choices.map((model) => technologyRanks.get(model.prefabId)).filter(Number.isFinite);
+    const initialTechnology = knownRanks.length ? Math.min(...knownRanks) : 0;
+    const technologyRank = (model) => technologyRanks.get(model.prefabId) ?? initialTechnology;
     const costPerPoint = (model) => model.cost / formationWeight(model);
     const combatChoices = choices.filter((model) => !support(model));
     const coreChoices = combatChoices.length ? combatChoices : choices;
@@ -659,6 +679,11 @@ const Tactics = (() => {
       Math.floor(unitLimit / (coreChoices.some(frontlineMS) ? 2 : minimumWeight)),
     );
     const desiredShips = aiShipQuota(expectedCount, seed);
+    const desiredTransports = expectedCount >= 8 ? Math.max(1, Math.floor(expectedCount / 12)) : 0;
+    const frontlineTarget = Math.max(2, Math.ceil(
+      (unitLimit - desiredShips * 4 - desiredTransports) * 0.8 / 2,
+    ) * 2);
+    const aircraftPointLimit = Math.max(1, Math.floor(unitLimit * 0.15));
     let remaining = maxCost;
     let remainingPoints = unitLimit;
     for (let i = 0; i < count; i++) {
@@ -690,7 +715,16 @@ const Tactics = (() => {
       const infantryCount = entries.filter((entry) => infantry(formationModel(entry))).length;
       const supportCount = entries.filter((entry) => support(formationModel(entry))).length;
       const combatCount = entries.length - supportCount;
+      const ships = entries.filter((entry) => formationModel(entry).ship).length;
+      const transports = entries.filter((entry) => transport(formationModel(entry))).length;
+      const aircraftPoints = entries.reduce((sum, entry) => {
+        const model = formationModel(entry);
+        return sum + (lightAircraft(model) ? formationWeight(model) : 0);
+      }, 0);
+      const hasFrontline = choices.some(frontlineMS);
       const legal = choices.filter((model) => {
+        if (hasFrontline && lightAircraft(model) && aircraftPoints >= aircraftPointLimit) return false;
+        if (model.ship && ships >= desiredShips && coreChoices.some((m) => !m.ship)) return false;
         // Keep at least three combat platforms per supply unit; never spend the army on logistics.
         if (
           support(model) &&
@@ -752,24 +786,40 @@ const Tactics = (() => {
       let preferred = legal.filter(
         (model) => adaptation(model) >= Math.min(100, bestLegalAdaptation),
       );
-      const ships = entries.filter((entry) => formationModel(entry).ship).length;
-      const kind = preferred.filter((model) => !!model.ship === ships < desiredShips);
-      if (kind.length) preferred = kind;
-      if (ships < desiredShips) {
-        const carriers = preferred.filter((model) => model.ship && model.hangars?.length);
-        if (carriers.length) preferred = carriers;
-      }
-      const leaders = preferred.filter(commander);
-      if (leaders.length && commanderCount < commandAllowance) preferred = leaders;
-      // Build a combat-MS backbone when the legal pool supports it. Otherwise
-      // one-point aircraft/tanks at the target price can crowd out every MS.
+      // Choose a role before its technology tier: a newly unlocked fighter must
+      // not displace the MS backbone or every older logistics aircraft.
+      const fleet = ships < desiredShips ? preferred.filter((model) => model.ship) : [];
+      const logistics = transports < desiredTransports && combatCount >= 4
+        ? preferred.filter((model) => transport(model) &&
+            entries.some((entry) => {
+              const passenger = formationModel(entry);
+              return !entry.preload && model.hangars.some((hangar) =>
+                hangar.capacity >= (passenger.transport?.slotCost || 1) &&
+                hangar.allowedTags.some((tag) => passenger.transport?.loadTags.includes(tag)));
+            }))
+        : [];
+      const combat = preferred.filter((model) => !model.ship && !support(model));
+      if (fleet.length) preferred = fleet;
+      else if (logistics.length) preferred = logistics;
+      else if (combat.length) preferred = combat;
+      // Keep most non-logistics points in combat MS when they are available.
       const frontlinePoints = entries.reduce((sum, entry) => {
         const model = formationModel(entry);
         return sum + (frontlineMS(model) ? formationWeight(model) : 0);
       }, 0);
       const frontline = preferred.filter(frontlineMS);
-      if (frontline.length && frontlinePoints < Math.floor(unitLimit / 4) * 2)
-        preferred = frontline;
+      if (frontline.length && frontlinePoints < frontlineTarget) preferred = frontline;
+      const leaders = preferred.filter(commander);
+      if (leaders.length && commanderCount < commandAllowance) preferred = leaders;
+      // Try the latest affordable technology first. Once every platform there
+      // is represented, also admit the preceding column to retain variety.
+      const highestTechnology = Math.max(...preferred.map(technologyRank));
+      const latest = preferred.filter((model) => technologyRank(model) === highestTechnology);
+      const diversify = latest.every((model) => copies(model.prefabId) > 0);
+      preferred = preferred.filter((model) =>
+        technologyRank(model) === highestTechnology ||
+        (diversify && technologyRank(model) === highestTechnology - 1 && copies(model.prefabId) === 0),
+      );
       // Select a competitive price per point first, then diversify within that
       // tier. A new cheap platform must not crowd out an affordable combat MS.
       const budgetPerPoint = remaining / fillablePoints;
@@ -843,18 +893,33 @@ const Tactics = (() => {
     );
     for (const [index, entry] of entries.entries()) {
       const model = formationModel(entry);
-      if (model.hangars?.length || !model.transport) continue;
-      const compatible = hangars.filter(
-        (slot) =>
-          slot.carrierIndex !== index &&
-          slot.remaining >= (slot.hangar.kind === "sfs" ? 1 : model.transport.slotCost) &&
-          slot.hangar.allowedTags.some((tag) => model.transport.loadTags.includes(tag)),
-      );
+      if (!model.transport || entry.preload) continue;
+      const compatible = hangars
+        .filter(
+          (slot) =>
+            slot.carrierIndex !== index &&
+            slot.remaining >= (slot.hangar.kind === "sfs" ? 1 : model.transport.slotCost) &&
+            slot.hangar.allowedTags.some((tag) => model.transport.loadTags.includes(tag)),
+        )
+        .filter((slot) => {
+          const seen = new Set([index]);
+          let parent = slot.carrierIndex;
+          while (entries[parent]) {
+            if (seen.has(parent)) return false;
+            seen.add(parent);
+            if (!entries[parent].preload) break;
+            parent = entries[parent].preload.carrierIndex;
+          }
+          return true;
+        });
       if (!compatible.length) continue;
-      seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
-      if (seed / 4294967296 >= 0.5) continue;
-      seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
-      const slot = compatible[seed % compatible.length];
+      // Pack same chassis together so their launches can form a squad. Prefer
+      // efficient capacity use instead of randomly leaving half the cargo outside.
+      const packedPeers = (slot) => entries.filter((other) =>
+        other.preload?.carrierIndex === slot.carrierIndex &&
+        formationModel(other).prefabId === model.prefabId).length;
+      compatible.sort((a, b) => packedPeers(b) - packedPeers(a) || a.remaining - b.remaining);
+      const slot = compatible[0];
       entry.preload = { carrierIndex: slot.carrierIndex, hangarId: slot.hangar.id };
       slot.remaining -= slot.hangar.kind === "sfs" ? 1 : model.transport.slotCost;
     }
@@ -1188,11 +1253,41 @@ const Tactics = (() => {
       !deploymentCells(g, team, u).some((c) => c.x === x && c.y === y)
     )
       throw Error("请在己方出生区的有效格子部署");
-    if (!fits(g, u, x, y, u.angle, false, team)) throw Error("该部署位置已有单位");
+    const target = squadJoinTarget(g, u, x, y, [u]);
+    if (!target && !fits(g, u, x, y, u.angle, false, team)) throw Error("该部署位置已有单位");
     delete u.rotationPivot;
+    delete u.squadId; delete u.squadSlot;
     u.x = x;
     u.y = y;
+    if (target) joinSquad(g, u, target);
     hangars.sync(g);
+  }
+  function aiDeployment(g, seat) {
+    if (!g.deployment || g.deployment[seat]) return;
+    const controlled = g.units.filter(u => ownerOf(u) === seat && onMap(u) &&
+      (!g.campaignBattlefield || u.campaignDeploying));
+    // Load compatible troops using real deployment, adjacency and native capacity checks.
+    for (const carrier of controlled.filter(u => !u.embarked && hangars.of(u).length)) {
+      for (const passenger of controlled.filter(u => u !== carrier && !u.embarked && !hangars.of(u).length)) {
+        const allowed = new Set(deploymentCells(g, seat, passenger).map(c => key(c.x, c.y)));
+        const destination = cells(carrier).flatMap(c => [[1,0],[-1,0],[0,1],[0,-1]]
+          .map(([dx,dy]) => ({x:c.x+dx,y:c.y+dy})))
+          .find(c => allowed.has(key(c.x,c.y)) && fits(g,passenger,c.x,c.y,passenger.angle,false,seat) &&
+            hangars.of(carrier).some(h => hangars.canEmbark(g,{...passenger,...c},carrier,h.id)));
+        if (!destination) continue;
+        deploy(g,seat,passenger.id,destination.x,destination.y);
+        const h = hangars.of(carrier).find(h => hangars.canEmbark(g,passenger,carrier,h.id));
+        hangars.embark(g,passenger,carrier,h.id);
+      }
+    }
+    for (const unit of controlled.filter(u => squadEligible(u) && !u.embarked)) {
+      if (squadMembers(g,unit).length > 1) continue;
+      const target = controlled.filter(other => other !== unit && !other.embarked && squadEligible(other) &&
+          squadJoinTarget(g,unit,other.x,other.y,[unit]) === other)
+        .sort((a,b) => Number(b.model === unit.model)-Number(a.model === unit.model) || dist(unit,a)-dist(unit,b))[0];
+      if (target && deploymentCells(g,seat,unit).some(c => c.x === target.x && c.y === target.y))
+        deploy(g,seat,unit.id,target.x,target.y);
+    }
   }
   function confirmDeployment(g, team) {
     if (g.units.some((u) => u.pendingMove?.seat === team)) throw Error("请先确认或取消移动");
@@ -1365,6 +1460,91 @@ const Tactics = (() => {
     const size = dimensions(unit);
     return x >= unit.x && x < unit.x + size.width && y >= unit.y && y < unit.y + size.height;
   }
+  // A squad shares one simulation cell; presentation offsets never change range or sight.
+  function squadMembers(g, unit) {
+    if (!unit?.squadId) return unit ? [unit] : [];
+    return g.units
+      .filter(
+        (other) =>
+          onMap(other) &&
+          !other.embarked &&
+          other.squadId === unit.squadId &&
+          other.team === unit.team &&
+          controllerOf(g, other) === controllerOf(g, unit) &&
+          other.x === unit.x &&
+          other.y === unit.y,
+      )
+      .sort((a, b) => (a.squadSlot ?? 0) - (b.squadSlot ?? 0) || a.id.localeCompare(b.id));
+  }
+  function squadEligible(unit) {
+    const size = dimensions(unit),
+      model = modelOf(unit);
+    return (
+      onMap(unit) &&
+      !unit.embarked &&
+      !unit.visualOnly &&
+      !model.ship &&
+      unitSize(model) !== "large" &&
+      size.width === 1 &&
+      size.height === 1 &&
+      !hangars.of(unit).length
+    );
+  }
+  function squadJoinTarget(g, unit, x, y, members = squadMembers(g, unit)) {
+    const target = g.units.find(
+      (other) =>
+        onMap(other) && !other.embarked && !members.includes(other) && occupies(other, x, y),
+    );
+    if (
+      !target ||
+      !members.every(squadEligible) ||
+      !squadEligible(target) ||
+      target.team !== unit.team ||
+      controllerOf(g, target) !== controllerOf(g, unit) ||
+      environmentOf(g, target) !== environmentOf(g, unit) ||
+      !!target.flying !== !!unit.flying
+    )
+      return null;
+    const occupants = g.units.filter(
+      (other) =>
+        onMap(other) && !other.embarked && !members.includes(other) && occupies(other, x, y),
+    );
+    const destination = squadMembers(g, target);
+    return members.length + destination.length <= 3 &&
+      occupants.every((other) => destination.includes(other)) &&
+      destination.every((other) => !other.plan && !other.pendingMove)
+      ? target
+      : null;
+  }
+  function squadOffset(g, unit, facing = null, frameMembers = null) {
+    if (!unit.squadId && !(frameMembers?.length > 1)) return { x: 0, y: 0, scale: 1 };
+    const members = frameMembers || squadMembers(g, unit);
+    const index = Math.max(
+      0,
+      members.findIndex((member) => member.id === unit.id),
+    );
+    if (members.length < 2) return { x: 0, y: 0, scale: 1 };
+    const x = members.length === 2 ? (index ? 0.22 : -0.22) : (index - 1) * 0.3;
+    const y = members.length === 2 ? 0 : index === 1 ? -0.12 : 0.12;
+    // A shallow triangle is only a visual arrangement; all members share the same rules.
+    const angle = ((facing ?? members[0].angle ?? 0) * Math.PI) / 180;
+    return {
+      x: x * Math.cos(angle) - y * Math.sin(angle),
+      y: x * Math.sin(angle) + y * Math.cos(angle),
+      scale: 1,
+    };
+  }
+  function joinSquad(g, unit, target, members = [unit]) {
+    if (squadJoinTarget(g, unit, target.x, target.y, members)?.id !== target.id)
+      throw Error("该小队无法加入：成员、控制权或容量已变化");
+    const destination = squadMembers(g, target).filter((other) => !members.includes(other));
+    const id = target.squadId || "squad-" + target.id;
+    [...destination, ...members].forEach((other, index) => {
+      other.squadId = id;
+      other.squadSlot = index;
+      other.origin = null;
+    });
+  }
   function fits(
     g,
     unit,
@@ -1391,6 +1571,14 @@ const Tactics = (() => {
         !(g.units || []).some(
           (other) =>
             other.id !== unit.id &&
+            !(
+              unit.squadId &&
+              other.squadId === unit.squadId &&
+              other.team === unit.team &&
+              controllerOf(g, other) === controllerOf(g, unit) &&
+              squadEligible(unit) &&
+              squadEligible(other)
+            ) &&
             onMap(other) &&
             !other.embarked &&
             (occupies(other, c.x, c.y) ||
@@ -1524,12 +1712,20 @@ const Tactics = (() => {
       placed.units.push({ ...probe, ...position });
       result.push({ entry, i, position, heading });
     }
-    formation.forEach((entry, i) => {
-      if (!entry.preload) return;
-      const carrier = result.find((p) => p.i === entry.preload.carrierIndex);
-      if (carrier)
-        result.push({ entry, i, position: { ...carrier.position }, heading: carrier.heading });
-    });
+    const placedIndices = new Map(result.map((item) => [item.i, item]));
+    function placeCargo(i, visiting = new Set()) {
+      if (placedIndices.has(i)) return placedIndices.get(i);
+      const entry = formation[i];
+      if (!entry?.preload || visiting.has(i)) return null;
+      visiting.add(i);
+      const carrier = placeCargo(entry.preload.carrierIndex, visiting);
+      if (!carrier) return null;
+      const item = { entry, i, position: { ...carrier.position }, heading: carrier.heading };
+      placedIndices.set(i, item);
+      result.push(item);
+      return item;
+    }
+    for (let i = 0; i < formation.length; i++) if (!placeCargo(i)) return null;
     return result;
   }
   function create(ai = false, seed = 7319, formations, deploying = false, settings = {}) {
@@ -1676,7 +1872,7 @@ const Tactics = (() => {
   function at(g, x, y) {
     return g.units.find((u) => onMap(u) && !u.embarked && occupies(u, x, y));
   }
-  // 敌军上下左右相邻的格子消耗至少3点；地形更昂贵时仍按地形计算。
+  // Approaching an enemy costs ordinary terrain movement; leaving its control zone costs at least three.
   function terrainCost(g, u, x, y) {
     const movement = modelOf(u).movementType;
     const tile = g.tiles[y][x];
@@ -1690,32 +1886,33 @@ const Tactics = (() => {
     }
     return terrain[g.tiles[y][x]].cost;
   }
-  function movementCost(g, u, x, y) {
+  function movementCost(g, u, x, y, leavingEnemyControl = false) {
     const base = terrainCost(g, u, x, y);
-    const cost = g.units.some(
-      (enemy) => onMap(enemy) && enemy.team !== u.team && dist(enemy, { x, y }) === 1,
-    )
-      ? Math.max(base, 3)
-      : base;
+    const cost = leavingEnemyControl ? Math.max(base, 3) : base;
     return cost / (campaignBattlefield.onSupply(g, u, x, y) ? 1.25 : 1);
   }
   // 按地形消耗搜索可达格子，同时保存各格子的移动路径。
-  function reachable(g, u, starts = null) {
+  function reachableSingle(g, u, starts = null) {
     if (!onMap(u) || u.embarked) return new Map();
     const startAdaptation = adaptationOf(g, u);
     const moveLimit = startAdaptation > 0 ? modelOf(u, g).move / startAdaptation : modelOf(u).move;
     // A search does not mutate the board. Evaluate each destination's expensive
     // collision/terrain/ZOC checks once, even when reached from several edges.
     const stepCosts = new Map();
-    function stepCost(x, y) {
-      const id = key(x, y);
+    const enemyControl = new Set();
+    for (const enemy of g.units.filter((enemy) => onMap(enemy) && enemy.team !== u.team))
+      for (const cell of cells(enemy))
+        for (const [dx, dy] of [[1,0],[-1,0],[0,1],[0,-1]])
+          enemyControl.add(key(cell.x + dx, cell.y + dy));
+    function stepCost(x, y, leavingEnemyControl) {
+      const id = key(x, y) + ":" + Number(leavingEnemyControl);
       if (!stepCosts.has(id))
         stepCosts.set(
           id,
           fits(g, u, x, y, u.angle, true)
             ? Math.max(
                 ...cells(u, x, y).map(
-                  (c) => movementCost(g, u, c.x, c.y) / (adaptationOf(g, u, c.x, c.y) || 0),
+                  (c) => movementCost(g, u, c.x, c.y, leavingEnemyControl) / (adaptationOf(g, u, c.x, c.y) || 0),
                 ),
               )
             : Infinity,
@@ -1724,11 +1921,43 @@ const Tactics = (() => {
     }
     const initial = starts || [{ x: u.x, y: u.y, cost: 0, path: [] }];
     let best = new Map(initial.filter((p) => p.cost <= moveLimit).map((p) => [key(p.x, p.y), p])),
-      queue = [...best.values()];
+      queue = [];
+    let sequence = 0;
+    const earlier = (a, b) => a.node.cost < b.node.cost ||
+      (a.node.cost === b.node.cost && a.order < b.order);
+    function push(node) {
+      const entry = { node, order: sequence++ };
+      let index = queue.length;
+      queue.push(entry);
+      while (index > 0) {
+        const parent = (index - 1) >> 1;
+        if (!earlier(entry, queue[parent])) break;
+        queue[index] = queue[parent];
+        index = parent;
+      }
+      queue[index] = entry;
+    }
+    function pop() {
+      const first = queue[0].node;
+      const last = queue.pop();
+      if (queue.length) {
+        let index = 0;
+        while (index * 2 + 1 < queue.length) {
+          let child = index * 2 + 1;
+          if (child + 1 < queue.length && earlier(queue[child + 1], queue[child])) child++;
+          if (!earlier(queue[child], last)) break;
+          queue[index] = queue[child];
+          index = child;
+        }
+        queue[index] = last;
+      }
+      return first;
+    }
+    for (const node of best.values()) push(node);
     while (queue.length) {
-      queue.sort((a, b) => a.cost - b.cost);
-      let n = queue.shift();
+      let n = pop();
       if (n.cost !== best.get(key(n.x, n.y)).cost) continue;
+      const leavingEnemyControl = cells(u, n.x, n.y).some((cell) => enemyControl.has(key(cell.x, cell.y)));
       for (const [dx, dy] of [
         [1, 0],
         [-1, 0],
@@ -1738,18 +1967,22 @@ const Tactics = (() => {
         let x = n.x + dx,
           y = n.y + dy;
         if (x < 0 || x >= mapWidth(g) || y < 0 || y >= mapHeight(g)) continue;
-        let cost = n.cost + stepCost(x, y);
+        let cost = n.cost + stepCost(x, y, leavingEnemyControl);
         if (cost > moveLimit) continue;
         let k = key(x, y);
         if (best.has(k) && best.get(k).cost <= cost) continue;
         let entry = { x, y, cost, path: [...n.path, { x, y }] };
         best.set(k, entry);
-        queue.push(entry);
+        push(entry);
       }
     }
     // 友军可作为路径中间点，但不能作为移动终点。
     for (const [cell, entry] of best) {
-      if (!fits(g, u, entry.x, entry.y)) best.delete(cell);
+      if (!fits(g, u, entry.x, entry.y)) {
+        const target = squadJoinTarget(g, u, entry.x, entry.y, [u]);
+        if (target) entry.squadTarget = target.id;
+        else best.delete(cell);
+      }
     }
     // Boarding endpoints use an ordinary reachable hull-edge cell plus one step.
     // Normal cargo never becomes a collision obstacle or a path starting point.
@@ -1764,6 +1997,41 @@ const Tactics = (() => {
       }
     }
     return best;
+  }
+  function reachable(g, unit, starts = null, single = false) {
+    const members = single || starts ? [unit] : squadMembers(g, unit);
+    const result = reachableSingle(g, unit, starts);
+    if (members.length < 2) return result;
+    if (members.some((other) => other.moved || other.acted || other.plan || other.pendingMove))
+      return new Map();
+    const routes = members.map((other) => other === unit ? result : reachableSingle(g, other));
+    for (const [cell, route] of result) {
+      const occupied = g.units.some(
+        (other) =>
+          onMap(other) &&
+          !other.embarked &&
+          !members.includes(other) &&
+          occupies(other, route.x, route.y),
+      );
+      if (route.boarding) {
+        const carrier = g.units.find((c) => c.id === route.boarding.carrierId);
+        const walks = routes.map((walk) => walk.get(cell));
+        const plan = walks.every((walk) => walk?.boarding?.carrierId === carrier?.id)
+          ? hangars.boardingPlan(g, members.map((member, i) => ({
+              ...member, ...walks[i].boarding.approach, pendingMove: undefined,
+            })), carrier)
+          : null;
+        if (!plan) result.delete(cell);
+        else route.squadBoarding = plan;
+        continue;
+      }
+      if (
+        routes.some((walk) => !walk.has(cell) || walk.get(cell).boarding) ||
+        (occupied && !squadJoinTarget(g, unit, route.x, route.y, members))
+      )
+        result.delete(cell);
+    }
+    return result;
   }
   function boardingRoute(g, u, carrier, x, y, walk, moveLimit) {
     for (const h of hangars.of(carrier)) {
@@ -1805,7 +2073,7 @@ const Tactics = (() => {
       if (!models[unit.model]?.ship && !models[unit.model]?.fixedWeaponFacing) unit.angle = angle;
     }
   }
-  function move(g, u, x, y) {
+  function moveSingle(g, u, x, y, suppliedTile = null) {
     if (
       !onMap(u) ||
       u.embarked ||
@@ -1816,7 +2084,7 @@ const Tactics = (() => {
       u.moved
     )
       throw Error("本单位无法移动");
-    let tile = reachable(g, u).get(key(x, y));
+    let tile = suppliedTile || reachableSingle(g, u).get(key(x, y));
     if (!tile || !tile.path.length) throw Error("该位置不可移动");
     if (tile.boarding) {
       const { carrierId, hangarId, approach } = tile.boarding;
@@ -1847,6 +2115,32 @@ const Tactics = (() => {
     hangars.sync(g);
     return tile.path;
   }
+  function move(g, unit, x, y, single = false) {
+    const members = single ? [unit] : squadMembers(g, unit);
+    const destination = reachable(g, unit, null, single).get(key(x, y));
+    if (!destination) throw Error("小队成员无法一同到达该位置");
+    const routes = members.map((other) => other === unit ? destination : reachableSingle(g, other).get(key(x, y)));
+    for (const [index, route] of routes.entries()) {
+      const reservation = destination.squadBoarding?.find((item) => item.unitId === members[index].id);
+      if (reservation) route.boarding = { ...route.boarding, hangarId: reservation.hangarId };
+    }
+    if (
+      members.some(
+        (other) => !onMap(other) || other.moved || other.acted || other.pendingMove || other.plan,
+      )
+    )
+      throw Error("小队中存在无法移动的单位");
+    const target = squadJoinTarget(g, unit, x, y, members);
+    members.forEach((other, index) => moveSingle(g, other, x, y, routes[index]));
+    if (single) {
+      delete unit.squadId;
+      delete unit.squadSlot;
+    }
+    if (target) {
+      joinSquad(g, unit, target, members);
+    } else if (members.length > 1) members.forEach((other) => (other.origin = null));
+    return routes[members.indexOf(unit)].path;
+  }
   function canUndo(g, u) {
     return (
       g.winner === null &&
@@ -1860,7 +2154,7 @@ const Tactics = (() => {
     );
   }
   // 预览只保留落点与路径，不改变裁定位置，因此不会提前更新视野或索敌。
-  function previewMove(g, u, x, y, seat = ownerOf(u)) {
+  function previewMove(g, u, x, y, seat = ownerOf(u), single = false) {
     if (u?.embarked?.exposed) return hangars.previewLaunch(g, u, x, y, seat).path;
     if (
       !onMap(u) ||
@@ -1872,7 +2166,7 @@ const Tactics = (() => {
       g.units.some((unit) => unit.pendingMove?.seat === seat)
     )
       throw Error("请先确认或取消移动");
-    const tile = reachable(g, u).get(key(x, y));
+    const tile = reachable(g, u, null, single).get(key(x, y));
     if (!tile?.path.length) throw Error("该位置不可移动");
     const previous = tile.path.at(-2) || u;
     const angle = models[u.model]?.ship
@@ -1885,6 +2179,14 @@ const Tactics = (() => {
       seat,
       from: { x: u.x, y: u.y },
       path: tile.path,
+      single,
+      squadIds: (single ? [u] : squadMembers(g, u)).map((other) => other.id),
+      squadPaths: Object.fromEntries(
+        (single ? [u] : squadMembers(g, u)).map((other) => [
+          other.id,
+          other === u ? tile.path : reachableSingle(g, other).get(key(x, y))?.path || tile.path,
+        ]),
+      ),
       ...(tile.boarding ? { boarding: tile.boarding } : {}),
     };
     return tile.path;
@@ -1892,7 +2194,9 @@ const Tactics = (() => {
   function confirmMove(g, u) {
     const pending = u.pendingMove;
     if (!pending) throw Error("没有待确认的移动");
-    delete u.pendingMove;
+    if (pending.launchMemberOf) throw Error("请确认整个出击小队");
+    const launchMembers = (pending.squadLaunchIds || [u.id]).map(id => g.units.find(actor => actor.id === id));
+    for (const actor of launchMembers) delete actor.pendingMove;
     try {
       if (pending.rotation) {
         rotate(g, u, pending.rotation);
@@ -1900,7 +2204,7 @@ const Tactics = (() => {
         return [];
       }
       if (pending.boarding) {
-        const route = reachable(g, u).get(key(pending.x, pending.y));
+        const route = reachable(g, u, null, pending.single === true).get(key(pending.x, pending.y));
         if (
           route?.boarding?.carrierId !== pending.boarding.carrierId ||
           route.boarding.hangarId !== pending.boarding.hangarId
@@ -1908,18 +2212,23 @@ const Tactics = (() => {
           throw Error("搭载目标或容量已变化，请取消后重新选择");
       }
       const path = pending.launch
-        ? hangars.launch(g, u, pending.x, pending.y).path
-        : move(g, u, pending.x, pending.y);
+        ? (pending.squadLaunchIds ? hangars.launchSquad(g, launchMembers, pending.x, pending.y) : hangars.launch(g, u, pending.x, pending.y)).path
+        : move(g, u, pending.x, pending.y, pending.single === true);
       u.origin = null;
       return path;
     } catch (error) {
       u.pendingMove = pending;
+      for (const actor of launchMembers.slice(1)) actor.pendingMove = {
+        x: pending.x, y: pending.y, seat: pending.seat, launch: true, launchMemberOf: u.id,
+      };
       throw error;
     }
   }
   function cancelMove(g, u) {
     if (!u.pendingMove) throw Error("没有待取消的移动");
-    delete u.pendingMove;
+    if (u.pendingMove.launchMemberOf) return cancelMove(g, g.units.find(actor => actor.id === u.pendingMove.launchMemberOf));
+    const ids = u.pendingMove.squadLaunchIds || [u.id];
+    for (const id of ids) delete g.units.find(actor => actor.id === id).pendingMove;
   }
   function undo(g, u) {
     if (!canUndo(g, u)) throw Error("无法撤销：己方编组的后续单位已移动或原位置被占用");
@@ -1956,7 +2265,7 @@ const Tactics = (() => {
     return modelOf(u).actionPoints ?? 10;
   }
   function counterActionBudget(u) {
-    return roundAP(actionBudget(u) * 0.75);
+    return actionBudget(u);
   }
   function actionPoints(u) {
     return u.actionPoints ?? actionBudget(u);
@@ -2020,9 +2329,9 @@ const Tactics = (() => {
         throw Error("该武器的使用次数已经耗尽");
     const ap = weapons.reduce((n, w) => n + actionCost(w), 0);
     const en = weapons.reduce((n, w) => n + weaponStats(w, u).en, 0);
-    if (ap > budget.ap) throw Error("行动点不足");
+    // Automatic ordinary attacks do not consume or require AP.
     if (en > budget.en) throw Error("武器序列总EN不足");
-    return { ap, en };
+    return { ap: 0, en };
   }
   function counterQueue(g, u, target, weapons) {
     if (!Array.isArray(weapons) || !weapons.length || weapons.length > 32)
@@ -2034,9 +2343,9 @@ const Tactics = (() => {
     validatePilotWeaponQueue(u, weapons);
     const ap = weapons.reduce((n, w) => n + actionCost(w), 0);
     const en = weapons.reduce((n, w) => n + weaponStats(w, u).en, 0);
-    if (ap > counterActionBudget(u)) throw Error("反击行动点不足");
+
     if (en > u.en) throw Error("反击武器序列总EN不足");
-    return { ap, en };
+    return { ap: 0, en };
   }
   function counterPlan(g, unit, orders) {
     if (!Array.isArray(orders) || !orders.length || orders.length > 32)
@@ -2051,8 +2360,7 @@ const Tactics = (() => {
       weapons.push(...queue);
     }
     if (
-      weapons.length > 32 ||
-      weapons.reduce((sum, w) => sum + actionCost(w), 0) > counterActionBudget(unit)
+      weapons.length > 32
     )
       throw Error("反击行动点不足");
     if (weapons.reduce((sum, w) => sum + weaponStats(w, unit).en, 0) > unit.en)
@@ -2103,10 +2411,13 @@ const Tactics = (() => {
   function validatePilotWeaponQueue(unit, weapons) {
     const counts = new Map();
     for (const weapon of weapons) {
-      if (!weapon.pilotRequirements?.length || weapon.turnUseContinuation) continue;
+      if (weapon.turnUseContinuation) continue;
       const count = (counts.get(weapon.id) || 0) + 1;
       counts.set(weapon.id, count);
-      if ((unit.pilotWeaponTurnUses?.[weapon.id] || 0) + count > 1)
+      if (Number.isInteger(weapon.maxUsesPerTurn) &&
+          (unit.weaponTurnUses?.[weapon.id] || 0) + count > weapon.maxUsesPerTurn)
+        throw Error("武器超过本回合使用次数上限");
+      if (weapon.pilotRequirements?.length && (unit.pilotWeaponTurnUses?.[weapon.id] || 0) + count > 1)
         throw Error("驾驶员条件武装每回合只能使用一次");
     }
   }
@@ -2119,6 +2430,7 @@ const Tactics = (() => {
       !!w &&
       pilotWeaponAllowed(u, w) &&
       (!w.pilotRequirements?.length || w.turnUseContinuation || !u.pilotWeaponTurnUses?.[w.id]) &&
+      (!Number.isInteger(w.maxUsesPerTurn) || w.turnUseContinuation || (u.weaponTurnUses?.[w.id] || 0) < w.maxUsesPerTurn) &&
       (!w.requiresShield || u.shield > 0) &&
       !weaponCooldown(u, w) &&
       (!Number.isInteger(w.maxUses) || (u.weaponUses?.[w.id] || 0) < w.maxUses) &&
@@ -2206,6 +2518,8 @@ const Tactics = (() => {
     );
   }
   function canAttack(g, a, b, w) {
+    if (a?.attackSkillRound === g.round && w?.slot !== "skill") return false;
+    if (a && w && w.slot !== "skill" && !w.turnUseContinuation && !automaticFire.roundCount(Tactics, g, a, w)) return false;
     if (a?.pendingMove) return false;
     if (
       w?.requiresSfsMS &&
@@ -2225,7 +2539,7 @@ const Tactics = (() => {
     if (b?.groundTarget)
       return (
         !!groundTarget(g, a, b.x, b.y) &&
-        ["mortar", "nuke"].includes(w?.special?.type) &&
+        ["mortar", "nuke", "blast"].includes(w?.special?.type) &&
         onMap(a) &&
         canUse(a, w) &&
         inRange(a, b, w) &&
@@ -2254,10 +2568,12 @@ const Tactics = (() => {
     return weapon && event.aimCell ? { ...weapon, aimCell: event.aimCell } : weapon;
   }
   function baseEventWeapon(unit, event) {
-    const weapon = modelOf(unit).weapons.find((w) => w.id === event.weapon);
+    let weapon = modelOf(
+      event.model && models[event.model] ? { ...unit, model: event.model } : unit,
+    ).weapons.find((w) => w.id === event.weapon);
     // Only server-expanded impact events carry a blast centre; launch requests still check range.
     if (["nuke", "blast"].includes(weapon?.special?.type) && event.impactCell)
-      return {
+      weapon = {
         ...weapon,
         blastCenter: event.impactCell,
         ...(event.energySpent !== undefined
@@ -2304,16 +2620,28 @@ const Tactics = (() => {
     };
   }
   function countersRemaining(u) {
-    return Math.max(0, Math.min(1, modelOf(u).counterLimit ?? 1) - (u.counterCount ?? 0));
+    return (modelOf(u).counterLimit ?? 1) > 0
+      ? 1 : 0;
+  }
+  // A squad is the combat target, including members without their own incoming volley.
+  // Preserve real incoming records first (notably their no-counter restrictions).
+  function counterTargetEntries(g, request) {
+    const attacks = request.attacks || request.counterTargets || [request];
+    const entries = new Map(attacks.map((attack) => [attack.attacker, attack]));
+    for (const attack of attacks) {
+      const attacker = g.units.find((unit) => unit.id === attack.attacker);
+      if (!attacker) continue;
+      for (const member of squadMembers(g, attacker))
+        if (!entries.has(member.id)) entries.set(member.id, { ...attack, attacker: member.id });
+    }
+    return [...entries.values()];
   }
   function canCounter(g, a, b, w) {
     return (
       !!a &&
       !!w &&
       !w.noCounter &&
-      actionCost(w) <= counterActionBudget(a) &&
       countersRemaining(a) > 0 &&
-      (!a.counterTargetId || a.counterTargetId === b?.id) &&
       canAttack(g, a, b, w)
     );
   }
@@ -2547,8 +2875,13 @@ const Tactics = (() => {
   function spend(u, w) {
     if (w.en) u.en -= w.en;
     recordPilotWeaponUse(u, w);
+    if (Number.isInteger(w.maxUsesPerTurn) && !w.turnUseContinuation)
+      (u.weaponTurnUses ||= {})[w.id] = (u.weaponTurnUses[w.id] || 0) + 1;
     if (Number.isInteger(w.maxUses)) (u.weaponUses ||= {})[w.id] = (u.weaponUses[w.id] || 0) + 1;
     if (w.changeHeldWeapon !== false) u.heldWeapon = w.id;
+    const finalDisplay = w.attack.displayStates?.at(-1)?.index;
+    if (finalDisplay !== undefined || w.changeHeldWeapon !== false)
+      u.weaponDisplayIndex = finalDisplay ?? w.displayIndex ?? 0;
   }
   function random(g) {
     g.seed = (Math.imul(1664525, g.seed) + 1013904223) >>> 0;
@@ -2566,10 +2899,12 @@ const Tactics = (() => {
     counterOnly = false,
     counterOrders = null,
     counterProgress = null,
+    options = {},
   ) {
     if (
-      g.winner !== null ||
-      (!counterOnly && (a.team !== g.team || a.acted || !canAttack(g, a, b, w)))
+      !options.launched &&
+      (g.winner !== null ||
+        (!counterOnly && (a.team !== g.team || a.acted || !canAttack(g, a, b, w))))
     )
       throw Error("攻击条件已失效");
     if (!["counter", "defend", "evade"].includes(response)) throw Error("未知应战方式");
@@ -2604,7 +2939,7 @@ const Tactics = (() => {
       faceTarget(from, to);
       faceTarget(to, from);
       weapon = weaponStats(weapon, from);
-      spend(from, weapon);
+      if (!options.launched) spend(from, weapon);
       const before = to.hp,
         shieldBefore = to.shield,
         partsBefore = { ...to.brokenParts },
@@ -2662,7 +2997,7 @@ const Tactics = (() => {
         const overdriveEnded = wasOverdrive && !to.overdrive;
         let dodgeTo = null;
         if (executed && !hit) {
-          dodgeTo = dodgeSlots[to.id] === 0 ? dodgeSide() : 0;
+          dodgeTo = dodgeSlots[to.id] === 0 ? dodgeSide() : -dodgeSlots[to.id];
           dodgeSlots[to.id] = dodgeTo;
         }
         strikes.push({
@@ -2730,11 +3065,11 @@ const Tactics = (() => {
         shieldAfter: to.shield,
         shieldDamage: shieldBefore - to.shield,
         after: to.hp,
-        hitChance: strikes[0].hitChance,
+        hitChance: strikes[0]?.hitChance,
         response: stance,
       });
     }
-    if (!counterOnly) fire(a, b, w, response);
+    if (!counterOnly) fire(a, b, w, response, !!options.isCounter);
     if (response === "counter" && allowCounter && b.hp > 0 && a.hp > 0) {
       let remaining = counterProgress?.remaining ?? counterActionBudget(b),
         started = counterProgress?.started ?? false;
@@ -2753,7 +3088,6 @@ const Tactics = (() => {
         if (
           !weapon ||
           weapon.noCounter ||
-          actionCost(weapon) > remaining ||
           !canAttack(g, b, enemy, weapon)
         )
           continue;
@@ -2763,7 +3097,6 @@ const Tactics = (() => {
             b.counterTargetId = enemy.id;
           started = true;
         }
-        remaining -= actionCost(weapon);
         if (weapon.special?.type === "blast") {
           const impact = attackCells(b, enemy, weapon)[0] || { x: enemy.x, y: enemy.y };
           const victims = g.units.filter(
@@ -2807,18 +3140,19 @@ const Tactics = (() => {
         (e) => e.carrierId === event.to && event.after <= 0 && event.before > 0,
       );
     let alive = [0, 1].map((t) => g.units.some((u) => u.team === t && u.hp > 0));
-    if (!alive[0] || !alive[1]) g.winner = alive[0] ? 0 : 1;
+    if (!options.deferVictory && (!alive[0] || !alive[1])) g.winner = alive[0] ? 0 : 1;
     return events;
   }
   // Counter waves share one reaction opportunity and one AP budget across the entire batch.
   function counter(g, defender, attacker, weaponIds, orders = null, progress = null) {
     return fight(g, attacker, defender, null, "counter", weaponIds, true, true, orders, progress);
   }
-  function wait(g, u) {
+  function wait(g, u, single = false) {
     if (!onMap(u) || g.winner !== null || u.team !== g.team || u.acted) throw Error("无法待机");
-    u.acted = true;
-    u.actionPoints = 0;
-    u.origin = null;
+    for (const member of single ? [u] : squadMembers(g, u)) {
+      member.acted = true;
+      member.origin = null;
+    }
   }
   function irradiationLine(unit, target, range) {
     const from = center(unit),
@@ -3097,7 +3431,9 @@ const Tactics = (() => {
     // One round number is one team action phase; all counter budgets refresh on handoff.
     for (const u of g.units) {
       u.counterCount = 0;
+      delete u.counterActionPoints;
       delete u.pilotWeaponTurnUses;
+      delete u.weaponTurnUses;
       delete u.counterTargetId;
     }
     for (const u of g.units.filter((u) => u.team === g.team && u.hp > 0)) {
@@ -3137,7 +3473,7 @@ const Tactics = (() => {
           iFieldHP(u) + (field.capacity * field.recoveryPercent) / 100,
         );
       u.acted = false;
-      u.actionPoints = Math.max(0, roundAP(actionBudget(u) * (u.apPenaltyNextTurn ? 0.75 : 1)));
+      u.actionPoints = actionBudget(u);
       delete u.apPenaltyNextTurn;
       u.moved = false;
       u.origin = null;
@@ -3173,7 +3509,6 @@ const Tactics = (() => {
         u.readySnipe = { target: target.id, weapon: weapon.id, aimCell };
         u.plan = { ...u.readySnipe, charged: true };
         u.acted = true;
-        u.actionPoints = 0;
       }
     }
     g.turnEffects.push(...hangars.evacuate(g).map((e) => ({ type: "evacuation", ...e })));
@@ -3194,25 +3529,7 @@ const Tactics = (() => {
       )
         return false;
       if (u.embarked) return true;
-      if (u.plan) {
-        if (actionPoints(u) <= 0) return false;
-        return enemies.some((target) => {
-          const order = attackPlanFor(u, target);
-          const committed = order
-            ? (order.weapons || [order.weapon])
-                .map((id) => modelOf(u).weapons.find((weapon) => weapon.id === id))
-                .filter(Boolean)
-            : [];
-          return modelOf(u).weapons.some((weapon) => {
-            try {
-              attackQueue(g, u, target, [...committed, weapon]);
-              return true;
-            } catch {
-              return false;
-            }
-          });
-        });
-      }
+      if (u.plan) return false;
       if (skills.of(u).some((skill) => skills.targets(g, u, skill.id).length)) return true;
       if (!u.moved && (reachable(g, u).size > 1 || canRotate(g, u, 1) || canRotate(g, u, -1)))
         return true;
@@ -3262,6 +3579,52 @@ const Tactics = (() => {
       }
     }
     return pressure;
+  }
+  // Assemble nearby idle units through the same move/join rules as a player.
+  // Never retreat across the map or delay an available attack just to fill a squad.
+  function aiSquadChoice(g, u, available = () => true) {
+    const members = squadMembers(g, u);
+    if (
+      !members.every(squadEligible) ||
+      members.length >= 3 ||
+      members.some((m) => m.moved || m.acted || m.plan || m.pendingMove)
+    )
+      return null;
+    const enemies = g.units.filter((e) => e.team !== u.team && onMap(e));
+    const nearest = (point) =>
+      enemies.length ? Math.min(...enemies.map((e) => dist(point, e))) : 0;
+    const allowance = Math.max(1, modelOf(u).move * 0.25);
+    const candidates = g.units.filter(
+      (other) =>
+        other !== u &&
+        onMap(other) &&
+        !other.embarked &&
+        other.team === u.team &&
+        controllerOf(g, other) === controllerOf(g, u) &&
+        dist(u, other) <= modelOf(u).move + 1 &&
+        squadJoinTarget(g, u, other.x, other.y, members)?.id === other.id &&
+        nearest(other) <= nearest(u) + allowance,
+    );
+    if (!candidates.length) return null;
+    if (
+      members.some((m) => enemies.some((e) => automaticFire.queue(Tactics, g, m, e, false).length))
+    )
+      return null;
+    const routes = reachable(g, u);
+    let best = null;
+    for (const other of candidates) {
+      const route = routes.get(key(other.x, other.y));
+      if (!route) continue;
+      const destination = squadMembers(g, other);
+      if (!destination.every((member) => !member.acted && !member.moved && available(member))) continue;
+      const same = destination.reduce((sum, member) => sum + members.filter(
+        (source) => modelOf(source).prefabId === modelOf(member).prefabId).length, 0);
+      const speeds = [...members, ...destination].map((member) => modelOf(member).move);
+      const speedPenalty = Math.max(...speeds) - Math.min(...speeds);
+      const score = same * 10 + destination.length * 2 - speedPenalty - route.cost * 0.1;
+      if (!best || score > best.score) best = { ...route, score };
+    }
+    return best;
   }
   function aiChoice(g, u, destinations = null) {
     let cells =
@@ -3355,7 +3718,6 @@ const Tactics = (() => {
           if (
             inRange(virtual, e, w) &&
             (!destinations || w.slot !== "skill") &&
-            actionCost(w) <= actionPoints(u) + (u.plan?.actionCost ?? 0) &&
             canAttack(decisionGame, virtual, e, w)
           ) {
             let ex = estimate(g, virtual, e, w),
@@ -3383,6 +3745,43 @@ const Tactics = (() => {
       )
         best = { ...c, score, target, weapon, assignedAttackers };
     }
+    if (!destinations && !u.moved && best && !best.target && strategy.goal &&
+        ["advance", "flank", "overrun"].includes(strategy.state)) {
+      const goal = strategy.goal;
+      const distance = (point) => Math.hypot(point.x - goal.x, point.y - goal.y);
+      if (distance(u) > 2 && distance(best) >= distance(u) - 0.5) {
+        // Only run a full-board escape search when local scoring stalls. The
+        // reverse field finds a way around walls instead of repeating the same
+        // closest-to-enemy cell every turn. Actual moves still use reachable().
+        const members = squadMembers(g, u), passable = new Map(), distances = new Map(), queue = [];
+        const allowed = (x, y) => {
+          const id = key(x, y);
+          if (!passable.has(id)) passable.set(id, x >= 0 && y >= 0 && x < mapWidth(g) && y < mapHeight(g) &&
+            members.every((member) => fits(g, member, x, y, member.angle, true) &&
+              Tactics.cells(member, x, y).every((cell) => adaptationOf(g, member, cell.x, cell.y) > 0 &&
+                Number.isFinite(movementCost(g, member, cell.x, cell.y)))));
+          return passable.get(id);
+        };
+        for (let y = Math.round(goal.y) - 1; y <= Math.round(goal.y) + 1; y++)
+          for (let x = Math.round(goal.x) - 1; x <= Math.round(goal.x) + 1; x++)
+            if (allowed(x, y)) { distances.set(key(x, y), 0); queue.push({ x, y }); }
+        for (let index = 0; index < queue.length; index++) {
+          const point = queue[index];
+          for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+            const x = point.x + dx, y = point.y + dy, id = key(x, y);
+            if (!distances.has(id) && allowed(x, y)) {
+              distances.set(id, distances.get(key(point.x, point.y)) + 1);
+              queue.push({ x, y });
+            }
+          }
+        }
+        const current = distances.get(key(u.x, u.y)) ?? Infinity;
+        const detours = cells.filter((point) => !point.boarding && !point.rotation &&
+          (distances.get(key(point.x, point.y)) ?? Infinity) < current);
+        detours.sort((a, b) => distances.get(key(a.x, a.y)) - distances.get(key(b.x, b.y)) || a.cost - b.cost);
+        if (detours.length) best = { ...best, ...detours[0], target: null, weapon: null };
+      }
+    }
     return best;
   }
   function aiLaunchChoice(g, u) {
@@ -3393,9 +3792,21 @@ const Tactics = (() => {
       ...u,
       embarked: undefined,
       moved: true,
-      actionPoints: roundAP(actionPoints(u) * 0.75),
+      actionPoints: actionPoints(u),
     };
-    return aiChoice(g, passenger, destinations);
+    const best = aiChoice(g, passenger, destinations);
+    // Prefer joining a nearby compatible squad on launch, without sacrificing
+    // an available attack or marching back away from the engagement.
+    const grouped = destinations.filter((point) => point.squadTarget);
+    for (const point of grouped) {
+      const target = g.units.find((member) => member.id === point.squadTarget);
+      const candidate = aiChoice(g, passenger, [point]);
+      if (!candidate || (best?.target && !candidate.target)) continue;
+      const same = squadMembers(g, target).some((member) => modelOf(member).prefabId === modelOf(u).prefabId);
+      const score = candidate.score + (same ? 1 : 0.35);
+      if (best && score > best.score) Object.assign(best, candidate, { score });
+    }
+    return best;
   }
   const hangars = hangarModule.create({
     modelOf,
@@ -3409,6 +3820,12 @@ const Tactics = (() => {
     movementCost,
     sensors,
     captureObjective: (g, unit, origin) => aiTactics.captureGoal(Tactics, g, unit, origin),
+    squadMembers,
+    squadEligible,
+    environmentOf,
+    squadJoinTarget,
+    joinSquad,
+    deploymentCells,
   });
   return {
     sensors,
@@ -3518,6 +3935,12 @@ const Tactics = (() => {
     center,
     anchorAt,
     occupies,
+    squadMembers,
+    squadEligible,
+    squadJoinTarget,
+    squadOffset,
+    joinSquad,
+    mapCellPixels: 160,
     fits,
     canRotate,
     rotate,
@@ -3525,6 +3948,7 @@ const Tactics = (() => {
     deploymentCells,
     deploy,
     confirmDeployment,
+    aiDeployment,
     terrain,
     terrainStyle,
     typeNames,
@@ -3544,6 +3968,23 @@ const Tactics = (() => {
     countersRemaining,
     canCounter,
     eventWeapon,
+    automaticWeapons: (g, u, t, counter = false) =>
+      automaticFire.weapons(Tactics, g, u, t, counter),
+    automaticQueue: (g, u, t, counter = false) => automaticFire.queue(Tactics, g, u, t, counter),
+    automaticSquadQueue: (g, u, t, counter = false) =>
+      automaticFire.squadQueue(Tactics, g, u, t, counter),
+    firePlan: (g, u, t, options = {}) => automaticFire.plan(Tactics, g, u, t, options),
+    attackRounds: (g, u, w, counter = false) => automaticFire.roundCount(Tactics, g, u, w, counter),
+    fireAPCost: (w, unit = null) => automaticFire.cost(Tactics, w, unit),
+    fireAPBudget: (u, counter = false) => automaticFire.budget(Tactics, u, counter),
+    resolveAutomatic: (room, choices, id) => automaticFire.resolve(Tactics, room, choices, id),
+    spendWeapon: spend,
+    resolveProjectile: (g, source, target, weapon, response, isCounter = false) =>
+      fight(g, source, target, weapon, response, [], false, false, null, null, {
+        launched: true,
+        deferVictory: true,
+        isCounter,
+      }),
     random,
     weaponCooldown,
     startWeaponCooldown,
@@ -3576,6 +4017,7 @@ const Tactics = (() => {
     attackCells,
     weakPoint,
     blastContains,
+    targetModifier,
     groundTarget,
     canAttack,
     irradiationLine,
@@ -3595,6 +4037,8 @@ const Tactics = (() => {
     turnTransitionMs,
     bestResponse,
     aiChoice,
+    aiSquadChoice,
+    counterTargetEntries,
     aiTargetPressure,
     aiLaunchChoice,
   };

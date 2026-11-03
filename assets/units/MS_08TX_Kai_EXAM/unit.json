@@ -601,7 +601,7 @@
   },
   "stats": {
     "hp": 40500,
-    "en": 375,
+    "en": 750,
     "move": 8,
     "mobility": 185,
     "cost": 625,
@@ -690,7 +690,7 @@
   },
   "sourceStats": {
     "enBeforeReduction": 750,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "hp": 32500,
     "walkSpeed": 0.85,
     "boostSpeed": 1.95,
@@ -769,6 +769,28 @@
     "Common_Push_A": {
       "ref": "Common_Push_A__lv2",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Push_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Kick_White_R"
+              ],
+              "delay": 0.45
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Push_A"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
@@ -790,7 +812,10 @@
             "y": 0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "ZN_Shotgun": {
       "ref": "ZN_Shotgun__lv1",
@@ -978,6 +1003,74 @@
     "ZN_HeatSword_Double_DBDF": {
       "ref": "ZN_HeatSword_Double_DBDF__lv1",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Melee_Double_B",
+              "delay": 0
+            },
+            {
+              "weaponDisplayIndex": 1,
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_2_Yellow_R"
+              ],
+              "delay": 0.6
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [
+                "leftArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_2_Yellow_L"
+              ],
+              "delay": 0.0
+            },
+            {
+              "animation": "Common_Melee_Double_F",
+              "delay": 0.4
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_1_Yellow_R"
+              ],
+              "delay": 0.3
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [
+                "leftArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_1_Yellow_L"
+              ],
+              "delay": 0.0
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Melee_Double_B"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/ZN_HeatSword_Double_DBDF.gw",
@@ -1000,11 +1093,106 @@
           "leftArm",
           "rightArm"
         ]
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "ZN_HeatSword_Double_DE": {
       "ref": "ZN_HeatSword_Double_DE__lv1",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "weaponDisplayIndex": 1,
+              "delay": 0
+            },
+            {
+              "animation": "Common_Melee_Double_G",
+              "delay": 0.2
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_1_Yellow_R_S"
+              ],
+              "delay": 0.32
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [
+                "leftArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_1_Yellow_L_S"
+              ],
+              "delay": 0.0
+            },
+            {
+              "animation": "Common_Pose_A",
+              "delay": 0.12
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_1_Yellow_R_S"
+              ],
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [
+                "leftArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_1_Yellow_L_S"
+              ],
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_1_Yellow_R_S"
+              ],
+              "delay": 0.12
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [
+                "leftArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_1_Yellow_L_S"
+              ],
+              "delay": 0.0
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Melee_Double_G"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/ZN_HeatSword_Double_DE.gw",
@@ -1027,7 +1215,10 @@
           "leftArm",
           "rightArm"
         ]
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     }
   },
   "mechanics": [

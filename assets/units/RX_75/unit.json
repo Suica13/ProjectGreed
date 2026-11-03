@@ -334,7 +334,7 @@
   },
   "stats": {
     "hp": 37500,
-    "en": 450,
+    "en": 900,
     "move": 5,
     "mobility": 100,
     "cost": 375,
@@ -424,7 +424,7 @@
   },
   "sourceStats": {
     "enBeforeReduction": 900,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "hp": 30000,
     "walkSpeed": 0.65,
     "boostSpeed": 1,
@@ -502,6 +502,28 @@
     "Common_Push_A": {
       "ref": "Common_Push_A__lv2",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Push_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Kick_White_R"
+              ],
+              "delay": 0.45
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Push_A"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
@@ -523,11 +545,17 @@
             "y": 0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "Common_MortarDouble_RX_75": {
       "ref": "Common_MortarDouble_RX_75__lv1",
       "overrides": {
+        "slot": "skill",
+        "noCounter": true,
+        "description": "迫击炮技能：攻击目标单元格，每回合一次，使用后本回合不能普通攻击。",
         "requiredParts": [
           "rightArm"
         ],
@@ -563,12 +591,16 @@
               }
             }
           ]
-        }
+        },
+        "maxUsesPerTurn": 1
       }
     },
     "Common_MortarDouble_RX_75_L": {
       "ref": "Common_MortarDouble_RX_75_L__lv1",
       "overrides": {
+        "slot": "skill",
+        "noCounter": true,
+        "description": "迫击炮技能：攻击目标单元格，每回合一次，使用后本回合不能普通攻击。",
         "requiredParts": [
           "rightArm"
         ],
@@ -611,7 +643,8 @@
             "paired_weapon"
           ],
           "mergedInto": "Common_MortarDouble_RX_75"
-        }
+        },
+        "maxUsesPerTurn": 1
       }
     },
     "EF_RX_75_Cannon": {

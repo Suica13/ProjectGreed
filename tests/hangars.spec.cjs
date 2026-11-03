@@ -73,7 +73,7 @@ test("hangar preview boards and launches existing units through visible controls
     HangarUI.open(getUnit("0-0"));
   });
   assert.equal(await dialog.locator("[data-board-id]").count(), 0);
-  await page.screenshot({ path: ".openai/hangar-preview.png" });
+  await page.screenshot({ path: "tmp/hangar-preview.png" });
   assert(await dialog.locator('[data-cargo-id="0-1"] button:not([data-inspect-cargo])').isDisabled());
   await page.evaluate(() => {
     Rules.end(game);
@@ -86,6 +86,7 @@ test("hangar preview boards and launches existing units through visible controls
   assert.equal(await page.locator("#hudCancelAction").textContent(), "取消出击");
   const point = await page.evaluate(() => {
     const p = Rules.hangars.launchCells(game, getUnit("0-1")).find((p) => p.distance > 1);
+    MapCamera.focus(p.x, p.y, { preserveZoom: true });
     drawMap(performance.now());
     const r = byId("map").getBoundingClientRect();
     return {

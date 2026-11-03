@@ -277,7 +277,7 @@
   },
   "stats": {
     "hp": 10500,
-    "en": 325,
+    "en": 650,
     "move": 5,
     "mobility": 50,
     "cost": 150,
@@ -375,7 +375,7 @@
   },
   "sourceStats": {
     "enBeforeReduction": 650,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "hp": 8500,
     "walkSpeed": 0.45,
     "boostSpeed": 0.65,
@@ -592,6 +592,28 @@
     "Common_Push_A": {
       "ref": "Common_Push_A__lv1",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Push_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Kick_White_R"
+              ],
+              "delay": 0.45
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Push_A"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
@@ -613,7 +635,10 @@
             "y": 0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     }
   },
   "mechanics": [

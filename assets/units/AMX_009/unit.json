@@ -455,7 +455,7 @@
   },
   "stats": {
     "hp": 62500,
-    "en": 475.0,
+    "en": 950.0,
     "move": 8,
     "mobility": 170.0,
     "cost": 1125,
@@ -568,7 +568,7 @@
     "movementBeforeMobility": 8,
     "mobilityMoveTarget": 9,
     "enBeforeReduction": 950.0,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "adaptability": {
       "ground": 100.0,
       "space": 100.0,
@@ -622,6 +622,28 @@
     "Common_Push_A": {
       "ref": "Common_Push_A__lv3",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Push_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Kick_White_R"
+              ],
+              "delay": 0.45
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Push_A"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
@@ -643,7 +665,10 @@
             "y": 0.0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "NZN_AMX_009_Bazooka": {
       "ref": "NZN_AMX_009_Bazooka__lv1",
@@ -793,6 +818,34 @@
     "NZN_AMX_009_BeamHawk_A_A": {
       "ref": "NZN_AMX_009_BeamHawk_A_A__lv1",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Melee_TwoHanded_A",
+              "delay": 0
+            },
+            {
+              "weaponDisplayIndex": 1,
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.5,
+              "requiredParts": [
+                "leftArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_1_Yellow_R_L"
+              ],
+              "delay": 0.6
+            },
+            {
+              "delay": 1.5
+            }
+          ],
+          "startAnimation": "Common_Melee_TwoHanded_A"
+        },
         "requiredParts": [
           "rightArm"
         ],
@@ -813,7 +866,10 @@
             "y": 0.0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     }
   },
   "mechanics": [

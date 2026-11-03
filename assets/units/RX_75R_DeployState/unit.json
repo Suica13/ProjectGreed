@@ -306,7 +306,7 @@
   },
   "stats": {
     "hp": 15500,
-    "en": 375,
+    "en": 750,
     "move": 0,
     "mobility": 75,
     "cost": 200,
@@ -425,7 +425,7 @@
     "accuracy": 110,
     "partStructuralStrength": 100,
     "enBeforeReduction": 750,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "adaptability": {
       "ground": 100,
       "space": 10,
@@ -616,6 +616,7 @@
     "Common_MortarDouble_RX_75R": {
       "ref": "Common_MortarDouble_RX_75R__lv1",
       "overrides": {
+        "slot": "skill",
         "clip": "Common_Cannon_Shoot_A",
         "attack": {
           "steps": [
@@ -729,6 +730,8 @@
             "hiddenAction_SetOnSkillOff"
           ]
         },
+        "noCounter": true,
+        "description": "迫击炮技能：攻击目标单元格，每回合一次，使用后本回合不能普通攻击。",
         "requiredParts": [
           "rightArm"
         ],
@@ -768,7 +771,8 @@
         "mergedPositions": [
           "Common_MortarDouble_RX_75R",
           "Common_MortarDouble_RX_75R_L"
-        ]
+        ],
+        "maxUsesPerTurn": 1
       },
       "remove": [
         "localization"
@@ -777,6 +781,9 @@
     "Common_MortarDouble_RX_75R_L": {
       "ref": "Common_MortarDouble_RX_75R_L__lv1",
       "overrides": {
+        "slot": "skill",
+        "noCounter": true,
+        "description": "迫击炮技能：攻击目标单元格，每回合一次，使用后本回合不能普通攻击。",
         "requiredParts": [
           "rightArm"
         ],
@@ -819,12 +826,35 @@
             "paired_weapon"
           ],
           "mergedInto": "Common_MortarDouble_RX_75R"
-        }
+        },
+        "maxUsesPerTurn": 1
       }
     },
     "Common_Push_A": {
       "ref": "Common_Push_A__lv1",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Push_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Kick_White_R"
+              ],
+              "delay": 0.45
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Push_A"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
@@ -846,7 +876,10 @@
             "y": 0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     }
   },
   "mechanics": [

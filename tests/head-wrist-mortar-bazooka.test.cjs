@@ -8,23 +8,12 @@ const { applyWeaponBalance } = require("../tools/weapon-balance.cjs");
 const { loadCatalog } = require("../tools/load-catalog.cjs");
 const catalog = loadCatalog();
 
-test("head vulcans and wrist guns have final 3 AP and 1–2 range without changing other arm weapons", () => {
-  let count = 0;
-  for (const model of Object.values(catalog.models))
-    for (const w of model.weapons)
-      if (Conversion.isHeadOrWrist(w)) {
-        assert.deepEqual([w.actionCost, w.min, w.max], [3, 1, 2], model.prefabId + "/" + w.id);
-        count++;
-      }
-  assert(count > 100);
-  for (const sourceName of [
-    "Common_ArmBeamSaber_B",
-    "Common_DoubleVulcan_FF_4",
-    "Common_SingleVulcan_RX_79_G",
-    "Common_DoubleVulcan_MS_MSM_04N",
-    "EF_FA_78_1_BR",
-  ])
-    assert.equal(Conversion.isHeadOrWrist({ sourceName }), false, sourceName);
+test("limb AP/range overrides are removed from conversion settings", () => {
+  const rules = Conversion.read();
+  assert.equal(rules.schemaVersion, 3);
+  assert.equal(rules.weapons.headWristAP, undefined);
+  assert.equal(rules.weapons.headWristRange, undefined);
+  assert.equal(Conversion.isHeadOrWrist, undefined);
 });
 
 test("mortar accuracy scales by 1.10, all bazookas by 1.25, and FA781 keeps its 1.5 beam-rifle scale", () => {
@@ -66,7 +55,10 @@ test("fractional AP conversion and repeated changes to classification rules pres
   config.weapons.ap = 1.25;
   config.weapons.accuracy = 0.9;
   config.units.ap = 1.05;
-  const custom = loadCatalog({ conversionOverride: config });
+  const custom = loadCatalog({
+    conversionOverride: config,
+    adjustmentsOverride: { schemaVersion: 1, units: {}, weapons: {}, prices: {} },
+  });
   assert(Object.values(custom.models).some((m) => m.weapons.some((w) => w.actionCost % 1 === 0.5)));
   assert(custom.prefabs.some((p) => p.stats.actionPoints % 1 === 0.5));
   for (const p of custom.prefabs) {
@@ -77,7 +69,7 @@ test("fractional AP conversion and repeated changes to classification rules pres
   const p = structuredClone(
     custom.prefabs.find((p) => Object.values(p.weapons).some((w) => w.category === "mortar")),
   );
-  for (const group of Object.values(config.weaponClasses)) group.mortar.accuracy = 1.2;
+  config.weaponClasses.mortar.accuracy = 1.2;
   applyWeaponBalance(p, config);
   const saved = structuredClone(p);
   applyWeaponBalance(p, config);

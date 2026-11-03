@@ -231,7 +231,7 @@
   },
   "stats": {
     "hp": 40500,
-    "en": 375,
+    "en": 750,
     "move": 9,
     "mobility": 110,
     "cost": 375,
@@ -340,7 +340,7 @@
     "accuracy": 120,
     "unitLevel": 1500,
     "enBeforeReduction": 750,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "tacticalMoveBeforeBonus": 9,
     "adaptability": {
       "ground": 10,
@@ -394,6 +394,28 @@
     "Common_Push_L_A": {
       "ref": "Common_Push_L_A__lv1",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Push_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Kick_White_R"
+              ],
+              "delay": 0.45
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Push_A"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_L_A.gw",
@@ -412,7 +434,10 @@
             "y": 0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "ZN_MA_04X_BeamShotgun": {
       "ref": "ZN_MA_04X_BeamShotgun__lv1",
@@ -659,6 +684,34 @@
     "Common_Cqb_Double_L_A_Fixed_MA_04X": {
       "ref": "Common_Cqb_Double_L_A_Fixed_MA_04X__lv1",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Melee_Double_A_Fixed",
+              "delay": 0
+            },
+            {
+              "weaponDisplayIndex": 1,
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_1_White_R"
+              ],
+              "delay": 0.42
+            },
+            {
+              "delay": 1.4
+            }
+          ],
+          "startAnimation": "Common_Melee_Double_A_Fixed"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_Double_L_A_Fixed_MA_04X.gw",
@@ -677,7 +730,10 @@
             "y": 0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     }
   },
   "mechanics": [

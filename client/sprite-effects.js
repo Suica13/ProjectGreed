@@ -21,10 +21,16 @@ const SpriteEffects = (() => {
     return Math.min(effect.endFrame, effect.startFrame + Math.floor(time * effect.fps));
   }
   function sound(id, index = 0) {
+    if (Array.isArray(id)) return id.map(effect => sound(effect, index)).find(Boolean) || null;
     const sounds = ART.effects[id]?.sounds || [];
     return sounds[Math.abs(index) % sounds.length] || null;
   }
   function draw(ctx, id, x, y, scale, time, angle = 0) {
+    if (Array.isArray(id)) {
+      let drawn = false;
+      for (const effect of id) drawn = draw(ctx, effect, x, y, scale, time, angle) || drawn;
+      return drawn;
+    }
     const effect = ART.effects[id],
       index = frame(id, time);
     if (index === null) return false;
@@ -153,7 +159,7 @@ const SkillEffects = (() => {
         item.effect,
         point.x,
         point.y,
-        tile / 64,
+        tile / Rules.mapCellPixels,
         time - (item.targetEffect ? 0.5 : 0),
       );
     }
@@ -186,7 +192,7 @@ const MapEffects = (() => {
   let sequence = 0;
   window.addEventListener("presentation-speed-change", ({ detail: { previous, speed } }) => {
     const now = performance.now();
-    for (const item of active) item.start = now - (now - item.start) * previous / speed;
+    for (const item of active) item.start = now - ((now - item.start) * previous) / speed;
   });
   function capture(view) {
     if (!view) return;
@@ -232,7 +238,9 @@ const MapEffects = (() => {
     }
     for (let i = active.length - 1; i >= 0; i--) {
       const item = active[i],
-        age = (((now - item.start) / 1000) * MovementTiming.presentationSpeed - item.delay) * ART.presentation.animationSpeed;
+        age =
+          (((now - item.start) / 1000) * MovementTiming.presentationSpeed - item.delay) *
+          ART.presentation.animationSpeed;
       if (age >= item.sequence.duration) {
         active.splice(i, 1);
         continue;
@@ -246,8 +254,8 @@ const MapEffects = (() => {
           WeaponAudio.play(SpriteEffects.sound(explosion.effect));
         }
       const scale =
-        (tile / 64) *
-        1.2 *
+        (tile / Rules.mapCellPixels) *
+        ART.presentation.unitMapScale *
         (BattleScene.settings().mapScale / (ART.presentation.mapCellScale || 1)) *
         UnitModels[item.unit.model].presentation.mapScale;
       if (age < 0 || item.sequence.keepSpriteUntilEnd)
@@ -309,8 +317,8 @@ const EnvironmentVisuals = (() => {
     splashes = [];
   function pose(unit, cell) {
     // Exposed SFS cargo inherits its carrier's altitude, not the terrain below it.
-    const carrier = unit.embarked?.exposed && !unit.pendingMove?.launch
-      ? getUnit(unit.embarked.carrierId) : null;
+    const carrier =
+      unit.embarked?.exposed && !unit.pendingMove?.launch ? getUnit(unit.embarked.carrierId) : null;
     const environment = Rules.environmentOf(game, carrier || unit, cell.x, cell.y);
     return {
       environment,

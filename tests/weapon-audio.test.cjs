@@ -182,3 +182,17 @@ test("battle effects are halved again while map and interface audio keep their c
   r.audio.play(sound, undefined, 1, "map");
   assert.equal(r.gains[0].gain.value, r.gains[1].gain.value * 0.5);
 });
+
+test("scene changes preserve UI feedback and full stop still silences it", async () => {
+  const r = runtime();
+  await r.audio.unlock();
+  r.audio.play(ART.presentation.buttonSound, undefined, 1, "ui");
+  const button = r.starts.at(-1).node;
+  r.audio.play(ART.presentation.moveSound);
+  const movement = r.starts.at(-1).node;
+  r.audio.stop();
+  assert.equal(r.stops.includes(button), false);
+  assert.equal(r.stops.includes(movement), true);
+  r.audio.stop(true);
+  assert.equal(r.stops.includes(button), true);
+});

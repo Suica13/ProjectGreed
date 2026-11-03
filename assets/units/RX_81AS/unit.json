@@ -551,7 +551,7 @@
   },
   "stats": {
     "hp": 59500,
-    "en": 450,
+    "en": 900,
     "move": 7,
     "mobility": 120,
     "cost": 825,
@@ -664,7 +664,7 @@
     "accuracy": 125,
     "partStructuralStrength": 125,
     "enBeforeReduction": 900,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "adaptability": {
       "ground": 100,
       "space": 100,
@@ -721,6 +721,28 @@
     "Common_Push_A": {
       "ref": "Common_Push_A__lv2",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Push_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Kick_White_R"
+              ],
+              "delay": 0.45
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Push_A"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
@@ -742,7 +764,10 @@
             "y": 0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "Common_Cannon": {
       "ref": "Common_Cannon__lv2",
@@ -1019,6 +1044,46 @@
     "EF_HSP_BF_B": {
       "ref": "EF_HSP_BF_B__lv1",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Melee_B",
+              "delay": 0
+            },
+            {
+              "weaponDisplayIndex": 1,
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Yellow_R"
+              ],
+              "delay": 0.4
+            },
+            {
+              "animation": "Common_Melee_F",
+              "delay": 0.6
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_1_Yellow_L_L"
+              ],
+              "delay": 0.3
+            },
+            {
+              "delay": 1.4
+            }
+          ],
+          "startAnimation": "Common_Melee_B"
+        },
         "requiredParts": [
           "rightArm"
         ],
@@ -1039,11 +1104,40 @@
             "y": 0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "EF_BeamSaber_F": {
       "ref": "EF_BeamSaber_F__lv2",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Melee_F",
+              "delay": 0
+            },
+            {
+              "weaponDisplayIndex": 11,
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_1_Pink_L"
+              ],
+              "delay": 0.3
+            },
+            {
+              "delay": 1.4
+            }
+          ],
+          "startAnimation": "Common_Melee_F"
+        },
         "pilotRequirements": [
           {
             "stat": "melee",
@@ -1088,11 +1182,36 @@
             "y": 0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "Common_Cqb_A_L": {
       "ref": "Common_Cqb_A_L__lv2",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Melee_A_L",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_1_White_L"
+              ],
+              "delay": 0.6
+            },
+            {
+              "delay": 1.4
+            }
+          ],
+          "startAnimation": "Common_Melee_A_L"
+        },
         "requiredParts": [
           "rightArm"
         ],
@@ -1115,6 +1234,7 @@
         }
       },
       "remove": [
+        "swingEffects",
         "pilotRequirements",
         "pilotRequirementSource",
         "requiresShield"

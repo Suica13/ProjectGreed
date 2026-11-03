@@ -109,7 +109,7 @@ for (const entry of ["client", "developer"])
       expect(result.buttons).toBeGreaterThan(0);
       expect(result.description).toContain(`${result.damage} × 1 = ${result.damage}`);
       expect(result.description).not.toContain("1/20");
-      await page.screenshot({ path: ".openai/irradiation-" + entry + ".png" });
+      await page.screenshot({ path: "tmp/irradiation-" + entry + ".png" });
       expect(errors).toEqual([]);
     },
   );

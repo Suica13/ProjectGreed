@@ -204,7 +204,7 @@
   },
   "stats": {
     "hp": 9500,
-    "en": 300,
+    "en": 600,
     "move": 6,
     "mobility": 110,
     "cost": 150,
@@ -292,7 +292,7 @@
   },
   "sourceStats": {
     "enBeforeReduction": 600,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "hp": 7500,
     "walkSpeed": 0.65,
     "boostSpeed": 1.3,
@@ -450,6 +450,30 @@
     "EF_RB_79K_Anchor": {
       "ref": "EF_RB_79K_Anchor__lv1",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Cannon_Shoot_A",
+              "delay": 0
+            },
+            {
+              "weaponDisplayIndex": 1,
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [],
+              "delay": 0.5
+            },
+            {
+              "delay": 0.5
+            }
+          ],
+          "startAnimation": "Common_Cannon_Shoot_A"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/EF_RB_79K_Anchor.gw",
@@ -473,6 +497,42 @@
     "Common_Cqb_BF_B": {
       "ref": "Common_Cqb_BF_B__lv1",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Melee_B",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.5,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_White_R_S"
+              ],
+              "delay": 0.4
+            },
+            {
+              "animation": "Common_Melee_F",
+              "delay": 0.6
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_1_White_L_S"
+              ],
+              "delay": 0.3
+            },
+            {
+              "delay": 1.4
+            }
+          ],
+          "startAnimation": "Common_Melee_B"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_BF.gw",
@@ -491,7 +551,10 @@
             "y": 0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     }
   },
   "mechanics": [

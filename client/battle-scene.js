@@ -221,12 +221,14 @@ const BattleScene = (() => {
       ctx.restore();
     }
 
-    if (!completed && weapon.swingEffects?.length) {
+    if (!completed) {
       const facing = Math.atan2(target.y - source.y, target.x - source.x);
       for (const [index, contact] of plan.contacts.entries()) {
+        const swingEffects = contact.swingEffects ?? weapon.swingEffects;
+        if (!swingEffects?.length) continue;
         SpriteEffects.draw(
           ctx,
-          weapon.swingEffects[index % weapon.swingEffects.length],
+          contact.swingEffects ?? swingEffects[index % swingEffects.length],
           source.x + melee.x,
           source.y + plan.sourceY + melee.y,
           source.scale,
@@ -265,7 +267,7 @@ const BattleScene = (() => {
       for (const contact of plan.contacts.filter((contact) => contact.hit))
         SpriteEffects.draw(
           ctx,
-          weapon.hitEffect,
+          weapon.hitEffects || weapon.hitEffect,
           target.x,
           target.y +
             WeaponEffects.position(plan, contact.at) *

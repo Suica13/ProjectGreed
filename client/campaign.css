@@ -2459,7 +2459,7 @@ body[data-page="campaign"] #openClientSettings {
 .campaign-force-tabs button[aria-pressed="true"] { background:#35556d; border-color:#88ceff; color:#fff; }
 .campaign-force-tabs .campaign-forces-expand { flex:0 0 auto; }
 .campaign-force-details-dialog {
-  width:min(1100px,calc(100vw - 24px)); height:min(800px,calc(100dvh - 24px));
+  width:min(550px,calc(100vw - 24px)); height:min(800px,calc(100dvh - 24px));
   max-width:calc(100vw - 24px); max-height:calc(100dvh - 24px);
   padding:16px; box-sizing:border-box; background:#18232f; color:#eaf2fa; border:1px solid #81bbdf;
 }

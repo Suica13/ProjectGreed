@@ -48,3 +48,18 @@ test('other players and enclosed passengers do not hold up a squad',()=>{
   c=G.aiChoice(g,fast);
   assert(G.dist({...fast,x:c.x,y:c.y},enemy)<G.dist(fast,enemy));
 });
+
+test('AI takes a legal detour around a wall instead of waiting at its closest point',()=>{
+  const {g,fast,enemy}=fixture();g.units=[fast,enemy];
+  Object.assign(fast,{x:14,y:12}); Object.assign(enemy,{x:30,y:12});
+  // Deep vertical wall: the next useful step is away from the enemy.
+  for(let y=3;y<25;y++)g.tiles[y][15]='mountain';
+  const original=G.terrain.mountain;
+  G.terrain.mountain={...original,cost:Infinity};
+  try {
+    const c=G.aiChoice(g,fast);
+    assert(c.path.length>0);
+    assert(c.y!==fast.y);
+    assert(G.reachable(g,fast).has(G.key(c.x,c.y)));
+  } finally {G.terrain.mountain=original;}
+});

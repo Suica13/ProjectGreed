@@ -87,7 +87,6 @@ const CampaignBattlefield = (() => {
       u.plan ||
       u.flying ||
       G.modelOf(u).movementType === "air" ||
-      G.actionPoints(u) < 5 ||
       u.team !== g.team ||
       u.acted
     )
@@ -100,8 +99,7 @@ const CampaignBattlefield = (() => {
   }
   function capture(G, g, u) {
     const node = canCapture(G, g, u);
-    if (!node) throw Error("无法占领：需地面单位位于敌方据点内、据点内没有敌军并保有5AP");
-    u.actionPoints = G.actionPoints(u) - 5;
+    if (!node) throw Error("无法占领：需地面单位位于敌方据点内、据点内没有敌军");
     g.campaignBattlefield.owners[node.id] = u.team;
     g.campaignBattlefield.version++;
     if (node.kind === "base") {

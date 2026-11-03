@@ -4,7 +4,7 @@ const IrradiationFX = (() => {
   window.addEventListener("presentation-speed-change", ({ detail: { previous, speed } }) => {
     const now = performance.now();
     for (const beam of active.values())
-      if (beam.start !== null) beam.start = now - (now - beam.start) * previous / speed;
+      if (beam.start !== null) beam.start = now - ((now - beam.start) * previous) / speed;
   });
   function reset() {
     active.clear();
@@ -27,16 +27,25 @@ const IrradiationFX = (() => {
     return {
       angle: (Math.atan2(beam.to.x - beam.from.x, -(beam.to.y - beam.from.y)) * 180) / Math.PI,
       clip: beam.clip,
-      time: beam.start === null ? 0 : Math.min(beam.chargeSeconds, ((now - beam.start) / 1000) * MovementTiming.presentationSpeed),
+      time:
+        beam.start === null
+          ? 0
+          : Math.min(
+              beam.chargeSeconds,
+              ((now - beam.start) / 1000) * MovementTiming.presentationSpeed,
+            ),
       weaponDisplayIndex: beam.weaponDisplayIndex,
     };
   }
   function units(roster, now) {
+    if (!active.size) return roster;
     const result = new Map(roster.map((u) => [u.id, u]));
     for (const beam of active.values())
       for (const actor of beam.actors || []) {
         const hit = beam.hitsById.get(actor.id);
-        const waiting = beam.start === null || ((now - beam.start) / 1000) * MovementTiming.presentationSpeed < beam.chargeSeconds;
+        const waiting =
+          beam.start === null ||
+          ((now - beam.start) / 1000) * MovementTiming.presentationSpeed < beam.chargeSeconds;
         const current = result.get(actor.id) || actor;
         result.set(
           actor.id,
@@ -71,7 +80,7 @@ const IrradiationFX = (() => {
       )
         continue;
       if (beam.start === null) {
-        beam.start = now - (beam.elapsedSeconds || 0) * 1000 / MovementTiming.presentationSpeed;
+        beam.start = now - ((beam.elapsedSeconds || 0) * 1000) / MovementTiming.presentationSpeed;
         if ((beam.elapsedSeconds || 0) < beam.chargeSeconds) GameAudio.playSound(beam.sound);
       }
       const time = ((now - beam.start) / 1000) * MovementTiming.presentationSpeed;
@@ -81,16 +90,18 @@ const IrradiationFX = (() => {
       const scale =
         sampledActor?.scale ??
         (model
-          ? (tile / 64) *
-            1.2 *
+          ? (tile / Rules.mapCellPixels) *
+            ART.presentation.unitMapScale *
             (BattleScene.settings().mapScale / (ART.presentation.mapCellScale || 1)) *
             model.presentation.mapScale
-          : tile / 64);
-      const actor = sampledActor || {
+          : tile / Rules.mapCellPixels);
+      const aimAngle = (Math.atan2(beam.to.x - beam.from.x, -(beam.to.y - beam.from.y)) * 180) / Math.PI;
+      const actor = sampledActor ? { ...sampledActor, aimAngle } : {
         x: origin.x,
         y: origin.y,
         scale,
-        angle: (Math.atan2(beam.to.x - beam.from.x, -(beam.to.y - beam.from.y)) * 180) / Math.PI,
+        angle: aimAngle,
+        aimAngle,
         clip: beam.clip,
         time: Math.min(time, beam.chargeSeconds),
       };
@@ -171,7 +182,8 @@ const IrradiationFX = (() => {
     let age = Infinity;
     for (const beam of active.values())
       if (beam.start !== null && beam.hitsById.get(id)?.iFieldDamage > 0) {
-        const time = ((now - beam.start) / 1000) * MovementTiming.presentationSpeed - beam.chargeSeconds;
+        const time =
+          ((now - beam.start) / 1000) * MovementTiming.presentationSpeed - beam.chargeSeconds;
         if (time >= 0) age = Math.min(age, time);
       }
     return age;

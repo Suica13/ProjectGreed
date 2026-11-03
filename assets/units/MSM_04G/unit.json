@@ -317,7 +317,7 @@
   },
   "stats": {
     "hp": 28000,
-    "en": 375,
+    "en": 750,
     "move": 5,
     "mobility": 75,
     "cost": 325,
@@ -431,7 +431,7 @@
     "accuracy": 115,
     "partStructuralStrength": 120,
     "enBeforeReduction": 750,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "adaptability": {
       "ground": 100,
       "space": 25,
@@ -488,6 +488,28 @@
     "Common_Push_A": {
       "ref": "Common_Push_A__lv1",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Push_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Kick_White_R"
+              ],
+              "delay": 0.45
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Push_A"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
@@ -509,11 +531,17 @@
             "y": 0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "Common_MortarDouble_Bombing_Shell": {
       "ref": "Common_MortarDouble_Bombing_Shell__lv1",
       "overrides": {
+        "slot": "skill",
+        "noCounter": true,
+        "description": "迫击炮技能：攻击目标单元格，每回合一次，使用后本回合不能普通攻击。",
         "requiredParts": [
           "rightArm"
         ],
@@ -549,12 +577,16 @@
               }
             }
           ]
-        }
+        },
+        "maxUsesPerTurn": 1
       }
     },
     "Common_MortarDouble_Bombing_Shell_R": {
       "ref": "Common_MortarDouble_Bombing_Shell_R__lv1",
       "overrides": {
+        "slot": "skill",
+        "noCounter": true,
+        "description": "迫击炮技能：攻击目标单元格，每回合一次，使用后本回合不能普通攻击。",
         "requiredParts": [
           "rightArm"
         ],
@@ -597,7 +629,8 @@
             "paired_weapon"
           ],
           "mergedInto": "Common_MortarDouble_Bombing_Shell"
-        }
+        },
+        "maxUsesPerTurn": 1
       }
     },
     "ZN_MSM_04G_HG": {
@@ -696,6 +729,32 @@
     "Common_Cqb_A": {
       "ref": "Common_Cqb_A__lv1",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Melee_A",
+              "delay": 0
+            },
+            {
+              "weaponDisplayIndex": 1,
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_1_White_R"
+              ],
+              "delay": 0.6
+            },
+            {
+              "delay": 1.4
+            }
+          ],
+          "startAnimation": "Common_Melee_A"
+        },
         "requiredParts": [
           "rightArm"
         ],
@@ -716,7 +775,10 @@
             "y": 0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     }
   },
   "mechanics": [

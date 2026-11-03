@@ -17,3 +17,5 @@
 - 人工数值编辑使用 `shared/editor-adjustments.json` 保存相对基准的加减值，在全局规则之后应用，再执行既有取整与校验；导入器不得将已叠加的差值烘焙回基础数值。数值保存与日志及例外表格共用事务。
 
 - 运行时全局换算倍率由 `shared/conversion-rules.json` 维护，先于人工差值执行；开发者编辑器可维护此文件及 `assets/unit-wip.json`，均要求版本校验、审计与失败回滚，不自动构建或重启游戏。
+
+- `现行武器与技能规则.md` 是现行战斗规则统一查询入口，由 `tools/export-combat-rules.cjs` 生成。修改武器、技能、状态、格纳库或驾驶员技能后执行 `npm run docs:combat-rules`；执行逻辑变化时同步维护生成器中的文字说明。普通客户端构建自动刷新报告，`npm run docs:combat-rules -- --check` 校验是否过时，不直接手改生成表格。

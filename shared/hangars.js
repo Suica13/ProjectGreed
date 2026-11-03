@@ -1,7 +1,24 @@
 /* 格纳库只保存现有单位的搭载关系；不复制单位，不恢复资源。 */
 "use strict";
 const UnitHangars = {
-  create({ modelOf, ownerOf, cells, fits, mapWidth, mapHeight, reachable, movementCost, sensors, captureObjective = () => null }) {
+  create({
+    modelOf,
+    ownerOf,
+    cells,
+    fits,
+    mapWidth,
+    mapHeight,
+    reachable,
+    movementCost,
+    sensors,
+    captureObjective = () => null,
+    squadMembers = (g, u) => [u],
+    squadEligible = () => false,
+    environmentOf = (g, u) => u.environment,
+    squadJoinTarget = () => null,
+    joinSquad = () => {},
+    deploymentCells = () => [],
+  }) {
     const onMap = (u) => !!u && u.hp > 0 && !u.embarked;
     const deploying = (g) => !!g.deployment && !g.deployment.every(Boolean);
     const of = (u) => modelOf(u).hangars || [];
@@ -12,18 +29,19 @@ const UnitHangars = {
           u.embarked?.carrierId === carrier.id &&
           (!hangarId || u.embarked.hangarId === hangarId),
       );
-    const exposed = u => u?.embarked?.exposed === true;
-    const slotCost = (u, h) => h?.kind === "sfs" ? 1 : (modelOf(u).transport?.slotCost || 1);
+    const exposed = (u) => u?.embarked?.exposed === true;
+    const slotCost = (u, h) => (h?.kind === "sfs" ? 1 : modelOf(u).transport?.slotCost || 1);
     function sync(g) {
-      const units = new Map(g.units.map(u => [u.id, u]));
-      const done = new Set(), visiting = new Set();
+      const units = new Map(g.units.map((u) => [u.id, u]));
+      const done = new Set(),
+        visiting = new Set();
       function follow(passenger) {
         if (!passenger?.embarked || done.has(passenger.id) || visiting.has(passenger.id)) return;
         visiting.add(passenger.id);
         const carrier = units.get(passenger.embarked.carrierId);
         if (carrier) {
           follow(carrier);
-          const h = of(carrier).find(h => h.id === passenger.embarked.hangarId);
+          const h = of(carrier).find((h) => h.id === passenger.embarked.hangarId);
           passenger.embarked.exposed = h?.kind === "sfs" && onMap(carrier);
           passenger.x = carrier.x;
           passenger.y = carrier.y;
@@ -35,7 +53,12 @@ const UnitHangars = {
     }
     const used = (g, carrier, hangarId) =>
       cargo(g, carrier, hangarId).reduce(
-        (sum, u) => sum + slotCost(u, of(carrier).find(h => h.id === u.embarked.hangarId)),
+        (sum, u) =>
+          sum +
+          slotCost(
+            u,
+            of(carrier).find((h) => h.id === u.embarked.hangarId),
+          ),
         0,
       );
     const edgeDistance = (carrier, passenger, x = passenger.x, y = passenger.y) => {
@@ -47,7 +70,8 @@ const UnitHangars = {
     };
     function canEmbark(g, u, carrier, hangarId) {
       if (
-        !onMap(u) || modelOf(u).deployed ||
+        !onMap(u) ||
+        modelOf(u).deployed ||
         !onMap(carrier) ||
         u.id === carrier.id ||
         u.team !== carrier.team ||
@@ -75,23 +99,74 @@ const UnitHangars = {
         edgeDistance(carrier, u) === 1
       );
     }
+    // Reserve every passenger before mutating the real board. Backtracking also
+    // handles mixed squads and overlapping native hangar type restrictions.
+    function boardingPlan(g, members, carrier, hangarId = null) {
+      if (!members.length || new Set(members.map((u) => u.id)).size !== members.length) return null;
+      const slots = of(carrier).filter((h) => !hangarId || h.id === hangarId);
+      if (!slots.length || members.some((u) => !slots.some((h) => canEmbark(g, u, carrier, h.id))))
+        return null;
+      const view = { ...g, units: g.units.map((u) => ({ ...u })) };
+      const plan = [];
+      function assign(index) {
+        if (index === members.length) return true;
+        const passenger = members[index];
+        const stored = view.units.find((u) => u.id === passenger.id);
+        if (!stored) return false;
+        for (const slot of slots) {
+          if (!canEmbark(view, passenger, carrier, slot.id)) continue;
+          stored.embarked = { carrierId: carrier.id, hangarId: slot.id };
+          plan.push({ unitId: passenger.id, hangarId: slot.id });
+          if (assign(index + 1)) return true;
+          plan.pop();
+          delete stored.embarked;
+        }
+        return false;
+      }
+      return assign(0) ? plan : null;
+    }
+    function embarkSquad(g, u, carrier, hangarId, single = false) {
+      const members = single ? [u] : squadMembers(g, u);
+      const plan = boardingPlan(g, members, carrier, hangarId);
+      if (!plan) throw Error("格纳库无法容纳整队，或成员不满足搭乘条件");
+      for (const item of plan)
+        embark(
+          g,
+          members.find((member) => member.id === item.unitId),
+          carrier,
+          item.hangarId,
+        );
+      return {
+        type: "embark",
+        unitId: u.id,
+        carrierId: carrier.id,
+        hangarId,
+        squadIds: members.map((member) => member.id),
+      };
+    }
     function embark(g, u, carrier, hangarId) {
       if (!canEmbark(g, u, carrier, hangarId))
         throw Error("无法搭载：容量、类型、距离或行动条件不满足");
-      const h = of(carrier).find(h => h.id === hangarId);
-      u.embarked = { carrierId: carrier.id, hangarId, boardRound: deploying(g) ? null : g.round,
-        ...(h.kind === "sfs" ? {exposed:true} : {}) };
+      const h = of(carrier).find((h) => h.id === hangarId);
+      delete u.squadId;
+      delete u.squadSlot;
+      u.embarked = {
+        carrierId: carrier.id,
+        hangarId,
+        boardRound: deploying(g) ? null : g.round,
+        ...(h.kind === "sfs" ? { exposed: true } : {}),
+      };
       sync(g);
       u.origin = null;
       if (!deploying(g)) {
         u.acted = true;
         u.moved = true;
-        u.actionPoints = 0;
       }
       return { type: "embark", unitId: u.id, carrierId: carrier.id, hangarId };
     }
     function launchCells(g, u, emergency = false) {
-      if (!u?.embarked || u.hp <= 0 || g.winner !== null || (!emergency && exposed(u) && u.moved)) return [];
+      if (!u?.embarked || u.hp <= 0 || g.winner !== null || (!emergency && exposed(u) && u.moved))
+        return [];
       const carrier = g.units.find((c) => c.id === u.embarked.carrierId);
       if (!carrier || (!emergency && !onMap(carrier))) return [];
       if (
@@ -130,7 +205,7 @@ const UnitHangars = {
           .filter(
             (p) =>
               edgeDistance(carrier, passenger, p.x, p.y) >= 1 &&
-              fits(
+              (fits(
                 view,
                 passenger,
                 p.x,
@@ -138,7 +213,14 @@ const UnitHangars = {
                 passenger.angle,
                 false,
                 deploying(g) ? ownerOf(u) : null,
-              ),
+              ) ||
+                (p.squadTarget &&
+                  (!deploying(g) ||
+                    cells(passenger, p.x, p.y).every((cell) =>
+                      deploymentCells(g, ownerOf(u), passenger).some(
+                        (allowed) => allowed.x === cell.x && allowed.y === cell.y,
+                      ),
+                    )))),
           )
           .map((p) => ({ ...p, distance: edgeDistance(carrier, passenger, p.x, p.y) }))
           .sort((a, b) => a.cost - b.cost || a.y - b.y || a.x - b.x);
@@ -190,25 +272,28 @@ const UnitHangars = {
       return { carrierId, from, path };
     }
     function launchAngle(path, from, x, y, fallback) {
-      const previous = [...path].reverse().find(point => point.x !== x || point.y !== y) || from;
-      return previous.x === x && previous.y === y ? fallback :
-        Math.atan2(x-previous.x,-(y-previous.y)) * 180 / Math.PI;
+      const previous = [...path].reverse().find((point) => point.x !== x || point.y !== y) || from;
+      return previous.x === x && previous.y === y
+        ? fallback
+        : (Math.atan2(x - previous.x, -(y - previous.y)) * 180) / Math.PI;
     }
     function previewLaunch(g, u, x, y, seat = u.ownerSeat ?? u.team) {
-      if (g.units.some(actor => actor.pendingMove?.seat === seat) || u.pendingMove) throw Error("请先确认或取消移动");
+      if (g.units.some((actor) => actor.pendingMove?.seat === seat) || u.pendingMove)
+        throw Error("请先确认或取消移动");
       const plan = prepareLaunch(g, u, x, y);
-      const angle = launchAngle(plan.path,plan.from,x,y,u.angle);
+      const angle = launchAngle(plan.path, plan.from, x, y, u.angle);
       u.pendingMove = { x, y, angle, seat, launch: true, ...plan };
-      return { type: "move_preview", unitId:u.id, ...plan, x, y };
+      return { type: "move_preview", unitId: u.id, ...plan, x, y };
     }
     function launch(g, u, x, y) {
       const { carrierId, from, path } = prepareLaunch(g, u, x, y);
       delete u.embarked;
-      Object.assign(u, { x, y, angle:launchAngle(path,from,x,y,u.angle), origin: null });
+      Object.assign(u, { x, y, angle: launchAngle(path, from, x, y, u.angle), origin: null });
+      const target = squadJoinTarget(g, u, x, y, [u]);
+      if (target) joinSquad(g, u, target);
       if (!deploying(g)) {
         u.moved = true;
         u.lastLaunchRound = g.round;
-        u.actionPoints = Math.round((u.actionPoints ?? modelOf(u).actionPoints ?? 10) * 0.75 * 2) / 2;
         const carrier = g.units.find((c) => c.id === carrierId);
         if (carrier) {
           carrier.origin = null;
@@ -217,6 +302,104 @@ const UnitHangars = {
       }
       sync(g);
       return { type: "launch", unitId: u.id, carrierId, x, y, from, path };
+    }
+    function launchSquadCells(g, members) {
+      if (!members.length || members.length > 3) return [];
+      const root = members[0];
+      if (
+        members.length > 1 &&
+        members.some(
+          (u) =>
+            !squadEligible({ ...u, embarked: undefined }) ||
+            ownerOf(u) !== ownerOf(root) ||
+            environmentOf(g, u) !== environmentOf(g, root) ||
+            !!u.flying !== !!root.flying,
+        )
+      )
+        return [];
+      const routes = members.map((u) => launchCells(g, u)),
+        others = routes.slice(1).map((cells) => new Set(cells.map((c) => c.x + "," + c.y)));
+      return routes[0].filter(
+        (c) =>
+          others.every((keys) => keys.has(c.x + "," + c.y)) &&
+          (!c.squadTarget ||
+            members.length +
+              squadMembers(
+                g,
+                g.units.find((u) => u.id === c.squadTarget),
+              ).length <=
+              3),
+      );
+    }
+    function launchGroupPlan(g, members, x, y) {
+      if (
+        !members.length ||
+        members.length > 3 ||
+        new Set(members.map((u) => u.id)).size !== members.length
+      )
+        throw Error("请选择1至3台出击单位");
+      const root = members[0],
+        carrierId = root.embarked?.carrierId;
+      if (
+        !carrierId ||
+        members.some(
+          (u) =>
+            u.embarked?.carrierId !== carrierId ||
+            ownerOf(u) !== ownerOf(root) ||
+            u.team !== root.team ||
+            u.pendingMove,
+        )
+      )
+        throw Error("请选择同一格纳库中由你控制的单位");
+      if (
+        members.length > 1 &&
+        members.some(
+          (u) => modelOf(u).ship || modelOf(u).largeUnit || cells(u).length !== 1 || of(u).length,
+        )
+      )
+        throw Error("这些单位不能组成同一小队");
+      const staged = { ...g, units: structuredClone(g.units) };
+      const plans = members.map((u) => prepareLaunch(g, u, x, y));
+      for (const member of members) {
+        const actor = staged.units.find((u) => u.id === member.id);
+        delete actor.pendingMove;
+        launch(staged, actor, x, y);
+      }
+      // Every selected unit must end in the same squad, including environment/size rules.
+      if (members.length > 1) {
+        const first = staged.units.find((u) => u.id === root.id);
+        const joined = new Set(squadMembers(staged, first).map((u) => u.id));
+        if (members.some((u) => !joined.has(u.id))) throw Error("所选单位无法组成同一小队");
+      }
+      return plans;
+    }
+    function previewLaunchSquad(g, members, x, y, seat = ownerOf(members[0])) {
+      if (g.units.some((u) => u.pendingMove?.seat === seat)) throw Error("请先确认或取消移动");
+      const plans = launchGroupPlan(g, members, x, y),
+        root = members[0];
+      const squadIds = members.map((u) => u.id),
+        squadPaths = Object.fromEntries(members.map((u, i) => [u.id, plans[i].path]));
+      members.forEach((u, i) => {
+        u.pendingMove = {
+          ...plans[i],
+          x,
+          y,
+          seat,
+          launch: true,
+          angle: launchAngle(plans[i].path, plans[i].from, x, y, u.angle),
+          ...(i ? { launchMemberOf: root.id } : { squadLaunchIds: squadIds, squadIds, squadPaths }),
+        };
+      });
+      return { type: "move_preview", unitId: root.id, ...plans[0], x, y, squadIds, squadPaths };
+    }
+    function launchSquad(g, members, x, y) {
+      launchGroupPlan(g, members, x, y);
+      const events = members.map((u) => launch(g, u, x, y));
+      return {
+        ...events[0],
+        squadIds: members.map((u) => u.id),
+        squadPaths: Object.fromEntries(events.map((e) => [e.unitId, e.path])),
+      };
     }
     function readyToLaunch(u) {
       const m = modelOf(u);
@@ -237,28 +420,31 @@ const UnitHangars = {
       const range = Math.max(6, attackReach(carrier));
       return g.units.some(
         (enemy) =>
-          onMap(enemy) &&
-          enemy.team !== carrier.team &&
-          edgeDistance(carrier, enemy) <= range,
+          onMap(enemy) && enemy.team !== carrier.team && edgeDistance(carrier, enemy) <= range,
       );
     }
     function shouldLaunch(g, u) {
       const carrier = g.units.find((c) => c.id === u.embarked?.carrierId);
-      return !!carrier && readyToLaunch(u) &&
-        (inContact(g, carrier) || !!captureObjective(g, u, carrier));
+      return (
+        !!carrier &&
+        readyToLaunch(u) &&
+        (inContact(g, carrier) || !!captureObjective(g, u, carrier))
+      );
     }
     function needsRecovery(u) {
       const m = modelOf(u);
       const damaged = Object.values(u.brokenParts || {}).some(Boolean);
-      const energyWeapons = m.weapons.filter(weapon => weapon.slot !== "skill" && weapon.en > 0);
-      const outOfAmmo = energyWeapons.length > 0 && energyWeapons.every(weapon => weapon.en > u.en);
+      const energyWeapons = m.weapons.filter((weapon) => weapon.slot !== "skill" && weapon.en > 0);
+      const outOfAmmo =
+        energyWeapons.length > 0 && energyWeapons.every((weapon) => weapon.en > u.en);
       return u.hp < m.hp * 0.25 || u.en < m.en * 0.5 || outOfAmmo || damaged;
     }
     function recoveryOrder(g, u) {
-      if (!onMap(u) || u.acted || u.plan || u.lastLaunchRound === g.round)
-        return null;
+      if (!onMap(u) || u.acted || u.plan || u.lastLaunchRound === g.round) return null;
       const m = modelOf(u);
-      const repair = needsRecovery(u);
+      const members = squadMembers(g, u);
+      if (members.some((member) => member.acted || member.plan || member.pendingMove)) return null;
+      const repair = members.some(needsRecovery);
       const enemies = g.units.filter((e) => onMap(e) && e.team !== u.team);
       const distance = Math.min(...enemies.map((e) => edgeDistance(u, e)));
       const longJourney = enemies.length > 0 && distance > m.move * 2 + attackReach(u);
@@ -277,17 +463,30 @@ const UnitHangars = {
           of(c).some(
             (h) =>
               (!repair || h.kind !== "sfs") &&
-              h.allowedTags.some((tag) => m.transport?.loadTags.includes(tag)) &&
-              used(g, c, h.id) + slotCost(u, h) <= h.capacity,
+              members.every((member) =>
+                h.allowedTags.some((tag) => modelOf(member).transport?.loadTags.includes(tag)),
+              ) &&
+              used(g, c, h.id) + members.reduce((sum, member) => sum + slotCost(member, h), 0) <=
+                h.capacity,
           ),
       );
       candidates.sort((a, b) => edgeDistance(a, u) - edgeDistance(b, u));
       for (const c of candidates)
         for (const h of of(c))
-          if (canEmbark(g, u, c, h.id))
+          if (boardingPlan(g, members, c, h.id))
             return { action: "embark", fields: { unitId: u.id, carrierId: c.id, hangarId: h.id } };
       if (!candidates.length) return null;
       if (u.moved) return { action: "wait", fields: { unitId: u.id } };
+      const walk = reachable(g, u);
+      const boardingRoutes = [...walk.values()].filter(
+        (route) =>
+          route.boarding && candidates.some((carrier) => carrier.id === route.boarding.carrierId),
+      );
+      boardingRoutes.sort((a, b) => a.cost - b.cost);
+      if (boardingRoutes.length) {
+        const point = boardingRoutes[0];
+        return { action: "move", fields: { unitId: u.id, x: point.x, y: point.y } };
+      }
       // Search from all carrier edges to avoid steering into a dead end around terrain.
       const distances = new Map(),
         queue = [];
@@ -326,7 +525,7 @@ const UnitHangars = {
         }
       }
       const current = distances.get(u.x + "," + u.y) ?? Infinity;
-      const options = [...reachable(g, u).values()].filter(
+      const options = [...walk.values()].filter(
         (p) => fits(g, u, p.x, p.y) && (distances.get(p.x + "," + p.y) ?? Infinity) < current,
       );
       options.sort(
@@ -343,12 +542,13 @@ const UnitHangars = {
         const seen = new Set();
         while (u?.embarked && !seen.has(u.id)) {
           seen.add(u.id);
-          u = g.units.find(c => c.id === u.embarked.carrierId);
+          u = g.units.find((c) => c.id === u.embarked.carrierId);
         }
         return seen.size;
       };
       // Resolve outer carriers first, including a nested carrier destroyed during evacuation.
-      const passengers = g.units.filter(u => u.hp > 0 && u.embarked)
+      const passengers = g.units
+        .filter((u) => u.hp > 0 && u.embarked)
         .sort((a, b) => depth(a) - depth(b));
       for (const u of passengers) {
         const carrier = g.units.find((c) => c.id === u.embarked.carrierId);
@@ -367,12 +567,10 @@ const UnitHangars = {
           u.x = carrier?.x ?? u.x;
           u.y = carrier?.y ?? u.y;
         }
-        const actionPoints = u.hp > 0
-          ? Math.max(0, Math.round((u.actionPoints ?? m.actionPoints ?? 10) * 0.5 * 2) / 2) : 0;
         Object.assign(u, {
-          acted: u.acted || actionPoints <= 0,
+          acted: u.acted || u.hp <= 0,
           moved: true,
-          actionPoints,
+          forcedExitRound: g.round,
           origin: null,
           lastLaunchRound: g.round,
         });
@@ -382,15 +580,22 @@ const UnitHangars = {
       return events;
     }
     return {
-      exposed, slotCost, sync,
+      exposed,
+      slotCost,
+      sync,
       of,
       cargo,
       used,
       canEmbark,
       embark,
+      boardingPlan,
+      embarkSquad,
       launchCells,
+      launchSquadCells,
       launch,
       previewLaunch,
+      previewLaunchSquad,
+      launchSquad,
       evacuate,
       readyToLaunch,
       shouldLaunch,

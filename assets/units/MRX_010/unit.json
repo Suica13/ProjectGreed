@@ -436,7 +436,7 @@
   },
   "stats": {
     "hp": 375000,
-    "en": 2500.0,
+    "en": 5000.0,
     "move": 7,
     "mobility": 110.0,
     "cost": 3750,
@@ -564,7 +564,7 @@
     "accuracy": 150.0,
     "unitLevel": 15000.0,
     "enBeforeReduction": 5000.0,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "tacticalMoveBeforeBonus": 6,
     "actionTurnSpeed": 0.85,
     "mobilityMoveTarget": 7,
@@ -619,10 +619,28 @@
       "ref": "Common_Push_A__lv3",
       "overrides": {
         "slot": "secondary",
-        "swingEffects": [
-          "Cqb_Fire_1_Pink_R",
-          "Cqb_Fire_1_Pink_L"
-        ],
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Push_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Kick_White_R"
+              ],
+              "delay": 0.45
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Push_A"
+        },
         "actionCost": 2,
         "requiredParts": [],
         "source": {
@@ -644,7 +662,8 @@
         }
       },
       "remove": [
-        "localization"
+        "localization",
+        "swingEffects"
       ]
     },
     "TITANS_MRX_009_ArmBR": {
@@ -1531,6 +1550,70 @@
     "Common_ArmBeamSaber_Large_Double_BBLDF_Yellow_MRX_010": {
       "ref": "Common_ArmBeamSaber_Large_Double_BBLDF_Yellow_MRX_010__lv1",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Melee_B",
+              "delay": 0
+            },
+            {
+              "weaponDisplayIndex": 1,
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Yellow_R_L"
+              ],
+              "delay": 0.4
+            },
+            {
+              "animation": "Common_Melee_B_L",
+              "delay": 0.5
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Yellow_L_L"
+              ],
+              "delay": 0.4
+            },
+            {
+              "animation": "Common_Melee_Double_F",
+              "delay": 0.4
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_1_Yellow_R_L"
+              ],
+              "delay": 0.3
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_1_Yellow_L_L"
+              ],
+              "delay": 0.0
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Melee_B"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/Common_ArmBeamSaber_Large_Double_BBLDF_Yellow_MRX_010.gw",
@@ -1549,7 +1632,10 @@
             "y": 0.0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     }
   },
   "mechanics": [

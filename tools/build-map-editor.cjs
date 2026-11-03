@@ -1,4 +1,4 @@
-﻿"use strict";
+"use strict";
 const fs = require("node:fs"),
   path = require("node:path");
 function buildMapEditor(root = path.resolve(__dirname, "..")) {
@@ -11,7 +11,7 @@ function buildMapEditor(root = path.resolve(__dirname, "..")) {
     .replace("__MAP_DOCUMENT__", () =>
       script(read("shared/map-document.js") + "\n" + read("shared/tilemap-view.js")),
     )
-    .replace("__EDITOR_JS__", () => script(read("map-editor/editor.js")));
+    .replace("__EDITOR_JS__", () => script("const MapEditorUnits = " + JSON.stringify(JSON.parse(read("assets/unit-catalog.json")).units.map(file => { const u = JSON.parse(read("assets/" + file)); return {id:u.id,name:u.name}; })) + ";\n" + "const MAP_EDITOR_LOCALES = " + JSON.stringify(JSON.parse(read("map-editor/locales.json"))) + ";\n" + read("map-editor/i18n.js") + "\n" + read("map-editor/authoring.js") + "\n" + read("map-editor/editor.js")));
   fs.mkdirSync(path.join(root, "public"), { recursive: true });
   fs.writeFileSync(path.join(root, "public/map-editor.html"), html);
   console.log("Built map-editor.html: " + Buffer.byteLength(html) + " bytes");

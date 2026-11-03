@@ -203,7 +203,7 @@
   },
   "stats": {
     "hp": 9000,
-    "en": 325,
+    "en": 650,
     "move": 6,
     "mobility": 105,
     "cost": 125,
@@ -310,7 +310,7 @@
     "accuracy": 115,
     "unitLevel": 450,
     "enBeforeReduction": 650,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "tacticalMoveBeforeBonus": 5,
     "adaptability": {
       "ground": 10,
@@ -392,6 +392,32 @@
     "Common_Cqb_A": {
       "ref": "Common_Cqb_A__lv1",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Melee_A",
+              "delay": 0
+            },
+            {
+              "weaponDisplayIndex": 1,
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_1_White_R"
+              ],
+              "delay": 0.6
+            },
+            {
+              "delay": 1.4
+            }
+          ],
+          "startAnimation": "Common_Melee_A"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_A.gw",
@@ -410,7 +436,10 @@
             "y": 0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     }
   },
   "mechanics": [

@@ -1,8 +1,8 @@
 {
   "name": "projectgreed",
-  "version": "0.72.0",
+  "version": "0.77.0",
   "private": true,
-  "description": "ProjectGreed V72 turn-based tactical game",
+  "description": "ProjectGreed V77 turn-based tactical game",
   "engines": {
     "node": ">=22"
   },
@@ -26,7 +26,9 @@
     "test:performance:ui": "playwright test tests/performance-network.spec.cjs tests/startup-loading.spec.cjs tests/network-weak.spec.cjs tests/production-sort.spec.cjs",
     "package:server": "python tools/package-server.py",
     "maps:import": "node tools/import-map.cjs",
-    "build:map-editor": "node tools/build-map-editor.cjs"
+    "build:map-editor": "node tools/build-map-editor.cjs",
+    "build:unit-editor": "node tools/build-unit-editor.cjs",
+    "docs:combat-rules": "node tools/export-combat-rules.cjs"
   },
   "dependencies": {
     "ws": "8.22.0"

@@ -2,12 +2,13 @@
 const MapCamera = (() => {
   const canvas = byId("map");
   const cellScale = ART.presentation.mapCellScale || 1;
+  const gridScale = Rules.mapCellPixels / 64;
   const zoomStep = 1.25;
   // baseTile already fits the viewport before presentation scaling is applied.
-  const fitZoom = 1 / cellScale;
+  const fitZoom = 1 / (cellScale * gridScale);
   const minimumZoom = fitZoom / zoomStep;
   const zoomEpsilon = 0.000001;
-  let zoom = fitZoom,
+  let zoom = 1 / cellScale,
     centerX = Rules.mapWidth(game) / 2,
     centerY = Rules.mapHeight(game) / 2,
     drag = null,
@@ -16,13 +17,13 @@ const MapCamera = (() => {
   let pinch = null,
     pinchConsumed = false;
   // Larger maps need more magnification to reach the same readable cell size.
-  const readableCellPixels = 160;
+  const readableCellPixels = 160 * gridScale;
   function baseTile(width, height) {
     return (
       Math.min(
         (Math.max(37, width) - 36) / Rules.mapWidth(game),
         (Math.max(37, height) - 36) / Rules.mapHeight(game),
-      ) * cellScale
+      ) * cellScale * gridScale
     );
   }
   function zoomLimit(width, height) {
@@ -34,10 +35,10 @@ const MapCamera = (() => {
   }
   function geometry(width, height) {
     const tile = baseTile(width, height) * zoom;
-    const bound = (value, half, extent) =>
-      half >= extent / 2 ? extent / 2 : Math.max(half, Math.min(extent - half, value));
-    centerX = bound(centerX, width / (2 * tile), Rules.mapWidth(game));
-    centerY = bound(centerY, height / (2 * tile), Rules.mapHeight(game));
+    // Allow space around the edges so panning also works at full-map zoom.
+    // The camera center stays on the map to prevent losing it off screen.
+    centerX = Math.max(0, Math.min(Rules.mapWidth(game), centerX));
+    centerY = Math.max(0, Math.min(Rules.mapHeight(game), centerY));
     return { tile, ox: width / 2 - centerX * tile, oy: height / 2 - centerY * tile };
   }
   function refresh() {
@@ -49,7 +50,7 @@ const MapCamera = (() => {
     byId("mapZoomLabel").textContent = Math.round(zoom * 100) + "%";
     byId("mapZoomOut").disabled = zoom <= minimumZoom;
     byId("mapZoomIn").disabled = zoom >= maximumZoom();
-    canvas.style.cursor = zoom * cellScale > 1 ? "grab" : "";
+    canvas.style.cursor = "grab";
   }
   function setZoom(value, x, y) {
     const box = canvas.getBoundingClientRect(),
@@ -83,8 +84,8 @@ const MapCamera = (() => {
   function frame(a, b) {
     focus((a.x + b.x) / 2, (a.y + b.y) / 2, { preserveZoom: true });
   }
-  function reset() {
-    zoom = fitZoom;
+  function reset(fullMap = false) {
+    zoom = fullMap ? fitZoom : 1 / cellScale;
     centerX = Rules.mapWidth(game) / 2;
     centerY = Rules.mapHeight(game) / 2;
     drag = null;
@@ -95,7 +96,7 @@ const MapCamera = (() => {
     refresh();
   }
   function fit() {
-    reset();
+    reset(true);
   }
   canvas.addEventListener(
     "wheel",
@@ -146,7 +147,6 @@ const MapCamera = (() => {
         return;
       }
     }
-    if (zoom * cellScale <= 1) return;
     suppressClick = false;
     drag = {
       id: event.pointerId,

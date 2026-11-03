@@ -62,3 +62,8 @@ ACE招募复用科技节点的`unlocks`；客户端招募与开发页预览共�
 Bazooka_SG、BZ_SG和Bazooka_ShotgunMode为扩散火箭筒。沿母弹Projectile_Bazooka_ShotgunMode（含Lv2）的hiddenAction_SpawnHitEffect读取12枚子弹及其独立载荷、命中、部位系数和目标修正，保留母弹伤害。原生发射数保存在nativeTiming.projectiles，衍生弹数另存secondaryProjectiles；不能用13枚同时出枪口冒充子母弹。演出splitFraction默认为0.65，可单独配置；子弹不重复播放发射声和枪口特效。普通ShellShotGun/BeamShotGun从枪口直接按原offsetRandomDir扩散，必须支持任意射击方向。断言见tests/scatter-projectiles.test.cjs。
 
 0087的AEUG、TITANS战舰按联邦系处理，NEO_ZEON按非联邦系处理。统一native HP×0.70、伤害×0.75、机体命中系数×0.65；联邦系额外HP×1.10、命中×1.10、回避×1.15，耐久按500取整。舰炮爆炸命中×0.8、普通舰炮对中型目标命中×0.75和对空炮减半发数继续保留。顺序须先apply_anti_air，再apply_damage，避免重建对空炮步骤后丢失伤害减免。
+
+
+## 左手连续射击动画修正（2026-11-03）
+
+原MOD的Common_ArmMG_L、NZN_AMX_101_ArmMG等左手发射链，第一发Common_Shoot_A_L之后误调用右手Common_Shoot_A_FA。native_presentation.correct_left_firing只对明确依赖单左臂且已使用左手起始动作的射击链，将后续Common_Shoot_A_FA改为已有Common_Shoot_A_L；保留逐发延迟、载荷、EN、弹数、显示索引与炮口，不修改右手、双臂齐射或格斗。双臂拆分后的PairedFire动画和枪口采样由同一修正流程生成。

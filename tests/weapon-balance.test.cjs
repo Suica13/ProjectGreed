@@ -7,9 +7,11 @@ const { loadCatalog } = require("../tools/load-catalog.cjs");
 const Codec = require("../tools/weapon-store.cjs"),
   Classes = require("../shared/weapon-classes.js");
 // Policy invariants exclude administrator offsets, which are applied afterwards.
-const catalog = loadCatalog({ adjustmentsOverride: { schemaVersion: 1, units: {}, weapons: {}, prices: {} } });
+const catalog = loadCatalog({
+  adjustmentsOverride: { schemaVersion: 1, units: {}, weapons: {}, prices: {} },
+});
 
-test("all main/subclass damage rules preserve source payloads and do not stack on reload", () => {
+test("all weapon-type damage rules preserve source payloads and do not stack on reload", () => {
   let count = 0,
     wrists = 0,
     ships = 0;
@@ -29,8 +31,7 @@ test("all main/subclass damage rules preserve source payloads and do not stack o
       }
       if (
         (prefab.stats.ship || prefab.unitTags.includes("MA")) &&
-        Classes.mainClass(before, id) === "hand" &&
-        Classes.classify(before, id) === "beam"
+        Classes.classify(before, id) === "beam_rifle"
       )
         factor = 1;
       assert.equal(after.damagePerShot, base * factor, prefab.id + "/" + id);
@@ -40,7 +41,7 @@ test("all main/subclass damage rules preserve source payloads and do not stack o
         after.attack.steps.map((s) => [s.shots, s.repeat, s.delay]),
         before.attack.steps.map((s) => [s.shots, s.repeat, s.delay]),
       );
-      if (Classes.wristBeam(before, id)) wrists++;
+      if (Classes.classify(before, id) === "beam_gun") wrists++;
       count++;
     }
     const saved = structuredClone(prefab);
@@ -53,7 +54,6 @@ test("all main/subclass damage rules preserve source payloads and do not stack o
 test("head/wrist and machine-gun costs remain consistent after paired-weapon compilation", () => {
   for (const model of Object.values(catalog.models))
     for (const weapon of model.weapons) {
-      if (Classes.headOrWrist(weapon)) assert.equal(weapon.actionCost, 3);
-      else if (Classes.machineGun(weapon)) assert.equal(weapon.actionCost, 4);
+      if (Classes.machineGun(weapon)) assert.equal(weapon.actionCost, 4);
     }
 });

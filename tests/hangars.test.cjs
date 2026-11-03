@@ -539,14 +539,17 @@ test("Gogg chest diffusion beams retain beam payload and localized confirmed nam
   assert.equal(p.weapons.ZN_MSM_03_SMS.type,"shell");
 });
 
-for (const ap of [0,1,3,5,8]) test(`emergency evacuation halves remaining AP once with rounding: ${ap}`, () => {
+for (const ap of [0,1,3,5,8]) test(`emergency evacuation preserves AP and applies same-round attack penalty: ${ap}`, () => {
   const {g,carrier,u,h}=fixture(true);
   G.hangars.embark(g,u,carrier,h.id);
   u.actionPoints=ap;
   carrier.hp=0;
   G.hangars.evacuate(g);
   assert(u.hp>0);
-  assert.equal(u.actionPoints,Math.round(ap*.5));
+  assert.equal(u.actionPoints,ap);
+  assert.equal(u.forcedExitRound,g.round);
+  for(const weapon of G.modelOf(u).weapons)
+    assert.equal(G.attackRounds(g,u,weapon), Math.floor(require("../shared/weapon-classes.js").rounds(weapon)/2));
   const remaining=u.actionPoints;
   G.hangars.evacuate(g);
   assert.equal(u.actionPoints,remaining);

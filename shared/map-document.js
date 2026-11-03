@@ -76,6 +76,7 @@ const MapDocument = (() => {
       tiles: [],
       layers: [],
       rules: [],
+      units: [],
       spawns: [],
       deploymentAreas: [],
       ...options,
@@ -108,6 +109,7 @@ const MapDocument = (() => {
       spawns: doc.spawns.map((s) => ({ ...s })),
       deploymentAreas: doc.deploymentAreas.map((a) => ({ ...a })),
       rules: copy(doc.rules),
+      units: copy(doc.units || []),
     };
   }
   function validate(doc) {
@@ -269,10 +271,18 @@ const MapDocument = (() => {
       )
         throw Error("出生地或部署区域超出地图。");
     }
+    if (!Array.isArray(doc.units || []) || (doc.units || []).length > 2048) throw Error("预置单位数量无效");
+    const occupied = new Set(), unitIds = new Set();
+    for (const u of doc.units || []) {
+      if (!u || typeof u.id !== "string" || unitIds.has(u.id) || typeof u.unitId !== "string" || !u.unitId ||
+          !integer(u.team, 0, doc.maxTeams - 1) || !integer(u.x, 0, doc.width - 1) || !integer(u.y, 0, doc.height - 1) || occupied.has(u.x + "," + u.y)) throw Error("预置单位坐标、队伍或标识无效/重叠");
+      occupied.add(u.x + "," + u.y); unitIds.add(u.id);
+    }
     return doc;
   }
   function resize(doc, width, height) {
     if (!integer(width, 12, 128) || !integer(height, 9, 128)) throw Error("地图尺寸超出范围。");
+    if ((doc.units || []).some(u => u.x >= width || u.y >= height)) throw Error("缩小地图会移除预置单位，请先删除越界单位。");
     for (const l of doc.layers) {
       if (l.type !== "tile") continue;
       const data = Array(width * height).fill(null);

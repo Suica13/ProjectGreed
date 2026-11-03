@@ -258,7 +258,7 @@
   },
   "stats": {
     "hp": 40500,
-    "en": 500,
+    "en": 1000,
     "move": 8,
     "mobility": 110,
     "cost": 500,
@@ -347,7 +347,7 @@
   },
   "sourceStats": {
     "enBeforeReduction": 1000,
-    "enCapacityMultiplier": 0.5,
+    "enCapacityMultiplier": 1,
     "hp": 32500,
     "walkSpeed": 1.35,
     "boostSpeed": 1.85,
@@ -425,6 +425,28 @@
     "Common_Push_A": {
       "ref": "Common_Push_A__lv2",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Push_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Kick_White_R"
+              ],
+              "delay": 0.45
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Push_A"
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
@@ -446,7 +468,10 @@
             "y": 0
           }
         }
-      }
+      },
+      "remove": [
+        "swingEffects"
+      ]
     },
     "ZN_YMT_05_MainCannon_AP": {
       "ref": "ZN_YMT_05_MainCannon_AP__lv1",

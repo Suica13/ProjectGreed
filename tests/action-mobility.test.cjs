@@ -30,7 +30,9 @@ test("all models use converted AP, retain tactical movement and keep deployed bu
     if (p.stats.ship) assert.equal(p.stats.actionPoints, 10, p.id);
     for (const m of Object.values(G.models).filter((m) => m.prefabId === p.id)) {
       assert.equal(m.actionPoints, p.stats.actionPoints, m.id);
-      assert.equal(m.move, p.sourceStats.mobilityMoveTarget, p.id);
+      const bonus = Number.isFinite(p.sourceStats.tacticalMoveBeforeBonus) ? (p.stats.ship ? 3 : 1) : 0;
+      assert.equal(m.move, p.stats.deployed ? 0 : Math.max(1,
+        Math.round((p.sourceStats.mobilityMoveTarget - bonus) * 0.5) + bonus), p.id);
     }
     if (p.stats.deployed) {
       const parent = G.catalog.prefabs.find((base) => base.id === p.formOf);
@@ -85,8 +87,9 @@ for (const [unitId, ap] of [
     planner.reset(room);
     const queue = Array(Math.floor(ap / 4)).fill(weapon);
     planner.plan(room, a, b, queue, 0);
-    assert.equal(a.actionPoints, ap % 4);
-    assert.throws(() => planner.plan(room, a, b, [...queue, weapon], 0));
+    assert.equal(a.actionPoints, ap);
+    planner.plan(room, a, b, [...queue, weapon], 0);
+    assert.equal(a.actionPoints, ap);
     planner.cancel(room, a);
     assert.equal(a.actionPoints, ap);
   });

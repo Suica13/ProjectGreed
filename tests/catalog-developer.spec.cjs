@@ -51,6 +51,7 @@ test("developer catalog edits unit overrides, offers save/discard on close, and 
     await page.locator('[data-field="unit.name.en"]').fill("Editor Gundam");
     await page.locator('[data-source-weapon="EF_HypeBazooka"] > summary').click();
     await page.locator('[data-field="weapon.EF_HypeBazooka.hit"]').fill("92");
+    await page.locator('[data-field="weapon.EF_HypeBazooka.attackRounds"]').fill("4");
     await page.locator("#closeFormationDetail").click();
     await expect(page.locator("#gameDialog")).toBeVisible();
     await page.getByRole("button", { name: "保存并关闭", exact: true }).click();
@@ -58,6 +59,7 @@ test("developer catalog edits unit overrides, offers save/discard on close, and 
     expect(f.store.getUnit("RX_78_2").unit.stats.hp).toBe(55500);
     expect(f.store.getUnit("RX_78_2").unit.weapons.EF_HypeBazooka.hit).toBe(92);
     expect(f.store.getUnit("RX_78_2").price.money).toBe(450);
+    expect(f.store.getUnit("RX_78_2").unit.weapons.EF_HypeBazooka.attackRounds).toBe(4);
     await page.locator('[data-unit-id="RX_78_2"] button').click();
     await page.locator("#editUnitProperties").click();
     await page.locator('[data-field="stats.hp"]').fill("99999");
@@ -72,6 +74,7 @@ test("developer catalog edits unit overrides, offers save/discard on close, and 
     await expect(page.locator("#commonWeaponEditor")).toBeVisible();
     const old = Number(await page.locator('[data-field="common.hit"]').inputValue());
     await page.locator('[data-field="common.hit"]').fill(String(old + 1));
+    await page.locator('[data-field="common.attackRounds"]').fill("7");
     await page
       .locator("#commonWeaponEditor")
       .getByRole("button", { name: "关闭", exact: true })
@@ -563,11 +566,14 @@ test("faction libraries download separately, cached switches and preview closing
     await expect(page.locator("#formationDetailTitle")).toContainText("Z");
     await page.locator("#editUnitProperties").click();
     await expect(page.locator("#unitSourceEditor")).toBeVisible();
-    const primary = page.locator("#unitSourceEditor label").filter({hasText:"主要阵营标签"}).locator("select");
+    const primary = page
+      .locator("#unitSourceEditor label")
+      .filter({ hasText: "主要阵营标签" })
+      .locator("select");
     await expect(primary).toHaveValue("AEUG");
     await expect(page.locator('[data-field="unit.eras"]')).toHaveValue("0087");
     await page.locator("#closeFormationDetail").click();
-    await page.getByRole("button",{name:"取消修改并关闭",exact:true}).click();
+    await page.getByRole("button", { name: "取消修改并关闭", exact: true }).click();
     const afterDownload = requests.length;
     await page.locator("#editorFactionSwitch").selectOption("ZEON");
     await expect(page.locator("#editorFactionSwitch")).toBeEnabled();

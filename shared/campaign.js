@@ -460,7 +460,7 @@ const CampaignRules = (() => {
         const unit = getUnit(command.armyId);
         check(unit.state?.embarked && !unit.moveTo && !busy(state, unit), "当前不能离开格纳库");
         const carrier = state.units.find((item) => !item.destroyed && item.state?.id === unit.state.embarked.carrierId);
-        check(carrier && controls(state, members, seat, carrier) && !carrier.moveTo, "请先取消运输单位调动或由其控制者操作");
+        check(carrier && !carrier.state?.embarked && controls(state, members, seat, carrier) && !carrier.moveTo, "请先取消运输单位调动或由其控制者操作");
         const positions = [];
         for (const encounter of state.encounters) {
           const game = encounter.battleSave?.game;
@@ -513,6 +513,7 @@ const CampaignRules = (() => {
             );
           unit.state.shield = Math.min(unit.state.shield || 0, after.shield.hp);
           delete unit.state.heldWeapon;
+          delete unit.state.weaponDisplayIndex;
           delete unit.state.defaultFormModel;
           delete unit.state.plan;
         }
@@ -827,7 +828,7 @@ const CampaignRules = (() => {
   }
   function embarkOptions(ctx, state, passenger) {
     if (passenger.destroyed || passenger.pendingTransfer || passenger.moveTo || busy(state, passenger) ||
-        (passenger.state?.embarked || passenger.aboard) || model(ctx, passenger).hangars?.length || model(ctx, passenger).deployed) return [];
+        (passenger.state?.embarked || passenger.aboard) || model(ctx, passenger).deployed) return [];
     const transport = model(ctx, passenger).transport;
     if (!transport) return [];
     return state.units.filter((carrier) => carrier.id !== passenger.id && !carrier.destroyed &&
@@ -1266,11 +1267,21 @@ const CampaignRules = (() => {
       const hangar = carrier && model(ctx, carrier)?.hangars?.find((item) => item.id === unit.state.embarked.hangarId);
       const transport = model(ctx, unit)?.transport;
       check(carrier && carrier !== unit && carrier.team === unit.team && carrier.region === unit.region &&
-        !carrier.state.embarked && hangar && transport && !model(ctx, unit).hangars?.length &&
+        hangar && transport &&
         hangar.allowedTags.some((tag) => transport.loadTags.includes(tag)), "格纳库搭载关系无效");
       const used = value.units.filter((item) => !item.destroyed && item.state?.embarked?.carrierId === carrier.state.id &&
         item.state.embarked.hangarId === hangar.id).reduce((sum, item) => sum + (hangar.kind === "sfs" ? 1 : model(ctx, item).transport?.slotCost || 1), 0);
       check(used <= hangar.capacity, "格纳库搭载超出容量");
+    }
+    for (const unit of value.units.filter((item) => !item.destroyed && item.state?.embarked)) {
+      const seen = new Set([unit.id]);
+      let parentId = unit.state.embarked.carrierId;
+      while (parentId) {
+        const parent = value.units.find((item) => !item.destroyed && item.state?.id === parentId);
+        check(parent && !seen.has(parent.id), "不能循环搭载");
+        seen.add(parent.id);
+        parentId = parent.state?.embarked?.carrierId;
+      }
     }
     check(
       Array.isArray(value.orders) &&

@@ -1,8 +1,8 @@
 """ProjectGreed unit EN capacity policy; weapon EN consumption keeps its native value."""
 import math
 
-EN_CAPACITY_MULTIPLIER = 0.5
-EN_CAPACITY_OVERRIDES = {"MS_06C": 350}
+EN_CAPACITY_MULTIPLIER = 1
+EN_CAPACITY_OVERRIDES = {}
 
 
 def capacity_for(unit_id, baseline):
