@@ -6,6 +6,7 @@ import copy, importlib.util, json, math, re, shutil, sys, subprocess
 from pathlib import Path
 from mod_source import ROOT, MAIN, ASSETS, parse, load, section, resolve, stat, number
 from unit_visuals import BONE_NAMES
+from weapon_kit_policy import surcharge
 from page_one_adaptations import finalize
 from unit_introductions import apply_introduction
 from unit_muzzle_effects import apply_muzzle_effects
@@ -214,7 +215,7 @@ def build(row,effects):
  if ship:primary=[];fixed=list(p['weapons'])
  p['weaponKits']=[{'id':'standard','name':'标准武装','cost':0,'weapons':list(p['weapons'])}]
  if len(primary)>1 and 'MS' in tags:
-  p['weaponKits']=[{'id':'kit_'+str(i),'name':p['weapons'][k]['name']+'套件','cost':100 if any(x in k for x in ['Cannon','Rifle','_BR']) else 50 if any(x in k for x in ['Bazooka','Missile']) else 0,'weapons':[k,*fixed]} for i,k in enumerate(primary)]
+  p['weaponKits']=[{'id':'kit_'+str(i),'name':p['weapons'][k]['name']+'套件','cost':surcharge(k,p['weapons'][k]),'weapons':[k,*fixed]} for i,k in enumerate(primary)]
  for layer in p['layers']:
   condition=layer.pop('_nativeVisibility','') or ''
   held=next((k for k in p['weapons'] if layer['name']==k or layer['name']==k+'_NotUsing'),None)

@@ -957,7 +957,7 @@
     {
       "id": "kit_2",
       "name": "光束步枪套件",
-      "cost": 100,
+      "cost": 75,
       "weapons": [
         "EF_RMS_179_BR",
         "EF_BeamSaber_A",

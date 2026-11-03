@@ -226,7 +226,7 @@ const HangarUI = (() => {
       panel.append(element("h4", "", "当前状态"),
         element("p", "", `${m.name} · ${UnitIdentity.owner(cargo).team}`),
         element("p", "", `HP ${formatNumber(cargo.hp)} / ${formatNumber(m.hp)} · EN ${formatNumber(cargo.en)} / ${formatNumber(m.en)}`),
-        element("p", "", `${I18n.text("盾牌")} ${formatNumber(cargo.shield || 0)} / ${formatNumber(m.shield?.hp || 0)} · AP ${Rules.actionPoints(cargo)} / ${Rules.actionBudget(cargo)}`),
+        element("p", "", `${I18n.text("盾牌")} ${formatNumber(cargo.shield || 0)} / ${formatNumber(m.shield?.hp || 0)} · ${I18n.text("AP参考")} ${formatNumber(m.actionPoints)}`),
         element("p", broken.length ? "red" : "muted", broken.length
           ? I18n.text("受损部位") + ": " + broken.map(k => I18n.text(Rules.partNames[k] || k)).join(" / ")
           : I18n.text("部位完好")));

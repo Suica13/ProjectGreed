@@ -912,7 +912,7 @@
     {
       "id": "kit_2",
       "name": "标准套件",
-      "cost": 100,
+      "cost": 75,
       "weapons": [
         "EF_90mmMG",
         "Common_DoubleCannon",

@@ -179,7 +179,7 @@ const ProductionUI = (() => {
         ["EN", formatNumber(model.en)],
         ["COST", model.cost],
         ["移动", model.move],
-        ["行动点", model.actionPoints ?? 5],
+        ["AP参考", model.actionPoints ?? 5],
         ["盾牌HP", formatNumber(model.shield.hp)],
         ["零件强度", model.partStructuralStrength],
       ]);

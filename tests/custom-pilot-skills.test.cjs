@@ -68,7 +68,7 @@ test("custom skills survive formation validation and run in the shared combat li
     assert.equal(u.en, 400);
     assert.equal(u.actionPoints, 0);
     for (const [stat, rate] of Object.entries(skill.statMultipliers))
-      assert.equal(P.of(u).stats[stat], permanent.stats[stat] * rate);
+      assert.equal(P.of(u).stats[stat], Math.round(permanent.stats[stat] * rate));
     assert.deepEqual(u.pilot, permanent);
     assert.equal(u.skillReadyRound[skill.id], start + 12);
     assert.throws(() => G.useSkill(game, u, skill.id, u.x, u.y));

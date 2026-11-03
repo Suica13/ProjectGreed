@@ -3245,5 +3245,10 @@
   "硬直AP记录（AP机制未启用）": "Stun AP record (AP inactive)",
   "锁定狙击目标": "Lock sniper target",
   "命中率": "Accuracy",
-  "已使用攻击类技能，本回合不能普通攻击或取消攻击。": "An offensive skill has been committed. Normal attacks and attack cancellation are unavailable this turn."
+  "已使用攻击类技能，本回合不能普通攻击或取消攻击。": "An offensive skill has been committed. Normal attacks and attack cancellation are unavailable this turn.",
+  "格斗穿甲": "Melee armor piercing",
+  "穿甲无视抗性": "Resistance ignored by armor piercing",
+  "舰炮": "Ship cannon",
+  "AP参考": "AP reference",
+  "按类型轮数自动使用可用武器；射击结束后进行格斗。": "Automatically uses available weapons by type rounds; melee follows ranged fire."
 }

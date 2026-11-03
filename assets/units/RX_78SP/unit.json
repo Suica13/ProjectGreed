@@ -831,7 +831,7 @@
     {
       "id": "kit_0",
       "name": "标准套件",
-      "cost": 100,
+      "cost": 75,
       "weapons": [
         "EF_RX_78SP_BR",
         "EF_RX_78SP_BR_Sniper_Aim",

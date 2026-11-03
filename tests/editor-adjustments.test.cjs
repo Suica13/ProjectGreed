@@ -131,7 +131,7 @@ test("offset helper rejects unsafe paths and invalid values without silently acc
 });
 
 
-test("common numeric edits leave the template unchanged and follow a later native template refresh", t => {
+test("common numeric edits preserve fixed class accuracy after a native template refresh", t => {
   const f = editorFixture(); t.after(f.cleanup);
   const ref = "EF_HypeBazooka__lv2", library = f.read("assets/weapons.json");
   const original = f.store.getWeapon(ref);
@@ -144,6 +144,6 @@ test("common numeric edits leave the template unchanged and follow a later nativ
   library.definitions[ref].hit += 10;
   for (const step of library.definitions[ref].attack.steps) if (step.accuracy !== undefined) step.accuracy += 10;
   write(f, "assets/weapons.json", library);
-  assert.equal(f.store.getWeapon(ref).weapon.hit, original.weapon.hit + 15);
-  assert.equal(f.store.getUnit("RX_78_2").unit.weapons.EF_HypeBazooka.hit, beforeUnit + 10);
+  assert.equal(f.store.getWeapon(ref).weapon.hit, original.weapon.hit + 5);
+  assert.equal(f.store.getUnit("RX_78_2").unit.weapons.EF_HypeBazooka.hit, beforeUnit);
 });

@@ -85,7 +85,11 @@ def compile_launcher(prefab, path, root=ROOT, copy_assets=True):
              'incom': ('INCOM有线炮', 'INCOM', 'インコム')}[control]
     steps, previous = [], 0
     native_damage = payloads[0]["BeamDamage"]
-    shot_damage = 4000 / (len(units) * 2) if control != 'incom' else native_damage
+    from native_combat import CHANNELS
+    native_components = {channel: payloads[0][key] for key,channel in CHANNELS.items() if payloads[0].get(key,0)>0}
+    native_total = sum(native_components.values())
+    shot_damage = 4000 / (len(units) * 2) if control != 'incom' else native_total
+    components = {channel: value * shot_damage / native_total for channel,value in native_components.items()}
     if control != 'incom':
         awakening = 75
     events=sorted((round(.7+cycle*1.2+index*.13,4),index) for cycle in range(2) for index in range(len(units)))
@@ -95,7 +99,7 @@ def compile_launcher(prefab, path, root=ROOT, copy_assets=True):
         previous=at
     weapon = dict(sourceName=key, name=names[0], localization={lang: {'name': name} for lang,name in zip(('zh','en','ja'),names)},
         type='beam', category='remote', slot='secondary', min=1, max=6 if control=='funnel' else 4,
-        hit=100 if control!='incom' else payloads[0].get('WeaponAccuracy',85), en=values[key + '_EN'], actionCost=3, damagePerShot=shot_damage, damageComponents={'beam':shot_damage},
+        hit=100 if control!='incom' else payloads[0].get('WeaponAccuracy',85), en=values[key + '_EN'], actionCost=3, damagePerShot=shot_damage, damageComponents=components,
         hitsPerShot=1, clip=None, changeHeldWeapon=False, requiredParts=[],
         attack={'startAnimation':None,'steps':steps}, muzzle={'mounts':mounts},
         projectile={'texture':f'../../projectiles/Beam_2_{color}.png','scale':.65,'speed':85,

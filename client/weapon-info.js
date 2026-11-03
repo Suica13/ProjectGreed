@@ -14,6 +14,7 @@ const WeaponInfo = (() => {
     melee: "格斗",
     meleeBeam: "格斗光束",
     meleeShell: "格斗实弹",
+    meleeAP: "格斗穿甲",
     beamAP: "光束穿甲",
     shellAP: "实弹穿甲",
     meleeBeamAP: "格斗光束穿甲",
@@ -35,7 +36,7 @@ const WeaponInfo = (() => {
     if (label) item.textContent = label;
     return item;
   };
-  const amount = (value) => (Number.isFinite(value) ? Number(value.toFixed(2)) : 0);
+  const amount = (value) => (Number.isFinite(value) ? Math.round(value) : 0);
   const percent = (factor) => Math.round((factor ?? 1) * 100) + "%";
   function badge(label, factors) {
     const damage = factors.damage ?? 1;
@@ -54,6 +55,8 @@ const WeaponInfo = (() => {
   }
   function effects(weapon, extended = false) {
     const tags = node("div", "weapon-effect-tags");
+    if (WeaponClasses.shipCannon(weapon, weapon.shipWeapon))
+      tags.append(badge("舰炮", { damage: 1, accuracy: Rules.catalog.conversionRules.weapons.shipCannonAccuracy ?? 0.85 }));
     const environments = extended ? ["ground", "air", "water", "space"] : ["ground", "air"];
     for (const key of environments) {
       const factor =
@@ -140,7 +143,7 @@ const WeaponInfo = (() => {
         if (value > 0) attributes.add(componentLabels[channel] || channel);
     }
     if (!attributes.size) attributes.add(Rules.typeNames[weapon.type] || weapon.type);
-    const number = (value) => value.toLocaleString(undefined, { maximumFractionDigits: 2 });
+    const number = (value) => Math.round(value).toLocaleString();
     const root = node("div", "weapon-summary");
     const heading = node("div", "weapon-summary-heading");
     heading.append(node("strong", "weapon-name", weapon.name));
@@ -295,6 +298,8 @@ const WeaponInfo = (() => {
       ]);
     if (["mortar", "snipe"].includes(weapon.special?.type))
       rows.push(["冷却", "1 " + I18n.text("回合")]);
+    if ([weapon, ...(weapon.attack.steps || [])].some(payload => Object.entries(payload.damageComponents || {}).some(([key,value])=>key.endsWith("AP") && value>0)))
+      rows.push(["穿甲无视抗性", Math.round((weapon.armorPiercingIgnore ?? Rules.catalog.conversionRules.weapons.armorPiercingIgnore) * 100) + "%"]);
     if (weapon.nativePayload?.DpDamage) rows.push(["DP", amount(weapon.nativePayload.DpDamage)]);
     for (const [label, value] of rows)
       stats.append(node("dt", "", label), node("dd", "", String(value)));

@@ -264,9 +264,7 @@ const MatchRecords = (() => {
         !Number.isFinite(u.angle) ||
         !Number.isFinite(u.performance ?? 1) ||
         (u.performance ?? 1) <= 0 ||
-        (u.performance ?? 1) > 10 ||
-        !Number.isFinite(u.actionPoints) ||
-        u.actionPoints < 0
+        (u.performance ?? 1) > 10
       )
         throw Error("存档单位状态无效。");
       if (u.embarked && !g.units.some((carrier) => carrier.id === u.embarked.carrierId))
@@ -279,9 +277,9 @@ const MatchRecords = (() => {
   }
   function validateGame(G, g, tiles) {
     if (!g || !Object.hasOwn(G.catalog.maps, g.mapId)) throw Error("存档地图不受支持。");
-    G.campaignBattlefield.validate(G, g);
+    const battlefieldMap = G.campaignBattlefield.validate(G, g);
     if (g.aiOptions !== undefined) g.aiOptions = G.aiTactics.settings(g.aiOptions);
-    const map = G.getMap(g.mapId);
+    const map = battlefieldMap || G.getMap(g.mapId);
     if (
       !Array.isArray(tiles) ||
       tiles.length !== map.height ||

@@ -1078,7 +1078,7 @@
     {
       "id": "kit_1",
       "name": "光束步枪套件",
-      "cost": 100,
+      "cost": 75,
       "weapons": [
         "EF_RX_78GP01_BR",
         "EF_RX_78GP01_LBR",

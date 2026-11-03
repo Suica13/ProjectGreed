@@ -87,8 +87,9 @@ def main():
             '@echo off\nsetlocal\nchcp 65001 >nul\ncd /d "%~dp0"\n'
             '"%~dp0runtime\\node.exe" "tools\\open-server-activities.cjs"\n'
             'if errorlevel 1 pause\n', encoding="utf-8", newline="\r\n")
+        (stage / "docs").mkdir(exist_ok=True)
         if args.with_client:
-            (stage / "使用说明.md").write_text(
+            (stage / "docs/使用说明.md").write_text(
                 f'# {project["name"]} {project["version"]} 服务端与客户端\n\n'
                 '双击 start_server.bat 启动服务端。已附带 Node 与 ws，无需安装依赖。\n'
                 '服务器默认端口1313，可修改 cfg.json 后重启。网页客户端：http://127.0.0.1:1313/ 。\n'
@@ -98,7 +99,7 @@ def main():
                 '运行后生成的 server-data 为活动、领取记录与结算日志，请在升级时保留；发行包不包含本机玩家数据。\n'
                 '房间与对局在内存中，停服不会保留。manifest.json 记录发行文件的 SHA-256。\n', encoding="utf-8")
         else:
-            shutil.copy2(ROOT / "服务器独立包说明.md", stage / "使用说明.md")
+            shutil.copy2(ROOT / "docs/tools/server-package.md", stage / "docs/使用说明.md")
         files = sorted(p for p in stage.rglob("*") if p.is_file())
         manifest = {"mode":"server-client" if args.with_client else "server-only", "project":project, "runtime":runtime, "files":{
             p.relative_to(stage).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()

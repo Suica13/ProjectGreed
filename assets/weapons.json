@@ -58393,7 +58393,7 @@
       }
     },
     "EF_GLine_HBR__lv1": {
-      "name": "光束炮",
+      "name": "光束步枪",
       "type": "beam",
       "min": 1,
       "max": 2,
@@ -58516,13 +58516,24 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "category": "other",
+      "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_GLine_HBR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_GLine_HBR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_GLine_SBR__lv1": {
-      "name": "光束炮",
+      "name": "光束步枪",
       "type": "beam",
       "min": 1,
       "max": 2,
@@ -58645,13 +58656,24 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "category": "other",
+      "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_GLine_SBR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_GLine_SBR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_GMRifle__lv1": {
-      "name": "光束步枪",
+      "name": "90mm机枪",
       "type": "shell",
       "min": 2,
       "max": 3,
@@ -58843,10 +58865,21 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "category": "beam_rifle",
+      "category": "machine_gun",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_GMRifle.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_GMRifle.gw",
+      "localization": {
+        "zh": {
+          "name": "90mm机枪"
+        },
+        "en": {
+          "name": "90mm Machine Gun"
+        },
+        "ja": {
+          "name": "90mmマシンガン"
+        }
+      }
     },
     "EF_GroundTypeBazooka__lv1": {
       "name": "陆战型火箭筒",
@@ -73363,7 +73396,7 @@
       }
     },
     "EF_RX_78GP01_LBR__lv1": {
-      "name": "光束炮",
+      "name": "光束步枪",
       "type": "beam",
       "min": 1,
       "max": 2,
@@ -73488,10 +73521,21 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "category": "other",
+      "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_78GP01_LBR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_78GP01_LBR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "EF_RX_78GP02A_BeamBazooka__lv1": {
       "name": "火箭筒",
@@ -74976,7 +75020,7 @@
           "hiddenAction_EF_RX_78SP_BR_Sniper_Fire_Step_1"
         ]
       },
-      "category": "sniper",
+      "category": "beam_rifle",
       "actionCost": 4,
       "level": 1,
       "levelSource": "Units/BattleUnits/Weapon/Beam/EF_RX_78SP_BR_Sniper.gw",
@@ -164616,7 +164660,7 @@
           "hiddenAction_ZN_MS_14G_BR_Sniper_Fire_Step_1"
         ]
       },
-      "category": "sniper",
+      "category": "beam_rifle",
       "actionCost": 4,
       "level": 1,
       "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_14G_BR_Sniper.gw",
@@ -193372,7 +193416,7 @@
       }
     },
     "EF_GMRifle__lv2": {
-      "name": "光束步枪",
+      "name": "90mm机枪",
       "type": "shell",
       "min": 2,
       "max": 3,
@@ -193564,10 +193608,21 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "category": "beam_rifle",
+      "category": "machine_gun",
       "actionCost": 2,
       "level": 2,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_GMRifle_Lv2.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Shell/EF_GMRifle_Lv2.gw",
+      "localization": {
+        "zh": {
+          "name": "90mm机枪"
+        },
+        "en": {
+          "name": "90mm Machine Gun"
+        },
+        "ja": {
+          "name": "90mmマシンガン"
+        }
+      }
     },
     "EF_170mmCannon__lv2": {
       "name": "170mm加农炮",
@@ -210513,7 +210568,7 @@
       }
     },
     "AEUG_MSA_005K_BR_GL__lv1": {
-      "name": "光束步枪",
+      "name": "实弹步枪",
       "type": "shell",
       "min": 2,
       "max": 3,
@@ -210676,13 +210731,13 @@
       "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSA_005K_BR.gw",
       "localization": {
         "zh": {
-          "name": "光束步枪"
+          "name": "实弹步枪"
         },
         "en": {
-          "name": "Beam Rifle"
+          "name": "Ballistic Rifle"
         },
         "ja": {
-          "name": "ビーム・ライフル"
+          "name": "実弾ライフル"
         }
       }
     },
@@ -230822,7 +230877,7 @@
       }
     },
     "TITANS_PMX_001_BR_M__lv1": {
-      "name": "光束步枪",
+      "name": "实弹步枪",
       "type": "shell",
       "min": 2,
       "max": 3,
@@ -230975,13 +231030,13 @@
       "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_PMX_001_BR.gw",
       "localization": {
         "zh": {
-          "name": "光束步枪"
+          "name": "实弹步枪"
         },
         "en": {
-          "name": "Beam Rifle"
+          "name": "Ballistic Rifle"
         },
         "ja": {
-          "name": "ビーム・ライフル"
+          "name": "実弾ライフル"
         }
       }
     },
@@ -232056,7 +232111,7 @@
       }
     },
     "TITANS_RX_178_BR_WGL_GL__lv1": {
-      "name": "光束步枪",
+      "name": "实弹步枪",
       "type": "shell",
       "min": 2,
       "max": 3,
@@ -232205,13 +232260,13 @@
       "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_RX_178_BR_WGL.gw",
       "localization": {
         "zh": {
-          "name": "光束步枪"
+          "name": "实弹步枪"
         },
         "en": {
-          "name": "Beam Rifle"
+          "name": "Ballistic Rifle"
         },
         "ja": {
-          "name": "ビーム・ライフル"
+          "name": "実弾ライフル"
         }
       }
     },
@@ -240839,7 +240894,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Cqb/ZN_MS_15B_BeamLance_B2_Lv2.gw"
     },
     "NZN_AGX_04A1_LBR__lv1": {
-      "name": "光束炮",
+      "name": "光束步枪",
       "type": "beam",
       "min": 1,
       "max": 2,
@@ -241033,10 +241088,21 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "category": "other",
+      "category": "beam_rifle",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_AGX_04A1_LBR.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_AGX_04A1_LBR.gw",
+      "localization": {
+        "zh": {
+          "name": "光束步枪"
+        },
+        "en": {
+          "name": "Beam Rifle"
+        },
+        "ja": {
+          "name": "ビーム・ライフル"
+        }
+      }
     },
     "GwanbanClass_Turret_BeamCannon__lv1": {
       "name": "舰载光束炮",
@@ -243063,7 +243129,7 @@
       }
     },
     "NZN_MS_14J_BR_GL__lv1": {
-      "name": "光束步枪",
+      "name": "实弹步枪",
       "type": "shell",
       "min": 2,
       "max": 3,
@@ -243204,13 +243270,13 @@
       "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_MS_14J_BR.gw",
       "localization": {
         "zh": {
-          "name": "光束步枪"
+          "name": "实弹步枪"
         },
         "en": {
-          "name": "Beam Rifle"
+          "name": "Ballistic Rifle"
         },
         "ja": {
-          "name": "ビーム・ライフル"
+          "name": "実弾ライフル"
         }
       }
     },
@@ -246306,7 +246372,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Shell/NZN_AMX_101_MS.gw"
     },
     "NZN_AMX_101_BR_MS__lv1": {
-      "name": "光束步枪",
+      "name": "实弹步枪",
       "type": "shell",
       "min": 2,
       "max": 3,
@@ -246463,13 +246529,13 @@
       "levelSource": "Units/BattleUnits/Weapon/Shell/NZN_AMX_101_BR_MS.gw",
       "localization": {
         "zh": {
-          "name": "光束步枪"
+          "name": "实弹步枪"
         },
         "en": {
-          "name": "Beam Rifle"
+          "name": "Ballistic Rifle"
         },
         "ja": {
-          "name": "ビーム・ライフル"
+          "name": "実弾ライフル"
         }
       }
     },

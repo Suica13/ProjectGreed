@@ -1190,7 +1190,7 @@
   "weaponKits": [
     {
       "id": "kit_0",
-      "name": "EF RX 81 GG套件",
+      "name": "光束步枪套件",
       "cost": 0,
       "weapons": [
         "EF_GLine_SBR",
@@ -1199,11 +1199,22 @@
         "Common_DoubleVulcan_MS",
         "EF_BeamSaber_Double_AALDF",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "光束步枪套件"
+        },
+        "en": {
+          "name": "Beam Rifle Kit"
+        },
+        "ja": {
+          "name": "ビーム・ライフル装備"
+        }
+      }
     },
     {
       "id": "kit_2",
-      "name": "导弹发射器套件",
+      "name": "光束步枪套件",
       "cost": 50,
       "weapons": [
         "EF_GLine_SBR",
@@ -1212,7 +1223,18 @@
         "Common_DoubleVulcan_MS",
         "EF_BeamSaber_Double_AALDF",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "光束步枪套件"
+        },
+        "en": {
+          "name": "Beam Rifle Kit"
+        },
+        "ja": {
+          "name": "ビーム・ライフル装備"
+        }
+      }
     }
   ],
   "description": "真正意义上的量产型高达,性能已经超越了高达",

@@ -4,6 +4,7 @@ import json,re,importlib.util
 from pathlib import Path
 from mod_source import ROOT,ASSETS,load,section,resolve
 from unit_visuals import BONE_NAMES
+from weapon_kit_policy import surcharge
 from unit_parts import apply_parts
 from unit_skills import apply_body_tackle, import_tackle_assets
 import copy
@@ -41,6 +42,9 @@ def populate_infantry(p,data):
  module.write(ASSETS/'effects/effects.json',effects)
 
 def weapon_label(key,w):
+ from native_weapon_names import label
+ confirmed = label(key,w)
+ if confirmed:return confirmed[0]
  if key.startswith(('Medea_Turret_MG', 'FatUncle_Turret_MG')):return '\u9632\u7a7a\u673a\u67aa'
  if key == 'ZN_MS_07B3_Minigun':return '加特林盾牌'
  if key in BALANCED:return BALANCED[key]['name']
@@ -94,7 +98,7 @@ def finalize(p,row,data):
   if kit['id'].startswith('kit_'):
    primary=p['weapons'][kit['weapons'][0]];name=primary['sourceName']
    kit['name']=primary['name']+'套件'
-   kit['cost']=100 if 'Cannon' in name or 'Rifle' in name or name.endswith('_BR') else 75 if primary['type']=='beam' else 50 if any(token in name for token in ['Bazooka','Missile','_MS','BigGun']) else 0
+   kit['cost']=surcharge(name, primary)
  for weapon in p['weapons'].values():weapon['hitBonus']=weapon['hit']-int(weapon['sourceHit']*weapon['hitMultiplier']+.5)
  for key,w in p['weapons'].items():
   if p['stats'].get('ship') or w['type']=='melee':continue

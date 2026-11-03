@@ -999,7 +999,7 @@
     {
       "id": "magella_cannon",
       "name": "马哲拉顶炮套件",
-      "cost": 100,
+      "cost": 75,
       "weapons": [
         "ZN_MagellaCannon",
         "ZN_HeatHawk_A",

@@ -723,6 +723,10 @@
     "ZN_MAN_03_Funnel": {
       "ref": "ZN_MAN_03_Funnel__lv1",
       "overrides": {
+        "damageComponents": {
+          "beam": 400.0,
+          "beamAP": 100.0
+        },
         "requiredParts": [],
         "muzzle": {
           "mounts": [

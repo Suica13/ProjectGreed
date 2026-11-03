@@ -48,30 +48,6 @@ def main():
     for row in rows:
         key=(row["weaponId"],row["source"],row["duration"],row["cooldown"],row["projectiles"],row["en"],row["damagePerProjectile"])
         groups[key].append(row)
-    lines=["# 武器发射流程与CD统计","",f"共{len(rows)}条单位—武器配置，按ID、来源、流程、发数、消耗等去重后{len(groups)}组；包含隐藏武器与强化形态，hidden字段可筛选。不是只统计武器名称。","",
-        "- 流程时间包含原MOD准备、射击、收招，不包含本项目弹道飞行、命中、死亡动画或每单位0～1秒随机延迟。",
-        "- CD单独记录：普通动作在开火开始设置CD；自动炮塔通常在弹仓耗尽后进入CD。参考循环取普通动作max(流程,CD)、自动炮塔流程+CD，未计移位、瞄准、驾驶员或特定条件加成。",
-        "- emissions是发射动作/炮口次数，projectiles是含霰弹的弹体数；舰炮含全部完好模块。连射中每弹的数值保存在JSON时间线中，不把副炮、左右炮位或不同弹丸重复叠加。",
-        "- 原ProjectileAttackTimes是弹体可命中目标容量，不是对同一单位重复伤害；本次不将其改成多段连击。DP、烧灼等原生载荷另存nativePayload，未声称已实现原RTS全部异常状态。",
-        "- 声明的_EN宏不等于实际扣费：例如部分战舰迫击炮只用宏做AI门槛，没有price/addResources/UseEN扣费。本表按实际执行的资源操作统计，同时保留declaredEnergy供核对；不擅自补上原MOD未执行的消费。",
-        "- 当前已接入AP限制的单目标多武器顺序攻击；本报告记录原始流程，多目标攻击尚未接入。","", "## 当前AP攻击流程","",
-        "每单位默认5 AP，先选一个敌人再按顺序添加武器，可重复同一武器；每次分别消耗其AP和EN。流程秒数与CD仅作原生演出参考，不作为本回合次数限制。",
-        "光束步枪/火箭筒2 AP，机枪扫射3，头部火神炮1，手臂/内藏武装2，加农炮/舰炮3。格斗、光束喷枪、导弹2，航空炸弹3。零EN武器也必须支付AP。",
-        "狙击蓄力与迫击炮作为技能武器独占行动。普通航空投弹可进入AP序列；舰炮按一类完好模块齐射消费一次武器AP。同一单位依次演出，不同单位并行；防守统一选择一次，目标死亡后取消剩余武器。",
-        "", "## 按CD分类","", "| 分类 | 单位—武器条目数 |", "| --- | ---: |"]
-    counts=Counter(row["class"] for row in rows)
-    for label,count in counts.items():lines.append(f"| {label} | {count} |")
-    lines += ["", "## 按流程时间分类", "", "| 分类 | 单位—武器条目数 |", "| --- | ---: |"]
-    for label,count in Counter(row["flowClass"] for row in rows).items():
-        lines.append(f"| {label} | {count} |")
-    for kind in sorted(set(row["category"] for row in rows)):
-        lines += ["", "## "+kind, "", "| 武器ID | 首发/末发(s) | 收招/流程(s) | CD(s) | 发数 | EN | 使用单位 |", "| --- | ---: | ---: | ---: | ---: | ---: | --- |"]
-        for grouped in groups.values():
-            row=grouped[0]
-            if row["category"]!=kind:continue
-            units=", ".join(dict.fromkeys(item["unitId"] for item in grouped))
-            lines.append(f"| {row['weaponId']} | {row['firstShot']}/{row['lastShot']} | {row['recovery']}/{row['duration']} | {row['cooldown']} | {row['projectiles']} | {row['en']} | {units} |")
-    (ROOT/"武器时间与CD统计.md").write_text("\n".join(lines)+"\n",encoding="utf-8")
     from native_weapon_names import label as confirmed_label
     uncertain=defaultdict(list)
     for row in rows:
@@ -85,7 +61,7 @@ def main():
     for key,items in sorted(uncertain.items()):
         naming.append("| "+key+" | "+items[0]["displayName"]+" | "+", ".join(dict.fromkeys(item["unitId"] for item in items))+" |")
     naming += ["", "可按武器ID或一组前缀提供命名规则，例如：ArmGL、ArmBR、HandMG、AA、CN、BigGun、MS／AMS／SMS。不会凭ID猜测新的正式显示名。"]
-    (ROOT/"武器命名待确认.md").write_text("\n".join(naming)+"\n",encoding="utf-8")
+    (ROOT/"docs/imports/weapon-names.md").write_text("\n".join(naming)+"\n",encoding="utf-8")
     print(f"Weapon rows: {len(rows)}; timing groups: {len(groups)}; names awaiting confirmation: {len(uncertain)}")
 
 if __name__=="__main__":

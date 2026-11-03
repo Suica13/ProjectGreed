@@ -1,0 +1,36 @@
+# 战舰炮塔核对
+
+按当前目录逐舰核对原MOD附件、独立炮塔贴图、层级、镜像、旋转和默认方向。可运行 `python tools/audit-ship-turrets.py` 重新校验；加 `--write` 更新本表。
+
+原MOD部分导弹、防空导弹、炸弹发射点没有独立贴图，仅有内部发射挂点；表中单独计数，不把这些模块误判成漏导。标记Ring、状态特效不算物理炮塔。
+
+普通炮塔排在舰体上方；原MOD明确 setDrawLayerOnBottom 的模块保留在舰体下方。舰桥同样作为独立模块贴图导入。损坏模块保留贴图并播放小尺寸电流，开火仍禁用。
+
+待机、规划、被攻击和演出结束后保持原生默认方向；仅当前武器仍完好且射界合法的炮塔在开火演出期间瞄准。规则始终使用舰体方向＋原生idleDir＋固定射界判断，显示旋转不参与判定。
+
+| ID | 舰名 | 模块 | 独立贴图模块 | 原生无独立贴图 | 原生下层贴图 |
+| --- | --- | ---: | ---: | ---: | ---: |
+| SalamisClass | 萨拉米斯级 | 16 | 14 | 2 | 4 |
+| BurkeClass | 伯克级驱逐舰 | 5 | 3 | 2 | 0 |
+| U_Type_Submarine | U型潜艇 | 5 | 0 | 5 | 0 |
+| HimalayaClass | 喜马拉雅级 | 7 | 7 | 0 | 0 |
+| ColumbusClass | 哥伦布级 | 4 | 4 | 0 | 4 |
+| M_Type_Submarine | M型潜水艇 | 12 | 0 | 12 | 0 |
+| MiniTrayClass | 小托盘级 | 8 | 6 | 2 | 0 |
+| BigTrayClass | 大托盘级 | 10 | 10 | 0 | 0 |
+| MagellanClass | 麦哲伦级 | 23 | 21 | 2 | 9 |
+| PegasusClass | 飞马级 | 21 | 19 | 2 | 10 |
+| MagellanClass_Green | 麦哲伦级[指挥舰] | 23 | 21 | 2 | 9 |
+| HeavyForkClass | 重叉级 | 17 | 17 | 0 | 0 |
+| U_Type_Submarine_ZEON | 尤康级 | 5 | 0 | 5 | 0 |
+| MusaiClass | 姆塞级 | 8 | 3 | 5 | 0 |
+| PapuaClass | 巴布亚级 | 4 | 4 | 0 | 0 |
+| M_Type_Submarine_ZEON | 魔鲨级 | 12 | 0 | 12 | 0 |
+| FalmerClass | 法梅尔级 | 8 | 3 | 5 | 0 |
+| DabudeClass | 达布德级 | 9 | 9 | 0 | 0 |
+| ChivvayClass | 契贝级 | 27 | 20 | 7 | 6 |
+| GawClass | 加乌级 | 14 | 10 | 4 | 6 |
+| GallopClass | 盖洛普级 | 3 | 3 | 0 | 0 |
+| ZanzibarClass | 桑吉巴尔级 | 16 | 14 | 2 | 7 |
+| GwazineClass | 格瓦金级 | 13 | 13 | 0 | 10 |
+| JotunheimClass | 尤顿海姆级 | 5 | 5 | 0 | 0 |

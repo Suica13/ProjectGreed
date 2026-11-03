@@ -207,7 +207,7 @@ window.createCampaignPilotUI = ({ state, command, node, button }) => {
           const stat = node("div", "", "campaign-pilot-stat");
           stat.append(
             node("span", label),
-            node("strong", String(Math.round(p.stats[key] * 100) / 100)),
+            node("strong", String(Math.round(p.stats[key]))),
           );
           if (!p.ace)
             for (const amount of [1, 5])

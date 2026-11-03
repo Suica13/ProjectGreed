@@ -70,6 +70,7 @@ window.CatalogDeveloper = (() => {
         (selected ? "&ids=" + encodeURIComponent(selected.join(",")) : ""),
     );
     I18n.bindCatalog(next);
+    if (next.conversionRules) Rules.catalog.conversionRules = next.conversionRules;
     if (next.partial) {
       const replaced = new Set(next.ids);
       const retained = Rules.catalog.prefabs.filter((prefab) => !replaced.has(prefab.id));
@@ -235,7 +236,7 @@ window.CatalogDeveloper = (() => {
     drawRules();
     if (WeaponClasses.isWeaponSkill(weapon)) return;
     const core = section(parent, "基础属性（换算后的游戏数值；修改以增减量保存，伤害按25点取整）");
-    input(
+    const damageInput = input(
       core,
       "基础单发伤害",
       Object.values(view.damageComponents || {}).reduce((sum, value) => sum + value, 0),
@@ -278,6 +279,46 @@ window.CatalogDeveloper = (() => {
         "number",
         prefix + "." + key,
       );
+    const channels = section(parent, "伤害分量（每发；含穿甲）");
+    for (const channel of [
+      "beam",
+      "shell",
+      "melee",
+      "meleeBeam",
+      "meleeShell",
+      "beamAP",
+      "shellAP",
+      "meleeAP",
+      "meleeBeamAP",
+      "meleeShellAP",
+    ]) {
+      const control = input(
+        channels,
+        Schema.labels[channel],
+        view.damageComponents?.[channel] || 0,
+        (value) => {
+          Schema.setComponentDamage(weapon, channel, value);
+          damageInput.value = weapon.damagePerShot;
+          damageInput.dispatchEvent(new Event("input"));
+        },
+        "number",
+        prefix + ".damageComponents." + channel,
+      );
+      control.min = "0";
+    }
+    const piercing = input(
+      channels,
+      "穿甲无视抗性比例（0.5＝50%）",
+      weapon.armorPiercingIgnore ?? Rules.catalog.conversionRules.weapons.armorPiercingIgnore,
+      (value) => (weapon.armorPiercingIgnore = value),
+      "number",
+      prefix + ".armorPiercingIgnore",
+    );
+    piercing.min = "0";
+    piercing.max = "1";
+    channels.append(
+      node("small", "穿甲仅忽略对应比例的抗性；固定减伤、护盾覆盖和最终减伤正常生效。"),
+    );
     const targets = section(parent, "目标倍率（1 = 100%）");
     weapon.targetModifiers ??= {};
     for (const key of ["ground", "space", "air", "water"])
@@ -630,14 +671,25 @@ window.CatalogDeveloper = (() => {
   async function saveUnit(closeAfter) {
     if (!unitPanel.reportValidity()) return false;
     const session = unitSession;
-    const result = await api("unit", {
-      id: session.id,
-      revision: session.revision,
-      unit: session.unit,
-      price: session.price && { money: session.price.money, supplies: session.price.supplies },
-    });
+    editUnit.disabled = true;
+    editUnit.textContent = "保存中…";
+    unitPanel.setAttribute("aria-busy", "true");
+    let result;
+    try {
+      result = await api("unit", {
+        id: session.id,
+        revision: session.revision,
+        unit: session.unit,
+        price: session.price && { money: session.price.money, supplies: session.price.supplies },
+      });
+    } finally {
+      editUnit.disabled = false;
+      unitPanel.removeAttribute("aria-busy");
+      editUnit.textContent = "保存修改";
+    }
     unitSession = null;
     unitPanel.hidden = true;
+    unitPanel.replaceChildren();
     editUnit.textContent = "修改属性";
     if (!result.noChanges)
       await refreshCatalog([session.id, result.id, ...(result.affectedUnits || [])]);
@@ -648,6 +700,7 @@ window.CatalogDeveloper = (() => {
   async function discardUnit() {
     unitSession = null;
     unitPanel.hidden = true;
+    unitPanel.replaceChildren();
     editUnit.textContent = "修改属性";
   }
   async function closeChoice() {

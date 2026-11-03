@@ -69,8 +69,8 @@ def main():
         "- `tools/animation_pool.py` 维护动画引用；构建时 `shared/asset-pool.js` 对相同动画和武器内容再次去重，保留单位专属炮口、部位和套件差异。",
         f"- 原生源数据审计：{audit['units']} 个新增机体、{audit['weapons']} 份武器配置，差异 {len(audit['errors'])} 项；详见 tools/0079-page-two-audit.json。",
         "- 资源加载器检查注册、素材路径、骨骼、武器步骤、形态引用与有效套件。自动检查不等于所有单位均已逐一完成实机视觉和完整对局验收。", ""]
-    Path("0079第二页移植清单.md").write_text("\n".join(lines),encoding="utf-8")
-    print("Wrote 0079第二页移植清单.md:",len(rows),"units,",sum(bool(names) for names in review.values()),"units with review mechanics")
+    Path("docs/imports/0079-late.md").write_text("\n".join(lines),encoding="utf-8")
+    print("Wrote docs/imports/0079-late.md:",len(rows),"units,",sum(bool(names) for names in review.values()),"units with review mechanics")
 
 
 if __name__=="__main__":main()

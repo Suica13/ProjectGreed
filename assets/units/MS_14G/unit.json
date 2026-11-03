@@ -973,7 +973,7 @@
     {
       "id": "kit_0",
       "name": "光束步枪套件",
-      "cost": 100,
+      "cost": 75,
       "weapons": [
         "ZN_MS_14G_BR",
         "ZN_MS_14G_BR_Sniper_Aim",

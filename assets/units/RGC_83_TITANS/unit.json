@@ -978,20 +978,31 @@
   "weaponKits": [
     {
       "id": "kit_3",
-      "name": "光束步枪套件",
-      "cost": 100,
+      "name": "90mm机枪套件",
+      "cost": 0,
       "weapons": [
         "EF_GMRifle",
         "EF_RGC_83_DoubleBeamCannon",
         "EF_BeamSaber_AF_A",
         "Common_DoubleVulcan_MS",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "90mm机枪套件"
+        },
+        "en": {
+          "name": "90mm Machine Gun Kit"
+        },
+        "ja": {
+          "name": "90mmマシンガン装備"
+        }
+      }
     },
     {
       "id": "kit_2",
       "name": "光束步枪套件",
-      "cost": 100,
+      "cost": 75,
       "weapons": [
         "EF_RMS_179_BR",
         "EF_RGC_83_DoubleBeamCannon",

@@ -44,7 +44,7 @@ for (const lang of ["zh", "ja", "en"])
   missing[lang + "WeaponName"] = weapons.filter(
     ({ weapon }) => !String(weapon.localization?.[lang]?.name || "").trim(),
   ).length;
-const naming = fs.readFileSync(path.join(root, "武器命名待确认.md"), "utf8");
+const naming = fs.readFileSync(path.join(root, "docs/imports/weapon-names.md"), "utf8");
 const uncertain = Number(naming.match(/以下(\d+)个武器ID/)?.[1] || 0);
 const lines = [
   "# 单位移植遗漏审计",
@@ -81,7 +81,7 @@ const lines = [
   `- 英文：${missing.enname.length} 个单位名、${missing.endescription.length} 个单位介绍缺失。`,
   `- 日文：${missing.janame.length} 个单位名、${missing.jadescription.length} 个单位介绍缺失；缺失单位名见下方列表。`,
   `- 武器本地化：${missing.zhWeaponName} / ${missing.jaWeaponName} / ${missing.enWeaponName} 条配置分别缺少中/日/英本地化名称；运行时仍有非空的通用显示名作为回退。`,
-  `- 武器命名：${uncertain} 个唯一武器 ID 仍使用泛称或占位名，详见《武器命名待确认.md》。`,
+  `- 武器命名：${uncertain} 个唯一武器 ID 仍使用泛称或占位名，详见《docs/imports/weapon-names.md》。`,
   "",
   "### 缺少日文单位名",
   "",
@@ -89,7 +89,7 @@ const lines = [
   "",
   "## 全局战斗载荷仍待实现",
   "",
-  "这些项目来自仓库 `TODO.md`，部分原 MOD 武器已经保存对应载荷数据，但规则层尚未结算：",
+  "这些项目来自仓库 `docs/maintenance/roadmap.md`，部分原 MOD 武器已经保存对应载荷数据，但规则层尚未结算：",
   "",
   "- 火焰持续伤害。",
   "- 硬直导致 AP 减半。",
@@ -103,7 +103,7 @@ const lines = [
   "本报告核对 JSON 状态、技能类型和文本字段。贴图层级、炮口、动画、声音与多人演出仍需在浏览器中逐单位目视验证；自动化通过不能替代全部单位的人工演出检查。",
   "",
 ];
-fs.writeFileSync(path.join(root, "单位移植遗漏审计.md"), lines.join("\n"));
+fs.writeFileSync(path.join(root, "docs/imports/migration-audit.md"), lines.join("\n"));
 console.log(
-  `Wrote 单位移植遗漏审计.md: ${review.length} review records, ${grouped(review).length} kinds, ${legacy.length} superseded markers.`,
+  `Wrote docs/imports/migration-audit.md: ${review.length} review records, ${grouped(review).length} kinds, ${legacy.length} superseded markers.`,
 );

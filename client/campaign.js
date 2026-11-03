@@ -1633,7 +1633,7 @@ window.CampaignUI = (() => {
       for (const [label, value] of [
         ["HP", `${formatNumber(unit.hp ?? m.hp)} / ${formatNumber(m.hp)}`],
         ["EN", `${formatNumber(unit.en ?? m.en)} / ${formatNumber(m.en)}`],
-        ["行动点", m.actionPoints],
+        ["AP参考", m.actionPoints],
         ["移动", m.move],
         ["视野", m.sensors.sight],
         ["侦察", m.sensors.radar],

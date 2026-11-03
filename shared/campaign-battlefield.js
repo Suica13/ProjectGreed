@@ -128,7 +128,10 @@ const CampaignBattlefield = (() => {
     if (!f) return null;
     const net = network(g);
     let zones;
-    if (u.team === f.defender) zones = f.layout.nodes.filter((n) => f.owners[n.id] === u.team);
+    if (u.team === f.defender) zones = [
+      ...f.layout.nodes.filter((n) => n.kind === "base" && f.owners[n.id] === u.team),
+      ...f.layout.gates.filter((n) => f.adjacentOwners[n.region] === u.team),
+    ];
     else {
       const gate =
         f.layout.gates.find((n) => n.region === (fromRegion || u.campaignEntry)) ||
@@ -224,8 +227,13 @@ const CampaignBattlefield = (() => {
   function validate(G, g) {
     const f = g.campaignBattlefield;
     if (!f) return;
-    const entry = G.catalog.scenarios[f.scenarioId]?.regions[f.regionId],
-      source = entry?.layout;
+    const entry = G.catalog.scenarios[f.scenarioId]?.regions[f.regionId];
+    const map = G.getMap(g.mapId);
+    // Accept only shipped historical layouts, never arbitrary saved geometry.
+    const legacy = (map.legacyStrategicLayouts || []).find(version =>
+      version.width === g.tiles?.[0]?.length && version.height === g.tiles?.length &&
+      JSON.stringify(version.layout) === JSON.stringify(f.layout));
+    const source = legacy?.layout || entry?.layout;
     if (source?.nodes && f.layout?.nodes) {
       const migrated = clone(f.layout);
       for (const node of migrated.nodes)
@@ -244,6 +252,7 @@ const CampaignBattlefield = (() => {
       source.gates.some((n) => ![0, 1].includes(f.adjacentOwners?.[n.region]))
     )
       throw Error("据点与补给线存档无效");
+    return legacy || map;
   }
   return {
     create,

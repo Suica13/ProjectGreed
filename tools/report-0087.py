@@ -32,7 +32,7 @@ def main():
         p=prefabs[r['id']];price=production['licenseOffers'].get(r['id']); label=f"{price['money']} / {price['supplies']}" if price else "无法购买／形态或条件限定"
         era=next((t for t in p['tags'] if re.fullmatch(r"\d{4}[EL]?",t)),"")
         lines.append(f"| {r['id']} | {p['name']} | {', '.join(p.get('availableFactions',[next(t for t in p['tags'] if t in ('EFSF','ZEON','AEUG','TITANS','NEO_ZEON'))]))} | {era} | {len(p['weaponKits'])} | {label} |")
-    (ROOT/'0087单位移植清单.md').write_text('\n'.join(lines)+'\n',encoding='utf8')
+    (ROOT/'docs/imports/0087-units.md').write_text('\n'.join(lines)+'\n',encoding='utf8')
     gaps=collections.defaultdict(list)
     for r in native:
         for m in prefabs[r['id']].get('mechanics',[]):
@@ -45,6 +45,6 @@ def main():
     lines += ["", "## 未注册衍生形态与科技树外内容", "", "以下对象尚未注册到可玩目录。再入辅助对象无需照搬成独立战棋单位；变形、系统和收纳形态应在对应机制接通时导入并映射。科技树外机型需补充明确的开发／特殊变换来源，ACE需单独移植招募数据。", "", "| ID | 名称 | 类型 | 原MOD文件 |", "|---|---|---|---|"]
     for item in deferred: lines.append(f"| {item['id']} | {item['name']} | {item['reason']} | {item['source']} |")
     lines += ["", "## 复核边界", "", "- 自动校验覆盖目录引用、科技前置与门槛、价格、AP／射程换算及编辑器数据作用域。", "- 大型MA、变形机、复杂背包与多炮塔的逐机视觉、枪口、音效及实际多人交战仍需人工试玩；不得仅凭导入成功宣称全部还原。", "", "重新生成：`python tools/report-0087.py`。"]
-    (ROOT/'0087缺失机制与转换建议.md').write_text('\n'.join(lines)+'\n',encoding='utf8')
+    (ROOT/'docs/imports/0087-gaps.md').write_text('\n'.join(lines)+'\n',encoding='utf8')
     print(len(rows),'units;',len(gaps),'review mechanism groups;',len(report['excluded']),'non-combat unlock references')
 if __name__=='__main__':main()

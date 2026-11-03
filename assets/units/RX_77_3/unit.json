@@ -992,7 +992,7 @@
     {
       "id": "kit_2",
       "name": "光束步枪套件",
-      "cost": 100,
+      "cost": 75,
       "weapons": [
         "EF_RX_77_2_BR",
         "Common_DoubleCannon_B2",
@@ -1017,7 +1017,7 @@
     {
       "id": "kit_4",
       "name": "光束步枪套件",
-      "cost": 100,
+      "cost": 75,
       "weapons": [
         "EF_RX_77_2_BR",
         "EF_RX_77_4_BeamCannon",

@@ -1287,7 +1287,7 @@
     {
       "id": "kit_2",
       "name": "光束步枪套件",
-      "cost": 100,
+      "cost": 75,
       "weapons": [
         "AEUG_MSN_100_BR",
         "Common_ArmGL",

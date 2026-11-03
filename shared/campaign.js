@@ -591,7 +591,6 @@ const CampaignRules = (() => {
         actor.acted = false;
         actor.moved = false;
         actor.plan = null;
-        actor.actionPoints = original.actionPoints;
         game.team = team;
         game.winner = null;
         game.deployment = null;

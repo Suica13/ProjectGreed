@@ -1043,7 +1043,7 @@
     {
       "id": "kit_0",
       "name": "光束步枪套件",
-      "cost": 100,
+      "cost": 75,
       "weapons": [
         "NZN_MS_14J_BR",
         "NZN_MS_14J_MS",

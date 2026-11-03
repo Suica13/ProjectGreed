@@ -1,7 +1,7 @@
 """Rasterize the strategic projection into deterministic, playable local terrain.
 
 GIS dependencies are generation-only. Exported maps are ordinary tile JSON.
-North stays up; ocean regions use small documented landing platforms for points.
+North stays up; ocean entrances remain water, with an island at the central base.
 """
 import hashlib
 import heapq
@@ -18,7 +18,7 @@ from shapely.geometry import GeometryCollection, Point, Polygon, box, shape
 from shapely.ops import unary_union
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = 1
+VERSION = 2
 WALKABLE = {'plain', 'snow', 'desert', 'highland', 'forest', 'rubble'}
 COLORS = {'plain': '#65765d', 'snow': '#d6e0e5', 'desert': '#c0a474',
           'highland': '#918b72', 'forest': '#345944', 'rubble': '#6e7371',
@@ -143,9 +143,10 @@ class RegionalGeography:
                 node['x'], node['y'] = min(choices, key=lambda p:
                     math.dist(p, desired) + sum(max(0, 7-math.dist(p, q))*30 for q in occupied))
             occupied.append((node['x'], node['y']))
-            if battle['tiles'][node['y']][node['x']] == 'water': pads.append(node['id'])
-            radius = 3 if naval else 1
-            self.clear_pad(battle, node['x'], node['y'], radius)
+            if battle['tiles'][node['y']][node['x']] == 'water' and (not naval or node['kind'] == 'base'): pads.append(node['id'])
+            # Only the central naval base gets an island; outposts remain water.
+            if not naval or node['kind'] == 'base':
+                self.clear_pad(battle, node['x'], node['y'], 5 if naval else 1)
             if node['kind'] == 'base' and region.get('factory'):
                 self.urbanize(battle, node['x'], node['y'])
         for gate in layout['gates']:
@@ -155,23 +156,16 @@ class RegionalGeography:
             shore = [(x, y) for x, y in edge if land[y, x]]
             if shore and not naval:
                 gate['x'], gate['y'] = min(shore, key=lambda p: math.dist(p, (gate['x'], gate['y'])))
-            if battle['tiles'][gate['y']][gate['x']] == 'water': pads.append(gate['id'])
-            # Shared arrival areas need room for ground cargo as well as nearby water berths.
-            self.clear_pad(battle, gate['x'], gate['y'], 4)
-        for seat, (spawn, area) in enumerate(zip(battle['spawns'], battle['deploymentAreas'])):
-            self.clear_pad(battle, spawn['x'], spawn['y'], 2)
-            # The shared actor constructor stages up to 72 units in these small
-            # reserved edge strips before applying strategic gate deployment.
-            # Keep only the minimum necessary landing ground; leave water berths.
-            candidates = [(x,y) for y in range(area['y'],area['y']+area['height'])
-                          for x in range(area['x'],area['x']+area['width'])]
-            capacity = sum(battle['tiles'][y][x] in WALKABLE for x,y in candidates)
-            changed = False
-            for x,y in sorted(candidates, key=lambda p: math.dist(p,(spawn['x'],spawn['y']))):
-                if capacity >= 72: break
-                if battle['tiles'][y][x] not in WALKABLE:
-                    battle['tiles'][y][x] = 'plain'; capacity += 1; changed = True
-            if changed: pads.append('staging_' + str(seat+1))
+            if not naval and battle['tiles'][gate['y']][gate['x']] == 'water': pads.append(gate['id'])
+            if not naval:
+                self.clear_pad(battle, gate['x'], gate['y'], 3)
+        # Seats are metadata, not encounter-style left/right deployment strips.
+        # The campaign adapter places real armies at their base/arrival gate.
+        base = next(node for node in layout['nodes'] if node['kind'] == 'base')
+        for spawn in battle['spawns']:
+            spawn.update(x=base['x'], y=base['y'])
+        battle.pop('deploymentAreas', None)
+        battle.pop('deploymentExpansion', None)
         # Ground objectives receive connected approach roads with the least terrain
         # disruption. Ocean maps retain water supply lanes and require transports.
         roads = []

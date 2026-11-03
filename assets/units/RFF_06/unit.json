@@ -779,7 +779,7 @@
     {
       "id": "kit_1",
       "name": "加农炮套件",
-      "cost": 100,
+      "cost": 75,
       "weapons": [
         "EF_RFF_06_Cannon",
         "Common_Cqb_A",

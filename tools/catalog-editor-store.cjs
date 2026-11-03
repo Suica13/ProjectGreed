@@ -17,10 +17,16 @@ function createEditorStore(root = path.resolve(__dirname, ".."), validate = null
   const library = () => read("assets/weapons.json");
   const unitFiles = () => registered().map((ref) => ({ ref, raw: read("assets/" + ref) }));
   const find = (id) => {
+    const ref = "units/" + id + "/unit.json";
+    if (registered().includes(ref)) {
+      const raw = read("assets/" + ref);
+      if (raw.id === id) return { ref, raw };
+    }
     const result = unitFiles().find((item) => item.raw.id === id);
     if (!result) throw Error("单位不存在：" + id);
     return result;
   };
+  const revisionFiles = new Map();
   function revision() {
     return crypto
       .createHash("sha256")
@@ -37,7 +43,20 @@ function createEditorStore(root = path.resolve(__dirname, ".."), validate = null
           "assets/unit-wip.json",
           ...registered().map((ref) => "assets/" + ref),
         ]
-          .map((file) => fs.readFileSync(path.join(root, file), "utf8"))
+          .map((file) => {
+            const absolute = path.join(root, file),
+              stat = fs.statSync(absolute);
+            const stamp = stat.size + ":" + stat.mtimeMs + ":" + stat.ctimeMs;
+            let cached = revisionFiles.get(file);
+            if (!cached || cached.stamp !== stamp) {
+              cached = {
+                stamp,
+                hash: crypto.createHash("sha256").update(fs.readFileSync(absolute)).digest("hex"),
+              };
+              revisionFiles.set(file, cached);
+            }
+            return file + ":" + cached.hash;
+          })
           .join("\n"),
       )
       .digest("hex");
@@ -157,11 +176,29 @@ function createEditorStore(root = path.resolve(__dirname, ".."), validate = null
         throw Error("武器数值无效：" + key);
     if (!Number.isInteger(next.attackRounds) || next.attackRounds < 0 || next.attackRounds > 20)
       throw Error("攻击轮数须为0到20的整数");
+    if (
+      !Number.isFinite(next.armorPiercingIgnore) ||
+      next.armorPiercingIgnore < 0 ||
+      next.armorPiercingIgnore > 1
+    )
+      throw Error("穿甲无视抗性比例必须在0到1之间");
     require("../shared/weapon-classes.js").classify(next);
     if (next.min > next.max) throw Error("最小射程不能大于最大射程");
     if (!next.name?.trim()) throw Error("请填写武器名称");
     require("../shared/weapon-sequence.js").compile(next);
     return next;
+  }
+  let compiled = null,
+    compiledRevision = null;
+  function catalog() {
+    const current = revision();
+    if (!compiled || compiledRevision !== current) {
+      compiled = validate
+        ? validate({ embedAssets: false })
+        : require("./load-catalog.cjs").loadCatalog({ embedAssets: false });
+      compiledRevision = current;
+    }
+    return compiled;
   }
   function transaction(changes, metadata) {
     // Formatting-only saves must not create revisions, logs or exception entries.
@@ -171,6 +208,7 @@ function createEditorStore(root = path.resolve(__dirname, ".."), validate = null
     if (!changes.size) return { ok: true, noChanges: true, revision: revision() };
     const Audit = require("./editor-audit.cjs"),
       record = Audit.planAudit(root, changes, metadata);
+    const sourceHashes = new Map([...revisionFiles].map(([file, value]) => [file, value.hash]));
     const backups = new Map();
     const write = (file, content) => {
       const target = path.resolve(root, file);
@@ -181,6 +219,7 @@ function createEditorStore(root = path.resolve(__dirname, ".."), validate = null
       try {
         fs.writeFileSync(temp, content);
         fs.renameSync(temp, target);
+        revisionFiles.delete(file);
         if (!backups.has(target)) backups.set(target, previous);
       } finally {
         fs.rmSync(temp, { force: true });
@@ -188,11 +227,32 @@ function createEditorStore(root = path.resolve(__dirname, ".."), validate = null
     };
     try {
       for (const [file, content] of changes) write(file, content);
-      if (validate) validate();
-      else require("./load-catalog.cjs").loadCatalog();
+      const writtenRevision = revision();
+      const externalChanges = [...revisionFiles].some(
+        ([file, value]) => !changes.has(file) && sourceHashes.get(file) !== value.hash,
+      );
+      const incremental =
+        !externalChanges &&
+        compiled &&
+        compiledRevision === metadata.revision &&
+        metadata.operation === "unit" &&
+        metadata.target.id === metadata.target.newId;
+      const options = {
+        embedAssets: false,
+        ...(incremental ? { reuseCatalog: compiled, changedUnits: [metadata.target.id] } : {}),
+      };
+      const validated = validate
+        ? validate(options)
+        : require("./load-catalog.cjs").loadCatalog(options);
       const afterRevision = revision();
+      if (afterRevision !== writtenRevision)
+        throw Object.assign(Error("项目文件在校验过程中发生变化，请重新打开后重试。"), {
+          status: 409,
+        });
       for (const [file, content] of Audit.auditOutputs(root, record, afterRevision))
         write(file, content);
+      compiled = validated;
+      compiledRevision = afterRevision;
       return {
         ok: true,
         revision: afterRevision,
@@ -201,6 +261,9 @@ function createEditorStore(root = path.resolve(__dirname, ".."), validate = null
         affectedUnits: record.units.map((unit) => unit.id),
       };
     } catch (error) {
+      compiled = null;
+      compiledRevision = null;
+      revisionFiles.clear();
       for (const [file, bytes] of [...backups].reverse()) {
         if (bytes === null) fs.rmSync(file, { force: true });
         else fs.writeFileSync(file, bytes);
@@ -489,6 +552,7 @@ function createEditorStore(root = path.resolve(__dirname, ".."), validate = null
     );
   }
   return {
+    catalog,
     getUnit,
     getWeapon,
     templates,

@@ -831,7 +831,7 @@
     },
     {
       "id": "machine_gun",
-      "name": "机枪套件",
+      "name": "90mm机枪套件",
       "cost": 0,
       "weapons": [
         "EF_90mmMG",
@@ -841,13 +841,13 @@
       ],
       "localization": {
         "zh": {
-          "name": "机枪套件"
+          "name": "90mm机枪套件"
         },
         "ja": {
-          "name": "マシンガン装備"
+          "name": "90mmマシンガン装備"
         },
         "en": {
-          "name": "Machine Gun Kit"
+          "name": "90mm Machine Gun Kit"
         }
       }
     }

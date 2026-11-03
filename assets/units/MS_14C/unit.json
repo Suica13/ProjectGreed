@@ -1014,7 +1014,7 @@
     {
       "id": "kit_2",
       "name": "光束步枪套件",
-      "cost": 100,
+      "cost": 75,
       "weapons": [
         "ZN_MS_14_BR",
         "ZN_MS_14C_BeamCannon",

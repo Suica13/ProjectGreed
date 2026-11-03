@@ -404,7 +404,6 @@ function createCampaignRoom({
           x: actor.x,
           y: actor.y,
           angle: actor.angle,
-          actionPoints: actor.actionPoints,
           environment: actor.environment,
         };
         const saved = Records.clone(preserved);

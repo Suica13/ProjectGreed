@@ -49,7 +49,7 @@ for row in rows:
 lines+=['','## 维护','', '- `tools/0079-page-one-manifest.json`：科技树来源清单。','- `tools/0079-import-report.json`：当前JSON实现状态报告。','- `python tools/import-0079-page-one.py`：从原MOD重新生成本次新增预制体，不覆盖原先15种已平衡单位；Node.js需在PATH中，更新目录前执行完整资源校验。','- `python tools/import-death-effects.py`：重新提取死亡特效。','- `python tools/add-coastal-map.py`：重建海陆测试图。','- `npm run units:reload`：扫描项目内普通JSON并重建网页，不读取原MOD。','- 修改源码或JSON后运行 `npm run build`，服务端重启、客户端刷新。没有生成ZIP或部署服务器。','', '已发现原MOD GallopClass 与 JotunheimClass 的阵营tag误写EFSF，按ZEON第一页的解锁归属校正；Wappa缺失阵营／年代tag，补为ZEON、0079。']
 lines += ['', '## 武器与显示修正', '',
 '- 坦克读取basePositionFromTurret，使用独立命名炮塔骨骼，炮口随同一挂点旋转。',
-'- 战舰附件贴图、镜像与层级逐模块读取原MOD，舰桥也导入；默认在舰体上方，原生setDrawLayerOnBottom保持下层。待机、规划和受击不追踪敌人，仅开火演出中当前武器的完好、射界合法炮塔瞄准；射界按舰体方向和原始idleDir判定。详见《战舰炮塔核对.md》。',
+'- 战舰附件贴图、镜像与层级逐模块读取原MOD，舰桥也导入；默认在舰体上方，原生setDrawLayerOnBottom保持下层。待机、规划和受击不追踪敌人，仅开火演出中当前武器的完好、射界合法炮塔瞄准；射界按舰体方向和原始idleDir判定。详见《docs/imports/ship-turrets.md》。',
 '- 主武器套件按原单位的主装备槽判定；固定炮、火神炮和通用近战归入各主武器套件。同一槽位的左右武器合为一个套件。',
 '- 驾驶员技能限制与非默认副武器选装写入availability/requirements/secondarySlots，保留原配置但从所有可出击套件排除。详情面板可查看隐藏原因，隐藏装备贴图也不显示。原有默认副武器保留。未作为普通武器导入的对应触发器列入deferredWeapons。',
 '- 双臂同类远程武器以pairedWeapons声明物理通道和independent模式，加载成左右臂独立选项，各自扣AP与对应EN并播放本侧动画；每手仅保留自身实际载荷，不复制双手完整流程。同侧双管、非手臂武器及舰船模块保留原有齐射。钢加农迫击炮依赖背包。',
@@ -74,8 +74,8 @@ lines += ['', '## 原MOD资源与武器数据', '',
 '- 格子射程仍用战术类别转换；头部火神炮、腕部机枪/榴弹/光束枪统一1～2格。航空炸弹不能选择空军；迫击炮保留完整九宫格抽取、空格落空与只能防御/回避的回合制规则。',
 '- 狙击技能保留跨己方回合蓄力及命中率×2；技能自身伤害和EN沿用原MOD。首回合锁定使用原LockTarget_1白色帧（0～2），次个己方回合目标有效才转红（19帧）并立即进入应战/开火流程；演出后继续当前己方行动。弹速沿用对应普通狙击弹，不使用锁定标记速度。',
 '- 原生AP伤害独立保留：不减固定防御，只按相应防御百分比的四分之一计算，并穿透护盾；DP及其他异常载荷在面板/源数据中保留，未假装已完整实现原RTS全部异常状态。',
-'- 时间明细、CD分组与多武器排队建议见《武器时间与CD统计.md》及同名CSV；全部单位—武器时间线见tools/weapon-timing-report.json。现已用AP启用单目标多武器顺序攻击，原生时间/CD只影响演出，不作为AP费用。',
-'- 显示名不明确的武器见《武器命名待确认.md》，等待用户命名逻辑后统一修改，不改武器ID。',
+'- 时间明细、CD分组与多武器排队建议见《tools/weapon-timing-report.json》及同名CSV；全部单位—武器时间线见tools/weapon-timing-report.json。当前为小队自动交火，原生时间/CD作为演出来源；AP只有参考值。',
+'- 显示名不明确的武器见《docs/imports/weapon-names.md》，等待用户命名逻辑后统一修改，不改武器ID。',
 '- 战舰回避采用原MOD baseReactionLevel；命中系数为原MOD的65%，爆炸弹舰炮命中额外乘80%，所有武器伤害为原MOD的75%，耐久为原MOD的70%；联邦系再提高耐久10%、命中10%、回避15%，最终耐久按500取整。伤害按25取整；不叠加旧通用耐久、炮塔、机枪和姆塞/法梅尔例外修正。',
 '- tools/native_combat.py负责原生数值和流程；tools/native_presentation.py负责狙击持握/射击显示、钢坦克炮管图层、钢加农套件与主手优先。tools/weapon_policy.py负责格子射程与回合制特殊规则。',
 '- python tools/refresh_weapon_skills.py刷新预制体；python tools/report-weapon-timing.py重建统计。批量导入末尾执行相同政策，避免回到手工平衡值。']
@@ -91,4 +91,4 @@ lines += ['', '## 下一步机制讨论（尚未接入）', '',
 '', '来源入口：原MOD Template/Unit/Skill/{SFS,FlyStyle,FlyUnit,FlyHover}.gw，以及Template/Unit/Transport_SFS.ini。以上是分析及建议，不代表功能已接入。',
 '', '移植流程模板见 `.agents/skills/projectgreed-mod-unit-import/SKILL.md`。']
 
-Path('0079第一页移植核对.md').write_text('\n'.join(lines)+'\n',encoding='utf-8',newline='\n')
+Path('docs/imports/0079-early.md').write_text('\n'.join(lines)+'\n',encoding='utf-8',newline='\n')

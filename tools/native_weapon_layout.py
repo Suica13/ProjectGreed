@@ -131,11 +131,7 @@ def merge_positions(p):
   g['mergedPositions']=keys
  return remap
 
-def surcharge(key):
- if re.search('Cannon|Rifle|_BR|_BR_',key):return 100
- if re.search('BeamGun|BeamSpray',key):return 75
- if re.search('Bazooka|Missile|Launcher|(?:^|_)MS(?:_|$)|SMS',key):return 50
- return 0
+from weapon_kit_policy import surcharge
 
 def visibility_and_deferred(p,data):
  # Hidden loadouts must not leave their holstered textures visible on the unit.
@@ -208,7 +204,7 @@ def correct(p,row,data):
   fixed=[k for k in active if k not in primary]
   p['weaponKits']=[{'id':'standard','name':'标准武装','cost':0,'weapons':active}]
   if primary:
-   p['weaponKits']=[{'id':next((k['id'] for k in oldkits if k['weapons'] and k['weapons'][0]==key),'main_'+str(main[key])),'name':p['weapons'][key]['name']+'套件','cost':surcharge(key),'weapons':[key,*fixed]} for key in primary]
+   p['weaponKits']=[{'id':next((k['id'] for k in oldkits if k['weapons'] and k['weapons'][0]==key),'main_'+str(main[key])),'name':p['weapons'][key]['name']+'套件','cost':surcharge(key, p['weapons'][key]),'weapons':[key,*fixed]} for key in primary]
   # Multiple weapons in the same equipment slot are one kit, not alternatives.
   grouped={}
   for kit in p['weaponKits']:

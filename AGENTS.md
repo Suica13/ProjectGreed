@@ -18,4 +18,11 @@
 
 - 运行时全局换算倍率由 `shared/conversion-rules.json` 维护，先于人工差值执行；开发者编辑器可维护此文件及 `assets/unit-wip.json`，均要求版本校验、审计与失败回滚，不自动构建或重启游戏。
 
-- `现行武器与技能规则.md` 是现行战斗规则统一查询入口，由 `tools/export-combat-rules.cjs` 生成。修改武器、技能、状态、格纳库或驾驶员技能后执行 `npm run docs:combat-rules`；执行逻辑变化时同步维护生成器中的文字说明。普通客户端构建自动刷新报告，`npm run docs:combat-rules -- --check` 校验是否过时，不直接手改生成表格。
+- `docs/rules/combat.md` 是现行战斗规则统一查询入口，由 `tools/export-combat-rules.cjs` 生成。修改武器、技能、状态、格纳库或驾驶员技能后执行 `npm run docs:combat-rules`；执行逻辑变化时同步维护生成器中的文字说明。普通客户端构建自动刷新报告，`npm run docs:combat-rules -- --check` 校验是否过时，不直接手改生成表格。
+
+
+## 文档维护
+
+- 项目说明与生成的Markdown统一放入docs/，按docs/README.md分类。根README.md只作入口；根AGENTS.md与.agents/skills/*/SKILL.md因工具发现约定保留原位。不要在源码或素材目录新建说明MD。
+- 现行武器与技能规则只维护docs/rules/combat.md，由tools/export-combat-rules.cjs生成；AP仅保留stats.actionPoints与actionCost参考值，禁止新增AP倍率、预算、扣费、返还或减AP状态。穿甲beamAP等伤害分量与行动点无关，保持正常结算。
+- 移动文档须同步生成器、审计事务、打包输入与链接；已完成的临时速报不作为现行规则保留。维护记录及例外差值按原事务保留。

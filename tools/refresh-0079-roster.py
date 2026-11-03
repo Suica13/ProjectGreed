@@ -49,6 +49,6 @@ def main():
             if option['unitId']==p['id']:continue
             condition='配属'+pilots.get(option['pilotId'],option['pilotId'])+'时自动转换' if option.get('pilotId') else '未支持的原条件' if option['blocked'] else '目标未移植' if option['unitId'] not in roster else '、'.join(option['unlockUnits']) or '无额外开发条件'
             routes.append(f"| {p['id']} | {option['unitId']} | {option['money']} | {option['supplies']} | {condition} |")
-    Path('单位改装路线.md').write_text('\n'.join(routes)+'\n',encoding='utf8')
-    Path('0079额外单位与改装列表.md').write_text('\n'.join(rows)+'\n',encoding='utf8')
+    Path('docs/imports/refit-source-routes.md').write_text('\n'.join(routes)+'\n',encoding='utf8')
+    Path('docs/imports/0079-additional.md').write_text('\n'.join(rows)+'\n',encoding='utf8')
 if __name__=='__main__':main()

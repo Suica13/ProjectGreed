@@ -154,7 +154,7 @@ const teamName = (t) => (t ? "红方" : "蓝方"),
   unitName = (u) => Rules.unitName(u),
   formatNumber = (n) => Math.round(Number(n)).toLocaleString("en-US"),
   formatDistance = (n) =>
-    Number(n).toLocaleString("en-US", { maximumFractionDigits: 2 }) + " " + I18n.text("格"),
+    Math.round(Number(n)).toLocaleString("en-US") + " " + I18n.text("格"),
   isAI = () => !Net.active && game.ai && game.team === 1,
   isBusy = (allowDeployment = false) =>
     !!window.ReplayPlayer?.active ||
@@ -277,7 +277,7 @@ function attackForecast(attacker, target, weapons, response = "counter", isCount
       strikes++;
     }
   }
-  return { damage, hit: strikes ? Math.round((hit / strikes) * 10) / 10 : 0 };
+  return { damage, hit: strikes ? Math.round(hit / strikes) : 0 };
 }
 function attackForecastText(forecast) {
   return (
@@ -752,7 +752,7 @@ function renderPanel() {
     }
     stats.prepend(pilotLine, xp, pilotStats);
   } else stats.prepend(pilotLine, pilotStats);
-  stats.append(element("div", "", `${I18n.text("AP（未启用）")} ${Rules.actionPoints(u)}/${Rules.actionBudget(u)}`));
+  stats.append(element("div", "", `${I18n.text("AP参考")} ${formatNumber(m.actionPoints)}`));
   overview.append(stats);
   const partStatus = element("div", "rule-box");
   partStatus.id = "unitPartStatus";
@@ -808,7 +808,6 @@ function renderPanel() {
     effects.push(I18n.text("背包损毁：移动力-25%（向下取整，至少1格）"));
   if (penalty.resistancePenalty)
     effects.push(I18n.text("四肢损毁：抗性降低") + " " + penalty.resistancePenalty + "%");
-  if (u.apPenaltyNextTurn) effects.push(I18n.text("硬直AP记录（AP机制未启用）"));
   if (u.burning) effects.push(I18n.text("燃烧中"));
   if (m.iField)
     partStatus.append(
@@ -877,7 +876,7 @@ function renderPanel() {
         element(
           "p",
           "helper",
-          I18n.text(commandLabels[kind]) + " +" + Number((value * 100).toFixed(2)) + "%",
+          I18n.text(commandLabels[kind]) + " +" + Math.round(value * 100) + "%",
         ),
       );
   let actions = element("div", "actions");
@@ -1155,7 +1154,6 @@ function mapRanges(chosen, canMove, deploymentSeat, showAttack = false) {
       u.brokenParts,
       u.moduleHp,
       u.en,
-      u.actionPoints,
       u.plan,
       u.embarked,
       u.pendingMove,
@@ -2766,7 +2764,7 @@ function renderReaction() {
     (entry) => !entry.noCounter && available(entry).length,
   );
   const choices = counterChoices();
-  byId("counterActionPoints").textContent = I18n.text("按类型轮数自动使用可用武器，不消耗AP；射击结束后进行格斗。");
+  byId("counterAutomaticInfo").textContent = I18n.text("按类型轮数自动使用可用武器；射击结束后进行格斗。");
   byId("counterList").replaceChildren();
   for (const member of scope) {
     const choice = choices.find((entry) => entry.unitId === member.id),

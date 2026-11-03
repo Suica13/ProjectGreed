@@ -115,7 +115,7 @@ def main():
         lines.append(f"| {p['name']} | {p['faction']} | {p['comprehension']} | {p['experienceBase']} | {p['price']['money'] if p['price'] else '—'} | {p['price']['supplies'] if p['price'] else '—'} | {'、'.join(s['name'] for s in p['skills'])} |")
     lines += ["", "没有独立招募报价的5名ACE保留资料，暂不可招募；招募须开发对应科技或通过活动独立解锁；西玛可通过全服累计击坠活动解锁；同一ACE只能持有一份档案，待回归时按资金与物资各半价重新招募，保留等级和战绩、经验清零后恢复配属资格，驾驶员档案全阵营共享，但联邦与吉翁编组只能配属本阵营ACE；PMC可以配属任意ACE；西玛具有EFSF副阵营，也可供联邦编组使用。招募入口始终可打开，未开放候选显示未解锁，阵营与0079年代标识常驻。活动奖励可以独立解锁已有报价但无科技节点的ACE（例如西玛）。", "", "维护入口：`tools/import-ace-pilots.py`；原生等级与成长依据：`Template/Unit/BattleUnit_Framework_Pilot.ini`的`hiddenAction_TryLevelUp`和`hiddenAction_CheckLevelUp`。"]
     lines += ["", "ACE限时技能：持续1回合，效果结束后冷却5个己方回合（15秒=1回合）；两次开启最短间隔6回合。EXAM驾驶员为常驻被动。原秒数保存在技能nativeTiming中，技能机制已启用。主动技能消耗100 EN、0 AP，属性与经验增益统一1.35倍；持有经验值上升时额外持有攻击力上升，效果覆盖敌方回合；EXAM驾驶员免除EXAM耐久自损，EN与系统持续时间仍正常结算。"]
-    (PROJECT / "ACE驾驶员接入.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    (PROJECT / "docs/imports/ace-pilots.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"Imported {len(aces)} ACE profiles; max level 5 (native cap: {max_level} upgrades)")
 
 if __name__ == "__main__": main()

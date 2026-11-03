@@ -939,7 +939,7 @@
     {
       "id": "kit_0",
       "name": "光束步枪套件",
-      "cost": 100,
+      "cost": 75,
       "weapons": [
         "TITANS_RX_121_BR",
         "EF_BeamSaber_BF_B",
@@ -971,14 +971,25 @@
     },
     {
       "id": "kit_2",
-      "name": "光束步枪套件",
-      "cost": 100,
+      "name": "90mm机枪套件",
+      "cost": 0,
       "weapons": [
         "EF_GMRifle",
         "EF_BeamSaber_BF_B",
         "Common_DoubleVulcan_MS",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "90mm机枪套件"
+        },
+        "en": {
+          "name": "90mm Machine Gun Kit"
+        },
+        "ja": {
+          "name": "90mmマシンガン装備"
+        }
+      }
     }
   ],
   "description": "更换了高达头部的吉姆镇暴型",

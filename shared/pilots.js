@@ -11,7 +11,7 @@ const PilotSystem = (() => {
     faction === "PMC" ||
     (aceProfile(value).availableFactions || [aceProfile(value).faction]).includes(faction);
   const maxLevel = (value) => aceProfile(value)?.maxLevel ?? growthRules.maxLevel;
-  const aceStatCap = (value, key) => aceProfile(value)?.maxStats[key];
+  const aceStatCap = (value, key) => aceProfile(value) ? Math.round(aceProfile(value).maxStats[key]) : undefined;
   const byId = new Map(catalog.named.map((pilot) => [pilot.id, pilot]));
   const portraitsById = new Map(catalog.portraits.map((portrait) => [portrait.id, portrait]));
   function defaultPortrait(faction = "PMC") {
@@ -138,7 +138,7 @@ const PilotSystem = (() => {
       value = { ...value, stats: undefined };
     } else if (value.aceGrowthVersion !== version) throw Error("ACE驾驶员数据版本无效");
     if (!Number.isSafeInteger(experience) || experience < 0) throw Error("驾驶员经验无效");
-    const stats = Object.fromEntries(
+    const growthStats = Object.fromEntries(
       Object.entries(source.baseStats).map(([key, base]) => [
         key,
         level === source.maxLevel
@@ -148,7 +148,9 @@ const PilotSystem = (() => {
             : 0,
       ]),
     );
-    if (value.stats && Object.keys(labels).some((key) => value.stats[key] !== stats[key]))
+    const stats = Object.fromEntries(Object.entries(growthStats).map(([key, n]) => [key, Math.round(n)]));
+    // Accept exact legacy growth values, then normalize them without losing XP or rank.
+    if (value.stats && Object.keys(labels).some((key) => value.stats[key] !== stats[key] && value.stats[key] !== growthStats[key]))
       throw Error("ACE属性由悟性成长，不能手动修改");
     const record = {};
     for (const key of ["kills", "shipKills", "battles", "losses", "destroyedCost", "lostCost"]) {
@@ -527,6 +529,7 @@ const PilotSystem = (() => {
         if (unit.pilotBuffs[skill.id])
           for (const [key, multiplier] of Object.entries(skill.statMultipliers || {}))
             stats[key] *= multiplier;
+      for (const key of Object.keys(stats)) stats[key] = Math.round(stats[key]);
       cached = { base, buffs: unit.pilotBuffs, value: { ...base, stats } };
       buffPilotCache.set(unit, cached);
     }
@@ -553,7 +556,6 @@ const PilotSystem = (() => {
       melee: factor(stats.melee, 0.25) * awakening,
       defense: Math.max(0.05, 1 - (stats.defense - 100) * 0.0025),
       move: factor(stats.speed, 0.5),
-      actionPointsMultiplier: factor(stats.speed, 0.4),
       accuracy: factor(stats.accuracy, 0.25),
       reaction: factor(stats.reaction, 0.25),
     };

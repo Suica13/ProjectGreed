@@ -956,7 +956,7 @@
     {
       "id": "kit_3",
       "name": "光束步枪套件",
-      "cost": 100,
+      "cost": 75,
       "weapons": [
         "EF_HyperBeamRifle",
         "EF_BeamSaber_AF_A",

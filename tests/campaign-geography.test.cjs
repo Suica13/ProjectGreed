@@ -9,23 +9,29 @@ const walkable = tile => !['water', 'rock'].includes(tile);
 const maps = new Map(world.regions.map(region => [region.id,
   JSON.parse(fs.readFileSync(path.join(root, 'local-battles', `${region.id}_5v5.json`), 'utf8'))]));
 
-test('regional maps retain a uniform north-up projection and usable deployment areas', () => {
+test('regional maps retain a uniform north-up projection and base/entrance deployment without encounter strips', () => {
   const signatures = new Set();
   for (const region of world.regions) {
     const map = maps.get(region.id), geo = map.geography;
     assert.equal(geo.regionId, region.id);
     assert.equal(geo.orientation, 'north-up');
-    assert.equal(map.width, 57);
-    assert.equal(map.height, 68);
+    assert.equal(map.width, 43);
+    assert.equal(map.height, 51);
     const [left, top, right, bottom] = geo.worldBounds;
     assert(Math.abs((right-left)/map.width - (bottom-top)/map.height) < 1e-6);
     assert.equal(Object.values(geo.terrainCounts).reduce((a,b) => a+b, 0), map.width*map.height);
     signatures.add(JSON.stringify(map.tiles));
-    for (const area of map.deploymentAreas) {
-      let count = 0;
-      for (let y=area.y; y<area.y+area.height; y++)
-        for (let x=area.x; x<area.x+area.width; x++) count += walkable(map.tiles[y][x]);
-      assert(count >= 72, `${region.id}: deployment capacity`);
+    assert.equal(map.deploymentAreas, undefined);
+    assert.equal(map.deploymentExpansion, undefined);
+    const center = map.strategic.nodes.find(n => n.kind === 'base');
+    assert(map.spawns.every(s => s.x === center.x && s.y === center.y));
+    assert(!geo.landingPlatforms.some(p => p.startsWith('staging_')));
+    if (region.kind === 'sea') {
+      assert(geo.landingPlatforms.every(id => id === 'base'));
+      assert(walkable(map.tiles[center.y][center.x]));
+      assert(geo.terrainCounts.water > map.width * map.height * .6);
+      for (const gate of map.strategic.gates)
+        assert(!geo.landingPlatforms.includes(gate.id));
     }
     if (region.kind !== 'land') continue;
     const base = map.strategic.nodes.find(n => n.kind === 'base');
@@ -42,9 +48,9 @@ test('regional maps retain a uniform north-up projection and usable deployment a
       assert(seen.has(`${point.x},${point.y}`), `${region.id}: inaccessible ${point.id}`);
   }
   assert.equal(signatures.size, 43);
-  assert(maps.get('greenland').geography.terrainCounts.snow > 500);
-  assert(maps.get('north_africa').geography.terrainCounts.desert > 500);
-  assert(maps.get('japan').geography.terrainCounts.water > 500);
+  assert(maps.get('greenland').geography.terrainCounts.snow > 250);
+  assert(maps.get('north_africa').geography.terrainCounts.desert > 250);
+  assert(maps.get('japan').geography.terrainCounts.water > 250);
 });
 
 test('touching regions have reciprocal strategic links and matching local entrances', () => {

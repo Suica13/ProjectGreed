@@ -1,6 +1,15 @@
 {
   "schemaVersion": 1,
-  "units": {},
+  "units": {
+    "YMS_16M": {
+      "/weapons/ZN_YMS_16M_Cannon_AP/min": 1,
+      "/weapons/ZN_YMS_16M_Cannon_AP/hit": -10.75,
+      "/weapons/ZN_YMS_16M_Cannon_AP/attackRounds": -1,
+      "/weapons/ZN_YMS_16M_Cannon_HE/min": 1,
+      "/weapons/ZN_YMS_16M_Cannon_HE/hit": -1.25,
+      "/weapons/Common_Mortar_YMS_16M/hit": -0.77500000000001
+    }
+  },
   "weapons": {
     "Army_Squad_EFSF_0079_O_G_Member_P__lv1": {
       "/hit": -5

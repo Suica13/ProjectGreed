@@ -53,10 +53,12 @@ def make_layout(region, lookup, width, height):
 
 def resize_local_map(battle):
     """Reduce regional dimensions once; keep all terrain/objective coordinates in bounds."""
-    if battle.get('regionalScale') == 0.75:
+    if battle.get('regionalScaleVersion') == 2:
         return False
     old_width, old_height = battle['width'], battle['height']
-    width, height = round(old_width * 0.75), round(old_height * 0.75)
+    first = battle.get('regionalScale') != 0.75
+    width = round(round(old_width * 0.75) * 0.75) if first else round(old_width * 0.75)
+    height = round(round(old_height * 0.75) * 0.75) if first else round(old_height * 0.75)
     sx, sy = width / old_width, height / old_height
     battle['tiles'] = [[battle['tiles'][min(old_height-1, int(y / sy))][min(old_width-1, int(x / sx))]
                         for x in range(width)] for y in range(height)]
@@ -81,13 +83,13 @@ def resize_local_map(battle):
         if node.get('side') == 'east': node['x'] = width-2
         if node.get('side') == 'north': node['y'] = 1
         if node.get('side') == 'south': node['y'] = height-2
-    battle.update(width=width, height=height, regionalScale=0.75)
+    battle.update(width=width, height=height, regionalScale=0.5625, regionalScaleVersion=2)
     return True
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--resize-existing', action='store_true', help='Apply the regional 75% dimensions once to existing local maps.')
+    parser.add_argument('--resize-existing', action='store_true', help='Apply the additional regional 25% reduction once to existing local maps.')
     parser.add_argument('--rebuild-geography', action='store_true', help='Rebuild the regional terrain from world projection and physical geography.')
     parser.add_argument('--dependencies', help='Generation-only Shapely/numpy package directory.')
     args = parser.parse_args()
@@ -111,6 +113,9 @@ def main():
         if target.exists():
             if args.resize_existing or args.rebuild_geography:
                 battle = read(target)
+                if args.resize_existing and battle.get('regionalScaleVersion') != 2:
+                    battle.setdefault('legacyStrategicLayouts', []).append(dict(
+                        width=battle['width'], height=battle['height'], layout=copy.deepcopy(battle['strategic'])))
                 changed = resize_local_map(battle) if args.resize_existing else False
                 if args.rebuild_geography:
                     # Start from the fixed objective template so rebuilding is idempotent.

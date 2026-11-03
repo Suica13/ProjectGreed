@@ -55,7 +55,7 @@ def main():
         '- 素材使用原始文件名、透明PNG与现有共享动画池。只有战场用到的远程单元贴图才会加入战斗预加载。',
         '', '## 检查范围','',
         '本脚本核对5个已接入机体的源动作、数量、门槛、价格接线，以及INCOM源动作区别。规则/WebSocket测试与浏览器演出测试另行运行；不代表全部旧版测试或所有MOD时代均已验收。','']
-    Path('浮游兵器接入清单.md').write_text('\n'.join(lines),encoding='utf-8')
+    Path('docs/imports/remote-weapons.md').write_text('\n'.join(lines),encoding='utf-8')
     print(f'Native remote source audit passed: {len(rows)} carriers + original INCOM fixture')
 
 if __name__=='__main__':main()

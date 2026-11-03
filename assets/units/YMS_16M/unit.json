@@ -527,7 +527,10 @@
       "name": "Xamel",
       "description": "A long-range attack prototype MS developed by the Zeon forces at the end of the One Year War, operated by both a pilot and a gunner"
     },
-    "ja": {}
+    "ja": {
+      "name": "ザメル",
+      "description": "一年戦争末期にジオン軍が開発した長距離攻撃用試作MS。操縦手と砲手の2名で運用する。"
+    }
   },
   "weapons": {
     "Common_Push_A": {
@@ -555,7 +558,7 @@
               "delay": 0.45
             },
             {
-              "delay": 1.0
+              "delay": 1
             }
           ],
           "startAnimation": "Common_Push_A"

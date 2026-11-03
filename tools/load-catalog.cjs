@@ -51,6 +51,8 @@ function loadCatalog({
   adjustmentsOverride = null,
   conversionOverride = null,
   weaponDefinitionsOverride = null,
+  reuseCatalog = null,
+  changedUnits = null,
 } = {}) {
   const Adjust = require("../shared/catalog-adjustments.cjs");
   const adjustments = adjustmentsOverride || Adjust.read();
@@ -298,6 +300,8 @@ function loadCatalog({
           ? x >= area.x && y >= area.y && x < area.x + area.width && y < area.y + area.height
           : Math.abs(x - spawn.x) + Math.abs(y - spawn.y) <= map.deploymentRadius;
       if (!inside(spawn.x, spawn.y)) throw Error("Spawn outside deployment area: " + map.id);
+      // Regional maps deploy via their central base and linked entrances.
+      if (map.scope === "strategic" && map.strategic) continue;
       let capacity = 0;
       for (let y = 0; y < map.height; y++)
         for (let x = 0; x < map.width; x++)
@@ -469,17 +473,41 @@ function loadCatalog({
     throw Error("Invalid low HP presentation setting");
   const defaultEquipment =
     read(path.resolve(__dirname, "../shared/production-catalog.json")).defaultKits || {};
+  const changed = changedUnits && new Set(changedUnits);
+  const retained = new Map(), retainedModels = new Map(), retainedArt = new Map();
+  if (reuseCatalog && changed && !embedAssets) {
+    for (const prefab of reuseCatalog.prefabs) retained.set(prefab.id, prefab);
+    for (const [id, model] of Object.entries(reuseCatalog.models)) {
+      if (!retainedModels.has(model.prefabId)) retainedModels.set(model.prefabId, {});
+      retainedModels.get(model.prefabId)[id] = model;
+    }
+    for (const art of reuseCatalog.units) {
+      const id = reuseCatalog.models[art.id].prefabId;
+      if (!retainedArt.has(id)) retainedArt.set(id, []);
+      retainedArt.get(id).push(art);
+    }
+    Object.assign(result.sounds, reuseCatalog.sounds);
+  }
   for (const ref of catalog.units) {
     const source = file(root, ref),
       base = path.dirname(source),
       raw =
         unitOverrides[ref] || JSON.parse(fs.readFileSync(source, "utf8").replace(/^\uFEFF/, "")),
-      prefab = WeaponStore.expandPrefab(raw, weaponDefinitionsOverride || undefined);
+      cached = retained.get(raw.id);
+    if (cached && !changed.has(raw.id)) {
+      result.prefabs.push(cached);
+      Object.assign(result.models, retainedModels.get(raw.id));
+      result.units.push(...(retainedArt.get(raw.id) || []));
+      continue;
+    }
+    const prefab = WeaponStore.expandPrefab(raw, weaponDefinitionsOverride || undefined);
     if (prefab.enabled === false) continue;
+    prefab.skills = (prefab.skills || []).filter(skill => skill.type !== "emp");
     localize.prefab(prefab);
     require("./unit-footprint.cjs").compactShipFootprint(prefab);
     require("./weapon-balance.cjs").applyWeaponBalance(prefab, conversion);
     Adjust.unit(prefab, adjustments, raw.weapons);
+    require("../shared/conversion-rules.cjs").roundValues(prefab);
     require("./weapon-level-labels.cjs").applyWeaponLevelLabels(prefab);
     // Skills and weapons share the same 25-point damage quantization policy.
     for (const skill of prefab.skills || [])
@@ -882,8 +910,6 @@ function loadCatalog({
               ))
           )
             throw Error("Invalid pilot weapon requirement: " + prefab.id + "/" + key);
-          if (raw.onHitAPLoss !== undefined && ![0.25, 1].includes(raw.onHitAPLoss))
-            throw Error("Invalid on-hit AP loss: " + prefab.id + "/" + key);
           if (raw.burn !== undefined && (raw.burn.durationTurns !== 3 || raw.burn.hpPercent !== 5))
             throw Error("Invalid burn status: " + prefab.id + "/" + key);
           if (raw.requiresSfsMS !== undefined && typeof raw.requiresSfsMS !== "boolean")
@@ -911,6 +937,8 @@ function loadCatalog({
                 (!Array.isArray(step.swingEffects) || step.swingEffects.length > 16 ||
                  step.swingEffects.some(id => typeof id !== "string" || !result.effects[id])))
               throw Error("Invalid per-strike melee effects: " + key);
+          if (!Number.isFinite(weapon.armorPiercingIgnore) || weapon.armorPiercingIgnore < 0 || weapon.armorPiercingIgnore > 1)
+            throw Error("Invalid armor piercing resistance ratio: " + key);
           if (!result.effects[weapon?.hitEffect]) throw Error("Missing hit effect: " + key);
           if (weapon.hitEffects !== undefined &&
               (!Array.isArray(weapon.hitEffects) || !weapon.hitEffects.length ||
@@ -967,6 +995,8 @@ function loadCatalog({
                   "beamAP",
                   "shellAP",
                   "meleeAP",
+                  "meleeBeamAP",
+                  "meleeShellAP",
                 ].includes(channel) ||
                 !Number.isFinite(value) ||
                 value < 0,
@@ -1115,6 +1145,7 @@ function loadCatalog({
               }),
             };
           }
+          weapon.en = Math.round(weapon.en);
           return require("./weapon-level-labels.cjs").labelWeapon(
             { ...weapon, id: key },
             prefab.id,
@@ -1181,7 +1212,7 @@ function loadCatalog({
       // Leave a basic melee option usable by ordinary pilots. Utility whips do
       // not take that slot ahead of a conventional sword; native gates stay intact.
       const basicMelee = ungatedMelee.find((w) =>
-        w.rangeRole !== "tether_melee" && !w.onHitAPLoss) || ungatedMelee[0];
+        w.rangeRole !== "tether_melee" && !w.nativePayload?.StunDamage) || ungatedMelee[0];
       meleeWeapons.forEach((w) => {
         if (normalMelee.length > 1 && normalMelee.includes(w) && w !== basicMelee && !w.pilotRequirements?.length)
           w.pilotRequirements = [{ stat: "melee", operator: ">=", value: 125 }];

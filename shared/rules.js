@@ -976,7 +976,7 @@ const Tactics = (() => {
       );
     return {
       ...weapon,
-      en,
+      en: Math.round(en),
       partDamageMultiplier: attackMultiplier,
       remoteDamageMultiplier: remoteMultiplier,
       get name() {
@@ -1051,8 +1051,6 @@ const Tactics = (() => {
     }
     return variants.get(factor);
   }
-  const roundAP = (value) => Math.round(value * 2) / 2;
-  const mobilityActionMultiplier = (base) => Math.max(1, 1 + ((base.speed ?? 100) - 100) * 0.005);
   function pilotModelOf(unit, base) {
     const pilot = pilots.of(unit, base);
     let variants = pilotModels.get(base);
@@ -1070,18 +1068,10 @@ const Tactics = (() => {
         get kitName() {
           return base.kitName;
         },
-        move: base.deployed ? 0 : Math.max(1, base.move * modifiers.move),
-        actionPoints: Math.max(
-          1,
-          roundAP(
-            (base.actionPoints ?? 10) *
-              mobilityActionMultiplier(base) *
-              modifiers.actionPointsMultiplier,
-          ),
-        ),
+        move: base.deployed ? 0 : Math.max(1, Math.round(base.move * modifiers.move)),
         // Legacy mobility stores native baseReactionLevel, not movement/speed.
-        mobility: base.mobility * modifiers.reaction,
-        accuracy: base.accuracy * modifiers.accuracy,
+        mobility: Math.round(base.mobility * modifiers.reaction),
+        accuracy: Math.round(base.accuracy * modifiers.accuracy),
         pilotModifiers: modifiers,
         pilotExperienceMultiplier:
           (base.pilotExperienceMultiplier ?? 1) * pilots.experienceMultiplier(unit),
@@ -1677,7 +1667,10 @@ const Tactics = (() => {
     hangars.sync(g);
   }
   // AI预选和真正创建单位共用完整占地检查；大舰优先，避免碎片化空位。
-  function deploymentPlacements(world, formation, seat) {
+  function deploymentPlacements(world, formation, seat, staging = false) {
+    // Campaign actors are constructed off-stage, then placed by campaign-room at
+    // their actual arrival gate. Never alter ocean terrain just for construction.
+    if (staging) world = { ...world, tiles: world.tiles.map(row => row.map(() => "plain")) };
     const placed = { ...world, units: [...(world.units || [])] },
       result = [],
       terrainCells = new Map();
@@ -1701,7 +1694,9 @@ const Tactics = (() => {
         ":" +
         ((models[model].adaptability?.water ?? 0) > 0);
       if (!terrainCells.has(movement)) {
-        const cells = deploymentCells(placed, seat, probe);
+        const cells = staging
+          ? placed.tiles.flatMap((row, y) => row.map((_, x) => ({x, y})))
+          : deploymentCells(placed, seat, probe);
         terrainCells.set(movement, { cells, area: new Set(cells.map((c) => key(c.x, c.y))) });
       }
       const available = terrainCells.get(movement);
@@ -1776,6 +1771,7 @@ const Tactics = (() => {
         { tiles, units, mapId: map.id, environment: map.environment },
         formations[seat],
         seat,
+        settings.mode === "campaign" && map.scope === "strategic",
       );
       if (!placements) throw Error("出生区没有足够位置容纳编组，请检查目录配置");
       placements.forEach(({ entry, i, position, heading }) => {
@@ -1838,7 +1834,6 @@ const Tactics = (() => {
           en: m.en,
           moved: false,
           acted: false,
-          actionPoints: m.actionPoints ?? 10,
           origin: null,
           counterCount: 0,
           angle: heading,
@@ -1846,7 +1841,6 @@ const Tactics = (() => {
         });
       });
     }
-    for (const unit of units) unit.actionPoints = actionBudget(unit);
     hangars.sync({ units });
     units.sort(
       (a, b) =>
@@ -2261,25 +2255,13 @@ const Tactics = (() => {
         firingArcCanBear(u, step.firingArc, w.aimCell ?? target),
     );
   }
-  function actionBudget(u) {
-    return modelOf(u).actionPoints ?? 10;
-  }
-  function counterActionBudget(u) {
-    return actionBudget(u);
-  }
-  function actionPoints(u) {
-    return u.actionPoints ?? actionBudget(u);
-  }
-  function actionCost(w) {
-    return w.actionCost ?? 2;
-  }
   function attackOrders(unit) {
     return unit.plan ? unit.plan.attacks || [unit.plan] : [];
   }
   function attackPlanFor(unit, target) {
     return attackOrders(unit).find((order) => order.target === target?.id);
   }
-  function attackBudget(unit, target) {
+  function attackResources(unit, target) {
     const others = attackOrders(unit).filter((order) => order.target !== target?.id);
     const weapons = others.flatMap((order) =>
       (order.weapons || [order.weapon])
@@ -2287,7 +2269,6 @@ const Tactics = (() => {
         .filter(Boolean),
     );
     return {
-      ap: actionPoints(unit) + (attackPlanFor(unit, target)?.actionCost || 0),
       en: unit.en - weapons.reduce((sum, weapon) => sum + weaponStats(weapon, unit).en, 0),
       weapons,
     };
@@ -2313,7 +2294,7 @@ const Tactics = (() => {
       throw Error("技能武器须独立使用");
     if (!target.groundTarget && !attackAimCell(g, u, target, weapons))
       throw Error("没有所有所选武器均可攻击的目标格");
-    const budget = attackBudget(u, target);
+    const budget = attackResources(u, target);
     const allWeapons = [...budget.weapons, ...weapons];
     validatePilotWeaponQueue(u, allWeapons);
     if (allWeapons.length > 32) throw Error("攻击计划最多包含32次武器使用");
@@ -2328,9 +2309,8 @@ const Tactics = (() => {
       )
         throw Error("该武器的使用次数已经耗尽");
     const en = weapons.reduce((n, w) => n + weaponStats(w, u).en, 0);
-    // Automatic ordinary attacks do not consume or require AP.
     if (en > budget.en) throw Error("武器序列总EN不足");
-    return { ap: 0, en };
+    return { en };
   }
   function counterQueue(g, u, target, weapons) {
     if (!Array.isArray(weapons) || !weapons.length || weapons.length > 32)
@@ -2343,7 +2323,7 @@ const Tactics = (() => {
     const en = weapons.reduce((n, w) => n + weaponStats(w, u).en, 0);
 
     if (en > u.en) throw Error("反击武器序列总EN不足");
-    return { ap: 0, en };
+    return { en };
   }
   function counterPlan(g, unit, orders) {
     if (!Array.isArray(orders) || !orders.length || orders.length > 32)
@@ -2789,7 +2769,6 @@ const Tactics = (() => {
     ) {
       return Object.entries(components).reduce((sum, [channel, value]) => {
         const ap = channel.endsWith("AP");
-        if (ap && defenses === defender.shield.defenses) return sum;
         if (ap) channel = channel.slice(0, -2);
         const percentKey =
           channel === "meleeBeam" ? "beam" : channel === "meleeShell" ? "shell" : channel;
@@ -2806,11 +2785,12 @@ const Tactics = (() => {
               elementBonus *
               sizeModifier.damage *
               targetFactor *
-              (ap ? 1 : share) -
-              (ap ? 0 : defenses[flatKey].flat * defenseMultiplier),
+              share -
+              defenses[flatKey].flat * defenseMultiplier,
           ) *
           (1 -
-            Math.min(100, (defenses[percentKey].percent * defenseMultiplier) / (ap ? 4 : 1)) /
+            Math.min(100, defenses[percentKey].percent * defenseMultiplier *
+              (ap ? 1 - (w.armorPiercingIgnore ?? catalog.conversionRules.weapons.armorPiercingIgnore) : 1)) /
               100) *
           (element === "shell" ? 1 - (defender.shellFinalResistance || 0) / 100 : 1) *
           (channel === "beam" ? beamScreen : 1) *
@@ -2858,7 +2838,7 @@ const Tactics = (() => {
       blockedFieldLeft = Math.max(floor, blockedFieldLeft - roundDamage(blocked.absorbed));
     }
     return {
-      hit,
+      hit: Math.round(hit),
       damage,
       shieldDamage,
       blockedDamage,
@@ -2989,7 +2969,6 @@ const Tactics = (() => {
             sourceId: from.id,
             lastTickRound: to.burning?.lastTickRound,
           };
-        if (hit && to.hp > 0 && weapon.onHitAPLoss) to.apPenaltyNextTurn = 0.25;
         const wasOverdrive = !!to.overdrive;
         const formReverted = skills.revertDamaged(to);
         const overdriveEnded = wasOverdrive && !to.overdrive;
@@ -3069,8 +3048,7 @@ const Tactics = (() => {
     }
     if (!counterOnly) fire(a, b, w, response, !!options.isCounter);
     if (response === "counter" && allowCounter && b.hp > 0 && a.hp > 0) {
-      let remaining = counterProgress?.remaining ?? counterActionBudget(b),
-        started = counterProgress?.started ?? false;
+      let started = counterProgress?.started ?? false;
       const entries = counterOrders
         ? counterOrders.flatMap((order) =>
             order.weaponIds.map((id) => ({
@@ -3126,7 +3104,7 @@ const Tactics = (() => {
         } else fire(b, enemy, weapon, "counter", true);
         if (counterProgress) counterProgress.sequence = (counterProgress.sequence ?? 0) + 1;
       }
-      if (counterProgress) Object.assign(counterProgress, { remaining, started });
+      if (counterProgress) Object.assign(counterProgress, { started });
     }
     if (!counterOnly) {
       a.acted = true;
@@ -3141,7 +3119,7 @@ const Tactics = (() => {
     if (!options.deferVictory && (!alive[0] || !alive[1])) g.winner = alive[0] ? 0 : 1;
     return events;
   }
-  // Counter waves share one reaction opportunity and one AP budget across the entire batch.
+  // Counter waves share reaction state across the entire batch; EN is checked per shot.
   function counter(g, defender, attacker, weaponIds, orders = null, progress = null) {
     return fight(g, attacker, defender, null, "counter", weaponIds, true, true, orders, progress);
   }
@@ -3304,14 +3282,6 @@ const Tactics = (() => {
         }
       if (best) return { skillId: skill.id, x: best.x, y: best.y };
     }
-    for (const skill of skills.of(unit).filter((s) => s.type === "emp"))
-      if (
-        skills.canUse(g, unit, skill.id) &&
-        enemies.some(
-          (other) => sensors.distance(unit, other) <= skill.radius && !other.apPenaltyNextTurn,
-        )
-      )
-        return { skillId: skill.id, x: unit.x, y: unit.y };
     return null;
   }
   function tickBurning(g) {
@@ -3429,7 +3399,6 @@ const Tactics = (() => {
     // One round number is one team action phase; all counter budgets refresh on handoff.
     for (const u of g.units) {
       u.counterCount = 0;
-      delete u.counterActionPoints;
       delete u.pilotWeaponTurnUses;
       delete u.weaponTurnUses;
       delete u.counterTargetId;
@@ -3471,8 +3440,6 @@ const Tactics = (() => {
           iFieldHP(u) + (field.capacity * field.recoveryPercent) / 100,
         );
       u.acted = false;
-      u.actionPoints = actionBudget(u);
-      delete u.apPenaltyNextTurn;
       u.moved = false;
       u.origin = null;
     }
@@ -3796,7 +3763,6 @@ const Tactics = (() => {
       ...u,
       embarked: undefined,
       moved: true,
-      actionPoints: actionPoints(u),
     };
     // Evaluate exits together. Reuse each result when adding squad-joining preference,
     // instead of rerunning enemy scans, pressure estimates and strategy per exit.
@@ -3982,8 +3948,6 @@ const Tactics = (() => {
       automaticFire.squadQueue(Tactics, g, u, t, counter),
     firePlan: (g, u, t, options = {}) => automaticFire.plan(Tactics, g, u, t, options),
     attackRounds: (g, u, w, counter = false) => automaticFire.roundCount(Tactics, g, u, w, counter),
-    fireAPCost: (w, unit = null) => automaticFire.cost(Tactics, w, unit),
-    fireAPBudget: (u, counter = false) => automaticFire.budget(Tactics, u, counter),
     resolveAutomatic: (room, choices, id) => automaticFire.resolve(Tactics, room, choices, id),
     spendWeapon: spend,
     resolveProjectile: (g, source, target, weapon, response, isCounter = false) =>
@@ -3998,15 +3962,11 @@ const Tactics = (() => {
     canUse,
     recordPilotWeaponUse,
     pilotWeaponAllowed,
-    actionBudget,
-    counterActionBudget,
-    actionPoints,
-    actionCost,
     attackAimCell,
     attackQueue,
     attackOrders,
     attackPlanFor,
-    attackBudget,
+    attackResources,
     counterQueue,
     counterPlan,
     moduleCanBear,

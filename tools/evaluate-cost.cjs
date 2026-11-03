@@ -176,7 +176,7 @@ if (require.main === module) {
         " |",
     );
     fs.writeFileSync(
-      path.join(__dirname, "../单位COST估算.md"),
+      path.join(__dirname, "../docs/maintenance/cost-source-audit.md"),
       [
         "# V05 单位 COST 估算",
         "",

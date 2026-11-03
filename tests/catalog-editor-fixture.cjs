@@ -18,7 +18,7 @@ function editorFixture() {
     "shared/production-catalog.json",
     "shared/development-tree.json",
     "shared/pilots.json",
-    "MS与舰船例外列表.md",
+    "docs/maintenance/unit-exceptions.md",
     ...references.map((ref) => "assets/" + ref),
   ]) {
     const target = path.join(root, file);
@@ -26,7 +26,7 @@ function editorFixture() {
     fs.copyFileSync(path.join(source, file), target);
   }
   const read = (file) => JSON.parse(fs.readFileSync(path.join(root, file), "utf8"));
-  const catalog = () => {
+  const catalog = (options = {}) => {
     const definitions = read("assets/weapons.json").definitions;
     return loadCatalog({
       catalogOverride: read("assets/unit-catalog.json"),
@@ -35,6 +35,7 @@ function editorFixture() {
       weaponDefinitionsOverride: definitions,
       wipOverride: read("assets/unit-wip.json"),
       unitOverrides: Object.fromEntries(references.map((ref) => [ref, read("assets/" + ref)])),
+      ...options,
     });
   };
   return {

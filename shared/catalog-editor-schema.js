@@ -6,6 +6,7 @@ const CatalogEditorSchema = (() => {
     "localization",
     "damagePerShot",
     "damageComponents",
+    "armorPiercingIgnore",
     "min",
     "max",
     "hit",
@@ -23,7 +24,6 @@ const CatalogEditorSchema = (() => {
     "minovsky",
     "resupply",
     "smoke",
-    "emp",
     "flight",
     "fullboost",
     "overboost",
@@ -45,7 +45,7 @@ const CatalogEditorSchema = (() => {
     speed: "机动",
     mobility: "反应系数",
     accuracy: "命中系数",
-    actionPoints: "基础AP",
+    actionPoints: "AP参考",
     move: "基础移动距离",
     partStructuralStrength: "零件强度",
     counterLimit: "反击上限",
@@ -62,6 +62,12 @@ const CatalogEditorSchema = (() => {
     snow: "雪地",
     desert: "沙漠",
     rubble: "废墟",
+    beamAP: "光束穿甲",
+    shellAP: "实弹穿甲",
+    meleeAP: "格斗穿甲",
+    meleeBeamAP: "格斗光束穿甲",
+    meleeShellAP: "格斗实弹穿甲",
+    armorPiercingIgnore: "穿甲无视抗性比例",
     beam: "光束",
     shell: "实弹",
     melee: "格斗",
@@ -77,7 +83,7 @@ const CatalogEditorSchema = (() => {
     min: "最小射程",
     max: "最大射程",
     hit: "基础命中率（%）",
-    actionCost: "AP（未启用）",
+    actionCost: "武器AP参考",
     attackRounds: "攻击轮数（0–20）",
     partBreakModifier: "部位破坏系数",
     small: "小型",
@@ -107,11 +113,34 @@ const CatalogEditorSchema = (() => {
           ? rescale(step.damageComponents)
           : { ...weapon.damageComponents };
   }
+  function setComponentDamage(weapon, channel, value) {
+    const before = weapon.damageComponents[channel] || 0;
+    const total = Object.values(weapon.damageComponents).reduce((a, b) => a + b, 0);
+    for (const step of weapon.attack?.steps || []) {
+      if (!step.damageComponents) continue;
+      const share = total
+        ? Object.values(step.damageComponents).reduce((a, b) => a + b, 0) / total
+        : 1;
+      step.damageComponents[channel] = before
+        ? ((step.damageComponents[channel] || 0) * value) / before
+        : value * share;
+    }
+    weapon.damageComponents[channel] = value;
+    weapon.damagePerShot = Object.values(weapon.damageComponents).reduce((a, b) => a + b, 0);
+  }
   function setHit(weapon, value) {
     weapon.hit = value;
     for (const step of weapon.attack?.steps || [])
       if (step.accuracy !== undefined) step.accuracy = value;
   }
-  return { weaponFields, safeSkillTypes, mechanismFields, labels, setDamage, setHit };
+  return {
+    weaponFields,
+    safeSkillTypes,
+    mechanismFields,
+    labels,
+    setDamage,
+    setComponentDamage,
+    setHit,
+  };
 })();
 if (typeof module !== "undefined") module.exports = CatalogEditorSchema;

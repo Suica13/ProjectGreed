@@ -930,7 +930,7 @@
     {
       "id": "kit_0",
       "name": "光束步枪套件",
-      "cost": 100,
+      "cost": 75,
       "weapons": [
         "ZN_MS_17_BR",
         "ZN_YMS_15_BeamSaber_BF_B",

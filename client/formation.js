@@ -832,7 +832,7 @@ const Formation = (() => {
       ["机动", model.speed ?? 100],
       ["反应系数", model.mobility],
       ["命中系数", model.accuracy + "%"],
-      ["行动点", model.actionPoints ?? 5],
+      ["AP参考", model.actionPoints ?? 5],
       ["零件强度", model.partStructuralStrength],
       ...(model.ship
         ? [
@@ -2155,7 +2155,7 @@ const Formation = (() => {
         element(
           "span",
           "",
-          `${I18n.text(label)} ${profile.baseStats[key]} → ${Number(profile.maxStats[key].toFixed(2))}`,
+          `${I18n.text(label)} ${profile.baseStats[key]} → ${Math.round(profile.maxStats[key])}`,
         ),
       );
     acePreview.append(attributes);
@@ -2579,7 +2579,7 @@ const Formation = (() => {
         element(
           "span",
           "",
-          `${label} ${Number(pilotEdit.stats[key].toFixed(2))} / ${pilotEdit.ace ? Number(PilotSystem.aceStatCap(pilotEdit, key).toFixed(2)) : PilotSystem.statCap(pilotEdit.level)}`,
+          `${label} ${Math.round(pilotEdit.stats[key])} / ${pilotEdit.ace ? Math.round(PilotSystem.aceStatCap(pilotEdit, key)) : PilotSystem.statCap(pilotEdit.level)}`,
         ),
         plus,
         plusFive,

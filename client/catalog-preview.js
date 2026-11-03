@@ -64,7 +64,7 @@ const Formation = (() => {
       ["机动", model.speed],
       ["反应系数", model.mobility],
       ["命中系数", model.accuracy + "%"],
-      ["行动点", model.actionPoints],
+      ["AP参考", model.actionPoints],
       ["零件强度", model.partStructuralStrength],
     ]);
     metrics("formationDetailMovement", [

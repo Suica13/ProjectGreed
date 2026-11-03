@@ -2566,6 +2566,11 @@ function createRoomEngine({
         weaponId: best.weapon.id,
         weaponIds: weapons.map((w) => w.id),
         aimCell: G.attackAimCell(room.game, u, best.target, weapons),
+        // A squad member may already have waited or used an attack skill. Keep
+        // its action/plan intact while the remaining members plan individually.
+        single: G.squadMembers(room.game, u).some(
+          (member) => member.acted || member.plan || member.squadOrder,
+        ),
       },
     };
   }

@@ -7,7 +7,7 @@ const { isDeepStrictEqual: equal } = require("node:util");
 const Codec = require("./weapon-store.cjs");
 const Adjust = require("../shared/catalog-adjustments.cjs");
 const Conversion = require("../shared/conversion-rules.cjs");
-const exceptionFile = "MS与舰船例外列表.md";
+const exceptionFile = "docs/maintenance/unit-exceptions.md";
 const start = "<!-- catalog-editor-exceptions:start -->",
   end = "<!-- catalog-editor-exceptions:end -->";
 const heading =
@@ -56,7 +56,12 @@ function localTime(date) {
 function planAudit(root, changes, metadata) {
   const text = (file, next) =>
     next && changes.has(file) ? changes.get(file) : fs.readFileSync(path.join(root, file), "utf8");
-  const json = (file, next = false) => JSON.parse(text(file, next));
+  const parsed = new Map();
+  const json = (file, next = false) => {
+    const key = next && changes.has(file) ? "next:" + file : file;
+    if (!parsed.has(key)) parsed.set(key, JSON.parse(text(file, next)));
+    return parsed.get(key);
+  };
   const beforeLibrary = json("assets/weapons.json").definitions,
     afterLibrary = json("assets/weapons.json", true).definitions;
   const beforeAdjustments = json(Adjust.file),
@@ -100,6 +105,8 @@ function planAudit(root, changes, metadata) {
     const file = "assets/" + ref,
       before = json(file),
       after = json(file, true);
+    if (metadata.operation === "unit" && metadata.target.id === metadata.target.newId &&
+        before.id !== metadata.target.id) continue;
     const fields = differences(
       snapshot(
         before,
@@ -302,7 +309,7 @@ function auditOutputs(root, record, afterRevision) {
       "OTHER",
       "legacy",
     ]
-      .map((group) => "- [" + group + "](docs/editor-changes/" + group + ".md)")
+      .map((group) => "- [" + group + "](../editor-changes/" + group + ".md)")
       .join("\n") +
     "\n\n<!-- catalog-editor-index:end -->";
   if (a >= 0 && b >= a) {

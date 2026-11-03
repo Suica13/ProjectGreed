@@ -29,6 +29,17 @@ const WeaponClasses = (() => {
     other: "其他",
   };
   const valid = (id) => Object.hasOwn(labels, id);
+  const baseHits = {
+    rifle: 95, beam_rifle: 90, beam_spray: 80, beam_gun: 85,
+    beam_cannon: 70, beam_bazooka: 70, close_defense: 95,
+    small_vulcan: 100, machine_gun: 100, bazooka: 75, panzerfaust: 65,
+    cannon: 65, melee: 100, missile: 80, grenade: 65,
+    grenade_launcher: 75, sniper: 100, mortar: 65, remote: 95,
+    flamethrower: 85, bomb: 75, nuke: 65, ram: 90,
+  };
+  const shipCannon = (weapon, ship) => !!ship &&
+    ["cannon", "beam_cannon", "mortar"].includes(classify(weapon)) &&
+    weapon.rangeRole !== "ship_anti_air";
   function classify(weapon, id = "") {
     if (weapon.weaponClass !== undefined) {
       if (!valid(weapon.weaponClass))
@@ -116,8 +127,6 @@ const WeaponClasses = (() => {
       weapon.pilotRequirements?.length || weapon.special?.type === "snipe" ? 1 : Infinity;
     return Math.min(configured, limit, weapon.maxUsesPerTurn ?? Infinity);
   }
-  const mountAP = (weapon) =>
-    wristWeapon(weapon) ? 3 : headVulcan(weapon) ? 2 : headBeam(weapon) ? 3 : null;
   function defaultRules() {
     return Object.fromEntries(
       Object.keys(labels).map((kind) => [
@@ -133,14 +142,12 @@ const WeaponClasses = (() => {
                   : kind === "melee"
                     ? 1.1
                     : 1,
-          accuracy: ({ mortar: 0.935, bazooka: 0.95, beam_bazooka: 0.95, panzerfaust: 0.9, cannon: 0.95 })[kind] ?? 1,
-          ap: 1,
+          accuracy: 1,
           en: 1,
           range: 1,
           rangeBonus: 0,
-          baseAP: -1,
           baseEN: -1,
-          baseHit: -1,
+          baseHit: baseHits[kind] ?? -1,
           minRange: -1,
           maxRange: -1,
         },
@@ -158,26 +165,18 @@ const WeaponClasses = (() => {
     return [
       { label: "武器类型", value: labels[kind] },
       ...[
-        ["baseAP", "基础AP"],
         ["baseEN", "基础EN"],
         ["baseHit", "基础命中率"],
         ["minRange", "基础最小射程"],
         ["maxRange", "基础最大射程"],
       ].map(([key, label]) => ({
         label,
-        value: String(inherited(key === "baseAP" && weapon.shipAPExempt ? -1 : group[key])),
+        value: String(inherited(group[key])),
       })),
       { label: "分类伤害倍率", value: "×" + group.damage },
       { label: "通用伤害倍率", value: "×" + global.damage },
       { label: "基础命中倍率", value: "×" + global.accuracy * group.accuracy },
-      {
-        label: "AP换算",
-        value: weapon.shipAPExempt
-          ? "舰载原费用"
-          : weapon.mountAPOverride !== undefined
-            ? weapon.mountAPOverride + " AP"
-            : "×" + global.ap * group.ap,
-      },
+      ...(shipCannon(weapon, weapon.shipWeapon) ? [{ label: "舰炮命中倍率", value: "×" + (global.shipCannonAccuracy ?? 0.85) }] : []),
       {
         label: "射程换算",
         value:
@@ -198,13 +197,14 @@ const WeaponClasses = (() => {
     roundTable,
     labels,
     valid,
+    baseHits,
+    shipCannon,
     classify,
     tags,
     machineGun,
     headVulcan,
     wristWeapon,
     headBeam,
-    mountAP,
     defaultRules,
     isWeaponSkill,
     rule,

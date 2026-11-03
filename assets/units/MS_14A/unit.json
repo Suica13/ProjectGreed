@@ -950,7 +950,7 @@
     {
       "id": "beam_rifle",
       "name": "格鲁古古光束步枪套件",
-      "cost": 100,
+      "cost": 75,
       "weapons": [
         "ZN_MS_14_BR",
         "ZN_TwinBeamSword_A",

@@ -2,13 +2,6 @@
 const AutomaticFire = (() => {
   const Classes =
     typeof WeaponClasses !== "undefined" ? WeaponClasses : require("./weapon-classes.js");
-  // Ordinary automatic fire has no AP cost; skills retain their own AP rules.
-  const cost = () => 0;
-  const budget = (G, unit, counter = false) =>
-    Math.max(
-      0,
-      counter ? (unit.counterActionPoints ?? G.actionBudget(unit)) : G.actionPoints(unit),
-    );
   const roundCount = (G, game, unit, weapon, counter = false) => {
     // A melee defender replies once per approaching enemy, before evacuation
     // penalties. Configurable offensive rounds must not multiply that reply.
@@ -43,8 +36,7 @@ const AutomaticFire = (() => {
 
   function plan(G, game, unit, target, options = {}) {
     const { counter = false, combatMode = "melee", ids = null } = options;
-    const ap = budget(G, unit, counter),
-      en = Math.max(0, unit?.en || 0);
+    const en = Math.max(0, unit?.en || 0);
     const targets = target ? G.squadMembers(game, target) : [];
     const planned = targets.flatMap((enemy) =>
       G.attackOrders(enemy).map((order) => ({ enemy, order })),
@@ -57,7 +49,7 @@ const AutomaticFire = (() => {
           G.modelOf(enemy).weapons.some((w) => w.id === id && w.type === "melee"),
         ),
       );
-    if (!unit || !target) return { weapons: [], ap: 0, en: 0, budget: ap };
+    if (!unit || !target) return { weapons: [], en: 0 };
     if (ids !== null) throw Error("当前模式不支持手动选择武器");
     const pool = new Map();
     for (const enemy of targets)
@@ -91,7 +83,7 @@ const AutomaticFire = (() => {
       selected.push(...Array(count).fill(weapon));
       remaining -= energy * count;
     }
-    return { weapons: selected, ap: 0, en: en - remaining, budget: ap };
+    return { weapons: selected, en: en - remaining };
   }
 
   function queue(G, game, unit, target, counter = false) {
@@ -488,8 +480,7 @@ const AutomaticFire = (() => {
               G.automaticWeapons(game, from, to).some(
                 (w) =>
                   w.type === "melee" &&
-                  Classes.classify(w) !== "ram" &&
-                  cost(G, w, from) <= budget(G, from, run.counter),
+                  Classes.classify(w) !== "ram",
               ),
             );
           if (Classes.classify(run.weapon) === "ram" && meleeAvailability.get(key)) continue;
@@ -770,6 +761,6 @@ const AutomaticFire = (() => {
     room.combats = [...(room.combats || []), ...merged];
     return merged;
   }
-  return { plan, cost, budget, roundCount, weapons, queue, squadQueue, flight, resolve };
+  return { plan, roundCount, weapons, queue, squadQueue, flight, resolve };
 })();
 if (typeof module !== "undefined") module.exports = AutomaticFire;

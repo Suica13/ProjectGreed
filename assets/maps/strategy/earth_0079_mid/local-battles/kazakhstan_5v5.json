@@ -3,70 +3,70 @@
   "environment": "ground",
   "name": "哈萨克斯坦 · 局地战5v5",
   "description": "占领中心基地或消灭敌军。",
-  "width": 57,
-  "height": 68,
+  "width": 43,
+  "height": 51,
   "playersPerTeam": 5,
   "deploymentRadius": 4,
   "spawns": [
     {
       "team": 0,
       "position": 1,
-      "x": 4,
-      "y": 7
+      "x": 20,
+      "y": 27
     },
     {
       "team": 1,
       "position": 1,
-      "x": 52,
-      "y": 7
+      "x": 20,
+      "y": 27
     },
     {
       "team": 0,
       "position": 2,
-      "x": 4,
-      "y": 20
+      "x": 20,
+      "y": 27
     },
     {
       "team": 1,
       "position": 2,
-      "x": 52,
-      "y": 20
+      "x": 20,
+      "y": 27
     },
     {
       "team": 0,
       "position": 3,
-      "x": 4,
-      "y": 34
+      "x": 20,
+      "y": 27
     },
     {
       "team": 1,
       "position": 3,
-      "x": 52,
-      "y": 34
+      "x": 20,
+      "y": 27
     },
     {
       "team": 0,
       "position": 4,
-      "x": 4,
-      "y": 48
+      "x": 20,
+      "y": 27
     },
     {
       "team": 1,
       "position": 4,
-      "x": 52,
-      "y": 48
+      "x": 20,
+      "y": 27
     },
     {
       "team": 0,
       "position": 5,
-      "x": 4,
-      "y": 61
+      "x": 20,
+      "y": 27
     },
     {
       "team": 1,
       "position": 5,
-      "x": 52,
-      "y": 61
+      "x": 20,
+      "y": 27
     }
   ],
   "appearance": {
@@ -95,12 +95,6 @@
       "snow",
       "snow",
       "snow",
-      "snow",
-      "snow",
-      "water",
-      "water",
-      "water",
-      "water",
       "water",
       "water",
       "water",
@@ -116,21 +110,13 @@
       "plain",
       "plain",
       "plain",
-      "plain",
-      "snow",
       "water",
       "water",
       "snow",
-      "snow",
       "water",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
+      "water",
+      "water",
+      "water",
       "snow",
       "snow",
       "snow",
@@ -150,16 +136,10 @@
       "water",
       "water",
       "water",
-      "water",
-      "water",
-      "water",
-      "water",
       "snow",
       "snow",
       "snow",
       "snow",
-      "water",
-      "water",
       "water",
       "water",
       "water",
@@ -175,15 +155,7 @@
       "plain",
       "plain",
       "plain",
-      "plain",
-      "snow",
-      "snow",
       "water",
-      "water",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
       "snow",
       "snow",
       "snow",
@@ -220,30 +192,16 @@
       "water",
       "water",
       "water",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
       "water",
       "water",
-      "water",
-      "water",
-      "water",
-      "water",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "snow",
-      "snow",
-      "water",
-      "water",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
       "snow",
       "snow",
       "snow",
@@ -276,13 +234,6 @@
       "water",
       "water",
       "water",
-      "water",
-      "water",
-      "water",
-      "water",
-      "snow",
-      "snow",
-      "snow",
       "snow",
       "water",
       "plain",
@@ -294,14 +245,7 @@
       "plain",
       "plain",
       "plain",
-      "snow",
-      "snow",
       "water",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
       "snow",
       "snow",
       "snow",
@@ -333,12 +277,7 @@
       "water",
       "water",
       "water",
-      "water",
-      "water",
-      "water",
-      "water",
-      "water",
-      "water",
+      "snow",
       "water",
       "snow",
       "snow",
@@ -351,17 +290,8 @@
       "plain",
       "plain",
       "plain",
-      "plain",
-      "plain",
-      "snow",
-      "snow",
       "water",
       "water",
-      "water",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
       "snow",
       "snow",
       "snow",
@@ -380,74 +310,10 @@
     ],
     [
       "snow",
-      "water",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "snow",
-      "snow",
-      "snow",
       "snow",
       "water",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "snow",
-      "snow",
-      "snow",
-      "water",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "snow",
-      "snow"
-    ],
-    [
       "water",
       "water",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "snow",
-      "snow",
-      "snow",
       "snow",
       "snow",
       "snow",
@@ -464,16 +330,12 @@
       "snow",
       "snow",
       "highland",
-      "highland",
-      "highland",
       "snow",
       "snow",
       "snow",
       "snow",
       "snow",
       "snow",
-      "snow",
-      "water",
       "water",
       "snow",
       "snow",
@@ -488,24 +350,13 @@
       "snow",
       "snow",
       "snow",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
       "snow",
       "snow"
     ],
     [
       "snow",
+      "snow",
       "water",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "snow",
-      "snow",
       "snow",
       "snow",
       "snow",
@@ -524,15 +375,11 @@
       "highland",
       "highland",
       "snow",
+      "water",
+      "water",
+      "water",
+      "water",
       "snow",
-      "snow",
-      "water",
-      "water",
-      "water",
-      "water",
-      "water",
-      "water",
-      "water",
       "water",
       "snow",
       "snow",
@@ -547,129 +394,7 @@
       "snow",
       "snow",
       "snow",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
       "snow",
-      "snow"
-    ],
-    [
-      "snow",
-      "snow",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "highland",
-      "highland",
-      "snow",
-      "snow",
-      "plain",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "snow",
-      "snow"
-    ],
-    [
-      "snow",
-      "snow",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "rock",
-      "rock",
-      "rock",
-      "highland",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
       "snow",
       "snow"
     ],
@@ -691,21 +416,7 @@
       "snow",
       "snow",
       "snow",
-      "snow",
-      "rock",
-      "rock",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
+      "highland",
       "snow",
       "snow",
       "snow",
@@ -747,13 +458,96 @@
       "snow",
       "snow",
       "snow",
+      "highland",
+      "highland",
+      "snow",
+      "snow",
+      "snow",
+      "plain",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "plain",
+      "plain",
+      "plain",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow"
+    ],
+    [
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
       "snow",
       "snow",
       "snow",
       "highland",
-      "rock",
+      "highland",
       "snow",
       "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "plain",
+      "plain",
+      "plain",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow"
+    ],
+    [
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "highland",
       "snow",
       "snow",
       "snow",
@@ -765,10 +559,48 @@
       "snow",
       "snow",
       "snow",
+      "plain",
+      "plain",
+      "plain",
       "snow",
       "snow",
       "snow",
       "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow"
+    ],
+    [
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "highland",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "water",
+      "water",
       "snow",
       "snow",
       "snow",
@@ -805,12 +637,9 @@
       "snow",
       "snow",
       "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
       "highland",
-      "highland",
+      "snow",
+      "snow",
       "snow",
       "snow",
       "snow",
@@ -833,194 +662,6 @@
       "snow",
       "snow",
       "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow"
-    ],
-    [
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "highland",
-      "highland",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "water",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "plain",
-      "plain",
-      "plain",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow"
-    ],
-    [
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "highland",
-      "highland",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "plain",
-      "snow",
-      "snow",
-      "plain",
-      "plain",
-      "plain",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow"
-    ],
-    [
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "highland",
-      "highland",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "plain",
       "plain",
       "plain",
       "plain",
@@ -1041,35 +682,7 @@
       "snow",
       "snow",
       "snow",
-      "snow",
-      "snow",
-      "snow",
       "highland",
-      "highland",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "water",
-      "water",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
       "snow",
       "snow",
       "snow",
@@ -1080,6 +693,20 @@
       "snow",
       "snow",
       "plain",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
       "plain",
       "plain",
       "plain",
@@ -1099,37 +726,8 @@
       "snow",
       "snow",
       "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
       "highland",
       "highland",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "water",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
       "snow",
       "snow",
       "snow",
@@ -1139,6 +737,21 @@
       "snow",
       "snow",
       "plain",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
       "plain",
       "plain",
       "plain",
@@ -1148,11 +761,7 @@
     [
       "snow",
       "snow",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
+      "snow",
       "snow",
       "snow",
       "snow",
@@ -1172,22 +781,7 @@
       "snow",
       "snow",
       "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "water",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
+      "plain",
       "snow",
       "snow",
       "snow",
@@ -1198,6 +792,11 @@
       "snow",
       "plain",
       "plain",
+      "plain",
+      "snow",
+      "snow",
+      "snow",
+      "snow",
       "plain",
       "plain",
       "plain",
@@ -1205,58 +804,44 @@
       "plain"
     ],
     [
-      "snow",
-      "snow",
+      "forest",
+      "forest",
+      "forest",
       "plain",
       "plain",
       "plain",
       "plain",
       "plain",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
       "highland",
       "highland",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "water",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
+      "highland",
       "plain",
       "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
       "plain",
       "plain",
       "plain",
@@ -1264,58 +849,44 @@
       "plain"
     ],
     [
-      "snow",
-      "snow",
+      "forest",
+      "forest",
+      "forest",
       "plain",
       "plain",
       "plain",
       "plain",
       "plain",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
       "highland",
       "highland",
       "highland",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
       "plain",
       "plain",
       "plain",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
-      "snow",
       "plain",
       "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
       "plain",
       "plain",
       "plain",
@@ -1326,13 +897,9 @@
       "plain",
       "plain",
       "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
+      "forest",
+      "forest",
+      "forest",
       "plain",
       "plain",
       "plain",
@@ -1342,6 +909,10 @@
       "highland",
       "highland",
       "highland",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
       "plain",
       "plain",
       "plain",
@@ -1357,20 +928,6 @@
       "plain",
       "plain",
       "forest",
-      "water",
-      "water",
-      "water",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
       "forest",
       "forest",
       "plain",
@@ -1385,20 +942,15 @@
       "plain",
       "plain",
       "plain",
+      "forest",
+      "forest",
+      "forest",
       "plain",
       "plain",
       "plain",
       "plain",
       "plain",
       "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "highland",
-      "highland",
       "highland",
       "highland",
       "plain",
@@ -1414,1053 +966,53 @@
       "plain",
       "plain",
       "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "water",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain"
-    ],
-    [
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "water",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain"
-    ],
-    [
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "water",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain"
-    ],
-    [
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "highland",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "water",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain"
-    ],
-    [
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "water",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain"
-    ],
-    [
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain"
-    ],
-    [
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "highland",
-      "highland",
-      "highland",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain"
-    ],
-    [
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "highland",
-      "highland",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain"
-    ],
-    [
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
       "water",
       "plain",
       "plain",
       "plain",
       "plain",
       "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain"
-    ],
-    [
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "water",
-      "water",
-      "water",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain"
-    ],
-    [
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "water",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain"
-    ],
-    [
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain"
-    ],
-    [
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain"
-    ],
-    [
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
       "forest",
       "forest",
       "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain"
-    ],
-    [
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain"
-    ],
-    [
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
       "plain",
       "plain",
       "plain",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "water",
-      "water",
-      "water",
-      "water",
-      "water",
-      "water",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain"
-    ],
-    [
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "water",
-      "water",
-      "water",
-      "water",
-      "water",
-      "water",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "water",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
       "plain",
       "plain",
       "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain"
-    ],
-    [
-      "forest",
-      "forest",
-      "forest",
-      "water",
-      "water",
-      "water",
-      "water",
-      "water",
-      "water",
-      "water",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "water",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
       "forest"
     ],
     [
+      "plain",
+      "plain",
+      "plain",
       "forest",
       "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "highland",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
       "water",
-      "water",
-      "water",
-      "water",
-      "water",
-      "water",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
       "plain",
       "plain",
       "plain",
@@ -2471,40 +1023,510 @@
       "plain",
       "plain",
       "plain",
-      "forest",
-      "forest",
-      "forest",
       "plain",
       "plain",
       "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
       "forest"
     ],
     [
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "highland",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "water",
+      "plain",
+      "plain",
+      "plain",
       "forest",
       "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain"
+    ],
+    [
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "highland",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "water",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain"
+    ],
+    [
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "water",
+      "water",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain"
+    ],
+    [
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "water",
+      "water",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain"
+    ],
+    [
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "water",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain"
+    ],
+    [
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain"
+    ],
+    [
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain"
+    ],
+    [
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain"
+    ],
+    [
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "water",
+      "water",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain"
+    ],
+    [
+      "plain",
+      "plain",
+      "plain",
+      "water",
+      "water",
+      "water",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "plain"
+    ],
+    [
+      "highland",
+      "highland",
+      "plain",
+      "water",
+      "water",
+      "water",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "highland",
+      "highland",
+      "rock",
+      "rock",
+      "rock",
+      "highland",
+      "highland",
+      "highland",
+      "highland"
+    ],
+    [
+      "highland",
+      "highland",
+      "highland",
       "forest",
       "water",
       "water",
@@ -2514,6 +1536,188 @@
       "plain",
       "plain",
       "plain",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "plain",
+      "plain",
+      "plain",
+      "highland",
+      "highland",
+      "rock",
+      "rock",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain"
+    ],
+    [
+      "forest",
+      "forest",
+      "highland",
+      "highland",
+      "water",
+      "water",
+      "water",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain"
+    ],
+    [
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "highland",
+      "water",
+      "water",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain"
+    ],
+    [
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "water",
+      "water",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain"
+    ],
+    [
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "water",
+      "water",
+      "water",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
       "plain",
       "plain",
       "plain",
@@ -2536,6 +1740,123 @@
       "plain",
       "plain",
       "plain",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain"
+    ],
+    [
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "water",
+      "water",
+      "water",
+      "water",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "highland",
+      "rock",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain"
+    ],
+    [
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "water",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "highland",
+      "highland",
+      "highland",
+      "rock",
+      "rock",
+      "rock",
+      "plain",
+      "plain",
+      "highland",
+      "highland",
+      "highland",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain"
+    ],
+    [
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
       "plain",
       "plain",
       "plain",
@@ -2545,9 +1866,369 @@
       "plain",
       "plain",
       "plain",
+      "rock",
+      "rock",
+      "rock",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "rock"
+    ],
+    [
       "forest",
       "forest",
       "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "rock",
+      "rock",
+      "rock",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "rock"
+    ],
+    [
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "rock",
+      "rock",
+      "rock",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "rock"
+    ],
+    [
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland"
+    ],
+    [
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland"
+    ],
+    [
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland"
+    ],
+    [
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "water",
+      "water",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "highland",
+      "rock",
+      "rock",
+      "rock",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland"
+    ],
+    [
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "water",
+      "water",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "rock",
+      "rock",
+      "rock",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland"
+    ],
+    [
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "water",
+      "water",
+      "water",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
       "plain",
       "plain",
       "plain",
@@ -2557,1615 +2238,146 @@
       "highland",
       "highland",
       "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland"
+    ],
+    [
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "water",
+      "water",
+      "water",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
       "forest",
       "forest",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "highland",
+      "highland",
+      "highland",
+      "highland",
+      "highland"
+    ],
+    [
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "water",
+      "water",
+      "water",
+      "water",
+      "water",
+      "water",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "water"
+    ],
+    [
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "desert",
+      "water",
+      "water",
+      "water",
+      "desert",
+      "water",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "forest",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "plain",
+      "water",
       "forest"
-    ],
-    [
-      "highland",
-      "highland",
-      "forest",
-      "water",
-      "water",
-      "water",
-      "water",
-      "water",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "highland",
-      "plain",
-      "plain",
-      "plain",
-      "rock",
-      "rock",
-      "rock",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland"
-    ],
-    [
-      "highland",
-      "highland",
-      "highland",
-      "water",
-      "water",
-      "water",
-      "water",
-      "water",
-      "water",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "plain",
-      "plain",
-      "plain",
-      "rock",
-      "rock",
-      "rock",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "plain",
-      "plain"
-    ],
-    [
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "water",
-      "water",
-      "water",
-      "water",
-      "water",
-      "plain",
-      "water",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "plain",
-      "plain",
-      "plain",
-      "rock",
-      "rock",
-      "rock",
-      "highland",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain"
-    ],
-    [
-      "plain",
-      "plain",
-      "highland",
-      "highland",
-      "highland",
-      "water",
-      "water",
-      "water",
-      "water",
-      "plain",
-      "water",
-      "water",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain"
-    ],
-    [
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "water",
-      "water",
-      "water",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain"
-    ],
-    [
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "water",
-      "water",
-      "water",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "plain",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain"
-    ],
-    [
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "water",
-      "water",
-      "water",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain"
-    ],
-    [
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "water",
-      "water",
-      "water",
-      "water",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain"
-    ],
-    [
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "water",
-      "water",
-      "water",
-      "water",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "highland",
-      "highland",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain"
-    ],
-    [
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "water",
-      "water",
-      "water",
-      "water",
-      "water",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain"
-    ],
-    [
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "plain",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain"
-    ],
-    [
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland"
-    ],
-    [
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland"
-    ],
-    [
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland"
-    ],
-    [
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland"
-    ],
-    [
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland"
-    ],
-    [
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland"
-    ],
-    [
-      "desert",
-      "desert",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "highland",
-      "highland"
-    ],
-    [
-      "desert",
-      "desert",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "highland",
-      "highland"
-    ],
-    [
-      "desert",
-      "desert",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "highland",
-      "highland"
-    ],
-    [
-      "desert",
-      "desert",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "highland",
-      "highland"
-    ],
-    [
-      "desert",
-      "desert",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "highland",
-      "highland",
-      "highland",
-      "rock",
-      "rock",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "highland",
-      "highland"
-    ],
-    [
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "water",
-      "water",
-      "water",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "highland",
-      "rock",
-      "rock",
-      "rock",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland"
-    ],
-    [
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "water",
-      "water",
-      "water",
-      "water",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "rock",
-      "rock",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland",
-      "highland"
-    ],
-    [
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "water",
-      "water",
-      "water",
-      "water",
-      "water",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "highland",
-      "highland",
-      "plain",
-      "highland"
-    ],
-    [
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "desert",
-      "water",
-      "water",
-      "water",
-      "water",
-      "water",
-      "water",
-      "water",
-      "water",
-      "water",
-      "desert",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "forest",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain",
-      "plain"
     ]
-  ],
-  "deploymentExpansion": {
-    "version": 2,
-    "baseWidth": 37,
-    "baseHeight": 42,
-    "addedLeft": 10,
-    "addedRight": 10,
-    "addedTop": 13,
-    "addedBottom": 13
-  },
-  "deploymentAreas": [
-    {
-      "x": 0,
-      "y": 0,
-      "width": 10,
-      "height": 14
-    },
-    {
-      "x": 47,
-      "y": 0,
-      "width": 10,
-      "height": 14
-    },
-    {
-      "x": 0,
-      "y": 14,
-      "width": 10,
-      "height": 13
-    },
-    {
-      "x": 47,
-      "y": 14,
-      "width": 10,
-      "height": 13
-    },
-    {
-      "x": 0,
-      "y": 27,
-      "width": 10,
-      "height": 14
-    },
-    {
-      "x": 47,
-      "y": 27,
-      "width": 10,
-      "height": 14
-    },
-    {
-      "x": 0,
-      "y": 41,
-      "width": 10,
-      "height": 13
-    },
-    {
-      "x": 47,
-      "y": 41,
-      "width": 10,
-      "height": 13
-    },
-    {
-      "x": 0,
-      "y": 54,
-      "width": 10,
-      "height": 14
-    },
-    {
-      "x": 47,
-      "y": 54,
-      "width": 10,
-      "height": 14
-    }
   ],
   "scope": "strategic",
   "strategic": {
@@ -4175,8 +2387,8 @@
         "id": "base",
         "kind": "base",
         "name": "中心基地",
-        "x": 27,
-        "y": 36,
+        "x": 20,
+        "y": 27,
         "radius": 1,
         "deploymentRadius": 10
       },
@@ -4184,8 +2396,8 @@
         "id": "post_1",
         "kind": "outpost",
         "name": "据点1",
-        "x": 31,
-        "y": 14,
+        "x": 26,
+        "y": 9,
         "radius": 1,
         "deploymentRadius": 3
       },
@@ -4193,8 +2405,8 @@
         "id": "post_2",
         "kind": "outpost",
         "name": "据点2",
-        "x": 44,
-        "y": 23,
+        "x": 32,
+        "y": 16,
         "radius": 1,
         "deploymentRadius": 3
       },
@@ -4202,8 +2414,8 @@
         "id": "post_3",
         "kind": "outpost",
         "name": "据点3",
-        "x": 43,
-        "y": 43,
+        "x": 32,
+        "y": 32,
         "radius": 1,
         "deploymentRadius": 3
       },
@@ -4211,8 +2423,8 @@
         "id": "post_4",
         "kind": "outpost",
         "name": "据点4",
-        "x": 26,
-        "y": 54,
+        "x": 18,
+        "y": 40,
         "radius": 1,
         "deploymentRadius": 3
       },
@@ -4220,8 +2432,8 @@
         "id": "post_5",
         "kind": "outpost",
         "name": "据点5",
-        "x": 14,
-        "y": 45,
+        "x": 8,
+        "y": 35,
         "radius": 1,
         "deploymentRadius": 3
       },
@@ -4229,8 +2441,8 @@
         "id": "post_6",
         "kind": "outpost",
         "name": "据点6",
-        "x": 15,
-        "y": 26,
+        "x": 10,
+        "y": 21,
         "radius": 1,
         "deploymentRadius": 3
       }
@@ -4240,7 +2452,7 @@
         "id": "gate_odessa",
         "region": "odessa",
         "x": 1,
-        "y": 33,
+        "y": 26,
         "radius": 3,
         "deploymentRadius": 7,
         "side": "west"
@@ -4248,8 +2460,8 @@
       {
         "id": "gate_beijing",
         "region": "beijing",
-        "x": 55,
-        "y": 19,
+        "x": 41,
+        "y": 15,
         "radius": 3,
         "deploymentRadius": 7,
         "side": "east"
@@ -4257,8 +2469,8 @@
       {
         "id": "gate_china",
         "region": "china",
-        "x": 55,
-        "y": 33,
+        "x": 41,
+        "y": 26,
         "radius": 3,
         "deploymentRadius": 7,
         "side": "east"
@@ -4266,8 +2478,8 @@
       {
         "id": "gate_siberia",
         "region": "siberia",
-        "x": 55,
-        "y": 48,
+        "x": 41,
+        "y": 35,
         "radius": 3,
         "deploymentRadius": 7,
         "side": "east"
@@ -4275,7 +2487,7 @@
       {
         "id": "gate_russia_west",
         "region": "russia_west",
-        "x": 28,
+        "x": 22,
         "y": 1,
         "radius": 3,
         "deploymentRadius": 7,
@@ -4284,8 +2496,8 @@
       {
         "id": "gate_arabia",
         "region": "arabia",
-        "x": 20,
-        "y": 66,
+        "x": 15,
+        "y": 49,
         "radius": 3,
         "deploymentRadius": 7,
         "side": "south"
@@ -4293,8 +2505,8 @@
       {
         "id": "gate_india",
         "region": "india",
-        "x": 36,
-        "y": 66,
+        "x": 27,
+        "y": 49,
         "radius": 3,
         "deploymentRadius": 7,
         "side": "south"
@@ -4333,7 +2545,7 @@
       },
       {
         "id": "gate_odessa",
-        "a": "post_6",
+        "a": "post_5",
         "b": "gate_odessa"
       },
       {
@@ -4368,21 +2580,20 @@
       }
     ]
   },
-  "regionalScale": 0.75,
+  "regionalScale": 0.5625,
   "geography": {
-    "version": 1,
+    "version": 2,
     "regionId": "kazakhstan",
     "orientation": "north-up",
     "projection": "strategic-equirectangular",
     "worldBounds": [
-      751.191837,
-      50.630612,
-      899.508163,
-      227.569388
+      747.028571,
+      46.207143,
+      903.671429,
+      231.992857
     ],
-    "worldUnitsPerTile": 2.6020408163265305,
+    "worldUnitsPerTile": 3.642857142857143,
     "physicalFeatures": [
-      "CAUCASUS MTS.",
       "KAZAKH STEPPE",
       "Lake Balkhash",
       "Ob",
@@ -4391,1690 +2602,1529 @@
     ],
     "landingPlatforms": [],
     "terrainCounts": {
-      "water": 247,
-      "snow": 852,
-      "plain": 1722,
-      "highland": 322,
-      "rock": 23,
-      "forest": 584,
-      "desert": 126
+      "water": 160,
+      "snow": 493,
+      "plain": 925,
+      "highland": 171,
+      "forest": 316,
+      "rock": 28,
+      "desert": 100
     },
     "source": "world.json region path + Natural Earth 1:110m physical layers",
     "groundApproaches": [
       [
         [
-          27,
-          36
-        ],
-        [
-          27,
-          35
-        ],
-        [
-          27,
-          34
-        ],
-        [
-          27,
-          33
-        ],
-        [
-          27,
-          32
-        ],
-        [
-          27,
-          31
-        ],
-        [
-          27,
-          30
-        ],
-        [
-          27,
-          29
-        ],
-        [
-          27,
-          28
-        ],
-        [
-          27,
+          20,
           27
         ],
         [
-          27,
+          20,
           26
         ],
         [
-          27,
+          20,
           25
         ],
         [
-          27,
+          20,
           24
         ],
         [
-          27,
+          20,
           23
         ],
         [
-          27,
+          20,
           22
         ],
         [
-          27,
+          20,
           21
         ],
         [
-          27,
+          20,
           20
         ],
         [
-          27,
+          20,
           19
         ],
         [
-          27,
+          20,
           18
         ],
         [
-          27,
+          20,
           17
         ],
         [
-          27,
+          20,
           16
         ],
         [
-          27,
-          15
-        ],
-        [
-          28,
-          15
-        ],
-        [
-          28,
-          14
-        ],
-        [
-          29,
-          14
-        ],
-        [
-          30,
-          14
-        ],
-        [
-          31,
-          14
-        ]
-      ],
-      [
-        [
-          27,
-          36
-        ],
-        [
-          27,
-          35
-        ],
-        [
-          27,
-          34
-        ],
-        [
-          27,
-          33
-        ],
-        [
-          27,
-          32
-        ],
-        [
-          27,
-          31
-        ],
-        [
-          27,
-          30
-        ],
-        [
-          27,
-          29
-        ],
-        [
-          27,
-          28
-        ],
-        [
-          28,
-          28
-        ],
-        [
-          29,
-          28
-        ],
-        [
-          30,
-          28
-        ],
-        [
-          31,
-          28
-        ],
-        [
-          32,
-          28
-        ],
-        [
-          33,
-          28
-        ],
-        [
-          34,
-          28
-        ],
-        [
-          35,
-          28
-        ],
-        [
-          36,
-          28
-        ],
-        [
-          37,
-          28
-        ],
-        [
-          38,
-          28
-        ],
-        [
-          39,
-          28
-        ],
-        [
-          39,
-          27
-        ],
-        [
-          39,
-          26
-        ],
-        [
-          39,
-          25
-        ],
-        [
-          39,
-          24
-        ],
-        [
-          39,
-          23
-        ],
-        [
-          40,
-          23
-        ],
-        [
-          41,
-          23
-        ],
-        [
-          42,
-          23
-        ],
-        [
-          43,
-          23
-        ],
-        [
-          44,
-          23
-        ]
-      ],
-      [
-        [
-          27,
-          36
-        ],
-        [
-          27,
-          37
-        ],
-        [
-          27,
-          38
-        ],
-        [
-          27,
-          39
-        ],
-        [
-          27,
-          40
-        ],
-        [
-          27,
-          41
-        ],
-        [
-          27,
-          42
-        ],
-        [
-          27,
-          43
-        ],
-        [
-          28,
-          43
-        ],
-        [
-          29,
-          43
-        ],
-        [
-          30,
-          43
-        ],
-        [
-          31,
-          43
-        ],
-        [
-          32,
-          43
-        ],
-        [
-          33,
-          43
-        ],
-        [
-          34,
-          43
-        ],
-        [
-          35,
-          43
-        ],
-        [
-          36,
-          43
-        ],
-        [
-          37,
-          43
-        ],
-        [
-          38,
-          43
-        ],
-        [
-          39,
-          43
-        ],
-        [
-          40,
-          43
-        ],
-        [
-          41,
-          43
-        ],
-        [
-          42,
-          43
-        ],
-        [
-          43,
-          43
-        ]
-      ],
-      [
-        [
-          27,
-          36
-        ],
-        [
-          26,
-          36
-        ],
-        [
-          26,
-          37
-        ],
-        [
-          26,
-          38
-        ],
-        [
-          26,
-          39
-        ],
-        [
-          26,
-          40
-        ],
-        [
-          26,
-          41
-        ],
-        [
-          26,
-          42
-        ],
-        [
-          26,
-          43
-        ],
-        [
-          26,
-          44
-        ],
-        [
-          26,
-          45
-        ],
-        [
-          26,
-          46
-        ],
-        [
-          26,
-          47
-        ],
-        [
-          26,
-          48
-        ],
-        [
-          26,
-          49
-        ],
-        [
-          26,
-          50
-        ],
-        [
-          26,
-          51
-        ],
-        [
-          26,
-          52
-        ],
-        [
-          26,
-          53
-        ],
-        [
-          26,
-          54
-        ]
-      ],
-      [
-        [
-          27,
-          36
-        ],
-        [
-          26,
-          36
-        ],
-        [
-          25,
-          36
-        ],
-        [
-          24,
-          36
-        ],
-        [
-          23,
-          36
-        ],
-        [
-          22,
-          36
-        ],
-        [
           21,
-          36
-        ],
-        [
-          20,
-          36
-        ],
-        [
-          19,
-          36
-        ],
-        [
-          18,
-          36
-        ],
-        [
-          17,
-          36
-        ],
-        [
-          16,
-          36
-        ],
-        [
-          15,
-          36
-        ],
-        [
-          14,
-          36
-        ],
-        [
-          14,
-          37
-        ],
-        [
-          14,
-          38
-        ],
-        [
-          14,
-          39
-        ],
-        [
-          14,
-          40
-        ],
-        [
-          14,
-          41
-        ],
-        [
-          14,
-          42
-        ],
-        [
-          14,
-          43
-        ],
-        [
-          14,
-          44
-        ],
-        [
-          14,
-          45
-        ]
-      ],
-      [
-        [
-          27,
-          36
-        ],
-        [
-          26,
-          36
-        ],
-        [
-          25,
-          36
-        ],
-        [
-          24,
-          36
-        ],
-        [
-          23,
-          36
-        ],
-        [
-          22,
-          36
-        ],
-        [
-          21,
-          36
-        ],
-        [
-          20,
-          36
-        ],
-        [
-          19,
-          36
-        ],
-        [
-          18,
-          36
-        ],
-        [
-          17,
-          36
-        ],
-        [
-          16,
-          36
-        ],
-        [
-          15,
-          36
-        ],
-        [
-          15,
-          35
-        ],
-        [
-          15,
-          34
-        ],
-        [
-          15,
-          33
-        ],
-        [
-          15,
-          32
-        ],
-        [
-          15,
-          31
-        ],
-        [
-          15,
-          30
-        ],
-        [
-          15,
-          29
-        ],
-        [
-          15,
-          28
-        ],
-        [
-          15,
-          27
-        ],
-        [
-          15,
-          26
-        ]
-      ],
-      [
-        [
-          27,
-          36
-        ],
-        [
-          26,
-          36
-        ],
-        [
-          25,
-          36
-        ],
-        [
-          24,
-          36
-        ],
-        [
-          23,
-          36
-        ],
-        [
-          22,
-          36
-        ],
-        [
-          21,
-          36
-        ],
-        [
-          20,
-          36
-        ],
-        [
-          19,
-          36
-        ],
-        [
-          18,
-          36
-        ],
-        [
-          17,
-          36
-        ],
-        [
-          16,
-          36
-        ],
-        [
-          15,
-          36
-        ],
-        [
-          14,
-          36
-        ],
-        [
-          13,
-          36
-        ],
-        [
-          12,
-          36
-        ],
-        [
-          11,
-          36
-        ],
-        [
-          10,
-          36
-        ],
-        [
-          9,
-          36
-        ],
-        [
-          8,
-          36
-        ],
-        [
-          7,
-          36
-        ],
-        [
-          6,
-          36
-        ],
-        [
-          5,
-          36
-        ],
-        [
-          4,
-          36
-        ],
-        [
-          3,
-          36
-        ],
-        [
-          2,
-          36
-        ],
-        [
-          1,
-          36
-        ],
-        [
-          1,
-          35
-        ],
-        [
-          1,
-          34
-        ],
-        [
-          1,
-          33
-        ]
-      ],
-      [
-        [
-          27,
-          36
-        ],
-        [
-          27,
-          35
-        ],
-        [
-          27,
-          34
-        ],
-        [
-          27,
-          33
-        ],
-        [
-          27,
-          32
-        ],
-        [
-          27,
-          31
-        ],
-        [
-          27,
-          30
-        ],
-        [
-          27,
-          29
-        ],
-        [
-          27,
-          28
-        ],
-        [
-          27,
-          27
-        ],
-        [
-          27,
-          26
-        ],
-        [
-          27,
-          25
-        ],
-        [
-          27,
-          24
-        ],
-        [
-          27,
-          23
-        ],
-        [
-          27,
-          22
-        ],
-        [
-          27,
-          21
-        ],
-        [
-          28,
-          21
-        ],
-        [
-          29,
-          21
-        ],
-        [
-          30,
-          21
-        ],
-        [
-          31,
-          21
-        ],
-        [
-          32,
-          21
-        ],
-        [
-          32,
-          20
-        ],
-        [
-          32,
-          19
-        ],
-        [
-          33,
-          19
-        ],
-        [
-          34,
-          19
-        ],
-        [
-          35,
-          19
-        ],
-        [
-          36,
-          19
-        ],
-        [
-          37,
-          19
-        ],
-        [
-          38,
-          19
-        ],
-        [
-          39,
-          19
-        ],
-        [
-          40,
-          19
-        ],
-        [
-          41,
-          19
-        ],
-        [
-          42,
-          19
-        ],
-        [
-          43,
-          19
-        ],
-        [
-          44,
-          19
-        ],
-        [
-          45,
-          19
-        ],
-        [
-          46,
-          19
-        ],
-        [
-          47,
-          19
-        ],
-        [
-          48,
-          19
-        ],
-        [
-          49,
-          19
-        ],
-        [
-          50,
-          19
-        ],
-        [
-          51,
-          19
-        ],
-        [
-          52,
-          19
-        ],
-        [
-          53,
-          19
-        ],
-        [
-          54,
-          19
-        ],
-        [
-          55,
-          19
-        ]
-      ],
-      [
-        [
-          27,
-          36
-        ],
-        [
-          27,
-          35
-        ],
-        [
-          27,
-          34
-        ],
-        [
-          28,
-          34
-        ],
-        [
-          29,
-          34
-        ],
-        [
-          30,
-          34
-        ],
-        [
-          31,
-          34
-        ],
-        [
-          32,
-          34
-        ],
-        [
-          33,
-          34
-        ],
-        [
-          34,
-          34
-        ],
-        [
-          35,
-          34
-        ],
-        [
-          36,
-          34
-        ],
-        [
-          37,
-          34
-        ],
-        [
-          38,
-          34
-        ],
-        [
-          39,
-          34
-        ],
-        [
-          40,
-          34
-        ],
-        [
-          41,
-          34
-        ],
-        [
-          42,
-          34
-        ],
-        [
-          43,
-          34
-        ],
-        [
-          44,
-          34
-        ],
-        [
-          45,
-          34
-        ],
-        [
-          46,
-          34
-        ],
-        [
-          47,
-          34
-        ],
-        [
-          48,
-          34
-        ],
-        [
-          49,
-          34
-        ],
-        [
-          50,
-          34
-        ],
-        [
-          50,
-          33
-        ],
-        [
-          51,
-          33
-        ],
-        [
-          52,
-          33
-        ],
-        [
-          53,
-          33
-        ],
-        [
-          54,
-          33
-        ],
-        [
-          55,
-          33
-        ]
-      ],
-      [
-        [
-          27,
-          36
-        ],
-        [
-          27,
-          37
-        ],
-        [
-          27,
-          38
-        ],
-        [
-          27,
-          39
-        ],
-        [
-          27,
-          40
-        ],
-        [
-          27,
-          41
-        ],
-        [
-          27,
-          42
-        ],
-        [
-          27,
-          43
-        ],
-        [
-          27,
-          44
-        ],
-        [
-          27,
-          45
-        ],
-        [
-          27,
-          46
-        ],
-        [
-          27,
-          47
-        ],
-        [
-          27,
-          48
-        ],
-        [
-          28,
-          48
-        ],
-        [
-          29,
-          48
-        ],
-        [
-          30,
-          48
-        ],
-        [
-          31,
-          48
-        ],
-        [
-          32,
-          48
-        ],
-        [
-          33,
-          48
-        ],
-        [
-          34,
-          48
-        ],
-        [
-          35,
-          48
-        ],
-        [
-          36,
-          48
-        ],
-        [
-          37,
-          48
-        ],
-        [
-          38,
-          48
-        ],
-        [
-          39,
-          48
-        ],
-        [
-          40,
-          48
-        ],
-        [
-          41,
-          48
-        ],
-        [
-          42,
-          48
-        ],
-        [
-          43,
-          48
-        ],
-        [
-          44,
-          48
-        ],
-        [
-          45,
-          48
-        ],
-        [
-          46,
-          48
-        ],
-        [
-          47,
-          48
-        ],
-        [
-          48,
-          48
-        ],
-        [
-          49,
-          48
-        ],
-        [
-          50,
-          48
-        ],
-        [
-          51,
-          48
-        ],
-        [
-          52,
-          48
-        ],
-        [
-          53,
-          48
-        ],
-        [
-          54,
-          48
-        ],
-        [
-          55,
-          48
-        ]
-      ],
-      [
-        [
-          27,
-          36
-        ],
-        [
-          27,
-          35
-        ],
-        [
-          27,
-          34
-        ],
-        [
-          27,
-          33
-        ],
-        [
-          27,
-          32
-        ],
-        [
-          27,
-          31
-        ],
-        [
-          27,
-          30
-        ],
-        [
-          27,
-          29
-        ],
-        [
-          27,
-          28
-        ],
-        [
-          27,
-          27
-        ],
-        [
-          27,
-          26
-        ],
-        [
-          27,
-          25
-        ],
-        [
-          27,
-          24
-        ],
-        [
-          27,
-          23
-        ],
-        [
-          27,
-          22
-        ],
-        [
-          27,
-          21
-        ],
-        [
-          27,
-          20
-        ],
-        [
-          27,
-          19
-        ],
-        [
-          27,
-          18
-        ],
-        [
-          27,
-          17
-        ],
-        [
-          27,
           16
         ],
         [
-          27,
+          22,
+          16
+        ],
+        [
+          23,
+          16
+        ],
+        [
+          23,
           15
         ],
         [
-          27,
+          23,
           14
         ],
         [
-          27,
+          24,
+          14
+        ],
+        [
+          24,
           13
         ],
         [
-          27,
+          24,
           12
         ],
         [
-          27,
+          24,
           11
         ],
         [
-          27,
+          24,
           10
         ],
         [
-          27,
+          24,
           9
         ],
         [
-          27,
-          8
-        ],
-        [
-          27,
-          7
-        ],
-        [
-          27,
-          6
-        ],
-        [
-          27,
-          5
-        ],
-        [
-          27,
-          4
-        ],
-        [
-          27,
-          3
-        ],
-        [
-          27,
-          2
-        ],
-        [
-          27,
-          1
-        ],
-        [
-          28,
-          1
-        ]
-      ],
-      [
-        [
-          27,
-          36
+          25,
+          9
         ],
         [
           26,
-          36
-        ],
-        [
-          25,
-          36
-        ],
-        [
-          24,
-          36
-        ],
-        [
-          23,
-          36
-        ],
-        [
-          22,
-          36
-        ],
-        [
-          21,
-          36
-        ],
-        [
-          20,
-          36
-        ],
-        [
-          20,
-          37
-        ],
-        [
-          20,
-          38
-        ],
-        [
-          20,
-          39
-        ],
-        [
-          20,
-          40
-        ],
-        [
-          20,
-          41
-        ],
-        [
-          20,
-          42
-        ],
-        [
-          20,
-          43
-        ],
-        [
-          20,
-          44
-        ],
-        [
-          20,
-          45
-        ],
-        [
-          20,
-          46
-        ],
-        [
-          20,
-          47
-        ],
-        [
-          20,
-          48
-        ],
-        [
-          20,
-          49
-        ],
-        [
-          20,
-          50
-        ],
-        [
-          20,
-          51
-        ],
-        [
-          20,
-          52
-        ],
-        [
-          20,
-          53
-        ],
-        [
-          20,
-          54
-        ],
-        [
-          20,
-          55
-        ],
-        [
-          20,
-          56
-        ],
-        [
-          20,
-          57
-        ],
-        [
-          20,
-          58
-        ],
-        [
-          20,
-          59
-        ],
-        [
-          20,
-          60
-        ],
-        [
-          20,
-          61
-        ],
-        [
-          20,
-          62
-        ],
-        [
-          20,
-          63
-        ],
-        [
-          20,
-          64
-        ],
-        [
-          20,
-          65
-        ],
-        [
-          20,
-          66
+          9
         ]
       ],
       [
         [
+          20,
+          27
+        ],
+        [
+          20,
+          26
+        ],
+        [
+          20,
+          25
+        ],
+        [
+          20,
+          24
+        ],
+        [
+          20,
+          23
+        ],
+        [
+          20,
+          22
+        ],
+        [
+          20,
+          21
+        ],
+        [
+          20,
+          20
+        ],
+        [
+          20,
+          19
+        ],
+        [
+          20,
+          18
+        ],
+        [
+          20,
+          17
+        ],
+        [
+          21,
+          17
+        ],
+        [
+          22,
+          17
+        ],
+        [
+          23,
+          17
+        ],
+        [
+          24,
+          17
+        ],
+        [
+          25,
+          17
+        ],
+        [
+          26,
+          17
+        ],
+        [
           27,
+          17
+        ],
+        [
+          27,
+          16
+        ],
+        [
+          28,
+          16
+        ],
+        [
+          29,
+          16
+        ],
+        [
+          30,
+          16
+        ],
+        [
+          31,
+          16
+        ],
+        [
+          32,
+          16
+        ]
+      ],
+      [
+        [
+          20,
+          27
+        ],
+        [
+          20,
+          28
+        ],
+        [
+          20,
+          29
+        ],
+        [
+          20,
+          30
+        ],
+        [
+          20,
+          31
+        ],
+        [
+          20,
+          32
+        ],
+        [
+          21,
+          32
+        ],
+        [
+          22,
+          32
+        ],
+        [
+          23,
+          32
+        ],
+        [
+          24,
+          32
+        ],
+        [
+          25,
+          32
+        ],
+        [
+          26,
+          32
+        ],
+        [
+          27,
+          32
+        ],
+        [
+          28,
+          32
+        ],
+        [
+          29,
+          32
+        ],
+        [
+          30,
+          32
+        ],
+        [
+          31,
+          32
+        ],
+        [
+          32,
+          32
+        ]
+      ],
+      [
+        [
+          20,
+          27
+        ],
+        [
+          19,
+          27
+        ],
+        [
+          18,
+          27
+        ],
+        [
+          18,
+          28
+        ],
+        [
+          18,
+          29
+        ],
+        [
+          18,
+          30
+        ],
+        [
+          18,
+          31
+        ],
+        [
+          18,
+          32
+        ],
+        [
+          18,
+          33
+        ],
+        [
+          18,
+          34
+        ],
+        [
+          18,
+          35
+        ],
+        [
+          18,
           36
         ],
         [
-          27,
+          18,
           37
         ],
         [
-          27,
+          18,
           38
         ],
         [
-          27,
+          18,
           39
         ],
         [
+          18,
+          40
+        ]
+      ],
+      [
+        [
+          20,
+          27
+        ],
+        [
+          19,
+          27
+        ],
+        [
+          18,
+          27
+        ],
+        [
+          17,
+          27
+        ],
+        [
+          16,
+          27
+        ],
+        [
+          15,
+          27
+        ],
+        [
+          14,
+          27
+        ],
+        [
+          13,
+          27
+        ],
+        [
+          12,
+          27
+        ],
+        [
+          11,
+          27
+        ],
+        [
+          10,
+          27
+        ],
+        [
+          9,
+          27
+        ],
+        [
+          9,
+          28
+        ],
+        [
+          9,
+          29
+        ],
+        [
+          9,
+          30
+        ],
+        [
+          9,
+          31
+        ],
+        [
+          9,
+          32
+        ],
+        [
+          9,
+          33
+        ],
+        [
+          9,
+          34
+        ],
+        [
+          8,
+          34
+        ],
+        [
+          8,
+          35
+        ]
+      ],
+      [
+        [
+          20,
+          27
+        ],
+        [
+          19,
+          27
+        ],
+        [
+          18,
+          27
+        ],
+        [
+          17,
+          27
+        ],
+        [
+          16,
+          27
+        ],
+        [
+          15,
+          27
+        ],
+        [
+          14,
+          27
+        ],
+        [
+          13,
+          27
+        ],
+        [
+          12,
+          27
+        ],
+        [
+          11,
+          27
+        ],
+        [
+          10,
+          27
+        ],
+        [
+          10,
+          26
+        ],
+        [
+          10,
+          25
+        ],
+        [
+          10,
+          24
+        ],
+        [
+          10,
+          23
+        ],
+        [
+          10,
+          22
+        ],
+        [
+          10,
+          21
+        ]
+      ],
+      [
+        [
+          20,
+          27
+        ],
+        [
+          19,
+          27
+        ],
+        [
+          18,
+          27
+        ],
+        [
+          17,
+          27
+        ],
+        [
+          16,
+          27
+        ],
+        [
+          15,
+          27
+        ],
+        [
+          14,
+          27
+        ],
+        [
+          13,
+          27
+        ],
+        [
+          12,
+          27
+        ],
+        [
+          11,
+          27
+        ],
+        [
+          10,
+          27
+        ],
+        [
+          9,
+          27
+        ],
+        [
+          8,
+          27
+        ],
+        [
+          7,
+          27
+        ],
+        [
+          6,
+          27
+        ],
+        [
+          5,
+          27
+        ],
+        [
+          4,
+          27
+        ],
+        [
+          3,
+          27
+        ],
+        [
+          2,
+          27
+        ],
+        [
+          1,
+          27
+        ],
+        [
+          1,
+          26
+        ]
+      ],
+      [
+        [
+          20,
+          27
+        ],
+        [
+          20,
+          26
+        ],
+        [
+          20,
+          25
+        ],
+        [
+          20,
+          24
+        ],
+        [
+          20,
+          23
+        ],
+        [
+          20,
+          22
+        ],
+        [
+          20,
+          21
+        ],
+        [
+          20,
+          20
+        ],
+        [
+          20,
+          19
+        ],
+        [
+          20,
+          18
+        ],
+        [
+          20,
+          17
+        ],
+        [
+          20,
+          16
+        ],
+        [
+          20,
+          15
+        ],
+        [
+          21,
+          15
+        ],
+        [
+          22,
+          15
+        ],
+        [
+          23,
+          15
+        ],
+        [
+          24,
+          15
+        ],
+        [
+          25,
+          15
+        ],
+        [
+          26,
+          15
+        ],
+        [
           27,
+          15
+        ],
+        [
+          28,
+          15
+        ],
+        [
+          29,
+          15
+        ],
+        [
+          30,
+          15
+        ],
+        [
+          31,
+          15
+        ],
+        [
+          32,
+          15
+        ],
+        [
+          33,
+          15
+        ],
+        [
+          34,
+          15
+        ],
+        [
+          35,
+          15
+        ],
+        [
+          36,
+          15
+        ],
+        [
+          37,
+          15
+        ],
+        [
+          38,
+          15
+        ],
+        [
+          39,
+          15
+        ],
+        [
+          40,
+          15
+        ],
+        [
+          41,
+          15
+        ]
+      ],
+      [
+        [
+          20,
+          27
+        ],
+        [
+          21,
+          27
+        ],
+        [
+          22,
+          27
+        ],
+        [
+          23,
+          27
+        ],
+        [
+          24,
+          27
+        ],
+        [
+          25,
+          27
+        ],
+        [
+          26,
+          27
+        ],
+        [
+          27,
+          27
+        ],
+        [
+          28,
+          27
+        ],
+        [
+          29,
+          27
+        ],
+        [
+          30,
+          27
+        ],
+        [
+          31,
+          27
+        ],
+        [
+          32,
+          27
+        ],
+        [
+          33,
+          27
+        ],
+        [
+          34,
+          27
+        ],
+        [
+          35,
+          27
+        ],
+        [
+          36,
+          27
+        ],
+        [
+          37,
+          27
+        ],
+        [
+          38,
+          27
+        ],
+        [
+          38,
+          26
+        ],
+        [
+          39,
+          26
+        ],
+        [
+          40,
+          26
+        ],
+        [
+          41,
+          26
+        ]
+      ],
+      [
+        [
+          20,
+          27
+        ],
+        [
+          20,
+          28
+        ],
+        [
+          20,
+          29
+        ],
+        [
+          20,
+          30
+        ],
+        [
+          20,
+          31
+        ],
+        [
+          20,
+          32
+        ],
+        [
+          20,
+          33
+        ],
+        [
+          20,
+          34
+        ],
+        [
+          20,
+          35
+        ],
+        [
+          21,
+          35
+        ],
+        [
+          22,
+          35
+        ],
+        [
+          23,
+          35
+        ],
+        [
+          24,
+          35
+        ],
+        [
+          25,
+          35
+        ],
+        [
+          26,
+          35
+        ],
+        [
+          27,
+          35
+        ],
+        [
+          28,
+          35
+        ],
+        [
+          29,
+          35
+        ],
+        [
+          30,
+          35
+        ],
+        [
+          31,
+          35
+        ],
+        [
+          32,
+          35
+        ],
+        [
+          33,
+          35
+        ],
+        [
+          34,
+          35
+        ],
+        [
+          35,
+          35
+        ],
+        [
+          36,
+          35
+        ],
+        [
+          37,
+          35
+        ],
+        [
+          38,
+          35
+        ],
+        [
+          39,
+          35
+        ],
+        [
+          40,
+          35
+        ],
+        [
+          41,
+          35
+        ]
+      ],
+      [
+        [
+          20,
+          27
+        ],
+        [
+          19,
+          27
+        ],
+        [
+          18,
+          27
+        ],
+        [
+          18,
+          26
+        ],
+        [
+          18,
+          25
+        ],
+        [
+          18,
+          24
+        ],
+        [
+          18,
+          23
+        ],
+        [
+          18,
+          22
+        ],
+        [
+          18,
+          21
+        ],
+        [
+          18,
+          20
+        ],
+        [
+          18,
+          19
+        ],
+        [
+          18,
+          18
+        ],
+        [
+          18,
+          17
+        ],
+        [
+          18,
+          16
+        ],
+        [
+          18,
+          15
+        ],
+        [
+          18,
+          14
+        ],
+        [
+          18,
+          13
+        ],
+        [
+          18,
+          12
+        ],
+        [
+          18,
+          11
+        ],
+        [
+          18,
+          10
+        ],
+        [
+          18,
+          9
+        ],
+        [
+          18,
+          8
+        ],
+        [
+          18,
+          7
+        ],
+        [
+          18,
+          6
+        ],
+        [
+          18,
+          5
+        ],
+        [
+          18,
+          4
+        ],
+        [
+          19,
+          4
+        ],
+        [
+          19,
+          3
+        ],
+        [
+          19,
+          2
+        ],
+        [
+          19,
+          1
+        ],
+        [
+          20,
+          1
+        ],
+        [
+          21,
+          1
+        ],
+        [
+          22,
+          1
+        ]
+      ],
+      [
+        [
+          20,
+          27
+        ],
+        [
+          19,
+          27
+        ],
+        [
+          18,
+          27
+        ],
+        [
+          17,
+          27
+        ],
+        [
+          16,
+          27
+        ],
+        [
+          15,
+          27
+        ],
+        [
+          15,
+          28
+        ],
+        [
+          15,
+          29
+        ],
+        [
+          15,
+          30
+        ],
+        [
+          15,
+          31
+        ],
+        [
+          15,
+          32
+        ],
+        [
+          15,
+          33
+        ],
+        [
+          15,
+          34
+        ],
+        [
+          15,
+          35
+        ],
+        [
+          15,
+          36
+        ],
+        [
+          15,
+          37
+        ],
+        [
+          15,
+          38
+        ],
+        [
+          15,
+          39
+        ],
+        [
+          15,
           40
         ],
         [
-          27,
+          15,
           41
         ],
         [
-          27,
+          15,
           42
         ],
         [
-          27,
+          15,
           43
         ],
         [
-          27,
+          15,
           44
         ],
         [
-          27,
+          15,
           45
         ],
         [
-          27,
+          15,
           46
         ],
         [
-          27,
+          15,
           47
         ],
         [
-          27,
+          15,
           48
         ],
         [
-          27,
+          15,
+          49
+        ]
+      ],
+      [
+        [
+          20,
+          27
+        ],
+        [
+          20,
+          28
+        ],
+        [
+          20,
+          29
+        ],
+        [
+          20,
+          30
+        ],
+        [
+          20,
+          31
+        ],
+        [
+          20,
+          32
+        ],
+        [
+          20,
+          33
+        ],
+        [
+          20,
+          34
+        ],
+        [
+          20,
+          35
+        ],
+        [
+          20,
+          36
+        ],
+        [
+          20,
+          37
+        ],
+        [
+          20,
+          38
+        ],
+        [
+          20,
+          39
+        ],
+        [
+          20,
+          40
+        ],
+        [
+          20,
+          41
+        ],
+        [
+          20,
+          42
+        ],
+        [
+          20,
+          43
+        ],
+        [
+          20,
+          44
+        ],
+        [
+          20,
+          45
+        ],
+        [
+          20,
+          46
+        ],
+        [
+          20,
+          47
+        ],
+        [
+          20,
+          48
+        ],
+        [
+          20,
+          49
+        ],
+        [
+          21,
+          49
+        ],
+        [
+          22,
+          49
+        ],
+        [
+          23,
+          49
+        ],
+        [
+          24,
+          49
+        ],
+        [
+          25,
+          49
+        ],
+        [
+          26,
           49
         ],
         [
           27,
-          50
-        ],
-        [
-          27,
-          51
-        ],
-        [
-          27,
-          52
-        ],
-        [
-          27,
-          53
-        ],
-        [
-          27,
-          54
-        ],
-        [
-          27,
-          55
-        ],
-        [
-          27,
-          56
-        ],
-        [
-          27,
-          57
-        ],
-        [
-          27,
-          58
-        ],
-        [
-          27,
-          59
-        ],
-        [
-          27,
-          60
-        ],
-        [
-          27,
-          61
-        ],
-        [
-          27,
-          62
-        ],
-        [
-          27,
-          63
-        ],
-        [
-          27,
-          64
-        ],
-        [
-          27,
-          65
-        ],
-        [
-          27,
-          66
-        ],
-        [
-          28,
-          66
-        ],
-        [
-          29,
-          66
-        ],
-        [
-          30,
-          66
-        ],
-        [
-          31,
-          66
-        ],
-        [
-          32,
-          66
-        ],
-        [
-          33,
-          66
-        ],
-        [
-          34,
-          66
-        ],
-        [
-          35,
-          66
-        ],
-        [
-          36,
-          66
+          49
         ]
       ]
     ]
-  }
+  },
+  "regionalScaleVersion": 2,
+  "legacyStrategicLayouts": [
+    {
+      "width": 57,
+      "height": 68,
+      "layout": {
+        "regionId": "kazakhstan",
+        "nodes": [
+          {
+            "id": "base",
+            "kind": "base",
+            "name": "中心基地",
+            "x": 27,
+            "y": 36,
+            "radius": 1,
+            "deploymentRadius": 10
+          },
+          {
+            "id": "post_1",
+            "kind": "outpost",
+            "name": "据点1",
+            "x": 31,
+            "y": 14,
+            "radius": 1,
+            "deploymentRadius": 3
+          },
+          {
+            "id": "post_2",
+            "kind": "outpost",
+            "name": "据点2",
+            "x": 44,
+            "y": 23,
+            "radius": 1,
+            "deploymentRadius": 3
+          },
+          {
+            "id": "post_3",
+            "kind": "outpost",
+            "name": "据点3",
+            "x": 43,
+            "y": 43,
+            "radius": 1,
+            "deploymentRadius": 3
+          },
+          {
+            "id": "post_4",
+            "kind": "outpost",
+            "name": "据点4",
+            "x": 26,
+            "y": 54,
+            "radius": 1,
+            "deploymentRadius": 3
+          },
+          {
+            "id": "post_5",
+            "kind": "outpost",
+            "name": "据点5",
+            "x": 14,
+            "y": 45,
+            "radius": 1,
+            "deploymentRadius": 3
+          },
+          {
+            "id": "post_6",
+            "kind": "outpost",
+            "name": "据点6",
+            "x": 15,
+            "y": 26,
+            "radius": 1,
+            "deploymentRadius": 3
+          }
+        ],
+        "gates": [
+          {
+            "id": "gate_odessa",
+            "region": "odessa",
+            "x": 1,
+            "y": 33,
+            "radius": 3,
+            "deploymentRadius": 7,
+            "side": "west"
+          },
+          {
+            "id": "gate_beijing",
+            "region": "beijing",
+            "x": 55,
+            "y": 19,
+            "radius": 3,
+            "deploymentRadius": 7,
+            "side": "east"
+          },
+          {
+            "id": "gate_china",
+            "region": "china",
+            "x": 55,
+            "y": 33,
+            "radius": 3,
+            "deploymentRadius": 7,
+            "side": "east"
+          },
+          {
+            "id": "gate_siberia",
+            "region": "siberia",
+            "x": 55,
+            "y": 48,
+            "radius": 3,
+            "deploymentRadius": 7,
+            "side": "east"
+          },
+          {
+            "id": "gate_russia_west",
+            "region": "russia_west",
+            "x": 28,
+            "y": 1,
+            "radius": 3,
+            "deploymentRadius": 7,
+            "side": "north"
+          },
+          {
+            "id": "gate_arabia",
+            "region": "arabia",
+            "x": 20,
+            "y": 66,
+            "radius": 3,
+            "deploymentRadius": 7,
+            "side": "south"
+          },
+          {
+            "id": "gate_india",
+            "region": "india",
+            "x": 36,
+            "y": 66,
+            "radius": 3,
+            "deploymentRadius": 7,
+            "side": "south"
+          }
+        ],
+        "links": [
+          {
+            "id": "base_post_1",
+            "a": "base",
+            "b": "post_1"
+          },
+          {
+            "id": "base_post_2",
+            "a": "base",
+            "b": "post_2"
+          },
+          {
+            "id": "base_post_3",
+            "a": "base",
+            "b": "post_3"
+          },
+          {
+            "id": "base_post_4",
+            "a": "base",
+            "b": "post_4"
+          },
+          {
+            "id": "base_post_5",
+            "a": "base",
+            "b": "post_5"
+          },
+          {
+            "id": "base_post_6",
+            "a": "base",
+            "b": "post_6"
+          },
+          {
+            "id": "gate_odessa",
+            "a": "post_6",
+            "b": "gate_odessa"
+          },
+          {
+            "id": "gate_beijing",
+            "a": "post_2",
+            "b": "gate_beijing"
+          },
+          {
+            "id": "gate_china",
+            "a": "post_2",
+            "b": "gate_china"
+          },
+          {
+            "id": "gate_siberia",
+            "a": "post_3",
+            "b": "gate_siberia"
+          },
+          {
+            "id": "gate_russia_west",
+            "a": "post_1",
+            "b": "gate_russia_west"
+          },
+          {
+            "id": "gate_arabia",
+            "a": "post_4",
+            "b": "gate_arabia"
+          },
+          {
+            "id": "gate_india",
+            "a": "post_4",
+            "b": "gate_india"
+          }
+        ]
+      }
+    }
+  ]
 }

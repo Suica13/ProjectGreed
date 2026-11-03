@@ -1071,7 +1071,7 @@
     {
       "id": "beam_rifle",
       "name": "陆战型光束步枪套件",
-      "cost": 100,
+      "cost": 75,
       "weapons": [
         "EF_GroundTypeBeamRifle",
         "EF_BeamSaber_A",
@@ -1092,7 +1092,7 @@
     {
       "id": "cannon",
       "name": "180mm加农炮套件",
-      "cost": 100,
+      "cost": 75,
       "weapons": [
         "EF_180mmCannon",
         "EF_BeamSaber_A",

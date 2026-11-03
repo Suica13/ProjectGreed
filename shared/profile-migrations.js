@@ -42,6 +42,10 @@ const ProfileMigrations = (() => {
       if (unit.inventoryModel !== undefined) unit.deploymentModel ??= unit.inventoryModel;
       delete unit.inventoryUnitId;
       delete unit.inventoryModel;
+      // Retired action-point balances are not part of current battle state.
+      delete unit.actionPoints;
+      delete unit.counterActionPoints;
+      delete unit.apPenaltyNextTurn;
     }
     return game;
   }

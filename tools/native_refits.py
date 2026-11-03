@@ -68,5 +68,5 @@ if __name__ == '__main__':
         for option in p['refits']:
             reason = '专属驾驶员／未支持原条件' if option['blocked'] else '目标未移植' if not (ASSETS / 'units' / option['unitId'] / 'unit.json').exists() else '、'.join(option['unlockUnits']) or '无额外开发条件'
             report.append(f"| {p['id']} | {option['unitId']} | {option['money']} | {option['supplies']} | {reason} |")
-    Path('单位改装路线.md').write_text('\n'.join(report) + '\n', encoding='utf-8')
+    Path('docs/imports/refit-source-routes.md').write_text('\n'.join(report) + '\n', encoding='utf-8')
     print('Native refit routes:', total)

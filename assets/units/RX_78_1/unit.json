@@ -1598,7 +1598,7 @@
     {
       "id": "beam_rifle",
       "name": "试作型光束步枪套件",
-      "cost": 100,
+      "cost": 75,
       "weapons": [
         "EF_RX_78_1_BR",
         "EF_BeamSaber_AF_Fast_A",

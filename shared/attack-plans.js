@@ -28,14 +28,12 @@ function createAttackPlanner(rules, randomId) {
       aimCell: last.aimCell,
       weapon: last.weapon,
       weapons: last.weapons,
-      actionCost: orders.reduce((sum, order) => sum + (order.actionCost || 0), 0),
       attacks: orders.map((order) => ({
         target: order.target,
         targetCell: order.targetCell,
         aimCell: order.aimCell,
         weapon: order.weapon,
         weapons: order.weapons,
-        actionCost: order.actionCost,
         order: order.order,
       })),
     };
@@ -54,7 +52,7 @@ function createAttackPlanner(rules, randomId) {
       const intent = { automatic: false, attacker: attacker.id, target: target.id,
         ...(target.groundTarget ? { targetCell: {x:target.x,y:target.y} } : {}),
         aimCell: target.aimCell, seat, weapon: skill.id, weapons: [skill.id],
-        noCounter: !!skill.noCounter, actionCost: 0, order: ++room.planSequence };
+        noCounter: !!skill.noCounter, order: ++room.planSequence };
       room.plans.push(intent);
       syncPlan(room, attacker);
       attacker.attackSkillRound = room.game.round;
@@ -74,7 +72,6 @@ function createAttackPlanner(rules, randomId) {
     if (!automatic.length) throw Error("没有满足射程、EN与部位条件的武器");
     const intent = {
       automatic: true,
-      apCost: firePlan.ap,
       enCost: firePlan.en,
       combatMode,
       attacker: attacker.id,
@@ -83,7 +80,6 @@ function createAttackPlanner(rules, randomId) {
       seat,
       weapon: automatic[0].id,
       weapons: automatic.map((w) => w.id),
-      actionCost: 0,
       noCounter: automatic.every((w) => w.noCounter),
       order: ++room.planSequence,
     };
@@ -469,9 +465,6 @@ function createAttackPlanner(rules, randomId) {
       reserved.counterCount = (reserved.counterCount || 0) + 1;
       reserved.counterTargetId = choice.counterTargetId || choice.intent.attacker;
       reserved.en -= weapons.reduce((sum, w) => sum + (w ? rules.weaponStats(w, target).en : 0), 0);
-      reserved.counterActionPoints =
-        rules.fireAPBudget(reserved, true) -
-        weapons.reduce((sum, w) => sum + (w ? rules.fireAPCost(w, target) : 0), 0);
     }
     return {
       remaining: rules.countersRemaining(reserved),
@@ -504,9 +497,6 @@ function createAttackPlanner(rules, randomId) {
         const used = (choice.counterIds || []).map((id) =>
           rules.modelOf(target).weapons.find((w) => w.id === id),
         );
-        reserved.counterActionPoints =
-          rules.fireAPBudget(reserved, true) -
-          used.reduce((sum, w) => sum + rules.fireAPCost(w, target), 0);
         reserved.en -= used.reduce((sum, w) => sum + rules.weaponStats(w, target).en, 0);
       }
       const plan = rules.firePlan(room.game, reserved, attacker, {

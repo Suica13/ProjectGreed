@@ -5,7 +5,7 @@ const path = require("node:path");
 const crypto = require("node:crypto");
 const Classes = require("../shared/weapon-classes.js");
 const ROOT = path.resolve(__dirname, "..");
-const OUTPUT = path.join(ROOT, "现行武器与技能规则.md");
+const OUTPUT = path.join(ROOT, "docs/rules/combat.md");
 const compare = (a, b) => a < b ? -1 : a > b ? 1 : 0;
 const code = value => "`" + String(value).replaceAll("`", "") + "`";
 const cell = value => String(value ?? "—").replaceAll("|", "\\|").replaceAll("\n", "<br>");
@@ -20,12 +20,11 @@ function table(headers, rows) {
     .map(row => "| " + row.map(cell).join(" | ") + " |\n").join("") + "\n";
 }
 const explanations = {
-  pilot_buff: "强化驾驶员指定属性或经验倍率，不是直接将最终伤害/命中率乘同一倍率。持续结束后开始冷却。机动强化造成的AP预算变化同步计入剩余AP。",
+  pilot_buff: "强化驾驶员指定属性或经验倍率，不是直接将最终伤害/命中率乘同一倍率。持续结束后开始冷却。机动只影响移动，不产生AP预算。",
   resupply: "消耗自身10%最大EN（原2 AP仅保留配置），为相邻目标格内全部友军恢复各自50%最大EN，不超过上限；每己方回合一次。",
   irradiation: "按方向直线攻击，沿途每台单位含友军判定一次；判定射程与固定长度原版演出解绑。有requiresSfsMS时须搭载MS。",
   beam_diffusion: "指定地格生成区域，攻击射线经过区域时光束伤害×0.5，同类区域不重复叠加。",
   smoke: "当前位置产生烟雾，区域内所有单位受到远程攻击时来袭命中×0.75，不叠加，格斗不受影响。",
-  emp: "保留原AP减益记录；当前AP机制停用，EMP／硬直暂不影响行动。",
   minovsky: "范围内防守单位回避系数×1.25、反侦测距离+5格。额外命中×0.75当前仅匹配导弹或旧special.type=mortar；现行普通迫击炮为blast，不匹配这项额外惩罚。",
   recon: "扫描/声呐标记敌人；摄像枪在选定地格生成临时视野/雷达。waterOnly、范围、持续和冷却按各条参数执行。",
   flight: "切换起飞/降落，不消耗AP；检查必需部位和合法降落位置，宇宙中不能切换。",
@@ -44,7 +43,7 @@ const typeNames = {
   transform: "变形/部署", armor_purge: "爆甲", repair: "主动维修",
 };
 const parameterLabels = {
-  minRange: "最小施放范围", range: "施放范围", radius: "影响半径", actionCost: "保留AP数值（未启用）",
+  minRange: "最小施放范围", range: "施放范围", radius: "影响半径", actionCost: "AP参考值",
   enCost: "固定EN费用", enCostPercent: "最大EN费用%", enPercent: "系统启动EN%",
   duration: "持续己方回合", durationTurns: "持续己方回合", durationRounds: "持续队伍阶段",
   cooldownTurns: "冷却己方回合", moveBonus: "移动加值", mobilityMultiplier: "反应系数倍率",
@@ -82,6 +81,11 @@ function render(catalog) {
   const out = ["# 现行武器与技能规则", "",
     "> 按武器类型和技能机制整理的现行规则，由 tools/export-combat-rules.cjs 维护和生成。", "",
     "规则指纹：" + code(fingerprint) + "。", "",
+    "## 数值取整", "",
+    "驾驶员成长及强化后的八项属性四舍五入为整数，兼容旧存档精确的小数成长值。机体属性、AP、移动格数、武器命中/范围/EN及最终命中率取整，伤害仍按25点取整。倍率、概率、动画时间和坐标保留精度。", "",
+    "## 命中统一规则", "",
+    "已指定类型以分类baseHit覆盖原MOD命中，分类accuracy=1，旧类型命中惩罚不重复叠加；单发及分段命中同步覆盖。其他光束及其他类型暂保留源值，照射技能保留60%。", "",
+    "舰炮特性：战舰的加农炮、光束炮、迫击炮额外乘weapons.shipCannonAccuracy（当前0.85）；不包含对空炮、机枪、导弹、航空炸弹。机体命中系数、目标倍率、驾驶员及人工差值独立计算。", "",
     "## 维护方式", "",
     "- 刷新：`npm run docs:combat-rules`；核对是否过时：`npm run docs:combat-rules -- --check`。普通客户端构建自动刷新。",
     "- 通用倍率/范围改 shared/conversion-rules.json；分类改 shared/weapon-classes.js；轮数/交替流程改 shared/automatic-fire.js。",
@@ -99,13 +103,13 @@ function render(catalog) {
     "8. 驾驶员门槛武装每回合最多1次，须满足pilotRequirements；腕部射击武器和驾驶员门槛武装每回合限用1次；无门槛格斗取消每回合一次限制，每次交火按配置轮数执行。防守方首个格斗对每名实际格斗进攻者分别回击1次，是次数限制的例外，每次支付EN。具有复数非冲撞格斗的套件，保留一把基础格斗不追加门槛，其余无原门槛的追加格斗要求格斗≥125；原有门槛保留，冲撞不计数也不追加门槛。防守方选择首个实际可用的格斗武器，避免被无资格使用的前置招式阻断。队伍交接刷新每回合标记，maxUses继续限制总弹药。",
     "9. 小队最多3台，同格不分前后排。攻击目标为整队，射击逐次选择存活敌方成员，格斗优先对位。单机操作仅提交该成员。",
     "10. 攻击结束保留最后持武器和显隐索引，回避后保持战斗朝向；变形/换装时重置不适用的显示状态。", "",
+    "- 穿甲分量（beamAP/shellAP/meleeAP/meleeBeamAP/meleeShellAP）默认忽略50%的对应百分比抗性：有效抗性=原抗性×(1-armorPiercingIgnore)。固定减伤、护盾覆盖和最终减伤照常计算；单武器值覆盖weapons.armorPiercingIgnore，全局与特例均可在开发者页面维护。",
     "- 原生衰减贯穿弹丸（ProjectileAttackTimes>1且ProjectileAttackTimesDamageModifier<1）：额外穿甲伤害=对应基础光束/实弹分量×原生次数×weapons.penetrationDamagePerCount（默认15%）；保留已有穿甲分量，最终按25取整。不执行穿透多目标判定。格斗多段次数不套此规则。",
     "- 格斗动画与斩击特效逐段沿原MOD动作链读取；B段不再轮流套用通用A段特效。",
     "- 强制脱出：父格纳库被击毁而弹出的单位，记录forcedExitRound；仅本回合实际攻击轮数=floor(可用轮数×0.5)，最低0，进攻与反击相同。已排队但未开始的轮次同样重新检查。主动出击不附带该轮数惩罚。单位变形／爆甲保留标记，下一回合自动失效。AP不再减半。", "",
-    "- AP机制停用后，EMP／硬直的原AP减益不再限制行动；没有擅自转换为轮数或移动惩罚。", "",
-    "### 保留的武器基础AP配置（自动交火不扣除）", "",
-    table(["类型/部位", "最终AP"], [["火箭筒/光束火箭筒",5],["光束步枪",3],["机枪",4],["加农炮",5],["迫击炮",6],["狙击/蓄力狙击",8],["腕部武器",3],["头部火神炮",2],["头部光束",3],["舰载武器","保留原费用"]]),
-    "- 部位费用优先于类型费用；舰载武器不采用本次类型基础AP覆盖，仍按原来源和全局倍率计算。上述为当前全局倍率下的费用，人工相对差值仍随后应用。类型基础AP保存在分类baseAP（最终值除以AP倍率），腕部和头部使用明确来源标识，不按手持武器挂在哪只手上识别。", "",
+    "- AP仅为配置参考值：不换算、不产生运行时余额或预算、不参与动作。AP专用EMP不进入运行目录，原武器AP减益不再编译；不替换成其他惩罚。", "",
+    "### AP参考字段", "",
+    "单位stats.actionPoints、武器/技能actionCost仅作为原始配置参考，不受机动、驾驶员、类型或全局倍率影响。开发者可编辑参考值；AP预算、扣费、返还、回合恢复和AP减益均已移除。", "",
     "- 移动控制区：进入敌军相邻格并停下按普通地形费用；从敌军相邻格继续移动，该步至少消耗3格移动力。不叠加多名敌军的惩罚，保留地形、适应性和补给线修正。", "",
     "### 全局武器配置", "", table(["参数", "当前值"], Object.entries(config.weapons).map(([key, value]) => [key, value])),
     "- 弹速：除照射与迫击炮外按原MOD ProjectileSpeed×projectileSpeed换算，当前为1/10；集束子弹独立换算。不再叠加旧演出弹速倍率；航空炸弹保留重力投放时序，牵引鞭保留伸缩动作。", "",
@@ -118,16 +122,16 @@ function render(catalog) {
     "- 加农炮分类rangeBonus=2，在当前全局射程×0.5后相当于最终最大射程+1格；最小射程不变。",
     "### 类型规则", "",
     "基础值-1代表继承。倍率在人工差值之前执行；可用性由EN、冷却、弹药和驾驶员门槛共同决定，不再按武器分类设置固定轮数。", "",
-    table(["分类/ID", "使用次数", "伤害/命中/AP/EN倍率", "射程倍率/最大加值", "基础AP/EN/命中", "基础最小/最大范围"],
+    table(["分类/ID", "使用次数", "伤害/命中/EN倍率", "射程倍率/最大加值", "基础EN/命中", "基础最小/最大范围"],
       Object.entries(Classes.labels).map(([id, name]) => {
         const rule = config.weaponClasses[id];
         return [name + " " + code(id), String(Classes.rounds({weaponClass:id,type:["melee","ram"].includes(id)?"melee":"shell"}))+"轮，受EN与次数限制",
-          [rule.damage, rule.accuracy, rule.ap, rule.en].join(" / "), rule.range + " / " + rule.rangeBonus,
-          [rule.baseAP, rule.baseEN, rule.baseHit].join(" / "), rule.minRange + " / " + rule.maxRange];
+          [rule.damage, rule.accuracy, rule.en].join(" / "), rule.range + " / " + rule.rangeBonus,
+          [rule.baseEN, rule.baseHit].join(" / "), rule.minRange + " / " + rule.maxRange];
       })),
     "## 技能共用条件与计时", "",
     "- 通常须在己方行动阶段，单位存活且在地图上、未搭载、无待确认移动或攻击计划，战局结束或部署阶段不能发动。一般技能要求尚未结束行动；驾驶员技能可对已行动单位使用，但仍受其余条件约束。passive不可主动发动。",
-    "- actionCost仅保留AP数值，不校验或扣费；consumeAction=true仍独立结束本次行动，但不清空AP。enCost优先作为固定消耗，无该字段时才用enCostPercent×最大EN；EXAM类使用enPercent。",
+    "- actionCost仅保留AP数值，不校验或扣费；consumeAction=true仍独立结束本次行动。enCost优先作为固定消耗，无该字段时才用enCostPercent×最大EN；EXAM类使用enPercent。",
     "- game.round每次队伍交接+1；durationRounds=2相当于一次双方循环。durationTurns、cooldownTurns为己方回合；duration是推进/系统的己方回合计数。",
     "- 驾驶员强化与全力推进在效果结束后开始冷却；多数其他cooldownTurns从发动时起计。maxUses保留实际次数（99不写成无限）。", "",
     table(["技能类型", "效果/特殊规则", "现行公共参数"], Object.entries(explanations).map(([id, text]) => [typeNames[id] + " " + code(id), text, commonParameters(id)])),
@@ -143,7 +147,7 @@ function render(catalog) {
     ])), "",
     "## 状态与被动能力", "",
     "- 燃烧命中后覆盖持续时间：现行为3个己方回合，每个受影响单位的己方回合开始只扣一次5%最大耐久，SP百分比防护减免该伤害；按25取整，不按秒扣。",
-    "- 电热鞭/硬直命中标记下回合AP×0.75，半点取整；重复命中不叠加，EMP同理。",
+    "- 已移除电热鞭/硬直和EMP的AP减益，不记录下回合AP惩罚。",
     "- 迫击炮是独立攻击类技能，每回合一次，不能反击，爆炸半径0，仅命中目标格内敌军；照射、迫击炮和蓄力狙击发动后不能普通攻击或取消攻击类技能计划。所有主动技能每回合一次，变形与部署及解除操作共享一次标记。",
     "- 蓄力狙击先锁定，下次己方回合开始重新验证目标和射程后射击，跟踪目标单位而非仅旧格。狙击冷却计数2，每次己方回合开始减1，大于0时不可用。",
     "- 核弹一次发动只发射一枚、只演出一次爆炸，范围内敌军分别判定；半径、形状和使用次数依该武器配置执行。",
@@ -157,12 +161,12 @@ function render(catalog) {
     "- [分类](shared/weapon-classes.js)、[轮数/交火](shared/automatic-fire.js)、[共享战斗规则](shared/rules.js)",
     "- [机体技能](shared/unit-skills.js)、[驾驶员技能](shared/pilots.json)、[驾驶员逻辑](shared/pilots.js)、[格纳库](shared/hangars.js)",
     "- [导入射程政策](tools/weapon_policy.py)、[文档生成器](tools/export-combat-rules.cjs)", ""];
-  return {text: out.join("\n"), stats: {weaponTypes: Object.keys(Classes.labels).length, skillTypes: Object.keys(explanations).length, pilotSkills: pilotSkills.size}};
+  return {text: out.join("\n").replace(/\]\((shared|tools|client|assets)\//g, "](../../$1/"), stats: {weaponTypes: Object.keys(Classes.labels).length, skillTypes: Object.keys(explanations).length, pilotSkills: pilotSkills.size}};
 }
 function writeReport(catalog, {check = false} = {}) {
   const report = render(catalog);
   const current = fs.existsSync(OUTPUT) ? fs.readFileSync(OUTPUT, "utf8") : null;
-  if (check && current !== report.text) throw Error("现行武器与技能规则.md 已过时，请运行 npm run docs:combat-rules");
+  if (check && current !== report.text) throw Error("docs/rules/combat.md 已过时，请运行 npm run docs:combat-rules");
   if (!check && current !== report.text) fs.writeFileSync(OUTPUT, report.text, "utf8");
   return report.stats;
 }

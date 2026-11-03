@@ -26,13 +26,15 @@ const UnitSkills = (() => {
     if (!Array.isArray(skills) || new Set(skills.map((s) => s?.id)).size !== skills.length)
       throw Error("Invalid unit skills: " + label);
     for (const skill of skills) {
+      if (skill?.actionCost !== undefined && (!Number.isInteger(skill.actionCost) || skill.actionCost < 0))
+        throw Error("Invalid skill AP reference: " + label);
       if (skill?.owner === "pilot") {
         if (
           !skill.implemented ||
           !skill.id ||
           !skill.name ||
           skill.range !== 0 ||
-          skill.actionCost !== 0 ||
+
           !["pilot_buff", "pilot_passive"].includes(skill.type) ||
           !Number.isFinite(skill.enCost) ||
           skill.enCost < 0 ||
@@ -43,7 +45,7 @@ const UnitSkills = (() => {
       }
       if (skill?.type === "flight") {
         if (
-          skill.actionCost !== 1 ||
+
           !Array.isArray(skill.requiredParts) ||
           !skill.id ||
           !skill.name ||
@@ -59,8 +61,7 @@ const UnitSkills = (() => {
         if (
           !/^[A-Za-z0-9_]+$/.test(skill.id) ||
           !skill.name ||
-          !Number.isInteger(skill.actionCost * 2) ||
-          skill.actionCost < 0 ||
+
           !Number.isFinite(skill.enCost) ||
           skill.enCost < 0 ||
           !Number.isFinite(skill.moveBonus) ||
@@ -77,7 +78,7 @@ const UnitSkills = (() => {
         if (
           !/^[A-Za-z0-9_]+$/.test(skill.id) ||
           !skill.name ||
-          skill.actionCost !== 0 ||
+
           !Number.isFinite(skill.enCost) ||
           skill.enCost <= 0 ||
           !Number.isInteger(skill.duration) ||
@@ -111,9 +112,8 @@ const UnitSkills = (() => {
         if (
           !skill.id ||
           !skill.name ||
-          !Number.isInteger(skill.actionCost * 2) ||
-          skill.actionCost < 0.5 ||
-          skill.actionCost > 99 ||
+
+
           !Number.isFinite(skill.enCostPercent) ||
           skill.enCostPercent < 0 ||
           (skill.enCost !== undefined && (!Number.isFinite(skill.enCost) || skill.enCost < 0)) ||
@@ -142,7 +142,7 @@ const UnitSkills = (() => {
         if (
           skill.id !== "SmokeGrenade" ||
           skill.radius !== 2 ||
-          skill.actionCost !== 2 ||
+
           skill.enCost !== 100 ||
           skill.cooldownTurns !== 3 ||
           skill.durationRounds !== 2
@@ -153,7 +153,7 @@ const UnitSkills = (() => {
       if (skill?.type === "emp") {
         if (
           skill.id !== "EMP" ||
-          skill.actionCost !== 2 ||
+
           skill.radius !== 3 ||
           skill.cooldownTurns !== 2 ||
           !Number.isFinite(skill.enCost) ||
@@ -166,9 +166,8 @@ const UnitSkills = (() => {
         if (
           !/^[A-Za-z0-9_]+$/.test(skill.id) ||
           !skill.name ||
-          !Number.isInteger(skill.actionCost * 2) ||
-          skill.actionCost < 0.5 ||
-          skill.actionCost > 99 ||
+
+
           !Number.isFinite(skill.enCostPercent) ||
           skill.enCostPercent < 0 ||
           (skill.enCost !== undefined && (!Number.isFinite(skill.enCost) || skill.enCost < 0)) ||
@@ -189,7 +188,7 @@ const UnitSkills = (() => {
           (skill.reconMode !== undefined && !["camera", "scan"].includes(skill.reconMode)) ||
           (skill.reconMode &&
             (!Number.isInteger(skill.actionCost * 2) ||
-              skill.actionCost < 0.5 ||
+
               !Number.isInteger(skill.durationRounds) ||
               skill.durationRounds < 1)) ||
           (skill.reconMode === "camera" &&
@@ -220,8 +219,7 @@ const UnitSkills = (() => {
           skill.radius > 20 ||
           !Number.isFinite(skill.enCost) ||
           skill.enCost <= 0 ||
-          !Number.isInteger(skill.actionCost * 2) ||
-          skill.actionCost < 0.5 ||
+
           !Number.isInteger(skill.durationRounds) ||
           skill.durationRounds < 1 ||
           !Number.isInteger(skill.cooldownTurns) ||
@@ -238,7 +236,7 @@ const UnitSkills = (() => {
           !/^[A-Za-z0-9_]+$/.test(skill.id) ||
           !skill.name ||
           skill.range !== 1 ||
-          skill.actionCost !== 2 ||
+
           skill.cooldownTurns !== 1 ||
           skill.enCostPercent !== 10 ||
           skill.enRecoveryPercent !== 50 ||
@@ -281,8 +279,6 @@ const UnitSkills = (() => {
         skill.maxUses < 1 ||
         skill.maxUses > 99 ||
         typeof skill.consumeAction !== "boolean" ||
-        (skill.actionCost !== undefined &&
-          (!Number.isInteger(skill.actionCost * 2) || skill.actionCost < 0)) ||
         !["remove", "keep", "transform"].includes(skill.source?.mode) ||
         (skill.source.mode === "remove" && !skill.spawn)
       )
@@ -316,7 +312,7 @@ const UnitSkills = (() => {
       sensors,
       cells: unitCells,
     } = G;
-    const of = (unit) => [...(models[unit.model]?.skills || []), ...pilots.skillsOf(unit)];
+    const of = (unit) => [...(models[unit.model]?.skills || []), ...pilots.skillsOf(unit)].filter(skill => skill.type !== "emp");
     const usageKey = (unit, skill) => models[unit.model].prefabId + "/" + skill.id;
     const turnKey = skill => skill.type === "transform" ? "transformation" : skill.type === "flight" ? "flight" : skill.id;
     const energyCost = (unit, skill) =>
@@ -332,7 +328,7 @@ const UnitSkills = (() => {
           G.attackRounds(game, unit, skill) > 0) &&
         (skill.type !== "pilot_buff" ||
           (unit.en >= skill.enCost && !unit.pilotBuffs?.[skill.id])) &&
-        (!["smoke", "emp"].includes(skill.type) || unit.en >= skill.enCost) &&
+        (skill.type !== "smoke" || unit.en >= skill.enCost) &&
         (unit.skillReadyRound?.[skill.id] ?? 0) <= game.round &&
         (!["resupply", "beam_diffusion", "irradiation"].includes(skill.type) ||
           unit.en >= energyCost(unit, skill)) &&
@@ -379,10 +375,8 @@ const UnitSkills = (() => {
       y,
       skillUses,
       consumeAction,
-      actionCost = 0,
     ) {
       const model = config.unitId + "__" + (config.kitMap?.[oldModel.kitId] ?? config.kitId);
-      const remainingAP = unit.actionPoints ?? oldModel.actionPoints ?? 5;
       const next = {
         id,
         model,
@@ -409,9 +403,6 @@ const UnitSkills = (() => {
           ? { deploymentUnitId: unit.deploymentUnitId, deploymentModel: unit.deploymentModel }
           : {}),
         ...(config.inheritResources && unit.burning ? { burning: { ...unit.burning } } : {}),
-        ...(config.inheritResources && unit.apPenaltyNextTurn
-          ? { apPenaltyNextTurn: unit.apPenaltyNextTurn }
-          : {}),
 
         ...(Number.isInteger(unit.formationIndex) ? { formationIndex: unit.formationIndex } : {}),
         angle: unit.angle,
@@ -423,7 +414,6 @@ const UnitSkills = (() => {
         brokenParts: config.repairAllParts ? {} : { ...unit.brokenParts },
         moved: consumeAction || unit.moved,
         acted: consumeAction || unit.acted,
-        actionPoints: remainingAP,
         origin: null,
         plan: null,
         moduleHp: undefined,
@@ -495,7 +485,7 @@ const UnitSkills = (() => {
               unit.y,
               uses,
               skill.consumeAction,
-              skill.actionCost ?? 0,
+
             );
       if (
         source &&
@@ -603,7 +593,7 @@ const UnitSkills = (() => {
         unit.y,
         plan.uses,
         skill.consumeAction,
-        skill.actionCost ?? 0,
+
       );
       if (
         probe.hp <= 0 ||
@@ -639,15 +629,9 @@ const UnitSkills = (() => {
         throw Error("技能不可用，或目标不在合法范围内");
       const skill = of(unit).find((s) => s.id === skillId);
       if (skill.type === "pilot_buff") {
-        const previousBudget = modelOf(unit).actionPoints ?? 5;
-        const remainingAP = unit.actionPoints ?? previousBudget;
         const expiresRound = game.round + skill.durationTurns * 2;
         unit.en -= skill.enCost;
         unit.pilotBuffs = { ...unit.pilotBuffs, [skill.id]: { expiresRound } };
-        const budgetChange = (modelOf(unit).actionPoints ?? 5) - previousBudget;
-        if (budgetChange) {
-          unit.actionPoints = Math.max(0, remainingAP + budgetChange);
-        }
         unit.skillReadyRound = {
           ...unit.skillReadyRound,
           [skill.id]: expiresRound + skill.cooldownTurns * 2,
@@ -697,34 +681,6 @@ const UnitSkills = (() => {
           sound: skill.sound,
           effect: skill.effect,
           smoke: true,
-        };
-      }
-      if (skill.type === "emp") {
-        const affected = game.units.filter(
-          (target) =>
-            target.team !== unit.team &&
-            target.hp > 0 &&
-            (!target.embarked || target.embarked.exposed) &&
-            sensors.distance(unit, target) <= skill.radius,
-        );
-        for (const target of affected) target.apPenaltyNextTurn = 0.25;
-        unit.en -= skill.enCost;
-        unit.origin = null;
-        unit.skillReadyRound = {
-          ...unit.skillReadyRound,
-          [skill.id]: game.round + skill.cooldownTurns * 2,
-        };
-        return {
-          type: "skill",
-          skillId,
-          unitId: unit.id,
-          resultId: unit.id,
-          from: center(unit),
-          to: center(unit),
-          effect: skill.effect,
-          sound: skill.sound,
-          radius: skill.radius,
-          emp: true,
         };
       }
       if (skill.type === "resupply") {
@@ -1040,7 +996,7 @@ const UnitSkills = (() => {
           y,
           plan.uses,
           skill.consumeAction,
-          skill.actionCost ?? 0,
+
         );
       }
       // All checks finish before mutation. Invalid destinations never consume a skill or remove a unit.

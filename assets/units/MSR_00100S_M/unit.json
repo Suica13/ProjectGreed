@@ -1090,7 +1090,7 @@
     {
       "id": "kit_2",
       "name": "光束步枪套件",
-      "cost": 100,
+      "cost": 75,
       "weapons": [
         "AEUG_MSR_00100S_M_BR",
         "AEUG_MSR_00100S_BeamMinigun_Single",

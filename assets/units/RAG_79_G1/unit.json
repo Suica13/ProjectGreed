@@ -1097,7 +1097,7 @@
     {
       "id": "kit_0",
       "name": "光束步枪套件",
-      "cost": 100,
+      "cost": 75,
       "weapons": [
         "EF_BeamRifleAuqa",
         "EF_RAG_79_G1_HG",

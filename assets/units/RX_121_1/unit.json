@@ -1138,7 +1138,7 @@
     {
       "id": "kit_0",
       "name": "光束步枪套件",
-      "cost": 100,
+      "cost": 75,
       "weapons": [
         "TITANS_RX_121_BR",
         "TITANS_RX_121_BodyMS",
@@ -1172,15 +1172,26 @@
     },
     {
       "id": "kit_2",
-      "name": "光束步枪套件",
-      "cost": 100,
+      "name": "90mm机枪套件",
+      "cost": 0,
       "weapons": [
         "EF_GMRifle",
         "TITANS_RX_121_BodyMS",
         "EF_BeamSaber_BF_B",
         "Common_DoubleVulcan_MS",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "90mm机枪套件"
+        },
+        "en": {
+          "name": "90mm Machine Gun Kit"
+        },
+        "ja": {
+          "name": "90mmマシンガン装備"
+        }
+      }
     }
   ],
   "description": "海兹尔的改修型,加装了各种装备",

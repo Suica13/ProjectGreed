@@ -6,10 +6,10 @@ const file = "shared/conversion-rules.json";
 const Classes = require("./weapon-classes.js");
 const fields = {
   weapons: {
-    machineGunAP: ["机枪基础AP消耗", 1, 99, true, "固定基础值，再乘下方武器AP倍率。"],
     damage: ["全部武装伤害倍率", 0.01, 10, false, "在武器分类倍率之后叠乘，包含有伤害的机体技能。"],
     accuracy: ["武器命中率倍率", 0.01, 10, false, "同时处理单发及分段命中率。"],
-    ap: ["武器AP消耗倍率", 0.01, 10, false, "按0.5点四舍五入；不改变每次攻击的发数。"],
+    shipCannonAccuracy: ["舰炮命中倍率", 0.01, 10, false, "战舰的加农炮、光束炮和迫击炮额外乘此系数；不包含机枪、对空炮、导弹和航空炸弹。"],
+    armorPiercingIgnore: ["穿甲无视抗性比例", 0, 1, false, "0.5表示只计算目标50%的对应抗性；固定减伤、盾牌和最终减伤仍正常计算。可由单武器特例覆盖。"],
     penetrationDamagePerCount: ["每次原生贯穿附伤", 0, 10, false, "有衰减且次数大于1的远程弹丸：基础光束/实弹伤害×原次数×本值，追加对应穿甲分量。"],
     sniperDamage: ["普通狙击伤害倍率", 0.01, 10, false, "仅普通狙击武器，不与蓄力狙击倍率叠加。"],
     chargedSniperDamage: ["蓄力狙击伤害倍率", 0.01, 10, false, "仅蓄力狙击技能，替代普通狙击倍率。"],
@@ -34,32 +34,25 @@ const fields = {
   units: {
     hp: ["单位耐久倍率", 0.01, 10, false, "以现有单位基础值换算，向上取整。"],
     en: ["单位EN上限倍率", 0.01, 10, false, "以现有基础值换算，向上取整。"],
-    ap: [
-      "单位每回合基础AP倍率",
-      0.01,
-      10,
-      false,
-      "按0.5点四舍五入，最低1点；随后计算机体和驾驶员机动倍率。",
-    ],
     move: ["单位基础移动距离倍率", 0.01, 10, false, "基础距离乘倍率后四舍五入，再加原移植战术加成（普通单位+1、战舰+3）；不修改动画速度。"],
     accuracy: ["单位命中系数倍率", 0.01, 10, false, "独立于上方武器本身的命中率。"],
     reaction: ["单位反应系数倍率", 0.01, 10, false, "对应回避用的反应系数，不是机动。"],
   },
 };
 const classFields = {
-  baseAP: ["基础AP（-1继承）", -1, 99, false],
   baseEN: ["基础EN（-1继承）", -1, 999999, false],
   baseHit: ["基础命中率（-1继承）", -1, 1000, false],
   minRange: ["基础最小射程（-1继承）", -1, 100, false],
   maxRange: ["基础最大射程（-1继承）", -1, 100, false],
   damage: ["分类伤害倍率", 0.01, 10, false],
   accuracy: ["分类命中倍率", 0.01, 10, false],
-  ap: ["分类AP倍率", 0.01, 10, false],
   en: ["分类EN倍率", 0.01, 10, false],
   range: ["分类射程倍率", 0.01, 10, false],
   rangeBonus: ["分类最大射程增减", -100, 100, true],
 };
 function validate(value) {
+  if (value?.weapons && value.weapons.shipCannonAccuracy === undefined) value.weapons.shipCannonAccuracy = 0.85;
+  if (value?.weapons && value.weapons.armorPiercingIgnore === undefined) value.weapons.armorPiercingIgnore = 0.5;
   // Older editor clients may omit this newly introduced setting.
   if (value?.weapons && value.weapons.projectileSpeed === undefined) value.weapons.projectileSpeed = 0.1;
   if (
@@ -97,7 +90,7 @@ function validate(value) {
         n < min ||
         n > max ||
         (integer && !Number.isInteger(n)) ||
-        (["baseAP", "baseEN", "baseHit", "minRange", "maxRange"].includes(key) && n < 0 && n !== -1)
+        (["baseEN", "baseHit", "minRange", "maxRange"].includes(key) && n < 0 && n !== -1)
       )
         throw Error(label + "无效：" + kind);
     }
@@ -118,7 +111,6 @@ function scaleDamage(weapon, ratio) {
   }
 }
 // Match actual source families, not handheld weapons attached to an arm or ArmBeamSaber.
-const roundAP = (value) => Math.round(value * 2) / 2;
 function globals(prefab, rules) {
   const w = rules.weapons;
   const isWeaponSkill = Classes.isWeaponSkill;
@@ -126,6 +118,7 @@ function globals(prefab, rules) {
     ...Object.values(prefab.weapons || {}),
     ...(prefab.skills || []).filter(isWeaponSkill),
   ]) {
+    delete weapon.onHitAPLoss;
     weapon.attackRounds ??= Classes.baseRounds(weapon);
     if (weapon.projectile && !["mortar", "irradiation"].includes(Classes.classify(weapon))) {
       // Always start from retained MOD data, never divide an already converted speed.
@@ -142,6 +135,7 @@ function globals(prefab, rules) {
     const group = Classes.rule(weapon, rules);
     const old = weapon.conversionMultipliers;
     const numericFields = [
+      "armorPiercingIgnore",
       "hit",
       "baseHit",
       "actionCost",
@@ -160,7 +154,9 @@ function globals(prefab, rules) {
           .filter((key) => Number.isFinite(weapon[key]))
           .map((key) => [key, weapon[key]]),
       );
-    const accuracy = w.accuracy * group.accuracy,
+    weapon.armorPiercingIgnore = base.armorPiercingIgnore ?? w.armorPiercingIgnore;
+    const shipCannon = Classes.shipCannon(weapon, prefab.stats?.ship);
+    const accuracy = w.accuracy * group.accuracy * (shipCannon ? (w.shipCannonAccuracy ?? 0.85) : 1),
       en = w.en * group.en,
       range = group.range;
     const sniperScale = weapon.special?.type === "snipe" ? w.chargedSniperDamage : Classes.classify(weapon) === "sniper" ? w.sniperDamage : 1;
@@ -193,25 +189,8 @@ function globals(prefab, rules) {
     for (const key of ["hit", "baseHit"])
       if (base[key] !== undefined)
         weapon[key] = (group.baseHit >= 0 ? group.baseHit : base[key]) * accuracy;
-    const tacticalAP =
-      !prefab.stats?.ship && group.baseAP >= 0
-        ? group.baseAP
-        : Classes.machineGun(weapon)
-          ? w.machineGunAP
-          : ["bazooka", "beam_bazooka"].includes(Classes.classify(weapon))
-            ? 3
-            : base.actionCost;
-    if (tacticalAP !== undefined)
-      weapon.actionCost = Math.max(0.5, roundAP(tacticalAP * w.ap * group.ap));
-    // Mount overrides are final AP, before additive administrator exceptions.
-    // Warships retain the pre-existing source/global AP policy.
-    const mountAP = prefab.stats?.ship ? null : Classes.mountAP(weapon);
-    if (mountAP !== null) {
-      weapon.actionCost = mountAP;
-      weapon.mountAPOverride = mountAP;
-    } else delete weapon.mountAPOverride;
-    if (prefab.stats?.ship) weapon.shipAPExempt = true;
-    else delete weapon.shipAPExempt;
+    if (prefab.stats?.ship) weapon.shipWeapon = true;
+    else delete weapon.shipWeapon;
     if (Classes.wristWeapon(weapon)) weapon.maxUsesPerTurn = 1;
     for (const key of ["en", "enCost"])
       if (base[key] !== undefined) {
@@ -269,7 +248,6 @@ function globals(prefab, rules) {
   const fields = {
     hp: "hp",
     en: "en",
-    ap: "actionPoints",
     move: "move",
     accuracy: "accuracy",
     reaction: "mobility",
@@ -287,7 +265,6 @@ function globals(prefab, rules) {
     for (const [key, field] of Object.entries(fields)) {
       let n = base[field] * rules.units[key];
       if (["hp", "en"].includes(key)) n = Math.ceil(n);
-      if (key === "ap") n = roundAP(n);
       if (key === "move") {
         // Source stats offset movement by native mobility; the compiler restores
         // it. Scale the actual tactical base, preserving the imported +1/+3.
@@ -297,21 +274,41 @@ function globals(prefab, rules) {
         n = prefab.stats.deployed ? 0 :
           Math.max(1, Math.round((base.move + mobilityOffset - bonus) * rules.units.move) + bonus) - mobilityOffset;
       }
-      if (["hp", "ap"].includes(key)) n = Math.max(1, n);
+      if (key === "hp") n = Math.max(1, n);
       prefab.stats[field] = n;
     }
     if (Object.values(rules.units).every((n) => n === 1)) delete prefab.conversionBase;
     else prefab.conversionBase = base;
   }
+  return roundValues(prefab);
+}
+// Quantize gameplay values after global rules and again after administrator offsets.
+// Ratios, timing and animation coordinates deliberately retain their precision.
+function roundValues(prefab) {
+  for (const key of ["hp", "en", "cost", "actionPoints", "move", "speed", "mobility", "accuracy", "partStructuralStrength"])
+    if (Number.isFinite(prefab.stats?.[key])) prefab.stats[key] = Math.round(prefab.stats[key]);
+  for (const field of ["adaptability", "attackBonuses"])
+    for (const key of Object.keys(prefab[field] || {}))
+      if (Number.isFinite(prefab[field][key])) prefab[field][key] = Math.round(prefab[field][key]);
+  for (const defense of Object.values(prefab.defenses || {}))
+    for (const key of ["percent", "flat"])
+      if (Number.isFinite(defense[key])) defense[key] = Math.round(defense[key]);
+  if (Number.isFinite(prefab.shield?.hp)) prefab.shield.hp = Math.round(prefab.shield.hp);
+  for (const weapon of [...Object.values(prefab.weapons || {}), ...(prefab.skills || []).filter(Classes.isWeaponSkill)]) {
+    for (const key of ["hit", "baseHit", "min", "max", "minRange", "range", "actionCost", "en", "enCost"])
+      if (Number.isFinite(weapon[key])) weapon[key] = Math.round(weapon[key]);
+    for (const step of weapon.attack?.steps || [])
+      if (Number.isFinite(step.accuracy)) step.accuracy = Math.round(step.accuracy);
+  }
   return prefab;
 }
 module.exports = {
+  roundValues,
   file,
   fields,
   classFields,
   validate,
   read,
   globals,
-  roundAP,
   scaleDamage,
 };

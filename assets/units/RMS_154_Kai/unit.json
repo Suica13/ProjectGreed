@@ -1151,7 +1151,7 @@
     {
       "id": "kit_0",
       "name": "光束步枪套件",
-      "cost": 100,
+      "cost": 75,
       "weapons": [
         "TITANS_RX_178_BR_WGL",
         "EF_BeamSaber_AF_Yellow_A",

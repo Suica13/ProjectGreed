@@ -43,7 +43,7 @@ test("unit edits log exact field and price changes and preserve the curated exce
   assert(fields.some((field) => field.path === "/deploymentLicense/money" && field.after === 700));
   const index = fs.readFileSync(path.join(f.root, exceptionFile), "utf8");
   assert(index.startsWith(document.split("<!-- catalog-editor-index:start -->")[0].trimEnd()));
-  assert(index.includes("docs/editor-changes/EFSF.md"));
+  assert(index.includes("../editor-changes/EFSF.md"));
   const table = fs.readFileSync(path.join(f.root, "docs/editor-changes/EFSF.md"), "utf8");
   assert(table.includes(result.auditLog));
   assert(table.includes("203.0.113.20"));

@@ -39,7 +39,7 @@ function createDeveloperServer({
   logger = null,
   key = process.env.PROJECTGREED_EDITOR_KEY || "13450",
   store = createEditorStore(root),
-  catalog = () => require("./load-catalog.cjs").loadCatalog({ embedAssets: false }),
+  catalog = null,
 } = {}) {
   host = resolveEditorHost(host);
   if (["0.0.0.0", "::", ""].includes(host)) throw Error("请指定编辑服务绑定的具体IP");
@@ -66,7 +66,7 @@ function createDeveloperServer({
   const editorFactions = ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"];
   function editorCatalog(faction = "EFSF") {
     if (!editorFactions.includes(faction)) throw Error("请选择一个有效阵营单位库");
-    const full = catalog();
+    const full = catalog ? catalog() : store.catalog();
     const data = {
       ...full,
       prefabs: full.prefabs.filter((prefab) =>
@@ -258,6 +258,7 @@ function createDeveloperServer({
           return send(200, {
             partial: !!ids,
             ids,
+            conversionRules: data.conversionRules,
             prefabs: wanted ? data.prefabs.filter((prefab) => wanted.has(prefab.id)) : data.prefabs,
             models: wanted
               ? Object.fromEntries(

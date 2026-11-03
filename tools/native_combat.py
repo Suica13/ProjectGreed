@@ -7,7 +7,7 @@ import re
 from pathlib import Path
 from mod_source import ROOT, MAIN, MOD, source_root, parse, load, section, resolve, stat
 
-CHANNELS = {"BeamDamage": "beam", "ShellDamage": "shell", "CqbDamage": "melee", "CqbBeamDamage": "meleeBeam", "CqbShellDamage": "meleeShell", "BeamAPDamage": "beamAP", "ShellAPDamage": "shellAP", "CqbAPDamage": "meleeAP"}
+CHANNELS = {"BeamDamage": "beam", "ShellDamage": "shell", "CqbDamage": "melee", "CqbBeamDamage": "meleeBeam", "CqbShellDamage": "meleeShell", "BeamAPDamage": "beamAP", "ShellAPDamage": "shellAP", "CqbAPDamage": "meleeAP", "CqbBeamAPDamage": "meleeBeamAP", "CqbShellAPDamage": "meleeShellAP"}
 PARTS = {"head": "head", "backpack": "backpack", "armL": "leftArm", "armR": "rightArm", "legL": "leftLeg", "legR": "rightLeg"}
 
 @functools.lru_cache(None)

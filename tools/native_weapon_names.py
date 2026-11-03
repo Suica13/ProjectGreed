@@ -2,6 +2,7 @@
 import re
 
 EXACT = {
+    "EF_GMRifle": ("90mm机枪", "90mm Machine Gun", "90mmマシンガン"),
     "EF_BeamSprayGunB2": ("光束喷枪", "Beam Spray Gun", "ビーム・スプレーガン"),
     "EF_LongRifle": ("长距离步枪", "Long-Range Rifle", "ロング・ライフル"),
     "ZN_MSM_03_ChestBeam": ("胸部光束扩散炮", "Chest Diffusion Beam Cannon", "胸部拡散ビーム砲"),
@@ -24,8 +25,9 @@ def label(key, weapon, ship=False):
         return EXACT[ident]
     if re.search(r"(?:Bazooka\w*|(?:^|_)BZ)_(?:SG|ShotgunMode)(?:_|$)", ident, re.I):
         return ("扩散火箭筒", "Cluster Bazooka", "拡散バズーカ")
-    if re.search(r"(?:BeamRifle|(?:^|_)BR(?:_|$))", ident, re.I) and not re.search(r"(?:Arm|Double|Hand)_?BR", ident):
-        return ("光束步枪", "Beam Rifle", "ビーム・ライフル")
+    if re.search(r"(?:BeamRifle|(?:^|_)[SHL]?BR(?:_|$))", ident, re.I) and not re.search(r"(?:Arm|Double|Hand)_?BR", ident):
+        return (("实弹步枪", "Ballistic Rifle", "実弾ライフル") if weapon.get("type") == "shell"
+                else ("光束步枪", "Beam Rifle", "ビーム・ライフル"))
     caliber = re.search(r"(\d+)mmMG", ident, re.I)
     if caliber:
         return (caliber[1]+"mm机枪", caliber[1]+"mm Machine Gun", caliber[1]+"mmマシンガン")

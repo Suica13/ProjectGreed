@@ -6,8 +6,8 @@
   "big_gun": 50,
   "beam_spray": 75,
   "beam_gun": 75,
-  "beam_rifle": 100,
-  "cannon": 100,
-  "magella_cannon": 100,
+  "beam_rifle": 75,
+  "cannon": 75,
+  "magella_cannon": 75,
   "standard": 0
 }

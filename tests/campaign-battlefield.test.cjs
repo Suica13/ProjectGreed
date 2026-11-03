@@ -33,8 +33,8 @@ test("all 43 regions reference editable 5v5 maps with one base, six posts and co
       map = G.getMap(entry.mapId),
       layout = entry.layout;
     assert.equal(map.playersPerTeam, 5);
-    assert.equal(map.width, 57);
-    assert.equal(map.height, 68);
+    assert.equal(map.width, 43);
+    assert.equal(map.height, 51);
     assert.equal(map.spawns.length, 10);
     assert.equal(layout.nodes.filter((n) => n.kind === "base").length, 1);
     assert.equal(layout.nodes.filter((n) => n.kind === "outpost").length, 6);
@@ -119,11 +119,14 @@ test("connected routes grant 25 percent movement efficiency and disconnected pos
   assert.equal(unit.hp, 1 + Math.round(m.hp * 0.2));
   assert.equal(unit.en, Math.ceil(m.en * 0.4));
 });
-test("defenders deploy at posts/base while each attacking army can only deploy at its own approach", () => {
+test("defenders deploy at base/friendly entrances while each attacking army can only deploy at its own approach", () => {
   const { game, unit, enemy, field } = fixture();
   const defender = B.deploymentCells(G, game, unit);
-  for (const post of field.layout.nodes)
-    assert(defender.some((c) => c.x === post.x && c.y === post.y));
+  const base = field.layout.nodes.find(n => n.kind === "base");
+  assert(defender.some(c => c.x === base.x && c.y === base.y));
+  assert(defender.every(c => Math.hypot(c.x-base.x,c.y-base.y) <= base.deploymentRadius ||
+    field.layout.gates.some(gate => field.adjacentOwners[gate.region] === unit.team &&
+      Math.hypot(c.x-gate.x,c.y-gate.y) <= gate.deploymentRadius)));
   for (const gate of field.layout.gates) {
     const cells = B.deploymentCells(G, game, enemy, gate.region);
     assert(cells.length > 0);
@@ -133,11 +136,7 @@ test("defenders deploy at posts/base while each attacking army can only deploy a
   field.owners.base = 1;
   for (const gate of field.layout.gates) field.adjacentOwners[gate.region] = 1;
   field.version++;
-  assert(
-    B.deploymentCells(G, game, unit).some(
-      (cell) => cell.x === field.layout.nodes[1].x && cell.y === field.layout.nodes[1].y,
-    ),
-  );
+  assert.equal(B.deploymentCells(G, game, unit).length, 0);
   enemy.campaignEntry = field.layout.gates[0].region;
   const allowed = new Set(B.deploymentCells(G, game, enemy).map((c) => G.key(c.x, c.y)));
   assert(G.deploymentCells(game, 1, enemy).every((c) => allowed.has(G.key(c.x, c.y))));
@@ -216,7 +215,7 @@ test("regional battle deployment preserves each incoming army approach and check
   }
   assert(room.game.units.some((unit) => unit.campaignId === defender.id));
   const actor = room.game.units.find((unit) => unit.campaignId === defender.id);
-  const post = layout.nodes.find((node) => node.kind === "outpost");
+  const post = layout.nodes.find((node) => node.kind === "base");
   assert.equal(B.deploymentSeat(room.game, actor), 2);
   assert.equal(room.game.deployment[2], false);
   G.deploy(room.game, 2, actor.id, post.x, post.y);
@@ -327,4 +326,39 @@ test("an enemy footprint inside a post blocks capture until it leaves or is dest
  const before=structuredClone(game);assert.throws(()=>B.capture(G,game,unit));assert.deepEqual(game,before);
  enemy.x=post.x+2;assert.equal(B.canCapture(G,game,unit)?.id,post.id);
  enemy.x=post.x+1;enemy.hp=0;assert.equal(B.canCapture(G,game,unit)?.id,post.id);
+});
+
+test("ocean actor construction keeps the real water terrain and cannot expose legacy edge deployment", () => {
+  const map = G.getMap(scenario.regions.north_atlantic.mapId);
+  const armies = Array(10).fill(null);
+  armies[0] = Array.from({length: 40}, () => ({unitId:'Type61', kitId:ctx.production.defaultKits.Type61}));
+  const game = G.create(false, 1, armies, false, G.campaignRoomSettings({mapId:map.id}));
+  assert.equal(game.units.length, 40);
+  assert.deepEqual(game.tiles, map.tiles);
+  game.campaignBattlefield = B.create(G, C.create(ctx, [{seat:0},{seat:1}]), 'north_atlantic');
+  const actor = game.units[0], field = game.campaignBattlefield;
+  field.defender = actor.team;
+  field.owners.base = actor.team;
+  for (const gate of field.layout.gates) field.adjacentOwners[gate.region] = 1-actor.team;
+  field.version++;
+  const base = field.layout.nodes.find(n => n.kind === 'base');
+  assert(G.deploymentCells(game,0,actor).every(c => Math.hypot(c.x-base.x,c.y-base.y)<=base.deploymentRadius));
+});
+
+test("known pre-resize campaign saves retain their terrain and positions while forged layouts fail", () => {
+  const {game,field} = fixture(), map=G.getMap(game.mapId), old=map.legacyStrategicLayouts[0];
+  const saved = JSON.parse(JSON.stringify(game));
+  saved.tiles=Array.from({length:old.height},()=>Array(old.width).fill('plain'));
+  saved.campaignBattlefield.layout=JSON.parse(JSON.stringify(old.layout));
+  saved.units[0].x=old.width-2;
+  assert.equal(B.validate(G,saved).width,old.width);
+  assert.equal(saved.units[0].x,old.width-2);
+  const Records=require('../shared/match-records.js');
+  const record=Records.create(G,'legacy-map',G.campaignRoomSettings({mapId:game.mapId}),saved.tiles);
+  record.perspectives = ['global'];
+  record.frames = [{at:0,turnStart:true,views:{global:Records.pack(null,{game:saved,phase:'idle',log:[],viewTeam:null})}}];
+  record.checkpoints = [{frame:0,round:saved.round,team:saved.team}];
+  assert(Records.validate(G,JSON.parse(JSON.stringify(record))));
+  saved.campaignBattlefield.layout.nodes[0].x++;
+  assert.throws(()=>B.validate(G,saved));
 });

@@ -194,7 +194,7 @@ window.CampaignWorkspace = (() => {
       metrics(info, [
         ["HP", formatNumber(m.hp)],
         ["EN", formatNumber(m.en)],
-        ["行动点", m.actionPoints],
+        ["AP参考", m.actionPoints],
         ["移动", m.move],
         ["盾牌HP", formatNumber(m.shield.hp)],
         ["视野距离", m.sensors.sight],

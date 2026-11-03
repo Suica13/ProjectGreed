@@ -969,7 +969,7 @@
     {
       "id": "kit_0",
       "name": "光束步枪套件",
-      "cost": 100,
+      "cost": 75,
       "weapons": [
         "AEUG_MSZ_006A1_BR",
         "Common_DoubleVulcan_MS",
