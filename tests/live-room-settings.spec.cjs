@@ -71,7 +71,7 @@ test("map, count, COST and room/team bans apply automatically without confirmati
 });
 
 async function connect(page, port, name) {
-  for (const address of ["123.99.195.3:1313", "126.227.168.176:1313"])
+  for (const address of require("../client/config.json").presetServers.map(server => server.address))
     await page.routeWebSocket("ws://" + address + "/ws", (ws) => ws.close());
   await page.goto("http://127.0.0.1:" + port);
   await page.locator("#playerId").fill(name);

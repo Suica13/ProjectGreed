@@ -3,7 +3,7 @@ const { pathToFileURL } = require("node:url"),
   path = require("node:path");
 const { createServer } = require("../server.js");
 const fileURL = pathToFileURL(path.resolve("public/client.html")).href;
-const addresses = ["123.99.195.3:1313", "126.227.168.176:1313"];
+const addresses = ["123.99.195.3:1313", "126.227.168.176:1313", "64.83.48.234:1313"];
 async function open(page) {
   await page.locator("#openSkirmish").click();
   await page.locator("#openRooms").click();
@@ -17,7 +17,7 @@ async function noVisibleIPs(page) {
 test("preset status probes are independent, refreshable, and preset connections never show their IP", async ({
   page,
 }, testInfo) => {
-  const online = [true, false],
+  const online = [true, false, true],
     messages = [];
   for (let i = 0; i < addresses.length; i++)
     await page.routeWebSocket("ws://" + addresses[i] + "/ws", (ws) => {
@@ -35,6 +35,7 @@ test("preset status probes are independent, refreshable, and preset connections 
   await open(page);
   await expect(page.locator("#preset-status-primary")).toHaveText("在线");
   await expect(page.locator("#preset-status-test")).toHaveText("离线");
+  await expect(page.locator("#preset-status-primary2")).toHaveText("在线");
   await noVisibleIPs(page);
   await page.screenshot({ path: testInfo.outputPath("server-presets.png") });
   await expect(page.locator("#lobby")).toBeHidden();
@@ -51,6 +52,11 @@ test("preset status probes are independent, refreshable, and preset connections 
   await page.locator("#preset-test").click();
   await expect(page.locator("#connectedServer")).toHaveText("测试服务器");
   expect(await page.evaluate(() => Lobby.endpoint())).toBe("ws://" + addresses[1] + "/ws");
+  await noVisibleIPs(page);
+  await page.evaluate(() => Lobby.open());
+  await page.locator("#preset-primary2").click();
+  await expect(page.locator("#connectedServer")).toHaveText("正式服务器2");
+  expect(await page.evaluate(() => Lobby.endpoint())).toBe("ws://" + addresses[2] + "/ws");
   await noVisibleIPs(page);
 });
 
@@ -74,7 +80,7 @@ test("silent sockets time out; closing the dialog cancels probes and preserves c
     await expect(page.locator("#preset-status-test")).toHaveText("离线");
     await expect.poll(() => active).toBe(0);
     await page.locator("#refreshServerStatus").click();
-    await expect.poll(() => active).toBe(2);
+    await expect.poll(() => active).toBe(addresses.length);
     await page.locator("#cancelServer").click();
     await expect.poll(() => active).toBe(0);
     await open(page);
@@ -109,5 +115,6 @@ test("remembered preset addresses remain hidden and do not populate the custom I
   await noVisibleIPs(page);
   await page.setViewportSize({ width: 430, height: 900 });
   await expect(page.locator("#preset-primary")).toBeVisible();
+  await expect(page.locator("#preset-primary2")).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });

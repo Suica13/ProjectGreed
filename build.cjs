@@ -48,8 +48,8 @@ if (typeof clientConfig.defaultServerAddress !== "string")
   );
 if (
   !Array.isArray(clientConfig.presetServers) ||
-  clientConfig.presetServers.length !== 2 ||
-  new Set(clientConfig.presetServers.map((server) => server.id)).size !== 2 ||
+  clientConfig.presetServers.length < 1 ||
+  new Set(clientConfig.presetServers.map((server) => server.id)).size !== clientConfig.presetServers.length ||
   clientConfig.presetServers.some(
     (server) =>
       !/^[a-z][a-z0-9_-]*$/.test(server.id) ||
@@ -59,7 +59,7 @@ if (
       !server.address.trim(),
   )
 )
-  throw Error("client/config.json: exactly two valid named presetServers are required");
+  throw Error("client/config.json: at least one valid named presetServer with a unique ID is required");
 html = html
   .replaceAll("__PROJECT_NAME__", project.name)
   .replaceAll("__PROJECT_VERSION__", project.version)

@@ -229,7 +229,7 @@ test("server dialog gates the table until handshake succeeds; refresh requests n
   page.on("websocket", (socket) => {
     if (new URL(socket.url()).port === String(server.address().port)) attempts++;
   });
-  for (const host of ["123.99.195.3:1313", "126.227.168.176:1313"])
+  for (const host of require("../client/config.json").presetServers.map(server => server.address))
     await page.routeWebSocket("ws://" + host + "/ws", (ws) => ws.close());
   try {
     await page.goto("/");

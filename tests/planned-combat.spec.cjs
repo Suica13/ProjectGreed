@@ -1,7 +1,7 @@
 const { test, expect } = require("@playwright/test");
 const { createServer } = require("../server.js");
 async function connect(page, port, name) {
-  for (const ip of ["123.99.195.3:1313", "126.227.168.176:1313"])
+  for (const ip of require("../client/config.json").presetServers.map(server => server.address))
     await page.routeWebSocket("ws://" + ip + "/ws", (ws) => ws.close());
   await page.goto("http://127.0.0.1:" + port);
   await page.locator("#playerId").fill(name);
