@@ -712,33 +712,6 @@
     "ZN_LongRangeBeamSniperRifle_Sniper_Aim": {
       "ref": "ZN_LongRangeBeamSniperRifle_Sniper_Aim__lv1",
       "overrides": {
-        "attack": {
-          "steps": [
-            {
-              "weaponDisplayIndex": 0,
-              "delay": 0
-            },
-            {
-              "animation": "Common_Shoot_Two_Handed_A_Stand",
-              "delay": 0
-            },
-            {
-              "shots": 1,
-              "muzzleIndex": 1,
-              "partBreakModifier": 1,
-              "requiredParts": [],
-              "delay": 0.25
-            }
-          ],
-          "startAnimation": null
-        },
-        "projectile": {
-          "texture": "../../projectiles/LockTarget_1.png",
-          "scale": 0.5,
-          "speed": 125,
-          "forwardOffset": 0,
-          "rotation": 0
-        },
         "requiredParts": [
           "rightArm"
         ],
@@ -761,26 +734,26 @@
         "muzzle": {
           "mounts": [
             {
-              "bone": "Body",
-              "offset": {
-                "x": 14,
-                "y": 35
-              }
-            },
-            {
-              "bone": "Body",
-              "offset": {
-                "x": 14,
-                "y": 35
+              "layer": "ZN_LongRangeBeamSniperRifle",
+              "point": {
+                "x": 2.500000000000001,
+                "y": -18.75
               }
             }
           ]
+        },
+        "localization": {
+          "zh": {
+            "name": "狙击蓄力"
+          },
+          "en": {
+            "name": "Charged Sniper Shot"
+          },
+          "ja": {
+            "name": "チャージ狙撃"
+          }
         }
-      },
-      "remove": [
-        "muzzleEffects",
-        "sound"
-      ]
+      }
     },
     "ZN_Shotgun": {
       "ref": "ZN_Shotgun__lv1",

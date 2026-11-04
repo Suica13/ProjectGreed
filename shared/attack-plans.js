@@ -76,7 +76,7 @@ function createAttackPlanner(rules, randomId) {
       combatMode,
       attacker: attacker.id,
       target: target.id,
-      targetSquad: rules.squadMembers(room.game, target).map((unit) => unit.id),
+      targetSquad: rules.squadAttackMembers(room.game, target).map((unit) => unit.id),
       seat,
       weapon: automatic[0].id,
       weapons: automatic.map((w) => w.id),
@@ -102,7 +102,8 @@ function createAttackPlanner(rules, randomId) {
   ) {
     if (manualPlans !== null) throw Error("当前模式不支持手动选择武器");
     if (!["melee", "shooting"].includes(combatMode)) throw Error("无效的交战方式");
-    const members = single || skillWeapon(attacker, weapon) ? [attacker] : rules.squadMembers(room.game, attacker);
+    const members = single || skillWeapon(attacker, weapon) ? [attacker] : rules.squadAttackMembers(room.game, attacker)
+      .filter(unit => !unit.embarked?.exposed || !unit.acted || unit.plan || unit.squadOrder);
     if (members.length === 1) return planOne(room, attacker, target, weapon, seat, combatMode);
     // Stage the whole squad: a rejected command must never reserve only half its members.
     const ids = new Set(members.map((unit) => unit.id));
@@ -178,8 +179,21 @@ function createAttackPlanner(rules, randomId) {
     syncPlan(room, attacker);
     attacker.acted = !!attacker.plan;
   }
+  function followSquad(room, joined) {
+    const members = rules.squadAttackMembers(room.game, joined);
+    const ids = new Set(members.map(unit => unit.id));
+    const order = room.plans.find(intent => intent.automatic && ids.has(intent.attacker));
+    const target = order && find(room, order.target);
+    if (!target || target.hp <= 0) return;
+    for (const unit of members) {
+      if (unit.acted || unit.plan || unit.pendingMove || unit.attackSkillRound === room.game.round) continue;
+      if (!rules.firePlan(room.game, unit, target, { combatMode: order.combatMode }).weapons.length) continue;
+      planOne(room, unit, target, null, order.seat, order.combatMode);
+      unit.squadOrder = true;
+    }
+  }
   function cancel(room, attacker, targetId = null, single = false) {
-    const members = single ? [attacker] : rules.squadMembers(room.game, attacker);
+    const members = single ? [attacker] : rules.squadAttackMembers(room.game, attacker);
     const candidates = members.filter(
       (member) =>
         member.plan &&
@@ -233,7 +247,7 @@ function createAttackPlanner(rules, randomId) {
       rules.faceTarget(target, attacker);
       // A defender squad has one response panel. Include incoming fire aimed
       // at any member, so the panel can select every attacking enemy squad.
-      const targetIds = new Set(rules.squadMembers(room.game, target).map((unit) => unit.id));
+      const targetIds = new Set(rules.squadAttackMembers(room.game, target).map((unit) => unit.id));
       const attacks = [intent];
       room.plans = room.plans.filter((other) => {
         if (!targetIds.has(other.target)) return true;
@@ -256,7 +270,7 @@ function createAttackPlanner(rules, randomId) {
         else if (from) delete from.plan;
         return false;
       });
-      const defenders = rules.squadMembers(room.game, target);
+      const defenders = rules.squadAttackMembers(room.game, target);
       const representative =
         defenders.find(
           (member) => rules.automaticSquadQueue(room.game, member, attacker, true).length,
@@ -340,8 +354,14 @@ function createAttackPlanner(rules, randomId) {
           delete attacker.plan;
           continue;
         }
-        const impact = intent.aimCell ?? rules.center(target);
+        const impact = intent.aimCell ?? rules.attackAimCell(room.game, attacker, target, [weapon]) ?? rules.center(target);
         const blastId = randomId();
+        // A mortar salvo is launched once at a cell. Resolve every occupant at
+        // each shell's impact, rather than queuing a full hidden salvo per victim.
+        if (weapon.category === "mortar") {
+          result.push({ ...intent, impactCell: impact, blastId, cellBlast: true });
+          continue;
+        }
         const victims = room.game.units
           .filter(
             (unit) =>
@@ -448,7 +468,7 @@ function createAttackPlanner(rules, randomId) {
     }
     // Unfocused squad members can counter without duplicating incoming fire.
     for (const request of [...room.reactions])
-      for (const member of rules.squadMembers(room.game, find(room, request.target)))
+      for (const member of rules.squadAttackMembers(room.game, find(room, request.target)))
         if (!room.reactions.some((other) => other.target === member.id))
           room.reactions.push({ ...request, id: randomId(), target: member.id, supportOnly: true });
     room.pending = room.reactions[0] || null;
@@ -523,7 +543,7 @@ function createAttackPlanner(rules, randomId) {
     const pending = room.reactions?.find((request) => request.id === reactionId) || room.pending;
     if (!pending || pending.id !== reactionId) throw Error("应战请求已过期，请处理当前交战");
     const members = new Set(
-      rules.squadMembers(room.game, find(room, pending.target)).map((unit) => unit.id),
+      rules.squadAttackMembers(room.game, find(room, pending.target)).map((unit) => unit.id),
     );
     const overrides = new Map();
     if (memberResponses !== null) {
@@ -603,6 +623,7 @@ function createAttackPlanner(rules, randomId) {
     reset,
     plan,
     planBatch,
+    followSquad,
     cancel,
     next,
     prepare,

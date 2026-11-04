@@ -42,7 +42,7 @@ for (const width of [1440, 390])
     await page.getByRole("button", { name: "驾驶员", exact: true }).click();
     await expect(page.locator("#formationMain")).toHaveAttribute("data-page", "pilots");
     await expect(page.locator("#formationPageTitle")).toHaveText("驾驶员");
-    await page.getByRole("button", { name: "生产", exact: true }).click();
+    await page.locator("#shellProduction").click();
     await expect(page.locator("#productionScreen")).toBeVisible();
     await expect(page.locator("#productionResources")).toBeHidden();
     await expect(page.locator("#productionPrice")).toBeVisible();
@@ -148,7 +148,7 @@ test("room membership survives every pre-battle page, assembly snapshots and dep
     }
     await page.locator("#shellHangar").click();
     await page.locator("#formationName").fill("NAV SAVED");
-    await page.getByRole("button", { name: "生产", exact: true }).click();
+    await page.locator("#shellProduction").click();
     await act(page, "sync");
     expect(await page.evaluate(() => pageView)).toBe("production");
     await page.locator("#shellHangar").click();
@@ -163,7 +163,14 @@ test("room membership survives every pre-battle page, assembly snapshots and dep
     await expect(page.locator("#shellRoomStatus")).toContainText("最终编组");
     await page.locator("#shellRoomStatus").click();
     await expect(page.locator("#roomPreparation")).toBeVisible();
+    await expect(page.locator("#editFinalFormation")).toBeVisible();
+    await page.locator("#editFinalFormation").click();
+    expect(await page.evaluate(() => pageView)).toBe("formation");
+    await page.evaluate(() => document.getElementById("saveFormation").click());
+    await idle(page);
+    await expect(page.locator("#roomPreparation")).toBeVisible();
     await act(page, "confirm_formation");
+    await expect(page.locator("#editFinalFormation")).toBeHidden();
     await act(guest, "confirm_formation");
     await expect(page.locator("#gameScene")).toBeVisible();
     await expect(page.locator("#menuShell")).toBeHidden();

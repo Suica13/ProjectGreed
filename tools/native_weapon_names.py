@@ -24,7 +24,7 @@ def label(key, weapon, ship=False):
     if ident in EXACT:
         return EXACT[ident]
     if re.search(r"(?:Bazooka\w*|(?:^|_)BZ)_(?:SG|ShotgunMode)(?:_|$)", ident, re.I):
-        return ("扩散火箭筒", "Cluster Bazooka", "拡散バズーカ")
+        return ("火箭筒[霰弹]", "Bazooka [Scatter]", "バズーカ[散弾]")
     if re.search(r"(?:BeamRifle|(?:^|_)[SHL]?BR(?:_|$))", ident, re.I) and not re.search(r"(?:Arm|Double|Hand)_?BR", ident):
         return (("实弹步枪", "Ballistic Rifle", "実弾ライフル") if weapon.get("type") == "shell"
                 else ("光束步枪", "Beam Rifle", "ビーム・ライフル"))

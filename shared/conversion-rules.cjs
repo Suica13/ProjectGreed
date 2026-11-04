@@ -131,7 +131,7 @@ function globals(prefab, rules) {
       const payloadSpeed = (flightSource || weapon).nativePayload?.ProjectileSpeed;
       const nativeSpeed = payloadSpeed > 0 ? payloadSpeed : weapon.projectile.nativeSpeed ?? weapon.projectile.speed;
       weapon.projectile.nativeSpeed = nativeSpeed;
-      weapon.projectile.speed = nativeSpeed * w.projectileSpeed;
+      weapon.projectile.speed = (weapon.projectile.presentationSpeed ?? nativeSpeed) * w.projectileSpeed;
       if (weapon.projectile.cluster) {
         const cluster = weapon.projectile.cluster;
         cluster.nativeSpeed ??= cluster.speed;

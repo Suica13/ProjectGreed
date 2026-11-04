@@ -1434,6 +1434,15 @@ const Tactics = (() => {
       .sort((a, b) => (a.squadSlot ?? 0) - (b.squadSlot ?? 0) || a.id.localeCompare(b.id));
   }
   const squadCapacity = unit => Math.max(1, modelOf(unit).transport?.slotCost || 1);
+  function squadAttackMembers(g, unit) {
+    const root = unit?.embarked?.exposed
+      ? g.units.find(other => other.id === unit.embarked.carrierId) || unit : unit;
+    const members = squadMembers(g, root);
+    const carriers = new Set(members.map(other => other.id));
+    return [...members, ...g.units.filter(other =>
+      other.hp > 0 && other.embarked?.exposed && carriers.has(other.embarked.carrierId) &&
+      other.team === root.team && controllerOf(g, other) === controllerOf(g, root))];
+  }
   const squadFits = members => members.length <= 6 && members.reduce((sum,u) => sum+squadCapacity(u),0) <= 6;
   const squadEvasion = (g, unit) => squadEligible(unit) ? Math.round(12 * (6-Math.min(6,squadMembers(g,unit).length))/5) : 0;
   function squadTarget(g, candidates) {
@@ -1450,7 +1459,7 @@ const Tactics = (() => {
       unitSize(model) !== "large" &&
       size.width === 1 &&
       size.height === 1 &&
-      !hangars.of(unit).length
+      hangars.of(unit).every(hangar => hangar.kind === "sfs")
     );
   }
   function squadJoinTarget(g, unit, x, y, members = squadMembers(g, unit)) {
@@ -1475,7 +1484,7 @@ const Tactics = (() => {
     const destination = squadMembers(g, target);
     return squadFits([...members, ...destination]) &&
       occupants.every((other) => destination.includes(other)) &&
-      destination.every((other) => !other.plan && !other.pendingMove)
+      destination.every((other) => !other.pendingMove && other.attackSkillRound !== g.round)
       ? target
       : null;
   }
@@ -3547,6 +3556,7 @@ const Tactics = (() => {
         !other.embarked &&
         other.team === u.team &&
         controllerOf(g, other) === controller &&
+        !other.acted && !other.plan && !other.pendingMove && available(other) &&
         dist(u, other) <= moveRange + 1 &&
         squadJoinTarget(g, u, other.x, other.y, members)?.id === other.id &&
         nearest(other) <= currentNearest + allowance,
@@ -3887,6 +3897,7 @@ const Tactics = (() => {
     anchorAt,
     occupies,
     squadMembers,
+    squadAttackMembers,
     squadEligible,
     squadJoinTarget,
     squadOffset,

@@ -821,7 +821,7 @@ const RoomPanel = (() => {
       (teamLists.get(team) || squads).append(card);
     }
     const own = snapshot.assembly?.players.find((player) => player.memberId === snapshot.you?.id);
-    byId("editFinalFormation").hidden = true;
+    byId("editFinalFormation").hidden = !own || !!snapshot.loadedSave || !!own.ready;
     const allBots =
       snapshot.you?.id === snapshot.hostId &&
       snapshot.members.filter((player) => player.seat !== null).every((player) => player.bot);
@@ -882,8 +882,7 @@ const RoomPanel = (() => {
       snapshot.phase === "finished";
     shareButton.textContent =
       snapshot.settings.shareAlliedUnits || own?.shareUnits ? "已共享单位给友军" : "共享单位给友军";
-    byId("roomFormation").disabled =
-      !!snapshot.loadedSave || snapshot.started || busy || !!own?.formationPreset;
+    byId("roomFormation").disabled = busy || !Formation.canEditRoom();
     const formationSelect = byId("roomFormationSelect");
     formationSelect.replaceChildren();
     const presets = Formation.presets();
@@ -904,8 +903,7 @@ const RoomPanel = (() => {
     if (snapshot.loadedSave) {
       formationSelect.replaceChildren(new Option(I18n.text("存档编组"), "saved"));
     }
-    formationSelect.disabled =
-      !!snapshot.loadedSave || snapshot.started || busy || !!own?.formationPreset;
+    formationSelect.disabled = busy || !Formation.canEditRoom();
     let disabledCount = 0,
       valid = true;
     try {
@@ -1183,7 +1181,7 @@ const RoomPanel = (() => {
   };
   byId("roomFormationSelect").onchange = () => {
     const snapshot = Net.snapshot;
-    if (!snapshot || snapshot.started || Net.awaiting) return;
+    if (!snapshot || !Formation.canEditRoom() || Net.awaiting) return;
     if (!Formation.selectPreset(Number(byId("roomFormationSelect").value))) return;
     const units = Formation.current();
     if (snapshot.you?.seat !== null) {

@@ -10,7 +10,22 @@ const Lobby = (() => {
   const presets = CLIENT_CONFIG.presetServers;
   const probes = new Set();
   let probeGeneration = 0,
-    statusTimer = null;
+    statusTimer = null,
+    pingTimer = null,
+    pingStarted = null;
+  let onlinePlayers = null, currentPing = null;
+  function showMetrics(prefix, players, ping) {
+    const count = Number.isSafeInteger(players) && players >= 0 ? String(players) : "—";
+    const latency = Number.isFinite(ping) && ping >= 0 ? Math.round(ping) + " ms" : "—";
+    byId(prefix === "connected" ? "connectedOnlinePlayers" : "preset-players-" + prefix).textContent = count;
+    byId(prefix === "connected" ? "connectedServerPing" : "preset-ping-" + prefix).textContent = latency;
+  }
+  function samplePing() {
+    if (socket?.readyState !== WebSocket.OPEN) return;
+    if (pingStarted !== null && performance.now() - pingStarted < 8000) return;
+    pingStarted = performance.now();
+    socket.send(JSON.stringify({ type: "ping" }));
+  }
   function setConnecting(busy) {
     byId("connectServer").disabled = busy;
     for (const preset of presets) byId("preset-" + preset.id).disabled = busy;
@@ -29,6 +44,7 @@ const Lobby = (() => {
       offline: "离线",
       unavailable: "无法检测",
     }[state];
+    if (state !== "online") showMetrics(preset.id, null, null);
   }
   // 只请求房间列表，不创建/加入房间；旧版服务端也支持该探测。
   function probe(preset, generation) {
@@ -36,13 +52,18 @@ const Lobby = (() => {
     return new Promise((resolve) => {
       let peer = null,
         timer = null,
-        done = false;
-      function finish(state) {
+        done = false,
+        started = null;
+      function finish(state, message = null) {
         if (done) return;
         done = true;
         clearTimeout(timer);
         probes.delete(cancel);
-        if (generation === probeGeneration && state) mark(preset, state);
+        if (generation === probeGeneration && state) {
+          mark(preset, state);
+          if (state === "online") showMetrics(preset.id, message?.onlinePlayers,
+            started === null ? null : performance.now() - started);
+        }
         if (peer) {
           peer.onopen = peer.onmessage = peer.onclose = peer.onerror = null;
           peer.close();
@@ -56,11 +77,14 @@ const Lobby = (() => {
         if (location.protocol === "https:" && url.startsWith("ws:")) return finish("unavailable");
         peer = new WebSocket(url);
         timer = setTimeout(() => finish("offline"), 4000);
-        peer.onopen = () => peer.send(JSON.stringify({ type: "list_rooms" }));
+        peer.onopen = () => {
+          started = performance.now();
+          peer.send(JSON.stringify({ type: "list_rooms", statusOnly: true }));
+        };
         peer.onmessage = (event) => {
           try {
             const message = JSON.parse(event.data);
-            finish(message.type === "rooms" && Array.isArray(message.rooms) ? "online" : "offline");
+            finish(message.type === "rooms" && Array.isArray(message.rooms) ? "online" : "offline", message);
           } catch {
             finish("offline");
           }
@@ -84,6 +108,9 @@ const Lobby = (() => {
 
   function stopConnection() {
     clearTimeout(timeout);
+    clearInterval(pingTimer);
+    pingTimer = pingStarted = onlinePlayers = currentPing = null;
+    showMetrics("connected", null, null);
     const previous = socket;
     socket = null;
     currentURL = null;
@@ -251,7 +278,10 @@ const Lobby = (() => {
     currentURL = url;
     timeout = setTimeout(() => fail("连接超时，请检查 IP 和端口。"), 8000);
     current.onopen = () => {
-      if (socket === current) { ServerActivities.attach(current); requestRooms(); }
+      if (socket === current) {
+        ServerActivities.attach(current); requestRooms(); samplePing();
+        pingTimer = setInterval(samplePing, 5000);
+      }
     };
     current.onmessage = (event) => {
       if (socket !== current) return;
@@ -263,11 +293,20 @@ const Lobby = (() => {
         return;
       }
       if (ServerActivities.receive(message,current)) return;
+      if (message.type === "pong") {
+        if (pingStarted !== null) currentPing = performance.now() - pingStarted;
+        pingStarted = null;
+        if (Number.isSafeInteger(message.onlinePlayers)) onlinePlayers = message.onlinePlayers;
+        showMetrics("connected", onlinePlayers, currentPing);
+        return;
+      }
       if (message.type === "error") {
         fail(message.message || "服务器拒绝了连接。");
         return;
       }
       if (message.type !== "rooms" || !Array.isArray(message.rooms)) return;
+      if (Number.isSafeInteger(message.onlinePlayers)) onlinePlayers = message.onlinePlayers;
+      showMetrics("connected", onlinePlayers, currentPing);
       clearTimeout(timeout);
       ready = true;
       window.dispatchEvent(new Event("lobby-connection-changed"));
@@ -308,7 +347,14 @@ const Lobby = (() => {
     button.type = "button";
     status.id = "preset-status-" + preset.id;
     status.setAttribute("role", "status");
-    button.append(label, status);
+    const metrics = element("span", "server-metrics");
+    const players = element("span", "", "—"), ping = element("span", "", "—");
+    players.id = "preset-players-" + preset.id;
+    ping.id = "preset-ping-" + preset.id;
+    players.setAttribute("data-i18n-ignore", "");
+    ping.setAttribute("data-i18n-ignore", "");
+    metrics.append(element("span", "", "在线玩家"), players, element("span", "", "PING"), ping);
+    button.append(label, status, metrics);
     button.onclick = () => connect(preset.address);
     byId("presetServers").append(button);
   }

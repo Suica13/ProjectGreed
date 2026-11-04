@@ -316,12 +316,12 @@ const AttackControls = (() => {
     const root = current && getUnit(current.unitId);
     if (!root || !draft(root)) return null;
     return unit?.id === root.id ||
-      (!current.single && Rules.squadMembers(game, root).some((member) => member.id === unit?.id))
+      (!current.single && Rules.squadAttackMembers(game, root).some((member) => member.id === unit?.id))
       ? current
       : null;
   }
   function members(unit) {
-    return squadSingleMove ? [unit] : Rules.squadMembers(game, unit);
+    return squadSingleMove ? [unit] : Rules.squadAttackMembers(game, unit);
   }
   function targetLabel(unit) {
     const count = Rules.squadMembers(game, unit).length;
@@ -333,7 +333,8 @@ const AttackControls = (() => {
   }
   function hasPlan(unit) { return members(unit).some(member=>!!member.plan); }
   function editable(unit) {
-    return !!unit && members(unit).every(member=>member.attackSkillRound!==game.round &&
+    return !!unit && members(unit).filter(member=>!member.embarked?.exposed || !member.acted || member.plan || member.squadOrder)
+      .every(member=>member.attackSkillRound!==game.round &&
       (!member.acted || member.plan || member.squadOrder));
   }
   function cancelPlan(unit) {
@@ -392,6 +393,8 @@ const AttackControls = (() => {
     return true;
   }
   function memberPlan(unit, target) {
+    if (unit.embarked?.exposed && unit.acted && !unit.plan && !unit.squadOrder)
+      return { weapons: [], en: 0 };
     const draft = groupDraft(unit);
     if (draft?.cache?.[unit.id]) return draft.cache[unit.id];
     const plan = Rules.firePlan(game, unit, target, { combatMode: squadCombatMode });

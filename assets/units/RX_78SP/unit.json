@@ -664,6 +664,47 @@
     "EF_RX_78SP_BR_Sniper_Aim": {
       "ref": "EF_RX_78SP_BR_Sniper_Aim__lv1",
       "overrides": {
+        "name": "狙击蓄力",
+        "slot": "skill",
+        "damagePerShot": 8000.0,
+        "damageComponents": {
+          "beam": 4000.0,
+          "beamAP": 4000.0
+        },
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Shoot_Two_Handed_A_Stand",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1,
+              "requiredParts": [],
+              "delay": 0.25
+            }
+          ],
+          "startAnimation": null
+        },
+        "projectile": {
+          "texture": "../../projectiles/Beam_2.png",
+          "scale": 1,
+          "speed": 100,
+          "forwardOffset": -7.5,
+          "rotation": 0
+        },
+        "localization": {
+          "zh": {
+            "name": "狙击蓄力"
+          },
+          "en": {
+            "name": "Charged Sniper Shot"
+          },
+          "ja": {
+            "name": "チャージ狙撃"
+          }
+        },
         "requiredParts": [
           "rightArm"
         ],
@@ -686,20 +727,36 @@
         "muzzle": {
           "mounts": [
             {
-              "bone": "Body",
-              "offset": {
-                "x": 9,
-                "y": 35
-              }
-            },
-            {
-              "bone": "Body",
-              "offset": {
-                "x": 9,
-                "y": 35
+              "layer": "EF_RX_78SP_BR",
+              "point": {
+                "x": 1.1634144591899855e-15,
+                "y": -19
               }
             }
           ]
+        },
+        "muzzleEffects": [
+          "Beam_Fire_1_Pink"
+        ],
+        "sound": {
+          "file": "../../sounds/BeamCannon_1.ogg",
+          "volume": 0.6
+        },
+        "displayIndex": 0,
+        "noCounter": true,
+        "hitScale": 2,
+        "description": "本回合锁定目标，下次己方回合开始时目标仍在射程内则自动射击；命中率×2，伤害为原MOD技能的一半，EN不变。",
+        "special": {
+          "type": "snipe",
+          "delayOwnTurns": 1,
+          "baseWeapon": "EF_RX_78SP_BR"
+        },
+        "sniperDamageBeforeHalving": {
+          "damagePerShot": 16000,
+          "damageComponents": {
+            "beam": 8000,
+            "beamAP": 8000
+          }
         }
       }
     },

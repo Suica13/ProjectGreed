@@ -115,7 +115,7 @@
       },
       "visibleWhen": {
         "kit": [
-          "kit_2"
+          "kit_1"
         ],
         "weaponDisplayIndex": {
           "not": 0
@@ -408,7 +408,7 @@
       },
       "visibleWhen": {
         "kit": [
-          "kit_2"
+          "kit_1"
         ],
         "weaponDisplayIndex": 0
       },
@@ -757,6 +757,7 @@
     "EF_HypeBazookaKai_0087_ShotgunMode": {
       "ref": "EF_HypeBazookaKai_0087_ShotgunMode__lv2",
       "overrides": {
+        "name": "火箭筒[霰弹]",
         "attack": {
           "steps": [
             {
@@ -885,6 +886,17 @@
             "hiddenAction_EF_HypeBazookaKai_0087_ShotgunMode_Fire_Step_Final",
             "hiddenAction_SetAttackingOff"
           ]
+        },
+        "localization": {
+          "zh": {
+            "name": "火箭筒[霰弹]"
+          },
+          "en": {
+            "name": "Bazooka [Scatter]"
+          },
+          "ja": {
+            "name": "バズーカ[散弾]"
+          }
         },
         "requiredParts": [
           "rightArm"
@@ -1089,7 +1101,7 @@
     },
     {
       "id": "kit_1",
-      "name": "扩散火箭筒套件",
+      "name": "火箭筒[霰弹]套件",
       "cost": 50,
       "weapons": [
         "EF_HypeBazookaKai_0087_ShotgunMode",
@@ -1099,13 +1111,13 @@
       ],
       "localization": {
         "zh": {
-          "name": "扩散火箭筒套件"
+          "name": "火箭筒[霰弹]套件"
         },
         "en": {
-          "name": "Cluster Bazooka Kit"
+          "name": "Bazooka [Scatter] Kit"
         },
         "ja": {
-          "name": "拡散バズーカ装備"
+          "name": "バズーカ[散弾]装備"
         }
       }
     }

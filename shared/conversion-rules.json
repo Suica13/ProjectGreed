@@ -16,7 +16,7 @@
   },
   "units": {
     "hp": 1,
-    "en": 0.5,
+    "en": 1,
     "move": 0.5,
     "accuracy": 1,
     "reaction": 1
@@ -155,11 +155,11 @@
       "maxRange": -1
     },
     "mortar": {
-      "damage": 1,
+      "damage": 1.25,
       "accuracy": 1,
       "en": 1,
       "range": 1,
-      "rangeBonus": 0,
+      "rangeBonus": 4,
       "baseEN": -1,
       "baseHit": 65,
       "minRange": -1,

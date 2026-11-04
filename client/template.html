@@ -2396,6 +2396,10 @@
             <div data-ui-node="node-155">
               <h3 data-ui-node="node-151">房间列表</h3>
               <span data-ui-node="node-156" id="connectedServer" class="muted"></span>
+              <span id="connectedServerMetrics" class="server-metrics muted">
+                <span>在线玩家</span><span id="connectedOnlinePlayers" data-i18n-ignore>—</span>
+                <span data-i18n-ignore>PING</span><span id="connectedServerPing" data-i18n-ignore>—</span>
+              </span>
             </div>
             <div class="lobby-header-actions">
               <button id="openServerActivities" type="button" disabled>服务器活动</button>
@@ -2514,7 +2518,7 @@
           <div class="room-controls">
             <section id="finalAssemblyPanel" hidden aria-labelledby="finalAssemblyTitle">
               <h3 id="finalAssemblyTitle">最终编组</h3>
-              <p class="muted">可查看队友编组，确认阶段不可修改编组。超限或不被允许的单位无法出击。</p>
+              <p class="muted">可查看队友编组，确认前可修改自己的编组。超限或不被允许的单位无法出击。</p>
               <div id="finalSquads"></div>
               <p id="finalAssemblyStatus" role="status"></p>
               <div class="net-buttons">

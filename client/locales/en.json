@@ -3293,5 +3293,7 @@
   "武器超过本回合使用次数上限": "The weapon has reached its usage limit for this turn",
   "基础最小射程": "Base minimum range",
   "基础最大射程": "Base maximum range",
-  "舰炮命中倍率": "Naval gun accuracy multiplier"
+  "舰炮命中倍率": "Naval gun accuracy multiplier",
+  "可查看队友编组，确认前可修改自己的编组。超限或不被允许的单位无法出击。": "View allied formations and edit your own before confirming. Units exceeding limits or violating tag rules cannot deploy.",
+  "在线玩家": "Online players"
 }

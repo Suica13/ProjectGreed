@@ -825,6 +825,7 @@
     "AEUG_ClayBazooka_ShotgunMode": {
       "ref": "AEUG_ClayBazooka_ShotgunMode__lv2",
       "overrides": {
+        "name": "火箭筒[霰弹]",
         "attack": {
           "steps": [
             {
@@ -953,6 +954,17 @@
             "hiddenAction_AEUG_ClayBazooka_ShotgunMode_Fire_Step_Final",
             "hiddenAction_SetAttackingOff"
           ]
+        },
+        "localization": {
+          "zh": {
+            "name": "火箭筒[霰弹]"
+          },
+          "en": {
+            "name": "Bazooka [Scatter]"
+          },
+          "ja": {
+            "name": "バズーカ[散弾]"
+          }
         },
         "requiredParts": [
           "rightArm"
@@ -1101,7 +1113,7 @@
     },
     {
       "id": "kit_3",
-      "name": "扩散火箭筒套件",
+      "name": "火箭筒[霰弹]套件",
       "cost": 50,
       "weapons": [
         "AEUG_ClayBazooka_ShotgunMode",
@@ -1112,13 +1124,13 @@
       ],
       "localization": {
         "zh": {
-          "name": "扩散火箭筒套件"
+          "name": "火箭筒[霰弹]套件"
         },
         "en": {
-          "name": "Cluster Bazooka Kit"
+          "name": "Bazooka [Scatter] Kit"
         },
         "ja": {
-          "name": "拡散バズーカ装備"
+          "name": "バズーカ[散弾]装備"
         }
       }
     }

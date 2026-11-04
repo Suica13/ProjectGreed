@@ -76,6 +76,7 @@ function createServer({
           version: project.version,
           protocol: 1,
           rooms: rooms.size,
+          onlinePlayers: onlinePlayerCount(),
         }),
       );
       return;
@@ -147,6 +148,13 @@ function createServer({
   }, 1000);
   activityTimer.unref();
   let lastRoomList = "";
+  function onlinePlayerCount() {
+    const players = new Set();
+    for (const client of wss.clients)
+      if (client.readyState === WebSocket.OPEN && (client.lobby || client.room || client.activityProfileId))
+        players.add(client.activityProfileId || client);
+    return players.size;
+  }
   const writeSettlement = require("./tools/settlement-log.cjs").createSettlementLog({
     directory: settlementDirectory,
     version: project.version,
@@ -173,11 +181,12 @@ function createServer({
     randomSeed: () => crypto.randomBytes(4).readUInt32LE(),
     randomToken: () => crypto.randomBytes(24).toString("hex"),
     onRooms: (list) => {
-      const serialized = JSON.stringify(list);
+      const onlinePlayers = onlinePlayerCount();
+      const serialized = JSON.stringify({ rooms: list, onlinePlayers });
       if (serialized === lastRoomList) return;
       lastRoomList = serialized;
       for (const client of wss.clients)
-        if (client.lobby) send(client, { type: "rooms", rooms: list });
+        if (client.lobby) send(client, { type: "rooms", rooms: list, onlinePlayers });
     },
   });
   const {
@@ -229,10 +238,13 @@ function createServer({
           if (msg.type === "activity_hello" && msg.version !== project.version)
             throw Error("活动客户端版本不匹配");
           activities.receive(ws, msg);
-        } else if (msg.type === "ping") send(ws, { type: "pong" });
+          if (msg.type === "activity_hello") broadcastRooms();
+        } else if (msg.type === "ping") send(ws, { type: "pong", onlinePlayers: onlinePlayerCount() });
         else if (msg.type === "list_rooms") {
-          ws.lobby = true;
-          send(ws, { type: "rooms", rooms: roomList() });
+          const joiningLobby = !ws.lobby && msg.statusOnly !== true;
+          if (msg.statusOnly !== true) ws.lobby = true;
+          send(ws, { type: "rooms", rooms: roomList(), onlinePlayers: onlinePlayerCount() });
+          if (joiningLobby) broadcastRooms();
         } else if (msg.type === "leave") leaveRoom(ws);
         else if (msg.type === "hello") {
           // Check before creating a room or consuming a reconnect token. Older
@@ -271,6 +283,7 @@ function createServer({
     ws.on("close", () => {
       activities.disconnect(ws);
       engine.disconnect(ws);
+      broadcastRooms();
     });
   });
   const heartbeat = setInterval(() => {

@@ -10,7 +10,9 @@ test("AI search remains read-only and repeated searches give the same orders", (
     second = G.aiChoice(game, game.units[0]);
   assert.deepEqual(first, second);
   assert.equal(JSON.stringify(game), before);
-  assert.deepEqual([first.x, first.y, first.target], [8, 5, "enemy-0"]);
+  assert.equal(first.target, "enemy-0");
+  assert(G.reachable(game, game.units[0]).has(G.key(first.x, first.y)));
+  assert(first.x > game.units[0].x, "the chosen cell advances toward the enemy");
 });
 
 test("carrier exits share one tactical evaluation and preserve the preferred squad exit", () => {

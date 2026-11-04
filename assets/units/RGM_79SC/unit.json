@@ -797,6 +797,33 @@
     "EF_R4_BeamSniperRifle_Sniper_Aim": {
       "ref": "EF_R4_BeamSniperRifle_Sniper_Aim__lv1",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "weaponDisplayIndex": 0,
+              "delay": 0
+            },
+            {
+              "animation": "Common_Shoot_Two_Handed_A_Stand",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1,
+              "requiredParts": [],
+              "delay": 0.25
+            }
+          ],
+          "startAnimation": null
+        },
+        "projectile": {
+          "texture": "../../projectiles/Beam_2.png",
+          "scale": 1,
+          "speed": 125,
+          "forwardOffset": -7.5,
+          "rotation": 0
+        },
         "requiredParts": [
           "rightArm"
         ],
@@ -824,15 +851,26 @@
                 "x": -0.5882352941176454,
                 "y": -27.058823529411764
               }
-            },
-            {
-              "layer": "EF_R4_BeamSniperRifle_Attack",
-              "point": {
-                "x": -0.5882352941176454,
-                "y": -27.058823529411764
-              }
             }
           ]
+        },
+        "muzzleEffects": [
+          "Beam_Fire_1_Pink"
+        ],
+        "sound": {
+          "file": "../../sounds/BeamCannon_1.ogg",
+          "volume": 0.6
+        },
+        "localization": {
+          "zh": {
+            "name": "狙击蓄力"
+          },
+          "en": {
+            "name": "Charged Sniper Shot"
+          },
+          "ja": {
+            "name": "チャージ狙撃"
+          }
         }
       }
     },

@@ -644,6 +644,14 @@
     "AEUG_MSZ_006C1_BeamSmartGun": {
       "ref": "AEUG_MSZ_006C1_BeamSmartGun__lv1",
       "overrides": {
+        "projectile": {
+          "texture": "../../projectiles/Beam_2_Blue.png",
+          "scale": 1.0,
+          "speed": 0.75,
+          "forwardOffset": -7.5,
+          "rotation": 0.0,
+          "presentationSpeed": 125
+        },
         "requiredParts": [
           "rightArm"
         ],
@@ -762,6 +770,44 @@
     "AEUG_MSZ_006C1_BeamSmartGun_Sniper_Aim": {
       "ref": "AEUG_MSZ_006C1_BeamSmartGun_Sniper_Aim__lv1",
       "overrides": {
+        "name": "狙击蓄力",
+        "slot": "skill",
+        "damagePerShot": 17500.0,
+        "damageComponents": {
+          "beam": 12500.0,
+          "beamAP": 5000.0
+        },
+        "attack": {
+          "steps": [
+            {
+              "weaponDisplayIndex": 0,
+              "delay": 0
+            },
+            {
+              "animation": "Common_Shoot_Two_Handed_A_Stand",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "delay": 0.25
+            }
+          ],
+          "startAnimation": null
+        },
+        "changeHeldWeapon": false,
+        "projectile": {
+          "texture": "../../projectiles/Beam_2_Blue.png",
+          "scale": 1.0,
+          "speed": 0.75,
+          "forwardOffset": -7.5,
+          "rotation": 0.0,
+          "presentationSpeed": 125
+        },
         "requiredParts": [
           "rightArm"
         ],
@@ -789,15 +835,41 @@
                 "x": 9.0,
                 "y": 40.0
               }
-            },
-            {
-              "bone": "Body",
-              "offset": {
-                "x": 9.0,
-                "y": 40.0
-              }
             }
           ]
+        },
+        "muzzleEffects": [
+          "Beam_Fire_1_Blue"
+        ],
+        "sound": {
+          "file": "../../sounds/BeamCannon_2.ogg",
+          "volume": 0.6
+        },
+        "noCounter": true,
+        "hitScale": 2,
+        "description": "本回合锁定目标，下次己方回合开始时目标仍在射程内则自动射击；命中率×2，伤害为原MOD技能的一半，EN不变。",
+        "special": {
+          "type": "snipe",
+          "delayOwnTurns": 1,
+          "baseWeapon": "AEUG_MSZ_006C1_BeamSmartGun"
+        },
+        "sniperDamageBeforeHalving": {
+          "damagePerShot": 35000.0,
+          "damageComponents": {
+            "beam": 25000.0,
+            "beamAP": 10000.0
+          }
+        },
+        "localization": {
+          "zh": {
+            "name": "狙击蓄力"
+          },
+          "en": {
+            "name": "Charged Sniper Shot"
+          },
+          "ja": {
+            "name": "チャージ狙撃"
+          }
         }
       }
     },

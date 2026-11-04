@@ -423,6 +423,12 @@ const AutomaticFire = (() => {
         from = find(run.from);
       let to = job.destination || find(run.to) || initial.get(run.to);
       if (job.kind === "launch") {
+        if (run.intent.cellBlast && from && (!to || to.hp <= 0)) {
+          to = { ...structuredClone(to || from), ...run.intent.impactCell,
+            id: "impact-" + randomId(), hp: 1, shield: 0, visualOnly: true,
+            team: 1 - from.team };
+          initial.set(to.id, structuredClone(to));
+        }
         if (
           from &&
           from.hp > 0 &&
@@ -585,7 +591,7 @@ const AutomaticFire = (() => {
       } else {
         if (!to) continue;
         const victims =
-          run.intent.automatic && ["nuke", "blast"].includes(run.weapon.special?.type)
+          (run.intent.automatic || run.intent.cellBlast) && ["nuke", "blast"].includes(run.weapon.special?.type)
             ? game.units.filter(
                 (unit) =>
                   unit.team !== job.source.team &&

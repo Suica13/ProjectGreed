@@ -20,10 +20,16 @@ function fixture(carrierId = "DodaiYS") {
 test("native SFS platforms have one exposed MS slot with original offsets", () => {
   const platforms = G.catalog.prefabs.filter((p) => p.hangars.some((h) => h.kind === "sfs"));
   assert.deepEqual(platforms.map((p) => p.id).sort(), [
+    "BaseJabber",
     "Burstliner",
+    "Dodai2",
+    "DodaiKai",
     "DodaiYS",
     "FFB_7Bst",
     "FF_X7Bst",
+    "G_Fighter",
+    "Gator",
+    "SFU_X79",
     "Skiure",
   ]);
   for (const p of platforms) {
@@ -96,7 +102,7 @@ test("boarding confirmation never turns into a normal move when its carrier leav
   assert.throws(() => G.confirmMove(g, u));
   assert.deepEqual(u, before);
 });
-test("SFS dismount preview can be cancelled, then confirmed with existing launch AP rules", () => {
+test("SFS dismount preview can be cancelled and confirmed without forced-exit penalties", () => {
   const { g, carrier, u, h } = fixture();
   G.hangars.embark(g, u, carrier, h.id);
   G.end(g);
@@ -117,7 +123,7 @@ test("SFS dismount preview can be cancelled, then confirmed with existing launch
   assert(u.moved && !u.acted);
   assert.equal(u.hp, hp);
   assert.equal(u.en, en);
-  assert.equal(G.actionPoints(u), Math.ceil(G.actionBudget(u) * 0.75));
+  assert.notEqual(u.forcedExitRound, g.round);
 });
 test("SFS does not repair passengers; carrier destruction uses hangar evacuation once", () => {
   const { g, carrier, u, h } = fixture();

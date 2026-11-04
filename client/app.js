@@ -1216,7 +1216,7 @@ function mapRanges(chosen, canMove, deploymentSeat, showAttack = false) {
   const attackArea = new Set(),
     attackTargets = new Set();
   if (showAttack && chosen) {
-    for (const member of squadSingleMove ? [chosen] : Rules.squadMembers(game, chosen)) {
+    for (const member of squadSingleMove ? [chosen] : Rules.squadAttackMembers(game, chosen)) {
       // 射程可随预览落点更新；视野与索敌仍使用未确认的裁定状态。
       const attackOrigin = chosen.pendingMove
         ? {
@@ -2467,10 +2467,11 @@ function beginAttack(a, b, w, weapons = [w]) {
   const offensiveSkill = w?.slot === "skill";
   if (!offensiveSkill && !squadSingleMove && !Rules.automaticSquadQueue(game, a, b).length)
     a =
-      Rules.squadMembers(game, a).find(
+      Rules.squadAttackMembers(game, a).find(
         (member) => Rules.automaticSquadQueue(game, member, b).length,
       ) || a;
-  const plannedMembers = offensiveSkill ? [{unit:a,weapons:[w]}] : (squadSingleMove ? [a] : Rules.squadMembers(game,a)).map(member => ({
+  const plannedMembers = offensiveSkill ? [{unit:a,weapons:[w]}] : (squadSingleMove ? [a] : Rules.squadAttackMembers(game,a))
+    .filter(member=>!member.embarked?.exposed || !member.acted || member.plan || member.squadOrder).map(member => ({
     unit: member,
     weapons: Rules.firePlan(game, member, b, { combatMode: squadCombatMode }).weapons,
   })).filter(plan=>plan.weapons.length);
@@ -2501,7 +2502,7 @@ function beginAttack(a, b, w, weapons = [w]) {
   }
   if (phase !== "idle" || !weapons.length || a.acted) return;
   GameAudio.play("lockonSound");
-  for (const member of squadSingleMove ? [a] : Rules.squadMembers(game, a))
+  for (const member of squadSingleMove ? [a] : Rules.squadAttackMembers(game, a))
     Rules.faceTarget(member, b);
   Rules.faceTarget(b, a);
   pending = {

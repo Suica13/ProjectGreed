@@ -1350,6 +1350,9 @@ body.menu-shell-active #formationMain .formation-toolbar #openFormationShare { w
 #serverForm input { width:100%; min-width:0; max-width:100%; box-sizing:border-box; }
 #serverForm .preset-server { min-width:0; max-width:100%; flex-wrap:wrap; text-align:left; }
 #serverForm .preset-server > * { min-width:0; }
+.server-metrics { display:inline-flex; align-items:center; gap:6px; font-size:12px; font-variant-numeric:tabular-nums; white-space:nowrap; }
+#serverForm .preset-server .server-metrics { flex-basis:100%; justify-content:flex-end; color:#bdd3e3; }
+#connectedServerMetrics { margin-left:12px; }
 #serverForm .net-buttons { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
 #serverForm .net-buttons button { width:100%; min-width:0; white-space:normal; }
 @media(max-width:600px) {

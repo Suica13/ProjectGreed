@@ -84,7 +84,8 @@ test("all sniper charge variants render real bullets and finish their playback",
   Net.leave();session++;
   const variants=new Map();
   for(const model of Object.values(UnitModels))for(const weapon of model.weapons)
-   if(weapon.special?.type==='snipe')variants.set(weapon.id,{unitId:model.prefabId,kitId:model.kitId});
+   if(weapon.special?.type==='snipe')variants.set(weapon.id,{unitId:model.prefabId,kitId:model.kitId,
+    ...(model.requiredPilotId?{customPilot:PilotSystem.createAce(model.requiredPilotId)}:{})});
   const finish=CombatPlayback.finish;let completed=0,maxSeconds=0;
   CombatPlayback.finish=()=>{completed++;battleView=null;MapCombat.reset();};
   try {

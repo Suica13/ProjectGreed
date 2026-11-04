@@ -1053,6 +1053,33 @@
     "ZN_135mmAntiShipSniper_Sniper_Aim": {
       "ref": "ZN_135mmAntiShipSniper_Sniper_Aim__lv2",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "weaponDisplayIndex": 0,
+              "delay": 0
+            },
+            {
+              "animation": "Common_Shoot_Two_Handed_A_Stand",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1,
+              "requiredParts": [],
+              "delay": 0.25
+            }
+          ],
+          "startAnimation": null
+        },
+        "projectile": {
+          "texture": "../../projectiles/RailShell_1.png",
+          "scale": 0.85,
+          "speed": 120,
+          "forwardOffset": -2.5,
+          "rotation": 0
+        },
         "requiredParts": [
           "rightArm"
         ],
@@ -1080,15 +1107,26 @@
                 "x": 2.222222222222223,
                 "y": -16.666666666666668
               }
-            },
-            {
-              "layer": "ZN_135mmAntiShipSniper_Attack",
-              "point": {
-                "x": 2.222222222222223,
-                "y": -16.666666666666668
-              }
             }
           ]
+        },
+        "muzzleEffects": [
+          "BZ_Fire_1_S"
+        ],
+        "sound": {
+          "file": "../../sounds/ShellSniper.ogg",
+          "volume": 0.6
+        },
+        "localization": {
+          "zh": {
+            "name": "狙击蓄力"
+          },
+          "en": {
+            "name": "Charged Sniper Shot"
+          },
+          "ja": {
+            "name": "チャージ狙撃"
+          }
         }
       }
     },

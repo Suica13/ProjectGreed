@@ -593,6 +593,41 @@
     "ZN_MS_14JG_BMG_Sniper_Aim": {
       "ref": "ZN_MS_14JG_BMG_Sniper_Aim__lv1",
       "overrides": {
+        "name": "狙击蓄力",
+        "slot": "skill",
+        "damagePerShot": 11250.0,
+        "damageComponents": {
+          "beam": 7500.0,
+          "beamAP": 3750.0
+        },
+        "attack": {
+          "steps": [
+            {
+              "weaponDisplayIndex": 0,
+              "delay": 0
+            },
+            {
+              "animation": "Common_Shoot_Two_Handed_A_Stand",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1,
+              "requiredParts": [],
+              "delay": 0.25
+            }
+          ],
+          "startAnimation": null
+        },
+        "changeHeldWeapon": false,
+        "projectile": {
+          "texture": "../../projectiles/Beam_1_Yellow.png",
+          "scale": 1,
+          "speed": 80,
+          "forwardOffset": -7.5,
+          "rotation": 0
+        },
         "requiredParts": [
           "rightArm"
         ],
@@ -615,20 +650,46 @@
         "muzzle": {
           "mounts": [
             {
-              "bone": "Body",
-              "offset": {
-                "x": 9,
-                "y": 35
-              }
-            },
-            {
-              "bone": "Body",
-              "offset": {
-                "x": 9,
-                "y": 35
+              "layer": "ZN_MS_14JG_BMG",
+              "point": {
+                "x": -1.9999999999999991,
+                "y": -16
               }
             }
           ]
+        },
+        "muzzleEffects": [
+          "Beam_Fire_1_Yellow_S"
+        ],
+        "sound": {
+          "file": "../../sounds/BeamGun_2.ogg",
+          "volume": 0.5
+        },
+        "noCounter": true,
+        "hitScale": 2,
+        "description": "本回合锁定目标，下次己方回合开始时目标仍在射程内则自动射击；命中率×2，伤害为原MOD技能的一半，EN不变。",
+        "special": {
+          "type": "snipe",
+          "delayOwnTurns": 1,
+          "baseWeapon": "ZN_MS_14JG_BMG"
+        },
+        "sniperDamageBeforeHalving": {
+          "damagePerShot": 22500,
+          "damageComponents": {
+            "beam": 15000,
+            "beamAP": 7500
+          }
+        },
+        "localization": {
+          "zh": {
+            "name": "狙击蓄力"
+          },
+          "en": {
+            "name": "Charged Sniper Shot"
+          },
+          "ja": {
+            "name": "チャージ狙撃"
+          }
         }
       }
     },

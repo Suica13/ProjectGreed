@@ -685,6 +685,29 @@
     "TITANS_BeamSniper_RMS_106CS_Sniper_Aim": {
       "ref": "TITANS_BeamSniper_RMS_106CS_Sniper_Aim__lv1",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Shoot_Two_Handed_A_Stand",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.25
+            }
+          ],
+          "startAnimation": null
+        },
+        "projectile": {
+          "texture": "../../projectiles/Beam_2_Yellow.png",
+          "scale": 1.0,
+          "speed": 100.0,
+          "forwardOffset": -7.5,
+          "rotation": 0.0
+        },
         "requiredParts": [
           "rightArm"
         ],
@@ -712,15 +735,27 @@
                 "x": -1.9999999999999987,
                 "y": -23.0
               }
-            },
-            {
-              "layer": "TITANS_BeamSniper_RMS_106CS_Attack",
-              "point": {
-                "x": -1.9999999999999987,
-                "y": -23.0
-              }
             }
           ]
+        },
+        "muzzleEffects": [
+          "Beam_Fire_1_Yellow"
+        ],
+        "sound": {
+          "file": "../../sounds/BeamCannon_1.ogg",
+          "volume": 0.6
+        },
+        "displayIndex": 0,
+        "localization": {
+          "zh": {
+            "name": "狙击蓄力"
+          },
+          "en": {
+            "name": "Charged Sniper Shot"
+          },
+          "ja": {
+            "name": "チャージ狙撃"
+          }
         }
       }
     },

@@ -2,12 +2,12 @@
 const assert = require("node:assert/strict");
 const { spawnSync } = require("node:child_process");
 const G = require("../shared/rules.js");
-test("unit capacities are 50 percent of native MOD EN for every form", () => {
+test("unit capacities match 100 percent of native MOD EN for every form", () => {
   for (const prefab of G.catalog.prefabs) {
     const source = prefab.sourceStats;
     assert.ok(source.enBeforeReduction > 0, prefab.id);
     assert.equal(source.enCapacityMultiplier, 1, prefab.id);
-    const expected = Math.ceil(source.enBeforeReduction * 0.5);
+    const expected = Math.ceil(source.enBeforeReduction);
     assert.equal(prefab.stats.en, expected, prefab.id);
     for (const kit of prefab.weaponKits)
       assert.equal(G.models[prefab.id + "__" + kit.id].en, expected, prefab.id);
@@ -15,7 +15,7 @@ test("unit capacities are 50 percent of native MOD EN for every form", () => {
   const model = Object.values(G.models).find((model) => model.prefabId === "MS_06C");
   assert.equal(
     model.en,
-    G.catalog.prefabs.find((p) => p.id === "MS_06C").sourceStats.enBeforeReduction * 0.5,
+    G.catalog.prefabs.find((p) => p.id === "MS_06C").sourceStats.enBeforeReduction,
   );
   const nuke = model.weapons.find((weapon) => weapon.special?.type === "nuke");
   assert.ok(nuke);

@@ -108,13 +108,22 @@ const MapCombat = (() => {
     for (const battle of view.battles || [])
       for (const event of battle.events)
         for (const exit of event.evacuations || []) pendingExits.add(exit.unitId);
-    const nuclearLaunches = new Set();
+    const nuclearLaunches = new Map();
     const orderedBattles = [...(view.battles || [])].sort((a, b) =>
       Number.isInteger(a.combatWave) && Number.isInteger(b.combatWave)
         ? a.combatWave - b.combatWave ||
           Number(a.combatStage === "counter") - Number(b.combatStage === "counter")
         : 0,
     );
+    // A mortar victim may die on the first shell. Use the longest surviving
+    // victim lane for the shared salvo's visuals, so later shells stay visible.
+    for (const battle of orderedBattles)
+      for (const event of battle.events) {
+        if (!event.blastId || !event.impactCell) continue;
+        const previous = nuclearLaunches.get(event.blastId);
+        if (!previous || (event.shotIndices?.length || 1) > (previous.shotIndices?.length || 1))
+          nuclearLaunches.set(event.blastId, event);
+      }
     const visualBattles = orderedBattles.map((battle) => ({
       ...battle,
       events: battle.events.map((event) => {
@@ -126,8 +135,9 @@ const MapCombat = (() => {
         )
           return event;
         const key = event.blastId || JSON.stringify([event.from, event.weapon, event.impactCell]);
-        const nuclearFollowup = nuclearLaunches.has(key);
-        nuclearLaunches.add(key);
+        const representative = nuclearLaunches.get(key);
+        const nuclearFollowup = !!representative && representative !== event;
+        if (!representative) nuclearLaunches.set(key, event);
         return { ...event, nuclearFollowup };
       }),
     }));
@@ -205,6 +215,19 @@ const MapCombat = (() => {
     // 演出沿用玩家当前的镜头位置与倍率。
   }
   function formationOffset(unit, facing = null, members = null) {
+    if (battleView?.mapBattle && unit.embarked?.exposed) {
+      const carrier = displayed.get(unit.embarked.carrierId);
+      const slot = carrier && Rules.hangars.of(carrier).find(h => h.id === unit.embarked.hangarId);
+      if (slot) {
+        const parent = formationOffset(carrier);
+        const angle = (facing ?? carrier.angle ?? 0) * Math.PI / 180;
+        const scale = ART.presentation.unitMapScale * BattleScene.settings().mapScale /
+          (ART.presentation.mapCellScale || 1) * Rules.modelOf(carrier).presentation.mapScale / Rules.mapCellPixels;
+        const {x,y,height} = slot.offset;
+        return {x:parent.x+(x*Math.cos(angle)+y*Math.sin(angle))*scale,
+          y:parent.y+(x*Math.sin(angle)-y*Math.cos(angle)-height)*scale,scale:1};
+      }
+    }
     return (
       (battleView?.mapBattle && formationOffsets.get(unit.id)) ||
       Rules.squadOffset(game, unit, facing, members)
@@ -241,7 +264,12 @@ const MapCombat = (() => {
     };
   }
   function meleePoses(result) {
+    const current = new Map();
+    for (const pair of meleeExchanges.values())
+      if (pair.start <= dodgeClock && (!current.has(pair.attacker) || pair.start > current.get(pair.attacker).start))
+        current.set(pair.attacker, pair);
     for (const pair of meleeExchanges.values()) {
+      if (current.get(pair.attacker) !== pair) continue;
       if (dodgeClock < pair.start) continue;
       const anchor = meleeAnchor(pair);
       if (!anchor) continue;
@@ -282,6 +310,7 @@ const MapCombat = (() => {
         y: anchor.origin.y + (anchor.engaged.y - anchor.origin.y) * progress + (dodge?.y || 0),
         dodge,
         angle: anchor.angle,
+        aimAngle: anchor.angle,
         moving: moving || !!pose.moving,
         ...(moving
           ? {
@@ -291,6 +320,16 @@ const MapCombat = (() => {
           : {}),
         ...(dodgeClock >= pair.end && !dead ? { clip: null, moving: false } : {}),
       });
+      const actor = displayed.get(pair.attacker);
+      if (actor && !Rules.modelOf(actor).ship && !Rules.modelOf(actor).fixedWeaponFacing)
+        actor.angle = actor.aimAngle = anchor.angle;
+      const defender = displayed.get(pair.defender), defenderPose = result.get(pair.defender);
+      if (defender && defenderPose && !defenderPose.firing &&
+          !Rules.modelOf(defender).ship && !Rules.modelOf(defender).fixedWeaponFacing) {
+        const facing = (anchor.angle + 180) % 360;
+        defender.angle = defender.aimAngle = facing;
+        result.set(pair.defender, { ...defenderPose, angle: facing, aimAngle: facing });
+      }
     }
     return result;
   }
@@ -319,6 +358,10 @@ const MapCombat = (() => {
         arenaHeight: Rules.mapHeight(game) * Rules.mapCellPixels,
       };
     });
+    for (const actor of actors) {
+      actor.homeX = actor.x;
+      actor.homeY = actor.y;
+    }
     if (event.meleeExchange) {
       const anchor = meleeAnchor(event.meleeExchange);
       const attacker = actors.find((actor) => actor.unit.id === event.meleeExchange.attacker);
@@ -374,7 +417,7 @@ const MapCombat = (() => {
       dodgeTracks.set(event.to, {
         moves: [],
         initialSlot: event.targetDodgeSlot || 0,
-        base: { x: target.x, y: target.y, scale: target.scale },
+        base: { x: target.homeX, y: target.homeY, scale: target.scale },
       });
     const plan = WeaponEffects.plan(weapon, source, target, event, {
       start,

@@ -155,6 +155,13 @@ const Formation = (() => {
           Rules.catalog.formation.maxUnits,
         );
   const ownPlayer = () => Net.snapshot?.members.find((player) => player.id === Net.memberId);
+  function canEditRoom() {
+    const snapshot = Net.snapshot;
+    return !!snapshot && Net.seat !== null && !snapshot.loadedSave &&
+      !ownPlayer()?.formationPreset &&
+      (!snapshot.started || (snapshot.phase === "assembly" &&
+        !snapshot.assembly?.players.find(p => p.memberId === Net.memberId)?.ready));
+  }
   const budget = () =>
     Net.active && Net.snapshot?.settings
       ? Rules.armyBudget(Net.snapshot.settings, ownPlayer())
@@ -1414,7 +1421,11 @@ const Formation = (() => {
     return true;
   }
   function open() {
-    if (Net.active && Net.snapshot?.phase === "assembly") {
+    if (Net.active && Net.snapshot?.loadedSave) {
+      note("存档编组不可更改。");
+      return;
+    }
+    if (Net.active && Net.snapshot?.phase === "assembly" && !canEditRoom()) {
       note("确认阶段不可修改编组。");
       return;
     }
@@ -1890,7 +1901,7 @@ const Formation = (() => {
       returnView: "formation",
       onReturn: () => {
         render();
-        if (Net.active && Net.seat !== null && !Net.awaiting && !Net.snapshot.started)
+        if (Net.active && !Net.awaiting && canEditRoom())
           Net.request("update_formation", { formation: current() });
       },
     });
@@ -1909,7 +1920,7 @@ const Formation = (() => {
     finishPilotEditor();
     saveDraft();
     const units = current();
-    if (Net.active && Net.seat !== null && points(units) <= unitLimit() && !Net.snapshot.started)
+    if (Net.active && points(units) <= unitLimit() && canEditRoom())
       Net.request("update_formation", { formation: units });
     closeDetail();
     setPageView(returnView);
@@ -1917,6 +1928,7 @@ const Formation = (() => {
   };
   byId("openFormation").onclick = open;
   byId("roomFormation").onclick = open;
+  byId("editFinalFormation").onclick = open;
   window.addEventListener("game-assets-ready", () => {
     if (pageView === "formation" && (detailIndex !== null || catalogDetail)) renderDetail();
   });
@@ -2360,10 +2372,7 @@ const Formation = (() => {
     // otherwise retains the profile captured when the player last readied.
     if (
       Net.active &&
-      Net.seat !== null &&
-      !Net.snapshot?.started &&
-      !Net.snapshot?.loadedSave &&
-      !ownPlayer()?.formationPreset
+      canEditRoom()
     )
       Net.request("update_formation", { formation: current() });
     return clean;
@@ -2905,6 +2914,7 @@ const Formation = (() => {
       ),
     hasPilotAward: (id) => pilotStore.awards.includes(id),
     open,
+    canEditRoom,
     group: () => group,
     setGroup,
     alignWithRoom: (snapshot) => {

@@ -94,23 +94,38 @@ def finalize_weapon_slots(prefab):
 
 def configure_sniper(prefab):
     ordinary = [(key, weapon) for key, weapon in prefab["weapons"].items()
-                if weapon["category"] == "sniper" and "_Sniper_Aim" not in key]
+                if "_Sniper_Aim" not in key]
     for key, weapon in prefab["weapons"].items():
         if "_Sniper_Aim" not in key:
             continue
-        match = next(((base_id, base) for base_id, base in ordinary if key.startswith(base_id)), None)
+        match = next(((base_id, base) for base_id, base in ordinary if key == base_id + "_Sniper_Aim"), None)
         if not match:
             continue
         base_id, base = match
         if weapon.get("projectile") and base.get("projectile"):
             # Aim helpers carry LockTarget sheets; only real bullets are rendered as projectiles.
+            if 0 < base.get("nativePayload", {}).get("ProjectileSpeed", 100) <= 1:
+                base["projectile"]["presentationSpeed"] = 125
             weapon["projectile"] = copy.deepcopy(base["projectile"])
+            weapon["muzzle"] = copy.deepcopy(base["muzzle"])
+            for field in ("muzzleEffect", "muzzleEffects", "sound", "displayIndex"):
+                if field in base:
+                    weapon[field] = copy.deepcopy(base[field])
+            mount_count = len(base["muzzle"].get("mounts", []))
+            for step in weapon.get("attack", {}).get("steps", []):
+                if step.get("shots"):
+                    step["muzzleIndex"] = min(step.get("muzzleIndex", 0), max(0, mount_count - 1))
         # 伤害、耗能、步骤使用原生技能；仅保留回合制蓄力与命中倍率规则。
         weapon.update(
             name="狙击蓄力", slot="skill", changeHeldWeapon=False, noCounter=True, hitScale=2,
             description="本回合锁定目标，下次己方回合开始时目标仍在射程内则自动射击；命中率×2，伤害为原MOD技能的一半，EN不变。",
             special={"type": "snipe", "delayOwnTurns": 1, "baseWeapon": base_id},
         )
+        weapon["localization"] = {
+            "zh": {"name": "狙击蓄力"},
+            "en": {"name": "Charged Sniper Shot"},
+            "ja": {"name": "チャージ狙撃"},
+        }
         baseline = weapon.setdefault("sniperDamageBeforeHalving", {
             field: weapon[field] for field in ("damagePerShot", "damageComponents") if field in weapon})
         for field, value in baseline.items():
@@ -362,4 +377,6 @@ def configure(prefab, native):
     apply_beam_bazookas(prefab, native)
     from unit_ship_balance import apply_footprint
     apply_footprint(prefab)
+    from repair_weapon_presentation import repair_scatter
+    repair_scatter(prefab)
     return apply_levels(finalize_weapon_slots(apply_classification(apply_big_zam(prefab, native))))

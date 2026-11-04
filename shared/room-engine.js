@@ -2247,11 +2247,17 @@ function createRoomEngine({
   }
   function nextAIAction(room, onlySeat = null, excluded = new Set()) {
     const allowed = (player) => player && (onlySeat === null || player.seat === onlySeat);
-    const available = (unit) =>
-      G.squadMembers(room.game, unit).every(
-        (member) =>
-          !excluded.has(member.id) && (aiUnitMoves(room).get(member.id) || 0) <= Date.now(),
-      );
+    const moves = aiUnitMoves(room), now = Date.now(), availability = new Map();
+    const actors = new Map(room.game.units.map(unit => [unit.id, unit]));
+    const available = (unit) => {
+      if (availability.has(unit.id)) return availability.get(unit.id);
+      const carrier = unit.embarked && actors.get(unit.embarked.carrierId);
+      const members = G.squadMembers(room.game, carrier || unit);
+      const value = members.every(member => !excluded.has(member.id) && (moves.get(member.id) || 0) <= now);
+      for (const member of members) availability.set(member.id, value);
+      availability.set(unit.id, value);
+      return value;
+    };
     if (!room.started || !connected(room).every(Boolean)) return null;
     if (room.phase === "battle")
       return room.battle.ready.every(Boolean) ? { finishBattle: true } : null;
@@ -2363,6 +2369,7 @@ function createRoomEngine({
       return unfinished ? { player: unfinished, action: "end_turn", fields: {} } : null;
     }
     // Gather before an idle anchor attacks/waits and becomes unavailable to join.
+    const checkedSquads = new Set();
     for (const actor of room.game.units) {
       if (
         G.controllerOf(room.game, actor) !== player.seat ||
@@ -2370,6 +2377,9 @@ function createRoomEngine({
         !canPlanMore(actor)
       )
         continue;
+      const group = actor.squadId || actor.id;
+      if (checkedSquads.has(group)) continue;
+      checkedSquads.add(group);
       if (room.campaignBattle && G.campaignBattlefield.canCapture(G, room.game, actor)) continue;
       const gather = G.aiSquadChoice(room.game, actor, available);
       if (gather)
@@ -2568,34 +2578,45 @@ function createRoomEngine({
         aimCell: G.attackAimCell(room.game, u, best.target, weapons),
         // A squad member may already have waited or used an attack skill. Keep
         // its action/plan intact while the remaining members plan individually.
-        single: G.squadMembers(room.game, u).some(
+        single: G.squadAttackMembers(room.game, u).some(
           (member) => member.acted || member.plan || member.squadOrder,
         ),
       },
     };
   }
   function scheduleAI(room) {
-    clearTimeout(aiTimers.get(room));
-    aiTimers.delete(room);
+    const previous = aiTimers.get(room);
+    const key = `${room.matchId}:${room.game.round}:${room.game.team}:${room.phase}`;
+    // A human/delegated player's frequent updates must not postpone another AI forever.
+    // The callback reads current state rather than binding an obsolete revision.
+    const cancel = () => {
+      clearTimeout(previous);
+      aiTimers.delete(room);
+    };
     // Delay expensive pathfinding until the timer fires; chat/sync never drives AI.
     if (
       !room.started ||
       room.returnCountdown ||
       !connected(room).every(Boolean) ||
       !["idle", "reaction", "battle"].includes(room.phase)
-    )
+    ) {
+      cancel();
       return;
-    if (room.phase === "battle" && !room.battle.ready.every(Boolean)) return;
-    if (room.phase === "reaction" && !botReaction(room)) return;
+    }
+    if (room.phase === "battle" && !room.battle.ready.every(Boolean)) { cancel(); return; }
+    if (room.phase === "reaction" && !botReaction(room)) { cancel(); return; }
     if (
       room.phase === "idle" &&
       !room.seats.some(
         (p) =>
           aiControlled(room, p) && G.seatTeam(p.seat) === room.game.team && !room.turnDone[p.seat],
       )
-    )
+    ) {
+      cancel();
       return;
-    const revision = room.revision;
+    }
+    if (previous?.aiKey === key) return;
+    cancel();
     const bots =
       room.phase === "idle"
         ? room.seats.filter(
@@ -2618,7 +2639,8 @@ function createRoomEngine({
           );
     const timer = setTimeout(() => {
       aiTimers.delete(room);
-      if (rooms.get(room.code) !== room || room.revision !== revision) return;
+      if (rooms.get(room.code) !== room ||
+          key !== `${room.matchId}:${room.game.round}:${room.game.team}:${room.phase}`) return;
       function advancePlayer(onlySeat = null, excluded = new Set()) {
         let intent;
         try {
@@ -2704,6 +2726,7 @@ function createRoomEngine({
       scheduleAI(room);
     }, delay);
     timer.unref?.();
+    timer.aiKey = key;
     aiTimers.set(room, timer);
   }
   // 使用玩家显示 ID 而非席位编号，避免多人同型号机体的日志混淆。
@@ -3237,10 +3260,11 @@ function createRoomEngine({
             broadcast(room, id, member);
             return;
           }
-          if (room.phase === "assembly" && msg.action === "update_formation")
+          if (room.phase === "assembly" && member.finalReady && msg.action === "update_formation")
             throw Error("确认阶段不可修改编组。");
           if (
             room.phase === "assembly" &&
+            member.finalReady &&
             msg.formation !== undefined &&
             JSON.stringify(
               G.validateFormation(msg.formation, Infinity, playerUnitLimit(room, member)),
@@ -4189,6 +4213,10 @@ function createRoomEngine({
         throw Error("不支持的操作");
     }
     room.revision++;
+    if (room.phase === "idle" && ["move", "launch", "embark"].includes(event?.type)) {
+      const joined = unit(room, event.unitId);
+      if (joined) planner.followSquad(room, joined);
+    }
     room.lastEvent = { id: randomId(), ...event };
     cache.set(id, true);
     if (cache.size > 512) cache.delete(cache.keys().next().value);
