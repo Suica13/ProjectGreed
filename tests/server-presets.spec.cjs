@@ -3,7 +3,7 @@ const { pathToFileURL } = require("node:url"),
   path = require("node:path");
 const { createServer } = require("../server.js");
 const fileURL = pathToFileURL(path.resolve("public/client.html")).href;
-const addresses = ["114.66.40.147:1313", "126.227.168.176:1313"];
+const addresses = ["123.99.195.3:1313", "126.227.168.176:1313"];
 async function open(page) {
   await page.locator("#openSkirmish").click();
   await page.locator("#openRooms").click();
@@ -16,7 +16,7 @@ async function noVisibleIPs(page) {
 
 test("preset status probes are independent, refreshable, and preset connections never show their IP", async ({
   page,
-}) => {
+}, testInfo) => {
   const online = [true, false],
     messages = [];
   for (let i = 0; i < addresses.length; i++)
@@ -36,7 +36,7 @@ test("preset status probes are independent, refreshable, and preset connections 
   await expect(page.locator("#preset-status-primary")).toHaveText("在线");
   await expect(page.locator("#preset-status-test")).toHaveText("离线");
   await noVisibleIPs(page);
-  await page.screenshot({ path: ".openai/server-presets.png" });
+  await page.screenshot({ path: testInfo.outputPath("server-presets.png") });
   await expect(page.locator("#lobby")).toBeHidden();
   expect(messages.every((type) => type === "list_rooms")).toBe(true);
   await page.locator("#preset-primary").click();
@@ -99,7 +99,7 @@ test("remembered preset addresses remain hidden and do not populate the custom I
   await page.addInitScript(() =>
     sessionStorage.setItem(
       "slg-last",
-      JSON.stringify({ url: "ws://114.66.40.147:1313/ws", room: "PRIOR" }),
+      JSON.stringify({ url: "ws://123.99.195.3:1313/ws", room: "PRIOR" }),
     ),
   );
   for (const host of addresses)
