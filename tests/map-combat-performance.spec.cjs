@@ -21,12 +21,15 @@ test('many parallel squad volleys share state and pose calculations',async({page
    const actors=structuredClone([a,b]),events=Rules.fight(game,a,b,weapon,'defend');
    records.push({id:'perf-'+wave+'-'+i,a:a.id,b:b.id,actors,events,before:{[a.id]:actors[0].hp,[b.id]:actors[1].hp},crossfire:true,timelineStart:0});
   }
-  await SpriteRenderer.ensureAssets([Rules.modelOf(units[0]).weapons.find(w=>w.type!=='melee'&&!w.special).projectile.asset]);
+  const gun=Rules.modelOf(units[0]).weapons.find(w=>w.type!=='melee'&&!w.special);
+  const impactId=[gun.hitEffects||gun.hitEffect].flat().find(id=>ART.effects[id]);
+  await SpriteRenderer.ensureAssets([gun.projectile.asset,ART.effects[impactId].asset]);
   phase='battle';pending=moving=battleView=null;setPageView('game');
   function measure(api) {
    api.reset();api.seed(records);
    battleView={networkId:'perf',battles:records,actors:records.flatMap(b=>b.actors),events:records.flatMap(b=>b.events)};
-   api.begin(battleView,()=>0);api.update(performance.now());
+   api.begin(battleView,()=>0);
+   const setupStart=performance.now();api.update(performance.now());const setupMs=performance.now()-setupStart;
    for(const f of api.frames)f.time=f.plan.impacts[0]+.01;
    const expected=new Map();
    for(const f of api.frames)expected.set(f.event.to,(expected.get(f.event.to)||0)+WeaponEffects.arrived(f.plan,f.time).reduce((n,c)=>n+c.damage,0));
@@ -42,7 +45,7 @@ test('many parallel squad volleys share state and pose calculations',async({page
    }
    WeaponEffects.arrived=arrived;WeaponEffects.firingPose=pose;
    const correct=result.every(u=>u.team===0 || u.hp===1000000-(expected.get(u.id)||0));
-   return {units:result.length,frames:api.frames.length,correct,scansPerFrame:scans/35,posesPerFrame:poses/35,medianMs:samples.sort((a,b)=>a-b)[17]};
+   return {units:result.length,frames:api.frames.length,setupMs,correct,scansPerFrame:scans/35,posesPerFrame:poses/35,medianMs:samples.sort((a,b)=>a-b)[17]};
   }
   const old=baseline ? measure(new Function(baseline+';return MapCombat;')()) : null;
   const result=measure(MapCombat);
@@ -57,10 +60,16 @@ test('many parallel squad volleys share state and pose calculations',async({page
   const offscreenDraws=draws;draws=0;
   ctx.setTransform(.1,0,0,.1,100-f.source.x*.1,100-f.source.y*.1);
   WeaponEffects.draw(ctx,f.weapon,f.plan,time,f.source,f.event);
-  return {...result,baseline:old,offscreenDraws,onscreenDraws:draws};
+  const onscreenDraws=draws,effectImage=SpriteRenderer.images[ART.effects[impactId].asset];let effects=0;
+  ctx.drawImage=(...args)=>{if(args[0]===effectImage)effects++;return nativeDraw(...args);};
+  ctx.setTransform(.2,0,0,.2,-10000,-10000);SpriteEffects.draw(ctx,impactId,0,0,1,0);
+  const offscreenEffects=effects;
+  ctx.setTransform(.2,0,0,.2,128,128);SpriteEffects.draw(ctx,impactId,0,0,1,0);
+  return {...result,baseline:old,offscreenDraws,onscreenDraws,offscreenEffects,onscreenEffects:effects-offscreenEffects};
  },baseline);
  console.log('MAP_COMBAT_METRICS '+JSON.stringify(metrics));
  expect(metrics.offscreenDraws).toBe(0);expect(metrics.onscreenDraws).toBeGreaterThan(0);
+ expect(metrics.offscreenEffects).toBe(0);expect(metrics.onscreenEffects).toBeGreaterThan(0);
  expect(metrics.correct).toBe(true);expect(metrics.units).toBe(48);expect(metrics.frames).toBe(72);
  expect(metrics.scansPerFrame).toBeLessThanOrEqual(metrics.frames*2+1);
  expect(metrics.posesPerFrame).toBeLessThanOrEqual(metrics.frames+1);

@@ -261,8 +261,10 @@ const BattleHUD = (() => {
     Net.request("spectate", { team: value === "global" ? null : Number(value) });
   };
   function updateSquadClearance() {
-    const clearance=squadStrip.hidden ? 0 : Math.ceil(scene.getBoundingClientRect().bottom-squadStrip.getBoundingClientRect().top+8);
+    const bounds = squadStrip.hidden ? null : squadStrip.getBoundingClientRect();
+    const clearance=bounds ? Math.ceil(scene.getBoundingClientRect().bottom-bounds.top+8) : 0;
     scene.style.setProperty("--squad-strip-clearance",clearance+"px");
+    scene.style.setProperty("--squad-strip-height",bounds ? Math.ceil(bounds.height+8)+"px" : "0px");
   }
   if(window.ResizeObserver) new ResizeObserver(updateSquadClearance).observe(squadStrip);
   window.addEventListener("resize",updateSquadClearance);

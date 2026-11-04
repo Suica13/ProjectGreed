@@ -3,13 +3,15 @@ const MapCombat = (() => {
   const restingPoses = new Map(),
     meleeExchanges = new Map();
   const dodgeTracks = new Map();
+  const facingTargets = new Map();
   const formationOffsets = new Map();
   const pendingExits = new Set(), startedActors = new Set();
-  let stateCache = null, poseCache = new WeakMap(), contactCache = new WeakMap();
+  let stateCache = null, poseCache = new WeakMap(), contactCache = new WeakMap(), setupPoses = null;
   function invalidateFrame() {
     stateCache = null;
     poseCache = new WeakMap();
     contactCache = new WeakMap();
+    setupPoses = null;
   }
   function contactsFor(item) {
     const cached = contactCache.get(item);
@@ -40,6 +42,7 @@ const MapCombat = (() => {
     visibleActors.clear();
     restingPoses.clear();
     dodgeTracks.clear();
+    facingTargets.clear();
     formationOffsets.clear();
     dodgeClock = 0;
     dodgeLastNow = null;
@@ -91,6 +94,7 @@ const MapCombat = (() => {
       }
     const now = performance.now();
     dodgeTracks.clear();
+    facingTargets.clear();
     dodgeClock = 0;
     // Initial UI and asset preparation must never consume the opening volley.
     // Establish the playback epoch only when a map frame can actually be shown.
@@ -292,7 +296,9 @@ const MapCombat = (() => {
   }
   function setup(view, start = dodgeClock) {
     const event = { ...view.events[view.index] };
-    const previousPoses = poses();
+    // Simultaneously starting lanes share the same previous rendered frame.
+    // Rebuilding every active lane for each new lane makes startup quadratic.
+    const previousPoses = setupPoses || (setupPoses = poses());
     const actors = [event.from, event.to].map((id) => {
       const unit = displayed.get(id) || view.actors.find((unit) => unit.id === id);
       return {
@@ -362,6 +368,7 @@ const MapCombat = (() => {
     source.angle = source.unit.angle;
     source.aimAngle = aim;
     source.unit.aimAngle = aim;
+    facingTargets.set(event.from, event.to);
     target.angle = target.unit.angle;
     if (!dodgeTracks.has(event.to))
       dodgeTracks.set(event.to, {
@@ -381,6 +388,7 @@ const MapCombat = (() => {
     return frame;
   }
   function commit(view, parallel = false) {
+    setupPoses = null;
     for (const [id, pose] of framePoses())
       restingPoses.set(id, {
         x: pose.x,
@@ -670,8 +678,28 @@ const MapCombat = (() => {
         null,
         { unit, scale: track.base.scale },
       );
+      // Face the actual incoming attacker during evasion, then resume the
+      // current attack lock. Both hull and weapon aim must forget the old shot.
+      let facing = {};
+      const model = ART.models[unit.model];
+      if (!pose.attacking && !model.ship && !model.fixedWeaponFacing) {
+        let incoming;
+        for (let index = track.moves.length - 1; index >= 0; index--)
+          if (track.moves[index].at <= dodgeClock) { incoming = track.moves[index].sourceId; break; }
+        const targetId = dodge.active ? incoming : facingTargets.get(id) || Rules.attackOrders(unit)[0]?.target || incoming;
+        const target = result.get(targetId), enemy = displayed.get(targetId);
+        if (enemy) {
+          const center = Rules.center(enemy);
+          const x = target?.x ?? (center.x + .5 + formationOffset(enemy).x) * Rules.mapCellPixels;
+          const y = target?.y ?? (center.y + .5 + formationOffset(enemy).y) * Rules.mapCellPixels;
+          const angle = Math.atan2(x - track.base.x - dodge.x, -(y - track.base.y - dodge.y)) * 180 / Math.PI;
+          unit.angle = unit.aimAngle = angle;
+          facing = { angle, aimAngle: angle };
+        }
+      }
       result.set(id, {
         ...pose,
+        ...facing,
         x: track.base.x + dodge.x,
         y: track.base.y + dodge.y,
         dodge,
@@ -836,6 +864,9 @@ const MapCombat = (() => {
       ctx.restore();
       return;
     }
+    const effectVisible = (id, at) => Array.isArray(id)
+      ? id.some(effect => SpriteEffects.frame(effect, at) !== null)
+      : SpriteEffects.frame(id, at) !== null;
     for (const [index, contact] of (event.nuclearFollowup ? [] : plan.contacts).entries()) {
       const contactShot = frame.shotsByIndex.get(contact.shotIndex);
       const scatterPoint =
@@ -844,28 +875,31 @@ const MapCombat = (() => {
           : contact.clusterRole === "fragment"
             ? contactShot?.destination
             : null;
-      const swingEffects = contact.swingEffects ?? weapon.swingEffects;
-      if (swingEffects?.length)
+      const swingEffect = contact.swingEffects ?? (Array.isArray(weapon.swingEffects)
+        ? weapon.swingEffects[index % weapon.swingEffects.length] : weapon.swingEffects);
+      const swingTime = (time - contact.at) * plan.actionSpeed;
+      if (swingEffect && effectVisible(swingEffect, swingTime))
         SpriteEffects.draw(
           ctx,
-          contact.swingEffects ?? swingEffects[index % swingEffects.length],
+          swingEffect,
           sourcePose.x,
           sourcePose.y,
           source.scale,
-          (time - contact.at) * plan.actionSpeed,
+          swingTime,
           facing,
         );
-      if (
+      const hitEffect = contact.clusterRole === "fragment"
+        ? weapon.projectile.cluster.hitEffect : weapon.hitEffects || weapon.hitEffect;
+      const hitTime = (time - contact.at) * ART.presentation.animationSpeed;
+      if (effectVisible(hitEffect, hitTime) && (
         plan.blastPoint ||
         contact.hit ||
         weapon.projectile?.motion === "mortar" ||
         weapon.projectile?.motion === "bomb"
-      )
+      ))
         SpriteEffects.draw(
           ctx,
-          contact.clusterRole === "fragment"
-            ? weapon.projectile.cluster.hitEffect
-            : (weapon.hitEffects || weapon.hitEffect),
+          hitEffect,
           scatterPoint?.x ??
             plan.blastPoint?.x ??
             target.x +
@@ -879,7 +913,7 @@ const MapCombat = (() => {
                 target.scale *
                 ART.presentation.dodgeDistance,
           target.scale,
-          (time - contact.at) * ART.presentation.animationSpeed,
+          hitTime,
           facing,
         );
     }
@@ -903,7 +937,7 @@ const MapCombat = (() => {
         target.scale,
         (time - plan.deathAt) * ART.presentation.animationSpeed,
       );
-    const contacts = WeaponEffects.arrived(plan, time),
+    const contacts = contactsFor(frame),
       latest = contacts.at(-1);
     if (
       !event.effectsOnly &&

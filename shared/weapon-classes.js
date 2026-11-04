@@ -135,7 +135,7 @@ const WeaponClasses = (() => {
           damage:
             kind === "beam_rifle"
               ? 1.5
-              : machineGun({ weaponClass: kind })
+              : ["small_vulcan", "close_defense"].includes(kind)
                 ? 0.75
                 : ["bazooka", "beam_bazooka", "panzerfaust"].includes(kind)
                   ? 1.25

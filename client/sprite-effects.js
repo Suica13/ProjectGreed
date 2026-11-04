@@ -42,12 +42,21 @@ const SpriteEffects = (() => {
       scale * (effect.scaleFrom + ((effect.scaleTo - effect.scaleFrom) * time) / effect.duration);
     const forward = effect.offset.y + effect.drift * time,
       lateral = effect.offset.x;
+    const cx = x + (Math.cos(angle) * forward - Math.sin(angle) * lateral) * scale;
+    const cy = y + (Math.sin(angle) * forward + Math.cos(angle) * lateral) * scale;
+    if (ctx.canvas && ctx.getTransform) {
+      const transform = ctx.getTransform();
+      const px = transform.a * cx + transform.c * cy + transform.e;
+      const py = transform.b * cx + transform.d * cy + transform.f;
+      // Enclose the entire rotated frame, including drift and effect scaling.
+      const radius = Math.hypot(width, height) * Math.abs(size) / 2 *
+        Math.max(Math.abs(transform.a) + Math.abs(transform.c), Math.abs(transform.b) + Math.abs(transform.d));
+      if (px + radius < 0 || py + radius < 0 || px - radius > ctx.canvas.width || py - radius > ctx.canvas.height)
+        return false;
+    }
     ctx.save();
     if (effect.visibleInFog === false) clipFog(ctx);
-    ctx.translate(
-      x + (Math.cos(angle) * forward - Math.sin(angle) * lateral) * scale,
-      y + (Math.sin(angle) * forward + Math.cos(angle) * lateral) * scale,
-    );
+    ctx.translate(cx, cy);
     ctx.rotate(angle + ((effect.rotation + 90) * Math.PI) / 180);
     ctx.scale(size, size);
     ctx.globalAlpha *= effect.alpha;

@@ -896,7 +896,7 @@
   position: absolute;
   z-index: 25;
   left: 50%;
-  bottom: 66px;
+  bottom: calc(66px + var(--squad-strip-height, 0px));
   transform: translateX(-50%);
   display: flex;
   gap: 6px;
@@ -2254,3 +2254,13 @@ body.replay-active #gameScene .hud-terrain-strip {
 
 #gameScene .squad-portraits { flex:1 1 auto; }
 @media(max-width:600px){#gameScene #squadCombatMode{height:37px;}}
+
+/* Information stays readable above the squad dock in portrait layouts. */
+@media (max-width: 700px) and (orientation: portrait) {
+  #gameScene #hudUnitPanel,
+  #gameScene[data-unit-commands="true"] #hudUnitPanel {
+    z-index: 40;
+    bottom: max(var(--squad-strip-clearance, 0px), calc(var(--hud-dock) + 12px));
+    max-height: none;
+  }
+}

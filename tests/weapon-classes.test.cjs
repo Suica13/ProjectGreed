@@ -40,7 +40,7 @@ test("explicit classes control balance without changing source damage channels o
   for (const [kind, scale, cost, range] of [
     ["beam_gun", 1, 4, 4],
     ["beam_rifle", 1.5, 4, 4],
-    ["machine_gun", 0.75, 4, 4],
+    ["machine_gun", 1, 4, 4],
     ["bazooka", 1.25, 6, 4],
     ["sniper", 1, 4, 5],
   ]) {

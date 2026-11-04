@@ -34,6 +34,20 @@ const SpriteRenderer = (() => {
       : 0;
     return sample(animation, at);
   }
+  let drawSamples = new WeakMap();
+  function beginFrame() {
+    drawSamples = new WeakMap();
+  }
+  function drawPose(model, clip, time, loop) {
+    const animation = models[model].animations[clip];
+    if (!animation) return {};
+    const at = loop ? time % animation.duration : Math.min(time, animation.duration);
+    const cached = drawSamples.get(animation);
+    if (cached?.at === at) return cached.pose;
+    const value = sample(animation, at);
+    drawSamples.set(animation, { at, pose: value });
+    return value;
+  }
   function state(model, heldWeapon) {
     const unit = models[model];
     return {
@@ -121,7 +135,7 @@ const SpriteRenderer = (() => {
       ...(ART.models[model].modules || []),
       ...(ART.models[model].visualTurrets || []),
     ];
-    if (!modules) return sampled;
+    if (!modules.length) return sampled;
     sampled = { ...sampled };
     for (const module of modules) {
       const delta = ((((aimAngle - angle - module.idleDir + 180) % 360) + 360) % 360) - 180;
@@ -332,7 +346,7 @@ const SpriteRenderer = (() => {
           (id) => !brokenParts[id],
         )
       : [];
-    const sampled = turretPose(model, pose(model, clip, time, loop), angle, aimAngle, active);
+    const sampled = turretPose(model, drawPose(model, clip, time, loop), angle, aimAngle, active);
     ctx.save();
     const flightClock = globalThis.ReplayPlayer?.active
       ? globalThis.ReplayPlayer.time * 1000
@@ -583,6 +597,7 @@ const SpriteRenderer = (() => {
 
   return {
     draw,
+    beginFrame,
     radius,
     load,
     loadMenu,

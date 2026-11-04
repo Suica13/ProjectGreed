@@ -687,6 +687,7 @@ const WeaponEffects = (() => {
             : 1;
       moves.push({
         at,
+        sourceId: event?.from,
         from: previous.y,
         to: side * (0.72 + (hash % 100) / 250),
         duration: 0.34 + ((hash >>> 8) % 100) / 700,

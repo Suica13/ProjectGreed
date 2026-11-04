@@ -1503,6 +1503,8 @@ function drawMap(now) {
   const battleSettings = BattleScene.settings();
   // Lifetime is exactly one draw: simulation changes can never reuse a stale model.
   const frameModels = new WeakMap(), frameSquads = new Map();
+  const frameUnits = new Map(game.units.map(unit => [unit.id, unit]));
+  const frameUnit = id => frameUnits.get(id) || getUnit(id);
   function frameModelOf(unit) {
     if (!frameModels.has(unit)) frameModels.set(unit,Rules.modelOf(unit));
     return frameModels.get(unit);
@@ -1520,7 +1522,7 @@ function drawMap(now) {
   for (const root of game.units) {
     const ids = root.pendingMove?.squadLaunchIds;
     if (!ids) continue;
-    const group = ids.map(id=>getUnit(id)).filter(Boolean);
+    const group = ids.map(frameUnit).filter(Boolean);
     for (const member of group) launchMembers.set(member.id,group);
   }
   const frameMembersOf = unit => launchMembers.get(unit?.id) ||
@@ -1530,6 +1532,7 @@ function drawMap(now) {
     box = c.getBoundingClientRect(),
     dpr = window.GameViewport?.pixelRatio(box.width, box.height) || window.devicePixelRatio || 1;
   if (box.width < 1 || box.height < 1) return;
+  SpriteRenderer.beginFrame?.();
   if (c.width !== Math.round(box.width * dpr) || c.height !== Math.round(box.height * dpr)) {
     c.width = Math.round(box.width * dpr);
     c.height = Math.round(box.height * dpr);
@@ -1728,6 +1731,7 @@ function drawMap(now) {
   };
   SpriteEffects.setFogClip(visibilityClip, ctx);
   const mapUnitPoses = [],
+    mapPosesById = new Map(),
     selectionMarks = [];
   const squadPendingMoves = new Map();
   for (const actor of game.units)
@@ -1802,8 +1806,8 @@ function drawMap(now) {
       t = skillPose.time;
     }
     if (u.embarked?.exposed && !u.pendingMove?.launch) {
-      const parent = mapUnitPoses.find((p) => p.u.id === u.embarked.carrierId);
-      const carrier = getUnit(u.embarked.carrierId);
+      const parent = mapPosesById.get(u.embarked.carrierId);
+      const carrier = frameUnit(u.embarked.carrierId);
       const slot = carrier && Rules.hangars.of(carrier).find((h) => h.id === u.embarked.hangarId);
       if (parent && slot) {
         const rad = (parent.angle * Math.PI) / 180;
@@ -1825,8 +1829,8 @@ function drawMap(now) {
     const visualScale = (tile/Rules.mapCellPixels) * ART.presentation.unitMapScale *
       (battleSettings.mapScale/(ART.presentation.mapCellScale || 1)) * frameModelOf(u).presentation.mapScale * formationOffset.scale;
     const radius = SpriteRenderer.radius(u.model)*visualScale + tile;
-    if (!combatPose && !skillPose && (pos.x+radius < 0 || pos.y+radius < 0 || pos.x-radius > w || pos.y-radius > h)) continue;
-    mapUnitPoses.push({
+    const parentCarrier = u.embarked?.exposed && frameUnit(u.embarked.carrierId);
+    const pose = {
       u,
       pos,
       angle,
@@ -1839,7 +1843,13 @@ function drawMap(now) {
       groundCell,
       formationOffset,
       visualScale,
-    });
+      airborne: !!u.flying || frameModelOf(u).movementType === "air" ||
+        !!(parentCarrier && (parentCarrier.flying || frameModelOf(parentCarrier).movementType === "air")),
+    };
+    // Retain carrier transforms even when its hull is outside the viewport.
+    mapPosesById.set(u.id, pose);
+    if (pos.x+radius < 0 || pos.y+radius < 0 || pos.x-radius > w || pos.y-radius > h) continue;
+    mapUnitPoses.push(pose);
   }
   // Ground overlays are drawn before every unit, including moving and dodging units.
   if (!immersive)
@@ -1850,15 +1860,8 @@ function drawMap(now) {
   if (!immersive && !unitThumbnails)
     for (const { u, pos } of mapUnitPoses)
       UnitIdentity.drawRing(ctx, u, pos, (tile * 64) / Rules.mapCellPixels);
-  const airbornePose = (pose) =>
-    !!pose.u.flying ||
-    frameModelOf(pose.u).movementType === "air" ||
-    (pose.u.embarked?.exposed &&
-      (() => {
-        const carrier = getUnit(pose.u.embarked.carrierId);
-        return carrier && (carrier.flying || frameModelOf(carrier).movementType === "air");
-      })());
-  mapUnitPoses.sort((a, b) => Number(!!airbornePose(a)) - Number(!!airbornePose(b)));
+  mapUnitPoses.sort((a, b) => Number(a.airborne) - Number(b.airborne));
+  const pilotLabels = MapCamera.pilotLabels;
   let smokeDrawn = false;
   for (const {
     u,
@@ -1873,12 +1876,13 @@ function drawMap(now) {
     groundCell,
     formationOffset,
     visualScale,
+    airborne,
   } of mapUnitPoses) {
-    if (authoredMap.tileMap && !aboveLayerDrawn && airbornePose({ u })) {
+    if (authoredMap.tileMap && !aboveLayerDrawn && airborne) {
       drawAboveLayer();
       aboveLayerDrawn = true;
     }
-    if (!smokeDrawn && airbornePose({ u })) {
+    if (!smokeDrawn && airborne) {
       EnvironmentVisuals.smoke(ctx, game, mapPosition, tile);
       smokeDrawn = true;
     }
@@ -2065,7 +2069,7 @@ function drawMap(now) {
       ctx.fillText("E", barx + hpw - 1, bary - 2);
       ctx.restore();
     }
-    if (MapCamera.pilotLabels && u.pilot?.name && (u.pilot.custom || u.pilot.aceId)) {
+    if (pilotLabels && u.pilot?.name && (u.pilot.custom || u.pilot.aceId)) {
       ctx.fillStyle = u.acted && u.team === game.team ? "#8fa0a5" : "#dfebed";
       const nameSize = Math.max(7, spriteTile * 0.14) * battleSettings.mapLabelSize;
       ctx.font = `${nameSize}px system-ui`;

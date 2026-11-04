@@ -347,7 +347,7 @@ const AttackControls = (() => {
       !!target &&
       target.team !== unit.team &&
       Rules.onMap(target) &&
-      !target.embarked &&
+      (!target.embarked || target.embarked.exposed === true) &&
       editable(unit) &&
       members(unit).some((member) =>
         Rules.automaticWeapons(game, member, target).some(

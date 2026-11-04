@@ -17,7 +17,7 @@ test('mixed squad volleys and melee counters share facing and keep approach out 
   const battles=planner.resolve(room);
   MapCombat.reset();MapCombat.seed(battles);
   battleView={networkId:'facing',battles,actors:battles.flatMap(b=>b.actors),events:battles.flatMap(b=>b.events)};
-  phase='battle';pending=moving=null;setPageView('game');MapCombat.begin(battleView,()=>0);
+  phase='battle';pending=moving=null;setPageView('game');MapCamera.focus(5,5,{preserveZoom:true});MapCombat.begin(battleView,()=>0);
   const finish=CombatPlayback.finish;let completed=false;
   CombatPlayback.finish=()=>{completed=true;battleView=null;};
   const checked=new Set();let counters=0,maxFacingError=0,maxMeleeOffset=0,maxCounterJump=0;
