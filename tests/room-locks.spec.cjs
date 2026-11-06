@@ -23,12 +23,15 @@ async function lobby(page) {
 }
 for (const width of [1280, 390])
   test(`independent room creation, password lock and join at ${width}px`, async ({ browser }) => {
+    test.setTimeout(60000);
     const hostContext = await browser.newContext({ viewport: { width, height: 844 } }),
       guestContext = await browser.newContext({ viewport: { width, height: 844 } });
     const host = await hostContext.newPage(),
       guest = await guestContext.newPage(),
       errors = [];
     for (const page of [host, guest]) page.on("pageerror", (error) => errors.push(error.message));
+    host.setDefaultTimeout(8000);
+    guest.setDefaultTimeout(8000);
     const code = "LOCKUI" + width;
     try {
       await lobby(host);
@@ -51,26 +54,58 @@ for (const width of [1280, 390])
       expect(box.x + box.width).toBeLessThanOrEqual(width);
       await host.locator('#roomCreateForm button[type="submit"]').click();
       await expect(host.locator("#roomPreparation")).toBeVisible();
-      await expect(host.locator("#roomFormationPreset")).toHaveValue("1000,200,12");
+      await expect(host.locator("#roomFormationPreset")).toHaveValue("2000,250,36");
       expect(
         await host
           .locator("#roomFormationPreset option")
           .evaluateAll((options) => options.map((o) => o.value)),
       ).toEqual([
-        "1000,200,12",
-        "2000,400,12",
-        "4000,800,12",
-        "6000,1200,12",
-        "8000,1600,12",
-        "10000,2000,12",
+        "2000,250,36",
+        "2000,400,36",
+        "4000,800,36",
+        "6000,1200,36",
+        "8000,1600,36",
+        "10000,2000,36",
         "custom",
       ]);
       if (width < 700) await host.locator('[data-room-tab="settings"]').click();
-      await host.locator("#roomFormationPreset").selectOption("10000,2000,12");
+      await host.locator("#roomFormationPreset").selectOption("10000,2000,36");
       await expect.poll(() => app.rooms.get(code).settings.costLimit).toBe(10000);
       expect(app.rooms.get(code).settings.unitCostLimit).toBe(2000);
-      expect(app.rooms.get(code).settings.unitLimit).toBe(12);
-      if (width < 700) await host.locator('[data-room-tab="seats"]').click();
+      expect(app.rooms.get(code).settings.unitLimit).toBe(36);
+      await expect(host.locator("#roomTeamRestrictions").locator("..")).toBeVisible();
+      await host.locator("#roomBattleMode").selectOption("regular");
+      await expect.poll(() => app.rooms.get(code).settings.mode).toBe("regular");
+      await expect(host.locator("#roomTeamRestrictions").locator("..")).toBeHidden();
+      await host.locator("#roomBattleMode").selectOption("quick");
+      await expect.poll(() => app.rooms.get(code).settings.mode).toBe("quick");
+      await expect(host.locator("#roomTeamRestrictions").locator("..")).toBeVisible();
+      await host.locator("#roomFogMode").selectOption("visible");
+      await expect.poll(() => app.rooms.get(code).settings.fogMode).toBe("visible");
+      await host.locator("#roomPresetName").fill("我的规则");
+      await expect(host.locator("#saveRoomPreset")).toBeEnabled();
+      await host.locator("#saveRoomPreset").click();
+      const savedId = await host.locator("#roomFormationPreset").inputValue();
+      expect(savedId).toMatch(/^saved-/);
+      await host.locator("#roomFormationPreset").selectOption("2000,250,36");
+      await expect.poll(() => app.rooms.get(code).settings.costLimit).toBe(2000);
+      await host.locator("#roomFogMode").selectOption("disabled");
+      await expect.poll(() => app.rooms.get(code).settings.fogMode).toBe("disabled");
+      await host.locator("#roomFormationPreset").selectOption(savedId);
+      await expect.poll(() => app.rooms.get(code).settings.costLimit).toBe(10000);
+      await expect.poll(() => app.rooms.get(code).settings.fogMode).toBe("visible");
+      await host.reload();
+      await host.waitForFunction(() => assetsReady);
+      await expect(host.locator("#roomPreparation")).toBeVisible();
+      if (width < 700) await host.locator('[data-room-tab="settings"]').click();
+      await expect(host.locator("#roomFormationPreset")).toHaveValue(savedId);
+      await host.locator("#deleteRoomPreset").click();
+      expect(await host.evaluate(() => JSON.parse(localStorage.getItem("projectgreed.room-rule-presets.v1")))).toEqual([]);
+      await expect(host.locator("#deleteRoomPreset")).toBeDisabled();
+      if (width < 700) {
+        await host.locator("#closeRoomSettingsSheet").click();
+        await host.locator('[data-room-tab="seats"]').click();
+      }
       expect(app.rooms.get(code).settings.mode).toBe("quick");
       await guestContext.grantPermissions([]);
       await lobby(guest);
@@ -91,6 +126,9 @@ for (const width of [1280, 390])
       await guest.locator('#joinLockedRoomForm button[type="submit"]').click();
       await expect(guest.locator("#roomPreparation")).toBeVisible();
       expect(app.rooms.get(code).members.size).toBe(2);
+      if (width < 700) await guest.locator('[data-room-tab="settings"]').click();
+      await expect(guest.locator("#saveRoomPreset")).toBeDisabled();
+      await expect(guest.locator("#roomFormationPreset")).toBeDisabled();
       await guest.reload();
       await guest.waitForFunction(() => assetsReady);
       await expect(guest.locator("#roomPreparation")).toBeVisible();
@@ -98,8 +136,7 @@ for (const width of [1280, 390])
     } finally {
       for (const page of [host, guest])
         if (!page.isClosed()) await page.evaluate(() => Net.leave()).catch(() => {});
-      await hostContext.close();
-      await guestContext.close();
+      await Promise.all([hostContext.close(), guestContext.close()]);
       await expect.poll(() => app.rooms.size).toBe(0);
     }
   });

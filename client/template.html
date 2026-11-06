@@ -2586,15 +2586,21 @@
                       /></label>
                       <label
                         >规则预设<select id="roomFormationPreset" aria-label="编组限制预设">
-                          <option value="1000,250,12">1000/250/12</option>
-                          <option value="2000,400,12">2000/400/12</option>
-                          <option value="4000,800,12">4000/800/12</option>
-                          <option value="6000,1200,12">6000/1200/12</option>
-                          <option value="8000,1600,12">8000/1600/12</option>
-                          <option value="10000,2000,12">10000/2000/12</option>
+                          <option value="2000,250,36">2000/250/36</option>
+                          <option value="2000,400,36">2000/400/36</option>
+                          <option value="4000,800,36">4000/800/36</option>
+                          <option value="6000,1200,36">6000/1200/36</option>
+                          <option value="8000,1600,36">8000/1600/36</option>
+                          <option value="10000,2000,36">10000/2000/36</option>
                           <option value="custom">自定义</option>
                         </select></label
                       >
+                    </div>
+                    <div class="room-preset-editor">
+                      <input id="roomPresetName" type="text" maxlength="40" placeholder="预设名称" aria-label="规则预设名称" />
+                      <button id="saveRoomPreset" type="button">保存预设</button>
+                      <button id="deleteRoomPreset" type="button">删除预设</button>
+                      <small id="roomPresetStatus" class="muted" role="status"></small>
                     </div>
                   </details>
                   <details class="room-rule-group" open>
@@ -2634,7 +2640,7 @@
                     <div id="roomTagRestrictions" class="tag-restrictions"></div>
                   </details>
                   <details class="room-rule-group">
-                    <summary id="roomTeamRulesTitle">队伍强制阵营</summary>
+                    <summary id="roomTeamRulesTitle">队伍禁用标签</summary>
                     <div id="roomTeamRestrictions"></div>
                   </details>
                 </section>

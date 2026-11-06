@@ -3354,5 +3354,16 @@
   "快速战模式": "Quick battle mode",
   "已搭乘": "Aboard",
   "生产周期：{turns}回合／台": "Production: {turns} turn(s)/unit",
-  "库存 {quantity} · 套件 {kits}": "Stock {quantity} · Kits {kits}"
+  "库存 {quantity} · 套件 {kits}": "Stock {quantity} · Kits {kits}",
+  "已保存预设": "Saved presets",
+  "规则预设名称": "Rule preset name",
+  "预设名称": "Preset name",
+  "保存预设": "Save preset",
+  "删除预设": "Delete preset",
+  "请输入预设名称": "Enter a preset name",
+  "预设名称最多40个字符": "Preset names may contain up to 40 characters",
+  "最多保存30个预设": "You can save up to 30 presets",
+  "预设已保存到当前浏览器": "Preset saved in this browser",
+  "预设已删除": "Preset deleted",
+  "友军共享设置无效": "Invalid allied unit sharing setting"
 }

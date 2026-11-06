@@ -716,7 +716,7 @@ for (const [cost, money, supplies] of [
   [0,2500,5000], [1999,2500,5000], [2000,2500,5000], [2499,2500,5000],
   [2500,2750,5500], [4999,3750,7500], [5000,4000,8000], [7500,5150,10300],
   [10000,6220,12440], [15000,8120,16240], [17000,8800,17600],
-  [19999,9550,19100], [20000,9700,19400], [24000,10900,21800], [24500,11050,22100],
+  [19999,9550,19100], [20000,9700,19400], [20001,9700,19400], [24000,9700,19400], [24500,9700,19400], [99999,9700,19400],
 ]) test(`integer staircase base reward at COST ${cost}`, () => {
   assert.deepEqual(R.calculateBattleReward(cost), {money,supplies});
 });
@@ -753,4 +753,15 @@ for (const mode of ["regular", "quick"]) test(`authoritative ${mode} staircase r
     assert.equal(result.supplies,8000*rate);
   }
   assert.equal(R.teamAverageFormationCost(f.room.battleRoster,0),5000);
+});
+
+for (const mode of ["regular", "quick"]) test(`authoritative ${mode} victory base caps above 20000 roster COST`, t => {
+  const f = fixture(t, {mode});
+  for (const unit of Object.values(f.room.battleRoster))
+    if (unit.team === 0) unit.cost = 50000;
+  f.kill(); f.finish();
+  const award = f.frames.get(f.clients[0]).economyAwards.find(a => a.kind === "result");
+  const rate = mode === "quick" ? .1 : 1;
+  assert.equal(award.money, 9700 * rate);
+  assert.equal(award.supplies, 19400 * rate);
 });

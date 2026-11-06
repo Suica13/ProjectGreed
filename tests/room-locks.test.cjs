@@ -47,9 +47,9 @@ test("WebSocket room locks enforce passwords for players and spectators, expose 
   });
   assert.equal(host.reply.type, "joined");
   const state = await host.wait((m) => m.type === "state");
-  assert.equal(state.settings.costLimit, 1000);
-  assert.equal(state.settings.unitCostLimit, 200);
-  assert.equal(state.settings.unitLimit, 12);
+  assert.equal(state.settings.costLimit, 2000);
+  assert.equal(state.settings.unitCostLimit, 250);
+  assert.equal(state.settings.unitLimit, 36);
   assert.equal(state.settings.mode, "quick");
   const list = await request({ type: "list_rooms" });
   assert.equal(list.reply.rooms[0].locked, true);

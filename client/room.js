@@ -7,19 +7,70 @@ const RoomPanel = (() => {
     queuedNumericSettings = {};
   const numericDrafts = { costLimit: null, unitCostLimit: null, unitLimit: null };
   const formationPresets = new Set([
-    "1000,250,12",
-    "2000,400,12",
-    "4000,800,12",
-    "6000,1200,12",
-    "8000,1600,12",
-    "10000,2000,12",
+    "2000,250,36",
+    "2000,400,36",
+    "4000,800,36",
+    "6000,1200,36",
+    "8000,1600,36",
+    "10000,2000,36",
   ]);
+  const presetStorageKey = "projectgreed.room-rule-presets.v1";
+  function presetRules(settings) {
+    if (typeof settings.shareAlliedUnits !== "boolean") throw Error("友军共享设置无效");
+    return {
+      costLimit: Rules.validateCostLimit(settings.costLimit),
+      unitCostLimit: Rules.validateUnitCostLimit(settings.unitCostLimit),
+      unitLimit: Rules.validateUnitLimit(settings.unitLimit),
+      fogMode: Rules.validateFogMode(settings.fogMode),
+      shareAlliedUnits: settings.shareAlliedUnits,
+      pilotPolicy: Rules.validatePilotPolicy(settings.pilotPolicy),
+      ...Rules.validateTagRestrictions(Object.fromEntries(
+        ["bannedFactions", "bannedEras", "bannedTypes"].map(key => [key, settings[key]])
+      )),
+      teamRestrictions: Rules.validateTeamRestrictions(settings.teamRestrictions),
+    };
+  }
+  let savedPresets = [];
+  try {
+    const stored = JSON.parse(localStorage.getItem(presetStorageKey) || "[]");
+    if (Array.isArray(stored)) for (const item of stored.slice(0, 30)) {
+      try {
+        if (typeof item.name !== "string" || !item.name.trim() || item.name.length > 40 ||
+            typeof item.id !== "string" || !/^saved-[a-z0-9-]{1,80}$/.test(item.id) ||
+            savedPresets.some(p => p.id === item.id || p.name === item.name.trim())) continue;
+        savedPresets.push({id:item.id, name:item.name.trim(), rules:presetRules(item.rules)});
+      } catch { /* Ignore an invalid entry without losing other saved presets. */ }
+    }
+  } catch { /* A damaged browser setting must not prevent room creation. */ }
+  function savedPresetOptions() {
+    const select = byId("roomFormationPreset");
+    select.querySelector("optgroup[data-saved-presets]")?.remove();
+    if (!savedPresets.length) return;
+    const group = document.createElement("optgroup");
+    group.label = I18n.text("已保存预设");
+    group.dataset.savedPresets = "";
+    for (const preset of savedPresets) {
+      const option = new Option(preset.name, preset.id);
+      option.dataset.i18nIgnore = "";
+      group.append(option);
+    }
+    select.insertBefore(group, select.querySelector('option[value="custom"]'));
+  }
+  savedPresetOptions();
   function showFormationPreset(settings) {
     const values = ["costLimit", "unitCostLimit", "unitLimit"].map(
-      (key) => numericDrafts[key] ?? settings[key],
+      key => numericDrafts[key] ?? settings[key],
     );
+    let saved;
+    try {
+      const current = presetRules({...settings, ...Object.fromEntries(
+        ["costLimit", "unitCostLimit", "unitLimit"].map((key, i) => [key, Number(values[i])])
+      )});
+      saved = savedPresets.find(p => JSON.stringify(p.rules) === JSON.stringify(current));
+    } catch { /* An unfinished numeric input is a custom draft. */ }
     const preset = values.join(",");
-    byId("roomFormationPreset").value = formationPresets.has(preset) ? preset : "custom";
+    byId("roomFormationPreset").value = saved?.id || (formationPresets.has(preset) ? preset : "custom");
+    byId("deleteRoomPreset").disabled = !saved || byId("roomFormationPreset").disabled;
   }
   const joinButtons = [byId("joinTeam1"), byId("joinTeam2")];
   let detail = null;
@@ -291,6 +342,9 @@ const RoomPanel = (() => {
     const locked = snapshot.started || snapshot.you?.id !== snapshot.hostId || busy;
     showFormationPreset(settings);
     byId("roomFormationPreset").disabled = locked;
+    byId("roomPresetName").disabled = locked;
+    byId("saveRoomPreset").disabled = locked;
+    byId("deleteRoomPreset").disabled = locked || !savedPresets.some(p => p.id === byId("roomFormationPreset").value);
     byId("roomShareAlliedUnits").value = settings.shareAlliedUnits ? "enabled" : "disabled";
     byId("roomShareAlliedUnits").disabled = locked;
     byId("roomFogMode").value = settings.fogMode || "full";
@@ -314,8 +368,7 @@ const RoomPanel = (() => {
       (item) => item.open,
     );
     teamRulesPanel.replaceChildren();
-    byId("roomTeamRulesTitle").textContent =
-      settings.mode === "quick" ? "队伍禁用标签" : "队伍强制阵营";
+    byId("roomTeamRulesTitle").textContent = "队伍禁用标签";
     if (settings.mode === "quick") {
       for (let team = 0; team < 2; team++) {
         const group = element("details", "team-filters");
@@ -344,8 +397,9 @@ const RoomPanel = (() => {
     byId("roomScenarioSelect").hidden = !strategic;
     byId("roomScenarioSelect").disabled = locked;
     mapSelect.hidden = strategic;
-    for (const id of ["roomFormationPreset", "roomTagRestrictions", "roomTeamRestrictions"])
+    for (const id of ["roomFormationPreset", "roomTagRestrictions"])
       byId(id).closest("details").hidden = strategic;
+    teamRulesPanel.closest("details").hidden = settings.mode !== "quick";
     for (const id of ["roomFogMode", "roomShareAlliedUnits"])
       byId(id).closest("label").hidden = strategic;
     let summary = byId("campaignRoomRuleSummary");
@@ -1160,8 +1214,13 @@ const RoomPanel = (() => {
   byId("roomMapSelect").onchange = () => sendSettings({ mapId: byId("roomMapSelect").value });
   byId("roomFormationPreset").onchange = () => {
     const preset = byId("roomFormationPreset").value;
-    if (!formationPresets.has(preset)) return;
-    const [costLimit, unitCostLimit, unitLimit] = preset.split(",").map(Number);
+    const saved = savedPresets.find(p => p.id === preset);
+    if (!saved && !formationPresets.has(preset)) return;
+    const rules = saved?.rules || Object.fromEntries(
+      ["costLimit", "unitCostLimit", "unitLimit"].map((key, i) => [key, Number(preset.split(",")[i])])
+    );
+    const {costLimit, unitCostLimit, unitLimit} = rules;
+    byId("roomPresetName").value = saved?.name || "";
     clearTimeout(numericSettingsTimer);
     numericSettingsTimer = null;
     queuedNumericSettings = {};
@@ -1170,7 +1229,39 @@ const RoomPanel = (() => {
     byId("roomCostLimit").value = costLimit;
     byId("roomUnitCostLimit").value = unitCostLimit;
     byId("roomUnitLimit").value = unitLimit;
-    sendSettings({ costLimit, unitCostLimit, unitLimit });
+    sendSettings(rules);
+  };
+  function storePresets(next) {
+    localStorage.setItem(presetStorageKey, JSON.stringify(next));
+    savedPresets = next;
+    savedPresetOptions();
+    showFormationPreset(Net.snapshot.settings);
+  }
+  byId("saveRoomPreset").onclick = () => {
+    const snapshot = Net.snapshot;
+    if (!snapshot || snapshot.started || snapshot.you?.id !== snapshot.hostId || Net.awaiting) return;
+    try {
+      const name = byId("roomPresetName").value.trim();
+      if (!name) throw Error("请输入预设名称");
+      if (name.length > 40) throw Error("预设名称最多40个字符");
+      const previous = savedPresets.find(p => p.name === name);
+      if (!previous && savedPresets.length >= 30) throw Error("最多保存30个预设");
+      const rules = presetRules({...snapshot.settings, ...Object.fromEntries(
+        Object.entries(numericDrafts).filter(([, value]) => value !== null).map(([key, value]) => [key, Number(value)])
+      )});
+      const entry = {id:previous?.id || "saved-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8), name, rules};
+      storePresets(previous ? savedPresets.map(p => p.id === previous.id ? entry : p) : [...savedPresets, entry]);
+      byId("roomPresetStatus").textContent = I18n.text("预设已保存到当前浏览器");
+    } catch (error) { byId("roomPresetStatus").textContent = I18n.text(error.message); }
+  };
+  byId("deleteRoomPreset").onclick = () => {
+    const selected = byId("roomFormationPreset").value;
+    if (byId("roomFormationPreset").disabled || !savedPresets.some(p => p.id === selected)) return;
+    try {
+      storePresets(savedPresets.filter(p => p.id !== selected));
+      byId("roomPresetName").value = "";
+      byId("roomPresetStatus").textContent = I18n.text("预设已删除");
+    } catch (error) { byId("roomPresetStatus").textContent = I18n.text(error.message); }
   };
   function flushNumericSettings() {
     clearTimeout(numericSettingsTimer);

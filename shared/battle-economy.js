@@ -97,7 +97,7 @@ const BattleEconomy = (() => {
       : 0;
   }
   function calculateBattleReward(formationCost) {
-    let steps = Math.max(0, Math.floor((formationCost - 2000) / 500));
+    let steps = Math.max(0, Math.floor((Math.min(formationCost, 20000) - 2000) / 500));
     let money = 2500;
     // Six complete 500-COST steps per tier. All remaining steps use the floor.
     for (let level = 0; level < 5 && steps > 0; level++) {
