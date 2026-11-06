@@ -172,6 +172,7 @@ const Formation = (() => {
       : {}),
     characterFaction: group,
     licenses: Economy.snapshot().licenses,
+    ownedStock: Economy.normalizeStock(Economy.snapshot()),
     ...(Net.active && Net.snapshot?.settings.mode === "quick" ? {} : Economy.normalizeStock(Economy.snapshot())),
   });
   // Drafts may contain future units; technology is required to produce them; owned stock can deploy.
@@ -1825,7 +1826,7 @@ const Formation = (() => {
   function checkLicenses(entries, proceed) {
     const quick = Net.snapshot?.settings.mode === "quick";
     if (quick ? !Economy.licensePlan(entries).items.length : !Economy.purchasePlan(entries).items.length) return proceed();
-    showLicenseDialog(quick ? "部署许可不足" : "出战库存不足", quick ? "快速战只需部署许可，无需机体或套件库存。缺少许可的单位不会生成。" : "编组缺少部署许可、机体或套件。强制准备后，不足的单位不会生成。", [], [
+    showLicenseDialog(quick ? "部署许可不足" : "出战库存不足", quick ? "快速战可凭部署许可或完整机体与套件库存出战。不满足条件的单位不会生成。" : "编组缺少机体或套件库存。强制准备后，不足的单位不会生成。", [], [
       ["取消", "cancelMissingStock"],
       ["去往机库", "openStockWarehouse", () => open()],
       ["强制准备", "forceReadyWithoutStock", proceed],

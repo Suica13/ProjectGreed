@@ -674,3 +674,15 @@ test("Cima default event uses requested server-local period and a 10000 COST thr
   assert.equal(event.targetCost, 10000);
   assert.deepEqual(event.rewards.unlockAces, ["Pilot_ZEON_0079_N_ACE_CIA"]);
 });
+
+test("stock rewards validate separate chassis and kits and survive a claim retry", t => {
+  const f=fixture(t),ws={},profile=identity();f.service.identify(ws,profile,"Stock");
+  const published=f.service.publish(activity("online_now",{rewards:{inventory:{RGM_79:2},kits:{RGM_79__beam_spray:4}}}));
+  const mail=f.frames.get(ws).at(-1).mail.find(item=>item.activityId===published.id);
+  assert(mail);assert.deepEqual(mail.rewards.inventory,{RGM_79:2});
+  f.service.receive(ws,{type:"activity_claim",mailId:mail.id});
+  const award=f.frames.get(ws).at(-1).award;assert.deepEqual(award.kits,{RGM_79__beam_spray:4});
+  f.service.receive(ws,{type:"activity_claim",mailId:mail.id});assert.deepEqual(f.frames.get(ws).at(-1).award,award);
+  assert.throws(()=>f.service.publish(activity("online_now",{rewards:{inventory:{not_a_unit:1}}})));
+  assert.throws(()=>f.service.publish(activity("online_now",{rewards:{kits:{RGM_79__beam_spray:-1}}})));
+});

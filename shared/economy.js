@@ -189,7 +189,12 @@ const Economy = (() => {
     const next = snapshot();
     next.money += award.money;
     next.supplies += award.supplies;
-    if (award.inventory !== undefined) throw Error("活动奖励仅支持部署许可");
+    const awardedStock = normalizeStock(award);
+    for (const kind of ["inventory", "kits"]) for (const [id, count] of Object.entries(awardedStock[kind])) {
+      const quantity = (next[kind][id] || 0) + count;
+      if (!Number.isSafeInteger(quantity) || quantity > 1000000) throw Error("库存数量超过上限：" + id);
+      next[kind][id] = quantity;
+    }
     for (const [id, owned] of Object.entries(award.licenses || {})) {
       if (!Object.hasOwn(catalog.baseModels, id) || owned !== true) throw Error("活动单位奖励无效");
       next.licenses[id] = true;
@@ -328,14 +333,20 @@ const Economy = (() => {
       items.push({ kind, id, unitId: kind === "kits" ? id.split("__")[0] : id, count, offer });
       if (offer) for (const key of ["money", "supplies"]) total[key] += offer[key] * count;
     }
+    const buyingLicenses = new Set();
     for (const [id, needed] of Object.entries(units)) {
-      if (!state.licenses[id]) add("licenses", id, 1, licenseOffer(id));
-      const gift = state.licenses[id] ? 0 : 1;
+      const short = quantity(id) < needed || Object.entries(kits).some(([model, count]) =>
+        model.startsWith(id + "__") && kitQuantity(model) < count);
+      if (!state.licenses[id] && short) {
+        buyingLicenses.add(id);
+        add("licenses", id, 1, licenseOffer(id));
+      }
+      const gift = buyingLicenses.has(id) ? 1 : 0;
       add("inventory", id, Math.max(0, needed - quantity(id) - gift), unitOffer(id));
     }
     for (const [id, needed] of Object.entries(kits)) {
       const unitId = id.split("__")[0];
-      const gift = !state.licenses[unitId] && id === unitId + "__" + defaultKit(unitId) ? 1 : 0;
+      const gift = buyingLicenses.has(unitId) && id === unitId + "__" + defaultKit(unitId) ? 1 : 0;
       add("kits", id, Math.max(0, needed - kitQuantity(id) - gift), kitOffer(id));
     }
     return { ...total, items };
@@ -402,7 +413,9 @@ const Economy = (() => {
   function licensePlan(entries) {
     const items = [],
       total = { money: 0, supplies: 0 };
-    for (const unitId of new Set(entries.map((entry) => entry.unitId))) {
+    const unlicensed = entries.filter(entry => !state.licenses[entry.unitId]);
+    const missingStock = stockPlan(unlicensed, state).missing.map(index => unlicensed[index]);
+    for (const unitId of new Set(missingStock.map(entry => entry.unitId))) {
       if (state.licenses[unitId]) continue;
       const offer = licenseOffer(unitId);
       items.push({ unitId });

@@ -235,3 +235,19 @@ test("PMC allocations use largest remainders, honor caps, and conserve every all
   assert.deepEqual(R.allocateTechnology(1,{EFSF:1,ZEON:1},{},{EFSF:10,ZEON:10}),{EFSF:1});
   assert.deepEqual(R.technologyFactions({tags:["EFSF","0079T1","EFSF"],availableFactions:["AEUG","TITANS"],faction:"EFSF"}),["AEUG","EFSF","TITANS"]);
 });
+
+test("activity stock grants are counted, atomic and idempotent without granting licenses", () => {
+  const {E}=load({schemaVersion:3,money:1000000,supplies:1000000,licenses:{},inventory:{},kits:{}});
+  const award={id:"stock-mail",matchId:"server",money:0,supplies:0,inventory:{RGM_79:2},kits:{RGM_79__beam_spray:3}};
+  assert(E.creditActivity(award));
+  assert.equal(E.quantity("RGM_79"),2);assert.equal(E.kitQuantity("RGM_79__beam_spray"),3);
+  assert.equal(E.hasLicense("RGM_79"),false);
+  assert.equal(E.creditActivity(award),false);
+  assert.equal(E.quantity("RGM_79"),2);
+  assert.equal(E.buyKit("RGM_79","beam_spray","PMC"),false);
+  assert.equal(E.produce("RGM_79","beam_spray","PMC"),false);
+  assert.equal(E.purchasePlan([{unitId:"RGM_79",kitId:"beam_spray"}]).items.length,0);
+  const before=JSON.stringify(E.snapshot());
+  assert.throws(()=>E.creditActivity({...award,id:"bad",inventory:{not_a_unit:1}}));
+  assert.equal(JSON.stringify(E.snapshot()),before);
+});

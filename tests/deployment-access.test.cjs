@@ -204,7 +204,8 @@ test('licensed undeveloped units bypass research only, retain faction, cost and 
   assert.equal(G.restrictionReason(lockedModel, rules), null);
   assert.equal(G.planFormation([lockedEntry,lockedEntry],Infinity,rules).reasons[1], undefined);
   assert.equal(G.planFormation([lockedEntry],Infinity,{...rules,licenses:undefined}).deployable.length,1);
-  assert.equal(G.restrictionReason(lockedModel,{...rules,licenses:{}}),'not_developed');
+  assert.equal(G.restrictionReason(lockedModel,{...rules,licenses:{}}),null);
+  assert.equal(G.restrictionReason(lockedModel,{...rules,licenses:{},ownedLicenses:{},ownedStock:{inventory:{},kits:{}},inventory:{},kits:{}}),'not_developed');
   assert.equal(G.restrictionReason(lockedModel,{...rules,characterFaction:'ZEON'}),'faction_mismatch');
   assert.equal(G.restrictionReason(lockedModel,{...rules,unitCostLimit:0}),'cost');
   assert.equal(G.restrictionReason(lockedModel,{...rules,bannedFactions:['EFSF']}),'not_allowed');
@@ -383,4 +384,28 @@ for(const mode of ["regular","quick"]) test("WebSocket pilot policy is host-owne
  assert.equal(plan.reasons[1],"pilot_banned");assert.equal(plan.reasons[2],"pilot_banned");
  await a.action("confirm_formation");response=await b.action("confirm_formation");assert.equal(response.phase,"deployment");
  const own=app.rooms.get("PILOTS").game.units.filter(u=>u.ownerSeat===0);assert.equal(own.length,1);assert(!own[0].pilot.custom);
+});
+
+for (const mode of ["regular", "quick"]) test(`unlicensed stock deploys in ${mode} without research and never overdraws the fallback`, () => {
+  const stock = {inventory:{[lockedEntry.unitId]:1},kits:{[lockedEntry.unitId+"__"+lockedEntry.kitId]:1}};
+  const rules = G.armyRestrictions({...G.defaultRoomSettings(),mode,unitCostLimit:99999},
+    {seat:0,characterFaction:"PMC",researched:{},licenses:{},...stock});
+  const plan = G.planFormation([lockedEntry,lockedEntry],99999,rules);
+  assert.equal(plan.deployable.length,1);
+  assert.equal(plan.reasons[1],"stock");
+  const banned = G.planFormation([lockedEntry],99999,{...rules,bannedFactions:[lockedModel.faction]});
+  assert.equal(banned.deployable.length,0);
+});
+for (const mode of ["regular", "quick"]) test(`WebSocket ${mode} spawns unresearched inventory without a deployment license`, async t => {
+  const app=createServer({host:"127.0.0.1",port:0}),address=await app.listen();
+  const a=new Peer(`ws://127.0.0.1:${address.port}/ws`),b=new Peer(`ws://127.0.0.1:${address.port}/ws`);
+  t.after(async()=>{a.ws.terminate();b.ws.terminate();await app.close();});
+  const stock={inventory:{[lockedEntry.unitId]:1},kits:{[lockedEntry.unitId+"__"+lockedEntry.kitId]:1},researched:{}};
+  await a.join("create","STOCKONLY",{},stock);await b.join("join","STOCKONLY",{},stock);
+  const formation=[lockedEntry];
+  await a.action("configure_room",{...G.defaultRoomSettings(),battleMode:mode,costLimit:99999,unitCostLimit:99999});
+  await b.action("set_ready",{ready:true,formation});await a.action("start_game",{formation});
+  await a.action("confirm_formation",{formation});const state=await b.action("confirm_formation",{formation});
+  assert.equal(state.phase,"deployment");
+  assert.equal(app.rooms.get("STOCKONLY").game.units.filter(u=>G.modelOf(u).prefabId===lockedEntry.unitId).length,2);
 });

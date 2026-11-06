@@ -59,6 +59,45 @@ const UnitIdentity = (() => {
     ctx.strokeRect(x, y, size, size);
     ctx.restore();
   }
+  const unitImages = new Map();
+  function drawMapSymbol(ctx, unit, position, tile) {
+    const center = Rules.center(unit);
+    ctx.save();
+    ctx.strokeStyle = colors[relation(unit)].color;
+    ctx.lineWidth = 1.25;
+    for (const cell of Rules.cells(unit))
+      ctx.strokeRect(
+        position.x + (cell.x - center.x - 0.5) * tile,
+        position.y + (cell.y - center.y - 0.5) * tile,
+        tile,
+        tile,
+      );
+    const key = unit.model + ":" + (unit.pilot?.aceId || "");
+    let image = unitImages.get(key);
+    if (!image) {
+      image = new Image();
+      if (unitImages.size >= 256)
+        unitImages.delete(unitImages.keys().next().value);
+      unitImages.set(key, image);
+      image.src = unitIcon(unit.model, unit.pilot);
+    }
+    const size = Math.max(10, Math.min(28, tile * 0.9));
+    const x = position.x - size / 2,
+      y = position.y - size / 2;
+    if (image.complete && image.naturalWidth)
+      ctx.drawImage(image, x, y, size, size);
+    if (unit.pilot?.name) {
+      const badge = Math.max(7, Math.min(12, size * 0.45));
+      drawPilotPortrait(
+        ctx,
+        unit.pilot,
+        x + size - badge * 0.8,
+        y + size - badge * 0.8,
+        badge,
+      );
+    }
+    ctx.restore();
+  }
   function drawCommandAura(ctx, unit, position, tile, selectedUnit) {
     if (!selectedUnit || !Rules.modelOf(unit).supplyAura) return;
     if (
@@ -108,5 +147,5 @@ const UnitIdentity = (() => {
     ctx.fill();
     ctx.stroke();
   }
-  return { colors, viewerSeat, relation, owner, drawRing, drawCommandAura, drawPilotPortrait };
+  return { colors, viewerSeat, relation, owner, drawRing, drawCommandAura, drawPilotPortrait, drawMapSymbol };
 })();

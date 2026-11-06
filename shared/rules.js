@@ -355,6 +355,11 @@ const Tactics = (() => {
       missing: entries.flatMap((entry, index) => (licenses[entry.unitId] === true ? [] : [index])),
     };
   }
+  function stockAccess(model, restrictions) {
+    const stock = restrictions.ownedStock || restrictions;
+    return (stock.inventory?.[model.prefabId] || 0) > 0 &&
+      (stock.kits?.[model.prefabId + "__" + model.kitId] || 0) > 0;
+  }
   function restrictionReason(model, restrictions = {}) {
     if (model.wip) return "wip";
     if (restrictions.aiBannedUnits?.includes(model.prefabId)) return "not_allowed";
@@ -368,7 +373,8 @@ const Tactics = (() => {
         restrictions.characterFaction,
       ) &&
       !development.allows(restrictions.characterFaction, model.prefabId, restrictions.researched) &&
-      (restrictions.licenses ?? restrictions.ownedLicenses)?.[model.prefabId] !== true
+      (restrictions.licenses ?? restrictions.ownedLicenses)?.[model.prefabId] !== true &&
+      !stockAccess(model, restrictions)
     )
       return "not_developed";
     if (restrictions.environment && (model.adaptability?.[restrictions.environment] ?? 100) <= 0)
@@ -434,7 +440,14 @@ const Tactics = (() => {
         candidates.map((c) => c.entry),
         licenses,
       ).missing)
-        reasons[candidates[i].index] = "license";
+        if (!stockAccess(models[candidates[i].entry.unitId + "__" + candidates[i].entry.kitId], restrictions))
+          reasons[candidates[i].index] = "license";
+      // In quick battles stock is an alternative to a license, not an unlimited permit.
+      if (restrictions.inventory === undefined && restrictions.ownedStock) {
+        const unlicensed = candidates.filter(item => licenses[item.entry.unitId] !== true && !reasons[item.index]);
+        const plan = economy.stockPlan(unlicensed.map(item => item.entry), restrictions.ownedStock);
+        for (const i of plan.missing) reasons[unlicensed[i].index] = plan.reasons[i];
+      }
     }
     if (restrictions.inventory !== undefined || restrictions.kits !== undefined) {
       const candidates = clean.flatMap((entry, index) => reasons[index] ? [] : [{ entry, index }]);
@@ -584,6 +597,7 @@ const Tactics = (() => {
       rules.licenses = normalizeLicenses(player.licenses);
       // Readiness may skip quantity checks while retaining ownership-based deployment access.
       rules.ownedLicenses = rules.licenses;
+      rules.ownedStock = economy.normalizeStock(player);
       if (!player.formationPreset && settings.mode === "regular") Object.assign(rules, economy.normalizeStock(player));
     }
     const config = armySettings(player);
@@ -1789,6 +1803,7 @@ const Tactics = (() => {
       const stockPlan = seatRules.licenses === undefined && !restrictedPilots ? null : planFormation(
         formations[seat], Infinity, {
           licenses: seatRules.licenses, inventory: seatRules.inventory, kits: seatRules.kits,
+          ownedStock: seatRules.ownedStock,
           pilotPolicy: seatRules.pilotPolicy, bannedFactions: pilotBans,
         }, catalog.formation.maxUnits);
       sourceIndices[seat] = (stockPlan?.indices || formations[seat].map((_, i) => i)).map(

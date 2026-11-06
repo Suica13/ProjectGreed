@@ -1957,17 +1957,7 @@ function drawMap(now) {
       }
     }
     if (unitThumbnails) {
-      const center = Rules.center(u),
-        palette = UnitIdentity.colors[UnitIdentity.relation(u)];
-      ctx.fillStyle = palette.color;
-      ctx.strokeStyle = "#091820";
-      ctx.lineWidth = 1;
-      for (const cell of Rules.cells(u)) {
-        const x = pos.x + (cell.x - center.x) * tile - tile * 0.38;
-        const y = pos.y + (cell.y - center.y) * tile - tile * 0.38;
-        ctx.fillRect(x, y, tile * 0.76, tile * 0.76);
-        ctx.strokeRect(x, y, tile * 0.76, tile * 0.76);
-      }
+      UnitIdentity.drawMapSymbol(ctx, u, pos, tile);
     } else {
       SpriteRenderer.draw(
         ctx,
@@ -2042,6 +2032,11 @@ function drawMap(now) {
         (frameModelOf(u).ship ? unitSize.width : 1),
       barx = pos.x - hpw / 2,
       bary = pos.y + spriteTile * (frameModelOf(u).ship ? unitSize.height / 2 - 0.12 : 0.36);
+    if (unitThumbnails) {
+      const iconSize = Math.max(10, Math.min(28, tile * .9));
+      const badgeSize = Math.max(7, Math.min(12, iconSize * .45));
+      bary = pos.y + iconSize / 2 + badgeSize * .2 + 3;
+    }
     ctx.fillStyle = "#07141c";
     ctx.fillRect(barx, bary, hpw, 4);
     ctx.fillStyle = u.team ? "#ed9685" : "#83d6ee";
@@ -2071,14 +2066,14 @@ function drawMap(now) {
     }
     if (pilotLabels && u.pilot?.name && (u.pilot.custom || u.pilot.aceId)) {
       ctx.fillStyle = u.acted && u.team === game.team ? "#8fa0a5" : "#dfebed";
-      const nameSize = Math.max(7, spriteTile * 0.14) * battleSettings.mapLabelSize;
+      const nameSize = Math.max(9, spriteTile * 0.14) * battleSettings.mapLabelSize;
       ctx.font = `${nameSize}px system-ui`;
       ctx.textAlign = "center";
       ctx.save();
       ctx.textBaseline = "middle";
       const label = I18n.pilotName(u.pilot);
       const labelY = bary + 12 + nameSize / 2;
-      if (u.pilot?.custom) {
+      if (u.pilot?.custom || u.pilot?.aceId) {
         const width = ctx.measureText(label).width,
           iconSize = nameSize * 1.1;
         const left = pos.x - (width + iconSize + 3) / 2;

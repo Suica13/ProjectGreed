@@ -166,6 +166,10 @@
           grid-template-columns: minmax(0, 1fr) 70px auto;
         }
       }
+      .reward-unit[data-kind] { grid-template-columns:minmax(0,1fr) 95px auto; }
+      .reward-unit select { width:100%; min-width:0; }
+      .reward-unit input[type="search"], .reward-unlock input[type="search"] { grid-column:1 / -1; width:100%; min-width:0; }
+      .reward-unit input[type="number"] { width:95px; min-width:70px; }
     </style>
     <style id="admin-blue-theme">
       :root {
@@ -465,6 +469,13 @@
                 <button id="addUnit" type="button">添加部署许可</button>
               </section>
               <section>
+                <h3>机体与套件库存奖励</h3>
+                <p class="muted">机体与套件独立计数；领取库存不自动授予开发或部署许可。</p>
+                <div id="stockRewards"></div>
+                <button id="addChassisStock" type="button">添加机体库存</button>
+                <button id="addKitStock" type="button">添加套件库存</button>
+              </section>
+              <section>
                 <h3>开发奖励</h3>
                 <p class="muted">逐条添加需要立即开发的单位，不消耗科技点或货币。仅开放部署许可的购买条件，不赠送部署许可。</p>
                 <div id="unlocks"></div>
@@ -632,6 +643,8 @@
           Object.entries(rewards.licenses)
             .map(([id, count]) => "\n部署许可：" + unitName(id))
             .join("") +
+          Object.entries(rewards.inventory || {}).map(([id,count]) => "\n机体库存：" + unitName(id) + " ×" + count).join("") +
+          Object.entries(rewards.kits || {}).map(([id,count]) => "\n套件库存：" + (snapshot.kits.find(k => k.id === id)?.name || id) + " ×" + count).join("") +
           rewards.unlockUnits.map((id) => "\n立即开发：" + unitName(id)).join("") +
           (rewards.unlockAces || [])
             .map((id) => "\n解锁ACE：" + (snapshot.aces.find((p) => p.id === id)?.name || id))
@@ -649,6 +662,62 @@
           byId("status").textContent = error.message;
         }
       }
+      const rewardOrder = new Intl.Collator("zh-CN", {
+        numeric: true,
+        sensitivity: "base",
+      });
+      function searchableReward(select, label, keepSelection = false) {
+        const search = document.createElement("input");
+        search.type = "search";
+        search.placeholder = "搜索" + label;
+        search.setAttribute("aria-label", search.placeholder);
+        const options = [...select.options].sort(
+          (a, b) =>
+            rewardOrder.compare(a.textContent, b.textContent) ||
+            a.value.localeCompare(b.value),
+        );
+        const selected = keepSelection ? select.value : null;
+        select.replaceChildren(...options);
+        select.value = selected || options[0]?.value || "";
+        search.oninput = () => {
+          const query = search.value.trim().toLocaleLowerCase();
+          for (const option of select.options)
+            option.hidden =
+              !!query &&
+              ![option.textContent, option.value]
+                .join(" ")
+                .toLocaleLowerCase()
+                .includes(query);
+        };
+        return search;
+      }
+      function addStock(kind) {
+        if (!snapshot) return;
+        const row = document.createElement("div");
+        row.className = "reward-unit";
+        row.dataset.kind = kind;
+        const select = document.createElement("select");
+        const label = kind === "inventory" ? "库存奖励单位" : "库存奖励套件";
+        select.setAttribute("aria-label", label);
+        for (const item of kind === "inventory" ? snapshot.units : snapshot.kits)
+          select.add(new Option(item.name + " [" + item.faction + "]", item.id));
+        const count = document.createElement("input");
+        count.type = "number";
+        count.min = "1";
+        count.max = "1000000";
+        count.step = "1";
+        count.value = "1";
+        count.required = true;
+        count.setAttribute("aria-label", "奖励数量");
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.textContent = "删除";
+        remove.onclick = () => row.remove();
+        row.append(searchableReward(select, label), select, count, remove);
+        byId("stockRewards").append(row);
+      }
+      byId("addChassisStock").onclick = () => addStock("inventory");
+      byId("addKitStock").onclick = () => addStock("kits");
       function addUnit() {
         if (!snapshot) return;
         const row = document.createElement("div");
@@ -661,7 +730,7 @@
         remove.type = "button";
         remove.textContent = "删除";
         remove.onclick = () => row.remove();
-        row.append(select, remove);
+        row.append(searchableReward(select,"部署许可奖励单位"), select, remove);
         byId("licenseRewards").append(row);
       }
       function renderUnlocks() {
@@ -695,7 +764,7 @@
             unlockUnits.splice(index, 1);
             renderUnlocks();
           };
-          row.append(select, remove);
+          row.append(searchableReward(select,select.getAttribute("aria-label"),true), select, remove);
           list.append(row);
         });
         byId("addUnlock").disabled = unlockUnits.length >= choices.length;
@@ -738,7 +807,7 @@
             unlockAces.splice(index, 1);
             renderAceUnlocks();
           };
-          row.append(select, remove);
+          row.append(searchableReward(select,select.getAttribute("aria-label"),true), select, remove);
           list.append(row);
         }
         byId("addAceUnlock").disabled = unlockAces.length >= (snapshot?.aces?.length || 0);
@@ -857,6 +926,12 @@
           const id = row.querySelector("select").value;
           licenses[id] = true;
         }
+        const stock = {inventory:{},kits:{}};
+        for (const row of byId("stockRewards").children) {
+          const id = row.querySelector("select").value;
+          const count = Number(row.querySelector('input[type="number"]').value);
+          stock[row.dataset.kind][id] = (stock[row.dataset.kind][id] || 0) + count;
+        }
         const value = {
           title: byId("title").value,
           text: byId("body").value,
@@ -865,6 +940,7 @@
             money: Number(byId("money").value),
             supplies: Number(byId("supplies").value),
             licenses,
+            ...stock,
             unlockUnits: [...unlockUnits],
             unlockAces: [...unlockAces],
           },

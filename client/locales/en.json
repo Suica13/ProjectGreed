@@ -3365,5 +3365,8 @@
   "最多保存30个预设": "You can save up to 30 presets",
   "预设已保存到当前浏览器": "Preset saved in this browser",
   "预设已删除": "Preset deleted",
-  "友军共享设置无效": "Invalid allied unit sharing setting"
+  "友军共享设置无效": "Invalid allied unit sharing setting",
+  "编组缺少机体或套件库存。强制准备后，不足的单位不会生成。": "The formation is missing chassis or equipment stock. Units without sufficient stock will not deploy if you force ready.",
+  "快速战可凭部署许可或完整机体与套件库存出战。不满足条件的单位不会生成。": "Quick battles allow deployment with a license or sufficient chassis and equipment stock. Units meeting neither condition will not deploy.",
+  "套件库存": "Equipment stock"
 }

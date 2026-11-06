@@ -79,6 +79,21 @@ for (const width of [1280, 390])
       await admin.locator("#addUnit").click();
       await admin.locator(".reward-unit select").selectOption("Type61");
       await expect(admin.locator('.reward-unit input[type="number"]')).toHaveCount(0);
+      const options = await admin.locator("#licenseRewards select option").evaluateAll(options => options.map(o => o.textContent));
+      const sorted = await admin.evaluate(options => [...options].sort(new Intl.Collator("zh-CN",{numeric:true,sensitivity:"base"}).compare), options);
+      expect(options).toEqual(sorted);
+      await admin.locator("#licenseRewards input[type=search]").fill("Type61");
+      expect(await admin.locator("#licenseRewards option").evaluateAll(options => options.filter(o=>!o.hidden).every(o=>o.value.includes("Type61")))).toBe(true);
+      await admin.locator("#addChassisStock").click();
+      const chassis = admin.locator('#stockRewards [data-kind="inventory"]');
+      await chassis.locator('input[type="search"]').fill("MS_14A");
+      await chassis.locator("select").selectOption("MS_14A");
+      await chassis.locator('input[type="number"]').fill("2");
+      await admin.locator("#addKitStock").click();
+      const kit = admin.locator('#stockRewards [data-kind="kits"]');
+      await kit.locator('input[type="search"]').fill("MS_14A__beam_rifle");
+      await kit.locator("select").selectOption("MS_14A__beam_rifle");
+      await kit.locator('input[type="number"]').fill("3");
       await admin.locator("#publish").click();
       await expect(admin.locator("#status")).toContainText("已投递 1 封");
       await page
@@ -96,6 +111,8 @@ for (const width of [1280, 390])
           unlocked: Development.allows("EFSF", "RGM_79_G"),
         })),
       ).toEqual({ money: 10123, supplies: 20456, owned: true, unlocked: true });
+      expect(await page.evaluate(() => ({inventory:Economy.quantity("MS_14A"),kits:Economy.kitQuantity("MS_14A__beam_rifle"),license:Economy.hasLicense("MS_14A")}))).toEqual({inventory:2,kits:3,license:false});
+      await expect(page.locator(".server-activities-detail")).toContainText("×3");
       expect(
         await page
           .locator("#serverActivitiesDialog")

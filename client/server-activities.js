@@ -264,6 +264,14 @@ const ServerActivities = (() => {
       row.append(element("span", "", unitLabel(id) + " · 部署许可"));
       rewards.append(row);
     }
+    for (const kind of ["inventory", "kits"]) for (const [id, count] of Object.entries(item.rewards[kind] || {})) {
+      const row = element("div", "server-activity-unit"), image = element("img");
+      const modelId = kind === "kits" ? id : Economy.baseModel(id);
+      if (modelId && UnitModels[modelId]) { image.src = unitIcon(modelId); image.alt = ""; row.append(image); }
+      const name = kind === "inventory" ? unitLabel(id) : (UnitModels[id]?.name || id) + " · " + (UnitModels[id]?.kitName || id.split("__")[1]);
+      row.append(element("span", "", name + " · " + I18n.text(kind === "inventory" ? "机体库存" : "套件库存") + " ×" + count));
+      rewards.append(row);
+    }
     for (const id of item.rewards.unlockUnits || [])
       rewards.append(element("p", "", I18n.text("立即开发") + " · " + unitLabel(id)));
     for (const id of item.rewards.unlockAces || []) {

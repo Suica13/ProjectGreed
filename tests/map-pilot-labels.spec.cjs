@@ -16,15 +16,15 @@ for (const width of [1600, 390])
       weaponId = null;
       moving = null;
       battleView = null;
-      game.units[0].pilot = { ...game.units[0].pilot, name: "MapPilotOne", custom: false };
+      game.units[0].pilot = PilotSystem.createCustom("custom-map-label", "MapPilotOne");
       setPageView("game");
       const output = [];
-      for (const extent of [12, 64]) {
+      for (const extent of [64, 128]) {
         game.tiles = Array.from({ length: extent }, () => Array(extent).fill("plain"));
         Object.assign(game.units[0], { x: Math.floor(extent / 2), y: Math.floor(extent / 2) });
         MapCamera.reset();
         const pixelsPerZoom = mapGeo.tile / MapCamera.zoom;
-        const limit = 96 / pixelsPerZoom;
+        const limit = (Rules.mapCellPixels / 2) / pixelsPerZoom;
         MapCamera.setZoom(limit * 0.99);
         const hidden = MapCamera.pilotLabels;
         MapCamera.setZoom(limit * 1.01);
@@ -57,9 +57,30 @@ for (const width of [1600, 390])
     for (const row of results) {
       expect(row.hidden).toBe(false);
       expect(row.shown).toBe(true);
-      expect(row.tile).toBeCloseTo(96 * 1.01, 2);
+      expect(row.tile).toBeCloseTo(80 * 1.01, 2);
       expect(row.pilot).toBe(true);
       expect(row.unit).toBe(false);
     }
     expect(results[0].zoom).toBeLessThan(results[1].zoom);
   });
+
+test("minimum zoom symbols outline occupied cells and overlay a pilot portrait on the unit icon",async({page})=>{
+ await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
+ await page.waitForFunction(()=>typeof assetsReady!=="undefined"&&assetsReady);
+ await page.evaluate(()=>{
+ Net.leave();game=Rules.create(false,1,[[{unitId:"RGM_79",kitId:"machine_gun"}],[{unitId:"Type61",kitId:"standard"}]],false,{costLimit:99999,unitCostLimit:99999});game.units[0].model="SalamisClass__standard";
+ game.units[0].pilot=PilotSystem.createCustom("custom-symbol","Symbol pilot");
+ phase="idle";mode="select";selected=null;weaponId=null;moving=null;battleView=null;
+ setPageView("game");MapCamera.setZoom(.01);MapCamera.setZoom(.01);drawMap(performance.now());
+ });
+ await expect(page.locator("#map")).toHaveAttribute("data-unit-thumbnails","true");
+ await expect.poll(()=>page.evaluate(()=>{
+ const canvas=document.createElement("canvas");canvas.width=300;canvas.height=300;const ctx=canvas.getContext("2d");
+ let strokes=0,images=0,fills=0;
+ const stroke=ctx.strokeRect.bind(ctx),image=ctx.drawImage.bind(ctx),fill=ctx.fillRect.bind(ctx);
+ ctx.strokeRect=(...args)=>{strokes++;stroke(...args)};ctx.drawImage=(...args)=>{images++;image(...args)};ctx.fillRect=(...args)=>{fills++;fill(...args)};
+ const unit=game.units[0];UnitIdentity.drawMapSymbol(ctx,unit,{x:150,y:150},10);
+ return {outline:strokes>=Rules.cells(unit).length,images:images>=2,noBlockFill:fills<=1};
+ })).toEqual({outline:true,images:true,noBlockFill:true});
+ await page.screenshot({path:"tmp/map-minimum-unit-symbols.png"});
+});

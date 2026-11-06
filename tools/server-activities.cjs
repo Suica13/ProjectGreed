@@ -8,6 +8,10 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
   const developmentTree = require("../shared/development-tree.json");
   const aceMap = new Map(require("../shared/pilots.json").aces.map((p) => [p.id, p]));
   const unitMap = new Map(rules.catalog.prefabs.map((unit) => [unit.id, unit]));
+  const kitMap = new Map(rules.catalog.prefabs.flatMap(unit => unit.weaponKits.map(kit => {
+    const id = unit.id + "__" + kit.id;
+    return [id, {id, unitId:unit.id, name:unit.name + " · " + (rules.models[id]?.kitName || kit.name || kit.id), faction:unit.faction}];
+  })));
   let state = { schemaVersion: 2, serverId: crypto.randomUUID(), players: {}, activities: [] };
   function save(next) {
     if (storePath) {
@@ -162,7 +166,10 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
       )
     )
       throw Error("资金、物资必须为0至10亿的整数");
-    if (Object.hasOwn(value,"inventory")) throw Error("旧库存奖励接口已移除，请使用部署许可");
+    const stock = rules.normalizeStock({inventory:value.inventory, kits:value.kits});
+    for (const id of Object.keys(stock.kits)) if (!kitMap.has(id)) throw Error("套件奖励无效：" + id);
+    if (Object.keys(stock.inventory).length) rewards.inventory = stock.inventory;
+    if (Object.keys(stock.kits).length) rewards.kits = stock.kits;
     if (value.licenses !== undefined && (!value.licenses || typeof value.licenses !== "object" || Array.isArray(value.licenses)))
       throw Error("部署许可奖励格式无效");
     for (const [id,owned] of Object.entries(value.licenses || {})) {
@@ -584,6 +591,7 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
         faction: p.faction,
         era: p.era || "0079",
       })),
+      kits: [...kitMap.values()],
       units: [...unitMap.values()].map((unit) => ({
         id: unit.id,
         name: unit.code + " " + unit.name,
