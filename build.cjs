@@ -96,6 +96,7 @@ for (const [key, file] of [
   ["PILOT_REWARDS", "client/pilot-rewards.js"],
   ["REWARD_NOTIFICATIONS", "client/reward-notifications.js"],
   ["PROFILE_SAVE", "client/profile-save.js"],
+  ["PROFILE_STORAGE", "client/profile-storage.js"],
   ["PROFILE_IDENTITY", "client/profile-identity.js"],
   ["SERVER_ACTIVITIES", "client/server-activities.js"],
   ["DEVELOPMENT_UI", "client/development.js"],

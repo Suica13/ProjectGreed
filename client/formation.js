@@ -10,6 +10,7 @@ const Formation = (() => {
   const pilotStores = {};
   const sharedPilotKey = "projectgreed.custom-pilots.v3.shared";
   let pilotStore;
+  let pilotStorageReady = false;
   try {
     pilotStore = JSON.parse(localStorage.getItem(sharedPilotKey));
   } catch {}
@@ -32,7 +33,7 @@ const Formation = (() => {
         awards: Array.isArray(saved?.awards) ? saved.awards : [],
       };
     }
-    // Claim the old shared roster once; keep the original data as a migration backup.
+    // Merge the old shared roster before replacing the obsolete storage keys.
     try {
       if (!localStorage.getItem(pilotStorageKey + "migrated")) {
         const old = JSON.parse(localStorage.getItem("projectgreed.custom-pilots.v1"));
@@ -45,7 +46,6 @@ const Formation = (() => {
             } catch {}
           }
           target.awards = [...new Set([...target.awards, ...(old.awards || [])])];
-          localStorage.setItem(pilotStorageKey + group, JSON.stringify(target));
         }
         localStorage.setItem(pilotStorageKey + "migrated", group);
       }
@@ -73,8 +73,15 @@ const Formation = (() => {
   savePilots();
   function savePilots() {
     try {
-      localStorage.setItem(sharedPilotKey, JSON.stringify(pilotStore));
+      ProfileStorage.replace([
+        [sharedPilotKey, JSON.stringify(pilotStore)],
+        ...["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].map(faction =>
+          [pilotStorageKey + faction, null]),
+        ["projectgreed.custom-pilots.v1", null],
+      ]);
+      pilotStorageReady = true;
     } catch {
+      pilotStorageReady = false;
       note("浏览器无法保存驾驶员，本次会话仍可使用。");
     }
   }
@@ -232,7 +239,11 @@ const Formation = (() => {
       index,
     });
     try {
-      localStorage.setItem(storageKey, JSON.stringify({ version: formationSaveVersion, squads }));
+      // Assigned pilots are references into the shared roster, not copies of avatars/statistics.
+      localStorage.setItem(storageKey, JSON.stringify({
+        version: formationSaveVersion,
+        squads: pilotStorageReady ? ProfileStorage.compactSquads(squads, pilotStore.pilots) : squads,
+      }));
       localStorage.removeItem(legacyStorageKey);
       localStorage.removeItem(legacyStorageKey + "-active");
       localStorage.setItem(storageKey + "-active", String(index));
@@ -1559,7 +1570,10 @@ const Formation = (() => {
     // render() already refreshes the selected unit's capacity/permission checks.
     if (pickerContext) closePicker();
   };
-  byId("formationSearch").oninput = () => renderCatalog();
+  byId("formationSearch").oninput = () => {
+    byId("formationCatalog").scrollTop = 0;
+    renderCatalog();
+  };
   byId("formationStock").onchange = () => renderCatalog();
   function selectCatalogUnit(prefab, card) {
     byId("formationPrefab").value = prefab.id;
@@ -2288,7 +2302,10 @@ const Formation = (() => {
     byId("recruitAcePilot").disabled = false;
     list.scrollTop = scrollTop;
   }
-  byId("pilotRosterSearch").oninput = renderPilotRoster;
+  byId("pilotRosterSearch").oninput = () => {
+    byId("customPilotList").scrollTop = 0;
+    renderPilotRoster();
+  };
   byId("pilotRosterFilter").onchange = renderPilotRoster;
   function showFormationTab(tab) {
     finishPilotEditor();
@@ -2791,9 +2808,9 @@ const Formation = (() => {
   pilotHelp.setAttribute("aria-labelledby", "pilotAttributeHelpTitle");
   document.body.append(pilotHelp);
   const pilotEffectDescriptions = [
-    ["射击", "每点增加0.5个百分点的射击伤害倍率；100点为100%，200点为150%。"],
-    ["格斗", "每点增加0.5个百分点的格斗伤害倍率；100点为100%，200点为150%。"],
-    ["防御", "每点降低0.5个百分点的承受伤害倍率；100点为100%，200点为50%。"],
+    ["射击", "每点增加0.25个百分点的射击伤害倍率；100点为100%，200点为125%。"],
+    ["格斗", "每点增加0.25个百分点的格斗伤害倍率；100点为100%，200点为125%。"],
+    ["防御", "每点降低0.25个百分点的承受伤害倍率；100点为100%，200点为75%。"],
     [
       "机动",
       "以100点为基准，每点使移动倍率变化0.5%；200点为150%移动。攻击轮数系数每点增加0.5%，100点为100%，200点为150%；基础轮数×机体机动/100×驾驶员系数后四舍五入。格斗与限次规则保持不变，不影响回避或AP。",

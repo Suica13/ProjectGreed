@@ -95,7 +95,8 @@ const Economy = (() => {
     }
   }
   function errorMessage(error) {
-    if (error?.name === "QuotaExceededError") return "浏览器本地存储空间不足，未保存本次更改。";
+    if (error?.name === "QuotaExceededError")
+      return "浏览器本地存储空间不足，未保存本次更改。请在设置中点击“检查存储”，新建个人存档不会重置浏览器的存储配额。";
     if (error?.name === "SecurityError")
       return "当前预览禁止访问本地存储，请在 Edge 或 Chrome 中打开此客户端页面。";
     if (error?.name === "SyntaxError") return "经济存档无法解析，请导入有效的个人存档。";

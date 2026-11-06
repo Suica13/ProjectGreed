@@ -77,22 +77,27 @@ test("training spending, reset and level cap retain current validation", () => {
 });
 
 const near = (a, b) => assert.ok(Math.abs(a - b) < 1e-9, `${a} != ${b}`);
-test("attribute gains increase by 25 percent and awakening grants accuracy/evasion", () => {
+test("damage attributes use quarter-point gains while other modifiers stay unchanged", () => {
   const unit = (patch) => ({ pilot: { stats: { ...P.baseStats(), awakening: 60, ...patch } } });
   const base = P.modifiers(unit({}));
-  for (const [stat, field] of [
-    ["shooting", "shooting"],
-    ["melee", "melee"],
-    ["accuracy", "accuracy"],
-    ["reaction", "reaction"],
+  for (const [stat, field, weight] of [
+    ["shooting", "shooting", 0.25],
+    ["melee", "melee", 0.25],
+    ["accuracy", "accuracy", 0.5],
+    ["reaction", "reaction", 0.5],
+    ["speed", "move", 0.5],
+    ["speed", "attackRounds", 0.5],
   ]) {
-    near(P.modifiers(unit({ [stat]: 110 }))[field], 1.05);
-    near(P.modifiers(unit({ [stat]: 200 }))[field], 1.5);
-    near(P.modifiers(unit({ [stat]: 90 }))[field], 0.95);
+    near(P.modifiers(unit({ [stat]: 100 }))[field], 1);
+    near(P.modifiers(unit({ [stat]: 110 }))[field], 1 + weight / 10);
+    near(P.modifiers(unit({ [stat]: 200 }))[field], 1 + weight);
+    near(P.modifiers(unit({ [stat]: 90 }))[field], 1 - weight / 10);
   }
   near(base.shooting, 1);
-  near(P.modifiers(unit({ defense: 110 })).defense, 0.95);
-  near(P.modifiers(unit({ defense: 200 })).defense, 0.5);
+  near(P.modifiers(unit({ defense: 100 })).defense, 1);
+  near(P.modifiers(unit({ defense: 90 })).defense, 1.025);
+  near(P.modifiers(unit({ defense: 110 })).defense, 0.975);
+  near(P.modifiers(unit({ defense: 200 })).defense, 0.75);
   near(P.modifiers(unit({ speed: 110 })).reaction, 1);
   near(P.modifiers(unit({ awakening: 100 })).shooting, 1);
   near(P.modifiers(unit({ awakening: 100 })).melee, 1);

@@ -133,17 +133,20 @@ const ProfileSave = (() => {
   }
   function exportData() {
     const formations = {};
+    const pilots = Formation.exportPilotStores();
+    const roster = Object.values(pilots).flatMap(store => store.pilots);
     for (const faction of factions) {
       const saved = JSON.parse(localStorage.getItem(formationKey + faction) || "null");
       formations[faction] = saved
-        ? { ...saved, index: Number(localStorage.getItem(formationKey + faction + "-active") || 0) }
+        ? { ...saved, squads: ProfileStorage.expandSquads(saved.squads, roster),
+            index: Number(localStorage.getItem(formationKey + faction + "-active") || 0) }
         : null;
     }
     return {
       ...validate({
         format: "ProjectGreed-profile",
         schemaVersion: 1,
-        pilots: Formation.exportPilotStores(),
+        pilots,
         formations,
         development: Development.exportProgress(),
         economy: Economy.exportProgress(),
@@ -154,31 +157,43 @@ const ProfileSave = (() => {
   function importData(value) {
     const clean = validate(value),
       writes = new Map();
+    // Older faction archives can contain copies of the same pilot; retain the
+    // most advanced copy, matching the existing shared-roster migration.
+    const uniquePilots = new Map();
+    for (const pilot of Object.values(clean.pilots).flatMap(store => store.pilots)) {
+      const previous = uniquePilots.get(pilot.id);
+      if (!previous || pilot.level > previous.level ||
+          (pilot.level === previous.level && pilot.experience > previous.experience))
+        uniquePilots.set(pilot.id, pilot);
+    }
+    const roster = [...uniquePilots.values()];
     for (const faction of factions) {
-      writes.set(pilotKey + faction, JSON.stringify(clean.pilots[faction]));
+      writes.set(pilotKey + faction, null);
       const save = clean.formations[faction];
       writes.set(
         formationKey + faction,
-        save ? JSON.stringify({ version: 3, squads: save.squads }) : null,
+        save ? JSON.stringify({ version: 3,
+          squads: ProfileStorage.compactSquads(save.squads, roster) }) : null,
       );
       writes.set(formationKey + faction + "-active", save ? String(save.index) : null);
     }
-    // Rebuild the shared roster from imported faction archives on the next load.
-    writes.set("projectgreed.custom-pilots.v3.shared", null);
+    writes.set("projectgreed.custom-pilots.v3.shared", JSON.stringify({
+      pilots: roster,
+      awards: [...new Set(Object.values(clean.pilots).flatMap(store => store.awards))],
+    }));
+    writes.set("projectgreed.custom-pilots.v1", null);
+    // A replaced personal profile must not retain large recovery copies of its old wallet.
+    // These removals participate in the same rollback as the new profile.
+    for (const suffix of [".before-counted-stock", ".before-unit-inventory", ".recovery-backup"])
+      writes.set(Economy.key + suffix, null);
+    writes.set("slg-formations-v1", null);
+    writes.set("slg-formations-v1-active", null);
     writes.set("slg-formations-v1.pmc-unified", null);
     writes.set(ProfileIdentity.key, JSON.stringify(clean.identity));
     writes.set(Economy.key, JSON.stringify(clean.economy));
     writes.set(pilotKey + "migrated", "imported");
     writes.set("projectgreed.developmentProgress.v1", JSON.stringify(clean.development));
-    const previous = new Map([...writes.keys()].map((key) => [key, localStorage.getItem(key)]));
-    const write = (key, value) =>
-      value === null ? localStorage.removeItem(key) : localStorage.setItem(key, value);
-    try {
-      for (const [key, value] of writes) write(key, value);
-    } catch (error) {
-      for (const [key, value] of previous) write(key, value);
-      throw error;
-    }
+    ProfileStorage.replace(writes);
   }
   const panel = document.createElement("div"),
     actions = document.createElement("div"),
@@ -200,6 +215,7 @@ const ProfileSave = (() => {
   input.hidden = true;
   input.id = "profileSaveFile";
   status.className = "settings-help muted";
+  status.id = "profileSaveStatus";
   status.setAttribute("role", "status");
   status.textContent = Economy.storageIssue()
     ? "存档读取失败，原始数据已保留。请导入有效存档或新建存档：" + Economy.storageIssue()
@@ -236,7 +252,7 @@ const ProfileSave = (() => {
       importData(JSON.parse(await file.text()));
       location.reload();
     } catch (error) {
-      status.textContent = "导入失败：" + error.message;
+      status.textContent = "导入失败：" + Economy.errorMessage(error);
       input.value = "";
     }
   };
@@ -278,12 +294,55 @@ const ProfileSave = (() => {
       PlayerProfile.setFaction("PMC");
       location.reload();
     } catch (error) {
-      status.textContent = "新建失败：" + error.message;
+      status.textContent = "新建失败：" + Economy.errorMessage(error);
     }
   };
   actions.className = "profile-save-actions";
   actions.append(exportButton, importButton, newButton);
   panel.append(actions, input, status);
+  const diagnostics = document.createElement("div");
+  diagnostics.className = "profile-save-actions";
+  const checkStorage = document.createElement("button");
+  checkStorage.id = "checkProfileStorage";
+  checkStorage.type = "button";
+  checkStorage.textContent = "检查存储";
+  const exportDiagnostic = document.createElement("button");
+  exportDiagnostic.id = "exportStorageDiagnostic";
+  exportDiagnostic.type = "button";
+  exportDiagnostic.textContent = "导出存储诊断";
+  const diagnosticText = document.createElement("p");
+  diagnosticText.id = "profileStorageDiagnostic";
+  diagnosticText.className = "settings-help muted";
+  diagnosticText.hidden = true;
+  diagnosticText.setAttribute("role", "status");
+  let lastDiagnostic;
+  function inspectStorage() {
+    lastDiagnostic = { ...ProfileStorage.inspect(), client: document.title,
+      entryMode: location.protocol, browser: navigator.userAgent };
+    const kib = bytes => (bytes / 1024).toFixed(1) + " KiB";
+    let message = lastDiagnostic.writable ? "本地存储写入正常。" :
+      lastDiagnostic.errorName === "QuotaExceededError" ?
+        "浏览器连极小的数据也无法保存（配额不足）。" : "浏览器禁止或无法保存本地数据。";
+    message += " 当前页面存储估算占用 " + kib(lastDiagnostic.estimatedBytes) + "。";
+    if (!lastDiagnostic.writable)
+      message += "新建个人存档不会清除历史战役备份或其他页面数据，也不能解除浏览器存储限制。请导出存储诊断以便排查。";
+    message += lastDiagnostic.groups.map(group => group.name + " " + kib(group.bytes)).join("；");
+    diagnosticText.textContent = message;
+    diagnosticText.hidden = false;
+    return lastDiagnostic;
+  }
+  checkStorage.onclick = inspectStorage;
+  exportDiagnostic.onclick = () => {
+    const report = inspectStorage();
+    const url = URL.createObjectURL(new Blob([JSON.stringify(report, null, 2)], {type:"application/json"}));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "ProjectGreed-storage-diagnostic.json";
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+  diagnostics.append(checkStorage, exportDiagnostic);
+  panel.append(diagnostics, diagnosticText);
   document.getElementById("clientSettingsDialog").append(panel);
   return { validate, exportData, encodeData, importData };
 })();

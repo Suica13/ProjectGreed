@@ -513,6 +513,7 @@ const ProductionUI = (() => {
     if (e.key === "Escape") byId("closeProduction").click();
   });
   byId("productionSearch").oninput = () => {
+    byId("productionList").scrollTop = 0;
     byId("productionStatus").textContent = "";
     render();
   };

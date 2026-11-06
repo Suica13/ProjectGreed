@@ -1,10 +1,11 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const G=require('../shared/rules'),P=G.pilots;
 const unit=stats=>({pilot:{stats:{...P.baseStats(),...stats}}});
-test('attribute bonuses increase by 25 percent, while attack mobility follows the explicit 100/200 curve',()=>{
+test('damage attributes use quarter-point gains while mobility and other attributes retain their curves',()=>{
  const modifiers=P.modifiers(unit({shooting:200,melee:200,accuracy:200,reaction:200,defense:200,speed:200,awakening:100}));
- for(const key of ['shooting','melee','accuracy','reaction'])assert.equal(modifiers[key],1.5);
- assert.equal(modifiers.defense,.5);assert.equal(modifiers.move,1.5);assert.equal(modifiers.attackRounds,1.5);
+ for(const key of ['shooting','melee'])assert.equal(modifiers[key],1.25);
+ for(const key of ['accuracy','reaction'])assert.equal(modifiers[key],1.5);
+ assert.equal(modifiers.defense,.75);assert.equal(modifiers.move,1.5);assert.equal(modifiers.attackRounds,1.5);
  assert.equal(modifiers.awakeningHit,10);assert.equal(modifiers.awakeningEvasion,10);
  assert.equal(P.modifiers(unit({awakening:99})).awakeningHit,0);
  assert.equal(P.modifiers(unit({awakening:200})).shooting,1);

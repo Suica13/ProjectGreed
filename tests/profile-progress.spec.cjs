@@ -92,7 +92,7 @@ test("personal save download and file import preserve pilots, formations, counte
     () =>
       typeof assetsReady !== "undefined" &&
       assetsReady &&
-      !!localStorage.getItem("projectgreed.custom-pilots.v2.EFSF"),
+      !!localStorage.getItem("projectgreed.custom-pilots.v3.shared"),
   );
   expect(await page.evaluate(() => ProfileSave.exportData().development)).toEqual(
     original.development,
@@ -300,14 +300,14 @@ for (const width of [1280, 360])
       .click();
     expect(
       await page.evaluate(
-        () => JSON.parse(localStorage.getItem("projectgreed.custom-pilots.v2.PMC")).pilots.length,
+        () => JSON.parse(localStorage.getItem("projectgreed.custom-pilots.v3.shared")).pilots.filter(p => p.faction === "PMC").length,
       ),
     ).toBe(1);
     await page.evaluate(() => {
       Net.active = true;
     });
     await page.locator("#newProfileSave").click();
-    await expect(page.locator(".profile-save-controls .settings-help")).toContainText(
+    await expect(page.locator("#profileSaveStatus")).toContainText(
       "请先退出当前战局",
     );
     await page.evaluate(() => {
@@ -356,7 +356,7 @@ test("damaged wallet keeps menu navigation and import recovery available", async
  await page.locator("#closeSkirmish").click();
  await page.locator("#shellSettings").click();
  await page.locator("#exportProfileSave").click();
- await expect(page.locator("#clientSettingsDialog .profile-save-controls [role=status]")).toContainText("MS_14S");
+ await expect(page.locator("#profileSaveStatus")).toContainText("MS_14S");
  expect(await page.evaluate(()=>localStorage.getItem(Economy.key))).toBe(damaged);
  expect(await page.evaluate(()=>localStorage.getItem(Economy.key+".recovery-backup"))).toBe(damaged);
  const valid=await page.evaluate(()=>({

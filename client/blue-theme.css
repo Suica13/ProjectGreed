@@ -2601,7 +2601,7 @@ body .formation-row-actions .formation-pilot-button { display:block; text-align:
 #formationUnits, #customPilotList, #productionList, #encyclopediaList {
   gap:4px; align-content:start;
 }
-#productionList { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
+#productionList { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); flex:1 1 0; }
 #encyclopediaList > .encyclopedia-unit,
 #productionList > .production-unit,
 #formationCatalog > .catalog-unit-row {

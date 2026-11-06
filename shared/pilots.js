@@ -614,9 +614,9 @@ const PilotSystem = (() => {
     const stats = of(unit, model).stats;
     const awakening = stats.awakening >= 100 ? 10 : 0;
     return {
-      shooting: factor(stats.shooting, 0.5),
-      melee: factor(stats.melee, 0.5),
-      defense: Math.max(0.05, 1 - (stats.defense - 100) * 0.005),
+      shooting: factor(stats.shooting, 0.25),
+      melee: factor(stats.melee, 0.25),
+      defense: Math.max(0.05, 1 - (stats.defense - 100) * 0.0025),
       move: factor(stats.speed, 0.5),
       attackRounds: factor(stats.speed, 0.5),
       awakeningHit: awakening,
