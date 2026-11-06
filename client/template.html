@@ -2375,7 +2375,13 @@
             <h3 id="skirmishSetupTitle">创建对战</h3>
             <p class="muted">创建离线房间与 AI 对战，或连接服务器加入多人房间。</p>
             <label>离线房间模式<select id="offlineRoomMode">
-              <option value="regular">常规战</option><option value="quick">快速战</option><option value="campaign">战略模式</option>
+              <optgroup label="遭遇战模式">
+                <option value="regular">常规战模式</option>
+                <option value="quick">快速战模式</option>
+              </optgroup>
+              <optgroup label="战略模式">
+                <option value="campaign">历史战役模式</option>
+              </optgroup>
             </select></label>
             <div class="net-buttons">
               <button id="createOfflineRoom" class="primary">单机 · 创建房间</button>
@@ -2596,7 +2602,13 @@
                     <summary>战场规则</summary>
                     <div class="room-battle-rules">
                       <label>对战模式<select id="roomBattleMode" aria-label="对战模式">
-                        <option value="regular">常规战</option><option value="quick">快速战</option><option value="campaign">战略模式</option>
+                        <optgroup label="遭遇战模式">
+                <option value="regular">常规战模式</option>
+                <option value="quick">快速战模式</option>
+              </optgroup>
+              <optgroup label="战略模式">
+                <option value="campaign">历史战役模式</option>
+              </optgroup>
                       </select></label>
                       <label>驾驶员使用<select id="roomPilotPolicy" aria-label="驾驶员使用">
                         <option value="allow">允许</option><option value="no_custom">禁止PMC驾驶员</option><option value="no_ace">禁止ACE驾驶员</option><option value="none">全部禁止</option>
@@ -3120,7 +3132,7 @@
         <div class="development-workspace">
           <div class="development-tree-scroll">
             <select id="developmentPageSelect" aria-label="科技树页面" hidden disabled>
-              <option value="0">0079E · 早期</option>
+              <option value="0">0079T1 · 早期</option>
             </select>
             <div class="development-tree-stage">
               <div id="developmentTree" class="development-tree" aria-label="科技树"></div>
@@ -3137,10 +3149,7 @@
           <p id="formationPilotBudget" hidden></p>
           <div id="formationHeadingActions" class="formation-heading-actions">
             <p id="formationBudget" data-ui-node="node-213"></p>
-        <label class="formation-group-banner" for="formationGroup">
-          <strong>编组阵营</strong>
-          <span>PMC</span><select id="formationGroup" aria-label="编组阵营" hidden disabled><option value="PMC">PMC</option></select>
-        </label>
+        <select id="formationGroup" hidden disabled><option value="PMC">PMC</option></select>
           </div>
         </div>
         <nav class="formation-mode-tabs" aria-label="编成页面">
@@ -5082,7 +5091,13 @@
               autocomplete="off"
           /></label>
           <label>新房间模式<select id="newRoomMode">
-            <option value="regular">常规战</option><option value="quick">快速战</option><option value="campaign">战略模式</option>
+            <optgroup label="遭遇战模式">
+                <option value="regular">常规战模式</option>
+                <option value="quick">快速战模式</option>
+              </optgroup>
+              <optgroup label="战略模式">
+                <option value="campaign">历史战役模式</option>
+              </optgroup>
           </select></label>
         <label class="settings-toggle">密码锁<input id="newRoomLocked" type="checkbox" /></label>
         <label id="newRoomPasswordLabel" hidden>房间密码<input id="newRoomPassword" type="password" maxlength="64" autocomplete="new-password" /></label>

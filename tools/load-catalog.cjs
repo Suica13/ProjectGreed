@@ -537,7 +537,7 @@ function loadCatalog({
         .length !== 1
     )
       throw Error("Unit must have exactly one primary faction tag: " + ref);
-    if (!prefab.tags.some((tag) => /^\d{4}(?:[EL])?$/.test(tag)))
+    if (!prefab.tags.some((tag) => /^\d{4}(?:T[12])?$/.test(tag)))
       throw Error("Unit must have an era tag: " + ref);
     prefab.unitTags ??= [];
     if (prefab.unitTags.includes("MA"))

@@ -14,8 +14,8 @@ test("formation tries higher technology before price, while retaining a budget f
         ship: false, unitTags: ["MS"], skills: [], commandAuras: [], supplyAura: null,
       };
     D.nodes = (faction) => faction === "EFSF" ? [
-      { row: "mid", era: "0079E", page: 0, column: 2, unlocks: ["early"] },
-      { row: "mid", era: "0079L", page: 1, column: 2, unlocks: ["late-a", "late-b"] },
+      { row: "mid", era: "0079T1", page: 0, column: 2, unlocks: ["early"] },
+      { row: "mid", era: "0079T2", page: 1, column: 2, unlocks: ["late-a", "late-b"] },
     ] : [];
     for (let seed = 1; seed <= 20; seed++) {
       const army = G.randomFormation(seed, 1000, {}, 6);

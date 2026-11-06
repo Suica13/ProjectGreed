@@ -109,7 +109,7 @@ for (const width of [1440, 390, 360])
         expect(positions[0].y).toBe(positions[1].y);
         expect(positions[1].x).toBeGreaterThan(positions[0].x);
       }
-      expect(Math.max(...heights)).toBeLessThanOrEqual(width > 1100 ? 132 : 204);
+      expect(Math.max(...heights)).toBeLessThanOrEqual(width > 1100 ? 120 : 104);
       expect(await list.locator(".pilot-list-skills").evaluateAll(rows => rows.every(row => [...row.children].every(child => child.getBoundingClientRect().bottom <= row.getBoundingClientRect().bottom + 1)))).toBe(true);
       expect(await list.locator(".pilot-record").evaluateAll(rows => rows.every(row => [...row.querySelectorAll(".pilot-record-cell")].every(child => child.getBoundingClientRect().bottom <= row.getBoundingClientRect().bottom + 1)))).toBe(true);
       const maxCard = list.locator('[data-pilot-id="custom-filter-max"]');

@@ -823,7 +823,7 @@ function createCampaignRoom({
         room.settings.mode === "campaign" &&
         !room.started &&
         !room.campaign,
-      "只有房主可开始战略模式房间",
+      "只有房主可开始历史战役模式房间",
     );
     room.campaign = C.create(ctx, members(room), {
       rounds,
@@ -832,7 +832,7 @@ function createCampaignRoom({
     bindTeams(room);
   }
   function handle(room, member, msg) {
-    check(room.settings.mode === "campaign", "请先选择战略模式房间");
+    check(room.settings.mode === "campaign", "请先选择历史战役模式房间");
     check(member.id === room.hostId || room.campaign, "当前没有战役");
     if (msg.action === "campaign_import_begin") {
       check(

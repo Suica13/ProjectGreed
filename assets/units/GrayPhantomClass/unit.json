@@ -1060,7 +1060,7 @@
       "radar": 600,
       "antiDetection": -200
     },
-    "technologyEra": "0079L",
+    "technologyEra": "0079T2",
     "importedTechPage": 1,
     "actionTurnSpeed": 0.45,
     "mobilityMoveTarget": 7,
@@ -1092,7 +1092,7 @@
   "faction": "EFSF",
   "tags": [
     "EFSF",
-    "0079L"
+    "0079T2"
   ],
   "localization": {
     "zh": {

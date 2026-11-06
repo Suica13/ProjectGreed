@@ -2537,3 +2537,310 @@ body .formation-row-actions .formation-pilot-button { display:block; text-align:
 #roomMain #teamSlots.pmc-room :is(.lineup-header, .spawn-slot) {
   grid-template-columns: minmax(0, 1fr) 64px 64px;
 }
+
+/* Mark embarked formation units without changing card dimensions. */
+#formationUnits .formation-boarding-badge {
+  display:block; box-sizing:border-box; width:100%; margin:2px 0 0; padding:0;
+  color:#aeeaff; background:#19475a; border:1px solid #70caed; border-radius:2px;
+  font-size:9px; line-height:12px; font-weight:700; text-align:center; white-space:nowrap;
+}
+#formationUnits .formation-board-button[aria-pressed="true"] {
+  border-color:#70caed; background:#19475a; color:#d5f4ff;
+}
+.formation-cargo-row .formation-cargo-actions {
+  display:grid; gap:4px; width:150px; min-width:0; align-self:center;
+}
+.formation-cargo-actions > button {
+  width:100%; min-width:0; height:28px; margin:0; padding:3px 6px;
+  font-size:12px; line-height:20px; text-align:center;
+}
+.formation-cargo-actions .formation-pilot-button {
+  display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+@media(max-width:650px) {
+  .formation-cargo-row .formation-cargo-actions { grid-column:3; grid-row:2; width:112px; }
+}
+
+/* Keep roster cards fixed; skills wrap within their own two-line area. */
+#customPilotList > .custom-pilot-card {
+  height:132px; min-height:132px; max-height:132px; padding:6px 8px; align-items:start;
+}
+#customPilotList .custom-pilot-summary {
+  align-self:start; grid-template-columns:minmax(0,1fr);
+  grid-template-rows:20px 16px 44px 28px; gap:2px;
+}
+#customPilotList .pilot-roster-heading { grid-area:1 / 1; min-height:20px; }
+#customPilotList .pilot-roster-progress { grid-area:2 / 1; justify-content:flex-start; line-height:16px; }
+#customPilotList .pilot-list-skills { grid-area:3 / 1; align-content:start; gap:2px 6px; }
+#customPilotList .pilot-list-skill { max-width:100%; align-items:flex-start; }
+#customPilotList .pilot-list-skill > span { min-width:0; white-space:normal; overflow-wrap:anywhere; }
+#customPilotList .pilot-record {
+  grid-area:4 / 1; display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
+  width:100%; max-width:none; gap:2px 10px; align-content:start;
+}
+#customPilotList .pilot-record-cell {
+  flex-direction:row; flex-wrap:wrap; align-content:start; justify-content:flex-start;
+  white-space:normal; line-height:14px; gap:0 4px;
+}
+#customPilotList .pilot-record-cell > span { min-width:0; overflow-wrap:anywhere; }
+#customPilotList .pilot-record-cell > strong { white-space:nowrap; }
+@media(max-width:720px) {
+  #customPilotList > .custom-pilot-card { height:204px; min-height:204px; max-height:204px; grid-template-rows:minmax(0,1fr) 32px; }
+}
+
+/* Four visible rows: eight cards on desktop, four on phones. Heights depend on
+   the viewport preset, never on the unit or pilot's content. */
+#formationUnits, #customPilotList, #productionList, #encyclopediaList {
+  gap:4px; align-content:start;
+}
+#productionList { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
+#encyclopediaList > .encyclopedia-unit,
+#productionList > .production-unit,
+#formationCatalog > .catalog-unit-row {
+  height:120px; min-height:120px; max-height:120px; padding:6px; gap:6px;
+}
+#productionList .production-unit-info { gap:2px; }
+#productionList .production-unit-portrait, #productionList .production-unit .production-unit-portrait > img {
+  width:36px; height:auto; min-height:0;
+}
+#productionList .production-unit .production-unit-portrait > img { height:36px; }
+#productionList .unit-line-title { font-size:12px; }
+#productionList .production-unit-footer, #productionList .production-unit-price,
+#productionList .production-owned { gap:2px 6px; font-size:9px; }
+#encyclopediaList .encyclopedia-unit-identity { width:40px; gap:2px; padding-top:0; }
+#encyclopediaList .encyclopedia-portrait { width:40px; height:40px; min-height:40px; }
+#encyclopediaList .encyclopedia-portrait img { width:36px; height:36px; }
+#encyclopediaList .encyclopedia-unit-body { gap:2px; }
+#encyclopediaList .encyclopedia-unit-status { font-size:9px; line-height:12px; }
+#encyclopediaList .encyclopedia-unit-footer { font-size:10px; }
+#encyclopediaList .encyclopedia-unit-footer button { min-height:22px; padding:2px 6px; font-size:10px; }
+body.menu-shell-active #formationScreen #formationUnits > .formation-row {
+  height:120px; min-height:120px; max-height:120px; padding:4px 6px;
+  grid-template-columns:40px minmax(0,1fr); grid-template-rows:minmax(0,1fr) 24px;
+  align-content:start; gap:2px 6px;
+}
+body #formationScreen #formationUnits .formation-unit-portrait { grid-column:1; grid-row:1; width:40px; }
+body #formationScreen #formationUnits .formation-unit-portrait > .formation-icon,
+body #formationScreen #formationUnits .formation-unit-portrait > .formation-icon > img { width:40px; height:40px; }
+#formationUnits .formation-unit-name { display:flex; flex-direction:column; gap:2px; }
+#formationUnits .formation-unit-name > strong { font-size:12px; line-height:16px; -webkit-line-clamp:1; }
+#formationUnits .formation-cargo-note { font-size:9px; line-height:11px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+#formationUnits .formation-stock-line { display:block; font-size:9px; line-height:11px; margin:0; }
+#formationUnits .formation-stock-line small { font-size:inherit; }
+body.menu-shell-active #formationScreen #formationUnits .formation-row > .formation-row-actions {
+  grid-area:2 / 1 / 3 / -1; width:100%; display:grid; grid-template-columns:repeat(4,minmax(0,1fr));
+  grid-template-rows:24px; gap:4px; align-self:start;
+}
+body.menu-shell-active #formationScreen #formationUnits .formation-row-actions > button {
+  grid-column:auto; grid-row:1; width:100%; height:24px; min-height:24px; padding:2px 4px; font-size:10px;
+}
+#formationUnits .unit-tags, #productionList .unit-tags, #encyclopediaList .unit-tags { gap:2px 3px; }
+#formationUnits .unit-tags :is(.faction-tag,.era-tag,.type-tag,.unit-summary-tag),
+#productionList .unit-tags :is(.faction-tag,.era-tag,.type-tag,.unit-summary-tag),
+#encyclopediaList .unit-tags :is(.faction-tag,.era-tag,.type-tag,.unit-summary-tag) {
+  font-size:9px; line-height:12px; padding:1px 3px;
+}
+#formationUnits .unit-tags-more, #productionList .unit-tags-more, #encyclopediaList .unit-tags-more {
+  min-width:20px; min-height:16px; height:16px; padding:0 3px; font-size:10px;
+}
+#customPilotList { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); padding:4px; }
+#customPilotList > .custom-pilot-card {
+  height:120px; min-height:120px; max-height:120px; padding:3px 5px;
+  grid-template-columns:40px minmax(0,1fr) 68px; grid-template-rows:minmax(0,1fr); gap:4px;
+}
+#customPilotList .custom-pilot-summary { grid-column:2; grid-row:1; grid-template-rows:16px 12px 32px 28px; gap:2px; }
+#customPilotList .pilot-roster-heading { min-height:16px; font-size:11px; }
+#customPilotList .pilot-roster-progress { line-height:12px; font-size:9px; }
+#customPilotList .pilot-list-skills { gap:2px 5px; }
+#customPilotList .pilot-list-skill { font-size:9px; line-height:14px; gap:3px; }
+body #formationScreen #customPilotList .pilot-list-skills .pilot-list-skill > img { width:14px; height:14px; }
+#customPilotList .pilot-list-skills .pilot-cost-tag { font-size:9px; }
+#customPilotList .pilot-record { gap:2px 6px; }
+#customPilotList .pilot-record-cell { font-size:9px; line-height:12px; gap:0 3px; }
+#customPilotList .pilot-record-cell strong { font-size:9px; }
+body.menu-shell-active #formationScreen #customPilotList .formation-row-actions {
+  display:grid; grid-column:3; grid-row:1; gap:3px; width:68px; align-self:start;
+}
+body.menu-shell-active #formationScreen #customPilotList .formation-row-actions button {
+  width:100%; height:22px; min-height:22px; font-size:9px; padding:1px 3px;
+}
+@media(max-width:720px) {
+  body.menu-shell-active #formationScreen .formation-dialog { padding:6px; gap:4px; }
+  #formationMain > .formation-heading { min-height:24px; height:24px; max-height:24px; margin:0; padding:0; }
+  #formationMain .shell-page-title { font-size:15px; line-height:20px; }
+  #formationMain #formationBudget, #formationMain #formationPilotBudget { margin:0; font-size:9px; line-height:12px; }
+  body.menu-shell-active #formationMain > .formation-toolbar { gap:3px; padding:0; }
+  #formationMain > .formation-toolbar label > span { display:none; }
+  #formationMain > .formation-toolbar :is(input,select,button) { height:26px; min-height:26px; margin:0; padding:2px 4px; font-size:10px; }
+  #formationScreen #formationPilotToolbar { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  #formationMain > .formation-toolbar label { margin:0; gap:0; }
+  #formationUnits, #customPilotList { display:grid; grid-template-columns:minmax(0,1fr); gap:4px; padding:2px 4px; }
+  body.menu-shell-active #formationScreen #formationUnits > .formation-row {
+    height:92px; min-height:92px; max-height:92px; padding:3px 4px;
+    grid-template-columns:32px minmax(0,1fr); grid-template-rows:minmax(0,1fr) 20px;
+  }
+  body #formationScreen #formationUnits .formation-unit-portrait { width:32px; }
+  body #formationScreen #formationUnits .formation-unit-portrait > .formation-icon,
+  body #formationScreen #formationUnits .formation-unit-portrait > .formation-icon > img { width:32px; height:32px; }
+  #formationUnits .formation-unit-name > strong { font-size:11px; line-height:14px; }
+  body.menu-shell-active #formationScreen #formationUnits .formation-row > .formation-row-actions { grid-template-rows:20px; }
+  body.menu-shell-active #formationScreen #formationUnits .formation-row-actions > button { height:20px; min-height:20px; font-size:9px; padding:1px 2px; }
+  #formationUnits .unit-tags :is(.faction-tag,.era-tag,.type-tag,.unit-summary-tag) { font-size:8px; line-height:10px; padding:1px 2px; }
+  #customPilotList > .custom-pilot-card { height:104px; min-height:104px; max-height:104px; grid-template-columns:32px minmax(0,1fr); grid-template-rows:minmax(0,1fr); gap:4px; }
+  #customPilotList .pilot-roster-portrait { grid-column:1; grid-row:1; width:32px; }
+  body #formationScreen #customPilotList .pilot-roster-portrait > img { width:32px; height:32px; }
+  #customPilotList .pilot-recruit-state { font-size:8px; line-height:10px; }
+  #customPilotList .pilot-roster-heading { font-size:10px; gap:3px; }
+  #customPilotList .pilot-faction-tags > span { font-size:8px; padding:1px 2px; }
+  body.menu-shell-active #formationScreen #customPilotList .formation-row-actions { grid-column:1; grid-row:1; width:32px; align-self:end; gap:2px; }
+  body.menu-shell-active #formationScreen #customPilotList .formation-row-actions button { height:16px; min-height:16px; max-width:none; padding:0; font-size:8px; line-height:14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  #productionList { grid-template-columns:minmax(0,1fr); }
+  body.menu-shell-active .production-list { max-height:none; height:calc(100dvh - 350px); min-height:0; flex:none; }
+  #productionList > .production-unit, #encyclopediaList > .encyclopedia-unit { height:92px; min-height:92px; max-height:92px; padding:4px; }
+  .production-filters label { font-size:9px; }
+  .production-filters select, #productionSearch { height:26px; min-height:26px; padding:2px 4px; }
+  #productionScreen .production-heading { min-height:28px; height:28px; max-height:28px; padding:0; }
+  .encyclopedia-dialog { gap:4px; padding:6px; }
+  .encyclopedia-dialog > .shell-page-heading { height:28px; min-height:28px; max-height:28px; padding:0; }
+  .encyclopedia-dialog .shell-page-title { font-size:16px; line-height:22px; }
+  .encyclopedia-tabs button { height:24px; min-height:24px; padding:2px 6px; margin:0; font-size:10px; }
+  .encyclopedia-filters { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:3px; }
+  .encyclopedia-filters > * { min-height:26px; height:26px; padding:2px 3px; font-size:10px; }
+  #encyclopediaSearch { grid-column:1 / -1; }
+}
+
+#productionList .production-unit { grid-template-columns:36px minmax(0,1fr); }
+#productionList .unit-line-title { -webkit-line-clamp:1; line-height:16px; }
+#productionList .resource-balance { gap:2px 4px; font-size:9px; line-height:12px; }
+#productionList .production-unit-footer { line-height:12px; }
+#formationUnits .unit-tags :is(.unit-tags-primary,.unit-tags-types),
+#productionList .unit-tags :is(.unit-tags-primary,.unit-tags-types),
+#encyclopediaList .unit-tags :is(.unit-tags-primary,.unit-tags-types) { display:contents; }
+#formationUnits .formation-unit-name small { margin:0; }
+@media(max-width:720px) {
+  body.menu-shell-active #formationMain .formation-heading { height:24px !important; min-height:24px !important; max-height:24px !important; padding:0 !important; }
+  body.menu-shell-active #formationScreen .formation-dialog { gap:4px !important; padding:6px !important; }
+  body.menu-shell-active #formationMain .formation-unit-actions button,
+  body.menu-shell-active #formationMain .pilot-create-actions button { min-height:26px; height:26px; margin:0; padding:2px 4px; font-size:10px; white-space:nowrap; }
+}
+
+#encyclopediaList .encyclopedia-unit-name { -webkit-line-clamp:1; font-size:12px; line-height:16px; }
+#encyclopediaList .production-turns { margin:0; font-size:9px; line-height:12px; }
+
+#formationUnits .unit-summary-tag, #productionList .unit-summary-tag, #encyclopediaList .unit-summary-tag {
+  min-height:0; height:auto; box-sizing:border-box;
+}
+#productionList .unit-line-meta { gap:2px 3px; align-items:flex-start; }
+#productionList .production-unit-price > .cost {
+  height:16px; min-height:16px; font-size:9px; line-height:12px; padding:1px 3px;
+}
+
+/* Production remains a single compact column on every device. */
+#productionList { grid-template-columns:minmax(0,1fr); }
+@media(min-width:721px) {
+  #productionList > .production-unit { height:64px; min-height:64px; max-height:64px; padding:3px 5px; grid-template-columns:32px minmax(0,1fr); }
+  #productionList .production-unit-portrait { width:32px; gap:1px; }
+  #productionList .production-unit .production-unit-portrait > img { width:28px; height:28px; }
+  #productionList .unit-portrait-status { font-size:8px; line-height:10px; }
+  #productionList .production-unit-info { gap:1px; }
+}
+
+#customPilotList .pilot-list-skills .pilot-cost-tag {
+  height:14px; min-height:14px; padding:0 3px; line-height:12px; font-size:9px; box-sizing:border-box;
+}
+#formationCatalog .catalog-unit { grid-template-columns:36px minmax(0,1fr); padding:4px; gap:4px; align-items:start; }
+#formationCatalog .catalog-unit-portrait { width:36px; gap:2px; }
+#formationCatalog .catalog-unit img { width:36px; height:36px; }
+#formationCatalog .catalog-unit-info { gap:2px; }
+#formationCatalog .catalog-unit-info > strong { -webkit-line-clamp:1; font-size:12px; line-height:16px; }
+#formationCatalog .unit-tags { gap:2px 3px; }
+#formationCatalog .unit-tags :is(.faction-tag,.era-tag,.type-tag,.unit-summary-tag) {
+  min-height:0; height:auto; font-size:9px; line-height:12px; padding:1px 3px;
+}
+#formationCatalog .unit-tags-more { min-width:20px; min-height:16px; height:16px; padding:0 3px; }
+#formationCatalog .formation-stock-line { font-size:9px; line-height:12px; }
+#formationCatalog .formation-stock-line small { font-size:inherit; margin:0; }
+#productionList .unit-portrait-status { overflow-wrap:anywhere; }
+@media(max-width:720px) {
+  body.menu-shell-active #formationScreen #customPilotList .formation-row-actions button {
+    min-width:0; width:32px; box-sizing:border-box;
+  }
+}
+
+#formationUnits .formation-row > .formation-unit-name { gap:1px; }
+@media(min-width:721px) {
+  #productionList > .production-unit { height:84px; min-height:84px; max-height:84px; padding:4px 6px; grid-template-columns:40px minmax(0,1fr); }
+  #productionList .production-unit-portrait { width:40px; gap:2px; }
+  #productionList .production-unit .production-unit-portrait > img { width:36px; height:36px; }
+  #productionList .unit-portrait-status { font-size:9px; line-height:11px; }
+}
+
+body.menu-shell-active #formationScreen #customPilotList .formation-row-actions {
+  grid-template-columns:minmax(0,1fr); grid-auto-flow:row;
+}
+body.menu-shell-active #formationScreen #customPilotList .formation-row-actions > button {
+  grid-column:1; grid-row:auto;
+}
+
+@media(min-width:721px) and (max-height:800px) {
+  #encyclopediaList > .encyclopedia-unit, #formationCatalog > .catalog-unit-row,
+  body.menu-shell-active #formationScreen #formationUnits > .formation-row { height:96px; min-height:96px; max-height:96px; }
+  #customPilotList > .custom-pilot-card { height:104px; min-height:104px; max-height:104px; }
+  #productionList > .production-unit { height:66px; min-height:66px; max-height:66px; padding:3px 5px; grid-template-columns:32px minmax(0,1fr); }
+  #productionList .production-unit-portrait { width:32px; gap:1px; }
+  #productionList .production-unit .production-unit-portrait > img { width:28px; height:28px; }
+  #productionList .unit-portrait-status { font-size:8px; line-height:10px; }
+  body.menu-shell-active #formationMain .formation-heading { height:28px !important; min-height:28px !important; max-height:28px !important; padding:0 !important; }
+  body.menu-shell-active #formationScreen .formation-dialog { gap:4px !important; }
+}
+
+/* Inventory and preloading share one line; status badges never cover portraits. */
+#formationUnits .formation-row > .formation-unit-name > .formation-stock-line {
+  display:flex; flex-wrap:nowrap; align-items:center; justify-content:space-between;
+  gap:4px; width:100%; min-width:0;
+}
+#formationUnits .formation-inventory-count { flex:none; white-space:nowrap; }
+#formationUnits .formation-cargo-note {
+  display:flex; flex:0 1 auto; justify-content:flex-end; align-items:center;
+  gap:3px; min-width:0; margin-left:auto; white-space:nowrap;
+}
+.formation-preload-badge {
+  display:inline-block; flex:none; padding:0 3px; border:1px solid #6cc7eb;
+  border-radius:2px; background:#19475a; color:#cef1ff; font-size:8px; line-height:11px;
+}
+.formation-cargo-destination { min-width:0; overflow:hidden; text-overflow:ellipsis; }
+#formationUnits .formation-unit-portrait { gap:3px; }
+#productionList .unit-portrait-status,
+#formationUnits .unit-undeveloped, #formationCatalog .unit-undeveloped,
+#encyclopediaList .encyclopedia-unit-status:not(:empty) {
+  box-sizing:border-box; padding:0 2px; border:1px solid #b66d70;
+  border-radius:2px; background:#522a32; color:#ffb8bb; font-size:8px;
+  line-height:11px; max-width:100%; text-align:center;
+}
+#customPilotList > .custom-pilot-card { column-gap:10px; }
+#customPilotList .custom-pilot-summary {
+  height:100%; min-height:0; grid-template-rows:16px 12px minmax(0,1fr) 26px;
+}
+#customPilotList .pilot-record { height:26px; align-self:end; margin:0; }
+#customPilotList .pilot-roster-portrait { width:40px; gap:0; }
+body #formationScreen #customPilotList .pilot-roster-portrait > img { width:40px; height:40px; }
+body .pilot-roster-portrait > .pilot-recruit-state {
+  box-sizing:border-box; margin:4px 0 0; padding:0 3px; border:1px solid #759bb1;
+  border-radius:2px; background:#253e4d; color:#d0e8f5; line-height:12px; font-size:8px;
+}
+@media(max-width:720px) {
+  #customPilotList > .custom-pilot-card { column-gap:10px; }
+  #customPilotList .pilot-roster-portrait { width:32px; }
+  body #formationScreen #customPilotList .pilot-roster-portrait > img { width:28px; height:28px; }
+  body #customPilotList .pilot-roster-portrait > .pilot-recruit-state { font-size:7.5px; line-height:10px; padding:0 2px; }
+}
+
+@media(min-width:721px) and (max-height:800px) {
+  body #formationScreen #formationUnits .formation-unit-portrait > .formation-icon,
+  body #formationScreen #formationUnits .formation-unit-portrait > .formation-icon > img { width:32px; height:32px; }
+  body #formationScreen #formationUnits .formation-unit-portrait > .formation-icon { align-self:center; }
+}
+
+@media(min-width:721px) and (max-height:800px) {
+  #productionList .production-unit .production-unit-portrait > img { width:24px; height:24px; align-self:center; }
+}

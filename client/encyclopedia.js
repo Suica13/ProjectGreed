@@ -100,7 +100,7 @@ const Encyclopedia = (() => {
     if (!window.CATALOG_DEVELOPER_MODE) portrait.append(image);
     if (prefab.wip) portrait.append(element("small", "unit-portrait-status", "WIP"));
     const body = element("div", "encyclopedia-unit-body");
-    body.append(element("strong", "encyclopedia-unit-name", prefab.code + " " + prefab.name));
+    body.append(element("strong", "encyclopedia-unit-name", prefab.name));
     body.append(Formation.unitTags(prefab, {cost: UnitModels[modelId].cost}));
     const timing = Economy.productionTiming(prefab.id, modelId.split("__")[1]);
     const footer = element("div", "encyclopedia-unit-footer");

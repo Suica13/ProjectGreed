@@ -25,7 +25,7 @@ const Formation = (() => {
     trigger = focus;
     const modelId = id + "__" + kitId,
       model = UnitModels[modelId];
-    byId("formationDetailTitle").textContent = model.code + " " + model.name;
+    byId("formationDetailTitle").textContent = model.name;
     byId("formationDetailTags").replaceChildren(UnitPreview.unitTags(model, {limit: Infinity}));
     byId("formationDetailIntro").textContent = model.description || "";
     const kits = byId("formationDetailKit");

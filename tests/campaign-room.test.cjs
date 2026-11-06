@@ -131,7 +131,7 @@ test("campaign WebSocket orders pause tactical combat, export private saves and 
     unitLimit: -10,
     unitCostLimit: -10,
     bannedFactions: ["EFSF", "ZEON"],
-    bannedEras: ["0079E"],
+    bannedEras: ["0079T1"],
     campaignOptions: { difficulty: "hard", aggression: "high", teams: [
       { research: 1.25, durability: 1.25, resources: 1.5 },
       { research: 0.75, durability: 0.75, resources: 0.5 },

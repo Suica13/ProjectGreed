@@ -353,7 +353,7 @@ const RoomPanel = (() => {
       summary = element(
         "p",
         "muted",
-        "战略模式使用剧本部队与共享资源，不限制编组COST、单位点数或禁用标签。",
+        "历史战役模式使用剧本部队与共享资源，不限制编组COST、单位点数或禁用标签。",
       );
       summary.id = "campaignRoomRuleSummary";
       byId("roomBattleMode").closest("details").append(summary);
@@ -864,7 +864,7 @@ const RoomPanel = (() => {
     formationSelect.setAttribute("aria-invalid", String(!valid || !!disabledCount));
     byId("roomTitle").textContent = Net.local
       ? "离线" +
-        { quick: "快速战", campaign: "战略模式", regular: "常规战" }[snapshot.settings.mode] +
+        { quick: "快速战模式", campaign: "历史战役模式", regular: "常规战模式" }[snapshot.settings.mode] +
         "房间"
       : "房间 " + snapshot.room;
     byId("roomStatus").hidden = !snapshot.started && !snapshot.loadedSave;

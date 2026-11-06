@@ -71,3 +71,5 @@
 - [tools/unit-editor.md](tools/unit-editor.md)
 
 - [maintenance/v87-release.md](maintenance/v87-release.md)
+
+- [maintenance/v88-release.md](maintenance/v88-release.md)

@@ -443,7 +443,7 @@
     "unitLevel": 800,
     "tacticalMoveBeforeBonus": 3,
     "v17BaseHp": 12500,
-    "technologyEra": "0079E",
+    "technologyEra": "0079T1",
     "actionTurnSpeed": 1.25,
     "mobilityMoveTarget": 0
   },
@@ -464,7 +464,7 @@
   "faction": "EFSF",
   "tags": [
     "EFSF",
-    "0079E"
+    "0079T1"
   ],
   "localization": {
     "zh": {

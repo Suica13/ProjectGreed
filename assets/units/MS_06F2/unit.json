@@ -677,7 +677,7 @@
       "antiDetection": 0
     },
     "v17BaseHp": 22000,
-    "technologyEra": "0079E",
+    "technologyEra": "0079T1",
     "actionTurnSpeed": 1.5,
     "mobilityMoveTarget": 6
   },
@@ -1084,7 +1084,7 @@
   ],
   "tags": [
     "ZEON",
-    "0079E"
+    "0079T1"
   ],
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],

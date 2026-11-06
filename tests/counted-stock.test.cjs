@@ -233,5 +233,5 @@ test("PMC allocations use largest remainders, honor caps, and conserve every all
     assert.deepEqual(R.allocateTechnology(total,weights,balances,limits),awards);
   }
   assert.deepEqual(R.allocateTechnology(1,{EFSF:1,ZEON:1},{},{EFSF:10,ZEON:10}),{EFSF:1});
-  assert.deepEqual(R.technologyFactions({tags:["EFSF","0079E","EFSF"],availableFactions:["AEUG","TITANS"],faction:"EFSF"}),["AEUG","EFSF","TITANS"]);
+  assert.deepEqual(R.technologyFactions({tags:["EFSF","0079T1","EFSF"],availableFactions:["AEUG","TITANS"],faction:"EFSF"}),["AEUG","EFSF","TITANS"]);
 });

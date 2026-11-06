@@ -203,7 +203,7 @@ const PilotSystem = (() => {
     )
       throw Error("ACE属性由悟性成长，不能手动修改");
     const record = {};
-    for (const key of ["kills", "shipKills", "battles", "losses", "destroyedCost", "lostCost"]) {
+    for (const key of ["kills", "shipKills", "battles", "losses"]) {
       const n = value.record?.[key] ?? 0;
       if (!Number.isSafeInteger(n) || n < 0) throw Error("驾驶员战绩无效");
       record[key] = n;
@@ -349,7 +349,7 @@ const PilotSystem = (() => {
       spent = 0;
     }
     const record = {};
-    for (const key of ["kills", "shipKills", "battles", "losses", "destroyedCost", "lostCost"]) {
+    for (const key of ["kills", "shipKills", "battles", "losses"]) {
       const n = value.record?.[key] ?? 0;
       if (!Number.isSafeInteger(n) || n < 0) throw Error("驾驶员战绩无效");
       record[key] = n;
@@ -454,7 +454,6 @@ const PilotSystem = (() => {
     if (kind === "kill") {
       p.record.kills++;
       if (details.shipKill === true) p.record.shipKills++;
-      p.record.destroyedCost += unitCost;
       p = gainExperience(p, experiencePoints);
     } else if (kind === "battle") {
       p.record.battles++;
@@ -462,7 +461,6 @@ const PilotSystem = (() => {
       p = gainExperience(p, experiencePoints);
     } else {
       p.record.losses++;
-      p.record.lostCost += unitCost;
       if (p.ace && details.requiresRecruitment !== false) p.needsRecruitment = true;
     }
     return custom(p);

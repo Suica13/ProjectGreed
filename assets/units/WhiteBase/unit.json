@@ -1061,7 +1061,7 @@
       "radar": 550,
       "antiDetection": -250
     },
-    "technologyEra": "0079E",
+    "technologyEra": "0079T1",
     "actionTurnSpeed": 0.45,
     "mobilityMoveTarget": 7,
     "shipHullBeforeReduction": 135000,
@@ -1092,7 +1092,7 @@
   "faction": "EFSF",
   "tags": [
     "EFSF",
-    "0079E"
+    "0079T1"
   ],
   "localization": {
     "zh": {

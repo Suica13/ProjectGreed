@@ -689,7 +689,15 @@ const Formation = (() => {
           render();
           renderDetail();
         };
-        row.append(remove);
+        const actions = element("div", "formation-cargo-actions"),
+          pilot = element("button");
+        pilot.type = "button";
+        pilotButtonText(pilot, "驾驶员", entry, m);
+        pilot.dataset.preloadPilot = String(i);
+        pilot.setAttribute("aria-haspopup", "dialog");
+        pilot.onclick = () => openPilot(i, true);
+        actions.append(pilot, remove);
+        row.append(actions);
         container.append(row);
       }
     }
@@ -815,7 +823,7 @@ const Formation = (() => {
     const prefab = Rules.catalog.prefabs.find((p) => p.id === entry.unitId);
     const model = Rules.formationModel(entry);
     window.dispatchEvent(new CustomEvent("unit-preview", { detail: { id: entry.unitId } }));
-    byId("formationDetailTitle").textContent = model.code + " " + model.name;
+    byId("formationDetailTitle").textContent = model.name;
     byId("formationDetailTags").replaceChildren(unitTags(model, {limit: Infinity}));
     ProductionUI.renderLicensePurchase(originalEntry.unitId, originalEntry.kitId);
     const pilotButton = byId("formationDetailPilot");
@@ -1043,12 +1051,9 @@ const Formation = (() => {
     if (renamed) refreshSelect();
   }
   byId("formationName").oninput = saveDraft;
-  function undevelopedWarning() {
-    const warning = element("small", "unit-undeveloped");
-    const icon = element("span", "unit-warning-icon", "⚠︎");
-    icon.setAttribute("aria-hidden", "true");
-    warning.append(icon, element("span", "", "尚未开发"));
-    return warning;
+  function unitStatusBadge(unitId) {
+    const status = !Development.allows(group, unitId) ? "未开发" : !Economy.hasLicense(unitId) ? "未许可" : null;
+    return status ? element("small", "unit-undeveloped", status) : null;
   }
   function render() {
     saveDraft();
@@ -1174,22 +1179,9 @@ const Formation = (() => {
       metadata.append(unitTags(model, {cost: model.cost, kitName: model.kitName}));
       label.title = model.description || "";
       label.append(
-        element("strong", "", `${entry.preload ? "" : i + 1 + ". "}${model.code} ${model.name}`),
+        element("strong", "", `${i + 1}. ${model.name}`),
         metadata,
       );
-      if (entry.preload) {
-        const carrier = draft[entry.preload.carrierIndex],
-          annotation = element("small", "formation-cargo-note"),
-          name = element("span", "", Rules.formationModel(carrier).name);
-        annotation.append(
-          document.createTextNode(I18n.text("预先搭载") + " · "),
-          name,
-          document.createTextNode(
-            " · " + hangarLabel(entry.preload.carrierIndex, entry.preload.hangarId),
-          ),
-        );
-        label.append(annotation);
-      }
       const remove = element("button", "", "移除");
 
       remove.onclick = (event) => {
@@ -1204,11 +1196,20 @@ const Formation = (() => {
         element(
           "small",
           "formation-inventory-count",
-          "机体库存 " + Economy.quantity(entry.unitId) + " · 当前套件 " + Economy.kitQuantity(entry.unitId + "__" + entry.kitId),
+          "库存 " + Economy.quantity(entry.unitId) + " · 套件 " + Economy.kitQuantity(entry.unitId + "__" + entry.kitId),
         ),
       );
-      if (!Economy.hasLicense(entry.unitId) && !Development.allows(group, entry.unitId))
-        portrait.append(undevelopedWarning());
+      const status = unitStatusBadge(entry.unitId);
+      if (status) portrait.append(status);
+      if (entry.preload) {
+        const carrier = draft[entry.preload.carrierIndex],
+          note = element("small", "formation-cargo-note"),
+          destination = Rules.formationModel(carrier).name + " · " + hangarLabel(entry.preload.carrierIndex, entry.preload.hangarId);
+        note.append(element("span", "formation-preload-badge", "预先搭载"),
+          element("span", "formation-cargo-destination", destination));
+        note.title = I18n.text("预先搭载") + " · " + destination;
+        stockLine.append(note);
+      }
       if (["license", "stock", "kit_stock"].includes(plan.reasons[i])) {
         row.classList.add("inventory-shortage");
         const produce = element("button", "produce-shortage-unit", "前往生产");
@@ -1229,13 +1230,16 @@ const Formation = (() => {
       pilot.onclick = () => openPilot(i);
       const board = element("button", "formation-board-button", entry.preload ? "搭乘中" : "搭乘");
       board.dataset.boardFormation = String(i);
+      board.setAttribute("aria-pressed", String(!!entry.preload));
       board.onclick = () => openBoarding(i);
       actions.append(details, board, pilot, remove);
-      row.append(portrait, label, actions, stockLine);
+      label.append(stockLine);
+      row.append(portrait, label, actions);
       list.append(row);
     });
     list.scrollTop = scrollTop;
   }
+  let pilotFromPreload = false;
   function closePilot() {
     if (pilotIndex === null) return;
     const index = pilotIndex;
@@ -1243,14 +1247,20 @@ const Formation = (() => {
     byId("formationPilotPanel").hidden = true;
     byId("formationUnitDetail").inert = false;
     byId("formationMain").inert = !byId("formationUnitDetail").hidden;
-    if (!byId("formationUnitDetail").hidden) byId("formationDetailPilot").focus();
+    if (!byId("formationUnitDetail").hidden) {
+      const target = pilotFromPreload
+        ? byId("formationDetailHangars").querySelector(`[data-preload-pilot="${index}"]`)
+        : byId("formationDetailPilot");
+      (target || byId("formationDetailPilot")).focus();
+    }
     else
       byId("formationUnits")
         .querySelector('[data-formation-index="' + index + '"] .formation-pilot-button')
         ?.focus();
   }
-  function openPilot(index) {
+  function openPilot(index, fromPreload = false) {
     if (!draft[index]) return;
+    pilotFromPreload = fromPreload;
     document.body.append(byId("formationPilotPanel"));
     pilotIndex = index;
     const entry = draft[index],
@@ -1312,7 +1322,7 @@ const Formation = (() => {
         if (profile) entry.customPilot = structuredClone(profile);
         else delete entry.customPilot;
         render();
-        if (detailIndex === index) renderDetail();
+        if (detailIndex !== null) renderDetail();
         closePilot();
       };
       card.append(portrait, details, choose);
@@ -1587,7 +1597,7 @@ const Formation = (() => {
       image.alt = prefab.name;
       image.loading = "lazy";
       image.decoding = "async";
-      const title = element("strong", "", prefab.code + " " + prefab.name);
+      const title = element("strong", "", prefab.name);
       const info = element("span", "catalog-unit-info");
       const costs = prefab.weaponKits.map((k) => prefab.stats.cost + k.cost);
       const selectedKit = prefab.weaponKits.find(kit => kit.id === pickerKits.get(prefab.id)) || prefab.weaponKits[0];
@@ -1605,8 +1615,8 @@ const Formation = (() => {
       info.append(stockLine);
       const portrait = element("span", "catalog-unit-portrait");
       portrait.append(image);
-      if (!Economy.hasLicense(prefab.id) && !Development.allows(group, prefab.id))
-        portrait.append(undevelopedWarning());
+      const status = unitStatusBadge(prefab.id);
+      if (status) portrait.append(status);
       card.append(portrait, info);
       card.onclick = () => {
         GameAudio.selectUnit(prefab);
@@ -1616,7 +1626,7 @@ const Formation = (() => {
       details.dataset.detailUnitId = prefab.id;
       details.dataset.buttonSound = "off";
       details.setAttribute("aria-haspopup", "dialog");
-      details.setAttribute("aria-label", `${prefab.code} ${prefab.name} · ${I18n.text("详情")}`);
+      details.setAttribute("aria-label", `${prefab.name} · ${I18n.text("详情")}`);
       details.onclick = () => {
         GameAudio.selectUnit(prefab);
         selectCatalogUnit(prefab, card);
@@ -1755,7 +1765,7 @@ const Formation = (() => {
       message: text,
       items: units.map((id) => {
         const unit = Rules.catalog.prefabs.find((p) => p.id === id);
-        return unit ? unit.code + " " + unit.name : id;
+        return unit ? unit.name : id;
       }),
       actions: choices.map(([label, id], value) => ({ label, id, value })),
     }).then((choice) => {
@@ -1861,11 +1871,9 @@ const Formation = (() => {
       [
         ["击坠单位数", Math.max(0, record.kills - record.shipKills)],
         ["击坠战舰数", record.shipKills],
-        ["参战次数", record.battles],
       ],
       [
-        ["总击坠COST", record.destroyedCost],
-        ["被击坠COST", record.lostCost],
+        ["参战次数", record.battles],
         ["被击坠数", record.losses],
       ],
     ];

@@ -17,7 +17,7 @@ for (const width of [1440, 390, 360]) test(`workshop aligns identity to portrait
     const card=page.locator(`#productionList [data-unit-id="${id}"]`);
     await expect(card).toHaveCount(1);
     const flag=card.locator('.unit-portrait-status');
-    if(status) { await expect(flag).toHaveText(status); await expect(flag).toHaveCSS('color','rgb(255, 107, 107)'); }
+    if(status) { await expect(flag).toHaveText(status); await expect(flag).toHaveCSS('color','rgb(255, 184, 187)'); }
     else await expect(flag).toHaveCount(0);
     const geometry=await card.evaluate(c=>({image:c.querySelector('.production-unit-portrait > img').getBoundingClientRect().top,text:c.querySelector('.production-unit-info').getBoundingClientRect().top}));
     expect(Math.abs(geometry.image-geometry.text)).toBeLessThanOrEqual(1);

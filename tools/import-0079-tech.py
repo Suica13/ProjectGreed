@@ -70,7 +70,7 @@ def import_faction(root, faction, page_number=0, era="0079"):
         })
     for node in nodes:
         node["page"] = page_number
-        node["era"] = "0087" if era == "0087" else "0079E" if page_number == 0 else "0083" if node["id"].endswith(("_GPProject", "_OperationStardust")) else "0079L"
+        node["era"] = ("0087T1" if page_number == 0 else "0087T2") if era == "0087" else "0079T1" if page_number == 0 else "0083" if node["id"].endswith(("_GPProject", "_OperationStardust")) else "0079T2"
     return nodes
 
 def main():

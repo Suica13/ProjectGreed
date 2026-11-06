@@ -7,8 +7,8 @@ test('AI buys current main-line MS instead of reserving budget for cheap slot fi
   for(const [id,cost,tags] of [['obsolete',100,['MS']],['core-a',400,['MS']],['core-b',450,['MS']],['fighter',50,['Aircraft']]])
    G.models[id+'__standard']={...base,prefabId:id,kitId:'standard',cost,ship:false,unitTags:tags,hangars:[],skills:[],commandAuras:[],supplyAura:null};
   D.nodes=f=>f==='EFSF'?[
-   {row:'mid',era:'0079E',page:0,column:1,unlocks:['obsolete','fighter']},
-   {row:'mid',era:'0079L',page:1,column:3,unlocks:['core-a','core-b']},
+   {row:'mid',era:'0079T1',page:0,column:1,unlocks:['obsolete','fighter']},
+   {row:'mid',era:'0079T2',page:1,column:3,unlocks:['core-a','core-b']},
   ]:[];
   for(let seed=1;seed<=30;seed++){
    const army=G.randomFormation(seed,1500,{},32);

@@ -723,7 +723,7 @@
       "antiDetection": 0
     },
     "v17BaseHp": 25000,
-    "technologyEra": "0079E",
+    "technologyEra": "0079T1",
     "actionTurnSpeed": 1.5,
     "mobilityMoveTarget": 5
   },
@@ -744,7 +744,7 @@
   "faction": "EFSF",
   "tags": [
     "EFSF",
-    "0079E"
+    "0079T1"
   ],
   "localization": {
     "zh": {

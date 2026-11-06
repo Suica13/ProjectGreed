@@ -60,8 +60,8 @@ const DevelopmentUI = (() => {
       icon.src = unitIcon(prefab.id + "__" + prefab.weaponKits[0].id);
       icon.alt = "";
       icon.loading = "lazy";
-      row.append(icon, element("span", "", prefab.code + " " + prefab.name));
-      row.setAttribute("aria-label", `预览 ${prefab.code} ${prefab.name}`);
+      row.append(icon, element("span", "", prefab.name));
+      row.setAttribute("aria-label", `预览 ${prefab.name}`);
       row.onclick = () => Formation.previewUnit(prefab.id, row);
     } else {
       row.append(
@@ -168,7 +168,7 @@ const DevelopmentUI = (() => {
     const divider = element(
       "div",
       "development-era-divider",
-      ["AEUG", "TITANS", "NEO_ZEON"].includes(faction) ? "0087后期" : "0079后期",
+      ["AEUG", "TITANS", "NEO_ZEON"].includes(faction) ? "0087T2" : "0079T2",
     );
     divider.style.gridColumn = "1 / -1";
     divider.style.gridRow = String(lateStart - 1);

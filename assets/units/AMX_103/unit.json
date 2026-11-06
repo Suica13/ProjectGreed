@@ -535,7 +535,7 @@
     "unitLevel": 8000.0,
     "tacticalMoveBeforeBonus": 8,
     "v17BaseHp": 80000.0,
-    "technologyEra": "0087"
+    "technologyEra": "0087T2"
   },
   "presentation": {
     "shield": true,
@@ -554,7 +554,7 @@
   "faction": "NEO_ZEON",
   "tags": [
     "NEO_ZEON",
-    "0087"
+    "0087T2"
   ],
   "localization": {
     "zh": {

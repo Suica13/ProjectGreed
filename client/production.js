@@ -338,7 +338,7 @@ const ProductionUI = (() => {
     const owned = Economy.hasLicense(prefab.id),
       locked = !allows(prefab);
     const busy = Net.started && Net.snapshot?.phase !== "assembly";
-    byId("productionUnitName").textContent = prefab.code + " " + prefab.name;
+    byId("productionUnitName").textContent = prefab.name;
     Formation.renderPreview(id, byId("productionPreview"));
     renderInfo(model);
     const prices = byId("productionPrice");
@@ -411,19 +411,19 @@ const ProductionUI = (() => {
       const tags = Formation.unitTags(defaultModel || prefab, {
         cost: defaultModel?.cost ?? prefab.stats.cost,
         kitName: defaultModel?.kitName,
+        limit: matchMedia("(max-width:720px)").matches ? 4 : 8,
       });
-      const cost = tags.querySelector(".cost");
       const heading = element("span", "unit-line-heading"),
         metadata = element("span", "unit-line-meta");
-      const name = element("strong", "unit-line-title", prefab.code + " " + prefab.name);
-      name.title = prefab.code + " " + prefab.name;
+      const name = element("strong", "unit-line-title", prefab.name);
+      name.title = prefab.name;
       heading.append(name);
       metadata.append(tags);
       const price = element("span", "production-unit-price"),
         balance = element("span", "resource-balance");
       if (offer) resources(balance, offer);
       else balance.append(element("span", "muted", productionNote(prefab)));
-      price.append(cost, balance);
+      price.append(balance);
       const owned = element("small", "muted production-owned");
       owned.append(
         element(

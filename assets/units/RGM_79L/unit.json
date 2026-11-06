@@ -585,7 +585,7 @@
       "antiDetection": 0
     },
     "v17BaseHp": 17000,
-    "technologyEra": "0079E",
+    "technologyEra": "0079T1",
     "actionTurnSpeed": 2.5,
     "mobilityMoveTarget": 8
   },
@@ -867,7 +867,7 @@
   },
   "tags": [
     "EFSF",
-    "0079E"
+    "0079T1"
   ],
   "costBalance": {
     "nativeLevel": 1350,

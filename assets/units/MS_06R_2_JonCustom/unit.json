@@ -638,7 +638,7 @@
     "unitLevel": 2250,
     "tacticalMoveBeforeBonus": 6,
     "v17BaseHp": 26500,
-    "technologyEra": "0079L",
+    "technologyEra": "0079T2",
     "actionTurnSpeed": 2.0,
     "mobilityMoveTarget": 7
   },
@@ -659,7 +659,7 @@
   "faction": "ZEON",
   "tags": [
     "ZEON",
-    "0079L"
+    "0079T2"
   ],
   "localization": {
     "zh": {

@@ -582,7 +582,7 @@
       "antiDetection": -100.0
     },
     "v17BaseHp": 300000.0,
-    "technologyEra": "0087"
+    "technologyEra": "0087T2"
   },
   "presentation": {
     "shield": false,
@@ -601,7 +601,7 @@
   "faction": "TITANS",
   "tags": [
     "TITANS",
-    "0087"
+    "0087T2"
   ],
   "localization": {
     "zh": {

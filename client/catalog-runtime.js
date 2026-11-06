@@ -18,7 +18,7 @@ const Rules = {
   factions: ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"],
   eras: [
     ...new Set(
-      ART.prefabs.flatMap((prefab) => prefab.tags).filter((tag) => /^\d{4}[EL]?$/.test(tag)),
+      ART.prefabs.flatMap((prefab) => prefab.tags).filter((tag) => /^\d{4}(?:T[12])?$/.test(tag)),
     ),
   ].sort(),
   roundDamage: (value) => WeaponSequence.roundDamage(value),

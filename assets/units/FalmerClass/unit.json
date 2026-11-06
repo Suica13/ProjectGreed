@@ -484,7 +484,7 @@
     },
     "shipHullBeforeReduction": 65000,
     "shipBalanceMultiplier": 0.7,
-    "technologyEra": "0079E",
+    "technologyEra": "0079T1",
     "actionTurnSpeed": 0.45,
     "mobilityMoveTarget": 7,
     "shipFactionHullMultiplier": 1,
@@ -513,7 +513,7 @@
   "faction": "ZEON",
   "tags": [
     "ZEON",
-    "0079E"
+    "0079T1"
   ],
   "localization": {
     "zh": {

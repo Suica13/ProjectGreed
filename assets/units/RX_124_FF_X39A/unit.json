@@ -608,7 +608,7 @@
     "unitLevel": 8000.0,
     "tacticalMoveBeforeBonus": 9,
     "v17BaseHp": 55000.0,
-    "technologyEra": "0087"
+    "technologyEra": "0087T2"
   },
   "presentation": {
     "shield": true,
@@ -627,7 +627,7 @@
   "faction": "TITANS",
   "tags": [
     "TITANS",
-    "0087"
+    "0087T2"
   ],
   "localization": {
     "zh": {

@@ -2232,7 +2232,7 @@ window.CampaignUI = (() => {
     );
     caption.title = savedName;
     caption.setAttribute("data-i18n-ignore", "");
-    title.append(node("h2", "战略模式"), divider, caption);
+    title.append(node("h2", "历史战役模式"), divider, caption);
     identity.append(title);
     const utilities = node("div", "", "campaign-header-utilities");
     utilities.append(
@@ -2356,7 +2356,7 @@ window.CampaignUI = (() => {
     if (!assetsReady) return GameDialog.alert("请等待单位数据加载完成");
     if (state()) return open();
     if (!Net.active || Net.snapshot?.settings.mode !== "campaign")
-      return GameDialog.alert("请先创建或加入战略模式房间");
+      return GameDialog.alert("请先创建或加入历史战役模式房间");
     const dialog = document.createElement("dialog");
     dialog.className = "campaign-setup";
     const rounds = document.createElement("input");
@@ -2425,7 +2425,7 @@ window.CampaignUI = (() => {
     const text = localStorage.getItem(storageKey);
     if (!text) return GameDialog.alert("没有自动保存的战役备份");
     if (!Net.active || Net.snapshot?.settings.mode !== "campaign")
-      throw Error("请先进入战略模式房间");
+      throw Error("请先进入历史战役模式房间");
     await upload(JSON.parse(text));
   });
   backup.id = "restoreCampaignBackup";

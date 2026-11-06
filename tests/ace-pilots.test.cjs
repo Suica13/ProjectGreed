@@ -103,7 +103,8 @@ test("ACE awards share deduplication and records, losses do not remove XP, and c
   assert.equal(P.creditAwards(store, [award]), false);
   const p = P.battleResult(store.pilots[0], "loss", 500);
   assert.equal(p.level, 1);
-  assert.equal(p.record.lostCost, 500);
+  assert.equal(p.record.losses, 1);
+  assert.equal(Object.hasOwn(p.record, "lostCost"), false);
   const custom = P.createCustom("custom-still-normal", "Test", P.catalog.portraits[0].id);
   assert.equal(custom.level, 0);
   assert.equal(custom.points, 80);

@@ -30,7 +30,7 @@ def main():
     lines += ["", "## 单位索引", "", "| ID | 中文名称 | 可用阵营 | 年代 | 套件数 | 部署许可：资金／物资 |", "|---|---|---|---|---:|---|"]
     for r in rows:
         p=prefabs[r['id']];price=production['licenseOffers'].get(r['id']); label=f"{price['money']} / {price['supplies']}" if price else "无法购买／形态或条件限定"
-        era=next((t for t in p['tags'] if re.fullmatch(r"\d{4}[EL]?",t)),"")
+        era=next((t for t in p['tags'] if re.fullmatch(r"\d{4}(?:T[12])?",t)),"")
         lines.append(f"| {r['id']} | {p['name']} | {', '.join(p.get('availableFactions',[next(t for t in p['tags'] if t in ('EFSF','ZEON','AEUG','TITANS','NEO_ZEON'))]))} | {era} | {len(p['weaponKits'])} | {label} |")
     (ROOT/'docs/imports/0087-units.md').write_text('\n'.join(lines)+'\n',encoding='utf8')
     gaps=collections.defaultdict(list)

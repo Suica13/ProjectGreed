@@ -41,15 +41,16 @@ for (const width of [1440, 390])
     await expect(common).toBeVisible();
     expect(
       await common.locator("[data-tag]").evaluateAll((tags) => tags.map((t) => t.dataset.tag)),
-    ).toEqual(["EFSF", "AEUG", "TITANS", "0079L", "ground", "space", "mediumUnit", "MS"]);
-    await expect(common.locator(".ground")).toHaveText("地面");
+    ).toEqual(["EFSF", "AEUG", "TITANS", "0079T2", "ground", "space", "mediumUnit", "MS"].slice(0, width <= 720 ? 4 : 8));
+    if (width > 720) await expect(common.locator(".ground")).toHaveText("地面");
     await expect(common.locator(".cost")).toHaveCount(1);
-    await expect(common.locator(".unit-tags-more")).toHaveCount(0);
+    expect(await common.locator(".unit-tags").evaluate(e => e.firstElementChild.classList.contains("cost"))).toBe(true);
+    await expect(common.locator(".unit-tags-more")).toHaveCount(width <= 720 ? 1 : 0);
     await page.locator("#encyclopediaSearch").fill("Type74");
     const carrier = page.locator('#encyclopediaList [data-unit-id="Type74"]');
-    await expect(carrier.locator("[data-tag]")).toHaveCount(8);
+    await expect(carrier.locator("[data-tag]")).toHaveCount(width <= 720 ? 4 : 8);
     await expect(carrier.locator(".cost")).toBeVisible();
-    await expect(carrier.locator(".space")).toContainText("%");
+    if (width > 720) await expect(carrier.locator(".space")).toContainText("%");
     await carrier.screenshot({path: `.openai/unit-tag-card-${width}.png`});
     await carrier.locator(".unit-tags-more").click();
     const dialog = page.locator("#unitTagsDialog");
@@ -78,6 +79,7 @@ test("formation and workshop share the eight-tag budget and nested more buttons 
   const row = page.locator("#formationUnits > .formation-row").first();
   await expect(row.locator("[data-tag]")).toHaveCount(8);
   await expect(row.locator(".cost")).toHaveCount(1);
+  expect(await row.locator(".unit-tags").evaluate(e => e.firstElementChild.classList.contains("cost"))).toBe(true);
   await row.locator(".unit-tags-more").click();
   await expect(page.locator("#unitTagsDialog [data-tag]")).toHaveCount(10);
   await page.locator("#unitTagsDialog").getByRole("button", { name: "关闭", exact: true }).click();
@@ -98,6 +100,7 @@ test("formation and workshop share the eight-tag budget and nested more buttons 
   const selected = await page.locator("#productionUnitName").textContent();
   const carrier = page.locator('#productionList [data-unit-id="Type74"]');
   await expect(carrier.locator("[data-tag]")).toHaveCount(8);
+  expect(await carrier.locator(".unit-tags").evaluate(e => e.firstElementChild.classList.contains("cost"))).toBe(true);
   await carrier.locator(".unit-tags-more").click();
   await expect(page.locator("#unitTagsDialog")).toBeVisible();
   expect(await page.locator("#productionUnitName").textContent()).toBe(selected);

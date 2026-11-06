@@ -738,7 +738,7 @@
     "shipFactionHullMultiplier": 1.1,
     "shipFactionAccuracyMultiplier": 1.1,
     "shipFactionEvasionMultiplier": 1.15,
-    "technologyEra": "0087",
+    "technologyEra": "0087T1",
     "shipFootprintBeforeCompaction": {
       "width": 2,
       "height": 3
@@ -762,7 +762,7 @@
   "faction": "TITANS",
   "tags": [
     "TITANS",
-    "0087"
+    "0087T1"
   ],
   "localization": {
     "zh": {

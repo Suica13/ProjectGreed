@@ -45,17 +45,17 @@ test("early and late eras remain distinct, with Stardust and GP units classified
   for (const row of manifest) {
     const prefab = G.catalog.prefabs.find((p) => p.id === row.id);
     const expected = early.has(row.id)
-      ? "0079E"
+      ? "0079T1"
       : row.tech.some((id) => /_(OperationStardust|GPProject)$/.test(id))
         ? "0083"
-        : "0079L";
+        : "0079T2";
     assert(prefab.tags.includes(expected), row.id);
-    assert.equal(prefab.tags.filter((tag) => /^\d{4}(?:[EL])?$/.test(tag)).length, 1);
+    assert.equal(prefab.tags.filter((tag) => /^\d{4}(?:T[12])?$/.test(tag)).length, 1);
   }
-  assert(G.eras.includes("0079E") && G.eras.includes("0079L") && G.eras.includes("0083"));
+  assert(G.eras.includes("0079T1") && G.eras.includes("0079T2") && G.eras.includes("0083"));
   assert.deepEqual(G.validateTagRestrictions({ bannedEras: ["0079"] }).bannedEras, [
-    "0079E",
-    "0079L",
+    "0079T1",
+    "0079T2",
   ]);
   assert.equal(
     G.restrictionReason(G.models.RGM_79__machine_gun, { bannedEras: ["0079"] }),
@@ -108,7 +108,7 @@ test("space Pale Rider HADES is a linked conversion form with inherited late-era
   const skill = prefab.skills.find((skill) => skill.type === "overdrive");
   assert(skill);
   const form = G.catalog.prefabs.find((p) => p.id === skill.formUnitId);
-  assert(form.formOnly && form.tags.includes("0079L"));
+  assert(form.formOnly && form.tags.includes("0079T2"));
   for (const kit of prefab.weaponKits)
     assert(form.weaponKits.some((target) => target.id === skill.formKits[kit.id]));
 });

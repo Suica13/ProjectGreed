@@ -94,10 +94,8 @@ def main():
         try:
             existing = path.exists()
             prefab = bulk.read(path) if existing else bulk.build(row, effects)
-            if not existing:
-                prefab["tags"] = [t for t in prefab["tags"] if not re.fullmatch(r"(?:0079[EL]?|0083)", t)]
-                if "0087" not in prefab["tags"]: prefab["tags"].append("0087")
-                prefab.setdefault("sourceStats", {})["technologyEra"] = "0087"
+            from unit_eras import apply as apply_era
+            prefab = apply_era(prefab)
             primary = next(t for t in prefab["tags"] if t in ("EFSF", "ZEON", *FACTIONS))
             available = list(dict.fromkeys([primary, *prefab.get("availableFactions", []), *row["factions"]]))
             if len(available) > 1: prefab["availableFactions"] = available

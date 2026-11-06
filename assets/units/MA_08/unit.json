@@ -341,7 +341,7 @@
       "antiDetection": 0
     },
     "v17BaseHp": 175000,
-    "technologyEra": "0079L",
+    "technologyEra": "0079T2",
     "importedTechPage": 1,
     "actionTurnSpeed": 0.5,
     "mobilityMoveTarget": 6
@@ -363,7 +363,7 @@
   "faction": "ZEON",
   "tags": [
     "ZEON",
-    "0079L"
+    "0079T2"
   ],
   "localization": {
     "zh": {

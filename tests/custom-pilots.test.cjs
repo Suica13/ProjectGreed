@@ -135,9 +135,9 @@ test("room kill awards are authoritative, private to the owner, and logged with 
   assert.equal(losses[0].pilotId, victim.id);
   assert.equal(b.pilot.experience, 600);
   assert.equal(b.pilot.record.losses, 1);
-  assert.equal(b.pilot.record.lostCost, G.models[b.model].cost);
+  assert.equal(Object.hasOwn(b.pilot.record, "lostCost"), false);
   assert.equal(a.pilot.record.kills, 1);
-  assert.equal(a.pilot.record.destroyedCost, G.models[b.model].cost);
+  assert.equal(Object.hasOwn(a.pilot.record, "destroyedCost"), false);
   assert(room.log.some((line) => line.includes("驾驶员[X29]驾驶的")));
   assert.equal(a.pilot.experience, G.models[b.model].cost);
 });
@@ -148,13 +148,13 @@ test("loss preserves all experience, level and training points", () => {
   assert.equal(p.experience, 3000);
   assert.equal(p.level, 3);
   assert.equal(p.points, 90);
-  assert.deepEqual(p.record, { kills: 0, losses: 1, destroyedCost: 0, lostCost: 500 });
+  assert.deepEqual(p.record, { kills: 0, shipKills: 0, battles: 0, losses: 1 });
   p = P.battleResult(p, "loss", 250);
   p = P.battleResult(p, "loss", 250);
   p = P.battleResult(p, "loss", 250);
   assert.equal(p.experience, 3000);
   assert.equal(p.record.losses, 4);
-  assert.equal(p.record.lostCost, 1250);
+  assert.equal(Object.hasOwn(p.record, "lostCost"), false);
   assert.throws(() => P.custom({ ...p, record: { kills: -1 } }), /战绩/);
 });
 
@@ -167,9 +167,9 @@ test("persisted award receipts deduplicate kills and losses across repeated snap
   assert.equal(store.pilots[0].experience, 0);
   assert.deepEqual(store.pilots[0].record, {
     kills: 1,
+    shipKills: 0,
+    battles: 0,
     losses: 1,
-    destroyedCost: 100,
-    lostCost: 50,
   });
   store = JSON.parse(JSON.stringify(store));
   assert.equal(P.creditAwards(store, [kill, loss]), false);
@@ -340,7 +340,7 @@ for (const mode of ["regular", "quick"])
       const cost = G.models[target.model].cost;
       const expected = fromSave ? 0 : mode === "quick" ? Math.floor(cost * 0.1) : cost;
       assert.equal(attacker.pilot.experience, 200 + expected);
-      assert.equal(attacker.pilot.record.destroyedCost, fromSave ? 0 : cost);
+      assert.equal(Object.hasOwn(attacker.pilot.record, "destroyedCost"), false);
       const awards = frames.get(clients[0]).pilotAwards;
       if (fromSave) {
         assert.deepEqual(awards, []);

@@ -651,7 +651,7 @@
     "unitLevel": 3500.0,
     "tacticalMoveBeforeBonus": 7,
     "v17BaseHp": 40000.0,
-    "technologyEra": "0087"
+    "technologyEra": "0087T1"
   },
   "presentation": {
     "shield": true,
@@ -670,7 +670,7 @@
   "faction": "AEUG",
   "tags": [
     "AEUG",
-    "0087"
+    "0087T1"
   ],
   "localization": {
     "zh": {

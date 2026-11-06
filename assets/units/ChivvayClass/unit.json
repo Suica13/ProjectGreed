@@ -1197,7 +1197,7 @@
       "radar": 550,
       "antiDetection": -250
     },
-    "technologyEra": "0079E",
+    "technologyEra": "0079T1",
     "actionTurnSpeed": 0.35,
     "mobilityMoveTarget": 6,
     "shipHullBeforeReduction": 90000,
@@ -1228,7 +1228,7 @@
   "faction": "ZEON",
   "tags": [
     "ZEON",
-    "0079E"
+    "0079T1"
   ],
   "localization": {
     "zh": {

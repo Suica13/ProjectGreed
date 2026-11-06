@@ -31,7 +31,7 @@ test("all imported units have separate type tags and valid native capacities", (
   for (const p of G.catalog.prefabs) {
     assert(p.unitTags.length, p.id);
     assert(
-      p.tags.every((t) => ["EFSF", "ZEON", "0079E", "0079L", "0083"].includes(t)),
+      p.tags.every((t) => ["EFSF", "ZEON", "0079T1", "0079T2", "0083"].includes(t)),
       p.id,
     );
     assert(Number.isInteger(p.transport.slotCost) && p.transport.slotCost > 0, p.id);

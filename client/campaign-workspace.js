@@ -417,13 +417,13 @@ window.CampaignWorkspace = (() => {
       const row = node("div", "", "campaign-unlock-unit");
       row.append(
         icon(unitIcon(id + "__" + kit)),
-        node("span", (prefab.code ? prefab.code + " " : "") + name(prefab)),
+        node("span", name(prefab)),
       );
       units.append(row);
     }
     if (!units.children.length) units.append(node("p", "无可用单位"));
     content.append(units);
-    if (missing) content.append(node("p", `另有${missing}项单位或驾驶员暂未接入战略模式`, "muted"));
+    if (missing) content.append(node("p", `另有${missing}项单位或驾驶员暂未接入历史战役模式`, "muted"));
     const footer = node("footer", "", "campaign-purchase");
     footer.append(
       node("strong", "开发费用"),

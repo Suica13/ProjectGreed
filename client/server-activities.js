@@ -115,7 +115,7 @@ const ServerActivities = (() => {
   }
   function unitLabel(id) {
     const prefab = Rules.catalog.prefabs.find((unit) => unit.id === id);
-    return prefab ? prefab.code + " " + I18n.localized(prefab) : id;
+    return prefab ? I18n.localized(prefab) : id;
   }
   function render() {
     list.replaceChildren();

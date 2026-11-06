@@ -691,7 +691,7 @@
       "antiDetection": 0
     },
     "v17BaseHp": 35000,
-    "technologyEra": "0079E",
+    "technologyEra": "0079T1",
     "learningComputerNativeMultiplier": 1.1,
     "actionTurnSpeed": 2.0,
     "mobilityMoveTarget": 7
@@ -713,7 +713,7 @@
   "faction": "EFSF",
   "tags": [
     "EFSF",
-    "0079E"
+    "0079T1"
   ],
   "localization": {
     "zh": {

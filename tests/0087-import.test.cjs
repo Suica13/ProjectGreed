@@ -51,7 +51,7 @@ test("all three Page_01 entry locks preserve native tech costs and faction unit 
     const units = G.catalog.prefabs.filter((p) => p.faction === f);
     assert(units.length > 20);
     for (const p of units) {
-      assert(p.tags.includes("0087"));
+      assert(p.tags.some((tag) => /^0087T[12]$/.test(tag)));
       assert(p.weaponKits.length);
       assert(production.defaultKits[p.id]);
       if (!p.formOnly && !p.requiredPilotId) assert(production.licenseOffers[p.id], p.id);

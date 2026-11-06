@@ -1162,7 +1162,7 @@ window.CatalogDeveloper = (() => {
         Object.assign(PRODUCTION_CATALOG, next.production);
         Rules.eras = [
           ...new Set(
-            ART.prefabs.flatMap((prefab) => prefab.tags).filter((tag) => /^\d{4}[EL]?$/.test(tag)),
+            ART.prefabs.flatMap((prefab) => prefab.tags).filter((tag) => /^\d{4}(?:T[12])?$/.test(tag)),
           ),
         ].sort();
         activeFaction = window.editorConnection.faction = nextFaction;

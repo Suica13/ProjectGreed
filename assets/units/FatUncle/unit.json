@@ -351,7 +351,7 @@
       "actionCost": 2,
       "usesPerOwnTurn": 1
     },
-    "technologyEra": "0079E",
+    "technologyEra": "0079T1",
     "actionTurnSpeed": 1.0,
     "mobilityMoveTarget": 8,
     "transportHullMultiplier": 0.75
@@ -373,7 +373,7 @@
   "faction": "ZEON",
   "tags": [
     "ZEON",
-    "0079E"
+    "0079T1"
   ],
   "localization": {
     "zh": {

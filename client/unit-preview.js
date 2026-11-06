@@ -4,7 +4,7 @@ const UnitPreview = (() => {
     const ctx = canvas.getContext("2d"),
       model = UnitModels[modelId];
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    canvas.setAttribute("aria-label", model.code + " " + model.name);
+    canvas.setAttribute("aria-label", model.name);
     if (!assetsReady) return;
     canvas.dataset.previewModel = modelId;
     if (!SpriteRenderer.modelsReady([modelId])) {
@@ -109,7 +109,7 @@ const UnitPreview = (() => {
     for (const faction of factions)
       result.push({ label: faction, value: faction, className: "faction-tag", faction });
     const otherTags = [...new Set((model.tags || []).filter((tag) => !factionIds.has(tag)))];
-    for (const tag of otherTags.filter((tag) => /^\d{4}[A-Z]?$/.test(tag)))
+    for (const tag of otherTags.filter((tag) => /^\d{4}(?:T[12])?$/.test(tag)))
       result.push({ label: tag, value: tag, className: "era-tag" });
     const adaptability = model.adaptability || model.stats?.adaptability;
     for (const environment of ["ground", "space"]) {
@@ -130,7 +130,7 @@ const UnitPreview = (() => {
       if (["SmallUnit", "LargeUnit", "MediumUnit"].includes(tag)) continue;
       result.push({ label: I18n.text(Rules.unitTagName(tag)), value: tag, className: "type-tag" });
     }
-    for (const tag of otherTags.filter((tag) => !/^\d{4}[A-Z]?$/.test(tag)))
+    for (const tag of otherTags.filter((tag) => !/^\d{4}(?:T[12])?$/.test(tag)))
       result.push({ label: I18n.text(tag), value: tag, className: "type-tag" });
     if (kitName) result.push({ label: kitName, value: "kit", className: "unit-summary-tag kit" });
     return result;
@@ -179,7 +179,7 @@ const UnitPreview = (() => {
     if (!tagsDialog.open) tagsDialog.showModal();
   }
 
-  function unitTags(model, { cost, kitName, limit = 8 } = {}) {
+  function unitTags(model, { cost, kitName, limit = matchMedia("(max-width:720px)").matches ? 4 : 8 } = {}) {
     const tags = element("span", "unit-tags");
     const primary = element("span", "unit-tags-primary");
     const types = element("span", "unit-tags-types");
@@ -206,7 +206,7 @@ const UnitPreview = (() => {
       tags.append(more);
     }
     // COST stays visible independently and never consumes a tag slot.
-    if (cost !== undefined) tags.append(element("span", "unit-summary-tag cost", "COST " + cost));
+    if (cost !== undefined) tags.prepend(element("span", "unit-summary-tag cost", "COST " + cost));
     return tags;
   }
   return { renderPreview, unitSummaryTags, unitTags };

@@ -205,10 +205,17 @@ const Tactics = (() => {
   const eras = [
     ...new Set(
       catalog.prefabs.flatMap((prefab) =>
-        prefab.tags.filter((tag) => /^\d{4}(?:[EL])?$/.test(tag)),
+        prefab.tags.filter((tag) => /^\d{4}(?:T[12])?$/.test(tag)),
       ),
     ),
   ].sort();
+  function expandEraTag(tag) {
+    if (tag === "0079E") return ["0079T1"];
+    if (tag === "0079L") return ["0079T2"];
+    if (tag === "0079" || tag === "0087")
+      return eras.filter((era) => era.startsWith(tag));
+    return [tag];
+  }
   const unitTags = [...new Set(catalog.prefabs.flatMap((p) => p.unitTags || []))].sort();
   function validateUnitCostLimit(value) {
     if (!Number.isInteger(value) || value < 1 || value > maxCostLimit)
@@ -240,9 +247,7 @@ const Tactics = (() => {
       let tags = value[key] ?? [];
       // Saved pre-split room rules used 0079 for both early and late units.
       if (key === "bannedEras" && Array.isArray(tags))
-        tags = tags.flatMap((tag) =>
-          tag === "0079" ? eras.filter((era) => era.startsWith("0079")) : [tag],
-        );
+        tags = tags.flatMap(expandEraTag);
       if (!Array.isArray(tags) || tags.some((tag) => !allowed.includes(tag)))
         throw Error("标签限制无效");
       clean[key] = [...new Set(tags)].sort();
@@ -379,8 +384,7 @@ const Tactics = (() => {
       restrictions.bannedFactions?.includes(model.faction) ||
       model.tags.some(
         (tag) =>
-          restrictions.bannedEras?.includes(tag) ||
-          (restrictions.bannedEras?.includes("0079") && /^0079[EL]$/.test(tag)),
+          restrictions.bannedEras?.some((era) => expandEraTag(era).includes(tag)),
       ) ||
       (model.unitTags || []).some((tag) => restrictions.bannedTypes?.includes(tag))
     )

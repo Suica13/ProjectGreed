@@ -3416,7 +3416,7 @@ function createRoomEngine({
           });
           target.ready = false;
         } else if (msg.action === "set_faction") {
-          if (room.settings.mode === "campaign") throw Error("战略模式每支队伍固定使用一个阵营");
+          if (room.settings.mode === "campaign") throw Error("历史战役模式每支队伍固定使用一个阵营");
           if (room.started) throw Error("对局开始后不能切换阵营。");
           if (msg.faction !== "PMC")
             throw Error("常规战和快速战固定使用 PMC 阵营。");
@@ -3538,7 +3538,7 @@ function createRoomEngine({
           const strategic =
             G.validateBattleMode(msg.battleMode ?? room.settings.mode) === "campaign";
           const map = G.getMap(strategic ? G.campaignRoomSettings().mapId : msg.mapId);
-          if (!strategic && map.scope === "strategic") throw Error("区块局地战地图仅用于战略模式");
+          if (!strategic && map.scope === "strategic") throw Error("区块局地战地图仅用于历史战役模式");
           if (
             !strategic &&
             msg.shareAlliedUnits !== undefined &&

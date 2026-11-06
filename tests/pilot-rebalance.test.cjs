@@ -51,7 +51,7 @@ test("previous custom growth migrates safely, refunds training and preserves pro
   assert.deepEqual(migrated.stats, P.baseStats());
   assert.equal(migrated.level, 8);
   assert.equal(migrated.points, 400);
-  assert.deepEqual(migrated.record, old.record);
+  assert.deepEqual(migrated.record, { kills: 4, shipKills: 1, battles: 2, losses: 1 });
   assert.deepEqual(P.custom(migrated), migrated);
   const progressing = P.custom({
     ...old,

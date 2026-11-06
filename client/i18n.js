@@ -174,7 +174,7 @@ const I18n = (() => {
       return;
     }
     if (node.nodeType !== Node.ELEMENT_NODE || ignored(node)) return;
-    for (const key of ["title", "aria-label", "placeholder"]) {
+    for (const key of ["title", "aria-label", "placeholder", ...(node.tagName === "OPTGROUP" ? ["label"] : [])]) {
       if (!node.hasAttribute(key)) continue;
       const entries = attributeSources.get(node) || {};
       let source = entries[key];
@@ -198,7 +198,7 @@ const I18n = (() => {
       childList: true,
       characterData: true,
       attributes: true,
-      attributeFilter: ["aria-label", "title", "placeholder"],
+      attributeFilter: ["aria-label", "title", "placeholder", "label"],
     });
   function refresh() {
     observer?.disconnect();
