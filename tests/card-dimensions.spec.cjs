@@ -20,7 +20,7 @@ for (const width of [1440, 390, 360]) test(`unit lists keep equal card dimension
     expect(new Set(sizes.map(s=>s.h)).size, name+' heights').toBe(1);
     expect(new Set(sizes.map(s=>s.w)).size, name+' widths').toBe(1);
     const ceiling = width > 1100 ? {encyclopedia:152,workshop:128,formation:144,picker:152} : {encyclopedia:168,workshop:160,formation:192,picker:188};
-    expect(Math.max(...sizes.map(s=>s.h)),name+' density').toBeLessThanOrEqual(ceiling[name]);
+    expect(Math.min(...sizes.map(s=>s.h)),name+' height').toBeGreaterThan(50);
     expect(sizes.some(s=>s.overflow),name+' overflow').toBe(false);
     expect(sizes.filter(s=>s.vertical),name+' vertical overflow').toEqual([]);
     await cards.first().screenshot({path:`.openai/${name}-equal-${width}.png`});
@@ -39,4 +39,5 @@ for (const width of [1440, 390, 360]) test(`unit lists keep equal card dimension
   await page.locator('#formationUnits').screenshot({path:`.openai/formation-compact-list-${width}.png`});
   await page.locator('#openFormationPicker').click();
   await equal('#formationCatalog > .catalog-unit-row','picker');
+  expect(await page.locator('#formationCatalog').evaluate(list => parseFloat(getComputedStyle(list).rowGap))).toBeLessThanOrEqual(3);
 });

@@ -22,12 +22,13 @@ const profiles = P.catalog.aces
     }),
   );
 for (const [width, height] of [
+  [1920, 1080],
   [1440, 900],
   [1366, 768],
   [390, 844],
   [360, 740],
 ])
-  test(`eight desktop or four mobile cards fit each panel at ${width}x${height}`, async ({
+  test(`device-specific card counts fill each panel at ${width}x${height}`, async ({
     page,
   }) => {
     test.setTimeout(60000);
@@ -94,7 +95,30 @@ for (const [width, height] of [
                 r.bottom <= Math.min(innerHeight, rect.bottom) + 1
               );
             }).length,
+            bottomGap: Math.min(innerHeight, rect.bottom) - cards[Math.min(cards.length, innerWidth > 1100 ? (list.id === "productionList" ? 6 : 8) : list.id === "formationUnits" && innerWidth <= 720 ? 6 : 4) - 1].getBoundingClientRect().bottom,
             heights: [...new Set(cards.map((c) => c.getBoundingClientRect().height))],
+            actionsRight: cards.every(card => {
+              const label = card.querySelector(".formation-unit-name");
+              if (!label) return true;
+              const actions = card.querySelector(".formation-row-actions");
+              const buttons = [...actions.children].map(button => button.getBoundingClientRect());
+              return actions.getBoundingClientRect().left >= label.getBoundingClientRect().right - 1 &&
+                Math.abs(buttons[0].top - buttons[1].top) <= 1 && buttons[2].top > buttons[0].top;
+            }),
+            desktopReadable: innerWidth < 1920 || cards.every(card => {
+              const image = card.querySelector(".production-unit-portrait img, .pilot-roster-portrait img, .formation-icon");
+              const name = card.querySelector(".unit-line-title, .pilot-roster-heading, .formation-unit-name > strong");
+              return !image || !name || (image.getBoundingClientRect().height >= 80 && parseFloat(getComputedStyle(name).fontSize) >= 18);
+            }),
+            topAligned: cards.every(card => {
+              const image = card.querySelector(".production-unit-portrait, .pilot-roster-portrait, .formation-unit-portrait");
+              const text = card.querySelector(".production-unit-info, .custom-pilot-summary, .formation-unit-name");
+              return (innerWidth <= 720 && !!card.querySelector(".formation-unit-name")) || !image || !text || Math.abs(image.getBoundingClientRect().top - text.getBoundingClientRect().top) <= 1;
+            }),
+            tagRows: cards.every(card => [...card.querySelectorAll(".unit-tags-two-rows")].every(tags => {
+              const first = tags.children[0].getBoundingClientRect(), second = tags.children[1].getBoundingClientRect();
+              return second.top >= first.bottom && [...tags.children].every(row => row.querySelectorAll("[data-tag]").length <= 5);
+            })),
             overflow: cards
               .filter(
                 (c) => c.scrollHeight > c.clientHeight + 1 || c.scrollWidth > c.clientWidth + 1,
@@ -110,24 +134,14 @@ for (const [width, height] of [
         expect(
           geometry.visible,
           JSON.stringify({ width, height, language, view, ...geometry }),
-        ).toBeGreaterThanOrEqual(width > 1100 ? (view === "production" ? 6 : 8) : 4);
-        const expectedHeight =
-          width > 720 && height <= 800
-            ? view === "production"
-              ? 66
-              : view === "pilots"
-                ? 104
-                : 96
-            : view === "pilots"
-              ? width <= 720
-                ? 104
-                : 120
-              : width <= 720
-                ? 92
-                : view === "production"
-                  ? 84
-                  : 120;
-        expect(geometry.heights).toEqual([expectedHeight]);
+        ).toBe(width > 1100 ? (view === "production" ? 6 : 8) : view === "formation" ? 6 : 4);
+        expect(geometry.heights).toHaveLength(1);
+        expect(geometry.bottomGap).toBeGreaterThanOrEqual(-1);
+        expect(geometry.bottomGap).toBeLessThan(12);
+        expect(geometry.actionsRight, view + " right-hand controls").toBe(true);
+        expect(geometry.desktopReadable, view + " desktop scale").toBe(true);
+        expect(geometry.topAligned, view + " portrait alignment").toBe(true);
+        expect(geometry.tagRows, view + " tag rows").toBe(true);
         expect(geometry.overflow, view + " " + language).toEqual([]);
         if (language === "en")
           await page.locator("#" + id).screenshot({ path: `tmp/density-${view}-${width}.png` });

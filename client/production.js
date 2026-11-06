@@ -411,7 +411,7 @@ const ProductionUI = (() => {
       const tags = Formation.unitTags(defaultModel || prefab, {
         cost: defaultModel?.cost ?? prefab.stats.cost,
         kitName: defaultModel?.kitName,
-        limit: matchMedia("(max-width:720px)").matches ? 4 : 8,
+        twoRows: true,
       });
       const heading = element("span", "unit-line-heading"),
         metadata = element("span", "unit-line-meta");

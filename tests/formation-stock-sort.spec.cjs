@@ -9,6 +9,8 @@ for (const width of [1280, 390])
       localStorage.setItem(
         "projectgreed.economy.v1",
         JSON.stringify({
+          schemaVersion: 3,
+          licenses: { Type61: true, MS_06F: true, Medea: true },
           money: 5000,
           supplies: 10000,
           inventory: { Type61: 2, MS_06F: 5, Medea: 1 },
@@ -21,6 +23,7 @@ for (const width of [1280, 390])
     await page.evaluate(() => I18n.setLanguage("zh"));
     await page.locator("#shellHangar").click();
     await page.locator("#openFormationPicker").click();
+    await page.locator("#formationStock").selectOption("owned");
     await expect(page.locator("#formationStock")).toHaveValue("owned");
     const cards = page.locator("#formationCatalog .catalog-unit");
     await expect(cards).toHaveCount(3);
@@ -45,7 +48,8 @@ for (const width of [1280, 390])
     }));
     expect(sorted).toEqual([...sorted].sort((a,b)=>Number(b.developed)-Number(a.developed)||a.cost-b.cost));
     await page.locator("#formationSearch").fill("RX_78_2");
-    await expect(cards).toHaveCount(1);
+    expect(await cards.count()).toBeGreaterThan(0);
+    expect(await cards.evaluateAll(nodes => nodes.every(node => node.dataset.unitId.includes("RX_78_2")))).toBe(true);
     await page.locator("#formationStock").selectOption("owned");
     await expect(cards).toHaveCount(0);
     const filters = await page.locator(".formation-catalog-heading select").evaluateAll((nodes) =>

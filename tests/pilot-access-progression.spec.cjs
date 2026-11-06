@@ -79,8 +79,8 @@ for (const width of [1440, 390, 360])
       ).toContainText("30000/MAX");
       await expect(list.locator('[data-pilot-id="custom-filter-legacy"]')).toContainText("Lv.8");
       await expect(list.locator(".pilot-cost-tag")).toHaveCount(7);
-      await expect(list.locator('.pilot-roster-portrait > .pilot-recruit-state')).toHaveCount(7);
-      await expect(list.locator('.pilot-roster-portrait > .pilot-recruit-state').first()).toHaveText('已招募');
+      await expect(list.locator('.pilot-roster-heading > .pilot-recruit-state')).toHaveCount(7);
+      await expect(list.locator('.pilot-roster-heading > .pilot-recruit-state').first()).toHaveText('已招募');
       await expect(list.locator('.custom-pilot-summary .ace-recruit-status')).toHaveCount(0);
       expect(await list.locator('.pilot-recruit-state').allTextContents()).toContain('待回归');
       expect(await list.locator('.custom-pilot-card').evaluateAll(cards=>cards.every(card=>card.scrollHeight<=card.clientHeight+1))).toBe(true);
@@ -89,7 +89,7 @@ for (const width of [1440, 390, 360])
       await expect(list.locator('.pilot-roster-heading [data-faction="PMC"]')).toHaveCount(4);
       await expect(list.locator('.pilot-roster-heading [data-faction="PMC"]').first()).toHaveCSS("color", "rgb(255, 255, 255)");
       await expect(list.locator(".pilot-roster-heading .pilot-cost-tag")).toHaveCount(0);
-      expect(await list.locator(".pilot-roster-heading").evaluateAll(headings => headings.every(h => h.children[1].textContent.startsWith("Lv.") && h.children[2].classList.contains("pilot-faction-tags") && h.children[0].getBoundingClientRect().width > 0))).toBe(true);
+      expect(await list.locator(".pilot-roster-heading").evaluateAll(headings => headings.every(h => h.children[1].textContent.startsWith("Lv.") && h.children[2].classList.contains("pilot-recruit-state") && h.children[3].classList.contains("pilot-faction-tags") && h.children[0].getBoundingClientRect().width > 0))).toBe(true);
       await expect(list.locator(".pilot-roster-heading .era-tag")).toHaveCount(3);
       expect(await list.locator(".pilot-roster-heading .ace-name").evaluateAll(names => names.every(name => name.getBoundingClientRect().width >= 36))).toBe(true);
       for (const [value, count] of [
@@ -109,7 +109,10 @@ for (const width of [1440, 390, 360])
         expect(positions[0].y).toBe(positions[1].y);
         expect(positions[1].x).toBeGreaterThan(positions[0].x);
       }
-      expect(Math.max(...heights)).toBeLessThanOrEqual(width > 1100 ? 120 : 104);
+      if (width <= 720) expect(await list.locator(".custom-pilot-card").evaluateAll(cards => cards.every(card => {
+        const summary = card.querySelector(".custom-pilot-summary").getBoundingClientRect();
+        return card.querySelector(".formation-row-actions").getBoundingClientRect().left >= summary.right;
+      }))).toBe(true);
       expect(await list.locator(".pilot-list-skills").evaluateAll(rows => rows.every(row => [...row.children].every(child => child.getBoundingClientRect().bottom <= row.getBoundingClientRect().bottom + 1)))).toBe(true);
       expect(await list.locator(".pilot-record").evaluateAll(rows => rows.every(row => [...row.querySelectorAll(".pilot-record-cell")].every(child => child.getBoundingClientRect().bottom <= row.getBoundingClientRect().bottom + 1)))).toBe(true);
       const maxCard = list.locator('[data-pilot-id="custom-filter-max"]');

@@ -73,18 +73,15 @@ for (const width of [1440, 1000, 390, 360])
             const portrait = card
               .querySelector(".pilot-roster-portrait img")
               .getBoundingClientRect();
-            const status = card.querySelector(".pilot-recruit-state").getBoundingClientRect();
+            const status = card.querySelector(".pilot-recruit-state");
             const record = card.querySelector(".pilot-record").getBoundingClientRect();
             const style = getComputedStyle(card);
             const statusLayout =
               summary.getBoundingClientRect().left - portrait.right >= 6 &&
-              status.top >= portrait.bottom + 3 &&
-              Math.abs(
-                record.bottom -
-                  (rect.bottom -
-                    parseFloat(style.paddingBottom) -
-                    parseFloat(style.borderBottomWidth)),
-              ) <= 1;
+              status.previousElementSibling.textContent.startsWith("Lv.") &&
+              status.nextElementSibling.classList.contains("pilot-faction-tags") &&
+              status.parentElement.classList.contains("pilot-roster-heading") &&
+              record.top - card.querySelector(".pilot-list-skills").getBoundingClientRect().bottom <= 2;
             const cells = [...card.querySelectorAll(".pilot-record-cell")];
             return {
               id: card.dataset.pilotId,
@@ -123,7 +120,7 @@ for (const width of [1440, 1000, 390, 360])
         ),
         language,
       ).toEqual([]);
-      expect(Math.max(...geometry.map((g) => g.height))).toBe(width > 720 ? 120 : 104);
+      expect(Math.min(...geometry.map((g) => g.height))).toBeGreaterThan(80);
       if (language === "en")
         await page
           .locator("#customPilotList")

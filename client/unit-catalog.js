@@ -3,6 +3,12 @@ const UnitCatalog = (() => {
   function select(query, filters, allows, includeForms = false) {
     query = query.trim().toLocaleLowerCase();
     const [kind, value] = (filters.type || "").split(":", 2);
+    const compareNames = new Intl.Collator(I18n.language, { numeric: true, sensitivity: "base" }).compare;
+    const availability = new Map();
+    const available = prefab => {
+      if (!availability.has(prefab.id)) availability.set(prefab.id, allows(prefab));
+      return availability.get(prefab.id);
+    };
     return Rules.catalog.prefabs
       .filter(
         (p) =>
@@ -20,9 +26,9 @@ const UnitCatalog = (() => {
       )
       .sort(
         (a, b) =>
-          Number(allows(b)) - Number(allows(a)) ||
+          Number(available(b)) - Number(available(a)) ||
           a.faction.localeCompare(b.faction, "en") ||
-          a.name.localeCompare(b.name, I18n.language, { numeric: true, sensitivity: "base" }) ||
+          compareNames(a.name, b.name) ||
           a.id.localeCompare(b.id, "en"),
       );
   }
@@ -57,6 +63,7 @@ const UnitCatalog = (() => {
     allows = (prefab) => Development.allows(faction, prefab.id),
   ) {
     // Each sort gets its own cache so later research and editor changes stay fresh.
+    const compareNames = new Intl.Collator(I18n.language, { numeric: true, sensitivity: "base" }).compare;
     const costs = new Map(),
       unlocked = new Map();
     const minimumCost = (prefab) => {
@@ -71,7 +78,7 @@ const UnitCatalog = (() => {
     return (a, b) =>
       Number(developed(b)) - Number(developed(a)) ||
       minimumCost(a) - minimumCost(b) ||
-      a.name.localeCompare(b.name, I18n.language, { numeric: true, sensitivity: "base" }) ||
+      compareNames(a.name, b.name) ||
       a.id.localeCompare(b.id, "en");
   }
   return { select, compareDevelopedCost, populateTypeFilter };

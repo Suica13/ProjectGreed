@@ -180,6 +180,29 @@ window.MenuShell = (() => {
   shellResizeObserver.observe(shell);
   shellResizeObserver.observe(byId("shellSidebar"));
   window.addEventListener("resize", updateShellMetrics);
+  // Size equal cards from the scroll panel, rather than a viewport preset.
+  // Observing the panel also covers toolbar wrapping and switching roster tabs.
+  const cardPanels = ["formationUnits", "customPilotList", "productionList", "encyclopediaList"];
+  function fitCards(list) {
+    if (!list.clientHeight || !list.getClientRects().length) return;
+    const style = getComputedStyle(list);
+    const columns = style.gridTemplateColumns.split(" ").length;
+    const desktop = matchMedia("(min-width:1101px)").matches;
+    const count = desktop ? (list.id === "productionList" ? 6 : 8)
+      : list.id === "formationUnits" && matchMedia("(max-width:720px)").matches ? 6 : 4;
+    const rows = Math.ceil(count / columns);
+    const rect = list.getBoundingClientRect();
+    const clipped = Math.max(0, rect.bottom - innerHeight) + Math.max(0, -rect.top);
+    const available = list.clientHeight - clipped - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
+    const gap = parseFloat(style.rowGap) || 0;
+    const height = Math.floor((available - gap * (rows - 1)) / rows);
+    if (height > 0) list.style.setProperty("--fitted-card-height", height + "px");
+  }
+  const cardResizeObserver = new ResizeObserver(entries => {
+    for (const { target } of entries) fitCards(target);
+  });
+  for (const id of cardPanels) cardResizeObserver.observe(byId(id));
+  window.addEventListener("resize", () => cardPanels.forEach(id => fitCards(byId(id))));
   refresh();
   return { refresh, go, returnView: () => (Net.active ? "room" : "menu") };
 })();

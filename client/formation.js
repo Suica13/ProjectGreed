@@ -144,7 +144,7 @@ const Formation = (() => {
     developmentPreviewFocus = null,
     pilotIndex = null;
   const pickerKits = new Map();
-  let catalogRevision = 0;
+  let catalogRevision = 0, catalogRenderKey = null;
   const catalogFilters = { faction: "", era: "", type: "" };
   const current = () =>
     !squads[index].units.length
@@ -1176,7 +1176,7 @@ const Formation = (() => {
       const prefab = Rules.catalog.prefabs.find((p) => p.id === entry.unitId),
         kit = prefab.weaponKits.find((k) => k.id === entry.kitId);
       const metadata = element("span", "unit-line-meta");
-      metadata.append(unitTags(model, {cost: model.cost, kitName: model.kitName}));
+      metadata.append(unitTags(model, {cost: model.cost, kitName: model.kitName, twoRows: true}));
       label.title = model.description || "";
       label.append(
         element("strong", "", `${i + 1}. ${model.name}`),
@@ -1554,8 +1554,9 @@ const Formation = (() => {
     appendUnit(entry);
     render();
     byId("formationUnits").scrollTop = byId("formationUnits").scrollHeight;
+    // Adding a draft entry does not consume stock or change the normal catalog.
+    // render() already refreshes the selected unit's capacity/permission checks.
     if (pickerContext) closePicker();
-    else renderCatalog();
   };
   byId("formationSearch").oninput = () => renderCatalog();
   byId("formationStock").onchange = () => renderCatalog();
@@ -1569,6 +1570,23 @@ const Formation = (() => {
   }
   function renderCatalog() {
     const query = byId("formationSearch").value.trim().toLocaleLowerCase();
+    const list = byId("formationCatalog");
+    const renderKey = JSON.stringify([
+      catalogRevision, group, PlayerProfile.faction(), I18n.language,
+      matchMedia("(max-width:720px)").matches,
+      query, catalogFilters, byId("formationStock").value, [...pickerKits], pickerContext,
+      pickerContext ? draft.map(entry => [entry.unitId, entry.kitId, entry.preload]) : null,
+    ]);
+    if (renderKey === catalogRenderKey) {
+      const selected = Rules.catalog.prefabs.find(prefab => prefab.id === byId("formationPrefab").value);
+      const card = selected && list.querySelector(`[data-unit-id="${selected.id}"]`);
+      if (card) selectCatalogUnit(selected, card);
+      else {
+        byId("addFormationUnit").disabled = true;
+        renderPickerCost();
+      }
+      return;
+    }
     const prefabs = UnitCatalog.select(query, catalogFilters, PlayerProfile.allows)
       .filter(
         (prefab) =>
@@ -1578,9 +1596,8 @@ const Formation = (() => {
       .sort(UnitCatalog.compareDevelopedCost(group));
     if (!prefabs.some((p) => p.id === byId("formationPrefab").value))
       byId("formationPrefab").value = prefabs[0]?.id || "";
-    const list = byId("formationCatalog");
     const scroll = list.scrollTop;
-    list.replaceChildren();
+    const rows = document.createDocumentFragment();
     for (const prefab of prefabs) {
       const card = element("button", "catalog-unit");
       card.dataset.buttonSound = "off";
@@ -1659,10 +1676,12 @@ const Formation = (() => {
           ),
         );
       }
-      list.append(row);
+      rows.append(row);
     }
-    if (!prefabs.length) list.append(element("p", "empty", "没有符合筛选的单位"));
+    if (!prefabs.length) rows.append(element("p", "empty", "没有符合筛选的单位"));
+    list.replaceChildren(rows);
     list.scrollTop = scroll;
+    catalogRenderKey = renderKey;
     list.dataset.revision = String(catalogRevision);
     byId("addFormationUnit").disabled =
       !prefabs.length ||
@@ -2190,7 +2209,9 @@ const Formation = (() => {
         : element("span", "", I18n.pilotName(p));
       pilotName.dataset.i18nIgnore = "";
       const heading = element("span", "pilot-roster-heading");
-      heading.append(pilotName, element("span", "", `Lv.${p.level}`));
+      const state = element("small", "pilot-recruit-state", p.needsRecruitment ? "待回归" : "已招募");
+      state.title = I18n.text(p.needsRecruitment ? "待回归" : "已招募");
+      heading.append(pilotName, element("span", "", `Lv.${p.level}`), state);
       const progress = element("small", "pilot-roster-progress", (p.ace ? "ACE · " : "") + pilotExperienceText(p));
       if (!p.ace && p.points > 0) {
         const points = element("span", "pilot-training-points", I18n.text("强化点+"));
@@ -2218,7 +2239,7 @@ const Formation = (() => {
 
       img.className = "formation-icon";
       const portrait = element("span", "pilot-roster-portrait");
-      portrait.append(img, element("small", "pilot-recruit-state", p.needsRecruitment ? "待回归" : "已招募"));
+      portrait.append(img);
       text.className = "custom-pilot-summary";
       const actions = element("div", "formation-row-actions");
       const details = element("button", "formation-detail-button", "详情");

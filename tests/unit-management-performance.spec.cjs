@@ -3,6 +3,66 @@ const { pathToFileURL } = require("node:url"),
   path = require("node:path");
 const url = pathToFileURL(path.resolve("public/client.html")).href;
 
+for (const width of [1440, 390])
+  test(`reopening and adding units preserve the catalog while stock changes refresh it at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.addInitScript(() => {
+      localStorage.setItem("projectgreed.economy.v1", JSON.stringify({
+        schemaVersion: 3, money: 5000, supplies: 10000, licenses: {}, inventory: {}, kits: {},
+      }));
+      localStorage.setItem("slg-formations-v1.PMC", JSON.stringify({
+        version: 3, squads: [{ name: "Catalog reuse", units: [] }],
+      }));
+    });
+    await page.goto(url);
+    await page.waitForFunction(() => typeof assetsReady !== "undefined" && assetsReady);
+    const result = await page.evaluate(() => {
+      Formation.open();
+      byId("formationStock").value = "all";
+      const start = performance.now();
+      byId("openFormationPicker").click();
+      const first = performance.now() - start;
+      const list = byId("formationCatalog"), rows = [...list.children];
+      byId("closeFormationPicker").click();
+      const reopenStart = performance.now();
+      byId("openFormationPicker").click();
+      const reopen = performance.now() - reopenStart;
+      const reopenStable = rows.every((row, i) => list.children[i] === row);
+      list.querySelector('[data-unit-id="Type61"]').click();
+      const quantity = Economy.quantity("Type61");
+      const addStart = performance.now();
+      for (let i = 0; i < 3; i++) byId("addFormationUnit").click();
+      const add = (performance.now() - addStart) / 3;
+      const addStable = rows.every((row, i) => list.children[i] === row);
+      const added = Formation.current().length;
+      const stockUnchanged = Economy.quantity("Type61") === quantity;
+      byId("closeFormationPicker").click();
+      const purchased = Economy.transact(Economy.licenseOffer("Type61"), { Type61: true });
+      byId("openFormationPicker").click();
+      const refreshed = rows[0] !== list.children[0];
+      const stockText = list.querySelector('[data-unit-id="Type61"] .formation-inventory-count').textContent;
+      return { first, reopen, add, count: rows.length, reopenStable, addStable,
+        added, stockUnchanged, purchased, refreshed, stockText, quantity: Economy.quantity("Type61") };
+    });
+    console.log("FORMATION_ADD_PROFILE", width, JSON.stringify(result));
+    expect(result.count).toBeGreaterThan(100);
+    expect(result.reopenStable).toBe(true);
+    expect(result.addStable).toBe(true);
+    expect(result.added).toBe(3);
+    expect(result.stockUnchanged).toBe(true);
+    expect(result.purchased).toBe(true);
+    expect(result.quantity).toBe(1);
+    expect(result.refreshed).toBe(true);
+    expect(result.stockText).toContain(String(result.quantity));
+    expect(result.stockText).not.toContain("未许可");
+    const lastDetails = page.locator("#formationCatalog [data-detail-unit-id]").last();
+    await lastDetails.scrollIntoViewIfNeeded();
+    await lastDetails.click();
+    await expect(page.locator("#formationUnitDetail")).toBeVisible();
+    await page.locator("#closeFormationDetail").click();
+    await expect(lastDetails).toBeFocused();
+  });
+
 test("modern pilot saves bypass obsolete rosters and catalog clicks preserve every card", async ({
   page,
 }) => {

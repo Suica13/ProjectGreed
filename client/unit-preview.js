@@ -179,11 +179,37 @@ const UnitPreview = (() => {
     if (!tagsDialog.open) tagsDialog.showModal();
   }
 
-  function unitTags(model, { cost, kitName, limit = matchMedia("(max-width:720px)").matches ? 4 : 8 } = {}) {
+  function unitTags(model, { cost, kitName, twoRows = false, limit = matchMedia("(max-width:720px)").matches ? 4 : 8 } = {}) {
     const tags = element("span", "unit-tags");
     const primary = element("span", "unit-tags-primary");
     const types = element("span", "unit-tags-types");
     const definitions = tagDefinitions(model, kitName);
+    if (twoRows) {
+      tags.classList.add("unit-tags-two-rows");
+      const identity = definitions.filter(d => d.value === "kit" || d.faction || d.className === "era-tag");
+      identity.sort((a, b) => Number(b.value === "kit") - Number(a.value === "kit"));
+      const traits = definitions.filter(d => !identity.includes(d));
+      if (cost !== undefined) identity.unshift({label: "COST " + cost, value: "cost", className: "unit-summary-tag cost"});
+      for (const [group, items] of [[primary, identity], [types, traits]]) {
+        group.append(...items.slice(0, 5).map(tagElement));
+        if (items.length > 5) {
+          const more = element("button", "unit-tags-more", "...");
+          more.type = "button";
+          more.title = I18n.text("查看全部标签");
+          more.setAttribute("aria-label", more.title);
+          more.setAttribute("aria-haspopup", "dialog");
+          more.addEventListener("keydown", event => event.stopPropagation());
+          more.onclick = event => {
+            event.preventDefault();
+            event.stopPropagation();
+            openTags(model, items, more);
+          };
+          group.append(more);
+        }
+      }
+      tags.append(primary, types);
+      return tags;
+    }
     for (const definition of definitions.slice(0, limit)) {
       const group =
         definition.className.startsWith("type-tag") || definition.value === "kit" ? types : primary;

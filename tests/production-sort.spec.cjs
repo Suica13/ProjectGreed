@@ -47,7 +47,7 @@ for (const width of [1280, 390])
     await expect(page.locator("#productionSort")).toHaveCount(0);
   });
 
-test("production and formation use the same automatic developed/COST order for every identity", async ({
+test("production and formation use the same automatic developed/COST order for every faction filter", async ({
   page,
 }) => {
   await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
@@ -64,10 +64,10 @@ test("production and formation use the same automatic developed/COST order for e
     );
   const sorted = (rows) =>
     [...rows].sort((a, b) => Number(b.developed) - Number(a.developed) || a.cost - b.cost);
-  for (const faction of ["ZEON", "EFSF", "PMC"]) {
-    await page.locator("#menuFactionSelect").selectOption(faction);
+  for (const faction of ["ZEON", "EFSF", ""]) {
     await page.locator("#shellHangar").click();
     await page.locator("#shellProduction").click();
+    await page.locator("#productionFaction").selectOption(faction);
     await expect(page.locator("#productionFaction")).toHaveValue(faction === "PMC" ? "" : faction);
     await expect(page.locator("#productionSort")).toHaveCount(0);
     const production = await values("#productionList .production-unit");
@@ -77,6 +77,7 @@ test("production and formation use the same automatic developed/COST order for e
     await page.locator("#shellHangar").click();
     await page.locator("#openFormationPicker").click();
     await page.locator("#formationStock").selectOption("all");
+    await page.locator("#formationFaction").selectOption(faction);
     await expect(page.locator("#formationFaction")).toHaveValue(faction === "PMC" ? "" : faction);
     await expect(page.locator("#formationSort")).toHaveCount(0);
     const formation = await values("#formationCatalog .catalog-unit");

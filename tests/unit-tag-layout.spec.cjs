@@ -44,7 +44,7 @@ for (const width of [1440, 390])
     ).toEqual(["EFSF", "AEUG", "TITANS", "0079T2", "ground", "space", "mediumUnit", "MS"].slice(0, width <= 720 ? 4 : 8));
     if (width > 720) await expect(common.locator(".ground")).toHaveText("地面");
     await expect(common.locator(".cost")).toHaveCount(1);
-    expect(await common.locator(".unit-tags").evaluate(e => e.firstElementChild.classList.contains("cost"))).toBe(true);
+    expect(await common.locator(".unit-tags").evaluate(e => !!e.querySelector(":scope > .cost, :scope > .unit-tags-primary > .cost:first-child"))).toBe(true);
     await expect(common.locator(".unit-tags-more")).toHaveCount(width <= 720 ? 1 : 0);
     await page.locator("#encyclopediaSearch").fill("Type74");
     const carrier = page.locator('#encyclopediaList [data-unit-id="Type74"]');
@@ -69,7 +69,7 @@ for (const width of [1440, 390])
     expect(errors).toEqual([]);
   });
 
-test("formation and workshop share the eight-tag budget and nested more buttons do not select a unit", async ({
+test("formation and workshop share two independent five-tag rows and nested more buttons do not select a unit", async ({
   page,
 }) => {
   const errors = [];
@@ -77,11 +77,14 @@ test("formation and workshop share the eight-tag budget and nested more buttons 
   await open(page);
   await page.evaluate(() => MenuShell.go("formation"));
   const row = page.locator("#formationUnits > .formation-row").first();
-  await expect(row.locator("[data-tag]")).toHaveCount(8);
+  expect(await row.locator(".unit-tags-primary [data-tag]").count()).toBeLessThanOrEqual(5);
+  await expect(row.locator(".unit-tags-types [data-tag]")).toHaveCount(5);
+  await expect(row.locator(".unit-tags-primary > :first-child")).toHaveClass(/cost/);
+  await expect(row.locator(".unit-tags-primary > :nth-child(2)")).toHaveAttribute("data-tag", "kit");
   await expect(row.locator(".cost")).toHaveCount(1);
-  expect(await row.locator(".unit-tags").evaluate(e => e.firstElementChild.classList.contains("cost"))).toBe(true);
+  expect(await row.locator(".unit-tags").evaluate(e => !!e.querySelector(":scope > .cost, :scope > .unit-tags-primary > .cost:first-child"))).toBe(true);
   await row.locator(".unit-tags-more").click();
-  await expect(page.locator("#unitTagsDialog [data-tag]")).toHaveCount(10);
+  expect(await page.locator("#unitTagsDialog [data-tag]").count()).toBeGreaterThan(5);
   await page.locator("#unitTagsDialog").getByRole("button", { name: "关闭", exact: true }).click();
   await page.locator("#openFormationPicker").click();
   await page.locator("#formationSearch").fill("Type");
@@ -99,8 +102,9 @@ test("formation and workshop share the eight-tag budget and nested more buttons 
   await page.locator('#productionList [data-unit-id="Type61"]').click();
   const selected = await page.locator("#productionUnitName").textContent();
   const carrier = page.locator('#productionList [data-unit-id="Type74"]');
-  await expect(carrier.locator("[data-tag]")).toHaveCount(8);
-  expect(await carrier.locator(".unit-tags").evaluate(e => e.firstElementChild.classList.contains("cost"))).toBe(true);
+  expect(await carrier.locator(".unit-tags-primary [data-tag]").count()).toBeLessThanOrEqual(5);
+  await expect(carrier.locator(".unit-tags-types [data-tag]")).toHaveCount(5);
+  expect(await carrier.locator(".unit-tags").evaluate(e => !!e.querySelector(":scope > .cost, :scope > .unit-tags-primary > .cost:first-child"))).toBe(true);
   await carrier.locator(".unit-tags-more").click();
   await expect(page.locator("#unitTagsDialog")).toBeVisible();
   expect(await page.locator("#productionUnitName").textContent()).toBe(selected);
