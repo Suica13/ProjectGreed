@@ -114,6 +114,8 @@ const MusicPlayer = (() => {
   window.addEventListener("keydown", unlock);
   window.addEventListener("character-selected", sync);
   window.addEventListener("pagehide", () => audio.pause());
+  window.addEventListener("app-background", () => { request++; audio.pause(); });
+  window.addEventListener("app-foreground", () => { if (wantsPlayback && started) play(); });
   render();
   return {
     audio,

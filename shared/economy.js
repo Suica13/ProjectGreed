@@ -138,7 +138,8 @@ const Economy = (() => {
       const writes = [[key, JSON.stringify(next)], ...extraWrites];
       const previous = writes.map(([k]) => [k, localStorage.getItem(k)]);
       try {
-        for (const [k, v] of writes) localStorage.setItem(k, v);
+        if (typeof AppRuntime !== "undefined" && AppRuntime.native) AppRuntime.replaceItems(writes);
+        else for (const [k, v] of writes) localStorage.setItem(k, v);
       } catch (error) {
         for (const [k, v] of previous) {
           try {

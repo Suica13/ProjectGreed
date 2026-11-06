@@ -317,15 +317,17 @@ const ProfileSave = (() => {
   diagnosticText.setAttribute("role", "status");
   let lastDiagnostic;
   function inspectStorage() {
-    lastDiagnostic = { ...ProfileStorage.inspect(), client: document.title,
+    lastDiagnostic = { ...ProfileStorage.inspect(), backend: typeof AppRuntime !== "undefined" && AppRuntime.native ? "native-file" : "browser-localStorage", client: document.title,
       entryMode: location.protocol, browser: navigator.userAgent };
     const kib = bytes => (bytes / 1024).toFixed(1) + " KiB";
-    let message = lastDiagnostic.writable ? "本地存储写入正常。" :
+    const native = lastDiagnostic.backend === "native-file";
+    let message = lastDiagnostic.writable ? (native ? "应用文件存档写入正常。" : "本地存储写入正常。") :
+      native ? "应用文件存档暂时无法写入。" :
       lastDiagnostic.errorName === "QuotaExceededError" ?
         "浏览器连极小的数据也无法保存（配额不足）。" : "浏览器禁止或无法保存本地数据。";
-    message += " 当前页面存储估算占用 " + kib(lastDiagnostic.estimatedBytes) + "。";
+    message += (native ? " 当前应用存档估算占用 " : " 当前页面存储估算占用 ") + kib(lastDiagnostic.estimatedBytes) + "。";
     if (!lastDiagnostic.writable)
-      message += "新建个人存档不会清除历史战役备份或其他页面数据，也不能解除浏览器存储限制。请导出存储诊断以便排查。";
+      message += native ? "请检查磁盘空间与应用数据目录权限，并导出存储诊断以便排查。" : "新建个人存档不会清除历史战役备份或其他页面数据，也不能解除浏览器存储限制。请导出存储诊断以便排查。";
     message += lastDiagnostic.groups.map(group => group.name + " " + kib(group.bytes)).join("；");
     diagnosticText.textContent = message;
     diagnosticText.hidden = false;

@@ -29,7 +29,12 @@
     "build:map-editor": "node tools/build-map-editor.cjs",
     "build:unit-editor": "node tools/build-unit-editor.cjs",
     "docs:combat-rules": "node tools/export-combat-rules.cjs",
-    "docs:check": "node tools/check-docs.cjs"
+    "docs:check": "node tools/check-docs.cjs",
+    "app:prepare": "node tools/build-apps.cjs prepare",
+    "app:windows": "node tools/build-apps.cjs windows",
+    "app:android": "node tools/build-apps.cjs android",
+    "app:test:windows": "node tests/native-windows-smoke.cjs",
+    "app:test:storage": "node --test tests/app-native-storage.test.cjs tests/profile-storage.test.cjs"
   },
   "dependencies": {
     "ws": "8.22.0"
