@@ -13,6 +13,13 @@
   "weapons": {
     "Army_Squad_EFSF_0079_O_G_Member_P__lv1": {
       "/hit": -5
+    },
+    "EF_RGC_83_DoubleBeamCannon__lv1": {
+      "/max": 1,
+      "/attackRounds": 1
+    },
+    "EF_GMRifle__lv1": {
+      "/attackRounds": 1
     }
   },
   "prices": {}

@@ -736,7 +736,10 @@
       "name": "GM Kai[SpaceColor]",
       "description": "A unit developed after standardizing the production specifications of the GM, with improved stability"
     },
-    "ja": {}
+    "ja": {
+      "name": "ジム改［宇宙配色］",
+      "description": "ジムの生産規格を統一して開発された機体。信頼性が向上している。"
+    }
   },
   "weapons": {
     "Common_Push_A": {
@@ -759,7 +762,7 @@
               "delay": 0.45
             },
             {
-              "delay": 1.0
+              "delay": 1
             }
           ],
           "startAnimation": "Common_Push_A"

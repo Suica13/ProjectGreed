@@ -2532,3 +2532,8 @@ body .formation-row-actions .formation-pilot-button { display:block; text-align:
   #customPilotList .formation-row-actions { gap:4px; }
   body.menu-shell-active #formationScreen #customPilotList .formation-row-actions button { min-height:28px; height:28px; padding:3px 8px; line-height:20px; font-size:11px; margin:0; }
 }
+
+/* PMC rooms share one faction; use the space for player names. */
+#roomMain #teamSlots.pmc-room :is(.lineup-header, .spawn-slot) {
+  grid-template-columns: minmax(0, 1fr) 64px 64px;
+}

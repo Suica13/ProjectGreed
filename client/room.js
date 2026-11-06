@@ -49,7 +49,7 @@ const RoomPanel = (() => {
   }
   function factionControl(member, self, snapshot) {
     const badge = PlayerProfile.badge(member, snapshot.settings.mode);
-    if (!badge) return element("span", "faction-badge", "—");
+    if (!badge) return document.createDocumentFragment();
     return badge;
   }
 
@@ -115,7 +115,8 @@ const RoomPanel = (() => {
       (map.description ? " · " + map.description : "");
   }
   function tagLabel(key, tag) {
-    if (tag.startsWith("pilot:")) return I18n.text("驾驶员") + " · " + (tag === "pilot:custom" ? "PMC" : tag.slice(6));
+    if (tag.startsWith("pilot:"))
+      return I18n.text("驾驶员") + " · " + (tag === "pilot:custom" ? "PMC" : tag.slice(6));
     return key === "bannedTypes" ? I18n.text(Rules.unitTagName(tag)) : tag;
   }
   function tagControls(parent, prefix, restrictions, locked, changed) {
@@ -140,9 +141,7 @@ const RoomPanel = (() => {
         select.replaceChildren();
         const summary = new Option(
           selectedTags.length
-            ? selectedTags
-                .map((tag) => tagLabel(key, tag))
-                .join(", ")
+            ? selectedTags.map((tag) => tagLabel(key, tag)).join(", ")
             : I18n.text("不禁用"),
           "",
         );
@@ -153,11 +152,7 @@ const RoomPanel = (() => {
         select.add(new Option(I18n.text("禁用全部"), "ALL"));
         for (const tag of values)
           select.add(
-            new Option(
-              tagLabel(key, tag) +
-                (selectedTags.includes(tag) ? " ✓" : ""),
-              tag,
-            ),
+            new Option(tagLabel(key, tag) + (selectedTags.includes(tag) ? " ✓" : ""), tag),
           );
       }
       select.onchange = () => {
@@ -444,7 +439,7 @@ const RoomPanel = (() => {
   }
   function restrictionSummary(restrictions = {}) {
     const tags = [
-      ...(restrictions.bannedFactions || []).map(tag => tagLabel("bannedFactions", tag)),
+      ...(restrictions.bannedFactions || []).map((tag) => tagLabel("bannedFactions", tag)),
       ...(restrictions.bannedEras || []),
       ...(restrictions.bannedTypes || []).map((tag) => I18n.text(Rules.unitTagName(tag))),
     ];
@@ -461,11 +456,7 @@ const RoomPanel = (() => {
         element(
           "p",
           "",
-          title +
-            "：" +
-            (tags
-              .map((tag) => tagLabel(key, tag))
-              .join("、") || "不禁用"),
+          title + "：" + (tags.map((tag) => tagLabel(key, tag)).join("、") || "不禁用"),
         ),
       );
     }
@@ -475,18 +466,13 @@ const RoomPanel = (() => {
     if (Number.isInteger(detail.team)) {
       const team = detail.team;
       const quick = snapshot.settings.mode === "quick";
-      byId("roomDetailTitle").textContent =
-        "队伍" + (team + 1) + (quick ? " · 禁用标签" : " · 阵营规则");
+      byId("roomDetailTitle").textContent = "队伍" + (team + 1) + " · 禁用标签";
       const content = byId("roomDetailContent");
       content.classList.remove("member-management");
       content.replaceChildren();
       if (quick) {
         content.append(element("h3", "", "队伍禁用标签"));
         appendTagDetails(content, snapshot.settings.teamRestrictions?.[team]);
-      } else {
-        content.append(
-          element("p", "", "阵营：PMC"),
-        );
       }
       content.append(element("h3", "", "房间禁用标签"));
       appendTagDetails(content, snapshot.settings);
@@ -733,19 +719,25 @@ const RoomPanel = (() => {
             element(
               "span",
               "overcost-label",
-              player.reasons?.[index] === "pilot_banned" ? "驾驶员被禁用，请解除配属" : player.reasons?.[index] === "stock" ? "机体库存不足" : player.reasons?.[index] === "kit_stock" ? "套件库存不足" : player.reasons?.[index] === "license"
-                ? "未许可"
-                : player.reasons?.[index] === "wip"
-                  ? "WIP"
-                  : player.reasons?.[index] === "faction_mismatch"
-                    ? "阵营不匹配"
-                    : player.reasons?.[index] === "not_developed"
-                      ? "尚未开发"
-                      : player.reasons?.[index] === "count"
-                        ? "超过单位点数"
-                        : player.reasons?.[index] === "not_allowed"
-                          ? "不被允许的单位"
-                          : "OVER COST",
+              player.reasons?.[index] === "pilot_banned"
+                ? "驾驶员被禁用，请解除配属"
+                : player.reasons?.[index] === "stock"
+                  ? "机体库存不足"
+                  : player.reasons?.[index] === "kit_stock"
+                    ? "套件库存不足"
+                    : player.reasons?.[index] === "license"
+                      ? "未许可"
+                      : player.reasons?.[index] === "wip"
+                        ? "WIP"
+                        : player.reasons?.[index] === "faction_mismatch"
+                          ? "阵营不匹配"
+                          : player.reasons?.[index] === "not_developed"
+                            ? "尚未开发"
+                            : player.reasons?.[index] === "count"
+                              ? "超过单位点数"
+                              : player.reasons?.[index] === "not_allowed"
+                                ? "不被允许的单位"
+                                : "OVER COST",
             ),
           );
         icons.append(icon);
@@ -845,7 +837,12 @@ const RoomPanel = (() => {
       const plan = Rules.planFormation(
         units,
         limit,
-        { ...Rules.armyRestrictions(snapshot.settings, own), licenses: undefined, inventory: undefined, kits: undefined },
+        {
+          ...Rules.armyRestrictions(snapshot.settings, own),
+          licenses: undefined,
+          inventory: undefined,
+          kits: undefined,
+        },
         Rules.armyUnitLimit(snapshot.settings, own),
       );
       valid = !!plan.deployable.length;
@@ -884,6 +881,7 @@ const RoomPanel = (() => {
         I18n.text("编组已锁定");
     const teams = byId("teamSlots");
     teams.classList.toggle("observer-teams", self.seat === null);
+    teams.classList.toggle("pmc-room", snapshot.settings.mode !== "campaign");
     for (const button of joinButtons) button.remove();
     teams.replaceChildren();
     for (let team = 0; team < 2; team++) {
@@ -899,7 +897,9 @@ const RoomPanel = (() => {
         "team-ban-summary",
         snapshot.settings.mode === "quick"
           ? "队伍禁用：" + restrictionSummary(snapshot.settings.teamRestrictions?.[team])
-          : "阵营：" + forced,
+          : snapshot.settings.mode === "campaign"
+            ? "阵营：" + forced
+            : "房间禁用标签",
       );
       summary.id = "teamBanSummary" + team;
       summary.disabled = snapshot.settings.mode === "campaign";
@@ -930,7 +930,7 @@ const RoomPanel = (() => {
       header.append(
         element("span", "", "玩家ID / 空位"),
         element("span", "", "位置"),
-        element("span", "", "阵营"),
+        ...(snapshot.settings.mode === "campaign" ? [element("span", "", "阵营")] : []),
         element("span", "", "状态"),
       );
       header.setAttribute("role", "row");
@@ -1016,7 +1016,9 @@ const RoomPanel = (() => {
           ready.dataset.reconnectUntil = reserved.until;
           ready.setAttribute("data-i18n-ignore", "");
         }
-        slot.append(nameCell, positionCell, factionCell, ready);
+        slot.append(nameCell, positionCell);
+        if (snapshot.settings.mode === "campaign") slot.append(factionCell);
+        slot.append(ready);
         for (const cell of slot.children) cell.setAttribute("role", "cell");
         column.append(slot);
       }
@@ -1222,7 +1224,8 @@ const RoomPanel = (() => {
   byId("roomShareAlliedUnits").onchange = () =>
     sendSettings({ shareAlliedUnits: byId("roomShareAlliedUnits").value === "enabled" });
   byId("roomFogMode").onchange = () => sendSettings({ fogMode: byId("roomFogMode").value });
-  byId("roomPilotPolicy").onchange = () => sendSettings({ pilotPolicy: byId("roomPilotPolicy").value });
+  byId("roomPilotPolicy").onchange = () =>
+    sendSettings({ pilotPolicy: byId("roomPilotPolicy").value });
   byId("roomBattleMode").onchange = () =>
     sendSettings({ battleMode: byId("roomBattleMode").value });
   byId("shareUnitsToAllies").onclick = () => Net.request("share_units");

@@ -90,6 +90,7 @@ const PlayerProfile = (() => {
     restriction,
     allows: (model) => restriction(model) === null,
     badge: (member, mode) => {
+      if (mode !== "campaign") return null;
       const faction = member?.characterFaction;
       if (!["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(faction)) return null;
       const label = displayFaction(faction);

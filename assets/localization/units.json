@@ -1107,12 +1107,20 @@
     "ja": {
       "name": "ジム改",
       "description": "ジムの生産規格を統一して開発された機体。信頼性が向上している。"
+    },
+    "en": {
+      "name": "GM Kai",
+      "description": "A unit developed after standardizing the production specifications of the GM, with improved stability"
     }
   },
   "RGM_79C_Space": {
     "ja": {
       "name": "ジム改［宇宙配色］",
       "description": "ジムの生産規格を統一して開発された機体。信頼性が向上している。"
+    },
+    "en": {
+      "name": "GM Kai[SpaceColor]",
+      "description": "A unit developed after standardizing the production specifications of the GM, with improved stability"
     }
   },
   "RGM_79D": {

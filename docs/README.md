@@ -69,3 +69,5 @@
 - [tools/map-editor.md](tools/map-editor.md)
 - [tools/server-package.md](tools/server-package.md)
 - [tools/unit-editor.md](tools/unit-editor.md)
+
+- [maintenance/v87-release.md](maintenance/v87-release.md)
