@@ -10,7 +10,7 @@ async function open(page) {
     PlayerProfile.select?.("EFSF");
   });
 }
-test("personal save download and file import preserve pilots, formations and spent technology balances", async ({
+test("personal save download and file import preserve pilots, formations, counted stock and cumulative research", async ({
   page,
 }) => {
   const errors = [];
@@ -25,8 +25,10 @@ test("personal save download and file import preserve pilots, formations and spe
   await open(page);
   const original = await page.evaluate(() => {
     Development.grantUnit("ZEON", "MS_06F");
-    Economy.produce("Type61", "EFSF");
-    Economy.buyKit("MS_06F__bazooka", "PMC");
+    Economy.purchaseLicense("Type61", "EFSF");
+    Economy.purchaseLicense("MS_06F", "PMC");
+    Economy.produce("Type61", "standard", "EFSF");
+    Economy.buyKit("MS_06F", "bazooka", "PMC");
     const pilot = PilotSystem.createCustom("custom-profile-1", "备份驾驶员", undefined, "EFSF");
     pilot.stats.shooting += 10;
     const node = Development.nodes("EFSF").find(
@@ -190,7 +192,7 @@ test("technology credits immediately and combines delayed toasts including final
   expect(result.final).toContain("75");
   expect(result.count).toBe(1);
 });
-test("map XP and level-up labels are deduplicated and follow an embarked pilot's carrier", async ({
+test("map XP labels are deduplicated and follow an embarked pilot's carrier without automatic promotion", async ({
   page,
 }) => {
   await open(page);
@@ -222,7 +224,7 @@ test("map XP and level-up labels are deduplicated and follow an embarked pilot's
     PilotRewards.draw(ctx, { id: "carrier" }, 100, 200, performance.now());
     return calls;
   });
-  expect(labels.map((c) => c.text)).toEqual(["+62经验值", "LEVEL UP"]);
+  expect(labels.map((c) => c.text)).toEqual(["+62经验值"]);
   expect(labels[0].x).toBe(100);
   expect(labels[0].y).toBeGreaterThan(195);
 });
@@ -324,13 +326,11 @@ for (const width of [1280, 360])
       expect(data.pilots[faction]).toEqual({ pilots: [], awards: [] });
       expect(JSON.stringify(data.formations[faction])).not.toContain("旧编组");
     }
-    expect(data.development.points).toEqual({ EFSF: 0, ZEON: 0 });
+    expect(data.development.points).toEqual({ EFSF: 0, ZEON: 0, AEUG: 0, TITANS: 0, NEO_ZEON: 0 });
     expect(data.development.claimed).toEqual({});
     expect(data.economy).toEqual({
-      money: 5000,
-      supplies: 10000,
-      inventory: { Type61: 24, FF_B2: 12, Medea: 3, MS_06F: 4, MS_06S: 2, FatUncle: 3 },
-      kits: {},
+      ...await page.evaluate(() => Economy.initial()),
+
     });
     expect(data.development.researched.EFSF).toEqual(["Tech_EFSF_0079_BaseTech"]);
     expect(data.development.researched.ZEON).toEqual(["Tech_ZEON_0079_BaseTech"]);
@@ -370,6 +370,6 @@ test("damaged wallet keeps menu navigation and import recovery available", async
  await page.locator("#profileSaveFile").setInputFiles({name:"repaired.json",mimeType:"application/json",buffer:Buffer.from(JSON.stringify(valid))});
  await loaded;
  await page.waitForFunction(()=>typeof assetsReady!=="undefined"&&assetsReady);
- expect(await page.evaluate(()=>ProfileSave.exportData().economy)).toEqual(valid.economy);
+ expect(await page.evaluate(()=>ProfileSave.exportData().economy)).toEqual(await page.evaluate(value => Economy.validate(ProfileMigrations.economy(value)), valid.economy));
  expect(errors).toEqual([]);
 });

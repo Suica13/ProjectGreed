@@ -2383,3 +2383,152 @@ body.menu-shell-active #formationScreen #formationUnits .formation-row > .format
 #gameScene .weapon-summary-compact .weapon-damage-line,
 #gameScene .weapon-summary-compact .weapon-accuracy { display:flex; flex-wrap:wrap; align-items:center; gap:4px; margin:0; }
 #gameScene .weapon-summary-compact .weapon-attributes { flex:1 1 100%; }
+
+/* Compact, equal-size list cards. Optional metadata shares lanes instead of reserving blank rows. */
+#encyclopediaList > .encyclopedia-unit { height:152px; box-sizing:border-box; padding:8px; }
+#productionList > .production-unit { height:128px; min-height:128px; box-sizing:border-box; padding:8px; gap:8px; align-items:start; }
+#formationCatalog > .catalog-unit-row { height:152px; min-height:152px; box-sizing:border-box; }
+#formationCatalog .catalog-unit { width:100%; min-width:0; height:100%; padding:8px; box-sizing:border-box; }
+body.menu-shell-active #formationScreen #formationUnits > .formation-row {
+  height:128px; min-height:128px; width:100%; margin-left:0; padding:8px; box-sizing:border-box;
+  grid-template-rows:auto auto; align-content:center; gap:4px 10px;
+}
+#formationUnits .formation-row > .formation-stock-line { align-self:start; }
+:is(.encyclopedia-unit-name, .unit-line-title, .catalog-unit-info > strong, .formation-unit-name > strong) {
+  display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden;
+  line-height:1.35; min-height:0;
+}
+#productionList .production-unit-info, .encyclopedia-unit-body { gap:4px; }
+#encyclopediaList .unit-tags, #productionList .unit-tags, #formationCatalog .unit-tags,
+#formationUnits .unit-tags { align-content:flex-start; gap:3px 4px; }
+#customPilotList > .custom-pilot-card {
+  height:132px; min-height:132px; width:100%; padding:8px; box-sizing:border-box; align-items:center;
+}
+#customPilotList .custom-pilot-summary {
+  display:grid; grid-template-columns:minmax(0,1fr) auto; grid-template-rows:26px 24px 32px;
+  gap:2px 8px; align-content:center; width:100%; min-width:0;
+}
+#customPilotList .pilot-roster-heading { grid-area:1 / 1; flex-wrap:nowrap; min-width:0; gap:5px; }
+#customPilotList .pilot-roster-heading > :first-child { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0; }
+#customPilotList .pilot-roster-heading > :not(:first-child) { flex:none; }
+#customPilotList .pilot-roster-progress { grid-area:1 / 2; display:flex; margin:0; font-size:11px; justify-content:flex-end; }
+#customPilotList .pilot-list-skills { grid-area:2 / 1 / 3 / -1; }
+#customPilotList .pilot-record { grid-area:3 / 1 / 4 / -1; margin:0; display:flex; flex-wrap:wrap; align-content:center; gap:2px 16px; max-width:780px; }
+#customPilotList .pilot-record-row { display:contents; }
+#customPilotList .pilot-record-cell { flex-wrap:nowrap; line-height:14px; white-space:nowrap; }
+#customPilotList .pilot-roster-meta { grid-area:4 / 1 / 5 / -1; display:flex; flex-wrap:wrap; align-items:center; gap:4px 10px; min-width:0; }
+#customPilotList .ace-tags { width:auto; gap:3px; }
+#customPilotList .ace-recruit-status { margin:0; }
+#customPilotList .ace-recruit-locked { display:none; }
+#customPilotList > .custom-pilot-card > img { width:48px; height:48px; align-self:start; margin-top:4px; }
+.pilot-list-skills { display:flex; flex-wrap:wrap; align-content:center; align-items:center; gap:3px 10px; min-width:0; }
+.pilot-list-skill { display:inline-flex; align-items:center; gap:4px; min-width:0; font-size:11px; line-height:18px; color:#d9eafb; }
+body .pilot-list-skills .pilot-list-skill > img,
+body #formationScreen .pilot-list-skills .pilot-list-skill > img { width:20px; height:20px; object-fit:contain; flex:none; border:1px solid #687e91; background:#253747; box-sizing:border-box; }
+.pilot-list-skills > small { margin:0; }
+#customPilotSkills { min-height:24px; }
+.pilot-record { gap:3px; margin:4px 0; }
+.pilot-record-row { gap:3px 8px; }
+.pilot-record-cell { gap:1px 4px; line-height:16px; }
+.pilot-record-cell strong { font-size:11px; }
+.campaign-pilot-card:not(:has(.campaign-pilot-details)) { height:152px; box-sizing:border-box; padding:8px; }
+.formation-pilot-card { height:168px; min-height:168px; box-sizing:border-box; padding:8px; }
+#aceRecruitList > .ace-recruit-candidate { height:144px; min-height:144px; box-sizing:border-box; padding:8px; }
+@media(max-width:1100px) {
+  body.menu-shell-active #formationScreen #formationUnits > .formation-row {
+    height:188px; min-height:188px; grid-template-rows:auto auto 64px; gap:4px 8px;
+  }
+  #customPilotList .custom-pilot-summary { grid-template-columns:minmax(0,1fr); grid-template-rows:22px 22px 24px 32px; }
+  #customPilotList .pilot-roster-heading { grid-area:1 / 1; }
+  #customPilotList .pilot-roster-progress { grid-area:2 / 1; justify-content:flex-start; }
+  #customPilotList .pilot-list-skills { grid-area:3 / 1; }
+  #customPilotList .pilot-record { grid-area:4 / 1; gap:2px 8px; }
+  #customPilotList .pilot-roster-meta { grid-area:5 / 1; }
+  #customPilotList > .custom-pilot-card { height:128px; min-height:128px; }
+}
+@media(max-width:720px) {
+  #encyclopediaList > .encyclopedia-unit { height:168px; }
+  #productionList > .production-unit { height:160px; min-height:160px; }
+  #formationCatalog > .catalog-unit-row { height:188px; min-height:188px; }
+  body.menu-shell-active #formationScreen #formationUnits > .formation-row { height:192px; min-height:192px; }
+  #customPilotList > .custom-pilot-card { height:204px; min-height:204px; grid-template-rows:minmax(0,1fr) 32px; gap:4px 6px; }
+  #customPilotList > .custom-pilot-card > img { width:40px; height:40px; }
+  #customPilotList .custom-pilot-summary { grid-template-rows:22px 24px 44px 48px; gap:2px; }
+  #customPilotList .pilot-roster-heading { flex-wrap:nowrap; gap:3px; font-size:11px; }
+  #customPilotList .pilot-roster-heading > :first-child { flex-basis:auto; }
+  #customPilotList .pilot-roster-progress { gap:4px; font-size:10px; }
+  #customPilotList .pilot-record { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:2px 6px; width:100%; }
+  #customPilotList .pilot-record-cell { flex-direction:row; justify-content:flex-start; align-items:baseline; font-size:10px; gap:4px; }
+  #customPilotList .pilot-roster-meta { gap:2px 6px; }
+  #customPilotList .ace-recruit-status { font-size:10px; }
+  body.menu-shell-active #formationScreen #customPilotList .formation-row-actions { display:flex; justify-content:flex-end; grid-row:2; }
+  #customPilotList .formation-row-actions button { flex:1; max-width:130px; min-height:30px; padding:4px; margin:0; }
+  .formation-pilot-card { height:232px; min-height:232px; }
+}
+
+@media(min-width:1101px) {
+  #formationScreen #formationPilotToolbar { grid-template-columns:minmax(0,2fr) minmax(200px,1fr); gap:8px; padding:8px; }
+}
+@media(min-width:1101px) {
+  #customPilotList { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-content:start; gap:6px; padding:6px; }
+  #customPilotList > p { grid-column:1 / -1; }
+  #customPilotList > .custom-pilot-card { height:132px; min-height:132px; }
+  #customPilotList .custom-pilot-summary { grid-template-columns:minmax(0,1fr); grid-template-rows:22px 22px 24px 32px; }
+  #customPilotList .pilot-roster-heading { grid-area:1 / 1; }
+  #customPilotList .pilot-roster-progress { grid-area:2 / 1; justify-content:flex-start; }
+  #customPilotList .pilot-list-skills { grid-area:3 / 1; }
+  #customPilotList .pilot-record { grid-area:4 / 1; gap:2px 8px; }
+  #customPilotList .pilot-roster-meta { grid-area:5 / 1; }
+}
+
+@media(max-width:720px) {
+  #formationCatalog .catalog-unit { grid-template-columns:44px minmax(0,1fr); gap:6px; }
+  #formationCatalog .catalog-unit-portrait { width:44px; }
+  #formationCatalog .catalog-unit img { width:44px; height:44px; }
+  #formationCatalog .catalog-unit-info > strong { font-size:12px; }
+  #formationCatalog .unit-tags :is(.faction-tag,.era-tag,.type-tag,.unit-summary-tag) { font-size:10px; padding:2px 4px; }
+  body.menu-shell-active #formationScreen #formationUnits .formation-row-actions button { min-height:28px; padding:4px; }
+}
+
+#customPilotList .faction-tag[data-faction="PMC"] { color:#fff; border-color:#fff; }
+
+#productionList .production-unit-info { align-self:start; }
+#productionList .unit-portrait-status { color:#ff6b6b; }
+
+#customPilotList .pilot-faction-tags { display:inline-flex; flex-wrap:nowrap; width:auto; gap:3px; }
+#customPilotList .pilot-roster-heading .ace-name { width:auto; flex:0 1 auto; }
+
+#customPilotList .pilot-roster-heading .pilot-name-viewport { container-type:normal; min-width:36px; }
+#customPilotList .pilot-roster-heading .pilot-name-scroll { width:auto; animation:none; overflow:hidden; text-overflow:ellipsis; }
+
+/* Recruitment state belongs to the portrait, leaving the identity and skill lanes compact. */
+.pilot-roster-portrait { display:flex; flex:none; flex-direction:column; align-items:center; align-self:start; gap:4px; width:48px; min-width:0; }
+body #customPilotList .pilot-roster-portrait > img { width:48px; height:48px; object-fit:contain; margin:0; }
+body .pilot-roster-portrait > .pilot-recruit-state { display:block; margin:0; color:#c7dff2; font-size:10px; line-height:14px; white-space:nowrap; text-align:center; }
+.campaign-pilot-card .pilot-roster-portrait { width:46px; }
+.campaign-pilot-card .pilot-roster-portrait > img { width:46px; height:46px; object-fit:contain; }
+#customPilotList .custom-pilot-summary { align-content:start; }
+body .formation-row-actions .formation-pilot-button { display:block; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+@media(min-width:1101px) {
+  #formationUnits { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-content:start; gap:6px; }
+  body.menu-shell-active #formationScreen #formationUnits > .formation-row { height:144px; min-height:144px; grid-template-columns:48px minmax(0,1fr) 128px; }
+  body.menu-shell-active #formationScreen #formationUnits .formation-row > .formation-row-actions { width:128px; gap:4px; }
+  body #formationScreen #formationUnits .formation-unit-portrait > .formation-icon { width:48px; height:48px; }
+  body #formationScreen #formationUnits .formation-unit-portrait > .formation-icon > img { width:48px; height:48px; }
+}
+#formationUnits .formation-preloaded-row { margin-left:0; border-left:2px solid #6aa8c4; }
+@media(max-width:720px) {
+  #customPilotList .pilot-roster-portrait { grid-column:1; grid-row:1 / 3; width:40px; }
+  body #customPilotList .pilot-roster-portrait > img { width:40px; height:40px; }
+}
+
+@media(min-width:1101px) {
+  body.menu-shell-active #formationScreen #formationUnits .formation-row > .formation-row-actions { grid-template-columns:minmax(0,1fr); grid-template-rows:repeat(4,28px); }
+  body #formationScreen #formationUnits .formation-row-actions > button { grid-column:1; grid-row:auto; min-height:28px; padding:4px; }
+  body #formationScreen #formationUnits .formation-row-actions > .formation-pilot-button { font-size:10px; }
+}
+
+@media(min-width:721px) {
+  #customPilotList .formation-row-actions { gap:4px; }
+  body.menu-shell-active #formationScreen #customPilotList .formation-row-actions button { min-height:28px; height:28px; padding:3px 8px; line-height:20px; font-size:11px; margin:0; }
+}

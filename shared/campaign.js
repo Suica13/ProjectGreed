@@ -1,6 +1,7 @@
 /* Persistent Earth campaign. Clients submit orders; this module owns resources and armies. */
 "use strict";
 const CampaignRules = (() => {
+  const pricing = typeof Economy !== "undefined" ? Economy : require("./economy.js");
   const crews =
     typeof CampaignPilots !== "undefined" ? CampaignPilots : require("./campaign-pilots.js");
   const copy = (value) => JSON.parse(JSON.stringify(value));
@@ -51,24 +52,10 @@ const CampaignRules = (() => {
     const prefab = ctx.G.catalog.prefabs.find((item) => item.id === unitId);
     if (!prefab?.weaponKits.some((kit) => kit.id === kitId) || !ctx.G.models[unitId + "__" + kitId])
       return null;
-    const offer = ctx.production.offers[unitId + "__" + kitId];
-    const native = ctx.production.nativePricing[unitId]?.kits[kitId];
-    if (!offer || native?.available === false) return null;
-    return {
-      unitId,
-      kitId,
-      money: Math.ceil(native?.batchMoney ?? offer.money),
-      supplies: Math.ceil(native?.batchSupplies ?? offer.supplies),
-      quantity: native?.quantity ?? offer.quantity,
-      turns: Math.max(
-        1,
-        Math.ceil(
-          (native?.source?.buildSeconds ?? offer.source?.buildSeconds ?? 30) /
-            (ctx.world?.settings?.productionSecondsPerTurn || 30),
-        ),
-      ),
-    };
+    // Campaigns use the same per-chassis and absolute kit prices, without licenses.
+    return pricing.productionOffer(unitId, kitId, ctx.production, ctx.G.models);
   }
+
   function dismissalQuote(ctx, unit) {
     const prefab = ctx.G.catalog.prefabs.find((item) => item.id === unit.unitId);
     const base = unit.pilotBase || { unitId: prefab?.formOf || unit.unitId, kitId: unit.kitId };
@@ -105,11 +92,10 @@ const CampaignRules = (() => {
       !ctx.G.models[unit.unitId + "__" + kitId]
     )
       return null;
-    const fee = ctx.production.nativeEquipmentCosts?.[unit.unitId + "__" + kitId];
-    if (!fee || ![fee.money, fee.supplies].every((value) => Number.isFinite(value) && value >= 0))
-      return null;
-    // A new purchase of the target equipment, not a trade-in or factory price difference.
-    return { money: Math.ceil(fee.money), supplies: Math.ceil(fee.supplies) };
+    const fee = pricing.kitOffer(unit.unitId + "__" + kitId, ctx.production, ctx.G.models);
+    if (!fee) return null;
+    // The target kit is bought for this strategic unit using shared faction funds.
+    return { money: fee.money, supplies: fee.supplies };
   }
   function available(ctx, state, team, unitId, kit = ctx.production.defaultKits[unitId]) {
     const faction = state.teams[team].faction;
@@ -120,7 +106,7 @@ const CampaignRules = (() => {
       m &&
       !prefab.disabled &&
       !prefab.formOnly &&
-      prefab.faction === faction &&
+      (prefab.availableFactions || [prefab.faction]).includes(faction) &&
       prefab.production?.enabled !== false &&
       !m.requiredPilotId &&
       m.adaptability.ground > 0 &&
@@ -190,6 +176,7 @@ const CampaignRules = (() => {
         faction,
         intelligence: { progress: intelligenceRules.initial, fundedTurn: 0 },
         researchQueue: [],
+        kits: {},
         money: Math.floor(ctx.world.settings.startingMoney * ctx.G.aiTactics.settings(options.campaignOptions).teams[team].resources),
         supplies: Math.floor(ctx.world.settings.startingSupplies * ctx.G.aiTactics.settings(options.campaignOptions).teams[team].resources),
         technology: ctx.world.settings.startingTechnology,
@@ -337,6 +324,9 @@ const CampaignRules = (() => {
       case "campaign_disembark":
         text = `${name} 离开格纳库`;
         break;
+      case "campaign_buy_kit":
+        text = "购买套件：" + command.unitId + " / " + command.kitId;
+        break;
       case "campaign_equip":
         text = "更换装备：" + name;
         break;
@@ -478,6 +468,14 @@ const CampaignRules = (() => {
         }
         break;
       }
+      case "campaign_buy_kit": {
+        check(available(ctx, state, team, command.unitId, command.kitId), "该单位或套件尚未开发");
+        const price = pricing.kitOffer(command.unitId + "__" + command.kitId, ctx.production, ctx.G.models);
+        check(price && charge(pool, price), "阵营资源不足");
+        const id = command.unitId + "__" + command.kitId;
+        (pool.kits ||= {})[id] = (pool.kits[id] || 0) + 1;
+        break;
+      }
       case "campaign_equip": {
         const unit = getUnit(command.armyId);
         check(
@@ -489,7 +487,10 @@ const CampaignRules = (() => {
         check(command.kitId !== unit.kitId && !unit.state?.embarked, "当前不能更换该套件");
         const price = equipmentQuote(ctx, unit, command.kitId);
         check(price, "该套件暂不可换装");
-        check(pool.money >= price.money && pool.supplies >= price.supplies, "阵营资源不足");
+        const targetKit = unit.unitId + "__" + command.kitId;
+        const stored = (pool.kits?.[targetKit] || 0) > 0;
+        check(stored || (pool.money >= price.money && pool.supplies >= price.supplies), "阵营资源不足");
+        const previousKit = unit.unitId + "__" + unit.kitId;
         const before = model(ctx, unit),
           after = ctx.G.models[unit.unitId + "__" + command.kitId];
         check(
@@ -526,8 +527,9 @@ const CampaignRules = (() => {
           )?.[0];
           if (baseKit) unit.pilotBase.kitId = baseKit;
         }
-        pool.money -= price.money;
-        pool.supplies -= price.supplies;
+        if (stored) pool.kits[targetKit]--;
+        else { pool.money -= price.money; pool.supplies -= price.supplies; }
+        (pool.kits ||= {})[previousKit] = (pool.kits[previousKit] || 0) + 1;
         updateSavedArmy(state, unit);
         break;
       }
@@ -799,16 +801,15 @@ const CampaignRules = (() => {
         pool.supplies >= (node.supplies || 0),
       "研发资源不足",
     );
-    pool.technology -= points;
     pool.money -= node.money || 0;
     pool.supplies -= node.supplies || 0;
     (pool.researchQueue ||= []).push({
       techId: node.id,
-      remaining: ctx.world.settings.researchTurns || 2,
+      remaining: 1,
     });
   }
   function researchPoints(ctx, node) {
-    return Math.ceil(node.points * (ctx.world.settings.researchPointMultiplier ?? 0.5));
+    return node.points;
   }
   function ensureArmyState(ctx, state, unit) {
     if (unit.state) return unit.state;
@@ -1121,6 +1122,8 @@ const CampaignRules = (() => {
             intelRedacted: true,
           };
         });
+      for (let side = 0; side < result.teams.length; side++)
+        if (side !== team) delete result.teams[side].kits;
       result.pilots = result.pilots.filter((entry) => entry.team === team);
       result.orders = result.orders.filter((entry) => entry.team === team);
       result.transfers = result.transfers.filter((entry) =>
@@ -1400,9 +1403,10 @@ const CampaignRules = (() => {
       const pending = pool.researchQueue || [];
       const nodes = ctx.development.nodes(pool.faction);
       check(Array.isArray(pending) && pending.length <= nodes.length && new Set(pending.map((item) => item.techId)).size === pending.length &&
-        pending.every((item) => item && integer(item.remaining, 1, ctx.world.settings.researchTurns || 2) &&
+        pending.every((item) => item && integer(item.remaining, 1, 10000) &&
           !pool.researched.includes(item.techId) && nodes.some((node) => node.id === item.techId && node.requires.every((id) => pool.researched.includes(id)))), "研发队列无效");
-      pool.researchQueue = copy(pending);
+      pool.researchQueue = copy(pending).map(order => ({...order, remaining: 1}));
+      pool.kits = pricing.normalizeStock({kits: pool.kits || {}}).kits;
     }
     check(value.marches === undefined || (Array.isArray(value.marches) && value.marches.length <= 10000 &&
       value.marches.every((report) => report && [0, 1].includes(report.team) &&

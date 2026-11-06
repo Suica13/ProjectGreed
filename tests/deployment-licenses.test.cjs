@@ -37,7 +37,7 @@ function load(
     vm.runInContext(fs.readFileSync("shared/" + name + ".js", "utf8"), context);
   return { ...vm.runInContext("({E:Economy,D:Development})", context), storage };
 }
-test("old chassis and complete model inventories migrate to permanent licenses; archive drops counts and kits", () => {
+test("legacy inventories retain permits and migrate to zero counted stock", () => {
   const old = {
     money: 10000,
     supplies: 20000,
@@ -50,19 +50,19 @@ test("old chassis and complete model inventories migrate to permanent licenses; 
   assert(E.hasLicense("RGM_79"));
   assert(!E.hasLicense("MS_06F"));
   const data = E.exportProgress();
-  assert.equal(data.schemaVersion, 2);
-  assert.equal(data.inventory, undefined);
-  assert.equal(data.kits, undefined);
+  assert.equal(data.schemaVersion, 3);
+  assert.equal(Object.keys(data.inventory).length, 0);
+  assert.equal(Object.keys(data.kits).length, 0);
   assert.equal(data.money, 10000);
   assert.equal(data.claimed.one, "match");
-  assert(storage.has(key + ".before-deployment-licenses"));
+  assert(storage.has(key + ".before-counted-stock"));
   const reloaded = load(data).E;
   assert.deepEqual(
     JSON.parse(JSON.stringify(reloaded.exportProgress())),
     JSON.parse(JSON.stringify(data)),
   );
 });
-test("one paid license covers every duplicate and every equipment kit; a second purchase cannot charge", () => {
+test("one paid permit grants one default-equipped chassis exactly once", () => {
   const { E } = load();
   const offer = E.licenseOffer("RGM_79");
   const before = E.snapshot();
@@ -74,13 +74,14 @@ test("one paid license covers every duplicate and every equipment kit; a second 
   }));
   assert.equal(G.licensePlan(entries, E.snapshot().licenses).missing.length, 0);
   assert.equal(typeof E.fitKits, "undefined");
-  assert.equal(typeof E.quantity, "undefined");
-  assert.equal(typeof E.produce, "undefined");
-  assert.equal(E.snapshot().inventory, undefined);
+  assert.equal(E.quantity("RGM_79"), 1);
+  assert.equal(E.kitQuantity("RGM_79__beam_spray"), 1);
+  assert.equal(typeof E.produce, "function");
+  assert.equal(Object.keys(E.snapshot().inventory).length, 1);
   const after = E.snapshot().money;
   assert(!E.purchaseLicense("RGM_79", "EFSF"));
   assert.equal(E.snapshot().money, after);
-  assert.equal(typeof E.buyKit, "undefined");
+  assert.equal(typeof E.buyKit, "function");
   assert.equal(typeof E.sellUnit, "undefined");
 });
 test("bulk permit purchases deduplicate chassis, reject undeveloped/unaffordable units atomically", () => {
@@ -121,7 +122,7 @@ test("battle losses never revoke licenses; activity grants are permanent and rec
 });
 test("paid refit operations have been removed from the live economy", () => {
   const { E } = load();
-  for (const name of ["refitOptions", "refitReason", "refitUnit", "produce", "produceMissing", "productionPlan", "fitKits", "quantity"])
+  for (const name of ["refitOptions", "refitReason", "refitUnit", "produceMissing", "productionPlan", "fitKits"])
     assert.equal(typeof E[name], "undefined", name);
   assert.throws(() => E.validate({money:0,supplies:0,inventory:{Type61:1}}));
   assert.throws(() => E.transact({}, {Type61:1}));

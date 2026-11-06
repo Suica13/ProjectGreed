@@ -171,7 +171,7 @@ const HangarUI = (() => {
             item.classList.toggle("is-selected",launchSelection.has(u.id));
             const toggle = () => {
               if (launchSelection.has(u.id)) launchSelection.delete(u.id);
-              else if (Rules.squadFits([...launchSelection].map(id=>getUnit(id)).concat(u))) launchSelection.add(u.id);
+              else if (Rules.squadFits([...launchSelection].map(id=>getUnit(id)).concat(u), game)) launchSelection.add(u.id);
               else return note("每个小队最多6台单位、6容量点");
               render();
             };

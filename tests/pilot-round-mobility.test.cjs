@@ -3,8 +3,8 @@ const G=require('../shared/rules'),P=G.pilots;
 const unit=stats=>({pilot:{stats:{...P.baseStats(),...stats}}});
 test('attribute bonuses increase by 25 percent, while attack mobility follows the explicit 100/200 curve',()=>{
  const modifiers=P.modifiers(unit({shooting:200,melee:200,accuracy:200,reaction:200,defense:200,speed:200,awakening:100}));
- for(const key of ['shooting','melee','accuracy','reaction'])assert.equal(modifiers[key],1.3125);
- assert.equal(modifiers.defense,.6875);assert.equal(modifiers.move,1.625);assert.equal(modifiers.attackRounds,1.25);
+ for(const key of ['shooting','melee','accuracy','reaction'])assert.equal(modifiers[key],1.5);
+ assert.equal(modifiers.defense,.5);assert.equal(modifiers.move,1.5);assert.equal(modifiers.attackRounds,1.5);
  assert.equal(modifiers.awakeningHit,10);assert.equal(modifiers.awakeningEvasion,10);
  assert.equal(P.modifiers(unit({awakening:99})).awakeningHit,0);
  assert.equal(P.modifiers(unit({awakening:200})).shooting,1);
@@ -20,7 +20,7 @@ test('unit mobility and pilot mobility multiply base rounds; use limits and forc
  const w={...original.weapons[0],attackRounds:2,pilotRequirements:[],maxUsesPerTurn:undefined};
  try{
   assert.equal(G.attackRounds(g,a,w),3);
-  a.pilot=unit({speed:200}).pilot;assert.equal(G.attackRounds(g,a,w),4);
+  a.pilot=unit({speed:200}).pilot;assert.equal(G.attackRounds(g,a,w),5);
   assert.equal(G.attackRounds(g,a,{...w,maxUsesPerTurn:1}),1);
   assert.equal(G.attackRounds(g,a,{...w,type:'melee'}),1);
   assert.equal(G.attackRounds(g,a,{...w,sourceName:'Common_ArmBR'}),1);
@@ -46,7 +46,7 @@ test('the authoritative automatic queue executes the same mobility-scaled rounds
  const weapon=G.modelOf(a).weapons[0],room={game:g};let sequence=0;
  const planner=createAttackPlanner(G,()=>String(++sequence));planner.reset(room);
  try{
-  const expected=G.attackRounds(g,a,weapon);assert.equal(expected,4);
+  const expected=G.attackRounds(g,a,weapon);assert.equal(expected,5);
   planner.plan(room,a,b,null,0,'shooting');planner.prepare(room);
   while(room.reactions.length)planner.choose(room,room.reactions[0].id,'defend');
   const battles=planner.resolve(room).filter(battle=>battle.events[0].from===a.id&&battle.events[0].weapon===weapon.id);
@@ -55,5 +55,5 @@ test('the authoritative automatic queue executes the same mobility-scaled rounds
 });
 test('leadership aura range stays unchanged and effect growth is 25 percent stronger',()=>{
  const {a}=fixture();a.pilot=unit({leadership:125}).pilot;
- assert.equal(G.commandAura(a).radius,4);assert.equal(G.commandAura(a).effect,.1125);
+ assert.equal(G.commandAura(a).radius,4);assert.equal(G.commandAura(a).effect,.125);
 });

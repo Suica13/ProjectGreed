@@ -20,6 +20,6 @@ def collect():
 
 if __name__=="__main__":
  file=ASSETS.parent/"shared/production-catalog.json"
- data=json.loads(file.read_text(encoding="utf-8"));data["defaultKits"]=collect();data["equipmentPolicy"]="free-equipment-deployment-license"
+ data=json.loads(file.read_text(encoding="utf-8"));data["defaultKits"]=collect();data["equipmentPolicy"]="counted-chassis-and-kits"
  file.write_text(json.dumps(data,ensure_ascii=False,indent=2)+"\n",encoding="utf-8",newline="\n")
  print("Updated native default equipment:",len(data["defaultKits"]))

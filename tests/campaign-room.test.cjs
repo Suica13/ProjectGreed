@@ -203,7 +203,7 @@ test("campaign WebSocket orders pause tactical combat, export private saves and 
   });
   await act(host, "campaign_research", { turn: 1, techId: "Tech_EFSF_0079_AntiMSPlan" });
   assert(!room.campaign.teams[0].researched.includes("Tech_EFSF_0079_AntiMSPlan"));
-  assert.equal(room.campaign.teams[0].researchQueue.find((order) => order.techId === "Tech_EFSF_0079_AntiMSPlan").remaining, 2);
+  assert.equal(room.campaign.teams[0].researchQueue.find((order) => order.techId === "Tech_EFSF_0079_AntiMSPlan").remaining, 1);
   assert.match(frames.get(host).ack, /^request-/);
   const moneyBeforeOrder = room.campaign.teams[0].money;
   await act(host, "campaign_produce", {
@@ -215,7 +215,7 @@ test("campaign WebSocket orders pause tactical combat, export private saves and 
     supplies: 0,
   });
   assert.equal(room.campaign.orders[0].kitId, "kit_1");
-  assert.equal(room.campaign.teams[0].money, moneyBeforeOrder - 2100);
+  assert.equal(room.campaign.teams[0].money, moneyBeforeOrder - require("../shared/campaign.js").quote({G,production:require("../shared/production-data.cjs")}, "RFF_06", "kit_1").money);
   await act(host, "campaign_cancel_order", { turn: 1, orderId: room.campaign.orders[0].id });
   assert.equal(room.campaign.orders.length, 0);
   assert.equal(room.campaign.teams[0].money, moneyBeforeOrder);

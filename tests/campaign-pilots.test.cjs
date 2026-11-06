@@ -275,7 +275,7 @@ test("authoritative campaign combat earns crew XP while ordinary saved battles s
       act(guest, "confirm_responses", { reviewId: room.reactionReviewId });
     assert.equal(target.hp, 0);
     assert.equal(attacker.pilot.record.kills, strategic ? 1 : 0);
-    assert.equal(attacker.pilot.experience, strategic ? G.modelOf(target).cost : 0);
+    assert.equal(attacker.pilot.experience, strategic ? G.pilots.combatExperience(G.modelOf(attacker).cost,G.modelOf(target).cost) : 0);
     assert.equal(
       (room.pilotAwards || []).length,
       0,

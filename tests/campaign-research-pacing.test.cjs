@@ -10,7 +10,7 @@ const ctx = {
   development: D,
 };
 const members = [{ seat: 0 }, { seat: 1 }];
-test("strategic research charges half points, preserves normal prices and takes two turns", () => {
+test("strategic research keeps cumulative full points and completes in one turn", () => {
   const s = C.create(ctx, members);
   s.units = [];
   const tech = D.nodes("EFSF").find(
@@ -20,14 +20,12 @@ test("strategic research charges half points, preserves normal prices and takes 
   );
   const original = structuredClone(tech),
     points = C.researchPoints(ctx, tech);
-  assert.equal(points, Math.ceil(tech.points * 0.5));
+  assert.equal(points, tech.points);
   s.teams[0].technology = points;
   C.action(ctx, s, members, 0, { action: "campaign_research", turn: s.turn, techId: tech.id });
-  assert.equal(s.teams[0].technology, 0);
-  assert.equal(s.teams[0].researchQueue[0].remaining, 2);
+  assert.equal(s.teams[0].technology, points);
+  assert.equal(s.teams[0].researchQueue[0].remaining, 1);
   assert.deepEqual(tech, original, "ordinary research data remains unchanged");
-  C.advance(ctx, s, members);
-  assert(!s.teams[0].researched.includes(tech.id));
   C.advance(ctx, s, members);
   assert(s.teams[0].researched.includes(tech.id));
   const low = C.create(ctx, members);
@@ -48,8 +46,8 @@ test("strategic AI prioritizes mainline and reserves points instead of draining 
   ];
   for (const [points, expected] of [
     [500, []],
-    [600, ["main"]],
-    [650, ["main", "branch"]],
+    [1200, ["main", "branch"]],
+    [1300, ["main", "branch"]],
   ]) {
     const s = C.create(ctx, members);
     s.units = [];

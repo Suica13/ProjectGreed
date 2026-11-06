@@ -2355,18 +2355,11 @@
             <button data-ui-node="node-140" id="openSkirmish" class="primary" disabled>开始战斗</button>
             <div class="menu-faction">
               <label for="menuFactionSelect">当前阵营:</label>
-              <select id="menuFactionSelect" aria-label="当前阵营">
-                <option value="PMC">PMC</option>
-                <option value="EFSF">地球联邦军[0079]</option>
-                <option value="ZEON">吉翁公国军[0079]</option>
-                <option value="AEUG">奥古[0087]</option>
-                <option value="TITANS">提坦斯[0087]</option>
-                <option value="NEO_ZEON">新吉翁[0087]</option>
-              </select>
+              <span>PMC</span><select id="menuFactionSelect" aria-label="当前阵营" hidden disabled><option value="PMC">PMC</option></select>
             </div>
           </div>
           <button id="openDevelopment" type="button">开发</button>
-          <button id="openProduction" type="button">部署许可</button>
+          <button id="openProduction" type="button">生产车间</button>
           <button data-ui-node="node-198" id="openFormation">编成</button>
           <button id="openReplayFile" type="button">回放</button>
         </div>
@@ -2604,6 +2597,9 @@
                     <div class="room-battle-rules">
                       <label>对战模式<select id="roomBattleMode" aria-label="对战模式">
                         <option value="regular">常规战</option><option value="quick">快速战</option><option value="campaign">战略模式</option>
+                      </select></label>
+                      <label>驾驶员使用<select id="roomPilotPolicy" aria-label="驾驶员使用">
+                        <option value="allow">允许</option><option value="no_custom">禁止PMC驾驶员</option><option value="no_ace">禁止ACE驾驶员</option><option value="none">全部禁止</option>
                       </select></label>
                       <label class="room-fog-option"
                         >战争迷雾
@@ -3017,6 +3013,11 @@
       .production-purchase .resource-balance span { gap:3px; }
       .production-purchase .resource-balance svg { width:12px; height:12px; }
       .production-purchases { grid-template-columns:1fr; }
+      #produceUnit[data-license-locked="true"], #buyProductionKit[data-license-locked="true"] { position:relative; opacity:1; }
+      #produceUnit[data-license-locked="true"]::after, #buyProductionKit[data-license-locked="true"]::after { content:""; position:absolute; inset:0; border-radius:inherit; background:rgba(0,0,0,0.68); pointer-events:none; }
+      .production-price-row { display:flex; align-items:center; justify-content:space-between; gap:12px; width:100%; }
+      #productionPrice { display:flex; flex-direction:column; align-items:stretch; }
+      #formationInventorySale { flex-wrap:wrap; }
       #productionQuantity { min-height:26px; line-height:1.25; }
       .production-purchase + .production-purchase { border-left:1px solid #405968; padding-left:10px; }
       #productionStatus { margin:0; min-height:15px; font-size:11px; line-height:1.3; }
@@ -3051,7 +3052,7 @@
     <section id="productionScreen" class="menu-screen" hidden aria-labelledby="productionTitle">
       <div class="modal production-dialog">
         <header class="production-heading shell-page-heading">
-          <h2 id="productionTitle" class="shell-page-title">部署许可</h2>
+          <h2 id="productionTitle" class="shell-page-title">生产车间</h2>
           <div id="productionResources" class="resource-balance" aria-label="账户资源"></div>
           <button id="closeProduction" type="button">返回主菜单</button>
         </header>
@@ -3080,10 +3081,13 @@
             <div class="production-order">
               <div class="production-purchases">
                 <div class="production-purchase">
-                  <span id="productionBaseKitName" class="muted">购买部署许可</span>
+                  <span id="productionBaseKitName" class="muted">选择出厂套件</span>
                   <div id="productionPrice" class="resource-balance"></div>
                   <div id="productionQuantity"></div>
-                  <button id="produceUnit" type="button" class="primary">购买部署许可</button>
+                  <div id="productionLicensePrice" class="resource-balance"></div>
+                  <button id="purchaseProductionLicense" type="button">购买部署许可</button>
+                  <button id="produceUnit" type="button" class="primary">生产机体＋套件 ×1</button>
+                  <button id="buyProductionKit" type="button">仅购买所选套件 ×1</button>
                 </div>
               </div>
               <p id="productionStatus" role="status" aria-live="polite"></p>
@@ -3108,7 +3112,7 @@
                 <option value="NEO_ZEON">新吉翁[0087]</option>
               </select>
             </label>
-            <div class="development-balance">可用科技点 <strong id="developmentPoints">0</strong></div>
+            <div class="development-balance">科技点 <strong id="developmentPoints">0</strong></div>
           </div>
           <button id="closeDevelopment" type="button">返回主菜单</button>
         </header>
@@ -3135,14 +3139,7 @@
             <p id="formationBudget" data-ui-node="node-213"></p>
         <label class="formation-group-banner" for="formationGroup">
           <strong>编组阵营</strong>
-          <select id="formationGroup" aria-label="编组阵营">
-            <option value="PMC">PMC</option>
-            <option value="EFSF">地球联邦军[0079]</option>
-            <option value="ZEON">吉翁公国军[0079]</option>
-                <option value="AEUG">奥古[0087]</option>
-                <option value="TITANS">提坦斯[0087]</option>
-                <option value="NEO_ZEON">新吉翁[0087]</option>
-          </select>
+          <span>PMC</span><select id="formationGroup" aria-label="编组阵营" hidden disabled><option value="PMC">PMC</option></select>
         </label>
           </div>
         </div>
@@ -3165,6 +3162,7 @@
         </div>
         <div id="formationPilotToolbar" class="formation-toolbar" hidden>
           <label for="pilotRosterSearch"><span>搜索驾驶员</span><input id="pilotRosterSearch" type="search" placeholder="按名称搜索驾驶员" /></label>
+          <label for="pilotRosterFilter"><span>驾驶员筛选</span><select id="pilotRosterFilter" aria-label="驾驶员筛选"></select></label>
         </div>
         <div id="formationUnitsWorkspace" class="formation-workspace">
           <section class="formation-squad">
@@ -3177,14 +3175,14 @@
             ></div>
             <div class="formation-unit-actions">
               <button id="openFormationPicker" type="button">添加单位</button>
-              <button id="produceMissingFormation" type="button" hidden>一键购买许可</button>
+              <button id="produceMissingFormation" type="button" hidden>一键补充库存</button>
                 </div>
           </section>
         </div>
         <div id="formationPilotRoster" class="formation-workspace" hidden>
           <section class="formation-squad">
             <div id="customPilotList" tabindex="0" role="region" aria-label="驾驶员滚动列表"></div>
-            <div class="pilot-create-actions"><button id="createCustomPilot" type="button">新增驾驶员</button><button id="recruitAcePilot" type="button">招募ACE</button></div>
+            <div class="pilot-create-actions"><button id="createCustomPilot" type="button">新增PMC驾驶员</button><button id="recruitAcePilot" type="button">招募ACE</button></div>
           </section>
         </div>
         <div class="net-buttons formation-footer" data-ui-node="node-219">
@@ -3253,7 +3251,7 @@
                 ><span class="formation-filter-label">类型筛选</span
                 ><select id="formationType" aria-label="类型筛选"></select
               ></label>
-              <label><span class="formation-filter-label">许可筛选</span><select id="formationStock" aria-label="许可筛选"><option value="all">全部</option><option value="owned" selected>已许可</option></select></label>
+              <label><span class="formation-filter-label">库存筛选</span><select id="formationStock" aria-label="库存筛选"><option value="all" selected>全部</option><option value="owned">有库存</option></select></label>
             </div>
             <input
               id="formationSearch"
@@ -3367,7 +3365,7 @@
             <div id="customPilotStats"></div>
             <div id="pilotTrainingActions"><button id="confirmPilotTraining" type="button" class="primary">确认强化</button><button id="cancelPilotTraining" type="button">取消强化</button></div>
           </section>
-          <button id="createPilotConfirm" type="button" class="primary" hidden>创建驾驶员</button>
+          <button id="createPilotConfirm" type="button" class="primary" hidden>创建PMC驾驶员</button>
         </div>
       </div>
       <div id="formationPilotPanel" class="formation-detail-overlay" hidden>
@@ -3376,7 +3374,7 @@
             <div><span class="eyebrow">PILOT ASSIGNMENT</span><h2 id="formationPilotTitle">驾驶员配属</h2></div>
             <button id="closeFormationPilot" type="button">关闭</button>
           </header>
-          <p class="muted">未配属时自动使用对应阵营的默认驾驶员，属性浮动±10%；自建驾驶员使用固定属性，每级增加25编队COST。同一驾驶员不能重复配属。</p>
+          <p class="muted">未配属时自动使用对应阵营的默认驾驶员，属性浮动±10%；PMC驾驶员使用固定属性，每级增加25编队COST。同一驾驶员不能重复配属。</p>
           <div id="formationPilotList" class="formation-pilot-list"></div>
         </div>
       </div>
@@ -3675,16 +3673,9 @@
       }
       .unit-tags-primary,
       .unit-tags-types {
-        display: inline-flex;
-        flex-wrap: wrap;
-        gap: 5px;
-        align-items: center;
+        display: contents;
       }
-      .unit-tags-types {
-        border-left: 1px solid #57717e;
-        padding-left: 10px;
-        margin-left: 4px;
-      }
+      .unit-tags-types { min-width:0; }
       .type-tag {
         color: #9fc7bd;
         background: #9fc7bd0a;
@@ -5270,6 +5261,7 @@
       const PROJECT = __PROJECT_META__;
       const DEVELOPMENT_TREE = __DEVELOPMENT_TREE__;
       const PRODUCTION_CATALOG = __PRODUCTION_CATALOG__;
+      const AI_UNIT_BANS = __AI_UNIT_BANS__;
       const PILOT_DATA = __PILOT_DATA__;
       const CLIENT_CONFIG = __CLIENT_CONFIG__;
       const UI_LOCALES = __UI_LOCALES__;

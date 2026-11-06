@@ -146,7 +146,7 @@ window.CampaignWorkspace = (() => {
     const price = unitPrice(prefab),
       m = UnitModels[prefab.id + "__" + price.kitId];
     const content = node("div", "", "campaign-inspector-content");
-    content.append(node("h3", name(prefab)), UnitPreview.unitTags(m));
+    content.append(node("h3", name(prefab)), UnitPreview.unitTags(m, {limit: Infinity}));
     const equipment = node("label", "生产套件", "campaign-kit-choice");
     const kits = node("select");
     kits.id = "campaignProductionKit";
@@ -230,28 +230,30 @@ window.CampaignWorkspace = (() => {
     ).length;
     const capacity = CampaignRules.productionCapacity(context(), regionId);
     footer.append(
-      node("strong", "每批生产价格"),
+      node("strong", "单台生产价格"),
       money(price),
-      node("p", `每批${price.quantity}台 · ${price.turns}大回合`),
+      node("p", `每次生产1台 · ${price.turns}大回合`),
       node(
         "p",
         `并行生产槽位 ${Math.min(reserved, capacity)}/${capacity} · 排队${Math.max(0, reserved - capacity)}`,
       ),
     );
-    const basePrice = CampaignRules.quote(context(), prefab.id);
-    const body = {
-      money: Math.ceil((basePrice.money / basePrice.quantity) * price.quantity),
-      supplies: Math.ceil((basePrice.supplies / basePrice.quantity) * price.quantity),
-    };
     const breakdown = node("details", "", "campaign-kit-breakdown");
     breakdown.append(
       node("summary", "价格明细"),
-      node("small", "基础套件价格"),
-      money(body),
-      node("small", "所选套件差价"),
-      money({ money: price.money - body.money, supplies: price.supplies - body.supplies }),
+      node("small", "机体生产费"),
+      money(price.chassis),
+      node("small", "出厂套件费"),
+      money(price.kit),
     );
     footer.append(breakdown);
+    const kitPrice = Economy.kitOffer(prefab.id + "__" + price.kitId);
+    const kitCount = pool().kits?.[prefab.id + "__" + price.kitId] || 0;
+    footer.append(node("p", `该套件库存 ${kitCount}`), money(kitPrice), action(
+      "单独购买套件 ×1",
+      () => Net.request("campaign_buy_kit", {turn: state().turn, unitId: prefab.id, kitId: price.kitId}),
+      !editable() || !CampaignRules.available(context(), state(), team(), prefab.id, price.kitId) || pool().money < kitPrice.money || pool().supplies < kitPrice.supplies,
+    ));
     const region = state().regions.find((item) => item.id === regionId),
       base = CAMPAIGN_WORLD.regions.find((item) => item.id === regionId);
     const reason = !CampaignRules.available(context(), state(), team(), prefab.id, price.kitId)
@@ -344,7 +346,7 @@ window.CampaignWorkspace = (() => {
                   ? "可以开发"
                   : "前置科技未完成",
           ),
-          node("small", `科技 ${formatNumber(CampaignRules.researchPoints(context(), tech))}`),
+          node("small", `科技点需求 ${formatNumber(CampaignRules.researchPoints(context(), tech))}`),
           money(tech),
         );
         grid.append(card);
@@ -425,7 +427,7 @@ window.CampaignWorkspace = (() => {
     const footer = node("footer", "", "campaign-purchase");
     footer.append(
       node("strong", "开发费用"),
-      node("p", `科技 ${formatNumber(CampaignRules.researchPoints(context(), tech))}`),
+      node("p", `科技点需求 ${formatNumber(CampaignRules.researchPoints(context(), tech))}`),
       money(tech),
     );
     const researched = pool().researched.includes(tech.id),
@@ -446,7 +448,7 @@ window.CampaignWorkspace = (() => {
             : "可以开发";
     footer.append(
       node("p", status),
-      node("p", `研发需要${CAMPAIGN_WORLD.settings.researchTurns || 2}个战略回合`),
+      node("p", "研发需要1个战略回合"),
       action(
         "开发",
         () => Net.request("campaign_research", { turn: state().turn, techId: tech.id }),

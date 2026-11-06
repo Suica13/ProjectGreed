@@ -133,16 +133,15 @@ const Development = (() => {
       !node ||
       active.has(id) ||
       !node.requires.every((id) => active.has(id)) ||
-      pointBalance(faction) < node.points ||
-      !economy.affordable(node)
+      pointBalance(faction) < node.points
     )
       return false;
     const next = {
       ...progress,
-      points: { ...progress.points, [faction]: pointBalance(faction) - node.points },
+      points: { ...progress.points },
       researched: { ...normalizeResearch(progress.researched), [faction]: [...active, id] },
     };
-    if (!economy.transact(node, {}, [[progressKey, JSON.stringify(next)]])) return false;
+    if (!economy.transact({}, {}, [[progressKey, JSON.stringify(next)]])) return false;
     progress = next;
     unitCache.clear();
     return true;
@@ -221,6 +220,22 @@ const Development = (() => {
     if (faction === "PMC") return factions.some((side) => unlockedUnits(side).has(prefabId));
     return unlockedUnits(faction).has(prefabId);
   }
+  function normalizeTechnologyPoints(value = {}) {
+    if (!value || typeof value !== "object" || Array.isArray(value)) throw Error("科技点无效");
+    const result = {};
+    for (const faction of factions) {
+      const points = value[faction] ?? 0;
+      if (!Number.isSafeInteger(points) || points < 0) throw Error("科技点无效：" + faction);
+      result[faction] = points;
+    }
+    return result;
+  }
+  function maximumPoints(faction) {
+    return Math.max(0, ...nodes(faction).map((node) => node.points));
+  }
+  function pointSnapshot() {
+    return normalizeTechnologyPoints(progress.points);
+  }
   function pointBalance(faction) {
     return Number(progress.points[faction]) || 0;
   }
@@ -273,6 +288,9 @@ const Development = (() => {
     unlockedUnits,
     allows,
     pointBalance,
+    pointSnapshot,
+    normalizeTechnologyPoints,
+    maximumPoints,
     creditAward,
     research,
     researchSnapshot,

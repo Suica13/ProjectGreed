@@ -1,14 +1,12 @@
-/* Room identity and formation save group are separate choices. */
+/* Personal identity and hangar share the PMC profile; campaigns own separate factions. */
 const PlayerProfile = (() => {
   const input = byId("playerId");
   const nameKey = "projectgreed.playerId";
   const factionKey = "projectgreed.combatFaction";
-  let character = "EFSF";
+  const character = "PMC";
   let formationGroup = "PMC";
   try {
-    const savedFaction = localStorage.getItem(factionKey);
-    if (["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(savedFaction))
-      character = savedFaction;
+    localStorage.setItem(factionKey, "PMC");
   } catch {}
 
   function displayFaction(faction) {
@@ -69,29 +67,9 @@ const PlayerProfile = (() => {
   window.addEventListener("page-changing", updateProgress);
   window.addEventListener("language-change", updateProgress);
 
-  function setFaction(faction) {
-    if (
-      !["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(faction) ||
-      faction === character
-    )
-      return;
-    character = faction;
-    try {
-      localStorage.setItem(factionKey, faction);
-    } catch {}
+  function setFaction() {
     showFaction();
-    updateProgress();
-    window.dispatchEvent(
-      new CustomEvent("character-selected", {
-        detail: { character: faction, initial: false },
-      }),
-    );
   }
-  byId("menuFactionSelect").onchange = (event) => {
-    const next = event.target.value;
-    Formation.setGroup(next);
-    setFaction(next);
-  };
   function restriction(model) {
     if (model?.wip) return "wip";
     const group = formationGroup;
@@ -104,7 +82,7 @@ const PlayerProfile = (() => {
     faction: () => character,
     setFaction,
     setFormationGroup: (group) => {
-      formationGroup = group;
+      formationGroup = "PMC";
     },
     displayFaction,
     updateProgress,

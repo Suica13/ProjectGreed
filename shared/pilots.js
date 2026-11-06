@@ -11,7 +11,8 @@ const PilotSystem = (() => {
     faction === "PMC" ||
     (aceProfile(value).availableFactions || [aceProfile(value).faction]).includes(faction);
   const maxLevel = (value) => aceProfile(value)?.maxLevel ?? growthRules.maxLevel;
-  const aceStatCap = (value, key) => aceProfile(value) ? Math.round(aceProfile(value).maxStats[key]) : undefined;
+  const aceStatCap = (value, key) =>
+    aceProfile(value) ? Math.round(aceProfile(value).maxStats[key]) : undefined;
   const byId = new Map(catalog.named.map((pilot) => [pilot.id, pilot]));
   const portraitsById = new Map(catalog.portraits.map((portrait) => [portrait.id, portrait]));
   function defaultPortrait(faction = "PMC") {
@@ -44,21 +45,63 @@ const PilotSystem = (() => {
     return value;
   }
   const growthRules = Object.freeze({
-    version: 6,
+    version: 7,
     initialLevel: 0,
     initialPoints: 80,
     pointsPerLevel: 40,
-    maxLevel: 10,
+    maxLevel: 8,
     initialStatCap: 125,
     statCapPerLevel: 10,
     statCap: 200,
   });
-  const experienceRequired = (level, value = null) => {
-    const ace = aceProfile(value);
-    // Custom cumulative thresholds follow 1000 * targetLevel^2: level 10 needs 100000 XP.
-    // ACE keeps its existing stage curve, expressed as cumulative thresholds.
-    return ace ? 2000 * (2 ** (level + 1) - 1) : 1000 * (level + 1) ** 2;
+  const customExperience = Object.freeze([500, 1500, 3000, 5000, 10000, 15000, 20000, 30000]);
+  const aceExperience = Object.freeze([1500, 3000, 5000, 10000, 20000]);
+  const experienceRequired = (level, value = null) =>
+    (aceProfile(value) ? aceExperience : customExperience)[level] ?? Infinity;
+  const pilotFactions = (value) => {
+    const source = aceProfile(value);
+    return source ? [...new Set([source.faction, ...(source.availableFactions || [])])] : [];
   };
+  function matchesFilter(value, filter = "all") {
+    return (
+      filter === "all" ||
+      (filter === "custom" ? !aceProfile(value) : pilotFactions(value).includes(filter))
+    );
+  }
+  function allowed(value, restrictions = {}) {
+    if (!value?.custom && !value?.aceId) return true;
+    const ace = !!aceProfile(value),
+      policy = restrictions.pilotPolicy || "allow";
+    if (policy === "none" || (ace ? policy === "no_ace" : policy === "no_custom")) return false;
+    const tags = ace ? pilotFactions(value).map((f) => "pilot:" + f) : ["pilot:custom"];
+    return !tags.some((tag) => restrictions.bannedFactions?.includes(tag));
+  }
+  // COST excludes the attached pilot's own COST on both sides of the ratio.
+  function combatExperience(ownCost, defeatedCost, multiplier = 1) {
+    return Math.max(
+      0,
+      Math.floor(((100 * Math.max(0, defeatedCost)) / Math.max(1, ownCost)) * multiplier),
+    );
+  }
+  const aceTotals = (catalog.aces || []).map((source) =>
+    Object.values(source.maxStats).reduce((sum, n) => sum + Math.round(n), 0),
+  );
+  const minimumAceTotal = Math.min(...aceTotals),
+    maximumAceTotal = Math.max(...aceTotals);
+  function aceBaseCost(value) {
+    const source = aceProfile(value) || value;
+    const total = Object.values(source.maxStats).reduce((sum, n) => sum + Math.round(n), 0);
+    return maximumAceTotal === minimumAceTotal
+      ? 250
+      : Math.max(
+          200,
+          Math.min(
+            300,
+            200 +
+              25 * Math.round((4 * (total - minimumAceTotal)) / (maximumAceTotal - minimumAceTotal)),
+          ),
+        );
+  }
   function cumulativeExperience(value, level, experience) {
     if (value.experienceVersion === 2) return experience;
     if (value.experienceVersion != null && value.experienceVersion !== 1)
@@ -148,9 +191,16 @@ const PilotSystem = (() => {
             : 0,
       ]),
     );
-    const stats = Object.fromEntries(Object.entries(growthStats).map(([key, n]) => [key, Math.round(n)]));
+    const stats = Object.fromEntries(
+      Object.entries(growthStats).map(([key, n]) => [key, Math.round(n)]),
+    );
     // Accept exact legacy growth values, then normalize them without losing XP or rank.
-    if (value.stats && Object.keys(labels).some((key) => value.stats[key] !== stats[key] && value.stats[key] !== growthStats[key]))
+    if (
+      value.stats &&
+      Object.keys(labels).some(
+        (key) => value.stats[key] !== stats[key] && value.stats[key] !== growthStats[key],
+      )
+    )
       throw Error("ACE属性由悟性成长，不能手动修改");
     const record = {};
     for (const key of ["kills", "shipKills", "battles", "losses", "destroyedCost", "lostCost"]) {
@@ -221,7 +271,7 @@ const PilotSystem = (() => {
   function custom(value) {
     if (value?.aceId || value?.ace) return ace(value);
     if (!value || typeof value !== "object" || !/^custom-[a-zA-Z0-9-]{1,80}$/.test(value.id || ""))
-      throw Error("自建驾驶员无效");
+      throw Error("PMC驾驶员无效");
     if (!Number.isInteger(value.level) || value.level < 0 || value.level > 1000)
       throw Error("驾驶员等级无效");
     const level = Math.min(value.level, growthRules.maxLevel);
@@ -240,9 +290,14 @@ const PilotSystem = (() => {
     if (oldVersion < 6 && value.level < 1) throw Error("驾驶员等级无效");
     if (oldVersion === trainingVersion && value.level > growthRules.maxLevel)
       throw Error("驾驶员等级无效");
-    const reset = oldVersion < trainingVersion;
+    const reset = oldVersion < 6;
+    const legacySix = oldVersion === 6;
     const previousCap = oldVersion >= 4 ? Math.min(200, 125 + (value.level - 1) * 10) : 160;
-    const maximum = reset ? previousCap : statCap(level);
+    const maximum = legacySix
+      ? Math.min(200, 125 + value.level * 10)
+      : reset
+        ? previousCap
+        : statCap(level);
     const stats = {};
     let spent = 0;
     for (const key of Object.keys(labels)) {
@@ -261,7 +316,10 @@ const PilotSystem = (() => {
           : oldVersion === 3
             ? 50 + (value.level - 1) * 20
             : (oldVersion === 2 ? 30 : 0) + (value.level - 1) * 10;
-    if (spent > (reset ? previousBudget : trainingBudget(level))) throw Error("驾驶员强化点不足");
+    if (
+      spent > (legacySix ? 80 + value.level * 40 : reset ? previousBudget : trainingBudget(level))
+    )
+      throw Error("驾驶员强化点不足");
     const rawExperience = value.experience ?? 0;
     if (
       !Number.isSafeInteger(rawExperience) ||
@@ -271,7 +329,7 @@ const PilotSystem = (() => {
       throw Error("驾驶员经验无效");
     const experience = cumulativeExperience(
       value,
-      reset ? Math.max(0, value.level - 1) : level,
+      legacySix ? value.level : reset ? Math.max(0, value.level - 1) : level,
       rawExperience,
     );
     const selectedSkillId = value.selectedSkillId;
@@ -283,7 +341,13 @@ const PilotSystem = (() => {
     )
       throw Error("驾驶员技能无效");
 
-    if (reset) spent = 0; // A growth-rule revision refunds every allocated point under the current budget.
+    if (reset) spent = 0;
+    // Former level 9/10 saves retain lifetime XP and records. Refund training
+    // only when their allocated points exceed the new level-eight budget.
+    if (legacySix && spent > trainingBudget(level)) {
+      Object.assign(stats, bases);
+      spent = 0;
+    }
     const record = {};
     for (const key of ["kills", "shipKills", "battles", "losses", "destroyedCost", "lostCost"]) {
       const n = value.record?.[key] ?? 0;
@@ -439,7 +503,7 @@ const PilotSystem = (() => {
     return pilot.ace && pilot.needsRecruitment
       ? 0
       : pilot.ace
-        ? (aceProfile(pilot).costBase ?? 250) + pilot.level * (aceProfile(pilot).costPerLevel ?? 25)
+        ? aceBaseCost(pilot) + pilot.level * (aceProfile(pilot).costPerLevel ?? 25)
         : pilot.level * 25;
   };
   function commandUnit(model) {
@@ -552,15 +616,15 @@ const PilotSystem = (() => {
     const stats = of(unit, model).stats;
     const awakening = stats.awakening >= 100 ? 10 : 0;
     return {
-      shooting: factor(stats.shooting, 0.3125),
-      melee: factor(stats.melee, 0.3125),
-      defense: Math.max(0.05, 1 - (stats.defense - 100) * 0.003125),
-      move: factor(stats.speed, 0.625),
-      attackRounds: factor(stats.speed, 0.25),
+      shooting: factor(stats.shooting, 0.5),
+      melee: factor(stats.melee, 0.5),
+      defense: Math.max(0.05, 1 - (stats.defense - 100) * 0.005),
+      move: factor(stats.speed, 0.5),
+      attackRounds: factor(stats.speed, 0.5),
       awakeningHit: awakening,
       awakeningEvasion: awakening,
-      accuracy: factor(stats.accuracy, 0.3125),
-      reaction: factor(stats.reaction, 0.3125),
+      accuracy: factor(stats.accuracy, 0.5),
+      reaction: factor(stats.reaction, 0.5),
     };
   }
   return {
@@ -576,6 +640,11 @@ const PilotSystem = (() => {
     profile,
     aceProfile,
     canAssign,
+    pilotFactions,
+    matchesFilter,
+    allowed,
+    combatExperience,
+    aceBaseCost,
     aceStatCap,
     maxLevel,
     createAce,

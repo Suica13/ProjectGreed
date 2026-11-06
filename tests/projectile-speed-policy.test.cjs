@@ -12,7 +12,11 @@ test("all conventional bullets use retained MOD speed / 10, including cluster fr
       if (kind === "mortar") { assert.equal(w.projectile.speed,w.nativePayload.ProjectileSpeed); mortar++; }
       continue;
     }
-    const baseline = w.nativePayload?.ProjectileSpeed > 0 ? w.nativePayload.ProjectileSpeed : w.projectile.nativeSpeed;
+    // Charged sniper aim retains the marker payload; its visible shot uses the rifle.
+    const source = w.special?.type === "snipe"
+      ? m.weapons.find(base => base.id === w.special.baseWeapon) || w : w;
+    const baseline = w.projectile.presentationSpeed ?? (source.nativePayload?.ProjectileSpeed > 0
+      ? source.nativePayload.ProjectileSpeed : w.projectile.nativeSpeed);
     assert.equal(w.projectile.speed,baseline * 0.1,m.prefabId + "/" + w.id);
     if (w.projectile.cluster) {
       assert.equal(w.projectile.cluster.speed,w.projectile.cluster.nativeSpeed * 0.1); fragments++;
@@ -53,4 +57,36 @@ test("every beam bazooka preserves native yellow cannon bullet and both impact l
       count++;
     }
   assert.equal(count,5);
+});
+
+
+test("damage carriers keep their own payload when a shot also spawns visual helpers", () => {
+  const { spawnSync } = require("node:child_process");
+  const result = spawnSync("python", ["-c", `
+import sys
+sys.path.insert(0, 'tools')
+from native_combat import damage_spawn, payload
+carrier = 'Projectile_HighBeamCannon_Yellow*1(addResources=BeamDamage:24000|ProjectileSpeed:55|ProjectileLife:25)'
+helper = 'Projectile_HighBeamCannon_Yellow_Effect*1(addResources=ProjectileSpeed:0.75|ProjectileLife:1)'
+for raw in (carrier, carrier + ', ' + helper, helper + ', ' + carrier):
+    values = payload(damage_spawn(raw))
+    assert values['BeamDamage'] == 24000
+    assert values['ProjectileSpeed'] == 55
+    assert values['ProjectileLife'] == 25
+`], { cwd: require("node:path").resolve(__dirname, ".."), encoding: "utf8" });
+  assert.equal(result.status, 0, result.stderr || result.error?.message);
+});
+
+test("heavy beam cannons use the damage carrier speed in every kit and variant", () => {
+  const keys = new Set(["ZN_MA_08_BeamCannon", "ZN_AMX_002_BeamCannon"]);
+  const prefabs = new Set();
+  for (const model of Object.values(G.models)) for (const weapon of model.weapons) {
+    if (!keys.has(weapon.id)) continue;
+    assert.equal(weapon.nativePayload.ProjectileSpeed, 55);
+    assert.equal(weapon.projectile.speed, 5.5);
+    const duration = Auto.flight(G, { x: 3, y: 3 }, { x: 6, y: 3 }, weapon);
+    assert(duration > 0 && duration < 1, model.id + '/' + weapon.id);
+    prefabs.add(model.prefabId);
+  }
+  for (const id of ["MA_08", "MA_08_DZL", "AMX_002"]) assert(prefabs.has(id), id);
 });

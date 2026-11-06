@@ -17,7 +17,7 @@ function fixture(t, mode = "regular", experienceBonus = 1) {
   t.after(() => engine.close());
   const clients = [{ readyState: 1 }, { readyState: 1 }];
   clients.forEach((ws, i) =>
-    engine.join(ws, { mode: i ? "join" : "create", room: "ASSIST", characterFaction: "PMC", inventory: { Type61: 10 } }),
+    engine.join(ws, { mode: i ? "join" : "create", room: "ASSIST", characterFaction: "PMC", licenses: {Type61:true}, inventory: { Type61: 10 }, kits:{Type61__standard:10} }),
   );
   const room = engine.rooms.get("ASSIST");
   function act(i, action, fields = {}) {
@@ -81,7 +81,7 @@ test("actual hull hits accumulate before a different pilot kills the target in t
   const awards = f.frames.get(f.clients[0]).pilotAwards;
   const assist = awards.find((a) => a.pilotId === "custom-assist-0" && a.kind === "assist");
   assert.ok(assist, JSON.stringify({ phase: f.room.phase, awards }));
-  assert.equal(assist.experiencePoints, Math.floor(G.modelOf(target).cost * 0.25));
+  assert.equal(assist.experiencePoints, Math.floor(100 * G.modelOf(target).cost / G.modelOf(f.room.game.units[0]).cost * 0.25));
   assert.equal(f.room.game.units[0].pilot.record.kills, 0);
   assert.equal(awards.filter((a) => a.kind === "kill").length, 1);
   assert.equal(f.room.pilotDamage[target.id], undefined);
@@ -132,7 +132,7 @@ for (const scenario of [
     assert.ok(assist);
     const xp = scenario.startsWith("saved")
       ? 0
-      : Math.floor(G.modelOf(target).cost * 0.25 * (scenario === "quick" ? 0.25 : 1));
+      : Math.floor(100 * G.modelOf(target).cost / G.modelOf(contributor).cost * 0.25 * (scenario === "quick" ? 0.1 : 1));
     assert.equal(assist.experiencePoints, xp);
     assert.equal(contributor.pilot.experience, xp);
     if (scenario === "embarked") assert.equal(assist.carrierId, contributor.embarked.carrierId);
@@ -150,18 +150,17 @@ test("authoritative level-up metadata and technology credits exist before the pl
   const f = fixture(t),
     killer = f.room.game.units[0],
     target = f.room.game.units[4];
-  killer.pilot.experience = 999;
+  killer.pilot.experience = 499;
   target.hp = 1;
   f.act(0, "attack", { unitId: killer.id, targetId: target.id, weaponId: "EF_Type61_Cannon" });
   f.resolve();
   const snapshot = f.frames.get(f.clients[0]);
   assert.equal(snapshot.phase, "playback");
-  assert.equal(killer.pilot.level, 1);
-  assert.equal(killer.pilot.points, 120);
-  assert.equal(snapshot.pilotAwards.find((a) => a.kind === "kill").leveledUp, true);
-  assert.ok(snapshot.techAwards[0].points > 0);
-  assert.equal(snapshot.techAwards[0].round, f.room.game.round);
-  assert.equal(snapshot.techAwards[0].team, f.room.game.team);
+  assert.equal(killer.pilot.level, 0);
+  assert.equal(killer.pilot.points, 80);
+  assert.equal(snapshot.pilotAwards.find((a) => a.kind === "kill").leveledUp, false);
+  assert(P.canUpgrade(killer.pilot));
+  assert.deepEqual(snapshot.techAwards, []);
 });
 
 test("player damage combines ordinary pilots across units",t=>{
@@ -181,15 +180,21 @@ for (const mode of ["regular", "quick"]) for (const saved of [false,true]) for (
     const f = fixture(t,mode,bonus);
     const [contributor,killer,,,target] = f.room.game.units;
     const [modelId,model] = Object.entries(G.models).find(([,m])=>m.prefabId === "RX_78_2");
-    for (const actor of [contributor,killer]) Object.assign(actor,{model:modelId,en:model.en,hp:model.hp});
+    const freshActor = G.create(false,1,[[{unitId:model.prefabId,kitId:model.kitId}],[{unitId:"Type61",kitId:"standard"}]],false,{...G.defaultRoomSettings(),costLimit:99999,unitCostLimit:99999}).units[0];
+    for (const actor of [contributor,killer]) {
+      const identity = {id:actor.id,ownerSeat:actor.ownerSeat,team:actor.team,x:actor.x,y:actor.y,pilot:actor.pilot};
+      Object.assign(actor,structuredClone(freshActor),identity);
+    }
     contributor.embarked = {carrierId:f.room.game.units[2].id,hangarId:"Hangar_1"};
+    killer.x = target.x - 1; killer.y = target.y;
     f.room.pilotDamage = {[target.id]:{contributor:{seat:G.ownerOf(contributor),pilotId:contributor.pilot.id,
       damage:G.modelOf(target).hp * .25}}};
     const initialAwards = f.room.pilotAwards.length;
     f.room.startedFromSave = saved;
     target.hp = 1;
     // The native rifle hits with this deterministic seed; the assist pilot stays aboard.
-    const weapon = model.weapons.find(w=>w.type !== "melee");
+    const weapon = model.weapons.find(w=>w.type !== "melee" && w.max >= G.dist(killer,target) && w.min <= G.dist(killer,target) && G.canUse(killer,w));
+    assert(weapon,"fresh RX-78-2 fixture must have a legal ranged weapon");
     f.act(0,"attack",{unitId:killer.id,targetId:target.id,weaponId:weapon.id});
     f.resolve();
     assert.equal(target.hp,0);
@@ -200,11 +205,11 @@ for (const mode of ["regular", "quick"]) for (const saved of [false,true]) for (
       assert.equal(contributor.pilot.experience,0);
       return;
     }
-    const speed = mode === "quick" ? .25 : 1;
+    const speed = mode === "quick" ? .1 : 1;
     for (const [actor,kind,share] of [[killer,"kill",1],[contributor,"assist",.25]]) {
       const award = awards.find(a=>a.pilotId === actor.pilot.id && a.kind === kind);
       assert.ok(award,JSON.stringify(awards));
-      const expected = Math.floor(G.modelOf(target).cost * share * speed * bonus * 1.25);
+      const expected = Math.floor(100 * G.modelOf(target).cost / G.modelOf(actor).cost * share * speed * bonus * 1.25);
       assert.equal(award.experiencePoints,expected);
       assert.equal(actor.pilot.experience,expected);
       const store = {pilots:[P.createCustom(actor.pilot.id,actor.pilot.name)],awards:[]};
@@ -240,7 +245,7 @@ for (const scenario of ["regular", "quick", "saved", "max"]) {
       const profile = P.catalog.aces.find((p) => p.price),
         original = P.createAce(profile.id);
       actor.pilot =
-        scenario === "max" ? P.gainExperience(original, 1000000) : original;
+        scenario === "max" ? P.custom({...original,level:5,experience:20000,stats:undefined}) : original;
       const before = structuredClone(actor.pilot);
       if (scenario === "saved") f.room.startedFromSave = true;
       target.hp = 1;
@@ -267,7 +272,7 @@ for (const scenario of ["regular", "quick", "saved", "max"]) {
         scenario === "max"
           ? 0
           : Math.floor(
-              G.modelOf(target).cost * (scenario === "quick" ? 0.25 : 1),
+              100 * G.modelOf(target).cost / G.modelOf(actor).cost * (scenario === "quick" ? 0.1 : 1),
             ),
       );
       assert.equal(actor.pilot.level, before.level);
@@ -312,8 +317,8 @@ for (const mode of ["regular", "quick", "saved"]) {
       const store = { pilots: [before], awards: [] };
       P.creditAwards(store, [award]);
       assert.equal(store.pilots[0].needsRecruitment, mode === "regular");
-      assert.equal(store.pilots[0].level, 1);
-      assert.equal(store.pilots[0].experience, 123);
+      assert.equal(store.pilots[0].level, before.level);
+      assert.equal(store.pilots[0].experience, before.experience);
       assert.equal(store.pilots[0].record.losses, 1);
     },
   );

@@ -73,45 +73,140 @@ const UnitPreview = (() => {
       "ground",
     );
   }
+  function environmentLabel(environment, value) {
+    const label = I18n.text(environment === "ground" ? "地面" : "宇宙");
+    return value === 100 ? label : label + " " + value + "%";
+  }
+
   function unitSummaryTags(adaptability, kitName, cost) {
     const tags = element("span", "unit-summary-tags");
-    const add = (label, kind, dim = false) =>
-      tags.append(element("span", "unit-summary-tag " + kind + (dim ? " is-dim" : ""), label));
-    const ground = adaptability?.ground ?? 0,
-      space = adaptability?.space ?? 0;
-    add(I18n.text("\u5730\u9762") + " " + ground + "%", "ground", ground < 90);
-    add(I18n.text("\u5b87\u5b99") + " " + space + "%", "space", space < 90);
-    add("COST " + cost, "cost");
-    if (kitName) add(kitName, "kit");
+    for (const environment of ["ground", "space"]) {
+      const value = adaptability?.[environment] ?? 0;
+      tags.append(
+        element(
+          "span",
+          "unit-summary-tag " + environment + (value < 90 ? " is-dim" : ""),
+          environmentLabel(environment, value),
+        ),
+      );
+    }
+    tags.append(element("span", "unit-summary-tag cost", "COST " + cost));
+    if (kitName) tags.append(element("span", "unit-summary-tag kit", kitName));
     return tags;
   }
 
-  function unitTags(model) {
-    const tags = element("span", "unit-tags"),
-      primary = element("span", "unit-tags-primary"),
-      types = element("span", "unit-tags-types");
-    for (const value of model.tags) {
-      const tag = element("span", value === model.faction ? "faction-tag" : "era-tag", value);
-      tag.dataset.tag = value;
-      if (value === model.faction) tag.dataset.faction = value;
-      primary.append(tag);
+  // One ordered collection serves every list and its complete-tag panel.
+  function tagDefinitions(model, kitName) {
+    const result = [];
+    const factionIds = new Set(["PMC", ...Rules.factions]);
+    const factions = [
+      ...new Set([
+        model.faction,
+        ...(model.availableFactions || []),
+        ...(model.tags || []).filter((tag) => factionIds.has(tag)),
+      ]),
+    ].filter(Boolean);
+    for (const faction of factions)
+      result.push({ label: faction, value: faction, className: "faction-tag", faction });
+    const otherTags = [...new Set((model.tags || []).filter((tag) => !factionIds.has(tag)))];
+    for (const tag of otherTags.filter((tag) => /^\d{4}[A-Z]?$/.test(tag)))
+      result.push({ label: tag, value: tag, className: "era-tag" });
+    const adaptability = model.adaptability || model.stats?.adaptability;
+    for (const environment of ["ground", "space"]) {
+      const value = adaptability?.[environment] ?? 0;
+      result.push({
+        label: environmentLabel(environment, value),
+        value: environment,
+        className: "unit-summary-tag " + environment + (value < 90 ? " is-dim" : ""),
+      });
     }
     const size = Rules.unitSize(model);
-    const sizeTag = element(
-      "span",
-      "type-tag unit-size-tag",
-      { small: "小型", medium: "中型", large: "大型" }[size],
-    );
-    sizeTag.dataset.tag = size + "Unit";
-    types.append(sizeTag);
-    for (const value of model.unitTags || []) {
-      if (value === "SmallUnit" || value === "LargeUnit" || value === "MediumUnit") continue;
-      const tag = element("span", "type-tag", I18n.text(Rules.unitTagName(value)));
-      tag.dataset.tag = value;
-      types.append(tag);
+    result.push({
+      label: I18n.text({ small: "小型", medium: "中型", large: "大型" }[size]),
+      value: size + "Unit",
+      className: "type-tag unit-size-tag",
+    });
+    for (const tag of [...new Set(model.unitTags || [])]) {
+      if (["SmallUnit", "LargeUnit", "MediumUnit"].includes(tag)) continue;
+      result.push({ label: I18n.text(Rules.unitTagName(tag)), value: tag, className: "type-tag" });
+    }
+    for (const tag of otherTags.filter((tag) => !/^\d{4}[A-Z]?$/.test(tag)))
+      result.push({ label: I18n.text(tag), value: tag, className: "type-tag" });
+    if (kitName) result.push({ label: kitName, value: "kit", className: "unit-summary-tag kit" });
+    return result;
+  }
+
+  function tagElement(definition) {
+    const tag = element("span", definition.className, definition.label);
+    tag.dataset.tag = definition.value;
+    if (definition.faction) tag.dataset.faction = definition.faction;
+    return tag;
+  }
+
+  let tagsDialog = null;
+  function openTags(model, definitions, trigger) {
+    if (!tagsDialog) {
+      tagsDialog = element("dialog", "unit-tags-dialog");
+      tagsDialog.id = "unitTagsDialog";
+      document.body.append(tagsDialog);
+      tagsDialog.addEventListener("click", (event) => {
+        const bounds = tagsDialog.getBoundingClientRect();
+        if (
+          event.target === tagsDialog &&
+          (event.clientX < bounds.left ||
+            event.clientX > bounds.right ||
+            event.clientY < bounds.top ||
+            event.clientY > bounds.bottom)
+        )
+          tagsDialog.close();
+      });
+    }
+    const header = element("header", "unit-tags-dialog-heading");
+    const title = element("h3", "", I18n.text("全部标签"));
+    title.id = "unitTagsDialogTitle";
+    tagsDialog.setAttribute("aria-labelledby", title.id);
+    const close = element("button", "", I18n.text("关闭"));
+    close.type = "button";
+    close.onclick = () => tagsDialog.close();
+    header.append(title, close);
+    const name = element("p", "", [model.code, model.name].filter(Boolean).join(" "));
+    const content = element("div", "unit-tags unit-tags-complete");
+    content.append(...definitions.map(tagElement));
+    tagsDialog.replaceChildren(header, name, content);
+    tagsDialog.onclose = () => {
+      if (trigger.isConnected) trigger.focus();
+    };
+    if (!tagsDialog.open) tagsDialog.showModal();
+  }
+
+  function unitTags(model, { cost, kitName, limit = 8 } = {}) {
+    const tags = element("span", "unit-tags");
+    const primary = element("span", "unit-tags-primary");
+    const types = element("span", "unit-tags-types");
+    const definitions = tagDefinitions(model, kitName);
+    for (const definition of definitions.slice(0, limit)) {
+      const group =
+        definition.className.startsWith("type-tag") || definition.value === "kit" ? types : primary;
+      group.append(tagElement(definition));
     }
     tags.append(primary);
     if (types.children.length) tags.append(types);
+    if (definitions.length > limit) {
+      const more = element("button", "unit-tags-more", "...");
+      more.type = "button";
+      more.title = I18n.text("查看全部标签");
+      more.setAttribute("aria-label", more.title);
+      more.setAttribute("aria-haspopup", "dialog");
+      more.addEventListener("keydown", (event) => event.stopPropagation());
+      more.onclick = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        openTags(model, definitions, more);
+      };
+      tags.append(more);
+    }
+    // COST stays visible independently and never consumes a tag slot.
+    if (cost !== undefined) tags.append(element("span", "unit-summary-tag cost", "COST " + cost));
     return tags;
   }
   return { renderPreview, unitSummaryTags, unitTags };

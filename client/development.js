@@ -78,11 +78,10 @@ const DevelopmentUI = (() => {
     const available = node.requires.every((id) => unlocked.has(id));
     const researched = unlocked.has(node.id);
     const points = Development.pointBalance(faction);
-    const canPay = Economy.affordable(node);
     details.replaceChildren(
       element("h3", "", node.name),
       element("p", "muted", node.description),
-      element("p", "", "所需阵营科技点：" + node.points),
+      element("p", "", "所需科技点：" + node.points),
       element(
         "p",
         "",
@@ -96,10 +95,8 @@ const DevelopmentUI = (() => {
           : !available
             ? "前置科技未完成"
             : points < node.points
-              ? "阵营科技点不足"
-              : !canPay
-                ? "资金或物资不足"
-                : "可以开发",
+              ? "科技点不足"
+              : "可以开发",
       ),
       element("h4", "", "解锁单位与驾驶员"),
     );
@@ -109,8 +106,8 @@ const DevelopmentUI = (() => {
     details.append(units);
     const action = element("button", researched ? "" : "primary", researched ? "已开发" : "开发");
     action.type = "button";
-    action.disabled = researched || !available || points < node.points || !canPay;
-    action.title = researched ? "已开发" : "消耗 " + node.points + " 科技点";
+    action.disabled = researched || !available || points < node.points;
+    action.title = researched ? "已开发" : "达到 " + node.points + " 科技点，不消耗科技点或货币";
     action.onclick = () => {
       try {
         if (Development.research(faction, node.id)) {
@@ -123,7 +120,7 @@ const DevelopmentUI = (() => {
       }
     };
     const price = element("div", "resource-balance");
-    ProductionUI.resources(price, node);
+    price.textContent = "科技点：" + points + " / " + node.points;
     price.classList.add("development-research-price");
     details.insertBefore(price, details.querySelector("h4"));
     details.insertBefore(action, price);

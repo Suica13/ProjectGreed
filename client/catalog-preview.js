@@ -26,7 +26,7 @@ const Formation = (() => {
     const modelId = id + "__" + kitId,
       model = UnitModels[modelId];
     byId("formationDetailTitle").textContent = model.code + " " + model.name;
-    byId("formationDetailTags").replaceChildren(UnitPreview.unitTags(model));
+    byId("formationDetailTags").replaceChildren(UnitPreview.unitTags(model, {limit: Infinity}));
     byId("formationDetailIntro").textContent = model.description || "";
     const kits = byId("formationDetailKit");
     kits.replaceChildren(...prefab.weaponKits.map((kit) => new Option(kit.name, kit.id)));

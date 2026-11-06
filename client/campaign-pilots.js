@@ -51,7 +51,7 @@ window.createCampaignPilotUI = ({ state, command, node, button }) => {
     const toolbar = node("div", "", "campaign-pilot-toolbar");
     toolbar.append(
       button(
-        "招募驾驶员",
+        "招募PMC驾驶员",
         () => {
           recruiting = !recruiting;
           refresh();
@@ -160,6 +160,7 @@ window.createCampaignPilotUI = ({ state, command, node, button }) => {
       const info = node("div", "", "campaign-pilot-copy");
       info.append(
         node("strong", p.name),
+        node("span", "COST +" + PilotSystem.cost(p), "unit-summary-tag cost"),
         node(
           "small",
           `Lv.${p.level} · EXP ${formatNumber(p.experience)} / ${p.level >= PilotSystem.maxLevel(p) ? "MAX" : formatNumber(PilotSystem.experienceRequired(p.level, p))}`,
@@ -169,7 +170,7 @@ window.createCampaignPilotUI = ({ state, command, node, button }) => {
         node(
           "small",
           p.needsRecruitment
-            ? "待回归"
+            ? ""
             : occupied
               ? I18n.text("已配属：") +
                 CampaignRules.unitLabel({ G: Rules }, occupied) +
@@ -181,6 +182,7 @@ window.createCampaignPilotUI = ({ state, command, node, button }) => {
               : "未配属",
         ),
       );
+      info.append(SkillControls.pilotSummary(p));
       const actions = node("div", "", "campaign-pilot-buttons");
       if (army)
         actions.append(
@@ -199,7 +201,14 @@ window.createCampaignPilotUI = ({ state, command, node, button }) => {
           refresh();
         }),
       );
-      row.append(image, info, actions);
+      if (!p.ace && p.points > 0) {
+        const points = node("span", "强化点+", "pilot-training-points");
+        points.title = "可用强化点：" + p.points;
+        info.append(points);
+      }
+      const portrait = node("span", "", "pilot-roster-portrait");
+      portrait.append(image, node("small", p.needsRecruitment ? "待回归" : "已招募", "pilot-recruit-state"));
+      row.append(portrait, info, actions);
       if (selectedId === p.id) {
         const details = node("section", "", "campaign-pilot-details");
         details.append(node("p", `剩余强化点：${p.points}`));

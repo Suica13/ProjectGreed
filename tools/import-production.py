@@ -88,7 +88,7 @@ def main():
     for reference in registry['units']:
         p=load_json((ASSETS/reference).read_text(encoding='utf8'))
         units.setdefault(p['id'],p['id']+'__'+p['weaponKits'][0]['id'])
-    (PROJECT/'shared/production-catalog.json').write_text(json.dumps({'schemaVersion':1,'timeEnabled':False,'equipmentPolicy':'free-equipment-deployment-license','defaultKits':__import__('default_equipment').collect(),'baseModels':units,'offers':result,'unavailable':unavailable},ensure_ascii=False,indent=2)+'\n',encoding='utf8')
+    (PROJECT/'shared/production-catalog.json').write_text(json.dumps({'schemaVersion':1,'timeEnabled':False,'productionSecondsPerTurn':20,'equipmentPolicy':'counted-chassis-and-kits','defaultKits':__import__('default_equipment').collect(),'baseModels':units,'offers':result,'unavailable':unavailable},ensure_ascii=False,indent=2)+'\n',encoding='utf8')
     import subprocess
     subprocess.run(["node",str(PROJECT/"tools/license-catalog.cjs")],check=True)
     import sys

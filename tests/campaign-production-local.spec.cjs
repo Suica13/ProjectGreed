@@ -25,4 +25,26 @@ test("regional orders and reserved production slots update immediately",async({p
  await workspace.locator('[data-unit-id="Type61"]').click();
  await workspace.getByRole("button",{name:"提交生产请求",exact:true}).click();
  await expect(workspace.locator('.campaign-purchase')).toContainText("并行生产槽位 2/5");
+ const personalBefore=await page.evaluate(()=>JSON.stringify(Economy.exportProgress()));
+ await expect.poll(()=>page.evaluate(()=>Net.awaiting)).toBe(null);
+ await page.evaluate(()=>{
+   const room=[...testEngine.rooms.values()][0];
+   room.campaign.teams[0].researched=Development.nodes("EFSF").map(node=>node.id);
+   room.revision++;testEngine.broadcast(room);
+ });
+ await workspace.locator('[data-unit-id="RGM_79"]').click();
+ await workspace.locator("#campaignProductionKit").selectOption("bazooka");
+ await workspace.locator(".campaign-kit-breakdown summary").click();
+ await expect(workspace.locator(".campaign-kit-breakdown")).toContainText("机体生产费");
+ await expect(workspace.locator(".campaign-kit-breakdown")).toContainText("出厂套件费");
+ expect(await page.evaluate(()=>Economy.hasLicense("RGM_79"))).toBe(false);
+ await expect(workspace.locator('.campaign-purchase')).toContainText("每次生产1台");
+ await workspace.getByRole("button",{name:"单独购买套件 ×1",exact:true}).click();
+ await expect.poll(()=>page.evaluate(()=>Net.snapshot.campaign.teams[0].kits.RGM_79__bazooka)).toBe(1);
+ await expect(workspace.locator('.campaign-purchase')).toContainText("该套件库存 1");
+ await expect.poll(()=>page.evaluate(()=>Net.awaiting)).toBe(null);
+ await workspace.getByRole("button",{name:"提交生产请求",exact:true}).click();
+ await expect.poll(()=>page.evaluate(()=>Net.snapshot.campaign.orders.filter(o=>o.unitId==="RGM_79"&&o.kitId==="bazooka").length)).toBe(1);
+ expect(await page.evaluate(()=>JSON.stringify(Economy.exportProgress()))).toBe(personalBefore);
+
 });

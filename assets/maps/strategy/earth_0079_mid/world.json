@@ -17652,7 +17652,7 @@
     "startingMoney": 25000,
     "startingSupplies": 50000,
     "startingTechnology": 2000,
-    "productionSecondsPerTurn": 30,
+    "productionSecondsPerTurn": 20,
     "ordinaryIncome": {
       "money": 200,
       "supplies": 400,
@@ -17663,7 +17663,7 @@
       "supplies": 600,
       "technology": 100
     },
-    "researchTurns": 2,
+    "researchTurns": 1,
     "productionSlots": 3,
     "headquartersProductionSlots": 5,
     "headquarters": [
@@ -17705,7 +17705,7 @@
         "MTank": 1
       }
     },
-    "researchPointMultiplier": 0.5
+    "researchPointMultiplier": 1
   },
   "id": "earth_0079_mid",
   "geographyVersion": 3,

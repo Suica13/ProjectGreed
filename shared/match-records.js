@@ -240,6 +240,7 @@ const MatchRecords = (() => {
     G.validateUnitCostLimit(settings.unitCostLimit);
     G.validateFogMode(settings.fogMode);
     G.validateBattleMode(settings.mode);
+    settings.pilotPolicy = G.validatePilotPolicy(settings.pilotPolicy);
     G.validateTagRestrictions(
       Object.fromEntries(
         ["bannedFactions", "bannedEras", "bannedTypes"].map((key) => [key, settings[key]]),
@@ -355,6 +356,7 @@ const MatchRecords = (() => {
     G.validateUnitCostLimit(record.settings.unitCostLimit);
     G.validateFogMode(record.settings.fogMode);
     G.validateBattleMode(record.settings.mode);
+    record.settings.pilotPolicy = G.validatePilotPolicy(record.settings.pilotPolicy);
     G.validateTagRestrictions(
       Object.fromEntries(
         ["bannedFactions", "bannedEras", "bannedTypes"].map((k) => [k, record.settings[k]]),

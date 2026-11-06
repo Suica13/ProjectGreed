@@ -280,7 +280,7 @@ const BattleHUD = (() => {
       !active || !squad.length || !squad.every(Rules.squadEligible) || !!pendingMovement() || (inCombat && !reacting);
     squadStrip.replaceChildren();
     if (!squadStrip.hidden) {
-      const heading = element("strong", "", I18n.text("小队") + ` ${squad.length}/6 · ${squad.reduce((sum,u)=>sum+Rules.squadCapacity(u),0)}/6`);
+      const heading = element("strong", "", I18n.text("小队") + ` ${squad.length}/6 · ${squad.reduce((sum,u)=>sum+Rules.squadCapacity(u, game),0)}/6`);
       const members = element("div", "squad-members");
       const all = element("button", "", I18n.text("全队"));
       all.id = "squadSelectAll";

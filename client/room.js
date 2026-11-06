@@ -50,39 +50,9 @@ const RoomPanel = (() => {
   function factionControl(member, self, snapshot) {
     const badge = PlayerProfile.badge(member, snapshot.settings.mode);
     if (!badge) return element("span", "faction-badge", "—");
-    const editingAI = member.bot && self.id === snapshot.hostId;
-    if (
-      (!editingAI && member.id !== self.id) ||
-      snapshot.started ||
-      snapshot.settings.mode === "campaign"
-    )
-      return badge;
-    const forced =
-      member.seat === null ? null : snapshot.settings.teamFactions?.[Rules.seatTeam(member.seat)];
-    const select = element("select", badge.className);
-    for (const faction of ["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"])
-      select.add(new Option(PlayerProfile.displayFaction(faction), faction));
-    select.value = member.characterFaction;
-    select.disabled = !!Net.awaiting || !!forced || snapshot.settings.mode === "quick";
-    select.title =
-      snapshot.settings.mode === "quick"
-        ? "快速战固定使用 PMC 阵营"
-        : forced
-          ? "本队已设置强制阵营"
-          : editingAI
-            ? "选择 AI 阵营"
-            : "选择自己的阵营";
-    select.setAttribute("aria-label", editingAI ? "选择 AI 阵营" : "选择自己的阵营");
-    select.onchange = () =>
-      editingAI
-        ? Net.request("configure_ai", {
-            seat: member.seat,
-            characterFaction: select.value,
-            config: {},
-          })
-        : Net.request("set_faction", { faction: select.value });
-    return select;
+    return badge;
   }
+
   function drawMap(map) {
     const canvas = byId("roomMapPreview"),
       ctx = canvas.getContext("2d");
@@ -144,10 +114,14 @@ const RoomPanel = (() => {
       "人" +
       (map.description ? " · " + map.description : "");
   }
+  function tagLabel(key, tag) {
+    if (tag.startsWith("pilot:")) return I18n.text("驾驶员") + " · " + (tag === "pilot:custom" ? "PMC" : tag.slice(6));
+    return key === "bannedTypes" ? I18n.text(Rules.unitTagName(tag)) : tag;
+  }
   function tagControls(parent, prefix, restrictions, locked, changed) {
     parent.replaceChildren();
     for (const [key, title, values] of [
-      ["bannedFactions", "禁用阵营", Rules.factions],
+      ["bannedFactions", "禁用阵营", Rules.factionTags],
       ["bannedEras", "禁用年代", Rules.eras],
       ["bannedTypes", "禁用类型", Rules.unitTags],
     ]) {
@@ -167,7 +141,7 @@ const RoomPanel = (() => {
         const summary = new Option(
           selectedTags.length
             ? selectedTags
-                .map((tag) => (key === "bannedTypes" ? I18n.text(Rules.unitTagName(tag)) : tag))
+                .map((tag) => tagLabel(key, tag))
                 .join(", ")
             : I18n.text("不禁用"),
           "",
@@ -180,7 +154,7 @@ const RoomPanel = (() => {
         for (const tag of values)
           select.add(
             new Option(
-              (key === "bannedTypes" ? I18n.text(Rules.unitTagName(tag)) : tag) +
+              tagLabel(key, tag) +
                 (selectedTags.includes(tag) ? " ✓" : ""),
               tag,
             ),
@@ -325,6 +299,9 @@ const RoomPanel = (() => {
     byId("roomShareAlliedUnits").value = settings.shareAlliedUnits ? "enabled" : "disabled";
     byId("roomShareAlliedUnits").disabled = locked;
     byId("roomFogMode").value = settings.fogMode || "full";
+    byId("roomPilotPolicy").value = settings.pilotPolicy || "allow";
+    byId("roomPilotPolicy").disabled = locked;
+    byId("roomPilotPolicy").closest("label").hidden = settings.mode === "campaign";
     byId("roomBattleMode").value = settings.mode || "regular";
     for (const id of ["roomMapSelect", "roomFogMode", "roomBattleMode"])
       byId(id).disabled = locked || (id === "roomMapSelect" && !!snapshot.loadedSave);
@@ -362,27 +339,6 @@ const RoomPanel = (() => {
           },
         );
         group.append(controls);
-        teamRulesPanel.append(group);
-      }
-    } else {
-      for (let team = 0; team < 2; team++) {
-        const group = element("label", "room-team-rules");
-        const select = element("select");
-        select.id = "teamForcedFaction" + team;
-        select.add(new Option("不限", ""));
-        select.add(new Option("PMC", "PMC"));
-        select.add(new Option("地球联邦军[0079]", "EFSF"));
-        select.add(new Option("吉翁公国军[0079]", "ZEON"));
-        for (const f of ["AEUG", "TITANS", "NEO_ZEON"])
-          select.add(new Option(PlayerProfile.displayFaction(f), f));
-        select.value = settings.teamFactions?.[team] || "";
-        select.disabled = locked;
-        select.onchange = () => {
-          const factions = [...(Net.snapshot.settings.teamFactions || [null, null])];
-          factions[team] = select.value || null;
-          sendSettings({ teamFactions: factions });
-        };
-        group.append(element("span", "", "队伍" + (team + 1) + "强制阵营"), select);
         teamRulesPanel.append(group);
       }
     }
@@ -428,29 +384,6 @@ const RoomPanel = (() => {
   }
   function armyControls(player, snapshot, locked) {
     const panel = element("div", "ai-settings");
-    const required =
-      player.seat === null ? null : snapshot.settings.teamFactions?.[Rules.seatTeam(player.seat)];
-    const factionLabel = element("label", "", "AI 阵营");
-    const faction = element("select");
-    for (const [value, label] of [
-      ["PMC", "PMC"],
-      ["EFSF", "地球联邦军[0079]"],
-      ["ZEON", "吉翁公国军[0079]"],
-      ["AEUG", "奥古[0087]"],
-      ["TITANS", "提坦斯[0087]"],
-      ["NEO_ZEON", "新吉翁[0087]"],
-    ])
-      faction.add(new Option(label, value));
-    faction.value = player.characterFaction || "PMC";
-    faction.disabled =
-      locked || !!required || ["quick", "campaign"].includes(snapshot.settings.mode);
-    faction.onchange = () =>
-      Net.request("configure_ai", {
-        seat: player.seat,
-        config: {},
-        characterFaction: faction.value,
-      });
-    factionLabel.append(faction);
     const strengthLabel = element("label", "", "AI 单位强度");
     const strength = element("select");
     for (const percent of Rules.strengthPercentages)
@@ -464,7 +397,7 @@ const RoomPanel = (() => {
         config: { difficulty: Number(strength.value) },
       });
     strengthLabel.append(strength);
-    panel.append(factionLabel, strengthLabel);
+    panel.append(strengthLabel);
     return panel;
   }
   function quickArmyControls(player, snapshot, locked) {
@@ -511,7 +444,7 @@ const RoomPanel = (() => {
   }
   function restrictionSummary(restrictions = {}) {
     const tags = [
-      ...(restrictions.bannedFactions || []),
+      ...(restrictions.bannedFactions || []).map(tag => tagLabel("bannedFactions", tag)),
       ...(restrictions.bannedEras || []),
       ...(restrictions.bannedTypes || []).map((tag) => I18n.text(Rules.unitTagName(tag))),
     ];
@@ -531,7 +464,7 @@ const RoomPanel = (() => {
           title +
             "：" +
             (tags
-              .map((tag) => (key === "bannedTypes" ? I18n.text(Rules.unitTagName(tag)) : tag))
+              .map((tag) => tagLabel(key, tag))
               .join("、") || "不禁用"),
         ),
       );
@@ -552,7 +485,7 @@ const RoomPanel = (() => {
         appendTagDetails(content, snapshot.settings.teamRestrictions?.[team]);
       } else {
         content.append(
-          element("p", "", "强制阵营：" + (snapshot.settings.teamFactions?.[team] || "不限")),
+          element("p", "", "阵营：PMC"),
         );
       }
       content.append(element("h3", "", "房间禁用标签"));
@@ -800,8 +733,8 @@ const RoomPanel = (() => {
             element(
               "span",
               "overcost-label",
-              player.reasons?.[index] === "license"
-                ? "未获得部署许可"
+              player.reasons?.[index] === "pilot_banned" ? "驾驶员被禁用，请解除配属" : player.reasons?.[index] === "stock" ? "机体库存不足" : player.reasons?.[index] === "kit_stock" ? "套件库存不足" : player.reasons?.[index] === "license"
+                ? "未许可"
                 : player.reasons?.[index] === "wip"
                   ? "WIP"
                   : player.reasons?.[index] === "faction_mismatch"
@@ -912,7 +845,7 @@ const RoomPanel = (() => {
       const plan = Rules.planFormation(
         units,
         limit,
-        { ...Rules.armyRestrictions(snapshot.settings, own), licenses: undefined },
+        { ...Rules.armyRestrictions(snapshot.settings, own), licenses: undefined, inventory: undefined, kits: undefined },
         Rules.armyUnitLimit(snapshot.settings, own),
       );
       valid = !!plan.deployable.length;
@@ -960,13 +893,13 @@ const RoomPanel = (() => {
       const forced =
         snapshot.settings.mode === "campaign"
           ? snapshot.campaign?.teams[team]?.faction || ["EFSF", "ZEON"][team]
-          : snapshot.settings.teamFactions?.[team];
+          : "PMC";
       const summary = element(
         "button",
         "team-ban-summary",
         snapshot.settings.mode === "quick"
           ? "队伍禁用：" + restrictionSummary(snapshot.settings.teamRestrictions?.[team])
-          : "强制阵营：" + (forced || "不限"),
+          : "阵营：" + forced,
       );
       summary.id = "teamBanSummary" + team;
       summary.disabled = snapshot.settings.mode === "campaign";
@@ -1289,6 +1222,7 @@ const RoomPanel = (() => {
   byId("roomShareAlliedUnits").onchange = () =>
     sendSettings({ shareAlliedUnits: byId("roomShareAlliedUnits").value === "enabled" });
   byId("roomFogMode").onchange = () => sendSettings({ fogMode: byId("roomFogMode").value });
+  byId("roomPilotPolicy").onchange = () => sendSettings({ pilotPolicy: byId("roomPilotPolicy").value });
   byId("roomBattleMode").onchange = () =>
     sendSettings({ battleMode: byId("roomBattleMode").value });
   byId("shareUnitsToAllies").onclick = () => Net.request("share_units");

@@ -35,7 +35,7 @@ function funded() {
 
 // Legacy consumable-kit and sale checks were replaced by deployment-licenses.test.cjs.
 
-test("research spends technology points, money and supplies together with rollback", () => {
+test("research unlocks at cumulative progress without spending and rolls back on storage failure", () => {
   const { E, D, context, storage } = funded();
   const node = tree.EFSF.find(
     (n) => n.points && n.requires.every((id) => D.unlockedTech("EFSF").includes(id)),
@@ -59,21 +59,21 @@ test("research spends technology points, money and supplies together with rollba
   assert(!D.unlockedTech("EFSF").includes(node.id));
   context.localStorage.setItem = set;
   assert(D.research("EFSF", node.id));
-  assert.equal(E.snapshot().money, rich.money - node.money);
-  assert.equal(E.snapshot().supplies, rich.supplies - node.supplies);
-  assert.equal(D.pointBalance("EFSF"), 100000 - node.points);
+  assert.equal(E.snapshot().money, rich.money);
+  assert.equal(E.snapshot().supplies, rich.supplies);
+  assert.equal(D.pointBalance("EFSF"), 100000);
   const restored = load(Object.fromEntries(storage));
   assert(restored.D.unlockedTech("EFSF").includes(node.id));
   assert.equal(restored.E.snapshot().money, E.snapshot().money);
 });
 
-test("technology cannot bypass resource costs and prices retain original timing metadata", () => {
+test("research requires no currency; original strategy costs and timings remain archived", () => {
   const { E, D } = load();
   const node = tree.EFSF.find(
     (n) => n.money > 5000 && n.requires.every((id) => D.unlockedTech("EFSF").includes(id)),
   );
   D.creditAward({ id: "points", matchId: "test", faction: "EFSF", points: 100000 });
-  assert(!D.research("EFSF", node.id));
+  assert(D.research("EFSF", node.id));
   assert.equal(E.snapshot().money, 5000);
   for (const nodes of Object.values(tree))
     for (const n of nodes) {
@@ -97,7 +97,7 @@ test("technology cannot bypass resource costs and prices retain original timing 
 test("native factory batch and mixed-kit metadata stay archived behind license pricing", () => {
   const { E } = load();
   const offer = catalog.offers[E.baseModel("Type61A5")];
-  assert.equal(catalog.equipmentPolicy, "free-equipment-deployment-license");
+  assert.equal(catalog.equipmentPolicy, "counted-chassis-and-kits");
   assert.equal(new Set(offer.source.outputs.map((o) => o.equipmentIndex)).size, 2);
   assert.equal(offer.output.kitId, "standard");
   assert.equal(offer.output.quantity, 3);

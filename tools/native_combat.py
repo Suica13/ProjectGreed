@@ -49,6 +49,16 @@ def payload(text):
     return {key:float(value) for key,value in re.findall(r"\b(\w+)\s*[:=]\s*(-?[\d.]+)",text)}
 
 
+def damage_spawn(text):
+    # Damage carriers and visual helpers have independent resources. Never let
+    # a helper's speed/life overwrite the actual shot's payload.
+    for spawn in re.split(r"\)\s*,\s*(?=\w)", text):
+        values = payload(spawn)
+        if any(values.get(key, 0) > 0 for key in CHANNELS):
+            return spawn
+    return text
+
+
 def source_for(weapon, prefab=None):
     root = MOD / prefab["source"].split("/")[0] if prefab else ROOT
     return root / weapon["source"]["file"]
@@ -81,7 +91,7 @@ def native_weapon(prefab, weapon, unit_data):
         turret = section(data,"turret_"+turret_id)
         projectile_id = action.get("fireTurretXAtGround_withProjectile",turret["projectile"])
         projectile = section(data,"projectile_"+projectile_id)
-        raw = projectile.get("spawnUnit","")
+        raw = damage_spawn(projectile.get("spawnUnit",""))
         values = payload(raw)
         count = re.search(r"^\s*\w+\*(\d+)",raw)
         count = int(count[1]) if count else 1

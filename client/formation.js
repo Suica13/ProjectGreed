@@ -172,6 +172,7 @@ const Formation = (() => {
       : {}),
     characterFaction: group,
     licenses: Economy.snapshot().licenses,
+    ...(Net.active && Net.snapshot?.settings.mode === "quick" ? {} : Economy.normalizeStock(Economy.snapshot())),
   });
   // Drafts may contain future units; technology is required to produce them; owned stock can deploy.
   const canAddUnit = (model) =>
@@ -239,6 +240,23 @@ const Formation = (() => {
     }
   }
   function loadCharacter() {
+    try {
+      const marker = legacyStorageKey + ".pmc-unified";
+      if (!localStorage.getItem(marker)) {
+        const merged = [];
+        const seen = new Set();
+        for (const faction of ["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"]) {
+          const saved = JSON.parse(localStorage.getItem(legacyStorageKey + "." + faction) || "null");
+          for (const squad of saved?.version === formationSaveVersion ? saved.squads || [] : []) {
+            const key = JSON.stringify(squad);
+            if (!seen.has(key)) { merged.push(squad); seen.add(key); }
+          }
+        }
+        if (merged.length) localStorage.setItem(legacyStorageKey + ".PMC", JSON.stringify({version: formationSaveVersion, squads: merged}));
+        localStorage.setItem(marker, "1");
+      }
+    } catch {}
+
     storageKey = legacyStorageKey + "." + group;
     let stored = null;
     let active = 0;
@@ -296,6 +314,7 @@ const Formation = (() => {
     renderCatalog();
   }
   function setGroup(next) {
+    next = "PMC";
     if (!["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(next) || group === next)
       return;
     finishPilotEditor();
@@ -748,12 +767,8 @@ const Formation = (() => {
   function pilotButtonText(button, prefix, entry, model) {
     const name = entry.customPilot?.name || PilotSystem.defaultName(model);
     button.classList.add("formation-pilot-button");
-    const label = element("span", "pilot-button-prefix", prefix + " · ");
-    const viewport = element("span", "pilot-name-viewport");
-    const text = element("span", "pilot-name-scroll", name);
-    if (entry.customPilot) text.setAttribute("data-i18n-ignore", "");
-    viewport.append(text);
-    button.replaceChildren(label, viewport);
+    button.textContent = prefix + " · " + name;
+    if (entry.customPilot) button.setAttribute("data-i18n-ignore", "");
     button.title = prefix + " · " + name;
   }
   function renderDetail() {
@@ -801,8 +816,8 @@ const Formation = (() => {
     const model = Rules.formationModel(entry);
     window.dispatchEvent(new CustomEvent("unit-preview", { detail: { id: entry.unitId } }));
     byId("formationDetailTitle").textContent = model.code + " " + model.name;
-    byId("formationDetailTags").replaceChildren(unitTags(model));
-    ProductionUI.renderLicensePurchase(originalEntry.unitId);
+    byId("formationDetailTags").replaceChildren(unitTags(model, {limit: Infinity}));
+    ProductionUI.renderLicensePurchase(originalEntry.unitId, originalEntry.kitId);
     const pilotButton = byId("formationDetailPilot");
     pilotButton.hidden = detailIndex === null || !!previewModel;
     pilotButtonText(pilotButton, "配属驾驶员", originalEntry, model);
@@ -824,7 +839,7 @@ const Formation = (() => {
       const displayKit = previewModel
         ? model
         : Rules.formationModel({ ...originalEntry, kitId: kit.id });
-      kits.add(new Option(`${displayKit.kitName} · COST ${displayKit.cost}${suffix}`, kit.id));
+      kits.add(new Option(`${displayKit.kitName} · COST ${displayKit.cost} · 库存 ${Economy.kitQuantity(equipmentPrefab.id + "__" + kit.id)}${suffix}`, kit.id));
     }
     kits.value = previewModel ? entry.kitId : originalEntry.kitId;
     kits.disabled = !!previewModel;
@@ -834,6 +849,7 @@ const Formation = (() => {
       ["HP", model.hp.toLocaleString()],
       ["EN", model.en],
       ["COST", model.cost],
+      ...(!model.formOnly ? [["生产周期", Economy.productionTiming(entry.unitId, entry.kitId).turns + "回合／台"]] : []),
       ["视野距离", formatDistance(model.sensors.sight)],
       ["侦察距离", formatDistance(model.sensors.radar)],
       ["机动", model.speed ?? 100],
@@ -1064,7 +1080,7 @@ const Formation = (() => {
     const plan = draft.length
       ? Rules.planFormation(draft, budget(), restrictions(), Rules.catalog.formation.maxUnits)
       : { disabled: [] };
-    const shortagePlan = Economy.licensePlan(draft);
+    const shortagePlan = Economy.purchasePlan(draft);
     byId("produceMissingFormation").hidden =
       byId("formationMain").dataset.page === "pilots" || !shortagePlan.items.length;
     byId("produceMissingFormation").classList.toggle(
@@ -1092,23 +1108,8 @@ const Formation = (() => {
     draft.forEach((entry, i) => {
       if (!entry.preload) appendCargo(i);
     });
-    displayOrder.forEach((i, position) => {
-      const entry = draft[i],
-        previous = draft[displayOrder[position - 1]];
-      if (
-        entry.preload &&
-        (!previous?.preload ||
-          previous.preload.carrierIndex !== entry.preload.carrierIndex ||
-          previous.preload.hangarId !== entry.preload.hangarId)
-      ) {
-        const divider = element(
-          "div",
-          "formation-hangar-divider",
-          hangarLabel(entry.preload.carrierIndex, entry.preload.hangarId),
-        );
-        divider.dataset.hangarGroup = entry.preload.carrierIndex + "/" + entry.preload.hangarId;
-        list.append(divider);
-      }
+    displayOrder.forEach((i) => {
+      const entry = draft[i];
       const row = element(
           "div",
           "formation-row" + (entry.preload ? " formation-preloaded-row" : ""),
@@ -1148,8 +1149,8 @@ const Formation = (() => {
           element(
             "span",
             "overcost-label",
-            plan.reasons[i] === "license"
-              ? "未获得部署许可"
+            plan.reasons[i] === "pilot_banned" ? "驾驶员被禁用，请解除配属" : plan.reasons[i] === "stock" ? "机体库存不足" : plan.reasons[i] === "kit_stock" ? "套件库存不足" : plan.reasons[i] === "license"
+              ? "未许可"
               : plan.reasons[i] === "wip"
                 ? "WIP"
                 : plan.reasons[i] === "faction_mismatch"
@@ -1170,12 +1171,11 @@ const Formation = (() => {
       const prefab = Rules.catalog.prefabs.find((p) => p.id === entry.unitId),
         kit = prefab.weaponKits.find((k) => k.id === entry.kitId);
       const metadata = element("span", "unit-line-meta");
-      metadata.append(unitTags(model));
+      metadata.append(unitTags(model, {cost: model.cost, kitName: model.kitName}));
       label.title = model.description || "";
       label.append(
         element("strong", "", `${entry.preload ? "" : i + 1 + ". "}${model.code} ${model.name}`),
         metadata,
-        unitSummaryTags(model.adaptability, model.kitName, model.cost),
       );
       if (entry.preload) {
         const carrier = draft[entry.preload.carrierIndex],
@@ -1204,18 +1204,18 @@ const Formation = (() => {
         element(
           "small",
           "formation-inventory-count",
-          Economy.hasLicense(entry.unitId) ? "已获得部署许可" : "未获得部署许可",
+          "机体库存 " + Economy.quantity(entry.unitId) + " · 当前套件 " + Economy.kitQuantity(entry.unitId + "__" + entry.kitId),
         ),
       );
       if (!Economy.hasLicense(entry.unitId) && !Development.allows(group, entry.unitId))
         portrait.append(undevelopedWarning());
-      if (plan.reasons[i] === "license") {
+      if (["license", "stock", "kit_stock"].includes(plan.reasons[i])) {
         row.classList.add("inventory-shortage");
-        const produce = element("button", "produce-shortage-unit", "部署许可");
+        const produce = element("button", "produce-shortage-unit", "前往生产");
         produce.type = "button";
         produce.onclick = () => openProduction(entry.unitId);
         const prompt = element("div", "inventory-shortage-prompt");
-        prompt.append(element("span", "", "未获得部署许可"), produce);
+        prompt.append(element("span", "", plan.reasons[i] === "license" ? "未许可" : plan.reasons[i] === "pilot_banned" ? "驾驶员被禁用，请解除配属" : plan.reasons[i] === "stock" ? "机体库存不足" : "套件库存不足"), produce);
         row.querySelector(":scope > .overcost-label")?.remove();
         row.append(prompt);
       }
@@ -1260,7 +1260,7 @@ const Formation = (() => {
     list.replaceChildren();
     const command = PilotSystem.commandUnit(model);
     const available = pilotStore.pilots.filter(
-      (p) => !p.needsRecruitment && PilotSystem.canAssign(p, group),
+      (p) => !p.needsRecruitment && PilotSystem.canAssign(p, group) && PilotSystem.allowed(p, restrictions()),
     );
     for (const profile of [null, ...available]) {
       const id = profile?.id || null,
@@ -1301,14 +1301,11 @@ const Formation = (() => {
             keys.map((key) => PilotSystem.labels[key] + " " + stats[key]).join(" · "),
           ),
         );
-      if (profile)
-        details.append(
-          element(
-            "small",
-            "",
-            `Lv.${profile.level} · COST +${PilotSystem.cost(profile)} · EXP ${profile.experience}/${PilotSystem.experienceRequired(profile.level, profile)}`,
-          ),
-        );
+      if (profile) {
+        const progress = element("small", "pilot-roster-progress", `Lv.${profile.level} · ${pilotExperienceText(profile)}`);
+        progress.append(pilotCostTag(profile));
+        details.append(progress, SkillControls.pilotSummary(profile));
+      }
       choose.disabled = !!selected || !!occupied;
       choose.onclick = () => {
         delete entry.pilotId;
@@ -1566,7 +1563,7 @@ const Formation = (() => {
       .filter(
         (prefab) =>
           pickerCompatible(prefab) &&
-          (byId("formationStock").value === "all" || Economy.hasLicense(prefab.id)),
+          (byId("formationStock").value === "all" || Economy.quantity(prefab.id) > 0),
       )
       .sort(UnitCatalog.compareDevelopedCost(group));
     if (!prefabs.some((p) => p.id === byId("formationPrefab").value))
@@ -1593,26 +1590,16 @@ const Formation = (() => {
       const title = element("strong", "", prefab.code + " " + prefab.name);
       const info = element("span", "catalog-unit-info");
       const costs = prefab.weaponKits.map((k) => prefab.stats.cost + k.cost);
-      info.append(
-        unitTags(prefab),
-        title,
-        unitSummaryTags(
-          prefab.stats.adaptability,
-          (
-            prefab.weaponKits.find((kit) => kit.id === pickerKits.get(prefab.id)) ||
-            prefab.weaponKits[0]
-          ).name,
-          Math.min(...costs) === Math.max(...costs)
-            ? Math.min(...costs)
-            : Math.min(...costs) + "?" + Math.max(...costs),
-        ),
-      );
+      const selectedKit = prefab.weaponKits.find(kit => kit.id === pickerKits.get(prefab.id)) || prefab.weaponKits[0];
+      const costLabel = Math.min(...costs) === Math.max(...costs)
+        ? Math.min(...costs) : Math.min(...costs) + "～" + Math.max(...costs);
+      info.append(title, unitTags(prefab, {cost: costLabel, kitName: selectedKit.name}));
       const stockLine = element("span", "formation-stock-line");
       stockLine.append(
         element(
           "small",
           "formation-inventory-count",
-          Economy.hasLicense(prefab.id) ? "已获得部署许可" : "未获得部署许可",
+          "机体库存 " + Economy.quantity(prefab.id) + (Economy.hasLicense(prefab.id) ? "" : " · 未许可"),
         ),
       );
       info.append(stockLine);
@@ -1776,123 +1763,44 @@ const Formation = (() => {
     });
   }
   async function replenish(entries, faction = group) {
-    const plan = Economy.licensePlan(entries);
+    const plan = Economy.purchasePlan(entries);
     if (!plan.items.length) return true;
-    // Only shortage-plan items participate in production checks or the purchase.
-    // Stocked units never reach development validation, regardless of their unlock state.
-    const undeveloped = plan.items
-      .filter((item) => !Development.allows(faction, item.unitId))
-      .map((item) => item.unitId);
-    if (undeveloped.length) {
-      const originalGroup = group,
-        originalIndex = index,
-        originalDraft = JSON.stringify(draft);
-      showLicenseDialog(
-        "尚未开发，无法购买许可",
-        "存在尚未开发单位，无法购买许可，是否从当前编组移除？本次购买已中止。",
-        undeveloped,
-        [
-          ["取消", "cancelRemoveUndeveloped"],
-          [
-            "移除",
-            "removeUndevelopedUnits",
-            () => {
-              if (
-                group !== originalGroup ||
-                index !== originalIndex ||
-                JSON.stringify(draft) !== originalDraft
-              )
-                return;
-              closeDetail();
-              closePicker();
-              for (let i = draft.length - 1; i >= 0; i--)
-                if (undeveloped.includes(draft[i].unitId)) removeEntry(i);
-              render();
-              renderCatalog();
-              note("已移除尚未开发单位，请重新确认购买。");
-            },
-          ],
-        ],
-      );
-      return false;
-    }
-    const unavailable = plan.items.filter((item) => {
-      const offer = Economy.licenseOffer(item.unitId);
-      const prefab = Rules.catalog.prefabs.find((unit) => unit.id === item.unitId);
-      return (
-        !offer ||
-        !prefab ||
-        prefab.wip ||
-        (faction !== "PMC" && !(offer.availableFactions || [offer.faction]).includes(faction))
-      );
-    });
+    const unavailable = plan.items.filter(item => !item.offer ||
+      !Development.allows(faction, item.unitId));
     if (unavailable.length) {
-      showLicenseDialog(
-        "无法购买许可",
-        "以下单位无法购买许可，已中止本次购买：",
-        unavailable.map((item) => item.unitId),
-        [["确认", "acknowledgeUnavailableUnits"]],
-      );
+      showLicenseDialog("无法补充库存", "存在尚未开发或无法生产的单位／套件，本次未扣费。",
+        [...new Set(unavailable.map(item => item.unitId))], [["确认", "acknowledgeUnavailableUnits"]]);
       return false;
     }
-    const originalEntries = JSON.stringify(entries),
-      originalGroup = group,
-      originalIndex = index;
-    const confirmed = await GameDialog.confirm("是否购买以下单位的永久部署许可？", {
-      title: "一键购买许可",
-      items: [
-        ...plan.items.map((item) => {
-          const unit = Rules.catalog.prefabs.find((prefab) => prefab.id === item.unitId);
-          return unit.code + " " + I18n.text(unit.name) + " · 部署许可";
-        }),
-        I18n.text("资金") + "：" + formatNumber(plan.money),
-        I18n.text("物资") + "：" + formatNumber(plan.supplies),
-      ],
+    const original = JSON.stringify(entries), originalGroup = group, originalIndex = index;
+    const confirmed = await GameDialog.confirm("购买缺少的部署许可，并补充机体与套件库存？", {
+      title: "一键补充库存",
+      items: [...plan.items.map(item => {
+        const model = UnitModels[item.kind === "kits" ? item.id : Economy.defaultModel(item.unitId)];
+        return (model?.name || item.unitId) + " · " +
+          (item.kind === "licenses" ? "部署许可（赠送默认配置1台）" : item.kind === "inventory" ? "机体" : model?.kitName || "套件") + " ×" + item.count;
+      }), "资金：" + formatNumber(plan.money), "物资：" + formatNumber(plan.supplies)],
       confirmText: "确认购买",
     });
     if (!confirmed) return false;
-    // A confirmation authorizes exactly the displayed units and price, never a changed plan.
-    if (
-      group !== originalGroup ||
-      index !== originalIndex ||
-      JSON.stringify(entries) !== originalEntries ||
-      JSON.stringify(Economy.licensePlan(entries)) !== JSON.stringify(plan)
-    ) {
-      note("编组或许可已变化，请重新确认购买。");
-      return false;
+    if (group !== originalGroup || index !== originalIndex || JSON.stringify(entries) !== original ||
+        JSON.stringify(Economy.purchasePlan(entries)) !== JSON.stringify(plan)) {
+      note("编组或库存已变化，请重新确认。"); return false;
     }
     try {
-      const result = Economy.purchaseMissingLicenses(entries, faction);
-      if (!result.ok) {
-        if (result.reason === "unavailable")
-          showLicenseDialog(
-            "无法购买许可",
-            "以下单位无法购买许可，已中止本次购买：",
-            result.units,
-            [["确认", "acknowledgeUnavailableUnits"]],
-          );
-        else note("货币不足，已取消购买。");
-        return false;
-      }
-      note("已获得所需单位的永久部署许可。");
-      return true;
-    } catch (error) {
-      note("许可购买失败：" + Economy.errorMessage(error));
-      return false;
-    }
+      const result = Economy.purchaseMissingStock(entries, faction);
+      if (!result.ok) { note(result.reason === "funds" ? "资金或物资不足，未扣费。" : "无法补充库存，未扣费。"); return false; }
+      note("已补充机体与套件库存。"); return true;
+    } catch (error) { note("库存购买失败：" + Economy.errorMessage(error)); return false; }
   }
   function checkLicenses(entries, proceed) {
-    if (!Economy.licensePlan(entries).items.length) return proceed();
-    showLicenseDialog(
-      "单位未获得部署许可",
-      "编组中存在未获得部署许可的单位。强制准备后，未许可单位不会生成。",
-      [],
-      [
-        ["取消", "cancelMissingStock"],
-        ["去往机库（编组）", "openStockWarehouse", () => open()],
-        ["强制准备", "forceReadyWithoutStock", proceed],
-      ],
-    );
+    const quick = Net.snapshot?.settings.mode === "quick";
+    if (quick ? !Economy.licensePlan(entries).items.length : !Economy.purchasePlan(entries).items.length) return proceed();
+    showLicenseDialog(quick ? "部署许可不足" : "出战库存不足", quick ? "快速战只需部署许可，无需机体或套件库存。缺少许可的单位不会生成。" : "编组缺少部署许可、机体或套件。强制准备后，不足的单位不会生成。", [], [
+      ["取消", "cancelMissingStock"],
+      ["去往机库", "openStockWarehouse", () => open()],
+      ["强制准备", "forceReadyWithoutStock", proceed],
+    ]);
   }
   function openProduction(unitId) {
     closeDetail();
@@ -2011,8 +1919,9 @@ const Formation = (() => {
     const growth = element(
       "p",
       "",
-      `${I18n.text("悟性")} ${profile.comprehension} · ${I18n.text("最高等级")} ${profile.maxLevel} · ${profile.costBase} COST + ${profile.costPerLevel} COST/Lv.`,
+      `${I18n.text("悟性")} ${profile.comprehension} · ${I18n.text("最高等级")} ${profile.maxLevel}`,
     );
+    growth.append(element("span", "unit-summary-tag cost", `COST ${PilotSystem.aceBaseCost(profile)} + ${profile.costPerLevel}/Lv.`));
     const description = element(
       "p",
       "ace-biography",
@@ -2129,10 +2038,12 @@ const Formation = (() => {
       const content = element("span", "ace-candidate-content");
       content.append(
         aceName(profile),
+        SkillControls.pilotSummary({ aceId: profile.id }),
         aceTags(profile),
-        element("small", "ace-recruit-status", aceStatus(profile)),
       );
-      button.append(img, content);
+      const portrait = element("span", "pilot-roster-portrait");
+      portrait.append(img, element("small", "pilot-recruit-state", aceStatus(profile)));
+      button.append(portrait, content);
       button.onclick = () => {
         selectedAce = profile.id;
         renderAceRecruitment();
@@ -2229,6 +2140,20 @@ const Formation = (() => {
     catalogRevision++;
     if (aceRecruit.open) renderAceRecruitment();
   });
+  function pilotCostTag(pilot) {
+    return element("span", "unit-summary-tag cost pilot-cost-tag", "COST +" + PilotSystem.cost(pilot));
+  }
+  function pilotExperienceText(pilot) {
+    return `EXP ${pilot.experience}/${pilot.level >= PilotSystem.maxLevel(pilot) ? "MAX" : PilotSystem.experienceRequired(pilot.level, pilot)}`;
+  }
+  function populatePilotFilters() {
+    const filter = byId("pilotRosterFilter"), selected = filter.value || "all";
+    filter.replaceChildren(new Option(I18n.text("全部"), "all"), new Option(I18n.text("PMC驾驶员"), "custom"),
+      ...Rules.factions.map(faction => new Option(PlayerProfile.displayFaction(faction), faction)));
+    filter.value = selected;
+  }
+  populatePilotFilters();
+  window.addEventListener("language-change", populatePilotFilters);
   function renderPilotRoster() {
     const list = byId("customPilotList");
     const scrollTop = list.scrollTop;
@@ -2237,16 +2162,17 @@ const Formation = (() => {
       `驾驶员 ${pilotStore.pilots.length} 名 · COST +${pilotStore.pilots.reduce((sum, p) => sum + PilotSystem.cost(p), 0)}`;
     if (!pilotStore.pilots.length)
       list.append(
-        element("p", "muted", "点击下方“新增驾驶员”创建。未配属时使用单位所属阵营的默认驾驶员。"),
+        element("p", "muted", "点击下方“新增PMC驾驶员”创建。未配属时使用单位所属阵营的默认驾驶员。"),
       );
     const search = byId("pilotRosterSearch").value.trim().toLocaleLowerCase();
     const visible = pilotStore.pilots.filter((p) =>
-      (p.name + " " + I18n.pilotName(p)).toLocaleLowerCase().includes(search),
+      (p.name + " " + I18n.pilotName(p)).toLocaleLowerCase().includes(search) && PilotSystem.matchesFilter(p, byId("pilotRosterFilter").value),
     );
     if (pilotStore.pilots.length && !visible.length)
       list.append(element("p", "muted", "没有符合条件的驾驶员。"));
     for (const p of visible) {
       const card = element("div", "formation-row custom-pilot-card");
+      card.dataset.pilotId = p.id;
       const img = element("img");
       img.src = PilotSystem.portrait(p);
       img.alt = "";
@@ -2255,28 +2181,36 @@ const Formation = (() => {
         ? aceName(PilotSystem.aceProfile(p))
         : element("span", "", I18n.pilotName(p));
       pilotName.dataset.i18nIgnore = "";
-      text.append(
-        pilotName,
-        document.createTextNode(` · Lv.${p.level} · COST +${PilotSystem.cost(p)}`),
-      );
-      text.append(
-        element(
-          "small",
-          "",
-          p.ace
-            ? `ACE · EXP ${p.experience}/${p.level === PilotSystem.maxLevel(p) ? "MAX" : PilotSystem.experienceRequired(p.level, p)}`
-            : `EXP ${p.experience}/${PilotSystem.experienceRequired(p.level, p)} · 强化点 ${p.points}`,
-        ),
-      );
+      const heading = element("span", "pilot-roster-heading");
+      heading.append(pilotName, element("span", "", `Lv.${p.level}`));
+      const progress = element("small", "pilot-roster-progress", (p.ace ? "ACE · " : "") + pilotExperienceText(p));
+      if (!p.ace && p.points > 0) {
+        const points = element("span", "pilot-training-points", I18n.text("强化点+"));
+        points.title = I18n.text("可用强化点") + "：" + p.points;
+        progress.append(points);
+      }
+      const skills = SkillControls.pilotSummary(p);
+      skills.prepend(pilotCostTag(p));
+      text.append(heading, progress, skills);
       const record = element("span", "pilot-record");
       renderPilotRecord(record, p);
       text.append(record);
-      if (p.ace)
-        text.append(
-          aceTags(PilotSystem.aceProfile(p)),
-          element("small", "ace-recruit-status", aceStatus(PilotSystem.aceProfile(p))),
-        );
+
+      const factionTags = element("span", "unit-tags pilot-faction-tags");
+      if (p.ace) {
+        const tags = aceTags(PilotSystem.aceProfile(p));
+        factionTags.append(...tags.children);
+
+      } else {
+        const faction = element("span", "faction-tag", "PMC");
+        faction.dataset.faction = "PMC";
+        factionTags.append(faction);
+      }
+      heading.append(factionTags);
+
       img.className = "formation-icon";
+      const portrait = element("span", "pilot-roster-portrait");
+      portrait.append(img, element("small", "pilot-recruit-state", p.needsRecruitment ? "待回归" : "已招募"));
       text.className = "custom-pilot-summary";
       const actions = element("div", "formation-row-actions");
       const details = element("button", "formation-detail-button", "详情");
@@ -2309,13 +2243,13 @@ const Formation = (() => {
       actions.append(details);
       if (!p.ace) actions.append(remove);
       if (p.needsRecruitment) {
-        text.append(element("small", "ace-recruit-locked", "待回归"));
+
         const recruit = element("button", "", "重新招募");
         recruit.type = "button";
         recruit.onclick = () => openAceRecruitment(p.aceId);
         actions.append(recruit);
       }
-      card.append(img, text, actions);
+      card.append(portrait, text, actions);
       card.onclick = (event) => {
         if (!event.target.closest("button")) editPilot(p);
       };
@@ -2325,6 +2259,7 @@ const Formation = (() => {
     list.scrollTop = scrollTop;
   }
   byId("pilotRosterSearch").oninput = renderPilotRoster;
+  byId("pilotRosterFilter").onchange = renderPilotRoster;
   function showFormationTab(tab) {
     finishPilotEditor();
     const pilots = tab === "pilots";
@@ -2335,7 +2270,7 @@ const Formation = (() => {
     byId("formationUnitsWorkspace").hidden = pilots;
     byId("formationPilotToolbar").hidden = !pilots;
     byId("formationPilotBudget").hidden = !pilots;
-    byId("produceMissingFormation").hidden = pilots || !Economy.licensePlan(draft).items.length;
+    byId("produceMissingFormation").hidden = pilots || !Economy.purchasePlan(draft).items.length;
     byId("saveFormation").hidden = false;
     if (pilots) renderPilotRoster();
   }
@@ -2502,9 +2437,11 @@ const Formation = (() => {
       renderAceInformation(byId("acePilotDetails"), PilotSystem.aceProfile(pilotEdit));
     resetTraining.textContent = "重置属性点 · 资金 " + 1000 * pilotEdit.level;
     resetTraining.disabled = pilotIsNew || !Economy.affordable({ money: 1000 * pilotEdit.level });
-    byId("customPilotProgress").textContent =
-      `Lv.${pilotEdit.level}${pilotEdit.level === PilotSystem.maxLevel(pilotEdit) ? " MAX" : ""} · COST +${PilotSystem.cost(pilotEdit)} · EXP ${pilotEdit.experience}/${pilotEdit.level === PilotSystem.maxLevel(pilotEdit) ? "MAX" : PilotSystem.experienceRequired(pilotEdit.level, pilotEdit)}${pilotEdit.ace ? " · ACE · " + I18n.text("悟性") + " " + PilotSystem.aceProfile(pilotEdit).comprehension : " · 强化点 " + pilotEdit.points}`;
+    byId("customPilotProgress").replaceChildren(
+      document.createTextNode(`Lv.${pilotEdit.level} · `), pilotCostTag(pilotEdit),
+      document.createTextNode(` · ${pilotExperienceText(pilotEdit)}${pilotEdit.ace ? " · ACE · " + I18n.text("悟性") + " " + PilotSystem.aceProfile(pilotEdit).comprehension : " · 强化点 " + pilotEdit.points}`));
     renderPilotRecord(byId("customPilotRecord"), pilotEdit);
+    byId("customPilotSkills").replaceChildren(SkillControls.pilotSummary(pilotEdit));
     learnPilotSkillButton.hidden = !!pilotEdit.ace;
     learnPilotSkillButton.disabled = pilotEdit.level < PilotSystem.skillUnlockLevel;
     learnPilotSkillButton.classList.toggle(
@@ -2546,7 +2483,7 @@ const Formation = (() => {
       " " +
       (PilotSystem.demotionCost(pilotEdit) ?? "—");
     byId("createPilotConfirm").textContent =
-      I18n.text("招募驾驶员") + " · " + I18n.text("资金") + " " + PilotSystem.customRecruitmentCost;
+      I18n.text("招募PMC驾驶员") + " · " + I18n.text("资金") + " " + PilotSystem.customRecruitmentCost;
     byId("createPilotConfirm").disabled = !Economy.affordable({
       money: PilotSystem.customRecruitmentCost,
     });
@@ -2755,7 +2692,9 @@ const Formation = (() => {
   const learnPilotSkillButton = element("button", "pilot-skill-button", "6级解锁技能");
   learnPilotSkillButton.id = "learnPilotSkill";
   learnPilotSkillButton.type = "button";
-  byId("customPilotProgress").after(learnPilotSkillButton);
+  const customPilotSkills = element("div");
+  customPilotSkills.id = "customPilotSkills";
+  byId("customPilotProgress").after(customPilotSkills, learnPilotSkillButton);
   const pilotSkillPicker = element("dialog", "pilot-attribute-help pilot-skill-picker");
   pilotSkillPicker.id = "pilotSkillPicker";
   pilotSkillPicker.setAttribute("aria-labelledby", "pilotSkillPickerTitle");
@@ -2822,24 +2761,24 @@ const Formation = (() => {
   pilotHelp.setAttribute("aria-labelledby", "pilotAttributeHelpTitle");
   document.body.append(pilotHelp);
   const pilotEffectDescriptions = [
-    ["射击", "每点增加0.3125个百分点的射击伤害倍率；100点为100%，200点为131.25%。"],
-    ["格斗", "每点增加0.3125个百分点的格斗伤害倍率；100点为100%，200点为131.25%。"],
-    ["防御", "每点降低0.3125个百分点的承受伤害倍率；100点为100%，200点为68.75%。"],
+    ["射击", "每点增加0.5个百分点的射击伤害倍率；100点为100%，200点为150%。"],
+    ["格斗", "每点增加0.5个百分点的格斗伤害倍率；100点为100%，200点为150%。"],
+    ["防御", "每点降低0.5个百分点的承受伤害倍率；100点为100%，200点为50%。"],
     [
       "机动",
-      "以100点为基准，每点使移动倍率变化0.625%；200点为162.5%移动。攻击轮数系数每点增加0.25%，100点为100%，200点为125%；基础轮数×机体机动/100×驾驶员系数后四舍五入。格斗与限次规则保持不变，不影响回避或AP。",
+      "以100点为基准，每点使移动倍率变化0.5%；200点为150%移动。攻击轮数系数每点增加0.5%，100点为100%，200点为150%；基础轮数×机体机动/100×驾驶员系数后四舍五入。格斗与限次规则保持不变，不影响回避或AP。",
     ],
     [
       "命中",
-      "每点增加0.3125个百分点的命中倍率；100点为100%，200点为131.25%。命中率乘我方命中倍率、除以敌方回避倍率，全部修正后限制在0%～100%。",
+      "每点增加0.5个百分点的命中倍率；100点为100%，200点为150%。命中率乘我方命中倍率、除以敌方回避倍率，全部修正后限制在0%～100%。",
     ],
     [
       "反应",
-      "每点增加0.3125个百分点的回避倍率；100点为100%，200点为131.25%。敌方命中率除以该倍率；与我方通讯回避倍率相乘。",
+      "每点增加0.5个百分点的回避倍率；100点为100%，200点为150%。敌方命中率除以该倍率；与我方通讯回避倍率相乘。",
     ],
     [
       "指挥",
-      "100点时指挥光环范围为3格、效果为10%；每高25点，范围增加1格、效果增加1.25个百分点；每低25点相应减少。仅影响机体已有的指挥光环。",
+      "100点时指挥光环范围为3格、效果为10%；每高25点，范围增加1格、效果增加2.5个百分点；每低25点相应减少。仅影响机体已有的指挥光环。",
     ],
     [
       "觉醒",

@@ -285,5 +285,24 @@ const SkillControls = (() => {
     }
     return true;
   }
-  return { render, cells, click, applied, description, commandAbilities, defensiveAbilities };
+  // Roster, assignment and campaign lists use the same equipped-skill presentation.
+  function pilotSummary(profile) {
+    const row = element("span", "pilot-list-skills");
+    const skills = PilotSystem.skillsOf({ pilot: profile });
+    for (const skill of skills) {
+      const badge = element("span", "pilot-list-skill");
+      badge.dataset.skillId = skill.id;
+      badge.title = description(skill);
+      const icon = element("img");
+      icon.src = skill.icon;
+      icon.alt = "";
+      const name = element("span", "", I18n.localized(skill, "name"));
+      badge.append(icon, name);
+      row.append(badge);
+    }
+    if (!skills.length)
+      row.append(element("small", "muted", I18n.text(profile?.level >= PilotSystem.skillUnlockLevel ? "未选择技能" : "6级解锁技能")));
+    return row;
+  }
+  return { render, cells, click, applied, description, commandAbilities, defensiveAbilities, pilotSummary };
 })();

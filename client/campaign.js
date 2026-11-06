@@ -1683,11 +1683,13 @@ window.CampaignUI = (() => {
       );
       if (quote) {
         const price = node("span", "", "resource-balance");
-        ProductionUI.resources(price, quote);
+        const stored = state().teams[unit.team].kits?.[unit.unitId + "__" + kitId] || 0;
+        if (stored) price.textContent = "使用套件库存 ×1（现有 " + stored + "）";
+        else ProductionUI.resources(price, quote);
         row.append(price);
         row.append(
           button(
-            "确认换装",
+            stored ? "使用库存换装" : "购买并换装",
             () => command("campaign_equip", { armyId: unit.id, kitId }),
             !editable,
           ),

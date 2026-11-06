@@ -10,6 +10,7 @@ const Tactics = (() => {
   const automaticFire =
     typeof AutomaticFire !== "undefined" ? AutomaticFire : require("./automatic-fire.js");
   const aiTactics = typeof AITactics !== "undefined" ? AITactics : require("./ai-tactics.js");
+  const aiUnitBans = typeof AI_UNIT_BANS !== "undefined" ? AI_UNIT_BANS : require("./ai-unit-bans.json");
   const campaignBattlefield =
     typeof CampaignBattlefield !== "undefined"
       ? CampaignBattlefield
@@ -20,6 +21,7 @@ const Tactics = (() => {
 
   const development =
     typeof Development !== "undefined" ? Development : require("./development.js");
+  const economy = typeof Economy !== "undefined" ? Economy : require("./economy.js");
   const parts = typeof UnitParts !== "undefined" ? UnitParts : require("./unit-parts.js");
   const skillModule = typeof UnitSkills !== "undefined" ? UnitSkills : require("./unit-skills.js");
   const hangarModule = typeof UnitHangars !== "undefined" ? UnitHangars : require("./hangars.js");
@@ -213,6 +215,12 @@ const Tactics = (() => {
       throw Error("单位 COST 上限无效");
     return value;
   }
+  const pilotTags = ["pilot:custom", ...factions.map(faction => "pilot:" + faction)];
+  const factionTags = [...factions, ...pilotTags];
+  function validatePilotPolicy(value = "allow") {
+    if (!["allow", "no_custom", "no_ace", "none"].includes(value)) throw Error("驾驶员使用限制无效");
+    return value;
+  }
   function validateTagRestrictions(value = {}) {
     if (
       !value ||
@@ -225,7 +233,7 @@ const Tactics = (() => {
       throw Error("标签限制无效");
     const clean = {};
     for (const [key, allowed] of [
-      ["bannedFactions", factions],
+      ["bannedFactions", factionTags],
       ["bannedEras", eras],
       ["bannedTypes", unitTags],
     ]) {
@@ -275,6 +283,7 @@ const Tactics = (() => {
       unitLimit: 12,
       unitCostLimit: 250,
       shareAlliedUnits: false,
+      pilotPolicy: "allow",
       ...validateTagRestrictions(),
       teamRestrictions: [validateTagRestrictions(), validateTagRestrictions()],
       teamFactions: [null, null],
@@ -316,6 +325,7 @@ const Tactics = (() => {
           }
         : {}),
       unitCostLimit: settings.unitCostLimit ?? Infinity,
+      pilotPolicy: validatePilotPolicy(settings.pilotPolicy),
       bannedFactions: [
         ...new Set([...(settings.bannedFactions || []), ...(teamRules?.bannedFactions || [])]),
       ],
@@ -342,6 +352,7 @@ const Tactics = (() => {
   }
   function restrictionReason(model, restrictions = {}) {
     if (model.wip) return "wip";
+    if (restrictions.aiBannedUnits?.includes(model.prefabId)) return "not_allowed";
     if (
       ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(restrictions.characterFaction) &&
       !(model.availableFactions || [model.faction]).includes(restrictions.characterFaction)
@@ -407,6 +418,7 @@ const Tactics = (() => {
         !pilots.canAssign(entry.customPilot, restrictions.characterFaction)
       )
         reasons[index] = "pilot_faction";
+      if (!pilots.allowed(entry.customPilot, restrictions)) reasons[index] = "pilot_banned";
     });
     if (restrictions.licenses !== undefined) {
       const licenses = normalizeLicenses(restrictions.licenses);
@@ -419,6 +431,11 @@ const Tactics = (() => {
         licenses,
       ).missing)
         reasons[candidates[i].index] = "license";
+    }
+    if (restrictions.inventory !== undefined || restrictions.kits !== undefined) {
+      const candidates = clean.flatMap((entry, index) => reasons[index] ? [] : [{ entry, index }]);
+      const stock = economy.stockPlan(candidates.map(item => item.entry), restrictions);
+      for (const index of stock.missing) reasons[candidates[index].index] = stock.reasons[index];
     }
     let occupied = 0;
     clean.forEach((entry, index) => {
@@ -553,12 +570,17 @@ const Tactics = (() => {
     )
       ? player.characterFaction
       : null;
+    // AI exclusions affect generation, previews and final deployment together.
+    // Human rosters and strategic armies keep their own existing rules.
+    if (player?.bot && aiUnitBans[settings.mode || "regular"])
+      rules.aiBannedUnits = [...aiUnitBans[settings.mode || "regular"]];
     // Room authority supplies the merged, cross-faction AI progression.
     rules.researched = player?.researched;
     if (player && !player.bot) {
       rules.licenses = normalizeLicenses(player.licenses);
       // Readiness may skip quantity checks while retaining ownership-based deployment access.
       rules.ownedLicenses = rules.licenses;
+      if (!player.formationPreset && settings.mode === "regular") Object.assign(rules, economy.normalizeStock(player));
     }
     const config = armySettings(player);
     rules.unitCostLimit =
@@ -1346,7 +1368,7 @@ const Tactics = (() => {
     const steps = Math.trunc((leadership - 100) / 25);
     return {
       radius: Math.max(1, 3 + steps),
-      effect: Math.max(0, 0.1 + steps * 0.0125),
+      effect: Math.max(0, 0.1 + steps * 0.025),
       kinds: model.commandAuras || [],
     };
   }
@@ -1433,7 +1455,15 @@ const Tactics = (() => {
       )
       .sort((a, b) => (a.squadSlot ?? 0) - (b.squadSlot ?? 0) || a.id.localeCompare(b.id));
   }
-  const squadCapacity = unit => Math.max(1, modelOf(unit).transport?.slotCost || 1);
+  function squadCapacity(unit, g = null) {
+    const model = modelOf(unit);
+    const sfsHangars = new Set((model.hangars || []).filter(h => h.kind === "sfs").map(h => h.id));
+    if (!sfsHangars.size) return Math.max(1, model.transport?.slotCost || 1);
+    // Squad points are independent of the SFS hull's ship-hangar footprint.
+    return 1 + (g?.units || []).filter(passenger => passenger.hp > 0 &&
+      passenger.embarked?.carrierId === unit.id && sfsHangars.has(passenger.embarked.hangarId))
+      .reduce((sum, passenger) => sum + Math.max(1, modelOf(passenger).transport?.slotCost || 1), 0);
+  }
   function squadAttackMembers(g, unit) {
     const root = unit?.embarked?.exposed
       ? g.units.find(other => other.id === unit.embarked.carrierId) || unit : unit;
@@ -1443,7 +1473,14 @@ const Tactics = (() => {
       other.hp > 0 && other.embarked?.exposed && carriers.has(other.embarked.carrierId) &&
       other.team === root.team && controllerOf(g, other) === controllerOf(g, root))];
   }
-  const squadFits = members => members.length <= 6 && members.reduce((sum,u) => sum+squadCapacity(u),0) <= 6;
+  function squadFits(members, g = null) {
+    if (members.length > 6) return false;
+    const costs = members.map(u => squadCapacity(u, g));
+    // A two-MS SFS is a five-point formation that must operate alone.
+    if (members.length > 1 && members.some((u, i) => costs[i] >= 5 &&
+      (modelOf(u).hangars || []).some(h => h.kind === "sfs"))) return false;
+    return costs.reduce((sum, cost) => sum + cost, 0) <= 6;
+  }
   const squadEvasion = (g, unit) => squadEligible(unit) ? Math.round(12 * (6-Math.min(6,squadMembers(g,unit).length))/5) : 0;
   function squadTarget(g, candidates) {
     return candidates.length ? candidates[Math.floor(random(g)*candidates.length)] : null;
@@ -1482,7 +1519,7 @@ const Tactics = (() => {
         onMap(other) && !other.embarked && !members.includes(other) && occupies(other, x, y),
     );
     const destination = squadMembers(g, target);
-    return squadFits([...members, ...destination]) &&
+    return squadFits([...members, ...destination], g) &&
       occupants.every((other) => destination.includes(other)) &&
       destination.every((other) => !other.pendingMove && other.attackSkillRound !== g.round)
       ? target
@@ -1742,11 +1779,14 @@ const Tactics = (() => {
         settings.mode === "campaign" ? Infinity : (settings.seatCostLimits?.[seat] ?? costLimit),
         settings.mode === "campaign" ? Infinity : (settings.seatUnitLimits?.[seat] ?? unitLimit),
       );
-      const licenses = rulesForSeat(seat).licenses;
-      const stockPlan =
-        licenses === undefined
-          ? null
-          : planFormation(formations[seat], Infinity, { licenses }, catalog.formation.maxUnits);
+      const seatRules = rulesForSeat(seat);
+      const pilotBans = (seatRules.bannedFactions || []).filter(tag => tag.startsWith("pilot:"));
+      const restrictedPilots = (seatRules.pilotPolicy && seatRules.pilotPolicy !== "allow") || pilotBans.length;
+      const stockPlan = seatRules.licenses === undefined && !restrictedPilots ? null : planFormation(
+        formations[seat], Infinity, {
+          licenses: seatRules.licenses, inventory: seatRules.inventory, kits: seatRules.kits,
+          pilotPolicy: seatRules.pilotPolicy, bannedFactions: pilotBans,
+        }, catalog.formation.maxUnits);
       sourceIndices[seat] = (stockPlan?.indices || formations[seat].map((_, i) => i)).map(
         (i) => settings.formationIndices?.[seat]?.[i] ?? i,
       );
@@ -3540,7 +3580,7 @@ const Tactics = (() => {
     const members = squadMembers(g, u);
     if (
       !members.every(squadEligible) ||
-      (members.length >= 6 || members.reduce((sum,m)=>sum+squadCapacity(m),0) >= 6) ||
+      (members.length >= 6 || members.reduce((sum,m)=>sum+squadCapacity(m,g),0) >= 6) ||
       members.some((m) => m.moved || m.acted || m.plan || m.pendingMove)
     )
       return null;
@@ -3830,6 +3870,9 @@ const Tactics = (() => {
     validateUnitLimit,
     validateUnitCostLimit,
     validateTagRestrictions,
+    validatePilotPolicy,
+    pilotTags,
+    factionTags,
     validateTeamRestrictions,
     validateTeamFactions,
     validateFogMode,
@@ -3839,6 +3882,8 @@ const Tactics = (() => {
     formationRestrictions,
     restrictionReason,
     normalizeLicenses,
+    normalizeStock: economy.normalizeStock,
+    stockPlan: economy.stockPlan,
     licensePlan,
     factions,
     eras,

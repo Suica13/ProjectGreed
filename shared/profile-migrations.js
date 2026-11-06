@@ -18,10 +18,12 @@ const ProfileMigrations = (() => {
   }
   function economy(value) {
     if (!value || typeof value !== "object") return value;
+    if (value.schemaVersion === 3) return value;
     const { inventory, kits, ...current } = value;
     if (current.licenses === undefined && inventory !== undefined)
       current.licenses = licensesFromInventory(inventory);
-    return { ...current, schemaVersion: 2 };
+    // Existing permits remain owned. No legacy permit grants physical stock.
+    return { ...current, schemaVersion: 3, inventory: {}, kits: {} };
   }
   function activityStore(state) {
     function rewards(value) {

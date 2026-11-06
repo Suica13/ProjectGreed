@@ -1,4 +1,4 @@
-/* Personal wallet and permanent deployment licenses; old inventory migrates once. */
+/* Permanent permits, counted chassis and independently counted equipment kits. */
 "use strict";
 const Economy = (() => {
   const key = "projectgreed.economy.v1";
@@ -14,7 +14,9 @@ const Economy = (() => {
         : require("../tools/load-catalog.cjs").loadCatalog().models);
   }
   const initial = () => ({
-    schemaVersion: 2,
+    schemaVersion: 3,
+    inventory: {},
+    kits: {},
     money: 5000,
     supplies: 10000,
     licenses: Object.fromEntries(
@@ -31,8 +33,7 @@ const Economy = (() => {
       value.supplies < 0
     )
       throw Error("资金、物资或部署许可无效");
-    if (Object.hasOwn(value, "inventory") || Object.hasOwn(value, "kits"))
-      throw Error("旧库存格式必须先转换为部署许可");
+    const stock = normalizeStock(value);
     const owned = value.licenses;
     if (!owned || typeof owned !== "object" || Array.isArray(owned)) throw Error("部署许可无效");
     const licenses = {};
@@ -59,8 +60,9 @@ const Economy = (() => {
     return {
       money: value.money,
       supplies: value.supplies,
-      schemaVersion: 2,
+      schemaVersion: 3,
       licenses,
+      ...stock,
       ...(Object.keys(claimed).length ? { claimed } : {}),
     };
   }
@@ -76,8 +78,8 @@ const Economy = (() => {
             ? ProfileMigrations
             : require("./profile-migrations.js");
         state = validate(migrations.economy(parsed));
-        if (parsed.schemaVersion !== 2 || parsed.licenses === undefined) {
-          const backupKey = key + ".before-deployment-licenses";
+        if (parsed.schemaVersion !== 3 || parsed.licenses === undefined) {
+          const backupKey = key + ".before-counted-stock";
           if (localStorage.getItem(backupKey) === null) localStorage.setItem(backupKey, saved);
           localStorage.setItem(key, JSON.stringify(state));
         }
@@ -124,7 +126,7 @@ const Economy = (() => {
     next.supplies -= cost.supplies ?? 0;
     for (const [id, owned] of Object.entries(licenses)) {
       if (owned !== true) throw Error("部署许可必须为true");
-      next.licenses[id] = true;
+      grantPurchasedLicense(next, id);
     }
     return commit(next, extraWrites);
   }
@@ -163,7 +165,20 @@ const Economy = (() => {
     const next = snapshot();
     next.money += award.money;
     next.supplies += award.supplies;
-    // Battle damage is a match record; permanent deployment licenses cannot be lost.
+    // Deployment consumes a reservation once; surviving physical items return at settlement.
+    for (const [field, direction] of [
+      ["stockUsed", -1],
+      ["stockReturned", 1],
+    ]) {
+      if (!award[field]) continue;
+      const stock = normalizeStock(award[field]);
+      for (const kind of ["inventory", "kits"])
+        for (const [id, count] of Object.entries(stock[kind])) {
+          const amount = (next[kind][id] || 0) + direction * count;
+          if (amount < 0) throw Error("出战库存不足：" + id);
+          next[kind][id] = amount;
+        }
+    }
     next.claimed = { ...next.claimed, [award.id]: award.matchId };
     return commit(next);
   }
@@ -182,6 +197,172 @@ const Economy = (() => {
     next.claimed = { ...next.claimed, [award.id]: award.matchId };
     return commit(next, extraWrites);
   }
+  function normalizeStock(value = {}) {
+    const result = { inventory: {}, kits: {} };
+    for (const kind of ["inventory", "kits"]) {
+      const items = value[kind] ?? {};
+      if (!items || typeof items !== "object" || Array.isArray(items)) throw Error("库存格式无效");
+      for (const [id, count] of Object.entries(items)) {
+        if (!Number.isSafeInteger(count) || count < 0 || count > 1000000)
+          throw Error("库存数量无效：" + id);
+        const known =
+          kind === "inventory"
+            ? Object.hasOwn(catalog.baseModels, id)
+            : Object.hasOwn(modelsForUnits(), id);
+        if (!known || ["__proto__", "constructor", "prototype"].includes(id))
+          throw Error("库存物品无效：" + id);
+        if (count) result[kind][id] = count;
+      }
+    }
+    return result;
+  }
+  // Pure allocation: a draft only occupies stock; switching kits never sells an item.
+  function stockPlan(entries, stock) {
+    const available = normalizeStock(stock),
+      missing = [],
+      reasons = {};
+    entries.forEach((entry, index) => {
+      const model = entry.unitId + "__" + entry.kitId;
+      if (!(available.inventory[entry.unitId] > 0)) reasons[index] = "stock";
+      else if (!(available.kits[model] > 0)) reasons[index] = "kit_stock";
+      else {
+        available.inventory[entry.unitId]--;
+        available.kits[model]--;
+      }
+      if (reasons[index]) missing.push(index);
+    });
+    return { missing, reasons };
+  }
+  function quantity(unitId) {
+    return state.inventory[unitId] || 0;
+  }
+  function kitQuantity(modelId) {
+    return state.kits[modelId] || 0;
+  }
+  function unitOffer(unitId, production = catalog) {
+    const permit = production.licenseOffers[unitId];
+    if (!permit) return null;
+    // Retain the original single-chassis production basis independently of permit pricing.
+    return { unitId, money: permit.money, supplies: permit.supplies, quantity: 1 };
+  }
+  function kitOffer(modelId, production = catalog, models = modelsForUnits()) {
+    const model = models[modelId];
+    if (!model || model.formOnly || model.wip) return null;
+    const chassis = unitOffer(model.prefabId, production);
+    if (!chassis) return null;
+    const native = production.nativeEquipmentCosts?.[modelId];
+    // Independent items always have a non-negative absolute price. Native zero-fee
+    // switching did not manufacture equipment; use 20% of chassis as its fallback.
+    const fallback = (key) => Math.max(key === "money" ? 25 : 50, Math.round(chassis[key] * 0.2));
+    return {
+      unitId: model.prefabId,
+      kitId: model.kitId,
+      quantity: 1,
+      money: native?.money > 0 ? Math.ceil(native.money) : fallback("money"),
+      supplies: native?.supplies > 0 ? Math.ceil(native.supplies) : fallback("supplies"),
+    };
+  }
+  // Factory times are batch totals. Both campaign orders and the catalog expose
+  // the same single-unit duration; personal production remains immediate for now.
+  function productionTiming(unitId, kitId = defaultKit(unitId), production = catalog) {
+    const native = production.nativePricing?.[unitId]?.kits?.[kitId];
+    const offer = production.offers?.[unitId + "__" + kitId] || production.offers?.[production.baseModels?.[unitId]];
+    const source = native?.source || offer?.source;
+    const quantity = Math.max(1, native?.quantity || offer?.quantity || 1);
+    const seconds = ((source?.buildSeconds ?? 30) + (source?.queueSeconds || 0)) / quantity;
+    const secondsPerTurn = production.productionSecondsPerTurn || 20;
+    return { seconds, secondsPerTurn, turns: Math.max(1, Math.min(5, Math.ceil(seconds / secondsPerTurn))) };
+  }
+  function productionOffer(unitId, kitId, production = catalog, models = modelsForUnits()) {
+    const chassis = unitOffer(unitId, production),
+      kit = kitOffer(unitId + "__" + kitId, production, models);
+    return chassis && kit
+      ? {
+          unitId,
+          kitId,
+          quantity: 1,
+          chassis,
+          kit,
+          turns: productionTiming(unitId, kitId, production).turns,
+          money: chassis.money + kit.money,
+          supplies: chassis.supplies + kit.supplies,
+        }
+      : null;
+  }
+  function mayProduce(unitId, faction) {
+    return !!state.licenses[unitId] && available(licenseOffer(unitId), faction);
+  }
+  function produce(unitId, kitId, faction) {
+    const offer = productionOffer(unitId, kitId);
+    if (!offer || !mayProduce(unitId, faction) || !affordable(offer)) return false;
+    const next = snapshot(),
+      modelId = unitId + "__" + kitId;
+    next.money -= offer.money;
+    next.supplies -= offer.supplies;
+    next.inventory[unitId] = quantity(unitId) + 1;
+    next.kits[modelId] = kitQuantity(modelId) + 1;
+    return commit(next);
+  }
+  function buyKit(unitId, kitId, faction) {
+    const modelId = unitId + "__" + kitId,
+      offer = kitOffer(modelId);
+    if (!offer || !mayProduce(unitId, faction) || !affordable(offer)) return false;
+    const next = snapshot();
+    next.money -= offer.money;
+    next.supplies -= offer.supplies;
+    next.kits[modelId] = kitQuantity(modelId) + 1;
+    return commit(next);
+  }
+  function purchasePlan(entries) {
+    const units = {},
+      kits = {};
+    for (const entry of entries) {
+      units[entry.unitId] = (units[entry.unitId] || 0) + 1;
+      const modelId = entry.unitId + "__" + entry.kitId;
+      kits[modelId] = (kits[modelId] || 0) + 1;
+    }
+    const items = [],
+      total = { money: 0, supplies: 0 };
+    function add(kind, id, count, offer) {
+      if (count <= 0) return;
+      items.push({ kind, id, unitId: kind === "kits" ? id.split("__")[0] : id, count, offer });
+      if (offer) for (const key of ["money", "supplies"]) total[key] += offer[key] * count;
+    }
+    for (const [id, needed] of Object.entries(units)) {
+      if (!state.licenses[id]) add("licenses", id, 1, licenseOffer(id));
+      const gift = state.licenses[id] ? 0 : 1;
+      add("inventory", id, Math.max(0, needed - quantity(id) - gift), unitOffer(id));
+    }
+    for (const [id, needed] of Object.entries(kits)) {
+      const unitId = id.split("__")[0];
+      const gift = !state.licenses[unitId] && id === unitId + "__" + defaultKit(unitId) ? 1 : 0;
+      add("kits", id, Math.max(0, needed - kitQuantity(id) - gift), kitOffer(id));
+    }
+    return { ...total, items };
+  }
+  function purchaseMissingStock(entries, faction) {
+    const plan = purchasePlan(entries);
+    const unavailable = plan.items.filter(
+      (item) => !item.offer || !available(licenseOffer(item.unitId), faction),
+    );
+    if (unavailable.length)
+      return {
+        ok: false,
+        reason: "unavailable",
+        units: [...new Set(unavailable.map((item) => item.unitId))],
+        plan,
+      };
+    if (!affordable(plan)) return { ok: false, reason: "funds", plan };
+    if (!plan.items.length) return { ok: true, plan };
+    const next = snapshot();
+    next.money -= plan.money;
+    next.supplies -= plan.supplies;
+    for (const item of plan.items) {
+      if (item.kind === "licenses") grantPurchasedLicense(next, item.id);
+      else next[item.kind][item.id] = (next[item.kind][item.id] || 0) + item.count;
+    }
+    return { ok: commit(next), plan };
+  }
   function baseModel(unitId) {
     return catalog.baseModels[unitId] || null;
   }
@@ -189,7 +370,17 @@ const Economy = (() => {
     return catalog.defaultKits?.[unitId] || baseModel(unitId)?.slice(unitId.length + 2) || null;
   }
   function licenseOffer(unitId) {
-    return catalog.licenseOffers[unitId] || null;
+    const base = catalog.licenseOffers[unitId];
+    const production = productionOffer(unitId, defaultKit(unitId));
+    return base && production ? { ...base, money: production.money * 3, supplies: production.supplies * 3 } : null;
+  }
+  function grantPurchasedLicense(next, unitId) {
+    if (next.licenses[unitId]) return;
+    if (!licenseOffer(unitId)) throw Error("部署许可无效：" + unitId);
+    next.licenses[unitId] = true;
+    next.inventory[unitId] = (next.inventory[unitId] || 0) + 1;
+    const modelId = unitId + "__" + defaultKit(unitId);
+    next.kits[modelId] = (next.kits[modelId] || 0) + 1;
   }
   function available(offer, faction) {
     if (
@@ -234,6 +425,18 @@ const Economy = (() => {
   return {
     key,
     catalog,
+    normalizeStock,
+    stockPlan,
+    quantity,
+    kitQuantity,
+    unitOffer,
+    kitOffer,
+    productionOffer,
+    productionTiming,
+    produce,
+    buyKit,
+    purchasePlan,
+    purchaseMissingStock,
     initial,
     errorMessage,
     validate,

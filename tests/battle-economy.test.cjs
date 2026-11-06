@@ -15,6 +15,8 @@ function fixture(
     onHostileDefeat,
     onSettlement,
     pilot = null,
+    ownFormation = null,
+    technologyPoints = {},
   } = {},
 ) {
   let seq = 0;
@@ -53,7 +55,13 @@ function fixture(
       mode: i ? "join" : "create",
       room: "REWARD",
       characterFaction: i ? "PMC" : faction,
-      licenses: { Type61: true },
+      licenses: { Type61: true }, inventory: {Type61:10}, kits: {Type61__standard:10},
+      technologyPoints: i ? {} : technologyPoints,
+      ...(i === 0 && ownFormation ? {
+        licenses: Object.fromEntries(ownFormation.map(entry => [entry.unitId,true])),
+        inventory: ownFormation.reduce((counts, entry) => {counts[entry.unitId]=(counts[entry.unitId]||0)+1;return counts},{}),
+        kits: ownFormation.reduce((counts, entry) => {const id=entry.unitId+"__"+entry.kitId;counts[id]=(counts[id]||0)+1;return counts},{}),
+      } : {}),
     }),
   );
   const room = engine.rooms.get("REWARD");
@@ -72,14 +80,14 @@ function fixture(
     ...G.defaultRoomSettings(),
     battleMode: mode,
     ...(assist ? { mapId: "crossroads_2v2" } : {}),
-    costLimit: 900,
+    costLimit: ownFormation ? 99999 : 900,
     unitCostLimit: 99999,
     fogMode: "disabled",
   });
   if (assist) act(2, "switch_seat", { seat: 2 });
   const tank = { unitId: "Type61", kitId: "standard" };
   const formations = [
-    [
+    ownFormation || [
       {
         ...tank,
         customPilot: pilot || G.pilots.createCustom("custom-reward", "Reward", null, faction),
@@ -103,10 +111,12 @@ function fixture(
   act(0, "start_game", { formation: formations[0] });
   clients.forEach((_, i) => act(i, "confirm_formation"));
   if (!saved) clients.forEach((_, i) => act(i, "confirm_deployment"));
-  assert.equal(room.game.units.length, assist ? 4 : 3);
+  assert.equal(room.game.units.length, ownFormation ? ownFormation.length + 1 : assist ? 4 : 3);
   assert.equal(room.startedFromSave, saved);
   room.game.tiles.forEach((r) => r.fill("plain"));
-  const [attacker, ally, target] = room.game.units;
+  const attacker = room.game.units.find(unit => G.ownerOf(unit) === 0);
+  const ally = room.game.units.find(unit => G.ownerOf(unit) === 0 && unit !== attacker);
+  const target = room.game.units.find(unit => G.ownerOf(unit) === 1);
   [
     [attacker, 2, 4],
     [ally, 2, 5],
@@ -132,6 +142,9 @@ function fixture(
   }
   return { engine, room, frames, clients, act, attacker, ally, target, kill, finish };
 }
+function baseReward(f, team = 0) {
+  return R.calculateBattleReward(R.teamAverageFormationCost(f.room.battleRoster, team));
+}
 for (const faction of ["EFSF", "PMC"])
   for (const mode of faction === "EFSF" ? ["regular"] : ["regular", "quick"])
     test(`authoritative ${faction} ${mode}: private prices, rates, win bonus, losses and deduplication`, (t) => {
@@ -140,31 +153,29 @@ for (const faction of ["EFSF", "PMC"])
       f.kill();
       const view = f.frames.get(f.clients[0]);
       const rates = R.rates(faction, mode);
+      assert.deepEqual(view.techAwards, []);
       assert.equal(
-        view.techAwards[0].points,
-        Math.floor(G.modelOf(f.target).cost * 0.75 * rates.technology * 1.5),
-      );
-      assert.equal(
-        view.economyAwards[0].money,
+        view.economyAwards.find(a => ["kill", "assist"].includes(a.kind)).money,
         Math.floor(R.price("Type61__standard") * 0.5 * rates.currency * 1.5),
       );
       assert.equal(
         view.pilotAwards.find((a) => a.kind === "kill").experiencePoints,
-        Math.floor(G.modelOf(f.target).cost * rates.experience * 1.5),
+        Math.floor(100 * G.modelOf(f.target).cost / G.modelOf(f.attacker).cost * rates.experience * 1.5),
       );
       assert.equal(
-        view.economyAwards[0].supplies,
+        view.economyAwards.find(a => ["kill", "assist"].includes(a.kind)).supplies,
         Math.floor(R.price(f.target.model, "supplies") * 0.5 * rates.currency * 1.5),
       );
       assert(!view.economyAwards.some((a) => a.kind === "result"));
-      assert.deepEqual(f.frames.get(f.clients[1]).economyAwards, []);
+      assert.deepEqual(f.frames.get(f.clients[1]).economyAwards.filter(a => a.kind !== "deployment"), []);
       assert.equal(view.battleRoster, undefined);
       f.finish();
+      assert.equal(f.frames.get(f.clients[0]).techAwards.reduce((sum, award) => sum + award.points, 0), R.technologyReward(true, mode));
       const result = f.frames.get(f.clients[0]).economyAwards.find((a) => a.kind === "result");
-      assert.equal(result.money, Math.floor(f.room.settings.costLimit * 1.5 * rates.currency * 1.5));
+      assert.equal(result.money, Math.floor(baseReward(f).money * rates.currency * 1.5));
       assert.equal(
         result.supplies,
-        Math.floor(G.modelOf(f.target).cost * 3 * rates.currency * 1.5),
+        Math.floor(baseReward(f).supplies * rates.currency * 1.5),
       );
       assert.deepEqual(result.losses, {});
       const loser = f.frames.get(f.clients[1]).economyAwards.find((a) => a.kind === "result");
@@ -190,7 +201,7 @@ for (const mode of ["regular", "quick"])
     }
   });
 for (const path of ["disconnect", "replace"])
-  test(`${path} before the match ends waives inventory losses through reconnection`, (t) => {
+  test(`${path} before the match ends preserves stock reservation and casualty settlement through reconnection`, (t) => {
     const f = fixture(t);
     f.ally.hp = 0;
     const ws = f.clients[0],
@@ -206,6 +217,7 @@ for (const path of ["disconnect", "replace"])
     f.finish();
     assert.deepEqual(f.frames.get(next).economyAwards.find((a) => a.kind === "result").losses, {});
     assert(f.frames.get(next).economyAwards.some((a) => a.kind === "kill"));
+    assert.equal(f.room.seats[0].inventory.Type61,9);
   });
 test("returning to the room mid-match produces no result award or loss settlement", (t) => {
   const f = fixture(t);
@@ -223,10 +235,10 @@ test("all production-backed chassis have original factory-backed per-unit prices
 });
 
 test("identity and quick-mode multiplier contract", () => {
-  assert.deepEqual(R.rates("EFSF", "regular"), { currency: 0.5, technology: 1, experience: 1 });
-  assert.deepEqual(R.rates("PMC", "regular"), { currency: 1, technology: 0.5, experience: 1 });
-  assert.deepEqual(R.rates("EFSF", "quick"), { currency: 0.125, technology: 0.25, experience: 0.25 });
-  assert.deepEqual(R.rates("PMC", "quick"), { currency: 0.25, technology: 0.125, experience: 0.25 });
+  assert.deepEqual(R.rates("EFSF", "regular"), { currency: 1, experience: 1 });
+  assert.deepEqual(R.rates("PMC", "regular"), { currency: 1, experience: 1 });
+  assert.deepEqual(R.rates("EFSF", "quick"), { currency: 0.1, experience: 0.1 });
+  assert.deepEqual(R.rates("PMC", "quick"), { currency: 0.1, experience: 0.1 });
 });
 
 for (const faction of ["PMC", "EFSF"])
@@ -252,26 +264,20 @@ for (const faction of ["PMC", "EFSF"])
         };
         f.kill();
         const view = f.frames.get(f.clients[2]);
-        assert.equal(view.economyAwards.length, below ? 0 : 1);
-        const expectedTech = below
-          ? 0
-          : Math.floor(G.modelOf(f.target).cost * 0.375 * R.rates(faction, mode).technology * 1.5);
-        assert.equal(view.techAwards.length, expectedTech > 0 ? 1 : 0);
+        assert.equal(view.economyAwards.filter(a => a.kind !== "deployment").length, below ? 0 : 1);
+        assert.equal(view.techAwards.length, 0);
         if (!below) {
           const rates = R.rates(faction, mode);
           assert.equal(
-            view.economyAwards[0].money,
+            view.economyAwards.find(a => ["kill", "assist"].includes(a.kind)).money,
             Math.floor(R.price(f.target.model) * 0.25 * rates.currency * 1.5),
           );
           assert.equal(
-            view.economyAwards[0].supplies,
+            view.economyAwards.find(a => ["kill", "assist"].includes(a.kind)).supplies,
             Math.floor(R.price(f.target.model, "supplies") * 0.25 * rates.currency * 1.5),
           );
-          assert.equal(view.economyAwards[0].kind, "assist");
-          assert.equal(
-            view.techAwards[0]?.points ?? 0,
-            Math.floor(G.modelOf(f.target).cost * 0.375 * rates.technology * 1.5),
-          );
+          assert.equal(view.economyAwards.find(a => ["kill", "assist"].includes(a.kind)).kind, "assist");
+          assert.deepEqual(view.techAwards, []);
         }
         const killer = f.frames.get(f.clients[0]);
         assert.equal(killer.economyAwards.filter((a) => a.kind === "kill").length, 1);
@@ -294,31 +300,29 @@ for (const faction of ["EFSF", "PMC"])
       const rates = R.rates(faction, mode);
       f.kill();
       const view = f.frames.get(f.clients[0]);
+      assert.deepEqual(view.techAwards, []);
       assert.equal(
-        view.techAwards[0].points,
-        Math.floor(G.modelOf(f.target).cost * 0.75 * rates.technology * 1.5 * 5),
-      );
-      assert.equal(
-        view.economyAwards[0].money,
+        view.economyAwards.find(a => ["kill", "assist"].includes(a.kind)).money,
         Math.floor(R.price(f.target.model) * 0.5 * rates.currency * 1.5 * 2),
       );
       assert.equal(
         view.pilotAwards.find((a) => a.kind === "kill").experiencePoints,
-        Math.floor(G.modelOf(f.target).cost * rates.experience * 1.5 * 3),
+        Math.floor(100 * G.modelOf(f.target).cost / G.modelOf(f.attacker).cost * rates.experience * 1.5 * 3),
       );
       assert.equal(
-        view.economyAwards[0].supplies,
+        view.economyAwards.find(a => ["kill", "assist"].includes(a.kind)).supplies,
         Math.floor(R.price(f.target.model, "supplies") * 0.5 * rates.currency * 1.5 * 4),
       );
       f.finish();
+      assert.equal(f.frames.get(f.clients[0]).techAwards.reduce((sum, award) => sum + award.points, 0), R.technologyReward(true, mode, 5));
       const result = f.frames.get(f.clients[0]).economyAwards.find((a) => a.kind === "result");
       assert.equal(
         result.money,
-        Math.floor(f.room.settings.costLimit * 1.5 * rates.currency * 1.5 * 2),
+        Math.floor(baseReward(f).money * rates.currency * 1.5 * 2),
       );
       assert.equal(
         result.supplies,
-        Math.floor(G.modelOf(f.target).cost * 3 * rates.currency * 1.5 * 4),
+        Math.floor(baseReward(f).supplies * rates.currency * 1.5 * 4),
       );
       const loser = f.frames.get(f.clients[1]).economyAwards.find((a) => a.kind === "result");
       assert.equal(loser.money, 0);
@@ -334,12 +338,12 @@ test("event expiring between kill and victory does not change earlier awards; sa
   });
   const f = fixture(t, { getRewardMultipliers });
   f.kill();
-  const money = f.frames.get(f.clients[0]).economyAwards[0].money;
+  const money = f.frames.get(f.clients[0]).economyAwards.find(a => a.kind === "kill").money;
   active = false;
   f.finish();
   const awards = f.frames.get(f.clients[0]).economyAwards;
-  assert.equal(awards[0].money, money);
-  assert.equal(awards.find((a) => a.kind === "result").money, f.room.settings.costLimit * 1.5);
+  assert.equal(awards.find(a => a.kind === "kill").money, money);
+  assert.equal(awards.find((a) => a.kind === "result").money, baseReward(f).money);
   active = true;
   const saved = fixture(t, { saved: true, getRewardMultipliers });
   saved.kill();
@@ -359,8 +363,8 @@ test("victory uses the starting room participants strength averages, including d
   f.kill();
   f.finish();
   const result = f.frames.get(f.clients[0]).economyAwards.find((a) => a.kind === "result");
-  assert.equal(result.money, Math.floor((f.room.settings.costLimit * 1.5) / 2));
-  assert.equal(result.supplies, Math.floor((G.modelOf(f.target).cost * 3) / 2));
+  assert.equal(result.money, Math.floor((baseReward(f).money) / 2));
+  assert.equal(result.supplies, Math.floor((baseReward(f).supplies) / 2));
   const before = JSON.stringify(result);
   f.act(0, "sync");
   assert.equal(
@@ -371,7 +375,7 @@ test("victory uses the starting room participants strength averages, including d
 });
 
 for (const allied of [0.5, 1, 1.5, 2])
-  test(`allied unit strength ${allied} adjusts kill currency, technology, pilot XP and victory income`, (t) => {
+  test(`allied unit strength ${allied} adjusts currency and pilot XP while research stays fixed`, (t) => {
     const f = fixture(t, { faction: "EFSF", strength: 1.5 });
     for (const unit of Object.values(f.room.battleRoster))
       if (unit.team === 0) unit.performance = allied;
@@ -386,23 +390,20 @@ for (const allied of [0.5, 1, 1.5, 2])
       view.economyAwards.find((a) => a.kind === "kill").supplies,
       Math.floor((R.price(f.target.model, "supplies") * 0.5 * rates.currency * 1.5) / allied),
     );
-    assert.equal(
-      view.techAwards.find((a) => a.kind === "kill").points,
-      Math.floor((G.modelOf(f.target).cost * 0.75 * rates.technology * 1.5) / allied),
-    );
+    assert.deepEqual(view.techAwards, []);
     assert.equal(
       view.pilotAwards.find((a) => a.kind === "kill").experiencePoints,
-      Math.floor((G.modelOf(f.target).cost * rates.experience * 1.5) / allied),
+      Math.floor((100 * G.modelOf(f.target).cost / G.modelOf(f.attacker).cost * rates.experience * 1.5) / allied),
     );
     f.finish();
     const result = f.frames.get(f.clients[0]).economyAwards.find((a) => a.kind === "result");
     assert.equal(
       result.money,
-      Math.floor((f.room.settings.costLimit * 1.5 * rates.currency * 1.5) / allied),
+      Math.floor((baseReward(f).money * rates.currency * 1.5) / allied),
     );
     assert.equal(
       result.supplies,
-      Math.floor((G.modelOf(f.target).cost * 3 * rates.currency * 1.5) / allied),
+      Math.floor((baseReward(f).supplies * rates.currency * 1.5) / allied),
     );
   });
 test("room participant averages ignore army sizes and give reciprocal team ratios", () => {
@@ -429,7 +430,7 @@ test("individual target strength no longer stacks on the match strength ratio", 
   );
   assert.equal(
     view.pilotAwards.find((a) => a.kind === "kill").experiencePoints,
-    Math.floor(G.modelOf(f.target).cost),
+    Math.floor(100 * G.modelOf(f.target).cost / G.modelOf(f.attacker).cost),
   );
 });
 
@@ -442,7 +443,7 @@ test("money and supplies prices retain per-unit batch division and fallback inde
   assert.equal(R.price("RGM_79_G__cannon", "supplies"), base.supplies / base.quantity);
 });
 
-test("regular opponent composition counts starting participants, never unit counts or quick games", () => {
+test("both battle modes use the same starting participant composition coefficient", () => {
   const roster = {
     own: { team: 0, memberId: "self", bot: false },
     h: { team: 1, memberId: "human", bot: false },
@@ -452,45 +453,42 @@ test("regular opponent composition counts starting participants, never unit coun
   assert.equal(R.opponentRatio(roster, 0, "regular"), 0.75);
   assert.equal(R.opponentRatio({ b: roster.b }, 0, "regular"), 0.5);
   assert.equal(R.opponentRatio({ h: roster.h }, 0, "regular"), 1);
-  assert.equal(R.opponentRatio(roster, 0, "quick"), 1);
+  assert.equal(R.opponentRatio(roster, 0, "quick"), 0.75);
 });
 for (const mode of ["regular", "quick"])
   test(`AI composition scales authoritative ${mode} awards and final income`, (t) => {
     const f = fixture(t, { mode, strength: 1.5 });
     f.room.battleRoster[f.target.id].bot = true;
-    const scale = mode === "regular" ? 0.5 : 1,
+    const scale = 0.5,
       rates = R.rates("PMC", mode);
     f.kill();
     const snapshot = f.frames.get(f.clients[0]);
+    assert.deepEqual(snapshot.techAwards, []);
     assert.equal(
-      snapshot.techAwards[0]?.points ?? 0,
-      Math.floor(G.modelOf(f.target).cost * 0.75 * rates.technology * 1.5 * scale),
-    );
-    assert.equal(
-      snapshot.economyAwards[0].money,
+      snapshot.economyAwards.find(a => ["kill", "assist"].includes(a.kind)).money,
       Math.floor(R.price(f.target.model) * 0.5 * rates.currency * 1.5 * scale),
     );
     assert.equal(
-      snapshot.economyAwards[0].supplies,
+      snapshot.economyAwards.find(a => ["kill", "assist"].includes(a.kind)).supplies,
       Math.floor(R.price(f.target.model, "supplies") * 0.5 * rates.currency * 1.5 * scale),
     );
     assert.equal(
       snapshot.pilotAwards.find((a) => a.kind === "kill").experiencePoints,
-      Math.floor(G.modelOf(f.target).cost * rates.experience * 1.5 * scale),
+      Math.floor(100 * G.modelOf(f.target).cost / G.modelOf(f.attacker).cost * rates.experience * 1.5 * scale),
     );
     f.finish();
     const result = f.frames.get(f.clients[0]).economyAwards.find((a) => a.kind === "result");
     assert.equal(
       result.money,
-      Math.floor(f.room.settings.costLimit * 1.5 * rates.currency * 1.5 * scale),
+      Math.floor(baseReward(f).money * rates.currency * 1.5 * scale),
     );
     assert.equal(
       result.supplies,
-      Math.floor(G.modelOf(f.target).cost * 3 * rates.currency * 1.5 * scale),
+      Math.floor(baseReward(f).supplies * rates.currency * 1.5 * scale),
     );
   });
 
-test("victory funds use room COST limit, supplies use team kills and assists never duplicate COST", (t) => {
+test("victory uses frozen team-average formation COST, ignores room limit and assists never duplicate COST", (t) => {
   const f = fixture(t, { assist: true });
   f.kill();
   const cost = G.modelOf(f.target).cost;
@@ -500,8 +498,8 @@ test("victory funds use room COST limit, supplies use team kills and assists nev
   for (const i of [0, 2]) {
     const result = f.frames.get(f.clients[i]).economyAwards.find((a) => a.kind === "result");
     assert.equal(result.destroyedCost, cost);
-    assert.equal(result.money, Math.floor(f.room.settings.costLimit * 1.5));
-    assert.equal(result.supplies, Math.floor(cost * 3));
+    assert.equal(result.money, Math.floor(baseReward(f).money));
+    assert.equal(result.supplies, baseReward(f).supplies);
   }
   const loser = f.frames.get(f.clients[1]).economyAwards.find((a) => a.kind === "result");
   assert.equal(loser.destroyedCost, 0);
@@ -559,7 +557,7 @@ test("ACE experience acceleration is credited once by the authoritative award pa
   assert.equal(G.modelOf(u).pilotExperienceMultiplier, 1.35);
   f.kill();
   const award = f.frames.get(f.clients[0]).pilotAwards.find((a) => a.kind === "kill");
-  assert.equal(award.experiencePoints, Math.floor(G.modelOf(f.target).cost * 1.35));
+  assert.equal(award.experiencePoints, Math.floor(100 * G.modelOf(f.target).cost / G.modelOf(u).cost * 1.35));
   assert.equal(u.pilot.experience, award.experiencePoints);
   assert(!u.pilot.stats.shooting.temporary);
 });
@@ -601,4 +599,158 @@ for(const saved of [false,true])test('settlement audit totals actual awards once
 test('aborted matches do not produce settlement audit records',t=>{
  const logs=[],f=fixture(t,{onSettlement:r=>logs.push(r)});
  f.act(0,'return_room');assert.equal(logs.length,0);
+});
+
+
+test("counted stock reserves once, returns survivors and awards fixed research only at settlement", t => {
+  const f = fixture(t, {faction:"EFSF", strength:4});
+  const own = f.room.seats[0], enemy = f.room.seats[1];
+  assert.equal(own.inventory.Type61,8); assert.equal(own.kits.Type61__standard,8);
+  assert.equal(enemy.inventory.Type61,9);
+  assert.equal(f.frames.get(f.clients[0]).economyAwards.filter(a=>a.kind==="deployment").length,1);
+  f.ally.hp=0;
+  f.kill();
+  assert.deepEqual(f.frames.get(f.clients[0]).techAwards,[]);
+  const kill = f.frames.get(f.clients[0]).economyAwards.find(a=>a.kind==="kill");
+  assert.equal(kill.money,Math.floor(R.price(f.target.model)*0.5*R.rates("EFSF","regular").currency*4));
+  f.finish();
+  const winner = f.frames.get(f.clients[0]), loser = f.frames.get(f.clients[1]);
+  assert.equal(winner.techAwards.reduce((sum,a)=>sum+a.points,0),660);
+  assert.equal(loser.techAwards.reduce((sum,a)=>sum+a.points,0),540);
+  assert.equal(winner.economyAwards.find(a=>a.kind==="result").stockReturned.inventory.Type61,1);
+  assert.equal(own.inventory.Type61,9); assert.equal(own.kits.Type61__standard,9);
+  assert.equal(enemy.inventory.Type61,9); assert.equal(enemy.kits.Type61__standard,9);
+  const before=JSON.stringify([f.room.economyAwards,f.room.techAwards,own.inventory]);
+  f.act(0,"sync");
+  assert.equal(JSON.stringify([f.room.economyAwards,f.room.techAwards,own.inventory]),before);
+});
+
+test("quick stock settlement uses fixed research and save-loaded battles never reserve physical inventory", t => {
+  const quick=fixture(t,{mode:"quick"}); quick.kill(); quick.finish();
+  assert.equal(quick.frames.get(quick.clients[0]).techAwards.reduce((sum,a)=>sum+a.points,0),66);
+  const saved=fixture(t,{saved:true});
+  assert.equal(saved.room.seats[0].inventory.Type61,10);
+  saved.kill();saved.finish();
+  assert.deepEqual(saved.frames.get(saved.clients[0]).economyAwards,[]);
+  assert.deepEqual(saved.frames.get(saved.clients[0]).techAwards,[]);
+});
+
+
+test("host interruption returns survivors once without technology or victory rewards", t => {
+  const f=fixture(t); f.ally.hp=0;
+  f.act(0,"return_room");
+  const view=f.frames.get(f.clients[0]);
+  const returned=view.economyAwards.find(a=>a.kind==="return");
+  assert.equal(returned.stockReturned.inventory.Type61,1);
+  assert.equal(f.room.seats[0].inventory.Type61,9);
+  assert.equal(f.room.seats[1].inventory.Type61,10);
+  assert.deepEqual(view.techAwards,[]);
+  const count=view.economyAwards.length;
+  f.act(0,"return_room");
+  assert.equal(f.frames.get(f.clients[0]).economyAwards.length,count);
+});
+
+
+for (const faction of ["AEUG", "TITANS", "NEO_ZEON"]) {
+  test(`legacy ${faction} identity cannot override roster-based research`, t => {
+    const f=fixture(t,{faction:"EFSF"});
+    // Isolate settlement routing: the original unit source stays EFSF.
+    f.room.seats[0].characterFaction=faction;
+    assert.equal(G.modelOf(f.attacker).faction,"EFSF");
+    f.kill(); f.finish();
+    const awards=f.frames.get(f.clients[0]).techAwards;
+    assert.equal(awards.length,1);assert.equal(awards[0].faction,"EFSF");
+    assert.equal(awards[0].points,660);
+  });
+}
+
+
+const tenToOneArmy = () => [...Array.from({length:10},()=>({unitId:"Type61",kitId:"standard"})),
+  {unitId:"MS_06F",kitId:"machine_gun"}];
+function pointsByFaction(snapshot) {
+  return Object.fromEntries(snapshot.techAwards.map(award=>[award.faction,award.points]));
+}
+test("PMC opening roster apportions 10 to 1 even after casualties or model changes", t => {
+  const f=fixture(t,{ownFormation:tenToOneArmy()});
+  f.ally.hp=0;
+  const zeon=f.room.game.units.find(unit=>G.ownerOf(unit)===0 && G.modelOf(unit).faction==="ZEON");
+  zeon.model="Type61__standard";
+  f.kill();f.finish();
+  assert.deepEqual(pointsByFaction(f.frames.get(f.clients[0])),{EFSF:600,ZEON:60});
+});
+for (const [name,balances,expected] of [
+  ["exclude a full faction",{EFSF:24000},{ZEON:660}],
+  ["fill a nearly full faction and redistribute",{EFSF:23900},{EFSF:100,ZEON:560}],
+  ["discard excess when all carried factions fill",{EFSF:23990,ZEON:23980},{EFSF:10,ZEON:20}],
+  ["award nothing when all carried factions are full",{EFSF:24000,ZEON:24000},{}],
+]) test("PMC caps: "+name,t=>{
+  const f=fixture(t,{ownFormation:tenToOneArmy(),technologyPoints:balances});
+  const original=JSON.stringify(f.room.technologyStartPoints);
+  f.kill();f.finish();
+  assert.deepEqual(pointsByFaction(f.frames.get(f.clients[0])),expected);
+  const before=JSON.stringify(f.room.techAwards);f.act(0,"sync");
+  assert.equal(JSON.stringify(f.room.techAwards),before);
+  assert.equal(JSON.stringify(f.room.technologyStartPoints),original);
+});
+test("common units count every playable faction without requiring each one to attack",t=>{
+  const f=fixture(t,{ownFormation:[{unitId:"Type61",kitId:"standard"},{unitId:"RGC_80",kitId:"beam_spray"}]});
+  f.kill();f.finish();
+  assert.deepEqual(pointsByFaction(f.frames.get(f.clients[0])),{EFSF:330,AEUG:165,TITANS:165});
+});
+for(const path of ["finish","return"]) test("quick casualties never remove chassis or kits, path="+path,t=>{
+  const f=fixture(t,{mode:"quick"});
+  assert.equal(f.room.seats[0].inventory.Type61,10);
+  assert.equal(f.room.seats[0].kits.Type61__standard,10);
+  const deployment=f.frames.get(f.clients[0]).economyAwards.find(award=>award.kind==="deployment");
+  assert.deepEqual(deployment.stockUsed,{inventory:{},kits:{}});
+  f.ally.hp=0;
+  if(path==="finish"){f.kill();f.finish()}else f.act(0,"return_room");
+  for(const player of f.room.seats.filter(Boolean)){
+    assert.equal(player.inventory.Type61,10);assert.equal(player.kits.Type61__standard,10);
+  }
+  const before=JSON.stringify(f.room.economyAwards);f.act(0,"sync");
+  assert.equal(JSON.stringify(f.room.economyAwards),before);
+});
+
+for (const [cost, money, supplies] of [
+  [0,2500,5000], [1999,2500,5000], [2000,2500,5000], [2499,2500,5000],
+  [2500,2750,5500], [4999,3750,7500], [5000,4000,8000], [7500,5150,10300],
+  [10000,6220,12440], [15000,8120,16240], [17000,8800,17600],
+  [19999,9550,19100], [20000,9700,19400], [24000,10900,21800], [24500,11050,22100],
+]) test(`integer staircase base reward at COST ${cost}`, () => {
+  assert.deepEqual(R.calculateBattleReward(cost), {money,supplies});
+});
+
+test("formation COST sums each participant before averaging and keeps teams independent", () => {
+  const roster = {
+    a:{memberId:"one",team:0,cost:4000}, b:{memberId:"one",team:0,cost:3000},
+    c:{memberId:"two",team:0,cost:3000,bot:true}, d:{memberId:"enemy",team:1,cost:24000},
+  };
+  assert.equal(R.teamAverageFormationCost(roster,0),5000);
+  assert.equal(R.teamAverageFormationCost(roster,1),24000);
+  assert.equal(R.teamAverageFormationCost({},0),0);
+  roster.c.cost=2999;
+  assert.equal(R.teamAverageFormationCost(roster,0),4999.5);
+  assert.deepEqual(R.calculateBattleReward(R.teamAverageFormationCost(roster,0)),{money:3750,supplies:7500});
+});
+
+for (const mode of ["regular", "quick"]) test(`authoritative ${mode} staircase reward freezes cost and uses teammate average`, t => {
+  const f=fixture(t,{mode,assist:true});
+  for (const unit of f.room.game.units)
+    assert.equal(f.room.battleRoster[unit.id].cost,G.modelOf(unit).cost+(unit.pilot?.custom ? G.pilots.cost(unit.pilot) : 0));
+  const ally = f.room.game.units.find(unit=>G.ownerOf(unit)===2);
+  // Two friendly participants: 7000 and 3000, not three units averaged separately.
+  f.room.battleRoster[f.attacker.id].cost=4000;
+  f.room.battleRoster[f.ally.id].cost=3000;
+  f.room.battleRoster[ally.id].cost=3000;
+  f.room.settings.costLimit=100000;
+  f.ally.hp=0;
+  f.kill(); f.finish();
+  const rate=mode==="quick"?0.1:1;
+  for (const seat of [0,2]) {
+    const result=f.frames.get(f.clients[seat]).economyAwards.find(a=>a.kind==="result");
+    assert.equal(result.money,4000*rate);
+    assert.equal(result.supplies,8000*rate);
+  }
+  assert.equal(R.teamAverageFormationCost(f.room.battleRoster,0),5000);
 });

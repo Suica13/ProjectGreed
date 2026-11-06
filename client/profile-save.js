@@ -107,7 +107,7 @@ const ProfileSave = (() => {
         formation?.version !== 3 ||
         !Array.isArray(formation.squads) ||
         !formation.squads.length ||
-        formation.squads.length > 1000 ||
+        formation.squads.length > (faction === "PMC" ? 6000 : 1000) ||
         !Number.isInteger(formation.index) ||
         formation.index < 0 ||
         formation.index >= formation.squads.length
@@ -165,6 +165,7 @@ const ProfileSave = (() => {
     }
     // Rebuild the shared roster from imported faction archives on the next load.
     writes.set("projectgreed.custom-pilots.v3.shared", null);
+    writes.set("slg-formations-v1.pmc-unified", null);
     writes.set(ProfileIdentity.key, JSON.stringify(clean.identity));
     writes.set(Economy.key, JSON.stringify(clean.economy));
     writes.set(pilotKey + "migrated", "imported");
@@ -202,7 +203,7 @@ const ProfileSave = (() => {
   status.setAttribute("role", "status");
   status.textContent = Economy.storageIssue()
     ? "存档读取失败，原始数据已保留。请导入有效存档或新建存档：" + Economy.storageIssue()
-    : "个人进度：驾驶员、编组、科技、资金、物资和单位库存。导入将覆盖个人进度并刷新页面。";
+    : "个人进度：驾驶员、编组、累计科技、资金、物资、部署许可及机体／套件库存。导入将覆盖个人进度并刷新页面。";
   exportButton.onclick = () => {
     try {
       const url = URL.createObjectURL(
@@ -274,7 +275,7 @@ const ProfileSave = (() => {
         formations,
         development: { points: { EFSF: 0, ZEON: 0 }, claimed: {} },
       });
-      PlayerProfile.setFaction("EFSF");
+      PlayerProfile.setFaction("PMC");
       location.reload();
     } catch (error) {
       status.textContent = "新建失败：" + error.message;

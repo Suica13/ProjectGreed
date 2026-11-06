@@ -27,13 +27,13 @@ test("bulk strategic orders do not inherit the old 72-entry formation limit", ()
   assert(units.every((unit) => unit.ownerSeat === 2));
 });
 
-test("selected equipment prices are charged per batch and preserved on every produced unit", () => {
+test("selected equipment is produced one unit at the shared PMC price", () => {
   const state = C.create(ctx, players),
     base = C.quote(ctx, "RFF_06"),
     quote = C.quote(ctx, "RFF_06", "kit_1");
-  assert.equal(quote.money, base.money + 600);
-  assert.equal(quote.supplies, base.supplies + 1200);
-  assert.equal(quote.quantity, 3);
+  assert.equal(quote.money, base.money + 50);
+  assert.equal(quote.supplies, base.supplies + 170);
+  assert.equal(quote.quantity, 1);
   const money = state.teams[0].money,
     supplies = state.teams[0].supplies;
   C.action(ctx, state, players, 0, {
@@ -43,10 +43,10 @@ test("selected equipment prices are charged per batch and preserved on every pro
     unitId: "RFF_06",
     kitId: "kit_1",
   });
-  assert.equal(state.teams[0].money, money - 2100);
-  assert.equal(state.teams[0].supplies, supplies - 3200);
+  assert.equal(state.teams[0].money, money - 650);
+  assert.equal(state.teams[0].supplies, supplies - 950);
   assert.equal(state.orders[0].kitId, "kit_1");
-  assert.match(state.history.at(-1), /生产.*×3.*资金 2100.*物资 3200/);
+  assert.match(state.history.at(-1), /生产.*×1.*资金 650.*物资 950/);
   const before = structuredClone(state);
   assert.throws(
     () =>
@@ -60,10 +60,10 @@ test("selected equipment prices are charged per batch and preserved on every pro
     /套件/,
   );
   assert.deepEqual(state, before);
-  assert.equal(C.quote(ctx, "RGM_79_G", "cannon"), null);
+  assert(C.quote(ctx, "RGM_79_G", "cannon"));
   for (let turn = 0; turn < quote.turns; turn++) C.advance(ctx, state, players);
   const produced = state.units.filter((unit) => unit.unitId === "RFF_06");
-  assert.equal(produced.length, 3);
+  assert.equal(produced.length, 1);
   assert(produced.every((unit) => unit.kitId === "kit_1" && unit.ownerSeat === 0));
 });
 
@@ -181,7 +181,7 @@ test("transfers need recipient acceptance and crossed enemy moves create one enc
   assert(state.encounters.some((encounter) => encounter.region === a.region));
 });
 
-test("technology costs are spent from the campaign pool; invalid archived resources are rejected", () => {
+test("campaign technology accumulates while monetary research costs and archive checks remain", () => {
   const state = C.create(ctx, players);
   const tech = ctx.development
     .nodes("EFSF")
@@ -195,11 +195,9 @@ test("technology costs are spent from the campaign pool; invalid archived resour
   state.teams[0].technology = 100000;
   C.action(ctx, state, players, 2, { action: "campaign_research", turn: 1, techId: tech.id });
   assert.equal(state.teams[0].money, 100000 - tech.money);
-  assert.equal(state.teams[0].technology, 100000 - C.researchPoints(ctx, tech));
+  assert.equal(state.teams[0].technology, 100000);
   assert(!state.teams[0].researched.includes(tech.id));
-  assert.equal(state.teams[0].researchQueue[0].remaining, 2);
-  C.advance(ctx, state, players);
-  assert(!state.teams[0].researched.includes(tech.id));
+  assert.equal(state.teams[0].researchQueue[0].remaining, 1);
   C.advance(ctx, state, players);
   assert(state.teams[0].researched.includes(tech.id));
   const invalid = structuredClone(state);
@@ -237,7 +235,7 @@ test("strategic transport orders keep passengers together and reject unauthorize
   assert.equal(passenger.region, carrier.region);
 });
 
-test("strategic re-equipment charges the native target equipment fee and cannot heal or bypass authority", () => {
+test("strategic re-equipment uses the shared target-kit price and cannot heal or bypass authority", () => {
   const state = C.create(ctx, players),
     unit = C.addUnit(ctx, state, 0, "jaburo", "RFF_06");
   const settings = G.campaignRoomSettings({ mapId: "frontier_1v1" });
@@ -258,7 +256,7 @@ test("strategic re-equipment charges the native target equipment fee and cannot 
   assert(unit.state.hp <= C.model(ctx, unit).hp / 2);
   assert(unit.state.en <= C.model(ctx, unit).en / 2);
   assert.deepEqual(unit.state.weaponUses, { test: 2 });
-  assert.deepEqual(C.equipmentQuote(ctx, unit, "kit_0"), { money: 0, supplies: 0 });
+  assert.deepEqual(C.equipmentQuote(ctx, unit, "kit_0"), { money: 100, supplies: 130 });
   const before = structuredClone(state);
   assert.throws(() => C.action(ctx, state, players, 0, { ...order, kitId: "missing" }), /套件/);
   assert.deepEqual(state, before);
@@ -368,7 +366,7 @@ test("encounter readiness advances to the next region only after the current bat
   assert.throws(() => choose(members[0], first), /准备已变化/);
 });
 
-test("producing a kit cheaper than the default discounts the actual batch", () => {
+test("a cheaper kit lowers the single-unit price without refunding other equipment", () => {
   const state = C.create(ctx, players);
   state.teams[0].researched = ctx.development.nodes("EFSF").map((node) => node.id);
   const standard = C.quote(ctx, "RGM_79"),
@@ -383,25 +381,25 @@ test("producing a kit cheaper than the default discounts the actual batch", () =
     unitId: "RGM_79",
     kitId: "machine_gun",
   });
-  assert.equal(before.money - state.teams[0].money, 1500);
-  assert.equal(before.supplies - state.teams[0].supplies, 2300);
-  assert.equal(state.orders[0].quantity, 3);
+  assert.equal(before.money - state.teams[0].money, 600);
+  assert.equal(before.supplies - state.teams[0].supplies, 900);
+  assert.equal(state.orders[0].quantity, 1);
 });
 
-test("every purchase of a paid native kit costs again, including a cheaper factory configuration", () => {
+test("campaign re-equipment returns removed kits and reuses stock before purchasing", () => {
   const state = C.create(ctx, players),
     unit = C.addUnit(ctx, state, 0, "jaburo", "RGM_79");
   const before = state.teams[0].supplies;
   const equip = (kitId) =>
     C.action(ctx, state, players, 0, { action: "campaign_equip", turn: 1, armyId: unit.id, kitId });
-  assert.deepEqual(C.equipmentQuote(ctx, unit, "bazooka"), { money: 0, supplies: 200 });
+  assert.deepEqual(C.equipmentQuote(ctx, unit, "bazooka"), { money: 100, supplies: 200 });
   assert.deepEqual(C.equipmentQuote(ctx, unit, "beam_spray"), { money: 150, supplies: 300 });
   equip("bazooka");
   assert.equal(state.teams[0].supplies, before - 200);
   equip("beam_spray");
-  assert.equal(state.teams[0].supplies, before - 500);
+  assert.equal(state.teams[0].supplies, before - 200);
   equip("bazooka");
-  assert.equal(state.teams[0].supplies, before - 700);
+  assert.equal(state.teams[0].supplies, before - 200);
   const fee = ctx.production.nativeEquipmentCosts.RGM_79__bazooka;
   assert.equal(fee.sources[0].action, "action_Set_Equipment2");
   assert.equal(fee.sources[0].seconds, 3);
@@ -537,4 +535,27 @@ test("head-on regional movement retains a real adjacent entry for both armies", 
   const entry = G.catalog.scenarios.earth_0079_mid.regions[a.region];
   for (const army of [a, b])
     assert(entry.layout.gates.some((gate) => gate.region === army.entryFrom));
+});
+
+
+test("campaign research unlocks direct production without personal permits or inventory", () => {
+  const E=require("../shared/economy.js"), before=JSON.stringify(E.exportProgress());
+  const state=C.create(ctx,players), team=state.teams[0];
+  team.researched=[];
+  assert.equal(C.available(ctx,state,0,"RGM_79","bazooka"),false);
+  team.researched=ctx.development.nodes("EFSF").map(node=>node.id);
+  assert.equal(E.hasLicense("RGM_79"),false); assert.equal(E.quantity("RGM_79"),0);
+  assert(C.available(ctx,state,0,"RGM_79","bazooka"));
+  const price=C.quote(ctx,"RGM_79","bazooka"), funds=team.money;
+  assert.equal(price.money,price.chassis.money+price.kit.money);
+  assert.equal(price.kit.money,E.kitOffer("RGM_79__bazooka").money*price.quantity);
+  C.action(ctx,state,players,0,{action:"campaign_produce",turn:state.turn,region:"jaburo",unitId:"RGM_79",kitId:"bazooka"});
+  assert.equal(team.money,funds-price.money);
+  assert.equal(state.orders[0].kitId,"bazooka");
+  const restored=C.validate(ctx,structuredClone(state));
+  assert.equal(restored.orders[0].money,price.money);
+  assert.equal(JSON.stringify(E.exportProgress()),before);
+  const custom={...ctx,production:structuredClone(ctx.production)};
+  custom.production.nativeEquipmentCosts.RGM_79__bazooka.money=222;
+  assert.equal(C.quote(custom,"RGM_79","bazooka").kit.money,222*price.quantity);
 });

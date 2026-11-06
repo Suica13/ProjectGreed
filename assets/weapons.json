@@ -137441,7 +137441,7 @@
       "projectile": {
         "texture": "../../projectiles/Beam_2_Yellow.png",
         "scale": 1,
-        "speed": 0.75,
+        "speed": 55,
         "forwardOffset": -10,
         "rotation": 0
       },
@@ -137479,7 +137479,7 @@
         "AntiBuilding": 1.5,
         "HeightChangeSpeed": 2,
         "HeightHitRange": 20,
-        "ProjectileSpeed": 0.75,
+        "ProjectileSpeed": 55,
         "ProjectileSpread": 1,
         "ProjectileExplosionRange": 45,
         "ProjectileLife": 25,
@@ -152650,7 +152650,7 @@
       "projectile": {
         "texture": "../../projectiles/Beam_2_Yellow.png",
         "scale": 1,
-        "speed": 0.75,
+        "speed": 55,
         "forwardOffset": -10,
         "rotation": 0
       },
@@ -152688,7 +152688,7 @@
         "AntiBuilding": 1.5,
         "HeightChangeSpeed": 2,
         "HeightHitRange": 20,
-        "ProjectileSpeed": 0.75,
+        "ProjectileSpeed": 55,
         "ProjectileSpread": 1,
         "ProjectileExplosionRange": 45,
         "ProjectileLife": 25,

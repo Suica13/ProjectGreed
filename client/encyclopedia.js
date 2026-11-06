@@ -50,7 +50,7 @@ const Encyclopedia = (() => {
     options("Status", [
       ["", "全部"],
       ["developed", "已开发"],
-      ["licensed", "已获得部署许可"],
+      ["licensed", "有许可"],
       ["locked", "未解锁"],
     ]);
     if (tab === "units") UnitCatalog.populateTypeFilter(field("Type"), field("Type").value);
@@ -101,23 +101,25 @@ const Encyclopedia = (() => {
     if (prefab.wip) portrait.append(element("small", "unit-portrait-status", "WIP"));
     const body = element("div", "encyclopedia-unit-body");
     body.append(element("strong", "encyclopedia-unit-name", prefab.code + " " + prefab.name));
-    body.append(Formation.unitTags(prefab));
-    body.append(
-      Formation.unitSummaryTags(prefab.stats.adaptability, null, UnitModels[modelId].cost),
-    );
+    body.append(Formation.unitTags(prefab, {cost: UnitModels[modelId].cost}));
+    const timing = Economy.productionTiming(prefab.id, modelId.split("__")[1]);
+    const footer = element("div", "encyclopedia-unit-footer");
+    footer.append(element("small", "muted production-turns", `生产周期：${timing.turns}回合／台`));
     const state = window.CATALOG_DEVELOPER_MODE
       ? ""
-      : Economy.hasLicense(prefab.id)
-        ? "已获得部署许可"
-        : Development.allows(PlayerProfile.faction(), prefab.id)
-          ? "已开发"
-          : "未解锁";
-    if (!window.CATALOG_DEVELOPER_MODE) body.append(element("small", "muted", state));
+      : !Development.allows(PlayerProfile.faction(), prefab.id)
+        ? "未开发"
+        : !Economy.hasLicense(prefab.id) ? "未许可" : "";
+    const identity = element("div", "encyclopedia-unit-identity");
+    identity.append(portrait);
+    if (!window.CATALOG_DEVELOPER_MODE)
+      identity.append(element("small", "muted encyclopedia-unit-status", state));
     const detail = element("button", "", "详细");
     detail.type = "button";
     detail.onclick = () => Formation.previewUnit(prefab.id, detail);
-    body.append(detail);
-    card.append(portrait, body);
+    footer.append(detail);
+    body.append(footer);
+    card.append(identity, body);
     return card;
   }
   function weapons() {

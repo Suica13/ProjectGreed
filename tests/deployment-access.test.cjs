@@ -8,7 +8,7 @@ const tank = { unitId: "Type61", kitId: "standard" };
 const army = (n) => Array.from({ length: n }, () => ({ ...tank }));
 test("one deployment license permits duplicate units and the creation boundary omits unlicensed units", () => {
   const entries = army(3),
-    rules = { licenses: { Type61: true } };
+    rules = { licenses: { Type61: true }, inventory: {Type61:3}, kits: {Type61__standard:3} };
   assert.equal(G.validateFormation(entries, 99999).length, 3);
   const plan = G.planFormation(entries, 99999, rules);
   assert.deepEqual(plan.indices, [0,1,2]);
@@ -16,7 +16,7 @@ test("one deployment license permits duplicate units and the creation boundary o
   const game = G.create(false, 1, [entries, army(1)], true, {
     costLimit: 99999,
     unitCostLimit: 99999,
-    seatFormationRules: [rules, { licenses: { Type61: true } }],
+    seatFormationRules: [rules, { licenses: { Type61: true }, inventory:{Type61:1}, kits:{Type61__standard:1} }],
   });
   assert.equal(game.units.filter((u) => u.ownerSeat === 0).length, 3);
   assert.deepEqual(
@@ -62,6 +62,8 @@ class Peer {
         room,
         characterFaction: "PMC",
         licenses,
+        inventory: Object.fromEntries(Object.keys(licenses).map(id => [id, 20])),
+        kits: Object.fromEntries(Object.keys(licenses).flatMap(id => G.catalog.prefabs.find(p => p.id === id).weaponKits.map(kit => [id + "__" + kit.id, 20]))),
         name: mode,
         ...options,
       }),
@@ -103,7 +105,7 @@ test("real WebSocket ready/assembly/start paths enforce stock and keep licenses 
     b.ws.terminate();
     await app.close();
   });
-  await a.join("create", "STOCK", { Type61: true });
+  await a.join("create", "STOCK", { Type61: true }, {inventory:{Type61:2},kits:{Type61__standard:1},technologyPoints:{EFSF:23900,ZEON:123}});
   await b.join("join", "STOCK", { Type61: true });
   let r = await b.action("set_ready", {
     ready: true,
@@ -114,18 +116,31 @@ test("real WebSocket ready/assembly/start paths enforce stock and keep licenses 
   r = await a.action("start_game", { formation: army(3), licenses: { Type61: true } });
   assert.equal(r.phase, "assembly");
   const own = r.assembly.players.find((p) => p.memberId === a.joined.memberId);
-  assert.equal(own.deployable.length, 3);
-  assert.equal(own.reasons[2], undefined);
+  assert.equal(own.deployable.length, 1);
+  assert.equal(own.reasons[1], "kit_stock");
+  assert.equal(own.reasons[2], "kit_stock");
   assert.deepEqual(r.members.find((m) => m.id === a.joined.memberId).licenses, { Type61: true });
   assert.equal(r.members.find((m) => m.id === b.joined.memberId).licenses, undefined);
   const room = app.rooms.get("STOCK"),
     oldLicenses = room.seats[0].licenses;
+  const oldStock = G.normalizeStock(room.seats[0]);
+  const oldTechnologyPoints = structuredClone(room.seats[0].technologyPoints);
+  assert.equal(r.members.find(m => m.id === b.joined.memberId).technologyPoints, undefined);
   r = await a.action("update_formation", {
     formation: [{ unitId: "fake", kitId: "fake" }],
+    inventory: {Type61:999}, kits: {Type61__standard:999}, technologyPoints:{EFSF:0},
     licenses: { Type61: true },
   });
   assert.equal(r.type, "error");
   assert.deepEqual(room.seats[0].licenses, oldLicenses);
+  assert.deepEqual(G.normalizeStock(room.seats[0]), oldStock);
+  r = await a.action("update_formation", {formation: army(3), inventory: {Type61:-1}, kits:{}});
+  assert.equal(r.type,"error");
+  assert.deepEqual(G.normalizeStock(room.seats[0]), oldStock);
+  assert.deepEqual(room.seats[0].technologyPoints, oldTechnologyPoints);
+  r = await a.action("update_formation", {formation:army(3),technologyPoints:{EFSF:-1}});
+  assert.equal(r.type,"error");
+  assert.deepEqual(room.seats[0].technologyPoints, oldTechnologyPoints);
   const requestId = randomUUID();
   r = await a.action("confirm_formation", { licenses: { Type61: true } }, { id: requestId });
   assert.equal(r.type, "state");
@@ -133,8 +148,20 @@ test("real WebSocket ready/assembly/start paths enforce stock and keep licenses 
   assert.equal(room.seats[0].licenses.Type61, true);
   r = await b.action("confirm_formation", { licenses: { Type61: true } });
   assert.equal(r.phase, "deployment");
-  assert.equal(room.game.units.filter((u) => u.ownerSeat === 0).length, 3);
+  assert.equal(room.game.units.filter((u) => u.ownerSeat === 0).length, 1);
+  assert.equal(room.seats[0].inventory.Type61, 1);
+  assert.equal(room.seats[0].kits.Type61__standard, 0);
+  const reserve = r.economyAwards.find(a => a.kind === "deployment");
+  assert.equal(reserve.stockUsed.inventory.Type61, 3); // recipient is player B
+  const ownDeployment = await a.wait(frame => frame.type === "state" && frame.phase === "deployment" &&
+    frame.economyAwards.some(award => award.kind === "deployment"));
+  const ownReceipt = ownDeployment.economyAwards.find(a => a.kind === "deployment");
+  assert.equal(ownReceipt.stockUsed.inventory.Type61, 1);
+  assert.equal(a.state.members.find(m => m.id === b.joined.memberId).inventory, undefined);
   assert.equal(room.game.units.filter((u) => u.ownerSeat === 1).length, 3);
+  assert.equal(room.technologyStartPoints[a.joined.memberId].EFSF,23900);
+  await a.action("sync",{technologyPoints:{EFSF:0}});
+  assert.equal(room.technologyStartPoints[a.joined.memberId].EFSF,23900);
 });
 
 test("a human may force readiness with zero stock but receives no spawned units", async (t) => {
@@ -173,7 +200,7 @@ const lockedModel = Object.values(G.models).find(m => !m.wip && m.faction === 'E
 const lockedEntry = {unitId: lockedModel.prefabId, kitId: Object.keys(G.models).find(id => G.models[id] === lockedModel).split('__')[1]};
 test('licensed undeveloped units bypass research only, retain faction, cost and tag restrictions', () => {
   const settings = {...G.defaultRoomSettings(), costLimit:99999, unitCostLimit:99999};
-  const rules = G.armyRestrictions(settings, {seat:0, characterFaction:'PMC', researched:{}, licenses:{[lockedEntry.unitId]:true}});
+  const rules = G.armyRestrictions(settings, {seat:0, characterFaction:'PMC', researched:{}, licenses:{[lockedEntry.unitId]:true}, inventory:{[lockedEntry.unitId]:2}, kits:{[lockedEntry.unitId+"__"+lockedEntry.kitId]:2}});
   assert.equal(G.restrictionReason(lockedModel, rules), null);
   assert.equal(G.planFormation([lockedEntry,lockedEntry],Infinity,rules).reasons[1], undefined);
   assert.equal(G.planFormation([lockedEntry],Infinity,{...rules,licenses:undefined}).deployable.length,1);
@@ -310,4 +337,50 @@ test("network rotation stays pending until confirm and duplicate preview never r
  assert.equal((await a.action('rotate',{unitId:u.id,direction:-1},{id})).type,'state');assert.equal(u.angle,90);
  await a.action('rotate',{unitId:u.id,direction:-1},{id});assert.equal(u.angle,90);
  assert.equal((await a.action('confirm_move',{unitId:u.id})).type,'state');assert.equal(u.angle,0);assert.equal(u.moved,true);
+});
+
+
+test("quick games deploy licensed duplicates and selected kits with zero physical stock, and enforce PMC", async t => {
+  const app = createServer({host:"127.0.0.1",port:0}), address = await app.listen();
+  const a = new Peer(`ws://127.0.0.1:${address.port}/ws`), b = new Peer(`ws://127.0.0.1:${address.port}/ws`);
+  t.after(async()=>{a.ws.terminate(); b.ws.terminate(); await app.close();});
+  const permits = {Type61:true,RGM_79:true};
+  await a.join("create","PMCZERO",permits,{characterFaction:"EFSF",inventory:{},kits:{}});
+  await b.join("join","PMCZERO",permits,{characterFaction:"ZEON",inventory:{},kits:{}});
+  assert(app.rooms.get("PMCZERO").seats.every(p=>!p || p.characterFaction === "PMC"));
+  let result=await a.action("set_faction",{faction:"ZEON"});
+  assert.equal(result.type,"error");
+  result=await a.action("configure_room",{...G.defaultRoomSettings(),battleMode:"quick",costLimit:99999,unitCostLimit:99999,unitLimit:72,teamFactions:["EFSF","ZEON"]});
+  assert.equal(result.type,"state");
+  assert.deepEqual(app.rooms.get("PMCZERO").settings.teamFactions,[null,null]);
+  const formation=[...army(3),{unitId:"RGM_79",kitId:"bazooka"}];
+  await b.action("set_ready",{ready:true,formation,licenses:permits,inventory:{},kits:{}});
+  result=await a.action("start_game",{formation,licenses:permits,inventory:{},kits:{}});
+  assert.equal(result.phase,"assembly");
+  await a.action("confirm_formation",{formation,licenses:permits,inventory:{},kits:{}});
+  result=await b.action("confirm_formation",{formation,licenses:permits,inventory:{},kits:{}});
+  assert.equal(result.phase,"deployment");
+  const room=app.rooms.get("PMCZERO");
+  assert.equal(room.game.units.filter(u=>u.ownerSeat===0).length,4);
+  assert(room.game.units.some(u=>u.ownerSeat===0 && u.model==="RGM_79__bazooka"));
+  assert.deepEqual(room.seats[0].inventory,{});
+  assert.deepEqual(room.seats[0].kits,{});
+});
+
+for(const mode of ["regular","quick"]) test("WebSocket pilot policy is host-owned and survives assembly/deployment: "+mode,async t=>{
+ const app=createServer({host:"127.0.0.1",port:0}),address=await app.listen();
+ const a=new Peer(`ws://127.0.0.1:${address.port}/ws`),b=new Peer(`ws://127.0.0.1:${address.port}/ws`);
+ t.after(async()=>{a.ws.terminate();b.ws.terminate();await app.close();});
+ await a.join("create","PILOTS",{Type61:true});await b.join("join","PILOTS",{Type61:true});
+ let response=await b.action("configure_room",{...G.defaultRoomSettings(),pilotPolicy:"none"});assert.equal(response.type,"error");
+ response=await a.action("configure_room",{...G.defaultRoomSettings(),pilotPolicy:"forged"});assert.equal(response.type,"error");
+ response=await a.action("configure_room",{...G.defaultRoomSettings(),battleMode:mode,pilotPolicy:"none",costLimit:99999,unitCostLimit:99999});assert.equal(response.type,"state");assert.equal(response.settings.pilotPolicy,"none");
+ const custom=G.pilots.createCustom("custom-policy-net","Policy"),ace=G.pilots.createAce(G.pilots.catalog.aces.find(p=>p.price).id);
+ const entries=[...army(1),{...tank,customPilot:custom},{...tank,customPilot:ace}];
+ await b.action("set_ready",{ready:true,formation:army(1)});
+ response=await a.action("start_game",{formation:entries});assert.equal(response.phase,"assembly");
+ const plan=response.assembly.players.find(p=>p.memberId===a.joined.memberId);
+ assert.equal(plan.reasons[1],"pilot_banned");assert.equal(plan.reasons[2],"pilot_banned");
+ await a.action("confirm_formation");response=await b.action("confirm_formation");assert.equal(response.phase,"deployment");
+ const own=app.rooms.get("PILOTS").game.units.filter(u=>u.ownerSeat===0);assert.equal(own.length,1);assert(!own[0].pilot.custom);
 });

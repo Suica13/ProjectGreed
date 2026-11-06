@@ -24,7 +24,7 @@ function load(saved = {}) {
   vm.runInContext(fs.readFileSync(require.resolve("../shared/development.js"), "utf8"), context);
   return { D: context.module.exports, storage, context };
 }
-test("research checks prerequisites, spends once, invalidates cached units and survives reload", () => {
+test("research checks cumulative thresholds without spending, invalidates cached units and survives reload", () => {
   const { D, storage } = load();
   const first = tree.EFSF.find(
     (n) => n.points > 0 && n.requires.every((id) => D.unlockedTech("EFSF").includes(id)),
@@ -36,7 +36,7 @@ test("research checks prerequisites, spends once, invalidates cached units and s
   if (later) assert.equal(D.research("EFSF", later.id), false);
   assert.equal(D.research("ZEON", first.id), false);
   assert.equal(D.research("EFSF", first.id), true);
-  assert.equal(D.pointBalance("EFSF"), 100000 - first.points);
+  assert.equal(D.pointBalance("EFSF"), 100000);
   assert.equal(D.research("EFSF", first.id), false);
   assert(D.allows("EFSF", unit));
   assert(D.allows("PMC", unit));

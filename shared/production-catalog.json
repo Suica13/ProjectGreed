@@ -1,7 +1,8 @@
 {
   "schemaVersion": 1,
   "timeEnabled": false,
-  "equipmentPolicy": "free-equipment-deployment-license",
+  "productionSecondsPerTurn": 20,
+  "equipmentPolicy": "counted-chassis-and-kits",
   "defaultKits": {
     "RGM_79": "beam_spray",
     "RGC_80": "beam_spray",

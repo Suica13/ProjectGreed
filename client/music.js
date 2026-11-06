@@ -1,4 +1,4 @@
-/* 菜单与战斗均按当前身份选择音乐，曲终顺序循环，“下一首”随机切换。 */
+/* PMC菜单共用原阵营菜单曲；战略模式保留阵营曲目，曲终随机换曲。 */
 const MusicPlayer = (() => {
   const audio = new Audio();
   const playlist = ART.music.tracks;
@@ -8,16 +8,8 @@ const MusicPlayer = (() => {
   const status = document.getElementById("musicStatus");
   const musicFaction = (faction) =>
     ({ AEUG: "EFSF", TITANS: "EFSF", NEO_ZEON: "ZEON" })[faction] || faction;
-  let menuFaction = "EFSF";
-  try {
-    const saved = localStorage.getItem("projectgreed.combatFaction");
-    if (["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(saved))
-      menuFaction = musicFaction(saved);
-  } catch {}
-  let available = playlist.filter(
-    (track) => track.scene === "menu" && (!track.faction || track.faction === menuFaction),
-  );
-  let index = playlist.indexOf(available[0]);
+  let available = playlist.filter((track) => track.scene === "menu");
+  let index = playlist.indexOf(available[Math.floor(Math.random() * available.length)]);
   let wantsPlayback = true;
   let started = false;
   let request = 0;
@@ -62,21 +54,24 @@ const MusicPlayer = (() => {
     if (wantsPlayback && shouldPlay) play();
     render();
   }
-  function currentFaction() {
-    const snapshot = typeof Net === "undefined" ? null : Net.snapshot;
-    const member = snapshot?.members?.find((entry) => entry.id === snapshot.you?.id);
-    if (member) return member.characterFaction;
-    return typeof PlayerProfile === "undefined" ? null : PlayerProfile.faction();
-  }
   function sync() {
+    const snapshot = typeof Net === "undefined" ? null : Net.snapshot;
+    const strategic = snapshot?.settings?.mode === "campaign";
     const scene = typeof pageView !== "undefined" && pageView === "game" ? "battle" : "menu";
-    const faction = musicFaction(currentFaction());
+    const member = snapshot?.members?.find((entry) => entry.id === snapshot.you?.id);
+    const team = Number.isInteger(member?.seat) ? member.seat % 2 : 0;
+    const faction = strategic
+      ? musicFaction(snapshot.campaign?.teams?.[team]?.faction || member?.characterFaction)
+      : "PMC";
     available = playlist.filter(
-      (track) => track.scene === scene && (!track.faction || track.faction === faction),
+      (track) =>
+        track.scene === scene &&
+        ((!strategic && scene === "menu") || !track.faction || track.faction === faction),
     );
     if (!available.length) return;
     audio.loop = available.length === 1;
-    if (!available.includes(playlist[index])) select(playlist.indexOf(available[0]));
+    if (!available.includes(playlist[index]))
+      select(playlist.indexOf(available[Math.floor(Math.random() * available.length)]));
   }
   toggle.addEventListener("click", () => {
     wantsPlayback = !wantsPlayback || audio.paused;
@@ -99,8 +94,12 @@ const MusicPlayer = (() => {
   });
   audio.addEventListener("ended", () => {
     if (!wantsPlayback) return;
-    const position = available.indexOf(playlist[index]);
-    select(playlist.indexOf(available[(position + 1) % available.length]));
+    const choices = available.filter((track) => track !== playlist[index]);
+    select(
+      playlist.indexOf(
+        choices.length ? choices[Math.floor(Math.random() * choices.length)] : available[0],
+      ),
+    );
   });
   audio.addEventListener("play", render);
   audio.addEventListener("pause", render);

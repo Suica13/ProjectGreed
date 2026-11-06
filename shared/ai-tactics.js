@@ -218,7 +218,7 @@ const AITactics = (() => {
               points(n) <= pool.technology &&
               (n.money || 0) <= pool.money &&
               (n.supplies || 0) <= pool.supplies &&
-              (!main || n.row === "mid" || pool.technology - points(n) >= points(main)),
+              (!main || n.row === "mid" || pool.technology >= points(main)),
           );
         if (!node) break;
         helpers.startResearch(ctx, state, team, node);

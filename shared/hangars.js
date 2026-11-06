@@ -88,6 +88,11 @@ const UnitHangars = {
         used(g, carrier, hangarId) + slotCost(u, hangar) > hangar.capacity
       )
         return false;
+      if (hangar.kind === "sfs") {
+        const projected = { ...g, units: g.units.map(actor => actor.id === u.id
+          ? { ...actor, embarked: { carrierId: carrier.id, hangarId, exposed: true } } : actor) };
+        if (!squadFits(squadMembers(projected, carrier), projected)) return false;
+      }
       if (deploying(g)) return !g.deployment[ownerOf(u)] && edgeDistance(carrier, u) === 1;
       return (
         u.team === g.team &&
@@ -305,7 +310,7 @@ const UnitHangars = {
       return { type: "launch", unitId: u.id, carrierId, x, y, from, path };
     }
     function launchSquadCells(g, members) {
-      if (!members.length || !squadFits(members)) return [];
+      if (!members.length || !squadFits(members, g)) return [];
       const root = members[0];
       if (
         members.length > 1 &&
@@ -324,13 +329,13 @@ const UnitHangars = {
         (c) =>
           others.every((keys) => keys.has(c.x + "," + c.y)) &&
           (!c.squadTarget ||
-            squadFits([...members, ...squadMembers(g, g.units.find(u => u.id === c.squadTarget))])),
+            squadFits([...members, ...squadMembers(g, g.units.find(u => u.id === c.squadTarget))], g)),
       );
     }
     function launchGroupPlan(g, members, x, y) {
       if (
         !members.length ||
-        !squadFits(members) ||
+        !squadFits(members, g) ||
         new Set(members.map((u) => u.id)).size !== members.length
       )
         throw Error("请选择不超过6台且合计不超过6容量点的出击单位");

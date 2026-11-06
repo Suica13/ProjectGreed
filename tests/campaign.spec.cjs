@@ -449,7 +449,7 @@ for (const viewport of [
     await firstArmy.getByRole("button", { name: "配属驾驶员", exact: true }).click();
     const crews = page.locator("#campaignPilotDialog");
     await expect(crews).toBeVisible();
-    await crews.getByRole("button", { name: "招募驾驶员", exact: true }).click();
+    await crews.getByRole("button", { name: "招募PMC驾驶员", exact: true }).click();
     await crews.getByRole("textbox", { name: "驾驶员名称", exact: true }).fill("战略驾驶员");
     await crews.getByRole("button", { name: "招募 · 资金 1,000", exact: true }).click();
     await expect(crews.locator(".campaign-pilot-card")).toHaveCount(1);

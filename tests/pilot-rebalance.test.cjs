@@ -24,8 +24,8 @@ test("custom pilot baseline and training follow revised budget without changing 
   assert.equal(P.cost(next), 25);
   assert.equal(P.statCap(0), 125);
   assert.equal(P.statCap(10), 200);
-  assert.equal(P.growthRules.maxLevel, 10);
-  assert.equal(P.custom({ ...p, level: 10 }).points, 480);
+  assert.equal(P.growthRules.maxLevel, 8);
+  assert.equal(P.custom({ ...p, level: 8 }).points, 400);
 });
 
 test("previous custom growth migrates safely, refunds training and preserves progression and records", () => {
@@ -49,8 +49,8 @@ test("previous custom growth migrates safely, refunds training and preserves pro
   };
   const migrated = P.custom(old);
   assert.deepEqual(migrated.stats, P.baseStats());
-  assert.equal(migrated.level, 10);
-  assert.equal(migrated.points, 480);
+  assert.equal(migrated.level, 8);
+  assert.equal(migrated.points, 400);
   assert.deepEqual(migrated.record, old.record);
   assert.deepEqual(P.custom(migrated), migrated);
   const progressing = P.custom({
@@ -72,8 +72,8 @@ test("training spending, reset and level cap retain current validation", () => {
   assert.equal(P.refundTraining(p).points, 80);
   p.stats.awakening++;
   assert.throws(() => P.custom(p), /强化点/);
-  const capped = P.custom({ ...fresh(), level: 10 });
-  assert.equal(P.gainExperience(capped, 100000).level, 10);
+  const capped = P.custom({ ...fresh(), level: 8 });
+  assert.equal(P.gainExperience(capped, 100000).level, 8);
 });
 
 const near = (a, b) => assert.ok(Math.abs(a - b) < 1e-9, `${a} != ${b}`);
@@ -86,13 +86,13 @@ test("attribute gains increase by 25 percent and awakening grants accuracy/evasi
     ["accuracy", "accuracy"],
     ["reaction", "reaction"],
   ]) {
-    near(P.modifiers(unit({ [stat]: 110 }))[field], 1.03125);
-    near(P.modifiers(unit({ [stat]: 200 }))[field], 1.3125);
-    near(P.modifiers(unit({ [stat]: 90 }))[field], 0.96875);
+    near(P.modifiers(unit({ [stat]: 110 }))[field], 1.05);
+    near(P.modifiers(unit({ [stat]: 200 }))[field], 1.5);
+    near(P.modifiers(unit({ [stat]: 90 }))[field], 0.95);
   }
   near(base.shooting, 1);
-  near(P.modifiers(unit({ defense: 110 })).defense, 0.96875);
-  near(P.modifiers(unit({ defense: 200 })).defense, 0.6875);
+  near(P.modifiers(unit({ defense: 110 })).defense, 0.95);
+  near(P.modifiers(unit({ defense: 200 })).defense, 0.5);
   near(P.modifiers(unit({ speed: 110 })).reaction, 1);
   near(P.modifiers(unit({ awakening: 100 })).shooting, 1);
   near(P.modifiers(unit({ awakening: 100 })).melee, 1);
@@ -102,11 +102,11 @@ test("leadership retains range steps and base effect while improving effect grow
   const model = Object.values(G.models).find((m) => m.commandAuras?.length);
   const u = { model: model.prefabId + "__" + model.kitId, pilot: { stats: P.baseStats() } };
   for (const [leadership, radius, effect] of [
-    [75, 2, 0.0875],
+    [75, 2, 0.075],
     [100, 3, 0.1],
-    [125, 4, 0.1125],
-    [150, 5, 0.125],
-    [200, 7, 0.15],
+    [125, 4, 0.125],
+    [150, 5, 0.15],
+    [200, 7, 0.2],
   ]) {
     u.pilot.stats.leadership = leadership;
     const aura = G.commandAura(u);
@@ -133,17 +133,17 @@ test("version five custom pilots refund valid training at their preserved level 
   assert.throws(() => P.custom({ ...old, experience: 2000 }), /经验/);
   assert.throws(() => P.custom({ ...old, level: 0 }), /等级/);
 });
-test("custom pilots require ten upgrades from zero, keep XP overflow policy and reject invalid levels", () => {
+test("custom pilots require eight upgrades from zero, keep XP overflow policy and reject invalid levels", () => {
   let pilot = fresh();
-  for (let level = 0; level < 10; level++) {
-    assert.equal(P.experienceRequired(level), 1000 * (level + 1) ** 2);
+  for (let level = 0; level < 8; level++) {
+    assert.equal(P.experienceRequired(level), [500,1500,3000,5000,10000,15000,20000,30000][level]);
     pilot = P.upgrade(P.gainExperience(pilot, P.experienceRequired(level) + 123));
     assert.equal(pilot.level, level + 1);
     assert.equal(pilot.experience, Array.from({length:level+1},(_,i)=>P.experienceRequired(i)+123).reduce((a,b)=>a+b,0));
     assert.equal(pilot.points, 80 + 40 * (level + 1));
   }
-  assert.equal(P.gainExperience(pilot, 9999999).level, 10);
-  assert.equal(P.cost(pilot), 250);
+  assert.equal(P.gainExperience(pilot, 9999999).level, 8);
+  assert.equal(P.cost(pilot), 200);
   assert.throws(() => P.custom({ ...fresh(), level: -1 }), /等级/);
   assert.throws(() => P.custom({ ...fresh(), level: 11 }), /等级/);
 });

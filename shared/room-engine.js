@@ -422,7 +422,7 @@ function createRoomEngine({
     for (const member of members(room)) member.ready = !!member.bot;
   }
   function forcedFaction(room, seat) {
-    if (room.settings.mode === "quick") return "PMC";
+    if (room.settings.mode !== "campaign") return "PMC";
     if (room.settings.mode === "campaign" && seat !== null)
       return room.campaign?.teams[G.seatTeam(seat)]?.faction || ["EFSF", "ZEON"][G.seatTeam(seat)];
     return seat === null ? null : room.settings.teamFactions?.[G.seatTeam(seat)] || null;
@@ -892,7 +892,7 @@ function createRoomEngine({
           shareUnits: !!member.shareUnits,
           aiSettings: member.bot ? member.aiSettings : undefined,
           formationPreset: member.formationPreset || null,
-          ...(member.id === recipient?.id ? { licenses: member.licenses || {} } : {}),
+          ...(member.id === recipient?.id ? { licenses: member.licenses || {}, ...G.normalizeStock(member), technologyPoints: member.technologyPoints } : {}),
           armySettings: G.armySettings(member),
         })),
       you: recipient
@@ -972,6 +972,7 @@ function createRoomEngine({
       const target = room.game.units.find((u) => u.id === event.unitId),
         source = room.game.units.find((u) => u.id === event.sourceId);
       if (!target) continue;
+      markTechParticipation(room, source, target, event.damage);
       if (source && source.team !== target.team && event.damage > 0) {
         const owner = room.seats[G.ownerOf(source)],
           faction = G.modelOf(source).faction;
@@ -1126,6 +1127,9 @@ function createRoomEngine({
     room.pilotParticipants = new Set();
     room.pilotDamage = {};
     room.playerDamage = {};
+    room.techParticipation = {};
+    room.technologyStartPoints = {};
+    room.stockReservations = {};
     room.game = G.create(false, randomSeed());
     delete room.aiFormationSeed;
     room.started = false;
@@ -1282,6 +1286,7 @@ function createRoomEngine({
         const source = unit(room, e.from),
           target = unit(room, e.to);
         if (!source || !target || source.team === target.team) continue;
+        markTechParticipation(room, source, target, e.damage);
         const owner = room.seats[G.ownerOf(source)];
         if (owner) {
           const contributions = ((room.playerDamage ||= {})[target.id] ||= {});
@@ -1443,29 +1448,6 @@ function createRoomEngine({
         G.seatTeam(owner.seat),
         room.settings.mode,
       );
-      const points = Math.max(
-        0,
-        Math.floor(
-          defeatedModel.cost *
-            roomBattleEconomy().killTechnologyRate *
-            rates.technology *
-            battleRate *
-            (assist ? 0.5 : 1) *
-            bonus.technology,
-        ),
-      );
-      if (points && ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(faction))
-        room.techAwards.push({
-          id: randomId(),
-          matchId: room.matchId,
-          memberId: owner.id,
-          faction,
-          targetId: to.id,
-          points,
-          kind: assist ? "assist" : "kill",
-          round: room.game.round,
-          team: room.game.team,
-        });
       const money = Math.max(
         0,
         Math.floor(price * (assist ? 0.25 : 0.5) * rates.currency * battleRate * bonus.money),
@@ -1509,6 +1491,72 @@ function createRoomEngine({
       });
     if (room.playerDamage) delete room.playerDamage[to.id];
   }
+  function markTechParticipation(room, source, target, damage) {
+    if (!(damage > 0) || !source || !target || source.team === target.team) return;
+    for (const actor of [source, target]) {
+      const owner = room.seats[G.ownerOf(actor)];
+      if (!owner || owner.bot) continue;
+      const faction = G.modelOf(actor).faction;
+      const factions = ((room.techParticipation ||= {})[owner.id] ||= []);
+      if (!factions.includes(faction)) factions.push(faction);
+    }
+  }
+  function reserveBattleStock(room) {
+    if (room.startedFromSave || room.campaign) return;
+    room.technologyStartPoints = Object.fromEntries(room.seats.filter(Boolean).map(player =>
+      [player.id, roomDevelopment().normalizeTechnologyPoints(player.technologyPoints)]));
+    for (const player of room.seats) {
+      if (!player || player.bot || player.formationPreset) continue;
+      const used = { inventory: {}, kits: {} };
+      for (const record of Object.values(room.battleRoster)) {
+        if (record.memberId !== player.id) continue;
+        used.inventory[record.unitId] = (used.inventory[record.unitId] || 0) + 1;
+        used.kits[record.stockModel] = (used.kits[record.stockModel] || 0) + 1;
+      }
+      const next = G.normalizeStock(player);
+      for (const kind of ["inventory", "kits"]) for (const [id, count] of Object.entries(used[kind])) {
+        if (room.settings.mode !== "quick" && (next[kind][id] || 0) < count) throw Error("出战库存不足：" + id);
+        if (room.settings.mode !== "quick") next[kind][id] -= count;
+      }
+      Object.assign(player, next);
+      room.stockReservations[player.id] = used;
+      room.economyAwards.push({ id: randomId(), matchId: room.matchId, memberId: player.id,
+        kind: "deployment", money: 0, supplies: 0,
+        stockUsed: room.settings.mode === "quick" ? { inventory: {}, kits: {} } : used });
+    }
+  }
+  function returnBattleStock(room, player) {
+    if (!room.stockReservations?.[player.id]) return undefined;
+    const quick = room.settings.mode === "quick";
+    // Quick games borrow units: neither launch nor casualties change the wallet.
+    // This also protects inventory when the room is left or the process closes.
+    const returned = { inventory: {}, kits: {} };
+    if (!quick) for (const [id, record] of Object.entries(room.battleRoster || {})) {
+      if (record.memberId !== player.id || !room.game.units.some(actor => actor.id === id && actor.hp > 0)) continue;
+      returned.inventory[record.unitId] = (returned.inventory[record.unitId] || 0) + 1;
+      returned.kits[record.stockModel] = (returned.kits[record.stockModel] || 0) + 1;
+    }
+    for (const kind of ["inventory", "kits"]) for (const [id, count] of Object.entries(returned[kind]))
+      player[kind][id] = (player[kind][id] || 0) + count;
+    delete room.stockReservations[player.id];
+    return returned;
+  }
+  function awardMatchTechnology(room, player, won, bonus) {
+    const participated = room.techParticipation?.[player.id];
+    if (!participated?.length) return;
+    const economy = roomBattleEconomy(), development = roomDevelopment();
+    const weights = economy.technologyWeights(room.battleRoster, player.id, player.characterFaction);
+    const balances = room.technologyStartPoints?.[player.id] || development.normalizeTechnologyPoints(player.technologyPoints);
+    const limits = Object.fromEntries(development.factions.map(faction => [faction, development.maximumPoints(faction)]));
+    const total = economy.technologyReward(won, room.settings.mode, bonus.technology);
+    const awards = economy.allocateTechnology(total, weights, balances, limits);
+    player.technologyPoints = development.normalizeTechnologyPoints(player.technologyPoints);
+    for (const [faction, points] of Object.entries(awards)) {
+      player.technologyPoints[faction] = balances[faction] + points;
+      room.techAwards.push({ id: randomId(), matchId: room.matchId,
+        memberId: player.id, faction, points, kind: "result", round: room.game.round, team: room.game.team });
+    }
+  }
   function settleBattleEconomy(room) {
     if (
       !room.started ||
@@ -1535,6 +1583,8 @@ function createRoomEngine({
         lostUnits.push({ id, unitId: record.unitId, model: record.model });
       }
       const won = G.seatTeam(player.seat) === room.game.winner;
+      awardMatchTechnology(room, player, won, bonus);
+      const stockReturned = returnBattleStock(room, player);
       const battleRate = roomBattleEconomy().rewardRatio(
         room.battleRoster,
         G.seatTeam(player.seat),
@@ -1542,16 +1592,23 @@ function createRoomEngine({
       );
       const rate = roomBattleEconomy().rates(player.characterFaction, room.settings.mode).currency;
       const destroyedCost = room.teamDestroyedCost?.[G.seatTeam(player.seat)] || 0;
+      const economy = roomBattleEconomy();
+      const base = ["regular", "quick"].includes(room.settings.mode)
+        ? economy.calculateBattleReward(
+            economy.teamAverageFormationCost(room.battleRoster, G.seatTeam(player.seat)),
+          )
+        : { money: room.settings.costLimit * 1.5, supplies: destroyedCost * 3 };
       (room.economyAwards ||= []).push({
         id: randomId(),
         matchId: room.matchId,
         memberId: player.id,
         kind: "result",
+        ...(stockReturned ? { stockReturned } : {}),
         destroyedCost,
         money: Math.floor(
-          (won ? room.settings.costLimit * 1.5 : destroyedCost) * rate * battleRate * bonus.money,
+          (won ? base.money : destroyedCost) * rate * battleRate * bonus.money,
         ),
-        supplies: Math.floor(destroyedCost * (won ? 3 : 2) * rate * battleRate * bonus.supplies),
+        supplies: Math.floor((won ? base.supplies : destroyedCost * 2) * rate * battleRate * bonus.supplies),
         losses,
         lostUnits,
       });
@@ -1654,7 +1711,7 @@ function createRoomEngine({
       kind === "battle" ||
       beforeLevel >= G.pilots.maxLevel(actor.pilot)
         ? 0
-        : Math.floor(points * rate);
+        : G.pilots.combatExperience(G.modelOf(actor).cost, points, rate);
     const requiresRecruitment =
       !!actor.pilot.ace && kind === "loss" && room.settings.mode !== "quick";
     actor.pilot = G.pilots.battleResult(actor.pilot, kind, points, experiencePoints, {
@@ -1893,7 +1950,7 @@ function createRoomEngine({
     G.planFormation(
       formation,
       playerBudget(room, player),
-      { ...playerRestrictions(room, player), licenses: undefined },
+      { ...playerRestrictions(room, player), licenses: undefined, inventory: undefined, kits: undefined },
       playerUnitLimit(room, player),
     );
   // Preview generation is deterministic for the merged room progression.
@@ -2102,7 +2159,7 @@ function createRoomEngine({
           !G.planFormation(
             army,
             playerBudget(room, room.seats[seat]),
-            { ...playerRestrictions(room, room.seats[seat]), licenses: undefined },
+            { ...playerRestrictions(room, room.seats[seat]), licenses: undefined, inventory: undefined, kits: undefined },
             playerUnitLimit(room, room.seats[seat]),
           ).deployable.length
         )
@@ -2124,6 +2181,9 @@ function createRoomEngine({
     room.pilotParticipants = new Set();
     room.pilotDamage = {};
     room.playerDamage = {};
+    room.techParticipation = {};
+    room.technologyStartPoints = {};
+    room.stockReservations = {};
     room.saveTurn = null;
     room.aiResearch = roomAIResearch(room);
     room.started = true;
@@ -2199,6 +2259,9 @@ function createRoomEngine({
           bot: !!room.seats[G.ownerOf(actor)]?.bot,
           unitId: actor.deploymentUnitId || G.models[actor.model].prefabId,
           model: actor.model,
+          stockModel: actor.deploymentModel || actor.model,
+          cost: G.modelOf(actor).cost + (actor.pilot?.custom ? G.pilots.cost(actor.pilot) : 0),
+          technologyFactions: roomBattleEconomy().technologyFactions(G.models[actor.deploymentModel || actor.model]),
           money: roomBattleEconomy().price(actor.deploymentModel || actor.model),
           supplies: roomBattleEconomy().price(actor.deploymentModel || actor.model, "supplies"),
           team: actor.team,
@@ -2206,6 +2269,7 @@ function createRoomEngine({
         },
       ]),
     );
+    reserveBattleStock(room);
     room.phase = room.game.deployment.every(Boolean) ? "idle" : "deployment";
     planner.reset(room);
     room.turnDone = Array(room.seats.length).fill(false);
@@ -3123,6 +3187,12 @@ function createRoomEngine({
       }
       clearTimeout(resultTimers.get(room));
       resultTimers.delete(room);
+      if (!room.campaign && !room.startedFromSave) for (const player of room.seats) {
+        if (!player || player.bot) continue;
+        const stockReturned = returnBattleStock(room, player);
+        if (stockReturned) room.economyAwards.push({ id: randomId(), matchId: room.matchId,
+          memberId: player.id, kind: "return", money: 0, supplies: 0, stockReturned });
+      }
       room.returnCountdown = {
         id: randomId(),
         at: Date.now() + roomReturnMs,
@@ -3178,7 +3248,12 @@ function createRoomEngine({
         return;
       }
       const previousLicenses = member.licenses;
+      const previousStock = G.normalizeStock(member);
+      const previousTechnologyPoints = member.technologyPoints;
       try {
+        if ((!room.started || room.phase === "assembly") && msg.technologyPoints !== undefined &&
+            ["set_ready", "start_game", "update_formation", "confirm_formation"].includes(msg.action))
+          member.technologyPoints = roomDevelopment().normalizeTechnologyPoints(msg.technologyPoints);
         if (
           !room.started &&
           msg.researched !== undefined &&
@@ -3191,6 +3266,10 @@ function createRoomEngine({
           ["set_ready", "start_game", "update_formation", "confirm_formation"].includes(msg.action)
         )
           member.licenses = G.normalizeLicenses(msg.licenses);
+        if ((!room.started || room.phase === "assembly") &&
+            (msg.inventory !== undefined || msg.kits !== undefined) &&
+            ["set_ready", "start_game", "update_formation", "confirm_formation"].includes(msg.action))
+          Object.assign(member, G.normalizeStock(msg));
         if (msg.action === "rename_unit") {
           throw Error("单位不支持改名");
         } else if (msg.action === "share_units") {
@@ -3339,8 +3418,8 @@ function createRoomEngine({
         } else if (msg.action === "set_faction") {
           if (room.settings.mode === "campaign") throw Error("战略模式每支队伍固定使用一个阵营");
           if (room.started) throw Error("对局开始后不能切换阵营。");
-          if (room.settings.mode === "quick" && msg.faction !== "PMC")
-            throw Error("快速战固定使用 PMC 阵营。");
+          if (msg.faction !== "PMC")
+            throw Error("常规战和快速战固定使用 PMC 阵营。");
           if (!["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(msg.faction))
             throw Error("玩家阵营无效。");
           const required = forcedFaction(room, member.seat);
@@ -3378,8 +3457,8 @@ function createRoomEngine({
           const characterFaction = msg.characterFaction ?? bot.characterFaction;
           if (!["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(characterFaction))
             throw Error("AI 阵营无效。");
-          if (room.settings.mode === "quick" && characterFaction !== "PMC")
-            throw Error("快速战 AI 固定使用 PMC 阵营。");
+          if (room.settings.mode !== "campaign" && characterFaction !== "PMC")
+            throw Error("常规战和快速战 AI 固定使用 PMC 阵营。");
           const required = forcedFaction(room, bot.seat);
           if (required && required !== characterFaction) throw Error("本队已设置强制阵营。");
           checkAIArmy(room, {
@@ -3475,6 +3554,7 @@ function createRoomEngine({
                 mode: G.validateBattleMode(msg.battleMode ?? room.settings.mode),
                 mapId: map.id,
                 fogMode: G.validateFogMode(msg.fogMode ?? room.settings.fogMode),
+                pilotPolicy: G.validatePilotPolicy(msg.pilotPolicy ?? room.settings.pilotPolicy),
                 shareAlliedUnits: msg.shareAlliedUnits ?? room.settings.shareAlliedUnits ?? false,
                 costLimit: G.validateCostLimit(msg.costLimit),
                 unitLimit: G.validateUnitLimit(msg.unitLimit ?? room.settings.unitLimit),
@@ -3493,7 +3573,7 @@ function createRoomEngine({
                       )
                     : [G.validateTagRestrictions(), G.validateTagRestrictions()],
                 teamFactions:
-                  G.validateBattleMode(msg.battleMode ?? room.settings.mode) === "quick"
+                  G.validateBattleMode(msg.battleMode ?? room.settings.mode) !== "campaign"
                     ? [null, null]
                     : G.validateTeamFactions(
                         msg.teamFactions ?? room.settings.teamFactions ?? [null, null],
@@ -3661,7 +3741,7 @@ function createRoomEngine({
                 !G.planFormation(
                   formation,
                   playerBudget(room, member),
-                  { ...playerRestrictions(room, member), licenses: undefined },
+                  { ...playerRestrictions(room, member), licenses: undefined, inventory: undefined, kits: undefined },
                   playerUnitLimit(room, member),
                 ).deployable.length
               )
@@ -3683,6 +3763,8 @@ function createRoomEngine({
         return;
       } catch (error) {
         member.licenses = previousLicenses;
+        Object.assign(member, previousStock);
+        member.technologyPoints = previousTechnologyPoints;
         throw error;
       }
     }
@@ -3890,6 +3972,7 @@ function createRoomEngine({
           for (const hit of event.hits) {
             const target = room.game.units.find((other) => other.id === hit.unitId);
             if (!target) continue;
+            markTechParticipation(room, u, target, hit.damage);
             if (u.team !== target.team && hit.damage > 0) {
               const owner = room.seats[G.ownerOf(u)],
                 faction = G.modelOf(u).faction;
@@ -4306,7 +4389,7 @@ function createRoomEngine({
           : room.seats.findIndex((player) => !player);
       if (seat === -1) seat = null;
     }
-    if (msg.mode !== "resume") characterFaction = forcedFaction(room, seat) || characterFaction;
+    characterFaction = forcedFaction(room, seat) || characterFaction;
     let member;
     if (msg.mode === "resume") {
       if (typeof msg.token !== "string") throw Error("缺少重连凭据");
@@ -4324,7 +4407,9 @@ function createRoomEngine({
         characterFaction,
         activityProfileId: ws.activityProfileId || null,
         researched: roomDevelopment().normalizeResearch(msg.researched),
+        technologyPoints: roomDevelopment().normalizeTechnologyPoints(msg.technologyPoints),
         licenses: G.normalizeLicenses(msg.licenses),
+        ...G.normalizeStock(msg),
         seat,
         ready: false,
         finalReady: false,

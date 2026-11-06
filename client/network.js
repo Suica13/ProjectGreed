@@ -259,6 +259,8 @@ const Net = (() => {
     };
     if (profileActions.has(intent.action) && n.snapshot?.settings.mode !== "campaign") {
       message.licenses = Economy.snapshot().licenses;
+      Object.assign(message, Economy.normalizeStock(Economy.snapshot()));
+      message.technologyPoints = Development.pointSnapshot();
       if (!n.snapshot?.started) message.researched = Development.researchSnapshot();
     }
     n.awaiting = {
@@ -574,7 +576,9 @@ const Net = (() => {
           reliableActions: 1,
           characterFaction: PlayerProfile.faction(),
           researched: Development.researchSnapshot(),
+          technologyPoints: Development.pointSnapshot(),
           licenses: Economy.snapshot().licenses,
+          ...Economy.normalizeStock(Economy.snapshot()),
           roomMode: mode === "create" ? byId("newRoomMode").value : undefined,
           mode,
           room,
