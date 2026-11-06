@@ -37,7 +37,7 @@ profiles.unshift(
     },
   }),
 );
-for (const width of [1440, 1000, 390, 360])
+for (const width of [1912, 1440, 1281, 1280, 1101, 1024, 820, 768, 721, 390, 360])
   test(`localized pilot records and skills do not overlap at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 960 });
     await page.addInitScript(
@@ -98,6 +98,7 @@ for (const width of [1440, 1000, 390, 360])
                     overlap(c.getBoundingClientRect(), other.getBoundingClientRect()),
                   ),
               ),
+              recordControlsOverlap: overlap(record, card.querySelector(".formation-row-actions").getBoundingClientRect()),
               recordOverflow: cells.some((c) => c.scrollWidth > c.clientWidth + 1),
               skillsOverflow: [...card.querySelectorAll(".pilot-list-skill")].some(
                 (c) => c.scrollWidth > c.clientWidth + 1,
@@ -114,7 +115,7 @@ for (const width of [1440, 1000, 390, 360])
             !g.statusLayout || g.overflow ||
             g.blockOverlap ||
             g.cellOverlap ||
-            g.recordOverflow ||
+            g.recordControlsOverlap || g.recordOverflow ||
             g.skillsOverflow ||
             g.outside,
         ),

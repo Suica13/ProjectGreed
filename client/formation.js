@@ -2267,7 +2267,7 @@ const Formation = (() => {
           editPilot(p);
           openPilotSkillPicker();
         };
-        actions.append(learn);
+        skills.append(learn);
       }
       actions.append(details);
       if (!p.ace) actions.append(remove);

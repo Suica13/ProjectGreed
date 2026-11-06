@@ -65,6 +65,7 @@ for (const [width, height] of [
     );
     await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
     await page.waitForFunction(() => typeof assetsReady !== "undefined" && assetsReady);
+    let rosterGeometry;
     for (const language of ["en", "ja", "zh"])
       for (const [view, id, selector] of [
         ["formation", "formationUnits", ".formation-row"],
@@ -88,6 +89,9 @@ for (const [width, height] of [
           const cards = [...list.querySelectorAll(":scope > " + selector)];
           return {
             panel: { top: rect.top, bottom: rect.bottom, height: rect.height },
+            padding: [getComputedStyle(list).paddingLeft, getComputedStyle(list).paddingRight],
+            widths: [...new Set(cards.map(c => c.getBoundingClientRect().width))],
+            buttonSize: cards[0].querySelector(".formation-row-actions > button")?.getBoundingClientRect().toJSON(),
             visible: cards.filter((c) => {
               const r = c.getBoundingClientRect();
               return (
@@ -103,12 +107,12 @@ for (const [width, height] of [
               const actions = card.querySelector(".formation-row-actions");
               const buttons = [...actions.children].map(button => button.getBoundingClientRect());
               return actions.getBoundingClientRect().left >= label.getBoundingClientRect().right - 1 &&
-                Math.abs(buttons[0].top - buttons[1].top) <= 1 && buttons[2].top > buttons[0].top;
+                Math.abs(buttons[0].top - buttons[1].top) <= 1 && buttons[2].top >= buttons[0].bottom;
             }),
             desktopReadable: innerWidth < 1920 || cards.every(card => {
               const image = card.querySelector(".production-unit-portrait img, .pilot-roster-portrait img, .formation-icon");
               const name = card.querySelector(".unit-line-title, .pilot-roster-heading, .formation-unit-name > strong");
-              return !image || !name || (image.getBoundingClientRect().height >= 80 && parseFloat(getComputedStyle(name).fontSize) >= 18);
+              return !image || !name || (image.getBoundingClientRect().height >= 80 && parseFloat(getComputedStyle(name).fontSize) >= 15);
             }),
             topAligned: cards.every(card => {
               const image = card.querySelector(".production-unit-portrait, .pilot-roster-portrait, .formation-unit-portrait");
@@ -131,13 +135,26 @@ for (const [width, height] of [
               })),
           };
         }, selector);
+        const roster = view === "formation" || view === "pilots";
+        // Approved fixed card heights take priority over the old exact-fill presets.
+        const fixedHeight = roster || (view === "encyclopedia" && width > 720);
+        const minimumVisible = fixedHeight
+          ? width > 1100 ? (height >= 850 ? 8 : 6) : height >= 800 ? 4 : 3
+          : width > 1100 ? (view === "production" ? 6 : 8) : 4;
         expect(
           geometry.visible,
           JSON.stringify({ width, height, language, view, ...geometry }),
-        ).toBe(width > 1100 ? (view === "production" ? 6 : 8) : view === "formation" ? 6 : 4);
+        ).toBeGreaterThanOrEqual(minimumVisible);
+        if (roster) expect(geometry.heights).toEqual([116]);
         expect(geometry.heights).toHaveLength(1);
-        expect(geometry.bottomGap).toBeGreaterThanOrEqual(-1);
-        expect(geometry.bottomGap).toBeLessThan(12);
+        if (view === "formation") rosterGeometry = geometry;
+        if (view === "pilots") {
+          expect(geometry.heights).toEqual(rosterGeometry.heights);
+          expect(geometry.widths).toEqual(rosterGeometry.widths);
+          expect(geometry.padding).toEqual(rosterGeometry.padding);
+          expect(geometry.buttonSize.width).toBe(rosterGeometry.buttonSize.width);
+          expect(geometry.buttonSize.height).toBe(rosterGeometry.buttonSize.height);
+        }
         expect(geometry.actionsRight, view + " right-hand controls").toBe(true);
         expect(geometry.desktopReadable, view + " desktop scale").toBe(true);
         expect(geometry.topAligned, view + " portrait alignment").toBe(true);

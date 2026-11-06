@@ -133,7 +133,9 @@ window.MenuShell = (() => {
   const progressRow = element("div", "menu-faction-progress");
   progressRow.id = "menuFactionProgress";
   byId("menuTechProgress").before(progressRow);
-  progressRow.append(byId("shellIdentity"), byId("menuTechProgress"));
+  byId("shellIdentity").hidden = true;
+  byId("menuTechProgress").querySelector(".menu-tech-progress-title").prepend(ProductionUI.resourceIcon("technology"));
+  progressRow.append(byId("menuTechProgress"));
   byId("start").removeAttribute("aria-modal");
   byId("start").setAttribute("role", "region");
   byId("shellLobby").onclick = () => go(Net.active ? "room" : "menu");
@@ -195,7 +197,14 @@ window.MenuShell = (() => {
     const clipped = Math.max(0, rect.bottom - innerHeight) + Math.max(0, -rect.top);
     const available = list.clientHeight - clipped - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
     const gap = parseFloat(style.rowGap) || 0;
-    const height = Math.floor((available - gap * (rows - 1)) / rows);
+    let height = Math.floor((available - gap * (rows - 1)) / rows);
+    if (["formationUnits", "customPilotList"].includes(list.id)) {
+      // Keep portrait sizing independent from the new, compact shared card slots.
+      const phone = matchMedia("(max-width:720px)").matches;
+      list.style.setProperty("--roster-reference-height", (height - (!phone && list.id === "customPilotList" ? 2 : 0)) + "px");
+      // Minimum visible counts are a floor, not a reason to stretch every card.
+      height = 116;
+    }
     if (height > 0) list.style.setProperty("--fitted-card-height", height + "px");
   }
   const cardResizeObserver = new ResizeObserver(entries => {

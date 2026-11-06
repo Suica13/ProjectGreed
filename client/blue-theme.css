@@ -299,10 +299,18 @@ body.menu-shell-active #start #openSkirmish {
   color: #c0cbd9;
 }
 #menuTechProgressBar {
-  background: #101620;
-  border-color: #3e4d60;
-  border-radius: 2px;
+  box-sizing: border-box;
+  width: 100%;
+  height: 10px;
+  min-height: 10px;
+  background: #081521;
+  border: 1px solid #7195ae;
+  border-radius: 3px;
+  box-shadow: inset 0 1px 2px #0008;
 }
+.menu-tech-progress-title { display:inline-flex; align-items:center; gap:5px; }
+.menu-tech-progress-title .resource-icon { width:16px; height:16px; flex:none; color:#66c9ff; }
+#shellIdentity[hidden] { display:none !important; }
 #menuTechProgressFill {
   background: #52b5df;
   border-radius: 0;
@@ -3130,11 +3138,10 @@ body #formationScreen #formationUnits .formation-unit-portrait > .formation-icon
   contain-intrinsic-size:auto 112px;
 }
 
-/* Match the phone's two-by-two action group on the right of desktop cards. */
+/* Move actions to the right without changing portrait or card dimensions. */
 @media(min-width:721px) {
   #formationUnits {
-    --unit-card-portrait:clamp(48px, calc(var(--fitted-card-height, 120px) - 28px), 150px);
-    --formation-actions-width:clamp(140px, var(--fitted-card-height, 140px), 176px);
+    --formation-actions-width:128px;
   }
   body.menu-shell-active #formationScreen #formationUnits > .formation-row {
     grid-template-columns:var(--unit-card-portrait) minmax(0,1fr) var(--formation-actions-width);
@@ -3142,12 +3149,12 @@ body #formationScreen #formationUnits .formation-unit-portrait > .formation-icon
   }
   body.menu-shell-active #formationScreen #formationUnits .formation-row > .formation-row-actions {
     grid-area:1 / 3; width:var(--formation-actions-width); align-self:center;
-    grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:repeat(2,auto); gap:4px;
+    grid-template-columns:minmax(0,1fr); grid-template-rows:repeat(4,auto); gap:2px;
   }
   body.menu-shell-active #formationScreen #formationUnits .formation-row-actions > button {
     grid-column:auto; grid-row:auto;
-    height:clamp(26px, calc(var(--fitted-card-height, 120px) * .22), 40px);
-    min-height:26px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    height:clamp(18px, calc((var(--fitted-card-height, 120px) - 16px) / 4), 36px);
+    min-height:18px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
   }
 }
 #formationUnitPicker #formationCatalog { gap:2px; padding:4px; }
@@ -3160,4 +3167,292 @@ body #formationScreen #formationUnits .formation-unit-portrait > .formation-icon
 }
 @media(max-width:720px) {
   #customPilotList .pilot-roster-heading > .pilot-recruit-state { max-width:64px; font-size:9px; line-height:12px; }
+}
+
+@media(max-width:720px) {
+  body.menu-shell-active #formationScreen #formationUnits .formation-row > .formation-row-actions {
+    grid-template-columns:minmax(0,1fr); grid-template-rows:repeat(4,auto); gap:1px;
+  }
+  body.menu-shell-active #formationScreen #formationUnits .formation-row-actions > button {
+    height:clamp(13px, calc((var(--fitted-card-height, 72px) - 10px) / 4), 26px);
+    min-height:13px; line-height:11px;
+  }
+}
+
+/* Shared roster cards: compact slots, identical insets and matching action sizes. */
+#formationUnits, #customPilotList { padding:0 12px; gap:4px; }
+body.menu-shell-active #formationScreen #formationUnits > .formation-row,
+#customPilotList > .custom-pilot-card { padding:3px 5px; column-gap:8px; }
+#formationUnits { --formation-actions-width:132px; }
+body.menu-shell-active #formationScreen #formationUnits .formation-row > .formation-row-actions {
+  grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:repeat(2,26px); gap:4px;
+}
+body.menu-shell-active #formationScreen #formationUnits .formation-row-actions > button,
+body.menu-shell-active #formationScreen #customPilotList .formation-row-actions > button {
+  width:64px; height:26px; min-height:26px; padding:1px 3px; font-size:11px; line-height:18px;
+}
+body.menu-shell-active #formationScreen #customPilotList .formation-row-actions {
+  width:64px; gap:4px; align-self:start;
+}
+#customPilotList .pilot-list-skills > .pilot-skill-alert {
+  width:auto; height:16px; min-height:16px; padding:0 4px; font-size:10px; line-height:14px;
+}
+@media(min-width:721px) {
+  #formationUnits { --unit-card-portrait:clamp(48px, calc(var(--roster-reference-height, 120px) - 60px), 120px); }
+  #customPilotList { --pilot-card-portrait:clamp(48px, calc(var(--roster-reference-height, 120px) - 40px), 136px); }
+  #customPilotList > .custom-pilot-card { grid-template-columns:var(--pilot-card-portrait) minmax(0,1fr) 64px; }
+  #formationUnits .formation-unit-name > strong, #customPilotList .pilot-roster-heading { font-size:clamp(16px, calc(var(--roster-reference-height, 120px) * .11), 20px); line-height:1.2; }
+}
+@media(max-width:720px) {
+  #formationUnits, #customPilotList { padding:0 6px; }
+  body.menu-shell-active #formationScreen #formationUnits > .formation-row {
+    grid-template-columns:var(--unit-card-portrait) minmax(0,1fr) 96px; column-gap:6px;
+  }
+  #customPilotList > .custom-pilot-card { grid-template-columns:32px minmax(0,1fr) 47px; column-gap:6px; }
+  body.menu-shell-active #formationScreen #formationUnits .formation-row > .formation-row-actions {
+    grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:repeat(2,26px); gap:2px;
+  }
+  body.menu-shell-active #formationScreen #formationUnits .formation-row-actions > button,
+  body.menu-shell-active #formationScreen #customPilotList .formation-row-actions > button {
+    width:47px; height:26px; min-height:26px; padding:0 1px; font-size:10px; line-height:12px;
+  }
+  body.menu-shell-active #formationScreen #customPilotList .formation-row-actions { width:47px; gap:2px; }
+  #customPilotList .custom-pilot-summary { grid-template-rows:16px 12px auto auto; gap:1px; }
+  #customPilotList .pilot-roster-heading { min-height:16px; font-size:13px; line-height:16px; }
+  #customPilotList .pilot-roster-progress { font-size:11px; line-height:12px; }
+  #customPilotList .pilot-list-skill, #customPilotList .pilot-list-skills .pilot-cost-tag { font-size:10px; line-height:14px; }
+  #customPilotList .pilot-list-skills .pilot-cost-tag { height:16px; min-height:16px; }
+  #customPilotList .pilot-record { width:calc(100% + 91px); margin-left:-38px; min-height:24px; }
+  #customPilotList .pilot-record-cell, #customPilotList .pilot-record-cell strong { font-size:10px; line-height:12px; }
+}
+
+#formationUnits .formation-unit-name { align-self:start; }
+@media(max-width:720px) {
+  #customPilotList .pilot-list-skills { min-height:24px; }
+}
+
+body.menu-shell-active #formationScreen #formationUnits .formation-row > .formation-row-actions { align-self:start; }
+@media(max-width:720px) {
+  body.menu-shell-active #formationScreen #formationUnits > .formation-row {
+    grid-template-rows:minmax(0,1fr); align-content:stretch; align-items:start;
+  }
+  body.menu-shell-active #formationScreen #formationUnits > .formation-row,
+  #customPilotList > .custom-pilot-card { padding:2px 5px; }
+}
+
+/* Both columns share the name's top anchor, independent of portrait size. */
+#encyclopediaList > .encyclopedia-unit { align-items:start; }
+#encyclopediaList .encyclopedia-unit-identity,
+#encyclopediaList .encyclopedia-unit-body { align-self:start; margin-top:0; padding-top:0; }
+#encyclopediaList .encyclopedia-unit-name { margin-top:0; }
+
+/* Approved desktop card layout; mobile keeps its own composition. */
+@media (min-width: 721px) {
+  #formationUnits, #customPilotList {
+    --roster-button-width: clamp(64px, calc(7vw - 9px), 125px);
+    --roster-button-height: clamp(28px, 2.5vw, 48px);
+    --roster-button-gap: clamp(3px, .26vw, 5px);
+  }
+  #formationUnits > .formation-row {
+    height: 116px !important;
+    min-height: 116px !important;
+    max-height: 116px !important;
+    padding: 5px !important;
+    column-gap: 10px !important;
+    border-radius: 0px !important;
+  }
+  #formationUnits {
+    gap: 4px !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  #formationUnits .formation-unit-portrait {
+    width: 86px !important;
+    min-width: 86px !important;
+  }
+  #formationUnits .formation-icon,
+  #formationUnits .formation-icon > img {
+    width: 86px !important;
+    height: 86px !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    object-fit: contain !important;
+  }
+  #formationUnits .formation-unit-name > strong {
+    font-size: 15px !important;
+    line-height: 1.2 !important;
+  }
+  #formationUnits .formation-stock-line,
+  #formationUnits .formation-cargo-note {
+    font-size: 14px !important;
+    line-height: 1.3 !important;
+  }
+  #formationUnits .unit-tags .faction-tag,
+  #formationUnits .unit-tags .era-tag,
+  #formationUnits .unit-tags .type-tag,
+  #formationUnits .unit-tags .unit-summary-tag,
+  #formationUnits .pilot-cost-tag,
+  #formationUnits .pilot-recruit-state {
+    font-size: 12px !important;
+    line-height: 1.2 !important;
+  }
+  #formationUnits .unit-tags-two-rows > span {
+    height: 17px !important;
+  }
+  #formationUnits > .formation-row {
+    grid-template-columns: 86px minmax(0, 1fr) calc(2 * var(--roster-button-width) + var(--roster-button-gap)) !important;
+  }
+  #formationUnits .formation-row-actions {
+    width: calc(2 * var(--roster-button-width) + var(--roster-button-gap)) !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, var(--roster-button-width)) !important;
+    grid-template-rows: none !important;
+    grid-auto-rows: var(--roster-button-height) !important;
+    gap: var(--roster-button-gap) !important;
+  }
+  #formationUnits .formation-row-actions > button {
+    width: var(--roster-button-width) !important;
+    height: var(--roster-button-height) !important;
+    min-height: var(--roster-button-height) !important;
+    grid-column: auto !important;
+    grid-row: auto !important;
+  }
+  #customPilotList > .custom-pilot-card {
+    height: 116px !important;
+    min-height: 116px !important;
+    max-height: 116px !important;
+    padding: 5px !important;
+    column-gap: 10px !important;
+    border-radius: 0px !important;
+  }
+  #customPilotList {
+    gap: 4px !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  #customPilotList .pilot-roster-portrait {
+    width: 86px !important;
+    min-width: 86px !important;
+  }
+  #customPilotList .pilot-roster-portrait > img {
+    width: 86px !important;
+    height: 86px !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    object-fit: contain !important;
+  }
+  #customPilotList .pilot-roster-heading {
+    font-size: 15px !important;
+    line-height: 1.2 !important;
+  }
+  #customPilotList .pilot-roster-progress,
+  #customPilotList .pilot-list-skill,
+  #customPilotList .pilot-record-cell,
+  #customPilotList .pilot-record-cell strong {
+    font-size: clamp(11px, .85vw, 14px) !important;
+    line-height: 1.3 !important;
+  }
+  #customPilotList .unit-tags .faction-tag,
+  #customPilotList .unit-tags .era-tag,
+  #customPilotList .unit-tags .type-tag,
+  #customPilotList .unit-tags .unit-summary-tag,
+  #customPilotList .pilot-cost-tag,
+  #customPilotList .pilot-recruit-state {
+    font-size: 12px !important;
+    line-height: 1.2 !important;
+  }
+  #customPilotList .unit-tags-two-rows > span {
+    height: 17px !important;
+  }
+  #customPilotList > .custom-pilot-card {
+    grid-template-columns: 86px minmax(0, 1fr) var(--roster-button-width) !important;
+  }
+  #customPilotList .formation-row-actions {
+    width: var(--roster-button-width) !important;
+    display: grid !important;
+    justify-self: end;
+    grid-template-columns: var(--roster-button-width) !important;
+    grid-template-rows: none !important;
+    grid-auto-rows: var(--roster-button-height) !important;
+    gap: var(--roster-button-gap) !important;
+  }
+  #customPilotList .formation-row-actions > button {
+    width: var(--roster-button-width) !important;
+    height: var(--roster-button-height) !important;
+    min-height: var(--roster-button-height) !important;
+    grid-column: auto !important;
+    grid-row: auto !important;
+  }
+  #customPilotList .custom-pilot-summary {
+    grid-template-rows: auto auto auto auto !important;
+  }
+  #encyclopediaList > .encyclopedia-unit {
+    height: 114px !important;
+    min-height: 114px !important;
+    max-height: 114px !important;
+    padding: 6px !important;
+    column-gap: 9px !important;
+    border-radius: 0px !important;
+  }
+  #encyclopediaList {
+    gap: 5px !important;
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  #encyclopediaList .encyclopedia-unit-identity {
+    width: 85px !important;
+    min-width: 85px !important;
+  }
+  #encyclopediaList .encyclopedia-portrait,
+  #encyclopediaList .encyclopedia-portrait img {
+    width: 85px !important;
+    height: 85px !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    object-fit: contain !important;
+  }
+  #encyclopediaList > .encyclopedia-unit {
+    grid-template-columns: 85px minmax(0, 1fr) !important;
+  }
+  #encyclopediaList .encyclopedia-unit-name {
+    font-size: 17px !important;
+    line-height: 1.2 !important;
+  }
+  #encyclopediaList .production-turns {
+    font-size: 13px !important;
+    line-height: 1.3 !important;
+  }
+  #encyclopediaList .unit-tags .faction-tag,
+  #encyclopediaList .unit-tags .era-tag,
+  #encyclopediaList .unit-tags .type-tag,
+  #encyclopediaList .unit-tags .unit-summary-tag,
+  #encyclopediaList .pilot-cost-tag,
+  #encyclopediaList .pilot-recruit-state {
+    font-size: 12px !important;
+    line-height: 1.2 !important;
+  }
+  #encyclopediaList .unit-tags-two-rows > span {
+    height: 17px !important;
+  }
+}
+@media (max-width: 720px) {
+  #formationUnits > .formation-row,
+  #customPilotList > .custom-pilot-card {
+    height: 116px;
+    min-height: 116px;
+    max-height: 116px;
+  }
+}
+
+/* Tablets get a full-width card before the information column becomes cramped. */
+@media (min-width:721px) and (max-width:1280px) {
+  #formationUnits, #customPilotList, #encyclopediaList {
+    grid-template-columns:minmax(0,1fr) !important;
+  }
 }
