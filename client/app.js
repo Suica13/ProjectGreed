@@ -1776,7 +1776,27 @@ function drawMap(now) {
       squadPendingMoves.set(id, actor.pendingMove);
   drawVisibleEffects(() => MapCombat.drawUnderlay(ctx, mapGeo));
   const authoredMap = Rules.getMap(game.mapId);
-  globalThis.ProjectGreedMapLighting = authoredMap.lighting || null;
+  const mapClimate = game.climateMap || authoredMap;
+  const climate = typeof BattlefieldClimate !== "undefined"
+    ? BattlefieldClimate.resolve(mapClimate, game.climateSettings || Net.snapshot?.settings || {},
+      game.round, game.climateSeed || game.seed || 1) : null;
+  const baseLighting = authoredMap.lighting || {};
+  const targetLighting = typeof MapShadowLighting !== "undefined" && climate
+    ? MapShadowLighting.fromClimate(baseLighting, climate) : baseLighting;
+  const lastLight = globalThis.ProjectGreedMapLighting;
+  const transition = globalThis.ProjectGreedLightTransition;
+  const lightKey = climate?.time + ":" + climate?.weather + ":" + game.mapId;
+  if (!transition || transition.key !== lightKey) {
+    globalThis.ProjectGreedLightTransition = { key:lightKey, at:now, from:lastLight || targetLighting };
+  }
+  const fade = Math.min(1,Math.max(0,(now-globalThis.ProjectGreedLightTransition.at)/1800));
+  const from = globalThis.ProjectGreedLightTransition.from;
+  globalThis.ProjectGreedMapLighting = {
+    ...targetLighting,
+    distance: (from.distance ?? targetLighting.distance)*(1-fade)+targetLighting.distance*fade,
+    horizontalAngle: (from.horizontalAngle ?? targetLighting.horizontalAngle)*(1-fade)+targetLighting.horizontalAngle*fade,
+    intensity: (from.intensity ?? targetLighting.intensity)*(1-fade)+targetLighting.intensity*fade,
+  };
   let aboveLayerDrawn = false;
   const drawAboveLayer = () =>
     drawVisibleEffects(() => TileMapRenderer.draw(ctx, authoredMap, "above", mapGeo, w, h));
