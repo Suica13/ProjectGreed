@@ -25,6 +25,9 @@ const Chat = (() => {
     },
   ];
   const scrollPositions = new Map();
+  function setDOMValue(node, property, value) {
+    if (node[property] !== value) node[property] = value;
+  }
   function scrollPosition(view) {
     if (!scrollPositions.has(view.lines))
       scrollPositions.set(view.lines, { top: 0, bottom: true, visible: false });
@@ -68,7 +71,7 @@ const Chat = (() => {
         : !ChatChannels.canSend(seat(), selectedChannel)
           ? "观战玩家只能查看队伍频道，请在全部或观战频道发送。"
           : notice;
-    for (const view of views) byId(view.status).textContent = text;
+    for (const view of views) setDOMValue(byId(view.status), "textContent", text);
   }
   function refreshChannels() {
     const allowed = availableChannels();
@@ -83,7 +86,7 @@ const Chat = (() => {
         select.replaceChildren();
         for (const channel of allowed) select.add(new Option(ChatChannels.label(channel), channel));
       }
-      select.value = selectedChannel;
+      setDOMValue(select, "value", selectedChannel);
     }
   }
   function refreshStatus() {
@@ -93,17 +96,25 @@ const Chat = (() => {
     const writable =
       connected() && !window.ReplayPlayer?.active && ChatChannels.canSend(seat(), selectedChannel);
     for (const view of views) {
-      byId(view.send).disabled = !writable || !!pending;
-      byId(view.input).disabled = !writable;
-      byId(view.channel).disabled = !connected();
+      setDOMValue(byId(view.send), "disabled", !writable || !!pending);
+      setDOMValue(byId(view.input), "disabled", !writable);
+      setDOMValue(byId(view.channel), "disabled", !connected());
     }
     renderStatus();
   }
+  let renderedMessages = null, renderedChatContext = "";
+  const messageFields = ["id", "memberId", "name", "text", "channel", "at", "system", "event", "characterFaction"];
   function render() {
     captureScroll();
     refreshChannels();
     // 服务端已按身份过滤权限；发送频道不再筛选聊天历史。
     const visible = messages;
+    const context = [views.length, Net.memberId, Net.snapshot?.settings?.mode, I18n.language].join(":");
+    if (renderedChatContext === context && renderedMessages?.length === visible.length &&
+      visible.every((message, index) => messageFields.every(field => message[field] === renderedMessages[index][field]))) {
+      refreshStatus();
+      return;
+    }
     for (const view of views) {
       const list = byId(view.lines);
       const position = scrollPosition(view);
@@ -142,12 +153,14 @@ const Chat = (() => {
       if (list.clientHeight)
         list.scrollTop = position.bottom ? list.scrollHeight : position.top;
     }
+    renderedMessages = visible.map(message => ({ ...message }));
+    renderedChatContext = context;
     refreshStatus();
   }
   function refreshNames(snapshot) {
     for (const view of views)
       for (const name of byId(view.lines).querySelectorAll("[data-member-id]"))
-        name.className = playerNameClass(name.dataset.memberId, snapshot.hostId, snapshot.you?.id);
+        setDOMValue(name, "className", playerNameClass(name.dataset.memberId, snapshot.hostId, snapshot.you?.id));
   }
   let battleLog = [],
     logExport = null,
@@ -167,7 +180,7 @@ const Chat = (() => {
     options.push("global");
     if (!available.includes(exportChoice)) exportChoice = available[0] || options[0];
     for (const id of ["showLog", "roomShowLog"])
-      byId(id).textContent = logExport ? "LOG · " + perspectiveLabel(logExport.perspective) : "LOG";
+      setDOMValue(byId(id), "textContent", logExport ? "LOG · " + perspectiveLabel(logExport.perspective) : "LOG");
     for (const id of ["battleLogView", "roomLogView"]) {
     const select = byId(id);
     if (select) select.onchange = () => {
@@ -193,14 +206,16 @@ const Chat = (() => {
       select.disabled = !!Net.awaiting;
     }
     for (const id of ["downloadBattleLog", "roomDownloadBattleLog"]) {
-      byId(id).disabled =
+      const disabled =
         Net.active || replayOptions
           ? !available.includes(exportChoice) || !!Net.awaiting
           : !battleLog.length;
-      byId(id).title =
+      const title =
         Net.active && !available.length
           ? "全局战报在对局结束或全员返回房间时开放下载。"
           : "下载战斗LOG";
+      setDOMValue(byId(id), "disabled", disabled);
+      setDOMValue(byId(id), "title", title);
     }
   }
   function downloadLog() {
@@ -237,26 +252,42 @@ const Chat = (() => {
     byId(id).disabled = true;
   }
   let logView = "combined";
+  const logNodes = new Map();
+  let logNamesKey = "";
   function setLog(
     entries,
     names = game.units.map((unit) => Rules.unitLogName(unit)).filter(Boolean),
   ) {
     battleLog = entries.slice();
     refreshExports();
+    const namesKey = JSON.stringify([I18n.language, [...new Set(names)].sort()]);
+    if (namesKey !== logNamesKey) { logNodes.clear(); logNamesKey = namesKey; }
+    const visible = battleLog.filter(text => logView === "combined" ||
+      (logView === "dialogue" ? /^(?:→ )?\[战场对话\]/.test(text) : !/^(?:→ )?\[战场对话\]/.test(text))).slice(0, 80);
     for (const id of ["log", "roomCombatLog"]) {
       const list = byId(id),
         scrollTop = list.scrollTop;
-      list.replaceChildren(
-        ...battleLog.filter((text) => logView === "combined" ||
-          (logView === "dialogue" ? /^(?:→ )?\[战场对话\]/.test(text) : !/^(?:→ )?\[战场对话\]/.test(text))).slice(0, 80).map((text) => {
-          const line = element(
+      const previous = logNodes.get(id) || new Map(), next = new Map(), occurrences = new Map();
+      let cursor = list.firstChild;
+      for (const text of visible) {
+        const occurrence = occurrences.get(text) || 0;
+        occurrences.set(text, occurrence + 1);
+        const key = JSON.stringify([text, occurrence]);
+        let line = previous.get(key);
+        if (!line) {
+          line = element(
             "div",
             "log-line" + (text.includes("\n") ? " deployment-roster" : ""),
           );
           setNamedText(line, text, names);
-          return line;
-        }),
-      );
+        }
+        next.set(key, line);
+        if (line === cursor) cursor = cursor.nextSibling;
+        else list.insertBefore(line, cursor);
+      }
+      while (cursor) { const removed = cursor; cursor = cursor.nextSibling; removed.remove(); }
+      // Retain only the visible 80 rows; old battles cannot accumulate detached DOM.
+      logNodes.set(id, next);
       list.scrollTop = scrollTop;
     }
   }

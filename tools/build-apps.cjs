@@ -3,6 +3,7 @@ const fs = require("node:fs"),
   path = require("node:path"),
   { spawnSync } = require("node:child_process"),
   crypto = require("node:crypto");
+const os = require("node:os");
 const root = path.resolve(__dirname, ".."),
   project = require("../project.json");
 const args = process.argv.slice(2),
@@ -94,6 +95,8 @@ if (mode === "windows") {
       "-p",
       "apps/android",
       "assembleDebug",
+      "-PprojectGreedDebugKeystore=" +
+        path.join(process.env.USERPROFILE || os.homedir(), ".android", "debug.keystore"),
       ...(args.includes("--with-tests") ? ["assembleDebugAndroidTest", "testDebugUnitTest"] : []),
       "--console=plain",
     ],

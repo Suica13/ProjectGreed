@@ -10,14 +10,22 @@ android {
         minSdk 26
         targetSdk 35
         testInstrumentationRunner 'io.projectgreed.apptest2.StoreInstrumentation'
-        versionCode 98000
-        versionName 'V98'
+        versionCode 99000
+        versionName 'V99'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
     sourceSets.main.assets.srcDirs = ["${rootDir}/../../build/app-client/content"]
+    // Keep debug update identity independent of the sandbox Java user.home.
+    signingConfigs {
+        debug {
+            if (project.hasProperty("projectGreedDebugKeystore")) {
+                storeFile file(project.property("projectGreedDebugKeystore"))
+            }
+        }
+    }
     buildTypes {
         debug { debuggable true }
         release { minifyEnabled false }

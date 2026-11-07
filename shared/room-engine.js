@@ -175,12 +175,9 @@ function createRoomEngine({
         snapshot.effectCombats = [];
         snapshot.combatActors = [];
       }
-      frame.views[perspective] = Records.pack(room.recordPrevious[perspective], snapshot);
-      next[perspective] = Records.unpack(
-        room.recordPrevious[perspective],
-        frame.views[perspective],
-        room.record.tiles,
-      );
+      const captured = Records.capture(room.recordPrevious[perspective], snapshot, room.record.tiles);
+      frame.views[perspective] = captured.change;
+      next[perspective] = captured.baseline;
     }
     const checkpoint = turnStart
       ? { frame: room.record.frames.length, round: room.game.round, team: room.game.team }
@@ -517,8 +514,12 @@ function createRoomEngine({
       })
       .sort((a, b) => a.code.localeCompare(b.code));
   }
+  let roomListKey = null;
   function broadcastRooms() {
-    onRooms(roomList());
+    const summary = roomList(), key = JSON.stringify(summary);
+    if (key === roomListKey) return;
+    onRooms(summary);
+    roomListKey = key;
   }
   function presenceMessage(room, member, event) {
     room.chat.push({
@@ -579,7 +580,7 @@ function createRoomEngine({
     return team === null ? (member?.seat === null ? ["global"] : []) : [logPerspective(team)];
   }
   // 公开快照不包含随机 seed；席位 token 不放入广播。
-  const safeGame = (game, recipient, intel) => {
+  const safeGame = (game, recipient, intel, visibleIds) => {
     let { seed, partSeed, ...view } = game;
     if (game.battlefield?.reserves) view.battlefield = {
       ...Object.fromEntries(Object.entries(game.battlefield).filter(([key]) => key !== "reinforcementQueue")),
@@ -588,7 +589,7 @@ function createRoomEngine({
     };
     if (intel)
       view.units = game.units
-        .filter((u) => u.team === intel.team || intel.visibleIds.includes(u.id))
+        .filter((u) => u.team === intel.team || visibleIds.has(u.id))
         .map((u) => (u.team === intel.team ? u : { ...u, origin: null, pendingMove: null }));
     if (intel) {
       view.visionAreas = (game.visionAreas || []).filter((area) => area.team === intel.team);
@@ -717,9 +718,10 @@ function createRoomEngine({
     const combatActors = room.game.units.filter((u) => actorIds.has(u.id));
     const hiddenIds =
       team === null ? [] : room.game.units.filter((u) => !known(u.id)).map((u) => u.id);
+    const eventText = room.lastEvent && hiddenIds.length ? JSON.stringify(room.lastEvent) : "";
     let lastEvent =
       room.lastEvent &&
-      !hiddenIds.some((id) => JSON.stringify(room.lastEvent).includes('"' + id + '"'))
+      !hiddenIds.some((id) => eventText.includes('"' + id + '"'))
         ? room.lastEvent
         : null;
     if (
@@ -795,7 +797,7 @@ function createRoomEngine({
       type: "state",
       room: room.code,
       revision: room.revision,
-      game: safeGame(room.game, recipient, intel),
+      game: safeGame(room.game, recipient, intel, visibleIds),
       combatActors,
       effectActors:
         team === null
@@ -1735,13 +1737,20 @@ function createRoomEngine({
       room.economyAwards.push({ id: randomId(), matchId: room.matchId, memberId: player.id,
         kind: "loss", money: 0, supplies: 0, stockLost: lost });
     }
+    const occupied = new Map();
+    for (const reserve of reserves) {
+      if (reserve.readyRound !== null && !reserve.request) continue;
+      if (!occupied.has(reserve.ownerSeat)) occupied.set(reserve.ownerSeat, { chassis: new Map(), kits: new Map() });
+      const counts = occupied.get(reserve.ownerSeat), kit = reserve.unitId + "__" + reserve.kitId;
+      counts.chassis.set(reserve.unitId, (counts.chassis.get(reserve.unitId) || 0) + 1);
+      counts.kits.set(kit, (counts.kits.get(kit) || 0) + 1);
+    }
     for (const reserve of reserves) {
       const player = room.seats[reserve.ownerSeat];
       if (!player || player.bot) continue;
-      const occupied = reserves.filter(item => item.ownerSeat === reserve.ownerSeat &&
-        (item.readyRound === null || item.request));
-      const chassis = occupied.filter(item => item.unitId === reserve.unitId).length;
-      const kits = occupied.filter(item => item.unitId === reserve.unitId && item.kitId === reserve.kitId).length;
+      const counts = occupied.get(reserve.ownerSeat);
+      const chassis = counts?.chassis.get(reserve.unitId) || 0;
+      const kits = counts?.kits.get(reserve.unitId + "__" + reserve.kitId) || 0;
       reserve.stockAvailable = (player.inventory?.[reserve.unitId] || 0) > chassis &&
         (player.kits?.[reserve.unitId + "__" + reserve.kitId] || 0) > kits;
     }
@@ -2081,6 +2090,7 @@ function createRoomEngine({
   // AI uses the same validated intents as players. Its controller is only an
   // internal address, never a WebSocket or a reconnectable human identity.
   const aiTimers = new Map();
+  const aiQueries = new WeakSet();
   const campaignTimers = new Map();
   function scheduleCampaignAutomation(room) {
     const next = room.campaign ? campaign().automaticPhase(room) : null;
@@ -2589,7 +2599,25 @@ function createRoomEngine({
     room.revision++;
     room.lastEvent = { id: randomId(), type: "battle_end" };
   }
-  function nextAIAction(room, onlySeat = null, excluded = new Set()) {
+  async function nextAIAction(room, onlySeat = null, excluded = new Set()) {
+    const revision = room.revision, board = room.game;
+    const query = queryAIAction(room, onlySeat, excluded);
+    const clock = () => typeof performance !== "undefined" ? performance.now() : Date.now();
+    while (rooms.get(room.code) === room && room.revision === revision && room.game === board) {
+      const step = G.withModelQuery(() => {
+        const deadline = clock() + 8;
+        let result;
+        do { result = query.next(); } while (!result.done && clock() < deadline);
+        return result;
+      });
+      if (step.done) return step.value;
+      // Let rendering, other rooms and human commands run between expensive
+      // transport probes. Any intervening revision discards the stale decision.
+      await new Promise(resolve => setTimeout(resolve, 0));
+    }
+    return null;
+  }
+  function* queryAIAction(room, onlySeat = null, excluded = new Set()) {
     const allowed = (player) => player && (onlySeat === null || player.seat === onlySeat);
     const moves = aiUnitMoves(room), now = Date.now(), availability = new Map();
     const actors = new Map(room.game.units.map(unit => [unit.id, unit]));
@@ -2683,6 +2711,7 @@ function createRoomEngine({
           action: "launch",
           fields: { unitId: passenger.id, x: point.x, y: point.y },
         };
+      yield;
     }
     // Let passengers approach/board before their carriers move away this turn.
     for (const passenger of room.game.units) {
@@ -2697,6 +2726,7 @@ function createRoomEngine({
         continue;
       const transport = G.hangars.recoveryOrder(room.game, passenger);
       if (transport) return { player: owner, ...transport };
+      yield;
     }
     const canPlanMore = (unit) =>
       available(unit) && !unit.acted && !unit.plan && unit.attackSkillRound !== room.game.round;
@@ -2940,6 +2970,7 @@ function createRoomEngine({
     };
   }
   function scheduleAI(room) {
+    if (aiQueries.has(room)) return;
     const previous = aiTimers.get(room);
     const key = `${room.matchId}:${room.game.round}:${room.game.team}:${room.phase}`;
     // A human/delegated player's frequent updates must not postpone another AI forever.
@@ -2950,6 +2981,7 @@ function createRoomEngine({
     };
     // Delay expensive pathfinding until the timer fires; chat/sync never drives AI.
     if (
+      rooms.get(room.code) !== room ||
       !room.started ||
       room.returnCountdown ||
       !connected(room).every(Boolean) ||
@@ -2992,15 +3024,19 @@ function createRoomEngine({
             room.phase === "idle" ? aiPacing(room).nextAt - Date.now() : 0,
             (room.turnNotBefore || 0) - Date.now(),
           );
-    const timer = setTimeout(() => {
+    const timer = setTimeout(async () => {
       aiTimers.delete(room);
       if (rooms.get(room.code) !== room ||
           key !== `${room.matchId}:${room.game.round}:${room.game.team}:${room.phase}`) return;
-      function advancePlayer(onlySeat = null, excluded = new Set()) {
+      aiQueries.add(room);
+      async function advancePlayer(onlySeat = null, excluded = new Set()) {
         let intent;
         try {
-          intent = nextAIAction(room, onlySeat, excluded);
+          intent = await nextAIAction(room, onlySeat, excluded);
           if (!intent) return;
+          // The read-only query is complete. Broadcasts from applying its intent
+          // keep the existing animation/pacing scheduler and may queue the next turn.
+          aiQueries.delete(room);
           if (intent.fields?.unitId) excluded.add(intent.fields.unitId);
           if (intent.finishBattle) {
             finishBattle(room);
@@ -3058,27 +3094,31 @@ function createRoomEngine({
           }
         }
       }
-      if (room.phase === "idle") {
-        const pacing = aiPacing(room), now = Date.now();
-        // Spread both pathfinding and broadcasts over different event-loop turns.
-        // A player's already moving units do not block a different player's start.
-        const ordered = [...bots].sort((a,b) => a.seat - b.seat);
-        const pivot = ordered.findIndex(player => player.seat > pacing.seat);
-        const lanes = pivot < 0 ? ordered : [...ordered.slice(pivot), ...ordered.slice(0,pivot)];
-        for (const player of lanes) {
-          if (room.turnDone[player.seat] || aiMoveUntil(room,player.seat) > now) continue;
-          const army = room.game.units.filter(u => u.hp > 0 && G.controllerOf(room.game,u) === player.seat);
-          const parallel = army.length < 8 ? 1 : Math.min(4,Math.ceil(army.length/4));
-          const moving = army.filter(u => (aiUnitMoves(room).get(u.id) || 0) > now).length;
-          if (moving >= parallel) continue;
-          pacing.seat = player.seat;
-          advancePlayer(player.seat,new Set());
-          pacing.nextAt = Date.now() + 120 + Math.floor(aiMoveJitter() * 0.08);
-          break;
-        }
-      } else advancePlayer();
-      // Every AI owns its animation wait; another player's movement cannot block it.
-      scheduleAI(room);
+      try {
+        if (room.phase === "idle") {
+          const pacing = aiPacing(room), now = Date.now();
+          // Spread both pathfinding and broadcasts over different event-loop turns.
+          // A player's already moving units do not block a different player's start.
+          const ordered = [...bots].sort((a,b) => a.seat - b.seat);
+          const pivot = ordered.findIndex(player => player.seat > pacing.seat);
+          const lanes = pivot < 0 ? ordered : [...ordered.slice(pivot), ...ordered.slice(0,pivot)];
+          for (const player of lanes) {
+            if (room.turnDone[player.seat] || aiMoveUntil(room,player.seat) > now) continue;
+            const army = room.game.units.filter(u => u.hp > 0 && G.controllerOf(room.game,u) === player.seat);
+            const parallel = army.length < 8 ? 1 : Math.min(4,Math.ceil(army.length/4));
+            const moving = army.filter(u => (aiUnitMoves(room).get(u.id) || 0) > now).length;
+            if (moving >= parallel) continue;
+            pacing.seat = player.seat;
+            await advancePlayer(player.seat,new Set());
+            pacing.nextAt = Date.now() + 120 + Math.floor(aiMoveJitter() * 0.08);
+            break;
+          }
+        } else await advancePlayer();
+      } finally {
+        aiQueries.delete(room);
+        // Every AI owns its animation wait; another player's movement cannot block it.
+        scheduleAI(room);
+      }
     }, delay);
     timer.unref?.();
     timer.aiKey = key;

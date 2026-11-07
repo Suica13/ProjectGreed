@@ -305,6 +305,14 @@ const PlanningUI = (() => {
 // Target-first attack editor. Draft choices never change the authoritative unit or its resources.
 const AttackControls = (() => {
   let current = null;
+  let targetQuery = null;
+  // Several controls ask the same target question during one UI refresh.
+  // Discard answers immediately afterwards: movement, EN and plans can change.
+  function withTargetQuery(render) {
+    const previous = targetQuery;
+    targetQuery = new WeakMap();
+    try { return render(); } finally { targetQuery = previous; }
+  }
   function reset() {
     current = null;
   }
@@ -347,7 +355,9 @@ const AttackControls = (() => {
     reset();mode="select";update();
   }
   function canTarget(unit, target) {
-    return (
+    if (unit && target && targetQuery?.get(unit)?.has(target))
+      return targetQuery.get(unit).get(target);
+    const result = (
       !!unit &&
       !!target &&
       target.team !== unit.team &&
@@ -360,6 +370,11 @@ const AttackControls = (() => {
         ),
       )
     );
+    if (targetQuery && unit && target) {
+      if (!targetQuery.has(unit)) targetQuery.set(unit, new WeakMap());
+      targetQuery.get(unit).set(target, result);
+    }
+    return result;
   }
   function start(unit) {
     if (
@@ -578,6 +593,7 @@ const AttackControls = (() => {
     panel.append(editor);
   }
   return {
+    withTargetQuery,
     memberCard,
     editable,
     hasPlan,

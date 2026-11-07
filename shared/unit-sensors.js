@@ -70,33 +70,58 @@ const UnitSensors = {
               (ranges(target, g).antiDetect ? 0.5 : 1),
       );
     }
-    function detected(g, team, target) {
+    function detected(g, team, target, query = null) {
       if (!target || target.groundTarget) return false;
       if (target.team === team) return true;
       if (fogMode(g) === "disabled") return onMap(target);
       if (g.intel?.team === team) return g.intel.detectedIds.includes(target.id);
       if (target.detectedBy?.[team] >= g.round) return true;
-      return allies(g, team).some(
+      const rangeOf = query?.rangeOf || (unit => ranges(unit, g));
+      const distanceOf = query?.distanceOf || distance;
+      return (query?.observers || allies(g, team)).some(
         (u) =>
-          (!u.sensorArea || !ranges(target, g).antiDetect) &&
-          ranges(u, g).radar > 0 &&
-          distance(u, target) + (ranges(target, g).antiDetection || 0) <
-            ranges(u, g).radar *
+          (!u.sensorArea || !rangeOf(target).antiDetect) &&
+          rangeOf(u).radar > 0 &&
+          distanceOf(u, target) + (rangeOf(target).antiDetection || 0) <
+            rangeOf(u).radar *
               (u.sensorArea ? crossLayer(g, u, target) : 1) *
-              (ranges(target, g).stealth ? 0.75 : 1) *
-              (ranges(target, g).antiDetect ? 0.5 : 1),
+              (rangeOf(target).stealth ? 0.75 : 1) *
+              (rangeOf(target).antiDetect ? 0.5 : 1),
       );
     }
-    function visible(g, team, target) {
+    function visible(g, team, target, query = null) {
       if (!target || target.groundTarget) return false;
       if (target.team === team) return true;
       if (fogMode(g) !== "full") return onMap(target);
       if (g.intel?.team === team) return g.intel.visibleIds.includes(target.id);
       if (!onMap(target)) return false;
+      const rangeOf = query?.rangeOf || (unit => ranges(unit, g));
+      const distanceOf = query?.distanceOf || distance;
       return (
-        allies(g, team).some((u) => distance(u, target) <= ranges(u, g).sight) ||
-        (ranges(target, g).revealOnDetection && detected(g, team, target))
+        (query?.observers || allies(g, team)).some((u) => distanceOf(u, target) <= rangeOf(u).sight) ||
+        (rangeOf(target).revealOnDetection && detected(g, team, target, query))
       );
+    }
+    const fullMapCells = new WeakMap();
+    function mapCellOrder(g) {
+      const width = g.tiles[0].length, height = g.tiles.length;
+      let cached = fullMapCells.get(g.tiles);
+      if (!cached || cached.width !== width || cached.height !== height) {
+        const cells = [];
+        for (let y = 0; y < height; y++) for (let x = 0; x < width; x++) cells.push(x + "," + y);
+        fullMapCells.set(g.tiles, cached = { width, height, cells });
+      }
+      return cached.cells;
+    }
+    function orderedVisibility(g, visible) {
+      const ordered = mapCellOrder(g).filter(id => visible.has(id));
+      // Keep explicit reveal markers even for custom callers with off-map
+      // targets. Normal battles only contain legal, in-bounds occupied cells.
+      if (ordered.length !== visible.size) {
+        const present = new Set(ordered);
+        for (const id of visible) if (!present.has(id)) ordered.push(id);
+      }
+      return ordered;
     }
     function view(g, team) {
       if (g.intel?.team === team) return g.intel;
@@ -104,10 +129,27 @@ const UnitSensors = {
         detectedIds = [],
         radarContacts = [];
       const observers = allies(g, team);
-      const visibleCells = new Set();
-      for (const u of observers) {
-        const radius = ranges(u, g).sight;
-        for (const p of footprint(u)) {
+      // A query sees one immutable board. Share ranges and footprints within it,
+      // never across actions where damage, weather or movement can change them.
+      const rangeCache = new WeakMap(), footprintCache = new WeakMap();
+      const rangeOf = unit => {
+        if (!rangeCache.has(unit)) rangeCache.set(unit, ranges(unit, g));
+        return rangeCache.get(unit);
+      };
+      const footprintOf = unit => {
+        if (!footprintCache.has(unit)) footprintCache.set(unit, footprint(unit));
+        return footprintCache.get(unit);
+      };
+      const query = { observers, rangeOf, distanceOf(a, b) {
+        let nearest = Infinity;
+        for (const p of footprintOf(a)) for (const q of footprintOf(b))
+          nearest = Math.min(nearest, Math.hypot(p.x - q.x, p.y - q.y));
+        return nearest;
+      } };
+      const fullFog = fogMode(g) === "full", visibleCells = fullFog ? new Set() : null;
+      for (const u of fullFog ? observers : []) {
+        const radius = rangeOf(u).sight;
+        for (const p of footprintOf(u)) {
           for (
             let y = Math.max(0, Math.ceil(p.y - radius));
             y <= Math.min(g.tiles.length - 1, Math.floor(p.y + radius));
@@ -121,19 +163,16 @@ const UnitSensors = {
               if (Math.hypot(x - p.x, y - p.y) <= radius) visibleCells.add(x + "," + y);
         }
       }
-      if (fogMode(g) !== "full")
-        for (let y = 0; y < g.tiles.length; y++)
-          for (let x = 0; x < g.tiles[0].length; x++) visibleCells.add(x + "," + y);
       for (const u of g.units) {
         if (!onMap(u)) continue;
-        const seen = visible(g, team, u),
-          found = detected(g, team, u);
+        const seen = visible(g, team, u, query),
+          found = detected(g, team, u, query);
         if (seen) visibleIds.push(u.id);
         if (found) detectedIds.push(u.id);
-        if (seen && ranges(u, g).revealOnDetection && found)
-          for (const p of cells(u)) visibleCells.add(p.x + "," + p.y);
+        if (visibleCells && seen && rangeOf(u).revealOnDetection && found)
+          for (const p of footprintOf(u)) visibleCells.add(p.x + "," + p.y);
         if (u.team !== team && found && (!seen || fogMode(g) !== "full")) {
-          const footprint = cells(u);
+          const footprint = footprintOf(u);
           radarContacts.push({
             x:
               (Math.min(...footprint.map((p) => p.x)) + Math.max(...footprint.map((p) => p.x))) / 2,
@@ -142,7 +181,8 @@ const UnitSensors = {
           });
         }
       }
-      return { team, visibleIds, detectedIds, radarContacts, visibleCells: [...visibleCells] };
+      return { team, visibleIds, detectedIds, radarContacts,
+        visibleCells: visibleCells ? orderedVisibility(g, visibleCells) : mapCellOrder(g).slice() };
     }
     return { ranges, distance, visible, detected, view, scanTargets };
   },

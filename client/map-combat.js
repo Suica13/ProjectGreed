@@ -867,6 +867,10 @@ const MapCombat = (() => {
         const visual = displayed.get(unit.id) || unit;
         const effect = pose.get(unit.id);
         const state = stats.values.get(unit.id);
+        // Idle bystanders have no playback overrides. Preserve their identity
+        // instead of allocating a copy for every unit on every combat frame.
+        if (visual === unit && !effect && !state && !initialHp.has(unit.id) &&
+            !unit.mapPose && !unit.mapDying) return unit;
         return {
           ...visual,
           brokenParts: state?.parts ?? initialParts.get(unit.id) ?? visual.brokenParts,

@@ -117,8 +117,14 @@ async function screenshot(name) {
     const port = fs.readFileSync(portFile, "utf8").split("\n")[0];
     const version = await (await fetch(`http://127.0.0.1:${port}/json/version`)).json();
     assert.match(version.Browser, /\/80\./);
-    const targets = await (await fetch(`http://127.0.0.1:${port}/json/list`)).json();
-    socket = new WebSocket(targets.find((t) => t.type === "page").webSocketDebuggerUrl);
+    let target;
+    for (let attempt = 0; attempt < 100 && !target; attempt++) {
+      const targets = await (await fetch(`http://127.0.0.1:${port}/json/list`)).json();
+      target = targets.find((item) => item.type === "page");
+      if (!target) await sleep(100);
+    }
+    if (!target) throw Error("Chromium 80 did not create its initial page");
+    socket = new WebSocket(target.webSocketDebuggerUrl);
     await once(socket, "open");
     socket.on("message", (text) => {
       const event = JSON.parse(text);

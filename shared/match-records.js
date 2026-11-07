@@ -5,7 +5,7 @@ const MatchRecords = (() => {
     maxBytes = 32 * 1024 * 1024,
     maxFrames = 12000;
   const clone = (value) => JSON.parse(JSON.stringify(value));
-  const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+  const same = (a, b) => a === b || JSON.stringify(a) === JSON.stringify(b);
   const blocked = new Set(["__proto__", "prototype", "constructor"]);
   const fingerprints = new WeakMap();
   function fingerprint(G) {
@@ -36,8 +36,8 @@ const MatchRecords = (() => {
       if (!same(before[key], value)) set[key] = clone(value);
     return { set, remove };
   }
-  function patch(before = {}, change) {
-    const result = { ...before, ...clone(change.set) };
+  function patch(before = {}, change, copy = true) {
+    const result = { ...before, ...(copy ? clone(change.set) : change.set) };
     for (const key of change.remove) delete result[key];
     return result;
   }
@@ -45,6 +45,7 @@ const MatchRecords = (() => {
     const { game, log, ...rest } = after,
       { units, tiles, ...board } = game;
     const oldUnits = new Map((before?.game.units || []).map((u) => [u.id, u]));
+    const currentIds = new Set(units.map(unit => unit.id));
     const oldLog = before?.log || [],
       append = log.length >= oldLog.length && same(log.slice(log.length - oldLog.length), oldLog);
     return {
@@ -63,21 +64,31 @@ const MatchRecords = (() => {
         board,
       ),
       units: units.filter((u) => !same(oldUnits.get(u.id), u)).map(clone),
-      removed: [...oldUnits.keys()].filter((id) => !units.some((u) => u.id === id)),
+      removed: [...oldUnits.keys()].filter((id) => !currentIds.has(id)),
       log: append
         ? { prepend: clone(log.slice(0, log.length - oldLog.length)) }
         : { reset: clone(log) },
     };
   }
   function unpack(before, change, tiles) {
+    return applyPacked(before, change, tiles, true);
+  }
+  function applyPacked(before, change, tiles, copy) {
     const units = new Map((before?.game.units || []).map((u) => [u.id, u]));
     for (const id of change.removed) units.delete(id);
-    for (const u of change.units) units.set(u.id, clone(u));
+    for (const u of change.units) units.set(u.id, copy ? clone(u) : u);
     return {
-      ...patch(before || {}, change.state),
-      game: { ...patch(before?.game || {}, change.game), tiles, units: [...units.values()] },
+      ...patch(before || {}, change.state, copy),
+      game: { ...patch(before?.game || {}, change.game, copy), tiles, units: [...units.values()] },
       log: change.log.reset || [...change.log.prepend, ...(before?.log || [])],
     };
+  }
+  function capture(before, after, tiles) {
+    const change = pack(before, after);
+    // pack owns independent deep copies. Recorder baselines and stored deltas
+    // are write-once, so share them internally instead of cloning them again.
+    // Public replay reconstruction still uses unpack's isolated copies.
+    return { change, baseline: applyPacked(before, change, tiles, false) };
   }
   function view(record, index, perspective) {
     if (
@@ -427,6 +438,7 @@ const MatchRecords = (() => {
     maxFrames,
     clone,
     pack,
+    capture,
     unpack,
     view,
     publicView,

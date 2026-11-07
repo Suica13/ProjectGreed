@@ -77,7 +77,8 @@ function startRendering() {
 const teamName = (t) => (t ? "红方" : "蓝方"),
   other = (t) => 1 - t,
   getUnit = (id) =>
-    game.units.find((u) => u.id === id) || Net.snapshot?.combatActors?.find((u) => u.id === id),
+    id === null || id === undefined ? undefined :
+      game.units.find((u) => u.id === id) || Net.snapshot?.combatActors?.find((u) => u.id === id),
   battleUnit = (id) => battleView?.actors?.find((unit) => unit.id === id) || getUnit(id),
   getWeapon = (u, id) => Rules.modelOf(u).weapons.find((w) => w.id === id),
   unitIcon = (() => {
@@ -264,7 +265,8 @@ function escapeHtml(value) {
 }
 // Keep log identifiers and player-written pilot names literal during translation.
 let namedTextNames = null,
-  namedTextGame = null;
+  namedTextGame = null,
+  namedTextSorted = [];
 function currentUnitNames() {
   if (namedTextGame !== game || !namedTextNames) {
     namedTextGame = game;
@@ -274,6 +276,7 @@ function currentUnitNames() {
         unit.pilot?.custom ? unit.pilot.name : null,
       ])
       .filter(Boolean);
+    namedTextSorted = [...new Set(namedTextNames)].sort((a, b) => b.length - a.length);
   }
   return namedTextNames;
 }
@@ -286,7 +289,7 @@ function pilotState(pilot) {
 function setNamedText(el, text, names = currentUnitNames()) {
   el.replaceChildren();
   let rest = String(text);
-  const unique = [...new Set(names)].sort((a, b) => b.length - a.length);
+  const unique = names === namedTextNames ? namedTextSorted : [...new Set(names)].sort((a, b) => b.length - a.length);
   while (rest) {
     let next = null;
     for (const name of unique) {
@@ -396,7 +399,7 @@ function update() {
           .map(capturePanelView)
       : [];
   try {
-    updateContents();
+    Rules.withModelQuery(() => AttackControls.withTargetQuery(updateContents));
   } finally {
     if (key === session + ":" + selected) views.forEach(restorePanelView);
     renderedPanelSelection = session + ":" + selected;
@@ -1458,6 +1461,8 @@ function resetMapPresentation(keepKeys = []) {
   mapTerrainCache.viewKey = "";
   authoredTerrainBase.tiles = authoredTerrainBase.mapId = null;
   dialogueBubbles.clear();
+  delete globalThis.ProjectGreedMapLighting;
+  delete globalThis.ProjectGreedLightTransition;
 }
 function drawCachedMapTerrain(target, w, h, dpr, tile, ox, oy, immersive, deploymentArea) {
   if (Rules.getMap(game.mapId).tileMap) {
@@ -1705,6 +1710,9 @@ function drawCampaignSupply(ctx, ox, oy, tile) {
   ctx.restore();
 }
 function drawMap(now) {
+  return Rules.withModelQuery(() => drawMapFrame(now));
+}
+function drawMapFrame(now) {
   const battleSettings = BattleScene.settings();
   // Lifetime is exactly one draw: simulation changes can never reuse a stale model.
   const frameModels = new WeakMap(), frameSquads = new Map();
@@ -1734,7 +1742,7 @@ function drawMap(now) {
     (unit?.squadId ? frameSquads.get(squadKey(unit)) || [] : unit ? [unit] : []);
   const selectedSquad = new Set(frameMembersOf(getUnit(selected)).map(unit => unit.id));
   let c = byId("map"),
-    box = c.getBoundingClientRect(),
+    box = MapCamera.renderSize(),
     dpr = window.GameViewport?.pixelRatio(box.width, box.height) || window.devicePixelRatio || 1;
   if (box.width < 1 || box.height < 1) return;
   SpriteRenderer.beginFrame?.();
@@ -1960,11 +1968,15 @@ function drawMap(now) {
   }
   const fade = Math.min(1,Math.max(0,(now-globalThis.ProjectGreedLightTransition.at)/1800));
   const from = globalThis.ProjectGreedLightTransition.from;
+  const blendLight = key => {
+    const start = from[key] ?? targetLighting[key], end = targetLighting[key];
+    return start === end ? end : start * (1 - fade) + end * fade;
+  };
   globalThis.ProjectGreedMapLighting = {
     ...targetLighting,
-    distance: (from.distance ?? targetLighting.distance)*(1-fade)+targetLighting.distance*fade,
-    horizontalAngle: (from.horizontalAngle ?? targetLighting.horizontalAngle)*(1-fade)+targetLighting.horizontalAngle*fade,
-    intensity: (from.intensity ?? targetLighting.intensity)*(1-fade)+targetLighting.intensity*fade,
+    distance: blendLight("distance"),
+    horizontalAngle: blendLight("horizontalAngle"),
+    intensity: blendLight("intensity"),
   };
   let aboveLayerDrawn = false;
   const drawAboveLayer = () =>

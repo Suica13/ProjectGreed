@@ -109,7 +109,7 @@ test("a captured destination cancels deployment; occupied landing cells wait wit
   B.requestDeployment(G, g, 2, reserve.id, siteId);
   g.round++;
   const count = g.units.length;
-  B.advance({ ...G, fits: () => false }, g);
+  B.advance({ ...G, placementQuery: () => ({ fits: () => false, include() {} }) }, g);
   assert.equal(g.units.length, count);
   assert(reserve.request);
   B.advance(G, g);

@@ -1136,7 +1136,22 @@ const Tactics = (() => {
     if (!variants.has(factor)) variants.set(factor, { ...base, hp: Math.ceil(base.hp * factor) });
     return variants.get(factor);
   }
+  let modelQuery = null;
+  // Explicit read-only scope. Presentation/AI queries share derived attributes,
+  // but commands and damage resolution run outside it and always see live data.
+  function withModelQuery(read) {
+    const previous = modelQuery;
+    modelQuery = new WeakMap();
+    try { return read(); } finally { modelQuery = previous; }
+  }
   function modelOf(unit, g = null) {
+    if (!modelQuery) return deriveModel(unit, g);
+    let contexts = modelQuery.get(unit);
+    if (!contexts) modelQuery.set(unit, (contexts = new Map()));
+    if (!contexts.has(g)) contexts.set(g, deriveModel(unit, g));
+    return contexts.get(g);
+  }
+  function deriveModel(unit, g = null) {
     const original = pilotModelOf(unit, campaignModelOf(unit)),
       base = unit.flying
         ? {
@@ -1560,8 +1575,9 @@ const Tactics = (() => {
       hangars.of(unit).every(hangar => hangar.kind === "sfs")
     );
   }
-  function squadJoinTarget(g, unit, x, y, members = squadMembers(g, unit)) {
-    const target = g.units.find(
+  function squadJoinTarget(g, unit, x, y, members = squadMembers(g, unit), movementQuery = null) {
+    const candidates = movementQuery ? movementQuery.current.get(key(x, y)) || [] : g.units;
+    const target = candidates.find(
       (other) =>
         onMap(other) && !other.embarked && !members.includes(other) && occupies(other, x, y),
     );
@@ -1575,7 +1591,7 @@ const Tactics = (() => {
       !!target.flying !== !!unit.flying
     )
       return null;
-    const occupants = g.units.filter(
+    const occupants = candidates.filter(
       (other) =>
         onMap(other) && !other.embarked && !members.includes(other) && occupies(other, x, y),
     );
@@ -1615,6 +1631,40 @@ const Tactics = (() => {
       other.squadId=id;other.squadSlot=index;other.origin=null;
     });
   }
+  // Search-local occupancy: a movement search never changes the board. Index
+  // both hulls and reserved destinations once instead of scanning every unit
+  // for every explored cell. Do not retain this across actions or previews.
+  function movementQuery(g) {
+    const current = new Map(), reserved = new Map();
+    function add(map, cell, unit) {
+      const id = key(cell.x, cell.y);
+      if (!map.has(id)) map.set(id, []);
+      map.get(id).push(unit);
+    }
+    function include(unit) {
+      if (!onMap(unit) || unit.embarked) return;
+      const occupied = new Set();
+      for (const cell of cells(unit)) {
+        add(current, cell, unit);
+        add(reserved, cell, unit);
+        occupied.add(key(cell.x, cell.y));
+      }
+      if (unit.pendingMove) for (const cell of cells({ ...unit, ...unit.pendingMove }))
+        if (!occupied.has(key(cell.x, cell.y))) add(reserved, cell, unit);
+    }
+    for (const unit of g.units || []) include(unit);
+    return { current, reserved, include };
+  }
+  // Append-only placement batches (airdrops) must include each accepted hull.
+  // Existing actors may not move or rotate while this short-lived query is used.
+  function placementQuery(g) {
+    const occupancy = movementQuery(g);
+    return {
+      fits: (unit, x, y, angle = unit.angle, throughAllies = false) =>
+        fits(g, unit, x, y, angle, throughAllies, null, null, occupancy),
+      include: occupancy.include,
+    };
+  }
   function fits(
     g,
     unit,
@@ -1624,6 +1674,7 @@ const Tactics = (() => {
     throughAllies = false,
     seat = null,
     deploymentArea = null,
+    occupancy = null,
   ) {
     const footprint = cells(unit, x, y, angle),
       area =
@@ -1638,7 +1689,7 @@ const Tactics = (() => {
         c.y < mapHeight(g) &&
         Number.isFinite(terrainCost(g, unit, c.x, c.y)) &&
         (!area || area.has(key(c.x, c.y))) &&
-        !(g.units || []).some(
+        !(occupancy ? occupancy.reserved.get(key(c.x, c.y)) || [] : g.units || []).some(
           (other) =>
             other.id !== unit.id &&
             !(
@@ -1651,7 +1702,7 @@ const Tactics = (() => {
             ) &&
             onMap(other) &&
             !other.embarked &&
-            (occupies(other, c.x, c.y) ||
+            (occupancy || occupies(other, c.x, c.y) ||
               (other.pendingMove && occupies({ ...other, ...other.pendingMove }, c.x, c.y))) &&
             (!throughAllies || other.team !== unit.team),
         ),
@@ -1998,7 +2049,7 @@ const Tactics = (() => {
     return cost / (campaignBattlefield.onSupply(g, u, x, y) ? 1.25 : 1);
   }
   // 按地形消耗搜索可达格子，同时保存各格子的移动路径。
-  function reachableSingle(g, u, starts = null) {
+  function reachableSingle(g, u, starts = null, occupancy = movementQuery(g)) {
     if (!onMap(u) || u.embarked) return new Map();
     const startAdaptation = adaptationOf(g, u);
     const moveLimit = startAdaptation > 0 ? modelOf(u, g).move / startAdaptation : modelOf(u).move;
@@ -2015,7 +2066,7 @@ const Tactics = (() => {
       if (!stepCosts.has(id))
         stepCosts.set(
           id,
-          fits(g, u, x, y, u.angle, true)
+          fits(g, u, x, y, u.angle, true, null, null, occupancy)
             ? Math.max(
                 ...cells(u, x, y).map(
                   (c) => movementCost(g, u, c.x, c.y, leavingEnemyControl) / (adaptationOf(g, u, c.x, c.y) || 0),
@@ -2084,8 +2135,8 @@ const Tactics = (() => {
     }
     // 友军可作为路径中间点，但不能作为移动终点。
     for (const [cell, entry] of best) {
-      if (!fits(g, u, entry.x, entry.y)) {
-        const target = squadJoinTarget(g, u, entry.x, entry.y, [u]);
+      if (!fits(g, u, entry.x, entry.y, u.angle, false, null, null, occupancy)) {
+        const target = squadJoinTarget(g, u, entry.x, entry.y, [u], occupancy);
         if (target) entry.squadTarget = target.id;
         else best.delete(cell);
       }
@@ -2105,14 +2156,15 @@ const Tactics = (() => {
     return best;
   }
   function reachable(g, unit, starts = null, single = false) {
+    const occupancy = movementQuery(g);
     const members = single || starts ? [unit] : squadMembers(g, unit);
-    const result = reachableSingle(g, unit, starts);
+    const result = reachableSingle(g, unit, starts, occupancy);
     if (members.length < 2) return result;
     if (members.some((other) => other.moved || other.acted || other.plan || other.pendingMove))
       return new Map();
-    const routes = members.map((other) => other === unit ? result : reachableSingle(g, other));
+    const routes = members.map((other) => other === unit ? result : reachableSingle(g, other, null, occupancy));
     for (const [cell, route] of result) {
-      const occupied = g.units.some(
+      const occupied = (occupancy.current.get(key(route.x, route.y)) || []).some(
         (other) =>
           onMap(other) &&
           !other.embarked &&
@@ -2133,7 +2185,7 @@ const Tactics = (() => {
       }
       if (
         routes.some((walk) => !walk.has(cell) || walk.get(cell).boarding) ||
-        (occupied && !squadJoinTarget(g, unit, route.x, route.y, members))
+        (occupied && !squadJoinTarget(g, unit, route.x, route.y, members, occupancy))
       )
         result.delete(cell);
     }
@@ -2608,6 +2660,14 @@ const Tactics = (() => {
     );
   }
   function canAttack(g, a, b, w) {
+    // Most UI/AI target probes are friendly, dead or outside weapon range.
+    // Reject those before evaluating pilot rounds, parts and energy modifiers.
+    // Ground-target and area-blast paths keep their own range semantics below.
+    if (a && b && w && !b.groundTarget &&
+      (a.team === b.team || !onMap(b) ||
+        !(w.blastCenter
+          ? blastContains(w.blastCenter, b, w.special.radius, w.special.shape)
+          : inRange(a, b, w)))) return false;
     if (a?.attackSkillRound === g.round && w?.slot !== "skill") return false;
     if (a && w && w.slot !== "skill" && !w.turnUseContinuation && !automaticFire.roundCount(Tactics, g, a, w)) return false;
     if (a?.pendingMove) return false;
@@ -3867,11 +3927,12 @@ const Tactics = (() => {
         // Only run a full-board escape search when local scoring stalls. The
         // reverse field finds a way around walls instead of repeating the same
         // closest-to-enemy cell every turn. Actual moves still use reachable().
-        const members = squadMembers(g, u), passable = new Map(), distances = new Map(), queue = [];
+        const members = squadMembers(g, u), occupancy = movementQuery(g),
+          passable = new Map(), distances = new Map(), queue = [];
         const allowed = (x, y) => {
           const id = key(x, y);
           if (!passable.has(id)) passable.set(id, x >= 0 && y >= 0 && x < mapWidth(g) && y < mapHeight(g) &&
-            members.every((member) => fits(g, member, x, y, member.angle, true) &&
+            members.every((member) => fits(g, member, x, y, member.angle, true, null, null, occupancy) &&
               Tactics.cells(member, x, y).every((cell) => adaptationOf(g, member, cell.x, cell.y) > 0 &&
                 Number.isFinite(movementCost(g, member, cell.x, cell.y)))));
           return passable.get(id);
@@ -3925,6 +3986,7 @@ const Tactics = (() => {
     return best;
   }
   const hangars = hangarModule.create({
+    placementQuery,
     modelOf,
     ownerOf,
     canControlUnit,
@@ -3946,6 +4008,7 @@ const Tactics = (() => {
   });
   return {
     sensors,
+    withModelQuery,
     activeMinovskyFields,
     minovskyAt,
     minovskyCells,
@@ -3996,6 +4059,7 @@ const Tactics = (() => {
     battlefieldMode,
     aiUnitBans,
     makeUnit,
+    placementQuery,
     campaignRoomSettings,
     defaultRoomSettings,
     formationRestrictions,

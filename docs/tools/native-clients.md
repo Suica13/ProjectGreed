@@ -1,11 +1,11 @@
-# V94 原生客户端
+# 原生客户端（V99）
 
 原生客户端最初在 AppTest2 试验分支开发，V93 已纳入主分支；对外名称统一为 ProjectGreed；应用 ID、签名密钥及 Windows 存档目录沿用旧版，方便覆盖更新。Windows 使用 .NET Framework 4.8 WinForms / WebView2，Android 使用系统 WebView；两个外壳使用同一份游戏源码、同一套原生存档适配器和同一份构建资源。不启动本地游戏服务器，不引入账号或数据库，不修改现有 WebSocket 协议。
 
 ## 客户端与运行要求
 
-- Windows：`build/ProjectGreed-V95-windows-x64/ProjectGreed.exe`，完整复制文件夹后启动，不要只复制 EXE。要求 Windows 10/11 x64、.NET Framework 4.8、Microsoft Edge WebView2 Evergreen Runtime 120 或更新。F11 切换全屏。
-- Android：`build/ProjectGreed-V95-android/ProjectGreed.apk`。要求 Android 8.0 / API 26 或更新，以及具备所需功能的 Android System WebView / Chrome（启动时检测实际能力，不强制120版）。APK 沿用原有 Android Debug 签名密钥，支持覆盖旧客户端；对外应用名和文件名不含 Test。应用 ID 为 `io.projectgreed.apptest2`。
+- Windows：`build/ProjectGreed-V99-windows-x64/ProjectGreed.exe`，完整复制文件夹后启动，不要只复制 EXE。要求 Windows 10/11 x64、.NET Framework 4.8、Microsoft Edge WebView2 Evergreen Runtime 120 或更新。F11 切换全屏。
+- Android：`build/ProjectGreed-V99-android/ProjectGreed.apk`。要求 Android 8.0 / API 26 或更新，以及具备所需功能的 Android System WebView / Chrome（启动时检测实际能力，不强制120版）。APK 沿用原有 Android Debug 签名密钥，支持覆盖旧客户端；对外应用名和文件名不含 Test。应用 ID 为 `io.projectgreed.apptest2`。
 - 两个平台均包含本地游戏资源，支持现有离线房间和同版本服务端联机。继续支持现有 HTTP / WS 地址，沿用现有网络协议，联机需使用同版本服务端。手机离开前台会暂停音乐，回到前台触发现有连接同步逻辑。
 - 同签名、同应用 ID 覆盖安装可以保留应用数据；更换 Android 签名或卸载之前，先在设置中导出个人存档。原网页版与软件版之间使用原有 JSON 存档导入导出迁移，不自动读取个人浏览器目录。
 
@@ -27,7 +27,7 @@ npm run app:test:chrome80
 
 ## 安卓横竖屏与存档文件夹
 
-安卓显示版本为 `V95`，安装版本码为 `95000`，应用 ID 和测试签名沿用之前的 AppTest2，支持覆盖安装。主菜单、房间准备、编组、生产、驾驶员、图鉴和历史战役战略地图固定竖屏；进入战斗场景（包括战斗回放）后允许随设备传感器切换横竖屏，退出战斗恢复竖屏。WebView 启用 viewport meta 支持，横屏沿用现有完整 1600×900 虚拟布局并缩放适配，不裁切中央区域。
+安卓显示版本为 `V99`，安装版本码为 `99000`，应用 ID 和签名沿用之前的版本，支持覆盖安装。主菜单、房间准备、编组、生产、驾驶员、图鉴和历史战役战略地图固定竖屏；进入战斗场景（包括战斗回放）后允许随设备传感器切换横竖屏，退出战斗恢复竖屏。WebView 启用 viewport meta 支持，横屏沿用现有完整 1600×900 虚拟布局并缩放适配，不裁切中央区域。
 
 第一次进入主菜单时弹出“将存档保存在其他文件夹可以避免意外丢失存档,要指定外置文件夹保存存档吗?”，提供“选择文件夹”和“关闭”。关闭后继续使用内部存档，不反复提示；设置里的“选择存档文件夹”按钮允许以后重新选择。战斗中该按钮不可用，以免切换位置重新加载中断对局。
 
@@ -62,6 +62,8 @@ Android 需要 JDK 17/21、Gradle 8.13、Android SDK platform 36 与 build-tools
 npm run app:android
 ```
 
+安卓命令显式使用 Windows 用户目录（`USERPROFILE`）下的 `.android/debug.keystore`，其他系统回退到用户主目录，避免受限构建环境的 Java `user.home` 改变签名。需要保留该密钥；它不随源码或客户端包分发。V99 已核对与旧 V95 的签名一致。
+
 两个命令默认先执行普通客户端构建，再构建共用软件资源。已准备好资源时可以加 `-- --prepared`。`npm run app:prepare` 仅准备资源。发行目录包含 SHA-256 文件清单；不包含测试存档、开发工具或服务端数据。
 
 `public/client.html` 仍是普通网页的独立单文件。软件版由 `tools/build-app-client.cjs` 从它生成：提取去重图片和音频、外置脚本与目录数据，只在软件版加入原生桥接及内容策略，不维护另一份游戏逻辑。
@@ -79,7 +81,7 @@ Windows 检查启动实际 EXE，使用 `tmp/` 内的隔离数据目录。覆盖
 Android 的 JVM 回归测试通过模拟目录读写验证迁移、重启、已有外置存档优先、权限丢失、部分写入、备份恢复和缺失文件保护；`--with-tests` 会执行这些测试并编译独立 instrumentation APK。后者用于实际 Android 文件 API 验证，设备连接后执行：
 
 ```text
-adb install -r build/ProjectGreed-V95-android/ProjectGreed.apk
+adb install -r build/ProjectGreed-V99-android/ProjectGreed.apk
 adb install -r apps/android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
 adb shell am instrument -w io.projectgreed.apptest2.test/io.projectgreed.apptest2.StoreInstrumentation
 ```

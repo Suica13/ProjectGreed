@@ -74,20 +74,39 @@ const RoomPanel = (() => {
   }
   const joinButtons = [byId("joinTeam1"), byId("joinTeam2")];
   let detail = null;
+  let reconnectTimer = null, reconnectLabels = [];
+  function stopReconnectCountdowns() {
+    clearInterval(reconnectTimer);
+    reconnectTimer = null;
+    reconnectLabels = [];
+  }
   // 只更新席位文字；倒计时无需请求服务器或重建房间面板。
   function updateReconnectCountdowns() {
     const snapshot = Net.snapshot;
-    if (!snapshot) return;
+    if (!snapshot || pageView !== "room" || document.hidden) return stopReconnectCountdowns();
     const now =
       Number.isFinite(snapshot.receivedAt) && Number.isFinite(snapshot.serverTime)
         ? snapshot.serverTime + performance.now() - snapshot.receivedAt
         : Date.now();
-    for (const label of document.querySelectorAll("[data-reconnect-until]")) {
+    let active = false;
+    for (const label of reconnectLabels) {
+      if (!label.isConnected) continue;
       const seconds = Math.max(0, Math.ceil((Number(label.dataset.reconnectUntil) - now) / 1000));
-      label.textContent = "重连 " + seconds + "s";
+      const text = "重连 " + seconds + "s";
+      if (label.textContent !== text) label.textContent = text;
+      active ||= seconds > 0;
     }
+    if (!active) stopReconnectCountdowns();
   }
-  setInterval(updateReconnectCountdowns, 250);
+  function refreshReconnectCountdowns() {
+    stopReconnectCountdowns();
+    if (pageView !== "room" || document.hidden) return;
+    reconnectLabels = [...byId("roomPreparation").querySelectorAll("[data-reconnect-until]")];
+    updateReconnectCountdowns();
+    if (reconnectLabels.length) reconnectTimer = setInterval(updateReconnectCountdowns, 250);
+  }
+  window.addEventListener("page-changing", stopReconnectCountdowns);
+  document.addEventListener("visibilitychange", refreshReconnectCountdowns);
   function playerLabel(member, self, snapshot) {
     const label = element("strong", "player-name player-other"),
       name = element("span", "", member.name);
@@ -1117,7 +1136,6 @@ const RoomPanel = (() => {
         for (const cell of slot.children) cell.setAttribute("role", "cell");
         column.append(slot);
       }
-      updateReconnectCountdowns();
       const button = joinButtons[team];
       const current =
         self.seat !== null && self.seat !== undefined && Rules.seatTeam(self.seat) === team;
@@ -1179,6 +1197,7 @@ const RoomPanel = (() => {
       snapshot.started && snapshot.phase !== "assembly" ? "返回战斗" : "主菜单";
     renderFinalAssembly(snapshot, busy);
     renderDetail(snapshot);
+    refreshReconnectCountdowns();
     if (snapshot.settings.mode === "battlefield") {
       for (const seat of [0,1]) { byId("removeSeatAI" + seat)?.remove(); }
     }

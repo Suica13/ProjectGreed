@@ -16,6 +16,17 @@ const MapCamera = (() => {
   const touches = new Map();
   let pinch = null,
     pinchConsumed = false;
+  let viewportSize = null;
+  function rememberSize(box) {
+    viewportSize = { width: box.width, height: box.height };
+    return viewportSize;
+  }
+  function renderSize() {
+    // Rendering needs dimensions, not a fresh DOM position. Input handlers still
+    // measure the live rectangle before mapping pointer coordinates.
+    return window.ResizeObserver && viewportSize?.width > 0 && viewportSize?.height > 0
+      ? viewportSize : rememberSize(canvas.getBoundingClientRect());
+  }
   function baseTile(width, height) {
     return (
       Math.min(
@@ -53,6 +64,7 @@ const MapCamera = (() => {
   }
   function refresh(box = null) {
     if (!box || typeof box.width !== "number") box = canvas.getBoundingClientRect();
+    rememberSize(box);
     const maximum = maximumZoom(box.width || 800, box.height || 600);
     if (box.width > 0 && box.height > 0) {
       zoom = Math.min(zoom, maximum);
@@ -241,10 +253,15 @@ const MapCamera = (() => {
     true,
   );
   window.addEventListener("resize", refresh);
+  if (window.ResizeObserver) new ResizeObserver(entries => {
+    const box = entries[0]?.contentRect;
+    if (box && (box.width !== viewportSize?.width || box.height !== viewportSize?.height)) refresh(box);
+  }).observe(canvas);
   byId("mapZoomIn").onclick = () => setZoom(zoom * zoomStep);
   byId("mapZoomOut").onclick = () => setZoom(zoom / zoomStep);
   byId("mapZoomReset").onclick = fit;
   return {
+    renderSize,
     geometry,
     frame,
     focus,

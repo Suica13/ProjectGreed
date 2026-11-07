@@ -64,12 +64,12 @@ const SpriteRenderer = (() => {
     idleColdPending = idleMissing > 0;
     idleMissing = 0;
     idleUpdateCursor = 0;
-    idleUpdateKeys = [...idleImages.entries()]
-      .filter(
-        ([, entry]) => entry.seenFrame >= idleFrame - 1 && entry.desiredBucket !== entry.bucket,
-      )
-      .sort((a, b) => a[1].bakedFrame - b[1].bakedFrame)
-      .map(([key]) => key);
+    idleUpdateKeys = [];
+    idleImages.forEach((entry, key) => {
+      if (entry.seenFrame >= idleFrame - 1 && entry.desiredBucket !== entry.bucket)
+        idleUpdateKeys.push(key);
+    });
+    idleUpdateKeys.sort((a, b) => idleImages.get(a).bakedFrame - idleImages.get(b).bakedFrame);
   }
   function drawPose(model, clip, time, loop) {
     const animation = models[model].animations[clip];
@@ -553,7 +553,9 @@ const SpriteRenderer = (() => {
       !flying &&
       ART.models[model].movementType !== "air" &&
       !turretStatus &&
-      !Object.values(brokenParts).some(Boolean)
+      // Broken MS limbs are static visibility changes and can be baked too.
+      // Module platforms retain their live electric damage overlay below.
+      (!ART.models[model].modules?.length || !Object.values(brokenParts).some(Boolean))
     ) {
       const layers = visibleLayers(
         model,
@@ -653,6 +655,7 @@ const SpriteRenderer = (() => {
         weaponDisplayIndex,
         boostSkillActive,
         hiddenLayers,
+        brokenParts,
         lighting,
         idleRasterSize,
       ]);
@@ -733,7 +736,7 @@ const SpriteRenderer = (() => {
       if (entry) {
         idleImages.delete(key);
         idleImages.set(key, entry);
-        while (idleImages.size > 96 || idleImagePixels > 16 * 1024 * 1024) {
+        while (idleImages.size > 256 || idleImagePixels > 16 * 1024 * 1024) {
           const oldest = idleImages.keys().next().value,
             removed = idleImages.get(oldest);
           idleImages.delete(oldest);
@@ -994,8 +997,12 @@ const SpriteRenderer = (() => {
       workers++;
       const image = new Image();
       pendingSources.add(task.source);
-      image.onload = () => {
+      image.onload = async () => {
         image.onload = image.onerror = null;
+        // Loading a PNG is not the same as decoding it. Finish asynchronous
+        // decoding behind the readiness gate instead of on the first draw.
+        try { if (typeof image.decode === "function") await image.decode(); }
+        catch { /* Older WebViews can reject decode even after a valid load. */ }
         pendingSources.delete(task.source);
         if (task.generation !== assetGeneration && !retainedSources.has(task.source)) requests.delete(task.source);
         workers--;

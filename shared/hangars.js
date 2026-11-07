@@ -6,6 +6,7 @@ const UnitHangars = {
     ownerOf,
     cells,
     fits,
+    placementQuery = null,
     mapWidth,
     mapHeight,
     reachable,
@@ -448,6 +449,11 @@ const UnitHangars = {
     function recoveryOrder(g, u) {
       if (!onMap(u) || u.acted || u.plan || u.lastLaunchRound === g.round) return null;
       const m = modelOf(u);
+      if (!m.transport?.loadTags?.length) return null;
+      // Check actual carriers before distance/contact searches. A normal ally is
+      // never a boarding destination, regardless of its proximity to the enemy.
+      const carriers = g.units.filter(c => c.id !== u.id && onMap(c) && c.team === u.team && of(c).length);
+      if (!carriers.length) return null;
       const members = squadMembers(g, u);
       if (members.some((member) => member.acted || member.plan || member.pendingMove)) return null;
       const repair = members.some(needsRecovery);
@@ -457,15 +463,8 @@ const UnitHangars = {
       // Healthy capturers finish nearby objectives before boarding for a long trip.
       if (!repair && captureObjective(g, u, u)) return null;
       if (!repair && !longJourney) return null;
-      const candidates = g.units.filter(
+      const candidates = carriers.filter(
         (c) =>
-          c.id !== u.id &&
-          onMap(c) &&
-          c.team === u.team &&
-          (repair ||
-            (!inContact(g, c) &&
-              edgeDistance(c, u) <= Math.max(1, m.move) &&
-              (modelOf(c).move > m.move || ["air", "hover"].includes(modelOf(c).movementType)))) &&
           of(c).some(
             (h) =>
               (!repair || h.kind !== "sfs") &&
@@ -474,7 +473,11 @@ const UnitHangars = {
               ) &&
               used(g, c, h.id) + members.reduce((sum, member) => sum + slotCost(member, h), 0) <=
                 h.capacity,
-          ),
+          ) &&
+          (repair ||
+            (!inContact(g, c) &&
+              edgeDistance(c, u) <= Math.max(1, m.move) &&
+              (modelOf(c).move > m.move || ["air", "hover"].includes(modelOf(c).movementType)))),
       );
       candidates.sort((a, b) => edgeDistance(a, u) - edgeDistance(b, u));
       for (const c of candidates)
@@ -494,6 +497,10 @@ const UnitHangars = {
         return { action: "move", fields: { unitId: u.id, x: point.x, y: point.y } };
       }
       // Search from all carrier edges to avoid steering into a dead end around terrain.
+      const occupancy = placementQuery?.(g);
+      const canFit = (x, y, throughAllies = false) => occupancy
+        ? occupancy.fits(u, x, y, u.angle, throughAllies)
+        : fits(g, u, x, y, u.angle, throughAllies);
       const distances = new Map(),
         queue = [];
       for (const c of candidates)
@@ -507,7 +514,7 @@ const UnitHangars = {
             const x = cell.x + dx,
               y = cell.y + dy,
               key = x + "," + y;
-            if (!distances.has(key) && fits(g, u, x, y, u.angle, true)) {
+            if (!distances.has(key) && canFit(x, y, true)) {
               distances.set(key, 0);
               queue.push({ x, y });
             }
@@ -524,7 +531,7 @@ const UnitHangars = {
           const x = n.x + dx,
             y = n.y + dy,
             key = x + "," + y;
-          if (!distances.has(key) && fits(g, u, x, y, u.angle, true)) {
+          if (!distances.has(key) && canFit(x, y, true)) {
             distances.set(key, distance);
             queue.push({ x, y });
           }
@@ -532,7 +539,7 @@ const UnitHangars = {
       }
       const current = distances.get(u.x + "," + u.y) ?? Infinity;
       const options = [...walk.values()].filter(
-        (p) => fits(g, u, p.x, p.y) && (distances.get(p.x + "," + p.y) ?? Infinity) < current,
+        (p) => canFit(p.x, p.y) && (distances.get(p.x + "," + p.y) ?? Infinity) < current,
       );
       options.sort(
         (a, b) =>

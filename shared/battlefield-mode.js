@@ -157,12 +157,18 @@ const BattlefieldMode = (() => {
     const state = game.battlefield;
     if (!state) return;
     if (!state.wave && !game.deployment?.some(ready => !ready)) reinforce(G, game);
+    const livingFormations = new Map();
     for (const unit of game.units) {
       if (unrepairable(game, unit)) {
         const before = state.baseHP[unit.id];
         unit.hp = Math.min(unit.hp, before);
         state.baseDamage[unit.team] += before - Math.max(0, unit.hp);
         state.baseHP[unit.id] = Math.max(0, unit.hp);
+      }
+      if (unit.hp > 0) {
+        const owner = G.ownerOf(unit);
+        if (!livingFormations.has(owner)) livingFormations.set(owner, new Set());
+        livingFormations.get(owner).add(unit.formationIndex);
       }
       if (unit.hp <= 0 && !state.defeated[unit.id]) {
         state.defeated[unit.id] = true;
@@ -174,8 +180,7 @@ const BattlefieldMode = (() => {
     for (const reserve of state.reserves || []) {
       // Escape forms retain the formation index: repair only when all surviving
       // components of this roster slot have been destroyed.
-      const alive = game.units.some((unit) => unit.hp > 0 &&
-        G.ownerOf(unit) === reserve.ownerSeat && unit.formationIndex === reserve.formationIndex);
+      const alive = livingFormations.get(reserve.ownerSeat)?.has(reserve.formationIndex);
       if (!alive && reserve.readyRound === null) {
         const pricing = typeof Economy !== "undefined" ? Economy : require("./economy.js");
         reserve.losses = (reserve.losses || 0) + 1;
@@ -288,6 +293,8 @@ const BattlefieldMode = (() => {
   }
   function placeReinforcements(G, game) {
     const state = game.battlefield, pending = [];
+    if (!state.reinforcementQueue?.length) return;
+    const placement = G.placementQuery(game);
     const anchors = new Map();
     for (const entry of state.reinforcementQueue || []) {
       const sites = deploymentSites(G, game, entry.team);
@@ -302,13 +309,14 @@ const BattlefieldMode = (() => {
         const candidates = [];
         for (const site of sites) for (let y = site.y - 7; y <= site.y + 7; y++)
           for (let x = site.x - 7; x <= site.x + 7; x++)
-            if (Math.hypot(x - site.x, y - site.y) <= 7 && G.fits(game, actor, x, y)) candidates.push({ x, y });
+            if (Math.hypot(x - site.x, y - site.y) <= 7 && placement.fits(actor, x, y)) candidates.push({ x, y });
         position = candidates[Math.floor(G.random(game) * candidates.length)];
       }
       if (!position) { pending.push(entry); continue; }
       Object.assign(actor, position, { airdropRound: game.round, formationIndex: state.nextFormationIndex[entry.team]++ });
       state.nextUnit++;
       game.units.push(actor);
+      placement.include(actor);
       if (join) G.joinSquad(game, actor, join);
       anchors.set(groupKey, join || actor);
       (game.turnEffects ||= []).push({ type: "airdrop", unitId: actor.id, team: entry.team, era: state.teams[entry.team].era });
@@ -357,6 +365,7 @@ const BattlefieldMode = (() => {
   function deployReserves(G, game) {
     if (game.winner !== null) return;
     const state = game.battlefield;
+    let placement = null;
     for (const reserve of state.reserves || []) {
       const request = reserve.request;
       if (!request || request.arrivalRound > game.round) continue;
@@ -375,14 +384,16 @@ const BattlefieldMode = (() => {
         formationIndex: reserve.formationIndex, airdropRound: game.round });
       if (model.iField) actor.iFieldHp = model.iField.capacity;
       const cells = [];
+      placement ||= G.placementQuery(game);
       for (let y = site.y - 5; y <= site.y + 5; y++) for (let x = site.x - 5; x <= site.x + 5; x++)
-        if (Math.hypot(x - site.x, y - site.y) <= 5 && G.fits(game, actor, x, y)) cells.push({ x, y });
+        if (Math.hypot(x - site.x, y - site.y) <= 5 && placement.fits(actor, x, y)) cells.push({ x, y });
       if (!cells.length) continue; // Keep the request queued until a legal landing cell is free.
       Object.assign(actor, cells[Math.floor(G.random(game) * cells.length)]);
       state.nextUnit++;
       reserve.request = null;
       reserve.readyRound = null;
       game.units.push(actor);
+      placement.include(actor);
       (game.turnEffects ||= []).push({ type: "airdrop", unitId: actor.id, team: actor.team });
     }
   }
