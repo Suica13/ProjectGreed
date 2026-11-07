@@ -1,0 +1,129 @@
+{
+  "version": 1,
+  "transitionMs": 1800,
+  "precipitation": {
+    "rain": {
+      "count": 145,
+      "speedX": 0.22,
+      "speedY": 0.56,
+      "stroke": "#9ec8eb",
+      "opacity": 0.48,
+      "length": 9
+    },
+    "heavy_rain": {
+      "count": 300,
+      "speedX": 0.29,
+      "speedY": 0.75,
+      "stroke": "#9ec8eb",
+      "opacity": 0.65,
+      "length": 15
+    },
+    "snow": {
+      "count": 145,
+      "speedX": 0.026,
+      "speedY": 0.043,
+      "stroke": "#eef7ff",
+      "opacity": 0.78,
+      "radius": 1.6
+    },
+    "blizzard": {
+      "count": 300,
+      "speedX": 0.09,
+      "speedY": 0.13,
+      "stroke": "#eef7ff",
+      "opacity": 0.82,
+      "radius": 1.6
+    },
+    "sand": {
+      "count": 145,
+      "speedX": 0.085,
+      "speedY": 0.12,
+      "stroke": "#d2b175",
+      "opacity": 0.5,
+      "radius": 1.1
+    },
+    "sandstorm": {
+      "count": 300,
+      "speedX": 0.17,
+      "speedY": 0.18,
+      "stroke": "#d2b175",
+      "opacity": 0.6,
+      "radius": 1.1
+    }
+  },
+  "overlays": {
+    "fog": {
+      "rgb": "190,205,211",
+      "opacity": 0.24
+    },
+    "overcast": {
+      "rgb": "75,86,99",
+      "opacity": 0.19
+    },
+    "sand": {
+      "rgb": "186,137,69",
+      "opacity": 0.18
+    },
+    "sandstorm": {
+      "rgb": "169,117,46",
+      "opacity": 0.36
+    },
+    "heavy_rain": {
+      "rgb": "49,71,99",
+      "opacity": 0.21
+    },
+    "blizzard": {
+      "rgb": "199,219,233",
+      "opacity": 0.18
+    }
+  },
+  "timeDarkness": {
+    "dawn": 0.13,
+    "morning": 0.02,
+    "noon": 0,
+    "afternoon": 0.04,
+    "dusk": 0.23,
+    "evening": 0.36,
+    "late_night": 0.48,
+    "pre_dawn": 0.39
+  },
+  "surfaces": {
+    "snow": {
+      "snow": 5,
+      "blizzard": 12,
+      "meltClear": 3,
+      "meltRain": 8
+    },
+    "wet": {
+      "rain": 10,
+      "heavy_rain": 22,
+      "dry": 4
+    },
+    "dust": {
+      "sand": 6,
+      "sandstorm": 14,
+      "clear": 3
+    }
+  },
+  "lightning": {
+    "enabled": true,
+    "weather": [
+      "heavy_rain"
+    ],
+    "frequencyRounds": 3,
+    "flashDurationMs": 500,
+    "maxOpacity": 0.62
+  },
+  "assets": {
+    "rain": null,
+    "heavy_rain": null,
+    "snow": null,
+    "blizzard": null,
+    "sand": null,
+    "sandstorm": null,
+    "lightning": null,
+    "snowCover": null,
+    "wetGround": null,
+    "dustCover": null
+  }
+}
