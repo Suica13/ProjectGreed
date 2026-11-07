@@ -173,6 +173,23 @@ const MapEditor = (() => {
       randomSeed: doc.seed,
     }))
       $(id).value = value;
+    const climate = doc.climate || {};
+    const wc = climate.weather || {}, tc = climate.time || {};
+    for (const input of document.querySelectorAll("[data-climate-weather]")) {
+      const id = input.dataset.climateWeather;
+      input.checked = (wc.allowed || ["clear"]).includes(id);
+    }
+    for (const input of document.querySelectorAll("[data-climate-weight]")) {
+      const id = input.dataset.climateWeight;
+      input.value = wc.weights?.[id] ?? (id === "clear" ? 1 : 0);
+    }
+    for (const input of document.querySelectorAll("[data-climate-time]"))
+      input.checked = (tc.allowed || ["dawn","morning","noon","afternoon","dusk","evening","late_night","pre_dawn"]).includes(input.dataset.climateTime);
+    $("mapWeatherFixed").checked = wc.fixed === true;
+    $("mapTimeFixed").checked = tc.fixed === true;
+    $("mapWeatherDuration").value = wc.durationRounds || 4;
+    $("mapTimeDuration").value = tc.durationRounds || 4;
+    $("mapClimatePanel").querySelectorAll("input").forEach(input => input.disabled = doc.environment === "space");
     $("modeRegular").checked = doc.supportedModes.includes("regular");
     $("modeQuick").checked = doc.supportedModes.includes("quick");
     $("playerCount").textContent = t("共 " + doc.spawns.length + " 名玩家 · " + doc.maxTeams + " 队");
@@ -1064,6 +1081,24 @@ const MapEditor = (() => {
         changed();
       });
   }
+  function saveClimate() {
+    if (doc.environment === "space") return;
+    const weatherAllowed = [...document.querySelectorAll("[data-climate-weather]:checked")].map(input => input.dataset.climateWeather);
+    const timeAllowed = [...document.querySelectorAll("[data-climate-time]:checked")].map(input => input.dataset.climateTime);
+    if (!weatherAllowed.length || !timeAllowed.length) return status("至少选择一种天气和一个时段");
+    const weights = Object.fromEntries([...document.querySelectorAll("[data-climate-weight]")].map(input =>
+      [input.dataset.climateWeight, Math.max(0, Math.min(1000, Number(input.value) || 0))]));
+    if (!weatherAllowed.some(id => weights[id] > 0)) return status("至少一个选中天气的权重需要大于0");
+    checkpoint();
+    doc.climate = { weather: { allowed: weatherAllowed, weights,
+      durationRounds: Math.max(1,Math.min(999,Number($("mapWeatherDuration").value)||4)),
+      fixed: $("mapWeatherFixed").checked },
+      time: { allowed: timeAllowed,
+        durationRounds: Math.max(1,Math.min(999,Number($("mapTimeDuration").value)||4)),
+        fixed: $("mapTimeFixed").checked } };
+    changed();
+  }
+  $("mapClimatePanel").addEventListener("change", saveClimate);
   bind("mapId", () => doc, "id");
   bind("mapName", () => doc, "name");
   bind("mapDescription", () => doc, "description");
