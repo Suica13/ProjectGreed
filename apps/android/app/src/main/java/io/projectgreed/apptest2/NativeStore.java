@@ -1,41 +1,48 @@
 package io.projectgreed.apptest2;
 
-import android.util.AtomicFile;
 import org.json.JSONObject;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 
-/** One atomic, private app file. The web client never supplies filesystem paths. */
+/** A verified snapshot and previous revision in the selected native storage backend. */
 final class NativeStore {
     static final int MAX_BYTES = 64 * 1024 * 1024;
-    private final File file, backup;
+    private final SnapshotFiles files;
+    private static final String PRIMARY = "profile.json", BACKUP = "profile.previous.json";
     private JSONObject current;
     private boolean recovered;
     private String readError;
-    NativeStore(File directory) {
-        directory.mkdirs();
-        file = new File(directory, "profile.json");
-        backup = new File(directory, "profile.previous.json");
+    NativeStore(File directory) { this(new SnapshotFiles.Local(directory), false, null); }
+    NativeStore(SnapshotFiles files, boolean requireExisting, JSONObject seed) {
+        this.files = files;
         try {
-            // AtomicFile.openRead also restores an interrupted platform-level write.
-            if (file.exists() || new File(file.getPath() + ".bak").exists()) current = load(file);
-            else if (backup.exists()) { current = load(backup); recovered = true; }
-            else current = new JSONObject().put("format", "ProjectGreed-app-store").put("version", 1)
-                .put("revision", 0).put("values", new JSONObject());
+            if (files.exists(PRIMARY)) current = load(PRIMARY);
+            else if (files.exists(BACKUP)) { current = load(BACKUP); recovered = true; }
+            else {
+                if (requireExisting) throw new IOException("所选文件夹中的存档已不存在，请重新选择原存档文件夹");
+                current = new JSONObject().put("format", "ProjectGreed-app-store").put("version", 1)
+                    .put("revision", seed == null ? 0 : seed.getLong("revision"))
+                    .put("values", seed == null ? new JSONObject() : seed.getJSONObject("values"));
+                validateValues(current.getJSONObject("values"));
+            }
         } catch (Exception first) {
             try {
-                current = load(backup);
-                if (file.exists() && !file.renameTo(new File(directory, "profile.corrupt-" + System.currentTimeMillis() + ".json")))
-                    throw new IOException("Cannot preserve damaged profile");
-                write(file, current);
+                current = load(BACKUP);
+                if (files.exists(PRIMARY)) files.preserveDamaged(PRIMARY);
+                write(PRIMARY, current);
                 recovered = true;
             } catch (Exception ignored) { readError = "存档及备份未能读取：" + first.getMessage(); }
         }
     }
-    private static JSONObject load(File file) throws Exception {
-        AtomicFile atomic = new AtomicFile(file);
-        try (InputStream input = atomic.openRead(); ByteArrayOutputStream bytes = new ByteArrayOutputStream()) {
+    // Test the selected folder before persisting its URI as the authoritative location.
+    synchronized void ensureSaved() throws Exception {
+        if (readError != null) throw new IOException(readError);
+        write(BACKUP, current);
+        write(PRIMARY, current);
+    }
+    private JSONObject load(String name) throws Exception {
+        try (InputStream input = files.openRead(name); ByteArrayOutputStream bytes = new ByteArrayOutputStream()) {
             byte[] buffer = new byte[16384]; int n;
             while ((n = input.read(buffer)) != -1) {
                 if (bytes.size() + n > MAX_BYTES) throw new IOException("Profile exceeds 64 MiB");
@@ -54,18 +61,12 @@ final class NativeStore {
             if (key.length() > 512 || !(values.get(key) instanceof String)) throw new IOException("Invalid profile record");
         }
     }
-    private static void write(File file, JSONObject value) throws Exception {
+    private void write(String name, JSONObject value) throws Exception {
         byte[] bytes = value.toString().getBytes(StandardCharsets.UTF_8);
-        if (bytes.length > MAX_BYTES) throw new IOException("应用存档超过64 MiB");
-        AtomicFile atomic = new AtomicFile(file);
-        FileOutputStream stream = null;
-        try {
-            stream = atomic.startWrite(); stream.write(bytes); stream.flush(); stream.getFD().sync(); atomic.finishWrite(stream); stream = null;
-            // Some AtomicFile rename failures are logged by Android instead of thrown.
-            // Read back the snapshot before acknowledging a paid purchase.
-            if (!load(file).toString().equals(value.toString())) throw new IOException("Native save verification failed");
-        }
-        catch (Exception error) { if (stream != null) atomic.failWrite(stream); throw error; }
+        if (bytes.length > MAX_BYTES) throw new IOException("应用存档超过64 MiB64 MiB");
+        files.write(name, bytes);
+        // A provider may report success after a partial write. Never acknowledge it.
+        if (!load(name).toString().equals(value.toString())) throw new IOException("Native save verification failed");
     }
     synchronized String read() {
         try {
@@ -85,8 +86,8 @@ final class NativeStore {
             JSONObject next = new JSONObject().put("format", "ProjectGreed-app-store").put("version", 1)
                 .put("revision", current.getLong("revision") + 1).put("values", values);
             // Preserve a validated previous snapshot; never acknowledge a half-written purchase.
-            write(backup, current);
-            write(file, next);
+            write(BACKUP, current);
+            write(PRIMARY, next);
             current = next;
             return new JSONObject().put("ok", true).put("revision", current.getLong("revision")).toString();
         } catch (Exception error) { return failure(error); }

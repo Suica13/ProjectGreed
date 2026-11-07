@@ -10,8 +10,8 @@ android {
         minSdk 26
         targetSdk 35
         testInstrumentationRunner 'io.projectgreed.apptest2.StoreInstrumentation'
-        versionCode 93001
-        versionName 'V93-AppTest2.1'
+        versionCode 93002
+        versionName 'V93'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
@@ -23,4 +23,9 @@ android {
         release { minifyEnabled false }
     }
     androidResources { noCompress 'ogg', 'mp3', 'wav' }
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.json:json:20240303'
 }

@@ -28,7 +28,13 @@
       }
       if (next.size === values.size && [...next].every(([k, v]) => values.get(k) === v)) return;
       const result = read(
-        bridge.commit(JSON.stringify({ revision, values: Object.fromEntries(next) })),
+        bridge.commit(
+          JSON.stringify({
+            revision,
+            ...(initial.epoch ? { epoch: initial.epoch } : {}),
+            values: Object.fromEntries(next),
+          }),
+        ),
       );
       if (!Number.isSafeInteger(result.revision) || result.revision !== revision + 1)
         throw Error("应用存档版本确认失败，请重启客户端");
@@ -84,6 +90,13 @@
       panel.textContent =
         "应用存档未能打开，已停止加载以保护原数据。\n请关闭客户端后重试，或恢复应用数据目录中的备份。\n\n" +
         error.message;
+      if (root.ProjectGreedAndroid?.chooseStorageFolder) {
+        const button = document.createElement("button");
+        button.textContent = "重新选择存档文件夹";
+        button.style.cssText = "display:block;margin-top:24px;padding:12px";
+        button.onclick = () => root.ProjectGreedAndroid.chooseStorageFolder();
+        panel.append(button);
+      }
       document.body.append(panel);
     };
     document.readyState === "loading"
@@ -188,6 +201,40 @@
     document.addEventListener("DOMContentLoaded", () => {
       const brand = document.querySelector(".shell-brand small");
       if (brand) brand.textContent += " / AppTest2";
+      if (root.ProjectGreedAndroid?.sceneChanged) {
+        const host = root.ProjectGreedAndroid;
+        let ready = typeof assetsReady !== "undefined" && assetsReady,
+          last = "";
+        const syncScene = () => {
+          const scene = document.body.dataset.page || "menu";
+          const key = scene + ":" + ready;
+          if (key !== last) {
+            last = key;
+            host.sceneChanged(scene, ready);
+          }
+          const button = document.getElementById("nativeSaveFolder");
+          if (button) button.disabled = scene === "game";
+        };
+        new MutationObserver(syncScene).observe(document.body, {
+          attributes: true,
+          attributeFilter: ["data-page"],
+        });
+        root.addEventListener("game-assets-ready", () => {
+          ready = true;
+          syncScene();
+        });
+        const exportButton = document.getElementById("exportProfileSave");
+        if (exportButton && host.chooseStorageFolder) {
+          const button = document.createElement("button");
+          button.id = "nativeSaveFolder";
+          button.type = "button";
+          button.className = exportButton.className;
+          button.textContent = "选择存档文件夹";
+          button.onclick = () => host.chooseStorageFolder();
+          exportButton.parentElement.append(button);
+        }
+        syncScene();
+      }
       if (area.recovered) root.alert("主存档未能读取，已从上次备份恢复；原文件已保留。");
     });
   } catch (error) {

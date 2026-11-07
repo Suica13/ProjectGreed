@@ -73,3 +73,25 @@ test("failed reads never silently create empty profiles, and prototype-like keys
   a.storage.clear();
   assert.equal(a.storage.length, 0);
 });
+
+test("a page from a previous save folder cannot overwrite the newly selected folder at the same revision", () => {
+  let epoch = "internal",
+    values = { wallet: "1000" };
+  const bridge = {
+    read: () => ({ ok: true, epoch, revision: 0, values }),
+    commit: (text) => {
+      const next = JSON.parse(text);
+      if (next.epoch !== epoch) return { ok: false, error: "Storage location changed" };
+      values = next.values;
+      return { ok: true, revision: 1 };
+    },
+  };
+  const oldPage = createStorage(bridge);
+  epoch = "external";
+  values = { wallet: "9000" };
+  assert.throws(() => oldPage.storage.setItem("wallet", "0"), /Storage location changed/);
+  assert.equal(values.wallet, "9000");
+  const newPage = createStorage(bridge);
+  newPage.storage.setItem("wallet", "8000");
+  assert.equal(values.wallet, "8000");
+});

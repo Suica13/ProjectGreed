@@ -37,6 +37,29 @@ test.beforeAll(async () => {
 test.afterAll(async () => {
   if (server) await new Promise((r) => server.close(r));
 });
+const installNativeBridge = (pilots) => {
+  let state = {
+    ok: true,
+    revision: 0,
+    values: { "projectgreed.custom-pilots.v3.shared": JSON.stringify({ pilots, awards: [] }) },
+  };
+  window.nativeExports = [];
+  window.nativeScenes = [];
+  window.folderChoices = 0;
+  window.ProjectGreedAndroid = {
+    sceneChanged: (scene, ready) => window.nativeScenes.push({ scene, ready }),
+    chooseStorageFolder: () => window.folderChoices++,
+    read: () => JSON.stringify(state),
+    commit: (payload) => {
+      const next = JSON.parse(payload);
+      if (next.revision !== state.revision) return JSON.stringify({ ok: false, error: "Stale" });
+      state = { ok: true, revision: state.revision + 1, values: next.values };
+      return JSON.stringify({ ok: true, revision: state.revision });
+    },
+    exportFile: (name, mime, data) => window.nativeExports.push({ name, mime, data }),
+    exit: () => (window.nativeExited = true),
+  };
+};
 for (const width of [1440, 390])
   test(`packaged app loads external assets, native bridge and exports at ${width}px`, async ({
     page,
@@ -46,26 +69,7 @@ for (const width of [1440, 390])
     const pilots = Array.from({ length: 12 }, (_, i) =>
       P.createCustom("custom-native-" + i, "Native " + i, undefined, "PMC"),
     );
-    await page.addInitScript((pilots) => {
-      let state = {
-        ok: true,
-        revision: 0,
-        values: { "projectgreed.custom-pilots.v3.shared": JSON.stringify({ pilots, awards: [] }) },
-      };
-      window.nativeExports = [];
-      window.ProjectGreedAndroid = {
-        read: () => JSON.stringify(state),
-        commit: (payload) => {
-          const next = JSON.parse(payload);
-          if (next.revision !== state.revision)
-            return JSON.stringify({ ok: false, error: "Stale" });
-          state = { ok: true, revision: state.revision + 1, values: next.values };
-          return JSON.stringify({ ok: true, revision: state.revision });
-        },
-        exportFile: (name, mime, data) => window.nativeExports.push({ name, mime, data }),
-        exit: () => (window.nativeExited = true),
-      };
-    }, pilots);
+    await page.addInitScript(installNativeBridge, pilots);
     const errors = [];
     page.on("pageerror", (e) => errors.push(e.message));
     await page.goto(url);
@@ -97,6 +101,12 @@ for (const width of [1440, 390])
     await page.locator("#shellSettings").click();
     await page.locator("#exportProfileSave").click();
     await page.waitForFunction(() => nativeExports.length === 1);
+    await expect(page.locator("#nativeSaveFolder")).toBeEnabled();
+    await page.locator("#nativeSaveFolder").click();
+    expect(await page.evaluate(() => folderChoices)).toBe(1);
+    expect(await page.evaluate(() => nativeScenes.some((s) => s.scene === "menu" && s.ready))).toBe(
+      true,
+    );
     const exported = await page.evaluate(() => nativeExports[0]);
     expect(JSON.parse(Buffer.from(exported.data, "base64").toString("utf8")).format).toBe(
       "ProjectGreed-profile",
@@ -111,3 +121,83 @@ for (const width of [1440, 390])
     );
     expect(errors).toEqual([]);
   });
+
+test("Android app rotates battle viewport without clipping and restores menu orientation policy", async ({
+  browser,
+}) => {
+  test.setTimeout(60000);
+  const context = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+    isMobile: true,
+    hasTouch: true,
+    deviceScaleFactor: 3,
+    userAgent:
+      "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 Chrome/130.0.0.0 Mobile Safari/537.36",
+  });
+  try {
+    const page = await context.newPage(),
+      errors = [];
+    page.on("pageerror", (e) => errors.push(e.message));
+    await page.addInitScript(installNativeBridge, []);
+    await page.goto(url);
+    await page.waitForFunction(() => typeof assetsReady !== "undefined" && assetsReady);
+    await expect
+      .poll(() => page.evaluate(() => nativeScenes.at(-1)))
+      .toEqual({ scene: "menu", ready: true });
+    await page.evaluate(async () => {
+      await SpriteRenderer.load();
+      Net.leave();
+      TurnFlow.reset();
+      const entry = { unitId: "Type61", kitId: "standard" };
+      game = Rules.create(false, 1, [[entry], [entry]], false, {
+        costLimit: 99999,
+        unitCostLimit: 10000,
+      });
+      selected = pending = battleView = moving = null;
+      mode = "select";
+      phase = "idle";
+      setPageView("game");
+      update();
+      drawMap(performance.now());
+    });
+    await expect
+      .poll(() => page.evaluate(() => nativeScenes.at(-1)))
+      .toEqual({ scene: "game", ready: true });
+    const units = await page.evaluate(() => JSON.stringify(game.units));
+    for (const viewport of [
+      { width: 844, height: 390 },
+      { width: 915, height: 412 },
+      { width: 390, height: 844 },
+    ]) {
+      await page.setViewportSize(viewport);
+      await expect
+        .poll(() =>
+          page.evaluate(() => document.documentElement.classList.contains("phone-landscape")),
+        )
+        .toBe(viewport.width > viewport.height);
+      await expect
+        .poll(() =>
+          page.evaluate(() => {
+            const r = document.body.getBoundingClientRect(),
+              v = visualViewport;
+            return (
+              r.left >= v.offsetLeft - 3 &&
+              r.top >= v.offsetTop - 3 &&
+              r.right <= v.offsetLeft + v.width + 3 &&
+              r.bottom <= v.offsetTop + v.height + 3
+            );
+          }),
+        )
+        .toBe(true);
+      expect(await page.evaluate(() => JSON.stringify(game.units))).toBe(units);
+    }
+    await expect(page.locator("#nativeSaveFolder")).toBeDisabled();
+    await page.evaluate(() => setPageView("menu"));
+    await expect
+      .poll(() => page.evaluate(() => nativeScenes.at(-1)))
+      .toEqual({ scene: "menu", ready: true });
+    expect(errors).toEqual([]);
+  } finally {
+    await context.close();
+  }
+});

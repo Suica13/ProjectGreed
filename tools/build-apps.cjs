@@ -94,7 +94,7 @@ if (mode === "windows") {
       "-p",
       "apps/android",
       "assembleDebug",
-      ...(args.includes("--with-tests") ? ["assembleDebugAndroidTest"] : []),
+      ...(args.includes("--with-tests") ? ["assembleDebugAndroidTest", "testDebugUnitTest"] : []),
       "--console=plain",
     ],
     { env: { ...process.env, JAVA_HOME: jdk, ANDROID_HOME: sdkPath } },
