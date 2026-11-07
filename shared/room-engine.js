@@ -3635,8 +3635,9 @@ function createRoomEngine({
           )
             throw Error("友军单位共享设置无效");
           if (msg.pilotDialogue !== undefined && typeof msg.pilotDialogue !== "boolean") throw Error("驾驶员对话设置无效");
-          if (msg.weather !== undefined && !["map","clear","rain","snow","sand"].includes(msg.weather)) throw Error("天气设置无效");
-          if (msg.dayNight !== undefined && !["map","day","night","cycle"].includes(msg.dayNight)) throw Error("昼夜设置无效");
+          if (msg.weather !== undefined && !["map","clear","rain","heavy_rain","fog","overcast","snow","blizzard","sand","sandstorm"].includes(msg.weather)) throw Error("天气设置无效");
+          if (msg.dayNight !== undefined && !["map","dawn","morning","noon","afternoon","dusk","evening","late_night","pre_dawn"].includes(msg.dayNight)) throw Error("昼夜设置无效");
+          for (const key of ["weatherCycle","timeCycle","climateBuffs"]) if (msg[key] !== undefined && typeof msg[key] !== "boolean") throw Error("环境循环与效果设置无效");
           const settings = strategic
             ? G.campaignRoomSettings({
                 mapId: map.id,
@@ -3649,6 +3650,9 @@ function createRoomEngine({
                 pilotDialogue: msg.pilotDialogue ?? room.settings.pilotDialogue ?? true,
                 weather: msg.weather ?? room.settings.weather ?? "map",
                 dayNight: msg.dayNight ?? room.settings.dayNight ?? "map",
+                weatherCycle: msg.weatherCycle ?? room.settings.weatherCycle ?? true,
+                timeCycle: msg.timeCycle ?? room.settings.timeCycle ?? true,
+                climateBuffs: msg.climateBuffs ?? room.settings.climateBuffs ?? true,
                 pilotPolicy: G.validatePilotPolicy(msg.pilotPolicy ?? room.settings.pilotPolicy),
                 shareAlliedUnits: msg.shareAlliedUnits ?? room.settings.shareAlliedUnits ?? false,
                 costLimit: G.validateCostLimit(msg.costLimit),
@@ -3674,7 +3678,7 @@ function createRoomEngine({
                         msg.teamFactions ?? room.settings.teamFactions ?? [null, null],
                       ),
               };
-          if (strategic) Object.assign(settings, { pilotDialogue: msg.pilotDialogue ?? room.settings.pilotDialogue ?? true, weather: msg.weather ?? room.settings.weather ?? "map", dayNight: msg.dayNight ?? room.settings.dayNight ?? "map" });
+          if (strategic) Object.assign(settings, { pilotDialogue: msg.pilotDialogue ?? room.settings.pilotDialogue ?? true, weather: msg.weather ?? room.settings.weather ?? "map", dayNight: msg.dayNight ?? room.settings.dayNight ?? "map", weatherCycle: msg.weatherCycle ?? room.settings.weatherCycle ?? true, timeCycle: msg.timeCycle ?? room.settings.timeCycle ?? true, climateBuffs: msg.climateBuffs ?? room.settings.climateBuffs ?? true });
           if (JSON.stringify(settings) !== JSON.stringify(room.settings)) {
             const mapChanged = settings.mapId !== room.settings.mapId;
             const modeChanged = settings.mode !== room.settings.mode;
