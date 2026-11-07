@@ -33,6 +33,8 @@ function createRoomEngine({
 }) {
   const Records =
     typeof MatchRecords === "undefined" ? require("./match-records.js") : MatchRecords;
+  const Dialogue = typeof BattleDialogue !== "undefined"
+    ? BattleDialogue : require("../client/battle-dialogue.js");
   let campaignAdapter = null;
   const automatedRequests = new WeakSet();
   const delegated = (room, seat) =>
@@ -916,6 +918,9 @@ function createRoomEngine({
         options: exportPerspectives(room, recipient),
       },
       log: team === null || !room.matchId ? room.log : room.teamLogs?.[team] || [],
+      dialogueEvents: (room.dialogueEvents || []).filter((entry) =>
+        team === null || !room.matchId || entry.visibleTeams.includes(team))
+        .slice(-40).map(({ visibleTeams, ...entry }) => entry),
       logNames: !room.started
         ? room.logNames || []
         : [
@@ -1352,6 +1357,24 @@ function createRoomEngine({
           awardDefeat(room, from, passenger, G.modelOf(passenger));
           settlePilotAssists(room, passenger, from);
         }
+        const dialogueTrigger = (kind, speaker, listener) => {
+          const entry = Dialogue.generate({
+            event: kind, speaker, target: listener,
+            sequence: room.log.length,
+            faction: speaker.pilot?.faction || G.modelOf(speaker).faction,
+          });
+          if (!entry) return;
+          const visibleTeams = logTeamIds(room).filter((team) =>
+            speaker.team === team || visibleBeforeCombat[team]?.includes(speaker.id));
+          log(room, Dialogue.format(entry), {
+            units: [speaker], visibleBy: visibleBeforeCombat, teams: visibleTeams,
+          });
+          (room.dialogueEvents ||= []).push({
+            ...entry, visibleTeams, round: room.game.round,
+            timestamp: Date.now(), id: room.matchId + ":" + room.log.length,
+          });
+          if (room.dialogueEvents.length > 240) room.dialogueEvents.splice(0, room.dialogueEvents.length - 240);
+        };
         const weapon = G.eventWeapon(from, e) || { name: e.weapon };
         log(
           room,
@@ -1365,6 +1388,8 @@ function createRoomEngine({
                 : null,
           },
         );
+        dialogueTrigger(destroyed ? "kill" : e.hit ? "attack" : "miss", from, to);
+        if (e.hit && !destroyed) dialogueTrigger("hit", to, from);
       }
     if (battles.length) {
       room.playbackIntel = intelBeforeCombat;
