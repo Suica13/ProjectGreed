@@ -349,6 +349,8 @@ const RoomPanel = (() => {
     byId("roomShareAlliedUnits").disabled = locked;
     byId("roomFogMode").value = settings.fogMode || "full";
     byId("roomPilotDialogue").value = settings.pilotDialogue === false ? "disabled" : "enabled";
+    byId("roomSurfaceCover").value = settings.surfaceCover === false ? "disabled" : "enabled";
+    byId("roomSurfaceCover").disabled = locked;
     byId("roomWeather").value = settings.weather || "map";
     byId("roomDayNight").value = settings.dayNight || "map";
     byId("roomWeatherCycle").value = settings.weatherCycle === false ? "disabled" : "enabled";
@@ -1324,6 +1326,7 @@ const RoomPanel = (() => {
     sendSettings({ shareAlliedUnits: byId("roomShareAlliedUnits").value === "enabled" });
   byId("roomFogMode").onchange = () => sendSettings({ fogMode: byId("roomFogMode").value });
   byId("roomPilotDialogue").onchange = () => sendSettings({ pilotDialogue: byId("roomPilotDialogue").value === "enabled" });
+  byId("roomSurfaceCover").onchange = () => sendSettings({ surfaceCover: byId("roomSurfaceCover").value === "enabled" });
   byId("roomWeather").onchange = () => sendSettings({ weather: byId("roomWeather").value });
   byId("roomDayNight").onchange = () => sendSettings({ dayNight: byId("roomDayNight").value });
   byId("roomWeatherCycle").onchange = () => sendSettings({ weatherCycle: byId("roomWeatherCycle").value === "enabled" });
