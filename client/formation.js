@@ -2376,8 +2376,10 @@ const Formation = (() => {
     pilotOriginal = JSON.stringify(pilotEdit);
     byId("customPilotName").value = I18n.pilotName(pilotEdit);
     byId("customPilotPersonality").value = pilotEdit.personality || "";
+    byId("customPilotOriginFaction").value = pilotEdit.originFaction || pilotEdit.faction || "PMC";
     byId("customPilotBackground").value = pilotEdit.background || "";
     byId("customPilotPersonality").disabled = !!pilotEdit.ace;
+    byId("customPilotOriginFaction").disabled = !!pilotEdit.ace;
     byId("customPilotBackground").disabled = !!pilotEdit.ace;
     byId("customPilotName").disabled = true;
     byId("renameCustomPilot").textContent = "修改名称";
@@ -2714,6 +2716,9 @@ const Formation = (() => {
   };
   byId("customPilotPersonality").onchange = () => {
     if (pilotEdit && !pilotEdit.ace) savePilotIdentity({ personality: byId("customPilotPersonality").value || null });
+  };
+  byId("customPilotOriginFaction").onchange = () => {
+    if (pilotEdit && !pilotEdit.ace) savePilotIdentity({ originFaction: byId("customPilotOriginFaction").value });
   };
   byId("customPilotBackground").onchange = () => {
     if (pilotEdit && !pilotEdit.ace) savePilotIdentity({ background: byId("customPilotBackground").value });
