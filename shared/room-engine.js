@@ -1364,11 +1364,15 @@ function createRoomEngine({
             faction: speaker.pilot?.faction || G.modelOf(speaker).faction,
           });
           if (!entry) return;
+          // A direct radio challenge is audible to both combatants, even if
+          // the target lacks visual contact. Do not disclose the speaker's map position.
+          const direct = kind === "taunt" || kind === "reply";
           const visibleTeams = logTeamIds(room).filter((team) =>
-            speaker.team === team || visibleBeforeCombat[team]?.includes(speaker.id));
-          log(room, Dialogue.format(entry), {
-            units: [speaker], visibleBy: visibleBeforeCombat, teams: visibleTeams,
-          });
+            direct ? team === speaker.team || team === listener.team
+              : speaker.team === team || visibleBeforeCombat[team]?.includes(speaker.id));
+          log(room, Dialogue.format(entry), direct
+            ? { units: [], teams: visibleTeams }
+            : { units: [speaker], visibleBy: visibleBeforeCombat, teams: visibleTeams });
           (room.dialogueEvents ||= []).push({
             ...entry, visibleTeams, round: room.game.round,
             timestamp: Date.now(), id: room.matchId + ":" + room.log.length,
@@ -1390,6 +1394,11 @@ function createRoomEngine({
         );
         dialogueTrigger(destroyed ? "kill" : e.hit ? "attack" : "miss", from, to);
         if (e.hit && !destroyed) dialogueTrigger("hit", to, from);
+        if (!destroyed && from.team !== to.team) {
+          const before = room.dialogueEvents?.length || 0;
+          dialogueTrigger("taunt", from, to);
+          if ((room.dialogueEvents?.length || 0) > before) dialogueTrigger("reply", to, from);
+        }
       }
     if (battles.length) {
       room.playbackIntel = intelBeforeCombat;
