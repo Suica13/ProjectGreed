@@ -33,7 +33,7 @@ function createRoomEngine({
 }) {
   const Records =
     typeof MatchRecords === "undefined" ? require("./match-records.js") : MatchRecords;
-  const DialogueRange = typeof DialogueRange !== "undefined" ? DialogueRange : require("./dialogue-range.js");
+  const DialogueRange = typeof globalThis.DialogueRange !== "undefined" ? globalThis.DialogueRange : require("./dialogue-range.js");
   const Dialogue = typeof BattleDialogue !== "undefined"
     ? BattleDialogue : require("../client/battle-dialogue.js");
   let campaignAdapter = null;
