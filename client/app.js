@@ -1780,7 +1780,7 @@ function drawMap(now) {
   for (const u of IrradiationFX.units(MapCombat.units(), now).sort(
     (a, b) => Number(!!a.embarked?.exposed) - Number(!!b.embarked?.exposed),
   )) {
-    if ((u.hp <= 0 && !u.mapDying) || u.mapPose?.hidden) continue;
+    if ((u.hp <= 0 && !u.mapDying) || u.mapPose?.hidden || u.deploymentStaged) continue;
     const motion = PlanningUI.motion(u, now) || (moving?.id === u.id ? moving : null);
     const pendingSquadMove = u.pendingMove || squadPendingMoves.get(u.id);
     const visualUnit = pendingSquadMove
