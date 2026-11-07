@@ -127,6 +127,7 @@ for (const [key, file] of [
   ["DIALOGUE_RANGE", "shared/dialogue-range.js"],
   ["BATTLE_DIALOGUE", "client/battle-dialogue.js"],
   ["DIALOGUE_AUDIO", "client/dialogue-audio.js"],
+  ["BATTLEFIELD_WEATHER", "client/battlefield-weather.js"],
   ["BATTLE_SCENE", "client/battle-scene.js"],
   ["BATTLE_WINDOW", "client/battle-window.js"],
   ["WEAPON_EFFECTS", "client/weapon-effects.js"],
