@@ -7,7 +7,7 @@ test("dialogue is deterministic and respects pilot personality",()=>{
  assert.deepEqual(a,b);
  assert.equal(a.personality,"cautious");
  assert.equal(a.faction,"TITANS");
- assert.match(dialogue.format(a),/^\[战场对话\]/);
+ assert.match(dialogue.format(a),/^→ \[战场对话\]/);
 });
 test("dialogue does not invent combat results",()=>{
  assert.equal(dialogue.generate({event:"unknown",speaker:{id:"a"}}),null);

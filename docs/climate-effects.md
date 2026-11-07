@@ -20,9 +20,9 @@ Map authors can independently change weather weights, allowed weather, duration,
 
 ## Limitations
 
-The current surface overlay is screen-space, not per-tile material coverage. It is a visual prototype, not the final snow-on-rooftops implementation. Flashing is disabled on space maps and should eventually respect a reduced-flashing accessibility option. No audio, thunder, footsteps or per-unit splashes are included yet.
+Surface coverage follows tactical tiles and terrain-specific snow, wetness and dust multipliers, with explicit per-map opt-in and a room-level veto. It does not model individual rooftops. Flashing is disabled on space maps and should eventually respect a reduced-flashing accessibility option. No audio, thunder, footsteps or per-unit splashes are included yet.
 
-The current build has not been validated in a live browser/Android environment; test the standalone HTML and large battles before release.
+Browser regression tests cover terrain coverage, grouped shadow opacity and room controls. Android device rendering still requires hardware validation.
 
 ## Terrain IDs
 

@@ -476,7 +476,7 @@ main { grid-template-columns: 310px minmax(260px, 1fr) 245px; }
   </head>
   <body>
     <header>
-      <div><strong>PROJECT GREED</strong><span>地图编辑器 · V94</span></div>
+      <div><strong>PROJECT GREED</strong><span>地图编辑器 · V95</span></div>
       <nav aria-label="文件操作">
         <button id="newMap">新建</button><button id="importMap">导入地图</button>
         <button id="exportProject">导出工程</button
@@ -518,6 +518,30 @@ main { grid-template-columns: 310px minmax(260px, 1fr) 245px; }
               </select></label
             >
             <label>默认地形<select id="defaultTerrain"></select></label>
+            <details id="mapClimatePanel"><summary>天气与昼夜循环</summary>
+              <p class="hint">宇宙地图不使用天气与时间。勾选参与循环的项目；天气权重越高出现概率越大。</p>
+              <h3>天气</h3><div id="mapClimateWeather"><label class="check"><input type="checkbox" data-climate-weather="clear"/>晴天 <input type="number" data-climate-weight="clear" min="0" max="1000" value="1" style="width:62px" title="天气权重"/></label>
+<label class="check"><input type="checkbox" data-climate-weather="rain"/>雨天 <input type="number" data-climate-weight="rain" min="0" max="1000" value="0" style="width:62px" title="天气权重"/></label>
+<label class="check"><input type="checkbox" data-climate-weather="heavy_rain"/>暴雨 <input type="number" data-climate-weight="heavy_rain" min="0" max="1000" value="0" style="width:62px" title="天气权重"/></label>
+<label class="check"><input type="checkbox" data-climate-weather="fog"/>雾天 <input type="number" data-climate-weight="fog" min="0" max="1000" value="0" style="width:62px" title="天气权重"/></label>
+<label class="check"><input type="checkbox" data-climate-weather="overcast"/>阴天 <input type="number" data-climate-weight="overcast" min="0" max="1000" value="0" style="width:62px" title="天气权重"/></label>
+<label class="check"><input type="checkbox" data-climate-weather="snow"/>雪天 <input type="number" data-climate-weight="snow" min="0" max="1000" value="0" style="width:62px" title="天气权重"/></label>
+<label class="check"><input type="checkbox" data-climate-weather="blizzard"/>暴雪 <input type="number" data-climate-weight="blizzard" min="0" max="1000" value="0" style="width:62px" title="天气权重"/></label>
+<label class="check"><input type="checkbox" data-climate-weather="sand"/>沙尘 <input type="number" data-climate-weight="sand" min="0" max="1000" value="0" style="width:62px" title="天气权重"/></label>
+<label class="check"><input type="checkbox" data-climate-weather="sandstorm"/>沙尘暴 <input type="number" data-climate-weight="sandstorm" min="0" max="1000" value="0" style="width:62px" title="天气权重"/></label></div>
+              <label class="check"><input id="mapWeatherFixed" type="checkbox"/>固定天气（不循环）</label>
+              <label>天气持续回合 <input id="mapWeatherDuration" type="number" min="1" max="999" value="4"/></label>
+              <h3>时间</h3><div id="mapClimateTimes"><label class="check"><input type="checkbox" data-climate-time="dawn"/>清晨</label>
+<label class="check"><input type="checkbox" data-climate-time="morning"/>上午</label>
+<label class="check"><input type="checkbox" data-climate-time="noon"/>正午</label>
+<label class="check"><input type="checkbox" data-climate-time="afternoon"/>下午</label>
+<label class="check"><input type="checkbox" data-climate-time="dusk"/>黄昏</label>
+<label class="check"><input type="checkbox" data-climate-time="evening"/>晚上</label>
+<label class="check"><input type="checkbox" data-climate-time="late_night"/>深夜</label>
+<label class="check"><input type="checkbox" data-climate-time="pre_dawn"/>凌晨</label></div>
+              <label class="check"><input id="mapTimeFixed" type="checkbox"/>固定时间（不循环）</label>
+              <label>每个时段持续回合 <input id="mapTimeDuration" type="number" min="1" max="999" value="4"/></label>
+            </details>
             <h2>玩家与队伍</h2>
             <div class="pair">
               <label>队伍上限<input id="maxTeams" type="number" min="2" max="8" /></label
@@ -727,13 +751,17 @@ const MapDocument = (() => {
   "use strict";
   const format = "ProjectGreedTileMap";
   const terrains = {
-    plain: { name: "普通", color: "#52626b" },
-    water: { name: "水", color: "#346c99" },
-    rock: { name: "山", color: "#73747a" },
+    plain: { name: "普通", color: "#52626b", category: "ground", cover: {snow:1,wet:1,dust:1} },
+    road: { name: "道路", color: "#666b70", category: "ground", cover: {snow:.6,wet:1,dust:.5} },
+    shallow_water: { name: "浅水（地面）", color: "#5895ac", category: "ground", cover: {snow:.15,wet:1,dust:0} },
+    deep_water: { name: "深水／海", color: "#24577d", category: "water", cover: {snow:0,wet:0,dust:0} },
+    residential: { name: "房区", color: "#9b8a7b", category: "ground", cover: {snow:.55,wet:.8,dust:.6} },
+    water: { name: "水（旧地图兼容）", color: "#346c99", category: "water", cover: {snow:0,wet:0,dust:0} },
+    rock: { name: "山区", color: "#73747a", category: "mountain", cover: {snow:.8,wet:.35,dust:.35} },
     forest: { name: "林", color: "#39704f" },
     rubble: { name: "废墟", color: "#7c6963" },
-    snow: { name: "雪地", color: "#d7e5ee" },
-    desert: { name: "沙漠", color: "#c5a86d" },
+    snow: { name: "雪地", color: "#d7e5ee", category: "ground", cover: {snow:1,wet:.25,dust:.1} },
+    desert: { name: "沙地", color: "#c5a86d", category: "ground", cover: {snow:.25,wet:.35,dust:1} },
     highland: { name: "高地（兼容）", color: "#93885e" },
   };
   const copy = (value) => JSON.parse(JSON.stringify(value));
@@ -1185,6 +1213,10 @@ const MapDocument = (() => {
       width: doc.width,
       height: doc.height,
       environment: doc.environment,
+      lighting: doc.lighting ? copy(doc.lighting) : null,
+      weather: doc.weather && typeof doc.weather === "object" ? copy(doc.weather) : null,
+      climate: doc.climate && typeof doc.climate === "object" ? copy(doc.climate) : null,
+      surfaceCover: doc.surfaceCover === true,
       maxTeams: doc.maxTeams,
       playersPerTeam: doc.playersPerTeam,
       supportedModes: [...doc.supportedModes],
@@ -1242,6 +1274,10 @@ const MapDocument = (() => {
       height: value.height,
       description: value.description || "",
       environment: value.environment || "ground",
+      lighting: value.lighting || null,
+      weather: value.weather || null,
+      climate: value.climate || null,
+      surfaceCover: value.surfaceCover === true,
       maxTeams: value.maxTeams || 2,
       playersPerTeam: value.playersPerTeam || 1,
       supportedModes: value.supportedModes || ["regular", "quick"],
@@ -1712,6 +1748,23 @@ const MapEditor = (() => {
       randomSeed: doc.seed,
     }))
       $(id).value = value;
+    const climate = doc.climate || {};
+    const wc = climate.weather || {}, tc = climate.time || {};
+    for (const input of document.querySelectorAll("[data-climate-weather]")) {
+      const id = input.dataset.climateWeather;
+      input.checked = (wc.allowed || ["clear"]).includes(id);
+    }
+    for (const input of document.querySelectorAll("[data-climate-weight]")) {
+      const id = input.dataset.climateWeight;
+      input.value = wc.weights?.[id] ?? (id === "clear" ? 1 : 0);
+    }
+    for (const input of document.querySelectorAll("[data-climate-time]"))
+      input.checked = (tc.allowed || ["dawn","morning","noon","afternoon","dusk","evening","late_night","pre_dawn"]).includes(input.dataset.climateTime);
+    $("mapWeatherFixed").checked = wc.fixed === true;
+    $("mapTimeFixed").checked = tc.fixed === true;
+    $("mapWeatherDuration").value = wc.durationRounds || 4;
+    $("mapTimeDuration").value = tc.durationRounds || 4;
+    $("mapClimatePanel").querySelectorAll("input").forEach(input => input.disabled = doc.environment === "space");
     $("modeRegular").checked = doc.supportedModes.includes("regular");
     $("modeQuick").checked = doc.supportedModes.includes("quick");
     $("playerCount").textContent = t("共 " + doc.spawns.length + " 名玩家 · " + doc.maxTeams + " 队");
@@ -2603,6 +2656,24 @@ const MapEditor = (() => {
         changed();
       });
   }
+  function saveClimate() {
+    if (doc.environment === "space") return;
+    const weatherAllowed = [...document.querySelectorAll("[data-climate-weather]:checked")].map(input => input.dataset.climateWeather);
+    const timeAllowed = [...document.querySelectorAll("[data-climate-time]:checked")].map(input => input.dataset.climateTime);
+    if (!weatherAllowed.length || !timeAllowed.length) return status("至少选择一种天气和一个时段");
+    const weights = Object.fromEntries([...document.querySelectorAll("[data-climate-weight]")].map(input =>
+      [input.dataset.climateWeight, Math.max(0, Math.min(1000, Number(input.value) || 0))]));
+    if (!weatherAllowed.some(id => weights[id] > 0)) return status("至少一个选中天气的权重需要大于0");
+    checkpoint();
+    doc.climate = { weather: { allowed: weatherAllowed, weights,
+      durationRounds: Math.max(1,Math.min(999,Number($("mapWeatherDuration").value)||4)),
+      fixed: $("mapWeatherFixed").checked },
+      time: { allowed: timeAllowed,
+        durationRounds: Math.max(1,Math.min(999,Number($("mapTimeDuration").value)||4)),
+        fixed: $("mapTimeFixed").checked } };
+    changed();
+  }
+  $("mapClimatePanel").addEventListener("change", saveClimate);
   bind("mapId", () => doc, "id");
   bind("mapName", () => doc, "name");
   bind("mapDescription", () => doc, "description");

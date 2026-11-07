@@ -3456,3 +3456,26 @@ body.menu-shell-active #formationScreen #formationUnits .formation-row > .format
     grid-template-columns:minmax(0,1fr) !important;
   }
 }
+
+/* Phone workshop cards keep readable content even when browser chrome reduces height. */
+@media (max-width:720px) {
+  body.menu-shell-active #productionScreen .production-list {
+    height:clamp(320px, 46dvh, 560px); max-height:none; min-height:320px;
+  }
+  #productionList { --unit-card-portrait:clamp(44px, 14vw, 64px); -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+  #productionList > .production-unit {
+    height:max(112px, var(--fitted-card-height, 112px)); min-height:112px; max-height:none;
+    padding:6px; gap:8px; align-content:start; align-items:start; overflow:hidden;
+  }
+  #productionList .production-unit-info { gap:4px; align-self:start; }
+  #productionList .unit-line-heading { min-height:20px; }
+  #productionList .unit-line-title { display:block; font-size:14px; line-height:20px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #productionList .unit-tags.unit-tags-two-rows { gap:2px; }
+  #productionList .unit-tags.unit-tags-two-rows > span { height:18px; }
+  #productionList .unit-tags.unit-tags-two-rows > span > span { font-size:11px; line-height:15px; }
+  #productionList .unit-tags-two-rows .unit-tags-more { height:18px; min-height:18px; line-height:16px; }
+  #productionList .production-unit-footer { display:flex; flex-direction:column; align-items:flex-start; gap:2px; }
+  #productionList .production-unit-price { gap:2px 6px; }
+  #productionList .production-unit-price > .resource-balance { flex-wrap:nowrap; gap:6px; }
+  #productionList .resource-balance, #productionList .production-unit-footer, #productionList .production-owned { font-size:11px; line-height:14px; }
+}

@@ -1,8 +1,8 @@
 """Build a server-only Windows ZIP, including Node but no game client/media.
 
 Run via npm run package:server. No npm/Python/install step is needed on the host.
-Local server-data, cfg overrides, tests, dev dependencies and compressed HTML
-are deliberately excluded from distribution.
+Only activity definitions are exported from local server-data; identities, claims,
+progress, cfg overrides, tests, dev dependencies and compressed HTML are excluded.
 """
 from weapon_store import loads as load_source_json, dumps as dump_source_json
 import argparse
@@ -58,6 +58,9 @@ def main():
         for directory in ["shared", "admin"]:
             shutil.copytree(ROOT / directory, stage / directory,
                             ignore=shutil.ignore_patterns("__pycache__", "*.log", "*.tmp", "asset-pool.js"))
+        # The server creates authoritative dialogue records from the shared client generator.
+        (stage / "client").mkdir()
+        shutil.copy2(ROOT / "client/battle-dialogue.js", stage / "client/battle-dialogue.js")
         for filename in ["server.js", "project.json", "start_server.bat"]:
             shutil.copy2(ROOT / filename, stage / filename)
         (stage / "cfg.json").write_text('{"port":1313}\n', encoding="utf-8")
@@ -75,6 +78,9 @@ def main():
         assert parsed["models"] and parsed["prefabs"] and parsed["maps"]
         assert not parsed["assets"] and not parsed["sounds"]
         (stage / "shared/server-catalog.json").write_bytes(catalog)
+        # Snapshot the currently authored activities without distributing player/claim data.
+        defaults = subprocess.check_output([node, str(ROOT / "tools/export-default-activities.cjs")], cwd=ROOT)
+        (stage / "shared/default-activities.json").write_bytes(defaults)
         # Adapter selects prevalidated metadata without ever reading textures or client files.
         (stage / "tools/load-catalog.cjs").write_text(
             '\"use strict\";\nconst catalog = require(\"../shared/server-catalog.json\");\n'
@@ -96,7 +102,7 @@ def main():
                 '其他玩家可在浏览器访问 http://服务器IP:1313/，也可复制 public/client.html 独立打开后输入服务器IP连接。\n'
                 '地图编辑器：http://127.0.0.1:1313/map-editor.html；单位工坊：http://127.0.0.1:1313/unit-editor.html 。\n'
                 'open_activities.bat 用于本机活动管理。关闭CMD窗口或按 Ctrl+C 停服。\n'
-                '运行后生成的 server-data 为活动、领取记录与结算日志，请在升级时保留；发行包不包含本机玩家数据。\n'
+                '首次启动从 shared/default-activities.json 初始化活动；运行后生成的 server-data 为活动、领取记录与结算日志，升级时请保留。发行包不包含打包者的玩家、领取记录及累计进度。\n'
                 '房间与对局在内存中，停服不会保留。manifest.json 记录发行文件的 SHA-256。\n', encoding="utf-8")
         else:
             shutil.copy2(ROOT / "docs/tools/server-package.md", stage / "docs/使用说明.md")

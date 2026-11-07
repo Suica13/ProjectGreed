@@ -3368,5 +3368,21 @@
   "友军共享设置无效": "Invalid allied unit sharing setting",
   "编组缺少机体或套件库存。强制准备后，不足的单位不会生成。": "The formation is missing chassis or equipment stock. Units without sufficient stock will not deploy if you force ready.",
   "快速战可凭部署许可或完整机体与套件库存出战。不满足条件的单位不会生成。": "Quick battles allow deployment with a license or sufficient chassis and equipment stock. Units meeting neither condition will not deploy.",
-  "套件库存": "Equipment stock"
+  "套件库存": "Equipment stock",
+  "天气与昼夜设置": "Weather and day/night settings",
+  "机体失去战斗能力，执行紧急脱出！": "Unit disabled! Emergency ejection!",
+  "撑不住了……后面交给你们。": "I cannot hold on... I leave the rest to you.",
+  "可恶，居然在这种地方……！": "Damn it! Not here...!",
+  "致命损伤，立即脱出！": "Critical damage! Ejecting now!",
+  "大家……一定要平安回去。": "Everyone... make it back safely.",
+  "击破确认，继续保持警戒。": "Kill confirmed. Stay alert.",
+  "干得好，我来掩护你。": "Good work. I will cover you.",
+  "漂亮！下一台交给我！": "Nice! Leave the next one to me!",
+  "别冒进，我会掩护你的侧翼。": "Do not overextend. I will cover your flank.",
+  "谢谢你的掩护，我们一起前进。": "Thanks for the cover. Let us advance together.",
+  "友机失去联络，掩护脱出人员！": "Friendly contact lost! Cover the evacuees!",
+  "收到求救信号，附近单位提供掩护。": "Distress signal received. Nearby units, provide cover.",
+  "可恶！我会替你讨回来的！": "Damn it! I will avenge you!",
+  "友机被击破，保持阵形，准备救援！": "Friendly unit down. Hold formation and prepare rescue!",
+  "回答我！千万不要放弃！": "Answer me! Do not give up!"
 }

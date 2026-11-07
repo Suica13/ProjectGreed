@@ -48,6 +48,8 @@ for (const size of [
           tile: mapGeo.tile,
           zoom: MapCamera.zoom,
           max: MapCamera.maxZoom,
+          targetTile: Math.max(box.width / 8, box.height / 4),
+          percent: MapCamera.zoomPercent,
           cell: cellAt({ clientX: box.left + point.x, clientY: box.top + point.y }),
           x: u.x,
           y: u.y,
@@ -56,8 +58,8 @@ for (const size of [
       return rows;
     });
     for (const r of results) {
-      expect(r.tile).toBeGreaterThanOrEqual(400);
-      expect(r.tile).toBeLessThan(400 + r.base * 0.5 + 0.001);
+      expect(r.tile).toBeCloseTo(r.targetTile, 4);
+      expect(r.percent).toBe(100);
       expect(r.zoom).toBe(r.max);
       expect(r.cell).toMatchObject({ x: r.x, y: r.y });
     }
@@ -72,11 +74,7 @@ for (const size of [
     await page.mouse.click(pos.x, pos.y);
     expect(await page.evaluate(() => selected)).toBe("0-0");
     await page.locator("#mapZoomReset").click();
-    const fit = await page.evaluate(
-      () =>
-        Math.round(100 / ((ART.presentation.mapCellScale || 1) * (Rules.mapCellPixels / 64))) + "%",
-    );
-    await expect(page.locator("#mapZoomLabel")).toHaveText(fit);
+    await expect(page.locator("#mapZoomLabel")).toHaveText("1%");
     expect(errors).toEqual([]);
   });
 }

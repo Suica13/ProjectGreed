@@ -206,24 +206,27 @@ function addLog(text) {
 }
 function recordBattleDialogue(event, speaker, target) {
   if (typeof BattleDialogue === "undefined" || Net.active) return;
-  if (typeof DialogueRange !== "undefined" && !DialogueRange.eligible(speaker, target, getUnit)) return;
+  if (!["kill", "defeat"].includes(event) && typeof DialogueRange !== "undefined" && !DialogueRange.eligible(speaker, target, getUnit)) return;
   const record = BattleDialogue.generate({
     event, speaker, target, sequence: log.length,
     faction: speaker?.pilot?.faction || Rules.modelOf(speaker)?.faction,
   });
   if (!record) return;
+  record.unitName = Rules.unitLogName(speaker);
+  record.position = DialogueRange.position(speaker, getUnit);
   const line = BattleDialogue.format(record);
   dialogueHistory.push({ ...record, line, logIndex: log.length, round: game.round });
   if (!ClientSettings.hidePilotDialogue()) {
-    dialogueBubbles.set(record.speakerId, { text: record.text, until: performance.now() + 3500 });
-    if (typeof DialogueAudio !== "undefined") DialogueAudio.play(record);
+    dialogueBubbles.set(record.speakerId, { text: record.text, pilotName: record.pilotName, position: record.position, defeatUnitId: record.defeatUnitId, voiceRecord: record.defeatUnitId ? record : null, until: 0 });
+    if (!record.defeatUnitId && typeof DialogueAudio !== "undefined") DialogueAudio.play(record);
   }
   addLog(line);
 }
-let lastNetworkDialogueId = null;
+let lastNetworkDialogueId = null, lastNetworkDialogueMatch = null;
 globalThis.receiveBattleDialogue = function (events = [], matchId = "") {
+  if (lastNetworkDialogueMatch !== matchId) { dialogueBubbles.clear(); lastNetworkDialogueMatch = matchId; }
   const recent = events.at(-1);
-  if (!recent) return;
+  if (!recent) { lastNetworkDialogueId = matchId + ":empty"; return; }
   const identity = matchId + ":" + recent.id;
   if (lastNetworkDialogueId === null) {
     lastNetworkDialogueId = identity;
@@ -231,12 +234,12 @@ globalThis.receiveBattleDialogue = function (events = [], matchId = "") {
   }
   if (lastNetworkDialogueId === identity) return;
   const previousIndex = events.findIndex((entry) => matchId + ":" + entry.id === lastNetworkDialogueId);
-  const added = previousIndex < 0 ? [recent] : events.slice(previousIndex + 1);
+  const added = previousIndex < 0 ? events : events.slice(previousIndex + 1);
   lastNetworkDialogueId = identity;
-  for (const record of added.slice(-5)) {
+  for (const record of added) {
     if (ClientSettings.hidePilotDialogue()) continue;
-    dialogueBubbles.set(record.speakerId, { text: record.text, until: performance.now() + 3500 });
-    if (typeof DialogueAudio !== "undefined") DialogueAudio.play(record);
+    dialogueBubbles.set(record.speakerId, { text: record.text, pilotName: record.pilotName, position: record.position, defeatUnitId: record.defeatUnitId, voiceRecord: record.defeatUnitId ? record : null, until: 0 });
+    if (!record.defeatUnitId && typeof DialogueAudio !== "undefined") DialogueAudio.play(record);
   }
 };
 function playerNameClass(memberId, hostId = Net.snapshot?.hostId, selfId = Net.memberId) {
@@ -259,13 +262,27 @@ function escapeHtml(value) {
   );
 }
 // Keep log identifiers and player-written pilot names literal during translation.
-function setNamedText(
-  el,
-  text,
-  names = game.units
-    .flatMap((unit) => [Rules.unitLogName(unit), unit.pilot?.custom ? unit.pilot.name : null])
-    .filter(Boolean),
-) {
+let namedTextNames = null,
+  namedTextGame = null;
+function currentUnitNames() {
+  if (namedTextGame !== game || !namedTextNames) {
+    namedTextGame = game;
+    namedTextNames = game.units
+      .flatMap((unit) => [
+        Rules.unitLogName(unit),
+        unit.pilot?.custom ? unit.pilot.name : null,
+      ])
+      .filter(Boolean);
+  }
+  return namedTextNames;
+}
+function pilotState(pilot) {
+  if (!pilot) return null;
+  // Portraits are immutable presentation assets, not gameplay cache inputs.
+  const { icon, portrait, avatar, ...state } = pilot;
+  return state;
+}
+function setNamedText(el, text, names = currentUnitNames()) {
   el.replaceChildren();
   let rest = String(text);
   const unique = [...new Set(names)].sort((a, b) => b.length - a.length);
@@ -384,7 +401,34 @@ function update() {
     renderedPanelSelection = session + ":" + selected;
   }
 }
+let actionAvailabilityCache = null;
+function playerHasActions() {
+  const seat = Net.active ? Net.seat : null;
+  const key = JSON.stringify([
+    session,
+    seat,
+    Net.snapshot?.revision,
+    game.round,
+    game.team,
+    game.winner,
+    game.deployment,
+    game.climateSettings,
+    game.tiles,
+    game.units.map((unit) => ({ ...unit, pilot: pilotState(unit.pilot) })),
+  ]);
+  if (
+    actionAvailabilityCache?.game !== game ||
+    actionAvailabilityCache.key !== key
+  )
+    actionAvailabilityCache = {
+      game,
+      key,
+      value: Rules.hasActions(game, seat),
+    };
+  return actionAvailabilityCache.value;
+}
 function updateContents() {
+  namedTextNames = null;
   const pendingMove = pendingMovement();
   if (!pendingMove && mode === "move-confirm") mode = "select";
   if (pendingMove && ["idle", "deployment"].includes(phase)) {
@@ -424,7 +468,7 @@ function updateContents() {
   );
   byId("endTurn").classList.toggle(
     "action-attention",
-    !byId("endTurn").disabled && !Rules.hasActions(game, Net.active ? Net.seat : null),
+    !byId("endTurn").disabled && !playerHasActions(),
   );
   byId("modeLabel").textContent = Net.active
     ? (Net.local ? "离线" : "联机") +
@@ -533,15 +577,107 @@ function renderReactionReview() {
   panel.append(confirm);
 }
 let rosterCache = null;
+const rosterRows = new Map();
+const rosterStatus = (unit) =>
+  unit.hp <= 0
+    ? "已击破"
+    : unit.embarked
+      ? "搭载中"
+      : unit.plan
+        ? "已计划攻击"
+        : unit.acted
+          ? "行动结束"
+          : unit.moved
+            ? "已移动 · 可攻击"
+            : "未行动";
+const rosterState = (unit) =>
+  JSON.stringify([
+    unit.model,
+    unit.hp,
+    unit.en,
+    unit.performance,
+    pilotState(unit.pilot),
+    unit.acted,
+    unit.moved,
+    !!unit.plan,
+    !!unit.embarked,
+  ]);
+function refreshRosterRows(busy) {
+  const units = new Map(game.units.map((unit) => [unit.id, unit]));
+  for (const [id, entry] of rosterRows) {
+    const unit = units.get(id);
+    if (!unit) continue;
+    const button = entry.button;
+    button.classList.toggle("selected", id === selected);
+    button.classList.toggle("dead", unit.hp <= 0);
+    button.disabled = unit.hp <= 0 || (busy && phase !== "deployment");
+    const state = rosterState(unit);
+    if (entry.state === state) continue;
+    entry.state = state;
+    const model = Rules.modelOf(unit);
+    for (const [kind, current, maximum] of [
+      ["hp", unit.hp, model.hp],
+      ["en", unit.en, model.en],
+    ]) {
+      const track = button.querySelector("." + kind + "-track");
+      track.setAttribute("aria-valuenow", Math.max(0, current));
+      track.setAttribute("aria-valuemax", maximum);
+      track.title =
+        kind.toUpperCase() +
+        " " +
+        formatNumber(current) +
+        " / " +
+        formatNumber(maximum);
+      track.firstElementChild.style.width =
+        Math.max(0, Math.min(100, (current / Math.max(1, maximum)) * 100)) +
+        "%";
+    }
+    button.querySelector(".roster-status").textContent = I18n.text(
+      rosterStatus(unit),
+    );
+  }
+  for (const group of byId("unitRoster").querySelectorAll(".roster-owner")) {
+    const own = game.units.filter(
+      (unit) => Rules.ownerOf(unit) === Number(group.dataset.ownerSeat),
+    );
+    const text = own.filter((unit) => unit.hp > 0).length + "/" + own.length;
+    const label = group.querySelector(".roster-owner-count");
+    if (label.textContent !== text) label.textContent = text;
+  }
+}
 function renderRoster(busy) {
-  const key = JSON.stringify([session,selected,busy,phase === "deployment",Net.seat,Net.snapshot?.viewTeam,
-    Net.snapshot?.seats,I18n.language,game.ai,
-    game.units.map(u => [u.id,u.model,u.team,u.ownerSeat,u.hp,u.en,u.shield,u.pilot,
-      u.moved,u.acted,u.pendingMove,u.plan,u.embarked,u.performance])]);
-  if (rosterCache?.game === game && rosterCache.key === key) return;
-  rosterCache = {game,key};
+  const key = JSON.stringify([
+    session,
+    game.mapId,
+    Net.seat,
+    Net.snapshot?.viewTeam,
+    Net.snapshot?.members?.map((member) => [
+      member.id,
+      member.name,
+      member.seat,
+      member.connected,
+    ]),
+    I18n.language,
+    game.ai,
+    game.units.map((unit) => [
+      unit.id,
+      unit.model,
+      unit.team,
+      unit.ownerSeat,
+      unit.pilot?.id,
+      unit.pilot?.name,
+      unit.pilot?.aceId,
+    ]),
+  ]);
+  if (rosterCache?.key === key) {
+    refreshRosterRows(busy);
+    return;
+  }
+  rosterCache = { game, key };
+  rosterRows.clear();
   const viewerTeam = Net.active
-    ? (Net.snapshot?.viewTeam ?? (Net.seat === null ? null : Rules.seatTeam(Net.seat)))
+    ? (Net.snapshot?.viewTeam ??
+      (Net.seat === null ? null : Rules.seatTeam(Net.seat)))
     : game.ai
       ? 0
       : null;
@@ -563,7 +699,9 @@ function renderRoster(busy) {
   allies.replaceChildren();
   enemies.replaceChildren();
   enemies.hidden = !splitTeams;
-  const visible = game.units.filter((unit) => splitTeams || unit.team === viewerTeam);
+  const visible = game.units.filter(
+    (unit) => splitTeams || unit.team === viewerTeam,
+  );
   const owners = [...new Set(visible.map(Rules.ownerOf))].sort((a, b) =>
     a === Net.seat ? -1 : b === Net.seat ? 1 : a - b,
   );
@@ -592,7 +730,9 @@ function renderRoster(busy) {
       const model = Rules.modelOf(unit),
         button = element(
           "button",
-          "roster-unit" + (selected === unit.id ? " selected" : "") + (unit.hp <= 0 ? " dead" : ""),
+          "roster-unit" +
+            (selected === unit.id ? " selected" : "") +
+            (unit.hp <= 0 ? " dead" : ""),
         );
       const image = element("img");
       image.src = unitIcon(unit.model, unit.pilot);
@@ -615,32 +755,23 @@ function renderRoster(busy) {
           "div",
           kind === "hp" ? "hp-fill" + (unit.team ? " red" : "") : "en-fill",
         );
-        fill.style.width = Math.max(0, Math.min(100, (current / maximum) * 100)) + "%";
+        fill.style.width =
+          Math.max(0, Math.min(100, (current / maximum) * 100)) + "%";
         track.append(fill);
         info.append(track);
       }
-      info.append(
-        element(
-          "small",
-          "roster-status",
-          unit.hp <= 0
-            ? "已击破"
-            : unit.embarked
-              ? "搭载中"
-              : unit.plan
-                ? "已计划攻击"
-                : unit.acted
-                  ? "行动结束"
-                  : unit.moved
-                    ? "已移动 · 可攻击"
-                    : "未行动",
-        ),
-      );
+      info.append(element("small", "roster-status", rosterStatus(unit)));
       button.dataset.unitId = unit.id;
+      rosterRows.set(unit.id, { button, state: rosterState(unit) });
       button.append(image, info);
-      button.setAttribute("aria-label", unitName(unit) + " · " + I18n.text("定位单位"));
+      button.setAttribute(
+        "aria-label",
+        unitName(unit) + " · " + I18n.text("定位单位"),
+      );
       button.disabled = unit.hp <= 0 || (busy && phase !== "deployment");
       button.onclick = () => {
+        const unit = getUnit(button.dataset.unitId);
+        if (!unit) return;
         if (unit.embarked && !unit.embarked.exposed) {
           const carrier = getUnit(unit.embarked.carrierId);
           if (carrier) {
@@ -1187,7 +1318,7 @@ function mapRanges(chosen, canMove, deploymentSeat, showAttack = false) {
       u.flying,
       u.overBoost,
       u.fullBoost,
-      u.pilot,
+      pilotState(u.pilot),
       u.brokenParts,
       u.moduleHp,
       u.en,
@@ -1309,7 +1440,26 @@ function mapRanges(chosen, canMove, deploymentSeat, showAttack = false) {
 // Cache only the viewport-sized terrain image, so large maps do not allocate giant canvases.
 // Map catalog tiles are immutable in battle; each server snapshot copies the same terrain.
 const mapTerrainCache = { canvas: null, viewKey: "" };
+const authoredTerrainBase = {tiles: null, mapId: null, canvas: null};
 function drawCachedMapTerrain(target, w, h, dpr, tile, ox, oy, immersive, deploymentArea) {
+  if (Rules.getMap(game.mapId).tileMap) {
+    // Authored art supplies terrain detail; its fallback colors need only one pixel per cell.
+    const base = authoredTerrainBase;
+    if (base.tiles !== game.tiles || base.mapId !== game.mapId) {
+      const canvas = base.canvas || (base.canvas = document.createElement("canvas"));
+      canvas.width = Rules.mapWidth(game); canvas.height = Rules.mapHeight(game);
+      const context = canvas.getContext("2d");
+      for (let y = 0; y < canvas.height; y++) for (let x = 0; x < canvas.width; x++) {
+        context.fillStyle = Rules.terrainStyle(game.mapId, game.tiles[y][x]).color;
+        context.fillRect(x, y, 1, 1);
+      }
+      base.tiles = game.tiles; base.mapId = game.mapId;
+    }
+    target.save(); target.imageSmoothingEnabled = false;
+    target.drawImage(base.canvas, ox, oy, base.canvas.width * tile, base.canvas.height * tile);
+    target.restore(); return;
+  }
+
   const cache = mapTerrainCache;
   const deploying = !immersive && phase === "deployment";
   const viewKey = JSON.stringify([
@@ -1910,32 +2060,6 @@ function drawMap(now) {
     mapUnitPoses.push(pose);
   }
   const pilotLabels = MapCamera.pilotLabels;
-  // Draw only when the corresponding pilot portrait is permitted to be visible.
-  if (dialogueBubbles.size && !ClientSettings.hidePilotDialogue()) {
-    ctx.save();
-    ctx.font = "12px system-ui";
-    ctx.textAlign = "center";
-    for (const [id, bubble] of dialogueBubbles) {
-      if (bubble.until <= now) { dialogueBubbles.delete(id); continue; }
-      const pose = mapPosesById.get(id);
-      if (!pilotLabels || !pose || !pose.u.pilot?.name ||
-          !(pose.u.pilot.custom || pose.u.pilot.aceId) ||
-          (Net.active && pose.u.team !== Net.snapshot?.you?.team &&
-           !intel?.visibleIds?.includes(id))) continue;
-      const text = bubble.text.slice(0, 40);
-      const width = Math.min(290, ctx.measureText(text).width + 22);
-      const x = Math.max(width / 2 + 4, Math.min(w - width / 2 - 4, pose.pos.x));
-      const y = Math.max(24, pose.pos.y - 42);
-      ctx.fillStyle = "rgba(10,25,36,0.92)";
-      ctx.strokeStyle = "#a8c9d8";
-      ctx.lineWidth = 1;
-      ctx.fillRect(x - width / 2, y - 19, width, 28);
-      ctx.strokeRect(x - width / 2, y - 19, width, 28);
-      ctx.fillStyle = "#f2f5f7";
-      ctx.fillText(text, x, y);
-    }
-    ctx.restore();
-  }
   // Ground overlays are drawn before every unit, including moving and dodging units.
   if (!immersive)
     for (const { u, pos } of mapUnitPoses)
@@ -2134,7 +2258,7 @@ function drawMap(now) {
     }
     if (pilotLabels && u.pilot?.name && (u.pilot.custom || u.pilot.aceId)) {
       ctx.fillStyle = u.acted && u.team === game.team ? "#8fa0a5" : "#dfebed";
-      const nameSize = Math.max(9, spriteTile * 0.14) * battleSettings.mapLabelSize;
+      const nameSize = Math.max(12, Math.min(18, spriteTile * 0.14)) * battleSettings.mapLabelSize;
       ctx.font = `${nameSize}px system-ui`;
       ctx.textAlign = "center";
       ctx.save();
@@ -2143,7 +2267,7 @@ function drawMap(now) {
       const labelY = bary + 12 + nameSize / 2;
       if (u.pilot?.custom || u.pilot?.aceId) {
         const width = ctx.measureText(label).width,
-          iconSize = nameSize * 1.1;
+          iconSize = Math.max(18, nameSize * 1.1);
         const left = pos.x - (width + iconSize + 3) / 2;
         UnitIdentity.drawPilotPortrait(ctx, u.pilot, left, labelY - iconSize / 2, iconSize);
         ctx.fillText(label, pos.x + (iconSize + 3) / 2, labelY);
@@ -2307,6 +2431,88 @@ function drawMap(now) {
       if (label.textContent !== next) label.textContent = next;
     }
   }
+  drawDialogueBubbles(ctx, mapPosesById, intel, w, h, now);
+}
+function drawDialogueBubbles(ctx, poses, intel, width, height, now) {
+  if (!dialogueBubbles.size || ClientSettings.hidePilotDialogue() || !MapCamera.pilotLabels) return;
+  const occupied = [];
+  ctx.save();
+  ctx.font = "12px system-ui";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  for (const [id, bubble] of dialogueBubbles) {
+    if (bubble.defeatUnitId && Net.snapshot?.phase === "playback") {
+      if (!battleView || battleView.networkId !== Net.snapshot.playback?.id || MapCombat.health(bubble.defeatUnitId) > 0) continue;
+    }
+    if (bubble.voiceRecord) {
+      if (typeof DialogueAudio !== "undefined") DialogueAudio.play(bubble.voiceRecord);
+      bubble.voiceRecord = null;
+    }
+    if (!bubble.until) bubble.until = now + 4500;
+    if (bubble.until <= now) {
+      dialogueBubbles.delete(id);
+      continue;
+    }
+    const pose = poses.get(id),
+      actor = pose?.u || getUnit(id);
+    // Server-provided anchors have already passed the recipient's visibility filter.
+    if (
+      Net.active &&
+      !bubble.position &&
+      actor?.team !== Net.team() &&
+      !intel?.visibleIds?.includes(id)
+    )
+      continue;
+    const anchor =
+      pose?.pos ||
+      (bubble.position && mapPosition(bubble.position.x, bubble.position.y));
+    if (
+      !anchor ||
+      anchor.x < -16 ||
+      anchor.x > width + 16 ||
+      anchor.y < -16 ||
+      anchor.y > height + 16
+    )
+      continue;
+    const text = I18n.text(bubble.text).slice(0, 48);
+    const name = I18n.text(bubble.pilotName || actor?.pilot?.name || "驾驶员") + ":";
+    const boxHeight = 50;
+    const boxWidth = Math.min(
+      width - 12,
+      330,
+      Math.max(ctx.measureText(text).width, ctx.measureText(name).width) + 22,
+    );
+    const x = Math.max(
+      boxWidth / 2 + 6,
+      Math.min(width - boxWidth / 2 - 6, anchor.x),
+    );
+    let y = Math.max(boxHeight / 2 + 6, Math.min(height - boxHeight / 2 - 6, anchor.y - 48));
+    for (const offset of [-48, -104, -160, -216, 48, 104, 160]) {
+      const candidate = anchor.y + offset;
+      if (candidate < boxHeight / 2 + 6 || candidate > height - boxHeight / 2 - 6) continue;
+      if (
+        !occupied.some(
+          (box) =>
+            Math.abs(box.x - x) < (box.width + boxWidth) / 2 + 4 &&
+            Math.abs(box.y - candidate) < boxHeight + 6,
+        )
+      ) {
+        y = candidate;
+        break;
+      }
+    }
+    occupied.push({ x, y, width: boxWidth });
+    ctx.fillStyle = "rgba(10,25,36,.94)";
+    ctx.strokeStyle = "#a8c9d8";
+    ctx.lineWidth = 1;
+    ctx.fillRect(x - boxWidth / 2, y - boxHeight / 2, boxWidth, boxHeight);
+    ctx.strokeRect(x - boxWidth / 2, y - boxHeight / 2, boxWidth, boxHeight);
+    ctx.fillStyle = "#a8d9f0";
+    ctx.fillText(name, x, y - 10, boxWidth - 12);
+    ctx.fillStyle = "#f2f5f7";
+    ctx.fillText(text, x, y + 10, boxWidth - 12);
+  }
+  ctx.restore();
 }
 function cellAt(e) {
   if (!mapGeo) return null;
@@ -2381,7 +2587,7 @@ byId("map").onclick = async (e) => {
     u &&
     target !== u &&
     mode === "move" &&
-    Rules.reachable(game, u, null, squadSingleMove).get(Rules.key(cell.x, cell.y))?.squadTarget
+    mapRanges(u, true, null).moveCells.get(Rules.key(cell.x, cell.y))?.squadTarget
   ) {
     try {
       await performMove(u, cell.x, cell.y);
@@ -2398,7 +2604,7 @@ byId("map").onclick = async (e) => {
     target.team === u.team &&
     mode === "move" &&
     !u.embarked &&
-    Rules.reachable(game, u, null, squadSingleMove).get(Rules.key(cell.x, cell.y))?.boarding
+    mapRanges(u, true, null).moveCells.get(Rules.key(cell.x, cell.y))?.boarding
   ) {
     try {
       await performMove(u, cell.x, cell.y);
@@ -2454,7 +2660,7 @@ byId("map").onclick = async (e) => {
       (Net.active && !Net.canControl(u)) ||
       u.acted ||
       u.moved ||
-      !Rules.reachable(game, u, null, squadSingleMove).has(Rules.key(anchor.x, anchor.y))
+      !mapRanges(u, true, null).moveCells.has(Rules.key(anchor.x, anchor.y))
     ) {
       window.BattleHUD?.clearSelection();
       return;
@@ -3016,6 +3222,14 @@ function logEvent(event) {
     `${logUnit(a)} 使用${w.name} → ${logUnit(b)}：${event.hit ? formatNumber(event.damage) + "伤害" : "未命中"}${event.strikes ? `（命中 ${event.hitCount}/${event.strikeCount}）` : ""}${event.brokenParts?.length ? "，部位破坏：" + [...new Set(event.brokenParts)].map((part) => Rules.partNames[part] || part).join("、") : ""}${event.after <= 0 ? "，击破！" : ""}`,
   );
   recordBattleDialogue(event.after <= 0 ? "kill" : event.hit ? "attack" : "miss", a, b);
+  if (event.after <= 0 && event.before > 0) {
+    recordBattleDialogue("defeat", b, a);
+    for (const [speaker, kind] of [[a,"allyKill"],[b,"allyLoss"]]) {
+      const ally = game.units.find(unit => unit.hp > 0 && unit.team === speaker.team &&
+        unit.id !== speaker.id && DialogueRange.nearby(unit, speaker, getUnit));
+      if (ally) recordBattleDialogue(kind, ally, speaker);
+    }
+  }
   if (event.hit && event.after > 0) recordBattleDialogue("hit", b, a);
   if (event.after > 0 && a.team !== b.team) {
     const before = dialogueHistory.length;

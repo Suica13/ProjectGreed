@@ -44,6 +44,9 @@
       .faction-tag[data-faction="AEUG"], .faction-aeug { color:#8de6a3; border-color:#5eb67a; }
       .faction-tag[data-faction="TITANS"], .faction-titans { color:#c5b3ff; border-color:#9980d9; }
       .faction-tag[data-faction="NEO_ZEON"], .faction-neo_zeon { color:#ffb1c1; border-color:#d96d8d; }
+      .room-climate-options { box-sizing:border-box; min-width:0; grid-column:1 / -1; width:100%; border:1px solid #355e79; padding:10px; border-radius:5px; }
+      .room-climate-options > summary { cursor:pointer; color:#b9dff2; }
+      .room-climate-fields { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:10px; margin-top:10px; }
     </style>
     <style>
       :root {
@@ -2649,13 +2652,18 @@
                           <option value="disabled">禁用</option>
                         </select>
                       </label>
-                      <label>地表覆盖效果 <select id="roomSurfaceCover"><option value="enabled">开启（遵循地图）</option><option value="disabled">关闭</option></select></label>
                       <label>驾驶员战场对话 <select id="roomPilotDialogue"><option value="enabled">开启</option><option value="disabled">关闭</option></select></label>
+                      <details id="roomClimateOptions" class="room-climate-options">
+                        <summary>天气与昼夜设置</summary>
+                        <div class="room-climate-fields">
+                      <label>地表覆盖效果 <select id="roomSurfaceCover"><option value="enabled">开启（遵循地图）</option><option value="disabled">关闭</option></select></label>
                       <label>天气 <select id="roomWeather"><option value="map">地图默认</option><option value="clear">晴天</option><option value="rain">雨天</option><option value="heavy_rain">暴雨</option><option value="fog">雾天</option><option value="overcast">阴天</option><option value="snow">雪天</option><option value="blizzard">暴雪</option><option value="sand">沙尘</option><option value="sandstorm">沙尘暴</option></select></label>
                       <label>昼夜 <select id="roomDayNight"><option value="map">地图默认</option><option value="dawn">清晨</option><option value="morning">上午</option><option value="noon">正午</option><option value="afternoon">下午</option><option value="dusk">黄昏</option><option value="evening">晚上</option><option value="late_night">深夜</option><option value="pre_dawn">凌晨</option></select></label>
                       <label>天气循环 <select id="roomWeatherCycle"><option value="enabled">开启</option><option value="disabled">关闭</option></select></label>
                       <label>时间循环 <select id="roomTimeCycle"><option value="enabled">开启</option><option value="disabled">关闭</option></select></label>
                       <label>天气与昼夜视野影响 <select id="roomClimateBuffs"><option value="enabled">开启</option><option value="disabled">关闭</option></select></label>
+                        </div>
+                      </details>
                       <label class="room-sharing-option"
                         >友军单位共享
                         <select id="roomShareAlliedUnits" aria-label="友军单位共享">

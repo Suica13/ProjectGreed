@@ -1061,6 +1061,7 @@ const MapCombat = (() => {
     units,
     formationOffset,
     fieldImpact,
+    health,
     draw,
     drawUnderlay: (ctx, geometry) => draw(ctx, geometry, true),
     suspend,

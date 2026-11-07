@@ -16,8 +16,6 @@ const MapCamera = (() => {
   const touches = new Map();
   let pinch = null,
     pinchConsumed = false;
-  // Larger maps need more magnification to reach the same readable cell size.
-  const readableCellPixels = 160 * gridScale;
   function baseTile(width, height) {
     return (
       Math.min(
@@ -27,11 +25,17 @@ const MapCamera = (() => {
     );
   }
   function zoomLimit(width, height) {
-    return Math.max(5, Math.ceil((readableCellPixels / baseTile(width, height)) * 2) / 2);
+    // Keep square cells; one axis reaches 8 columns / 4 rows.
+    return Math.max(fitZoom, Math.max(width / 8, height / 4) / baseTile(width, height));
   }
   function maximumZoom() {
     const box = canvas.getBoundingClientRect();
     return zoomLimit(box.width || 800, box.height || 600);
+  }
+  function zoomPercent() {
+    if (zoom < fitZoom - zoomEpsilon) return 0;
+    const span = maximumZoom() - fitZoom;
+    return span > zoomEpsilon ? 1 + 99 * Math.max(0, Math.min(1, (zoom - fitZoom) / span)) : 100;
   }
   function geometry(width, height) {
     const tile = baseTile(width, height) * zoom;
@@ -47,7 +51,7 @@ const MapCamera = (() => {
       zoom = Math.min(zoom, zoomLimit(box.width, box.height));
       mapGeo = geometry(box.width, box.height);
     }
-    byId("mapZoomLabel").textContent = Math.round(zoom * 100) + "%";
+    byId("mapZoomLabel").textContent = Math.round(zoomPercent()) + "%";
     byId("mapZoomOut").disabled = zoom <= minimumZoom;
     byId("mapZoomIn").disabled = zoom >= maximumZoom();
     canvas.style.cursor = "grab";
@@ -224,12 +228,17 @@ const MapCamera = (() => {
     fit,
     setZoom,
     get pilotLabels() {
-      const box = canvas.getBoundingClientRect();
-      // Pilot labels become visible at one third of the previous cell size.
-      return baseTile(box.width || 800, box.height || 600) * zoom >= readableCellPixels / 5;
+      return zoomPercent() >= 50 - zoomEpsilon;
     },
     get unitThumbnails() {
       return zoom <= minimumZoom + zoomEpsilon;
+    },
+    get zoomPercent() {
+      return zoomPercent();
+    },
+    setPercent(value) {
+      if (value <= 0) { setZoom(minimumZoom); setZoom(minimumZoom); }
+      else setZoom(fitZoom + (maximumZoom() - fitZoom) * Math.max(0, Math.min(99, value - 1)) / 99);
     },
     get maxZoom() {
       return maximumZoom();

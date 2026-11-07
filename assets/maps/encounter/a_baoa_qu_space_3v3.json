@@ -3490,7 +3490,34 @@
         "width": 10,
         "height": 8
       }
-    ]
+    ],
+    "climate": {
+      "weather": {
+        "allowed": [
+          "clear"
+        ],
+        "weights": {
+          "clear": 1
+        },
+        "durationRounds": 4,
+        "fixed": true
+      },
+      "time": {
+        "allowed": [
+          "noon"
+        ],
+        "durationRounds": 4,
+        "fixed": true
+      }
+    },
+    "surfaceCover": false,
+    "lighting": {
+      "direction": "upper",
+      "horizontalAngle": -45,
+      "distance": 0,
+      "intensity": 0.25,
+      "enabled": false
+    }
   },
   "localization": {
     "zh": {
@@ -3508,5 +3535,32 @@
     "factor": 0.75,
     "sourceWidth": 60,
     "sourceHeight": 30
+  },
+  "surfaceCover": false,
+  "climate": {
+    "weather": {
+      "allowed": [
+        "clear"
+      ],
+      "weights": {
+        "clear": 1
+      },
+      "durationRounds": 4,
+      "fixed": true
+    },
+    "time": {
+      "allowed": [
+        "noon"
+      ],
+      "durationRounds": 4,
+      "fixed": true
+    }
+  },
+  "lighting": {
+    "direction": "upper",
+    "horizontalAngle": -45,
+    "distance": 0,
+    "intensity": 0.25,
+    "enabled": false
   }
 }

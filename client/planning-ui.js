@@ -1,18 +1,34 @@
 /* 规划箭头和地图移动都是本地演出，不阻塞队友的操作。 */
 const PlanningUI = (() => {
-  const moves = new Map();
+  const moves = new Map(), completedPreviews = new Map();
+  let completionFrame = null;
+  function queueCompletion(unit) {
+    if (!unit.pendingMove) return;
+    completedPreviews.set(unit.id, unit.pendingMove);
+    if (completionFrame !== null) return;
+    completionFrame = requestAnimationFrame(() => {
+      completionFrame = null;
+      const relevant = [...completedPreviews].some(([id, preview]) => getUnit(id)?.pendingMove === preview);
+      completedPreviews.clear();
+      if (!relevant || pageView !== "game") return;
+      // Authority is unchanged; unlock only preview controls and boarding prompts.
+      window.BattleHUD?.refreshMovement();
+      window.SFSUI?.refresh();
+    });
+  }
   window.addEventListener("presentation-speed-change", ({ detail: { previous, speed } }) => {
     const now = performance.now(),
       ratio = speed / previous;
     for (const move of moves.values()) {
       if (move.start !== null) move.start = now - (now - move.start) / ratio;
       move.step /= ratio;
-      if (move.start !== null && getUnit(move.id)?.pendingMove)
-        setTimeout(update, Math.max(0, move.start + move.path.length * move.step - now) + 20);
     }
   });
   function reset() {
     moves.clear();
+    completedPreviews.clear();
+    if (completionFrame !== null) cancelAnimationFrame(completionFrame);
+    completionFrame = null;
     lockStarts.clear();
   }
   function move(event, actor = null) {
@@ -44,22 +60,10 @@ const PlanningUI = (() => {
   function motion(unit, now) {
     const move = moves.get(unit.id);
     if (!move) return null;
-    if (move.start === null) {
-      move.start = now;
-      if (getUnit(unit.id)?.pendingMove)
-        setTimeout(
-          () => {
-            if (
-              (!moves.has(unit.id) || moves.get(unit.id) === move) &&
-              getUnit(unit.id)?.pendingMove
-            )
-              update();
-          },
-          move.path.length * move.step + 20,
-        );
-    }
+    if (move.start === null) move.start = now;
     if (now < move.start + move.path.length * move.step) return move;
     moves.delete(unit.id);
+    queueCompletion(unit);
     return null;
   }
   function arrows(ctx) {

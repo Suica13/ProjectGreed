@@ -21,8 +21,9 @@ const BattlefieldWeather = (() => {
     snow:"雪天",blizzard:"暴雪",sand:"沙尘",sandstorm:"沙尘暴",none:"无天气"};
   const times = {dawn:"清晨",morning:"上午",noon:"正午",afternoon:"下午",dusk:"黄昏",
     evening:"晚上",late_night:"深夜",pre_dawn:"凌晨",none:"无时间"};
+  const climateRules = typeof BattlefieldClimate !== "undefined" ? BattlefieldClimate : require("../shared/battlefield-climate.js");
   function resolve(map, settings, round, seed) {
-    return BattlefieldClimate.resolve(map, settings, round, seed);
+    return climateRules.resolve(map, settings, round, seed);
   }
   function layer(ctx,w,h,now,state,alpha) {
     if (!state || alpha <= 0) return;

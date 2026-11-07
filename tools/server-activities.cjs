@@ -3,7 +3,9 @@ const fs = require("node:fs"),
   path = require("node:path"),
   crypto = require("node:crypto");
 
-function createActivityService({ rules, send, storePath = null, now = Date.now }) {
+function createActivityService({ rules, send, storePath = null, now = Date.now,
+  defaultsPath = path.join(__dirname, "../shared/default-activities.json") }) {
+  const hasPackagedDefaults = fs.existsSync(defaultsPath);
   const online = new Map();
   const developmentTree = require("../shared/development-tree.json");
   const aceMap = new Map(require("../shared/pilots.json").aces.map((p) => [p.id, p]));
@@ -50,6 +52,16 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
       state.schemaVersion = 2;
       save(state);
     }
+  } else if (hasPackagedDefaults) {
+    const defaults = JSON.parse(fs.readFileSync(defaultsPath, "utf8"));
+    if (defaults.schemaVersion !== 1 || !Array.isArray(defaults.activities))
+      throw Error("默认服务器活动格式无效");
+    state.activities = structuredClone(defaults.activities).map(activity => {
+      if (activity.mode === "cumulative_kill_cost")
+        Object.assign(activity, {progressCost: 0, participants: {}, killReceipts: {}});
+      return activity;
+    });
+    save(state);
   } else {
     state.activities.push({
       id: "first-server-visit",
@@ -68,7 +80,7 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
     save(state);
   }
   // Stable IDs install these defaults once on both new and existing servers.
-  const defaults = [
+  const defaults = hasPackagedDefaults ? [] : [
     {
       id: "default-cima-kill-cost-20261029",
       title: "全服累计击坠：西玛招募解锁",

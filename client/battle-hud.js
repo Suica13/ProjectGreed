@@ -268,6 +268,12 @@ const BattleHUD = (() => {
   }
   if(window.ResizeObserver) new ResizeObserver(updateSquadClearance).observe(squadStrip);
   window.addEventListener("resize",updateSquadClearance);
+  function refreshMovement() {
+    const unit = mode === "move-confirm" ? pendingMovement() : null;
+    const animating = unit && PlanningUI.motion(unit, performance.now());
+    confirmMove.disabled = !!animating || isBusy(true);
+    byId("hudCancelAction").disabled = !!unit && (!!animating || isBusy(true));
+  }
   function refresh() {
     const active = pageView === "game",
       unit = getUnit(selected),
@@ -374,7 +380,6 @@ const BattleHUD = (() => {
     const spectating = active && Net.active && Net.seat === null && Net.started;
     const pendingMove = pendingMovement();
     const confirmingMove = !!pendingMove && mode === "move-confirm";
-    const movingPreview = pendingMove && PlanningUI.motion(pendingMove, performance.now());
     confirmMove.textContent =
       I18n.text(
         pendingMove?.pendingMove?.rotation
@@ -387,8 +392,7 @@ const BattleHUD = (() => {
     if (confirmingMove) byId("hudCancelAction").setAttribute("aria-keyshortcuts", "W");
     else byId("hudCancelAction").removeAttribute("aria-keyshortcuts");
     confirmMove.hidden = !actionActive || !confirmingMove;
-    confirmMove.disabled = !!movingPreview || isBusy(true);
-    byId("hudCancelAction").disabled = confirmingMove && (!!movingPreview || isBusy(true));
+    refreshMovement();
     byId("hudActionBand").hidden = !actionActive && !spectating;
     byId("hudCancelAction").hidden = spectating;
     byId("spectatorViewControl").hidden = !spectating;
@@ -534,7 +538,7 @@ const BattleHUD = (() => {
     applyTab();
     updateSquadClearance();
   }
-  window.BattleHUD = { refresh, refreshRoomStatus, setTab, clearSelection };
+  window.BattleHUD = { refresh, refreshMovement, refreshRoomStatus, setTab, clearSelection };
   refresh();
   return window.BattleHUD;
 })();

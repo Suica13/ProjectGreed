@@ -6,7 +6,8 @@
 
 - `cfg.json`：默认端口1313，监听所有网卡。修改后重启；`start_server.bat --port 端口` 与 PORT 环境变量可临时覆盖。公网访问需放行对应 TCP 端口并设置路由器端口转发。
 - `open_activities.bat`：启动服务器后打开本机活动管理工具，也可访问 http://127.0.0.1:1313/admin/activities.html 。该管理工具保留，不是游戏客户端，沿用仅限本机管理的权限。
-- `server-data/`：首次启动自动生成，保存活动、领取记录及累计进度。请备份整个目录；升级时保留它和自己的 cfg.json。发行包不会携带打包者的数据。
+- `shared/default-activities.json`：打包时从项目 `server-data/activities.json` 提取当前活动配置，包含奖励、单位／套件库存及数量、时间和开关。首次启动据此初始化活动，不再混入旧的内置活动。打包时源文件缺失或格式错误会终止打包。
+- `server-data/`：首次启动自动生成，保存活动、领取记录及累计进度。请备份整个目录；升级时保留它和自己的 cfg.json，已有活动不会被包内默认值覆盖。发行包不携带打包者的服务器身份、玩家、领取记录或累计进度。
 - `shared/server-catalog.json`：从完整单位目录校验并导出的规则数据，与同版本客户端数值一致。改规则后须从开发项目重新打包；纯服务端不提供开发者编辑与重建功能。
 - `runtime/`：Node 运行环境及完整许可证；`node_modules/ws/LICENSE` 为 ws 许可证。
 - `manifest.json` 与 ZIP 旁的 `.sha256`：文件及压缩包校验信息。

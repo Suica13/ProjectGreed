@@ -6103,7 +6103,49 @@
         "width": 7,
         "height": 12
       }
-    ]
+    ],
+    "climate": {
+      "weather": {
+        "allowed": [
+          "clear",
+          "rain",
+          "heavy_rain",
+          "overcast",
+          "fog"
+        ],
+        "weights": {
+          "clear": 7,
+          "rain": 5,
+          "heavy_rain": 2,
+          "overcast": 4,
+          "fog": 2
+        },
+        "durationRounds": 4,
+        "fixed": false
+      },
+      "time": {
+        "allowed": [
+          "dawn",
+          "morning",
+          "noon",
+          "afternoon",
+          "dusk",
+          "evening",
+          "late_night",
+          "pre_dawn"
+        ],
+        "durationRounds": 4,
+        "fixed": false
+      }
+    },
+    "surfaceCover": true,
+    "lighting": {
+      "direction": "upper",
+      "horizontalAngle": -45,
+      "distance": 0.15,
+      "intensity": 0.25,
+      "enabled": true
+    }
   },
   "localization": {
     "zh": {
@@ -6121,5 +6163,47 @@
     "factor": 0.75,
     "sourceWidth": 72,
     "sourceHeight": 47
+  },
+  "surfaceCover": true,
+  "climate": {
+    "weather": {
+      "allowed": [
+        "clear",
+        "rain",
+        "heavy_rain",
+        "overcast",
+        "fog"
+      ],
+      "weights": {
+        "clear": 7,
+        "rain": 5,
+        "heavy_rain": 2,
+        "overcast": 4,
+        "fog": 2
+      },
+      "durationRounds": 4,
+      "fixed": false
+    },
+    "time": {
+      "allowed": [
+        "dawn",
+        "morning",
+        "noon",
+        "afternoon",
+        "dusk",
+        "evening",
+        "late_night",
+        "pre_dawn"
+      ],
+      "durationRounds": 4,
+      "fixed": false
+    }
+  },
+  "lighting": {
+    "direction": "upper",
+    "horizontalAngle": -45,
+    "distance": 0.15,
+    "intensity": 0.25,
+    "enabled": true
   }
 }

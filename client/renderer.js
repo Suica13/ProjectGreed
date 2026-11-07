@@ -314,6 +314,165 @@ const SpriteRenderer = (() => {
     modelRadii.set(model,result);
     return result;
   }
+  const shadowCache = new Map();
+  let shadowPixels = 0;
+  function drawUnitShadow(
+    ctx,
+    model,
+    layers,
+    sampled,
+    angle,
+    aimAngle,
+    clip,
+    time,
+    moving,
+    hidden,
+    lighting,
+  ) {
+    const casters = layers.filter(
+      (layer) =>
+        !hidden.includes(layer.name) &&
+        layer.castsShadow !== false &&
+        layer.shadowCaster !== false &&
+        layer.effect !== true &&
+        !layer.independentClock &&
+        layer.visibleInFog !== false &&
+        !layer.visibleWhen?.thrustActive &&
+        !layer.visibleWhen?.sustainedThrust &&
+        !layer.visibleWhen?.moving,
+    );
+    const duration = models[model].animations[clip]?.duration || 1;
+    const key = JSON.stringify([
+      model,
+      angle,
+      aimAngle,
+      clip,
+      Math.floor((time % duration) * 24),
+      moving,
+      casters.map((layer) => [
+        layer.name,
+        layer.frameFps
+          ? Math.floor(time * layer.frameFps) % (layer.frames || 1)
+          : layer.frame || 0,
+      ]),
+      lighting.direction,
+      lighting.horizontalAngle,
+      lighting.distance,
+      lighting.heightScale,
+    ]);
+    let entry = shadowCache.get(key);
+    if (!entry) {
+      let left = Infinity,
+        top = Infinity,
+        right = -Infinity,
+        bottom = -Infinity;
+      const items = [];
+      for (const layer of casters) {
+        const image = images[layer.asset];
+        if (!image) return; // Do not cache a partially loaded silhouette.
+        const transform = layerTransform(model, layer, angle, sampled),
+          frames = layer.frames || 1;
+        const fw = layer.frameWidth || Math.floor(image.width / frames),
+          fh = layer.frameHeight || image.height;
+        const frame =
+          layer.frameFps && (!layer.onlyAnimateWhenMoving || moving)
+            ? Math.floor(Math.max(0, time) * layer.frameFps) % frames
+            : layer.frame || 0;
+        const columns = Math.max(1, Math.floor(image.width / fw));
+        const elevation = Math.max(
+          0,
+          (layer.height || 0) + (sampled[layer.bone]?.height || 0),
+        );
+        const projection = MapShadowLighting.projection(
+          lighting,
+          1 + elevation / 64,
+        );
+        const x = transform.x + projection.x * 64,
+          y = transform.y + elevation + projection.y * 64;
+        const cos = Math.abs(Math.cos(transform.rotation)),
+          sin = Math.abs(Math.sin(transform.rotation));
+        const rx =
+          (cos * Math.abs(fw * transform.scaleX) +
+            sin * Math.abs(fh * transform.scaleY)) /
+          2;
+        const ry =
+          (sin * Math.abs(fw * transform.scaleX) +
+            cos * Math.abs(fh * transform.scaleY)) /
+          2;
+        left = Math.min(left, x - rx);
+        right = Math.max(right, x + rx);
+        top = Math.min(top, y - ry);
+        bottom = Math.max(bottom, y + ry);
+        items.push({ image, transform, fw, fh, frame, columns, x, y });
+      }
+      if (!items.length) return;
+      left = Math.floor(left) - 1;
+      top = Math.floor(top) - 1;
+      const width = Math.ceil(right - left) + 1,
+        height = Math.ceil(bottom - top) + 1;
+      const resolution = Math.min(1, 2048 / Math.max(width, height));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.max(1, Math.ceil(width * resolution));
+      canvas.height = Math.max(1, Math.ceil(height * resolution));
+      const surface = canvas.getContext("2d");
+      surface.scale(resolution, resolution);
+      surface.translate(-left, -top);
+      surface.imageSmoothingEnabled = false;
+      for (const item of items) {
+        const { image, transform, fw, fh, frame, columns, x, y } = item;
+        surface.save();
+        surface.translate(x, y);
+        surface.rotate(transform.rotation);
+        surface.scale(transform.scaleX, transform.scaleY);
+        surface.drawImage(
+          image,
+          (frame % columns) * fw,
+          Math.floor(frame / columns) * fh,
+          fw,
+          fh,
+          -fw / 2,
+          -fh / 2,
+          fw,
+          fh,
+        );
+        surface.restore();
+      }
+      // Merge all parts first; opacity is applied exactly once to the whole unit.
+      surface.setTransform(1, 0, 0, 1, 0, 0);
+      surface.globalCompositeOperation = "source-in";
+      surface.fillStyle = "#000";
+      surface.fillRect(0, 0, canvas.width, canvas.height);
+      entry = {
+        canvas,
+        left,
+        top,
+        width,
+        height,
+        pixels: canvas.width * canvas.height,
+      };
+      shadowCache.set(key, entry);
+      shadowPixels += entry.pixels;
+      while (shadowCache.size > 256 || shadowPixels > 8 * 1024 * 1024) {
+        const oldest = shadowCache.keys().next().value,
+          removed = shadowCache.get(oldest);
+        shadowCache.delete(oldest);
+        shadowPixels -= removed.pixels;
+      }
+    } else {
+      shadowCache.delete(key);
+      shadowCache.set(key, entry);
+    }
+    ctx.save();
+    ctx.globalAlpha *= lighting.intensity;
+    ctx.drawImage(
+      entry.canvas,
+      entry.left,
+      entry.top,
+      entry.width,
+      entry.height,
+    );
+    ctx.restore();
+  }
   function draw(
     ctx,
     model,
@@ -372,49 +531,11 @@ const SpriteRenderer = (() => {
       flying,
       boostSkillActive,
     );
-    // Render the same animated sprite hierarchy as a projected silhouette.
-    // Non-casting layers (effects, thrusters and explicitly excluded decals) are skipped.
     if (!effectsOnly && environment !== "space" &&
         typeof ClientSettings !== "undefined" && ClientSettings.unitShadows()) {
-      const lighting = typeof MapShadowLighting !== "undefined"
-        ? MapShadowLighting.normalize(globalThis.ProjectGreedMapLighting || {})
-        : { enabled: true, direction: "upper", distance: 0.1, intensity: 0.5 };
-      if (lighting.enabled && lighting.intensity > 0) {
-        ctx.save();
-        ctx.filter = "brightness(0)";
-        ctx.globalAlpha *= lighting.intensity;
-        for (const layer of layers) {
-          if (hiddenLayers.includes(layer.name) || layer.castsShadow === false ||
-              layer.shadowCaster === false || layer.effect === true ||
-              layer.independentClock || layer.visibleInFog === false ||
-              layer.visibleWhen?.thrustActive || layer.visibleWhen?.sustainedThrust ||
-              layer.visibleWhen?.moving) continue;
-          const image = images[layer.asset];
-          if (!image) continue;
-          const transform = layerTransform(model, layer, angle, sampled);
-          const frames = layer.frames || 1;
-          const fw = layer.frameWidth || Math.floor(image.width / frames);
-          const fh = layer.frameHeight || image.height;
-          const frame = layer.frameFps && (!layer.onlyAnimateWhenMoving || moving)
-            ? Math.floor(Math.max(0, time) * layer.frameFps) % frames
-            : layer.frame || 0;
-          const columns = Math.max(1, Math.floor(image.width / fw));
-          const elevation = Math.max(0, (layer.height || 0) +
-            (sampled[layer.bone]?.height || 0));
-          const projected = typeof MapShadowLighting !== "undefined"
-            ? MapShadowLighting.projection(lighting, 1 + elevation / 64)
-            : { x: 0, y: lighting.distance, alpha: lighting.intensity };
-          ctx.save();
-          ctx.translate(transform.x + projected.x * 64,
-            transform.y + elevation + projected.y * 64);
-          ctx.rotate(transform.rotation);
-          ctx.scale(transform.scaleX, transform.scaleY);
-          ctx.drawImage(image, (frame % columns) * fw,
-            Math.floor(frame / columns) * fh, fw, fh, -fw / 2, -fh / 2, fw, fh);
-          ctx.restore();
-        }
-        ctx.restore();
-      }
+      const lighting = MapShadowLighting.normalize(globalThis.ProjectGreedMapLighting || {});
+      if (lighting.enabled && lighting.intensity > 0)
+        drawUnitShadow(ctx, model, layers, sampled, angle, aimAngle, clip, time, moving, hiddenLayers, lighting);
     }
     for (const layer of layers) {
       if (hiddenLayers.includes(layer.name)) continue;

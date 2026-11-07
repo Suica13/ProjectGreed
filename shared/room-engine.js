@@ -921,7 +921,9 @@ function createRoomEngine({
       log: team === null || !room.matchId ? room.log : room.teamLogs?.[team] || [],
       dialogueEvents: (room.dialogueEvents || []).filter((entry) =>
         team === null || !room.matchId || entry.visibleTeams.includes(team))
-        .slice(-40).map(({ visibleTeams, ...entry }) => entry),
+        .slice(-40).map(({ visibleTeams, positionTeams, position, ...entry }) => ({
+          ...entry, ...(team === null || positionTeams?.includes(team) ? {position} : {}),
+        })),
       logNames: !room.started
         ? room.logNames || []
         : [
@@ -1126,6 +1128,8 @@ function createRoomEngine({
     room.economyAwards = [];
     room.battleRoster = {};
     room.economyDefeats = new Set();
+    room.dialogueDefeats = new Set();
+    room.dialogueEvents = [];
     room.lossExemptMembers = new Set();
     room.economySettled = false;
     room.teamDestroyedCost = [0, 0];
@@ -1345,7 +1349,7 @@ function createRoomEngine({
           if (from.team !== to.team)
             recordPilotBattle(room, from, "kill", defeatedModel.cost, !!defeatedModel.ship);
           recordPilotBattle(room, to, "loss", defeatedModel.cost);
-          awardDefeat(room, from, to, defeatedModel);
+          awardDefeat(room, from, to, defeatedModel, visibleBeforeCombat);
           settlePilotAssists(room, to, from);
         }
         for (const evacuation of e.evacuations || []) {
@@ -1358,30 +1362,8 @@ function createRoomEngine({
           awardDefeat(room, from, passenger, G.modelOf(passenger));
           settlePilotAssists(room, passenger, from);
         }
-        const dialogueTrigger = (kind, speaker, listener) => {
-          if (room.settings.pilotDialogue === false) return;
-          if (!radioRange.eligible(speaker, listener, (id) => unit(room, id))) return;
-          const entry = Dialogue.generate({
-            event: kind, speaker, target: listener,
-            sequence: room.log.length,
-            faction: speaker.pilot?.faction || G.modelOf(speaker).faction,
-          });
-          if (!entry) return;
-          // A direct radio challenge is audible to both combatants, even if
-          // the target lacks visual contact. Do not disclose the speaker's map position.
-          const direct = kind === "taunt" || kind === "reply";
-          const visibleTeams = logTeamIds(room).filter((team) =>
-            direct ? team === speaker.team || team === listener.team
-              : speaker.team === team || visibleBeforeCombat[team]?.includes(speaker.id));
-          log(room, Dialogue.format(entry), direct
-            ? { units: [], teams: visibleTeams }
-            : { units: [speaker], visibleBy: visibleBeforeCombat, teams: visibleTeams });
-          (room.dialogueEvents ||= []).push({
-            ...entry, visibleTeams, round: room.game.round,
-            timestamp: Date.now(), id: room.matchId + ":" + room.log.length,
-          });
-          if (room.dialogueEvents.length > 240) room.dialogueEvents.splice(0, room.dialogueEvents.length - 240);
-        };
+        const dialogueTrigger = (kind, speaker, listener) =>
+          emitPilotDialogue(room, kind, speaker, listener, visibleBeforeCombat);
         const weapon = G.eventWeapon(from, e) || { name: e.weapon };
         log(
           room,
@@ -1395,7 +1377,7 @@ function createRoomEngine({
                 : null,
           },
         );
-        dialogueTrigger(destroyed ? "kill" : e.hit ? "attack" : "miss", from, to);
+        if (!destroyed) dialogueTrigger(e.hit ? "attack" : "miss", from, to);
         if (e.hit && !destroyed) dialogueTrigger("hit", to, from);
         if (!destroyed && from.team !== to.team) {
           const before = room.dialogueEvents?.length || 0;
@@ -1458,7 +1440,86 @@ function createRoomEngine({
       automatic,
     };
   }
-  function awardDefeat(room, from, to, defeatedModel) {
+  function emitPilotDialogue(
+    room,
+    kind,
+    speaker,
+    listener,
+    visibleBefore = {},
+    defeatUnitId = null,
+  ) {
+    if (room.settings.pilotDialogue === false) return;
+    if (
+      !["kill", "defeat"].includes(kind) &&
+      !radioRange.eligible(speaker, listener, (id) => unit(room, id))
+    )
+      return;
+    const entry = Dialogue.generate({
+      event: kind,
+      speaker,
+      target: listener,
+      sequence: room.log.length,
+      faction: speaker.pilot?.faction || G.modelOf(speaker).faction,
+    });
+    if (!entry) return;
+    entry.defeatUnitId = defeatUnitId;
+    entry.unitName = G.unitLogName(speaker);
+    entry.position = radioRange.position(speaker, (id) => unit(room, id));
+    entry.positionTeams = logTeamIds(room).filter(
+      (team) =>
+        speaker.team === team || visibleBefore[team]?.includes(speaker.id),
+    );
+    // A direct radio challenge is audible to both combatants, even if
+    // the target lacks visual contact. Do not disclose the speaker's map position.
+    const direct = kind === "taunt" || kind === "reply";
+    const visibleTeams = logTeamIds(room).filter((team) =>
+      direct
+        ? team === speaker.team || team === listener.team
+        : speaker.team === team || visibleBefore[team]?.includes(speaker.id),
+    );
+    log(
+      room,
+      Dialogue.format(entry),
+      direct
+        ? { units: [], teams: visibleTeams }
+        : { units: [speaker], visibleBy: visibleBefore, teams: visibleTeams },
+    );
+    (room.dialogueEvents ||= []).push({
+      ...entry,
+      visibleTeams,
+      round: room.game.round,
+      timestamp: Date.now(),
+      id: room.matchId + ":" + room.log.length,
+    });
+    if (room.dialogueEvents.length > 240)
+      room.dialogueEvents.splice(0, room.dialogueEvents.length - 240);
+  }
+  function recordDefeatDialogue(room, from, to, visibleBefore = {}) {
+    if (!to || room.settings.pilotDialogue === false) return;
+    const key = room.matchId + ":" + to.id;
+    const seen = (room.dialogueDefeats ||= new Set());
+    if (seen.has(key)) return;
+    seen.add(key);
+    if (from && from.team !== to.team)
+      emitPilotDialogue(room, "kill", from, to, visibleBefore, to.id);
+    emitPilotDialogue(room, "defeat", to, from || to, visibleBefore, to.id);
+    for (const [actor, kind] of [
+      [from, "allyKill"],
+      [to, "allyLoss"],
+    ]) {
+      if (!actor || (kind === "allyKill" && actor.team === to.team)) continue;
+      const ally = room.game.units.find(
+        (candidate) =>
+          candidate.hp > 0 &&
+          candidate.team === actor.team &&
+          candidate.id !== actor.id &&
+          radioRange.nearby(candidate, actor, (id) => unit(room, id)),
+      );
+      if (ally) emitPilotDialogue(room, kind, ally, actor, visibleBefore, to.id);
+    }
+  }
+  function awardDefeat(room, from, to, defeatedModel, visibleBefore = {}) {
+    recordDefeatDialogue(room, from, to, visibleBefore);
     if (room.campaign) {
       if (from && from.team !== to.team) to.campaignDefeatedBy = from.team;
       return;
@@ -2239,6 +2300,8 @@ function createRoomEngine({
     room.economyAwards = [];
     room.battleRoster = {};
     room.economyDefeats = new Set();
+    room.dialogueDefeats = new Set();
+    room.dialogueEvents = [];
     room.lossExemptMembers = new Set();
     room.economySettled = false;
     room.teamDestroyedCost = [0, 0];
@@ -2945,6 +3008,11 @@ function createRoomEngine({
       participants.some((actor) => actor.team === team ||
         (visibleBefore?.[team] || []).includes(actor.id)));
     for (const entry of [first, response].filter(Boolean)) {
+      const speaker = participants.find(actor => actor.id === entry.speakerId);
+      entry.unitName = G.unitLogName(speaker);
+      entry.position = radioRange.position(speaker, id => unit(room, id));
+      entry.positionTeams = logTeamIds(room).filter(team => speaker.team === team ||
+        (visibleBefore?.[team] || []).includes(speaker.id));
       log(room, Dialogue.format(entry), { units: [], teams: visibleTeams });
       (room.dialogueEvents ||= []).push({
         ...entry, visibleTeams, round: room.game.round,
@@ -2954,7 +3022,7 @@ function createRoomEngine({
     if ((room.dialogueEvents?.length || 0) > 240)
       room.dialogueEvents.splice(0, room.dialogueEvents.length - 240);
   }
-  function logTransport(room, passenger, carrier, launching, visibleBefore = null) {
+  function logTransport(room, passenger, carrier, launching, visibleBefore = null, speak = true) {
     const destination = G.columnLabel(passenger.x) + (passenger.y + 1);
     const passengerName = unitLabel(room, passenger),
       carrierName = unitLabel(room, carrier);
@@ -2975,7 +3043,7 @@ function createRoomEngine({
           : null,
       },
     );
-    transportDialogue(room, passenger, carrier, launching, visibleBefore, room.phase === "deployment");
+    if (speak) transportDialogue(room, passenger, carrier, launching, visibleBefore, room.phase === "deployment");
   }
   const unit = (room, id) => room.game.units.find((u) => u.id === id);
   function cancelSeatMoves(room, seat) {
@@ -4238,7 +4306,8 @@ function createRoomEngine({
               };
           if (pending.launch || pending.boarding) {
             const ids = pending.squadIds || [u.id];
-            for (const id of ids) logTransport(room, unit(room, id), carrier, !!pending.launch, visibleBefore);
+            for (const [index, id] of ids.entries())
+              logTransport(room, unit(room, id), carrier, !!pending.launch, visibleBefore, !pending.launch || index === 0);
           }
           else
             log(

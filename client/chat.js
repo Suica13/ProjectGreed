@@ -248,7 +248,7 @@ const Chat = (() => {
         scrollTop = list.scrollTop;
       list.replaceChildren(
         ...battleLog.filter((text) => logView === "combined" ||
-          (logView === "dialogue" ? text.startsWith("[战场对话]") : !text.startsWith("[战场对话]"))).slice(0, 80).map((text) => {
+          (logView === "dialogue" ? /^(?:→ )?\[战场对话\]/.test(text) : !/^(?:→ )?\[战场对话\]/.test(text))).slice(0, 80).map((text) => {
           const line = element(
             "div",
             "log-line" + (text.includes("\n") ? " deployment-roster" : ""),

@@ -205,6 +205,8 @@ window.MenuShell = (() => {
       // Minimum visible counts are a floor, not a reason to stretch every card.
       height = 116;
     }
+    // A short phone viewport must scroll instead of squeezing four text rows together.
+    if (list.id === "productionList" && matchMedia("(max-width:720px)").matches) height = Math.max(112, height);
     if (height > 0) list.style.setProperty("--fitted-card-height", height + "px");
   }
   const cardResizeObserver = new ResizeObserver(entries => {

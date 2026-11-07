@@ -26,6 +26,23 @@ const BattleDialogue = (() => {
       idealist: ["下一次一定要阻止他。"],
     },
   };
+  Object.assign(lines, {
+    defeat: {
+      calm: ["机体失去战斗能力，执行紧急脱出！", "撑不住了……后面交给你们。"],
+      aggressive: ["可恶，居然在这种地方……！"], cautious: ["致命损伤，立即脱出！"],
+      idealist: ["大家……一定要平安回去。"],
+    },
+    allyKill: {
+      calm: ["击破确认，继续保持警戒。", "干得好，我来掩护你。"],
+      aggressive: ["漂亮！下一台交给我！"], cautious: ["别冒进，我会掩护你的侧翼。"],
+      idealist: ["谢谢你的掩护，我们一起前进。"],
+    },
+    allyLoss: {
+      calm: ["友机失去联络，掩护脱出人员！", "收到求救信号，附近单位提供掩护。"],
+      aggressive: ["可恶！我会替你讨回来的！"], cautious: ["友机被击破，保持阵形，准备救援！"],
+      idealist: ["回答我！千万不要放弃！"],
+    },
+  });
   const additional = {
     strategic: { attack: ["敌军阵形出现缺口，集中火力。", "按预定射界展开攻击。"], hit: ["重新部署，避免重复损失。"], kill: ["目标排除，推进下一阶段。"], miss: ["修正火控参数，重新计算。"] },
     sarcastic: { attack: ["这种差事还真是麻烦啊。", "喂，别怪我没提醒你。"], hit: ["哎呀，这可真够受的。"], kill: ["看来运气站在我这边。"], miss: ["好吧，当我没说。"] },
@@ -173,8 +190,8 @@ const BattleDialogue = (() => {
     // Suppress most routine remarks to avoid flooding the battlefield and transcript.
     if (event === "taunt" && seed % 5 !== 0) return null;
     if (event === "reply" && seed % 3 !== 0) return null;
-    if (!["kill", "taunt", "reply"].includes(event) && seed % 4 !== 0) return null;
-    const pool = event === "taunt" ? taunts[trait] : event === "reply" ? replies[trait] : lines[event][trait];
+    if (!["kill", "defeat", "allyKill", "allyLoss", "taunt", "reply"].includes(event) && seed % 4 !== 0) return null;
+    const pool = event === "taunt" ? taunts[trait] : event === "reply" ? replies[trait] : (lines[event][trait] || lines[event].calm);
     const factionId = pilot.originFaction || faction || pilot.faction || speaker.faction;
     const text = factionLines[factionId]?.[event] && seed % 5 === 0
       ? factionLines[factionId][event] : pool[seed % pool.length];
@@ -184,7 +201,7 @@ const BattleDialogue = (() => {
       publicToOpponent: event === "taunt" || event === "reply" };
   }
   function format(record) {
-    return `[战场对话][${record.faction}][${record.pilotName}]「${record.text}」`;
+    return `→ [战场对话][${record.faction}][${record.pilotName}]${record.unitName ? "[" + record.unitName + "]" : ""}「${record.text}」`;
   }
   return { generate, format, personality, personalities, backgrounds, taunts, replies, transport, transportReply };
 })();
