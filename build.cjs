@@ -129,6 +129,8 @@ for (const [key, file] of [
   ["HANGAR_UI", "client/hangar-ui.js"],
   ["SFS_UI", "client/sfs-ui.js"],
   ["AI_TACTICS", "shared/ai-tactics.js"],
+  ["BATTLEFIELD_MODE", "shared/battlefield-mode.js"],
+  ["BATTLEFIELD_UI", "client/battlefield-ui.js"],
   ["CAMPAIGN_BATTLEFIELD", "shared/campaign-battlefield.js"],
   ["AUTOMATIC_FIRE", "shared/automatic-fire.js"],
   ["CORE", "shared/rules.js"],

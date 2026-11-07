@@ -494,7 +494,7 @@ const Net = (() => {
     foregroundSyncAt = -Infinity;
     session++;
     moving = null;
-    status("离线常规战");
+    status("离线" + ({battlefield:"战地模式",campaign:"历史战役",quick:"快速战"}[byId("offlineRoomMode").value] || "常规战"));
   }
   function connect(mode = "join", auto = false, roomCode = null, credentials = {}) {
     cancelReconnect();

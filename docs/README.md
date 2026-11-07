@@ -58,6 +58,7 @@
 - [maps/geography-source.md](maps/geography-source.md)
 - [maps/map-layout.md](maps/map-layout.md)
 - [rules/campaign.md](rules/campaign.md)
+- [rules/battlefield.md](rules/battlefield.md)
 - [rules/combat.md](rules/combat.md)
 - [rules/economy.md](rules/economy.md)
 - [rules/escape.md](rules/escape.md)

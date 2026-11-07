@@ -3479,3 +3479,27 @@ body.menu-shell-active #formationScreen #formationUnits .formation-row > .format
   #productionList .production-unit-price > .resource-balance { flex-wrap:nowrap; gap:6px; }
   #productionList .resource-balance, #productionList .production-unit-footer, #productionList .production-owned { font-size:11px; line-height:14px; }
 }
+
+/* Carrier and preloaded passengers share one outline across roster columns. */
+#formationUnits { position:relative; }
+#formationUnits .formation-preloaded-row { border-left-color:#3c596a; }
+#formationUnits > .formation-transport-frames {
+  position:absolute; left:0; top:0; pointer-events:none; z-index:4;
+  overflow:visible; fill:none; stroke:#69c9ff; stroke-width:2;
+  stroke-linecap:square; stroke-linejoin:round;
+}
+
+/* Mode-specific room settings occupy their own rule group, outside the common grid. */
+#roomRulesPanel #battlefieldRoomOptions {
+  display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px;
+  width:100%; min-width:0; margin:0; padding:0; border:0; box-sizing:border-box;
+}
+#roomRulesPanel #battlefieldRoomOptions .battlefield-team-options {
+  display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px;
+  min-width:0; margin:0; padding:10px; border:1px solid #47718b; border-radius:4px;
+}
+#roomRulesPanel #battlefieldRoomOptions legend { padding:0 5px; white-space:normal; }
+#roomRulesPanel #battlefieldRoomOptions label { display:flex; flex-direction:column; gap:6px; margin:0; min-width:0; }
+#roomRulesPanel #battlefieldRoomOptions select { width:100%; min-width:0; max-width:100%; height:38px; }
+#roomRulesPanel #battlefieldRoomOptions > p { grid-column:1/-1; margin:0; line-height:1.5; overflow-wrap:anywhere; }
+@media(max-width:1000px) { #roomRulesPanel #battlefieldRoomOptions { grid-template-columns:minmax(0,1fr); } }

@@ -15,6 +15,7 @@ const Tactics = (() => {
     typeof CampaignBattlefield !== "undefined"
       ? CampaignBattlefield
       : require("./campaign-battlefield.js");
+  const battlefieldMode = typeof BattlefieldMode !== "undefined" ? BattlefieldMode : require("./battlefield-mode.js");
   const damagePolicy =
     typeof WeaponSequence !== "undefined" ? WeaponSequence : require("./weapon-sequence.js");
   const roundDamage = damagePolicy.roundDamage;
@@ -277,7 +278,7 @@ const Tactics = (() => {
     return value;
   }
   function validateBattleMode(value = "regular") {
-    if (!["regular", "quick", "campaign"].includes(value)) throw Error("对战模式无效");
+    if (!["regular", "quick", "campaign", "battlefield"].includes(value)) throw Error("对战模式无效");
     return value;
   }
   function defaultRoomSettings() {
@@ -1269,7 +1270,7 @@ const Tactics = (() => {
       (g.campaignBattlefield
         ? u.campaignDeploying && campaignBattlefield.deploymentSeat(g, u) === seat
         : ownerOf(u) === seat));
-    if (!u || u.embarked || u.hp <= 0) throw Error("该单位不能取消部署");
+    if (!u || u.facility || u.embarked || u.hp <= 0) throw Error("该单位不能取消部署");
     u.deploymentStaged = true;
     delete u.squadId;
     delete u.squadSlot;
@@ -1278,7 +1279,7 @@ const Tactics = (() => {
   function clearDeployment(g, seat) {
     if (!g.deployment || g.deployment[seat]) throw Error("部署已确认");
     for (const u of g.units) {
-      if (u.hp <= 0 || u.embarked) continue;
+      if (u.facility || u.hp <= 0 || u.embarked) continue;
       if (g.campaignBattlefield
         ? u.campaignDeploying && campaignBattlefield.deploymentSeat(g, u) === seat
         : ownerOf(u) === seat) stageDeployment(g, seat, u.id);
@@ -1333,7 +1334,7 @@ const Tactics = (() => {
         : ownerOf(u) === team,
     );
     for (const u of controlled.filter(
-      (u) => onMap(u) && !u.embarked && (!g.campaignBattlefield || u.campaignDeploying),
+      (u) => !u.facility && onMap(u) && !u.embarked && (!g.campaignBattlefield || u.campaignDeploying),
     )) {
       if (!deploymentCells(g, team, u).some((c) => c.x === u.x && c.y === u.y))
         throw Error("单位不在有效部署区域");
@@ -1550,6 +1551,7 @@ const Tactics = (() => {
       onMap(unit) &&
       !unit.embarked &&
       !unit.visualOnly &&
+      !unit.facility &&
       !model.ship &&
       unitSize(model) !== "large" &&
       size.width === 1 &&
@@ -1802,6 +1804,61 @@ const Tactics = (() => {
     for (let i = 0; i < formation.length; i++) if (!placeCargo(i)) return null;
     return result;
   }
+  function makeUnit(
+    entry,
+    seat,
+    id,
+    position,
+    heading = 0,
+    seed = 1,
+    performance = 1,
+    environment = "ground",
+  ) {
+    const model = formationModelId(entry);
+    if (!models[model]) throw Error("Unknown unit model: " + model);
+    const pilot = entry.customPilot
+      ? pilots.custom(entry.customPilot)
+      : pilots.roll(
+          entry.pilotId || null,
+          seed,
+          seat,
+          typeof id === "number" ? id : 0,
+          models[model],
+        );
+    const team = seatTeam(seat),
+      m = modelOf({ model, performance, environment, pilot });
+    return {
+      id,
+      ...(m.facilityType ? { facility: { id: String(id), type: m.facilityType } } : {}),
+      ownerSeat: seat,
+      environment,
+      model,
+      deploymentUnitId: entry.unitId,
+      deploymentModel: entry.unitId + "__" + entry.kitId,
+      pilot,
+      formationIndex: 0,
+      performance,
+      team,
+      x: position.x,
+      y: position.y,
+      hp: m.hp,
+      brokenParts: {},
+      ...(m.modules?.length
+        ? {
+            moduleHp: Object.fromEntries(m.modules.map((module) => [module.id, module.hp])),
+          }
+        : {}),
+      shield: m.shield.hp,
+      ...(m.iField ? { iFieldHp: m.iField.capacity } : {}),
+      en: m.en,
+      moved: false,
+      acted: false,
+      origin: null,
+      counterCount: 0,
+      angle: heading,
+      heldWeapon: m.weapons[0]?.id ?? null,
+    };
+  }
   function create(ai = false, seed = 7319, formations, deploying = false, settings = {}, restoration = null) {
     const map = getMap(settings.mapId),
       costLimit = validateCostLimit(settings.costLimit ?? catalog.formation.maxCost),
@@ -1828,6 +1885,10 @@ const Tactics = (() => {
       formationRestrictions({ ...settings, mapId: map.id }, seat);
     const tiles = map.tiles.map((row) => row.slice());
     let units = [];
+    if (settings.mode === "battlefield") {
+      if (!map.battlefield) throw Error("战地模式需要专用地图");
+      units = battlefieldMode.facilities(Tactics, { mapId: map.id, seed });
+    }
     const sourceIndices = [];
     for (let seat = 0; seat < formations.length; seat++) {
       // null 明确表示空出生点，不生成单位，也无需确认部署。
@@ -1871,58 +1932,18 @@ const Tactics = (() => {
           formationModel(entry).requiredPilotId !== entry.customPilot?.aceId
         )
           throw Error("该机体需要配属对应ACE驾驶员");
-        const team = seatTeam(seat);
-        const model = formationModelId(entry);
         const performance = settings.performances?.[seat] ?? 1;
         if (!strengthPercentages.some((percent) => percent / 100 === performance))
           throw Error("性能倍率无效");
-        const pilot = entry.customPilot
-          ? pilots.custom(entry.customPilot)
-          : pilots.roll(entry.pilotId || null, seed, seat, i, models[model]);
-        let m = modelOf({ model, performance, environment: map.environment, pilot });
-        units.push({
-          id: seat + "-" + (sourceIndices[seat]?.[i] ?? i),
-          ownerSeat: seat,
-          ...(entry.preload
-            ? {
-                embarked: {
-                  carrierId:
-                    seat +
-                    "-" +
-                    (sourceIndices[seat]?.[entry.preload.carrierIndex] ??
-                      entry.preload.carrierIndex),
-                  hangarId: entry.preload.hangarId,
-                  boardRound: null,
-                },
-              }
-            : {}),
-          environment: map.environment || "ground",
-          model,
-          deploymentUnitId: entry.unitId,
-          deploymentModel: entry.unitId + "__" + entry.kitId,
-          pilot,
-          formationIndex: sourceIndices[seat]?.[i] ?? i,
-          performance,
-          team,
-          x: position.x,
-          y: position.y,
-          hp: m.hp,
-          brokenParts: {},
-          ...(m.modules?.length
-            ? {
-                moduleHp: Object.fromEntries(m.modules.map((module) => [module.id, module.hp])),
-              }
-            : {}),
-          shield: m.shield.hp,
-          ...(m.iField ? { iFieldHp: m.iField.capacity } : {}),
-          en: m.en,
-          moved: false,
-          acted: false,
-          origin: null,
-          counterCount: 0,
-          angle: heading,
-          heldWeapon: m.weapons[0]?.id ?? null,
-        });
+        const index = sourceIndices[seat]?.[i] ?? i;
+        const actor = makeUnit(entry, seat, i, position, heading, seed, performance, map.environment || "ground");
+        actor.id = seat + "-" + index;
+        actor.formationIndex = index + (settings.mode === "battlefield" && seat < 2 ? units.filter(unit => unit.ownerSeat === seat && unit.facility).length : 0);
+        if (entry.preload) actor.embarked = {
+          carrierId: seat + "-" + (sourceIndices[seat]?.[entry.preload.carrierIndex] ?? entry.preload.carrierIndex),
+          hangarId: entry.preload.hangarId, boardRound: null,
+        };
+        units.push(actor);
       });
     }
     hangars.sync({ units });
@@ -1930,7 +1951,7 @@ const Tactics = (() => {
       (a, b) =>
         a.ownerSeat - b.ownerSeat || Number(a.id.split("-")[1]) - Number(b.id.split("-")[1]),
     );
-    return {
+    const game = {
       tiles,
       units,
       deployment: deploying ? formations.map((army) => army === null) : null,
@@ -1949,6 +1970,8 @@ const Tactics = (() => {
       partSeed: (seed ^ 0x85ebca6b) >>> 0,
       winner: null,
     };
+    if (settings.mode === "battlefield") battlefieldMode.initialize(Tactics, game, settings);
+    return game;
   }
   function at(g, x, y) {
     return g.units.find((u) => onMap(u) && !u.embarked && occupies(u, x, y));
@@ -3205,7 +3228,8 @@ const Tactics = (() => {
         (e) => e.carrierId === event.to && event.after <= 0 && event.before > 0,
       );
     let alive = [0, 1].map((t) => g.units.some((u) => u.team === t && u.hp > 0));
-    if (!options.deferVictory && (!alive[0] || !alive[1])) g.winner = alive[0] ? 0 : 1;
+    if (g.battlefield) battlefieldMode.sync(Tactics, g);
+    else if (!options.deferVictory && (!alive[0] || !alive[1])) g.winner = alive[0] ? 0 : 1;
     return events;
   }
   // Counter waves share reaction state across the entire batch; EN is checked per shot.
@@ -3339,7 +3363,8 @@ const Tactics = (() => {
     }
     const evacuations = hangars.evacuate(g);
     const alive = [0, 1].map((team) => g.units.some((u) => u.hp > 0 && u.team === team));
-    if (!alive[0] || !alive[1]) g.winner = alive[0] ? 0 : 1;
+    if (g.battlefield) battlefieldMode.sync(Tactics, g);
+    else if (!alive[0] || !alive[1]) g.winner = alive[0] ? 0 : 1;
     return {
       type: "skill",
       skillId: skill.id,
@@ -3429,7 +3454,8 @@ const Tactics = (() => {
     if (events.some((e) => e.after <= 0)) {
       events.push(...hangars.evacuate(g).map((e) => ({ type: "evacuation", ...e })));
       const alive = [0, 1].map((team) => g.units.some((u) => u.team === team && u.hp > 0));
-      if (!alive[0] || !alive[1]) g.winner = alive[0] ? 0 : 1;
+      if (g.battlefield) battlefieldMode.sync(Tactics, g);
+    else if (!alive[0] || !alive[1]) g.winner = alive[0] ? 0 : 1;
     }
     return events;
   }
@@ -3497,7 +3523,7 @@ const Tactics = (() => {
     const teamsAlive = [0, 1].map((team) =>
       g.units.some((unit) => unit.team === team && unit.hp > 0),
     );
-    if (!teamsAlive[0] || !teamsAlive[1]) g.winner = teamsAlive[0] ? 0 : 1;
+    if (!g.battlefield && (!teamsAlive[0] || !teamsAlive[1])) g.winner = teamsAlive[0] ? 0 : 1;
     g.team = 1 - g.team;
     g.round++;
     skills.tickPilotBuffs(g);
@@ -3538,7 +3564,7 @@ const Tactics = (() => {
         }
       }
       const maintenance = modelOf(u).autoRepair;
-      if (maintenance && u.hp < modelOf(u).hp && u.en >= maintenance.enCost) {
+      if (!battlefieldMode.unrepairable(g, u) && maintenance && u.hp < modelOf(u).hp && u.en >= maintenance.enCost) {
         u.en -= maintenance.enCost;
         u.hp = Math.min(
           modelOf(u).hp,
@@ -3564,7 +3590,7 @@ const Tactics = (() => {
         .find(({ provider, aura }) => inSupplyRange(provider, u));
       if (!aura) continue;
       const m = modelOf(u);
-      u.hp = Math.min(m.hp, u.hp + Math.round((m.hp * aura.aura.hpPercent) / 100));
+      if (!battlefieldMode.unrepairable(g, u)) u.hp = Math.min(m.hp, u.hp + Math.round((m.hp * aura.aura.hpPercent) / 100));
       u.en = Math.min(m.en, u.en + (m.en * aura.aura.enPercent) / 100);
     }
     for (const u of g.units.filter((u) => u.team === g.team && u.snipeOrder)) {
@@ -3590,7 +3616,9 @@ const Tactics = (() => {
     }
     g.turnEffects.push(...hangars.evacuate(g).map((e) => ({ type: "evacuation", ...e })));
     const alive = [0, 1].map((team) => g.units.some((u) => u.team === team && u.hp > 0));
-    if (!alive[0] || !alive[1]) g.winner = alive[0] ? 0 : 1;
+    if (g.battlefield) battlefieldMode.sync(Tactics, g);
+    else if (!alive[0] || !alive[1]) g.winner = alive[0] ? 0 : 1;
+    if (g.battlefield) battlefieldMode.advance(Tactics, g);
   }
   // 待机不阻止自动结束；仍可使用脱出等非攻击技能时保留行动机会。
   function hasActions(g, ownerSeat = null) {
@@ -3963,6 +3991,9 @@ const Tactics = (() => {
     validateTeamFactions,
     validateFogMode,
     validateBattleMode,
+    battlefieldMode,
+    aiUnitBans,
+    makeUnit,
     campaignRoomSettings,
     defaultRoomSettings,
     formationRestrictions,

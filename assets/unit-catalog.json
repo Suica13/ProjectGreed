@@ -459,7 +459,13 @@
     "units/AMX_011/unit.json",
     "units/AMX_014/unit.json",
     "units/AMX_107/unit.json",
-    "units/AMX_107M/unit.json"
+    "units/AMX_107M/unit.json",
+    "units/Facility_HQ/unit.json",
+    "units/Facility_MG/unit.json",
+    "units/Facility_Beam/unit.json",
+    "units/Facility_Missile/unit.json",
+    "units/Facility_Cannon/unit.json",
+    "units/Facility_Radar/unit.json"
   ],
   "effects": "effects/effects.json",
   "presentation": "presentation.json",
@@ -506,7 +512,8 @@
     "maps/encounter/coastal_supply_2v2.json",
     "maps/encounter/a_baoa_qu_space_3v3.json",
     "maps/encounter/colony_interior_3v3.json",
-    "maps/encounter/mass_driver_facility_3v3.json"
+    "maps/encounter/mass_driver_facility_3v3.json",
+    "maps/battlefield/frontline.json"
   ],
   "defaultMap": "frontier_1v1",
   "scenarioIndex": "maps/strategy/index.json"

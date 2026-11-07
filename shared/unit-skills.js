@@ -574,6 +574,7 @@ const UnitSkills = (() => {
         return game.units
           .filter(
             (other) =>
+              !(game.battlefield && other.facility?.type === "base") &&
               other !== unit &&
               other.team === unit.team &&
               other.hp > 0 &&

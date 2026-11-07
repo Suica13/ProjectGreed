@@ -64,6 +64,7 @@ function setPageView(view) {
   window.HangarUI?.refresh();
   window.SFSUI?.refresh();
   window.BattleHUD?.refresh();
+  window.BattlefieldUI?.refresh();
   if (view === "game") startRendering();
   else if (!window.isLayoutPreview) {
     cancelAnimationFrame(animationFrameId);
@@ -455,8 +456,8 @@ function updateContents() {
     ? `局地战 ${Math.min(game.round - campaignBattle.startRound + 1, campaignBattle.stopRound - campaignBattle.startRound)} / ${campaignBattle.stopRound - campaignBattle.startRound}回合 · ${teamName(game.team)}`
     : `第${game.round}回合 · ${teamName(game.team)}`;
   byId("turnBadge").style.color = game.team ? "var(--red)" : "var(--blue)";
-  byId("phaseTitle").textContent = teamName(game.team) + (isAI() ? "AI行动阶段" : "行动阶段");
-  if (phase === "deployment") byId("phaseTitle").textContent = "开局部署";
+  byId("phaseTitle").textContent = ({ deployment:"部署", moving:"移动", reaction:"应战",
+    battle:"交战", victory:"战斗结束" })[phase] || "行动";
   byId("phaseEyebrow").textContent = game.team ? "RED PHASE" : "BLUE PHASE";
   byId("endTurn").textContent = Net.active
     ? "完成计划 · 结束行动 (B)"
@@ -518,6 +519,7 @@ function updateContents() {
   window.HangarUI?.refresh();
   window.SFSUI?.refresh();
   window.BattleHUD?.refresh();
+  window.BattlefieldUI?.refresh();
   TurnFlow.refreshAutoEnd();
 }
 // 左侧只按当前视角显示我军；观战者可查看两队，每名所有者单独成组。
@@ -1924,6 +1926,7 @@ function drawMap(now) {
     Net.snapshot?.phase === "playback" ? Net.snapshot.combatIntel || game.intel : game.intel;
   EnvironmentVisuals.fog(ctx, intel, ox, oy, tile);
   drawCampaignSupply(ctx, ox, oy, tile);
+  window.BattlefieldUI?.draw(ctx, ox, oy, tile);
   // The clip remains available for individual effects opting out of fog visibility.
   const visibilityClip = EnvironmentVisuals.visibilityClip(intel, ox, oy, tile);
   const drawVisibleEffects = (draw) => {
@@ -2023,6 +2026,8 @@ function drawMap(now) {
       t = combatPose.time;
     }
     if (!combatPose) angle = PlanningUI.facing(u, angle, frameModelOf(u));
+    if (Number.isFinite(frameModelOf(u).presentation.fixedFacing))
+      angle = frameModelOf(u).presentation.fixedFacing;
     const skillPose = !combatPose && SkillEffects.pose(u, now);
     if (skillPose) {
       angle = skillPose.angle;
@@ -2049,6 +2054,7 @@ function drawMap(now) {
         if (!combatPose && !skillPose) angle = PlanningUI.facing(u, parent.angle, frameModelOf(u));
       }
     }
+    pos.y -= (window.BattlefieldUI?.dropHeight(u, now) || 0) * tile;
     EnvironmentVisuals.observe(u, groundCell, now);
     const visualScale = (tile/Rules.mapCellPixels) * ART.presentation.unitMapScale *
       (battleSettings.mapScale/(ART.presentation.mapCellScale || 1)) * frameModelOf(u).presentation.mapScale * formationOffset.scale;
@@ -2316,6 +2322,7 @@ function drawMap(now) {
     }
     ctx.restore();
   }
+  window.BattlefieldUI?.drawDrops(ctx, mapUnitPoses, now, tile);
   if (!aboveLayerDrawn) drawAboveLayer();
   // Hidden actors contribute effects only; never silhouettes, bars or selectable units.
   for (const actor of Net.snapshot?.effectActors || []) {
@@ -3462,7 +3469,7 @@ function showVictory() {
   }
   phase = "victory";
   byId("victoryTitle").textContent =
-    game.winner === -1 ? I18n.text("双方全灭，平局") : teamName(game.winner) + "胜利";
+    game.winner === -1 ? I18n.text(game.battlefield ? "战力相同，平局" : "双方全灭，平局") : teamName(game.winner) + "胜利";
   byId("victoryNote").textContent =
     `第${game.round}回合，全歼敌方小队。存活单位 ${game.units.filter((u) => u.team === game.winner && u.hp > 0).length} 台。`;
   byId("victory").hidden = false;

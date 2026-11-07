@@ -34,7 +34,7 @@ const explanations = {
   escape: "按source.mode处理原机并按spawn生成脱出机；保留身份/控制关系，资源继承、恢复和部位修复由source/spawn分别决定。",
   transform: "按source变形/部署、映射套件和继承资源；部署形态不能移动，已有载员或部位损坏会限制变形。",
   armor_purge: "按source切换爆甲形态，继承资源比例后加算配置恢复，不默认补满；AP仅保留数值，是否结束本次行动仍看consumeAction。",
-  repair: "按配置恢复目标友军HP、EN和护盾，不自动修复破损部位。",
+  repair: "按配置恢复目标友军HP、EN和护盾，不自动修复破损部位；战地模式主基地不接受主动维修。",
 };
 const typeNames = {
   pilot_buff: "驾驶员强化", resupply: "主动EN补给", irradiation: "光束照射", beam_diffusion: "光束扰乱膜",
@@ -156,7 +156,7 @@ function render(catalog) {
     "- 浮游炮/有线炮门槛查pilotRequirements；除INCOM外，觉醒不足100时伤害×觉醒/100，100以上为×[1+(觉醒-100)×remote.awakeningScale]。INCOM不套此觉醒伤害成长；保留两个战术射击位置，每个位置执行原MOD子单元的完整连射链与独立载荷，不再统一整轮4000伤害；单元数/发数由浮游炮配置决定。",
     "- 指挥：steps=trunc((领导力-100)/25)，范围=max(1,3+steps)，效果=max(0,0.10+0.025×steps)。攻击加最终射击/格斗伤害，防御减最终伤害，通信提高命中/回避；同类取最大不叠加。",
     "- I立场拦截远程光束，光束格斗绕过；普通/贯穿光束分别按reduction/piercingReduction减伤，消耗场耐久，下限为capacity×minimumRatio，己方回合恢复recoveryPercent。",
-    "- 被动补给光环、自动维修按各自参数在己方回合结算，重叠补给光环不叠加；主动补给不是补给光环。学习型电脑使用机体pilotExperienceMultiplier，与其他经验系数相乘。",
+    "- 被动补给光环、自动维修按各自参数在己方回合结算，重叠补给光环不叠加；主动补给不是补给光环。战地模式主基地禁止任何HP恢复（包括补给光环与自动维修），已经损失的HP不会回升。学习型电脑使用机体pilotExperienceMultiplier，与其他经验系数相乘。",
     "- 封闭格纳库载员己方回合恢复25%HP、50%EN、25%护盾并随机修复最多两个部位；SFS暴露载员不套此维修。符合占地与容量要求的SFS可组成小队，整队攻击包含同控制者的暴露乘客；新成员加入已下达普通攻击计划的小队时，自动追加自身可用攻击，不重置已行动成员。整队出击只由一名驾驶员代表全队与运输单位对话，所有成员仍分别记录出击日志；距离和容量判定不变。主动出击不扣AP；母舰死亡紧急退出仅本回合攻击轮数向下折半，允许0，AP数值不变。", "",
     "## 代码索引", "",
     "- [换算配置](shared/conversion-rules.json)、[换算实现](shared/conversion-rules.cjs)、[人工差值](shared/editor-adjustments.json)",

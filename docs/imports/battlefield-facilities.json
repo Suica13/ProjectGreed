@@ -1,0 +1,172 @@
+[
+  {
+    "id": "Facility_HQ",
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/HQ/Mod/HQ.ini",
+    "nativeHP": 750000,
+    "weapons": [],
+    "visual": {
+      "nativeBounds": [
+        -50.625,
+        -40.875,
+        50.625,
+        39.375
+      ],
+      "targetCells": 3,
+      "mapScale": 3.5555555555555554,
+      "layers": [
+        {
+          "name": "Body",
+          "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/HQ/Image/HQ_Body_0.png"
+        },
+        {
+          "name": "Light",
+          "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/HQ/Image/HQ_Body_1_Light.png"
+        }
+      ]
+    }
+  },
+  {
+    "id": "Facility_MG",
+    "source": "GW_BattleUniverse_Main/Units/Buildings/Turret/TypeA/Turret_MG_A.ini",
+    "nativeHP": 12500,
+    "weapons": [
+      "Common_Turret_MG_Double"
+    ],
+    "visual": {
+      "nativeBounds": [
+        -11.25,
+        -19.125,
+        11.25,
+        10.5
+      ],
+      "targetCells": 0.5,
+      "mapScale": 2.0253164556962027,
+      "layers": [
+        {
+          "name": "A",
+          "source": "GW_BattleUniverse_Main/Units/Buildings/Turret/Image/Ground/Turret_MG_1_A.png"
+        },
+        {
+          "name": "B",
+          "source": "GW_BattleUniverse_Main/Units/Buildings/Turret/Image/Ground/Turret_MG_1_B.png"
+        }
+      ]
+    }
+  },
+  {
+    "id": "Facility_Beam",
+    "source": "GW_BattleUniverse_Main/Units/Buildings/Turret/TypeA/Turret_BM_A.ini",
+    "nativeHP": 20000,
+    "weapons": [
+      "Common_Turret_BM_Double"
+    ],
+    "visual": {
+      "nativeBounds": [
+        -11.25,
+        -19.125,
+        11.25,
+        10.5
+      ],
+      "targetCells": 0.5,
+      "mapScale": 2.0253164556962027,
+      "layers": [
+        {
+          "name": "A",
+          "source": "GW_BattleUniverse_Main/Units/Buildings/Turret/Image/Ground/Turret_BM_1_A.png"
+        },
+        {
+          "name": "B",
+          "source": "GW_BattleUniverse_Main/Units/Buildings/Turret/Image/Ground/Turret_BM_1_B.png"
+        }
+      ]
+    }
+  },
+  {
+    "id": "Facility_Missile",
+    "source": "GW_BattleUniverse_Main/Units/Buildings/Turret/TypeA/Turret_MS_A.ini",
+    "nativeHP": 15000,
+    "weapons": [
+      "Common_Turret_MS_Double"
+    ],
+    "visual": {
+      "nativeBounds": [
+        -11.25,
+        -12.0,
+        11.25,
+        10.5
+      ],
+      "targetCells": 0.5,
+      "mapScale": 2.6666666666666665,
+      "layers": [
+        {
+          "name": "A",
+          "source": "GW_BattleUniverse_Main/Units/Buildings/Turret/Image/Ground/Turret_MS_1_A.png"
+        },
+        {
+          "name": "B",
+          "source": "GW_BattleUniverse_Main/Units/Buildings/Turret/Image/Ground/Turret_MS_1_B.png"
+        }
+      ]
+    }
+  },
+  {
+    "id": "Facility_Cannon",
+    "source": "GW_BattleUniverse_Main/Units/Buildings/Turret/TypeA/Turret_CN_A.ini",
+    "nativeHP": 20000,
+    "weapons": [
+      "Common_Turret_CN"
+    ],
+    "visual": {
+      "nativeBounds": [
+        -22.5,
+        -24.0,
+        22.5,
+        22.5
+      ],
+      "targetCells": 0.5,
+      "mapScale": 1.2903225806451613,
+      "layers": [
+        {
+          "name": "A",
+          "source": "GW_BattleUniverse_Main/Units/Buildings/Turret/Image/Ground/Turret_CN_1_A.png"
+        },
+        {
+          "name": "B",
+          "source": "GW_BattleUniverse_Main/Units/Buildings/Turret/Image/Ground/Turret_CN_1_B.png"
+        },
+        {
+          "name": "C",
+          "source": "GW_BattleUniverse_Main/Units/Buildings/Turret/Image/Ground/Turret_CN_1_C.png"
+        }
+      ]
+    }
+  },
+  {
+    "id": "Facility_Radar",
+    "source": "GW_BattleUniverse_Main/Units/Buildings/Turret/TypeA/Turret_Radar_A.ini",
+    "nativeHP": 7500,
+    "weapons": [],
+    "visual": {
+      "nativeBounds": [
+        -8.625,
+        -32.5,
+        12.375,
+        12.5
+      ],
+      "targetCells": 1,
+      "mapScale": 2.6666666666666665,
+      "layers": [
+        {
+          "name": "A",
+          "source": "GW_BattleUniverse_Main/Units/Buildings/Turret/Image/Common/Radar/Radar_1_A.png"
+        }
+      ]
+    }
+  },
+  {
+    "id": "StrategicLocation",
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/StrategicLocation/Mod/StrategicLocation.ini",
+    "body": "GW_BattleUniverse_DLC_0079/Units/Buildings/StrategicLocation/Image/StrategicLocation.png",
+    "highlight": "GW_BattleUniverse_DLC_0079/Units/Buildings/StrategicLocation/Image/StrategicLocation_Light_Self.png"
+  }
+]

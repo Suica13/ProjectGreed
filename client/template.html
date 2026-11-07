@@ -2404,6 +2404,7 @@
                 <option value="regular">常规战模式</option>
                 <option value="quick">快速战模式</option>
               </optgroup>
+              <optgroup label="战场模式"><option value="battlefield">战地模式</option></optgroup>
               <optgroup label="战略模式">
                 <option value="campaign">历史战役模式</option>
               </optgroup>
@@ -2637,6 +2638,7 @@
                 <option value="regular">常规战模式</option>
                 <option value="quick">快速战模式</option>
               </optgroup>
+              <optgroup label="战场模式"><option value="battlefield">战地模式</option></optgroup>
               <optgroup label="战略模式">
                 <option value="campaign">历史战役模式</option>
               </optgroup>
@@ -2672,6 +2674,10 @@
                         </select>
                       </label>
                     </div>
+                  </details>
+                  <details id="battlefieldRoomRules" class="room-rule-group" open hidden>
+                    <summary>战地模式设置</summary>
+                    <section id="battlefieldRoomOptions" class="battlefield-ai-options" aria-label="战地模式设置"></section>
                   </details>
                   <details class="room-rule-group">
                     <summary>房间禁用标签</summary>
@@ -5140,6 +5146,7 @@
                 <option value="regular">常规战模式</option>
                 <option value="quick">快速战模式</option>
               </optgroup>
+              <optgroup label="战场模式"><option value="battlefield">战地模式</option></optgroup>
               <optgroup label="战略模式">
                 <option value="campaign">历史战役模式</option>
               </optgroup>
@@ -5347,6 +5354,7 @@
       __BATTLEFIELD_CLIMATE__
       __UNIT_SENSORS__;
       __AI_TACTICS__;
+      __BATTLEFIELD_MODE__;
       __CAMPAIGN_BATTLEFIELD__;
       __AUTOMATIC_FIRE__
     __CORE__;
@@ -5410,6 +5418,7 @@
       __HANGAR_UI__;
       __SFS_UI__;
       __BATTLE_HUD__;
+      __BATTLEFIELD_UI__;
       __REPLAY_PLAYER__;
       __MENU_SHELL__;
       I18n.start();

@@ -20,7 +20,9 @@ const BattleHUD = (() => {
   phaseControls.append(scene.querySelector(".phase-row"));
   const topControls = element("div", "hud-top-controls");
   topControls.append(scene.querySelector(".map-camera-controls"), byId("hudTurnActions"));
-  byId("mapWrap").append(phaseControls, topControls);
+  const topLine = element("div", "hud-top-line");
+  topLine.append(phaseControls, topControls);
+  byId("mapWrap").append(topLine);
   const capturePoint = element("button", "primary", "占领");
   capturePoint.id = "hudCapturePoint";
   capturePoint.title = "占领据点：不消耗AP，空中单位不可占领，据点内有敌军时不可占领";

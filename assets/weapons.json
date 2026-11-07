@@ -256192,6 +256192,363 @@
       "description": "基础伤害 1,600 × 1 = 1,600；射程 10 格，宽度 3 格，命中 50%；消耗 5 AP、50%最大EN，冷却 3 个己方回合。对沿途每台单位（含友军）判定一次。",
       "level": 1,
       "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_PMX_000_MegaBeamCannon.gw"
+    },
+    "Common_Turret_MG_Double__lv1": {
+      "name": "机枪炮塔",
+      "type": "shell",
+      "category": "machineGun",
+      "min": 1,
+      "max": 6,
+      "hit": 100,
+      "sourceHit": 100,
+      "en": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 275,
+      "damageComponents": {
+        "shell": 275
+      },
+      "hitsPerShot": 1,
+      "sourceName": "Common_Turret_MG_Double",
+      "level": 1,
+      "changeHeldWeapon": false,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "delay": 0,
+            "muzzleIndex": 0,
+            "requiredParts": []
+          },
+          {
+            "shots": 1,
+            "delay": 0.15,
+            "muzzleIndex": 0,
+            "requiredParts": []
+          },
+          {
+            "shots": 1,
+            "delay": 0.15,
+            "muzzleIndex": 0,
+            "requiredParts": []
+          },
+          {
+            "shots": 1,
+            "delay": 0.15,
+            "muzzleIndex": 0,
+            "requiredParts": []
+          },
+          {
+            "shots": 1,
+            "delay": 0.15,
+            "muzzleIndex": 0,
+            "requiredParts": []
+          },
+          {
+            "shots": 1,
+            "delay": 0.15,
+            "muzzleIndex": 0,
+            "requiredParts": []
+          },
+          {
+            "shots": 1,
+            "delay": 0.15,
+            "muzzleIndex": 0,
+            "requiredParts": []
+          },
+          {
+            "shots": 1,
+            "delay": 0.15,
+            "muzzleIndex": 0,
+            "requiredParts": []
+          }
+        ],
+        "startAnimation": null
+      },
+      "nativePayload": {
+        "ShellDamage": 550.0,
+        "DpDamage": 50.0,
+        "WeaponAccuracy": 100.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 1.0,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 20.0,
+        "ProjectileSpeed": 75.0,
+        "ProjectileSpread": 5.0,
+        "ProjectileLife": 25.0
+      },
+      "targetModifiers": {
+        "air": 1.0,
+        "ground": 1.0,
+        "water": 0.75,
+        "space": 1.0
+      },
+      "projectile": {
+        "texture": "../../projectiles/Bazooka_1.png",
+        "scale": 0.75,
+        "speed": 55,
+        "forwardOffset": -5,
+        "rotation": 0
+      },
+      "hitEffect": "Explosion_Hit_1_S",
+      "sound": {
+        "file": "../../sounds/MachineGun_1.ogg",
+        "volume": 0.3
+      }
+    },
+    "Common_Turret_BM_Double__lv1": {
+      "name": "光束炮塔",
+      "type": "beam",
+      "category": "beamRifle",
+      "min": 1,
+      "max": 6,
+      "hit": 100,
+      "sourceHit": 100,
+      "en": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 2500,
+      "damageComponents": {
+        "beam": 2500
+      },
+      "hitsPerShot": 1,
+      "sourceName": "Common_Turret_BM_Double",
+      "level": 1,
+      "changeHeldWeapon": false,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "delay": 0,
+            "muzzleIndex": 0,
+            "requiredParts": []
+          },
+          {
+            "shots": 1,
+            "delay": 0.15,
+            "muzzleIndex": 0,
+            "requiredParts": []
+          }
+        ],
+        "startAnimation": null
+      },
+      "nativePayload": {
+        "BeamDamage": 5000.0,
+        "DpDamage": 175.0,
+        "WeaponAccuracy": 100.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.5,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 80.0,
+        "ProjectileSpread": 1.0,
+        "ProjectileLife": 30.0
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "ground": 1.0,
+        "water": 0.5,
+        "space": 1.0
+      },
+      "projectile": {
+        "texture": "../../projectiles/Beam_1.png",
+        "scale": 0.75,
+        "speed": 55,
+        "forwardOffset": -5,
+        "rotation": 0
+      },
+      "hitEffect": "Explosion_Hit_1_S",
+      "sound": {
+        "file": "../../sounds/BeamGun_3.ogg",
+        "volume": 0.45
+      }
+    },
+    "Common_Turret_MS_Double__lv1": {
+      "name": "导弹炮塔",
+      "type": "shell",
+      "category": "missile",
+      "min": 1,
+      "max": 8,
+      "hit": 125,
+      "sourceHit": 125,
+      "en": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 1500,
+      "damageComponents": {
+        "shell": 1500
+      },
+      "hitsPerShot": 1,
+      "sourceName": "Common_Turret_MS_Double",
+      "level": 1,
+      "changeHeldWeapon": false,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "delay": 0,
+            "muzzleIndex": 0,
+            "requiredParts": []
+          },
+          {
+            "shots": 1,
+            "delay": 0.15,
+            "muzzleIndex": 0,
+            "requiredParts": []
+          },
+          {
+            "shots": 1,
+            "delay": 0.15,
+            "muzzleIndex": 0,
+            "requiredParts": []
+          },
+          {
+            "shots": 1,
+            "delay": 0.15,
+            "muzzleIndex": 0,
+            "requiredParts": []
+          }
+        ],
+        "startAnimation": null
+      },
+      "nativePayload": {
+        "ShellDamage": 3000.0,
+        "DpDamage": 75.0,
+        "WeaponAccuracy": 125.0,
+        "PartBreakModifier": 1.0,
+        "CockpitBreakModifier": 1.0,
+        "PilotDamageModifier": 1.0,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.0,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.0,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 0.75,
+        "AntiAqua": 0.75,
+        "AntiAir": 1.5,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightHitRange": 20.0,
+        "HeightChangeSpeed": 2.0,
+        "ProjectileSpeed": 50.0,
+        "ProjectileTurnspeed": 3.5,
+        "ProjectileSpread": 0.0,
+        "ProjectileExplosionRange": 35.0,
+        "ProjectileLife": 20.0
+      },
+      "targetModifiers": {
+        "air": 1.5,
+        "ground": 1.0,
+        "water": 0.75,
+        "space": 1.0
+      },
+      "projectile": {
+        "texture": "../../projectiles/Bazooka_1.png",
+        "scale": 0.75,
+        "speed": 55,
+        "forwardOffset": -5,
+        "rotation": 0
+      },
+      "hitEffect": "Explosion_Hit_1_S",
+      "sound": {
+        "file": "../../sounds/Missile_1.ogg",
+        "volume": 0.4
+      }
+    },
+    "Common_Turret_CN__lv1": {
+      "name": "加农炮炮塔",
+      "type": "shell",
+      "category": "cannon",
+      "min": 1,
+      "max": 8,
+      "hit": 85,
+      "sourceHit": 85,
+      "en": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 5000,
+      "damageComponents": {
+        "shell": 5000
+      },
+      "hitsPerShot": 1,
+      "sourceName": "Common_Turret_CN",
+      "level": 1,
+      "changeHeldWeapon": false,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "delay": 0,
+            "muzzleIndex": 0,
+            "requiredParts": []
+          }
+        ],
+        "startAnimation": null
+      },
+      "nativePayload": {
+        "ShellDamage": 10000.0,
+        "DpDamage": 450.0,
+        "WeaponAccuracy": 85.0,
+        "PartBreakModifier": 1.25,
+        "CockpitBreakModifier": 0.75,
+        "PilotDamageModifier": 0.75,
+        "PilotTrueDamage": 0.0,
+        "AntiSizeLargeDamage": 1.25,
+        "AntiSizeSmallDamage": 0.75,
+        "AntiSizeLargeAccuracy": 1.25,
+        "AntiSizeSmallAccuracy": 0.75,
+        "AntiBuilding": 1.0,
+        "AntiAqua": 0.75,
+        "AntiAir": 0.75,
+        "AntiLand": 1.0,
+        "AntiSpace": 1.0,
+        "HeightChangeSpeed": 2.0,
+        "HeightHitRange": 25.0,
+        "ProjectileSpeed": 70.0,
+        "ProjectileSpread": 0.0,
+        "ProjectileExplosionRange": 50.0,
+        "ProjectileLife": 30.0
+      },
+      "targetModifiers": {
+        "air": 0.75,
+        "ground": 1.0,
+        "water": 0.75,
+        "space": 1.0
+      },
+      "projectile": {
+        "texture": "../../projectiles/Bazooka_1.png",
+        "scale": 0.75,
+        "speed": 55,
+        "forwardOffset": -5,
+        "rotation": 0
+      },
+      "hitEffect": "Explosion_Hit_1_S",
+      "sound": {
+        "file": "../../sounds/Bazooka_1.ogg",
+        "volume": 0.4
+      }
     }
   }
 }

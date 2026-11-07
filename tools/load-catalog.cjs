@@ -227,7 +227,7 @@ function loadCatalog({
       map.supportedModes !== undefined &&
       (!Array.isArray(map.supportedModes) ||
         !map.supportedModes.length ||
-        map.supportedModes.some((mode) => !["regular", "quick"].includes(mode)))
+        map.supportedModes.some((mode) => !["regular", "quick", "battlefield"].includes(mode)))
     )
       throw Error("Invalid map modes: " + map.id);
     if (
@@ -252,6 +252,7 @@ function loadCatalog({
       )
         throw Error("TileMap dimensions/ID mismatch: " + map.id);
     }
+    if (map.battlefield) require("../shared/battlefield-mode.js").validateMap(map);
     const areas = map.deploymentAreas;
     const expansion = map.deploymentExpansion;
     if (
@@ -309,7 +310,7 @@ function loadCatalog({
       if (capacity < catalog.formation.maxUnits)
         throw Error("Spawn area too small for maximum formation: " + map.id);
       if (
-        map.spawns.slice(0, seat).some((other, index) => {
+        !map.battlefield && map.spawns.slice(0, seat).some((other, index) => {
           if (!area)
             return (
               Math.abs(other.x - spawn.x) + Math.abs(other.y - spawn.y) <= map.deploymentRadius * 2

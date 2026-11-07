@@ -228,6 +228,38 @@ const RoomPanel = (() => {
       restrictions[select.dataset.key] = JSON.parse(select.dataset.bannedTags);
     return restrictions;
   }
+  function renderBattlefieldOptions(snapshot, locked) {
+    const panel = byId("battlefieldRoomOptions");
+    byId("battlefieldRoomRules").hidden = snapshot.settings.mode !== "battlefield";
+    if (snapshot.settings.mode !== "battlefield") return;
+    panel.replaceChildren();
+    const config = Rules.battlefieldMode.teams(Rules, snapshot.settings.battlefieldTeams);
+    for (const team of [0, 1]) {
+      const group = element("fieldset", "battlefield-team-options"), legend = element("legend", "", "队伍" + (team + 1) + " · 固定阵营 AI");
+      group.append(legend);
+      for (const [key, label, choices] of [["faction", "阵营", Rules.battlefieldMode.factions], ["era", "年代上限", Rules.eras]]) {
+        const container = element("label", "", label), select = element("select");
+        select.id = "battlefieldTeam" + team + key;
+        for (const value of choices) {
+          const option = new Option(value, value);
+          if (key === "era") option.disabled = !Rules.battlefieldMode.erasForFaction(Rules, config[team].faction).includes(value);
+          select.add(option);
+        }
+        select.value = config[team][key]; select.disabled = locked;
+        select.onchange = () => {
+          config[team][key] = select.value;
+          if (key === "faction") {
+            const eras = Rules.battlefieldMode.erasForFaction(Rules, config[team].faction);
+            if (!eras.includes(config[team].era)) config[team].era = eras[0];
+          }
+          sendSettings({battlefieldTeams:config});
+        };
+        container.append(select); group.append(container);
+      }
+      panel.append(group);
+    }
+    panel.append(element("p", "muted", "100回合 · 初始战力20000 · 每5回合空投增援 · 本模式不扣库存、不产生收益"));
+  }
   function renderCampaignOptions(snapshot, locked) {
     let panel = byId("campaignRoomOptions");
     if (!panel) {
@@ -318,13 +350,10 @@ const RoomPanel = (() => {
     const mapSelect = byId("roomMapSelect");
     mapSelect.replaceChildren();
     for (const map of Object.values(Rules.catalog.maps).filter(
-      (map) => map.scope !== "strategic",
+      (map) => settings.mode !== "campaign" && map.scope !== "strategic" &&
+        (map.supportedModes || ["regular", "quick"]).includes(settings.mode || "regular"),
     )) {
-      const option = new Option(map.name, map.id);
-      option.disabled =
-        !!map.supportedModes &&
-        !map.supportedModes.includes(settings.mode === "campaign" ? "regular" : settings.mode);
-      mapSelect.add(option);
+      mapSelect.add(new Option(map.name, map.id));
     }
     const nextKey = JSON.stringify([snapshot.room, snapshot.you?.id, snapshot.hostId]);
     if (nextKey !== settingsKey) {
@@ -424,6 +453,7 @@ const RoomPanel = (() => {
     }
     summary.hidden = !strategic;
     renderCampaignOptions(snapshot, locked);
+    renderBattlefieldOptions(snapshot, locked);
     if (strategic) {
       window.CampaignUI.preview(byId("roomMapPreview"), snapshot.campaign);
       byId("roomMapTitle").textContent = CAMPAIGN_WORLD.name;
@@ -559,7 +589,8 @@ const RoomPanel = (() => {
       !!Net.awaiting ||
       snapshot.started ||
       !!snapshot.campaign ||
-      snapshot.you.id !== snapshot.hostId;
+      snapshot.you.id !== snapshot.hostId ||
+      (snapshot.settings.mode === "battlefield" && player.bot && player.seat < 2);
     if (snapshot.settings.mode === "quick") {
       const switchView = element(
         "button",
@@ -612,7 +643,7 @@ const RoomPanel = (() => {
     seatRow.append(label, move);
     seatSection.append(seatRow);
     content.append(seatSection);
-    if (player.bot || player.id !== snapshot.you.id) {
+    if ((player.bot || player.id !== snapshot.you.id) && !(snapshot.settings.mode === "battlefield" && player.bot && player.seat < 2)) {
       const actionSection = element("section", "room-detail-section room-detail-danger");
       actionSection.append(element("h3", "", player.bot ? "移除 AI" : "玩家操作"));
       const remove = element("button", "danger", player.bot ? "移除 AI" : "踢出玩家");
@@ -928,7 +959,7 @@ const RoomPanel = (() => {
     formationSelect.setAttribute("aria-invalid", String(!valid || !!disabledCount));
     byId("roomTitle").textContent = Net.local
       ? "离线" +
-        { quick: "快速战模式", campaign: "历史战役模式", regular: "常规战模式" }[snapshot.settings.mode] +
+        { battlefield: "战地模式", quick: "快速战模式", campaign: "历史战役模式", regular: "常规战模式" }[snapshot.settings.mode] +
         "房间"
       : "房间 " + snapshot.room;
     byId("roomStatus").hidden = !snapshot.started && !snapshot.loadedSave;
@@ -1023,7 +1054,7 @@ const RoomPanel = (() => {
           (!snapshot.started || !!snapshot.campaign) &&
           self.id === snapshot.hostId &&
           (!member || member.bot) &&
-          !reserved
+          !reserved && !(snapshot.settings.mode === "battlefield" && seat < 2)
         ) {
           const addAI = element(
             "button",
@@ -1148,6 +1179,9 @@ const RoomPanel = (() => {
       snapshot.started && snapshot.phase !== "assembly" ? "返回战斗" : "主菜单";
     renderFinalAssembly(snapshot, busy);
     renderDetail(snapshot);
+    if (snapshot.settings.mode === "battlefield") {
+      for (const seat of [0,1]) { byId("removeSeatAI" + seat)?.remove(); }
+    }
   }
   function joinTeam(team) {
     const snapshot = Net.snapshot;

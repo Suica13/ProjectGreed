@@ -1103,23 +1103,25 @@ const Formation = (() => {
       scrollTop = list.scrollTop;
     list.replaceChildren();
     // 仅调整显示顺序，保留保存序号、搭载引用和 OVER COST 的末尾优先规则。
-    const displayOrder = [], visited = new Set(), cargoByHangar = new Map();
+    const displayOrder = [], visited = new Set(), cargoByHangar = new Map(), transportRoots = new Map();
     draft.forEach((entry, i) => {
       if (!entry.preload) return;
       const key = entry.preload.carrierIndex + "/" + entry.preload.hangarId;
       if (!cargoByHangar.has(key)) cargoByHangar.set(key, []);
       cargoByHangar.get(key).push(i);
     });
-    function appendCargo(i) {
+    function appendCargo(i, root = i) {
       if (visited.has(i)) return;
       visited.add(i);
       displayOrder.push(i);
+      transportRoots.set(i, root);
       for (const h of Rules.formationModel(draft[i]).hangars || [])
-        for (const j of cargoByHangar.get(i + "/" + h.id) || []) appendCargo(j);
+        for (const j of cargoByHangar.get(i + "/" + h.id) || []) appendCargo(j, root);
     }
     draft.forEach((entry, i) => {
       if (!entry.preload) appendCargo(i);
     });
+    const loadedRoots = new Set(displayOrder.filter((i) => draft[i].preload).map((i) => transportRoots.get(i)));
     displayOrder.forEach((i) => {
       const entry = draft[i];
       const row = element(
@@ -1128,6 +1130,7 @@ const Formation = (() => {
         ),
         model = Rules.formationModel(entry);
       row.dataset.formationIndex = String(i);
+      if (loadedRoots.has(transportRoots.get(i))) row.dataset.transportGroup = String(transportRoots.get(i));
       if (entry.preload) row.dataset.carrierIndex = String(entry.preload.carrierIndex);
       const show = () => {
         GameAudio.selectUnit(model);
@@ -1245,6 +1248,78 @@ const Formation = (() => {
       list.append(row);
     });
     list.scrollTop = scrollTop;
+    if (transportFrameList !== list) {
+      transportFrameObserver.disconnect();
+      transportFrameObserver.observe(list);
+      transportFrameList = list;
+    }
+    scheduleTransportFrames();
+  }
+  // Draw only the perimeter of each carrier group. An overlay preserves the
+  // roster grid and its original indices, including groups wrapping between columns.
+  let transportFrameRequest = 0;
+  const transportFrameObserver = new ResizeObserver(scheduleTransportFrames);
+  let transportFrameList = null;
+  function scheduleTransportFrames() {
+    if (transportFrameRequest) return;
+    transportFrameRequest = requestAnimationFrame(() => {
+      transportFrameRequest = 0;
+      drawTransportFrames();
+    });
+  }
+  function drawTransportFrames() {
+    const list = byId("formationUnits");
+    list.querySelector(".formation-transport-frames")?.remove();
+    if (!list.clientWidth || !list.clientHeight) return;
+    const rows = [...list.querySelectorAll(":scope > .formation-row")];
+    if (!rows.length) return;
+    const bounds = list.getBoundingClientRect();
+    const cells = rows.map((row) => {
+      const rect = row.getBoundingClientRect();
+      return {
+        group: row.dataset.transportGroup,
+        left: rect.left - bounds.left - list.clientLeft + list.scrollLeft,
+        top: rect.top - bounds.top - list.clientTop + list.scrollTop,
+        right: rect.right - bounds.left - list.clientLeft + list.scrollLeft,
+        bottom: rect.bottom - bounds.top - list.clientTop + list.scrollTop,
+      };
+    });
+    const columns = cells.length > 1 && Math.abs(cells[0].top - cells[1].top) < 1 ? 2 : 1;
+    const style = getComputedStyle(list);
+    const gapX = (parseFloat(style.columnGap) || 0) / 2;
+    const gapY = (parseFloat(style.rowGap) || 0) / 2;
+    const minX = Math.min(...cells.map((c) => c.left)) + 1;
+    const maxX = Math.max(...cells.map((c) => c.right)) - 1;
+    const minY = cells[0].top + 1;
+    const maxY = Math.max(...cells.map((c) => c.bottom)) - 1;
+    const paths = new Map();
+    cells.forEach((cell, i) => {
+      if (cell.group === undefined) return;
+      const same = (j) => cells[j]?.group === cell.group;
+      const left = Math.max(minX, cell.left - gapX);
+      const right = Math.min(maxX, cell.right + gapX);
+      const top = Math.max(minY, cell.top - gapY);
+      const bottom = Math.min(maxY, cell.bottom + gapY);
+      const edges = paths.get(cell.group) || [];
+      if (!same(i - columns)) edges.push(`M${left},${top}H${right}`);
+      if (!same(i + columns)) edges.push(`M${left},${bottom}H${right}`);
+      if (i % columns === 0 || !same(i - 1)) edges.push(`M${left},${top}V${bottom}`);
+      if (i % columns === columns - 1 || !same(i + 1)) edges.push(`M${right},${top}V${bottom}`);
+      paths.set(cell.group, edges);
+    });
+    if (!paths.size) return;
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.classList.add("formation-transport-frames");
+    svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("width", String(list.clientWidth));
+    svg.setAttribute("height", String(maxY + 1));
+    for (const [group, edges] of paths) {
+      const path = document.createElementNS(svg.namespaceURI, "path");
+      path.dataset.transportGroup = group;
+      path.setAttribute("d", edges.join(""));
+      svg.append(path);
+    }
+    list.append(svg);
   }
   let pilotFromPreload = false;
   function closePilot() {

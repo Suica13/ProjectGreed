@@ -33,6 +33,7 @@ function createRoomEngine({
 }) {
   const Records =
     typeof MatchRecords === "undefined" ? require("./match-records.js") : MatchRecords;
+  const Climate = typeof BattlefieldClimate !== "undefined" ? BattlefieldClimate : require("./battlefield-climate.js");
   const radioRange = typeof DialogueRange !== "undefined" ? DialogueRange : require("./dialogue-range.js");
   const Dialogue = typeof BattleDialogue !== "undefined"
     ? BattleDialogue : require("../client/battle-dialogue.js");
@@ -65,6 +66,49 @@ function createRoomEngine({
       });
     }
     return campaignAdapter;
+  }
+  function ensureBattlefieldSeats(room) {
+    if (room.settings.mode !== "battlefield") {
+      for (const bot of members(room).filter((player) => player.battlefieldAI)) {
+        room.members.delete(bot.id);
+        if (room.seats[bot.seat] === bot) room.seats[bot.seat] = null;
+      }
+      return;
+    }
+    room.settings.battlefieldTeams = G.battlefieldMode.teams(G, room.settings.battlefieldTeams);
+    for (const seat of [0, 1]) {
+      const previous = room.seats[seat];
+      if (previous && !previous.battlefieldAI) {
+        const destination = room.seats.findIndex(
+          (player, index) => index >= 2 && index % 2 === seat && !player,
+        );
+        previous.seat = destination < 0 ? null : destination;
+        if (previous.ws) previous.ws.seat = previous.seat;
+        if (previous.seat !== null) room.seats[previous.seat] = previous;
+        room.seats[seat] = null;
+      }
+      if (!room.seats[seat]) {
+        const id = randomId();
+        const bot = {
+          id,
+          name: "阵营 AI " + (seat + 1),
+          bot: true,
+          battlefieldAI: true,
+          seat,
+          ready: true,
+          finalReady: true,
+          requests: new Map(),
+          aiSettings: G.validateAISettings(),
+          ws: { room: room.code, memberId: id, seat },
+        };
+        room.members.set(id, bot);
+        room.seats[seat] = bot;
+      }
+      const bot = room.seats[seat];
+      bot.characterFaction = room.settings.battlefieldTeams[seat].faction;
+      bot.formation = null;
+      bot.ready = bot.finalReady = true;
+    }
   }
   function captureRecord(room, intelCache) {
     const chatOnly = ["move_preview", "move_cancel"].includes(room.lastEvent?.type);
@@ -425,6 +469,8 @@ function createRoomEngine({
     for (const member of members(room)) member.ready = !!member.bot;
   }
   function forcedFaction(room, seat) {
+    if (room.settings.mode === "battlefield" && seat !== null && seat < 2)
+      return room.settings.battlefieldTeams?.[seat]?.faction || ["EFSF", "ZEON"][seat];
     if (room.settings.mode !== "campaign") return "PMC";
     if (room.settings.mode === "campaign" && seat !== null)
       return room.campaign?.teams[G.seatTeam(seat)]?.faction || ["EFSF", "ZEON"][G.seatTeam(seat)];
@@ -1036,6 +1082,11 @@ function createRoomEngine({
       return;
     }
     refreshHost(room);
+    if (room.started && room.game.battlefield) {
+      G.battlefieldMode.captureNearby(G, room.game);
+      G.battlefieldMode.sync(G, room.game);
+      if (room.game.winner !== null && room.phase === "idle") room.phase = "finished";
+    }
     if (room.campaign) {
       const previous = JSON.stringify([
         room.settings.campaignCommanders,
@@ -1053,6 +1104,7 @@ function createRoomEngine({
       completePlayback(room);
       scheduleResultReturn(room);
     }
+    logClimate(room);
     settleBattleEconomy(room);
     recordSettlement(room);
     const recipients = members(room);
@@ -1520,6 +1572,7 @@ function createRoomEngine({
   }
   function awardDefeat(room, from, to, defeatedModel, visibleBefore = {}) {
     recordDefeatDialogue(room, from, to, visibleBefore);
+    if (room.settings.mode === "battlefield") return;
     if (room.campaign) {
       if (from && from.team !== to.team) to.campaignDefeatedBy = from.team;
       return;
@@ -1601,7 +1654,7 @@ function createRoomEngine({
     }
   }
   function reserveBattleStock(room) {
-    if (room.startedFromSave || room.campaign) return;
+    if (room.startedFromSave || room.campaign || room.settings.mode === "battlefield") return;
     room.technologyStartPoints = Object.fromEntries(room.seats.filter(Boolean).map(player =>
       [player.id, roomDevelopment().normalizeTechnologyPoints(player.technologyPoints)]));
     for (const player of room.seats) {
@@ -1655,6 +1708,7 @@ function createRoomEngine({
     }
   }
   function settleBattleEconomy(room) {
+    if (room.settings.mode === "battlefield") return;
     if (
       !room.started ||
       room.phase !== "finished" ||
@@ -1712,6 +1766,7 @@ function createRoomEngine({
     }
   }
   function recordSettlement(room) {
+    if (room.settings.mode === "battlefield") return;
     if (room.campaign) return;
     if (
       !room.started ||
@@ -1788,6 +1843,7 @@ function createRoomEngine({
     }
   }
   function recordPilotBattle(room, actor, kind, cost, shipKill = false) {
+    if (room.settings.mode === "battlefield") return;
     if ((room.startedFromSave && !room.campaign) || !actor?.pilot?.custom) return;
     const owner = room.seats[G.ownerOf(actor)];
     const points = Math.max(0, Math.floor(cost));
@@ -2012,9 +2068,9 @@ function createRoomEngine({
       formationVariation: G.aiFormationVariation(room.aiFormationSeed, player.seat),
     };
   }
-  const playerBudget = (room, player) => G.armyBudget(room.settings, formationPlayer(room, player));
+  const playerBudget = (room, player) => player?.battlefieldAI ? 10000 : G.armyBudget(room.settings, formationPlayer(room, player));
   const playerUnitLimit = (room, player) =>
-    G.armyUnitLimit(room.settings, formationPlayer(room, player));
+    player?.battlefieldAI ? 36 : G.armyUnitLimit(room.settings, formationPlayer(room, player));
   const aiResearchCache = new WeakMap();
   function roomAIResearch(room) {
     if (room.started && room.aiResearch) return room.aiResearch;
@@ -2057,6 +2113,13 @@ function createRoomEngine({
       player?.bot ? { ...formationPlayer(room, player), researched: roomAIResearch(room) } : player,
     );
     if (player?.bot) rules.aiAllowedEras = roomAIEras(room);
+    if (player?.battlefieldAI) {
+      Object.assign(rules, G.validateTagRestrictions());
+      rules.pilotPolicy = "allow";
+      rules.characterFaction = null;
+      rules.researched = undefined;
+      rules.unitCostLimit = 99999;
+    }
     return rules;
   }
   // Preparing may acknowledge shortages. Actual deployment always uses formationPlan's stock filter.
@@ -2071,6 +2134,12 @@ function createRoomEngine({
   // Cache by all effective inputs, never by mutable player/room identity.
   const previewArmies = new Map();
   function randomArmy(room, player, seed = randomSeed()) {
+    if (player.battlefieldAI) {
+      const state = { teams:G.battlefieldMode.teams(G, room.settings.battlefieldTeams), completed:0, wave:0 };
+      const { choices } = G.battlefieldMode.pool(G, state, player.seat);
+      if (!choices.length) throw Error("阵营 AI 没有可用初始部队");
+      return Array.from({length:4}, (_, i) => ({ ...choices[((seed >>> 0) + i * 17) % choices.length] }));
+    }
     if (player.formationPreset)
       return G.validateFormation(
         player.formationPreset.units.slice(0, playerUnitLimit(room, player)),
@@ -2571,7 +2640,7 @@ function createRoomEngine({
       const group = actor.squadId || actor.id;
       if (checkedSquads.has(group)) continue;
       checkedSquads.add(group);
-      if (room.campaignBattle && G.campaignBattlefield.canCapture(G, room.game, actor)) continue;
+      if (room.game.battlefield || (room.campaignBattle && G.campaignBattlefield.canCapture(G, room.game, actor))) continue;
       const gather = G.aiSquadChoice(room.game, actor, available);
       if (gather)
         return { player, action: "move", fields: { unitId: actor.id, x: gather.x, y: gather.y } };
@@ -2719,7 +2788,7 @@ function createRoomEngine({
       })
     )
       return { player, action: "wait", fields: { unitId: u.id, single: true } };
-    const choice = u.plan ? null : G.aiChoice(room.game, u);
+    const choice = u.plan ? null : G.battlefieldMode.aiChoice(G, room.game, u) || G.aiChoice(room.game, u);
     if (choice?.rotation)
       return { player, action: "rotate", fields: { unitId: u.id, direction: choice.rotation } };
     if (choice && !u.moved && (choice.x !== u.x || choice.y !== u.y))
@@ -2930,6 +2999,25 @@ function createRoomEngine({
     const model = G.modelOf(unit);
     return `[队伍${unit.team + 1}][${player?.name || "空席位"}]${G.pilotUnitName(unit)}(${model.code} ${model.name})`;
   }
+  // Public, deterministic environmental events share the normal perspective logs.
+  // Track the game object as well as values so rematches and campaign local battles
+  // record their own opening conditions without duplicating them on sync/reconnect.
+  function logClimate(room) {
+    if (!room.started || room.phase === "assembly" || (room.campaign && !room.campaignBattle)) return;
+    const game = room.game;
+    const current = Climate.resolve(game.climateMap || G.getMap(game.mapId),
+      game.climateSettings || room.settings, game.round, game.climateSeed || game.seed || 1);
+    const previous = room.climateLogState;
+    if (previous?.game === game && previous.weather === current.weather && previous.time === current.time) return;
+    const opening = previous?.game !== game;
+    room.climateLogState = { game, weather:current.weather, time:current.time };
+    const weatherNames = {clear:"晴天",rain:"雨天",heavy_rain:"暴雨",fog:"雾天",overcast:"阴天",
+      snow:"雪天",blizzard:"暴雪",sand:"沙尘",sandstorm:"沙尘暴"};
+    const timeNames = {dawn:"清晨",morning:"上午",noon:"正午",afternoon:"下午",dusk:"黄昏",
+      evening:"晚上",late_night:"深夜",pre_dawn:"凌晨"};
+    log(room, current.space ? "[战场环境] 宇宙 · 无天气与昼夜变化。" :
+      `[${opening ? "战场环境" : "环境变化"}] 第${game.round}回合 · 天气：${weatherNames[current.weather]} · 时间：${timeNames[current.time]}。`);
+  }
   // Record the information available when an event happens, never retroactively reveal it.
   function log(
     room,
@@ -3052,6 +3140,7 @@ function createRoomEngine({
       }
   }
   const canControl = (room, seat, u) =>
+    !(room.game.battlefield && u && G.ownerOf(u) < 2 && G.ownerOf(u) !== seat) &&
     (!u ||
       !delegated(room, G.controllerOf(room.game, u)) ||
       G.controllerOf(room.game, u) === seat) &&
@@ -3589,6 +3678,7 @@ function createRoomEngine({
           if (room.hostId !== member.id) throw Error("只有房主可以设置 AI。");
           if (room.started) throw Error("对局开始后不能修改 AI。");
           const bot = room.seats[msg.seat];
+          if (bot?.battlefieldAI) throw Error("??????????? AI ??????");
           if (!Number.isInteger(msg.seat) || !bot?.bot) throw Error("该席位不是 AI。");
           if (Object.hasOwn(msg, "formationPreset")) throw Error("房主不能修改 AI 编组预设。");
           const allowed =
@@ -3633,6 +3723,7 @@ function createRoomEngine({
           if (room.hostId !== member.id) throw Error("只有房主可以添加或移除 AI");
           if (room.started && !room.campaign) throw Error("对局开始后不能添加或移除 AI");
           const destination = msg.seat;
+          if (room.settings.mode === "battlefield" && destination < 2) throw Error("战地模式的阵营 AI 不可移除");
           if (!Number.isInteger(destination) || destination < 0 || destination >= room.seats.length)
             throw Error("无效的席位");
           if (msg.action === "add_ai") {
@@ -3692,7 +3783,13 @@ function createRoomEngine({
             throw Error("存档地图不可更改。");
           const strategic =
             G.validateBattleMode(msg.battleMode ?? room.settings.mode) === "campaign";
-          const map = G.getMap(strategic ? G.campaignRoomSettings().mapId : msg.mapId);
+          const nextMode = G.validateBattleMode(msg.battleMode ?? room.settings.mode);
+          const requestedMap = G.getMap(msg.mapId || room.settings.mapId);
+          const map = G.getMap(strategic ? G.campaignRoomSettings().mapId :
+            nextMode === "battlefield" ? (requestedMap.battlefield ? requestedMap.id : G.battlefieldMode.defaultMapId) :
+            requestedMap.battlefield ? G.defaultRoomSettings().mapId : requestedMap.id);
+          if (!strategic && map.supportedModes && !map.supportedModes.includes(nextMode))
+            throw Error("此地图不支持所选模式");
           if (!strategic && map.scope === "strategic") throw Error("区块局地战地图仅用于历史战役模式");
           if (
             !strategic &&
@@ -3746,12 +3843,15 @@ function createRoomEngine({
                         msg.teamFactions ?? room.settings.teamFactions ?? [null, null],
                       ),
               };
+          if (settings.mode === "battlefield") settings.battlefieldTeams = G.battlefieldMode.teams(G,
+            msg.battlefieldTeams ?? room.settings.battlefieldTeams);
           if (strategic) Object.assign(settings, { surfaceCover: msg.surfaceCover ?? room.settings.surfaceCover ?? true, pilotDialogue: msg.pilotDialogue ?? room.settings.pilotDialogue ?? true, weather: msg.weather ?? room.settings.weather ?? "map", dayNight: msg.dayNight ?? room.settings.dayNight ?? "map", weatherCycle: msg.weatherCycle ?? room.settings.weatherCycle ?? true, timeCycle: msg.timeCycle ?? room.settings.timeCycle ?? true, climateBuffs: msg.climateBuffs ?? room.settings.climateBuffs ?? true });
           if (JSON.stringify(settings) !== JSON.stringify(room.settings)) {
             const mapChanged = settings.mapId !== room.settings.mapId;
             const modeChanged = settings.mode !== room.settings.mode;
             const factionsChanged =
-              JSON.stringify(settings.teamFactions) !== JSON.stringify(room.settings.teamFactions);
+              JSON.stringify(settings.teamFactions) !== JSON.stringify(room.settings.teamFactions) ||
+              JSON.stringify(settings.battlefieldTeams) !== JSON.stringify(room.settings.battlefieldTeams);
             const tagsChanged = [
               "bannedFactions",
               "bannedEras",
@@ -3772,6 +3872,7 @@ function createRoomEngine({
             room.seats = Array(map.spawns.length).fill(null);
             for (const player of members(room))
               if (player.seat !== null) room.seats[player.seat] = player;
+            ensureBattlefieldSeats(room);
             for (const player of members(room)) applyForcedFaction(room, player);
             if (modeChanged && settings.mode === "regular") {
               for (const player of members(room)) {
@@ -3839,6 +3940,8 @@ function createRoomEngine({
             (!Number.isInteger(destination) || destination < 0 || destination >= room.seats.length)
           )
             throw Error("无效的席位");
+          if (room.settings.mode === "battlefield" && (movingMember.battlefieldAI || (destination !== null && destination < 2)))
+            throw Error("战地模式的一号席位固定为阵营 AI");
           const takingAI = room.campaign && destination !== null && room.seats[destination]?.bot;
           if (
             destination !== null &&
@@ -4559,8 +4662,14 @@ function createRoomEngine({
         room.seats = Array(G.getMap(room.settings.mapId).spawns.length).fill(null);
         room.turnDone = room.seats.map(() => false);
       }
+      if (room.settings.mode === "battlefield") {
+        room.settings.mapId = G.battlefieldMode.defaultMapId;
+        room.seats = Array(G.getMap(room.settings.mapId).spawns.length).fill(null);
+        room.turnDone = room.seats.map(() => false);
+        ensureBattlefieldSeats(room);
+      }
       rooms.set(code, room);
-      seat = 0;
+      seat = room.settings.mode === "battlefield" ? 2 : 0;
     } else {
       if (!room) throw Error("房间不存在，请确认IP和房间码；服务端重启后需重新创建");
       if (

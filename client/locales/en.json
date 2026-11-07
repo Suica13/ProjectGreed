@@ -1,4 +1,10 @@
 {
+  "战场环境": "Battlefield conditions",
+  "环境变化": "Conditions changed",
+  "[{event}] 第{round}回合 · 天气：{weather} · 时间：{time}。": "[{event}] Round {round} · Weather: {weather} · Time: {time}.",
+  "[战场环境] 宇宙 · 无天气与昼夜变化。": "[Battlefield conditions] Space · No weather or day/night cycle.",
+  "战地模式设置": "Battlefield settings",
+  "{team} · 行动": "{team} · Turn",
   "QQ群:": "QQ group:",
   "点击复制QQ群号": "Copy QQ group number",
   "已复制": "Copied",
