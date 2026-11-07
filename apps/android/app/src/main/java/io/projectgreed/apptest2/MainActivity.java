@@ -16,6 +16,7 @@ import java.util.Locale;
 public final class MainActivity extends Activity {
     private static final String HOST = "projectgreed.localhost";
     private WebView web;
+    private boolean clientStarted;
     private ValueCallback<Uri[]> fileChoice;
     private File pendingExport;
     private NativeStore store;
@@ -33,9 +34,6 @@ public final class MainActivity extends Activity {
         getWindow().setStatusBarColor(0xff152430);
         getWindow().setNavigationBarColor(0xff152430);
         if (Build.VERSION.SDK_INT >= 30) getWindow().setDecorFitsSystemWindows(false);
-        String folder = preferences.getString("saveTree", null);
-        store = folder == null ? new NativeStore(new File(getFilesDir(), "profile"))
-            : new NativeStore(new SnapshotFiles.Documents(getContentResolver(), Uri.parse(folder)), true, null);
         if (saved != null) {
             choosingFolder = saved.getBoolean("choosingFolder", false);
             String pendingName = saved.getString("pendingExport");
@@ -45,15 +43,6 @@ public final class MainActivity extends Activity {
             }
         }
 
-        android.content.pm.PackageInfo provider = WebView.getCurrentWebViewPackage();
-        if (provider != null) {
-            try {
-                if (Integer.parseInt(provider.versionName.split("[.]")[0]) < 120) {
-                    new AlertDialog.Builder(this).setMessage("系统 WebView 版本过旧，请更新 Android System WebView 或 Chrome 至120或更新版本。").setPositiveButton("关闭", (d,w)->finish()).setCancelable(false).show();
-                    return;
-                }
-            } catch (NumberFormatException ignored) { }
-        }
         web = new WebView(this);
         android.widget.FrameLayout safeArea = new android.widget.FrameLayout(this);
         safeArea.addView(web, new android.widget.FrameLayout.LayoutParams(-1, -1));
@@ -125,7 +114,13 @@ public final class MainActivity extends Activity {
                 return true;
             }
         });
-        web.loadUrl("http://" + HOST + "/client.html");
+        // Probe actual capabilities before any gameplay or native profile writes.
+        web.loadUrl("http://" + HOST + "/compatibility.html");
+    }
+    private void openProfile() {
+        String folder = preferences.getString("saveTree", null);
+        store = folder == null ? new NativeStore(new File(getFilesDir(), "profile"))
+            : new NativeStore(new SnapshotFiles.Documents(getContentResolver(), Uri.parse(folder)), true, null);
     }
     private static boolean isApp(Uri uri) { return "http".equals(uri.getScheme()) && HOST.equals(uri.getHost()); }
     private static String mime(String path) {
@@ -145,6 +140,29 @@ public final class MainActivity extends Activity {
         });
     }
     public final class Bridge {
+        @JavascriptInterface public void compatibilityResult(String result) {
+            runOnUiThread(()->{
+                if (clientStarted || isFinishing() || isDestroyed()) return;
+                try {
+                    org.json.JSONArray missing = new org.json.JSONArray(result);
+                    if (missing.length() == 0) {
+                        openProfile();
+                        clientStarted = true;
+                        web.loadUrl("http://" + HOST + "/client.html");
+                        return;
+                    }
+                    web.stopLoading();
+                    StringBuilder detail = new StringBuilder();
+                    for (int i = 0; i < missing.length(); i++) detail.append("\n• ").append(missing.getString(i));
+                    android.content.pm.PackageInfo provider = WebView.getCurrentWebViewPackage();
+                    String version = provider == null ? "未知" : provider.versionName;
+                    new AlertDialog.Builder(MainActivity.this)
+                        .setMessage("当前系统 WebView（" + version + "）缺少游戏必需的功能：" + detail
+                            + "\n\n请更新设备当前使用的 Android System WebView 或 Chrome 后重试。客户端不再强制要求120版。")
+                        .setPositiveButton("关闭", (d,w)->finish()).setCancelable(false).show();
+                } catch (Exception error) { alert("无法完成 WebView 功能检查，请重新打开客户端：" + error.getMessage()); }
+            });
+        }
         @JavascriptInterface public String read() {
             synchronized (storageLock) {
                 try { return new JSONObject(store.read()).put("epoch", storeEpoch).toString(); }

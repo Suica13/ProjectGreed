@@ -201,3 +201,46 @@ test("Android app rotates battle viewport without clipping and restores menu ori
     await context.close();
   }
 });
+
+for (const unsupported of [false, true])
+  test(`Android capability preflight ${unsupported ? "reports missing features" : "accepts pre-120 version text"} before profile access`, async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({
+      userAgent:
+        "Mozilla/5.0 (Linux; Android 8.0) AppleWebKit/537.36 Chrome/109.0.0.0 Mobile Safari/537.36",
+    });
+    try {
+      const page = await context.newPage(),
+        requests = [],
+        errors = [];
+      page.on("request", (req) => requests.push(req.url()));
+      page.on("pageerror", (e) => errors.push(e.message));
+      await page.addInitScript((unsupported) => {
+        window.ProjectGreedAndroid = {
+          compatibilityResult: (result) => {
+            window.compatibilityReport = JSON.parse(result);
+          },
+          read: () => {
+            throw Error("Profile must not be read by preflight");
+          },
+          commit: () => {
+            throw Error("Profile must not be changed by preflight");
+          },
+        };
+        if (unsupported) Object.defineProperty(window, "structuredClone", { value: undefined });
+      }, unsupported);
+      await page.goto(url.replace("client.html", "compatibility.html"));
+      await page.waitForFunction(() => Array.isArray(window.compatibilityReport));
+      const report = await page.evaluate(() => compatibilityReport);
+      if (unsupported) {
+        expect(report).toHaveLength(1);
+        expect(report[0]).toContain("structuredClone");
+        await expect(page.locator("#compatibilityStatus")).toContainText("structuredClone");
+      } else expect(report).toEqual([]);
+      expect(requests.some((url) => /app-runtime|scripts\/client-/.test(url))).toBe(false);
+      expect(errors).toEqual([]);
+    } finally {
+      await context.close();
+    }
+  });

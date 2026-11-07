@@ -5,13 +5,19 @@
 ## 客户端与运行要求
 
 - Windows：`build/ProjectGreed-V93-AppTest2-windows-x64/ProjectGreed.exe`，完整复制文件夹后启动，不要只复制 EXE。要求 Windows 10/11 x64、.NET Framework 4.8、Microsoft Edge WebView2 Evergreen Runtime 120 或更新。F11 切换全屏。
-- Android：`build/ProjectGreed-V93-AppTest2-android/ProjectGreed-V93-AppTest2-test.apk`。要求 Android 8.0 / API 26 或更新，以及 Android System WebView / Chrome 120 或更新。APK 是 AppTest2 测试签名版本，不是正式商店发行包。应用 ID 为 `io.projectgreed.apptest2`。
+- Android：`build/ProjectGreed-V93-AppTest2-android/ProjectGreed-V93-AppTest2-test.apk`。要求 Android 8.0 / API 26 或更新，以及具备所需功能的 Android System WebView / Chrome（启动时检测实际能力，不强制120版）。APK 是 AppTest2 测试签名版本，不是正式商店发行包。应用 ID 为 `io.projectgreed.apptest2`。
 - 两个平台均包含本地游戏资源，支持现有离线房间和同版本服务端联机。继续支持现有 HTTP / WS 地址，网络包保持 V93 格式。手机离开前台会暂停音乐，回到前台触发现有连接同步逻辑。
 - 同签名、同应用 ID 覆盖安装可以保留应用数据；更换 Android 签名或卸载之前，先在设置中导出个人存档。原网页版与软件版之间使用原有 JSON 存档导入导出迁移，不自动读取个人浏览器目录。
 
+## 旧版 Android WebView
+
+V93 / 安装版本码93003已移除“低于120一律退出”的限制。安卓先加载一个使用ES5语法的独立检查页，通过后才加载游戏代码和读取原生存档；不根据用户代理或版本号判断能否进入游戏。检查覆盖实际使用的 structuredClone、Array.at、Object.hasOwn、CSS :has、HTML对话框、Canvas 2D、尺寸监听及基础网络／编码接口。缺少必要功能时，原生提示会列出当前 WebView 版本和具体缺失项。
+
+这会放行具备这些功能的120之前版本；并不代表所有更旧 WebView 都能运行。尤其CSS :has影响现有页面布局，Chromium105才加入该功能，见[Chrome 官方说明](https://developer.chrome.com/blog/has-m105)。浏览器自动检查模拟旧版版本字符串和缺失接口，不能代替旧设备实际 WebView 验收。Android系统最低版本仍为8.0，不更换服务端或内置另一套浏览器内核。
+
 ## 安卓横竖屏与存档文件夹
 
-安卓显示版本为 `V93`，安装版本码为 `93002`，应用 ID 和测试签名沿用之前的 AppTest2，支持覆盖安装。主菜单、房间准备、编组、生产、驾驶员、图鉴和历史战役战略地图固定竖屏；进入战斗场景（包括战斗回放）后允许随设备传感器切换横竖屏，退出战斗恢复竖屏。WebView 启用 viewport meta 支持，横屏沿用现有完整 1600×900 虚拟布局并缩放适配，不裁切中央区域。
+安卓显示版本为 `V93`，安装版本码为 `93003`，应用 ID 和测试签名沿用之前的 AppTest2，支持覆盖安装。主菜单、房间准备、编组、生产、驾驶员、图鉴和历史战役战略地图固定竖屏；进入战斗场景（包括战斗回放）后允许随设备传感器切换横竖屏，退出战斗恢复竖屏。WebView 启用 viewport meta 支持，横屏沿用现有完整 1600×900 虚拟布局并缩放适配，不裁切中央区域。
 
 第一次进入主菜单时弹出“将存档保存在其他文件夹可以避免意外丢失存档,要指定外置文件夹保存存档吗?”，提供“选择文件夹”和“关闭”。关闭后继续使用内部存档，不反复提示；设置里的“选择存档文件夹”按钮允许以后重新选择。战斗中该按钮不可用，以免切换位置重新加载中断对局。
 

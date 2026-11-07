@@ -90,7 +90,14 @@ function buildAppClient() {
   );
   for (const name of fs.readdirSync(path.join(output, "assets")))
     if (!assets.has("assets/" + name)) fs.unlinkSync(path.join(output, "assets", name));
+  // The Android bootstrap runs an ES5 capability probe before loading game code.
+  const compatibility = ["compatibility.html", "webview-compat.js"].map((name) => {
+    const bytes = fs.readFileSync(path.join(root, "apps/android", name));
+    fs.writeFileSync(path.join(output, name), bytes);
+    return { path: name, sha256: crypto.createHash("sha256").update(bytes).digest("hex") };
+  });
   const manifest = {
+    compatibility,
     edition: "AppTest2",
     version: project.version,
     assets: [...assets.values()],
