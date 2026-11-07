@@ -142,7 +142,9 @@ const CampaignBattlefield = (() => {
     }
     const cells = new Map();
     for (const zone of zones) {
-      const radius = zone.deploymentRadius;
+      // Give large transports and incoming armies room to stage without
+      // altering the objective capture radius or the map's permanent terrain.
+      const radius = zone.deploymentRadius + (zone.kind === "base" ? 6 : 4);
       for (
         let y = Math.max(0, zone.y - radius);
         y < Math.min(G.mapHeight(g), zone.y + radius + 1);
