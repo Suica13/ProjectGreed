@@ -16,10 +16,12 @@ const UnitSensors = {
         !spaceAt(game, unit.x, unit.y) &&
         game.tiles?.[unit.y]?.[unit.x] === "water";
       const head = unit.brokenParts?.head ? 0.75 : 1;
+      const climate = game?.climate || null;
+      const sightFactor = climate?.sight ?? 1, radarFactor = climate?.radar ?? 1;
       return {
         ...base,
-        sight: Math.round(base.sight * head),
-        radar: base.radar * head,
+        sight: Math.round(base.sight * head * sightFactor),
+        radar: base.radar * head * radarFactor,
         antiDetection: (base.antiDetection || 0) + (game && minovskyAt(game, unit) ? 5 : 0),
         stealth: !!base.stealth || (water && !!base.stealthAqua),
         antiDetect: !!base.antiDetect || (water && !!base.antiDetectAqua),
