@@ -34,6 +34,7 @@ const BattleDialogue = (() => {
     NEO_ZEON: { attack: "新吉翁的意志不会动摇！" },
   };
   const personalities = ["calm", "aggressive", "cautious", "idealist"];
+  const backgrounds = { veteran: "老兵", rookie: "新兵", survivor: "幸存者", officer: "军官" };
   function hash(value) {
     let h = 2166136261;
     for (const c of String(value)) h = Math.imul(h ^ c.charCodeAt(0), 16777619) >>> 0;
@@ -48,6 +49,7 @@ const BattleDialogue = (() => {
     if (!speaker || !event || !lines[event]) return null;
     const pilot = speaker.pilot || {};
     const trait = personality(pilot);
+    const background = typeof pilot.background === "string" ? pilot.background.slice(0, 160) : "";
     const identity = pilot.id || pilot.name || speaker.id;
     const seed = hash([identity, target?.id, event, sequence].join(":"));
     // Suppress most routine remarks to avoid flooding the battlefield and transcript.
@@ -58,11 +60,11 @@ const BattleDialogue = (() => {
       ? factionLines[factionId][event] : pool[seed % pool.length];
     return { event, speakerId: speaker.id, targetId: target?.id || null,
       pilotName: pilot.name || speaker.name || speaker.id,
-      personality: trait, faction: factionId || "PMC", text, sequence };
+      personality: trait, background, faction: factionId || "PMC", text, sequence };
   }
   function format(record) {
     return `[战场对话][${record.faction}][${record.pilotName}]「${record.text}」`;
   }
-  return { generate, format, personality };
+  return { generate, format, personality, personalities, backgrounds };
 })();
 if (typeof module !== "undefined") module.exports = BattleDialogue;
