@@ -88,6 +88,12 @@ node tools/performance-live-battle.cjs --fog full --delegate --stop-on-finish --
 node tools/performance-scene-soak.cjs --shadows --duration 1500000 --output build/perf/scenes.json
 ```
 
+### 最终Windows软件本体长测
+
+最终提交构建的ProjectGreed.exe通过真实WebView2调试入口、隔离存档运行5分钟全迷雾AI对局，推进至20回合、1,311个revision，服务端160个单位对象，无脚本错误。帧间隔P95 8.1毫秒、最大408.1毫秒；绘制P95 5.9毫秒、最大103.3毫秒，159个长任务、最长394毫秒。原始记录为本机 final-native-live.json。此轮验证的是实际软件，并非浏览器仿真；场景规模和持续时间不同，不与12分钟样本直接比较。
+
+最终Windows产品版本为0.99.0，源码标记f1b65e7c；该代码提交已推送main。本报告随后补充发布验证数据，未再更改游戏代码。软件本体复测使用隔离数据，测试房间与进程均已退出。
+
 ## 验证与交付
 
 - V99核心定向Node回归40项通过；性能、快照、迷雾、录像及布局25项通过，另有环境、阴影和规则差分核验。
