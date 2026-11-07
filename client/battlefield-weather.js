@@ -74,18 +74,28 @@ const BattlefieldWeather = (() => {
     }
     return {snow,wet,dust};
   }
-  function ground(ctx,w,h,map,settings,round,seed) {
+  function ground(ctx,w,h,map,settings,round,seed,geometry) {
     const state=resolve(map,settings,round,seed);
-    if(state.space)return;
+    // Explicit map opt-in plus room veto; no accidental cover on legacy maps.
+    if(state.space || map.surfaceCover !== true || settings.surfaceCover === false) return;
     const cacheKey=[map?.id||map?.name||"",round,seed,JSON.stringify(settings)].join(":");
     if(cacheKey!==surfaceCacheKey){surfaceCacheKey=cacheKey;surfaceCacheValue=surfaceState(map,settings,round,seed);}
     const surface=surfaceCacheValue;
+    if(!geometry || !Array.isArray(map.tiles))return;
+    const {tile,ox,oy}=geometry;
+    if(!(tile>0))return;
+    const firstX=Math.max(0,Math.floor(-ox/tile)),lastX=Math.min(map.width,Math.ceil((w-ox)/tile));
+    const firstY=Math.max(0,Math.floor(-oy/tile)),lastY=Math.min(map.height,Math.ceil((h-oy)/tile));
+    const terrains=typeof MapDocument !== "undefined" ? MapDocument.terrains : {};
     ctx.save();
-    for(const [kind,rgb,opacity] of [["snow","231,241,247",.28],["wet","27,43,58",.2],["dust","191,147,87",.16]]){
-      const strength=surface[kind]/100;
-      if(strength<=0)continue;
-      if(!textureLayer(ctx,presets?.assets?.[kind==="snow"?"snowCover":kind==="wet"?"wetGround":"dustCover"],w,h,strength)){
-        ctx.fillStyle="rgba("+rgb+","+(opacity*strength)+")";ctx.fillRect(0,0,w,h);
+    for(let y=firstY;y<lastY;y++)for(let x=firstX;x<lastX;x++){
+      const terrain=terrains[map.tiles[y]?.[x]];
+      const cover=terrain?.cover || {snow:1,wet:1,dust:1};
+      for(const [kind,rgb,opacity] of [["snow","231,241,247",.35],["wet","27,43,58",.24],["dust","191,147,87",.21]]){
+        const strength=surface[kind]/100*(cover[kind]??1);
+        if(strength<=0)continue;
+        ctx.fillStyle="rgba("+rgb+","+(opacity*strength)+")";
+        ctx.fillRect(ox+x*tile,oy+y*tile,tile+0.3,tile+0.3);
       }
     }
     ctx.restore();
@@ -103,13 +113,13 @@ const BattlefieldWeather = (() => {
     const intensity=fraction<.18?fraction/.18:fraction<.32?.25:fraction<.45?.8*(1-(fraction-.32)/.13):Math.max(0,.3*(1-fraction)/.55);
     ctx.save();ctx.fillStyle="rgba(235,243,255,"+(Math.max(0,Math.min(1,intensity*(spec.maxOpacity??.62))))+")";ctx.fillRect(0,0,w,h);ctx.restore();
   }
-  function draw(ctx,w,h,now,map,settings,round,seed=1){
+  function draw(ctx,w,h,now,map,settings,round,seed=1,geometry=null){
     const state=resolve(map,settings,round,seed);
     const key=state.weather+":"+state.time;
     if(lastKey===null){lastKey=key;current=state;}
     else if(key!==lastKey){previous=current;current=state;lastKey=key;changedAt=now;}
     const progress=Math.min(1,Math.max(0,(now-changedAt)/(presets?.transitionMs || 1800)));
-    ground(ctx,w,h,map,settings,round,seed);
+    ground(ctx,w,h,map,settings,round,seed,geometry);
     if(previous && progress<1)layer(ctx,w,h,now,previous,1-progress);
     else previous=null;
     layer(ctx,w,h,now,current,previous?progress:1);
