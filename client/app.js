@@ -206,6 +206,7 @@ function addLog(text) {
 }
 function recordBattleDialogue(event, speaker, target) {
   if (typeof BattleDialogue === "undefined" || Net.active) return;
+  if (typeof DialogueRange !== "undefined" && !DialogueRange.eligible(speaker, target, getUnit)) return;
   const record = BattleDialogue.generate({
     event, speaker, target, sequence: log.length,
     faction: speaker?.pilot?.faction || Rules.modelOf(speaker)?.faction,
@@ -1885,7 +1886,8 @@ function drawMap(now) {
     if (pos.x+radius < 0 || pos.y+radius < 0 || pos.x-radius > w || pos.y-radius > h) continue;
     mapUnitPoses.push(pose);
   }
-  // Draw transient pilot speech over current map positions, never as game state.
+  const pilotLabels = MapCamera.pilotLabels;
+  // Draw only when the corresponding pilot portrait is permitted to be visible.
   if (dialogueBubbles.size) {
     ctx.save();
     ctx.font = "12px system-ui";
@@ -1893,7 +1895,10 @@ function drawMap(now) {
     for (const [id, bubble] of dialogueBubbles) {
       if (bubble.until <= now) { dialogueBubbles.delete(id); continue; }
       const pose = mapPosesById.get(id);
-      if (!pose) continue;
+      if (!pilotLabels || !pose || !pose.u.pilot?.name ||
+          !(pose.u.pilot.custom || pose.u.pilot.aceId) ||
+          (Net.active && pose.u.team !== Net.snapshot?.you?.team &&
+           !intel?.visibleIds?.includes(id))) continue;
       const text = bubble.text.slice(0, 40);
       const width = Math.min(290, ctx.measureText(text).width + 22);
       const x = Math.max(width / 2 + 4, Math.min(w - width / 2 - 4, pose.pos.x));
@@ -1918,7 +1923,6 @@ function drawMap(now) {
     for (const { u, pos } of mapUnitPoses)
       UnitIdentity.drawRing(ctx, u, pos, (tile * 64) / Rules.mapCellPixels);
   mapUnitPoses.sort((a, b) => Number(a.airborne) - Number(b.airborne));
-  const pilotLabels = MapCamera.pilotLabels;
   let smokeDrawn = false;
   for (const {
     u,
