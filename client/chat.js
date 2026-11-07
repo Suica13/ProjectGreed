@@ -285,6 +285,8 @@ const Chat = (() => {
       matchId = snapshot.matchId;
       selectTab(Net.local ? "log" : "chat");
     }
+    if (typeof globalThis.receiveBattleDialogue === "function")
+      globalThis.receiveBattleDialogue(snapshot.dialogueEvents || [], snapshot.matchId || "");
     setLog(snapshot.log || [], [
       ...(snapshot.logNames || []),
       ...snapshot.game.units.map((unit) => Rules.unitLogName(unit)).filter(Boolean),
