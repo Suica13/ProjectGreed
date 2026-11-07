@@ -2931,6 +2931,27 @@ function createRoomEngine({
       ]),
     );
   }
+  function transportDialogue(room, passenger, carrier, launching, visibleBefore = null, preloaded = false) {
+    if (!passenger || !carrier || passenger.id === carrier.id) return;
+    const event = launching ? "launch" : preloaded ? "preload" : "board";
+    // The transport's pilot speaks first. The passenger may acknowledge.
+    const sequence = room.log.length;
+    const first = Dialogue.transport({ event, speaker: carrier, target: passenger, sequence, preloaded });
+    const response = Dialogue.transportReply({ event, speaker: passenger, target: carrier, sequence });
+    const participants = [carrier, passenger];
+    const visibleTeams = logTeamIds(room).filter((team) =>
+      participants.some((actor) => actor.team === team ||
+        (visibleBefore?.[team] || []).includes(actor.id)));
+    for (const entry of [first, response].filter(Boolean)) {
+      log(room, Dialogue.format(entry), { units: [], teams: visibleTeams });
+      (room.dialogueEvents ||= []).push({
+        ...entry, visibleTeams, round: room.game.round,
+        timestamp: Date.now(), id: room.matchId + ":" + room.log.length,
+      });
+    }
+    if ((room.dialogueEvents?.length || 0) > 240)
+      room.dialogueEvents.splice(0, room.dialogueEvents.length - 240);
+  }
   function logTransport(room, passenger, carrier, launching, visibleBefore = null) {
     const destination = G.columnLabel(passenger.x) + (passenger.y + 1);
     const passengerName = unitLabel(room, passenger),
@@ -2952,6 +2973,7 @@ function createRoomEngine({
           : null,
       },
     );
+    transportDialogue(room, passenger, carrier, launching, visibleBefore, room.phase === "deployment");
   }
   const unit = (room, id) => room.game.units.find((u) => u.id === id);
   function cancelSeatMoves(room, seat) {
