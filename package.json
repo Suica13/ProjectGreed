@@ -32,6 +32,8 @@
     "docs:check": "node tools/check-docs.cjs",
     "app:prepare": "node tools/build-apps.cjs prepare",
     "app:windows": "node tools/build-apps.cjs windows",
+    "release:windows": "npm run app:windows",
+    "release:android": "npm run app:android",
     "app:android": "node tools/build-apps.cjs android",
     "app:test:windows": "node tests/native-windows-smoke.cjs",
     "app:test:storage": "node --test tests/app-native-storage.test.cjs tests/profile-storage.test.cjs",
