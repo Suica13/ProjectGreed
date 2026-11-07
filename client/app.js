@@ -214,6 +214,7 @@ function recordBattleDialogue(event, speaker, target) {
   const line = BattleDialogue.format(record);
   dialogueHistory.push({ ...record, line, logIndex: log.length, round: game.round });
   dialogueBubbles.set(record.speakerId, { text: record.text, until: performance.now() + 3500 });
+  if (typeof DialogueAudio !== "undefined") DialogueAudio.play(record);
   addLog(line);
 }
 function playerNameClass(memberId, hostId = Net.snapshot?.hostId, selfId = Net.memberId) {
