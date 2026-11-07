@@ -4,6 +4,7 @@ const { randomUUID } = require("node:crypto"),
   WebSocket = require("ws");
 const { createServer } = require("../server");
 const version = require("../project.json").version;
+const G = require("../shared/rules");
 test("two network PMC players use fixed faction AI slots and receive one authoritative battlefield result", async (t) => {
   const app = createServer({ port: 0, host: "127.0.0.1", aiDelayMs: 999999 });
   const address = await app.listen(),
@@ -54,8 +55,8 @@ test("two network PMC players use fixed faction AI slots and receive one authori
         roomMode: "battlefield",
         characterFaction: "PMC",
         licenses: { Type61: true },
-        inventory: {},
-        kits: {},
+        inventory: {Type61:5},
+        kits: {Type61__standard:5},
       }),
     );
     await wait((frame) => frame.type === "joined");
@@ -107,17 +108,35 @@ test("two network PMC players use fixed faction AI slots and receive one authori
   assert.equal(room.seats[0].bot, true);
   assert.equal(room.seats[1].bot, true);
   assert.deepEqual(room.stockReservations, {});
+  for (const unit of room.game.units.filter(unit => unit.ownerSeat >= 2)) unit.hp = 0;
+  G.battlefieldMode.sync(G, room.game);
+  const reserves = room.game.battlefield.reserves;
+  const own = reserves.find(item => item.ownerSeat === 2), enemy = reserves.find(item => item.ownerSeat === 3);
+  const hostView = (await host.act("sync")).game.battlefield.reserves;
+  const guestView = (await guest.act("sync")).game.battlefield.reserves;
+  assert.deepEqual(hostView.map(item => item.id), [own.id]);
+  assert.deepEqual(guestView.map(item => item.id), [enemy.id]);
+  assert.equal(hostView[0].template, undefined);
+  room.game.round = own.readyRound;
+  const site = G.battlefieldMode.deploymentSites(G, room.game, 0)[0];
+  assert.equal((await host.act("battlefield_deploy", { reserveId: enemy.id, siteId: site.id })).type, "error");
+  const queued = await host.act("battlefield_deploy", { reserveId: own.id, siteId: site.id });
+  assert.equal(queued.type, "state");
+  assert.equal(queued.game.battlefield.reserves[0].request.arrivalRound, room.game.round + 1);
+  room.game.round++; G.battlefieldMode.advance(G, room.game);
+  const arrival = (await host.act("sync")).game.units.find(unit => unit.id.startsWith("pmc-airdrop-"));
+  assert(arrival?.hp > 0 && arrival.ownerSeat === 2);
   room.game.units.find((unit) => unit.team === 1 && unit.facility?.type === "base").hp = 0;
   const result = await host.act("wait", {
-    unitId: room.game.units.find((unit) => unit.ownerSeat === 2).id,
+    unitId: arrival.id,
     single: true,
   });
   assert.equal(result.phase, "finished");
   assert.equal(result.game.winner, 0);
-  assert.deepEqual(result.game.battlefield.strength, [20000, 0]);
+  assert.deepEqual(result.game.battlefield.strength, [20000 - G.models.Type61__standard.cost, 0]);
   assert.equal(result.game.seed, undefined);
   assert.equal(result.game.partSeed, undefined);
-  assert.deepEqual(room.economyAwards, []);
+  assert.equal(room.economyAwards.filter(award => award.kind === "result").length, 2);
   assert.deepEqual(room.techAwards, []);
   const again = await host.act("sync");
   assert.deepEqual(again.game.battlefield.strength, result.game.battlefield.strength);

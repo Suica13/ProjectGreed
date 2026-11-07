@@ -3063,6 +3063,8 @@ const Deployment = (() => {
   function render() {
     byId("deploymentPanel").hidden = phase !== "deployment";
     byId("deploymentBottomBar").hidden = phase !== "deployment";
+    byId("gameScene").dataset.deployment = String(phase === "deployment");
+    requestAnimationFrame(updateClearance);
     byId("confirmDeployment").hidden = phase !== "deployment";
     byId("endTurn").hidden = [
       "start",
@@ -3082,25 +3084,31 @@ const Deployment = (() => {
       : seat === null
         ? "观战：等待两队部署。"
         : `${teamName(Rules.seatTeam(seat))}全队共享部署区 · 选中己方单位，再点击高亮空格调整位置。`;
-    const roster = byId("deploymentRoster");
+    const roster = byId("deploymentRoster"), scrollTop = roster.scrollTop;
     roster.replaceChildren();
     const controllable = game.units.filter((u) => u.hp > 0 && !u.embarked && canEditUnit(u));
     for (const u of controllable) {
       const button = document.createElement("button");
       button.type = "button";
-      button.style.cssText = "display:flex;flex:0 0 auto;align-items:center;gap:5px;padding:5px;border:1px solid #65849c;border-radius:5px;min-width:100px";
+      button.className = "deployment-unit-icon";
+      button.dataset.unitId = u.id;
+      button.classList.toggle("is-staged", !!u.deploymentStaged);
+      button.title = unitName(u) + (u.deploymentStaged ? " · 待放置" : " · 已部署");
+      button.setAttribute("aria-label", button.title);
       button.setAttribute("role", "option");
       button.setAttribute("aria-selected", String(selected === u.id));
       const img = document.createElement("img");
       img.src = unitIcon(u.model, u.pilot);
       img.alt = "";
-      img.style.cssText = "width:30px;height:30px;object-fit:contain";
+
       const label = document.createElement("span");
-      label.textContent = u.id + (u.deploymentStaged ? " · 待放置" : " · 已部署");
+      label.className = "deployment-unit-number";
+      label.textContent = String((u.formationIndex ?? game.units.indexOf(u)) + 1);
       button.append(img, label);
       button.onclick = () => { selected = u.id; update(); };
       roster.append(button);
     }
+    roster.scrollTop = scrollTop;
     const canChange = canEdit();
     byId("deploymentUnplace").disabled = !canChange || !canEditUnit(getUnit(selected));
     byId("deploymentClear").disabled = !canChange;
@@ -3113,22 +3121,6 @@ const Deployment = (() => {
     if (phase !== "deployment" || Net.awaiting || !cell) return;
     const target = Rules.at(game, cell.x, cell.y),
       u = getUnit(selected);
-    if (target && target !== u && canEditUnit(u) && canEditUnit(target) &&
-        Rules.squadJoinTarget(game,u,target.x,target.y,[u])) {
-      const stamp=session;
-      const choice=await GameDialog.choose({title:"合并小队",message:unitName(u)+" → "+unitName(target),
-        actions:[{label:"取消",value:"cancel"},{label:"选择单位",value:"select"},
-          {label:"合并小队",value:"join",primary:true}]});
-      if (stamp !== session || !canEditUnit(u) || !canEditUnit(target)) return;
-      if (choice === "select") { selected=target.id;GameAudio.selectUnit(target);update();return; }
-      if (choice !== "join") return;
-      if (Net.active) Net.request("deploy",{unitId:u.id,x:target.x,y:target.y});
-      else {
-        try { Rules.deploy(game,team(),u.id,target.x,target.y);GameAudio.selectUnit(u); }
-        catch(error) { note(error.message); }
-      }
-      squadSingleMove=false;update();return;
-    }
     if (target && canEditUnit(target)) {
       GameAudio.selectUnit(target);
       selected = target.id;
@@ -3148,6 +3140,85 @@ const Deployment = (() => {
       }
     }
   }
+  let dragging = null, pendingDrop = null;
+  function failedDrop(message = "加入失败") {
+    note(message);
+    GameAudio.play("underAttackSound");
+  }
+  function beginDrag(event) {
+    if (phase !== "deployment" || ["hangar-board", "hangar-launch"].includes(mode)) return false;
+    const cell = cellAt(event), target = cell && Rules.at(game, cell.x, cell.y);
+    let unit = getUnit(selected);
+    if (!unit || !Rules.cells(unit).some(p => p.x === cell?.x && p.y === cell?.y)) unit = target;
+    if (!canEditUnit(unit) || unit.embarked || unit.deploymentStaged || unit.facility) return false;
+    dragging = { unitId:unit.id, session, moved:false, x:event.clientX, y:event.clientY, image:new Image() };
+    dragging.image.src = unitIcon(unit.model, unit.pilot);
+    return true;
+  }
+  function moveDrag(event) {
+    if (!dragging || dragging.session !== session || phase !== "deployment") return cancelDrag();
+    dragging.x = event.clientX; dragging.y = event.clientY;
+    if (!dragging.moved) { dragging.moved = true; selected = dragging.unitId; update(); }
+  }
+  function cancelDrag() { dragging = null; }
+  function sendDrop(unit, x, y, message) {
+    if (Net.active) {
+      const id = Net.request("deploy", { unitId:unit.id, x, y });
+      if (id) pendingDrop = { id, message };
+    } else {
+      try { Rules.deploy(game, team(), unit.id, x, y); GameAudio.selectUnit(unit); }
+      catch { failedDrop(message); }
+      update();
+    }
+  }
+  function drop(event) {
+    const drag = dragging;
+    cancelDrag();
+    if (!drag?.moved || drag.session !== session || phase !== "deployment") return;
+    const unit = getUnit(drag.unitId), cell = cellAt(event);
+    if (!canEditUnit(unit)) return;
+    const rect = byId("map").getBoundingClientRect();
+    if (!cell || event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom)
+      return failedDrop("部署失败");
+    const target = Rules.at(game, cell.x, cell.y);
+    if (target && target.id !== unit.id) {
+      if (target.team === unit.team && Rules.hangars.of(target).length) {
+        HangarUI.openDeploymentBoarding(unit, target);
+        return;
+      }
+      if (!canEditUnit(target) || !Rules.squadJoinTarget(game,unit,target.x,target.y,[unit])) return failedDrop();
+      squadSingleMove = false;
+      sendDrop(unit, target.x, target.y, "加入失败");
+    } else {
+      const anchor = Rules.anchorAt(unit, cell.mapX ?? cell.x, cell.mapY ?? cell.y);
+      sendDrop(unit, anchor.x, anchor.y, "部署失败");
+    }
+  }
+  function dropRejected(id) {
+    if (!pendingDrop || pendingDrop.id !== id) return false;
+    const message = pendingDrop.message; pendingDrop = null;
+    failedDrop(message); return true;
+  }
+  function dropAccepted(id) { if (pendingDrop?.id === id) pendingDrop = null; }
+  function drawDrag(ctx) {
+    if (!dragging?.moved || dragging.session !== session || phase !== "deployment") return;
+    const box = byId("map").getBoundingClientRect(), size = Math.max(36, Math.min(72, mapGeo.tile * 1.5));
+    ctx.save();ctx.globalAlpha = .8;
+    if (dragging.image.complete && dragging.image.naturalWidth)
+      ctx.drawImage(dragging.image, dragging.x-box.left-size/2, dragging.y-box.top-size/2, size, size);
+    ctx.restore();
+  }
+  function updateClearance() {
+    const panel = byId("deploymentBottomBar"), scene = byId("gameScene");
+    let clearance = 0;
+    if (!panel.hidden) {
+      const top = Math.min(panel.getBoundingClientRect().top, byId("deploymentAuto").getBoundingClientRect().top);
+      clearance = Math.ceil(byId("mapWrap").getBoundingClientRect().bottom - top + 10);
+    }
+    scene.style.setProperty("--deployment-panel-clearance",clearance+"px");
+  }
+  new ResizeObserver(updateClearance).observe(byId("deploymentBottomBar"));
+  window.addEventListener("resize", updateClearance);
   function deploymentAction(action, id = null) {
     if (!canEdit()) return;
     if (Net.active) Net.request(action, id ? { unitId: id } : {});
@@ -3184,12 +3255,15 @@ const Deployment = (() => {
   return {
     render,
     click,
+    beginDrag, moveDrag, drop, cancelDrag, drawDrag, dropAccepted, dropRejected,
+    isDragging: id => !!(dragging?.moved && dragging.unitId === id && dragging.session === session && phase === "deployment"),
     team,
     canEdit,
     canEditUnit,
     areaSeat,
     reset: () => {
       previewSeat = 0;
+      cancelDrag(); pendingDrop = null;
     },
   };
 })();

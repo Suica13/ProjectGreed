@@ -2869,5 +2869,25 @@
       "name": "量産型バウ",
       "description": "バウの量産型。性能差はほとんどない。"
     }
+  },
+  "Facility_HQ": {
+    "en": {},
+    "ja": {}
+  },
+  "Facility_MG": {
+    "en": {},
+    "ja": {}
+  },
+  "Facility_Beam": {
+    "en": {},
+    "ja": {}
+  },
+  "Facility_Missile": {
+    "en": {},
+    "ja": {}
+  },
+  "Facility_Cannon": {
+    "en": {},
+    "ja": {}
   }
 }

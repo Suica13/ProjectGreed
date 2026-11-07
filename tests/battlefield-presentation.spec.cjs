@@ -18,7 +18,7 @@ test('native facility sizes, SL team highlights and compact non-overlapping phas
   await page.locator('#createOfflineRoom').click();
   await page.locator('#startRoomGame').click();
   await page.locator('#confirmFinalFormation').click();
-  await expect(page.locator('#phaseTitle')).toHaveText('部署');
+  await expect(page.locator('#phaseTitle')).toHaveText('部署阶段');
   await expect(page.locator('.phase-row #deploymentPanel')).toBeHidden();
   await expect(page.locator('.phase-row #hint')).toBeHidden();
   await page.locator('#confirmDeployment').click();
@@ -57,6 +57,12 @@ test('native facility sizes, SL team highlights and compact non-overlapping phas
       points.forEach(point => { point.owner = owner; });
       const canvas = document.createElement('canvas'); canvas.width = 400; canvas.height = 300;
       const ctx = canvas.getContext('2d');
+      let iconSpan = 0;
+      const drawImage = ctx.drawImage.bind(ctx);
+      ctx.drawImage = (image, ...args) => {
+        if (!iconSpan) iconSpan = Math.max(args[2], args[3]);
+        drawImage(image, ...args);
+      };
       const first = points[0];
       BattlefieldUI.draw(ctx, 200 - (first.x + .5) * 60, 150 - (first.y + .5) * 60, 60);
       const pixels = ctx.getImageData(0, 0, 400, 300).data;
@@ -65,10 +71,14 @@ test('native facility sizes, SL team highlights and compact non-overlapping phas
         if (pixels[i + 3] > 100 && pixels[i + 2] > pixels[i] + 40) blue++;
         if (pixels[i + 3] > 100 && pixels[i] > pixels[i + 2] + 40) red++;
       }
-      counts.push({ blue, red });
+      const border = [...ctx.getImageData(350, 150, 1, 1).data];
+      counts.push({ blue, red, border, iconSpan });
     }
     points.forEach((point, i) => { point.owner = original[i]; });
-    return counts[1].blue > counts[0].blue + 10 && counts[2].red > counts[0].red + 10;
+    return counts[1].blue > counts[0].blue + 10 && counts[2].red > counts[0].red + 10 &&
+      counts.every(count => Math.abs(count.iconSpan - 102) < 0.01) &&
+      counts[1].border[2] > counts[1].border[0] + 40 &&
+      counts[2].border[0] > counts[2].border[2] + 40;
   })).toBe(true);
   for (const width of [1600, 1000, 700, 390, 844]) {
     await page.setViewportSize({ width, height: width === 390 ? 844 : width === 844 ? 390 : 1000 });

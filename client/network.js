@@ -187,6 +187,7 @@ const Net = (() => {
     if (!n.awaiting || n.awaiting.id !== id) return false;
     clearTimeout(actionTimer);
     actionTimer = null;
+    if (accepted) Deployment.dropAccepted(id);
     if (accepted) GameAudio.actionAccepted?.(n.awaiting.action,
       n.snapshot?.game?.units.find(unit => unit.id === n.awaiting.fields?.unitId));
     n.awaiting = null;
@@ -457,8 +458,10 @@ const Net = (() => {
         return; // Authority follows STALE with a fresh snapshot.
       }
       if (!msg.id || msg.id === n.awaiting?.id) finishAction(n.awaiting?.id);
-      status(msg.message);
-      note(msg.message);
+      if (!Deployment.dropRejected(msg.id)) {
+        status(msg.message);
+        note(msg.message);
+      }
       if (pageView === "campaign") window.CampaignUI?.render();
       if (n.connecting) {
         if (mode === "resume") {
@@ -494,7 +497,7 @@ const Net = (() => {
     foregroundSyncAt = -Infinity;
     session++;
     moving = null;
-    status("离线" + ({battlefield:"战地模式",campaign:"历史战役",quick:"快速战"}[byId("offlineRoomMode").value] || "常规战"));
+    status("离线" + ({battlefield:"雇佣兵战争模式",campaign:"历史战役",quick:"快速战"}[byId("offlineRoomMode").value] || "常规战"));
   }
   function connect(mode = "join", auto = false, roomCode = null, credentials = {}) {
     cancelReconnect();

@@ -456,8 +456,8 @@ function updateContents() {
     ? `局地战 ${Math.min(game.round - campaignBattle.startRound + 1, campaignBattle.stopRound - campaignBattle.startRound)} / ${campaignBattle.stopRound - campaignBattle.startRound}回合 · ${teamName(game.team)}`
     : `第${game.round}回合 · ${teamName(game.team)}`;
   byId("turnBadge").style.color = game.team ? "var(--red)" : "var(--blue)";
-  byId("phaseTitle").textContent = ({ deployment:"部署", moving:"移动", reaction:"应战",
-    battle:"交战", victory:"战斗结束" })[phase] || "行动";
+  byId("phaseTitle").textContent = ({ deployment:"部署阶段", moving:"移动阶段", reaction:"应战阶段",
+    battle:"交战阶段", victory:"战斗结束" })[phase] || "行动阶段";
   byId("phaseEyebrow").textContent = game.team ? "RED PHASE" : "BLUE PHASE";
   byId("endTurn").textContent = Net.active
     ? "完成计划 · 结束行动 (B)"
@@ -473,7 +473,7 @@ function updateContents() {
   );
   byId("modeLabel").textContent = Net.active
     ? (Net.local ? "离线" : "联机") +
-      (Net.snapshot?.settings?.mode === "quick" ? "快速战" : "常规战") +
+      ({ battlefield: "雇佣兵战争模式", campaign: "历史战役模式", quick: "快速战", regular: "常规战" }[Net.snapshot?.settings?.mode] || "常规战") +
       " · " +
       Net.roleName()
     : "常规战";
@@ -1972,7 +1972,7 @@ function drawMap(now) {
   for (const u of IrradiationFX.units(MapCombat.units(), now).sort(
     (a, b) => Number(!!a.embarked?.exposed) - Number(!!b.embarked?.exposed),
   )) {
-    if ((u.hp <= 0 && !u.mapDying) || u.mapPose?.hidden || u.deploymentStaged) continue;
+    if ((u.hp <= 0 && !u.mapDying) || u.mapPose?.hidden || u.deploymentStaged || Deployment.isDragging(u.id)) continue;
     const motion = PlanningUI.motion(u, now) || (moving?.id === u.id ? moving : null);
     const pendingSquadMove = u.pendingMove || squadPendingMoves.get(u.id);
     const visualUnit = pendingSquadMove
@@ -2322,7 +2322,7 @@ function drawMap(now) {
     }
     ctx.restore();
   }
-  window.BattlefieldUI?.drawDrops(ctx, mapUnitPoses, now, tile);
+  Deployment.drawDrag(ctx);
   if (!aboveLayerDrawn) drawAboveLayer();
   // Hidden actors contribute effects only; never silhouettes, bars or selectable units.
   for (const actor of Net.snapshot?.effectActors || []) {
@@ -2596,6 +2596,9 @@ byId("map").onclick = async (e) => {
   if (pendingMovement()) return;
   let cell = cellAt(e);
   if (!cell) return;
+  if (mode === "move" || mode === "select") {
+    if (window.BattlefieldUI?.click(cell)) return;
+  }
   let target = Rules.at(game, cell.x, cell.y),
     u = getUnit(selected);
   // 查看单位资料不需要操作权限；移动与攻击仍检查所属玩家。

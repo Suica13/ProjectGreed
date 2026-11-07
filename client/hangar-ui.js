@@ -4,7 +4,7 @@ const HangarUI = (() => {
   dialog.id = "hangarDialog";
   dialog.setAttribute("aria-label", "格纳库");
   document.body.append(dialog);
-  let statusUnit = null, confirmingLaunch = false;
+  let statusUnit = null, confirmingLaunch = false, deploymentDrop = false;
   const launchSelection = new Set();
   let launchingIds = [], launchLocationKey = null;
   function commonLaunchCells(ids) {
@@ -48,7 +48,7 @@ const HangarUI = (() => {
     try {
       const u = getUnit(fields.unitId);
       if (action === "embark")
-        Rules.hangars.embarkSquad(game, u, getUnit(fields.carrierId), fields.hangarId, fields.single === true);
+        Rules.hangars.embarkSquad(game, u, getUnit(fields.carrierId), fields.hangarId, fields.single === true, fields.deploymentDrop === true);
       else PlanningUI.move(Rules.hangars.previewLaunchSquad(game, (fields.unitIds || [u.id]).map(getUnit), fields.x, fields.y));
       addLog(`${logUnit(u)} ${action === "embark" ? "搭载" : "出击"}。`);
       update();
@@ -57,9 +57,10 @@ const HangarUI = (() => {
     }
   }
   function board(u, carrier, h) {
+    const dropped = deploymentDrop;
     cancel();
     dialog.close();
-    request("embark", { unitId: u.id, carrierId: carrier.id, hangarId: h.id, single: squadSingleMove });
+    request("embark", { unitId: u.id, carrierId: carrier.id, hangarId: h.id, single: dropped || squadSingleMove, deploymentDrop:dropped });
   }
   function row(u, hangar = null) {
     const box = element("div", "hangar-unit");
@@ -194,7 +195,7 @@ const HangarUI = (() => {
           const embark = button(
             "搭乘",
             () => board(selectedUnit, carrier, h),
-            !allowed(selectedUnit) || !Rules.hangars.boardingPlan(game, squadSingleMove ? [selectedUnit] : Rules.squadMembers(game, selectedUnit), carrier, h.id),
+            !allowed(selectedUnit) || !Rules.hangars.boardingPlan(game, deploymentDrop || squadSingleMove ? [selectedUnit] : Rules.squadMembers(game, selectedUnit), carrier, h.id, deploymentDrop),
           );
           embark.dataset.boardId = selectedUnit.id;
           section.append(embark);
@@ -273,6 +274,18 @@ const HangarUI = (() => {
     render();
     if (!dialog.open) dialog.showModal();
   }
+  function openDeploymentBoarding(passenger, carrier) {
+    if (phase !== "deployment" || !Deployment.canEditUnit(passenger) || passenger.team !== carrier.team) return;
+    cancel();
+    deploymentDrop = true;
+    boarding = inspected = passenger.id;
+    boardingCarrier = carrier.id;
+    selected = passenger.id;
+    mode = "hangar-board";
+    statusUnit = null;
+    render();
+    if (!dialog.open) dialog.showModal();
+  }
   function actionButton(u) {
     const carrier = Rules.hangars.of(u).length > 0;
     if (
@@ -293,6 +306,7 @@ const HangarUI = (() => {
   }
   function cancel() {
     launching = boarding = boardingCarrier = reopenCarrier = null;
+    deploymentDrop = false;
     confirmingLaunch = false;
     launchingIds = []; launchLocationKey = null;
     launchLocations = [];
@@ -383,6 +397,6 @@ const HangarUI = (() => {
     cancel();
     update();
   });
-  return { open, actionButton, refresh, cells, click, cancel };
+  return { open, openDeploymentBoarding, actionButton, refresh, cells, click, cancel };
 })();
 window.HangarUI = HangarUI;

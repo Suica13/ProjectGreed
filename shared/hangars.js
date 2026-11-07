@@ -69,7 +69,7 @@ const UnitHangars = {
         ...b.map((p) => Math.min(...a.map((q) => Math.abs(p.x - q.x) + Math.abs(p.y - q.y)))),
       );
     };
-    function canEmbark(g, u, carrier, hangarId) {
+    function canEmbark(g, u, carrier, hangarId, deploymentDrop = false) {
       if (
         !onMap(u) ||
         modelOf(u).deployed ||
@@ -93,7 +93,11 @@ const UnitHangars = {
           ? { ...actor, embarked: { carrierId: carrier.id, hangarId, exposed: true } } : actor) };
         if (!squadFits(squadMembers(projected, carrier), projected)) return false;
       }
-      if (deploying(g)) return !g.deployment[ownerOf(u)] && edgeDistance(carrier, u) === 1;
+      if (deploying(g)) {
+        const inDeploymentArea = deploymentDrop && deploymentCells(g, ownerOf(u), u).some(
+          cell => cells(carrier).some(target => cell.x === target.x && cell.y === target.y));
+        return !g.deployment[ownerOf(u)] && (edgeDistance(carrier, u) === 1 || inDeploymentArea);
+      }
       return (
         u.team === g.team &&
         !u.acted &&
@@ -107,10 +111,10 @@ const UnitHangars = {
     }
     // Reserve every passenger before mutating the real board. Backtracking also
     // handles mixed squads and overlapping native hangar type restrictions.
-    function boardingPlan(g, members, carrier, hangarId = null) {
+    function boardingPlan(g, members, carrier, hangarId = null, deploymentDrop = false) {
       if (!members.length || new Set(members.map((u) => u.id)).size !== members.length) return null;
       const slots = of(carrier).filter((h) => !hangarId || h.id === hangarId);
-      if (!slots.length || members.some((u) => !slots.some((h) => canEmbark(g, u, carrier, h.id))))
+      if (!slots.length || members.some((u) => !slots.some((h) => canEmbark(g, u, carrier, h.id, deploymentDrop))))
         return null;
       const view = { ...g, units: g.units.map((u) => ({ ...u })) };
       const plan = [];
@@ -120,7 +124,7 @@ const UnitHangars = {
         const stored = view.units.find((u) => u.id === passenger.id);
         if (!stored) return false;
         for (const slot of slots) {
-          if (!canEmbark(view, passenger, carrier, slot.id)) continue;
+          if (!canEmbark(view, passenger, carrier, slot.id, deploymentDrop)) continue;
           stored.embarked = { carrierId: carrier.id, hangarId: slot.id };
           plan.push({ unitId: passenger.id, hangarId: slot.id });
           if (assign(index + 1)) return true;
@@ -131,9 +135,9 @@ const UnitHangars = {
       }
       return assign(0) ? plan : null;
     }
-    function embarkSquad(g, u, carrier, hangarId, single = false) {
+    function embarkSquad(g, u, carrier, hangarId, single = false, deploymentDrop = false) {
       const members = single ? [u] : squadMembers(g, u);
-      const plan = boardingPlan(g, members, carrier, hangarId);
+      const plan = boardingPlan(g, members, carrier, hangarId, deploymentDrop);
       if (!plan) throw Error("格纳库无法容纳整队，或成员不满足搭乘条件");
       for (const item of plan)
         embark(
@@ -141,6 +145,7 @@ const UnitHangars = {
           members.find((member) => member.id === item.unitId),
           carrier,
           item.hangarId,
+          deploymentDrop,
         );
       return {
         type: "embark",
@@ -150,8 +155,8 @@ const UnitHangars = {
         squadIds: members.map((member) => member.id),
       };
     }
-    function embark(g, u, carrier, hangarId) {
-      if (!canEmbark(g, u, carrier, hangarId))
+    function embark(g, u, carrier, hangarId, deploymentDrop = false) {
+      if (!canEmbark(g, u, carrier, hangarId, deploymentDrop))
         throw Error("无法搭载：容量、类型、距离或行动条件不满足");
       const h = of(carrier).find((h) => h.id === hangarId);
       delete u.squadId;

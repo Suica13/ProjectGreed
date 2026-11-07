@@ -8,6 +8,21 @@
       "/weapons/ZN_YMS_16M_Cannon_HE/min": 1,
       "/weapons/ZN_YMS_16M_Cannon_HE/hit": -1.25,
       "/weapons/Common_Mortar_YMS_16M/hit": -0.77500000000001
+    },
+    "Facility_HQ": {
+      "/stats/hp": -75000
+    },
+    "Facility_MG": {
+      "/stats/hp": 13750
+    },
+    "Facility_Beam": {
+      "/stats/hp": 10000
+    },
+    "Facility_Missile": {
+      "/stats/hp": 12500
+    },
+    "Facility_Cannon": {
+      "/stats/hp": 10000
     }
   },
   "weapons": {

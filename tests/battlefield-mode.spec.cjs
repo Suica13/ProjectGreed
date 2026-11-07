@@ -31,6 +31,55 @@ for (const width of [1600, 390])
     await expect(page.locator("#battlefieldStatus")).toBeVisible();
     await expect(page.locator("#battlefieldRounds")).toHaveText("0/100");
     await expect(page.locator(".battlefield-strength-text").first()).toHaveText("20,000/20,000");
+    await expect.poll(() => page.evaluate(() => !BattleAssets.loading && Net.canAct())).toBe(true);
+    await page.evaluate(() => {
+      const room = [...bfEngine.rooms.values()][0];
+      room.game.units.find(unit => unit.ownerSeat === Net.seat && !unit.facility).hp = 0;
+      room.revision++; bfEngine.broadcast(room);
+    });
+    async function clickSite(kind) {
+      const position = await page.evaluate(kind => {
+        const site = Rules.battlefieldMode.deploymentSites(Rules, game, Net.team()).find(item => item.id.startsWith(kind + ":"));
+        mode = "select";
+        MapCamera.setPercent(35); MapCamera.focus(site.x, site.y, { preserveZoom: true });
+        const rect = byId("map").getBoundingClientRect();
+        return { x: rect.left + mapGeo.ox + (site.x + .5) * mapGeo.tile,
+          y: rect.top + mapGeo.oy + (site.y + .5) * mapGeo.tile };
+      }, kind);
+      await page.mouse.click(position.x, position.y);
+      await expect(page.locator("#battlefieldDeploymentDialog")).toBeVisible();
+    }
+    await clickSite("base");
+    const deploy = page.locator("#battlefieldDeploymentDialog .battlefield-reserve button");
+    await expect(deploy).toBeDisabled();
+    await expect(page.locator(".battlefield-reserve small")).toContainText("维修中");
+    await page.evaluate(() => {
+      const room = [...bfEngine.rooms.values()][0];
+      room.game.round = room.game.battlefield.reserves[0].readyRound;
+      room.revision++; bfEngine.broadcast(room);
+    });
+    await expect(deploy).toBeEnabled();
+    const geometry = await page.locator(".battlefield-reserve").evaluate(row => {
+      const info = row.children[1].getBoundingClientRect(), button = row.children[2].getBoundingClientRect();
+      return { infoRight: info.right, buttonLeft: button.left, right: row.getBoundingClientRect().right };
+    });
+    expect(geometry.infoRight).toBeLessThan(geometry.buttonLeft);
+    expect(geometry.right).toBeLessThanOrEqual(width);
+    await deploy.click();
+    await expect(page.locator(".battlefield-reserve small")).toContainText("下一回合空投");
+    await expect(deploy).toBeDisabled();
+    await page.screenshot({ path: "build/mercenary-deployment-" + width + ".png" });
+    await page.locator("#battlefieldDeploymentDialog").getByRole("button", { name: "关闭", exact: true }).click();
+    await page.evaluate(() => {
+      const room = [...bfEngine.rooms.values()][0];
+      room.game.round++; Rules.battlefieldMode.advance(Rules, room.game);
+      room.game.battlefield.points[0].owner = 0;
+      room.revision++; bfEngine.broadcast(room);
+    });
+    await expect.poll(() => page.evaluate(() => game.units.filter(unit => unit.id.startsWith("pmc-airdrop-") && unit.hp > 0).length)).toBe(1);
+    await clickSite("point");
+    await expect(page.locator("#battlefieldDeploymentDialog")).toContainText("暂无阵亡单位");
+    await page.locator("#battlefieldDeploymentDialog").getByRole("button", { name: "关闭", exact: true }).click();
     await page.evaluate(() => {
       const room = [...bfEngine.rooms.values()][0];
       room.game.round = 6;
@@ -51,10 +100,10 @@ for (const width of [1600, 390])
       ).length,
       awards: Net.snapshot.economyAwards || [],
     }));
-    expect(info.wave).toBe(1);
+    expect(info.wave).toBe(2);
     expect(info.arrivals).toBeGreaterThan(0);
     expect(info.facilities).toBe(6);
-    expect(info.awards).toEqual([]);
+    expect(info.awards.map(award => award.kind)).toEqual(["loss"]);
     const box = await page.locator("#battlefieldStatus").boundingBox();
     expect(box.x).toBeGreaterThanOrEqual(0);
     expect(box.x + box.width).toBeLessThanOrEqual(width);

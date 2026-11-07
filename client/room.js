@@ -237,7 +237,7 @@ const RoomPanel = (() => {
     for (const team of [0, 1]) {
       const group = element("fieldset", "battlefield-team-options"), legend = element("legend", "", "队伍" + (team + 1) + " · 固定阵营 AI");
       group.append(legend);
-      for (const [key, label, choices] of [["faction", "阵营", Rules.battlefieldMode.factions], ["era", "年代上限", Rules.eras]]) {
+      for (const [key, label, choices] of [["faction", "阵营", Rules.battlefieldMode.factions], ["era", "年代上限", Rules.battlefieldMode.eras]]) {
         const container = element("label", "", label), select = element("select");
         select.id = "battlefieldTeam" + team + key;
         for (const value of choices) {
@@ -258,7 +258,7 @@ const RoomPanel = (() => {
       }
       panel.append(group);
     }
-    panel.append(element("p", "muted", "100回合 · 初始战力20000 · 每5回合空投增援 · 本模式不扣库存、不产生收益"));
+      panel.append(element("p", "muted", "100回合 · 初始战力20000 · 每5回合空投增援 · 阵亡扣除库存 · 击坠与助攻给予奖励"));
   }
   function renderCampaignOptions(snapshot, locked) {
     let panel = byId("campaignRoomOptions");
@@ -959,7 +959,7 @@ const RoomPanel = (() => {
     formationSelect.setAttribute("aria-invalid", String(!valid || !!disabledCount));
     byId("roomTitle").textContent = Net.local
       ? "离线" +
-        { battlefield: "战地模式", quick: "快速战模式", campaign: "历史战役模式", regular: "常规战模式" }[snapshot.settings.mode] +
+        { battlefield: "雇佣兵战争模式", quick: "快速战模式", campaign: "历史战役模式", regular: "常规战模式" }[snapshot.settings.mode] +
         "房间"
       : "房间 " + snapshot.room;
     byId("roomStatus").hidden = !snapshot.started && !snapshot.loadedSave;

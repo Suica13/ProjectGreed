@@ -2,6 +2,7 @@ const test = require("node:test"),
   assert = require("node:assert/strict");
 const G = require("../shared/rules");
 const B = G.battlefieldMode;
+const Economy = require("../shared/economy.js");
 const { createRoomEngine } = require("../shared/room-engine");
 test("every offered faction and era has an initial force inside the selected year", () => {
   for (const faction of B.factions) for (const era of B.erasForFaction(G, faction)) {
@@ -12,6 +13,23 @@ test("every offered faction and era has an initial force inside the selected yea
     assert(result.choices.every(entry => G.models[entry.unitId + "__" + entry.kitId].tags.some(
       tag => tag.startsWith(era.slice(0, 4)))));
   }
+});
+
+test("0079 fixed waves scale every contingent by surviving bases and honor exact phase boundaries", () => {
+  for (const era of B.eras) for (const faction of B.factions) for (const round of [1, 9, 10, 50, 51, 100]) {
+    const stage = B.waveStage(round), row = B.fixedWaves[era][stage];
+    const entries = B.wavePlan(G, { faction, era }, round, 2, () => 0.99);
+    for (const [id, count] of Object.entries(row[faction]))
+      assert.equal(entries.filter(entry => entry.unitId === id && entry.group.endsWith(":" + id)).length, count * 2);
+    assert.equal(entries.filter(entry => entry.group.endsWith(":random-ms")).length, row.randomMS * 2);
+    assert.equal(entries.filter(entry => entry.group.endsWith(":ship")).length, 0);
+    const ships = B.wavePlan(G, { faction, era }, round, 2, () => 0);
+    assert.equal(ships.filter(entry => entry.group.endsWith(":ship")).length, 2);
+  }
+  assert.equal(B.waveStage(9), "early"); assert.equal(B.waveStage(10), "middle");
+  assert.equal(B.waveStage(50), "middle"); assert.equal(B.waveStage(51), "late");
+  assert.throws(() => B.teams(G, [{ faction: "EFSF", era: "0087T1" }, { faction: "ZEON", era: "0079T1" }]));
+  assert(!B.eras.includes("0087T1") && !B.factions.includes("AEUG"));
 });
 function game() {
   const armies = Array(10).fill(null);
@@ -33,12 +51,80 @@ test("dedicated battlefield map creates six reusable facility types for each tea
   assert.equal(g.battlefield.points.length, 4);
   assert.deepEqual(g.battlefield.strength, [20000, 20000]);
   assert(g.units.filter((unit) => unit.facility).every((unit) => G.modelOf(unit).move === 0));
+  assert(g.units.filter(unit => unit.facility?.type === "base").every(unit => unit.hp === 300000));
+  assert(g.units.filter(unit => ["machineGun", "beam", "missile", "cannon"].includes(unit.facility?.type))
+    .every(unit => unit.hp === 20000));
   assert.throws(() =>
     G.create(false, 1, [null, null], false, { mode: "battlefield", mapId: "frontier_1v1" }),
   );
   assert.throws(() =>
     G.create(false, 1, Array(10).fill(null), false, { mode: "regular", mapId: B.defaultMapId }),
   );
+});
+
+test("PMC casualties repair on campaign production timing, deploy next round and can suffer repeated losses", () => {
+  const g = game(), state = g.battlefield, original = g.units.find(unit => !unit.facility);
+  const reserve = state.reserves[0], site = B.deploymentSites(G, g, 0)[0];
+  assert.throws(() => B.requestDeployment(G, g, 2, reserve.id, site.id), /阵亡/);
+  original.hp = 0;
+  B.sync(G, g);
+  const loss = G.modelOf(original).cost;
+  assert.equal(reserve.readyRound, g.round + Economy.productionTiming(reserve.unitId, reserve.kitId).turns);
+  assert.throws(() => B.requestDeployment(G, g, 2, reserve.id, site.id), /维修/);
+  g.round = reserve.readyRound;
+  assert.throws(() => B.requestDeployment(G, g, 4, reserve.id, site.id), /自己/);
+  assert.throws(() => B.requestDeployment(G, g, 2, reserve.id, "base:enemy"), /己方/);
+  B.requestDeployment(G, g, 2, reserve.id, site.id);
+  const before = g.units.length;
+  B.advance(G, g);
+  assert.equal(g.units.length, before);
+  assert.throws(() => B.requestDeployment(G, g, 2, reserve.id, site.id), /已申请/);
+  g.round++;
+  B.advance(G, g);
+  const restored = g.units.find(unit => unit.id.startsWith("pmc-airdrop-"));
+  assert(restored && restored.hp === G.modelOf(restored).hp && G.fits(g, restored));
+  assert.equal(restored.ownerSeat, original.ownerSeat);
+  assert.equal(restored.formationIndex, original.formationIndex);
+  assert.deepEqual(restored.pilot, original.pilot);
+  assert.equal(restored.airdropRound, g.round);
+  assert.equal(reserve.readyRound, null);
+  B.advance(G, g);
+  assert.equal(g.units.length, before + 1);
+  restored.hp = 0; B.sync(G, g);
+  assert.equal(state.losses[0], loss * 2);
+  assert.equal(reserve.readyRound, g.round + reserve.repairTurns);
+});
+
+test("a captured destination cancels deployment; occupied landing cells wait without overwriting units", () => {
+  const g = game(), state = g.battlefield, reserve = state.reserves[0];
+  g.units.find(unit => !unit.facility).hp = 0;
+  B.sync(G, g); g.round = reserve.readyRound;
+  const point = state.points[0]; point.owner = 0;
+  const siteId = "point:" + point.id;
+  B.requestDeployment(G, g, 2, reserve.id, siteId);
+  g.round++; point.owner = 1; B.advance(G, g);
+  assert.equal(reserve.request, null);
+  assert(reserve.readyRound <= g.round);
+  point.owner = 0;
+  B.requestDeployment(G, g, 2, reserve.id, siteId);
+  g.round++;
+  const count = g.units.length;
+  B.advance({ ...G, fits: () => false }, g);
+  assert.equal(g.units.length, count);
+  assert(reserve.request);
+  B.advance(G, g);
+  assert.equal(g.units.length, count + 1);
+  assert.equal(reserve.request, null);
+});
+
+test("surviving escape components prevent duplicate chassis repair", () => {
+  const g = game(), original = g.units.find(unit => !unit.facility), reserve = g.battlefield.reserves[0];
+  original.hp = 0;
+  const escape = { ...structuredClone(original), id: original.id + "-escape-1", hp: 100 };
+  g.units.push(escape); B.sync(G, g);
+  assert.equal(reserve.readyRound, null);
+  escape.hp = 0; B.sync(G, g);
+  assert(reserve.readyRound > g.round);
 });
 test("unit losses count once and base damage deducts the same percentage of initial strength", () => {
   const g = game(),
@@ -112,22 +198,76 @@ test("neutral capture is proximity based, contested sites do not change owner, p
   B.captureNearby(G, g);
   assert.equal(point.owner, 1);
 });
-test("reinforcement waves advance technology, respect chosen faction/era and cannot duplicate a round", () => {
+test("fixed waves include the first force, selected-era pools and idempotent later reinforcement", () => {
   const g = game();
-  g.round = 6;
-  B.advance(G, g);
   assert.equal(g.battlefield.wave, 1);
-  const units = g.units.filter((unit) => unit.airdropRound === 6);
-  assert.equal(units.length, 8);
-  assert(units.every((unit) => G.fits(g, unit) && G.modelOf(unit).tags.includes("0079T1")));
+  const initial = g.units.filter(unit => unit.ownerSeat === 0 && !unit.facility);
+  assert(initial.length >= 12);
+  g.round = 6; B.advance(G, g);
+  assert.equal(g.battlefield.wave, 2);
+  const count = g.units.length;
   B.advance(G, g);
-  assert.equal(g.battlefield.wave, 1);
+  assert.equal(g.units.length, count);
   for (const team of [0, 1]) {
-    const early = B.pool(G, { ...g.battlefield, completed: 0 }, team);
-    const late = B.pool(G, { ...g.battlefield, completed: 30, wave: 8 }, team);
-    assert.equal(early.era, "0079T1");
-    assert.equal(late.era, "0079T2");
-    assert(late.choices.every((entry) => entry.unitId !== "MS_06C"));
+    const available = B.pool(G, g.battlefield, team);
+    assert.equal(available.era, "0079T2");
+    assert(available.ms.every(entry => G.models[entry.unitId + "__" + entry.kitId].unitTags.includes("MS")));
+    assert(available.choices.every(entry => entry.unitId !== "MS_06C"));
+  }
+});
+
+test("point advantage drains one percent of initial strength once per round and persists through sync", () => {
+  const g = game(), state = g.battlefield;
+  state.points[0].owner = 0;
+  B.advance(G, g);
+  assert.deepEqual(state.strength, [20000, 20000], "no drain before a completed round");
+  g.round = 2;
+  B.advance(G, g);
+  assert.deepEqual(state.strength, [20000, 19800]);
+  B.advance(G, g);
+  B.sync(G, g);
+  assert.deepEqual(state.strength, [20000, 19800], "duplicate settlement and snapshots cannot drain twice");
+  state.points[1].owner = 0;
+  state.losses[1] = 1000;
+  g.round = 3;
+  B.advance(G, g);
+  assert.deepEqual(state.strength, [20000, 18600], "multiple extra points still drain a flat 200");
+  const restored = structuredClone(g);
+  B.advance(G, restored);
+  assert.deepEqual(restored.battlefield.strength, state.strength, "serialized settlement marker survives reload");
+});
+
+test("tied points stop the drain and a reversed advantage drains the other team", () => {
+  const g = game(), state = g.battlefield;
+  state.points[0].owner = 0;
+  state.points[1].owner = 1;
+  g.round = 2;
+  B.advance(G, g);
+  assert.deepEqual(state.strength, [20000, 20000]);
+  state.points[2].owner = 1;
+  g.round = 3;
+  B.advance(G, g);
+  assert.deepEqual(state.strength, [19800, 20000]);
+  state.points[3].owner = 0;
+  g.round = 4;
+  B.advance(G, g);
+  assert.deepEqual(state.strength, [19800, 20000]);
+});
+
+test("point drain can end a battle before reinforcements or decide the final round", () => {
+  for (const round of [6, 101]) {
+    const g = game(), state = g.battlefield;
+    state.points[0].owner = 0;
+    state.losses[1] = 19800;
+    g.round = round;
+    B.advance(G, g);
+    assert.equal(g.winner, 0);
+    assert.equal(state.strength[1], 0);
+    assert.equal(state.wave, 1);
+    const before = structuredClone(state.controlLosses);
+    g.round++;
+    B.advance(G, g);
+    assert.deepEqual(state.controlLosses, before, "finished battles cannot continue draining");
   }
 });
 test("repair skills do not offer the battlefield main base as a target", () => {
@@ -184,7 +324,7 @@ function roomFixture(t, options = {}) {
     room: "BATTLEFIELD",
     roomMode: "battlefield",
     characterFaction: "PMC",
-    licenses: { Type61: true },
+    licenses: { Type61: true }, inventory: { Type61: 5 }, kits: { Type61__standard: 5 },
   });
   const room = engine.rooms.get("BATTLEFIELD");
   const act = (action, fields = {}) =>
@@ -199,6 +339,135 @@ function roomFixture(t, options = {}) {
     });
   return { engine, ws, room, act, messages };
 }
+
+test("deployment requests enforce turn ownership and deduplicate, with private reserve snapshots", (t) => {
+  const { engine, room, act, ws, messages } = roomFixture(t);
+  act("start_game", { formation: [{ unitId: "Type61", kitId: "standard" }] });
+  act("confirm_formation"); act("confirm_deployment");
+  const reserve = room.game.battlefield.reserves[0];
+  const actor = room.game.units.find(unit => unit.ownerSeat === 2);
+  actor.hp = 0; engine.broadcast(room);
+  const snapshot = messages.filter(message => message.type === "state").at(-1);
+  assert.equal(snapshot.game.battlefield.reserves.length, 1);
+  assert.equal(snapshot.game.battlefield.reserves[0].template, undefined);
+  const site = B.deploymentSites(G, room.game, 0)[0];
+  assert.throws(() => act("battlefield_deploy", { reserveId: reserve.id, siteId: site.id }), /维修/);
+  room.game.round = reserve.readyRound;
+  room.game.team = 1;
+  assert.throws(() => act("battlefield_deploy", { reserveId: reserve.id, siteId: site.id }), /回合/);
+  room.game.team = 0;
+  const request = { id: "respawn-unique-request", revision: room.revision,
+    round: room.game.round, matchId: room.matchId, phase: room.phase,
+    action: "battlefield_deploy", reserveId: reserve.id, siteId: site.id };
+  engine.action(ws, request);
+  const before = structuredClone(reserve.request);
+  engine.action(ws, request);
+  assert.deepEqual(reserve.request, before);
+  assert.equal(room.log.filter(line => line.includes("申请部署维修完成")).length, 1);
+});
+
+test("battlefield losses consume stock once, reserve concurrent deployments and block empty stock", (t) => {
+  const { engine, room, act } = roomFixture(t);
+  act("start_game", { formation: [{ unitId: "Type61", kitId: "standard" }, { unitId: "Type61", kitId: "standard" }] });
+  act("confirm_formation"); act("confirm_deployment");
+  const player = room.seats[2], reserves = room.game.battlefield.reserves;
+  player.inventory.Type61 = player.kits.Type61__standard = 3;
+  const own = room.game.units.filter(unit => unit.ownerSeat === 2);
+  own.forEach(unit => unit.hp = 0); engine.broadcast(room);
+  assert.equal(player.inventory.Type61, 1); assert.equal(player.kits.Type61__standard, 1);
+  const receipts = room.economyAwards.filter(award => award.kind === "loss");
+  assert.equal(receipts.length, 2);
+  engine.broadcast(room); assert.equal(room.economyAwards.filter(award => award.kind === "loss").length, 2);
+  room.game.round = Math.max(...reserves.map(item => item.readyRound));
+  const site = B.deploymentSites(G, room.game, 0)[0];
+  act("battlefield_deploy", { reserveId: reserves[0].id, siteId: site.id });
+  assert.throws(() => act("battlefield_deploy", { reserveId: reserves[1].id, siteId: site.id }), /库存/);
+  room.game.round++; B.advance(G, room.game); engine.broadcast(room);
+  const arrival = room.game.units.find(unit => unit.id.startsWith("pmc-airdrop-"));
+  arrival.hp = 0; engine.broadcast(room);
+  assert.equal(player.inventory.Type61, 0);
+  assert.equal(player.kits.Type61__standard, 0);
+  room.game.round = reserves[0].readyRound;
+  assert.throws(() => act("battlefield_deploy", { reserveId: reserves[0].id, siteId: site.id }), /库存/);
+  // Settlement markers belong to the saved game, not an ephemeral room counter.
+  room.game = structuredClone(room.game); engine.broadcast(room);
+  assert.equal(room.economyAwards.filter(award => award.kind === "loss").length, 3);
+});
+
+test("ordinary AI players automatically request repaired roster units", async (t) => {
+  const errors = [];
+  t.mock.method(console, "error", (...args) => errors.push(args));
+  const { engine, room, act } = roomFixture(t, { aiDelayMs: 1, randomAIMoveDelay: () => 0 });
+  act("add_ai", { seat: 4 });
+  act("start_game", { formation: [{ unitId: "Type61", kitId: "standard" }] });
+  act("confirm_formation"); act("confirm_deployment");
+  const reserve = room.game.battlefield.reserves.find(item => item.ownerSeat === 4);
+  assert(reserve);
+  for (const unit of room.game.units) {
+    if (unit.ownerSeat === 4) unit.hp = 0;
+    else if (unit.ownerSeat < 2) { unit.moved = true; unit.acted = true; }
+  }
+  B.sync(G, room.game);
+  room.game.round = Math.max(...room.game.battlefield.reserves.filter(item => item.ownerSeat === 4).map(item => item.readyRound));
+  room.turnDone[0] = true; room.turnDone[4] = false;
+  engine.broadcast(room);
+  const deadline = Date.now() + 12000;
+  while (!reserve.request && Date.now() < deadline) await new Promise(resolve => setTimeout(resolve, 20));
+  assert(reserve.request, "ordinary AI must request a repaired unit before ending its turn");
+  assert.equal(reserve.request.arrivalRound, room.game.round + 1);
+  room.game.round++; B.advance(G, room.game);
+  assert(room.game.units.some(unit => unit.ownerSeat === 4 && unit.hp > 0 && unit.id.startsWith("pmc-airdrop-")));
+  assert.deepEqual(errors, []);
+});
+
+test("hostile kills pay COST/8, zero-damage attack participation pays COST/16 and result follows team era", (t) => {
+  let target, killNext = false;
+  // Exercise authoritative accounting independently of weapon hit randomness.
+  const rules = { ...G,
+    unitSkills: unit => [...G.unitSkills(unit), { id: "TestIrradiation", name: "测试照射", type: "irradiation" }],
+    useSkill(game, unit) {
+      const before = target.hp, after = killNext ? 0 : before;
+      target.hp = after;
+      return { type: "skill", skillId: "TestIrradiation", unitId: unit.id, resultId: unit.id,
+        irradiation: true, evacuations: [], hits: [{ unitId: target.id, before, after, damage: before - after }] };
+    },
+  };
+  const { engine, room, act } = roomFixture(t, { rules });
+  act("configure_room", { ...room.settings, battleMode: "battlefield", battlefieldTeams: [{ faction: "EFSF", era: "0079T1" }, { faction: "ZEON", era: "0079T2" }] });
+  const allySocket = { readyState: 1 };
+  engine.join(allySocket, { mode: "join", room: "BATTLEFIELD", characterFaction: "PMC",
+    licenses: { Type61: true }, inventory: { Type61: 5 }, kits: { Type61__standard: 5 } });
+  let serial = 0;
+  const allyAct = (action, fields = {}) => engine.action(allySocket, { id: "ally-" + ++serial,
+    revision: room.revision, round: room.game.round, matchId: room.matchId, action, ...fields });
+  allyAct("switch_seat", { seat: 4 });
+  const formation = [{ unitId: "Type61", kitId: "standard" }];
+  allyAct("set_ready", { ready: true, formation });
+  act("start_game", { formation });
+  act("confirm_formation"); allyAct("confirm_formation");
+  act("confirm_deployment"); allyAct("confirm_deployment");
+  target = room.game.units.find(unit => unit.ownerSeat === 1 && !unit.facility);
+  const cost = G.modelOf(target).cost;
+  allyAct("skill", { unitId: room.game.units.find(unit => unit.ownerSeat === 4).id, skillId: "TestIrradiation" });
+  assert.equal(room.economyAwards.filter(award => award.kind === "assist").length, 0);
+  room.playback = null; room.phase = "idle";
+  killNext = true;
+  act("skill", { unitId: room.game.units.find(unit => unit.ownerSeat === 2).id, skillId: "TestIrradiation" });
+  const kill = room.economyAwards.find(award => award.kind === "kill");
+  const assist = room.economyAwards.find(award => award.kind === "assist");
+  assert.deepEqual([kill.money, kill.supplies], [Math.floor(cost / 8), Math.floor(cost / 8)]);
+  assert.deepEqual([assist.money, assist.supplies], [Math.floor(cost / 16), Math.floor(cost / 16)]);
+  assert.equal(assist.memberId, room.seats[4].id);
+  engine.broadcast(room); engine.broadcast(room);
+  assert.equal(room.economyAwards.filter(award => award.kind === "kill" || award.kind === "assist").length, 2);
+  room.playback = null; room.phase = "idle";
+  room.game.units.find(unit => unit.team === 1 && unit.facility?.type === "base").hp = 0;
+  engine.broadcast(room);
+  const results = room.economyAwards.filter(award => award.kind === "result");
+  assert.equal(results.length, 2);
+  assert(results.every(award => award.money === 2500 && award.supplies === 5000));
+  assert.deepEqual(room.techAwards, []); assert.deepEqual(room.pilotAwards, []);
+});
 test("fixed AI slots cannot be removed, taken or relocated by host requests", (t) => {
   const { room, act } = roomFixture(t);
   assert(room.seats[0].battlefieldAI && room.seats[1].battlefieldAI);
@@ -207,7 +476,7 @@ test("fixed AI slots cannot be removed, taken or relocated by host requests", (t
   assert.throws(() => act("switch_seat", { seat: 1 }));
   assert.throws(() => act("move_player", { memberId: room.seats[0].id, seat: 4 }));
 });
-test("PMC deploys with a license and zero stock; winning does not change stock or award resources or XP", (t) => {
+test("PMC deployment uses inventory and receives fixed era rewards without technology or pilot XP", (t) => {
   const { engine, ws, room, act, messages } = roomFixture(t);
   act("start_game", { formation: [{ unitId: "Type61", kitId: "standard" }] });
   assert.equal(room.phase, "assembly");
@@ -221,7 +490,7 @@ test("PMC deploys with a license and zero stock; winning does not change stock o
   engine.broadcast(room);
   assert.equal(room.game.winner, 0);
   assert.equal(room.phase, "finished");
-  assert.deepEqual(room.economyAwards, []);
+  assert.deepEqual(room.economyAwards.map(award => [award.kind, award.money, award.supplies]), [["result", 4000, 8000]]);
   assert.deepEqual(room.techAwards, []);
   assert.deepEqual(room.pilotAwards, []);
   assert.deepEqual({ inventory: player.inventory, kits: player.kits }, before);

@@ -1,1 +1,320 @@
-{"schemaVersion": 2, "stats": {"hp": 375000, "en": 1000, "move": 0, "mobility": 25, "cost": 2000, "counterLimit": 1, "accuracy": 115, "partStructuralStrength": 100, "partsBreakable": false, "movementType": "ground", "adaptability": {"ground": 100, "space": 50, "water": 50, "air": 10, "atmosphere": 0, "mountain": 100, "forest": 75, "snow": 75, "desert": 75, "rubble": 75}, "ship": false, "visualTurrets": [], "actionPoints": 10, "sensors": {"sight": 8, "radar": 8, "antiDetection": 0, "revealOnDetection": false, "antiDetect": false, "stealth": false, "stealthAqua": false, "antiDetectAqua": false}, "speed": 100, "deployed": true, "facilityType": "base", "footprint": {"width": 3, "height": 3}}, "shield": {"hp": 0, "blockChance": 0, "coverage": 0, "defenses": {"beam": {"percent": 1, "flat": 0}, "shell": {"percent": 1, "flat": 0}, "melee": {"percent": 1, "flat": 0}, "dp": {"percent": 1, "flat": 0}}}, "defenses": {"beam": {"percent": 5, "flat": 0}, "shell": {"percent": 10, "flat": 45}, "melee": {"percent": 5, "flat": 0}, "dp": {"percent": 5, "flat": 0}, "sp": {"percent": 0, "flat": 0}}, "attackBonuses": {"melee": 0, "shooting": 15, "beam": 0, "shell": 0}, "presentation": {"shield": false, "mapScale": 3.5555555555555554, "battleScale": 1, "idle": "ImportedIdle", "move": "ImportedIdle", "stagger": "ImportedIdle", "dodge": "ImportedIdle", "deathEffect": "Explosion_Ground_1", "walk": "ImportedIdle", "movement": "walk", "moveSoundKey": "tankMoveSound", "fixedFacing": 0}, "id": "Facility_HQ", "code": "Facility_HQ", "name": "\u4e3b\u57fa\u5730", "description": "\u901a\u7528\u6218\u573a\u8bbe\u65bd", "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/HQ/Mod/HQ.ini", "tags": ["EFSF", "0079T1"], "availableFactions": ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"], "unitTags": ["Building", "LargeUnit"], "formOnly": true, "facility": {"type": "base"}, "production": {"enabled": false}, "skeleton": {"Pelvis": {"x": 0, "y": 0}, "Body": {"x": 0, "y": 0}, "LeftArm": {"x": -9, "y": 0}, "RightArm": {"x": 9, "y": 0}, "LeftShoulder": {"x": -9, "y": 0}, "RightShoulder": {"x": 9, "y": 0}, "LeftWeapon": {"x": 0, "y": 0}, "RightWeapon": {"x": 0, "y": 0}, "Attachment12": {"x": 0, "y": 0}, "Attachment13": {"x": 0, "y": 0}, "Attachment15": {"x": 0, "y": 0}, "Head": {"x": 0, "y": 0}, "Eye": {"x": 0, "y": 0}, "LeftFoot": {"x": -6, "y": 0, "endDirOffset": -8}, "LeftLeg": {"x": -6, "y": 0, "endDirOffset": -8}, "RightFoot": {"x": 6, "y": 0, "endDirOffset": 8}, "RightLeg": {"x": 6, "y": 0, "endDirOffset": 8}, "Turret_EF_Type61_Cannon": {"x": 0, "y": 0, "endDirOffset": 0}, "Turret": {"x": 0, "y": 3}}, "materials": {"textures": {"HQ_Body_0.png": "textures/HQ_Body_0.png", "HQ_Body_1_Light.png": "textures/HQ_Body_1_Light.png"}, "icon": "HQ_Body_0.png"}, "layers": [{"name": "Body", "texture": "HQ_Body_0.png", "bone": "Body", "order": 1.0, "scale": 0.75, "rotation": 0.0, "offset": {"x": 0.0, "y": 0.0}, "worldOffset": {"x": 0.0, "y": 0.75}, "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/HQ/Image/HQ_Body_0.png"}, {"name": "Light", "texture": "HQ_Body_1_Light.png", "bone": "Body", "order": 1.0, "scale": 0.75, "rotation": 0.0, "offset": {"x": 0.0, "y": 0.0}, "worldOffset": {"x": 0.0, "y": 0.75}, "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/HQ/Image/HQ_Body_1_Light.png"}], "weapons": {}, "animations": {"OnMoving": "../../animations/OnMoving.json", "OnMovingReversing": "../../animations/OnMovingReversing.json", "Common_Dead": "../../animations/Common_Dead__AMX_002.json", "Common_Stun": "../../animations/Common_Stun__AMX_002.json", "Common_Idle": "../../animations/Common_Idle__AntiZakuTank.json", "ImportedIdle": "../../animations/ImportedIdle.json"}, "skills": [], "transport": {"slotCost": 1, "loadTags": []}, "weaponKits": [{"id": "standard", "name": "\u6807\u51c6\u5957\u4ef6", "cost": 0, "weapons": []}], "mechanics": [{"id": "facility", "name": "\u901a\u7528\u6218\u573a\u8bbe\u65bd", "status": "implemented"}], "sourceStats": {"nativeHP": 750000, "facilitySource": "GW_BattleUniverse_DLC_0079/Units/Buildings/HQ/Mod/HQ.ini", "conversion": "HP and projectile payload / 2, followed by global conversion; turn volleys MG8 / Beam2 / Missile4 / Cannon1", "visual": {"nativeBounds": [-50.625, -40.875, 50.625, 39.375], "targetCells": 3, "mapScale": 3.5555555555555554, "layers": [{"name": "Body", "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/HQ/Image/HQ_Body_0.png"}, {"name": "Light", "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/HQ/Image/HQ_Body_1_Light.png"}]}}}
+{
+  "schemaVersion": 2,
+  "stats": {
+    "hp": 375000,
+    "en": 1000,
+    "move": 0,
+    "mobility": 25,
+    "cost": 2000,
+    "counterLimit": 1,
+    "accuracy": 115,
+    "partStructuralStrength": 100,
+    "partsBreakable": false,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 100,
+      "space": 50,
+      "water": 50,
+      "air": 10,
+      "atmosphere": 0,
+      "mountain": 100,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "visualTurrets": [],
+    "actionPoints": 10,
+    "sensors": {
+      "sight": 8,
+      "radar": 8,
+      "antiDetection": 0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    },
+    "speed": 100,
+    "deployed": true,
+    "facilityType": "base",
+    "footprint": {
+      "width": 3,
+      "height": 3
+    }
+  },
+  "shield": {
+    "hp": 0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1,
+        "flat": 0
+      },
+      "shell": {
+        "percent": 1,
+        "flat": 0
+      },
+      "melee": {
+        "percent": 1,
+        "flat": 0
+      },
+      "dp": {
+        "percent": 1,
+        "flat": 0
+      }
+    }
+  },
+  "defenses": {
+    "beam": {
+      "percent": 5,
+      "flat": 0
+    },
+    "shell": {
+      "percent": 10,
+      "flat": 45
+    },
+    "melee": {
+      "percent": 5,
+      "flat": 0
+    },
+    "dp": {
+      "percent": 5,
+      "flat": 0
+    },
+    "sp": {
+      "percent": 0,
+      "flat": 0
+    }
+  },
+  "attackBonuses": {
+    "melee": 0,
+    "shooting": 15,
+    "beam": 0,
+    "shell": 0
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 3.5555555555555554,
+    "battleScale": 1,
+    "idle": "ImportedIdle",
+    "move": "ImportedIdle",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "walk",
+    "moveSoundKey": "tankMoveSound",
+    "fixedFacing": 0
+  },
+  "id": "Facility_HQ",
+  "code": "Facility_HQ",
+  "name": "主基地",
+  "description": "通用战场设施",
+  "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/HQ/Mod/HQ.ini",
+  "tags": [
+    "EFSF",
+    "0079T1"
+  ],
+  "availableFactions": [
+    "EFSF",
+    "ZEON",
+    "AEUG",
+    "TITANS",
+    "NEO_ZEON"
+  ],
+  "unitTags": [
+    "Building",
+    "LargeUnit"
+  ],
+  "formOnly": true,
+  "facility": {
+    "type": "base"
+  },
+  "production": {
+    "enabled": false
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0,
+      "y": 0
+    },
+    "Body": {
+      "x": 0,
+      "y": 0
+    },
+    "LeftArm": {
+      "x": -9,
+      "y": 0
+    },
+    "RightArm": {
+      "x": 9,
+      "y": 0
+    },
+    "LeftShoulder": {
+      "x": -9,
+      "y": 0
+    },
+    "RightShoulder": {
+      "x": 9,
+      "y": 0
+    },
+    "LeftWeapon": {
+      "x": 0,
+      "y": 0
+    },
+    "RightWeapon": {
+      "x": 0,
+      "y": 0
+    },
+    "Attachment12": {
+      "x": 0,
+      "y": 0
+    },
+    "Attachment13": {
+      "x": 0,
+      "y": 0
+    },
+    "Attachment15": {
+      "x": 0,
+      "y": 0
+    },
+    "Head": {
+      "x": 0,
+      "y": 0
+    },
+    "Eye": {
+      "x": 0,
+      "y": 0
+    },
+    "LeftFoot": {
+      "x": -6,
+      "y": 0,
+      "endDirOffset": -8
+    },
+    "LeftLeg": {
+      "x": -6,
+      "y": 0,
+      "endDirOffset": -8
+    },
+    "RightFoot": {
+      "x": 6,
+      "y": 0,
+      "endDirOffset": 8
+    },
+    "RightLeg": {
+      "x": 6,
+      "y": 0,
+      "endDirOffset": 8
+    },
+    "Turret_EF_Type61_Cannon": {
+      "x": 0,
+      "y": 0,
+      "endDirOffset": 0
+    },
+    "Turret": {
+      "x": 0,
+      "y": 3
+    }
+  },
+  "materials": {
+    "textures": {
+      "HQ_Body_0.png": "textures/HQ_Body_0.png",
+      "HQ_Body_1_Light.png": "textures/HQ_Body_1_Light.png"
+    },
+    "icon": "HQ_Body_0.png"
+  },
+  "layers": [
+    {
+      "name": "Body",
+      "texture": "HQ_Body_0.png",
+      "bone": "Body",
+      "order": 1,
+      "scale": 0.75,
+      "rotation": 0,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "worldOffset": {
+        "x": 0,
+        "y": 0.75
+      },
+      "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/HQ/Image/HQ_Body_0.png"
+    },
+    {
+      "name": "Light",
+      "texture": "HQ_Body_1_Light.png",
+      "bone": "Body",
+      "order": 1,
+      "scale": 0.75,
+      "rotation": 0,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "worldOffset": {
+        "x": 0,
+        "y": 0.75
+      },
+      "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/HQ/Image/HQ_Body_1_Light.png"
+    }
+  ],
+  "weapons": {},
+  "animations": {
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Idle": "../../animations/Common_Idle__AntiZakuTank.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "skills": [],
+  "transport": {
+    "slotCost": 1,
+    "loadTags": []
+  },
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": []
+    }
+  ],
+  "mechanics": [
+    {
+      "id": "facility",
+      "name": "通用战场设施",
+      "status": "implemented"
+    }
+  ],
+  "sourceStats": {
+    "nativeHP": 750000,
+    "facilitySource": "GW_BattleUniverse_DLC_0079/Units/Buildings/HQ/Mod/HQ.ini",
+    "conversion": "HP and projectile payload / 2, followed by global conversion; turn volleys MG8 / Beam2 / Missile4 / Cannon1",
+    "visual": {
+      "nativeBounds": [
+        -50.625,
+        -40.875,
+        50.625,
+        39.375
+      ],
+      "targetCells": 3,
+      "mapScale": 3.5555555555555554,
+      "layers": [
+        {
+          "name": "Body",
+          "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/HQ/Image/HQ_Body_0.png"
+        },
+        {
+          "name": "Light",
+          "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/HQ/Image/HQ_Body_1_Light.png"
+        }
+      ]
+    }
+  },
+  "faction": "EFSF"
+}

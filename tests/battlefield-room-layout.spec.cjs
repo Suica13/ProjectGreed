@@ -13,7 +13,7 @@ for (const width of [1600, 1000, 390]) test('separate battlefield settings and m
   if (width===390) await page.getByRole('button',{name:'房间设置',exact:true}).click();
   const section=page.locator('#battlefieldRoomRules');
   await expect(section).toBeVisible();
-  await expect(section.locator('summary')).toHaveText('战地模式设置');
+  await expect(section.locator('summary')).toHaveText('雇佣兵战争模式设置');
   expect(await section.evaluate(el=>el.parentElement.id)).toBe('roomRulesPanel');
   await page.locator('#battlefieldRoomOptions').scrollIntoViewIfNeeded();
   const layout=await page.locator('#battlefieldRoomOptions').evaluate(panel=>{
@@ -29,8 +29,9 @@ for (const width of [1600, 1000, 390]) test('separate battlefield settings and m
   expect(layout).toBe(true);
   expect(await page.locator('#roomSettingsPage').evaluate(el=>el.scrollWidth<=el.clientWidth+1)).toBe(true);
   await page.screenshot({path:'build/canyon-room-'+width+'.png'});
-  await page.locator('#battlefieldTeam0faction').selectOption('AEUG');
-  await expect.poll(()=>page.evaluate(()=>Net.snapshot.settings.battlefieldTeams[0].faction)).toBe('AEUG');
+  expect(await page.locator('#battlefieldTeam0era option').evaluateAll(options => options.map(option => option.value))).toEqual(['0079T1','0079T2']);
+  await page.locator('#battlefieldTeam0faction').selectOption('ZEON');
+  await expect.poll(()=>page.evaluate(()=>Net.snapshot.settings.battlefieldTeams[0].faction)).toBe('ZEON');
   for (const mode of ['battlefield','regular','quick','campaign','battlefield']) {
     await page.locator('#roomBattleMode').selectOption(mode);
     await expect.poll(()=>page.evaluate(()=>Net.snapshot.settings.mode)).toBe(mode);

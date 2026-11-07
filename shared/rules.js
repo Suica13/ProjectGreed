@@ -602,7 +602,8 @@ const Tactics = (() => {
       // Readiness may skip quantity checks while retaining ownership-based deployment access.
       rules.ownedLicenses = rules.licenses;
       rules.ownedStock = economy.normalizeStock(player);
-      if (!player.formationPreset && settings.mode === "regular") Object.assign(rules, economy.normalizeStock(player));
+      if ((!player.formationPreset && settings.mode === "regular") || settings.mode === "battlefield")
+        Object.assign(rules, economy.normalizeStock(player));
     }
     const config = armySettings(player);
     rules.unitCostLimit =
@@ -1886,13 +1887,14 @@ const Tactics = (() => {
     const tiles = map.tiles.map((row) => row.slice());
     let units = [];
     if (settings.mode === "battlefield") {
-      if (!map.battlefield) throw Error("战地模式需要专用地图");
+      if (!map.battlefield) throw Error("雇佣兵战争模式需要专用地图");
       units = battlefieldMode.facilities(Tactics, { mapId: map.id, seed });
     }
     const sourceIndices = [];
     for (let seat = 0; seat < formations.length; seat++) {
       // null 明确表示空出生点，不生成单位，也无需确认部署。
       if (formations[seat] === null) continue;
+      if (settings.mode === "battlefield" && seat < 2) continue;
       formations[seat] = validateFormation(
         formations[seat],
         settings.mode === "campaign" ? Infinity : (settings.seatCostLimits?.[seat] ?? costLimit),

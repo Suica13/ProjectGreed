@@ -156,6 +156,7 @@ const MapCamera = (() => {
           cellX: (pair.x - old.ox) / old.tile,
           cellY: (pair.y - old.oy) / old.tile,
         };
+        Deployment.cancelDrag();
         drag = null;
         pinchConsumed = suppressClick = true;
         hover = null;
@@ -171,6 +172,7 @@ const MapCamera = (() => {
       centerY,
       tile: mapGeo.tile,
       moved: false,
+      unit: phase === "deployment" && Deployment.beginDrag(event),
     };
     canvas.setPointerCapture(event.pointerId);
   });
@@ -195,6 +197,12 @@ const MapCamera = (() => {
       dy = event.clientY - drag.y;
     if (Math.hypot(dx, dy) > 5) drag.moved = true;
     if (!drag.moved) return;
+    if (drag.unit) {
+      Deployment.moveDrag(event);
+      canvas.style.cursor = "grabbing";
+      hover = null;
+      return;
+    }
     centerX = drag.centerX - dx / drag.tile;
     centerY = drag.centerY - dy / drag.tile;
     refresh();
@@ -207,9 +215,14 @@ const MapCamera = (() => {
       event.preventDefault();
       suppressClick = true;
       if (touches.size < 2) pinch = null;
+      Deployment.cancelDrag();
       drag = null;
     } else if (drag?.id === event.pointerId) {
       suppressClick = drag.moved;
+      if (drag.unit) {
+        if (event.type === "pointercancel" || !drag.moved) Deployment.cancelDrag();
+        else Deployment.drop(event);
+      }
       drag = null;
     } else if (!touch) return;
     if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);

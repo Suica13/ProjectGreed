@@ -11,6 +11,11 @@
 
 | 时间（日本时间） | 来源IP | 单位 | 修改对象 | 修改内容 | 详细日志 |
 |---|---|---|---|---|---|
+| 2026-11-08 01:57:50 | local | 加农炮炮塔（Facility_Cannon） | 单位特例 | /displayLocalization：null → {"en":{},"ja":{}}<br>/faction：（无） → "EFSF"<br>/stats/hp：10000 → 20000 | [JSON](../../server-data/editor-changes/2026-11-08/2026-11-07T16-57-50-746Z-65624efa-5a35-4026-8c82-d7073faa858b.json) |
+| 2026-11-08 01:57:49 | local | 导弹炮塔（Facility_Missile） | 单位特例 | /displayLocalization：null → {"en":{},"ja":{}}<br>/faction：（无） → "EFSF"<br>/stats/hp：7500 → 20000 | [JSON](../../server-data/editor-changes/2026-11-08/2026-11-07T16-57-49-817Z-40d7ca91-afc7-4175-9065-77bdce6d763d.json) |
+| 2026-11-08 01:57:48 | local | 光束炮塔（Facility_Beam） | 单位特例 | /displayLocalization：null → {"en":{},"ja":{}}<br>/faction：（无） → "EFSF"<br>/stats/hp：10000 → 20000 | [JSON](../../server-data/editor-changes/2026-11-08/2026-11-07T16-57-48-920Z-8691afa7-9e32-4ea1-b5cb-9d39bd678afd.json) |
+| 2026-11-08 01:57:48 | local | 机枪炮塔（Facility_MG） | 单位特例 | /displayLocalization：null → {"en":{},"ja":{}}<br>/faction：（无） → "EFSF"<br>/stats/hp：6250 → 20000 | [JSON](../../server-data/editor-changes/2026-11-08/2026-11-07T16-57-48-021Z-2d4aa933-804d-4e2e-bfad-fd46c8a8bc21.json) |
+| 2026-11-08 01:57:44 | local | 主基地（Facility_HQ） | 单位特例 | /displayLocalization：null → {"en":{},"ja":{}}<br>/faction：（无） → "EFSF"<br>/stats/hp：375000 → 300000 | [JSON](../../server-data/editor-changes/2026-11-08/2026-11-07T16-57-44-415Z-4a4041d5-5d03-4175-a8c6-91db9000d9c8.json) |
 | 2026-11-07 19:07:13 | 36.161.160.31 | 吉姆加农II（RGC_83） | 共用武器 EF_RGC_83_DoubleBeamCannon__lv1 | /weapons/EF_RGC_83_DoubleBeamCannon/hit：70 → 80 | [JSON](../../server-data/editor-changes/2026-11-07/2026-11-07T10-07-13-571Z-952db561-c38d-4ab8-a887-c9561558d635.json) |
 | 2026-11-07 19:07:13 | 36.161.160.31 | GLine 完全特装型（RX_81FC） | 共用武器 EF_RGC_83_DoubleBeamCannon__lv1 | /weapons/EF_RGC_83_DoubleBeamCannon/hit：70 → 80 | [JSON](../../server-data/editor-changes/2026-11-07/2026-11-07T10-07-13-571Z-952db561-c38d-4ab8-a887-c9561558d635.json) |
 | 2026-11-05 15:39:35 | 126.105.69.222 | 吉姆改&#91;宇宙配色&#93;（RGM_79C_Space） | 单位特例 | /stats/cost：300 → 325 | [JSON](../../server-data/editor-changes/2026-11-05/2026-11-05T06-39-35-062Z-bfa8db89-41e4-4f20-9e19-f7c9ae0dbc0f.json) |
