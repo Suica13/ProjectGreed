@@ -1359,6 +1359,7 @@ function createRoomEngine({
           settlePilotAssists(room, passenger, from);
         }
         const dialogueTrigger = (kind, speaker, listener) => {
+          if (room.settings.pilotDialogue === false) return;
           if (!radioRange.eligible(speaker, listener, (id) => unit(room, id))) return;
           const entry = Dialogue.generate({
             event: kind, speaker, target: listener,
@@ -2932,6 +2933,7 @@ function createRoomEngine({
     );
   }
   function transportDialogue(room, passenger, carrier, launching, visibleBefore = null, preloaded = false) {
+    if (room.settings.pilotDialogue === false) return;
     if (!passenger || !carrier || passenger.id === carrier.id) return;
     const event = launching ? "launch" : preloaded ? "preload" : "board";
     // The transport's pilot speaks first. The passenger may acknowledge.
@@ -3632,6 +3634,9 @@ function createRoomEngine({
             typeof msg.shareAlliedUnits !== "boolean"
           )
             throw Error("友军单位共享设置无效");
+          if (msg.pilotDialogue !== undefined && typeof msg.pilotDialogue !== "boolean") throw Error("驾驶员对话设置无效");
+          if (msg.weather !== undefined && !["map","clear","rain","snow","sand"].includes(msg.weather)) throw Error("天气设置无效");
+          if (msg.dayNight !== undefined && !["map","day","night","cycle"].includes(msg.dayNight)) throw Error("昼夜设置无效");
           const settings = strategic
             ? G.campaignRoomSettings({
                 mapId: map.id,
@@ -3641,6 +3646,9 @@ function createRoomEngine({
                 mode: G.validateBattleMode(msg.battleMode ?? room.settings.mode),
                 mapId: map.id,
                 fogMode: G.validateFogMode(msg.fogMode ?? room.settings.fogMode),
+                pilotDialogue: msg.pilotDialogue ?? room.settings.pilotDialogue ?? true,
+                weather: msg.weather ?? room.settings.weather ?? "map",
+                dayNight: msg.dayNight ?? room.settings.dayNight ?? "map",
                 pilotPolicy: G.validatePilotPolicy(msg.pilotPolicy ?? room.settings.pilotPolicy),
                 shareAlliedUnits: msg.shareAlliedUnits ?? room.settings.shareAlliedUnits ?? false,
                 costLimit: G.validateCostLimit(msg.costLimit),
@@ -3666,6 +3674,7 @@ function createRoomEngine({
                         msg.teamFactions ?? room.settings.teamFactions ?? [null, null],
                       ),
               };
+          if (strategic) Object.assign(settings, { pilotDialogue: msg.pilotDialogue ?? room.settings.pilotDialogue ?? true, weather: msg.weather ?? room.settings.weather ?? "map", dayNight: msg.dayNight ?? room.settings.dayNight ?? "map" });
           if (JSON.stringify(settings) !== JSON.stringify(room.settings)) {
             const mapChanged = settings.mapId !== room.settings.mapId;
             const modeChanged = settings.mode !== room.settings.mode;
