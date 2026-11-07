@@ -59,17 +59,60 @@ const BattlefieldWeather = (() => {
     }
     ctx.restore();
   }
+  function surfaceState(map,settings,round,seed) {
+    const rules=presets?.surfaces || {};
+    let snow=0,wet=0,dust=0;
+    // Derive surface accumulation from the same seeded history on every client.
+    // No extra state is written to save files; replays remain deterministic.
+    const start=Math.max(1,round-160);
+    for(let turn=start;turn<=round;turn++){
+      const state=resolve(map,settings,turn,seed), weather=state.weather;
+      snow=Math.max(0,Math.min(100,snow+(weather==="snow"?(rules.snow?.snow??5):weather==="blizzard"?(rules.snow?.blizzard??12):weather==="rain"||weather==="heavy_rain"?-(rules.snow?.meltRain??8):weather==="clear"?-(rules.snow?.meltClear??3):0)));
+      wet=Math.max(0,Math.min(100,wet+(weather==="rain"?(rules.wet?.rain??10):weather==="heavy_rain"?(rules.wet?.heavy_rain??22):-(rules.wet?.dry??4))));
+      dust=Math.max(0,Math.min(100,dust+(weather==="sand"?(rules.dust?.sand??6):weather==="sandstorm"?(rules.dust?.sandstorm??14):weather==="clear"?-(rules.dust?.clear??3):0)));
+    }
+    return {snow,wet,dust};
+  }
+  function ground(ctx,w,h,map,settings,round,seed) {
+    const state=resolve(map,settings,round,seed);
+    if(state.space)return;
+    const surface=surfaceState(map,settings,round,seed);
+    ctx.save();
+    for(const [kind,rgb,opacity] of [["snow","231,241,247",.28],["wet","27,43,58",.2],["dust","191,147,87",.16]]){
+      const strength=surface[kind]/100;
+      if(strength<=0)continue;
+      if(!textureLayer(ctx,presets?.assets?.[kind==="snow"?"snowCover":kind==="wet"?"wetGround":"dustCover"],w,h,strength)){
+        ctx.fillStyle="rgba("+rgb+","+(opacity*strength)+")";ctx.fillRect(0,0,w,h);
+      }
+    }
+    ctx.restore();
+  }
+  function lightning(ctx,w,h,now,state,round,seed) {
+    const spec=presets?.lightning;
+    if(!spec?.enabled || !spec.weather?.includes(state.weather) || state.space)return;
+    const interval=Math.max(1,spec.frequencyRounds||3);
+    if(round%interval!==0)return;
+    const duration=spec.flashDurationMs||500;
+    const cycle=12000;
+    const phase=((now+((seed>>>0)%3000))%cycle+cycle)%cycle;
+    if(phase>=duration)return;
+    const fraction=phase/duration;
+    const intensity=fraction<.18?fraction/.18:fraction<.32?.25:fraction<.45?.8*(1-(fraction-.32)/.13):Math.max(0,.3*(1-fraction)/.55);
+    ctx.save();ctx.fillStyle="rgba(235,243,255,"+(Math.max(0,Math.min(1,intensity*(spec.maxOpacity??.62))))+")";ctx.fillRect(0,0,w,h);ctx.restore();
+  }
   function draw(ctx,w,h,now,map,settings,round,seed=1){
     const state=resolve(map,settings,round,seed);
     const key=state.weather+":"+state.time;
     if(lastKey===null){lastKey=key;current=state;}
     else if(key!==lastKey){previous=current;current=state;lastKey=key;changedAt=now;}
     const progress=Math.min(1,Math.max(0,(now-changedAt)/(presets?.transitionMs || 1800)));
+    ground(ctx,w,h,map,settings,round,seed);
     if(previous && progress<1)layer(ctx,w,h,now,previous,1-progress);
     else previous=null;
     layer(ctx,w,h,now,current,previous?progress:1);
+    lightning(ctx,w,h,now,state,round,seed);
     return state;
   }
-  return {draw,resolve,names,times};
+  return {draw,resolve,names,times,surfaceState};
 })();
 if(typeof module!=="undefined") module.exports=BattlefieldWeather;
