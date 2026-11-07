@@ -351,7 +351,10 @@ const RoomPanel = (() => {
     byId("roomPilotDialogue").value = settings.pilotDialogue === false ? "disabled" : "enabled";
     byId("roomWeather").value = settings.weather || "map";
     byId("roomDayNight").value = settings.dayNight || "map";
-    for (const id of ["roomPilotDialogue","roomWeather","roomDayNight"]) byId(id).disabled = locked;
+    byId("roomWeatherCycle").value = settings.weatherCycle === false ? "disabled" : "enabled";
+    byId("roomTimeCycle").value = settings.timeCycle === false ? "disabled" : "enabled";
+    byId("roomClimateBuffs").value = settings.climateBuffs === false ? "disabled" : "enabled";
+    for (const id of ["roomPilotDialogue","roomWeather","roomDayNight","roomWeatherCycle","roomTimeCycle","roomClimateBuffs"]) byId(id).disabled = locked;
     byId("roomPilotPolicy").value = settings.pilotPolicy || "allow";
     byId("roomPilotPolicy").disabled = locked;
     byId("roomPilotPolicy").closest("label").hidden = settings.mode === "campaign";
@@ -1322,6 +1325,9 @@ const RoomPanel = (() => {
   byId("roomPilotDialogue").onchange = () => sendSettings({ pilotDialogue: byId("roomPilotDialogue").value === "enabled" });
   byId("roomWeather").onchange = () => sendSettings({ weather: byId("roomWeather").value });
   byId("roomDayNight").onchange = () => sendSettings({ dayNight: byId("roomDayNight").value });
+  byId("roomWeatherCycle").onchange = () => sendSettings({ weatherCycle: byId("roomWeatherCycle").value === "enabled" });
+  byId("roomTimeCycle").onchange = () => sendSettings({ timeCycle: byId("roomTimeCycle").value === "enabled" });
+  byId("roomClimateBuffs").onchange = () => sendSettings({ climateBuffs: byId("roomClimateBuffs").value === "enabled" });
   byId("roomPilotPolicy").onchange = () =>
     sendSettings({ pilotPolicy: byId("roomPilotPolicy").value });
   byId("roomBattleMode").onchange = () =>
