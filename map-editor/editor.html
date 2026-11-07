@@ -52,6 +52,30 @@
               </select></label
             >
             <label>默认地形<select id="defaultTerrain"></select></label>
+            <details id="mapClimatePanel"><summary>天气与昼夜循环</summary>
+              <p class="hint">宇宙地图不使用天气与时间。勾选参与循环的项目；天气权重越高出现概率越大。</p>
+              <h3>天气</h3><div id="mapClimateWeather"><label class="check"><input type="checkbox" data-climate-weather="clear"/>晴天 <input type="number" data-climate-weight="clear" min="0" max="1000" value="1" style="width:62px" title="天气权重"/></label>
+<label class="check"><input type="checkbox" data-climate-weather="rain"/>雨天 <input type="number" data-climate-weight="rain" min="0" max="1000" value="0" style="width:62px" title="天气权重"/></label>
+<label class="check"><input type="checkbox" data-climate-weather="heavy_rain"/>暴雨 <input type="number" data-climate-weight="heavy_rain" min="0" max="1000" value="0" style="width:62px" title="天气权重"/></label>
+<label class="check"><input type="checkbox" data-climate-weather="fog"/>雾天 <input type="number" data-climate-weight="fog" min="0" max="1000" value="0" style="width:62px" title="天气权重"/></label>
+<label class="check"><input type="checkbox" data-climate-weather="overcast"/>阴天 <input type="number" data-climate-weight="overcast" min="0" max="1000" value="0" style="width:62px" title="天气权重"/></label>
+<label class="check"><input type="checkbox" data-climate-weather="snow"/>雪天 <input type="number" data-climate-weight="snow" min="0" max="1000" value="0" style="width:62px" title="天气权重"/></label>
+<label class="check"><input type="checkbox" data-climate-weather="blizzard"/>暴雪 <input type="number" data-climate-weight="blizzard" min="0" max="1000" value="0" style="width:62px" title="天气权重"/></label>
+<label class="check"><input type="checkbox" data-climate-weather="sand"/>沙尘 <input type="number" data-climate-weight="sand" min="0" max="1000" value="0" style="width:62px" title="天气权重"/></label>
+<label class="check"><input type="checkbox" data-climate-weather="sandstorm"/>沙尘暴 <input type="number" data-climate-weight="sandstorm" min="0" max="1000" value="0" style="width:62px" title="天气权重"/></label></div>
+              <label class="check"><input id="mapWeatherFixed" type="checkbox"/>固定天气（不循环）</label>
+              <label>天气持续回合 <input id="mapWeatherDuration" type="number" min="1" max="999" value="4"/></label>
+              <h3>时间</h3><div id="mapClimateTimes"><label class="check"><input type="checkbox" data-climate-time="dawn"/>清晨</label>
+<label class="check"><input type="checkbox" data-climate-time="morning"/>上午</label>
+<label class="check"><input type="checkbox" data-climate-time="noon"/>正午</label>
+<label class="check"><input type="checkbox" data-climate-time="afternoon"/>下午</label>
+<label class="check"><input type="checkbox" data-climate-time="dusk"/>黄昏</label>
+<label class="check"><input type="checkbox" data-climate-time="evening"/>晚上</label>
+<label class="check"><input type="checkbox" data-climate-time="late_night"/>深夜</label>
+<label class="check"><input type="checkbox" data-climate-time="pre_dawn"/>凌晨</label></div>
+              <label class="check"><input id="mapTimeFixed" type="checkbox"/>固定时间（不循环）</label>
+              <label>每个时段持续回合 <input id="mapTimeDuration" type="number" min="1" max="999" value="4"/></label>
+            </details>
             <h2>玩家与队伍</h2>
             <div class="pair">
               <label>队伍上限<input id="maxTeams" type="number" min="2" max="8" /></label
