@@ -7,6 +7,7 @@ const ProfileStorage = (() => {
       writable: false,
       estimatedBytes: 0,
       groups: [],
+      largestRecords: [],
       errorName: null,
     };
     const category = (key) => {
@@ -31,6 +32,7 @@ const ProfileStorage = (() => {
         group.records++;
         groups.set(name, group);
         result.estimatedBytes += bytes;
+        result.largestRecords.push({ key, bytes, category: name });
       }
       result.readable = true;
       // Probe a new, tiny record. Never overwrite or remove an existing save.
@@ -45,6 +47,9 @@ const ProfileStorage = (() => {
       result.errorName = error.name || "Error";
     }
     result.groups = [...groups.values()].sort((a, b) => b.bytes - a.bytes);
+    // Export only key names and sizes, never stored values.
+    result.largestRecords.sort((a, b) => b.bytes - a.bytes);
+    result.largestRecords = result.largestRecords.slice(0, 15);
     return result;
   }
   function replace(entries, storage = localStorage) {
