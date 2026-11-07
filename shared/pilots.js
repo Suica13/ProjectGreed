@@ -362,7 +362,7 @@ const PilotSystem = (() => {
     if (personality !== null && !allowedPersonalities.includes(personality))
       throw Error("驾驶员性格无效");
     const background = typeof value.background === "string"
-      ? value.background.replace(/[\\u0000-\\u001f\\u007f]/g, "").trim().slice(0, 160)
+      ? value.background.replace(/[\u0000-\u001f\u007f]/g, "").trim().slice(0, 160)
       : "";
     const uploadedPortrait = portraitData(value.uploadedPortrait);
     const portraitId = portraitsById.has(value.portraitId)
