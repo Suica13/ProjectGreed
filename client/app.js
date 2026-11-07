@@ -217,6 +217,24 @@ function recordBattleDialogue(event, speaker, target) {
   if (typeof DialogueAudio !== "undefined") DialogueAudio.play(record);
   addLog(line);
 }
+let lastNetworkDialogueId = null;
+globalThis.receiveBattleDialogue = function (events = [], matchId = "") {
+  const recent = events.at(-1);
+  if (!recent) return;
+  const identity = matchId + ":" + recent.id;
+  if (lastNetworkDialogueId === null) {
+    lastNetworkDialogueId = identity;
+    return;
+  }
+  if (lastNetworkDialogueId === identity) return;
+  const previousIndex = events.findIndex((entry) => matchId + ":" + entry.id === lastNetworkDialogueId);
+  const added = previousIndex < 0 ? [recent] : events.slice(previousIndex + 1);
+  lastNetworkDialogueId = identity;
+  for (const record of added.slice(-5)) {
+    dialogueBubbles.set(record.speakerId, { text: record.text, until: performance.now() + 3500 });
+    if (typeof DialogueAudio !== "undefined") DialogueAudio.play(record);
+  }
+};
 function playerNameClass(memberId, hostId = Net.snapshot?.hostId, selfId = Net.memberId) {
   return (
     "player-name " +
