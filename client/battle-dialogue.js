@@ -37,6 +37,32 @@ const BattleDialogue = (() => {
   };
   for (const [trait, events] of Object.entries(additional))
     for (const [event, phrases] of Object.entries(events)) lines[event][trait] = phrases;
+  const taunts = {
+    calm: ["你的动作已经被看穿了。", "你确定还要继续吗？"],
+    aggressive: ["就这点本事？", "来啊，让我看看你能撑多久！"],
+    cautious: ["你的破绽太明显了。", "我不会落入你的圈套。"],
+    idealist: ["现在撤退还来得及！", "不要再让战争夺走更多生命！"],
+    strategic: ["你的下一步，我已经算到了。", "你的阵形正在崩溃。"],
+    sarcastic: ["你是来打仗，还是来表演的？", "这种水平也敢冲上来？"],
+    strict: ["立即投降，停止无谓抵抗！", "你们的抵抗毫无意义！"],
+    zealous: ["你们阻挡不了我们的理想！", "准备见证我们的胜利吧！"],
+    proud: ["记住击败你的人是谁！", "你还不配当我的对手！"],
+    obsessive: ["谁也不能阻止我的计划！", "你不过是实验中的障碍！"],
+    empathetic: ["请离开战场，我不愿伤害你。", "我们真的必须战斗吗？"],
+  };
+  const replies = {
+    calm: ["少说废话，继续战斗。", "我会用行动回答你。"],
+    aggressive: ["有本事就来试试！", "闭嘴！我要打倒你！"],
+    cautious: ["别想用这种话动摇我。", "我不会轻易上当。"],
+    idealist: ["我也有必须守护的东西！", "我不会放弃自己的信念！"],
+    strategic: ["你的挑衅不会改变战局。", "看来你还没看清局势。"],
+    sarcastic: ["这台词你练习了多久？", "说完了吗？轮到我了。"],
+    strict: ["保持通讯纪律！", "敌方心理战无效。"],
+    zealous: ["我们的意志绝不会屈服！", "胜负还没有决定！"],
+    proud: ["你才该记住我的名字！", "别太得意了！"],
+    obsessive: ["你根本不了解我的目标！", "绝不会让你得逞！"],
+    empathetic: ["我也不愿如此，但我不能退。", "如果可以，我希望这场战斗停止。"],
+  };
   const factionLines = {
     EFSF: { attack: "联邦军各机，按命令开火！" },
     ZEON: { attack: "为了吉翁，进攻！" },
@@ -57,25 +83,28 @@ const BattleDialogue = (() => {
       : personalities[hash(pilot?.id || pilot?.name || "anonymous") % personalities.length];
   }
   function generate({ event, speaker, target, sequence = 0, faction } = {}) {
-    if (!speaker || !event || !lines[event]) return null;
+    if (!speaker || !event || !(lines[event] || event === "taunt" || event === "reply")) return null;
     const pilot = speaker.pilot || {};
     const trait = personality(pilot);
     const background = typeof pilot.background === "string" ? pilot.background.slice(0, 160) : "";
     const identity = pilot.id || pilot.name || speaker.id;
     const seed = hash([identity, target?.id, event, sequence].join(":"));
     // Suppress most routine remarks to avoid flooding the battlefield and transcript.
-    if (event !== "kill" && seed % 4 !== 0) return null;
-    const pool = lines[event][trait];
+    if (event === "taunt" && seed % 5 !== 0) return null;
+    if (event === "reply" && seed % 3 !== 0) return null;
+    if (!["kill", "taunt", "reply"].includes(event) && seed % 4 !== 0) return null;
+    const pool = event === "taunt" ? taunts[trait] : event === "reply" ? replies[trait] : lines[event][trait];
     const factionId = pilot.originFaction || faction || pilot.faction || speaker.faction;
     const text = factionLines[factionId]?.[event] && seed % 5 === 0
       ? factionLines[factionId][event] : pool[seed % pool.length];
     return { event, speakerId: speaker.id, targetId: target?.id || null,
       pilotName: pilot.name || speaker.name || speaker.id,
-      personality: trait, background, faction: factionId || "PMC", text, sequence };
+      personality: trait, background, faction: factionId || "PMC", text, sequence,
+      publicToOpponent: event === "taunt" || event === "reply" };
   }
   function format(record) {
     return `[战场对话][${record.faction}][${record.pilotName}]「${record.text}」`;
   }
-  return { generate, format, personality, personalities, backgrounds };
+  return { generate, format, personality, personalities, backgrounds, taunts, replies };
 })();
 if (typeof module !== "undefined") module.exports = BattleDialogue;
