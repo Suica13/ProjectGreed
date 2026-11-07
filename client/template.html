@@ -2019,6 +2019,12 @@
                 <div id="deploymentPanel" hidden data-ui-node="node-200">
                   <p id="deploymentStatus" data-ui-node="node-201"></p>
                   <p id="deploymentHint">部署区域全队共享，在高亮区域内调整位置，两队确认后开始回合。</p>
+                  <div id="deploymentRoster" role="listbox" aria-label="待部署单位" style="display:flex;gap:8px;overflow-x:auto;max-width:80vw;padding:8px 0"></div>
+                  <div id="deploymentControls" style="display:flex;gap:8px;flex-wrap:wrap">
+                    <button id="deploymentUnplace" type="button">取消部署</button>
+                    <button id="deploymentClear" type="button">全部清空</button>
+                    <button id="deploymentAuto" type="button">自动部署</button>
+                  </div>
                 </div>
               </div>
               <p data-ui-node="node-33" id="hint">点击己方单位，选择蓝色格子移动。</p>
