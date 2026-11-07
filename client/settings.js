@@ -2,23 +2,25 @@
 const ClientSettings = (() => {
   const key = "projectgreed.settings";
   const values = { master: 1, music: 1, sfx: 1 };
-  let unitShadows = false;
+  let unitShadows = false, hidePilotDialogue = false;
   try {
     const saved = JSON.parse(localStorage.getItem(key));
     for (const name of Object.keys(values))
       if (Number.isFinite(saved?.[name])) values[name] = Math.max(0, Math.min(1, saved[name]));
     unitShadows = saved?.unitShadows === true;
+    hidePilotDialogue = saved?.hidePilotDialogue === true;
   } catch {}
   const dialog = document.getElementById("clientSettingsDialog");
   const language = document.getElementById("settingsLanguage");
   function persist() {
     try {
-      localStorage.setItem(key, JSON.stringify({ ...values, unitShadows }));
+      localStorage.setItem(key, JSON.stringify({ ...values, unitShadows, hidePilotDialogue }));
     } catch {}
   }
   function render() {
     language.value = I18n.language;
     document.getElementById("settingsUnitShadows").checked = unitShadows;
+    document.getElementById("settingsHidePilotDialogue").checked = hidePilotDialogue;
     for (const name of Object.keys(values)) {
       document.getElementById("volume-" + name).value = Math.round(values[name] * 100);
       document.getElementById("volume-" + name + "-value").textContent =
@@ -39,6 +41,10 @@ const ClientSettings = (() => {
   language.addEventListener("change", () => I18n.setLanguage(language.value));
   document.getElementById("settingsUnitShadows").addEventListener("change", (event) => {
     unitShadows = event.target.checked;
+    persist();
+  });
+  document.getElementById("settingsHidePilotDialogue").addEventListener("change", (event) => {
+    hidePilotDialogue = event.target.checked;
     persist();
   });
   window.addEventListener("language-change", render);
@@ -65,6 +71,7 @@ const ClientSettings = (() => {
     set,
     values,
     unitShadows: () => unitShadows,
+    hidePilotDialogue: () => hidePilotDialogue,
   };
 })();
 
