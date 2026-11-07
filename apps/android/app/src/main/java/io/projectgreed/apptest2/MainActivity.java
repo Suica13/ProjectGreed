@@ -43,6 +43,16 @@ public final class MainActivity extends Activity {
             }
         }
 
+        android.content.pm.PackageInfo provider = WebView.getCurrentWebViewPackage();
+        if (provider != null) {
+            try {
+                if (Integer.parseInt(provider.versionName.split("[.]")[0]) < 80) {
+                    new AlertDialog.Builder(this).setMessage("当前 WebView 为" + provider.versionName + "，低于客户端支持的80版语法基线，请更新系统 WebView 后重试。")
+                        .setPositiveButton("关闭", (d,w)->finish()).setCancelable(false).show();
+                    return;
+                }
+            } catch (NumberFormatException ignored) { }
+        }
         web = new WebView(this);
         android.widget.FrameLayout safeArea = new android.widget.FrameLayout(this);
         safeArea.addView(web, new android.widget.FrameLayout.LayoutParams(-1, -1));

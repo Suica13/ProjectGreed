@@ -17,6 +17,7 @@ test.beforeAll(async () => {
     const mime = {
       ".js": "application/javascript",
       ".json": "application/json",
+      ".css": "text/css",
       ".html": "text/html",
       ".svg": "image/svg+xml",
       ".png": "image/png",
@@ -228,15 +229,15 @@ for (const unsupported of [false, true])
             throw Error("Profile must not be changed by preflight");
           },
         };
-        if (unsupported) Object.defineProperty(window, "structuredClone", { value: undefined });
+        if (unsupported) Object.defineProperty(window, "ResizeObserver", { value: undefined });
       }, unsupported);
       await page.goto(url.replace("client.html", "compatibility.html"));
       await page.waitForFunction(() => Array.isArray(window.compatibilityReport));
       const report = await page.evaluate(() => compatibilityReport);
       if (unsupported) {
         expect(report).toHaveLength(1);
-        expect(report[0]).toContain("structuredClone");
-        await expect(page.locator("#compatibilityStatus")).toContainText("structuredClone");
+        expect(report[0]).toContain("ResizeObserver");
+        await expect(page.locator("#compatibilityStatus")).toContainText("ResizeObserver");
       } else expect(report).toEqual([]);
       expect(requests.some((url) => /app-runtime|scripts\/client-/.test(url))).toBe(false);
       expect(errors).toEqual([]);

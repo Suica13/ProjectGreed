@@ -17,7 +17,7 @@
     var selectors = false, canvas = false;
     try { selectors = !!view.CSS && view.CSS.supports("selector(:has(*))"); } catch (ignored) { }
     try { canvas = !!view.document.createElement("canvas").getContext("2d"); } catch (ignored) { }
-    requireFeature("CSS :has（界面布局）", selectors);
+    requireFeature("CSS :has（界面布局）", selectors || !!(view.AppCompat && view.AppCompat.selectors));
     requireFeature("Canvas 2D（地图绘制）", canvas);
     return missing;
   }

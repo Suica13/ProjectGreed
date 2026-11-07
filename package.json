@@ -34,13 +34,20 @@
     "app:windows": "node tools/build-apps.cjs windows",
     "app:android": "node tools/build-apps.cjs android",
     "app:test:windows": "node tests/native-windows-smoke.cjs",
-    "app:test:storage": "node --test tests/app-native-storage.test.cjs tests/profile-storage.test.cjs"
+    "app:test:storage": "node --test tests/app-native-storage.test.cjs tests/profile-storage.test.cjs",
+    "app:test:chrome80": "node tests/app-chromium80.cjs"
   },
   "dependencies": {
     "ws": "8.22.0"
   },
   "devDependencies": {
     "@playwright/test": "1.64.1",
-    "prettier": "3.9.10"
+    "core-js": "3.51.0",
+    "css-has-pseudo": "8.0.2",
+    "esbuild": "0.28.2",
+    "postcss": "8.5.32",
+    "postcss-preset-env": "11.6.2",
+    "prettier": "3.9.10",
+    "wicg-inert": "3.1.3"
   }
 }

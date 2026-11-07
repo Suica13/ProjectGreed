@@ -23,7 +23,7 @@ function view() {
   };
 }
 test("capability acceptance is independent of a WebView version string", () => {
-  for (const version of ["105.0", "109.0", "119.0", "120.0", "unknown"]) {
+  for (const version of ["80.0", "83.0", "105.0", "109.0", "119.0", "120.0", "unknown"]) {
     const browser = view();
     browser.navigator = { userAgent: "Chrome/" + version };
     assert.deepEqual(missingFeatures(browser), []);
@@ -58,4 +58,13 @@ test("missing profile and battle primitives cannot silently pass startup", () =>
   const missing = missingFeatures(browser);
   assert.equal(missing.length, 4);
   assert.match(missing.join(" "), /Object.hasOwn/);
+});
+
+test("a packaged selector fallback can satisfy the UI requirement while missing native primitives still fail", () => {
+  const browser = view();
+  browser.CSS.supports = () => false;
+  browser.AppCompat = { selectors: true };
+  assert.deepEqual(missingFeatures(browser), []);
+  browser.structuredClone = undefined;
+  assert.equal(missingFeatures(browser).length, 1);
 });

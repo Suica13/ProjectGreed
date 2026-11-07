@@ -1,0 +1,16 @@
+/* Only loaded when native relational/list selectors are unavailable. */
+#productionList > .production-unit { min-height:78px !important; max-height:none !important; }
+.pilot-roster-heading > * + *, .pilot-list-skills > * + * { margin-left:3px; }
+.unit-tags-primary > span, .unit-tags-types > span { margin-right:2px; }
+@media (max-width:720px) {
+  body.menu-shell-active #formationMain > .formation-heading {
+    display:grid !important; grid-template-columns:auto minmax(0,1fr); gap:8px;
+  }
+  #formationMain > .formation-heading > h2 { grid-row:1; grid-column:1; font-size:18px !important; white-space:nowrap; }
+  #formationPilotBudget, #formationHeadingActions { grid-row:1; grid-column:2; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  #formationMain[data-page="pilots"] #formationHeadingActions { display:none !important; }
+  #formationPilotBudget { margin:0; font-size:12px; }
+  #customPilotList .pilot-list-skills { flex-wrap:nowrap; min-width:0; overflow:hidden; }
+}
+
+#customPilotList .pilot-list-skills > small { margin-left:4px !important; white-space:nowrap; }

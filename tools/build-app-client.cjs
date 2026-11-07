@@ -7,6 +7,7 @@ const root = path.resolve(__dirname, ".."),
   output = path.join(root, "build/app-client/content");
 function buildAppClient() {
   fs.mkdirSync(path.join(output, "assets"), { recursive: true });
+  const legacy = require("./build-app-legacy.cjs");
   let html = fs.readFileSync(path.join(root, "public/client.html"), "utf8");
   const project = require("../project.json");
   if (!html.includes(JSON.stringify(project))) throw Error("Run npm run build first");
@@ -40,6 +41,7 @@ function buildAppClient() {
       return name;
     },
   );
+  html = legacy.prepareLegacy(html, root, output);
   fs.mkdirSync(path.join(output, "scripts"), { recursive: true });
   const scripts = new Set();
   let scriptIndex = 0;
@@ -68,7 +70,7 @@ function buildAppClient() {
     if (!source.trim() || /\bsrc\s*=|type\s*=\s*["']application\/json/.test(attributes))
       return whole;
     const name = `scripts/client-${String(++scriptIndex).padStart(2, "0")}.js`;
-    fs.writeFileSync(path.join(output, name), source);
+    fs.writeFileSync(path.join(output, name), legacy.transformScript(source));
     scripts.add(name);
     return `<script${attributes} src="${name}"></script>`;
   });
@@ -81,12 +83,12 @@ function buildAppClient() {
     "default-src 'self' data: blob:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' http: https: ws: wss: data: blob:; object-src 'none'; frame-src 'none'; base-uri 'self'";
   html = html.replace(
     "<head>",
-    `<head>\n<meta http-equiv="Content-Security-Policy" content="${csp}">\n<link rel="icon" href="app-icon.svg"><script src="app-runtime.js"></script>`,
+    `<head>\n<meta http-equiv="Content-Security-Policy" content="${csp}">\n<link rel="icon" href="app-icon.svg"><script src="legacy-compat.js"></script><script src="app-runtime.js"></script>`,
   );
   fs.writeFileSync(path.join(output, "client.html"), html);
-  fs.copyFileSync(
-    path.join(root, "apps/common/app-runtime.js"),
+  fs.writeFileSync(
     path.join(output, "app-runtime.js"),
+    legacy.transformScript(fs.readFileSync(path.join(root, "apps/common/app-runtime.js"), "utf8")),
   );
   for (const name of fs.readdirSync(path.join(output, "assets")))
     if (!assets.has("assets/" + name)) fs.unlinkSync(path.join(output, "assets", name));
