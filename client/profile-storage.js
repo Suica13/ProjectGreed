@@ -48,6 +48,8 @@ const ProfileStorage = (() => {
     return result;
   }
   function replace(entries, storage = localStorage) {
+    if (typeof AppRuntime !== "undefined" && AppRuntime.native && storage === localStorage)
+      return AppRuntime.replaceItems(entries);
     const next = new Map(entries);
     const previous = new Map([...next.keys()].map((key) => [key, storage.getItem(key)]));
     const changes = [...next].filter(([key, value]) => previous.get(key) !== value);

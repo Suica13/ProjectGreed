@@ -20,6 +20,7 @@
 - [收益](rules/economy.md)
 - [部署许可与库存](rules/licenses.md)
 - [服务器打包与运行](tools/server-package.md)
+- [Windows / Android 软件客户端](tools/native-clients.md)
 - [源码导读](guides/code-tour.md)
 - [人工例外表](maintenance/unit-exceptions.md)
 - [编辑记录](editor-changes/README.md)

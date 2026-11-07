@@ -1,0 +1,31 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'io.projectgreed.apptest2'
+    compileSdk 36
+    buildToolsVersion '36.0.0'
+    buildFeatures { buildConfig true }
+    defaultConfig {
+        applicationId 'io.projectgreed.apptest2'
+        minSdk 26
+        targetSdk 35
+        testInstrumentationRunner 'io.projectgreed.apptest2.StoreInstrumentation'
+        versionCode 93002
+        versionName 'V93'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    sourceSets.main.assets.srcDirs = ["${rootDir}/../../build/app-client/content"]
+    buildTypes {
+        debug { debuggable true }
+        release { minifyEnabled false }
+    }
+    androidResources { noCompress 'ogg', 'mp3', 'wav' }
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.json:json:20240303'
+}
