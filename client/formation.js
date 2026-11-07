@@ -2375,6 +2375,10 @@ const Formation = (() => {
     );
     pilotOriginal = JSON.stringify(pilotEdit);
     byId("customPilotName").value = I18n.pilotName(pilotEdit);
+    byId("customPilotPersonality").value = pilotEdit.personality || "";
+    byId("customPilotBackground").value = pilotEdit.background || "";
+    byId("customPilotPersonality").disabled = !!pilotEdit.ace;
+    byId("customPilotBackground").disabled = !!pilotEdit.ace;
     byId("customPilotName").disabled = true;
     byId("renameCustomPilot").textContent = "修改名称";
     byId("renameCustomPilot").hidden = !!pilotEdit.ace;
@@ -2707,6 +2711,12 @@ const Formation = (() => {
   byId("cancelPilotTraining").onclick = () => {
     pilotEdit = structuredClone(JSON.parse(pilotOriginal));
     renderPilotStats();
+  };
+  byId("customPilotPersonality").onchange = () => {
+    if (pilotEdit && !pilotEdit.ace) savePilotIdentity({ personality: byId("customPilotPersonality").value || null });
+  };
+  byId("customPilotBackground").onchange = () => {
+    if (pilotEdit && !pilotEdit.ace) savePilotIdentity({ background: byId("customPilotBackground").value });
   };
   byId("createPilotConfirm").onclick = () => {
     if (!pilotEdit || !pilotIsNew) return;
