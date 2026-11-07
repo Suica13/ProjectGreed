@@ -214,8 +214,10 @@ function recordBattleDialogue(event, speaker, target) {
   if (!record) return;
   const line = BattleDialogue.format(record);
   dialogueHistory.push({ ...record, line, logIndex: log.length, round: game.round });
-  dialogueBubbles.set(record.speakerId, { text: record.text, until: performance.now() + 3500 });
-  if (typeof DialogueAudio !== "undefined") DialogueAudio.play(record);
+  if (!ClientSettings.hidePilotDialogue()) {
+    dialogueBubbles.set(record.speakerId, { text: record.text, until: performance.now() + 3500 });
+    if (typeof DialogueAudio !== "undefined") DialogueAudio.play(record);
+  }
   addLog(line);
 }
 let lastNetworkDialogueId = null;
@@ -232,6 +234,7 @@ globalThis.receiveBattleDialogue = function (events = [], matchId = "") {
   const added = previousIndex < 0 ? [recent] : events.slice(previousIndex + 1);
   lastNetworkDialogueId = identity;
   for (const record of added.slice(-5)) {
+    if (ClientSettings.hidePilotDialogue()) continue;
     dialogueBubbles.set(record.speakerId, { text: record.text, until: performance.now() + 3500 });
     if (typeof DialogueAudio !== "undefined") DialogueAudio.play(record);
   }
@@ -1888,7 +1891,7 @@ function drawMap(now) {
   }
   const pilotLabels = MapCamera.pilotLabels;
   // Draw only when the corresponding pilot portrait is permitted to be visible.
-  if (dialogueBubbles.size) {
+  if (dialogueBubbles.size && !ClientSettings.hidePilotDialogue()) {
     ctx.save();
     ctx.font = "12px system-ui";
     ctx.textAlign = "center";
