@@ -139,7 +139,7 @@
     root.AppRuntime = Object.freeze({
       native: true,
       ready: true,
-      edition: "AppTest2",
+      edition: "NativeJSON",
       replaceItems: area.batch,
       requestBack: async () => {
         const dialog = document.querySelector("dialog[open]");
@@ -200,7 +200,7 @@
     );
     document.addEventListener("DOMContentLoaded", () => {
       const brand = document.querySelector(".shell-brand small");
-      if (brand) brand.textContent += " / AppTest2";
+      if (brand) brand.textContent += " / Native JSON";
       if (root.ProjectGreedAndroid?.sceneChanged) {
         const host = root.ProjectGreedAndroid;
         let ready = typeof assetsReady !== "undefined" && assetsReady,
