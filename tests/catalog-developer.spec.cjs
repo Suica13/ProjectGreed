@@ -13,6 +13,40 @@ async function login(page, base, standalone = false) {
   await expect(page.locator("#editorLoginScreen")).toBeHidden({ timeout: 30000 });
 }
 
+for (const width of [1440, 390])
+  test(`developer faction lists render without player economy (${width})`, async ({ page }) => {
+    test.setTimeout(90000);
+    const app = createDeveloperServer({ port: 0 }),
+      address = await app.listen(),
+      errors = [];
+    page.on("pageerror", (error) => errors.push(error.message));
+    await page.setViewportSize({ width, height: 1000 });
+    try {
+      await login(page, "http://127.0.0.1:" + address.port, true);
+      for (const faction of ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"]) {
+        await page.locator("#editorFactionSwitch").selectOption(faction);
+        await expect(page.locator("#editorFactionSwitch")).toBeEnabled({ timeout: 30000 });
+        await expect
+          .poll(async () => ({
+            errors,
+            hasCards: (await page.locator(".encyclopedia-unit").count()) > 0,
+            rendering: await page.locator("#encyclopediaList").getAttribute("data-rendering"),
+          }))
+          .toEqual({ errors: [], hasCards: true, rendering: "false" });
+        expect(await page.evaluate(() => typeof Economy)).toBe("undefined");
+        await expect(page.locator(".production-turns")).toHaveCount(0);
+        const id = await page.evaluate(() => ART.prefabs[0].id);
+        await page.locator("#encyclopediaSearch").fill(id);
+        await expect(page.locator(`[data-unit-id="${id}"]`)).toBeVisible();
+        await page.locator("#encyclopediaSearch").fill("");
+      }
+      expect(errors).toEqual([]);
+    } finally {
+      await page.close();
+      await app.close();
+    }
+  });
+
 test("developer catalog edits unit overrides, offers save/discard on close, and edits common templates", async ({
   page,
 }) => {
@@ -36,7 +70,7 @@ test("developer catalog edits unit overrides, offers save/discard on close, and 
     const pane = await page.locator("#encyclopediaList").boundingBox();
     expect(pane.height).toBeGreaterThan(500);
     await page.locator("#encyclopediaSearch").fill("RX_78_2");
-    await page.locator('[data-unit-id="RX_78_2"] button').click();
+    await page.locator('[data-unit-id="RX_78_2"] .encyclopedia-unit-footer > button').click();
     await expect(page.locator("#editUnitProperties")).toBeVisible();
     await page.locator("#editUnitProperties").click();
     await expect(page.locator("#editUnitProperties")).toHaveText("保存修改");
@@ -60,7 +94,7 @@ test("developer catalog edits unit overrides, offers save/discard on close, and 
     expect(f.store.getUnit("RX_78_2").unit.weapons.EF_HypeBazooka.hit).toBe(92);
     expect(f.store.getUnit("RX_78_2").price.money).toBe(450);
     expect(f.store.getUnit("RX_78_2").unit.weapons.EF_HypeBazooka.attackRounds).toBe(4);
-    await page.locator('[data-unit-id="RX_78_2"] button').click();
+    await page.locator('[data-unit-id="RX_78_2"] .encyclopedia-unit-footer > button').click();
     await page.locator("#editUnitProperties").click();
     await page.locator('[data-field="stats.hp"]').fill("99999");
     const requestsBeforeDiscard = editorRequests.length;
@@ -69,7 +103,7 @@ test("developer catalog edits unit overrides, offers save/discard on close, and 
     await expect(page.locator("#formationUnitDetail")).toBeHidden();
     expect(f.store.getUnit("RX_78_2").unit.stats.hp).toBe(55500);
     expect(editorRequests.length).toBe(requestsBeforeDiscard);
-    await page.locator('[data-unit-id="RX_78_2"] button').click();
+    await page.locator('[data-unit-id="RX_78_2"] .encyclopedia-unit-footer > button').click();
     await page.locator("#formationDetailSlots .edit-common-weapon").first().click();
     await expect(page.locator("#commonWeaponEditor")).toBeVisible();
     const old = Number(await page.locator('[data-field="common.hit"]').inputValue());
@@ -130,10 +164,12 @@ test("async catalog cancels stale batches when filters or tabs change", async ({
   const result = await page.evaluate(() => ({
     ids: [...document.querySelectorAll(".encyclopedia-unit")].map((node) => node.dataset.unitId),
     weapons: document.querySelectorAll("#encyclopediaList .weapon-card").length,
+    productionPeriods: document.querySelectorAll("#encyclopediaList .production-turns").length,
   }));
   expect(result.weapons).toBe(0);
   expect(result.ids.length).toBeGreaterThan(0);
   expect(result.ids.every((id) => id.includes("MS_06F"))).toBe(true);
+  expect(result.productionPeriods).toBe(result.ids.length);
 });
 
 test("mobile developer preview keeps edit and close controls accessible", async ({ page }) => {
@@ -144,7 +180,7 @@ test("mobile developer preview keeps edit and close controls accessible", async 
     await login(page, "http://127.0.0.1:" + address.port);
     await expect(page.locator(".developer-toolbar small")).toHaveText("已连接");
     await page.locator("#encyclopediaSearch").fill("RGM_79");
-    await page.locator('[data-unit-id="RGM_79"] button').click();
+    await page.locator('[data-unit-id="RGM_79"] .encyclopedia-unit-footer > button').click();
     await page.locator("#editUnitProperties").click();
     await expect(page.locator("#unitSourceEditor")).toBeVisible();
     await page.locator('[data-field="stats.hp"]').fill("12345");
@@ -168,7 +204,7 @@ test("developer unit preview hides gameplay purchase and preload buttons", async
     await login(page, "http://127.0.0.1:" + address.port);
     await expect(page.locator("#encyclopediaScreen")).toBeVisible();
     await page.locator("#encyclopediaSearch").fill("Medea");
-    await page.locator('[data-unit-id="Medea"] button').click();
+    await page.locator('[data-unit-id="Medea"] .encyclopedia-unit-footer > button').click();
     await expect(page.locator("#producePreviewUnit")).toBeHidden();
     const preload = page.locator("#formationDetailHangars [data-preload-hangar]");
     await expect(preload).toHaveCount(0);
@@ -190,7 +226,7 @@ test("standalone developer HTML can read source through the loopback service", a
     await login(page, "http://127.0.0.1:" + address.port, true);
     await expect(page.locator(".developer-toolbar small")).toHaveText("已连接");
     await page.locator("#encyclopediaSearch").fill("RX_78_2");
-    await page.locator('[data-unit-id="RX_78_2"] button').click();
+    await page.locator('[data-unit-id="RX_78_2"] .encyclopedia-unit-footer > button').click();
     await page.locator("#editUnitProperties").click();
     await expect(page.locator("#unitSourceEditor")).toBeVisible();
     await page.locator("#closeFormationDetail").click();
@@ -285,34 +321,34 @@ for (const width of [1440, 390])
         .click();
       await expect(page.locator("#conversionRulesScreen")).toBeVisible();
       await expect(page.locator("#encyclopediaScreen")).toBeHidden();
-      await page.locator('[data-field="conversion.weaponClasses.hand.beam.damage"]').fill("1.35");
-      await page.locator('[data-field="conversion.weapons.ap"]').fill("1.5");
+      await page.locator('[data-field="conversion.weaponClasses.beam_rifle.damage"]').fill("1.35");
+      await expect(page.locator('[data-field="conversion.weapons.ap"]')).toHaveCount(0);
+      await page.locator('[data-field="conversion.weapons.armorPiercingIgnore"]').fill("0.4");
+      await page.locator('[data-field="conversion.weapons.range"]').fill("1");
       await page
         .locator("#conversionRulesScreen")
         .getByRole("button", { name: "保存规则", exact: true })
         .click();
       await expect(page.locator("#conversionRulesScreen [role=status]")).toContainText("已保存");
-      expect(f.read("shared/conversion-rules.json").weapons.ap).toBe(1.5);
-      await page.locator("[data-rule-main-class]").selectOption("leg");
+      expect(f.read("shared/conversion-rules.json").weapons.armorPiercingIgnore).toBe(0.4);
       await page.locator("[data-rule-sub-class]").selectOption("missile");
       for (const [key, value] of Object.entries({
-        baseAP: 2,
         baseEN: 25,
         baseHit: 88,
         minRange: 2,
         maxRange: 5,
       }))
         await page
-          .locator(`[data-field="conversion.weaponClasses.leg.missile.${key}"]`)
+          .locator(`[data-field="conversion.weaponClasses.missile.${key}"]`)
           .fill(String(value));
       await page
         .locator("#conversionRulesScreen")
         .getByRole("button", { name: "保存规则", exact: true })
         .click();
       await expect(page.locator("#conversionRulesScreen [role=status]")).toContainText("已保存");
-      await expect(page.locator("[data-rule-main-class]")).toHaveValue("leg");
+      await expect(page.locator("[data-rule-sub-class]")).toHaveValue("missile");
       const leg = f.store.getUnit("RX_80PR").unit.weapons.EF_RX_80PR_LegMS;
-      expect([leg.actionCost, leg.en, leg.hit, leg.min, leg.max]).toEqual([3, 25, 88, 2, 6]);
+      expect([leg.en, leg.hit, leg.min, leg.max]).toEqual([25, 88, 2, 6]);
 
       await page
         .locator(".developer-toolbar")
@@ -324,21 +360,21 @@ for (const width of [1440, 390])
           () =>
             Object.values(Rules.catalog.prefabs.find((u) => u.id === "RX_78_2").weapons).find(
               (w) => w.category === "machine_gun",
-            ).actionCost,
+            ).armorPiercingIgnore,
         ),
-      ).toBe(3);
+      ).toBe(0.4);
       await page
         .locator(".developer-toolbar")
         .getByRole("button", { name: "换算规则", exact: true })
         .click();
-      await page.locator('[data-field="conversion.weapons.ap"]').fill("2");
+      await page.locator('[data-field="conversion.weapons.armorPiercingIgnore"]').fill("0.3");
       await page
         .locator(".developer-toolbar")
         .getByRole("button", { name: "图鉴", exact: true })
         .click();
       await expect(page.locator("#gameDialog")).toBeVisible();
       await page.getByRole("button", { name: "取消修改并切换", exact: true }).click();
-      expect(f.read("shared/conversion-rules.json").weapons.ap).toBe(1.5);
+      expect(f.read("shared/conversion-rules.json").weapons.armorPiercingIgnore).toBe(0.4);
     } finally {
       await page.close();
       await app.close();
@@ -402,7 +438,7 @@ test("developer uses data-only catalog without unit icons or preview rendering",
   try {
     await login(page, "http://127.0.0.1:" + address.port, true);
     await page.locator("#encyclopediaSearch").fill("RX_78_2");
-    await page.locator('[data-unit-id="RX_78_2"] button').click();
+    await page.locator('[data-unit-id="RX_78_2"] .encyclopedia-unit-footer > button').click();
     await expect(page.locator("#formationUnitDetail")).toBeVisible();
     await expect(page.locator("#formationDetailPreview")).toBeHidden();
     await expect(page.locator("#encyclopediaList img")).toHaveCount(0);
@@ -480,7 +516,7 @@ test("editor runtime failures stay visible on the login screen", async ({ page }
   }
 });
 
-test("shared head vulcan editor agrees with converted AP and saves a final-value adjustment", async ({
+test("shared head vulcan editor preserves the AP reference and saves a final-value adjustment", async ({
   page,
 }) => {
   test.setTimeout(60000);
@@ -490,17 +526,23 @@ test("shared head vulcan editor agrees with converted AP and saves a final-value
   try {
     await login(page, "http://127.0.0.1:" + address.port);
     await page.locator("#encyclopediaSearch").fill("RX_78_2");
-    await page.locator('[data-unit-id="RX_78_2"] button').click();
+    await page.locator('[data-unit-id="RX_78_2"] .encyclopedia-unit-footer > button').click();
     await page
       .locator(
         '#formationDetailSlots [data-weapon-id="Common_DoubleVulcan_MS"] .edit-common-weapon',
       )
       .click();
     const initialRef = f.read("assets/units/RX_78_2/unit.json").weapons.Common_DoubleVulcan_MS.ref;
-    const currentAP = f.store.getWeapon(initialRef).weapon.actionCost;
+    const current = f.store.getWeapon(initialRef),
+      currentAP = current.weapon.actionCost,
+      baselineAP = current.baseline.actionCost;
     await expect(page.locator('[data-field="common.actionCost"]')).toHaveValue(String(currentAP));
     await expect(page.locator('[data-field="common.actionCost"]').locator("..")).toContainText(
-      "基准 3 · 调整 " + (currentAP >= 3 ? "+" : "") + (currentAP - 3),
+      "基准 " +
+        baselineAP +
+        " · 调整 " +
+        (currentAP >= baselineAP ? "+" : "") +
+        (currentAP - baselineAP),
     );
     await page.locator('[data-field="common.actionCost"]').fill("2");
     await page
@@ -510,7 +552,9 @@ test("shared head vulcan editor agrees with converted AP and saves a final-value
     await expect(page.locator("#commonWeaponEditor")).not.toBeVisible();
     const ref = f.read("assets/units/RX_78_2/unit.json").weapons.Common_DoubleVulcan_MS.ref;
     expect(f.read("assets/weapons.json").definitions[ref].actionCost).toBe(1);
-    expect(f.read("shared/editor-adjustments.json").weapons[ref]["/actionCost"]).toBe(-1);
+    expect(f.read("shared/editor-adjustments.json").weapons[ref]["/actionCost"]).toBe(
+      2 - baselineAP,
+    );
     expect(f.store.getUnit("RX_78_2").unit.weapons.Common_DoubleVulcan_MS.actionCost).toBe(2);
   } finally {
     await page.close();
@@ -543,7 +587,7 @@ test("faction libraries download separately, cached switches and preview closing
       ),
     ).toBe(true);
     await page.locator("#encyclopediaSearch").fill("MS_06F");
-    await page.locator('[data-unit-id="MS_06F"] button').click();
+    await page.locator('[data-unit-id="MS_06F"] .encyclopedia-unit-footer > button').click();
     const count = requests.length;
     const time = await page.evaluate(async () => {
       const start = performance.now();
@@ -562,7 +606,7 @@ test("faction libraries download separately, cached switches and preview closing
       ),
     ).toBe(true);
     await page.locator("#encyclopediaSearch").fill("MSZ_006");
-    await page.locator('[data-unit-id="MSZ_006"] button').click();
+    await page.locator('[data-unit-id="MSZ_006"] .encyclopedia-unit-footer > button').click();
     await expect(page.locator("#formationDetailTitle")).toContainText("Z");
     await page.locator("#editUnitProperties").click();
     await expect(page.locator("#unitSourceEditor")).toBeVisible();
@@ -571,7 +615,7 @@ test("faction libraries download separately, cached switches and preview closing
       .filter({ hasText: "主要阵营标签" })
       .locator("select");
     await expect(primary).toHaveValue("AEUG");
-    await expect(page.locator('[data-field="unit.eras"]')).toHaveValue("0087");
+    await expect(page.locator('[data-field="unit.eras"]')).toHaveValue("0087T2");
     await page.locator("#closeFormationDetail").click();
     await page.getByRole("button", { name: "取消修改并关闭", exact: true }).click();
     const afterDownload = requests.length;

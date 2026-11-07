@@ -28,7 +28,7 @@ test("unit overrides, source prices, localization and slot order persist without
   data.unit.weaponKits[0].weapons.reverse();
   const templates = f.store.templates();
   data.unit.skills.push(
-    structuredClone(templates.skills.find((s) => s.value.type === "emp").value),
+    structuredClone(templates.skills.find((s) => s.value.type === "smoke").value),
   );
   f.store.saveUnit(data);
   assert.equal(

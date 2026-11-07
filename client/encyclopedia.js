@@ -102,9 +102,12 @@ const Encyclopedia = (() => {
     const body = element("div", "encyclopedia-unit-body");
     body.append(element("strong", "encyclopedia-unit-name", prefab.name));
     body.append(Formation.unitTags(prefab, {cost: UnitModels[modelId].cost}));
-    const timing = Economy.productionTiming(prefab.id, modelId.split("__")[1]);
     const footer = element("div", "encyclopedia-unit-footer");
-    footer.append(element("small", "muted production-turns", `生产周期：${timing.turns}回合／台`));
+    // The standalone editor has catalog data only, never the player's economy.
+    if (!window.CATALOG_DEVELOPER_MODE) {
+      const timing = Economy.productionTiming(prefab.id, modelId.split("__")[1]);
+      footer.append(element("small", "muted production-turns", `生产周期：${timing.turns}回合／台`));
+    }
     const state = window.CATALOG_DEVELOPER_MODE
       ? ""
       : !Development.allows(PlayerProfile.faction(), prefab.id)
