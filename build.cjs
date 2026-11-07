@@ -124,6 +124,7 @@ for (const [key, file] of [
   ["MAP_SHADOW_LIGHTING", "client/map-shadow-lighting.js"],
   ["RENDERER", "client/renderer.js"],
   ["SPRITE_EFFECTS", "client/sprite-effects.js"],
+  ["BATTLE_DIALOGUE", "client/battle-dialogue.js"],
   ["BATTLE_SCENE", "client/battle-scene.js"],
   ["BATTLE_WINDOW", "client/battle-window.js"],
   ["WEAPON_EFFECTS", "client/weapon-effects.js"],
