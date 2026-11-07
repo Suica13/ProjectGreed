@@ -2980,6 +2980,11 @@ function logEvent(event) {
   );
   recordBattleDialogue(event.after <= 0 ? "kill" : event.hit ? "attack" : "miss", a, b);
   if (event.hit && event.after > 0) recordBattleDialogue("hit", b, a);
+  if (event.after > 0 && a.team !== b.team) {
+    const before = dialogueHistory.length;
+    recordBattleDialogue("taunt", a, b);
+    if (dialogueHistory.length > before) recordBattleDialogue("reply", b, a);
+  }
 }
 // 推进已经结算好的演出事件与显示血量，不再次计算伤害。
 function progressBattle(now) {
