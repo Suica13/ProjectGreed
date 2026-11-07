@@ -1739,6 +1739,7 @@ function drawMap(now) {
       squadPendingMoves.set(id, actor.pendingMove);
   drawVisibleEffects(() => MapCombat.drawUnderlay(ctx, mapGeo));
   const authoredMap = Rules.getMap(game.mapId);
+  globalThis.ProjectGreedMapLighting = authoredMap.lighting || null;
   let aboveLayerDrawn = false;
   const drawAboveLayer = () =>
     drawVisibleEffects(() => TileMapRenderer.draw(ctx, authoredMap, "above", mapGeo, w, h));
@@ -1889,23 +1890,7 @@ function drawMap(now) {
     ctx.save();
     const environmentPose = EnvironmentVisuals.pose(u, groundCell);
     const spriteTile = (tile * 64) / Rules.mapCellPixels;
-    if (
-      ClientSettings.unitShadows() &&
-      Rules.cellEnvironment(game, groundCell.x, groundCell.y) !== "space"
-    ) {
-      ctx.fillStyle = "rgba(0,0,0,0.28)";
-      ctx.beginPath();
-      ctx.ellipse(
-        pos.x + spriteTile * 0.05,
-        pos.y + spriteTile * 0.12,
-        spriteTile * unitSize.width * 0.3,
-        spriteTile * unitSize.height * 0.12,
-        0,
-        0,
-        Math.PI * 2,
-      );
-      ctx.fill();
-    }
+    // Animated silhouettes are rendered by SpriteRenderer when enabled.
     ctx.globalAlpha = environmentPose.alpha;
     if (
       !immersive &&
