@@ -2277,9 +2277,16 @@ function drawMap(now) {
     ctx.strokeRect(p.x - tile * 0.5 + 1, p.y - tile * 0.5 + 1, tile - 2, tile - 2);
   }
   SpriteEffects.setFogClip(null);
-  if (typeof BattlefieldWeather !== "undefined")
-    BattlefieldWeather.draw(ctx, w, h, now, game.climateMap || Rules.getMap(game.mapId),
+  if (typeof BattlefieldWeather !== "undefined") {
+    const state = BattlefieldWeather.draw(ctx, w, h, now, game.climateMap || Rules.getMap(game.mapId),
       game.climateSettings || Net.snapshot?.settings || {}, game.round, game.climateSeed || game.seed || 1);
+    const label = byId("mapClimateStatus");
+    if (label) {
+      const next = state.space ? "宇宙 · 无天气/时间" :
+        BattlefieldWeather.names[state.weather] + " · " + BattlefieldWeather.times[state.time];
+      if (label.textContent !== next) label.textContent = next;
+    }
+  }
 }
 function cellAt(e) {
   if (!mapGeo) return null;
