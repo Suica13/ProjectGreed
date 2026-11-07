@@ -2278,8 +2278,8 @@ function drawMap(now) {
   }
   SpriteEffects.setFogClip(null);
   if (typeof BattlefieldWeather !== "undefined")
-    BattlefieldWeather.draw(ctx, w, h, now, Rules.getMap(game.mapId),
-      Net.snapshot?.settings || game.settings || {}, game.round);
+    BattlefieldWeather.draw(ctx, w, h, now, game.climateMap || Rules.getMap(game.mapId),
+      game.climateSettings || Net.snapshot?.settings || {}, game.round, game.climateSeed || game.seed || 1);
 }
 function cellAt(e) {
   if (!mapGeo) return null;
