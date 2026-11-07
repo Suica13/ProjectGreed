@@ -29,7 +29,7 @@ const Tactics = (() => {
     typeof UnitSensors !== "undefined" ? UnitSensors : require("./unit-sensors.js");
   const pilots = typeof PilotSystem !== "undefined" ? PilotSystem : require("./pilots.js");
   // SFS passengers remain independent combat actors; enclosed cargo stays hidden.
-  const onMap = (u) => !!u && u.hp > 0 && (!u.embarked || u.embarked.exposed === true);
+  const onMap = (u) => !!u && u.hp > 0 && !u.deploymentStaged && (!u.embarked || u.embarked.exposed === true);
   const sensors = sensorModule.create({
     modelOf,
     cells,
@@ -1245,7 +1245,7 @@ const Tactics = (() => {
           : ownerOf(u) === team),
     );
     if (
-      !onMap(u) ||
+      (!onMap(u) && !u.deploymentStaged) ||
       !!u.embarked ||
       !Number.isInteger(x) ||
       !Number.isInteger(y) ||
@@ -1258,8 +1258,43 @@ const Tactics = (() => {
     delete u.squadId; delete u.squadSlot;
     u.x = x;
     u.y = y;
+    delete u.deploymentStaged;
     if (target) joinSquad(g, u, target);
     hangars.sync(g);
+  }
+  function stageDeployment(g, seat, id) {
+    if (!g.deployment || g.deployment[seat]) throw Error("部署已确认");
+    const u = g.units.find((u) => u.id === id &&
+      (g.campaignBattlefield
+        ? u.campaignDeploying && campaignBattlefield.deploymentSeat(g, u) === seat
+        : ownerOf(u) === seat));
+    if (!u || u.embarked || u.hp <= 0) throw Error("该单位不能取消部署");
+    u.deploymentStaged = true;
+    delete u.squadId;
+    delete u.squadSlot;
+    hangars.sync(g);
+  }
+  function clearDeployment(g, seat) {
+    if (!g.deployment || g.deployment[seat]) throw Error("部署已确认");
+    for (const u of g.units) {
+      if (u.hp <= 0 || u.embarked) continue;
+      if (g.campaignBattlefield
+        ? u.campaignDeploying && campaignBattlefield.deploymentSeat(g, u) === seat
+        : ownerOf(u) === seat) stageDeployment(g, seat, u.id);
+    }
+  }
+  function autoPlaceDeployment(g, seat) {
+    if (!g.deployment || g.deployment[seat]) throw Error("部署已确认");
+    const units = g.units.filter((u) => u.deploymentStaged &&
+      (g.campaignBattlefield
+        ? u.campaignDeploying && campaignBattlefield.deploymentSeat(g, u) === seat
+        : ownerOf(u) === seat));
+    for (const u of units) {
+      const area = new Set(deploymentCells(g, seat, u).map((cell) => key(cell.x, cell.y)));
+      const position = deploymentCells(g, seat, u).find((cell) =>
+        fits(g, u, cell.x, cell.y, u.angle, false, seat, area));
+      if (position) deploy(g, seat, u.id, position.x, position.y);
+    }
   }
   function aiDeployment(g, seat) {
     if (!g.deployment || g.deployment[seat]) return;
@@ -1303,6 +1338,8 @@ const Tactics = (() => {
         throw Error("单位不在有效部署区域");
       if (!fits(g, u, u.x, u.y, u.angle, false, team)) throw Error("部署位置重叠");
     }
+    if (controlled.some((u) => u.deploymentStaged && u.hp > 0 && !u.embarked))
+      throw Error("还有单位未部署，请放置或自动部署");
     for (const unit of controlled) delete unit.campaignDeploying;
     g.deployment[team] = true;
     return g.deployment.every(Boolean);
@@ -3981,6 +4018,9 @@ const Tactics = (() => {
     deploy,
     confirmDeployment,
     aiDeployment,
+    stageDeployment,
+    clearDeployment,
+    autoPlaceDeployment,
     terrain,
     terrainStyle,
     typeNames,
