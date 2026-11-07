@@ -17,7 +17,18 @@ let html = read("client/template.html").replace(
 );
 html = html.replace("__LANDSCAPE_VIEWPORT__", () => inlineScript(read("client/landscape-viewport.js")));
 html = html.replace("__BATTLEFIELD_CLIMATE__", () => inlineScript(read("shared/battlefield-climate.js")));
-html = html.replace("__CLIMATE_EFFECT_PRESETS__", () => "const CLIMATE_EFFECT_PRESETS = " + json(JSON.parse(read("client/climate-effects.json"))) + ";");
+html = html.replace("__CLIMATE_EFFECT_PRESETS__", () => {
+  const presets = JSON.parse(read("client/climate-effects.json"));
+  for (const [name, asset] of Object.entries(presets.assets || {})) {
+    if (!asset || asset.startsWith("data:image/")) continue;
+    if (!/^assets\\/[a-zA-Z0-9_./-]+\\.(png|webp)$/i.test(asset) || asset.includes(".."))
+      throw Error("Invalid climate asset path: " + name);
+    const extension = asset.endsWith(".webp") ? "webp" : "png";
+    presets.assets[name] = "data:image/" + extension + ";base64," +
+      fs.readFileSync(path.join(root, asset)).toString("base64");
+  }
+  return "const CLIMATE_EFFECT_PRESETS = " + json(presets) + ";";
+});
 html = html.replace("__UNIT_SENSORS__", () => inlineScript(read("shared/unit-sensors.js")));
 const project = JSON.parse(read("project.json"));
 const developmentTree = JSON.parse(read("shared/development-tree.json"));
