@@ -355,7 +355,7 @@ const SpriteRenderer = (() => {
     ctx.scale(scale, scale);
     ctx.imageSmoothingEnabled = false;
     const outlines = [];
-    for (const layer of visibleLayers(
+    const layers = visibleLayers(
       model,
       heldWeapon,
       shieldVisible,
@@ -371,7 +371,52 @@ const SpriteRenderer = (() => {
       weaponDisplayIndex,
       flying,
       boostSkillActive,
-    )) {
+    );
+    // Render the same animated sprite hierarchy as a projected silhouette.
+    // Non-casting layers (effects, thrusters and explicitly excluded decals) are skipped.
+    if (!effectsOnly && environment !== "space" &&
+        typeof ClientSettings !== "undefined" && ClientSettings.unitShadows()) {
+      const lighting = typeof MapShadowLighting !== "undefined"
+        ? MapShadowLighting.normalize(globalThis.ProjectGreedMapLighting || {})
+        : { enabled: true, direction: "upper", distance: 0.1, intensity: 0.5 };
+      if (lighting.enabled && lighting.intensity > 0) {
+        ctx.save();
+        ctx.filter = "brightness(0)";
+        ctx.globalAlpha *= lighting.intensity;
+        for (const layer of layers) {
+          if (hiddenLayers.includes(layer.name) || layer.castsShadow === false ||
+              layer.shadowCaster === false || layer.effect === true ||
+              layer.independentClock || layer.visibleInFog === false ||
+              layer.visibleWhen?.thrustActive || layer.visibleWhen?.sustainedThrust ||
+              layer.visibleWhen?.moving) continue;
+          const image = images[layer.asset];
+          if (!image) continue;
+          const transform = layerTransform(model, layer, angle, sampled);
+          const frames = layer.frames || 1;
+          const fw = layer.frameWidth || Math.floor(image.width / frames);
+          const fh = layer.frameHeight || image.height;
+          const frame = layer.frameFps && (!layer.onlyAnimateWhenMoving || moving)
+            ? Math.floor(Math.max(0, time) * layer.frameFps) % frames
+            : layer.frame || 0;
+          const columns = Math.max(1, Math.floor(image.width / fw));
+          const elevation = Math.max(0, (layer.height || 0) +
+            (sampled[layer.bone]?.height || 0));
+          const projected = typeof MapShadowLighting !== "undefined"
+            ? MapShadowLighting.projection(lighting, 1 + elevation / 64)
+            : { x: 0, y: lighting.distance, alpha: lighting.intensity };
+          ctx.save();
+          ctx.translate(transform.x + projected.x * 64,
+            transform.y + elevation + projected.y * 64);
+          ctx.rotate(transform.rotation);
+          ctx.scale(transform.scaleX, transform.scaleY);
+          ctx.drawImage(image, (frame % columns) * fw,
+            Math.floor(frame / columns) * fh, fw, fh, -fw / 2, -fh / 2, fw, fh);
+          ctx.restore();
+        }
+        ctx.restore();
+      }
+    }
+    for (const layer of layers) {
       if (hiddenLayers.includes(layer.name)) continue;
       const effectLayer =
         layer.effect === true ||
