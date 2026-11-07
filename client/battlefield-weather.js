@@ -3,6 +3,7 @@ const BattlefieldWeather = (() => {
   let lastKey = null, current = null, previous = null, changedAt = 0;
   const presets = typeof CLIMATE_EFFECT_PRESETS !== "undefined" ? CLIMATE_EFFECT_PRESETS : null;
   const textureCache = new Map();
+  let surfaceCacheKey=null,surfaceCacheValue=null;
   function texture(path) {
     if (!path || typeof Image === "undefined") return null;
     if (!textureCache.has(path)) { const img = new Image(); img.src = path; textureCache.set(path,img); }
@@ -76,7 +77,9 @@ const BattlefieldWeather = (() => {
   function ground(ctx,w,h,map,settings,round,seed) {
     const state=resolve(map,settings,round,seed);
     if(state.space)return;
-    const surface=surfaceState(map,settings,round,seed);
+    const cacheKey=[map?.id||map?.name||"",round,seed,JSON.stringify(settings)].join(":");
+    if(cacheKey!==surfaceCacheKey){surfaceCacheKey=cacheKey;surfaceCacheValue=surfaceState(map,settings,round,seed);}
+    const surface=surfaceCacheValue;
     ctx.save();
     for(const [kind,rgb,opacity] of [["snow","231,241,247",.28],["wet","27,43,58",.2],["dust","191,147,87",.16]]){
       const strength=surface[kind]/100;
