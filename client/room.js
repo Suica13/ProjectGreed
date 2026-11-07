@@ -348,6 +348,10 @@ const RoomPanel = (() => {
     byId("roomShareAlliedUnits").value = settings.shareAlliedUnits ? "enabled" : "disabled";
     byId("roomShareAlliedUnits").disabled = locked;
     byId("roomFogMode").value = settings.fogMode || "full";
+    byId("roomPilotDialogue").value = settings.pilotDialogue === false ? "disabled" : "enabled";
+    byId("roomWeather").value = settings.weather || "map";
+    byId("roomDayNight").value = settings.dayNight || "map";
+    for (const id of ["roomPilotDialogue","roomWeather","roomDayNight"]) byId(id).disabled = locked;
     byId("roomPilotPolicy").value = settings.pilotPolicy || "allow";
     byId("roomPilotPolicy").disabled = locked;
     byId("roomPilotPolicy").closest("label").hidden = settings.mode === "campaign";
@@ -1315,6 +1319,9 @@ const RoomPanel = (() => {
   byId("roomShareAlliedUnits").onchange = () =>
     sendSettings({ shareAlliedUnits: byId("roomShareAlliedUnits").value === "enabled" });
   byId("roomFogMode").onchange = () => sendSettings({ fogMode: byId("roomFogMode").value });
+  byId("roomPilotDialogue").onchange = () => sendSettings({ pilotDialogue: byId("roomPilotDialogue").value === "enabled" });
+  byId("roomWeather").onchange = () => sendSettings({ weather: byId("roomWeather").value });
+  byId("roomDayNight").onchange = () => sendSettings({ dayNight: byId("roomDayNight").value });
   byId("roomPilotPolicy").onchange = () =>
     sendSettings({ pilotPolicy: byId("roomPilotPolicy").value });
   byId("roomBattleMode").onchange = () =>
