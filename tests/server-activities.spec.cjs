@@ -1,5 +1,10 @@
 const { test, expect } = require("@playwright/test"),
   { createServer } = require("../server.js");
+async function chooseRewardUnit(page, button, id) {
+  await page.locator(button).click();
+  await page.locator("#rewardUnitSearch").fill(id);
+  await page.locator(`#rewardUnitList button[data-unit-id="${id}"]`).click();
+}
 for (const width of [1280, 390])
   test(`server mail welcome, durable identity and GUI publishing at ${width}px`, async ({
     page,
@@ -20,7 +25,10 @@ for (const width of [1280, 390])
       await expect(page.locator("#openServerActivities")).toBeEnabled();
       await page.locator("#openServerActivities").click();
       await expect(page.locator("#serverActivitiesDialog")).toContainText("首次加入服务器奖励");
-      await page.locator("#serverActivitiesDialog .server-activities-list button").filter({ hasText: "首次加入服务器奖励" }).click();
+      await page
+        .locator("#serverActivitiesDialog .server-activities-list button")
+        .filter({ hasText: "首次加入服务器奖励" })
+        .click();
       await expect(page.locator("#serverActivitiesDialog")).toContainText("陆战型吉姆");
       await expect(page.locator("#serverActivitiesDialog")).toContainText("大魔");
       await page.locator("#acceptServerActivity").click();
@@ -32,7 +40,7 @@ for (const width of [1280, 390])
         dom: Economy.hasLicense("MS_09"),
         identity: ProfileIdentity.snapshot(),
       }));
-      expect(before).toMatchObject({ money: 10000, supplies: 20000, gm: true, dom: true });
+      expect(before).toMatchObject({ money: 15000, supplies: 30000, gm: true, dom: true });
       expect(await page.evaluate(() => ProfileSave.exportData().identity)).toEqual(before.identity);
       await page.reload();
       await page.waitForFunction(() => assetsReady);
@@ -45,7 +53,7 @@ for (const width of [1280, 390])
         .filter({ hasText: "首次加入服务器奖励" })
         .click();
       await expect(page.locator("#acceptServerActivity")).toHaveText("已接受");
-      expect(await page.evaluate(() => Economy.snapshot().money)).toBe(10000);
+      expect(await page.evaluate(() => Economy.snapshot().money)).toBe(15000);
       const admin = await context.newPage();
       await admin.goto(base + "/admin/activities.html");
       await expect(admin.locator("#activities button")).toHaveCount(5);
@@ -54,7 +62,7 @@ for (const width of [1280, 390])
       await admin.locator("#editTitle").fill("更新后的欢迎活动");
       await admin.locator("#editBody").fill("更新后的欢迎文案");
       await admin.locator("#saveCopy").click();
-      await expect(admin.locator("#status")).toContainText("文案和时期已保存");
+      await expect(admin.locator("#status")).toContainText("活动修改已保存");
       await expect(page.locator(".server-activities-detail")).toContainText("更新后的欢迎文案");
       await expect(page.locator("#acceptServerActivity")).toHaveText("已接受");
       await admin.locator("#newActivity").click();
@@ -64,36 +72,20 @@ for (const width of [1280, 390])
       await admin.locator("#mode").selectOption("online_now");
       await admin.locator("#money").fill("123");
       await admin.locator("#supplies").fill("456");
-      await admin.locator("#addUnlock").click();
-      await admin.locator("#unlocks select").selectOption("RGM_79_G");
-      await admin.locator("#addUnlock").click();
-      await admin.locator("#unlocks select").nth(1).selectOption("MS_09");
+      await chooseRewardUnit(admin, "#addUnlock", "RGM_79_G");
+      await chooseRewardUnit(admin, "#addUnlock", "MS_09");
       await admin
-        .locator("#unlocks .reward-unlock")
-        .nth(1)
-        .getByRole("button", { name: "删除开发单位 MS_09", exact: true })
+        .locator('#unlocks [data-unit-id="MS_09"]')
+        .getByRole("button", { name: "删除", exact: true })
         .click();
-      await expect(admin.locator("#unlocks select")).toHaveCount(1);
-      await expect(admin.locator("#unlocks select")).toHaveValue("RGM_79_G");
-      await expect(admin.locator("#unlocks select[multiple]")).toHaveCount(0);
-      await admin.locator("#addUnit").click();
-      await admin.locator(".reward-unit select").selectOption("Type61");
-      await expect(admin.locator('.reward-unit input[type="number"]')).toHaveCount(0);
-      const options = await admin.locator("#licenseRewards select option").evaluateAll(options => options.map(o => o.textContent));
-      const sorted = await admin.evaluate(options => [...options].sort(new Intl.Collator("zh-CN",{numeric:true,sensitivity:"base"}).compare), options);
-      expect(options).toEqual(sorted);
-      await admin.locator("#licenseRewards input[type=search]").fill("Type61");
-      expect(await admin.locator("#licenseRewards option").evaluateAll(options => options.filter(o=>!o.hidden).every(o=>o.value.includes("Type61")))).toBe(true);
-      await admin.locator("#addChassisStock").click();
-      const chassis = admin.locator('#stockRewards [data-kind="inventory"]');
-      await chassis.locator('input[type="search"]').fill("MS_14A");
-      await chassis.locator("select").selectOption("MS_14A");
-      await chassis.locator('input[type="number"]').fill("2");
-      await admin.locator("#addKitStock").click();
-      const kit = admin.locator('#stockRewards [data-kind="kits"]');
-      await kit.locator('input[type="search"]').fill("MS_14A__beam_rifle");
-      await kit.locator("select").selectOption("MS_14A__beam_rifle");
-      await kit.locator('input[type="number"]').fill("3");
+      await expect(admin.locator("#unlocks .reward-summary")).toHaveCount(1);
+      await chooseRewardUnit(admin, "#addUnit", "Type61");
+      await expect(admin.locator('#licenseRewards [data-unit-id="Type61"]')).toHaveCount(1);
+      await chooseRewardUnit(admin, "#addChassisStock", "MS_14A");
+      await admin.locator("#rewardChassisCount").fill("2");
+      await admin.locator("#rewardBaseKit").selectOption("MS_14A__beam_rifle");
+      await admin.locator('#extraKitRows [data-kit-id="MS_14A__beam_rifle"] input').fill("1");
+      await admin.locator("#confirmRewardConfig").click();
       await admin.locator("#publish").click();
       await expect(admin.locator("#status")).toContainText("已投递 1 封");
       await page
@@ -110,8 +102,14 @@ for (const width of [1280, 390])
           owned: Economy.hasLicense("Type61"),
           unlocked: Development.allows("EFSF", "RGM_79_G"),
         })),
-      ).toEqual({ money: 10123, supplies: 20456, owned: true, unlocked: true });
-      expect(await page.evaluate(() => ({inventory:Economy.quantity("MS_14A"),kits:Economy.kitQuantity("MS_14A__beam_rifle"),license:Economy.hasLicense("MS_14A")}))).toEqual({inventory:2,kits:3,license:false});
+      ).toEqual({ money: 15123, supplies: 30456, owned: true, unlocked: true });
+      expect(
+        await page.evaluate(() => ({
+          inventory: Economy.quantity("MS_14A"),
+          kits: Economy.kitQuantity("MS_14A__beam_rifle"),
+          license: Economy.hasLicense("MS_14A"),
+        })),
+      ).toEqual({ inventory: 2, kits: 3, license: false });
       await expect(page.locator(".server-activities-detail")).toContainText("×3");
       expect(
         await page
@@ -166,7 +164,10 @@ test("failed local persistence retries the same server mail after reconnect with
     await page.evaluate((base) => Lobby.reconnect(base), base);
     await expect(page.locator("#openServerActivities")).toBeEnabled();
     await page.locator("#openServerActivities").click();
-    await page.locator("#serverActivitiesDialog .server-activities-list button").filter({ hasText: "首次加入服务器奖励" }).click();
+    await page
+      .locator("#serverActivitiesDialog .server-activities-list button")
+      .filter({ hasText: "首次加入服务器奖励" })
+      .click();
     await page.evaluate(() => {
       const original = Storage.prototype.setItem;
       let failed = false;
@@ -180,14 +181,17 @@ test("failed local persistence retries the same server mail after reconnect with
     });
     await page.locator("#acceptServerActivity").click();
     await expect(page.locator("#serverActivityStatus")).toContainText("接收失败");
-    expect(await page.evaluate(() => Economy.snapshot().money)).toBe(5000);
+    expect(await page.evaluate(() => Economy.snapshot().money)).toBe(10000);
     await page.reload();
     await page.waitForFunction(() => assetsReady);
     await page.evaluate(() => I18n.setLanguage("zh"));
     await page.evaluate((base) => Lobby.reconnect(base), base);
-    await expect.poll(() => page.evaluate(() => Economy.snapshot().money)).toBe(10000);
+    await expect.poll(() => page.evaluate(() => Economy.snapshot().money)).toBe(15000);
     await page.locator("#openServerActivities").click();
-    await page.locator("#serverActivitiesDialog .server-activities-list button").filter({ hasText: "首次加入服务器奖励" }).click();
+    await page
+      .locator("#serverActivitiesDialog .server-activities-list button")
+      .filter({ hasText: "首次加入服务器奖励" })
+      .click();
     await expect(page.locator("#acceptServerActivity")).toHaveText("已接受");
     expect(await page.evaluate(() => Economy.hasLicense("RGM_79_G"))).toBe(true);
     expect(app.activities.adminSnapshot().activities[0].accepted).toBe(1);
@@ -239,7 +243,7 @@ for (const width of [1280, 390])
         if (mode === "cumulative_login") await page.locator("#editLoginDays").fill("4");
         if (mode === "battle_bonus") await page.locator("#editMultipliermoney").fill("3");
         await page.locator("#saveCopy").click();
-        await expect(page.locator("#status")).toContainText("文案和时期已保存");
+        await expect(page.locator("#status")).toContainText("活动修改已保存");
         const response = await page.request.get(base + "/api/activities/admin"),
           data = await response.json();
         const activity = data.activities.find((activity) => activity.title === "test-" + mode);
@@ -279,7 +283,7 @@ test("opening the admin HTML file connects through the configured local server",
     await page.locator("#activities button").filter({ hasText: "超级煤球真理部" }).click();
     await page.locator("#editBody").fill("从本地HTML连接后编辑");
     await page.locator("#saveCopy").click();
-    await expect(page.locator("#status")).toContainText("文案和时期已保存");
+    await expect(page.locator("#status")).toContainText("活动修改已保存");
     expect(errors).toEqual([]);
   } finally {
     await app.close();

@@ -65,6 +65,7 @@ html = html
   .replaceAll("__PROJECT_VERSION__", project.version)
   .replace("__PROJECT_META__", json(project))
   .replace("__DEVELOPMENT_TREE__", json(developmentTree))
+  .replace("__STARTER_PROFILE__", json(require("./shared/starter-profile.json")))
   .replace("__PRODUCTION_CATALOG__", json(require("./shared/production-data.cjs")))
   .replace("__AI_UNIT_BANS__", json(require("./shared/ai-unit-bans.json")))
   .replace("__PILOT_DATA__", json(pilotData))

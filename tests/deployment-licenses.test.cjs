@@ -22,6 +22,7 @@ function load(
     );
   const context = vm.createContext({
     PILOT_DATA: require("../shared/pilots.json"),
+    STARTER_PROFILE: require("../shared/starter-profile.json"),
     PRODUCTION_CATALOG: catalog,
     ProfileMigrations: require("../shared/profile-migrations.js"),
     ART: { models: G.models },
@@ -48,7 +49,7 @@ test("legacy inventories retain permits and migrate to zero counted stock", () =
   const { E, storage } = load(old);
   assert(E.hasLicense("Type61"));
   assert(E.hasLicense("RGM_79"));
-  assert(!E.hasLicense("MS_06F"));
+  assert(E.hasLicense("MS_06F"));
   const data = E.exportProgress();
   assert.equal(data.schemaVersion, 3);
   assert.equal(Object.keys(data.inventory).length, 0);
@@ -86,19 +87,19 @@ test("one paid permit grants one default-equipped chassis exactly once", () => {
 });
 test("bulk permit purchases deduplicate chassis, reject undeveloped/unaffordable units atomically", () => {
   const { E } = load();
-  const entries = Array(12).fill({ unitId: "Type61", kitId: "standard" });
+  const entries = Array(12).fill({ unitId: "RGM_79", kitId: "beam_spray" });
   const plan = E.licensePlan(entries),
-    offer = E.licenseOffer("Type61");
+    offer = E.licenseOffer("RGM_79");
   assert.equal(plan.items.length, 1);
   assert.equal(plan.money, offer.money);
   assert(E.purchaseMissingLicenses(entries, "EFSF").ok);
   assert.equal(E.licensePlan(entries).items.length, 0);
   const poor = load({ money: 0, supplies: 0, inventory: {}, kits: {} }).E;
   assert(!poor.purchaseMissingLicenses(entries, "EFSF").ok);
-  assert(!poor.hasLicense("Type61"));
+  assert(!poor.hasLicense("RGM_79"));
   const locked = load(undefined, false);
   const id = Object.keys(catalog.baseModels).find(
-    (id) => !locked.D.allows("EFSF", id) && G.models[catalog.baseModels[id]]?.faction === "EFSF",
+    (id) => !locked.D.allows("EFSF", id) && !locked.E.hasLicense(id) && G.models[catalog.baseModels[id]]?.faction === "EFSF",
   );
   assert(id);
   assert(!locked.E.purchaseLicense(id, "EFSF"));

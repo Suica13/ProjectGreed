@@ -12,6 +12,7 @@ function load(saved = {}) {
     );
   const context = {
     structuredClone,
+    STARTER_PROFILE: require("../shared/starter-profile.json"),
     PRODUCTION_CATALOG: require("../shared/production-catalog.json"),
     DEVELOPMENT_TREE: tree,
     PILOT_DATA: require("../shared/pilots.json"),

@@ -13,16 +13,24 @@ const Economy = (() => {
         ? ART.models
         : require("../tools/load-catalog.cjs").loadCatalog().models);
   }
-  const initial = () => ({
-    schemaVersion: 3,
-    inventory: {},
-    kits: {},
-    money: 5000,
-    supplies: 10000,
-    licenses: Object.fromEntries(
-      ["Type61", "FF_B2", "Medea", "MS_06F", "MS_06S", "FatUncle"].map((id) => [id, true]),
-    ),
-  });
+  const starter = typeof STARTER_PROFILE !== "undefined" ? STARTER_PROFILE : require("./starter-profile.json");
+  const tree = typeof DEVELOPMENT_TREE !== "undefined" ? DEVELOPMENT_TREE : require("./development-tree.json");
+  const defaultPermits = [...new Set([
+    ...starter.units.map(unit => unit.unitId),
+    ...Object.values(tree).flatMap(nodes => nodes.filter(node => /BaseTech$/i.test(node.id))
+      .flatMap(node => node.unlocks)).filter(id => Object.hasOwn(catalog.baseModels, id)),
+  ])];
+  const defaultLicenses = () => Object.fromEntries(defaultPermits.map(id => [id, true]));
+  function initial() {
+    const inventory = {}, kits = {};
+    for (const entry of starter.units) {
+      inventory[entry.unitId] = (inventory[entry.unitId] || 0) + starter.stockSets;
+      const modelId = entry.unitId + "__" + entry.kitId;
+      kits[modelId] = (kits[modelId] || 0) + starter.stockSets;
+    }
+    return { schemaVersion: 3, inventory, kits, money: starter.money, supplies: starter.supplies,
+      licenses: defaultLicenses() };
+  }
   function validate(value) {
     if (value === undefined) return initial();
     if (
@@ -36,7 +44,7 @@ const Economy = (() => {
     const stock = normalizeStock(value);
     const owned = value.licenses;
     if (!owned || typeof owned !== "object" || Array.isArray(owned)) throw Error("部署许可无效");
-    const licenses = {};
+    const licenses = defaultLicenses();
     for (const [id, amount] of Object.entries(owned)) {
       if (typeof amount !== "boolean") throw Error("部署许可无效: " + id);
       const unitId = id;
@@ -453,6 +461,7 @@ const Economy = (() => {
     purchasePlan,
     purchaseMissingStock,
     initial,
+    starterFormation: () => structuredClone(starter.units),
     errorMessage,
     validate,
     snapshot,

@@ -127,12 +127,7 @@ const Formation = (() => {
         passenger("MS_06F", "machine_gun"),
         passenger("MS_06S", "kit_1"),
       ],
-      PMC: [
-        carrier("Medea"),
-        passenger("MS_06F", "machine_gun"),
-        passenger("MS_06F", "machine_gun"),
-        passenger("MS_06S", "kit_1"),
-      ],
+      PMC: Economy.starterFormation(),
     };
     return [{ name: faction + " 默认编组", units: units[faction] || [] }];
   }
@@ -1606,9 +1601,11 @@ const Formation = (() => {
       .filter(
         (prefab) =>
           pickerCompatible(prefab) &&
-          (byId("formationStock").value === "all" || Economy.quantity(prefab.id) > 0),
+          (byId("formationStock").value === "licensed" ? Economy.hasLicense(prefab.id)
+            : byId("formationStock").value === "owned" ? Economy.quantity(prefab.id) > 0 : true),
       )
-      .sort(UnitCatalog.compareDevelopedCost(group));
+      .sort(UnitCatalog.compareDevelopedCost(group,
+        byId("formationStock").value === "licensed" ? () => true : undefined));
     if (!prefabs.some((p) => p.id === byId("formationPrefab").value))
       byId("formationPrefab").value = prefabs[0]?.id || "";
     const scroll = list.scrollTop;

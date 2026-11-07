@@ -33,7 +33,7 @@ test("inactive late-game faction never advances AI, while active main-line progr
   ]);
   assert.deepEqual(merged, switched);
 });
-test("room source follows selected faction and does not include spectator research", () => {
+test("PMC room source follows participating research and does not include spectator research", () => {
   let seq = 0;
   const frames = new Map();
   const engine = createRoomEngine({
@@ -54,7 +54,7 @@ test("room source follows selected faction and does not include spectator resear
         m.cost <= 250 &&
         D.allows("ZEON", m.prefabId, {}),
     );
-    const researched = { EFSF: all("EFSF") };
+    const researched = { ZEON: D.nodes("ZEON").filter(n => n.page === 0 && n.column <= 2).map(n => n.id) };
     engine.join(host, {
       mode: "create",
       room: "ACTIVE",
@@ -80,14 +80,14 @@ test("room source follows selected faction and does not include spectator resear
       researched: { EFSF: all("EFSF") },
     });
     assert.equal(watcher.seat, null);
-    act("set_faction", { faction: "ZEON" });
+    act("set_faction", { faction: "PMC" });
     act("start_game", {
       formation: [{ unitId: model.prefabId, kitId: model.kitId }],
       researched,
       inventory: { [model.prefabId]: 5 },
     });
     assert.equal(room.phase, "assembly");
-    assert.deepEqual(room.aiResearch, D.aiResearch([{ characterFaction: "ZEON", researched }]));
+    assert.deepEqual(room.aiResearch, D.aiResearch([{ characterFaction: "PMC", researched }]));
     assert(!D.nodes("EFSF").some((n) => n.page === 1 && room.aiResearch.EFSF.includes(n.id)));
     assert(
       room.seats[1].formation.every((e) =>
@@ -95,8 +95,8 @@ test("room source follows selected faction and does not include spectator resear
       ),
     );
     const limits = frames.get(watcher).assembly.players.find((p) => p.bot);
-    assert(limits.limit >= 750 && limits.limit <= 1000);
-    assert(limits.unitLimit >= 9 && limits.unitLimit <= 12);
+    assert(limits.limit >= room.settings.costLimit * 0.75 && limits.limit <= room.settings.costLimit);
+    assert(limits.unitLimit >= Math.ceil(room.settings.unitLimit * 0.75) && limits.unitLimit <= room.settings.unitLimit);
     assert(limits.unitCostLimit >= 187 && limits.unitCostLimit <= 250);
     assert(
       room.seats[1].formation.reduce(

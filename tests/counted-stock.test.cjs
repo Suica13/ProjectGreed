@@ -25,6 +25,7 @@ function load(
     ],
   ]);
   const context = vm.createContext({
+    STARTER_PROFILE: require("../shared/starter-profile.json"),
     PRODUCTION_CATALOG: require("../shared/production-data.cjs"),
     PILOT_DATA: require("../shared/pilots.json"),
     ART: { models: G.models },

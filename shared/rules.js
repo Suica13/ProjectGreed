@@ -363,6 +363,8 @@ const Tactics = (() => {
   function restrictionReason(model, restrictions = {}) {
     if (model.wip) return "wip";
     if (restrictions.aiBannedUnits?.includes(model.prefabId)) return "not_allowed";
+    if (restrictions.aiAllowedEras && !model.tags.some(tag => restrictions.aiAllowedEras.includes(tag)))
+      return "not_allowed";
     if (
       ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(restrictions.characterFaction) &&
       !(model.availableFactions || [model.faction]).includes(restrictions.characterFaction)

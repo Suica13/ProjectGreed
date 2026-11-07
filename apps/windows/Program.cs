@@ -30,7 +30,7 @@ namespace ProjectGreed.Client {
         private Rectangle restoreBounds;
         private FormWindowState restoreState;
         public GameWindow(string[] args) {
-            Text = "ProjectGreed V93 · AppTest2";
+            Text = "ProjectGreed V94 · AppTest2";
             ClientSize = new Size(1440, 900);
             MinimumSize = new Size(360, 480);
             StartPosition = FormStartPosition.CenterScreen;

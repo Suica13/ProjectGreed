@@ -1,0 +1,139 @@
+{
+  "money": 10000,
+  "supplies": 20000,
+  "stockSets": 5,
+  "units": [
+    {
+      "unitId": "FatUncle",
+      "kitId": "standard"
+    },
+    {
+      "unitId": "MS_06S",
+      "kitId": "kit_1",
+      "preload": {
+        "carrierIndex": 0,
+        "hangarId": "Hangar_1"
+      }
+    },
+    {
+      "unitId": "MS_06F",
+      "kitId": "machine_gun",
+      "preload": {
+        "carrierIndex": 0,
+        "hangarId": "Hangar_1"
+      }
+    },
+    {
+      "unitId": "MS_06F",
+      "kitId": "machine_gun",
+      "preload": {
+        "carrierIndex": 0,
+        "hangarId": "Hangar_1"
+      }
+    },
+    {
+      "unitId": "Medea",
+      "kitId": "standard"
+    },
+    {
+      "unitId": "Type61",
+      "kitId": "standard",
+      "preload": {
+        "carrierIndex": 4,
+        "hangarId": "Hangar_1"
+      }
+    },
+    {
+      "unitId": "Type61",
+      "kitId": "standard",
+      "preload": {
+        "carrierIndex": 4,
+        "hangarId": "Hangar_1"
+      }
+    },
+    {
+      "unitId": "Type61",
+      "kitId": "standard",
+      "preload": {
+        "carrierIndex": 4,
+        "hangarId": "Hangar_1"
+      }
+    },
+    {
+      "unitId": "Type61",
+      "kitId": "standard",
+      "preload": {
+        "carrierIndex": 4,
+        "hangarId": "Hangar_1"
+      }
+    },
+    {
+      "unitId": "Type61",
+      "kitId": "standard",
+      "preload": {
+        "carrierIndex": 4,
+        "hangarId": "Hangar_1"
+      }
+    },
+    {
+      "unitId": "Type61",
+      "kitId": "standard",
+      "preload": {
+        "carrierIndex": 4,
+        "hangarId": "Hangar_1"
+      }
+    },
+    {
+      "unitId": "Medea",
+      "kitId": "standard"
+    },
+    {
+      "unitId": "FF_B2",
+      "kitId": "main_0",
+      "preload": {
+        "carrierIndex": 11,
+        "hangarId": "Hangar_1"
+      }
+    },
+    {
+      "unitId": "FF_B2",
+      "kitId": "main_0",
+      "preload": {
+        "carrierIndex": 11,
+        "hangarId": "Hangar_1"
+      }
+    },
+    {
+      "unitId": "FF_B2",
+      "kitId": "main_0",
+      "preload": {
+        "carrierIndex": 11,
+        "hangarId": "Hangar_1"
+      }
+    },
+    {
+      "unitId": "FF_S3",
+      "kitId": "main_0",
+      "preload": {
+        "carrierIndex": 11,
+        "hangarId": "Hangar_1"
+      }
+    },
+    {
+      "unitId": "FF_S3",
+      "kitId": "main_0",
+      "preload": {
+        "carrierIndex": 11,
+        "hangarId": "Hangar_1"
+      }
+    },
+    {
+      "unitId": "FF_S3",
+      "kitId": "main_0",
+      "preload": {
+        "carrierIndex": 11,
+        "hangarId": "Hangar_1"
+      }
+    }
+  ]
+}

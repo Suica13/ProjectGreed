@@ -1,6 +1,6 @@
 ﻿const {test,expect}=require('@playwright/test'),{pathToFileURL}=require('node:url'),path=require('node:path');
 const {createServer}=require('../server.js');
-test('licensed undeveloped units have no research warning in squad, picker or production',async({page})=>{
+test('licensed undeveloped units retain their development badges and cannot produce before research',async({page})=>{
  const c=require('../shared/production-catalog.json'),kit=c.defaultKits.RX_78_2;
  await page.addInitScript(kit=>{
   localStorage.setItem('projectgreed.combatFaction','PMC');
@@ -12,12 +12,12 @@ test('licensed undeveloped units have no research warning in squad, picker or pr
  expect(await page.evaluate(()=>Economy.hasLicense('RX_78_2'))).toBe(true);
  await page.locator('#shellHangar').click();
  await expect(page.locator('.formation-row')).toHaveCount(1);
- await expect(page.locator('.formation-row .unit-undeveloped')).toHaveCount(0);
+ await expect(page.locator('.formation-row .unit-undeveloped')).toHaveCount(1);
  await page.locator('#openFormationPicker').click();await page.locator('#formationSearch').fill('RX_78_2');
- await expect(page.locator('[data-unit-id="RX_78_2"] .unit-undeveloped')).toHaveCount(0);
+ await expect(page.locator('[data-unit-id="RX_78_2"] .unit-undeveloped')).toHaveCount(1);
  await page.locator('#closeFormationPicker').click();
  await page.evaluate(()=>ProductionUI.openUnit('RX_78_2'));
- await expect(page.locator('#productionList [data-unit-id="RX_78_2"] .unit-portrait-status')).toHaveCount(0);
+ await expect(page.locator('#productionList [data-unit-id="RX_78_2"] .unit-portrait-status')).toHaveCount(1);
  await expect(page.locator('#produceUnit')).toBeDisabled();
 });
 test('development and license rewards grant independently and retain separate progress',async({page})=>{
@@ -38,8 +38,8 @@ test('admin publishes separate reward types and can cancel or clear all activiti
   await page.locator('#clearAllActivities').click();await page.locator('#cancelDelete').click();
   expect(app.activities.adminSnapshot().activities.length).toBe(5);
   await page.locator('#newActivity').click();await page.locator('#title').fill('Separate rewards');await page.locator('#body').fill('Test');
-  await page.locator('#addUnit').click();await page.locator('#licenseRewards select').selectOption('MS_14A');
-  await page.locator('#addUnlock').click();await page.locator('#unlocks select').selectOption('RX_78_2');
+  await page.locator('#addUnit').click();await page.locator('#rewardUnitSearch').fill('MS_14A');await page.locator('#rewardUnitList [data-unit-id="MS_14A"]').click();
+  await page.locator('#addUnlock').click();await page.locator('#rewardUnitSearch').fill('RX_78_2');await page.locator('#rewardUnitList [data-unit-id="RX_78_2"]').click();
   await page.locator('#publish').click();
   await expect.poll(()=>app.activities.adminSnapshot().activities.length).toBe(6);
   const reward=app.activities.adminSnapshot().activities.at(-1).rewards;

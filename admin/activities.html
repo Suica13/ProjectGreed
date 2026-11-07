@@ -99,7 +99,8 @@
         flex: 1;
         min-width: 160px;
       }
-      .line input {
+      .line input,
+      .line select {
         width: 100%;
       }
       .reward-unit {
@@ -166,10 +167,116 @@
           grid-template-columns: minmax(0, 1fr) 70px auto;
         }
       }
-      .reward-unit[data-kind] { grid-template-columns:minmax(0,1fr) 95px auto; }
-      .reward-unit select { width:100%; min-width:0; }
-      .reward-unit input[type="search"], .reward-unlock input[type="search"] { grid-column:1 / -1; width:100%; min-width:0; }
-      .reward-unit input[type="number"] { width:95px; min-width:70px; }
+      .reward-unit[data-kind] {
+        grid-template-columns: minmax(0, 1fr) 95px auto;
+      }
+      .reward-unit select {
+        width: 100%;
+        min-width: 0;
+      }
+      .reward-unit input[type="search"],
+      .reward-unlock input[type="search"] {
+        grid-column: 1 / -1;
+        width: 100%;
+        min-width: 0;
+      }
+      .reward-unit input[type="number"] {
+        width: 95px;
+        min-width: 70px;
+      }
+
+      .reward-summary {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin: 8px 0;
+        padding: 10px;
+        border: 1px solid #355e79;
+      }
+      .reward-summary > div {
+        flex: 1;
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+      .reward-summary p {
+        margin: 4px 0 0;
+        color: #a9c4ce;
+      }
+      .reward-picker {
+        width: 760px;
+        max-width: 94vw;
+        max-height: 90vh;
+        padding: 18px;
+      }
+      .reward-picker h2 {
+        margin: 0 0 12px;
+      }
+      .picker-filters {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+      }
+      .picker-filters label {
+        min-width: 0;
+        margin: 8px 0;
+      }
+      .picker-filters select {
+        width: 100%;
+      }
+      #rewardUnitSearch,
+      #rewardKitSearch {
+        width: 100%;
+      }
+      #rewardUnitList {
+        height: 48vh;
+        overflow: auto;
+        margin: 10px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      #rewardUnitList button {
+        text-align: left;
+        flex-shrink: 0;
+      }
+      #rewardUnitList small {
+        display: block;
+        margin-top: 3px;
+        color: #a9c4ce;
+      }
+      #extraKitRows {
+        max-height: 30vh;
+        overflow: auto;
+        margin: 10px 0;
+      }
+      .extra-kit-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 95px;
+        align-items: center;
+        gap: 12px;
+        margin: 6px 0;
+      }
+      .extra-kit-row input {
+        width: 100%;
+      }
+      .picker-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 14px;
+      }
+      #rewardConfigError {
+        color: #ffc0cb;
+      }
+      @media (max-width: 500px) {
+        .picker-filters {
+          grid-template-columns: 1fr;
+          gap: 0;
+        }
+        .reward-picker {
+          padding: 12px;
+        }
+      }
     </style>
     <style id="admin-blue-theme">
       :root {
@@ -247,7 +354,8 @@
   <body>
     <header>
       <h1>服务器活动管理</h1>
-      <button id="refresh">刷新</button><button id="clearAllActivities" type="button">清空所有活动</button><span id="clock"></span>
+      <button id="refresh">刷新</button
+      ><button id="clearAllActivities" type="button">清空所有活动</button><span id="clock"></span>
     </header>
     <form id="serverConnection" hidden style="max-width: 720px; margin: 24px auto; padding: 20px">
       <h2>连接活动管理服务器</h2>
@@ -337,10 +445,10 @@
                 /></label>
               </div>
             </section>
-            <button id="saveCopy" type="submit">保存文案和时期</button>
+            <button id="saveCopy" type="submit">保存活动修改</button>
           </form>
           <p class="muted">
-            保存会同步更新已投递邮件的文案，奖励和领取记录保持原状。时期留空为不限期；登录日以服务器时间早上6点为界，周一早上6点刷新每周奖励。
+            保存会更新活动及尚未领取邮件的奖励。已领取或已开始领取的奖励保持原状，不重复发放。时期留空为不限期；登录日以服务器时间早上6点为界，周一早上6点刷新每周奖励。
           </p>
           <p id="detail"></p>
           <div class="line">
@@ -464,7 +572,10 @@
                 </div>
               </section>
               <section>
-                <h3>部署许可奖励</h3><p class="muted">直接授予永久部署许可，即使尚未开发也可以编组出战；不会额外开发科技。</p>
+                <h3>部署许可奖励</h3>
+                <p class="muted">
+                  直接授予永久部署许可，即使尚未开发也可以编组出战；不会额外开发科技。
+                </p>
                 <div id="licenseRewards"></div>
                 <button id="addUnit" type="button">添加部署许可</button>
               </section>
@@ -472,12 +583,14 @@
                 <h3>机体与套件库存奖励</h3>
                 <p class="muted">机体与套件独立计数；领取库存不自动授予开发或部署许可。</p>
                 <div id="stockRewards"></div>
-                <button id="addChassisStock" type="button">添加机体库存</button>
-                <button id="addKitStock" type="button">添加套件库存</button>
+                <button id="addChassisStock" type="button">添加单位</button>
+                <button id="addKitStock" type="button">添加套件</button>
               </section>
               <section>
                 <h3>开发奖励</h3>
-                <p class="muted">逐条添加需要立即开发的单位，不消耗科技点或货币。仅开放部署许可的购买条件，不赠送部署许可。</p>
+                <p class="muted">
+                  逐条添加需要立即开发的单位，不消耗科技点或货币。仅开放部署许可的购买条件，不赠送部署许可。
+                </p>
                 <div id="unlocks"></div>
                 <button id="addUnlock" type="button">添加开发单位</button
                 ><button id="clearUnlocks" type="button">清空开发奖励</button>
@@ -495,6 +608,56 @@
         <p id="status" role="status"></p>
       </article>
     </main>
+    <dialog id="rewardUnitDialog" class="reward-picker" aria-labelledby="rewardUnitTitle">
+      <h2 id="rewardUnitTitle">选择奖励单位</h2>
+      <input
+        id="rewardUnitSearch"
+        type="search"
+        placeholder="搜索单位名称、编号或套件"
+        aria-label="搜索奖励单位"
+      />
+      <div class="picker-filters">
+        <label>阵营<select id="rewardUnitFaction" aria-label="筛选奖励阵营"></select></label>
+        <label>年代<select id="rewardUnitEra" aria-label="筛选奖励年代"></select></label>
+        <label>类型<select id="rewardUnitType" aria-label="筛选奖励类型"></select></label>
+      </div>
+      <p id="rewardUnitCount" class="muted"></p>
+      <div id="rewardUnitList"></div>
+      <div class="picker-actions"><button id="cancelRewardUnit" type="button">取消</button></div>
+    </dialog>
+    <dialog id="rewardConfigDialog" class="reward-picker" aria-labelledby="rewardConfigTitle">
+      <form id="rewardConfigForm">
+        <h2 id="rewardConfigTitle">配置单位奖励</h2>
+        <div class="line">
+          <label
+            >机体数量<input
+              id="rewardChassisCount"
+              type="number"
+              min="0"
+              max="1000000"
+              step="1"
+              required
+          /></label>
+          <label>随附套件版本<select id="rewardBaseKit" aria-label="随附套件版本"></select></label>
+        </div>
+        <p class="muted">
+          每台机体随附一份所选套件；额外套件独立计数。机体数量为0时可仅赠送额外套件。
+        </p>
+        <h3>额外赠送套件</h3>
+        <input
+          id="rewardKitSearch"
+          type="search"
+          placeholder="搜索此单位的套件"
+          aria-label="搜索额外套件"
+        />
+        <div id="extraKitRows"></div>
+        <p id="rewardConfigError" role="status"></p>
+        <div class="picker-actions">
+          <button id="cancelRewardConfig" type="button">取消</button
+          ><button id="confirmRewardConfig" type="submit">确认</button>
+        </div>
+      </form>
+    </dialog>
     <dialog id="deleteActivityDialog" aria-labelledby="deleteActivityTitle">
       <h2 id="deleteActivityTitle">删除活动</h2>
       <p id="deleteActivityText"></p>
@@ -512,6 +675,9 @@
       const byId = (id) => document.getElementById(id);
       let unlockUnits = [],
         unlockAces = [];
+      let stockConfigurations = {};
+      let licenseUnits = [],
+        stockRewards = { inventory: {}, kits: {} };
       async function api(route = "", value) {
         const response = await fetch("/api/activities/admin" + route, {
           method: value ? "POST" : "GET",
@@ -606,7 +772,14 @@
         const activity = snapshot.activities.find((activity) => activity.id === selectedId);
         byId("selected").hidden = !activity;
         byId("newActivityPanel").hidden = !!activity;
-        if (!activity) return;
+        if (!activity) {
+          byId("form").insertBefore(byId("rewardFields"), byId("publish"));
+          byId("rewardFields").hidden = byId("mode").value === "battle_bonus";
+          return;
+        }
+        byId("editCopyForm").insertBefore(byId("rewardFields"), byId("saveCopy"));
+        byId("rewardFields").hidden = activity.mode === "battle_bonus";
+        loadRewards(activity.rewards, activity.stockConfigurations);
         byId("selectedTitle").textContent = activity.title;
         byId("editTitle").value = activity.title;
         byId("editBody").value = activity.text;
@@ -643,8 +816,18 @@
           Object.entries(rewards.licenses)
             .map(([id, count]) => "\n部署许可：" + unitName(id))
             .join("") +
-          Object.entries(rewards.inventory || {}).map(([id,count]) => "\n机体库存：" + unitName(id) + " ×" + count).join("") +
-          Object.entries(rewards.kits || {}).map(([id,count]) => "\n套件库存：" + (snapshot.kits.find(k => k.id === id)?.name || id) + " ×" + count).join("") +
+          Object.entries(rewards.inventory || {})
+            .map(([id, count]) => "\n机体库存：" + unitName(id) + " ×" + count)
+            .join("") +
+          Object.entries(rewards.kits || {})
+            .map(
+              ([id, count]) =>
+                "\n套件库存：" +
+                (snapshot.kits.find((k) => k.id === id)?.name || id) +
+                " ×" +
+                count,
+            )
+            .join("") +
           rewards.unlockUnits.map((id) => "\n立即开发：" + unitName(id)).join("") +
           (rewards.unlockAces || [])
             .map((id) => "\n解锁ACE：" + (snapshot.aces.find((p) => p.id === id)?.name || id))
@@ -673,8 +856,7 @@
         search.setAttribute("aria-label", search.placeholder);
         const options = [...select.options].sort(
           (a, b) =>
-            rewardOrder.compare(a.textContent, b.textContent) ||
-            a.value.localeCompare(b.value),
+            rewardOrder.compare(a.textContent, b.textContent) || a.value.localeCompare(b.value),
         );
         const selected = keepSelection ? select.value : null;
         select.replaceChildren(...options);
@@ -684,100 +866,285 @@
           for (const option of select.options)
             option.hidden =
               !!query &&
-              ![option.textContent, option.value]
-                .join(" ")
-                .toLocaleLowerCase()
-                .includes(query);
+              ![option.textContent, option.value].join(" ").toLocaleLowerCase().includes(query);
         };
         return search;
       }
-      function addStock(kind) {
-        if (!snapshot) return;
-        const row = document.createElement("div");
-        row.className = "reward-unit";
-        row.dataset.kind = kind;
-        const select = document.createElement("select");
-        const label = kind === "inventory" ? "库存奖励单位" : "库存奖励套件";
-        select.setAttribute("aria-label", label);
-        for (const item of kind === "inventory" ? snapshot.units : snapshot.kits)
-          select.add(new Option(item.name + " [" + item.faction + "]", item.id));
-        const count = document.createElement("input");
-        count.type = "number";
-        count.min = "1";
-        count.max = "1000000";
-        count.step = "1";
-        count.value = "1";
-        count.required = true;
-        count.setAttribute("aria-label", "奖励数量");
-        const remove = document.createElement("button");
-        remove.type = "button";
-        remove.textContent = "删除";
-        remove.onclick = () => row.remove();
-        row.append(searchableReward(select, label), select, count, remove);
-        byId("stockRewards").append(row);
+      function rewardButton(text, action) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = text;
+        button.onclick = action;
+        return button;
       }
-      byId("addChassisStock").onclick = () => addStock("inventory");
-      byId("addKitStock").onclick = () => addStock("kits");
-      function addUnit() {
-        if (!snapshot) return;
-        const row = document.createElement("div");
-        row.className = "reward-unit";
-        const select = document.createElement("select");
-        select.setAttribute("aria-label", "部署许可奖励单位");
-        for (const unit of snapshot.units)
-          select.add(new Option(unit.name + " [" + unit.faction + "]", unit.id));
-        const remove = document.createElement("button");
-        remove.type = "button";
-        remove.textContent = "删除";
-        remove.onclick = () => row.remove();
-        row.append(searchableReward(select,"部署许可奖励单位"), select, remove);
-        byId("licenseRewards").append(row);
+      function renderUnitRewards(containerId, values, remove) {
+        const list = byId(containerId);
+        list.replaceChildren();
+        for (const id of values) {
+          const row = document.createElement("div"),
+            name = document.createElement("div");
+          row.className = "reward-summary";
+          row.dataset.unitId = id;
+          name.textContent = unitName(id);
+          row.append(
+            name,
+            rewardButton("删除", () => remove(id)),
+          );
+          list.append(row);
+        }
+      }
+      function renderLicenses() {
+        renderUnitRewards("licenseRewards", licenseUnits, (id) => {
+          licenseUnits = licenseUnits.filter((value) => value !== id);
+          renderLicenses();
+        });
       }
       function renderUnlocks() {
-        const list = byId("unlocks");
-        list.replaceChildren();
-        const choices = (snapshot?.units || []).filter((unit) => unit.developable);
-        unlockUnits.forEach((id, index) => {
-          const row = document.createElement("div");
-          row.className = "reward-unlock";
-          const select = document.createElement("select");
-          select.setAttribute("aria-label", "立即开发单位");
-          for (const unit of choices) {
-            const option = new Option(
-              unit.name + " [" + unit.faction + "]",
-              unit.id,
-              false,
-              unit.id === id,
-            );
-            option.disabled = unit.id !== id && unlockUnits.includes(unit.id);
-            select.add(option);
-          }
-          select.onchange = () => {
-            unlockUnits[index] = select.value;
-            renderUnlocks();
-          };
-          const remove = document.createElement("button");
-          remove.type = "button";
-          remove.textContent = "删除";
-          remove.setAttribute("aria-label", "删除开发单位 " + id);
-          remove.onclick = () => {
-            unlockUnits.splice(index, 1);
-            renderUnlocks();
-          };
-          row.append(searchableReward(select,select.getAttribute("aria-label"),true), select, remove);
-          list.append(row);
-        });
-        byId("addUnlock").disabled = unlockUnits.length >= choices.length;
-      }
-      byId("addUnlock").onclick = () => {
-        const unit = snapshot?.units.find(
-          (unit) => unit.developable && !unlockUnits.includes(unit.id),
-        );
-        if (unit) {
-          unlockUnits.push(unit.id);
+        renderUnitRewards("unlocks", unlockUnits, (id) => {
+          unlockUnits = unlockUnits.filter((value) => value !== id);
           renderUnlocks();
+        });
+      }
+      function unitKits(id) {
+        return (snapshot?.kits || [])
+          .filter((kit) => kit.unitId === id)
+          .sort((a, b) => rewardOrder.compare(a.name, b.name) || a.id.localeCompare(b.id));
+      }
+      function clearUnitStock(id) {
+        delete stockRewards.inventory[id];
+        delete stockConfigurations[id];
+        for (const kit of unitKits(id)) delete stockRewards.kits[kit.id];
+      }
+      function renderStockRewards() {
+        const list = byId("stockRewards");
+        list.replaceChildren();
+        const ids = new Set(Object.keys(stockRewards.inventory));
+        for (const kit of snapshot?.kits || []) if (stockRewards.kits[kit.id]) ids.add(kit.unitId);
+        for (const id of [...ids].sort((a, b) => rewardOrder.compare(unitName(a), unitName(b)))) {
+          const row = document.createElement("div"),
+            info = document.createElement("div");
+          row.className = "reward-summary";
+          row.dataset.unitId = id;
+          const name = document.createElement("strong"),
+            details = document.createElement("p");
+          name.textContent = unitName(id);
+          details.textContent = [
+            "机体 ×" + (stockRewards.inventory[id] || 0),
+            ...unitKits(id)
+              .filter((kit) => stockRewards.kits[kit.id])
+              .map((kit) => (kit.kitName || kit.name) + " ×" + stockRewards.kits[kit.id]),
+          ].join(" · ");
+          info.append(name, details);
+          row.append(
+            info,
+            rewardButton("编辑", () => openUnitConfig(id, true)),
+            rewardButton("删除", () => {
+              clearUnitStock(id);
+              renderStockRewards();
+            }),
+          );
+          list.append(row);
+        }
+      }
+      function loadRewards(rewards = {}, configurations = {}) {
+        stockConfigurations = structuredClone(configurations);
+        byId("money").value = rewards.money || 0;
+        byId("supplies").value = rewards.supplies || 0;
+        licenseUnits = Object.keys(rewards.licenses || {}).filter((id) => rewards.licenses[id]);
+        unlockUnits = [...(rewards.unlockUnits || [])];
+        unlockAces = [...(rewards.unlockAces || [])];
+        stockRewards = { inventory: { ...rewards.inventory }, kits: { ...rewards.kits } };
+        renderLicenses();
+        renderUnlocks();
+        renderAceUnlocks();
+        renderStockRewards();
+      }
+      function readRewards() {
+        return {
+          money: Number(byId("money").value),
+          supplies: Number(byId("supplies").value),
+          licenses: Object.fromEntries(licenseUnits.map((id) => [id, true])),
+          inventory: { ...stockRewards.inventory },
+          kits: { ...stockRewards.kits },
+          unlockUnits: [...unlockUnits],
+          unlockAces: [...unlockAces],
+        };
+      }
+      let pickerKind = "inventory",
+        configUnitId = null,
+        editingStock = false;
+      function openUnitPicker(kind) {
+        if (!snapshot) return;
+        pickerKind = kind;
+        byId("rewardUnitTitle").textContent =
+          kind === "license"
+            ? "选择部署许可奖励"
+            : kind === "unlock"
+              ? "选择开发奖励"
+              : kind === "kits"
+                ? "选择套件所属单位"
+                : "选择奖励单位";
+        byId("rewardUnitSearch").value = "";
+        for (const [id, values, label] of [
+          [
+            "rewardUnitFaction",
+            snapshot.units.flatMap((unit) => unit.factions || [unit.faction]),
+            "全部阵营",
+          ],
+          ["rewardUnitEra", snapshot.units.flatMap((unit) => unit.eras || []), "全部年代"],
+          ["rewardUnitType", snapshot.units.flatMap((unit) => unit.tags || []), "全部类型"],
+        ])
+          byId(id).replaceChildren(
+            new Option(label, ""),
+            ...[...new Set(values)]
+              .sort(rewardOrder.compare)
+              .map((value) => new Option(value, value)),
+          );
+        renderUnitPicker();
+        byId("rewardUnitDialog").showModal();
+        byId("rewardUnitSearch").focus();
+      }
+      function renderUnitPicker() {
+        const query = byId("rewardUnitSearch").value.trim().toLocaleLowerCase(),
+          faction = byId("rewardUnitFaction").value,
+          era = byId("rewardUnitEra").value,
+          type = byId("rewardUnitType").value;
+        const units = snapshot.units
+          .filter(
+            (unit) =>
+              (pickerKind !== "unlock" || unit.developable) &&
+              (!faction || (unit.factions || [unit.faction]).includes(faction)) &&
+              (!era || unit.eras?.includes(era)) &&
+              (!type || unit.tags?.includes(type)) &&
+              (!query ||
+                [unit.id, unit.name, ...unitKits(unit.id).map((kit) => kit.name + " " + kit.id)]
+                  .join(" ")
+                  .toLocaleLowerCase()
+                  .includes(query)),
+          )
+          .sort((a, b) => rewardOrder.compare(a.name, b.name) || a.id.localeCompare(b.id));
+        byId("rewardUnitCount").textContent = "找到 " + units.length + " 个单位";
+        byId("rewardUnitList").replaceChildren(
+          ...units.map((unit) => {
+            const button = rewardButton(unit.name, () => {
+              byId("rewardUnitDialog").close();
+              if (["license", "unlock"].includes(pickerKind)) {
+                const values = pickerKind === "license" ? licenseUnits : unlockUnits;
+                if (!values.includes(unit.id)) values.push(unit.id);
+                if (pickerKind === "license") renderLicenses();
+                else renderUnlocks();
+              } else openUnitConfig(unit.id, false);
+            });
+            button.dataset.unitId = unit.id;
+            const tags = document.createElement("small");
+            tags.textContent = [unit.faction, ...(unit.eras || []), ...(unit.tags || [])].join(
+              " · ",
+            );
+            button.append(tags);
+            return button;
+          }),
+        );
+      }
+      function openUnitConfig(id, editing) {
+        configUnitId = id;
+        editingStock = editing;
+        const unit = snapshot.units.find((unit) => unit.id === id),
+          kits = unitKits(id);
+        const hasStock =
+          !!stockRewards.inventory[id] || kits.some((kit) => stockRewards.kits[kit.id]);
+        const count = hasStock ? stockRewards.inventory[id] || 0 : pickerKind === "kits" ? 0 : 1;
+        let baseKit =
+          stockConfigurations[id]?.kitId ??
+          (hasStock
+            ? kits.find((kit) => count > 0 && stockRewards.kits[kit.id] >= count)?.id || ""
+            : unit.defaultKit);
+        if (!kits.some((kit) => kit.id === baseKit)) baseKit = "";
+        byId("rewardConfigTitle").textContent = "配置奖励：" + unit.name;
+        byId("rewardChassisCount").value = count;
+        byId("rewardBaseKit").replaceChildren(
+          new Option("不随附套件", ""),
+          ...kits.map((kit) => new Option(kit.kitName || kit.name, kit.id)),
+        );
+        byId("rewardBaseKit").value = baseKit;
+        byId("rewardKitSearch").value = "";
+        byId("rewardConfigError").textContent = "";
+        byId("extraKitRows").replaceChildren(
+          ...kits.map((kit) => {
+            const row = document.createElement("label"),
+              name = document.createElement("span"),
+              input = document.createElement("input");
+            row.className = "extra-kit-row";
+            row.dataset.kitId = kit.id;
+            name.textContent = kit.kitName || kit.name;
+            input.type = "number";
+            input.min = "0";
+            input.max = "1000000";
+            input.step = "1";
+            input.required = true;
+            input.value = stockConfigurations[id]
+              ? stockConfigurations[id].extraKits[kit.id] || 0
+              : (stockRewards.kits[kit.id] || 0) - (hasStock && kit.id === baseKit ? count : 0);
+            input.setAttribute("aria-label", "额外套件数量 " + (kit.kitName || kit.name));
+            row.append(name, input);
+            return row;
+          }),
+        );
+        byId("rewardConfigDialog").showModal();
+        byId("rewardChassisCount").focus();
+      }
+      byId("rewardKitSearch").oninput = () => {
+        const query = byId("rewardKitSearch").value.trim().toLocaleLowerCase();
+        for (const row of byId("extraKitRows").children)
+          row.hidden = ![row.textContent, row.dataset.kitId]
+            .join(" ")
+            .toLocaleLowerCase()
+            .includes(query);
+      };
+      byId("rewardConfigForm").onsubmit = (event) => {
+        event.preventDefault();
+        const count = Number(byId("rewardChassisCount").value),
+          baseKit = byId("rewardBaseKit").value,
+          kits = {},
+          extraKits = {};
+        for (const row of byId("extraKitRows").children) {
+          const value =
+            Number(row.querySelector("input").value) + (row.dataset.kitId === baseKit ? count : 0);
+          if (!Number.isSafeInteger(value) || value < 0 || value > 1000000) {
+            byId("rewardConfigError").textContent = "每种套件的总数量须为0至100万的整数";
+            return;
+          }
+          const extra = Number(row.querySelector("input").value);
+          if (extra) extraKits[row.dataset.kitId] = extra;
+          if (value) kits[row.dataset.kitId] = value;
+        }
+        if (!count && !Object.keys(kits).length) {
+          byId("rewardConfigError").textContent = "请至少配置一台机体或一份套件";
+          return;
+        }
+        clearUnitStock(configUnitId);
+        if (count) stockRewards.inventory[configUnitId] = count;
+        Object.assign(stockRewards.kits, kits);
+        stockConfigurations[configUnitId] = { kitId: baseKit, extraKits };
+        renderStockRewards();
+        byId("rewardConfigDialog").close();
+      };
+      byId("cancelRewardUnit").onclick = () => byId("rewardUnitDialog").close();
+      byId("cancelRewardConfig").onclick = () => {
+        byId("rewardConfigDialog").close();
+        if (!editingStock) {
+          byId("rewardUnitDialog").showModal();
+          byId("rewardUnitSearch").focus();
         }
       };
+      byId("rewardUnitSearch").oninput = renderUnitPicker;
+      for (const id of ["rewardUnitFaction", "rewardUnitEra", "rewardUnitType"])
+        byId(id).onchange = renderUnitPicker;
+      byId("addChassisStock").onclick = () => openUnitPicker("inventory");
+      byId("addKitStock").onclick = () => openUnitPicker("kits");
+      function addUnit() {
+        openUnitPicker("license");
+      }
+      byId("addUnlock").onclick = () => openUnitPicker("unlock");
       function renderAceUnlocks() {
         const list = byId("aceUnlocks");
         list.replaceChildren();
@@ -807,7 +1174,11 @@
             unlockAces.splice(index, 1);
             renderAceUnlocks();
           };
-          row.append(searchableReward(select,select.getAttribute("aria-label"),true), select, remove);
+          row.append(
+            searchableReward(select, select.getAttribute("aria-label"), true),
+            select,
+            remove,
+          );
           list.append(row);
         }
         byId("addAceUnlock").disabled = unlockAces.length >= (snapshot?.aces?.length || 0);
@@ -842,7 +1213,7 @@
       };
       byId("newActivity").onclick = () => {
         byId("form").reset();
-        byId("licenseRewards").replaceChildren();
+        loadRewards();
         unlockUnits = [];
         unlockAces = [];
         renderAceUnlocks();
@@ -866,7 +1237,8 @@
       byId("clearAllActivities").onclick = () => {
         if (!snapshot?.activities.length) return;
         deletingId = "*";
-        byId("deleteActivityText").textContent = "确定清空所有活动？未领取奖励会撤销，已领取收益保留。重启后不会恢复已删除的默认活动。";
+        byId("deleteActivityText").textContent =
+          "确定清空所有活动？未领取奖励会撤销，已领取收益保留。重启后不会恢复已删除的默认活动。";
         byId("deleteActivityDialog").showModal();
         byId("cancelDelete").focus();
       };
@@ -882,7 +1254,8 @@
       byId("confirmDelete").onclick = async () => {
         byId("confirmDelete").disabled = true;
         try {
-          const ids = deletingId === "*" ? snapshot.activities.map((item) => item.id) : [deletingId];
+          const ids =
+            deletingId === "*" ? snapshot.activities.map((item) => item.id) : [deletingId];
           for (const id of ids) snapshot = await api("/delete", { id });
           selectedId = null;
           byId("deleteActivityDialog").close();
@@ -901,6 +1274,8 @@
         try {
           snapshot = await api("/edit", {
             id: selectedId,
+            rewards: readRewards(),
+            stockConfigurations: structuredClone(stockConfigurations),
             title: byId("editTitle").value,
             text: byId("editBody").value,
             ...period("editStartsAt", "editEndsAt"),
@@ -912,7 +1287,8 @@
               : {}),
           });
           render();
-          byId("status").textContent = "文案和时期已保存，文案已同步到已投递邮件。";
+          byId("status").textContent =
+            "活动修改已保存，尚未领取的邮件已更新；已开始领取及已领取记录保持原状。";
         } catch (error) {
           byId("status").textContent = error.message;
         } finally {
@@ -921,29 +1297,12 @@
       };
       byId("form").onsubmit = async (event) => {
         event.preventDefault();
-        const licenses = {};
-        for (const row of byId("licenseRewards").children) {
-          const id = row.querySelector("select").value;
-          licenses[id] = true;
-        }
-        const stock = {inventory:{},kits:{}};
-        for (const row of byId("stockRewards").children) {
-          const id = row.querySelector("select").value;
-          const count = Number(row.querySelector('input[type="number"]').value);
-          stock[row.dataset.kind][id] = (stock[row.dataset.kind][id] || 0) + count;
-        }
         const value = {
           title: byId("title").value,
           text: byId("body").value,
           mode: byId("mode").value,
-          rewards: {
-            money: Number(byId("money").value),
-            supplies: Number(byId("supplies").value),
-            licenses,
-            ...stock,
-            unlockUnits: [...unlockUnits],
-            unlockAces: [...unlockAces],
-          },
+          rewards: readRewards(),
+          stockConfigurations: structuredClone(stockConfigurations),
         };
         byId("publish").disabled = true;
         try {

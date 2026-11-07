@@ -686,3 +686,67 @@ test("stock rewards validate separate chassis and kits and survive a claim retry
   assert.throws(()=>f.service.publish(activity("online_now",{rewards:{inventory:{not_a_unit:1}}})));
   assert.throws(()=>f.service.publish(activity("online_now",{rewards:{kits:{RGM_79__beam_spray:-1}}})));
 });
+
+test("published reward edits update pending mail, preserve in-flight receipts and persist for later delivery", (t) => {
+  const f = fixture(t);
+  const players = [0, 1, 2].map(() => ({ ws: {}, identity: identity() }));
+  for (const p of players) f.service.identify(p.ws, p.identity, "Reward edit");
+  const event = f.service.publish(activity("next_login"));
+  for (const p of players) f.service.identify(p.ws, p.identity, "Reward edit");
+  // Mailbox protocol is also used by normal activity_list responses.
+  const mailFor = (p) =>
+    f.frames
+      .get(p.ws)
+      .filter((frame) => frame.mail)
+      .at(-1)
+      .mail.find((mail) => mail.activityId === event.id);
+  const original = players.map(mailFor);
+  f.service.receive(players[1].ws, { type: "activity_claim", mailId: original[1].id });
+  const receipt = f.frames.get(players[1].ws).at(-1).award;
+  f.service.receive(players[2].ws, { type: "activity_claim", mailId: original[2].id });
+  f.service.receive(players[2].ws, { type: "activity_ack", mailId: original[2].id });
+  const rewards = {
+    money: 123,
+    supplies: 456,
+    inventory: { RGM_79: 2 },
+    kits: { RGM_79__beam_spray: 3 },
+    licenses: { MS_14A: true },
+    unlockUnits: ["RX_78_2"],
+    unlockAces: ["Pilot_ZEON_0079_N_ACE_CIA"],
+  };
+  f.service.updateCopy(event.id, "Updated", "New reward", {
+    rewards, stockConfigurations:{RGM_79:{kitId:"RGM_79__beam_spray",extraKits:{RGM_79__beam_spray:1}}}
+  });
+  const current = f.service.adminSnapshot().activities.find((a) => a.id === event.id);
+  assert.deepEqual(mailFor(players[0]).rewards, current.rewards);
+  assert.equal(mailFor(players[0]).claimedAt, null);
+  for (const index of [1, 2])
+    assert.deepEqual(mailFor(players[index]).rewards, original[index].rewards);
+  assert.notEqual(mailFor(players[2]).confirmedAt, null);
+  f.service.receive(players[1].ws, { type: "activity_claim", mailId: original[1].id });
+  assert.deepEqual(f.frames.get(players[1].ws).at(-1).award, receipt);
+  assert.throws(() =>
+    f.service.updateCopy(event.id, "Invalid", "Invalid", {
+      rewards: { kits: { RGM_79__beam_spray: -1 } },
+    }),
+  );
+  assert.deepEqual(
+    f.service.adminSnapshot().activities.find((a) => a.id === event.id),
+    current,
+  );
+  assert.throws(() => f.service.updateCopy(event.id, "Invalid kit", "Invalid", {
+    rewards, stockConfigurations:{RGM_79:{kitId:"MS_06F__machine_gun",extraKits:{}}}
+  }));
+  assert.throws(() => f.service.updateCopy(event.id, "Wrong count", "Invalid", {
+    rewards, stockConfigurations:{RGM_79:{kitId:"RGM_79__beam_spray",extraKits:{RGM_79__beam_spray:2}}}
+  }));
+  assert.deepEqual(f.service.adminSnapshot().activities.find(a => a.id === event.id), current);
+  f.restart();
+  assert.deepEqual(f.service.adminSnapshot().activities.find(a => a.id === event.id).stockConfigurations,current.stockConfigurations);
+  for (const p of players) f.service.identify(p.ws, p.identity, "Reloaded");
+  assert.equal(mailFor(players[0]).id, original[0].id);
+  assert.deepEqual(mailFor(players[0]).rewards, current.rewards);
+  const later = { ws: {}, identity: identity() };
+  f.service.identify(later.ws, later.identity, "Later");
+  assert.deepEqual(mailFor(later).rewards, current.rewards);
+});

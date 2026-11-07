@@ -8,6 +8,7 @@ const catalog = require("../shared/production-catalog.json"),
 function load(saved = {}) {
   const storage = new Map(Object.entries(saved));
   const context = vm.createContext({
+    STARTER_PROFILE: require("../shared/starter-profile.json"),
     PRODUCTION_CATALOG: catalog,
     ProfileMigrations: require("../shared/profile-migrations.js"),
     PILOT_DATA: require("../shared/pilots.json"),
@@ -74,7 +75,7 @@ test("research requires no currency; original strategy costs and timings remain 
   );
   D.creditAward({ id: "points", matchId: "test", faction: "EFSF", points: 100000 });
   assert(D.research("EFSF", node.id));
-  assert.equal(E.snapshot().money, 5000);
+  assert.equal(E.snapshot().money, 10000);
   for (const nodes of Object.values(tree))
     for (const n of nodes) {
       assert.equal(n.money, n.sourceCosts.money * 2);
@@ -117,9 +118,12 @@ test("activity licenses, currency, development and receipt persist together or r
 
 
 test("license purchase cannot overspend or change memory when persistence fails",()=>{
- const {E,context,storage}=funded();const before=JSON.stringify(E.snapshot()),persisted=storage.get(E.key);
+ const {E,D,context,storage}=funded();
+ D.creditAward({id:"permit-test",matchId:"test",faction:"EFSF",points:100000});
+ for(const node of tree.EFSF) if(!D.unlockedTech("EFSF").includes(node.id)) D.research("EFSF",node.id);
+ const before=JSON.stringify(E.snapshot()),persisted=storage.get(E.key);
  assert(!E.transact({money:1000001,supplies:0}));
  context.localStorage.setItem=()=>{throw Error("quota");};
- assert.throws(()=>E.purchaseLicense("Type61","EFSF"),/quota/);
+ assert.throws(()=>E.purchaseLicense("RGM_79","EFSF"),/quota/);
  assert.equal(JSON.stringify(E.snapshot()),before);assert.equal(storage.get(E.key),persisted);
 });

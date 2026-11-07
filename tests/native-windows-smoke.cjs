@@ -112,8 +112,8 @@ async function stop() {
   await page.locator("#produceUnit").click();
   await page.locator("#buyProductionKit").click();
   const original = await page.evaluate(() => Economy.snapshot());
-  assert.equal(original.inventory.Type61, 1);
-  assert.equal(original.kits.Type61__standard, 2);
+  assert.equal(original.inventory.Type61, 31);
+  assert.equal(original.kits.Type61__standard, 32);
   // A real Windows file lock must reject the purchase without changing wallet or stock.
   lock = spawn(checks, ["--lock", path.join(data, "profile.json")], {
     windowsHide: true,

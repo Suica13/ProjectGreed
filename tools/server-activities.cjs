@@ -7,11 +7,25 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
   const online = new Map();
   const developmentTree = require("../shared/development-tree.json");
   const aceMap = new Map(require("../shared/pilots.json").aces.map((p) => [p.id, p]));
+  const production = require("../shared/production-data.cjs");
   const unitMap = new Map(rules.catalog.prefabs.map((unit) => [unit.id, unit]));
-  const kitMap = new Map(rules.catalog.prefabs.flatMap(unit => unit.weaponKits.map(kit => {
-    const id = unit.id + "__" + kit.id;
-    return [id, {id, unitId:unit.id, name:unit.name + " · " + (rules.models[id]?.kitName || kit.name || kit.id), faction:unit.faction}];
-  })));
+  const kitMap = new Map(
+    rules.catalog.prefabs.flatMap((unit) =>
+      unit.weaponKits.map((kit) => {
+        const id = unit.id + "__" + kit.id;
+        return [
+          id,
+          {
+            id,
+            unitId: unit.id,
+            name: unit.name + " · " + (rules.models[id]?.kitName || kit.name || kit.id),
+            faction: unit.faction,
+            kitName: rules.models[id]?.kitName || kit.name || kit.id,
+          },
+        ];
+      }),
+    ),
+  );
   let state = { schemaVersion: 2, serverId: crypto.randomUUID(), players: {}, activities: [] };
   function save(next) {
     if (storePath) {
@@ -25,7 +39,7 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
   if (storePath && fs.existsSync(storePath)) {
     state = JSON.parse(fs.readFileSync(storePath, "utf8"));
     if (
-      ![1,2].includes(state.schemaVersion) ||
+      ![1, 2].includes(state.schemaVersion) ||
       !state.serverId ||
       !state.players ||
       !Array.isArray(state.activities)
@@ -166,15 +180,19 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
       )
     )
       throw Error("资金、物资必须为0至10亿的整数");
-    const stock = rules.normalizeStock({inventory:value.inventory, kits:value.kits});
-    for (const id of Object.keys(stock.kits)) if (!kitMap.has(id)) throw Error("套件奖励无效：" + id);
+    const stock = rules.normalizeStock({ inventory: value.inventory, kits: value.kits });
+    for (const id of Object.keys(stock.kits))
+      if (!kitMap.has(id)) throw Error("套件奖励无效：" + id);
     if (Object.keys(stock.inventory).length) rewards.inventory = stock.inventory;
     if (Object.keys(stock.kits).length) rewards.kits = stock.kits;
-    if (value.licenses !== undefined && (!value.licenses || typeof value.licenses !== "object" || Array.isArray(value.licenses)))
+    if (
+      value.licenses !== undefined &&
+      (!value.licenses || typeof value.licenses !== "object" || Array.isArray(value.licenses))
+    )
       throw Error("部署许可奖励格式无效");
-    for (const [id,owned] of Object.entries(value.licenses || {})) {
+    for (const [id, owned] of Object.entries(value.licenses || {})) {
       if (!unitMap.has(id) || owned !== true) throw Error("单位许可奖励无效：" + id);
-      rewards.licenses[id]=true;
+      rewards.licenses[id] = true;
     }
     if (!Array.isArray(value.unlockUnits ?? [])) throw Error("开发奖励格式无效");
     for (const id of new Set(value.unlockUnits || [])) {
@@ -189,6 +207,31 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
       rewards.unlockAces.push(id);
     }
     return rewards;
+  }
+  // Presentation metadata preserves the selected bundled kit when several extra kits exist.
+  // Actual awards continue to use the independently counted inventory/kits maps.
+  function validateStockConfigurations(value = {}, rewards) {
+    if (!value || typeof value !== "object" || Array.isArray(value))
+      throw Error("单位套件配置格式无效");
+    const result = {};
+    for (const [unitId, config] of Object.entries(value)) {
+      if (!unitMap.has(unitId) || !config || typeof config !== "object" || Array.isArray(config))
+        throw Error("单位套件配置无效");
+      const kitId = config.kitId;
+      if (kitId !== "" && kitMap.get(kitId)?.unitId !== unitId)
+        throw Error("随附套件不属于所选单位");
+      const extraKits = rules.normalizeStock({ kits: config.extraKits }).kits;
+      for (const id of Object.keys(extraKits))
+        if (kitMap.get(id)?.unitId !== unitId) throw Error("额外套件不属于所选单位");
+      for (const kit of kitMap.values()) {
+        if (kit.unitId !== unitId) continue;
+        const total =
+          (extraKits[kit.id] || 0) + (kit.id === kitId ? rewards.inventory?.[unitId] || 0 : 0);
+        if (total !== (rewards.kits?.[kit.id] || 0)) throw Error("套件配置与奖励数量不一致");
+      }
+      result[unitId] = { kitId, extraKits };
+    }
+    return result;
   }
   function validateMultipliers(value) {
     if (!value || typeof value !== "object" || Array.isArray(value))
@@ -528,6 +571,10 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
       createdAt: now(),
       rewards: validateRewards(value.mode === "battle_bonus" ? {} : value.rewards),
     };
+    activity.stockConfigurations = validateStockConfigurations(
+      value.mode === "battle_bonus" ? {} : value.stockConfigurations,
+      activity.rewards,
+    );
     Object.assign(
       activity,
       schedule(
@@ -596,6 +643,14 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
         id: unit.id,
         name: unit.code + " " + unit.name,
         faction: unit.faction,
+        factions: unit.availableFactions || [unit.faction],
+        eras: unit.tags.filter((tag) => rules.eras.includes(tag)),
+        tags: unit.unitTags || [],
+        defaultKit:
+          unit.id +
+          "__" +
+          (production.defaultKits?.[unit.id] ||
+            production.baseModels[unit.id]?.slice(unit.id.length + 2)),
         developable: (developmentTree[unit.faction] || []).some((node) =>
           node.unlocks.includes(unit.id),
         ),
@@ -614,6 +669,13 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
     edit((next) => {
       const activity = next.activities.find((item) => item.id === id);
       if (!activity) throw Error("活动不存在");
+      if (activity.mode !== "battle_bonus" && Object.hasOwn(settings, "rewards")) {
+        activity.rewards = validateRewards(settings.rewards);
+        activity.stockConfigurations = validateStockConfigurations(
+          settings.stockConfigurations,
+          activity.rewards,
+        );
+      }
       if (Object.hasOwn(settings, "startsAt") || Object.hasOwn(settings, "endsAt"))
         Object.assign(
           activity,
@@ -655,6 +717,9 @@ function createActivityService({ rules, send, storePath = null, now = Date.now }
           if (mail.activityId === id) {
             mail.title = activity.title;
             mail.text = activity.text;
+            // Claimed receipts must stay immutable until acknowledgement and on retries.
+            if (mail.claimedAt === null && Object.hasOwn(settings, "rewards"))
+              mail.rewards = structuredClone(activity.rewards);
             if (activity.mode === "battle_bonus") {
               mail.multipliers = structuredClone(activity.multipliers);
               mail.startsAt = activity.startsAt;

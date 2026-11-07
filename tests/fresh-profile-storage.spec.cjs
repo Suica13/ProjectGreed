@@ -85,14 +85,14 @@ test("a genuinely fresh profile creates pilots and buys stock with a small persi
   expect(result.bought).toBe(true);
   expect(result.kit).toBe(true);
   expect(result.pilots).toBe(1);
-  expect(result.stock).toBe(1);
-  expect(result.kits).toBe(2);
+  expect(result.stock).toBe(31);
+  expect(result.kits).toBe(32);
   expect(result.report.writable).toBe(true);
   expect(result.report.estimatedBytes).toBeLessThan(64 * 1024);
   await page.reload();
   await page.waitForFunction(() => assetsReady);
   expect(await page.evaluate(() => ProfileSave.exportData().pilots.PMC.pilots.length)).toBe(1);
-  expect(await page.evaluate(() => Economy.quantity("Type61"))).toBe(1);
+  expect(await page.evaluate(() => Economy.quantity("Type61"))).toBe(31);
   expect(errors).toEqual([]);
 });
 test("settings diagnostics distinguish blocked writes and export a report without save contents", async ({

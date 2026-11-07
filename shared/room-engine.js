@@ -1132,6 +1132,7 @@ function createRoomEngine({
     room.stockReservations = {};
     room.game = G.create(false, randomSeed());
     delete room.aiFormationSeed;
+    delete room.aiFormationEras;
     room.started = false;
     room.delegatedSeats = [];
     room.phase = "waiting";
@@ -1940,11 +1941,28 @@ function createRoomEngine({
     aiResearchCache.set(room, { key, value });
     return value;
   }
-  const playerRestrictions = (room, player) =>
-    G.armyRestrictions(
+  function roomAIEras(room) {
+    if (room.settings.mode !== "regular" || room.resumeSave || room.startedFromSave) return undefined;
+    if (room.started && room.phase !== "assembly" && room.aiFormationEras) return room.aiFormationEras;
+    const allowed = new Set();
+    for (const player of room.seats) {
+      if (!player || player.bot) continue;
+      for (const entry of player.formationPreset?.units || player.formation || []) {
+        const model = G.models[entry.unitId + "__" + entry.kitId];
+        for (const tag of model?.tags || []) if (G.eras.includes(tag)) allowed.add(tag);
+      }
+    }
+    // AI-only rooms (including spectator hosts) have no human formation to follow.
+    return allowed.size ? [...allowed].sort() : undefined;
+  }
+  function playerRestrictions(room, player) {
+    const rules = G.armyRestrictions(
       room.settings,
       player?.bot ? { ...formationPlayer(room, player), researched: roomAIResearch(room) } : player,
     );
+    if (player?.bot) rules.aiAllowedEras = roomAIEras(room);
+    return rules;
+  }
   // Preparing may acknowledge shortages. Actual deployment always uses formationPlan's stock filter.
   const readinessPlan = (room, player, formation) =>
     G.planFormation(
@@ -2086,6 +2104,13 @@ function createRoomEngine({
   }
   function formationPlan(room, player) {
     if (room.resumeSave) return savedPlan(room, player.seat);
+    if (player.bot && !player.formationPreset && room.settings.mode === "regular") {
+      const eraKey = JSON.stringify(roomAIEras(room));
+      if (player.aiFormationEraKey !== eraKey) {
+        player.formation = randomArmy(room, player, 7319);
+        player.aiFormationEraKey = eraKey;
+      }
+    }
     const entries =
       player.formationPreset?.units || player.formation || randomArmy(room, player, 7319);
     if (!entries.length)
@@ -2166,7 +2191,10 @@ function createRoomEngine({
           throw Error("每名玩家至少需要一台符合限制的可出击单位");
       });
     room.seats.forEach((player, seat) => {
-      if (player?.bot) player.formation = armies[seat];
+      if (player?.bot) {
+        player.formation = armies[seat];
+        player.aiFormationEraKey = JSON.stringify(roomAIEras(room));
+      }
     });
     room.turnSave = room.resumeSave ? Records.clone(room.resumeSave) : null;
     room.startedFromSave = !!room.resumeSave;
@@ -2232,6 +2260,7 @@ function createRoomEngine({
     )
       throw Error("两支队伍都至少需要一名玩家或 AI");
     room.activeSeats = room.seats.map(Boolean);
+    room.aiFormationEras = roomAIEras(room);
     room.game = G.create(
       false,
       room.game.seed,

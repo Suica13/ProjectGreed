@@ -192,8 +192,8 @@ async function screenshot(name) {
       "(function(){var p=document.querySelector('#productionList .production-unit-portrait').getBoundingClientRect(),i=document.querySelector('#productionList .production-unit-info').getBoundingClientRect();return i.left>p.left&&Math.abs(i.top-p.top)<4;})()",
     );
     const wallet = await evaluate("Economy.snapshot()");
-    assert.equal(wallet.inventory.Type61, 1);
-    assert.equal(wallet.kits.Type61__standard, 2);
+    assert.equal(wallet.inventory.Type61, 31);
+    assert.equal(wallet.kits.Type61__standard, 32);
     await screenshot("production");
     await evaluate("MenuShell.go('formation')");
     await screenshot("formation");
