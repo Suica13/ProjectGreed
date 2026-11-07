@@ -2649,6 +2649,9 @@
                           <option value="disabled">禁用</option>
                         </select>
                       </label>
+                      <label>驾驶员战场对话 <select id="roomPilotDialogue"><option value="enabled">开启</option><option value="disabled">关闭</option></select></label>
+                      <label>天气 <select id="roomWeather"><option value="map">地图默认</option><option value="clear">晴朗</option><option value="rain">雨</option><option value="snow">雪</option><option value="sand">沙尘</option></select></label>
+                      <label>昼夜 <select id="roomDayNight"><option value="map">地图默认</option><option value="day">白天</option><option value="night">夜晚</option><option value="cycle">昼夜循环</option></select></label>
                       <label class="room-sharing-option"
                         >友军单位共享
                         <select id="roomShareAlliedUnits" aria-label="友军单位共享">
@@ -5158,6 +5161,7 @@
       <label class="settings-toggle"
         ><span>动态单位阴影（地图光照）</span><input id="settingsUnitShadows" type="checkbox"
       /></label>
+      <label class="settings-toggle"><span>隐藏驾驶员对话（包括提示音）</span><input id="settingsHidePilotDialogue" type="checkbox" /></label>
       <label for="settingsLanguage">语言</label>
       <select id="settingsLanguage" data-i18n-ignore aria-label="Language">
         <option value="zh">简体中文</option>
