@@ -354,7 +354,8 @@ const RoomPanel = (() => {
     byId("roomWeatherCycle").value = settings.weatherCycle === false ? "disabled" : "enabled";
     byId("roomTimeCycle").value = settings.timeCycle === false ? "disabled" : "enabled";
     byId("roomClimateBuffs").value = settings.climateBuffs === false ? "disabled" : "enabled";
-    for (const id of ["roomPilotDialogue","roomWeather","roomDayNight","roomWeatherCycle","roomTimeCycle","roomClimateBuffs"]) byId(id).disabled = locked;
+    const spaceMap = (() => { try { return Rules.getMap(settings.mapId).environment === "space"; } catch { return false; } })();
+    for (const id of ["roomPilotDialogue","roomWeather","roomDayNight","roomWeatherCycle","roomTimeCycle","roomClimateBuffs"]) byId(id).disabled = locked || (spaceMap && id !== "roomPilotDialogue");
     byId("roomPilotPolicy").value = settings.pilotPolicy || "allow";
     byId("roomPilotPolicy").disabled = locked;
     byId("roomPilotPolicy").closest("label").hidden = settings.mode === "campaign";
