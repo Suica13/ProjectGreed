@@ -4016,6 +4016,22 @@ function createRoomEngine({
         );
         break;
       }
+      case "stage_deployment": {
+        if (room.phase !== "deployment") throw Error("Not deploying");
+        const actor = ownUnit(room, seat, msg.unitId);
+        G.stageDeployment(room.game, room.campaignBattle ? seat : G.ownerOf(actor), actor.id);
+        break;
+      }
+      case "clear_deployment": {
+        if (room.phase !== "deployment") throw Error("Not deploying");
+        G.clearDeployment(room.game, seat);
+        break;
+      }
+      case "auto_place_deployment": {
+        if (room.phase !== "deployment") throw Error("Not deploying");
+        G.autoPlaceDeployment(room.game, seat);
+        break;
+      }
       case "confirm_deployment": {
         if (room.phase !== "deployment") throw Error("Not deploying");
         if (G.confirmDeployment(room.game, seat)) {
