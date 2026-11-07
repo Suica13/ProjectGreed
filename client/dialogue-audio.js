@@ -7,6 +7,13 @@ const DialogueAudio = (() => {
     aggressive: { frequency: 310, wave: "square", duration: 0.04 },
     cautious: { frequency: 540, wave: "triangle", duration: 0.035 },
     idealist: { frequency: 660, wave: "sine", duration: 0.055 },
+    strategic: { frequency: 380, wave: "triangle", duration: 0.05 },
+    sarcastic: { frequency: 490, wave: "square", duration: 0.028 },
+    strict: { frequency: 350, wave: "square", duration: 0.035 },
+    zealous: { frequency: 710, wave: "sawtooth", duration: 0.042 },
+    proud: { frequency: 590, wave: "triangle", duration: 0.047 },
+    obsessive: { frequency: 270, wave: "sawtooth", duration: 0.065 },
+    empathetic: { frequency: 630, wave: "sine", duration: 0.07 },
   });
   function configure(options = {}) {
     if (typeof options.enabled === "boolean") enabled = options.enabled;
