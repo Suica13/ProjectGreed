@@ -3,13 +3,17 @@ const MapDocument = (() => {
   "use strict";
   const format = "ProjectGreedTileMap";
   const terrains = {
-    plain: { name: "普通", color: "#52626b" },
-    water: { name: "水", color: "#346c99" },
-    rock: { name: "山", color: "#73747a" },
+    plain: { name: "普通", color: "#52626b", category: "ground", cover: {snow:1,wet:1,dust:1} },
+    road: { name: "道路", color: "#666b70", category: "ground", cover: {snow:.6,wet:1,dust:.5} },
+    shallow_water: { name: "浅水（地面）", color: "#5895ac", category: "ground", cover: {snow:.15,wet:1,dust:0} },
+    deep_water: { name: "深水／海", color: "#24577d", category: "water", cover: {snow:0,wet:0,dust:0} },
+    residential: { name: "房区", color: "#9b8a7b", category: "ground", cover: {snow:.55,wet:.8,dust:.6} },
+    water: { name: "水（旧地图兼容）", color: "#346c99", category: "water", cover: {snow:0,wet:0,dust:0} },
+    rock: { name: "山区", color: "#73747a", category: "mountain", cover: {snow:.8,wet:.35,dust:.35} },
     forest: { name: "林", color: "#39704f" },
     rubble: { name: "废墟", color: "#7c6963" },
-    snow: { name: "雪地", color: "#d7e5ee" },
-    desert: { name: "沙漠", color: "#c5a86d" },
+    snow: { name: "雪地", color: "#d7e5ee", category: "ground", cover: {snow:1,wet:.25,dust:.1} },
+    desert: { name: "沙地", color: "#c5a86d", category: "ground", cover: {snow:.25,wet:.35,dust:1} },
     highland: { name: "高地（兼容）", color: "#93885e" },
   };
   const copy = (value) => JSON.parse(JSON.stringify(value));
