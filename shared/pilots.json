@@ -432,26 +432,32 @@
         }
       },
       "baseStats": {
-        "shooting": 190.0,
-        "melee": 175.0,
-        "defense": 170.0,
-        "speed": 180.0,
-        "accuracy": 185.0,
-        "reaction": 180.0,
-        "leadership": 85.0,
-        "awakening": 90.0
+        "shooting": 190,
+        "melee": 175,
+        "defense": 170,
+        "speed": 180,
+        "accuracy": 185,
+        "reaction": 180,
+        "leadership": 85,
+        "awakening": 90
       },
-      "comprehension": 108.0,
+      "comprehension": 108,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 300,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -472,14 +478,14 @@
         {
           "money": 8000,
           "supplies": 4000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_AMR.gw",
           "action": "action_Pilot_EFSF_0079_N_ACE_AMR_Produce_Switch_G"
         },
         {
           "money": 8000,
           "supplies": 4000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_AMR.gw",
           "action": "action_Pilot_EFSF_0079_N_ACE_AMR_Produce_Switch_S"
         }
@@ -504,8 +510,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_AccuracyUp_ActiveTime": 15.0,
-            "Pilot_AccuracyUp_CD": 90.0,
+            "Pilot_AccuracyUp_ActiveTime": 15,
+            "Pilot_AccuracyUp_CD": 90,
             "Pilot_AccuracyUp_AccuracyUp": 1.75
           },
           "effect": "Flash_1_N",
@@ -518,8 +524,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -548,8 +554,8 @@
           "statMultipliers": {},
           "experienceMultiplier": 1.35,
           "nativeEffect": {
-            "Pilot_ExpUp_ActiveTime": 15.0,
-            "Pilot_ExpUp_CD": 90.0,
+            "Pilot_ExpUp_ActiveTime": 15,
+            "Pilot_ExpUp_CD": 90,
             "Pilot_ExpUp_ExpUp": 1.75
           },
           "effect": "Flash_1_N",
@@ -562,8 +568,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -595,8 +601,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_AtkUp_ActiveTime": 15.0,
-            "Pilot_AtkUp_CD": 90.0,
+            "Pilot_AtkUp_ActiveTime": 15,
+            "Pilot_AtkUp_CD": 90,
             "Pilot_AtkUp_AtkUp": 1.2
           },
           "effect": "Flash_1_N",
@@ -609,8 +615,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -625,7 +631,9 @@
       ],
       "unlockTech": [
         "Tech_EFSF_0079_T2_GMModularizationPlan"
-      ]
+      ],
+      "personality": "cautious",
+      "originFaction": "EFSF"
     },
     {
       "id": "Pilot_EFSF_0079_N_ACE_BRT",
@@ -642,14 +650,14 @@
         }
       },
       "baseStats": {
-        "shooting": 130.0,
-        "melee": 135.0,
-        "defense": 145.0,
-        "speed": 145.0,
-        "accuracy": 135.0,
-        "reaction": 165.0,
-        "leadership": 165.0,
-        "awakening": 45.0
+        "shooting": 130,
+        "melee": 135,
+        "defense": 145,
+        "speed": 145,
+        "accuracy": 135,
+        "reaction": 165,
+        "leadership": 165,
+        "awakening": 45
       },
       "comprehension": 106.5,
       "initialLevel": 0,
@@ -658,10 +666,16 @@
       "costBase": 225,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -682,14 +696,14 @@
         {
           "money": 10000,
           "supplies": 5000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_BRT.gw",
           "action": "action_Pilot_EFSF_0079_N_ACE_BRT_Produce_Switch_G"
         },
         {
           "money": 10000,
           "supplies": 5000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_BRT.gw",
           "action": "action_Pilot_EFSF_0079_N_ACE_BRT_Produce_Switch_S"
         }
@@ -714,9 +728,9 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_LeaderShipUp_ActiveTime": 15.0,
-            "Pilot_LeaderShipUp_CD": 90.0,
-            "Pilot_LeaderShipUp_LeaderShipUp": 2.0
+            "Pilot_LeaderShipUp_ActiveTime": 15,
+            "Pilot_LeaderShipUp_CD": 90,
+            "Pilot_LeaderShipUp_LeaderShipUp": 2
           },
           "effect": "Flash_1_N",
           "sound": {
@@ -728,8 +742,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -744,7 +758,9 @@
       ],
       "unlockTech": [
         "Tech_EFSF_0079_T2_GMModularizationPlan"
-      ]
+      ],
+      "personality": "strategic",
+      "originFaction": "EFSF"
     },
     {
       "id": "Pilot_EFSF_0079_N_ACE_CRS",
@@ -761,26 +777,32 @@
         }
       },
       "baseStats": {
-        "shooting": 165.0,
-        "melee": 135.0,
-        "defense": 165.0,
-        "speed": 140.0,
-        "accuracy": 145.0,
-        "reaction": 140.0,
-        "leadership": 65.0,
-        "awakening": 35.0
+        "shooting": 165,
+        "melee": 135,
+        "defense": 165,
+        "speed": 140,
+        "accuracy": 145,
+        "reaction": 140,
+        "leadership": 65,
+        "awakening": 35
       },
-      "comprehension": 105.0,
+      "comprehension": 105,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 200,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -801,14 +823,14 @@
         {
           "money": 5000,
           "supplies": 2500,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_CRS.gw",
           "action": "action_Pilot_EFSF_0079_N_ACE_CRS_Produce_Switch_G"
         },
         {
           "money": 5000,
           "supplies": 2500,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_CRS.gw",
           "action": "action_Pilot_EFSF_0079_N_ACE_CRS_Produce_Switch_S"
         }
@@ -833,8 +855,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_DefUp_ActiveTime": 15.0,
-            "Pilot_DefUp_CD": 90.0,
+            "Pilot_DefUp_ActiveTime": 15,
+            "Pilot_DefUp_CD": 90,
             "Pilot_DefUp_DefUp": 1.35
           },
           "effect": "Flash_1_N",
@@ -847,8 +869,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -863,7 +885,9 @@
       ],
       "unlockTech": [
         "Tech_EFSF_0079_T2_GundamNTCustomPlan"
-      ]
+      ],
+      "personality": "calm",
+      "originFaction": "EFSF"
     },
     {
       "id": "Pilot_EFSF_0079_N_ACE_FOT",
@@ -880,26 +904,32 @@
         }
       },
       "baseStats": {
-        "shooting": 155.0,
-        "melee": 150.0,
-        "defense": 150.0,
-        "speed": 170.0,
-        "accuracy": 150.0,
-        "reaction": 175.0,
-        "leadership": 75.0,
-        "awakening": 45.0
+        "shooting": 155,
+        "melee": 150,
+        "defense": 150,
+        "speed": 170,
+        "accuracy": 150,
+        "reaction": 175,
+        "leadership": 75,
+        "awakening": 45
       },
-      "comprehension": 105.0,
+      "comprehension": 105,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 225,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -920,14 +950,14 @@
         {
           "money": 5000,
           "supplies": 2500,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_FOT.gw",
           "action": "action_Pilot_EFSF_0079_N_ACE_FOT_Produce_Switch_G"
         },
         {
           "money": 5000,
           "supplies": 2500,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_FOT.gw",
           "action": "action_Pilot_EFSF_0079_N_ACE_FOT_Produce_Switch_S"
         }
@@ -952,8 +982,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_ReactionUp_ActiveTime": 15.0,
-            "Pilot_ReactionUp_CD": 90.0,
+            "Pilot_ReactionUp_ActiveTime": 15,
+            "Pilot_ReactionUp_CD": 90,
             "Pilot_ReactionUp_ReactionUp": 1.75
           },
           "effect": "Flash_1_N",
@@ -966,8 +996,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -982,7 +1012,9 @@
       ],
       "unlockTech": [
         "Tech_EFSF_0079_T2_G4Plan"
-      ]
+      ],
+      "personality": "idealist",
+      "originFaction": "EFSF"
     },
     {
       "id": "Pilot_EFSF_0079_N_ACE_HYT",
@@ -999,26 +1031,32 @@
         }
       },
       "baseStats": {
-        "shooting": 155.0,
-        "melee": 140.0,
-        "defense": 155.0,
-        "speed": 145.0,
-        "accuracy": 160.0,
-        "reaction": 155.0,
-        "leadership": 85.0,
-        "awakening": 55.0
+        "shooting": 155,
+        "melee": 140,
+        "defense": 155,
+        "speed": 145,
+        "accuracy": 160,
+        "reaction": 155,
+        "leadership": 85,
+        "awakening": 55
       },
-      "comprehension": 105.0,
+      "comprehension": 105,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 225,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -1053,8 +1091,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_AccuracyUp_ActiveTime": 15.0,
-            "Pilot_AccuracyUp_CD": 90.0,
+            "Pilot_AccuracyUp_ActiveTime": 15,
+            "Pilot_AccuracyUp_CD": 90,
             "Pilot_AccuracyUp_AccuracyUp": 1.75
           },
           "effect": "Flash_1_N",
@@ -1067,8 +1105,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -1081,7 +1119,9 @@
           }
         }
       ],
-      "unlockTech": []
+      "unlockTech": [],
+      "personality": "calm",
+      "originFaction": "EFSF"
     },
     {
       "id": "Pilot_EFSF_0079_N_ACE_JST",
@@ -1098,26 +1138,32 @@
         }
       },
       "baseStats": {
-        "shooting": 135.0,
-        "melee": 135.0,
-        "defense": 145.0,
-        "speed": 145.0,
-        "accuracy": 130.0,
-        "reaction": 145.0,
-        "leadership": 160.0,
-        "awakening": 35.0
+        "shooting": 135,
+        "melee": 135,
+        "defense": 145,
+        "speed": 145,
+        "accuracy": 130,
+        "reaction": 145,
+        "leadership": 160,
+        "awakening": 35
       },
-      "comprehension": 105.0,
+      "comprehension": 105,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 200,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -1138,14 +1184,14 @@
         {
           "money": 10000,
           "supplies": 5000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_JST.gw",
           "action": "action_Pilot_EFSF_0079_N_ACE_JST_Produce_Switch_G"
         },
         {
           "money": 10000,
           "supplies": 5000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_JST.gw",
           "action": "action_Pilot_EFSF_0079_N_ACE_JST_Produce_Switch_S"
         }
@@ -1170,9 +1216,9 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_LeaderShipUp_ActiveTime": 15.0,
-            "Pilot_LeaderShipUp_CD": 90.0,
-            "Pilot_LeaderShipUp_LeaderShipUp": 2.0
+            "Pilot_LeaderShipUp_ActiveTime": 15,
+            "Pilot_LeaderShipUp_CD": 90,
+            "Pilot_LeaderShipUp_LeaderShipUp": 2
           },
           "effect": "Flash_1_N",
           "sound": {
@@ -1184,8 +1230,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -1200,7 +1246,9 @@
       ],
       "unlockTech": [
         "Tech_EFSF_0079_T2_G4Plan"
-      ]
+      ],
+      "personality": "strategic",
+      "originFaction": "EFSF"
     },
     {
       "id": "Pilot_EFSF_0079_N_ACE_KOU",
@@ -1217,14 +1265,14 @@
         }
       },
       "baseStats": {
-        "shooting": 170.0,
-        "melee": 160.0,
-        "defense": 160.0,
-        "speed": 165.0,
-        "accuracy": 175.0,
-        "reaction": 175.0,
-        "leadership": 80.0,
-        "awakening": 35.0
+        "shooting": 170,
+        "melee": 160,
+        "defense": 160,
+        "speed": 165,
+        "accuracy": 175,
+        "reaction": 175,
+        "leadership": 80,
+        "awakening": 35
       },
       "comprehension": 106.5,
       "initialLevel": 0,
@@ -1233,10 +1281,16 @@
       "costBase": 250,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -1257,14 +1311,14 @@
         {
           "money": 6000,
           "supplies": 3000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_KOU.gw",
           "action": "action_Pilot_EFSF_0079_N_ACE_KOU_Produce_Switch_G"
         },
         {
           "money": 6000,
           "supplies": 3000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_KOU.gw",
           "action": "action_Pilot_EFSF_0079_N_ACE_KOU_Produce_Switch_S"
         }
@@ -1287,8 +1341,8 @@
           "statMultipliers": {},
           "experienceMultiplier": 1.35,
           "nativeEffect": {
-            "Pilot_ExpUp_ActiveTime": 15.0,
-            "Pilot_ExpUp_CD": 90.0,
+            "Pilot_ExpUp_ActiveTime": 15,
+            "Pilot_ExpUp_CD": 90,
             "Pilot_ExpUp_ExpUp": 1.75
           },
           "effect": "Flash_1_N",
@@ -1301,8 +1355,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -1334,8 +1388,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_AtkUp_ActiveTime": 15.0,
-            "Pilot_AtkUp_CD": 90.0,
+            "Pilot_AtkUp_ActiveTime": 15,
+            "Pilot_AtkUp_CD": 90,
             "Pilot_AtkUp_AtkUp": 1.2
           },
           "effect": "Flash_1_N",
@@ -1348,8 +1402,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -1364,7 +1418,9 @@
       ],
       "unlockTech": [
         "Tech_EFSF_0079_T2_GPProject"
-      ]
+      ],
+      "personality": "aggressive",
+      "originFaction": "EFSF"
     },
     {
       "id": "Pilot_EFSF_0079_N_ACE_KRN",
@@ -1381,26 +1437,32 @@
         }
       },
       "baseStats": {
-        "shooting": 155.0,
-        "melee": 155.0,
-        "defense": 145.0,
-        "speed": 150.0,
-        "accuracy": 165.0,
-        "reaction": 155.0,
-        "leadership": 85.0,
-        "awakening": 35.0
+        "shooting": 155,
+        "melee": 155,
+        "defense": 145,
+        "speed": 150,
+        "accuracy": 165,
+        "reaction": 155,
+        "leadership": 85,
+        "awakening": 35
       },
-      "comprehension": 105.0,
+      "comprehension": 105,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 225,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -1433,8 +1495,8 @@
           "statMultipliers": {},
           "experienceMultiplier": 1.35,
           "nativeEffect": {
-            "Pilot_ExpUp_ActiveTime": 15.0,
-            "Pilot_ExpUp_CD": 90.0,
+            "Pilot_ExpUp_ActiveTime": 15,
+            "Pilot_ExpUp_CD": 90,
             "Pilot_ExpUp_ExpUp": 1.75
           },
           "effect": "Flash_1_N",
@@ -1447,8 +1509,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -1480,8 +1542,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_AtkUp_ActiveTime": 15.0,
-            "Pilot_AtkUp_CD": 90.0,
+            "Pilot_AtkUp_ActiveTime": 15,
+            "Pilot_AtkUp_CD": 90,
             "Pilot_AtkUp_AtkUp": 1.2
           },
           "effect": "Flash_1_N",
@@ -1494,8 +1556,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -1508,7 +1570,9 @@
           }
         }
       ],
-      "unlockTech": []
+      "unlockTech": [],
+      "personality": "aggressive",
+      "originFaction": "EFSF"
     },
     {
       "id": "Pilot_EFSF_0079_N_ACE_KSD",
@@ -1525,26 +1589,32 @@
         }
       },
       "baseStats": {
-        "shooting": 150.0,
-        "melee": 145.0,
-        "defense": 155.0,
-        "speed": 150.0,
-        "accuracy": 170.0,
-        "reaction": 165.0,
-        "leadership": 85.0,
-        "awakening": 55.0
+        "shooting": 150,
+        "melee": 145,
+        "defense": 155,
+        "speed": 150,
+        "accuracy": 170,
+        "reaction": 165,
+        "leadership": 85,
+        "awakening": 55
       },
-      "comprehension": 105.0,
+      "comprehension": 105,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 225,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -1565,14 +1635,14 @@
         {
           "money": 5000,
           "supplies": 2500,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_KSD.gw",
           "action": "action_Pilot_EFSF_0079_N_ACE_KSD_Produce_Switch_G"
         },
         {
           "money": 5000,
           "supplies": 2500,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_KSD.gw",
           "action": "action_Pilot_EFSF_0079_N_ACE_KSD_Produce_Switch_S"
         }
@@ -1598,8 +1668,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_AtkUp_ActiveTime": 15.0,
-            "Pilot_AtkUp_CD": 90.0,
+            "Pilot_AtkUp_ActiveTime": 15,
+            "Pilot_AtkUp_CD": 90,
             "Pilot_AtkUp_AtkUp": 1.2
           },
           "effect": "Flash_1_N",
@@ -1612,8 +1682,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -1628,7 +1698,9 @@
       ],
       "unlockTech": [
         "Tech_EFSF_0079_T2_GMModularizationPlan"
-      ]
+      ],
+      "personality": "sarcastic",
+      "originFaction": "EFSF"
     },
     {
       "id": "Pilot_EFSF_0079_N_ACE_RUT",
@@ -1645,26 +1717,32 @@
         }
       },
       "baseStats": {
-        "shooting": 160.0,
-        "melee": 155.0,
-        "defense": 160.0,
-        "speed": 150.0,
-        "accuracy": 160.0,
-        "reaction": 155.0,
-        "leadership": 75.0,
-        "awakening": 35.0
+        "shooting": 160,
+        "melee": 155,
+        "defense": 160,
+        "speed": 150,
+        "accuracy": 160,
+        "reaction": 155,
+        "leadership": 75,
+        "awakening": 35
       },
-      "comprehension": 105.0,
+      "comprehension": 105,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 225,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -1685,14 +1763,14 @@
         {
           "money": 5000,
           "supplies": 2500,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_RUT.gw",
           "action": "action_Pilot_EFSF_0079_N_ACE_RUT_Produce_Switch_G"
         },
         {
           "money": 5000,
           "supplies": 2500,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_RUT.gw",
           "action": "action_Pilot_EFSF_0079_N_ACE_RUT_Produce_Switch_S"
         }
@@ -1717,8 +1795,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_AccuracyUp_ActiveTime": 15.0,
-            "Pilot_AccuracyUp_CD": 90.0,
+            "Pilot_AccuracyUp_ActiveTime": 15,
+            "Pilot_AccuracyUp_CD": 90,
             "Pilot_AccuracyUp_AccuracyUp": 1.75
           },
           "effect": "Flash_1_N",
@@ -1731,8 +1809,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -1747,7 +1825,9 @@
       ],
       "unlockTech": [
         "Tech_EFSF_0079_T2_G4Plan"
-      ]
+      ],
+      "personality": "calm",
+      "originFaction": "EFSF"
     },
     {
       "id": "Pilot_EFSF_0079_N_ACE_RVL",
@@ -1764,14 +1844,14 @@
         }
       },
       "baseStats": {
-        "shooting": 135.0,
-        "melee": 135.0,
-        "defense": 170.0,
-        "speed": 145.0,
-        "accuracy": 155.0,
-        "reaction": 160.0,
-        "leadership": 195.0,
-        "awakening": 85.0
+        "shooting": 135,
+        "melee": 135,
+        "defense": 170,
+        "speed": 145,
+        "accuracy": 155,
+        "reaction": 160,
+        "leadership": 195,
+        "awakening": 85
       },
       "comprehension": 106.5,
       "initialLevel": 0,
@@ -1780,10 +1860,16 @@
       "costBase": 275,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -1804,14 +1890,14 @@
         {
           "money": 10000,
           "supplies": 5000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_RVL.gw",
           "action": "action_Pilot_EFSF_0079_N_ACE_RVL_Produce_Switch_G"
         },
         {
           "money": 10000,
           "supplies": 5000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_RVL.gw",
           "action": "action_Pilot_EFSF_0079_N_ACE_RVL_Produce_Switch_S"
         }
@@ -1836,9 +1922,9 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_LeaderShipUp_ActiveTime": 15.0,
-            "Pilot_LeaderShipUp_CD": 90.0,
-            "Pilot_LeaderShipUp_LeaderShipUp": 2.0
+            "Pilot_LeaderShipUp_ActiveTime": 15,
+            "Pilot_LeaderShipUp_CD": 90,
+            "Pilot_LeaderShipUp_LeaderShipUp": 2
           },
           "effect": "Flash_1_N",
           "sound": {
@@ -1850,8 +1936,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -1866,7 +1952,9 @@
       ],
       "unlockTech": [
         "Tech_EFSF_0079_EarlyTypeMSDevelopmentPlan"
-      ]
+      ],
+      "personality": "strategic",
+      "originFaction": "EFSF"
     },
     {
       "id": "Pilot_EFSF_0079_N_ACE_SDS",
@@ -1883,26 +1971,32 @@
         }
       },
       "baseStats": {
-        "shooting": 160.0,
-        "melee": 150.0,
-        "defense": 150.0,
-        "speed": 140.0,
-        "accuracy": 160.0,
-        "reaction": 160.0,
-        "leadership": 75.0,
-        "awakening": 35.0
+        "shooting": 160,
+        "melee": 150,
+        "defense": 150,
+        "speed": 140,
+        "accuracy": 160,
+        "reaction": 160,
+        "leadership": 75,
+        "awakening": 35
       },
-      "comprehension": 105.0,
+      "comprehension": 105,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 200,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -1937,8 +2031,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_ReactionUp_ActiveTime": 15.0,
-            "Pilot_ReactionUp_CD": 90.0,
+            "Pilot_ReactionUp_ActiveTime": 15,
+            "Pilot_ReactionUp_CD": 90,
             "Pilot_ReactionUp_ReactionUp": 1.75
           },
           "effect": "Flash_1_N",
@@ -1951,8 +2045,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -1965,7 +2059,9 @@
           }
         }
       ],
-      "unlockTech": []
+      "unlockTech": [],
+      "personality": "cautious",
+      "originFaction": "EFSF"
     },
     {
       "id": "Pilot_EFSF_0079_N_ACE_SHR",
@@ -1982,26 +2078,32 @@
         }
       },
       "baseStats": {
-        "shooting": 160.0,
-        "melee": 150.0,
-        "defense": 170.0,
-        "speed": 150.0,
-        "accuracy": 160.0,
-        "reaction": 175.0,
-        "leadership": 80.0,
-        "awakening": 35.0
+        "shooting": 160,
+        "melee": 150,
+        "defense": 170,
+        "speed": 150,
+        "accuracy": 160,
+        "reaction": 175,
+        "leadership": 80,
+        "awakening": 35
       },
-      "comprehension": 105.0,
+      "comprehension": 105,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 225,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -2022,14 +2124,14 @@
         {
           "money": 5000,
           "supplies": 2500,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_SHR.gw",
           "action": "action_Pilot_EFSF_0079_N_ACE_SHR_Produce_Switch_G"
         },
         {
           "money": 4000,
           "supplies": 2000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_SHR.gw",
           "action": "action_Pilot_EFSF_0079_N_ACE_SHR_Produce_Switch_S"
         }
@@ -2054,8 +2156,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_DefUp_ActiveTime": 15.0,
-            "Pilot_DefUp_CD": 90.0,
+            "Pilot_DefUp_ActiveTime": 15,
+            "Pilot_DefUp_CD": 90,
             "Pilot_DefUp_DefUp": 1.35
           },
           "effect": "Flash_1_N",
@@ -2068,8 +2170,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -2084,7 +2186,9 @@
       ],
       "unlockTech": [
         "Tech_EFSF_0079_EarlyTypeMSDevelopmentPlan"
-      ]
+      ],
+      "personality": "idealist",
+      "originFaction": "EFSF"
     },
     {
       "id": "Pilot_EFSF_0079_N_ACE_SLG",
@@ -2101,26 +2205,32 @@
         }
       },
       "baseStats": {
-        "shooting": 170.0,
-        "melee": 130.0,
-        "defense": 170.0,
-        "speed": 160.0,
-        "accuracy": 150.0,
-        "reaction": 150.0,
-        "leadership": 75.0,
-        "awakening": 35.0
+        "shooting": 170,
+        "melee": 130,
+        "defense": 170,
+        "speed": 160,
+        "accuracy": 150,
+        "reaction": 150,
+        "leadership": 75,
+        "awakening": 35
       },
-      "comprehension": 105.0,
+      "comprehension": 105,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 225,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -2141,14 +2251,14 @@
         {
           "money": 4000,
           "supplies": 2000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_SLG.gw",
           "action": "action_Pilot_EFSF_0079_N_ACE_SLG_Produce_Switch_G"
         },
         {
           "money": 4000,
           "supplies": 2000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_SLG.gw",
           "action": "action_Pilot_EFSF_0079_N_ACE_SLG_Produce_Switch_S"
         }
@@ -2173,8 +2283,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_ReactionUp_ActiveTime": 15.0,
-            "Pilot_ReactionUp_CD": 90.0,
+            "Pilot_ReactionUp_ActiveTime": 15,
+            "Pilot_ReactionUp_CD": 90,
             "Pilot_ReactionUp_ReactionUp": 1.75
           },
           "effect": "Flash_1_N",
@@ -2187,8 +2297,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -2203,7 +2313,9 @@
       ],
       "unlockTech": [
         "Tech_EFSF_0079_T2_GMKaiDevelopmentPlan"
-      ]
+      ],
+      "personality": "sarcastic",
+      "originFaction": "EFSF"
     },
     {
       "id": "Pilot_EFSF_0079_N_ACE_SYA",
@@ -2220,14 +2332,14 @@
         }
       },
       "baseStats": {
-        "shooting": 140.0,
-        "melee": 120.0,
-        "defense": 145.0,
-        "speed": 150.0,
-        "accuracy": 160.0,
-        "reaction": 170.0,
-        "leadership": 80.0,
-        "awakening": 85.0
+        "shooting": 140,
+        "melee": 120,
+        "defense": 145,
+        "speed": 150,
+        "accuracy": 160,
+        "reaction": 170,
+        "leadership": 80,
+        "awakening": 85
       },
       "comprehension": 106.5,
       "initialLevel": 0,
@@ -2236,10 +2348,16 @@
       "costBase": 225,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -2260,14 +2378,14 @@
         {
           "money": 5000,
           "supplies": 2500,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_SYA.gw",
           "action": "action_Pilot_EFSF_0079_N_ACE_SYA_Produce_Switch_G"
         },
         {
           "money": 5000,
           "supplies": 2500,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_SYA.gw",
           "action": "action_Pilot_EFSF_0079_N_ACE_SYA_Produce_Switch_S"
         }
@@ -2292,8 +2410,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_SpdUp_ActiveTime": 15.0,
-            "Pilot_SpdUp_CD": 90.0,
+            "Pilot_SpdUp_ActiveTime": 15,
+            "Pilot_SpdUp_CD": 90,
             "Pilot_SpdUp_SpdUp": 1.35
           },
           "effect": "Flash_1_N",
@@ -2306,8 +2424,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -2322,7 +2440,9 @@
       ],
       "unlockTech": [
         "Tech_EFSF_0079_T2_GMKaiDevelopmentPlan"
-      ]
+      ],
+      "personality": "calm",
+      "originFaction": "EFSF"
     },
     {
       "id": "Pilot_EFSF_0079_N_ACE_TAM",
@@ -2339,26 +2459,32 @@
         }
       },
       "baseStats": {
-        "shooting": 135.0,
-        "melee": 135.0,
-        "defense": 150.0,
-        "speed": 145.0,
-        "accuracy": 135.0,
-        "reaction": 150.0,
-        "leadership": 170.0,
-        "awakening": 35.0
+        "shooting": 135,
+        "melee": 135,
+        "defense": 150,
+        "speed": 145,
+        "accuracy": 135,
+        "reaction": 150,
+        "leadership": 170,
+        "awakening": 35
       },
-      "comprehension": 105.0,
+      "comprehension": 105,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 225,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -2379,14 +2505,14 @@
         {
           "money": 8000,
           "supplies": 4000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_TAM.gw",
           "action": "action_Pilot_EFSF_0079_N_ACE_TAM_Produce_Switch_G"
         },
         {
           "money": 8000,
           "supplies": 4000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_TAM.gw",
           "action": "action_Pilot_EFSF_0079_N_ACE_TAM_Produce_Switch_S"
         }
@@ -2411,9 +2537,9 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_LeaderShipUp_ActiveTime": 15.0,
-            "Pilot_LeaderShipUp_CD": 90.0,
-            "Pilot_LeaderShipUp_LeaderShipUp": 2.0
+            "Pilot_LeaderShipUp_ActiveTime": 15,
+            "Pilot_LeaderShipUp_CD": 90,
+            "Pilot_LeaderShipUp_LeaderShipUp": 2
           },
           "effect": "Flash_1_N",
           "sound": {
@@ -2425,8 +2551,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -2441,7 +2567,9 @@
       ],
       "unlockTech": [
         "Tech_EFSF_0079_GMDevelopmentPlan"
-      ]
+      ],
+      "personality": "strategic",
+      "originFaction": "EFSF"
     },
     {
       "id": "Pilot_EFSF_0079_N_ACE_WAK",
@@ -2458,26 +2586,32 @@
         }
       },
       "baseStats": {
-        "shooting": 135.0,
-        "melee": 135.0,
-        "defense": 150.0,
-        "speed": 145.0,
-        "accuracy": 135.0,
-        "reaction": 150.0,
-        "leadership": 165.0,
-        "awakening": 35.0
+        "shooting": 135,
+        "melee": 135,
+        "defense": 150,
+        "speed": 145,
+        "accuracy": 135,
+        "reaction": 150,
+        "leadership": 165,
+        "awakening": 35
       },
-      "comprehension": 105.0,
+      "comprehension": 105,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 225,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -2498,14 +2632,14 @@
         {
           "money": 8000,
           "supplies": 4000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_WAK.gw",
           "action": "action_Pilot_EFSF_0079_N_ACE_WAK_Produce_Switch_G"
         },
         {
           "money": 8000,
           "supplies": 4000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_WAK.gw",
           "action": "action_Pilot_EFSF_0079_N_ACE_WAK_Produce_Switch_S"
         }
@@ -2530,9 +2664,9 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_LeaderShipUp_ActiveTime": 15.0,
-            "Pilot_LeaderShipUp_CD": 90.0,
-            "Pilot_LeaderShipUp_LeaderShipUp": 2.0
+            "Pilot_LeaderShipUp_ActiveTime": 15,
+            "Pilot_LeaderShipUp_CD": 90,
+            "Pilot_LeaderShipUp_LeaderShipUp": 2
           },
           "effect": "Flash_1_N",
           "sound": {
@@ -2544,8 +2678,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -2560,7 +2694,9 @@
       ],
       "unlockTech": [
         "Tech_EFSF_0079_T2_GundamNTCustomPlan"
-      ]
+      ],
+      "personality": "strict",
+      "originFaction": "EFSF"
     },
     {
       "id": "Pilot_EFSF_0079_N_ACE_YDR",
@@ -2577,26 +2713,32 @@
         }
       },
       "baseStats": {
-        "shooting": 175.0,
-        "melee": 135.0,
-        "defense": 135.0,
-        "speed": 150.0,
-        "accuracy": 155.0,
-        "reaction": 155.0,
-        "leadership": 135.0,
-        "awakening": 35.0
+        "shooting": 175,
+        "melee": 135,
+        "defense": 135,
+        "speed": 150,
+        "accuracy": 155,
+        "reaction": 155,
+        "leadership": 135,
+        "awakening": 35
       },
-      "comprehension": 105.0,
+      "comprehension": 105,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 225,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -2617,14 +2759,14 @@
         {
           "money": 3000,
           "supplies": 1500,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_YDR.gw",
           "action": "action_Pilot_EFSF_0079_N_ACE_YDR_Produce_Switch_G"
         },
         {
           "money": 3000,
           "supplies": 1500,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_YDR.gw",
           "action": "action_Pilot_EFSF_0079_N_ACE_YDR_Produce_Switch_S"
         }
@@ -2649,8 +2791,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_SpdUp_ActiveTime": 15.0,
-            "Pilot_SpdUp_CD": 90.0,
+            "Pilot_SpdUp_ActiveTime": 15,
+            "Pilot_SpdUp_CD": 90,
             "Pilot_SpdUp_SpdUp": 1.35
           },
           "effect": "Flash_1_N",
@@ -2663,8 +2805,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -2679,7 +2821,9 @@
       ],
       "unlockTech": [
         "Tech_EFSF_0079_AntiMSPlan"
-      ]
+      ],
+      "personality": "strategic",
+      "originFaction": "EFSF"
     },
     {
       "id": "Pilot_EFSF_0079_N_ACE_YUU",
@@ -2696,26 +2840,32 @@
         }
       },
       "baseStats": {
-        "shooting": 160.0,
-        "melee": 155.0,
-        "defense": 165.0,
-        "speed": 175.0,
-        "accuracy": 165.0,
-        "reaction": 175.0,
-        "leadership": 105.0,
-        "awakening": 50.0
+        "shooting": 160,
+        "melee": 155,
+        "defense": 165,
+        "speed": 175,
+        "accuracy": 165,
+        "reaction": 175,
+        "leadership": 105,
+        "awakening": 50
       },
-      "comprehension": 105.0,
+      "comprehension": 105,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 250,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -2736,14 +2886,14 @@
         {
           "money": 5000,
           "supplies": 2500,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_YUU.gw",
           "action": "action_Pilot_EFSF_0079_N_ACE_YUU_Produce_Switch_G"
         },
         {
           "money": 5000,
           "supplies": 2500,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/EFSF_0079/Units/ACE/Pilot_EFSF_0079_N_ACE_YUU.gw",
           "action": "action_Pilot_EFSF_0079_N_ACE_YUU_Produce_Switch_S"
         }
@@ -2766,8 +2916,8 @@
           "statMultipliers": {},
           "experienceMultiplier": 1.35,
           "nativeEffect": {
-            "Pilot_ExpUp_ActiveTime": 15.0,
-            "Pilot_ExpUp_CD": 90.0,
+            "Pilot_ExpUp_ActiveTime": 15,
+            "Pilot_ExpUp_CD": 90,
             "Pilot_ExpUp_ExpUp": 1.75
           },
           "effect": "Flash_1_N",
@@ -2780,8 +2930,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -2836,8 +2986,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_AtkUp_ActiveTime": 15.0,
-            "Pilot_AtkUp_CD": 90.0,
+            "Pilot_AtkUp_ActiveTime": 15,
+            "Pilot_AtkUp_CD": 90,
             "Pilot_AtkUp_AtkUp": 1.2
           },
           "effect": "Flash_1_N",
@@ -2850,8 +3000,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -2866,7 +3016,9 @@
       ],
       "unlockTech": [
         "Tech_EFSF_0079_BlueDestinyProject"
-      ]
+      ],
+      "personality": "calm",
+      "originFaction": "EFSF"
     },
     {
       "id": "Pilot_ZEON_0079_N_ACE_AKHN",
@@ -2883,26 +3035,32 @@
         }
       },
       "baseStats": {
-        "shooting": 150.0,
-        "melee": 155.0,
-        "defense": 160.0,
-        "speed": 170.0,
-        "accuracy": 155.0,
-        "reaction": 150.0,
-        "leadership": 75.0,
-        "awakening": 35.0
+        "shooting": 150,
+        "melee": 155,
+        "defense": 160,
+        "speed": 170,
+        "accuracy": 155,
+        "reaction": 150,
+        "leadership": 75,
+        "awakening": 35
       },
-      "comprehension": 105.0,
+      "comprehension": 105,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 225,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -2923,14 +3081,14 @@
         {
           "money": 4000,
           "supplies": 2000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_AKHN.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_AKHN_Produce_Switch_G"
         },
         {
           "money": 4000,
           "supplies": 2000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_AKHN.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_AKHN_Produce_Switch_S"
         }
@@ -2955,8 +3113,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_SpdUp_ActiveTime": 15.0,
-            "Pilot_SpdUp_CD": 90.0,
+            "Pilot_SpdUp_ActiveTime": 15,
+            "Pilot_SpdUp_CD": 90,
             "Pilot_SpdUp_SpdUp": 1.35
           },
           "effect": "Flash_1_N",
@@ -2969,8 +3127,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -2985,7 +3143,9 @@
       ],
       "unlockTech": [
         "Tech_ZEON_0079_T2_NewTypeUnderwaterMSDevelopmentPlan"
-      ]
+      ],
+      "personality": "aggressive",
+      "originFaction": "ZEON"
     },
     {
       "id": "Pilot_ZEON_0079_N_ACE_ANG",
@@ -3002,26 +3162,32 @@
         }
       },
       "baseStats": {
-        "shooting": 165.0,
-        "melee": 180.0,
-        "defense": 165.0,
-        "speed": 160.0,
-        "accuracy": 170.0,
-        "reaction": 165.0,
-        "leadership": 100.0,
-        "awakening": 35.0
+        "shooting": 165,
+        "melee": 180,
+        "defense": 165,
+        "speed": 160,
+        "accuracy": 170,
+        "reaction": 165,
+        "leadership": 100,
+        "awakening": 35
       },
-      "comprehension": 105.0,
+      "comprehension": 105,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 250,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -3042,14 +3208,14 @@
         {
           "money": 6000,
           "supplies": 3000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_ANG.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_ANG_Produce_Switch_G"
         },
         {
           "money": 6000,
           "supplies": 3000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_ANG.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_ANG_Produce_Switch_S"
         }
@@ -3074,8 +3240,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_DefUp_ActiveTime": 15.0,
-            "Pilot_DefUp_CD": 90.0,
+            "Pilot_DefUp_ActiveTime": 15,
+            "Pilot_DefUp_CD": 90,
             "Pilot_DefUp_DefUp": 1.35
           },
           "effect": "Flash_1_N",
@@ -3088,8 +3254,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -3104,7 +3270,9 @@
       ],
       "unlockTech": [
         "Tech_ZEON_0079_T2_OperationStardust"
-      ]
+      ],
+      "personality": "zealous",
+      "originFaction": "ZEON"
     },
     {
       "id": "Pilot_ZEON_0079_N_ACE_ANS",
@@ -3121,26 +3289,32 @@
         }
       },
       "baseStats": {
-        "shooting": 170.0,
-        "melee": 140.0,
-        "defense": 150.0,
-        "speed": 150.0,
-        "accuracy": 170.0,
-        "reaction": 175.0,
-        "leadership": 80.0,
-        "awakening": 35.0
+        "shooting": 170,
+        "melee": 140,
+        "defense": 150,
+        "speed": 150,
+        "accuracy": 170,
+        "reaction": 175,
+        "leadership": 80,
+        "awakening": 35
       },
-      "comprehension": 105.0,
+      "comprehension": 105,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 225,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -3161,14 +3335,14 @@
         {
           "money": 6000,
           "supplies": 3000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_ANS.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_ANS_Produce_Switch_G"
         },
         {
           "money": 4000,
           "supplies": 2000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_ANS.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_ANS_Produce_Switch_S"
         }
@@ -3193,8 +3367,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_DefUp_ActiveTime": 15.0,
-            "Pilot_DefUp_CD": 90.0,
+            "Pilot_DefUp_ActiveTime": 15,
+            "Pilot_DefUp_CD": 90,
             "Pilot_DefUp_DefUp": 1.35
           },
           "effect": "Flash_1_N",
@@ -3207,8 +3381,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -3223,7 +3397,9 @@
       ],
       "unlockTech": [
         "Tech_ZEON_0079_ApsarasDevelopmentPlan"
-      ]
+      ],
+      "personality": "idealist",
+      "originFaction": "ZEON"
     },
     {
       "id": "Pilot_ZEON_0079_N_ACE_BNI",
@@ -3240,26 +3416,32 @@
         }
       },
       "baseStats": {
-        "shooting": 145.0,
-        "melee": 155.0,
-        "defense": 140.0,
-        "speed": 155.0,
-        "accuracy": 135.0,
-        "reaction": 145.0,
-        "leadership": 75.0,
-        "awakening": 35.0
+        "shooting": 145,
+        "melee": 155,
+        "defense": 140,
+        "speed": 155,
+        "accuracy": 135,
+        "reaction": 145,
+        "leadership": 75,
+        "awakening": 35
       },
-      "comprehension": 105.0,
+      "comprehension": 105,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 200,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -3280,14 +3462,14 @@
         {
           "money": 4000,
           "supplies": 2000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_BNI.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_BNI_Produce_Switch_G"
         },
         {
           "money": 4000,
           "supplies": 2000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_BNI.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_BNI_Produce_Switch_S"
         }
@@ -3313,8 +3495,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_AtkUp_ActiveTime": 15.0,
-            "Pilot_AtkUp_CD": 90.0,
+            "Pilot_AtkUp_ActiveTime": 15,
+            "Pilot_AtkUp_CD": 90,
             "Pilot_AtkUp_AtkUp": 1.2
           },
           "effect": "Flash_1_N",
@@ -3327,8 +3509,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -3343,7 +3525,9 @@
       ],
       "unlockTech": [
         "Tech_ZEON_0079_T2_UnitedMaintenancePlan"
-      ]
+      ],
+      "personality": "idealist",
+      "originFaction": "ZEON"
     },
     {
       "id": "Pilot_ZEON_0079_N_ACE_CHA",
@@ -3360,14 +3544,14 @@
         }
       },
       "baseStats": {
-        "shooting": 180.0,
-        "melee": 195.0,
-        "defense": 175.0,
-        "speed": 195.0,
-        "accuracy": 180.0,
-        "reaction": 185.0,
-        "leadership": 100.0,
-        "awakening": 85.0
+        "shooting": 180,
+        "melee": 195,
+        "defense": 175,
+        "speed": 195,
+        "accuracy": 180,
+        "reaction": 185,
+        "leadership": 100,
+        "awakening": 85
       },
       "comprehension": 106.5,
       "initialLevel": 0,
@@ -3376,10 +3560,16 @@
       "costBase": 300,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -3400,14 +3590,14 @@
         {
           "money": 8000,
           "supplies": 4000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_CHA.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_CHA_Produce_Switch_G"
         },
         {
           "money": 8000,
           "supplies": 4000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_CHA.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_CHA_Produce_Switch_S"
         }
@@ -3432,9 +3622,9 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_LeaderShipUp_ActiveTime": 15.0,
-            "Pilot_LeaderShipUp_CD": 90.0,
-            "Pilot_LeaderShipUp_LeaderShipUp": 2.0
+            "Pilot_LeaderShipUp_ActiveTime": 15,
+            "Pilot_LeaderShipUp_CD": 90,
+            "Pilot_LeaderShipUp_LeaderShipUp": 2
           },
           "effect": "Flash_1_N",
           "sound": {
@@ -3446,8 +3636,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -3478,8 +3668,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_ReactionUp_ActiveTime": 15.0,
-            "Pilot_ReactionUp_CD": 90.0,
+            "Pilot_ReactionUp_ActiveTime": 15,
+            "Pilot_ReactionUp_CD": 90,
             "Pilot_ReactionUp_ReactionUp": 1.75
           },
           "effect": "Flash_1_N",
@@ -3492,8 +3682,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -3508,7 +3698,9 @@
       ],
       "unlockTech": [
         "Tech_ZEON_0079_T2_NewTypeUnderwaterMSDevelopmentPlan"
-      ]
+      ],
+      "personality": "strategic",
+      "originFaction": "ZEON"
     },
     {
       "id": "Pilot_ZEON_0079_N_ACE_CIA",
@@ -3525,26 +3717,32 @@
         }
       },
       "baseStats": {
-        "shooting": 175.0,
-        "melee": 155.0,
-        "defense": 150.0,
-        "speed": 170.0,
-        "accuracy": 175.0,
-        "reaction": 175.0,
-        "leadership": 100.0,
-        "awakening": 25.0
+        "shooting": 175,
+        "melee": 155,
+        "defense": 150,
+        "speed": 170,
+        "accuracy": 175,
+        "reaction": 175,
+        "leadership": 100,
+        "awakening": 25
       },
-      "comprehension": 105.0,
+      "comprehension": 105,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 225,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -3565,14 +3763,14 @@
         {
           "money": 5000,
           "supplies": 2500,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_CIA.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_CIA_Produce_Switch_G"
         },
         {
           "money": 5000,
           "supplies": 2500,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_CIA.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_CIA_Produce_Switch_S"
         }
@@ -3597,8 +3795,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_ReactionUp_ActiveTime": 15.0,
-            "Pilot_ReactionUp_CD": 90.0,
+            "Pilot_ReactionUp_ActiveTime": 15,
+            "Pilot_ReactionUp_CD": 90,
             "Pilot_ReactionUp_ReactionUp": 1.75
           },
           "effect": "Flash_1_N",
@@ -3611,8 +3809,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -3629,7 +3827,9 @@
       "availableFactions": [
         "ZEON",
         "EFSF"
-      ]
+      ],
+      "personality": "sarcastic",
+      "originFaction": "ZEON"
     },
     {
       "id": "Pilot_ZEON_0079_N_ACE_DZL",
@@ -3646,26 +3846,32 @@
         }
       },
       "baseStats": {
-        "shooting": 150.0,
-        "melee": 160.0,
-        "defense": 170.0,
-        "speed": 140.0,
-        "accuracy": 155.0,
-        "reaction": 150.0,
-        "leadership": 170.0,
-        "awakening": 35.0
+        "shooting": 150,
+        "melee": 160,
+        "defense": 170,
+        "speed": 140,
+        "accuracy": 155,
+        "reaction": 150,
+        "leadership": 170,
+        "awakening": 35
       },
-      "comprehension": 105.0,
+      "comprehension": 105,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 250,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -3686,14 +3892,14 @@
         {
           "money": 8000,
           "supplies": 4000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_DZL.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_DZL_Produce_Switch_G"
         },
         {
           "money": 8000,
           "supplies": 4000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_DZL.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_DZL_Produce_Switch_S"
         }
@@ -3719,8 +3925,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_AtkUp_ActiveTime": 15.0,
-            "Pilot_AtkUp_CD": 90.0,
+            "Pilot_AtkUp_ActiveTime": 15,
+            "Pilot_AtkUp_CD": 90,
             "Pilot_AtkUp_AtkUp": 1.2
           },
           "effect": "Flash_1_N",
@@ -3733,8 +3939,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -3765,8 +3971,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_DefUp_ActiveTime": 15.0,
-            "Pilot_DefUp_CD": 90.0,
+            "Pilot_DefUp_ActiveTime": 15,
+            "Pilot_DefUp_CD": 90,
             "Pilot_DefUp_DefUp": 1.35
           },
           "effect": "Flash_1_N",
@@ -3779,8 +3985,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -3795,7 +4001,9 @@
       ],
       "unlockTech": [
         "Tech_ZEON_0079_T2_BaseDefenseMADevelopmentPlan"
-      ]
+      ],
+      "personality": "zealous",
+      "originFaction": "ZEON"
     },
     {
       "id": "Pilot_ZEON_0079_N_ACE_GNS",
@@ -3812,26 +4020,32 @@
         }
       },
       "baseStats": {
-        "shooting": 170.0,
-        "melee": 140.0,
-        "defense": 180.0,
-        "speed": 160.0,
-        "accuracy": 170.0,
-        "reaction": 160.0,
-        "leadership": 115.0,
-        "awakening": 35.0
+        "shooting": 170,
+        "melee": 140,
+        "defense": 180,
+        "speed": 160,
+        "accuracy": 170,
+        "reaction": 160,
+        "leadership": 115,
+        "awakening": 35
       },
-      "comprehension": 105.0,
+      "comprehension": 105,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 250,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -3852,14 +4066,14 @@
         {
           "money": 8000,
           "supplies": 4000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_GNS.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_GNS_Produce_Switch_G"
         },
         {
           "money": 10000,
           "supplies": 5000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_GNS.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_GNS_Produce_Switch_S"
         }
@@ -3882,8 +4096,8 @@
           "statMultipliers": {},
           "experienceMultiplier": 1.35,
           "nativeEffect": {
-            "Pilot_ExpUp_ActiveTime": 15.0,
-            "Pilot_ExpUp_CD": 90.0,
+            "Pilot_ExpUp_ActiveTime": 15,
+            "Pilot_ExpUp_CD": 90,
             "Pilot_ExpUp_ExpUp": 1.75
           },
           "effect": "Flash_1_N",
@@ -3896,8 +4110,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -3929,8 +4143,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_AtkUp_ActiveTime": 15.0,
-            "Pilot_AtkUp_CD": 90.0,
+            "Pilot_AtkUp_ActiveTime": 15,
+            "Pilot_AtkUp_CD": 90,
             "Pilot_AtkUp_AtkUp": 1.2
           },
           "effect": "Flash_1_N",
@@ -3943,8 +4157,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -3959,7 +4173,9 @@
       ],
       "unlockTech": [
         "Tech_ZEON_0079_ApsarasDevelopmentPlan"
-      ]
+      ],
+      "personality": "obsessive",
+      "originFaction": "ZEON"
     },
     {
       "id": "Pilot_ZEON_0079_N_ACE_GRM",
@@ -3976,26 +4192,32 @@
         }
       },
       "baseStats": {
-        "shooting": 135.0,
-        "melee": 135.0,
-        "defense": 135.0,
-        "speed": 165.0,
-        "accuracy": 155.0,
-        "reaction": 160.0,
-        "leadership": 150.0,
-        "awakening": 35.0
+        "shooting": 135,
+        "melee": 135,
+        "defense": 135,
+        "speed": 165,
+        "accuracy": 155,
+        "reaction": 160,
+        "leadership": 150,
+        "awakening": 35
       },
-      "comprehension": 105.0,
+      "comprehension": 105,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 225,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -4016,14 +4238,14 @@
         {
           "money": 6000,
           "supplies": 3000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_GRM.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_GRM_Produce_Switch_G"
         },
         {
           "money": 6000,
           "supplies": 3000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_GRM.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_GRM_Produce_Switch_S"
         }
@@ -4049,8 +4271,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_AtkUp_ActiveTime": 15.0,
-            "Pilot_AtkUp_CD": 90.0,
+            "Pilot_AtkUp_ActiveTime": 15,
+            "Pilot_AtkUp_CD": 90,
             "Pilot_AtkUp_AtkUp": 1.2
           },
           "effect": "Flash_1_N",
@@ -4063,8 +4285,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -4079,7 +4301,9 @@
       ],
       "unlockTech": [
         "Tech_ZEON_0079_NewGroundTypeMSDevelopmentPlan"
-      ]
+      ],
+      "personality": "proud",
+      "originFaction": "ZEON"
     },
     {
       "id": "Pilot_ZEON_0079_N_ACE_GRN",
@@ -4096,14 +4320,14 @@
         }
       },
       "baseStats": {
-        "shooting": 135.0,
-        "melee": 135.0,
-        "defense": 170.0,
-        "speed": 145.0,
-        "accuracy": 155.0,
-        "reaction": 160.0,
-        "leadership": 195.0,
-        "awakening": 80.0
+        "shooting": 135,
+        "melee": 135,
+        "defense": 170,
+        "speed": 145,
+        "accuracy": 155,
+        "reaction": 160,
+        "leadership": 195,
+        "awakening": 80
       },
       "comprehension": 106.5,
       "initialLevel": 0,
@@ -4112,10 +4336,16 @@
       "costBase": 275,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -4136,14 +4366,14 @@
         {
           "money": 10000,
           "supplies": 5000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_GRN.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_GRN_Produce_Switch_G"
         },
         {
           "money": 10000,
           "supplies": 5000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_GRN.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_GRN_Produce_Switch_S"
         }
@@ -4168,9 +4398,9 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_LeaderShipUp_ActiveTime": 15.0,
-            "Pilot_LeaderShipUp_CD": 90.0,
-            "Pilot_LeaderShipUp_LeaderShipUp": 2.0
+            "Pilot_LeaderShipUp_ActiveTime": 15,
+            "Pilot_LeaderShipUp_CD": 90,
+            "Pilot_LeaderShipUp_LeaderShipUp": 2
           },
           "effect": "Flash_1_N",
           "sound": {
@@ -4182,8 +4412,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -4198,7 +4428,9 @@
       ],
       "unlockTech": [
         "Tech_ZEON_0079_GroundTypeMSDevelopmentPlan"
-      ]
+      ],
+      "personality": "zealous",
+      "originFaction": "ZEON"
     },
     {
       "id": "Pilot_ZEON_0079_N_ACE_HBT",
@@ -4215,26 +4447,32 @@
         }
       },
       "baseStats": {
-        "shooting": 170.0,
-        "melee": 165.0,
-        "defense": 170.0,
-        "speed": 160.0,
-        "accuracy": 160.0,
-        "reaction": 155.0,
-        "leadership": 110.0,
-        "awakening": 35.0
+        "shooting": 170,
+        "melee": 165,
+        "defense": 170,
+        "speed": 160,
+        "accuracy": 160,
+        "reaction": 155,
+        "leadership": 110,
+        "awakening": 35
       },
-      "comprehension": 105.0,
+      "comprehension": 105,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 225,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -4269,9 +4507,9 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_LeaderShipUp_ActiveTime": 15.0,
-            "Pilot_LeaderShipUp_CD": 90.0,
-            "Pilot_LeaderShipUp_LeaderShipUp": 2.0
+            "Pilot_LeaderShipUp_ActiveTime": 15,
+            "Pilot_LeaderShipUp_CD": 90,
+            "Pilot_LeaderShipUp_LeaderShipUp": 2
           },
           "effect": "Flash_1_N",
           "sound": {
@@ -4283,8 +4521,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -4297,7 +4535,9 @@
           }
         }
       ],
-      "unlockTech": []
+      "unlockTech": [],
+      "personality": "strict",
+      "originFaction": "ZEON"
     },
     {
       "id": "Pilot_ZEON_0079_N_ACE_HRD",
@@ -4314,26 +4554,32 @@
         }
       },
       "baseStats": {
-        "shooting": 160.0,
-        "melee": 160.0,
-        "defense": 140.0,
-        "speed": 150.0,
-        "accuracy": 160.0,
-        "reaction": 155.0,
-        "leadership": 130.0,
-        "awakening": 35.0
+        "shooting": 160,
+        "melee": 160,
+        "defense": 140,
+        "speed": 150,
+        "accuracy": 160,
+        "reaction": 155,
+        "leadership": 130,
+        "awakening": 35
       },
-      "comprehension": 105.0,
+      "comprehension": 105,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 225,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -4368,9 +4614,9 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_LeaderShipUp_ActiveTime": 15.0,
-            "Pilot_LeaderShipUp_CD": 90.0,
-            "Pilot_LeaderShipUp_LeaderShipUp": 2.0
+            "Pilot_LeaderShipUp_ActiveTime": 15,
+            "Pilot_LeaderShipUp_CD": 90,
+            "Pilot_LeaderShipUp_LeaderShipUp": 2
           },
           "effect": "Flash_1_N",
           "sound": {
@@ -4382,8 +4628,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -4398,7 +4644,9 @@
       ],
       "unlockTech": [
         "Tech_ZEON_0079_T2_HygoggDevelopmentPlan"
-      ]
+      ],
+      "personality": "calm",
+      "originFaction": "ZEON"
     },
     {
       "id": "Pilot_ZEON_0079_N_ACE_JON",
@@ -4415,26 +4663,32 @@
         }
       },
       "baseStats": {
-        "shooting": 165.0,
-        "melee": 165.0,
-        "defense": 155.0,
-        "speed": 170.0,
-        "accuracy": 170.0,
-        "reaction": 165.0,
-        "leadership": 100.0,
-        "awakening": 25.0
+        "shooting": 165,
+        "melee": 165,
+        "defense": 155,
+        "speed": 170,
+        "accuracy": 170,
+        "reaction": 165,
+        "leadership": 100,
+        "awakening": 25
       },
-      "comprehension": 105.0,
+      "comprehension": 105,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 225,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -4455,14 +4709,14 @@
         {
           "money": 5000,
           "supplies": 2500,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_JON.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_JON_Produce_Switch_G"
         },
         {
           "money": 5000,
           "supplies": 2500,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_JON.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_JON_Produce_Switch_S"
         }
@@ -4487,8 +4741,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_SpdUp_ActiveTime": 15.0,
-            "Pilot_SpdUp_CD": 90.0,
+            "Pilot_SpdUp_ActiveTime": 15,
+            "Pilot_SpdUp_CD": 90,
             "Pilot_SpdUp_SpdUp": 1.35
           },
           "effect": "Flash_1_N",
@@ -4501,8 +4755,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -4517,7 +4771,9 @@
       ],
       "unlockTech": [
         "Tech_ZEON_0079_T2_DomPowerfulPlan"
-      ]
+      ],
+      "personality": "proud",
+      "originFaction": "ZEON"
     },
     {
       "id": "Pilot_ZEON_0079_N_ACE_KCA",
@@ -4534,26 +4790,32 @@
         }
       },
       "baseStats": {
-        "shooting": 140.0,
-        "melee": 125.0,
-        "defense": 140.0,
-        "speed": 155.0,
-        "accuracy": 155.0,
-        "reaction": 140.0,
-        "leadership": 165.0,
-        "awakening": 35.0
+        "shooting": 140,
+        "melee": 125,
+        "defense": 140,
+        "speed": 155,
+        "accuracy": 155,
+        "reaction": 140,
+        "leadership": 165,
+        "awakening": 35
       },
-      "comprehension": 105.0,
+      "comprehension": 105,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 225,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -4574,14 +4836,14 @@
         {
           "money": 10000,
           "supplies": 5000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_KCA.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_KCA_Produce_Switch_G"
         },
         {
           "money": 10000,
           "supplies": 5000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_KCA.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_KCA_Produce_Switch_S"
         }
@@ -4606,9 +4868,9 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_LeaderShipUp_ActiveTime": 15.0,
-            "Pilot_LeaderShipUp_CD": 90.0,
-            "Pilot_LeaderShipUp_LeaderShipUp": 2.0
+            "Pilot_LeaderShipUp_ActiveTime": 15,
+            "Pilot_LeaderShipUp_CD": 90,
+            "Pilot_LeaderShipUp_LeaderShipUp": 2
           },
           "effect": "Flash_1_N",
           "sound": {
@@ -4620,8 +4882,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -4636,7 +4898,9 @@
       ],
       "unlockTech": [
         "Tech_ZEON_0079_T2_NextGenerationMainstayMSBiddingPlan"
-      ]
+      ],
+      "personality": "strategic",
+      "originFaction": "ZEON"
     },
     {
       "id": "Pilot_ZEON_0079_N_ACE_KMSK",
@@ -4653,26 +4917,32 @@
         }
       },
       "baseStats": {
-        "shooting": 170.0,
-        "melee": 170.0,
-        "defense": 140.0,
-        "speed": 155.0,
-        "accuracy": 150.0,
-        "reaction": 155.0,
-        "leadership": 75.0,
-        "awakening": 35.0
+        "shooting": 170,
+        "melee": 170,
+        "defense": 140,
+        "speed": 155,
+        "accuracy": 150,
+        "reaction": 155,
+        "leadership": 75,
+        "awakening": 35
       },
-      "comprehension": 105.0,
+      "comprehension": 105,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 225,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -4693,14 +4963,14 @@
         {
           "money": 5000,
           "supplies": 2500,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_KMSK.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_KMSK_Produce_Switch_G"
         },
         {
           "money": 5000,
           "supplies": 2500,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_KMSK.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_KMSK_Produce_Switch_S"
         }
@@ -4725,8 +4995,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_SpdUp_ActiveTime": 15.0,
-            "Pilot_SpdUp_CD": 90.0,
+            "Pilot_SpdUp_ActiveTime": 15,
+            "Pilot_SpdUp_CD": 90,
             "Pilot_SpdUp_SpdUp": 1.35
           },
           "effect": "Flash_1_N",
@@ -4739,8 +5009,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -4755,7 +5025,9 @@
       ],
       "unlockTech": [
         "Tech_ZEON_0079_T2_UnitedMaintenancePlan"
-      ]
+      ],
+      "personality": "sarcastic",
+      "originFaction": "ZEON"
     },
     {
       "id": "Pilot_ZEON_0079_N_ACE_LLS",
@@ -4772,14 +5044,14 @@
         }
       },
       "baseStats": {
-        "shooting": 165.0,
-        "melee": 130.0,
-        "defense": 130.0,
-        "speed": 150.0,
-        "accuracy": 175.0,
-        "reaction": 165.0,
-        "leadership": 75.0,
-        "awakening": 145.0
+        "shooting": 165,
+        "melee": 130,
+        "defense": 130,
+        "speed": 150,
+        "accuracy": 175,
+        "reaction": 165,
+        "leadership": 75,
+        "awakening": 145
       },
       "comprehension": 106.5,
       "initialLevel": 0,
@@ -4788,10 +5060,16 @@
       "costBase": 250,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -4812,14 +5090,14 @@
         {
           "money": 5000,
           "supplies": 2500,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_LLS.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_LLS_Produce_Switch_G"
         },
         {
           "money": 6000,
           "supplies": 3000,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_LLS.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_LLS_Produce_Switch_S"
         }
@@ -4844,8 +5122,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_AwakeningUp_ActiveTime": 15.0,
-            "Pilot_AwakeningUp_CD": 90.0,
+            "Pilot_AwakeningUp_ActiveTime": 15,
+            "Pilot_AwakeningUp_CD": 90,
             "Pilot_AwakeningUp_AwakeningUp": 1.75
           },
           "effect": "Flash_1_N",
@@ -4858,8 +5136,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -4874,7 +5152,9 @@
       ],
       "unlockTech": [
         "Tech_ZEON_0079_T2_BaseDefenseMADevelopmentPlan"
-      ]
+      ],
+      "personality": "empathetic",
+      "originFaction": "ZEON"
     },
     {
       "id": "Pilot_ZEON_0079_N_ACE_MQV",
@@ -4891,26 +5171,32 @@
         }
       },
       "baseStats": {
-        "shooting": 140.0,
-        "melee": 155.0,
-        "defense": 135.0,
-        "speed": 165.0,
-        "accuracy": 155.0,
-        "reaction": 145.0,
-        "leadership": 160.0,
-        "awakening": 35.0
+        "shooting": 140,
+        "melee": 155,
+        "defense": 135,
+        "speed": 165,
+        "accuracy": 155,
+        "reaction": 145,
+        "leadership": 160,
+        "awakening": 35
       },
-      "comprehension": 105.0,
+      "comprehension": 105,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 225,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -4931,14 +5217,14 @@
         {
           "money": 5000,
           "supplies": 2500,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_MQV.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_MQV_Produce_Switch_G"
         },
         {
           "money": 5000,
           "supplies": 2500,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_MQV.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_MQV_Produce_Switch_S"
         }
@@ -4963,8 +5249,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_DefUp_ActiveTime": 15.0,
-            "Pilot_DefUp_CD": 90.0,
+            "Pilot_DefUp_ActiveTime": 15,
+            "Pilot_DefUp_CD": 90,
             "Pilot_DefUp_DefUp": 1.35
           },
           "effect": "Flash_1_N",
@@ -4977,8 +5263,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -4993,7 +5279,9 @@
       ],
       "unlockTech": [
         "Tech_ZEON_0079_T2_NextGenerationMainstayMSBiddingPlan"
-      ]
+      ],
+      "personality": "proud",
+      "originFaction": "ZEON"
     },
     {
       "id": "Pilot_ZEON_0079_N_ACE_MSG",
@@ -5010,26 +5298,32 @@
         }
       },
       "baseStats": {
-        "shooting": 155.0,
-        "melee": 175.0,
-        "defense": 175.0,
-        "speed": 150.0,
-        "accuracy": 160.0,
-        "reaction": 160.0,
-        "leadership": 85.0,
-        "awakening": 25.0
+        "shooting": 155,
+        "melee": 175,
+        "defense": 175,
+        "speed": 150,
+        "accuracy": 160,
+        "reaction": 160,
+        "leadership": 85,
+        "awakening": 25
       },
-      "comprehension": 105.0,
+      "comprehension": 105,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 225,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -5050,14 +5344,14 @@
         {
           "money": 5000,
           "supplies": 2500,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_MSG.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_MSG_Produce_Switch_G"
         },
         {
           "money": 5000,
           "supplies": 2500,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_MSG.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_MSG_Produce_Switch_S"
         }
@@ -5082,8 +5376,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_DefUp_ActiveTime": 15.0,
-            "Pilot_DefUp_CD": 90.0,
+            "Pilot_DefUp_ActiveTime": 15,
+            "Pilot_DefUp_CD": 90,
             "Pilot_DefUp_DefUp": 1.35
           },
           "effect": "Flash_1_N",
@@ -5096,8 +5390,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -5112,7 +5406,9 @@
       ],
       "unlockTech": [
         "Tech_ZEON_0079_T2_DomPowerfulPlan"
-      ]
+      ],
+      "personality": "calm",
+      "originFaction": "ZEON"
     },
     {
       "id": "Pilot_ZEON_0079_N_ACE_NMBS",
@@ -5129,26 +5425,32 @@
         }
       },
       "baseStats": {
-        "shooting": 150.0,
-        "melee": 185.0,
-        "defense": 170.0,
-        "speed": 180.0,
-        "accuracy": 175.0,
-        "reaction": 155.0,
-        "leadership": 70.0,
-        "awakening": 55.0
+        "shooting": 150,
+        "melee": 185,
+        "defense": 170,
+        "speed": 180,
+        "accuracy": 175,
+        "reaction": 155,
+        "leadership": 70,
+        "awakening": 55
       },
-      "comprehension": 105.0,
+      "comprehension": 105,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 250,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -5169,14 +5471,14 @@
         {
           "money": 5000,
           "supplies": 2500,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_NMBS.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_NMBS_Produce_Switch_G"
         },
         {
           "money": 5000,
           "supplies": 2500,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_NMBS.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_NMBS_Produce_Switch_S"
         }
@@ -5202,8 +5504,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_AtkUp_ActiveTime": 15.0,
-            "Pilot_AtkUp_CD": 90.0,
+            "Pilot_AtkUp_ActiveTime": 15,
+            "Pilot_AtkUp_CD": 90,
             "Pilot_AtkUp_AtkUp": 1.2
           },
           "effect": "Flash_1_N",
@@ -5216,8 +5518,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -5255,7 +5557,9 @@
       ],
       "unlockTech": [
         "Tech_ZEON_0079_GoufFlightTypeDevelopmentPlan"
-      ]
+      ],
+      "personality": "zealous",
+      "originFaction": "ZEON"
     },
     {
       "id": "Pilot_ZEON_0079_N_ACE_NRS",
@@ -5272,26 +5576,32 @@
         }
       },
       "baseStats": {
-        "shooting": 160.0,
-        "melee": 180.0,
-        "defense": 170.0,
-        "speed": 180.0,
-        "accuracy": 160.0,
-        "reaction": 190.0,
-        "leadership": 95.0,
-        "awakening": 35.0
+        "shooting": 160,
+        "melee": 180,
+        "defense": 170,
+        "speed": 180,
+        "accuracy": 160,
+        "reaction": 190,
+        "leadership": 95,
+        "awakening": 35
       },
-      "comprehension": 105.0,
+      "comprehension": 105,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 250,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -5312,14 +5622,14 @@
         {
           "money": 5000,
           "supplies": 2500,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_NRS.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_NRS_Produce_Switch_G"
         },
         {
           "money": 5000,
           "supplies": 2500,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_NRS.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_NRS_Produce_Switch_S"
         }
@@ -5345,8 +5655,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_AtkUp_ActiveTime": 15.0,
-            "Pilot_AtkUp_CD": 90.0,
+            "Pilot_AtkUp_ActiveTime": 15,
+            "Pilot_AtkUp_CD": 90,
             "Pilot_AtkUp_AtkUp": 1.2
           },
           "effect": "Flash_1_N",
@@ -5359,8 +5669,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -5375,7 +5685,9 @@
       ],
       "unlockTech": [
         "Tech_ZEON_0079_GroundTypeMSDevelopmentPlan"
-      ]
+      ],
+      "personality": "strict",
+      "originFaction": "ZEON"
     },
     {
       "id": "Pilot_ZEON_0079_N_ACE_RBR",
@@ -5392,26 +5704,32 @@
         }
       },
       "baseStats": {
-        "shooting": 160.0,
-        "melee": 180.0,
-        "defense": 190.0,
-        "speed": 180.0,
-        "accuracy": 165.0,
-        "reaction": 160.0,
-        "leadership": 120.0,
-        "awakening": 35.0
+        "shooting": 160,
+        "melee": 180,
+        "defense": 190,
+        "speed": 180,
+        "accuracy": 165,
+        "reaction": 160,
+        "leadership": 120,
+        "awakening": 35
       },
-      "comprehension": 105.0,
+      "comprehension": 105,
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
       "costBase": 250,
       "costPerLevel": 25,
       "experienceBase": 1500,
-      "experienceThresholds": [1500, 3000, 5000, 10000, 20000],
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
       "nativeGrowth": {
         "maxLevel": 3,
-        "experienceBase": 7500.0,
+        "experienceBase": 7500,
         "experienceMultiplier": 1.5
       },
       "maxStats": {
@@ -5432,14 +5750,14 @@
         {
           "money": 5000,
           "supplies": 2500,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_RBR.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_RBR_Produce_Switch_G"
         },
         {
           "money": 5000,
           "supplies": 2500,
-          "seconds": 30.0,
+          "seconds": 30,
           "source": "Units/Buildings/Beacon_ACE/UnitList/ZEON_0079/Units/ACE/Pilot_ZEON_0079_N_ACE_RBR.gw",
           "action": "action_Pilot_ZEON_0079_N_ACE_RBR_Produce_Switch_S"
         }
@@ -5465,8 +5783,8 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_AtkUp_ActiveTime": 15.0,
-            "Pilot_AtkUp_CD": 90.0,
+            "Pilot_AtkUp_ActiveTime": 15,
+            "Pilot_AtkUp_CD": 90,
             "Pilot_AtkUp_AtkUp": 1.2
           },
           "effect": "Flash_1_N",
@@ -5479,8 +5797,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -5511,9 +5829,9 @@
           },
           "experienceMultiplier": 1,
           "nativeEffect": {
-            "Pilot_LeaderShipUp_ActiveTime": 15.0,
-            "Pilot_LeaderShipUp_CD": 90.0,
-            "Pilot_LeaderShipUp_LeaderShipUp": 2.0
+            "Pilot_LeaderShipUp_ActiveTime": 15,
+            "Pilot_LeaderShipUp_CD": 90,
+            "Pilot_LeaderShipUp_LeaderShipUp": 2
           },
           "effect": "Flash_1_N",
           "sound": {
@@ -5525,8 +5843,8 @@
           "cooldownTurns": 5,
           "cooldownStarts": "effect_end",
           "nativeTiming": {
-            "durationSeconds": 15.0,
-            "cooldownSeconds": 90.0
+            "durationSeconds": 15,
+            "cooldownSeconds": 90
           },
           "localization": {
             "en": {
@@ -5541,7 +5859,9 @@
       ],
       "unlockTech": [
         "Tech_ZEON_0079_GroundTypeZakuDevelopmentPlan"
-      ]
+      ],
+      "personality": "calm",
+      "originFaction": "ZEON"
     }
   ],
   "customSkills": [
@@ -5565,8 +5885,8 @@
       },
       "experienceMultiplier": 1,
       "nativeEffect": {
-        "Pilot_AtkUp_ActiveTime": 15.0,
-        "Pilot_AtkUp_CD": 90.0,
+        "Pilot_AtkUp_ActiveTime": 15,
+        "Pilot_AtkUp_CD": 90,
         "Pilot_AtkUp_AtkUp": 1.2
       },
       "effect": "Flash_1_N",
@@ -5579,8 +5899,8 @@
       "cooldownTurns": 5,
       "cooldownStarts": "effect_end",
       "nativeTiming": {
-        "durationSeconds": 15.0,
-        "cooldownSeconds": 90.0
+        "durationSeconds": 15,
+        "cooldownSeconds": 90
       },
       "localization": {
         "en": {
@@ -5611,8 +5931,8 @@
       },
       "experienceMultiplier": 1,
       "nativeEffect": {
-        "Pilot_AccuracyUp_ActiveTime": 15.0,
-        "Pilot_AccuracyUp_CD": 90.0,
+        "Pilot_AccuracyUp_ActiveTime": 15,
+        "Pilot_AccuracyUp_CD": 90,
         "Pilot_AccuracyUp_AccuracyUp": 1.75
       },
       "effect": "Flash_1_N",
@@ -5625,8 +5945,8 @@
       "cooldownTurns": 5,
       "cooldownStarts": "effect_end",
       "nativeTiming": {
-        "durationSeconds": 15.0,
-        "cooldownSeconds": 90.0
+        "durationSeconds": 15,
+        "cooldownSeconds": 90
       },
       "localization": {
         "en": {
@@ -5657,8 +5977,8 @@
       },
       "experienceMultiplier": 1,
       "nativeEffect": {
-        "Pilot_ReactionUp_ActiveTime": 15.0,
-        "Pilot_ReactionUp_CD": 90.0,
+        "Pilot_ReactionUp_ActiveTime": 15,
+        "Pilot_ReactionUp_CD": 90,
         "Pilot_ReactionUp_ReactionUp": 1.75
       },
       "effect": "Flash_1_N",
@@ -5671,8 +5991,8 @@
       "cooldownTurns": 5,
       "cooldownStarts": "effect_end",
       "nativeTiming": {
-        "durationSeconds": 15.0,
-        "cooldownSeconds": 90.0
+        "durationSeconds": 15,
+        "cooldownSeconds": 90
       },
       "localization": {
         "en": {
@@ -5704,8 +6024,8 @@
       },
       "experienceMultiplier": 1,
       "nativeEffect": {
-        "Pilot_DefUp_ActiveTime": 15.0,
-        "Pilot_DefUp_CD": 90.0,
+        "Pilot_DefUp_ActiveTime": 15,
+        "Pilot_DefUp_CD": 90,
         "Pilot_DefUp_DefUp": 1.35
       },
       "effect": "Flash_1_N",
@@ -5718,8 +6038,8 @@
       "cooldownTurns": 5,
       "cooldownStarts": "effect_end",
       "nativeTiming": {
-        "durationSeconds": 15.0,
-        "cooldownSeconds": 90.0
+        "durationSeconds": 15,
+        "cooldownSeconds": 90
       },
       "localization": {
         "en": {
@@ -5750,9 +6070,9 @@
       },
       "experienceMultiplier": 1,
       "nativeEffect": {
-        "Pilot_LeaderShipUp_ActiveTime": 15.0,
-        "Pilot_LeaderShipUp_CD": 90.0,
-        "Pilot_LeaderShipUp_LeaderShipUp": 2.0
+        "Pilot_LeaderShipUp_ActiveTime": 15,
+        "Pilot_LeaderShipUp_CD": 90,
+        "Pilot_LeaderShipUp_LeaderShipUp": 2
       },
       "effect": "Flash_1_N",
       "sound": {
@@ -5764,8 +6084,8 @@
       "cooldownTurns": 5,
       "cooldownStarts": "effect_end",
       "nativeTiming": {
-        "durationSeconds": 15.0,
-        "cooldownSeconds": 90.0
+        "durationSeconds": 15,
+        "cooldownSeconds": 90
       },
       "localization": {
         "en": {
@@ -5796,8 +6116,8 @@
       },
       "experienceMultiplier": 1,
       "nativeEffect": {
-        "Pilot_SpdUp_ActiveTime": 15.0,
-        "Pilot_SpdUp_CD": 90.0,
+        "Pilot_SpdUp_ActiveTime": 15,
+        "Pilot_SpdUp_CD": 90,
         "Pilot_SpdUp_SpdUp": 1.35
       },
       "effect": "Flash_1_N",
@@ -5810,8 +6130,8 @@
       "cooldownTurns": 5,
       "cooldownStarts": "effect_end",
       "nativeTiming": {
-        "durationSeconds": 15.0,
-        "cooldownSeconds": 90.0
+        "durationSeconds": 15,
+        "cooldownSeconds": 90
       },
       "localization": {
         "en": {
