@@ -3006,6 +3006,29 @@ const Deployment = (() => {
       : seat === null
         ? "观战：等待两队部署。"
         : `${teamName(Rules.seatTeam(seat))}全队共享部署区 · 选中己方单位，再点击高亮空格调整位置。`;
+    const roster = byId("deploymentRoster");
+    roster.replaceChildren();
+    const controllable = game.units.filter((u) => u.hp > 0 && !u.embarked && canEditUnit(u));
+    for (const u of controllable) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.style.cssText = "display:flex;flex:0 0 auto;align-items:center;gap:5px;padding:5px;border:1px solid #65849c;border-radius:5px;min-width:100px";
+      button.setAttribute("role", "option");
+      button.setAttribute("aria-selected", String(selected === u.id));
+      const img = document.createElement("img");
+      img.src = unitIcon(u.model, u.pilot);
+      img.alt = "";
+      img.style.cssText = "width:30px;height:30px;object-fit:contain";
+      const label = document.createElement("span");
+      label.textContent = u.id + (u.deploymentStaged ? " · 待放置" : " · 已部署");
+      button.append(img, label);
+      button.onclick = () => { selected = u.id; update(); };
+      roster.append(button);
+    }
+    const canChange = canEdit();
+    byId("deploymentUnplace").disabled = !canChange || !canEditUnit(getUnit(selected));
+    byId("deploymentClear").disabled = !canChange;
+    byId("deploymentAuto").disabled = !canChange;
     byId("confirmDeployment").disabled = !canEdit() || !!pendingMovement();
     byId("confirmDeployment").textContent =
       seat !== null && game.deployment[seat] ? "已确认，等待对方" : "确认部署 (B)";
@@ -3049,6 +3072,21 @@ const Deployment = (() => {
       }
     }
   }
+  function deploymentAction(action, id = null) {
+    if (!canEdit()) return;
+    if (Net.active) Net.request(action, id ? { unitId: id } : {});
+    else {
+      try {
+        if (action === "stage_deployment") Rules.stageDeployment(game, team(), id);
+        if (action === "clear_deployment") Rules.clearDeployment(game, team());
+        if (action === "auto_place_deployment") Rules.autoPlaceDeployment(game, team());
+      } catch (error) { note(error.message); }
+      update();
+    }
+  }
+  byId("deploymentUnplace").onclick = () => deploymentAction("stage_deployment", selected);
+  byId("deploymentClear").onclick = () => deploymentAction("clear_deployment");
+  byId("deploymentAuto").onclick = () => deploymentAction("auto_place_deployment");
   byId("confirmDeployment").onclick = () => {
     if (pendingMovement()) return;
     if (!canEdit()) return;
