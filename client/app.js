@@ -2298,8 +2298,8 @@ function drawMap(now) {
   }
   SpriteEffects.setFogClip(null);
   if (typeof BattlefieldWeather !== "undefined") {
-    const state = BattlefieldWeather.draw(ctx, w, h, now, game.climateMap || Rules.getMap(game.mapId),
-      game.climateSettings || Net.snapshot?.settings || {}, game.round, game.climateSeed || game.seed || 1);
+    const state = BattlefieldWeather.draw(ctx, w, h, now, { ...Rules.getMap(game.mapId), ...game.climateMap, tiles: Rules.getMap(game.mapId).tiles },
+      game.climateSettings || Net.snapshot?.settings || {}, game.round, game.climateSeed || game.seed || 1, mapGeo);
     const label = byId("mapClimateStatus");
     if (label) {
       const next = state.space ? "宇宙 · 无天气/时间" :
