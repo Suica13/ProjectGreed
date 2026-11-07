@@ -17,6 +17,7 @@ let html = read("client/template.html").replace(
 );
 html = html.replace("__LANDSCAPE_VIEWPORT__", () => inlineScript(read("client/landscape-viewport.js")));
 html = html.replace("__BATTLEFIELD_CLIMATE__", () => inlineScript(read("shared/battlefield-climate.js")));
+html = html.replace("__CLIMATE_EFFECT_PRESETS__", () => "const CLIMATE_EFFECT_PRESETS = " + json(JSON.parse(read("client/climate-effects.json"))) + ";");
 html = html.replace("__UNIT_SENSORS__", () => inlineScript(read("shared/unit-sensors.js")));
 const project = JSON.parse(read("project.json"));
 const developmentTree = JSON.parse(read("shared/development-tree.json"));
