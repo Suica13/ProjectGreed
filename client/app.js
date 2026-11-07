@@ -23,6 +23,8 @@ let game = menuGame(),
   counterId = null,
   counterTargetId = null,
   log = [],
+  dialogueHistory = [],
+  dialogueBubbles = new Map(),
   assetsReady = false,
   clock = 0,
   moving = null,
@@ -201,6 +203,18 @@ function logUnit(unit) {
 function addLog(text) {
   log.unshift(text);
   Chat.setLog(log);
+}
+function recordBattleDialogue(event, speaker, target) {
+  if (typeof BattleDialogue === "undefined" || Net.active) return;
+  const record = BattleDialogue.generate({
+    event, speaker, target, sequence: log.length,
+    faction: speaker?.pilot?.faction || Rules.modelOf(speaker)?.faction,
+  });
+  if (!record) return;
+  const line = BattleDialogue.format(record);
+  dialogueHistory.push({ ...record, line, logIndex: log.length, round: game.round });
+  dialogueBubbles.set(record.speakerId, { text: record.text, until: performance.now() + 3500 });
+  addLog(line);
 }
 function playerNameClass(memberId, hostId = Net.snapshot?.hostId, selfId = Net.memberId) {
   return (
@@ -1852,6 +1866,29 @@ function drawMap(now) {
     if (pos.x+radius < 0 || pos.y+radius < 0 || pos.x-radius > w || pos.y-radius > h) continue;
     mapUnitPoses.push(pose);
   }
+  // Draw transient pilot speech over current map positions, never as game state.
+  if (dialogueBubbles.size) {
+    ctx.save();
+    ctx.font = "12px system-ui";
+    ctx.textAlign = "center";
+    for (const [id, bubble] of dialogueBubbles) {
+      if (bubble.until <= now) { dialogueBubbles.delete(id); continue; }
+      const pose = mapPosesById.get(id);
+      if (!pose) continue;
+      const text = bubble.text.slice(0, 40);
+      const width = Math.min(290, ctx.measureText(text).width + 22);
+      const x = Math.max(width / 2 + 4, Math.min(w - width / 2 - 4, pose.pos.x));
+      const y = Math.max(24, pose.pos.y - 42);
+      ctx.fillStyle = "rgba(10,25,36,0.92)";
+      ctx.strokeStyle = "#a8c9d8";
+      ctx.lineWidth = 1;
+      ctx.fillRect(x - width / 2, y - 19, width, 28);
+      ctx.strokeRect(x - width / 2, y - 19, width, 28);
+      ctx.fillStyle = "#f2f5f7";
+      ctx.fillText(text, x, y);
+    }
+    ctx.restore();
+  }
   // Ground overlays are drawn before every unit, including moving and dodging units.
   if (!immersive)
     for (const { u, pos } of mapUnitPoses)
@@ -2922,6 +2959,8 @@ function logEvent(event) {
   addLog(
     `${logUnit(a)} 使用${w.name} → ${logUnit(b)}：${event.hit ? formatNumber(event.damage) + "伤害" : "未命中"}${event.strikes ? `（命中 ${event.hitCount}/${event.strikeCount}）` : ""}${event.brokenParts?.length ? "，部位破坏：" + [...new Set(event.brokenParts)].map((part) => Rules.partNames[part] || part).join("、") : ""}${event.after <= 0 ? "，击破！" : ""}`,
   );
+  recordBattleDialogue(event.after <= 0 ? "kill" : event.hit ? "attack" : "miss", a, b);
+  if (event.hit && event.after > 0) recordBattleDialogue("hit", b, a);
 }
 // 推进已经结算好的演出事件与显示血量，不再次计算伤害。
 function progressBattle(now) {
