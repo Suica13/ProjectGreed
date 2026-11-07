@@ -26,6 +26,17 @@ const BattleDialogue = (() => {
       idealist: ["下一次一定要阻止他。"],
     },
   };
+  const additional = {
+    strategic: { attack: ["敌军阵形出现缺口，集中火力。", "按预定射界展开攻击。"], hit: ["重新部署，避免重复损失。"], kill: ["目标排除，推进下一阶段。"], miss: ["修正火控参数，重新计算。"] },
+    sarcastic: { attack: ["这种差事还真是麻烦啊。", "喂，别怪我没提醒你。"], hit: ["哎呀，这可真够受的。"], kill: ["看来运气站在我这边。"], miss: ["好吧，当我没说。"] },
+    strict: { attack: ["遵照命令，执行攻击！"], hit: ["保持纪律，不许后退！"], kill: ["肃清完成，继续执行任务。"], miss: ["不得浪费弹药！"] },
+    zealous: { attack: ["为了我们的理想，前进！"], hit: ["信念绝不会被击溃！"], kill: ["胜利属于我们的事业！"], miss: ["下一次绝不会失手！"] },
+    proud: { attack: ["见识一下真正的实力！"], hit: ["竟敢伤到我的机体！"], kill: ["你还差得远呢。"], miss: ["这不过是试探。"] },
+    obsessive: { attack: ["计划已经开始，谁也无法阻止！"], hit: ["绝不能让研究付诸东流！"], kill: ["终于，结果得到了证明！"], miss: ["不可能……重新调整！"] },
+    empathetic: { attack: ["请退开，我不想伤害你。"], hit: ["为什么一定要互相伤害？"], kill: ["又有一个生命消失了……"], miss: ["请不要再靠近了。"] },
+  };
+  for (const [trait, events] of Object.entries(additional))
+    for (const [event, phrases] of Object.entries(events)) lines[event][trait] = phrases;
   const factionLines = {
     EFSF: { attack: "联邦军各机，按命令开火！" },
     ZEON: { attack: "为了吉翁，进攻！" },
@@ -33,7 +44,7 @@ const BattleDialogue = (() => {
     AEUG: { attack: "奥古各机，掩护同伴！" },
     NEO_ZEON: { attack: "新吉翁的意志不会动摇！" },
   };
-  const personalities = ["calm", "aggressive", "cautious", "idealist"];
+  const personalities = ["calm", "aggressive", "cautious", "idealist", "strategic", "sarcastic", "strict", "zealous", "proud", "obsessive", "empathetic"];
   const backgrounds = { veteran: "老兵", rookie: "新兵", survivor: "幸存者", officer: "军官" };
   function hash(value) {
     let h = 2166136261;
@@ -55,7 +66,7 @@ const BattleDialogue = (() => {
     // Suppress most routine remarks to avoid flooding the battlefield and transcript.
     if (event !== "kill" && seed % 4 !== 0) return null;
     const pool = lines[event][trait];
-    const factionId = faction || pilot.faction || speaker.faction;
+    const factionId = pilot.originFaction || faction || pilot.faction || speaker.faction;
     const text = factionLines[factionId]?.[event] && seed % 5 === 0
       ? factionLines[factionId][event] : pool[seed % pool.length];
     return { event, speakerId: speaker.id, targetId: target?.id || null,
