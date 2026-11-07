@@ -23,3 +23,9 @@ Map authors can independently change weather weights, allowed weather, duration,
 The current surface overlay is screen-space, not per-tile material coverage. It is a visual prototype, not the final snow-on-rooftops implementation. Flashing is disabled on space maps and should eventually respect a reduced-flashing accessibility option. No audio, thunder, footsteps or per-unit splashes are included yet.
 
 The current build has not been validated in a live browser/Android environment; test the standalone HTML and large battles before release.
+
+## Terrain IDs
+
+New editable terrain types: `road` (road), `shallow_water` (ground-classified shallow water), `deep_water` (sea), `residential` (built-up area). Existing `snow`, `desert` and `rock` remain as snowfield, sandy terrain and mountain. Legacy `water` remains supported. Tile categories and per-terrain cover multipliers live in `shared/map-document.js`.
+
+New terrain metadata does not yet comprehensively update unit movement and terrain combat modifiers; those require a separate compatibility pass before new terrain IDs are used in published maps.
