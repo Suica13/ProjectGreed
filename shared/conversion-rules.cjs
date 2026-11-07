@@ -233,6 +233,12 @@ function globals(prefab, rules) {
     // Preserve native/base values for reimports and relative editor adjustments.
     for (const key of ["min", "minRange", "max", "range"])
       if (Number.isFinite(weapon[key])) weapon[key] = Math.max(1, Math.ceil(weapon[key] * w.range));
+    // Area irradiation dimensions are explicit tactical cells, not imported
+    // ordinary-weapon ranges. Apply editor deltas afterwards as usual.
+    if (weapon.type === "irradiation" && weapon.areaWidth > 0) {
+      weapon.range = base.range;
+      weapon.minRange = base.minRange;
+    }
     if (weapon.min !== undefined && weapon.max !== undefined)
       weapon.min = Math.min(weapon.min, weapon.max);
     if (weapon.minRange !== undefined && weapon.range !== undefined)

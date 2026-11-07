@@ -947,6 +947,13 @@
               }
             }
           ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "converted_skill"
+          ],
+          "convertedSkill": "Irradiation"
         }
       }
     },
@@ -1079,6 +1086,11 @@
       "source": "Template/Unit/Skill/Transform_LandFly.gw",
       "status": "review",
       "name": "Transform_LandFly"
+    },
+    {
+      "id": "Irradiation",
+      "status": "adapted",
+      "name": "MEGA光束照射：方向照射、蓄力、逐机命中；原版固定演出与判定射程独立"
     }
   ],
   "weaponKits": [
@@ -1089,14 +1101,44 @@
       "weapons": [
         "TITANS_PMX_000_MS",
         "Common_ArmGL",
-        "TITANS_PMX_000_MegaBeamCannon",
         "EF_BeamSaber_AF_Large_Yellow_A",
         "Common_Push_A"
       ]
     }
   ],
   "description": "希罗克所设计的一款一击脱离用TMS,十分擅长奇袭作战",
-  "skills": [],
+  "skills": [
+    {
+      "ref": "TITANS_PMX_000_MegaBeamCannon__skill_irradiation__lv1",
+      "overrides": {
+        "requiredParts": [
+          "backpack"
+        ],
+        "muzzle": {
+          "mounts": [
+            {
+              "root": true,
+              "offset": {
+                "x": 20.0,
+                "y": -5.0
+              }
+            }
+          ]
+        },
+        "chargeMuzzle": {
+          "mounts": [
+            {
+              "root": true,
+              "offset": {
+                "x": 20.0,
+                "y": 15.0
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "kitAliases": {
     "kit_0": "standard",
     "kit_1": "standard",

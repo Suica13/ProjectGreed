@@ -127,9 +127,16 @@ window.CatalogDeveloper = (() => {
         if (parts[0] === "unit" && parts[1] === "previewScale")
           parts = ["presentation", "previewScale"];
       }
-      if (parts.at(-1) === "damage") parts[parts.length - 1] = "damagePerShot";
+      const totalDamage = parts.at(-1) === "damage";
+      if (totalDamage) parts.pop();
       let found = source;
       for (const part of parts) found = found?.[part];
+      if (totalDamage)
+        found =
+          found?.damagePerShot ??
+          (found?.damageComponents
+            ? Object.values(found.damageComponents).reduce((a, b) => a + b, 0)
+            : undefined);
       if (Number.isFinite(found)) numericBase = found;
       numericHint = node("small", "", "catalog-numeric-delta");
     }
@@ -240,7 +247,7 @@ window.CatalogDeveloper = (() => {
       core,
       "基础单发伤害",
       Object.values(view.damageComponents || {}).reduce((sum, value) => sum + value, 0),
-      (value) => Schema.setDamage(weapon, value),
+      (value) => Schema.setDamage(weapon, value, { preserveSteps: true }),
       "number",
       prefix + ".damage",
     );
@@ -297,7 +304,7 @@ window.CatalogDeveloper = (() => {
         Schema.labels[channel],
         view.damageComponents?.[channel] || 0,
         (value) => {
-          Schema.setComponentDamage(weapon, channel, value);
+          Schema.setComponentDamage(weapon, channel, value, { preserveSteps: true });
           damageInput.value = weapon.damagePerShot;
           damageInput.dispatchEvent(new Event("input"));
         },
@@ -319,6 +326,91 @@ window.CatalogDeveloper = (() => {
     channels.append(
       node("small", "穿甲仅忽略对应比例的抗性；固定减伤、护盾覆盖和最终减伤正常生效。"),
     );
+    const payloads = Schema.payloadGroups(weapon);
+    if (payloads.length) {
+      const panel = section(parent, "复合武装：独立攻击载荷");
+      panel.append(
+        node(
+          "small",
+          "基础伤害只调整继承基础载荷的发射段；以下独立载荷可分别修改，不改变发数、顺序和演出。伤害为倍率前每发数值。",
+        ),
+      );
+      for (const [groupIndex, group] of payloads.entries()) {
+        const index = group.indices[0],
+          step = weapon.attack.steps[index];
+        const detail = node("details"),
+          summary = node("summary"),
+          grid = node("div", "", "catalog-editor-grid");
+        const total = () =>
+          Object.values(step.damageComponents || weapon.damageComponents).reduce(
+            (a, b) => a + b,
+            0,
+          );
+        const updateSummary = () =>
+          (summary.textContent = `独立载荷 ${groupIndex + 1} · 第 ${group.indices.map((i) => i + 1).join("、")} 段 · ${group.shots} 发 · 单发 ${total()} · 倍率 ×${step.damageMultiplier ?? 1}`);
+        const controls = new Map();
+        const amount = input(
+          grid,
+          "独立单发伤害",
+          total(),
+          (value) => {
+            Schema.setStepDamage(weapon, group.indices, value);
+            for (const [channel, control] of controls) {
+              control.value = step.damageComponents[channel] || 0;
+              control.dispatchEvent(new Event("input"));
+            }
+            updateSummary();
+          },
+          "number",
+          prefix + `.attack.steps.${index}.damage`,
+        );
+        amount.min = "0";
+        for (const channel of [
+          "beam",
+          "shell",
+          "melee",
+          "meleeBeam",
+          "meleeShell",
+          "beamAP",
+          "shellAP",
+          "meleeAP",
+          "meleeBeamAP",
+          "meleeShellAP",
+        ]) {
+          const control = input(
+            grid,
+            Schema.labels[channel],
+            (step.damageComponents || weapon.damageComponents)[channel] || 0,
+            (value) => {
+              Schema.setStepComponentDamage(weapon, group.indices, channel, value);
+              amount.value = total();
+              updateSummary();
+            },
+            "number",
+            prefix + `.attack.steps.${index}.damageComponents.${channel}`,
+          );
+          control.min = "0";
+          controls.set(channel, control);
+        }
+        const multiplier = input(
+          grid,
+          "伤害倍率",
+          step.damageMultiplier ?? 1,
+          (value) => {
+            for (const i of group.indices) weapon.attack.steps[i].damageMultiplier = value;
+            updateSummary();
+          },
+          "number",
+          prefix + `.attack.steps.${index}.damageMultiplier`,
+        );
+        multiplier.min = "0";
+        multiplier.max = "10";
+        detail.dataset.payloadStep = String(index);
+        updateSummary();
+        detail.append(summary, grid);
+        panel.append(detail);
+      }
+    }
     const targets = section(parent, "目标倍率（1 = 100%）");
     weapon.targetModifiers ??= {};
     for (const key of ["ground", "space", "air", "water"])
@@ -1162,7 +1254,9 @@ window.CatalogDeveloper = (() => {
         Object.assign(PRODUCTION_CATALOG, next.production);
         Rules.eras = [
           ...new Set(
-            ART.prefabs.flatMap((prefab) => prefab.tags).filter((tag) => /^\d{4}(?:T[12])?$/.test(tag)),
+            ART.prefabs
+              .flatMap((prefab) => prefab.tags)
+              .filter((tag) => /^\d{4}(?:T[12])?$/.test(tag)),
           ),
         ].sort();
         activeFaction = window.editorConnection.faction = nextFaction;

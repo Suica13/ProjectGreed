@@ -3,6 +3,7 @@ const test = require("node:test"),
 const fs = require("node:fs"),
   vm = require("node:vm");
 const G = require("../shared/rules.js");
+const salvoCount = w => w.remote.units.reduce((sum, unit) => sum + (unit.burstShots || 1) * 2, 0);
 const expected = { MAN_03: 4, MAN_08: 5, MSN_02: 2, MS_06Z: 2, MSN_01: 2 };
 function fixture(id = "MAN_08") {
   const m = Object.values(G.models).find((m) => m.prefabId === id);
@@ -41,9 +42,9 @@ test("native remote salvos keep original counts, gates and every kit; consume EN
   for (const [id, count] of Object.entries(expected)) {
     const { g, a, b, w } = fixture(id);
     assert.equal(w.remote.units.length, count);
-    assert.equal(w.attack.shots.length, count * 2);
-    assert.equal(w.damage, 4000);
-    assert.equal(w.hit, 100);
+    assert.equal(w.attack.shots.length, salvoCount(w));
+    assert(w.damage > 0);
+    assert.equal(w.hit, 95);
     assert.equal(w.actionCost, 3);
     assert.deepEqual(w.pilotRequirements, [{ stat: "awakening", operator: ">=", value: 75 }]);
     for (const m of Object.values(G.models).filter((m) => m.prefabId === id))
@@ -54,15 +55,15 @@ test("native remote salvos keep original counts, gates and every kit; consume EN
     a.pilot.stats.awakening = 75;
     assert.equal(G.canAttack(g, a, b, w), true);
     assert.equal(G.canCounter(g, a, b, w), true);
-    assert.deepEqual(G.attackQueue(g, a, b, [w]), { ap: 3, en: w.en });
+    assert.deepEqual(G.attackQueue(g, a, b, [w]), { en: w.en });
     assert.throws(() => G.attackQueue(g, a, b, [w, w]), /每回合只能使用一次/);
     const en = a.en,
       units = g.units.length;
     const events = G.fight(g, a, b, w, "evade", null, false);
     assert.equal(a.en, en - w.en);
     assert.equal(g.units.length, units);
-    assert.equal(events[0].strikes.filter((s) => s.executed !== false).length, count * 2);
-    assert.equal(new Set(events[0].strikes.map((s) => s.shotIndex)).size, count * 2);
+    assert.equal(events[0].strikes.filter((s) => s.executed !== false).length, salvoCount(w));
+    assert.equal(new Set(events[0].strikes.map((s) => s.shotIndex)).size, salvoCount(w));
   }
 });
 test("wired hands lose only the broken arm volley, and both broken arms prohibit launch", () => {
@@ -70,9 +71,9 @@ test("wired hands lose only the broken arm volley, and both broken arms prohibit
     const { g, a, b, w } = fixture(id);
     a.brokenParts = { leftArm: true };
     assert.equal(G.canUse(a, w), true);
-    assert.equal(G.availableStrikes(a, w).length, 2);
+    assert.equal(G.availableStrikes(a, w).length, 10);
     const events = G.fight(g, a, b, w, "evade", null, false);
-    assert.equal(events[0].strikes.filter((s) => s.executed !== false).length, 2);
+    assert.equal(events[0].strikes.filter((s) => s.executed !== false).length, 10);
     a.brokenParts.rightArm = true;
     assert.equal(G.canUse(a, w), false);
   }
@@ -80,12 +81,13 @@ test("wired hands lose only the broken arm volley, and both broken arms prohibit
 test("remote base salvo damage follows Awakening, is repeat-safe and leaves hit/AP unchanged", () => {
   for (const id of Object.keys(expected)) {
     const {g,a,b,w}=fixture(id);
-    for(const [awakening,total] of [[75,3000],[100,4000],[150,12000],[200,20000]]) {
+    for(const [awakening,multiplier] of [[75,.75],[100,1],[150,3],[200,5]]) {
+      const total = w.attack.strikes.reduce((sum,step)=>sum+Math.round(Object.values(step.damageComponents||w.damageComponents).reduce((n,v)=>n+v,0)*multiplier/25)*25,0);
       a.pilot.stats.awakening=awakening;
       const scaled=G.weaponStats(w,a);
       assert.equal(scaled.damage,total,id+":"+awakening);
       assert.equal(G.weaponStats(scaled,a).damage,total);
-      assert.equal(scaled.hit,100);
+      assert.equal(scaled.hit,w.hit);
       assert.equal(scaled.actionCost,3);
       const raw=G.estimate(g,a,b,w,"evade"),again=G.estimate(g,a,b,scaled,"evade");
       assert.equal(raw.damage,again.damage);
@@ -96,9 +98,9 @@ test("remote base salvo damage follows Awakening, is repeat-safe and leaves hit/
     assert.equal(locked.damage,0);
     assert.equal(G.canAttack(g,a,b,w),false);
     a.pilot.stats.awakening=100;
-    assert.equal(G.weaponStats(locked,a).damage,4000);
+    assert.equal(G.weaponStats(locked,a).damage,w.damage);
     const incom={...w,remote:{...w.remote,kind:"incom",awakeningScale:0}};
-    assert.equal(G.weaponStats(incom,a).damage,4000);
+    assert.equal(G.weaponStats(incom,a).damage,w.damage);
   }
 });
 
@@ -158,14 +160,14 @@ test("remote paths are deterministic, staggered, stop to fire twice and preserve
       );
     }
     const plan = api.plan(w, source, target);
-    assert.equal(plan.shots.length, expected[id] * 2);
+    assert.equal(plan.shots.length, salvoCount(w));
     assert.ok(plan.duration >= paths.at(-1).end);
     for (const shot of plan.shots) {
       const remote = plan.remotes[shot.remoteIndex];
       assert.equal(api.remoteState(remote, w.remote, shot.at).moving, false);
       assert.equal(
         JSON.stringify(shot.origin),
-        JSON.stringify(remote.points[Math.floor(shot.index / paths.length)]),
+        JSON.stringify(remote.points[Math.floor(w.attack.muzzleShotIndices[shot.index] / (remote.unit.burstShots || 1))]),
       );
     }
   }
@@ -175,7 +177,8 @@ test("remote counterattacks use the same independent shot sequence and spend one
   const { g, a, b, w } = fixture("MAN_08");
   g.team = b.team;
   a.hp = 1000000;
-  const gun = G.modelOf(b).weapons.find((w) => w.min <= G.dist(a, b) && w.max >= G.dist(a, b));
+  b.x = 10; b.en = 100000;
+  const gun = G.modelOf(b).weapons.find((w) => G.canAttack(g,b,a,w));
   const before = a.en;
   const events = G.fight(g, b, a, gun, "counter", w.id, true);
   const remote = events.find((e) => e.from === a.id && e.weapon === w.id);

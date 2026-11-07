@@ -149,14 +149,14 @@ test("real WebSocket ready/assembly/start paths enforce stock and keep licenses 
   r = await b.action("confirm_formation", { licenses: { Type61: true } });
   assert.equal(r.phase, "deployment");
   assert.equal(room.game.units.filter((u) => u.ownerSeat === 0).length, 1);
-  assert.equal(room.seats[0].inventory.Type61, 1);
-  assert.equal(room.seats[0].kits.Type61__standard, 0);
+  assert.equal(room.seats[0].inventory.Type61, 2);
+  assert.equal(room.seats[0].kits.Type61__standard, 1);
   const reserve = r.economyAwards.find(a => a.kind === "deployment");
-  assert.equal(reserve.stockUsed.inventory.Type61, 3); // recipient is player B
+  assert.deepEqual(reserve.stockUsed, {inventory:{},kits:{}}); // launch does not deduct stock
   const ownDeployment = await a.wait(frame => frame.type === "state" && frame.phase === "deployment" &&
     frame.economyAwards.some(award => award.kind === "deployment"));
   const ownReceipt = ownDeployment.economyAwards.find(a => a.kind === "deployment");
-  assert.equal(ownReceipt.stockUsed.inventory.Type61, 1);
+  assert.deepEqual(ownReceipt.stockUsed, {inventory:{},kits:{}});
   assert.equal(a.state.members.find(m => m.id === b.joined.memberId).inventory, undefined);
   assert.equal(room.game.units.filter((u) => u.ownerSeat === 1).length, 3);
   assert.equal(room.technologyStartPoints[a.joined.memberId].EFSF,23900);
@@ -408,4 +408,35 @@ for (const mode of ["regular", "quick"]) test(`WebSocket ${mode} spawns unresear
   await a.action("confirm_formation",{formation});const state=await b.action("confirm_formation",{formation});
   assert.equal(state.phase,"deployment");
   assert.equal(app.rooms.get("STOCKONLY").game.units.filter(u=>G.modelOf(u).prefabId===lockedEntry.unitId).length,2);
+});
+
+
+test("MEGA irradiation WebSocket result is authoritative and duplicate requests cannot charge or damage twice", async t => {
+  const app=createServer({host:"127.0.0.1",port:0});const address=await app.listen();
+  const a=new Peer(`ws://127.0.0.1:${address.port}/ws`), b=new Peer(`ws://127.0.0.1:${address.port}/ws`);
+  t.after(async()=>{a.ws.terminate();b.ws.terminate();await app.close();});
+  await a.join("create","MEGA",{Type61:true});await b.join("join","MEGA",{Type61:true});
+  await b.action("set_ready",{ready:true,formation:army(3)});
+  await a.action("start_game",{formation:army(1)});
+  await a.action("confirm_formation");await b.action("confirm_formation");
+  await a.action("confirm_deployment");await b.action("confirm_deployment");
+  const room=app.rooms.get("MEGA"),g=room.game,u=g.units.find(u=>u.ownerSeat===0);
+  u.model=Object.keys(G.models).find(id=>G.models[id].prefabId==="MSZ_010");
+  Object.assign(u,{x:3,y:8,en:G.modelOf(u).en,acted:false});
+  const enemies=g.units.filter(u=>u.ownerSeat===1);
+  enemies.forEach((unit,i)=>Object.assign(unit,{x:8,y:8+i,hp:1000000,shield:0}));
+  g.tiles.forEach(row=>row.fill("plain"));g.fogMode="disabled";g.team=0;
+  const skill=G.unitSkills(u).find(s=>s.type==="irradiation"),en=u.en,id=randomUUID();
+  const result=await a.action("skill",{unitId:u.id,skillId:skill.id,x:4,y:8},{id});
+  assert.equal(result.type,"state",JSON.stringify(result));assert.equal(result.phase,"playback");
+  const effect=result.playback.skillEffect;
+  assert.equal(effect.areaWidth,3);assert.equal(effect.to.x-effect.from.x,10);
+  assert.deepEqual(new Set(effect.hits.map(hit=>hit.unitId)),new Set(enemies.slice(0,2).map(u=>u.id)));
+  assert.equal(u.en,en*.5);
+  const state=JSON.stringify(g.units.map(u=>[u.hp,u.en,u.shield]));
+  const duplicate=await a.action("skill",{unitId:u.id,skillId:skill.id,x:4,y:8},{id,revision:0});
+  assert.equal(duplicate.playback.id,result.playback.id);
+  assert.equal(JSON.stringify(g.units.map(u=>[u.hp,u.en,u.shield])),state);
+  const other=await b.wait(frame=>frame.type==="state"&&frame.playback?.id===result.playback.id);
+  assert.equal(other.playback.skillEffect.areaWidth,3);
 });

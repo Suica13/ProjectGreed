@@ -17,6 +17,14 @@ const TileMapView = (() => {
       const img = images.get(src);
       return img && img.complete !== false && (img.naturalWidth || img.width) > 0 ? img : null;
     }
+    function retainImages(sources = []) {
+      const keep = new Set(sources);
+      for (const [src, img] of images) if (!keep.has(src)) {
+        if (!loadImage) { img.onload = img.onerror = null; img.src = ""; }
+        images.delete(src);
+      }
+      indexes = new WeakMap();
+    }
     function index(doc) {
       if (!indexes.has(doc))
         indexes.set(doc, {
@@ -70,6 +78,7 @@ const TileMapView = (() => {
     return {
       draw,
       drawTile,
+      retainImages,
       image,
       invalidate: () => {
         indexes = new WeakMap();

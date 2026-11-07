@@ -217,7 +217,7 @@ const WeaponEffects = (() => {
       const remoteIndex = weapon.remote ? weapon.attack.muzzleIndices[index] : null;
       const remote = remotes[remoteIndex];
       const remoteCycle = remote
-        ? weapon.attack.muzzleIndices.slice(0, index).filter((i) => i === remoteIndex).length
+        ? Math.floor(weapon.attack.muzzleIndices.slice(0, index).filter((i) => i === remoteIndex).length / (remote.unit.burstShots || 1))
         : 0;
       const origin = remote
         ? { ...remote.points[remoteCycle] }
@@ -872,6 +872,28 @@ const WeaponEffects = (() => {
       ctx.restore();
     }
   }
+  function drawRemoteTrail(ctx, weapon, plan, shot, age, source, size) {
+    const trail = plan.remotes?.[shot.remoteIndex]?.unit.trail;
+    const image = SpriteRenderer.images[trail?.asset];
+    if (!image || age < 0) return;
+    const dx = shot.destination.x - shot.origin.x, dy = shot.destination.y - shot.origin.y;
+    const interval = trail.intervalSeconds, lifetime = trail.lifeSeconds;
+    const last = Math.min(age, shot.visibleUntil - shot.at);
+    // Sample native emission times directly: no particle objects, timers or RNG.
+    for (let index = Math.max(0, Math.ceil((age - lifetime) / interval)); index <= Math.floor(last / interval); index++) {
+      const emitted = index * interval, fade = (age - emitted) / lifetime;
+      if (fade < 0 || fade >= 1) continue;
+      const t = emitted / shot.flight;
+      const scale = source.scale * size * (trail.scaleFrom + (trail.scaleTo - trail.scaleFrom) * fade);
+      ctx.save();
+      ctx.globalAlpha *= trail.alpha * (1 - fade);
+      ctx.translate(shot.origin.x + dx * t, shot.origin.y + dy * t);
+      ctx.rotate(Math.atan2(dy, dx) + Math.PI / 2);
+      ctx.scale(scale, scale);
+      ctx.drawImage(image, -image.width / 2, -image.height / 2);
+      ctx.restore();
+    }
+  }
   function drawUnclipped(ctx, weapon, plan, time, source, event, size, pose, layer) {
     if (weapon.projectile?.motion === "tether") {
       drawTether(ctx, weapon, plan, time, source, event, size, pose, layer);
@@ -886,6 +908,7 @@ const WeaponEffects = (() => {
       const image = SpriteRenderer.images[projectile.asset];
       if (!image) continue;
       const age = time - shot.at;
+      if (weapon.remote) drawRemoteTrail(ctx, weapon, plan, shot, age, source, size);
       if (age < 0 || time > shot.visibleUntil) continue;
       const travel = age / shot.flight,
         dx = shot.destination.x - shot.origin.x,

@@ -66,13 +66,13 @@ const SkillControls = (() => {
         .toLocaleString(undefined, { maximumFractionDigits: 2 });
       if (Number.isFinite(skill.enCost)) {
         if (I18n.language === "en")
-          return `Damage ${damage} × 1 = ${damage}; range ${skill.range}, accuracy ${skill.baseHit}%; ${skill.actionCost} AP and ${skill.enCost} EN; cooldown ${skill.cooldownTurns} turns. Hits each unit along the beam once, including allies.`;
+          return `Damage ${damage} × 1 = ${damage}; range ${skill.range}${skill.areaWidth ? `, width ${skill.areaWidth}` : ""}, accuracy ${skill.baseHit}%; ${skill.actionCost} AP and ${skill.enCost} EN; cooldown ${skill.cooldownTurns} turns. Hits each unit along the beam once, including allies.`;
         if (I18n.language === "ja")
-          return `ダメージ ${damage} × 1 = ${damage}；射程${skill.range}、命中${skill.baseHit}%。消費${skill.actionCost} AP・${skill.enCost} EN、冷却${skill.cooldownTurns}ターン。射線上の味方を含む各機に1回判定。`;
-        return `基础伤害 ${damage} × 1 = ${damage}；射程 ${skill.range} 格，命中 ${skill.baseHit}%；消耗 ${skill.actionCost} AP、${skill.enCost} EN，冷却 ${skill.cooldownTurns} 个己方回合。对沿途每台单位（含友军）判定一次。`;
+          return `ダメージ ${damage} × 1 = ${damage}；射程${skill.range}${skill.areaWidth ? `・幅${skill.areaWidth}マス` : ""}、命中${skill.baseHit}%。消費${skill.actionCost} AP・${skill.enCost} EN、冷却${skill.cooldownTurns}ターン。射線上の味方を含む各機に1回判定。`;
+        return `基础伤害 ${damage} × 1 = ${damage}；射程 ${skill.range} 格${skill.areaWidth ? `，宽度 ${skill.areaWidth} 格` : ""}，命中 ${skill.baseHit}%；消耗 ${skill.actionCost} AP、${skill.enCost} EN，冷却 ${skill.cooldownTurns} 个己方回合。对沿途每台单位（含友军）判定一次。`;
       }
       return I18n.text(
-        `基础伤害 ${damage} × 1 = ${damage}；射程 ${skill.range} 格，命中 ${skill.baseHit}%；消耗 ${skill.actionCost} AP、${skill.enCost !== undefined ? skill.enCost + " EN" : skill.enCostPercent + "%最大EN"}，冷却 ${skill.cooldownTurns} 个己方回合。对沿途每台单位（含友军）判定一次。`,
+        `基础伤害 ${damage} × 1 = ${damage}；射程 ${skill.range} 格${skill.areaWidth ? `，宽度 ${skill.areaWidth} 格` : ""}，命中 ${skill.baseHit}%；消耗 ${skill.actionCost} AP、${skill.enCost !== undefined ? skill.enCost + " EN" : skill.enCostPercent + "%最大EN"}，冷却 ${skill.cooldownTurns} 个己方回合。对沿途每台单位（含友军）判定一次。`,
       );
     }
     if (skill.type === "recon" && skill.reconMode === "camera") {

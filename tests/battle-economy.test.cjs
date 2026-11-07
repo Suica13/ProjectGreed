@@ -602,11 +602,11 @@ test('aborted matches do not produce settlement audit records',t=>{
 });
 
 
-test("counted stock reserves once, returns survivors and awards fixed research only at settlement", t => {
+test("counted stock stays intact until settlement deducts only casualties and awards fixed research", t => {
   const f = fixture(t, {faction:"EFSF", strength:4});
   const own = f.room.seats[0], enemy = f.room.seats[1];
-  assert.equal(own.inventory.Type61,8); assert.equal(own.kits.Type61__standard,8);
-  assert.equal(enemy.inventory.Type61,9);
+  assert.equal(own.inventory.Type61,10); assert.equal(own.kits.Type61__standard,10);
+  assert.equal(enemy.inventory.Type61,10);
   assert.equal(f.frames.get(f.clients[0]).economyAwards.filter(a=>a.kind==="deployment").length,1);
   f.ally.hp=0;
   f.kill();
@@ -617,7 +617,7 @@ test("counted stock reserves once, returns survivors and awards fixed research o
   const winner = f.frames.get(f.clients[0]), loser = f.frames.get(f.clients[1]);
   assert.equal(winner.techAwards.reduce((sum,a)=>sum+a.points,0),660);
   assert.equal(loser.techAwards.reduce((sum,a)=>sum+a.points,0),540);
-  assert.equal(winner.economyAwards.find(a=>a.kind==="result").stockReturned.inventory.Type61,1);
+  assert.equal(winner.economyAwards.find(a=>a.kind==="result").stockLost.inventory.Type61,1);
   assert.equal(own.inventory.Type61,9); assert.equal(own.kits.Type61__standard,9);
   assert.equal(enemy.inventory.Type61,9); assert.equal(enemy.kits.Type61__standard,9);
   const before=JSON.stringify([f.room.economyAwards,f.room.techAwards,own.inventory]);
@@ -636,12 +636,12 @@ test("quick stock settlement uses fixed research and save-loaded battles never r
 });
 
 
-test("host interruption returns survivors once without technology or victory rewards", t => {
+test("host interruption settles actual casualties once without technology or victory rewards", t => {
   const f=fixture(t); f.ally.hp=0;
   f.act(0,"return_room");
   const view=f.frames.get(f.clients[0]);
   const returned=view.economyAwards.find(a=>a.kind==="return");
-  assert.equal(returned.stockReturned.inventory.Type61,1);
+  assert.equal(returned.stockLost.inventory.Type61,1);
   assert.equal(f.room.seats[0].inventory.Type61,9);
   assert.equal(f.room.seats[1].inventory.Type61,10);
   assert.deepEqual(view.techAwards,[]);
@@ -764,4 +764,30 @@ for (const mode of ["regular", "quick"]) test(`authoritative ${mode} victory bas
   const rate = mode === "quick" ? .1 : 1;
   assert.equal(award.money, 9700 * rate);
   assert.equal(award.supplies, 19400 * rate);
+});
+
+
+test("closing and resuming regular battle keeps deployed stock until one final settlement", t => {
+  const f = fixture(t);
+  const player = f.room.seats[0];
+  const original = structuredClone({ inventory: player.inventory, kits: player.kits });
+  f.ally.hp = 0;
+  f.engine.disconnect(f.clients[0]);
+  assert.deepEqual({ inventory: player.inventory, kits: player.kits }, original);
+  assert(f.room.economyAwards.filter(a => a.memberId === player.id)
+    .every(a => !a.stockLost && !Object.keys(a.stockUsed?.inventory || {}).length));
+  const resumed = { readyState: 1 };
+  f.engine.join(resumed, { mode: "resume", room: "REWARD", token: player.token, characterFaction: "PMC" });
+  f.clients[0] = resumed;
+  assert.deepEqual({ inventory: player.inventory, kits: player.kits }, original);
+  f.kill();
+  assert.equal(player.inventory.Type61, 10);
+  f.finish();
+  const award = f.frames.get(resumed).economyAwards.find(a => a.kind === "result");
+  assert.deepEqual(award.stockLost, { inventory: { Type61: 1 }, kits: { Type61__standard: 1 } });
+  assert.equal(player.inventory.Type61, 9);
+  assert.equal(player.kits.Type61__standard, 9);
+  f.act(0, "sync");
+  assert.equal(player.inventory.Type61, 9);
+  assert.equal(f.frames.get(resumed).economyAwards.filter(a => a.kind === "result").length, 1);
 });

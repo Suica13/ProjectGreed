@@ -476,7 +476,7 @@ main { grid-template-columns: 310px minmax(260px, 1fr) 245px; }
   </head>
   <body>
     <header>
-      <div><strong>PROJECT GREED</strong><span>地图编辑器 · V95</span></div>
+      <div><strong>PROJECT GREED</strong><span>地图编辑器 · V96</span></div>
       <nav aria-label="文件操作">
         <button id="newMap">新建</button><button id="importMap">导入地图</button>
         <button id="exportProject">导出工程</button
@@ -1344,6 +1344,14 @@ const TileMapView = (() => {
       const img = images.get(src);
       return img && img.complete !== false && (img.naturalWidth || img.width) > 0 ? img : null;
     }
+    function retainImages(sources = []) {
+      const keep = new Set(sources);
+      for (const [src, img] of images) if (!keep.has(src)) {
+        if (!loadImage) { img.onload = img.onerror = null; img.src = ""; }
+        images.delete(src);
+      }
+      indexes = new WeakMap();
+    }
     function index(doc) {
       if (!indexes.has(doc))
         indexes.set(doc, {
@@ -1397,6 +1405,7 @@ const TileMapView = (() => {
     return {
       draw,
       drawTile,
+      retainImages,
       image,
       invalidate: () => {
         indexes = new WeakMap();

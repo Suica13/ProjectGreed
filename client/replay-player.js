@@ -281,6 +281,7 @@ window.ReplayPlayer = (() => {
     await request("record_upload_finish", { uploadId });
   }
   function begin(isShared) {
+    BattleAssets.release();
     if (!active)
       saved = { game, phase, page: pageView, snapshot: Net.snapshot, quick: byId("quick").checked };
     active = true;
@@ -295,7 +296,7 @@ window.ReplayPlayer = (() => {
     setPageView("game");
   }
   function stop(restore = true) {
-    BattleAssets.cancel();
+    BattleAssets.release();
     session++;
     active = false;
     shared = false;
@@ -317,7 +318,7 @@ window.ReplayPlayer = (() => {
         Net.snapshot = live || saved.snapshot;
         if (Net.snapshot) Chat.setSnapshot(Net.snapshot);
         setPageView(saved.page);
-        if (Net.active && live) Net.applySnapshot(live);
+        if (Net.active && Net.snapshot) Net.applySnapshot(Net.snapshot);
         else update();
       }
     }

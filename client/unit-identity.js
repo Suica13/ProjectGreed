@@ -35,25 +35,78 @@ const UnitIdentity = (() => {
       team: "队伍" + (unit.team + 1),
     };
   }
-  const portraitImages = new Map();
+  const portraitImages = new Map(),
+    portraitQueue = [];
+  let portraitLoads = 0;
+  function loadPortraits() {
+    while (portraitLoads < 4 && portraitQueue.length) {
+      const entry = portraitQueue.shift();
+      if (portraitImages.get(entry.source) !== entry) continue;
+      portraitLoads++;
+      const image = new Image();
+      image.decoding = "async";
+      const finish = () => {
+        image.onload = image.onerror = null;
+        image.removeAttribute("src");
+        portraitLoads--;
+        loadPortraits();
+      };
+      image.onload = () => {
+        try {
+          if (
+            portraitImages.get(entry.source) === entry &&
+            image.naturalWidth &&
+            image.naturalHeight
+          ) {
+            const canvas = document.createElement("canvas");
+            canvas.width = canvas.height = 64;
+            const crop = Math.min(image.naturalWidth, image.naturalHeight);
+            canvas
+              .getContext("2d")
+              .drawImage(
+                image,
+                (image.naturalWidth - crop) / 2,
+                (image.naturalHeight - crop) / 2,
+                crop,
+                crop,
+                0,
+                0,
+                64,
+                64,
+              );
+            entry.surface = canvas;
+          }
+        } finally {
+          finish();
+        }
+      };
+      image.onerror = finish;
+      image.src = entry.source;
+    }
+  }
   function drawPilotPortrait(ctx, pilot, x, y, size) {
     const source = PilotSystem.portrait(pilot);
-    let image = portraitImages.get(source);
-    if (!image) {
-      image = new Image();
-      // Bound uploaded-portrait memory across long sessions.
-      if (portraitImages.size >= 128) portraitImages.delete(portraitImages.keys().next().value);
-      portraitImages.set(source, image);
-      image.src = source;
+    let entry = portraitImages.get(source);
+    if (!entry) {
+      entry = { source, surface: null };
+      portraitImages.set(source, entry);
+      portraitQueue.push(entry);
+      // 512 fixed-size thumbnails use at most 8 MiB of pixel data.
+      if (portraitImages.size > 512) {
+        const oldest = portraitImages.keys().next().value,
+          removed = portraitImages.get(oldest);
+        portraitImages.delete(oldest);
+        if (removed.surface) removed.surface.width = removed.surface.height = 0;
+      }
+      loadPortraits();
+    } else {
+      portraitImages.delete(source);
+      portraitImages.set(source, entry);
     }
     ctx.save();
     ctx.fillStyle = "#30343b";
     ctx.fillRect(x, y, size, size);
-    if (image.complete && image.naturalWidth && image.naturalHeight) {
-      const crop = Math.min(image.naturalWidth, image.naturalHeight);
-      ctx.drawImage(image, (image.naturalWidth - crop) / 2,
-        (image.naturalHeight - crop) / 2, crop, crop, x, y, size, size);
-    }
+    if (entry.surface) ctx.drawImage(entry.surface, x, y, size, size);
     ctx.strokeStyle = "#a9b8c8";
     ctx.lineWidth = 1;
     ctx.strokeRect(x, y, size, size);
@@ -76,25 +129,17 @@ const UnitIdentity = (() => {
     let image = unitImages.get(key);
     if (!image) {
       image = new Image();
-      if (unitImages.size >= 256)
-        unitImages.delete(unitImages.keys().next().value);
+      if (unitImages.size >= 256) unitImages.delete(unitImages.keys().next().value);
       unitImages.set(key, image);
       image.src = unitIcon(unit.model, unit.pilot);
     }
     const size = Math.max(10, Math.min(28, tile * 0.9));
     const x = position.x - size / 2,
       y = position.y - size / 2;
-    if (image.complete && image.naturalWidth)
-      ctx.drawImage(image, x, y, size, size);
+    if (image.complete && image.naturalWidth) ctx.drawImage(image, x, y, size, size);
     if (unit.pilot?.name) {
       const badge = Math.max(7, Math.min(12, size * 0.45));
-      drawPilotPortrait(
-        ctx,
-        unit.pilot,
-        x + size - badge * 0.8,
-        y + size - badge * 0.8,
-        badge,
-      );
+      drawPilotPortrait(ctx, unit.pilot, x + size - badge * 0.8, y + size - badge * 0.8, badge);
     }
     ctx.restore();
   }
@@ -147,5 +192,14 @@ const UnitIdentity = (() => {
     ctx.fill();
     ctx.stroke();
   }
-  return { colors, viewerSeat, relation, owner, drawRing, drawCommandAura, drawPilotPortrait, drawMapSymbol };
+  return {
+    colors,
+    viewerSeat,
+    relation,
+    owner,
+    drawRing,
+    drawCommandAura,
+    drawPilotPortrait,
+    drawMapSymbol,
+  };
 })();

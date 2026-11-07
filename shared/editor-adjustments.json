@@ -16,10 +16,36 @@
     },
     "EF_RGC_83_DoubleBeamCannon__lv1": {
       "/max": 1,
-      "/attackRounds": 1
+      "/attackRounds": 1,
+      "/hit": 10
     },
     "EF_GMRifle__lv1": {
       "/attackRounds": 1
+    },
+    "TITANS_FedayeenRifle__lv1": {
+      "/damagePerShot": -10593.75,
+      "/damageComponents/beam": -8149.0384615385,
+      "/damageComponents/beamAP": -2444.7115384615
+    },
+    "TITANS_FedayeenRifle_BS_BF_B__lv1": {
+      "/damagePerShot": -1000,
+      "/damageComponents/melee": 2000
+    },
+    "Common_ShieldMS__lv2": {
+      "/damagePerShot": -375,
+      "/damageComponents/shell": -375
+    },
+    "TITANS_RX_121_BR_Double__lv1": {
+      "/damagePerShot": -1500,
+      "/damageComponents/beam": -1500
+    },
+    "AEUG_PrototypeClayBazooka__lv1": {
+      "/damagePerShot": -2000,
+      "/damageComponents/shell": -2000
+    },
+    "AEUG_RMS_099_BeamGun__lv1": {
+      "/damagePerShot": -625,
+      "/damageComponents/beam": -625
     }
   },
   "prices": {}

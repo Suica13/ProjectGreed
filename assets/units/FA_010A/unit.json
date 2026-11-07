@@ -625,6 +625,13 @@
               }
             }
           ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "converted_skill"
+          ],
+          "convertedSkill": "Irradiation"
         }
       }
     },
@@ -1701,6 +1708,11 @@
       "id": "movement",
       "name": "地面移动",
       "status": "implemented"
+    },
+    {
+      "id": "Irradiation",
+      "status": "adapted",
+      "name": "MEGA光束照射：方向照射、蓄力、逐机命中；原版固定演出与判定射程独立"
     }
   ],
   "weaponKits": [
@@ -1709,7 +1721,6 @@
       "name": "标准套件",
       "cost": 0,
       "weapons": [
-        "AEUG_FA_010A_MegaBeamCannon",
         "Common_DoubleVulcan_MS",
         "AEUG_FA_010A_BR",
         "AEUG_FA_010A_BeamCannon",
@@ -1720,7 +1731,40 @@
     }
   ],
   "description": "为了实验全装甲ZZ而制造的试验机",
-  "skills": [],
+  "skills": [
+    {
+      "ref": "AEUG_FA_010A_MegaBeamCannon__skill_irradiation__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "muzzle": {
+          "mounts": [
+            {
+              "root": true,
+              "offset": {
+                "x": 13.0,
+                "y": 42.0
+              }
+            }
+          ]
+        },
+        "chargeMuzzle": {
+          "mounts": [
+            {
+              "root": true,
+              "offset": {
+                "x": 13.0,
+                "y": 52.0
+              }
+            }
+          ]
+        },
+        "level": 1,
+        "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_FA_010A_MegaBeamCannon.gw"
+      }
+    }
+  ],
   "kitAliases": {
     "kit_0": "standard",
     "kit_1": "standard",

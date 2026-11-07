@@ -590,3 +590,48 @@ test("faction libraries download separately, cached switches and preview closing
     await app.close();
   }
 });
+
+test("compound payload controls independently edit and persist the grenade", async ({ page }) => {
+  test.setTimeout(120000);
+  const f = editorFixture(),
+    app = createDeveloperServer({ port: 0, store: f.store, catalog: f.catalog });
+  const address = await app.listen();
+  let ref = null;
+  page.on("request", (request) => {
+    const url = new URL(request.url());
+    if (url.pathname === "/api/editor/weapon" && request.method() === "GET")
+      ref = url.searchParams.get("ref");
+  });
+  try {
+    await login(page, "http://127.0.0.1:" + address.port);
+    await page.locator("#editorFactionSwitch").selectOption("NEO_ZEON");
+    await expect(page.locator("#editorFactionSwitch")).toBeEnabled();
+    await page.locator("#encyclopediaWeaponsTab").click();
+    await page.locator("#encyclopediaSearch").fill("ZN_120mmMGWithGrenadeLauncher");
+    await page.locator("#encyclopediaList .edit-common-weapon").first().click();
+    const detail = page.locator("#commonWeaponEditor [data-payload-step]").first();
+    await detail.locator("summary").click();
+    const step = await detail.getAttribute("data-payload-step");
+    const amount = page.locator(`[data-field="common.attack.steps.${step}.damage"]`),
+      base = page.locator('[data-field="common.damage"]');
+    const before = Number(await amount.inputValue()),
+      oldBase = Number(await base.inputValue());
+    await amount.fill(String(before + 500));
+    await base.fill(String(oldBase + 25));
+    await expect(amount).toHaveValue(String(before + 500));
+    await page
+      .locator("#commonWeaponEditor")
+      .getByRole("button", { name: "保存修改", exact: true })
+      .click();
+    await expect(page.locator("#commonWeaponEditor")).not.toBeVisible({ timeout: 30000 });
+    const saved = f.store.getWeapon(ref).weapon;
+    expect(saved.damagePerShot).toBe(oldBase + 25);
+    expect(
+      Object.values(saved.attack.steps[Number(step)].damageComponents).reduce((a, b) => a + b, 0),
+    ).toBe(before + 500);
+  } finally {
+    await page.close();
+    await app.close();
+    f.cleanup();
+  }
+});

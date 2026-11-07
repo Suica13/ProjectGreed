@@ -5,7 +5,7 @@ from weapon_store import loads as load_source_json, dumps as dump_source_json
 import json
 import re
 import shutil
-from mod_source import ASSETS, MOD, ROOT, load, parse, section, resolve
+from mod_source import ASSETS, MOD, ROOT, load, parse, section, resolve, source_root
 
 CARRIERS = ('MAN_03', 'MAN_08', 'MSN_02', 'MS_06Z', 'MSN_01')
 
@@ -29,6 +29,19 @@ def launches(data, entry):
                     yield from walk(child.strip(), (*stack, name))
     return list(walk(entry))
 
+def native_burst(prefab, path, child, root):
+    """Follow the remote gun's actual firing chain, just like an ordinary weapon."""
+    from native_combat import native_weapon
+    barrels = [name[7:] for name in child if name.startswith('turret_')
+        and 'BeamDamage' in section(child, 'projectile_' + section(child, name).get('projectile', '1')).get('spawnUnit', '')]
+    if not barrels:
+        raise ValueError('Unsupported remote payload (reflector or indirect control): ' + path.stem)
+    gun = dict(sourceName=barrels[0], source={'file':path.relative_to(root).as_posix(),
+        'barrels':[{'id':name} for name in barrels]}, projectile={})
+    native_weapon(prefab, gun, child)
+    return gun
+
+
 def compile_launcher(prefab, path, root=ROOT, copy_assets=True):
     data = load(path, root)
     key = path.stem
@@ -37,10 +50,12 @@ def compile_launcher(prefab, path, root=ROOT, copy_assets=True):
     if not children or len(children) > 16:
         raise ValueError('Invalid native remote count: ' + key)
     values = globals_in(path)
-    units, mounts = [], []
+    units, mounts, bursts = [], [], []
     control = None
     payloads = []
     color = "Yellow"
+    projectile_texture = None
+    projectile_hit = None
     for ident in children:
         child_path = next(root.glob('Units/BattleUnits/*/' + ident + '.ini'), None)
         if child_path is None:
@@ -57,9 +72,29 @@ def compile_launcher(prefab, path, root=ROOT, copy_assets=True):
         projectile = next((v for k,v in child.items() if k.startswith('projectile_') and 'BeamDamage' in v.get('spawnUnit','')), None)
         if projectile is None:
             raise ValueError('Unsupported remote payload (reflector or indirect control): ' + ident)
+        burst = native_burst(prefab, child_path, child, root)
+        bursts.append(burst)
         payloads.append({name:float(value) for name,value in re.findall(r'(\w+)\s*[=:]\s*([-\d.]+)',projectile['spawnUnit'])})
         if not units:
             color = next((name for name in ('Yellow','Pink','Blue') if name in projectile['spawnUnit']), 'Yellow')
+        # Resolve the actual child projectile, including the native short beam trail.
+        projectile_id = projectile['spawnUnit'].split('*',1)[0].strip()
+        projectile_path = root/'Units/BattleUnits/Weapon/Beam/Projectile'/(projectile_id+'.ini')
+        if not projectile_path.exists(): projectile_path = MOD/'GW_BattleUniverse_Main/Units/BattleUnits/Weapon/Beam/Projectile'/(projectile_id+'.ini')
+        projectile_data = load(projectile_path)
+        if projectile_texture is None:
+            projectile_texture = resolve(projectile_data['decal_Projectile_Image']['image'],projectile_path.parent,source_root(projectile_path)).name
+            projectile_hit = projectile_data['hiddenAction_SpawnHitEffect']['spawnEffects']
+        trail = next((section(projectile_data,key) for key in projectile_data if key.startswith('effect_Beam_TrailLine')), None)
+        trail_config = None
+        if trail:
+            image_path = resolve(trail['image'],projectile_path.parent,source_root(projectile_path))
+            # ROOT references in shared projectile files belong to the main package.
+            destination = ASSETS/'projectiles'/image_path.name
+            if copy_assets and not destination.exists(): shutil.copyfile(image_path,destination)
+            trail_config = dict(texture='../../projectiles/'+image_path.name,alpha=float(trail.get('alpha',.35)),
+                lifeSeconds=float(trail['life'])/60,intervalSeconds=.02 if '_S_' in image_path.name else .03,
+                scaleFrom=float(trail.get('scaleFrom',1)),scaleTo=float(trail.get('scaleTo',1)))
         body = child['decal_Body']
         image = resolve(body['image'], child_path.parent, root)
         destination = ASSETS / 'units' / prefab['id'] / 'textures' / image.name
@@ -74,6 +109,7 @@ def compile_launcher(prefab, path, root=ROOT, copy_assets=True):
         local_name=ident.removeprefix(prefab['id']+'_')
         mounted=next((layer for layer in candidates if layer['name']==local_name), candidates[0] if candidates else None)
         units.append(dict(texture=image.name, scale=float(body.get('imageScale', 1)),
+                          burstShots=burst['nativeTiming']['projectiles'],trail=trail_config,
                           nativeUnit=ident, requiredParts=[side] if side else [],
                           hideLayers=[mounted['name']] if mounted else [],scaleX=mounted.get('scaleX',1) if mounted else 1))
         mounts.append(dict(layer=mounted['name'],point=dict(x=0,y=0)) if mounted else dict(bone=bone, offset=dict(x=0, y=0)))
@@ -88,49 +124,55 @@ def compile_launcher(prefab, path, root=ROOT, copy_assets=True):
     from native_combat import CHANNELS
     native_components = {channel: payloads[0][key] for key,channel in CHANNELS.items() if payloads[0].get(key,0)>0}
     native_total = sum(native_components.values())
-    shot_damage = 4000 / (len(units) * 2) if control != 'incom' else native_total
-    components = {channel: value * shot_damage / native_total for channel,value in native_components.items()}
-    if control != 'incom':
-        awakening = 75
-    events=sorted((round(.7+cycle*1.2+index*.13,4),index) for cycle in range(2) for index in range(len(units)))
-    for at,index in events:
-        steps.append(dict(delay=round(at-previous,4),shots=1,muzzleIndex=index,
-                          requiredParts=units[index]['requiredParts']))
+    # Retain two tactical firing positions, each firing the full native burst.
+    shot_damage = native_total
+    components = dict(native_components)
+    if control != 'incom': awakening = 75
+    events = []
+    for cycle in range(2):
+        for index, burst in enumerate(bursts):
+            at = 0
+            first = burst['nativeTiming']['firstShot']
+            for step in burst['attack']['steps']:
+                for repeat in range(step.get('repeat', 1)):
+                    at += step['delay']
+                    if not step.get('shots'): continue
+                    item = {k:v for k,v in step.items() if k not in ('delay','repeat','muzzleIndex','requiredParts','weaponDisplayIndex','animation')}
+                    item.update(muzzleIndex=index, requiredParts=units[index]['requiredParts'])
+                    channels = step.get('damageComponents', burst['damageComponents'])
+                    if channels != components: item['damageComponents'] = channels
+                    else: item.pop('damageComponents',None)
+                    events.append((round(.7+cycle*1.2+index*.13+at-first,6),item))
+    for at,item in sorted(events,key=lambda event:event[0]):
+        steps.append(dict(item,delay=round(at-previous,6)))
         previous=at
     weapon = dict(sourceName=key, name=names[0], localization={lang: {'name': name} for lang,name in zip(('zh','en','ja'),names)},
         type='beam', category='remote', slot='secondary', min=1, max=6 if control=='funnel' else 4,
         hit=100 if control!='incom' else payloads[0].get('WeaponAccuracy',85), en=values[key + '_EN'], actionCost=3, damagePerShot=shot_damage, damageComponents=components,
         hitsPerShot=1, clip=None, changeHeldWeapon=False, requiredParts=[],
         attack={'startAnimation':None,'steps':steps}, muzzle={'mounts':mounts},
-        projectile={'texture':f'../../projectiles/Beam_2_{color}.png','scale':.65,'speed':85,
+        projectile={'texture':'../../projectiles/'+projectile_texture,'scale':.65,'speed':85,
                     'forwardOffset':0,'rotation':0,'visibleInFog':False},
-        hitEffect='Beam_Hit_2_'+color, nativePayload=payloads[0], sound={'file':'../../sounds/BeamGun_3.ogg','volume':.45},
+        hitEffect=projectile_hit, nativePayload=payloads[0], sound={'file':'../../sounds/BeamGun_3.ogg','volume':.45},
         source={'file':str(path.relative_to(root)).replace('\\','/'),'root':root.name},
         remote={'kind':control,'units':units,'shotsPerUnit':2,'moveSeconds':.6,'settleSeconds':.1,
                 'waitSeconds':.5,'staggerSeconds':.13,'returnSeconds':.65,'awakeningScale':0 if control=='incom' else .04},
         nativeRemote={'count':len(units),'cooldownSeconds':values.get(key+'_CD'),
-                      'awakeningMinimum':awakening,'entry':key+'_Trigger','unitSources':children,'unitPayloads':payloads},
-        description=f'{names[0]}：{len(units)}个单元，每单元2发，基础伤害{native_damage:g}/发。消耗3 AP。')
-    for lang, description in {
-        'zh': f'{len(units)}个单元，每单元2发，基础伤害{native_damage:g}/发；消耗3 AP。',
-        'en': f'{len(units)} remote units, 2 shots each, {native_damage:g} base damage per shot; costs 3 AP.',
-        'ja': f'{len(units)}基が各2発射撃。1発の基本ダメージ{native_damage:g}、消費3 AP。'
-    }.items():
-        weapon['localization'][lang]['description']=description
-    if control != 'incom':
-        descriptions = {
-            'zh': f'{len(units)}个单元，每单元2发；75觉醒可用，100觉醒时整次基础伤害4000，100以上每点觉醒增加基础伤害4%，200觉醒时20000；低于100按觉醒比例计算。基础命中100%，消耗3 AP。',
-            'en': f'{len(units)} units, 2 shots each. Requires 75 Awakening. Base salvo damage: 4000 at 100 Awakening; +4% per point above 100, reaching 20000 at 200. Below 100, scales proportionally. Base accuracy 100%; costs 3 AP.',
-            'ja': f'{len(units)}基が各2発。覚醒75で使用可能。覚醒100で全弾の基本ダメージ4000、100を超える1点ごとに4%増加、200で20000。100未満は覚醒値に比例。基本命中100%、消費3 AP。',
-        }
-        weapon['description'] = descriptions['zh']
-        for lang, text in descriptions.items():
-            weapon['localization'][lang]['description'] = text
+                      'awakeningMinimum':awakening,'entry':key+'_Trigger','unitSources':children,'unitPayloads':payloads,'unitBursts':[burst['nativeTiming'] for burst in bursts]},
+        description='')
+    burst_counts = '/'.join(str(unit['burstShots']) for unit in units)
+    descriptions = {
+        'zh': f'{len(units)}个单元，各射击2轮；每轮按原MOD动作链发射{burst_counts}发，独立逐发判定。原始载荷与连射间隔保留；伤害应用全局换算、人工差值及现有觉醒成长。',
+        'en': f'{len(units)} remote units, 2 firing positions each. Native burst: {burst_counts} shots per position, resolved separately before global, editor and Awakening modifiers.',
+        'ja': f'{len(units)}基が各2回射撃。各回の原作連射数は{burst_counts}発、1発ずつ判定。原作ダメージと間隔に全体換算・編集差分・覚醒補正を適用。',
+    }
+    weapon['description'] = descriptions['zh']
+    for lang, text in descriptions.items(): weapon['localization'][lang]['description'] = text
     weapon['sourceHit'] = weapon['hit']
     weapon['nativeTiming'] = dict(source=weapon['source']['file'], entry=key+'_Trigger',
         cooldown=values.get(key+'_CD',0), duration=previous, firstShot=.7,lastShot=previous,
-        firingEvents=len(units)*2,projectiles=len(units)*2,declaredEnergy=weapon['en'],energyMode='perVolley',
-        energyPerEmission=0,energy=weapon['en'],adaptation='remote_two_shots_per_unit')
+        firingEvents=len(events),projectiles=sum(step.get("shots",0) for step in steps),declaredEnergy=weapon['en'],energyMode='perVolley',
+        energyPerEmission=0,energy=weapon['en'],adaptation='two_positions_with_native_bursts')
     if awakening is not None:
         weapon['pilotRequirements']=[dict(stat='awakening',operator='>=',value=awakening)]
     if any(u['requiredParts'] for u in units):

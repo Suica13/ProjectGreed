@@ -114,7 +114,7 @@ function runtime() {
     Chat: { setSnapshot() {}, saveLog() {}, refreshStatus() {} },
     MatchResults: { reset() {} },
     CombatPlayback: { reset() {} },
-    BattleAssets:{guard:()=>false,cancel(){}},
+    BattleAssets:{guard:()=>false,cancel(){},release(){}},
     IrradiationFX:{reset(){},start(event,done){done?.();}},
     PlanningUI: { reset() {}, move() {} },
     MapEffects: { reset() {} },

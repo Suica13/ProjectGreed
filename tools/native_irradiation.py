@@ -1,15 +1,30 @@
 """Native continuous beam payloads become one directional skill hit per hull."""
 from weapon_store import loads as load_source_json, dumps as dump_source_json
 import copy,json,re,shutil,struct,math
-from mod_source import ASSETS,ROOT,MAIN,load
+from mod_source import ASSETS,ROOT,MAIN,MOD,load
 BEAMS={'ApsarasIII':'ZN_ApsarasIII_MegaBeamCannon','MA_08_DZL':'ZN_MA_08_MegaBeamCannon','ApsarasII':'ZN_ApsarasII_MegaBeamCannon','RX_78_4_Bst':'EF_RX_78_4_HighMegaLauncher',
        'Burstliner':'EF_Burstliner_BeamCannon','MA_08':'ZN_MA_08_MegaBeamCannon','AMX_002':'ZN_AMX_002_MegaBeamCannon','Skiure':'ZN_Skiure_BeamCannon'}
 
+# Only native continuous MEGA guns, never ordinary large beam projectiles.
+MEGA_BEAMS = {
+    'MSZ_010':'AEUG_MSZ_010_HighMegaCannon',
+    'MSZ_010S':'AEUG_MSZ_010_HighMegaCannon',
+    'FA_010S':'AEUG_MSZ_010_HighMegaCannon',
+    'FA_010A':'AEUG_FA_010A_MegaBeamCannon',
+    'FA_00100S':'AEUG_FA_00100S_MegaBeamCannon',
+    'AMX_014':'NZN_AMX_014_MegaBeamCannon',
+    'MRX_009':'TITANS_MRX_009_MegaBeamCannon',
+    'MRX_010':'TITANS_MRX_009_MegaBeamCannon',
+    'PMX_000':'TITANS_PMX_000_MegaBeamCannon',
+}
+
 def apply(prefab,native=None):
-    key=BEAMS.get(prefab['id'])
+    key=MEGA_BEAMS.get(prefab['id'],BEAMS.get(prefab['id']))
+    mega=prefab['id'] in MEGA_BEAMS
     if not key:return prefab
     weapon=prefab['weapons'][key]
-    data=load(ROOT/weapon['source']['file'])
+    root=MOD/prefab['source'].split('/')[0]
+    data=load(root/weapon['source']['file'],root)
     color=next((s.get('sendMessageWithTags','')[9:] for s in data.values() if s.get('sendMessageWithTags','').startswith('SetColor_')),'Pink')
     charge_attachment=data.get('attachment_'+key+'_ChargeEffect_1')
     beam_attachment=data.get('attachment_'+key+'_BulletEffect_1')
@@ -35,8 +50,12 @@ def apply(prefab,native=None):
     fire_action=data.get('hiddenAction_'+key+'_Fire_Step_1',{})
     fire_audio=fire_action.get('playSoundAtUnit')
     if fire_audio:
-        audio_path,volume=fire_audio.rsplit(':',1)
-        source=MAIN/audio_path.removeprefix('ROOT:').replace('\\','/')
+        audio_match=re.match(r'^(.*\.ogg)(?::([\d.]+))?$',fire_audio,re.I)
+        if not audio_match: raise ValueError('Invalid native irradiation audio: '+fire_audio)
+        audio_path=audio_match[1].removeprefix('ROOT:').replace('\\','/').lstrip('/')
+        volume=float(audio_match[2] or 1)
+        source=root/audio_path
+        if not source.exists(): source=MAIN/audio_path
         destination=ASSETS/'sounds'/source.name
         if not destination.exists():shutil.copyfile(source,destination)
         fire_sound={'file':'../../sounds/'+source.name,'volume':min(1,float(volume))}
@@ -62,8 +81,10 @@ def apply(prefab,native=None):
     for share in sorted(shares,key=lambda item:-(item['exact']-item['count']))[:remainder]:share['count']+=1
     damage_components={share['key']:share['count']*25 for share in shares}
 
-    skill=dict(id='Irradiation',type='irradiation',name='光束照射',range=10,minRange=1,actionCost=5,enCostPercent=50,
-        cooldownTurns=3,maxUses=99,consumeAction=False,baseHit=60,damageComponents=damage_components,
+    title='MEGA光束照射' if mega else '光束照射'
+    skill=dict(id='Irradiation',type='irradiation',name=title,range=10,minRange=1,actionCost=5,enCostPercent=50,
+        cooldownTurns=3,maxUses=99,consumeAction=False,baseHit=50 if mega else 60,damageComponents=damage_components,
+        areaWidth=3 if mega else 0,
         nativeTotalDamage=native_total,nativeRepeatMultiplier=repeat_multiplier,sourceWeapon=key,
         requiredParts=copy.deepcopy(weapon.get('requiredParts',[])),requiresSfsMS=prefab['id'] in ('Burstliner','Skiure'),
         chargeSeconds=round(max(1,weapon.get('nativeTiming',{}).get('firstShot',2)),3),fireSeconds=2,
@@ -71,15 +92,15 @@ def apply(prefab,native=None):
         chargeScale=float(charge_decal['imageScale'])*2,fireSound=fire_sound,beamSections=beam_sections,beamLength=beam_length,weaponDisplayIndex=weapon.get('displayIndex',0),
         clip=next((step['animation'] for step in weapon['attack']['steps'] if step.get('animation')),None),
         effect='Irradiation_Charge_'+color,sound={'file':'../../sounds/BeamCharge_4.ogg','volume':.7},
-        localization={'zh':{'name':'光束照射'},'en':{'name':'Irradiation Beam'},'ja':{'name':'照射ビーム'}},
-        description=f'基础伤害 {rounded_damage:,} × 1 = {rounded_damage:,}；射程 10 格，命中 60%；消耗 5 AP、50%最大EN，冷却 3 个己方回合。对沿途每台单位（含友军）判定一次。')
+        localization={'zh':{'name':title},'en':{'name':'MEGA Irradiation Beam' if mega else 'Irradiation Beam'},'ja':{'name':'MEGA照射ビーム' if mega else '照射ビーム'}},
+        description=f'基础伤害 {rounded_damage:,} × 1 = {rounded_damage:,}；射程 10 格，宽度 {3 if mega else 1} 格，命中 {50 if mega else 60}%；消耗 5 AP、50%最大EN，冷却 3 个己方回合。对沿途每台单位（含友军）判定一次。')
     if 'BeamCharge_4.ogg' not in [p.name for p in (ASSETS/'sounds').glob('*.ogg')]:raise ValueError('Missing charge audio')
     skills=prefab.setdefault('skills',[]);skills[:]=[s for s in skills if s['id']!='Irradiation'];skills.append(skill)
     weapon['availability']={'hidden':True,'reasons':['converted_skill'],'convertedSkill':'Irradiation'}
     for kit in prefab['weaponKits']:kit['weapons']=[w for w in kit['weapons'] if w!=key]
     prefab['mechanics']=[m for m in prefab.get('mechanics',[]) if not (m.get('id','').startswith('energy_capacity_') and key in m['id'])]
     prefab['mechanics']=[m for m in prefab.get('mechanics',[]) if m['id']!='Irradiation']
-    prefab['mechanics'].append(dict(id='Irradiation',status='adapted',name='光束照射：方向射线、蓄力、逐机命中；原版固定演出与判定射程独立'))
+    prefab['mechanics'].append(dict(id='Irradiation',status='adapted',name=title+'：方向照射、蓄力、逐机命中；原版固定演出与判定射程独立'))
     if prefab['id']=='ApsarasII':
         prefab['stats'].update(footprint={'width':3,'height':3},movementType='air')
         prefab['unitTags']=[tag for tag in prefab.get('unitTags',[]) if tag not in ('SmallUnit','MediumUnit','LargeUnit')]+['LargeUnit']
@@ -106,8 +127,12 @@ def import_effects():
 
 if __name__=='__main__':
     import_effects()
-    for ident in BEAMS:
-        path=ASSETS/f'units/{ident}/unit.json';prefab=load_source_json(path.read_text(encoding='utf-8'));apply(prefab)
+    for ident in {**BEAMS,**MEGA_BEAMS}:
+        path=ASSETS/f'units/{ident}/unit.json'
+        if not path.exists(): continue
+        prefab=load_source_json(path.read_text(encoding='utf-8'));apply(prefab)
+        from native_weapon_levels import apply as apply_levels
+        apply_levels(prefab)
         path.write_text(dump_source_json(prefab,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     path=ASSETS/'unit-wip.json';wip=load_source_json(path.read_text(encoding='utf-8'));wip['units']=[name for name in wip['units'] if not name.startswith('Apsaras')];path.write_text(dump_source_json(wip,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     print('Converted',len(BEAMS),'native irradiation beams; Apsaras enabled')

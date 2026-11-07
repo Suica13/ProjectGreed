@@ -357,7 +357,9 @@ function createCampaignRoom({
       }
       if (!legal) continue;
       try {
-        G.create(false, 1, Records.clone(trial), false, settings);
+        // These entries come from validated persistent armies, not a player
+        // formation. Preserve deployed/transformed hulls when crossing regions.
+        G.create(false, 1, Records.clone(trial), false, settings, { allowExistingForms: true });
         for (let seat = 0; seat < armies.length; seat++) armies[seat] = trial[seat];
         selected.push(...incoming);
       } catch {
@@ -365,7 +367,7 @@ function createCampaignRoom({
       }
     }
     const fresh = selected.length
-      ? G.create(false, randomSeed(), Records.clone(armies), false, settings)
+      ? G.create(false, randomSeed(), Records.clone(armies), false, settings, { allowExistingForms: true })
       : null;
     const incoming = fresh?.units.slice() || [];
     if (!game) {

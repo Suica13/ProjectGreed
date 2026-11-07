@@ -1,7 +1,8 @@
 /* Keep playback clocks and ready acknowledgements behind actual resource readiness. */
 window.BattleAssets = (() => {
   let generation = 0,
-    loading = false;
+    loading = false,
+    sceneKey = null;
   function cancel() {
     generation++;
     if (loading) {
@@ -9,12 +10,25 @@ window.BattleAssets = (() => {
       StartupLoading.finish();
     }
   }
+  function release() {
+    cancel();
+    if (sceneKey !== null) {
+      sceneKey = null;
+      resetMapPresentation();
+    }
+  }
   function guard(snapshot, resume) {
     if (["waiting", "assembly"].includes(snapshot.phase)) {
-      cancel();
+      release();
       return false;
     }
     const keys = SpriteRenderer.battleKeys(snapshot);
+    const nextKey = JSON.stringify([snapshot.room, snapshot.matchId, snapshot.game?.mapId, snapshot.game?.campaignBattlefield?.regionId]);
+    if (sceneKey !== nextKey) {
+      cancel();
+      sceneKey = nextKey;
+      resetMapPresentation(keys);
+    }
     if (SpriteRenderer.readyAssets(keys)) {
       cancel();
       return false;
@@ -41,6 +55,7 @@ window.BattleAssets = (() => {
   return {
     guard,
     cancel,
+    release,
     get loading() {
       return loading;
     },

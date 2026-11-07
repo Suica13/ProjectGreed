@@ -1123,7 +1123,8 @@ function loadCatalog({
               !remote.units.length ||
               remote.units.length > 16 ||
               remote.shotsPerUnit !== 2 ||
-              weapon.attack.shots.length !== remote.units.length * remote.shotsPerUnit ||
+              weapon.attack.shots.length !== remote.units.reduce((sum, unit) => sum + (unit.burstShots ?? 1) * remote.shotsPerUnit, 0) ||
+              remote.units.some(unit => !Number.isInteger(unit.burstShots ?? 1) || (unit.burstShots ?? 1) < 1 || (unit.burstShots ?? 1) > 64) ||
               ![
                 "moveSeconds",
                 "settleSeconds",
@@ -1141,7 +1142,16 @@ function loadCatalog({
               units: remote.units.map((unit) => {
                 if (!textureKeys[unit.texture] || !Number.isFinite(unit.scale) || unit.scale <= 0)
                   throw Error("Missing remote sprite: " + key);
-                return { ...unit, asset: textureKeys[unit.texture] };
+                let trail = unit.trail;
+                if (trail) {
+                  if (![trail.alpha, trail.lifeSeconds, trail.intervalSeconds, trail.scaleFrom, trail.scaleTo].every(Number.isFinite) ||
+                      trail.alpha < 0 || trail.alpha > 1 || trail.lifeSeconds <= 0 || trail.lifeSeconds > 1 || trail.intervalSeconds < .01)
+                    throw Error("Invalid remote beam trail: " + key);
+                  const asset = prefab.id + "/remote-trail/" + trail.texture;
+                  if (embedAssets) result.assets[asset] = "data:image/png;base64," + fs.readFileSync(file(base, trail.texture)).toString("base64");
+                  trail = { ...trail, asset };
+                }
+                return { ...unit, trail, asset: textureKeys[unit.texture] };
               }),
             };
           }

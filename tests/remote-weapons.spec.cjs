@@ -122,7 +122,7 @@ for (const entry of ["client", "developer"])
     for (const [i, row] of result.rows.entries()) {
       expect(row.used).toBe(true);
       expect(row.finite).toBe(true);
-      expect(row.shots).toBe([8, 10, 4, 4, 4][i]);
+      expect(row.shots).toBe([12, 10, 20, 20, 20][i]);
       expect(row.duration).toBeGreaterThan(3);
       expect(row.contactsBefore).toBe(0);
       expect(row.contactsAfter).toBe(row.shots);
@@ -131,7 +131,7 @@ for (const entry of ["client", "developer"])
     expect(result.opaque).toBeGreaterThan(10000);
     await page
       .locator("#remote-test-canvas")
-      .screenshot({ path: ".openai/remote-" + entry + ".png" });
+      .screenshot({ path: "build/remote-" + entry + ".png" });
     expect(errors).toEqual([]);
   });
 
@@ -159,7 +159,7 @@ test("actual map playback reveals remote damage on contact and restores detached
       x: 8,
       y: 8,
       en: 1000,
-      pilot: { stats: { awakening: 100, shooting: 100, accuracy: 100 } },
+      pilot: { stats: { awakening: 100, shooting: 100, accuracy: 100, melee: 100, defense: 100, speed: 100, reaction: 100, leadership: 100 } },
     });
     Object.assign(b, { x: 11, y: 8, hp: 100000, shield: 0 });
     await SpriteRenderer.ensureAssets(SpriteRenderer.battleKeys(game));
@@ -195,7 +195,7 @@ test("actual map playback reveals remote damage on contact and restores detached
     return { initial, partial, final, real, deployed, returned, count };
   });
   expect(result.initial).toBe(100000);
-  expect(result.count).toBe(4);
+  expect(result.count).toBe(20);
   expect(result.deployed).toEqual(expect.arrayContaining(["ArmL", "ArmR"]));
   expect(result.returned).toEqual([]);
   expect(result.final).toBe(result.real);

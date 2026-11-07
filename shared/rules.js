@@ -129,6 +129,7 @@ const Tactics = (() => {
     entries,
     maxCost = catalog.formation.maxCost,
     unitLimit = catalog.formation.maxUnits,
+    allowExistingForms = false,
   ) {
     if (
       !Array.isArray(entries) ||
@@ -145,7 +146,7 @@ const Tactics = (() => {
       const alias = catalog.prefabs.find((p) => p.id === entry?.unitId)?.kitAliases?.[entry?.kitId];
       const id = entry?.unitId + "__" + (alias || entry?.kitId),
         model = models[id];
-      if (!model || model.formOnly) throw Error("编组包含不可用单位或武器套件");
+      if (!model || (model.formOnly && !allowExistingForms)) throw Error("编组包含不可用单位或武器套件");
       const customPilot = entry.customPilot ? pilots.custom(entry.customPilot) : null;
       if (customPilot?.needsRecruitment) throw Error("该ACE需要重新招募后才能配属");
       if (!customPilot && pilots.aceProfile(entry.pilotId)) throw Error("请先招募并配属ACE驾驶员");
@@ -1801,7 +1802,7 @@ const Tactics = (() => {
     for (let i = 0; i < formation.length; i++) if (!placeCargo(i)) return null;
     return result;
   }
-  function create(ai = false, seed = 7319, formations, deploying = false, settings = {}) {
+  function create(ai = false, seed = 7319, formations, deploying = false, settings = {}, restoration = null) {
     const map = getMap(settings.mapId),
       costLimit = validateCostLimit(settings.costLimit ?? catalog.formation.maxCost),
       unitLimit = validateUnitLimit(settings.unitLimit ?? catalog.formation.maxUnits),
@@ -1835,6 +1836,7 @@ const Tactics = (() => {
         formations[seat],
         settings.mode === "campaign" ? Infinity : (settings.seatCostLimits?.[seat] ?? costLimit),
         settings.mode === "campaign" ? Infinity : (settings.seatUnitLimits?.[seat] ?? unitLimit),
+        settings.mode === "campaign" && restoration?.allowExistingForms === true,
       );
       const seatRules = rulesForSeat(seat);
       const pilotBans = (seatRules.bannedFactions || []).filter(tag => tag.startsWith("pilot:"));
@@ -3247,6 +3249,28 @@ const Tactics = (() => {
     }
     return true;
   }
+  // A finite oriented strip against a unit footprint, including diagonal fire.
+  // Strict overlap prevents a 3-cell beam from also hitting the adjacent row
+  // whose edge only touches the strip. The old zero-width ray remains exact.
+  function irradiationIntersectsUnit(from, to, unit, width = 0) {
+    if (!width) return lineIntersectsUnit(from, to, unit);
+    const dx = to.x - from.x, dy = to.y - from.y, length = Math.hypot(dx, dy);
+    if (!length) return false;
+    const along = { x: dx / length, y: dy / length };
+    const normal = { x: -along.y, y: along.x };
+    const half = width / 2, size = dimensions(unit);
+    const beam = [from, to].flatMap(point => [-1, 1].map(side => ({
+      x: point.x + normal.x * half * side, y: point.y + normal.y * half * side,
+    })));
+    const hull = [unit.x - .5, unit.x + size.width - .5].flatMap(x =>
+      [unit.y - .5, unit.y + size.height - .5].map(y => ({ x, y })));
+    for (const axis of [{x:1,y:0}, {x:0,y:1}, along, normal]) {
+      const a = beam.map(point => point.x * axis.x + point.y * axis.y);
+      const b = hull.map(point => point.x * axis.x + point.y * axis.y);
+      if (Math.max(...a) <= Math.min(...b) + 1e-8 || Math.max(...b) <= Math.min(...a) + 1e-8) return false;
+    }
+    return true;
+  }
   function irradiate(g, unit, skill, x, y) {
     const line = irradiationLine(unit, { x, y }, skill.range),
       hits = [];
@@ -3256,7 +3280,7 @@ const Tactics = (() => {
           other !== unit &&
           onMap(other) &&
           other.embarked?.carrierId !== unit.id &&
-          lineIntersectsUnit(line.from, line.to, other),
+          irradiationIntersectsUnit(line.from, line.to, other, skill.areaWidth),
       )
       .sort((a, b) => dist(unit, a) - dist(unit, b) || a.id.localeCompare(b.id));
     const weapon = {
@@ -3333,6 +3357,7 @@ const Tactics = (() => {
       fireSeconds: skill.fireSeconds,
       fireSound: skill.fireSound,
       beamWidth: skill.beamWidth,
+      areaWidth: skill.areaWidth,
       beamSections: skill.beamSections,
       beamLength: skill.beamLength,
       chargeScale: skill.chargeScale,
@@ -3360,7 +3385,7 @@ const Tactics = (() => {
               onMap(other) &&
               other.embarked?.carrierId !== unit.id &&
               (other.team === unit.team || enemies.includes(other)) &&
-              lineIntersectsUnit(line.from, line.to, other),
+              irradiationIntersectsUnit(line.from, line.to, other, skill.areaWidth),
           );
           // Never deliberately fire a friendly-fire beam through an allied hull.
           if (crossed.some((other) => other.team === unit.team)) continue;
@@ -4090,6 +4115,7 @@ const Tactics = (() => {
     groundTarget,
     canAttack,
     irradiationLine,
+    irradiationIntersectsUnit,
     lineIntersectsUnit,
     aiAreaSkill,
     hasSfsMS,

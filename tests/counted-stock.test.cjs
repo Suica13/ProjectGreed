@@ -252,3 +252,38 @@ test("activity stock grants are counted, atomic and idempotent without granting 
   assert.throws(()=>E.creditActivity({...award,id:"bad",inventory:{not_a_unit:1}}));
   assert.equal(JSON.stringify(E.snapshot()),before);
 });
+
+
+test("end-only losses survive closing/reload, duplicate delivery and failed storage writes", () => {
+  let { E } = load();
+  assert(E.purchaseMissingStock([entry, entry], "EFSF").ok);
+  const deployment = { id: "new-deploy", matchId: "new-match", money: 0, supplies: 0,
+    stockUsed: { inventory: {}, kits: {} } };
+  assert(E.creditAward(deployment));
+  assert.equal(E.quantity("Type61"), 2);
+  const restored = load(JSON.parse(JSON.stringify(E.exportProgress())));
+  E = restored.E;
+  assert.equal(E.quantity("Type61"), 2);
+  assert.equal(E.kitQuantity("Type61__standard"), 2);
+  assert(!E.creditAward(deployment));
+  const result = { id: "new-result", matchId: "new-match", kind: "result", money: 123, supplies: 456,
+    stockLost: { inventory: { Type61: 1 }, kits: { Type61__standard: 1 } } };
+  const before = E.exportProgress(), write = restored.context.localStorage.setItem;
+  restored.context.localStorage.setItem = () => { throw Error("quota"); };
+  assert.throws(() => E.creditAward(result), /quota/);
+  assert.equal(JSON.stringify(E.exportProgress()), JSON.stringify(before));
+  restored.context.localStorage.setItem = write;
+  assert(E.creditAward(result));
+  assert.equal(E.quantity("Type61"), 1);
+  assert.equal(E.kitQuantity("Type61__standard"), 1);
+  assert.equal(E.snapshot().money, before.money + 123);
+  const again = load(JSON.parse(JSON.stringify(E.exportProgress()))).E;
+  assert(!again.creditAward(result));
+  assert.equal(again.quantity("Type61"), 1);
+  // A result delayed across other matches must not prevent rewards or go negative.
+  assert(again.creditAward({ ...result, id: "late-result", stockLost: {
+    inventory: { Type61: 2 }, kits: { Type61__standard: 2 } } }));
+  assert.equal(again.quantity("Type61"), 0);
+  assert.equal(again.kitQuantity("Type61__standard"), 0);
+  assert(!again.creditAward({ ...result, id: "late-result" }));
+});

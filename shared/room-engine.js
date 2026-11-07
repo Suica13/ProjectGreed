@@ -1615,30 +1615,28 @@ function createRoomEngine({
       const next = G.normalizeStock(player);
       for (const kind of ["inventory", "kits"]) for (const [id, count] of Object.entries(used[kind])) {
         if (room.settings.mode !== "quick" && (next[kind][id] || 0) < count) throw Error("出战库存不足：" + id);
-        if (room.settings.mode !== "quick") next[kind][id] -= count;
       }
       Object.assign(player, next);
       room.stockReservations[player.id] = used;
       room.economyAwards.push({ id: randomId(), matchId: room.matchId, memberId: player.id,
         kind: "deployment", money: 0, supplies: 0,
-        stockUsed: room.settings.mode === "quick" ? { inventory: {}, kits: {} } : used });
+        stockUsed: { inventory: {}, kits: {} } });
     }
   }
-  function returnBattleStock(room, player) {
+  function settleBattleStock(room, player) {
     if (!room.stockReservations?.[player.id]) return undefined;
-    const quick = room.settings.mode === "quick";
-    // Quick games borrow units: neither launch nor casualties change the wallet.
-    // This also protects inventory when the room is left or the process closes.
-    const returned = { inventory: {}, kits: {} };
-    if (!quick) for (const [id, record] of Object.entries(room.battleRoster || {})) {
-      if (record.memberId !== player.id || !room.game.units.some(actor => actor.id === id && actor.hp > 0)) continue;
-      returned.inventory[record.unitId] = (returned.inventory[record.unitId] || 0) + 1;
-      returned.kits[record.stockModel] = (returned.kits[record.stockModel] || 0) + 1;
+    // Launch only validates stock. Charge actual casualties once at the end,
+    // using the original chassis/kit identity even after in-battle transformations.
+    const lost = { inventory: {}, kits: {} };
+    if (room.settings.mode !== "quick") for (const [id, record] of Object.entries(room.battleRoster || {})) {
+      if (record.memberId !== player.id || room.game.units.some(actor => actor.id === id && actor.hp > 0)) continue;
+      lost.inventory[record.unitId] = (lost.inventory[record.unitId] || 0) + 1;
+      lost.kits[record.stockModel] = (lost.kits[record.stockModel] || 0) + 1;
     }
-    for (const kind of ["inventory", "kits"]) for (const [id, count] of Object.entries(returned[kind]))
-      player[kind][id] = (player[kind][id] || 0) + count;
+    for (const kind of ["inventory", "kits"]) for (const [id, count] of Object.entries(lost[kind]))
+      player[kind][id] = Math.max(0, (player[kind][id] || 0) - count);
     delete room.stockReservations[player.id];
-    return returned;
+    return lost;
   }
   function awardMatchTechnology(room, player, won, bonus) {
     const participated = room.techParticipation?.[player.id];
@@ -1683,7 +1681,7 @@ function createRoomEngine({
       }
       const won = G.seatTeam(player.seat) === room.game.winner;
       awardMatchTechnology(room, player, won, bonus);
-      const stockReturned = returnBattleStock(room, player);
+      const stockLost = settleBattleStock(room, player);
       const battleRate = roomBattleEconomy().rewardRatio(
         room.battleRoster,
         G.seatTeam(player.seat),
@@ -1702,7 +1700,7 @@ function createRoomEngine({
         matchId: room.matchId,
         memberId: player.id,
         kind: "result",
-        ...(stockReturned ? { stockReturned } : {}),
+        ...(stockLost ? { stockLost } : {}),
         destroyedCost,
         money: Math.floor(
           (won ? base.money : destroyedCost) * rate * battleRate * bonus.money,
@@ -3346,9 +3344,9 @@ function createRoomEngine({
       resultTimers.delete(room);
       if (!room.campaign && !room.startedFromSave) for (const player of room.seats) {
         if (!player || player.bot) continue;
-        const stockReturned = returnBattleStock(room, player);
-        if (stockReturned) room.economyAwards.push({ id: randomId(), matchId: room.matchId,
-          memberId: player.id, kind: "return", money: 0, supplies: 0, stockReturned });
+        const stockLost = settleBattleStock(room, player);
+        if (stockLost) room.economyAwards.push({ id: randomId(), matchId: room.matchId,
+          memberId: player.id, kind: "return", money: 0, supplies: 0, stockLost });
       }
       room.returnCountdown = {
         id: randomId(),

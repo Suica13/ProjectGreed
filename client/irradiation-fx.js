@@ -146,19 +146,22 @@ const IrradiationFX = (() => {
         });
       }
       const // Native sheet height 168 × imageScale 1.25 × imageScaleY 1.5.
-        height = (beam.beamWidth ?? 315) * scale,
+        height = beam.areaWidth ? beam.areaWidth * tile : (beam.beamWidth ?? 315) * scale,
         native = beam.beamSections || [
           { part: "Start", left: -101.25, width: 452.5 },
           { part: "Mid", left: 351.625, width: 173.75 },
           { part: "End", left: 525.375, width: 431.25 },
         ];
+      const lengthScale = beam.areaWidth
+        ? Math.hypot(to.x - from.x, to.y - from.y) / (beam.beamLength || Math.max(...native.map(section => section.left + section.width)))
+        : scale;
       const frame = Math.min(27, Math.floor(((time - beam.chargeSeconds) / beam.fireSeconds) * 28));
       ctx.save();
       ctx.translate(from.x, from.y);
       ctx.rotate(Math.atan2(to.y - from.y, to.x - from.x));
       // Native attachment offsets and frame sizes are model-space values.
       // Only camera/model scale and aim direction affect the presentation:
-      // never stretch, crop or repeat sheets to match the gameplay ray length.
+      // ordinary rays keep native dimensions; MEGA uses its explicit 3-cell strip.
       for (const section of native) {
         const effect = ART.effects[key(section.part)],
           image = SpriteRenderer.images[effect.asset],
@@ -169,9 +172,9 @@ const IrradiationFX = (() => {
           0,
           fw,
           image.height,
-          section.left * scale,
+          section.left * lengthScale,
           -height / 2,
-          section.width * scale,
+          section.width * lengthScale,
           height,
         );
       }

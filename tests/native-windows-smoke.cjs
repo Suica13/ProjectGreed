@@ -13,7 +13,7 @@ const root = path.resolve(__dirname, ".."),
 const exe = path.join(
   root,
   "build",
-  `ProjectGreed-${version}-AppTest2-windows-x64`,
+  `ProjectGreed-${version}-windows-x64`,
   "ProjectGreed.exe",
 );
 const evidence = fs.mkdtempSync(path.join(root, "tmp", "native-client-"));

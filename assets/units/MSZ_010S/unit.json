@@ -680,6 +680,13 @@
               }
             }
           ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "converted_skill"
+          ],
+          "convertedSkill": "Irradiation"
         }
       }
     },
@@ -1243,6 +1250,11 @@
       "source": "Template/Unit/Skill/CustomUnit_NewUnit.gw",
       "status": "adapted",
       "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
+    },
+    {
+      "id": "Irradiation",
+      "status": "adapted",
+      "name": "MEGA光束照射：方向照射、蓄力、逐机命中；原版固定演出与判定射程独立"
     }
   ],
   "weaponKits": [
@@ -1252,7 +1264,6 @@
       "cost": 0,
       "weapons": [
         "AEUG_MSZ_010S_BR",
-        "AEUG_MSZ_010_HighMegaCannon",
         "Common_DoubleVulcan_MS",
         "AEUG_MSZ_010_BeamCannon",
         "AEUG_MSZ_010S_BackpackMS",
@@ -1262,7 +1273,40 @@
     }
   ],
   "description": "对ZZ高达进行强化改装后得来的型号,用于适配全装甲组件",
-  "skills": [],
+  "skills": [
+    {
+      "ref": "AEUG_MSZ_010_HighMegaCannon__skill_irradiation__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "muzzle": {
+          "mounts": [
+            {
+              "root": true,
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          ]
+        },
+        "chargeMuzzle": {
+          "mounts": [
+            {
+              "root": true,
+              "offset": {
+                "x": 0.0,
+                "y": 20.0
+              }
+            }
+          ]
+        },
+        "level": 1,
+        "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSZ_010_HighMegaCannon.gw"
+      }
+    }
+  ],
   "kitAliases": {
     "kit_0": "standard",
     "kit_1": "standard",

@@ -98,7 +98,7 @@ const CatalogEditorSchema = (() => {
     iField: "I立场",
     pilotExperienceMultiplier: "学习型电脑／经验倍率",
   };
-  function setDamage(weapon, value) {
+  function setDamage(weapon, value, { preserveSteps = false } = {}) {
     const old = Object.values(weapon.damageComponents || {}).reduce((a, b) => a + b, 0);
     const scale = old ? value / old : 0;
     const rescale = (components) =>
@@ -107,16 +107,16 @@ const CatalogEditorSchema = (() => {
       ? rescale(weapon.damageComponents)
       : { [weapon.type === "melee" ? "melee" : weapon.type === "beam" ? "beam" : "shell"]: value };
     weapon.damagePerShot = value;
-    for (const step of weapon.attack?.steps || [])
+    for (const step of preserveSteps ? [] : weapon.attack?.steps || [])
       if (step.damageComponents)
         step.damageComponents = old
           ? rescale(step.damageComponents)
           : { ...weapon.damageComponents };
   }
-  function setComponentDamage(weapon, channel, value) {
+  function setComponentDamage(weapon, channel, value, { preserveSteps = false } = {}) {
     const before = weapon.damageComponents[channel] || 0;
     const total = Object.values(weapon.damageComponents).reduce((a, b) => a + b, 0);
-    for (const step of weapon.attack?.steps || []) {
+    for (const step of preserveSteps ? [] : weapon.attack?.steps || []) {
       if (!step.damageComponents) continue;
       const share = total
         ? Object.values(step.damageComponents).reduce((a, b) => a + b, 0) / total
@@ -127,6 +127,46 @@ const CatalogEditorSchema = (() => {
     }
     weapon.damageComponents[channel] = value;
     weapon.damagePerShot = Object.values(weapon.damageComponents).reduce((a, b) => a + b, 0);
+  }
+  function payloadGroups(weapon) {
+    const groups = [];
+    for (const [index, step] of (weapon.attack?.steps || []).entries()) {
+      if (!(step.shots > 0) || (!step.damageComponents && (step.damageMultiplier ?? 1) === 1))
+        continue;
+      const key = JSON.stringify([
+        step.damageComponents,
+        step.damageMultiplier ?? 1,
+        step.accuracy ?? weapon.hit,
+      ]);
+      let group = groups.at(-1);
+      if (!group || group.key !== key) groups.push((group = { key, indices: [], shots: 0 }));
+      group.indices.push(index);
+      group.shots += step.shots * (step.repeat ?? 1);
+    }
+    return groups;
+  }
+  function setStepDamage(weapon, indices, value) {
+    for (const index of indices) {
+      const step = weapon.attack.steps[index],
+        components = step.damageComponents || weapon.damageComponents;
+      const total = Object.values(components).reduce((a, b) => a + b, 0);
+      step.damageComponents = total
+        ? Object.fromEntries(
+            Object.entries(components).map(([key, amount]) => [key, (amount * value) / total]),
+          )
+        : {
+            [weapon.type === "beam" ? "beam" : weapon.type === "melee" ? "melee" : "shell"]: value,
+          };
+    }
+  }
+  function setStepComponentDamage(weapon, indices, channel, value) {
+    for (const index of indices) {
+      const step = weapon.attack.steps[index];
+      step.damageComponents = {
+        ...(step.damageComponents || weapon.damageComponents),
+        [channel]: value,
+      };
+    }
   }
   function setHit(weapon, value) {
     weapon.hit = value;
@@ -141,6 +181,9 @@ const CatalogEditorSchema = (() => {
     setDamage,
     setComponentDamage,
     setHit,
+    payloadGroups,
+    setStepDamage,
+    setStepComponentDamage,
   };
 })();
 if (typeof module !== "undefined") module.exports = CatalogEditorSchema;

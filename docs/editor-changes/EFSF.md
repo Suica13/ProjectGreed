@@ -11,6 +11,8 @@
 
 | 时间（日本时间） | 来源IP | 单位 | 修改对象 | 修改内容 | 详细日志 |
 |---|---|---|---|---|---|
+| 2026-11-07 19:07:13 | 36.161.160.31 | 吉姆加农II（RGC_83） | 共用武器 EF_RGC_83_DoubleBeamCannon__lv1 | /weapons/EF_RGC_83_DoubleBeamCannon/hit：70 → 80 | [JSON](../../server-data/editor-changes/2026-11-07/2026-11-07T10-07-13-571Z-952db561-c38d-4ab8-a887-c9561558d635.json) |
+| 2026-11-07 19:07:13 | 36.161.160.31 | GLine 完全特装型（RX_81FC） | 共用武器 EF_RGC_83_DoubleBeamCannon__lv1 | /weapons/EF_RGC_83_DoubleBeamCannon/hit：70 → 80 | [JSON](../../server-data/editor-changes/2026-11-07/2026-11-07T10-07-13-571Z-952db561-c38d-4ab8-a887-c9561558d635.json) |
 | 2026-11-05 15:39:35 | 126.105.69.222 | 吉姆改&#91;宇宙配色&#93;（RGM_79C_Space） | 单位特例 | /stats/cost：300 → 325 | [JSON](../../server-data/editor-changes/2026-11-05/2026-11-05T06-39-35-062Z-bfa8db89-41e4-4f20-9e19-f7c9ae0dbc0f.json) |
 | 2026-11-05 15:39:22 | 126.105.69.222 | 吉姆改（RGM_79C） | 单位特例 | /stats/cost：300 → 325 | [JSON](../../server-data/editor-changes/2026-11-05/2026-11-05T06-39-22-717Z-2c3cf072-13d7-42c7-9a39-a639c56778c0.json) |
 | 2026-11-05 15:39:10 | 126.105.69.222 | 吉姆改（RGM_79C） | 单位特例 | /stats/cost：325 → 300 | [JSON](../../server-data/editor-changes/2026-11-05/2026-11-05T06-39-10-922Z-631e5e7f-a869-4d6b-bfc1-30c30e5b7b26.json) |

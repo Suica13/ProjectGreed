@@ -4110,9 +4110,42 @@ const SpriteRenderer = (() => {
       : 0;
     return sample(animation, at);
   }
-  let drawSamples = new WeakMap();
+  let drawSamples = new WeakMap(),
+    idleBakeSpent = 0;
+  const idleImages = new Map(),
+    staticAnimations = new WeakMap();
+  function staticPose(animation) {
+    if (!animation) return true;
+    if (!staticAnimations.has(animation))
+      staticAnimations.set(
+        animation,
+        Object.values(animation.curves || {}).every((fields) =>
+          Object.values(fields).every((points) =>
+            points.every((point) => point[1] === points[0][1]),
+          ),
+        ),
+      );
+    return staticAnimations.get(animation);
+  }
+  let idleImagePixels = 0,
+    idleFrame = 0,
+    idleMissing = 0,
+    idleColdPending = false;
+  let idleUpdateKeys = [],
+    idleUpdateCursor = 0;
   function beginFrame() {
     drawSamples = new WeakMap();
+    idleBakeSpent = 0;
+    idleFrame++;
+    idleColdPending = idleMissing > 0;
+    idleMissing = 0;
+    idleUpdateCursor = 0;
+    idleUpdateKeys = [...idleImages.entries()]
+      .filter(
+        ([, entry]) => entry.seenFrame >= idleFrame - 1 && entry.desiredBucket !== entry.bucket,
+      )
+      .sort((a, b) => a[1].bakedFrame - b[1].bakedFrame)
+      .map(([key]) => key);
   }
   function drawPose(model, clip, time, loop) {
     const animation = models[model].animations[clip];
@@ -4315,9 +4348,14 @@ const SpriteRenderer = (() => {
     };
   }
   const outlineCache = new Map();
+  let outlinePixels = 0;
   function turretOutline(asset, image, frame, columns, fw, fh, usable) {
     const key = [asset, frame, usable].join(":");
-    if (outlineCache.has(key)) return outlineCache.get(key);
+    if (outlineCache.has(key)) {
+      const canvas = outlineCache.get(key);
+      outlineCache.delete(key); outlineCache.set(key, canvas);
+      return canvas;
+    }
     const canvas = document.createElement("canvas");
     canvas.width = fw + 4;
     canvas.height = fh + 4;
@@ -4351,6 +4389,13 @@ const SpriteRenderer = (() => {
     c.globalCompositeOperation = "destination-out";
     stamp(2, 2);
     outlineCache.set(key, canvas);
+    outlinePixels += canvas.width * canvas.height;
+    while (outlineCache.size > 128 || outlinePixels > 4 * 1024 * 1024) {
+      const oldest = outlineCache.keys().next().value, removed = outlineCache.get(oldest);
+      if (removed === canvas) break;
+      outlineCache.delete(oldest); outlinePixels -= removed.width * removed.height;
+      removed.width = removed.height = 0;
+    }
     return canvas;
   }
   // A small visual-only height variation in source pixels. Shadows and map cells stay fixed.
@@ -4365,29 +4410,43 @@ const SpriteRenderer = (() => {
   const modelRadii = new Map();
   function radius(model) {
     if (modelRadii.has(model)) return modelRadii.get(model);
-    const unit = models[model], motion = {};
+    const unit = models[model],
+      motion = {};
     // Enclose all poses and layers, including long weapons and engine flames.
     for (const animation of Object.values(unit.animations))
       for (const [bone, fields] of Object.entries(animation.curves || {})) {
-        motion[bone] ||= {x:0,y:0,height:0};
-        for (const key of ["x","y","height"])
-          for (const [,value] of fields[key] || []) motion[bone][key] = Math.max(motion[bone][key],Math.abs(value));
+        motion[bone] ||= { x: 0, y: 0, height: 0 };
+        for (const key of ["x", "y", "height"])
+          for (const [, value] of fields[key] || [])
+            motion[bone][key] = Math.max(motion[bone][key], Math.abs(value));
       }
     let result = 0;
     for (const layer of unit.decals) {
       const image = images[layer.asset];
       // Missing assets may finish loading later; never cache an incomplete bound.
       if (!image) return Infinity;
-      const bone = unit.bones[layer.bone], delta = motion[layer.bone] || {}, offset = layer.offset || {};
-      const width = layer.frameWidth || Math.floor(image.width/(layer.frames || 1)),
+      const bone = unit.bones[layer.bone],
+        delta = motion[layer.bone] || {},
+        offset = layer.offset || {};
+      const width = layer.frameWidth || Math.floor(image.width / (layer.frames || 1)),
         height = layer.frameHeight || image.height;
-      result = Math.max(result,
-        Math.hypot(bone.x,bone.y) + (delta.x || 0)+(delta.y || 0)+(delta.height || 0) +
-        Math.hypot(offset.x || 0,offset.y || 0) + Math.hypot(layer.worldOffset?.x || 0,layer.worldOffset?.y || 0) +
-        Math.abs(layer.height || 0) + Math.hypot(width*Math.abs((layer.scale ?? 1)*(layer.scaleX ?? 1)),
-          height*Math.abs((layer.scale ?? 1)*(layer.scaleY ?? 1)))/2);
+      result = Math.max(
+        result,
+        Math.hypot(bone.x, bone.y) +
+          (delta.x || 0) +
+          (delta.y || 0) +
+          (delta.height || 0) +
+          Math.hypot(offset.x || 0, offset.y || 0) +
+          Math.hypot(layer.worldOffset?.x || 0, layer.worldOffset?.y || 0) +
+          Math.abs(layer.height || 0) +
+          Math.hypot(
+            width * Math.abs((layer.scale ?? 1) * (layer.scaleX ?? 1)),
+            height * Math.abs((layer.scale ?? 1) * (layer.scaleY ?? 1)),
+          ) /
+            2,
+      );
     }
-    modelRadii.set(model,result);
+    modelRadii.set(model, result);
     return result;
   }
   const shadowCache = new Map();
@@ -4427,9 +4486,7 @@ const SpriteRenderer = (() => {
       moving,
       casters.map((layer) => [
         layer.name,
-        layer.frameFps
-          ? Math.floor(time * layer.frameFps) % (layer.frames || 1)
-          : layer.frame || 0,
+        layer.frameFps ? Math.floor(time * layer.frameFps) % (layer.frames || 1) : layer.frame || 0,
       ]),
       lighting.direction,
       lighting.horizontalAngle,
@@ -4455,26 +4512,16 @@ const SpriteRenderer = (() => {
             ? Math.floor(Math.max(0, time) * layer.frameFps) % frames
             : layer.frame || 0;
         const columns = Math.max(1, Math.floor(image.width / fw));
-        const elevation = Math.max(
-          0,
-          (layer.height || 0) + (sampled[layer.bone]?.height || 0),
-        );
-        const projection = MapShadowLighting.projection(
-          lighting,
-          1 + elevation / 64,
-        );
+        const elevation = Math.max(0, (layer.height || 0) + (sampled[layer.bone]?.height || 0));
+        const projection = MapShadowLighting.projection(lighting, 1 + elevation / 64);
         const x = transform.x + projection.x * 64,
           y = transform.y + elevation + projection.y * 64;
         const cos = Math.abs(Math.cos(transform.rotation)),
           sin = Math.abs(Math.sin(transform.rotation));
         const rx =
-          (cos * Math.abs(fw * transform.scaleX) +
-            sin * Math.abs(fh * transform.scaleY)) /
-          2;
+          (cos * Math.abs(fw * transform.scaleX) + sin * Math.abs(fh * transform.scaleY)) / 2;
         const ry =
-          (sin * Math.abs(fw * transform.scaleX) +
-            cos * Math.abs(fh * transform.scaleY)) /
-          2;
+          (sin * Math.abs(fw * transform.scaleX) + cos * Math.abs(fh * transform.scaleY)) / 2;
         left = Math.min(left, x - rx);
         right = Math.max(right, x + rx);
         top = Math.min(top, y - ry);
@@ -4533,6 +4580,7 @@ const SpriteRenderer = (() => {
           removed = shadowCache.get(oldest);
         shadowCache.delete(oldest);
         shadowPixels -= removed.pixels;
+        removed.canvas.width = removed.canvas.height = 0;
       }
     } else {
       shadowCache.delete(key);
@@ -4540,13 +4588,7 @@ const SpriteRenderer = (() => {
     }
     ctx.save();
     ctx.globalAlpha *= lighting.intensity;
-    ctx.drawImage(
-      entry.canvas,
-      entry.left,
-      entry.top,
-      entry.width,
-      entry.height,
-    );
+    ctx.drawImage(entry.canvas, entry.left, entry.top, entry.width, entry.height);
     ctx.restore();
   }
   function draw(
@@ -4574,8 +4616,254 @@ const SpriteRenderer = (() => {
     effectsOnly = false,
     boostSkillActive = false,
     hiddenLayers = [],
+    idleRasterSize = 0,
   ) {
     const isFiring = attacking ?? (!!clip && /Shoot|Fire|Attack/.test(clip));
+    // Overview idle poses are sampled at 12fps into reusable, bounded surfaces.
+    // Position, camera scale, live effects, movement and combat remain frame-driven.
+    if (
+      idleRasterSize > 0 &&
+      !effectsOnly &&
+      !moving &&
+      !isFiring &&
+      !flying &&
+      ART.models[model].movementType !== "air" &&
+      !turretStatus &&
+      !Object.values(brokenParts).some(Boolean)
+    ) {
+      const layers = visibleLayers(
+        model,
+        heldWeapon,
+        shieldVisible,
+        false,
+        clip,
+        time,
+        loop,
+        brokenParts,
+        attacking,
+        onLand,
+        environment,
+        attackWeapon,
+        weaponDisplayIndex,
+        flying,
+        boostSkillActive,
+      );
+      const effects = layers
+        .filter(
+          (layer) =>
+            layer.effect ||
+            layer.independentClock ||
+            layer.visibleWhen?.thrustActive ||
+            layer.visibleWhen?.sustainedThrust ||
+            layer.visibleInFog === false ||
+            layer.animationVisibility ||
+            layer.rotationSpeed ||
+            layer.onlyAnimateWhenMoving ||
+            layer.visibleWhen?.moving,
+        )
+        .map((layer) => layer.name);
+      const lighting =
+        environment !== "space" &&
+        typeof ClientSettings !== "undefined" &&
+        ClientSettings.unitShadows()
+          ? MapShadowLighting.normalize(globalThis.ProjectGreedMapLighting || {})
+          : null;
+      const firstBody = layers.findIndex((layer) => !effects.includes(layer.name));
+      let lastBody = layers.length - 1;
+      while (lastBody >= 0 && effects.includes(layers[lastBody].name)) lastBody--;
+      const interleaved = layers
+        .slice(firstBody, lastBody + 1)
+        .some((layer) => effects.includes(layer.name));
+      const prefixEffects = layers.slice(0, firstBody).map((layer) => layer.name);
+      // Preserve layer order and a single combined shadow for complex animated attachments.
+      const dynamicCaster =
+        lighting &&
+        layers.some(
+          (layer) =>
+            effects.includes(layer.name) &&
+            layer.castsShadow !== false &&
+            layer.shadowCaster !== false &&
+            layer.effect !== true &&
+            !layer.independentClock &&
+            layer.visibleInFog !== false &&
+            !layer.visibleWhen?.thrustActive &&
+            !layer.visibleWhen?.sustainedThrust &&
+            !layer.visibleWhen?.moving,
+        );
+      if (firstBody < 0 || interleaved || dynamicCaster || (lighting && prefixEffects.length))
+        return draw(
+          ctx,
+          model,
+          x,
+          y,
+          scale,
+          angle,
+          clip,
+          time,
+          heldWeapon,
+          loop,
+          shieldVisible,
+          moving,
+          brokenParts,
+          aimAngle,
+          attacking,
+          onLand,
+          environment,
+          attackWeapon,
+          weaponDisplayIndex,
+          flying,
+          turretStatus,
+          effectsOnly,
+          boostSkillActive,
+          hiddenLayers,
+        );
+      const key = JSON.stringify([
+        model,
+        angle,
+        aimAngle,
+        clip,
+        heldWeapon,
+        shieldVisible,
+        onLand,
+        environment,
+        weaponDisplayIndex,
+        boostSkillActive,
+        hiddenLayers,
+        lighting,
+        idleRasterSize,
+      ]);
+      let entry = idleImages.get(key);
+      const bucket =
+        staticPose(models[model].animations[clip]) &&
+        !layers.some(
+          (layer) =>
+            !effects.includes(layer.name) && layer.frameFps && !layer.onlyAnimateWhenMoving,
+        )
+          ? 0
+          : Math.floor(time * 12);
+      if (entry) {
+        entry.desiredBucket = bucket;
+        entry.seenFrame = idleFrame;
+      }
+      const mayUpdate =
+        !entry ||
+        (!idleColdPending && (!idleUpdateKeys.length || idleUpdateKeys[idleUpdateCursor] === key));
+      if (
+        (!entry || entry.bucket !== bucket) &&
+        mayUpdate &&
+        idleBakeSpent < 2 &&
+        layers.every((layer) => images[layer.asset])
+      ) {
+        let extent = radius(model) + 4;
+        if (lighting?.enabled && lighting.intensity > 0) {
+          const projection = MapShadowLighting.projection(lighting, 1 + extent / 64);
+          extent = extent * 2 + Math.hypot(projection.x, projection.y) * 64;
+        }
+        if (Number.isFinite(extent) && extent > 0) {
+          const started = performance.now();
+          if (!entry) {
+            // Preserve native texels in overview, including large hulls and
+            // the padding required by their combined shadow. Resolution stays
+            // independent of zoom, so wheel/pinch never triggers rebaking.
+            const resolution = Math.min(1, idleRasterSize / (extent * 2));
+            const canvas = document.createElement("canvas");
+            canvas.width = canvas.height = Math.ceil(extent * 2 * resolution);
+            entry = { canvas, extent, resolution, bucket: null };
+            idleImagePixels += canvas.width * canvas.height;
+          }
+          const surface = entry.canvas.getContext("2d");
+          surface.clearRect(0, 0, entry.canvas.width, entry.canvas.height);
+          draw(
+            surface,
+            model,
+            entry.extent * entry.resolution,
+            entry.extent * entry.resolution,
+            entry.resolution,
+            angle,
+            clip,
+            bucket / 12,
+            heldWeapon,
+            loop,
+            shieldVisible,
+            false,
+            brokenParts,
+            aimAngle,
+            attacking,
+            onLand,
+            environment,
+            attackWeapon,
+            weaponDisplayIndex,
+            false,
+            null,
+            false,
+            boostSkillActive,
+            [...hiddenLayers, ...effects],
+          );
+          if (idleUpdateKeys[idleUpdateCursor] === key) idleUpdateCursor++;
+          entry.bucket = entry.desiredBucket = bucket;
+          entry.seenFrame = entry.bakedFrame = idleFrame;
+          idleBakeSpent += performance.now() - started;
+        }
+      }
+      if (!entry) idleMissing++;
+      if (entry) {
+        idleImages.delete(key);
+        idleImages.set(key, entry);
+        while (idleImages.size > 96 || idleImagePixels > 16 * 1024 * 1024) {
+          const oldest = idleImages.keys().next().value,
+            removed = idleImages.get(oldest);
+          idleImages.delete(oldest);
+          idleImagePixels -= removed.canvas.width * removed.canvas.height;
+          removed.canvas.width = removed.canvas.height = 0;
+        }
+        const drawEffects = (names) => {
+          if (!names.length) return;
+          draw(
+            ctx,
+            model,
+            x,
+            y,
+            scale,
+            angle,
+            clip,
+            time,
+            heldWeapon,
+            loop,
+            shieldVisible,
+            false,
+            brokenParts,
+            aimAngle,
+            attacking,
+            onLand,
+            environment,
+            attackWeapon,
+            weaponDisplayIndex,
+            false,
+            turretStatus,
+            false,
+            boostSkillActive,
+            [
+              ...hiddenLayers,
+              ...layers.filter((layer) => !names.includes(layer.name)).map((layer) => layer.name),
+            ],
+          );
+        };
+        drawEffects(prefixEffects);
+        ctx.save();
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(
+          entry.canvas,
+          x - entry.extent * scale,
+          y - entry.extent * scale,
+          entry.extent * scale * 2,
+          entry.extent * scale * 2,
+        );
+        ctx.restore();
+        drawEffects(effects.filter((name) => !prefixEffects.includes(name)));
+        return;
+      }
+    }
+
     const active = isFiring
       ? (ART.models[model].weapons.find((w) => w.id === heldWeapon)?.moduleIds || []).filter(
           (id) => !brokenParts[id],
@@ -4607,11 +4895,27 @@ const SpriteRenderer = (() => {
       flying,
       boostSkillActive,
     );
-    if (!effectsOnly && environment !== "space" &&
-        typeof ClientSettings !== "undefined" && ClientSettings.unitShadows()) {
+    if (
+      !effectsOnly &&
+      environment !== "space" &&
+      typeof ClientSettings !== "undefined" &&
+      ClientSettings.unitShadows()
+    ) {
       const lighting = MapShadowLighting.normalize(globalThis.ProjectGreedMapLighting || {});
       if (lighting.enabled && lighting.intensity > 0)
-        drawUnitShadow(ctx, model, layers, sampled, angle, aimAngle, clip, time, moving, hiddenLayers, lighting);
+        drawUnitShadow(
+          ctx,
+          model,
+          layers,
+          sampled,
+          angle,
+          aimAngle,
+          clip,
+          time,
+          moving,
+          hiddenLayers,
+          lighting,
+        );
     }
     for (const layer of layers) {
       if (hiddenLayers.includes(layer.name)) continue;
@@ -4724,21 +5028,59 @@ const SpriteRenderer = (() => {
     const presentation = models[model].presentation;
     return presentation.movement === "walk" ? presentation.walk : presentation.move;
   }
+  function resetCaches() {
+    for (const entry of [...idleImages.values(), ...shadowCache.values()])
+      entry.canvas.width = entry.canvas.height = 0;
+    for (const canvas of outlineCache.values()) canvas.width = canvas.height = 0;
+    idleImages.clear(); shadowCache.clear(); outlineCache.clear(); modelRadii.clear();
+    idleImagePixels = shadowPixels = outlinePixels = idleBakeSpent = idleFrame = idleMissing = 0;
+    idleColdPending = false; idleUpdateKeys = []; idleUpdateCursor = 0;
+    drawSamples = new WeakMap();
+  }
   // One bounded queue serves startup, previews and battle preparation.
   const requests = new Map(),
     queue = [];
-  let workers = 0;
+  let workers = 0, assetGeneration = 0;
+  const pendingSources = new Set();
+  let retainedSources = new Set();
+  function releaseBattleResources(keys = []) {
+    resetCaches();
+    assetGeneration++;
+    // Small menu icons are shared across screens; decoded battle sheets are
+    // leased to the current battle, not retained for every battle ever played.
+    const keep = new Set([...keys, ...ART.units.map(unit => unit.icon)]);
+    retainedSources = new Set([...keep].map(key => ART.assets[key]).filter(Boolean));
+    for (const key of Object.keys(images)) if (!keep.has(key)) delete images[key];
+    for (const source of requests.keys())
+      if (!retainedSources.has(source) && !pendingSources.has(source)) requests.delete(source);
+    for (let i = queue.length - 1; i >= 0; i--) if (!retainedSources.has(queue[i].source)) {
+      const [obsolete] = queue.splice(i, 1); obsolete.resolve(null);
+    }
+  }
+  function cacheStats() {
+    const decoded = new Set(Object.values(images));
+    return { idle: idleImages.size, idlePixels: idleImagePixels, shadow: shadowCache.size,
+      shadowPixels, outlines: outlineCache.size, outlinePixels, sources: requests.size,
+      decoded: decoded.size, decodedPixels: [...decoded].reduce((sum, image) => sum + image.width * image.height, 0),
+      pending: pendingSources.size };
+  }
   function pump() {
     while (workers < 8 && queue.length) {
       const task = queue.shift();
       workers++;
       const image = new Image();
+      pendingSources.add(task.source);
       image.onload = () => {
+        image.onload = image.onerror = null;
+        pendingSources.delete(task.source);
+        if (task.generation !== assetGeneration && !retainedSources.has(task.source)) requests.delete(task.source);
         workers--;
         task.resolve(image);
         pump();
       };
       image.onerror = () => {
+        image.onload = image.onerror = null;
+        pendingSources.delete(task.source);
         workers--;
         requests.delete(task.source);
         task.reject(Error("Asset loading failed: " + task.key));
@@ -4749,6 +5091,8 @@ const SpriteRenderer = (() => {
   }
   function ensureAssets(keys, onProgress = () => {}) {
     keys = [...new Set(keys)].filter((key) => ART.assets[key]);
+    for (const key of keys) retainedSources.add(ART.assets[key]);
+    const generation = assetGeneration;
     let completed = 0;
     onProgress(0, keys.length);
     return Promise.all(
@@ -4760,13 +5104,13 @@ const SpriteRenderer = (() => {
         const source = ART.assets[key];
         if (!requests.has(source)) {
           const request = new Promise((resolve, reject) =>
-            queue.push({ source, key, resolve, reject }),
+            queue.push({ source, key, resolve, reject, generation }),
           );
           requests.set(source, request);
           pump();
         }
         return requests.get(source).then((image) => {
-          images[key] = image;
+          if (generation === assetGeneration || retainedSources.has(source)) images[key] = image;
           onProgress(++completed, keys.length);
           return image;
         });
@@ -4820,7 +5164,7 @@ const SpriteRenderer = (() => {
             ART.models[id].weapons.flatMap((weapon) => [
               weapon.projectile?.asset,
               weapon.projectile?.cluster?.asset,
-              ...(weapon.remote?.units || []).map((unit) => unit.asset),
+              ...(weapon.remote?.units || []).flatMap((unit) => [unit.asset, unit.trail?.asset]),
             ]),
           ),
         ].filter(Boolean),
@@ -4840,6 +5184,8 @@ const SpriteRenderer = (() => {
   return {
     draw,
     beginFrame,
+    releaseBattleResources,
+    cacheStats,
     radius,
     load,
     loadMenu,

@@ -680,6 +680,13 @@
               }
             }
           ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "converted_skill"
+          ],
+          "convertedSkill": "Irradiation"
         }
       }
     },
@@ -1243,6 +1250,11 @@
       "source": "Template/Unit/Skill/Transform_LandFly.gw",
       "status": "review",
       "name": "Transform_LandFly"
+    },
+    {
+      "id": "Irradiation",
+      "status": "adapted",
+      "name": "MEGA光束照射：方向照射、蓄力、逐机命中；原版固定演出与判定射程独立"
     }
   ],
   "weaponKits": [
@@ -1252,7 +1264,6 @@
       "cost": 0,
       "weapons": [
         "AEUG_MSZ_010_BR",
-        "AEUG_MSZ_010_HighMegaCannon",
         "Common_DoubleVulcan_MS",
         "AEUG_MSZ_010_BeamCannon",
         "AEUG_MSZ_010_BackpackMS",
@@ -1262,7 +1273,40 @@
     }
   ],
   "description": "具有超越Z含义的第四代MS典范,具备极其强大的火力与防御力",
-  "skills": [],
+  "skills": [
+    {
+      "ref": "AEUG_MSZ_010_HighMegaCannon__skill_irradiation__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "muzzle": {
+          "mounts": [
+            {
+              "root": true,
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          ]
+        },
+        "chargeMuzzle": {
+          "mounts": [
+            {
+              "root": true,
+              "offset": {
+                "x": 0.0,
+                "y": 20.0
+              }
+            }
+          ]
+        },
+        "level": 1,
+        "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSZ_010_HighMegaCannon.gw"
+      }
+    }
+  ],
   "kitAliases": {
     "kit_0": "standard",
     "kit_1": "standard",

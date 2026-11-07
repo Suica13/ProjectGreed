@@ -324,6 +324,12 @@ const EnvironmentVisuals = (() => {
   const fogPixelsPerCell = 8;
   const water = new Map(),
     splashes = [];
+  function reset() {
+    matchKey = fogKey = fogCells = visibleMapPath = screenClip = screenClipKey = smoothRadius = null;
+    fogWidth = fogHeight = 0; water.clear(); splashes.length = 0;
+    for (const canvas of [fogCanvas, smoothFogCanvas]) if (canvas) canvas.width = canvas.height = 0;
+    fogCanvas = smoothFogCanvas = null;
+  }
   function pose(unit, cell) {
     // Exposed SFS cargo inherits its carrier's altitude, not the terrain below it.
     const carrier =
@@ -398,7 +404,7 @@ const EnvironmentVisuals = (() => {
     const key = JSON.stringify([width, height, intel.visibleCells]);
     if (key === fogKey) return;
     fogKey = key;
-    fogCanvas = document.createElement("canvas");
+    fogCanvas ||= document.createElement("canvas");
     fogCanvas.width = width * fogPixelsPerCell;
     fogCanvas.height = height * fogPixelsPerCell;
     const c = fogCanvas.getContext("2d"),
@@ -484,5 +490,5 @@ const EnvironmentVisuals = (() => {
     }
     ctx.restore();
   }
-  return { pose, observe, drawWater, fog, visibilityClip, smoke };
+  return { pose, observe, drawWater, fog, visibilityClip, smoke, reset };
 })();

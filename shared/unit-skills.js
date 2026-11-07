@@ -120,6 +120,7 @@ const UnitSkills = (() => {
           !Number.isFinite(skill.range) ||
           skill.range < 1 ||
           skill.range > 100 ||
+          (skill.areaWidth !== undefined && (!Number.isInteger(skill.areaWidth) || skill.areaWidth < 0 || skill.areaWidth > 15)) ||
           !Number.isFinite(skill.minRange) ||
           skill.minRange < 0 ||
           skill.minRange > skill.range ||
@@ -176,6 +177,7 @@ const UnitSkills = (() => {
           !Number.isFinite(skill.range) ||
           skill.range < 1 ||
           skill.range > 100 ||
+          (skill.areaWidth !== undefined && (!Number.isInteger(skill.areaWidth) || skill.areaWidth < 0 || skill.areaWidth > 15)) ||
           skill.consumeAction !== false
         )
           throw Error("Invalid beam diffusion skill: " + label);
@@ -199,6 +201,7 @@ const UnitSkills = (() => {
           !Number.isFinite(skill.range) ||
           skill.range < 1 ||
           skill.range > 100 ||
+          (skill.areaWidth !== undefined && (!Number.isInteger(skill.areaWidth) || skill.areaWidth < 0 || skill.areaWidth > 15)) ||
           !Number.isFinite(skill.enCost) ||
           skill.enCost < 0 ||
           !Number.isInteger(skill.maxUses) ||

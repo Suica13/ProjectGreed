@@ -175,16 +175,21 @@ const Economy = (() => {
     const next = snapshot();
     next.money += award.money;
     next.supplies += award.supplies;
-    // Deployment consumes a reservation once; surviving physical items return at settlement.
+    // New matches deduct only actual losses at settlement. Keep legacy deployment/return
+    // receipts readable for already-running older servers; all changes share one receipt.
     for (const [field, direction] of [
       ["stockUsed", -1],
       ["stockReturned", 1],
+      ["stockLost", -1],
     ]) {
       if (!award[field]) continue;
       const stock = normalizeStock(award[field]);
       for (const kind of ["inventory", "kits"])
         for (const [id, count] of Object.entries(stock[kind])) {
-          const amount = (next[kind][id] || 0) + direction * count;
+          const change = (next[kind][id] || 0) + direction * count;
+          // A delayed result may arrive after stock was used elsewhere. Still save
+          // the receipt and rewards once rather than blocking settlement forever.
+          const amount = field === "stockLost" ? Math.max(0, change) : change;
           if (amount < 0) throw Error("出战库存不足：" + id);
           next[kind][id] = amount;
         }

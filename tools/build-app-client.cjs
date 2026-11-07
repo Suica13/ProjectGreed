@@ -100,7 +100,7 @@ function buildAppClient() {
   });
   const manifest = {
     compatibility,
-    edition: "AppTest2",
+    edition: "ProjectGreed",
     version: project.version,
     assets: [...assets.values()],
     scripts: [...scripts].map((name) => ({

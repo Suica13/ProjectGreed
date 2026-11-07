@@ -1441,6 +1441,22 @@ function mapRanges(chosen, canMove, deploymentSeat, showAttack = false) {
 // Map catalog tiles are immutable in battle; each server snapshot copies the same terrain.
 const mapTerrainCache = { canvas: null, viewKey: "" };
 const authoredTerrainBase = {tiles: null, mapId: null, canvas: null};
+// Run on battle identity changes, including restarting the same map. Menu and
+// hangar navigation within a live match deliberately keep the current resources.
+function resetMapPresentation(keepKeys = []) {
+  SpriteRenderer.releaseBattleResources(keepKeys);
+  TileMapRenderer.reset();
+  BattlefieldWeather.reset();
+  EnvironmentVisuals.reset();
+  mapRangeCache = null;
+  for (const cache of [mapTerrainCache, authoredTerrainBase]) {
+    if (cache.canvas) cache.canvas.width = cache.canvas.height = 0;
+    cache.canvas = null;
+  }
+  mapTerrainCache.viewKey = "";
+  authoredTerrainBase.tiles = authoredTerrainBase.mapId = null;
+  dialogueBubbles.clear();
+}
 function drawCachedMapTerrain(target, w, h, dpr, tile, ox, oy, immersive, deploymentArea) {
   if (Rules.getMap(game.mapId).tileMap) {
     // Authored art supplies terrain detail; its fallback colors need only one pixel per cell.
@@ -2059,7 +2075,7 @@ function drawMap(now) {
     if (pos.x+radius < 0 || pos.y+radius < 0 || pos.x-radius > w || pos.y-radius > h) continue;
     mapUnitPoses.push(pose);
   }
-  const pilotLabels = MapCamera.pilotLabels;
+  const pilotLabels = MapCamera.pilotLabelsAt(w, h);
   // Ground overlays are drawn before every unit, including moving and dodging units.
   if (!immersive)
     for (const { u, pos } of mapUnitPoses)
@@ -2177,6 +2193,7 @@ function drawMap(now) {
         false,
         !!(u.overBoost || u.fullBoost || u.overdrive || u.boostSkillActive),
         combatPose?.hiddenLayers || [],
+        !pilotLabels && !combatPose && !motion && !skillPose ? 2048 : 0,
       );
       const fieldImpact = Math.min(
         MapCombat.fieldImpact(u.id),
@@ -2431,10 +2448,10 @@ function drawMap(now) {
       if (label.textContent !== next) label.textContent = next;
     }
   }
-  drawDialogueBubbles(ctx, mapPosesById, intel, w, h, now);
+  drawDialogueBubbles(ctx, mapPosesById, intel, w, h, now, pilotLabels);
 }
-function drawDialogueBubbles(ctx, poses, intel, width, height, now) {
-  if (!dialogueBubbles.size || ClientSettings.hidePilotDialogue() || !MapCamera.pilotLabels) return;
+function drawDialogueBubbles(ctx, poses, intel, width, height, now, labelsVisible = MapCamera.pilotLabels) {
+  if (!dialogueBubbles.size || ClientSettings.hidePilotDialogue() || !labelsVisible) return;
   const occupied = [];
   ctx.save();
   ctx.font = "12px system-ui";
@@ -3506,7 +3523,7 @@ function tick(now) {
     clock = now / 1000;
     if (assetsReady) {
       if (window.GamePreview?.active) window.GamePreview.tick(now);
-      else if (pageView === "game") {
+      else if (pageView === "game" && !window.BattleAssets?.loading) {
         MapCombat.update(now);
         drawMap(now);
         drawBattle(now);

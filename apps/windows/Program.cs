@@ -15,7 +15,7 @@ namespace ProjectGreed.Client {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             using (var mutex = new Mutex(true, "Local\\ProjectGreed.AppTest2", out bool first)) {
-                if (!first) { MessageBox.Show("ProjectGreed AppTest2 已在运行。", "ProjectGreed"); return; }
+                if (!first) { MessageBox.Show("ProjectGreed 已在运行。", "ProjectGreed"); return; }
                 try { Application.Run(new GameWindow(args)); }
                 catch (Exception error) { MessageBox.Show("客户端未能启动：" + error.Message, "ProjectGreed"); }
             }
@@ -30,7 +30,7 @@ namespace ProjectGreed.Client {
         private Rectangle restoreBounds;
         private FormWindowState restoreState;
         public GameWindow(string[] args) {
-            Text = "ProjectGreed V95 · AppTest2";
+            Text = "ProjectGreed V95";
             ClientSize = new Size(1440, 900);
             MinimumSize = new Size(360, 480);
             StartPosition = FormStartPosition.CenterScreen;

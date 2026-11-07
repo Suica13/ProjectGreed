@@ -125,5 +125,39 @@
     "snowCover": null,
     "wetGround": null,
     "dustCover": null
+  },
+  "timeTints": {
+    "dawn": {
+      "rgb": "220,178,145",
+      "opacity": 0.13
+    },
+    "morning": {
+      "rgb": "255,243,215",
+      "opacity": 0.025
+    },
+    "noon": {
+      "rgb": "255,237,195",
+      "opacity": 0.055
+    },
+    "afternoon": {
+      "rgb": "245,218,173",
+      "opacity": 0.07
+    },
+    "dusk": {
+      "rgb": "81,43,65",
+      "opacity": 0.25
+    },
+    "evening": {
+      "rgb": "9,19,48",
+      "opacity": 0.4
+    },
+    "late_night": {
+      "rgb": "3,10,32",
+      "opacity": 0.62
+    },
+    "pre_dawn": {
+      "rgb": "8,17,43",
+      "opacity": 0.49
+    }
   }
 }

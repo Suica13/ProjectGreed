@@ -29,3 +29,7 @@ Browser regression tests cover terrain coverage, grouped shadow opacity and room
 New editable terrain types: `road` (road), `shallow_water` (ground-classified shallow water), `deep_water` (sea), `residential` (built-up area). Existing `snow`, `desert` and `rock` remain as snowfield, sandy terrain and mountain. Legacy `water` remains supported. Tile categories and per-terrain cover multipliers live in `shared/map-document.js`.
 
 New terrain metadata does not yet comprehensively update unit movement and terrain combat modifiers; those require a separate compatibility pass before new terrain IDs are used in published maps.
+
+地表覆盖层按地图格子生成小尺寸缓存，仅在地图、天气累计状态或回合变化时更新；缩放和平移复用该图片。没有积雪、湿润或积尘时直接跳过地表遍历。降水、闪电及昼夜过渡仍逐帧播放。
+
+降水起点按独立固定随机序列分布，各粒子的速度、尺寸、透明度不同，雪粒另有错相摆动；不按固定步长排成格线。粒子数据复用且有数量上限，不在每帧重建。`timeTints` 配置每个时段的滤镜颜色与透明度：深夜使用更暗的深蓝色，正午使用低透明度的暖米色；仅影响演出，不改变昼夜感知规则。

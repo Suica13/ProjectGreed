@@ -46,10 +46,10 @@ test("ship trait excludes non-cannons and non-ships, and reloading does not stac
     assert.equal(weapon.hit, Math.round(Classes.baseHits[Classes.classify(weapon)] * (Classes.shipCannon(weapon, true) ? 0.8 : 1)));
 });
 
-test("unspecified classes inherit native accuracy; irradiation skill stays at 60", () => {
+test("unspecified classes inherit native accuracy; irradiation keeps 60 and MEGA irradiation uses 50", () => {
   assert.equal(config.weaponClasses.beam.baseHit, -1);
   assert.equal(config.weaponClasses.other.baseHit, -1);
   const skills = catalog.prefabs.flatMap(p => p.skills || []).filter(s => s.type === "irradiation");
   assert(skills.length > 0);
-  assert(skills.every(s => s.baseHit === 60));
+  assert(skills.every(s => s.baseHit === (s.areaWidth === 3 ? 50 : 60)));
 });

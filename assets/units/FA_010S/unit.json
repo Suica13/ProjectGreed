@@ -773,6 +773,13 @@
               }
             }
           ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "converted_skill"
+          ],
+          "convertedSkill": "Irradiation"
         }
       }
     },
@@ -1845,6 +1852,11 @@
       "source": "Template/Unit/Skill/ExitUnit.gw",
       "status": "adapted",
       "name": "爆甲：原生形态转换，资源与部位规则使用显式配置"
+    },
+    {
+      "id": "Irradiation",
+      "status": "adapted",
+      "name": "MEGA光束照射：方向照射、蓄力、逐机命中；原版固定演出与判定射程独立"
     }
   ],
   "weaponKits": [
@@ -1853,7 +1865,6 @@
       "name": "标准套件",
       "cost": 0,
       "weapons": [
-        "AEUG_MSZ_010_HighMegaCannon",
         "Common_DoubleVulcan_MS",
         "AEUG_MSZ_010S_BR",
         "AEUG_MSZ_010_BeamCannon",
@@ -1904,6 +1915,38 @@
         "enRecoveryPercent": 35.0,
         "shieldRecoveryPercent": 0,
         "repairAllParts": false
+      }
+    },
+    {
+      "ref": "AEUG_MSZ_010_HighMegaCannon__skill_irradiation__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "muzzle": {
+          "mounts": [
+            {
+              "root": true,
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          ]
+        },
+        "chargeMuzzle": {
+          "mounts": [
+            {
+              "root": true,
+              "offset": {
+                "x": 0.0,
+                "y": 20.0
+              }
+            }
+          ]
+        },
+        "level": 1,
+        "levelSource": "Units/BattleUnits/Weapon/Beam/AEUG_MSZ_010_HighMegaCannon.gw"
       }
     }
   ],

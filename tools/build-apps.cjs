@@ -25,7 +25,7 @@ if (mode === "prepare") process.exit(0);
 const delivery = path.join(
   root,
   "build",
-  `ProjectGreed-${project.version}-AppTest2-${mode === "windows" ? "windows-x64" : "android"}`,
+  `ProjectGreed-${project.version}-${mode === "windows" ? "windows-x64" : "android"}`,
 );
 if (!delivery.startsWith(path.join(root, "build") + path.sep))
   throw Error("Output outside workspace build folder");
@@ -57,7 +57,7 @@ if (mode === "windows") {
   // The resolved target is checked before removing an old generated content tree.
   if (
     destination !==
-    path.resolve(root, "build", `ProjectGreed-${project.version}-AppTest2-windows-x64`, "content")
+    path.resolve(root, "build", `ProjectGreed-${project.version}-windows-x64`, "content")
   )
     throw Error("Unsafe content destination");
   fs.rmSync(destination, { recursive: true, force: true });
@@ -101,7 +101,7 @@ if (mode === "windows") {
   );
   fs.copyFileSync(
     path.join(root, "apps/android/app/build/outputs/apk/debug/app-debug.apk"),
-    path.join(delivery, `ProjectGreed-${project.version}-AppTest2-test.apk`),
+    path.join(delivery, "ProjectGreed.apk"),
   );
 } else throw Error("Unknown target: " + mode);
 const records = [];
@@ -123,7 +123,7 @@ scan(delivery);
 fs.writeFileSync(
   path.join(delivery, "distribution-manifest.json"),
   JSON.stringify(
-    { edition: "AppTest2", version: project.version, platform: mode, files: records },
+    { edition: "ProjectGreed", version: project.version, platform: mode, files: records },
     null,
     2,
   ),

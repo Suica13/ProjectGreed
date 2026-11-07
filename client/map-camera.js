@@ -21,20 +21,26 @@ const MapCamera = (() => {
       Math.min(
         (Math.max(37, width) - 36) / Rules.mapWidth(game),
         (Math.max(37, height) - 36) / Rules.mapHeight(game),
-      ) * cellScale * gridScale
+      ) *
+      cellScale *
+      gridScale
     );
   }
   function zoomLimit(width, height) {
     // Keep square cells; one axis reaches 8 columns / 4 rows.
     return Math.max(fitZoom, Math.max(width / 8, height / 4) / baseTile(width, height));
   }
-  function maximumZoom() {
-    const box = canvas.getBoundingClientRect();
-    return zoomLimit(box.width || 800, box.height || 600);
+  function maximumZoom(width, height) {
+    if (!(width > 0 && height > 0)) {
+      const box = canvas.getBoundingClientRect();
+      width = box.width || 800;
+      height = box.height || 600;
+    }
+    return zoomLimit(width, height);
   }
-  function zoomPercent() {
+  function zoomPercent(width, height) {
     if (zoom < fitZoom - zoomEpsilon) return 0;
-    const span = maximumZoom() - fitZoom;
+    const span = maximumZoom(width, height) - fitZoom;
     return span > zoomEpsilon ? 1 + 99 * Math.max(0, Math.min(1, (zoom - fitZoom) / span)) : 100;
   }
   function geometry(width, height) {
@@ -45,25 +51,29 @@ const MapCamera = (() => {
     centerY = Math.max(0, Math.min(Rules.mapHeight(game), centerY));
     return { tile, ox: width / 2 - centerX * tile, oy: height / 2 - centerY * tile };
   }
-  function refresh() {
-    const box = canvas.getBoundingClientRect();
+  function refresh(box = null) {
+    if (!box || typeof box.width !== "number") box = canvas.getBoundingClientRect();
+    const maximum = maximumZoom(box.width || 800, box.height || 600);
     if (box.width > 0 && box.height > 0) {
-      zoom = Math.min(zoom, zoomLimit(box.width, box.height));
+      zoom = Math.min(zoom, maximum);
       mapGeo = geometry(box.width, box.height);
     }
-    byId("mapZoomLabel").textContent = Math.round(zoomPercent()) + "%";
+    const label = Math.round(zoomPercent(box.width || 800, box.height || 600)) + "%";
+    if (byId("mapZoomLabel").textContent !== label) byId("mapZoomLabel").textContent = label;
     byId("mapZoomOut").disabled = zoom <= minimumZoom;
-    byId("mapZoomIn").disabled = zoom >= maximumZoom();
-    canvas.style.cursor = "grab";
+    byId("mapZoomIn").disabled = zoom >= maximum;
+    if (canvas.style.cursor !== "grab") canvas.style.cursor = "grab";
   }
-  function setZoom(value, x, y) {
-    const box = canvas.getBoundingClientRect(),
-      old = geometry(box.width, box.height);
+  function setZoom(value, x, y, box = canvas.getBoundingClientRect()) {
+    const old = geometry(box.width, box.height);
     x ??= box.width / 2;
     y ??= box.height / 2;
     const cellX = (x - old.ox) / old.tile,
       cellY = (y - old.oy) / old.tile;
-    let nextZoom = Math.max(minimumZoom, Math.min(maximumZoom(), value));
+    let nextZoom = Math.max(
+      minimumZoom,
+      Math.min(maximumZoom(box.width || 800, box.height || 600), value),
+    );
     // Keep a distinct full-map stop before entering the one-step thumbnail view.
     // The same stops apply to buttons, wheel input and programmatic zoom changes.
     if (zoom < fitZoom - zoomEpsilon && nextZoom > zoom) nextZoom = Math.max(fitZoom, nextZoom);
@@ -74,7 +84,7 @@ const MapCamera = (() => {
     const tile = baseTile(box.width, box.height) * zoom;
     centerX = cellX - (x - box.width / 2) / tile;
     centerY = cellY - (y - box.height / 2) / tile;
-    refresh();
+    refresh(box);
   }
   function focus(x, y, { preserveZoom = false } = {}) {
     if (!preserveZoom) zoom = Math.max(zoom, 1.75);
@@ -112,6 +122,7 @@ const MapCamera = (() => {
         zoom * Math.exp(-event.deltaY * 0.0015),
         event.clientX - box.left,
         event.clientY - box.top,
+        box,
       );
     },
     { passive: false },
@@ -170,11 +181,11 @@ const MapCamera = (() => {
         event.preventDefault();
         const pair = touchPair(),
           box = canvas.getBoundingClientRect();
-        setZoom((pinch.zoom * pair.distance) / pinch.distance, pair.x, pair.y);
+        setZoom((pinch.zoom * pair.distance) / pinch.distance, pair.x, pair.y, box);
         const tile = baseTile(box.width, box.height) * zoom;
         centerX = pinch.cellX - (pair.x - box.width / 2) / tile;
         centerY = pinch.cellY - (pair.y - box.height / 2) / tile;
-        refresh();
+        refresh(box);
         return;
       }
       if (pinchConsumed) return;
@@ -237,9 +248,22 @@ const MapCamera = (() => {
       return zoomPercent();
     },
     setPercent(value) {
-      if (value <= 0) { setZoom(minimumZoom); setZoom(minimumZoom); }
-      else setZoom(fitZoom + (maximumZoom() - fitZoom) * Math.max(0, Math.min(99, value - 1)) / 99);
+      const box = canvas.getBoundingClientRect();
+      if (value <= 0) {
+        setZoom(minimumZoom, undefined, undefined, box);
+        setZoom(minimumZoom, undefined, undefined, box);
+      } else
+        setZoom(
+          fitZoom +
+            ((maximumZoom(box.width || 800, box.height || 600) - fitZoom) *
+              Math.max(0, Math.min(99, value - 1))) /
+              99,
+          undefined,
+          undefined,
+          box,
+        );
     },
+    pilotLabelsAt: (width, height) => zoomPercent(width, height) >= 50 - zoomEpsilon,
     get maxZoom() {
       return maximumZoom();
     },

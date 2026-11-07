@@ -331,7 +331,7 @@ const Net = (() => {
     }
   }
   function leave({ notify = true, forget = true } = {}) {
-    BattleAssets.cancel();
+    BattleAssets.release();
     if (window.ReplayPlayer?.active) window.ReplayPlayer.stop(false);
     window.BattlePrompts?.reset();
     closeDisconnect();
@@ -639,7 +639,8 @@ const Net = (() => {
     // Resource/loading/playback callbacks may finish after returning or reconnecting.
     // They must never restore a superseded room phase or reopen its modal.
     if (!n.active || !s || s !== n.snapshot) return;
-    if (!s.started || s.returnCountdown) BattleAssets.cancel();
+    if (!s.started) BattleAssets.release();
+    else if (s.returnCountdown) BattleAssets.cancel();
     else if (BattleAssets.guard(s, () => applySnapshot(s))) {
       phase = "loading";
       return;

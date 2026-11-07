@@ -1544,6 +1544,13 @@
               }
             }
           ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "converted_skill"
+          ],
+          "convertedSkill": "Irradiation"
         }
       }
     },
@@ -1673,6 +1680,11 @@
       "name": "Unsupported remote payload (reflector or indirect control): MRX_010_Funnel",
       "source": "Units/BattleUnits/Weapon/Funnel/TITANS_MRX_010_Funnel.gw",
       "status": "review"
+    },
+    {
+      "id": "Irradiation",
+      "status": "adapted",
+      "name": "MEGA光束照射：方向照射、蓄力、逐机命中；原版固定演出与判定射程独立"
     }
   ],
   "weaponKits": [
@@ -1686,7 +1698,6 @@
         "TITANS_MRX_009_ArmBR_4",
         "TITANS_MRX_009_ArmBR_L_4",
         "TITANS_MRX_009_BeamCannon",
-        "TITANS_MRX_009_MegaBeamCannon",
         "Common_ArmBeamSaber_Large_Double_BBLDF_Yellow_MRX_010",
         "Common_Push_A"
       ]
@@ -1700,7 +1711,38 @@
     "levelMultiplier": 0.25,
     "published": 3750
   },
-  "skills": [],
+  "skills": [
+    {
+      "ref": "TITANS_MRX_009_MegaBeamCannon__skill_irradiation__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "muzzle": {
+          "mounts": [
+            {
+              "root": true,
+              "offset": {
+                "x": 0.0,
+                "y": 15.0
+              }
+            }
+          ]
+        },
+        "chargeMuzzle": {
+          "mounts": [
+            {
+              "root": true,
+              "offset": {
+                "x": 0.0,
+                "y": 35.0
+              }
+            }
+          ]
+        },
+        "level": 1,
+        "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_MegaBeamCannon.gw"
+      }
+    }
+  ],
   "nativeCombatRevision": 1,
   "unitTags": [
     "MA",
