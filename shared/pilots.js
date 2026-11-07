@@ -216,6 +216,8 @@ const PilotSystem = (() => {
       custom: true,
       name: source.name,
       faction: source.faction,
+      originFaction: source.originFaction || source.faction,
+      personality: source.personality || "calm",
       level,
       experience: cumulativeExperience(value, level, experience),
       experienceVersion: 2,
@@ -357,13 +359,16 @@ const PilotSystem = (() => {
     const faction = value.faction ?? "PMC";
     if (!["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(faction))
       throw Error("驾驶员阵营无效");
-    const allowedPersonalities = ["calm", "aggressive", "cautious", "idealist"];
+    const allowedPersonalities = ["calm", "aggressive", "cautious", "idealist", "strategic", "sarcastic", "strict", "zealous", "proud", "obsessive", "empathetic"];
     const personality = value.personality == null ? null : value.personality;
     if (personality !== null && !allowedPersonalities.includes(personality))
       throw Error("驾驶员性格无效");
     const background = typeof value.background === "string"
       ? value.background.replace(/[\u0000-\u001f\u007f]/g, "").trim().slice(0, 160)
       : "";
+    const originFaction = value.originFaction ?? faction;
+    if (!["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(originFaction))
+      throw Error("驾驶员出身阵营无效");
     const uploadedPortrait = portraitData(value.uploadedPortrait);
     const portraitId = portraitsById.has(value.portraitId)
       ? value.portraitId
@@ -373,6 +378,7 @@ const PilotSystem = (() => {
       name,
       trainingVersion,
       faction,
+      originFaction,
       ...(personality ? { personality } : {}),
       ...(background ? { background } : {}),
       portraitId,
