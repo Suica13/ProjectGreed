@@ -2017,7 +2017,13 @@
               <div class="phase-heading">
                 <h2 data-ui-node="node-32" id="phaseTitle">蓝方行动阶段</h2>
                 <style>
-      #deploymentRoster { scrollbar-width:thin; }
+      #deploymentRoster { scrollbar-width:thin; min-height:58px; }
+      #deploymentBottomBar { position:absolute;left:12px;right:12px;bottom:12px;z-index:15;display:flex;align-items:center;gap:12px;padding:9px;background:rgba(8,22,34,.92);border:1px solid #54758b;border-radius:8px;box-shadow:0 4px 20px #0008; }
+      #deploymentBottomBar[hidden] {display:none}
+      #deploymentBottomBar #deploymentRoster {flex:1;max-width:none!important}
+      #deploymentBottomBar #deploymentControls {display:flex;flex-direction:column;flex-shrink:0}
+      #deploymentBottomBar #deploymentUnplace {border-color:#d29b6d}
+      @media(max-width:650px){#deploymentBottomBar{left:4px;right:4px;bottom:4px;gap:5px;padding:5px}#deploymentBottomBar #deploymentControls button{min-width:78px!important;font-size:11px;padding:5px}}
       #deploymentRoster button[aria-selected="true"] { outline:2px solid #8fd5ff; }
       #deploymentRoster button:focus-visible { outline:2px solid #e8ca74; }
       #deploymentControls button { padding:6px 10px; }
@@ -2026,12 +2032,7 @@
     <div id="deploymentPanel" hidden data-ui-node="node-200">
                   <p id="deploymentStatus" data-ui-node="node-201"></p>
                   <p id="deploymentHint">部署区域全队共享，在高亮区域内调整位置，两队确认后开始回合。</p>
-                  <div id="deploymentRoster" role="listbox" aria-label="待部署单位" style="display:flex;gap:8px;overflow-x:auto;max-width:80vw;padding:8px 0"></div>
-                  <div id="deploymentControls" style="display:flex;gap:8px;flex-wrap:wrap">
-                    <button id="deploymentUnplace" type="button">取消部署</button>
-                    <button id="deploymentClear" type="button">全部清空</button>
-                    <button id="deploymentAuto" type="button">自动部署</button>
-                  </div>
+
                 </div>
               </div>
               <p data-ui-node="node-33" id="hint">点击己方单位，选择蓝色格子移动。</p>
@@ -2043,6 +2044,14 @@
           </div>
           <div data-ui-node="node-35" class="map-wrap" id="mapWrap">
             <span id="hudTurnActions" role="group" aria-label="回合操作"></span>
+            <div id="deploymentBottomBar" hidden>
+                  <div id="deploymentRoster" role="listbox" aria-label="待部署单位" style="display:flex;gap:8px;overflow-x:auto;max-width:80vw;padding:8px 0"></div>
+                  <div id="deploymentControls" style="display:flex;gap:8px;flex-wrap:wrap">
+                    <button id="deploymentUnplace" type="button">取消部署</button>
+                    <button id="deploymentClear" type="button">全部清空</button>
+                    <button id="deploymentAuto" type="button">自动部署</button>
+                  </div>
+            </div>
             <span id="mapEnvironment" class="map-environment is-ground">地面</span>
             <div class="map-camera-controls" aria-label="地图缩放">
               <span id="mapCombatControls" hidden>
