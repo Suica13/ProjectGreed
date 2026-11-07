@@ -63,6 +63,87 @@ const BattleDialogue = (() => {
     obsessive: ["你根本不了解我的目标！", "绝不会让你得逞！"],
     empathetic: ["我也不愿如此，但我不能退。", "如果可以，我希望这场战斗停止。"],
   };
+  const transportLines = {
+    board: {
+      calm: ["收到，机库已准备好。", "确认入库，保持待命。"],
+      aggressive: ["赶紧进来，下一波还等着我们！"],
+      cautious: ["减速接近，确认停泊锁定。"],
+      idealist: ["欢迎回来，大家平安就好。"],
+      strategic: ["已为你预留整备位置。"],
+      sarcastic: ["终于想起来回来补给了？"],
+      strict: ["按规程入库，不许抢道！"],
+      zealous: ["整备完毕后继续为理想而战！"],
+      proud: ["能搭乘本舰是你的荣幸。"],
+      obsessive: ["不要碰我的设备，按指定位置停靠！"],
+      empathetic: ["辛苦了，先回来休息吧。"],
+    },
+    launch: {
+      calm: ["出击许可，祝你顺利。"],
+      aggressive: ["去吧，狠狠教训他们！"],
+      cautious: ["确认周边安全，允许出击。"],
+      idealist: ["一定要平安回来。"],
+      strategic: ["按预定路线出击，我方负责支援。"],
+      sarcastic: ["别把机体弄坏了再回来啊。"],
+      strict: ["出击许可，严格执行命令！"],
+      zealous: ["带着我们的信念出击吧！"],
+      proud: ["让敌人见识本舰的战力！"],
+      obsessive: ["别偏离我指定的作战路线！"],
+      empathetic: ["注意安全，我等你回来。"],
+    },
+    preload: {
+      calm: ["编组确认，已安排专属机库。"],
+      aggressive: ["终于等到你了，准备大干一场！"],
+      cautious: ["预先搭载确认，请检查整备状态。"],
+      idealist: ["这次也请大家互相照应。"],
+      strategic: ["按照既定作战编组，待命。"],
+      sarcastic: ["你的专用座位早就留好了。"],
+      strict: ["编组人员按指定位置待命！"],
+      zealous: ["全员集结，胜利就在前方！"],
+      proud: ["这是精锐部队的集结。"],
+      obsessive: ["各项准备必须完全符合计划。"],
+      empathetic: ["欢迎加入本舰，彼此照顾吧。"],
+    },
+    passengerBoard: {
+      calm: ["收到，准备入库。"], aggressive: ["我会很快再出击！"],
+      cautious: ["了解，正在检查停泊程序。"], idealist: ["谢谢接应。"],
+      strategic: ["明白，等待下一步指令。"], sarcastic: ["终于能歇口气了。"],
+      strict: ["遵命，执行归舰程序。"], zealous: ["休整后继续战斗！"],
+      proud: ["记得好好整备我的机体。"], obsessive: ["我的机体不许擅自改动！"],
+      empathetic: ["谢谢，我回来了。"],
+    },
+    passengerLaunch: {
+      calm: ["了解，开始出击。"], aggressive: ["交给我吧！"],
+      cautious: ["确认，正在离舰。"], idealist: ["我会保护大家。"],
+      strategic: ["按计划行动。"], sarcastic: ["好好看着我的表现吧。"],
+      strict: ["收到，出击！"], zealous: ["为了胜利！"],
+      proud: ["看好了！"], obsessive: ["终于轮到我了。"],
+      empathetic: ["我会尽力平安回来。"],
+    },
+  };
+  function transport({event, speaker, target, sequence=0, preloaded=false}={}) {
+    if (!speaker || !target || !["board","launch","preload"].includes(event)) return null;
+    const pilot=speaker.pilot || {};
+    const trait=personality(pilot);
+    const seed=hash([speaker.id,target.id,event,sequence].join(":"));
+    const pool=transportLines[event][trait];
+    const text=pool[seed % pool.length];
+    return { event, speakerId:speaker.id, targetId:target.id,
+      pilotName:pilot.name || speaker.name || speaker.id,
+      personality:trait, faction:pilot.originFaction || pilot.faction || speaker.faction || "PMC",
+      text, sequence, preloaded, transport:true };
+  }
+  function transportReply({event,speaker,target,sequence=0}={}) {
+    if (!speaker || !target || !["board","launch","preload"].includes(event)) return null;
+    const pilot=speaker.pilot || {};
+    const trait=personality(pilot);
+    const seed=hash([speaker.id,target.id,event,"reply",sequence].join(":"));
+    if (seed % 3 !== 0) return null;
+    const pool=transportLines[event === "launch" ? "passengerLaunch" : "passengerBoard"][trait];
+    return {event:"transportReply",speakerId:speaker.id,targetId:target.id,
+      pilotName:pilot.name || speaker.name || speaker.id,
+      personality:trait,faction:pilot.originFaction || pilot.faction || speaker.faction || "PMC",
+      text:pool[seed % pool.length],sequence,transport:true};
+  }
   const factionLines = {
     EFSF: { attack: "联邦军各机，按命令开火！" },
     ZEON: { attack: "为了吉翁，进攻！" },
@@ -105,6 +186,6 @@ const BattleDialogue = (() => {
   function format(record) {
     return `[战场对话][${record.faction}][${record.pilotName}]「${record.text}」`;
   }
-  return { generate, format, personality, personalities, backgrounds, taunts, replies };
+  return { generate, format, personality, personalities, backgrounds, taunts, replies, transport, transportReply };
 })();
 if (typeof module !== "undefined") module.exports = BattleDialogue;
