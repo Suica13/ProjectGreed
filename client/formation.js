@@ -2987,6 +2987,7 @@ const Deployment = (() => {
   };
   function render() {
     byId("deploymentPanel").hidden = phase !== "deployment";
+    byId("deploymentBottomBar").hidden = phase !== "deployment";
     byId("confirmDeployment").hidden = phase !== "deployment";
     byId("endTurn").hidden = [
       "start",
