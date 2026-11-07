@@ -16,7 +16,7 @@
       "description": "点在する格納庫跡と北側の氷池。南の開けた側道から迂回できる。"
     }
   },
-  "lighting": { "direction": "upper", "horizontalAngle": 25, "distance": 0.15, "intensity": 0.42 },
+  "lighting": { "direction": "upper", "horizontalAngle": -45, "distance": 0.15, "intensity": 0.42 },
   "width": 39,
   "height": 14,
   "playersPerTeam": 1,
