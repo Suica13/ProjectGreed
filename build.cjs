@@ -21,7 +21,7 @@ html = html.replace("__CLIMATE_EFFECT_PRESETS__", () => {
   const presets = JSON.parse(read("client/climate-effects.json"));
   for (const [name, asset] of Object.entries(presets.assets || {})) {
     if (!asset || asset.startsWith("data:image/")) continue;
-    if (!/^assets\\/[a-zA-Z0-9_./-]+\\.(png|webp)$/i.test(asset) || asset.includes(".."))
+    if (!/^assets\/[a-zA-Z0-9_./-]+\.(png|webp)$/i.test(asset) || asset.includes(".."))
       throw Error("Invalid climate asset path: " + name);
     const extension = asset.endsWith(".webp") ? "webp" : "png";
     presets.assets[name] = "data:image/" + extension + ";base64," +
