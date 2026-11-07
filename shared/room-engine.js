@@ -33,6 +33,7 @@ function createRoomEngine({
 }) {
   const Records =
     typeof MatchRecords === "undefined" ? require("./match-records.js") : MatchRecords;
+  const DialogueRange = typeof DialogueRangeModule !== "undefined" ? DialogueRangeModule : require("./dialogue-range.js");
   const Dialogue = typeof BattleDialogue !== "undefined"
     ? BattleDialogue : require("../client/battle-dialogue.js");
   let campaignAdapter = null;
@@ -1358,6 +1359,7 @@ function createRoomEngine({
           settlePilotAssists(room, passenger, from);
         }
         const dialogueTrigger = (kind, speaker, listener) => {
+          if (!DialogueRange.eligible(speaker, listener, (id) => unit(room, id))) return;
           const entry = Dialogue.generate({
             event: kind, speaker, target: listener,
             sequence: room.log.length,
