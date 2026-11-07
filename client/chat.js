@@ -168,7 +168,15 @@ const Chat = (() => {
     if (!available.includes(exportChoice)) exportChoice = available[0] || options[0];
     for (const id of ["showLog", "roomShowLog"])
       byId(id).textContent = logExport ? "LOG · " + perspectiveLabel(logExport.perspective) : "LOG";
-    for (const id of exportSelectors) {
+    for (const id of ["battleLogView", "roomLogView"]) {
+    const select = byId(id);
+    if (select) select.onchange = () => {
+      logView = select.value;
+      for (const other of ["battleLogView", "roomLogView"]) if (byId(other)) byId(other).value = logView;
+      setLog(battleLog);
+    };
+  }
+  for (const id of exportSelectors) {
       const select = byId(id);
       if (!select) continue;
       if (
@@ -228,6 +236,7 @@ const Chat = (() => {
     byId(id).onclick = downloadLog;
     byId(id).disabled = true;
   }
+  let logView = "combined";
   function setLog(
     entries,
     names = game.units.map((unit) => Rules.unitLogName(unit)).filter(Boolean),
@@ -238,7 +247,8 @@ const Chat = (() => {
       const list = byId(id),
         scrollTop = list.scrollTop;
       list.replaceChildren(
-        ...battleLog.slice(0, 80).map((text) => {
+        ...battleLog.filter((text) => logView === "combined" ||
+          (logView === "dialogue" ? text.startsWith("[战场对话]") : !text.startsWith("[战场对话]"))).slice(0, 80).map((text) => {
           const line = element(
             "div",
             "log-line" + (text.includes("\n") ? " deployment-roster" : ""),
