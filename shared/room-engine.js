@@ -3870,6 +3870,9 @@ function createRoomEngine({
       msg.round === room.game.round &&
       [
         "deploy",
+        "stage_deployment",
+        "clear_deployment",
+        "auto_place_deployment",
         "rotate",
         "confirm_deployment",
         "embark",
