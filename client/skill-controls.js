@@ -22,7 +22,7 @@ const SkillControls = (() => {
     };
     return (model.commandAuras || []).map((kind) => ({
       name: labels[kind.type],
-      description: `范围 ${aura.radius} 格 · ${effects[kind.type]}。同类取最强；领导力每满25点提高1格与1.25%效果，100点时为3格与10%。`,
+      description: `范围 ${aura.radius} 格 · ${effects[kind.type]}。同类取最强；领导力每满25点提高1格与2.5个百分点效果，100点时为3格与10%。`,
     }));
   }
   function defensiveAbilities(model) {
@@ -64,16 +64,14 @@ const SkillControls = (() => {
       const damage = Object.values(skill.damageComponents)
         .reduce((sum, value) => sum + value, 0)
         .toLocaleString(undefined, { maximumFractionDigits: 2 });
-      if (Number.isFinite(skill.enCost)) {
+      {
+        const en = Number.isFinite(skill.enCost) ? skill.enCost + " EN" : skill.enCostPercent + "%";
         if (I18n.language === "en")
-          return `Damage ${damage} × 1 = ${damage}; range ${skill.range}${skill.areaWidth ? `, width ${skill.areaWidth}` : ""}, accuracy ${skill.baseHit}%; ${skill.actionCost} AP and ${skill.enCost} EN; cooldown ${skill.cooldownTurns} turns. Hits each unit along the beam once, including allies.`;
+          return `Damage ${damage} × 1 = ${damage}; range ${skill.range}${skill.areaWidth ? `, width ${skill.areaWidth}` : ""}, accuracy ${skill.baseHit}%; costs ${en}${Number.isFinite(skill.enCost) ? "" : " max EN"}; cooldown ${skill.cooldownTurns} turns. Hits each unit along the beam once, including allies.`;
         if (I18n.language === "ja")
-          return `ダメージ ${damage} × 1 = ${damage}；射程${skill.range}${skill.areaWidth ? `・幅${skill.areaWidth}マス` : ""}、命中${skill.baseHit}%。消費${skill.actionCost} AP・${skill.enCost} EN、冷却${skill.cooldownTurns}ターン。射線上の味方を含む各機に1回判定。`;
-        return `基础伤害 ${damage} × 1 = ${damage}；射程 ${skill.range} 格${skill.areaWidth ? `，宽度 ${skill.areaWidth} 格` : ""}，命中 ${skill.baseHit}%；消耗 ${skill.actionCost} AP、${skill.enCost} EN，冷却 ${skill.cooldownTurns} 个己方回合。对沿途每台单位（含友军）判定一次。`;
+          return `ダメージ ${damage} × 1 = ${damage}；射程${skill.range}${skill.areaWidth ? `・幅${skill.areaWidth}マス` : ""}、命中${skill.baseHit}%。${Number.isFinite(skill.enCost) ? en : "最大ENの" + en}を消費、冷却${skill.cooldownTurns}ターン。射線上の味方を含む各機に1回判定。`;
+        return `基础伤害 ${damage} × 1 = ${damage}；射程 ${skill.range} 格${skill.areaWidth ? `，宽度 ${skill.areaWidth} 格` : ""}，命中 ${skill.baseHit}%；消耗 ${Number.isFinite(skill.enCost) ? en : en + "最大EN"}，冷却 ${skill.cooldownTurns} 个己方回合。对沿途每台单位（含友军）判定一次。`;
       }
-      return I18n.text(
-        `基础伤害 ${damage} × 1 = ${damage}；射程 ${skill.range} 格${skill.areaWidth ? `，宽度 ${skill.areaWidth} 格` : ""}，命中 ${skill.baseHit}%；消耗 ${skill.actionCost} AP、${skill.enCost !== undefined ? skill.enCost + " EN" : skill.enCostPercent + "%最大EN"}，冷却 ${skill.cooldownTurns} 个己方回合。对沿途每台单位（含友军）判定一次。`,
-      );
     }
     if (skill.type === "recon" && skill.reconMode === "camera") {
       if (I18n.language === "en")
@@ -125,9 +123,9 @@ const SkillControls = (() => {
   }
   function description(skill) {
     const note = skill.type === "emp" ? " " + I18n.text("AP机制未启用，AP减益暂不影响行动。") : "";
-    return (sourceDescription(skill) + note)
+    return I18n.text(sourceDescription(skill) + note)
       .replace(/(?:AP\s*\d+(?:\.\d+)?|\d+(?:\.\d+)?\s*AP)(?:\s*[、,，·与和])?/g, "")
-      .replace(/(?:消耗|消費)\s*[、,，·]/g, "消耗");
+      .replace(/(消耗|消費)\s*[、,，·]/g, "$1 ");
   }
   function render(list, unit, canCommand) {
     for (const weapon of Rules.modelOf(unit).weapons.filter(w => w.slot === "skill")) {

@@ -1,6 +1,7 @@
 ﻿/* 0079 早期／后期与0083开发目录：客户端展示与服务端编组裁定共用同一份节点数据。 */
 "use strict";
 const Development = (() => {
+  const saveCodec = typeof SaveCodec !== "undefined" ? SaveCodec : require("./save-codec.js");
   const economy = typeof Economy !== "undefined" ? Economy : require("./economy.js");
   const tree =
     typeof DEVELOPMENT_TREE !== "undefined" ? DEVELOPMENT_TREE : require("./development-tree.json");
@@ -18,7 +19,7 @@ const Development = (() => {
   let progress = { points: { EFSF: 0, ZEON: 0 }, claimed: {} };
   if (typeof localStorage !== "undefined") {
     try {
-      const saved = JSON.parse(localStorage.getItem(progressKey) || "null");
+      const saved = saveCodec.parse(localStorage.getItem(progressKey) || "null");
       if (saved?.points && saved?.claimed) progress = saved;
     } catch {}
   }
@@ -141,7 +142,7 @@ const Development = (() => {
       points: { ...progress.points },
       researched: { ...normalizeResearch(progress.researched), [faction]: [...active, id] },
     };
-    if (!economy.transact({}, {}, [[progressKey, JSON.stringify(next)]])) return false;
+    if (!economy.transact({}, {}, [[progressKey, saveCodec.stringify(next)]])) return false;
     progress = next;
     unitCache.clear();
     return true;
@@ -161,7 +162,7 @@ const Development = (() => {
     researched.units[faction].push(unitId);
     const next = { ...progress, researched };
     if (typeof localStorage !== "undefined")
-      localStorage.setItem(progressKey, JSON.stringify(next));
+      localStorage.setItem(progressKey, saveCodec.stringify(next));
     progress = next;
     unitCache.clear();
     return true;
@@ -175,7 +176,7 @@ const Development = (() => {
       if (!faction) throw Error("活动开发奖励无效：" + id);
       if (!next.researched.units[faction].includes(id)) next.researched.units[faction].push(id);
     }
-    if (!economy.creditActivity(award, [[progressKey, JSON.stringify(next)]])) return false;
+    if (!economy.creditActivity(award, [[progressKey, saveCodec.stringify(next)]])) return false;
     progress = next;
     unitCache.clear();
     if (typeof window !== "undefined") window.dispatchEvent(new Event("development-changed"));
@@ -253,7 +254,7 @@ const Development = (() => {
     progress.points[award.faction] = pointBalance(award.faction) + award.points;
     progress.claimed[award.id] = award.matchId;
     try {
-      localStorage.setItem(progressKey, JSON.stringify(progress));
+      localStorage.setItem(progressKey, saveCodec.stringify(progress));
     } catch {}
     return true;
   }

@@ -73,6 +73,7 @@
 - [rules/pilot-weapons.md](rules/pilot-weapons.md)
 - [rules/pilots.md](rules/pilots.md)
 - [rules/squads.md](rules/squads.md)
+- [tools/save-editor.md](tools/save-editor.md)
 - [tools/map-editor.md](tools/map-editor.md)
 - [tools/server-package.md](tools/server-package.md)
 - [tools/unit-editor.md](tools/unit-editor.md)

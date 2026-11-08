@@ -457,8 +457,8 @@ function updateContents() {
     u = getUnit(selected);
   const campaignBattle = Net.snapshot?.campaign;
   byId("turnBadge").textContent = campaignBattle?.startRound
-    ? `局地战 ${Math.min(game.round - campaignBattle.startRound + 1, campaignBattle.stopRound - campaignBattle.startRound)} / ${campaignBattle.stopRound - campaignBattle.startRound}回合 · ${teamName(game.team)}`
-    : `第${game.round}回合 · ${teamName(game.team)}`;
+    ? `局地战 ${Math.min(game.round - campaignBattle.startRound + 1, campaignBattle.stopRound - campaignBattle.startRound)} / ${campaignBattle.stopRound - campaignBattle.startRound}回合 · ${I18n.text("队伍")}${game.team + 1}`
+    : `第${game.round}回合 · ${I18n.text("队伍")}${game.team + 1}`;
   byId("turnBadge").style.color = game.team ? "var(--red)" : "var(--blue)";
   byId("phaseTitle").textContent = ({ deployment:"部署阶段", moving:"移动阶段", reaction:"应战阶段",
     battle:"交战阶段", victory:"战斗结束" })[phase] || "行动阶段";

@@ -244,7 +244,9 @@ const BattlefieldMode = (() => {
   }
   function heal(G, game) {
     if (!game.battlefield) return;
-    const sites = deploymentSites(G, game, game.team);
+    const sites = deploymentSites(G, game, game.team).filter((site) =>
+      !game.units.some((enemy) => enemy.team !== game.team && G.onMap(enemy) &&
+        G.cells(enemy).some((cell) => containsSite(site, cell.x, cell.y))));
     for (const unit of game.units) {
       if (!G.onMap(unit) || unit.team !== game.team || unit.embarked || unit.facility) continue;
       const nearby = sites.filter((site) =>
@@ -850,25 +852,8 @@ const BattlefieldMode = (() => {
   }
   function aiChoice(G, game, unit) {
     if (!game.battlefield || unit.facility || unit.moved || unit.embarked) return null;
-    const targets = [
-      ...game.battlefield.points.filter((point) => point.owner !== unit.team),
-      ...game.units.filter(
-        (other) => other.facility?.type === "base" && other.team !== unit.team && other.hp > 0,
-      ),
-    ];
-    const goal = targets.sort(
-      (a, b) => Math.hypot(a.x - unit.x, a.y - unit.y) - Math.hypot(b.x - unit.x, b.y - unit.y),
-    )[0];
-    if (!goal) return null;
-    const cells = [...G.reachable(game, unit).values()];
-    if (!cells.length) return null;
-    const distance = (cell) => Math.hypot(cell.x - goal.x, cell.y - goal.y);
-    const minimum = Math.min(...cells.map(distance));
-    return G.aiChoice(
-      game,
-      unit,
-      cells.filter((cell) => distance(cell) <= minimum + 1),
-    );
+    // Use the same capability-aware goals and obstacle routing as campaign AI.
+    return G.aiChoice(game, unit);
   }
   return {
     blockedCells,

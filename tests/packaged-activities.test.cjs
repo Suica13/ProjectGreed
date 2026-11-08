@@ -8,15 +8,17 @@ test("package defaults export current definitions, reset progress and preserve e
   const source={schemaVersion:2,serverId:"private-server",players:{private:{secretHash:"secret"}},
     activities:[{id:"custom",mode:"cumulative_kill_cost",title:"Custom",enabled:true,targetCost:100,
       progressCost:88,participants:{private:true},killReceipts:{receipt:1},
-      rewards:{money:42,unitStock:{Type61:5}},stockConfigurations:{Type61:{kitId:"Type61__standard",extraKits:{Type61__standard:2}}}}]};
+      rewards:{money:42,inventory:{Type61:5},kits:{Type61__standard:2}},stockConfigurations:{Type61:{kitId:"Type61__standard",extraKits:{Type61__standard:2}}}}]};
   const input=path.join(dir,"source.json"), defaultsPath=path.join(dir,"defaults.json"), storePath=path.join(dir,"activities.json");
   fs.writeFileSync(input,JSON.stringify(source));
   const bytes=execFileSync(process.execPath,["tools/export-default-activities.cjs",input]);
   fs.writeFileSync(defaultsPath,bytes);
   const exported=JSON.parse(bytes);
   assert.deepEqual(exported,exportDefaults(source));
-  assert.deepEqual(exported.activities[0].rewards,source.activities[0].rewards);
-  assert.deepEqual(exported.activities[0].stockConfigurations,source.activities[0].stockConfigurations);
+  assert.deepEqual(exported.activities[0].rewards,{money:42,inventory:{Type61:5}});
+  assert.equal(source.activities[0].rewards.kits.Type61__standard,2);
+  assert.equal(exported.activities[0].stockConfigurations,undefined);
+  assert(source.activities[0].stockConfigurations);
   assert(!bytes.includes("secret") && !bytes.includes("private") && !bytes.includes("receipt"));
   const options={rules,send:()=>{},defaultsPath,storePath};
   createActivityService(options);

@@ -1,6 +1,7 @@
 /* Permanent permits and counted chassis; equipment selection is free. */
 "use strict";
 const Economy = (() => {
+  const saveCodec = typeof SaveCodec !== "undefined" ? SaveCodec : require("./save-codec.js");
   const key = "projectgreed.economy.v1";
   const catalog =
     typeof PRODUCTION_CATALOG !== "undefined"
@@ -78,7 +79,7 @@ const Economy = (() => {
     try {
       const saved = localStorage.getItem(key);
       if (saved !== null) {
-        const parsed = JSON.parse(saved);
+        const parsed = saveCodec.parse(saved);
         const migrations =
           typeof ProfileMigrations !== "undefined"
             ? ProfileMigrations
@@ -87,7 +88,7 @@ const Economy = (() => {
         if (parsed.schemaVersion !== 3 || parsed.licenses === undefined) {
           const backupKey = key + ".before-counted-stock";
           if (localStorage.getItem(backupKey) === null) localStorage.setItem(backupKey, saved);
-          localStorage.setItem(key, JSON.stringify(state));
+          localStorage.setItem(key, saveCodec.stringify(state));
         }
       }
     } catch (error) {
@@ -141,7 +142,7 @@ const Economy = (() => {
     if (storageError) throw storageError;
     next = validate(next);
     if (typeof localStorage !== "undefined") {
-      const writes = [[key, JSON.stringify(next)], ...extraWrites];
+      const writes = [[key, saveCodec.stringify(next)], ...extraWrites];
       const previous = writes.map(([k]) => [k, localStorage.getItem(k)]);
       try {
         if (typeof AppRuntime !== "undefined" && AppRuntime.native) AppRuntime.replaceItems(writes);

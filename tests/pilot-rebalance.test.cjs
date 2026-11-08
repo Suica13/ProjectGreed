@@ -83,8 +83,8 @@ test("damage attributes use quarter-point gains while other modifiers stay uncha
   for (const [stat, field, weight] of [
     ["shooting", "shooting", 0.25],
     ["melee", "melee", 0.25],
-    ["accuracy", "accuracy", 0.5],
-    ["reaction", "reaction", 0.5],
+    ["accuracy", "accuracy", 0.25],
+    ["reaction", "reaction", 0.25],
     ["speed", "move", 0.5],
     ["speed", "attackRounds", 0.5],
   ]) {

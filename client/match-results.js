@@ -1,3 +1,44 @@
+/* The header and final results share the same complete, personal receipt totals. */
+const MatchIncome = (() => {
+  let previous, economy, technology, economyLength, technologyLength, cached;
+  const rendered = new WeakMap();
+  function totals(snapshot = Net.snapshot) {
+    // Snapshots are immutable in live play; length checks also support appended local fixtures.
+    if (
+      cached &&
+      previous === snapshot &&
+      economy === snapshot?.economyAwards &&
+      technology === snapshot?.techAwards &&
+      economyLength === economy?.length &&
+      technologyLength === technology?.length
+    )
+      return cached;
+    previous = snapshot;
+    economy = snapshot?.economyAwards;
+    technology = snapshot?.techAwards;
+    economyLength = economy?.length;
+    technologyLength = technology?.length;
+    cached = BattleEconomy.rewardTotals(economy, technology, snapshot?.matchId);
+    return cached;
+  }
+  function render(container, snapshot = Net.snapshot) {
+    const value = totals(snapshot);
+    const hidden = !!snapshot?.replay || snapshot?.phase === "replay";
+    const key = JSON.stringify([
+      value.money,
+      value.supplies,
+      value.technology,
+      hidden,
+      I18n.language,
+    ]);
+    if (rendered.get(container) === key) return;
+    rendered.set(container, key);
+    container.hidden = hidden;
+    ProductionUI.resources(container, value, { compact: true, technology: true });
+  }
+  return { totals, render };
+})();
+
 /* 赛后倒计时只显示服务端期限；联机返回房间由服务端统一裁定。 */
 const MatchResults = (() => {
   let timer = null,
@@ -38,36 +79,38 @@ const MatchResults = (() => {
       byId("victoryCountdown").before(rewards);
     }
     const awards = Net.snapshot?.economyAwards || [];
-    const totals = awards.reduce(
-      (sum, a) => ({
-        money: sum.money + a.money,
-        supplies: sum.supplies + a.supplies,
-        losses: sum.losses + Object.values(a.losses || {}).reduce((n, v) => n + v, 0),
-      }),
-      { money: 0, supplies: 0, losses: 0 },
+    const losses = awards.reduce(
+      (sum, award) => sum + Object.values(award.losses || {}).reduce((n, value) => n + value, 0),
+      0,
     );
-    rewards.textContent =
-      "本局收益：资金 " +
-      totals.money +
-      " · 物资 " +
-      totals.supplies +
-      " · 损毁扣除 " +
-      totals.losses +
-      " 台";
+    const balance = element("span", "resource-balance");
+    MatchIncome.render(balance);
+    rewards.replaceChildren(
+      element("span", "", I18n.text("本局收益") + "："),
+      balance,
+      element("span", "", " · " + I18n.text("损毁扣除") + " " + losses + " " + I18n.text("台")),
+    );
     rewards.hidden = !Net.active || Net.snapshot?.replay;
     let icons = byId("victoryUnitIcons");
-    if (!icons) { icons = element("div"); icons.id = "victoryUnitIcons"; rewards.after(icons); }
+    if (!icons) {
+      icons = element("div");
+      icons.id = "victoryUnitIcons";
+      rewards.after(icons);
+    }
     icons.replaceChildren();
     const spectating = Net.active && Net.seat === null;
     const sections = spectating
-      ? (Net.snapshot?.teamLosses || [0, 1].map(team => ({ team, units: [] })))
-          .map(({ team, units }) => ({
-            team, records: units,
-            label: I18n.text("队伍") + (team + 1) + " · " + I18n.text("损毁单位") + " " + units.length,
-          }))
+      ? (Net.snapshot?.teamLosses || [0, 1].map((team) => ({ team, units: [] }))).map(
+          ({ team, units }) => ({
+            team,
+            records: units,
+            label:
+              I18n.text("队伍") + (team + 1) + " · " + I18n.text("损毁单位") + " " + units.length,
+          }),
+        )
       : [
-          { label: I18n.text("损失单位"), records: awards.flatMap(a => a.lostUnits || []) },
-          { label: I18n.text("击毁单位"), records: awards.filter(a => a.kind === "kill") },
+          { label: I18n.text("损失单位"), records: awards.flatMap((a) => a.lostUnits || []) },
+          { label: I18n.text("击毁单位"), records: awards.filter((a) => a.kind === "kill") },
         ];
     for (const { label, records, team } of sections) {
       const section = element("section", team === undefined ? "" : "result-team-losses");
@@ -76,7 +119,10 @@ const MatchResults = (() => {
       const list = element("div", "result-unit-icons");
       for (const record of records) {
         if (!UnitModels[record.model]) continue;
-        const img = element("img"); img.src = unitIcon(record.model); img.alt = UnitModels[record.model].name; img.title = img.alt;
+        const img = element("img");
+        img.src = unitIcon(record.model);
+        img.alt = UnitModels[record.model].name;
+        img.title = img.alt;
         img.dataset.unitId = record.id || "";
         list.append(img);
       }

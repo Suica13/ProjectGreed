@@ -1,7 +1,7 @@
 const { test, expect } = require("@playwright/test");
 const { createServer } = require("../server.js");
 for (const width of [1280, 390])
-  test(`activity unit picker, kit quantities and published editing at ${width}px`, async ({
+  test(`activity chassis picker and published editing without equipment gifts at ${width}px`, async ({
     page,
   }, testInfo) => {
     const app = createServer({ host: "127.0.0.1", port: 0 }),
@@ -15,7 +15,7 @@ for (const width of [1280, 390])
     };
     try {
       await page.goto(`http://127.0.0.1:${address.port}/admin/activities.html`);
-      await expect(page.locator("#activities button")).toHaveCount(5);
+      await expect(page.locator("#activities button").first()).toBeVisible();
       await page.locator("#title").fill("Configurable stock");
       await page.locator("#addChassisStock").click();
       const names = await page
@@ -31,35 +31,24 @@ for (const width of [1280, 390])
       await page.locator("#rewardUnitEra").selectOption("0079T1");
       await page.locator("#rewardUnitType").selectOption("MS");
       await choose("MS_06F");
-      await expect(page.locator("#rewardBaseKit")).toHaveValue("MS_06F__machine_gun");
-      expect(
-        await page
-          .locator("#extraKitRows input")
-          .evaluateAll((inputs) => inputs.every((i) => i.value === "0")),
-      ).toBe(true);
       await page.locator("#rewardChassisCount").fill("9");
       await page.locator("#cancelRewardConfig").click();
       await expect(page.locator("#stockRewards .reward-summary")).toHaveCount(0);
       await choose("MS_06F");
       await page.screenshot({path:testInfo.outputPath("reward-config.png")});
       await page.locator("#rewardChassisCount").fill("2");
-      await page.locator("#rewardBaseKit").selectOption("MS_06F__bazooka");
-      await page.locator('#extraKitRows [data-kit-id="MS_06F__machine_gun"] input').fill("3");
-      await page.locator('#extraKitRows [data-kit-id="MS_06F__bazooka"] input').fill("4");
-      await page.locator("#rewardKitSearch").fill("machine_gun");
-      await expect(page.locator('#extraKitRows [data-kit-id="MS_06F__bazooka"]')).toBeHidden();
       await page.locator("#confirmRewardConfig").click();
       await expect(page.locator('#stockRewards [data-unit-id="MS_06F"]')).toContainText("机体 ×2");
       await page.locator("#publish").click();
       await expect(page.locator("#status")).toContainText("活动已发布");
       const event = app.activities.adminSnapshot().activities.at(-1);
       expect(event.rewards.inventory).toEqual({ MS_06F: 2 });
-      expect(event.rewards.kits).toEqual({ MS_06F__machine_gun: 3, MS_06F__bazooka: 6 });
+      expect(event.rewards.kits).toBeUndefined();
+      expect(event.stockConfigurations).toBeUndefined();
       await page
         .locator('#stockRewards [data-unit-id="MS_06F"]')
         .getByRole("button", { name: "编辑", exact: true })
         .click();
-      await expect(page.locator("#rewardBaseKit")).toHaveValue("MS_06F__bazooka");
       await page.locator("#rewardChassisCount").fill("8");
       await page.locator("#cancelRewardConfig").click();
       await expect(page.locator('#stockRewards [data-unit-id="MS_06F"]')).toContainText("机体 ×2");
@@ -84,12 +73,7 @@ for (const width of [1280, 390])
       await page.locator("#newActivity").click();
       await expect(page.locator("#stockRewards .reward-summary")).toHaveCount(0);
       await expect(page.locator("#money")).toHaveValue("0");
-      await page.locator("#addKitStock").click();
-      await choose("MS_06F");
-      await expect(page.locator("#rewardChassisCount")).toHaveValue("0");
-      await page.locator('#extraKitRows [data-kit-id="MS_06F__machine_gun"] input').fill("5");
-      await page.locator("#confirmRewardConfig").click();
-      await expect(page.locator('#stockRewards [data-unit-id="MS_06F"]')).toContainText("机体 ×0");
+      await expect(page.locator("#addKitStock")).toHaveCount(0);
       expect(errors).toEqual([]);
     } finally {
       await app.close();

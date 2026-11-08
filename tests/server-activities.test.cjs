@@ -675,7 +675,7 @@ test("Cima default event uses requested server-local period and a 10000 COST thr
   assert.deepEqual(event.rewards.unlockAces, ["Pilot_ZEON_0079_N_ACE_CIA"]);
 });
 
-test("stock rewards validate separate chassis and kits and survive a claim retry", t => {
+test("stock rewards grant only chassis, ignore legacy kits and survive a claim retry", t => {
   const f=fixture(t),ws={},profile=identity();f.service.identify(ws,profile,"Stock");
   const published=f.service.publish(activity("online_now",{rewards:{inventory:{RGM_79:2},kits:{RGM_79__beam_spray:4}}}));
   const mail=f.frames.get(ws).at(-1).mail.find(item=>item.activityId===published.id);
@@ -685,6 +685,30 @@ test("stock rewards validate separate chassis and kits and survive a claim retry
   f.service.receive(ws,{type:"activity_claim",mailId:mail.id});assert.deepEqual(f.frames.get(ws).at(-1).award,award);
   assert.throws(()=>f.service.publish(activity("online_now",{rewards:{inventory:{not_a_unit:1}}})));
   assert.throws(()=>f.service.publish(activity("online_now",{rewards:{inventory:{RGM_79:-1}}})));
+});
+
+test("legacy equipment gifts are filtered on the wire without erasing historical rewards", t => {
+  const f = fixture(t), profile = identity(), ws = {};
+  f.service.identify(ws,profile);
+  const published = f.service.publish(activity("online_now",{rewards:{inventory:{RGM_79:2}}}));
+  const stored = JSON.parse(fs.readFileSync(f.options.storePath,"utf8"));
+  const definition = stored.activities.find(item => item.id === published.id);
+  const pending = stored.players[profile.id].mail.find(item => item.activityId === published.id);
+  const legacy = { RGM_79__beam_spray:4 };
+  definition.rewards.kits = legacy; pending.rewards.kits = legacy;
+  definition.stockConfigurations = { RGM_79:{kitId:"RGM_79__beam_spray"} };
+  fs.writeFileSync(f.options.storePath,JSON.stringify(stored));
+  f.restart();
+  const next = {}; f.service.identify(next,profile);
+  const mail = f.frames.get(next).at(-1).mail.find(item => item.activityId === published.id);
+  assert.equal(mail.rewards.kits,undefined);
+  const listing = f.service.adminSnapshot().activities.find(item => item.id === published.id);
+  assert.equal(listing.rewards.kits,undefined); assert.equal(listing.stockConfigurations,undefined);
+  f.service.receive(next,{type:"activity_claim",mailId:mail.id});
+  assert.equal(f.frames.get(next).at(-1).award.kits,undefined);
+  const after = JSON.parse(fs.readFileSync(f.options.storePath,"utf8"));
+  assert.deepEqual(after.activities.find(item => item.id === published.id).rewards.kits,legacy);
+  assert.deepEqual(after.players[profile.id].mail.find(item => item.id === mail.id).rewards.kits,legacy);
 });
 
 test("published reward edits update pending mail, preserve in-flight receipts and persist for later delivery", (t) => {

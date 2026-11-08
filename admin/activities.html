@@ -244,21 +244,6 @@
         margin-top: 3px;
         color: #a9c4ce;
       }
-      #extraKitRows {
-        max-height: 30vh;
-        overflow: auto;
-        margin: 10px 0;
-      }
-      .extra-kit-row {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) 95px;
-        align-items: center;
-        gap: 12px;
-        margin: 6px 0;
-      }
-      .extra-kit-row input {
-        width: 100%;
-      }
       .picker-actions {
         display: flex;
         justify-content: flex-end;
@@ -612,7 +597,7 @@
       <input
         id="rewardUnitSearch"
         type="search"
-        placeholder="搜索单位名称、编号或套件"
+        placeholder="搜索单位名称或编号"
         aria-label="搜索奖励单位"
       />
       <div class="picker-filters">
@@ -662,9 +647,8 @@
       const byId = (id) => document.getElementById(id);
       let unlockUnits = [],
         unlockAces = [];
-      let stockConfigurations = {};
       let licenseUnits = [],
-        stockRewards = { inventory: {}, kits: {} };
+        stockRewards = { inventory: {} };
       async function api(route = "", value) {
         const response = await fetch("/api/activities/admin" + route, {
           method: value ? "POST" : "GET",
@@ -766,7 +750,7 @@
         }
         byId("editCopyForm").insertBefore(byId("rewardFields"), byId("saveCopy"));
         byId("rewardFields").hidden = activity.mode === "battle_bonus";
-        loadRewards(activity.rewards, activity.stockConfigurations);
+        loadRewards(activity.rewards);
         byId("selectedTitle").textContent = activity.title;
         byId("editTitle").value = activity.title;
         byId("editBody").value = activity.text;
@@ -884,7 +868,7 @@
         });
       }
       function clearUnitStock(id) {
-        delete stockRewards.inventory[id];delete stockConfigurations[id];
+        delete stockRewards.inventory[id];
       }
       function renderStockRewards() {
         const list = byId("stockRewards");
@@ -911,14 +895,13 @@
           list.append(row);
         }
       }
-      function loadRewards(rewards = {}, configurations = {}) {
-        stockConfigurations = {};
+      function loadRewards(rewards = {}) {
         byId("money").value = rewards.money || 0;
         byId("supplies").value = rewards.supplies || 0;
         licenseUnits = Object.keys(rewards.licenses || {}).filter((id) => rewards.licenses[id]);
         unlockUnits = [...(rewards.unlockUnits || [])];
         unlockAces = [...(rewards.unlockAces || [])];
-        stockRewards = { inventory: { ...rewards.inventory }, kits: {} };
+        stockRewards = { inventory: { ...rewards.inventory } };
         renderLicenses();
         renderUnlocks();
         renderAceUnlocks();
@@ -945,9 +928,7 @@
             ? "选择部署许可奖励"
             : kind === "unlock"
               ? "选择开发奖励"
-              : kind === "kits"
-                ? "选择套件所属单位"
-                : "选择奖励单位";
+              : "选择奖励单位";
         byId("rewardUnitSearch").value = "";
         for (const [id, values, label] of [
           [
@@ -1172,7 +1153,6 @@
           snapshot = await api("/edit", {
             id: selectedId,
             rewards: readRewards(),
-            stockConfigurations: {},
             title: byId("editTitle").value,
             text: byId("editBody").value,
             ...period("editStartsAt", "editEndsAt"),
@@ -1199,7 +1179,6 @@
           text: byId("body").value,
           mode: byId("mode").value,
           rewards: readRewards(),
-          stockConfigurations: {},
         };
         byId("publish").disabled = true;
         try {

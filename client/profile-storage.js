@@ -80,12 +80,13 @@ const ProfileStorage = (() => {
       throw error;
     }
   }
-  function compactSquads(squads, pilots) {
+  function compactSquads(squads, pilots, exact = false) {
     const ids = new Set(pilots.map((pilot) => pilot.id));
+    const roster = exact ? new Map(pilots.map(pilot => [pilot.id, JSON.stringify(pilot)])) : null;
     return squads.map((squad) => ({
       ...squad,
       units: squad.units.map((unit) =>
-        ids.has(unit.customPilot?.id)
+        ids.has(unit.customPilot?.id) && (!exact || roster.get(unit.customPilot.id) === JSON.stringify(unit.customPilot))
           ? { ...unit, customPilot: { id: unit.customPilot.id } }
           : unit,
       ),

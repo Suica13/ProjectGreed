@@ -2,7 +2,7 @@
 const fs = require("node:fs"), path = require("node:path");
 // Only reusable activity definitions are distributed, never server identity or player records.
 const fields = ["id", "title", "text", "mode", "enabled", "createdAt", "updatedAt",
-  "startsAt", "endsAt", "rewards", "stockConfigurations", "multipliers", "targetCost", "loginDays"];
+  "startsAt", "endsAt", "rewards", "multipliers", "targetCost", "loginDays"];
 function exportDefaults(source) {
   if (![1, 2].includes(source.schemaVersion) || !Array.isArray(source.activities))
     throw Error("Invalid activity source; packaging aborted");
@@ -10,8 +10,10 @@ function exportDefaults(source) {
   const activities = source.activities.map(activity => {
     if (!activity.id || ids.has(activity.id)) throw Error("Invalid or duplicate activity ID");
     ids.add(activity.id);
-    return Object.fromEntries(fields.filter(key => Object.hasOwn(activity, key))
+    const result = Object.fromEntries(fields.filter(key => Object.hasOwn(activity, key))
       .map(key => [key, structuredClone(activity[key])]));
+    if (result.rewards) { const { kits, ...rewards } = result.rewards; result.rewards = rewards; }
+    return result;
   });
   return {schemaVersion: 1, activities};
 }

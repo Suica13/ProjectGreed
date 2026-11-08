@@ -456,8 +456,8 @@ test("hostile kills pay COST/2, zero-damage attack participation pays COST/4 and
   act("skill", { unitId: room.game.units.find(unit => unit.ownerSeat === 2).id, skillId: "TestIrradiation" });
   const kill = room.economyAwards.find(award => award.kind === "kill");
   const assist = room.economyAwards.find(award => award.kind === "assist");
-  assert.deepEqual([kill.money, kill.supplies], [Math.floor(cost / 2), Math.floor(cost / 2)]);
-  assert.deepEqual([assist.money, assist.supplies], [Math.floor(cost / 4), Math.floor(cost / 4)]);
+  assert.deepEqual([kill.money, kill.supplies], [Math.floor(cost / 2 * 1.25), Math.floor(cost / 2 * 1.25)]);
+  assert.deepEqual([assist.money, assist.supplies], [Math.floor(cost / 4 * 1.25), Math.floor(cost / 4 * 1.25)]);
   assert.equal(assist.memberId, room.seats[4].id);
   engine.broadcast(room); engine.broadcast(room);
   assert.equal(room.economyAwards.filter(award => award.kind === "kill" || award.kind === "assist").length, 2);
@@ -466,9 +466,9 @@ test("hostile kills pay COST/2, zero-damage attack participation pays COST/4 and
   engine.broadcast(room);
   const results = room.economyAwards.filter(award => award.kind === "result");
   assert.equal(results.length, 2);
-  assert(results.every(award => award.money === 1125 && award.supplies === 2250));
+  assert(results.every(award => award.money === 1406 && award.supplies === 2812));
   assert(room.techAwards.length>0);
-  assert.equal(room.techAwards.filter(a=>a.memberId===room.seats[2].id).reduce((sum,a)=>sum+a.points,0),B.technologyReward(room.settings,0,true));
+  assert.equal(room.techAwards.filter(a=>a.memberId===room.seats[2].id).reduce((sum,a)=>sum+a.points,0),B.technologyReward(room.settings,0,true,1.25));
   assert.deepEqual(room.pilotAwards, []);
 });
 test("fixed AI slots cannot be removed, taken or relocated by host requests", (t) => {
@@ -493,7 +493,7 @@ test("PMC deployment uses inventory and receives fixed era rewards without techn
   engine.broadcast(room);
   assert.equal(room.game.winner, 0);
   assert.equal(room.phase, "finished");
-  assert.deepEqual(room.economyAwards.map(award => [award.kind, award.money, award.supplies]), [["result", 1250, 2500]]);
+  assert.deepEqual(room.economyAwards.map(award => [award.kind, award.money, award.supplies]), [["result", 1562, 3125]]);
   assert.deepEqual(room.techAwards, []);
   assert.deepEqual(room.pilotAwards, []);
   assert.deepEqual({ inventory: player.inventory, kits: player.kits }, before);
@@ -611,7 +611,7 @@ test("only campaign-eligible ground units suppress sites and each real PMC captu
   engine.broadcast(room);assert.equal(point.owner,0);
   let awards=room.economyAwards.filter(a=>a.kind==="capture");
   assert.equal(awards.length,1);assert.equal(awards[0].memberId,room.seats[2].id);
-  assert.deepEqual([awards[0].money,awards[0].supplies],[750,1500]);
+  assert.deepEqual([awards[0].money,awards[0].supplies],[937,1875]);
   engine.broadcast(room);engine.broadcast(room);
   assert.equal(room.economyAwards.filter(a=>a.kind==="capture").length,1);
   assert.equal(game.battlefield.captureRewards.length,0);

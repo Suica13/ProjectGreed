@@ -34,7 +34,9 @@ const AITactics = (() => {
   function decide(G, game, unit) {
     let phase = phases.get(game);
     const key = game.round + ":" + game.team;
-    if (!phase || phase.key !== key) phases.set(game, phase = { key, players: new Map() });
+    if (!phase || phase.key !== key) phases.set(game, phase = {
+      key, players: new Map(), navigation: new Map(), missions: new Set(),
+    });
     const seat = G.controllerOf(game, unit);
     if (phase.players.has(seat)) return phase.players.get(seat);
     const config = settings(game.aiOptions),
@@ -78,43 +80,75 @@ const AITactics = (() => {
     } else if (ratio >= 1.75) state = "overrun";
     if (config.difficulty === "easy" && !defender && state !== "gather") state = "advance";
     const decision = { state, goal, origin, ratio, difficulty: config.difficulty,
-      squad: squad.map((u) => u.id), friends: squad, enemies, strategic: !!field };
+      squad: squad.map((u) => u.id), friends: squad, enemies,
+      strategic: !!(field || game.battlefield), navigation: phase.navigation, missions: phase.missions };
     phase.players.set(seat, decision);
     return decision;
   }
   function captureCapable(G, unit) {
-    return G.modelOf(unit).movementType !== "air" &&
+    return !unit.facility && G.modelOf(unit).movementType !== "air" &&
       (!unit.flying || G.unitSkills(unit).some((skill) => skill.type === "flight"));
   }
   function captureGoal(G, game, unit, origin = unit, nearby = true) {
-    if (!game.campaignBattlefield || !captureCapable(G, unit)) return null;
+    if ((!game.campaignBattlefield && !game.battlefield) || !captureCapable(G, unit)) return null;
     const field = game.campaignBattlefield;
-    const targets = field.layout.nodes.filter((point) => field.owners[point.id] !== unit.team &&
+    const points = field ? field.layout.nodes : game.battlefield.points, radius = field ? 1 : 2;
+    const targets = points.filter((point) => (field ? field.owners[point.id] : point.owner) !== unit.team &&
       (!nearby || distance(origin, point) <= Math.max(6, G.modelOf(unit).move + 2)) &&
       !game.units.some((enemy) => enemy.team !== unit.team && G.onMap(enemy) &&
-        G.cells(enemy).some((cell) => Math.max(Math.abs(cell.x-point.x), Math.abs(cell.y-point.y)) <= 1)));
+        G.cells(enemy).some((cell) => Math.max(Math.abs(cell.x-point.x), Math.abs(cell.y-point.y)) <= radius)));
     return targets.sort((a,b) => distance(origin,a)-distance(origin,b))[0] || null;
   }
   function forUnit(G, game, unit, decision) {
-    if (!game.campaignBattlefield) return decision;
-    if (captureCapable(G, unit)) {
-      const target = captureGoal(G, game, unit);
-      return target ? { ...decision, goal: target } : decision;
+    if (!game.campaignBattlefield && !game.battlefield) return decision;
+    const campaign = game.campaignBattlefield;
+    const points = campaign ? campaign.layout.nodes : game.battlefield.points;
+    const hostile = (point) => (campaign ? campaign.owners[point.id] : point.owner) !== unit.team;
+    // One mobile squad per occupation objective. Other squads keep advancing,
+    // rather than converging on the same post or waiting for reinforcements.
+    if (!decision.assignments) {
+      const groups = new Map();
+      for (const ally of game.units) {
+        if (!G.onMap(ally) || ally.embarked || ally.team !== unit.team ||
+            G.controllerOf(game, ally) !== G.controllerOf(game, unit) ||
+            G.modelOf(ally).move <= 0 || !captureCapable(G, ally)) continue;
+        const id = ally.squadId || ally.id;
+        if (!groups.has(id)) groups.set(id, ally);
+      }
+      const pairs = [];
+      for (const [id, ally] of groups) for (const point of points.filter(hostile))
+        pairs.push({ id, point, distance: distance(ally, point) });
+      pairs.sort((a, b) => a.distance - b.distance || String(a.id).localeCompare(String(b.id)) ||
+        String(a.point.id).localeCompare(String(b.point.id)));
+      const assignments = new Map(), assignedPoints = new Set();
+      for (const pair of pairs) if (!assignments.has(pair.id) && !assignedPoints.has(pair.point.id) &&
+          !decision.missions.has(unit.team + ":" + pair.point.id)) {
+        assignments.set(pair.id, pair.point); assignedPoints.add(pair.point.id);
+        decision.missions.add(unit.team + ":" + pair.point.id);
+      }
+      decision.assignments = assignments;
     }
+    const assigned = decision.assignments.get(unit.squadId || unit.id);
+    if (captureCapable(G, unit) && assigned && hostile(assigned))
+      return { ...decision, state: "advance", goal: assigned, occupation: true };
     const passenger = game.units.find((u) => u.hp > 0 && u.embarked?.carrierId === unit.id &&
       captureCapable(G,u) && G.hangars.readyToLaunch(u));
     const target = passenger && captureGoal(G, game, passenger, unit, false);
     // Transports deliver capturers. Aircraft without capturers continue fighting
     // instead of inheriting the ground squad's occupation destination.
-    const goal = target || (decision.enemies.length ? center(decision.enemies) : decision.origin);
-    return { ...decision, goal, avoidObjective: true };
+    const enemies = decision.enemies.filter((enemy) => G.onMap(enemy));
+    const bases = game.battlefield ? enemies.filter((enemy) => enemy.facility?.type === "base") : [];
+    const targets = bases.length ? bases : enemies;
+    const nearest = targets.reduce((best, enemy) => !best || distance(unit, enemy) < distance(unit, best) ? enemy : best, null);
+    const goal = target || nearest || (campaign && points.find((point) => point.kind === "base" && hostile(point))) || unit;
+    return { ...decision, state: "advance", goal, avoidObjective: !captureCapable(G, unit) };
   }
   function positionScorer(G, game, unit, decision) {
     const { state, origin, difficulty } = decision;
     let goal = decision.goal;
     const index = decision.squad.indexOf(unit.id),
       separation = distance(origin, goal),
-      flank = difficulty !== "easy" && decision.squad.length >= 4 &&
+      flank = !decision.strategic && difficulty !== "easy" && decision.squad.length >= 4 &&
         ["advance", "flank"].includes(state) && separation > 6;
     if (flank) {
       const side = index % 2 ? 1 : -1, width = Math.min(difficulty === "hard" ? 6 : 4, separation * 0.3);
@@ -126,12 +160,12 @@ const AITactics = (() => {
     const objectiveOffsets = decision.avoidObjective ? G.cells(unit, 0, 0) : [];
     return (cell) => {
       let score = -distance(cell, goal) * (cautious ? 0.85 : 0.45);
-      if (decision.squad.length > 1 && state !== "overrun") {
+      if (!decision.strategic && decision.squad.length > 1 && state !== "overrun") {
         let nearest = friends.length ? Infinity : 0;
         for (const friend of friends) nearest = Math.min(nearest, distance(cell, friend));
         score -= Math.max(0, nearest - 4) * (difficulty === "easy" ? 0.08 : 0.25);
       }
-      if (decision.avoidObjective && game.campaignBattlefield.layout.nodes.some((point) =>
+      if (decision.avoidObjective && game.campaignBattlefield?.layout.nodes.some((point) =>
         objectiveOffsets.some((tile) => Math.max(Math.abs(tile.x+cell.x-point.x), Math.abs(tile.y+cell.y-point.y)) <= 1)))
         score -= 12;
       score += (G.terrain[game.tiles[cell.y]?.[cell.x]]?.cover || 0) * (cautious ? 0.025 : 0.006);

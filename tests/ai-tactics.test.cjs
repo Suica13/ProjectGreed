@@ -53,7 +53,7 @@ test("campaign options validate allowed values, scale starting funds and technol
   C.advance(ctx,state,players);
   for(const team of [0,1]) {
     const bases=ctx.world.regions.filter((r)=>r.factory&&r.owner===team).length;
-    assert.equal(state.teams[team].technology-tech[team],bases*100*options.teams[team].research);
+    assert.equal(state.teams[team].technology-tech[team],bases*Math.floor(100*options.teams[team].research*1.25));
   }
   const imported=C.validate(ctx,JSON.parse(JSON.stringify(state)),players);
   assert.deepEqual(imported.options,A.settings(options));

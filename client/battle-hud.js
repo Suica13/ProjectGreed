@@ -15,11 +15,11 @@ const BattleHUD = (() => {
   terrainInfo.id = "hudTerrainInfo";
   terrainInfo.append(byId("mapEnvironment"), byId("hoverInfo"));
   byId("mapWrap").append(terrainInfo, byId("hudActionBand"));
-  // Phase information and zoom share one flowing column, including translated text.
+  // Zoom sits immediately to the right of the fixed-width phase badge.
   const phaseControls = element("div", "hud-phase-controls");
   phaseControls.append(scene.querySelector(".phase-row"), scene.querySelector(".map-camera-controls"));
-  // Playback tools get their own row; they must not stretch the zoom row.
-  phaseControls.append(phaseControls.querySelector("#mapCombatControls"));
+  // CampaignUI attaches these controls beside presentation speed in the lower toolbar.
+  scene.querySelector(".log-tabs").append(byId("mapCombatControls"));
   const topControls = element("div", "hud-top-controls");
   topControls.append(byId("hudTurnActions"));
   const topLine = element("div", "hud-top-line");
@@ -270,6 +270,7 @@ const BattleHUD = (() => {
   document.addEventListener("visibilitychange", resetFps);
   function refreshRoomStatus() {
     const snapshot = Net.active ? Net.snapshot : null;
+    MatchIncome.render(byId("hudMatchIncome"), snapshot);
     const roomName = Net.local
       ? "离线" + (snapshot?.settings?.mode === "quick" ? "快速战" : "常规战")
       : snapshot?.room || Net.room || "—";

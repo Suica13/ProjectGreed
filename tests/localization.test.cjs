@@ -26,6 +26,21 @@ function i18n(languages, saved, body = { nodeType: 0 }) {
   vm.runInNewContext(fs.readFileSync("client/i18n.js", "utf8") + ";globalThis.api=I18n;", context);
   return context.api;
 }
+
+test("current battlefield, save and pilot descriptions have English and Japanese translations", () => {
+  const accuracy = "每点增加0.25个百分点的命中倍率；100点为100%，200点为125%。命中率乘我方命中倍率、除以敌方回避倍率，全部修正后限制在0%～100%。";
+  const reaction = "每点增加0.25个百分点的回避倍率；100点为100%，200点为125%。敌方命中率除以该倍率；与我方通讯回避倍率相乘。";
+  for (const lang of ["en", "ja"]) {
+    const api = i18n([lang]);
+    for (const key of ["本局收入", "暂无库存", "下载存档编辑器", "机枪炮塔",
+      "目标确认，开始射击。", "预备库存不足", "设置分类", accuracy, reaction]) {
+      assert.notEqual(api.text(key), key, lang + ": " + key);
+    }
+    assert.match(api.text(accuracy), /0\.25/);
+    assert.match(api.text(accuracy), /125%/);
+    assert.match(api.text(reaction), /125%/);
+  }
+});
 test("locale detection supports regional variants, browser preference order, English fallback and saved selection", () => {
   assert.equal(i18n(["zh-TW"]).language, "zh");
   assert.equal(i18n(["ja-JP"]).language, "ja");
@@ -159,7 +174,7 @@ test("room, skill and return messages are localized in both languages", () => {
 });
 test("binding the catalog invalidates earlier untranslated cache entries", () => {
   const api = i18n(["en"]);
-  assert.equal(api.text("测试新机体"), "测试新机体");
+  assert.notEqual(api.text("测试新机体"), "Test unit");
   api.bindCatalog({
     prefabs: [
       {

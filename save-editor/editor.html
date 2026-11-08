@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; base-uri 'none'"
+    />
+    <title>ProjectGreed 存档编辑器</title>
+    <style>
+      __STYLE__
+    </style>
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1>存档编辑器</h1>
+        <p>ProjectGreed · 离线编辑，另存副本</p>
+      </div>
+      <div class="actions">
+        <label class="button"
+          >打开存档<input id="openSave" type="file" accept=".json,application/json" hidden
+        /></label>
+        <button id="downloadSave" disabled>保存修改副本</button
+        ><button id="downloadProfile" disabled>导出个人进度</button>
+      </div>
+    </header>
+    <p class="hint">
+      支持游戏导出的个人进度 JSON，以及 Windows / Android 的
+      profile.json。客户端存档中的设置和历史战役备份会保留。历史战役独立存档不在此工具的编辑范围。
+    </p>
+    <p id="status" role="status">请选择存档。所有处理均在本机完成。</p>
+    <main id="workspace" hidden>
+      <nav id="tabs" aria-label="编辑分类">
+        <button data-tab="resources">资源与科技</button><button data-tab="units">许可与库存</button>
+        <button data-tab="pilots">驾驶员</button><button data-tab="research">开发科技</button
+        ><button data-tab="formations">编组</button>
+      </nav>
+      <section id="resources" class="page">
+        <h2>资源</h2>
+        <div id="resourceFields" class="fields"></div>
+        <h2>累计科技点</h2>
+        <div id="pointFields" class="fields"></div>
+        <p class="hint">科技点与已开发科技分别编辑；保存前按游戏现行规则校验。</p>
+      </section>
+      <section id="units" class="page" hidden>
+        <div class="toolbar">
+          <input
+            id="unitSearch"
+            type="search"
+            placeholder="搜索单位名称或编号"
+            aria-label="搜索单位"
+          /><select id="unitFaction" aria-label="筛选阵营">
+            <option value="">全部阵营</option>
+          </select>
+        </div>
+        <p id="unitCount"></p>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>单位</th>
+                <th>阵营 / 年代</th>
+                <th>部署许可</th>
+                <th>库存</th>
+              </tr>
+            </thead>
+            <tbody id="unitRows"></tbody>
+          </table>
+        </div>
+      </section>
+      <section id="pilots" class="page" hidden>
+        <div class="toolbar">
+          <input
+            id="pilotSearch"
+            type="search"
+            placeholder="搜索驾驶员"
+            aria-label="搜索驾驶员"
+          /><select id="pilotSelect" aria-label="选择驾驶员"></select>
+        </div>
+        <div class="toolbar">
+          <button id="addPilot">新增 PMC 驾驶员</button
+          ><select id="aceSelect" aria-label="选择新增 ACE"></select
+          ><button id="addAce">新增 ACE</button>
+        </div>
+        <div id="pilotFields" class="fields"></div>
+        <p class="hint">
+          等级、经验和属性须符合游戏的属性上限及强化点预算。技能必须满足解锁等级；未分配强化点由游戏自动计算。
+        </p>
+      </section>
+      <section id="research" class="page" hidden>
+        <div class="toolbar"><select id="researchFaction" aria-label="科技阵营"></select></div>
+        <div id="researchNodes"></div>
+        <p class="hint">
+          勾选科技时会包含其前置科技；取消科技时会一并取消依赖它的科技。0087 阵营仍需满足 0079
+          的解锁要求。
+        </p>
+      </section>
+      <section id="formations" class="page" hidden>
+        <p class="hint">
+          编组保留单位、套件、驾驶员与预先搭载关系。可编辑对应编组
+          JSON，提交后使用游戏的编组规则校验。
+        </p>
+        <select id="formationFaction" aria-label="编组阵营"></select
+        ><textarea id="formationJson" spellcheck="false" aria-label="编组 JSON"></textarea
+        ><button id="applyFormation">应用编组 JSON</button>
+      </section>
+    </main>
+    <script>
+      __SCRIPT__;
+    </script>
+  </body>
+</html>

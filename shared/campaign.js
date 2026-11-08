@@ -2,6 +2,7 @@
 "use strict";
 const CampaignRules = (() => {
   const pricing = typeof Economy !== "undefined" ? Economy : require("./economy.js");
+  const rewards = typeof BattleEconomy !== "undefined" ? BattleEconomy : require("./battle-economy.js");
   const crews =
     typeof CampaignPilots !== "undefined" ? CampaignPilots : require("./campaign-pilots.js");
   const copy = (value) => JSON.parse(JSON.stringify(value));
@@ -824,8 +825,9 @@ const CampaignRules = (() => {
       holder = state.regions.find((region) => region.id === regionId);
     if (!base || !holder) return { money: 0, supplies: 0, technology: 0 };
     const amount = base.factory ? ctx.world.settings.factoryIncome : ctx.world.settings.ordinaryIncome;
-    return { money: amount.money, supplies: amount.supplies,
-      technology: Math.floor(amount.technology * (state.options?.teams[holder.owner]?.research ?? 1)) };
+    return { money: Math.floor(amount.money * rewards.rewardMultiplier),
+      supplies: Math.floor(amount.supplies * rewards.rewardMultiplier),
+      technology: Math.floor(amount.technology * (state.options?.teams[holder.owner]?.research ?? 1) * rewards.rewardMultiplier) };
   }
   function income(ctx, state, team) {
     const total = { money: 0, supplies: 0, technology: 0 };

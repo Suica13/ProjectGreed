@@ -111,7 +111,7 @@ const CampaignBattlefield = (() => {
     return nodes.find((node) => G.cells(u).some((cell) => Math.max(Math.abs(cell.x - node.x), Math.abs(cell.y - node.y)) <= 1));
   }
   function canSuppress(G, u) {
-    return !!u && G.onMap(u) && !u.embarked && !u.pendingMove && !u.plan &&
+    return !!u && !u.facility && G.onMap(u) && !u.embarked && !u.pendingMove && !u.plan &&
       !u.flying && G.modelOf(u).movementType !== "air";
   }
   function canCapture(G, g, u) {
@@ -140,9 +140,12 @@ const CampaignBattlefield = (() => {
   function heal(G, g) {
     const net = network(g);
     if (!net) return;
+    const contested = new Set(net.nodes.filter((node) => g.units.some((enemy) =>
+      enemy.team !== g.team && G.onMap(enemy) && G.cells(enemy).some((cell) =>
+        Math.max(Math.abs(cell.x - node.x), Math.abs(cell.y - node.y)) <= 1))).map((node) => node.id));
     for (const u of g.units.filter((u) => G.onMap(u) && u.team === g.team && !u.embarked)) {
       const node = nodeAt(G, g, u);
-      if (!node || !net.reached[u.team].has(node.id)) continue;
+      if (!node || contested.has(node.id) || !net.reached[u.team].has(node.id)) continue;
       const m = G.modelOf(u),
         base = node.kind === "base";
       u.hp = Math.min(m.hp, u.hp + Math.round(m.hp * (base ? 0.2 : 0.15)));

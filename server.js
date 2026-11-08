@@ -100,6 +100,8 @@ function createServer({
             ? path.join(publicDir, "map-editor.html")
           : pathname === "/unit-editor.html" || pathname === "/unit-editor"
             ? path.join(publicDir, "unit-editor.html")
+          : pathname === "/save-editor.html" || pathname === "/save-editor"
+            ? path.join(publicDir, "save-editor.html")
             : null;
     if (!file) {
       res.writeHead(404);

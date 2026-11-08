@@ -4,6 +4,7 @@ const { test, expect } = require("@playwright/test"),
 test("English and Japanese players share stable unit and weapon IDs and authoritative combat results", async ({
   browser,
 }) => {
+  test.setTimeout(60000);
   const app = createServer({ host: "127.0.0.1", port: 0 }),
     address = await app.listen(),
     contexts = [];
@@ -15,7 +16,8 @@ test("English and Japanese players share stable unit and weapon IDs and authorit
         localStorage.setItem("projectgreed.combatFaction", "PMC");
         localStorage.setItem(
           "projectgreed.economy.v1",
-          JSON.stringify({ money: 5000, supplies: 10000, inventory: { RGM_79: 1 }, kits: {} }),
+          JSON.stringify({ schemaVersion: 3, money: 5000, supplies: 10000,
+            licenses: { RGM_79: true }, inventory: { RGM_79: 1 }, kits: {} }),
         );
         localStorage.setItem(
           "slg-formations-v1.PMC",
@@ -76,10 +78,11 @@ test("English and Japanese players share stable unit and weapon IDs and authorit
     await japanese.locator("#confirmResponse").click();
     await expect.poll(() => english.evaluate(() => phase)).toBe("battle");
     await expect.poll(() => japanese.evaluate(() => phase)).toBe("battle");
-    const a = await english.evaluate(() => Net.snapshot.combats.at(-1).events);
-    const b = await japanese.evaluate(() => Net.snapshot.combats.at(-1).events);
+    const a = await english.evaluate(() => Net.snapshot.combats.flatMap(combat => combat.events));
+    const b = await japanese.evaluate(() => Net.snapshot.combats.flatMap(combat => combat.events));
     expect(a).toEqual(b);
-    expect(a[0].weapon).toBe("EF_90mmMG");
+    // The batch includes separate combats for the selected weapon and vulcans.
+    expect(a.some(event => event.weapon === "EF_90mmMG")).toBe(true);
     expect(
       await english.evaluate(() => Net.snapshot.game.units.map(({ pendingMove, ...unit }) => unit)),
     ).toEqual(

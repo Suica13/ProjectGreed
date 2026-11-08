@@ -636,8 +636,8 @@ const PilotSystem = (() => {
       attackRounds: factor(stats.speed, 0.5),
       awakeningHit: awakening,
       awakeningEvasion: awakening,
-      accuracy: factor(stats.accuracy, 0.5),
-      reaction: factor(stats.reaction, 0.5),
+      accuracy: factor(stats.accuracy, 0.25),
+      reaction: factor(stats.reaction, 0.25),
     };
   }
   return {

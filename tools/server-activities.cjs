@@ -9,7 +9,6 @@ function createActivityService({ rules, send, storePath = null, now = Date.now,
   const online = new Map();
   const developmentTree = require("../shared/development-tree.json");
   const aceMap = new Map(require("../shared/pilots.json").aces.map((p) => [p.id, p]));
-  const production = require("../shared/production-data.cjs");
   const unitMap = new Map(rules.catalog.prefabs.map((unit) => [unit.id, unit]));
   let state = { schemaVersion: 2, serverId: crypto.randomUUID(), players: {}, activities: [] };
   function save(next) {
@@ -161,6 +160,12 @@ function createActivityService({ rules, send, storePath = null, now = Date.now,
     callback(next);
     save(next);
   }
+  // Project outgoing rewards onto current mechanics; legacy on-disk records stay intact.
+  function currentRewards(value = {}) { const { kits, ...rewards } = value; return rewards; }
+  function currentItem(value) {
+    const { stockConfigurations, ...item } = value;
+    return { ...item, rewards: currentRewards(item.rewards) };
+  }
   function validateRewards(value = {}) {
     const rewards = {
       money: value.money ?? 0,
@@ -175,7 +180,7 @@ function createActivityService({ rules, send, storePath = null, now = Date.now,
       )
     )
       throw Error("资金、物资必须为0至10亿的整数");
-    const stock = rules.normalizeStock({ inventory: value.inventory, kits: value.kits });
+    const stock = rules.normalizeStock({ inventory: value.inventory });
     if (Object.keys(stock.inventory).length) rewards.inventory = stock.inventory;
     if (
       value.licenses !== undefined &&
@@ -200,10 +205,6 @@ function createActivityService({ rules, send, storePath = null, now = Date.now,
     }
     return rewards;
   }
-  // Presentation metadata preserves the selected bundled kit when several extra kits exist.
-  // Actual awards continue to use the independently counted inventory/kits maps.
-  // Legacy bundled-kit metadata has no economic meaning after free equipment selection.
-  function validateStockConfigurations() { return {}; }
   function validateMultipliers(value) {
     if (!value || typeof value !== "object" || Array.isArray(value))
       throw Error("请配置战斗收益倍率");
@@ -253,7 +254,7 @@ function createActivityService({ rules, send, storePath = null, now = Date.now,
           : {}),
         title: activity.title,
         text: activity.text,
-        rewards: structuredClone(activity.rewards),
+        rewards: structuredClone(currentRewards(activity.rewards)),
         createdAt: now(),
         claimedAt: null,
         confirmedAt: null,
@@ -294,7 +295,7 @@ function createActivityService({ rules, send, storePath = null, now = Date.now,
         enabled: activity.enabled,
         startsAt: activity.startsAt ?? null,
         endsAt: activity.endsAt ?? null,
-        rewards: activity.rewards,
+        rewards: currentRewards(activity.rewards),
         confirmedAt:
           player.mail.find(
             (item) =>
@@ -336,7 +337,7 @@ function createActivityService({ rules, send, storePath = null, now = Date.now,
       type: "activity_mailbox",
       capabilities: { deleteAcceptedRewards: true },
       serverId: state.serverId,
-      mail: player.mail.filter((item) => item.deletedAt == null),
+      mail: player.mail.filter((item) => item.deletedAt == null).map(currentItem),
       activities,
     });
   }
@@ -498,7 +499,7 @@ function createActivityService({ rules, send, storePath = null, now = Date.now,
         award: {
           id: "server-mail:" + state.serverId + ":" + mail.id,
           matchId: state.serverId,
-          ...mail.rewards,
+          ...currentRewards(mail.rewards),
         },
       });
     } else if (msg.type === "activity_ack") {
@@ -542,10 +543,6 @@ function createActivityService({ rules, send, storePath = null, now = Date.now,
       createdAt: now(),
       rewards: validateRewards(value.mode === "battle_bonus" ? {} : value.rewards),
     };
-    activity.stockConfigurations = validateStockConfigurations(
-      value.mode === "battle_bonus" ? {} : value.stockConfigurations,
-      activity.rewards,
-    );
     Object.assign(
       activity,
       schedule(
@@ -590,7 +587,7 @@ function createActivityService({ rules, send, storePath = null, now = Date.now,
       serverId: state.serverId,
       serverTime: now(),
       activities: state.activities.map((activity) => ({
-        ...activity,
+        ...currentItem(activity),
         delivered: Object.values(state.players).filter((player) =>
           player.mail.some((mail) => mail.activityId === activity.id),
         ).length,
@@ -609,7 +606,6 @@ function createActivityService({ rules, send, storePath = null, now = Date.now,
         faction: p.faction,
         era: p.era || "0079",
       })),
-      kits: [],
       units: [...unitMap.values()].map((unit) => ({
         id: unit.id,
         name: unit.code + " " + unit.name,
@@ -617,11 +613,6 @@ function createActivityService({ rules, send, storePath = null, now = Date.now,
         factions: unit.availableFactions || [unit.faction],
         eras: unit.tags.filter((tag) => rules.eras.includes(tag)),
         tags: unit.unitTags || [],
-        defaultKit:
-          unit.id +
-          "__" +
-          (production.defaultKits?.[unit.id] ||
-            production.baseModels[unit.id]?.slice(unit.id.length + 2)),
         developable: (developmentTree[unit.faction] || []).some((node) =>
           node.unlocks.includes(unit.id),
         ),
@@ -642,10 +633,6 @@ function createActivityService({ rules, send, storePath = null, now = Date.now,
       if (!activity) throw Error("活动不存在");
       if (activity.mode !== "battle_bonus" && Object.hasOwn(settings, "rewards")) {
         activity.rewards = validateRewards(settings.rewards);
-        activity.stockConfigurations = validateStockConfigurations(
-          settings.stockConfigurations,
-          activity.rewards,
-        );
       }
       if (Object.hasOwn(settings, "startsAt") || Object.hasOwn(settings, "endsAt"))
         Object.assign(
@@ -690,7 +677,7 @@ function createActivityService({ rules, send, storePath = null, now = Date.now,
             mail.text = activity.text;
             // Claimed receipts must stay immutable until acknowledgement and on retries.
             if (mail.claimedAt === null && Object.hasOwn(settings, "rewards"))
-              mail.rewards = structuredClone(activity.rewards);
+              mail.rewards = structuredClone(currentRewards(activity.rewards));
             if (activity.mode === "battle_bonus") {
               mail.multipliers = structuredClone(activity.multipliers);
               mail.startsAt = activity.startsAt;

@@ -18,7 +18,7 @@ function createRoomEngine({
   onRooms = () => {},
   onHostileDefeat = () => {},
   onSettlement = () => {},
-  getRewardMultipliers = () => ({ experience: 1, money: 1, supplies: 1, technology: 1 }),
+  getRewardMultipliers: activityRewardMultipliers = () => ({ experience: 1, money: 1, supplies: 1, technology: 1 }),
   randomId,
   randomSeed,
   randomToken,
@@ -31,6 +31,7 @@ function createRoomEngine({
   hostReconnectMs = 0,
   reconnectGraceMs = 60000,
 }) {
+  const getRewardMultipliers = () => roomBattleEconomy().rewardMultipliers(activityRewardMultipliers());
   const Records =
     typeof MatchRecords === "undefined" ? require("./match-records.js") : MatchRecords;
   const Climate =
@@ -2157,7 +2158,7 @@ function createRoomEngine({
     const beforeLevel = actor.pilot.level;
     // Campaign progression belongs to the campaign save, independent of account identity/events.
     const battleRate = room.campaign
-      ? 1
+      ? roomBattleEconomy().rewardMultiplier
       : roomBattleEconomy().rates(owner?.characterFaction, room.settings.mode).experience *
         roomBattleEconomy().rewardRatio(room.battleRoster, actor.team, room.settings.mode) *
         getRewardMultipliers().experience;
@@ -3031,8 +3032,7 @@ function createRoomEngine({
       if (checkedSquads.has(group)) continue;
       checkedSquads.add(group);
       if (
-        room.game.battlefield ||
-        (room.campaignBattle && G.campaignBattlefield.canCapture(G, room.game, actor))
+        room.game.battlefield || room.game.campaignBattlefield
       )
         continue;
       const gather = G.aiSquadChoice(room.game, actor, available);
@@ -3044,8 +3044,12 @@ function createRoomEngine({
     );
     if (room.campaignBattle && G.campaignBattlefield.canCapture(G, room.game, u))
       return { player, action: "capture_point", fields: { unitId: u.id } };
-    const objective = room.campaignBattle && G.campaignBattlefield.nodeAt(G, room.game, u);
-    if (objective && u.flying && room.game.campaignBattlefield.owners[objective.id] !== u.team) {
+    const objective = room.game.battlefield
+      ? room.game.battlefield.points.find((point) => point.owner !== u.team &&
+          G.cells(u).some((cell) => G.battlefieldMode.containsSite(point, cell.x, cell.y)))
+      : room.campaignBattle && G.campaignBattlefield.nodeAt(G, room.game, u);
+    if (objective && u.flying && (room.game.battlefield ||
+        room.game.campaignBattlefield.owners[objective.id] !== u.team)) {
       const landing = G.unitSkills(u).find(
         (skill) => skill.type === "flight" && G.canUseSkill(room.game, u, skill.id),
       );

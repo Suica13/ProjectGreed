@@ -3833,6 +3833,64 @@ const Tactics = (() => {
     }
     return best;
   }
+  function aiRouteField(g, u, strategy, onlyObstructed = false) {
+    const goal = strategy.goal, members = squadMembers(g, u);
+    const radius = strategy.occupation ? (g.battlefield ? 2 : 1) : 1;
+    // Shared per phase and movement footprint, not per candidate tile.
+    // Allies are traversable in this field; reachable() still decides legal stops.
+    const cache = strategy.navigation;
+    const cacheKey = JSON.stringify([u.team, goal.x, goal.y, goal.model, radius, !!strategy.occupation,
+      [...new Set(members.map((member) => JSON.stringify([member.model, member.angle, !!member.flying, member.environment])))].sort()]);
+    if (cache?.has(cacheKey)) return cache.get(cacheKey);
+    const occupancy = movementQuery(g), passable = new Map(), distances = new Map(), queue = [];
+    const allowed = (x, y) => {
+      const id = key(x, y);
+      if (!passable.has(id)) passable.set(id, x >= 0 && y >= 0 && x < mapWidth(g) && y < mapHeight(g) &&
+        members.every((member) => fits(g, member, x, y, member.angle, true, null, null, occupancy) &&
+          Tactics.cells(member, x, y).every((cell) => adaptationOf(g, member, cell.x, cell.y) > 0 &&
+            Number.isFinite(movementCost(g, member, cell.x, cell.y)))));
+      return passable.get(id);
+    };
+    const targetCells = goal.model ? cells(goal) : [{ x: Math.round(goal.x), y: Math.round(goal.y) }];
+    const nearTarget = (x, y) => Tactics.cells(u, x, y).some((cell) => targetCells.some((target) =>
+      (strategy.occupation ? Math.max(Math.abs(cell.x - target.x), Math.abs(cell.y - target.y)) :
+        Math.abs(cell.x - target.x) + Math.abs(cell.y - target.y)) <= radius));
+    if (onlyObstructed) {
+      // Open terrain needs no full-board search. Test a direct grid corridor;
+      // once obstructed, keep the cached route field throughout this phase.
+      const dx = Math.round(goal.x) - u.x, dy = Math.round(goal.y) - u.y,
+        steps = Math.max(Math.abs(dx), Math.abs(dy), 1);
+      let previous = u;
+      for (let step = 0; step <= steps; step++) {
+        const x = Math.round(u.x + dx * step / steps), y = Math.round(u.y + dy * step / steps);
+        if (!allowed(x, y) || (previous.x !== x && previous.y !== y &&
+            !allowed(x, previous.y) && !allowed(previous.x, y))) break;
+        if (nearTarget(x, y)) return null;
+        previous = { x, y };
+      }
+    }
+    const offsets = Tactics.cells(u, 0, 0), padding = radius + Math.max(0,
+      ...offsets.flatMap((cell) => [Math.abs(cell.x), Math.abs(cell.y)]));
+    const left = Math.max(0, Math.min(...targetCells.map((cell) => cell.x)) - padding),
+      right = Math.min(mapWidth(g) - 1, Math.max(...targetCells.map((cell) => cell.x)) + padding),
+      top = Math.max(0, Math.min(...targetCells.map((cell) => cell.y)) - padding),
+      bottom = Math.min(mapHeight(g) - 1, Math.max(...targetCells.map((cell) => cell.y)) + padding);
+    for (let y = top; y <= bottom; y++) for (let x = left; x <= right; x++) {
+      if (!allowed(x, y) || !nearTarget(x, y)) continue;
+      distances.set(key(x, y), 0); queue.push({ x, y });
+    }
+    for (let index = 0; index < queue.length; index++) {
+      const point = queue[index], next = distances.get(key(point.x, point.y)) + 1;
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        const x = point.x + dx, y = point.y + dy, id = key(x, y);
+        if (!distances.has(id) && allowed(x, y)) {
+          distances.set(id, next); queue.push({ x, y });
+        }
+      }
+    }
+    if (cache && cache.size < 128) cache.set(cacheKey, distances);
+    return distances;
+  }
   function aiChoice(g, u, destinations = null, collectCandidate = null) {
     let cells =
         destinations ??
@@ -3840,11 +3898,36 @@ const Tactics = (() => {
       enemies = g.units.filter((e) => e.team !== u.team && onMap(e)),
       best = null;
     cells = cells.filter(cell => !cell.boarding);
-    const weapons = modelOf(u).weapons,
-      pressure = aiTargetPressure(g, u.team),
-      strategy = aiTactics.forUnit(Tactics, g, u, aiTactics.decide(Tactics, g, u)),
-      positionScore = aiTactics.positionScorer(Tactics, g, u, strategy),
+    const weapons = modelOf(u).weapons, pressure = aiTargetPressure(g, u.team);
+    let strategy = aiTactics.forUnit(Tactics, g, u, aiTactics.decide(Tactics, g, u));
+    let route = !destinations && strategy.strategic && !u.moved && !u.facility &&
+      modelOf(u).move > 0 && strategy.goal ? aiRouteField(g, u, strategy, true) : null;
+    if (route && !route.has(key(u.x, u.y))) {
+      // A nearer post can be on another island or behind an impassable ridge.
+      // Choose a reachable mission instead of marching into that shoreline forever.
+      const field = g.campaignBattlefield;
+      const points = aiTactics.captureCapable(Tactics, u)
+        ? (field ? field.layout.nodes.filter((point) => field.owners[point.id] !== u.team) :
+          g.battlefield.points.filter((point) => point.owner !== u.team)) : [];
+      const alternatives = [...points.map((goal) => ({ goal, occupation: true })),
+        ...enemies.map((goal) => ({ goal, occupation: false }))];
+      alternatives.sort((a, b) => Math.hypot(a.goal.x - u.x, a.goal.y - u.y) -
+        Math.hypot(b.goal.x - u.x, b.goal.y - u.y));
+      for (const alternative of alternatives) {
+        const next = { ...strategy, ...alternative }, candidate = aiRouteField(g, u, next);
+        if (!candidate.has(key(u.x, u.y))) continue;
+        strategy = next; route = candidate; break;
+      }
+    }
+    const localScore = aiTactics.positionScorer(Tactics, g, u, strategy),
       cautious = ["gather", "defend"].includes(strategy.state);
+    const positionScore = (cell) => {
+      const remaining = route?.get(key(cell.x, cell.y));
+      // Replace straight-line attraction with a traversable route. Keeping it
+      // for the entire approach avoids alternating between a detour and a wall.
+      return localScore(cell) + (remaining === undefined ? (route?.size ? -10000 : 0) :
+        (Math.hypot(cell.x - strategy.goal.x, cell.y - strategy.goal.y) - remaining) * 0.45);
+    };
     // AI navigation knows enemy positions even through fog. Keep actual sight
     // separate so this knowledge does not grant attacks against unseen targets.
     const decisionGame = {
@@ -3857,7 +3940,7 @@ const Tactics = (() => {
     };
     // Keep each AI player's mobile force together during the approach. Once
     // any member makes contact, combat positioning takes priority over waiting.
-    if (!destinations && enemies.length && !u.moved) {
+    if (!destinations && !strategy.strategic && enemies.length && !u.moved) {
       const squad = g.units.filter(
         (ally) =>
           onMap(ally) &&
@@ -3955,7 +4038,7 @@ const Tactics = (() => {
       )
         best = { ...c, score, target, weapon, assignedAttackers };
     }
-    if (!destinations && !u.moved && best && !best.target && strategy.goal &&
+    if (!destinations && !strategy.strategic && !u.moved && best && !best.target && strategy.goal &&
         ["advance", "flank", "overrun"].includes(strategy.state)) {
       const goal = strategy.goal;
       const distance = (point) => Math.hypot(point.x - goal.x, point.y - goal.y);
@@ -3963,29 +4046,7 @@ const Tactics = (() => {
         // Only run a full-board escape search when local scoring stalls. The
         // reverse field finds a way around walls instead of repeating the same
         // closest-to-enemy cell every turn. Actual moves still use reachable().
-        const members = squadMembers(g, u), occupancy = movementQuery(g),
-          passable = new Map(), distances = new Map(), queue = [];
-        const allowed = (x, y) => {
-          const id = key(x, y);
-          if (!passable.has(id)) passable.set(id, x >= 0 && y >= 0 && x < mapWidth(g) && y < mapHeight(g) &&
-            members.every((member) => fits(g, member, x, y, member.angle, true, null, null, occupancy) &&
-              Tactics.cells(member, x, y).every((cell) => adaptationOf(g, member, cell.x, cell.y) > 0 &&
-                Number.isFinite(movementCost(g, member, cell.x, cell.y)))));
-          return passable.get(id);
-        };
-        for (let y = Math.round(goal.y) - 1; y <= Math.round(goal.y) + 1; y++)
-          for (let x = Math.round(goal.x) - 1; x <= Math.round(goal.x) + 1; x++)
-            if (allowed(x, y)) { distances.set(key(x, y), 0); queue.push({ x, y }); }
-        for (let index = 0; index < queue.length; index++) {
-          const point = queue[index];
-          for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
-            const x = point.x + dx, y = point.y + dy, id = key(x, y);
-            if (!distances.has(id) && allowed(x, y)) {
-              distances.set(id, distances.get(key(point.x, point.y)) + 1);
-              queue.push({ x, y });
-            }
-          }
-        }
+        const distances = aiRouteField(g, u, strategy);
         const current = distances.get(key(u.x, u.y)) ?? Infinity;
         const detours = cells.filter((point) => !point.boarding && !point.rotation &&
           (distances.get(key(point.x, point.y)) ?? Infinity) < current);

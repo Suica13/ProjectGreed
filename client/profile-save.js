@@ -1,219 +1,7 @@
-/* Personal progress only: never copy connection credentials or an ongoing match. */
-const ProfileSave = (() => {
+/* Personal progress controls; serialization is shared with the offline save editor. */
+(() => {
   const factions = ["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"];
-  const pilotKey = "projectgreed.custom-pilots.v2.",
-    formationKey = "slg-formations-v1.";
-  // Archive-only lossless dictionary compression. Runtime receipt lookup stays unchanged.
-  function packClaims(store) {
-    const groups = new Map();
-    for (const [id, match] of Object.entries(store.claimed || {})) {
-      if (!groups.has(match)) groups.set(match, []);
-      groups.get(match).push(id);
-    }
-    const { claimed, ...rest } = store;
-    return {
-      ...rest,
-      claimedPacked: [...groups].map(([match, ids]) => {
-        let prefix = ids[0];
-        for (const id of ids) {
-          let n = 0;
-          while (n < prefix.length && prefix[n] === id[n]) n++;
-          prefix = prefix.slice(0, n);
-        }
-        return [match, prefix, ids.map((id) => id.slice(prefix.length))];
-      }),
-    };
-  }
-  function unpackClaims(store) {
-    if (!store || !Array.isArray(store.claimedPacked) || store.claimed !== undefined)
-      throw Error("奖励记录压缩格式无效");
-    const claimed = {};
-    for (const group of store.claimedPacked) {
-      if (!Array.isArray(group) || group.length !== 3) throw Error("奖励记录压缩格式无效");
-      const [match, prefix, suffixes] = group;
-      if (
-        typeof match !== "string" ||
-        match.length > 200 ||
-        typeof prefix !== "string" ||
-        prefix.length > 200 ||
-        !Array.isArray(suffixes)
-      )
-        throw Error("奖励记录压缩格式无效");
-      for (const suffix of suffixes) {
-        if (typeof suffix !== "string" || prefix.length + suffix.length > 200)
-          throw Error("奖励记录压缩格式无效");
-        const id = prefix + suffix;
-        if (!id || Object.hasOwn(claimed, id)) throw Error("奖励记录重复或无效");
-        Object.defineProperty(claimed, id, { value: match, enumerable: true });
-      }
-    }
-    const { claimedPacked, ...rest } = store;
-    return { ...rest, claimed };
-  }
-  function encodeData(value = exportData()) {
-    const clean = validate(value);
-    return {
-      ...clean,
-      schemaVersion: 2,
-      createdAt: value.createdAt || new Date().toISOString(),
-      development: packClaims(clean.development),
-      economy: packClaims(clean.economy),
-    };
-  }
-  function validate(value) {
-    if (value?.format !== "ProjectGreed-profile" || ![1, 2].includes(value.schemaVersion))
-      throw Error("不支持的个人存档格式");
-    if (value.schemaVersion === 2)
-      value = {
-        ...value,
-        development: unpackClaims(value.development),
-        economy: unpackClaims(value.economy),
-      };
-    const result = {
-      format: value.format,
-      schemaVersion: 1,
-      identity: value.identity
-        ? ProfileIdentity.validate(value.identity)
-        : ProfileIdentity.snapshot(),
-      pilots: {},
-      formations: {},
-      development: Development.validateProgress(value.development),
-      economy: Economy.validate(ProfileMigrations.economy(value.economy)),
-    };
-    for (const faction of factions) {
-      const addedFaction = ["AEUG", "TITANS", "NEO_ZEON"].includes(faction);
-      const store =
-        value.pilots?.[faction] ?? (addedFaction ? { pilots: [], awards: [] } : undefined);
-      if (
-        !Array.isArray(store?.pilots) ||
-        !Array.isArray(store.awards) ||
-        store.pilots.length > 10000 ||
-        store.awards.some((id) => typeof id !== "string" || id.length > 200)
-      )
-        throw Error("驾驶员存档无效");
-      const pilots = store.pilots.map((p) => {
-        if (p.faction !== faction) throw Error("驾驶员阵营无效");
-        return PilotSystem.custom(p);
-      });
-      if (new Set(pilots.map((p) => p.id)).size !== pilots.length) throw Error("驾驶员编号重复");
-      result.pilots[faction] = { pilots, awards: [...new Set(store.awards)] };
-      const formation =
-        value.formations?.[faction] ?? (addedFaction ? null : value.formations?.[faction]);
-      if (formation === null) {
-        result.formations[faction] = null;
-        continue;
-      }
-      if (
-        formation?.version !== 3 ||
-        !Array.isArray(formation.squads) ||
-        !formation.squads.length ||
-        formation.squads.length > (faction === "PMC" ? 6000 : 1000) ||
-        !Number.isInteger(formation.index) ||
-        formation.index < 0 ||
-        formation.index >= formation.squads.length
-      )
-        throw Error("编组存档无效");
-      result.formations[faction] = {
-        version: 3,
-        index: formation.index,
-        squads: formation.squads.map((squad) => {
-          if (typeof squad.name !== "string" || !squad.name.trim() || squad.name.length > 100)
-            throw Error("编组名称无效");
-          return {
-            name: squad.name,
-            units:
-              Array.isArray(squad.units) && !squad.units.length
-                ? []
-                : Rules.validateFormation(squad.units, Infinity, Rules.catalog.formation.maxUnits),
-          };
-        }),
-      };
-    }
-    return result;
-  }
-  function exportData() {
-    const formations = {};
-    const pilots = Formation.exportPilotStores();
-    const roster = Object.values(pilots).flatMap(store => store.pilots);
-    for (const faction of factions) {
-      const saved = JSON.parse(localStorage.getItem(formationKey + faction) || "null");
-      formations[faction] = saved
-        ? { ...saved, squads: ProfileStorage.expandSquads(saved.squads, roster),
-            index: Number(localStorage.getItem(formationKey + faction + "-active") || 0) }
-        : null;
-    }
-    return {
-      ...validate({
-        format: "ProjectGreed-profile",
-        schemaVersion: 1,
-        pilots,
-        formations,
-        development: Development.exportProgress(),
-        economy: Economy.exportProgress(),
-      }),
-      createdAt: new Date().toISOString(),
-    };
-  }
-  function fromNativeSnapshot(value) {
-    if (value?.format !== "ProjectGreed-app-store" || value.version !== 1 || !value.values ||
-      Object.values(value.values).some(v => typeof v !== "string")) throw Error("原生存档格式无效");
-    const read = (key, fallback = null) => value.values[key] === undefined ? fallback : JSON.parse(value.values[key]);
-    const shared = read("projectgreed.custom-pilots.v3.shared", {pilots:[],awards:[]});
-    const old = factions.map(f => read(pilotKey+f, {pilots:[],awards:[]}));
-    const roster = [...shared.pilots,...old.flatMap(store=>store.pilots)];
-    const unique = new Map();
-    for (const pilot of roster) if (!unique.has(pilot.id) || pilot.level > unique.get(pilot.id).level) unique.set(pilot.id,pilot);
-    const pilots={},formations={};
-    for (const faction of factions) {
-      pilots[faction]={pilots:[...unique.values()].filter(p=>p.faction===faction),awards:[...new Set([...shared.awards,...old.flatMap(store=>store.awards)])]};
-      const saved=read(formationKey+faction);
-      formations[faction]=saved?{...saved,index:Number(value.values[formationKey+faction+"-active"]||0),squads:ProfileStorage.expandSquads(saved.squads,[...unique.values()])}:null;
-    }
-    const economy=read(Economy.key);if(!economy)throw Error("原生存档中缺少个人进度");
-    return validate({format:"ProjectGreed-profile",schemaVersion:1,pilots,formations,economy,
-      identity:read(ProfileIdentity.key),development:read("projectgreed.developmentProgress.v1",Development.exportProgress())});
-  }
-  function importData(value) {
-    const clean = validate(value),
-      writes = new Map();
-    // Older faction archives can contain copies of the same pilot; retain the
-    // most advanced copy, matching the existing shared-roster migration.
-    const uniquePilots = new Map();
-    for (const pilot of Object.values(clean.pilots).flatMap(store => store.pilots)) {
-      const previous = uniquePilots.get(pilot.id);
-      if (!previous || pilot.level > previous.level ||
-          (pilot.level === previous.level && pilot.experience > previous.experience))
-        uniquePilots.set(pilot.id, pilot);
-    }
-    const roster = [...uniquePilots.values()];
-    for (const faction of factions) {
-      writes.set(pilotKey + faction, null);
-      const save = clean.formations[faction];
-      writes.set(
-        formationKey + faction,
-        save ? JSON.stringify({ version: 3,
-          squads: ProfileStorage.compactSquads(save.squads, roster) }) : null,
-      );
-      writes.set(formationKey + faction + "-active", save ? String(save.index) : null);
-    }
-    writes.set("projectgreed.custom-pilots.v3.shared", JSON.stringify({
-      pilots: roster,
-      awards: [...new Set(Object.values(clean.pilots).flatMap(store => store.awards))],
-    }));
-    writes.set("projectgreed.custom-pilots.v1", null);
-    // A replaced personal profile must not retain large recovery copies of its old wallet.
-    // These removals participate in the same rollback as the new profile.
-    for (const suffix of [".before-counted-stock", ".before-unit-inventory", ".recovery-backup"])
-      writes.set(Economy.key + suffix, null);
-    writes.set("slg-formations-v1", null);
-    writes.set("slg-formations-v1-active", null);
-    writes.set("slg-formations-v1.pmc-unified", null);
-    writes.set(ProfileIdentity.key, JSON.stringify(clean.identity));
-    writes.set(Economy.key, JSON.stringify(clean.economy));
-    writes.set(pilotKey + "migrated", "imported");
-    writes.set("projectgreed.developmentProgress.v1", JSON.stringify(clean.development));
-    ProfileStorage.replace(writes);
-  }
+  const { validate, exportData, encodeData, importData, fromNativeSnapshot } = ProfileSave;
   const panel = document.createElement("div"),
     actions = document.createElement("div"),
     status = document.createElement("p");
@@ -267,7 +55,8 @@ const ProfileSave = (() => {
       if (!canImport()) throw Error("请先退出当前战局");
       const file = input.files[0];
       if (!file) return;
-      if (file.size > 32 * 1024 * 1024) throw Error("存档超过32MB");
+      const limit = window.AppRuntime?.native ? 64 : 32;
+      if (file.size > limit * 1024 * 1024) throw Error("存档超过" + limit + "MB");
       const value = JSON.parse(await file.text());
       importData(window.AppRuntime?.native && value?.format === "ProjectGreed-app-store" ? fromNativeSnapshot(value) : value);
       location.reload();
@@ -319,6 +108,20 @@ const ProfileSave = (() => {
   };
   actions.className = "profile-save-actions";
   actions.append(exportButton, importButton, newButton);
+  const saveEditorButton = document.createElement("button");
+  saveEditorButton.id = "downloadSaveEditor";
+  saveEditorButton.type = "button";
+  saveEditorButton.textContent = "下载存档编辑器";
+  saveEditorButton.onclick = () => {
+    try {
+      const bytes = Uint8Array.from(atob(SAVE_EDITOR_BUNDLE), character => character.charCodeAt(0));
+      const url = URL.createObjectURL(new Blob([CatalogInflate.gunzipSync(bytes)], { type:"text/html;charset=utf-8" }));
+      const link = document.createElement("a"); link.href = url; link.download = "ProjectGreed-save-editor.html"; link.click();
+      setTimeout(() => URL.revokeObjectURL(url),1000);
+      status.textContent = "存档编辑器已导出，打开该 HTML 文件后选择存档即可离线编辑。";
+    } catch(error) { status.textContent = "导出编辑器失败：" + error.message; }
+  };
+  actions.append(saveEditorButton);
   panel.append(actions, input, status);
   const diagnostics = document.createElement("div");
   diagnostics.className = "profile-save-actions";
@@ -366,5 +169,4 @@ const ProfileSave = (() => {
   diagnostics.append(checkStorage, exportDiagnostic);
   panel.append(diagnostics, diagnosticText);
   document.getElementById("clientSettingsDialog").append(panel);
-  return { validate, exportData, encodeData, importData, fromNativeSnapshot };
 })();

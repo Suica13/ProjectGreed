@@ -185,7 +185,7 @@ test("income forecast equals settlement and respects regional ownership and rese
   const core = ctx.world.regions.find((r) => r.factory);
   const holder = s.regions.find((r) => r.id === core.id);
   holder.owner = 0;
-  assert.deepEqual(C.regionIncome(ctx, s, core.id), {money:300, supplies:600, technology:125});
+  assert.deepEqual(C.regionIncome(ctx, s, core.id), {money:375, supplies:750, technology:156});
   const ordinary = ctx.world.regions.find((r) => !r.factory);
-  assert.deepEqual(C.regionIncome(ctx, s, ordinary.id), {money:200, supplies:400, technology:0});
+  assert.deepEqual(C.regionIncome(ctx, s, ordinary.id), {money:250, supplies:500, technology:0});
 });

@@ -81,10 +81,8 @@ for (const width of [1440, 390])
     await expect(page.locator("#shellRecordsScreen")).toBeVisible();
     await expect(page.locator("#shellSubnav button")).toHaveCount(1);
     await expect(page.locator("#shellSubnav button")).toHaveText("回放文件");
-    await expect(page.locator("#shellOpenRecords")).toBeVisible();
-    await page.locator("#shellOpenRecords").click();
-    await expect(page.locator("#matchRecordsDialog")).toBeVisible();
-    await page.keyboard.press("Escape");
+    await expect(page.locator("#shellRecordsScreen button")).toHaveCount(1);
+    await expect(page.locator("#shellOpenRecords")).toHaveCount(0);
     await expect(page.locator("#shellOpenReplay")).toBeVisible();
     await page.locator("#shellSettings").click();
     await expect(page.locator("#clientSettingsDialog")).toBeVisible();

@@ -2437,7 +2437,7 @@ window.CampaignUI = (() => {
   delegationToggle.id = "campaignDelegationToggle";
   delegationToggle.className = "campaign-delegation-toggle";
   delegationToggle.hidden = true;
-  byId("showLog").after(delegationToggle);
+  byId("battleLogView").after(delegationToggle);
   const presentationSpeed = button(
     "",
     () => {
@@ -2455,7 +2455,12 @@ window.CampaignUI = (() => {
   );
   presentationSpeed.id = "battlePresentationSpeed";
   presentationSpeed.hidden = true;
-  delegationToggle.after(presentationSpeed);
+  const presentationTools = element("span", "battle-presentation-tools");
+  presentationTools.id = "battlePresentationTools";
+  presentationTools.setAttribute("role", "group");
+  presentationTools.setAttribute("aria-label", "战斗演出操作");
+  presentationTools.append(presentationSpeed, byId("mapCombatControls"));
+  delegationToggle.after(presentationTools);
   const battleSave = button("保存战役", () => command("campaign_export"));
   battleSave.id = "saveCampaignBattle";
   battleSave.hidden = true;

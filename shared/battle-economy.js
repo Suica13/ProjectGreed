@@ -1,6 +1,13 @@
 "use strict";
 // Prices are per deployed unit, including its selected kit, never tactical COST.
 const BattleEconomy = (() => {
+  const rewardMultiplier = 1.25;
+  // Apply once, before the existing final integer rounding. Event settings stay
+  // independent so online and offline matches use the same global balance.
+  function rewardMultipliers(activity = {}) {
+    return Object.fromEntries(["money", "supplies", "technology", "experience"].map((key) =>
+      [key, rewardMultiplier * (activity[key] ?? 1)]));
+  }
   const catalog =
     typeof PRODUCTION_CATALOG !== "undefined"
       ? PRODUCTION_CATALOG
@@ -153,7 +160,31 @@ const BattleEconomy = (() => {
   function rewardRatio(roster, team, mode) {
     return strengthRatio(roster, team) * opponentRatio(roster, team, mode);
   }
+  // Sum the authoritative receipts, not wallet differences or only the final payout.
+  // This is presentation data: the original receipts remain the only credit operation.
+  function rewardTotals(economyAwards = [], techAwards = [], matchId = null) {
+    const totals = { money: 0, supplies: 0, technology: 0 };
+    const number = value => Number.isSafeInteger(value) && value >= 0 ? value : 0;
+    function receipts(awards, add) {
+      const seen = new Set();
+      for (const award of awards || []) {
+        if (!award || (matchId && award.matchId && award.matchId !== matchId)) continue;
+        const key = award.id ? JSON.stringify([award.matchId || matchId, award.id]) : null;
+        if (key && seen.has(key)) continue;
+        if (key) seen.add(key);
+        add(award);
+      }
+    }
+    receipts(economyAwards, award => {
+      totals.money += number(award.money);
+      totals.supplies += number(award.supplies);
+    });
+    receipts(techAwards, award => totals.technology += number(award.points));
+    return totals;
+  }
   return {
+    rewardMultiplier,
+    rewardMultipliers,
     price,
     rates,
     calculateBattleReward,
@@ -161,6 +192,7 @@ const BattleEconomy = (() => {
     strengthRatio,
     opponentRatio,
     rewardRatio,
+    rewardTotals,
     technologyReward,
     technologyFactions,
     technologyWeights,

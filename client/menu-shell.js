@@ -154,7 +154,6 @@ window.MenuShell = (() => {
     true,
   );
   byId("shellOpenReplay").onclick = () => byId("openReplayFile").click();
-  byId("shellOpenRecords").onclick = () => byId("openMatchRecords").click();
   for (const id of ["formationUnitsTab", "formationPilotsTab"])
     byId(id).addEventListener("click", refresh);
   for (const event of [
