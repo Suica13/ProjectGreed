@@ -269,6 +269,83 @@
     "Common_Turret_MG_Double": {
       "ref": "Common_Turret_MG_Double__lv1",
       "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "shots": 1,
+              "delay": 0,
+              "muzzleIndex": 0,
+              "requiredParts": []
+            },
+            {
+              "shots": 1,
+              "delay": 0.15,
+              "muzzleIndex": 0,
+              "requiredParts": []
+            },
+            {
+              "shots": 1,
+              "delay": 0.15,
+              "muzzleIndex": 0,
+              "requiredParts": []
+            },
+            {
+              "shots": 1,
+              "delay": 0.15,
+              "muzzleIndex": 0,
+              "requiredParts": []
+            },
+            {
+              "shots": 1,
+              "delay": 0.15,
+              "muzzleIndex": 0,
+              "requiredParts": []
+            },
+            {
+              "shots": 1,
+              "delay": 0.15,
+              "muzzleIndex": 0,
+              "requiredParts": []
+            },
+            {
+              "shots": 1,
+              "delay": 0.15,
+              "muzzleIndex": 0,
+              "requiredParts": []
+            },
+            {
+              "shots": 1,
+              "delay": 0.15,
+              "muzzleIndex": 0,
+              "requiredParts": []
+            },
+            {
+              "shots": 1,
+              "delay": 0.15,
+              "muzzleIndex": 0,
+              "requiredParts": []
+            },
+            {
+              "shots": 1,
+              "delay": 0.15,
+              "muzzleIndex": 0,
+              "requiredParts": []
+            },
+            {
+              "shots": 1,
+              "delay": 0.15,
+              "muzzleIndex": 0,
+              "requiredParts": []
+            },
+            {
+              "shots": 1,
+              "delay": 0.15,
+              "muzzleIndex": 0,
+              "requiredParts": []
+            }
+          ],
+          "startAnimation": null
+        },
         "actionCost": 2,
         "source": {
           "file": "GW_BattleUniverse_Main/Units/Buildings/Turret/TypeA/Turret_MG_A.ini",
@@ -291,7 +368,8 @@
             }
           ]
         },
-        "requiredParts": []
+        "requiredParts": [],
+        "attackRounds": 2
       }
     }
   },

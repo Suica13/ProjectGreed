@@ -476,7 +476,7 @@ main { grid-template-columns: 310px minmax(260px, 1fr) 245px; }
   </head>
   <body>
     <header>
-      <div><strong>PROJECT GREED</strong><span>地图编辑器 · V100</span></div>
+      <div><strong>PROJECT GREED</strong><span>地图编辑器 · V102</span></div>
       <nav aria-label="文件操作">
         <button id="newMap">新建</button><button id="importMap">导入地图</button>
         <button id="exportProject">导出工程</button
@@ -545,7 +545,7 @@ main { grid-template-columns: 310px minmax(260px, 1fr) 245px; }
             <h2>玩家与队伍</h2>
             <div class="pair">
               <label>队伍上限<input id="maxTeams" type="number" min="2" max="8" /></label
-              ><label>每队玩家<input id="playersPerTeam" type="number" min="1" max="5" /></label>
+              ><label>每队玩家<input id="playersPerTeam" type="number" min="1" max="6" /></label>
             </div>
             <p id="playerCount" class="hint"></p>
             <button id="applyPlayers">重新生成席位与部署区</button>
@@ -783,26 +783,27 @@ const MapDocument = (() => {
     return prefix + "_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 9);
   }
   function setPlayers(doc, teams, playersPerTeam) {
-    if (!integer(teams, 2, 8) || !integer(playersPerTeam, 1, 5))
-      throw Error("队伍需为2–8队，每队1–5名玩家。");
+    if (!integer(teams, 2, 8) || !integer(playersPerTeam, 1, 6))
+      throw Error("队伍需为2–8队，每队1–6个席位。");
     doc.maxTeams = teams;
     doc.playersPerTeam = playersPerTeam;
     doc.spawns = [];
     doc.deploymentAreas = [];
-    // Teams occupy disjoint vertical strips; players within a team occupy separate rows.
+    // Teammates share a compact staging area; extra seats do not stretch the map.
     for (let position = 0; position < playersPerTeam; position++) {
       for (let team = 0; team < teams; team++) {
         const strip = Math.max(1, Math.floor(doc.width / teams));
-        const width = Math.max(1, Math.min(10, strip));
-        const x = teams === 2 ? (team ? doc.width - width : 0) : team * strip;
-        const y = Math.floor((position * doc.height) / playersPerTeam);
-        const height = Math.floor(((position + 1) * doc.height) / playersPerTeam) - y;
+        const width = Math.max(1, Math.min(14, strip-2));
+        const x = teams === 2 ? (team ? doc.width-width-1 : 1) : team*strip;
+        const height = Math.max(1,Math.min(16,doc.height-2));
+        const y = Math.floor((doc.height-height)/2);
+        const columns = Math.ceil(Math.sqrt(playersPerTeam)), rows = Math.ceil(playersPerTeam/columns);
         doc.deploymentAreas.push({ x, y, width, height });
         doc.spawns.push({
           team,
           position: position + 1,
-          x: x + Math.floor(width / 2),
-          y: y + Math.floor(height / 2),
+          x: x + Math.floor(((position%columns)+0.5)*width/columns),
+          y: y + Math.floor((Math.floor(position/columns)+0.5)*height/rows),
         });
       }
     }
@@ -882,7 +883,7 @@ const MapDocument = (() => {
       throw Error("地图应为12–128列、9–128行；Tile尺寸应为4–512像素。");
     if (!["ground", "space"].includes(doc.environment) || !terrains[doc.defaultTerrain])
       throw Error("地图环境或默认地形无效。");
-    if (!integer(doc.maxTeams, 2, 8) || !integer(doc.playersPerTeam, 1, 5))
+    if (!integer(doc.maxTeams, 2, 8) || !integer(doc.playersPerTeam, 1, 6))
       throw Error("玩家配置无效。");
     if (
       !Array.isArray(doc.supportedModes) ||
@@ -1252,7 +1253,7 @@ const MapDocument = (() => {
         doc.deploymentAreas
           .slice(0, i)
           .some(
-            (b) =>
+            (b, j) => doc.spawns[j].team !== s.team &&
               area.x < b.x + b.width &&
               b.x < area.x + area.width &&
               area.y < b.y + b.height &&

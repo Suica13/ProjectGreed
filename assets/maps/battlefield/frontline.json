@@ -45,7 +45,7 @@
   },
   "surfaceCover": true,
   "maxTeams": 2,
-  "playersPerTeam": 5,
+  "playersPerTeam": 6,
   "supportedModes": [
     "battlefield"
   ],
@@ -54,65 +54,89 @@
     {
       "team": 0,
       "position": 1,
-      "x": 11,
-      "y": 10
+      "x": 9,
+      "y": 12
     },
     {
       "team": 1,
       "position": 1,
-      "x": 60,
-      "y": 37
+      "x": 62,
+      "y": 35
     },
     {
       "team": 0,
       "position": 2,
-      "x": 11,
-      "y": 14
+      "x": 12,
+      "y": 12
     },
     {
       "team": 1,
       "position": 2,
-      "x": 60,
-      "y": 33
+      "x": 59,
+      "y": 35
     },
     {
       "team": 0,
       "position": 3,
-      "x": 11,
-      "y": 18
+      "x": 15,
+      "y": 12
     },
     {
       "team": 1,
       "position": 3,
-      "x": 60,
-      "y": 29
+      "x": 56,
+      "y": 35
     },
     {
       "team": 0,
       "position": 4,
-      "x": 11,
+      "x": 9,
       "y": 22
     },
     {
       "team": 1,
       "position": 4,
-      "x": 60,
+      "x": 62,
       "y": 25
     },
     {
       "team": 0,
       "position": 5,
-      "x": 11,
-      "y": 26
+      "x": 12,
+      "y": 22
     },
     {
       "team": 1,
       "position": 5,
-      "x": 60,
-      "y": 21
+      "x": 59,
+      "y": 25
+    },
+    {
+      "team": 0,
+      "position": 6,
+      "x": 15,
+      "y": 22
+    },
+    {
+      "team": 1,
+      "position": 6,
+      "x": 56,
+      "y": 25
     }
   ],
   "deploymentAreas": [
+    {
+      "x": 4,
+      "y": 7,
+      "width": 13,
+      "height": 22
+    },
+    {
+      "x": 55,
+      "y": 19,
+      "width": 13,
+      "height": 22
+    },
     {
       "x": 4,
       "y": 7,
@@ -7295,7 +7319,7 @@
     "environment": "ground",
     "defaultTerrain": "plain",
     "maxTeams": 2,
-    "playersPerTeam": 5,
+    "playersPerTeam": 6,
     "supportedModes": [
       "battlefield"
     ],
@@ -15039,65 +15063,89 @@
       {
         "team": 0,
         "position": 1,
-        "x": 11,
-        "y": 10
+        "x": 9,
+        "y": 12
       },
       {
         "team": 1,
         "position": 1,
-        "x": 60,
-        "y": 37
+        "x": 62,
+        "y": 35
       },
       {
         "team": 0,
         "position": 2,
-        "x": 11,
-        "y": 14
+        "x": 12,
+        "y": 12
       },
       {
         "team": 1,
         "position": 2,
-        "x": 60,
-        "y": 33
+        "x": 59,
+        "y": 35
       },
       {
         "team": 0,
         "position": 3,
-        "x": 11,
-        "y": 18
+        "x": 15,
+        "y": 12
       },
       {
         "team": 1,
         "position": 3,
-        "x": 60,
-        "y": 29
+        "x": 56,
+        "y": 35
       },
       {
         "team": 0,
         "position": 4,
-        "x": 11,
+        "x": 9,
         "y": 22
       },
       {
         "team": 1,
         "position": 4,
-        "x": 60,
+        "x": 62,
         "y": 25
       },
       {
         "team": 0,
         "position": 5,
-        "x": 11,
-        "y": 26
+        "x": 12,
+        "y": 22
       },
       {
         "team": 1,
         "position": 5,
-        "x": 60,
-        "y": 21
+        "x": 59,
+        "y": 25
+      },
+      {
+        "team": 0,
+        "position": 6,
+        "x": 15,
+        "y": 22
+      },
+      {
+        "team": 1,
+        "position": 6,
+        "x": 56,
+        "y": 25
       }
     ],
     "deploymentAreas": [
+      {
+        "x": 4,
+        "y": 7,
+        "width": 13,
+        "height": 22
+      },
+      {
+        "x": 55,
+        "y": 19,
+        "width": 13,
+        "height": 22
+      },
       {
         "x": 4,
         "y": 7,

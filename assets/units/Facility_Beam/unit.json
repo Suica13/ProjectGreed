@@ -291,7 +291,8 @@
             }
           ]
         },
-        "requiredParts": []
+        "requiredParts": [],
+        "attackRounds": 3
       }
     }
   },

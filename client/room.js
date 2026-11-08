@@ -28,6 +28,7 @@ const RoomPanel = (() => {
         ["bannedFactions", "bannedEras", "bannedTypes"].map(key => [key, settings[key]])
       )),
       teamRestrictions: Rules.validateTeamRestrictions(settings.teamRestrictions),
+      ...(settings.battlefieldTeams ? {battlefieldTeams:Rules.battlefieldMode.teams(Rules,settings.battlefieldTeams)} : {}),
     };
   }
   let savedPresets = [];
@@ -253,6 +254,30 @@ const RoomPanel = (() => {
     if (snapshot.settings.mode !== "battlefield") return;
     panel.replaceChildren();
     const config = Rules.battlefieldMode.teams(Rules, snapshot.settings.battlefieldTeams);
+    const scaleLabel = element("label", "", "战争规模预设"), scaleSelect = element("select");
+    scaleLabel.style.gridColumn = "1 / -1";
+    scaleSelect.id = "battlefieldScalePreset";
+    scaleSelect.add(new Option(I18n.text("自定义"), "custom"));
+    for (const preset of Rules.battlefieldMode.roomPresets)
+      scaleSelect.add(new Option(`${preset.era} · ${I18n.text(preset.name)} · ${preset.costLimit}/${preset.unitCostLimit}/${preset.unitLimit}`,preset.id));
+    scaleSelect.value = Rules.battlefieldMode.roomPreset(snapshot.settings)?.id || "custom";
+    scaleSelect.disabled = locked;
+    scaleSelect.onchange = () => {
+      if (scaleSelect.value === "custom") return;
+      clearTimeout(numericSettingsTimer);
+      numericSettingsTimer = null; queuedNumericSettings = {}; submittedNumericSettings = null;
+      numericDrafts.costLimit = numericDrafts.unitCostLimit = numericDrafts.unitLimit = null;
+      sendSettings(Rules.battlefieldMode.presetSettings(scaleSelect.value,config,Rules.eras));
+    };
+    scaleLabel.append(scaleSelect);panel.append(scaleLabel);
+    const reward = element("p", "muted");
+    reward.id = "battlefieldEntryReward";reward.style.gridColumn = "1 / -1";
+    const preset = Rules.battlefieldMode.roomPreset(snapshot.settings);
+    reward.textContent = (preset ? "固定入场收益" : "自定义规则：按编组COST插值，年代大规模收益封顶") + " · " + [0,1].map(team => {
+      const pay = Rules.battlefieldMode.baseReward(snapshot.settings,team);
+      return `${I18n.text("队伍")}${team+1}: ${I18n.text("资金")} ${formatNumber(pay.money)} / ${I18n.text("物资")} ${formatNumber(pay.supplies)}`;
+    }).join(" · ");
+    panel.append(reward);
     for (const team of [0, 1]) {
       const group = element("fieldset", "battlefield-team-options"), legend = element("legend", "", "队伍" + (team + 1) + " · 固定阵营 AI");
       group.append(legend);

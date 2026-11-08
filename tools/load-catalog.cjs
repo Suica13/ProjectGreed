@@ -177,7 +177,7 @@ function loadCatalog({
       map.height > 128 ||
       !Number.isInteger(map.playersPerTeam) ||
       map.playersPerTeam < 1 ||
-      map.playersPerTeam > 5 ||
+      map.playersPerTeam > (map.battlefield ? 6 : 5) ||
       !Number.isInteger(map.deploymentRadius) ||
       map.deploymentRadius < 1 ||
       !Array.isArray(map.spawns) ||
@@ -311,6 +311,7 @@ function loadCatalog({
         throw Error("Spawn area too small for maximum formation: " + map.id);
       if (
         !map.battlefield && map.spawns.slice(0, seat).some((other, index) => {
+          if (other.team === spawn.team) return false;
           if (!area)
             return (
               Math.abs(other.x - spawn.x) + Math.abs(other.y - spawn.y) <= map.deploymentRadius * 2

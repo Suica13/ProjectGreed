@@ -100,13 +100,14 @@ def build(suffix,name,source,kind):
   if not key.startswith('turret_') or t.get('canShoot')!='true':continue
   spawn=section(d,'projectile_'+t['projectile']).get('spawnUnit','');payload={k:float(v) for k,v in re.findall(r'(\w+)\s*[:=]\s*(-?[\d.]+)',spawn)}
   wid=key[7:];channel='beam' if payload.get('BeamDamage') else 'shell';damage=round(payload.get('BeamDamage',payload.get('ShellDamage',0))/50)*25
-  shots={'machineGun':8,'beam':2,'missile':4,'cannon':1}[kind]
+  shots={'machineGun':12,'beam':2,'missile':4,'cannon':1}[kind]
   w={'name':name,'type':channel,'category':{'machineGun':'machineGun','beam':'beamRifle','missile':'missile','cannon':'cannon'}[kind],'min':1,'max':round(float(t.get('limitingRange',600))/100),'hit':round(payload.get('WeaponAccuracy',100)),'sourceHit':round(payload.get('WeaponAccuracy',100)),'en':0,'slot':'primary','clip':None,'damagePerShot':damage,'damageComponents':{channel:damage},'hitsPerShot':1,'sourceName':wid,'level':1,'actionCost':2,'changeHeldWeapon':False,'attack':{'steps':[{'shots':1,'delay':0 if i==0 else .15,'muzzleIndex':0,'requiredParts':[]} for i in range(shots)],'startAnimation':None},'nativePayload':payload,'source':{'file':u['source'],'barrels':[{'id':wid,'x':float(t.get('barrelX',0)),'y':float(t.get('barrelY',12))}]},'muzzle':{'mounts':[{'bone':'Turret','offset':{'x':float(t.get('barrelX',0)),'y':float(t.get('barrelY',12))}}]},'targetModifiers':{key:payload.get(native,1) for key,native in [('air','AntiAir'),('ground','AntiLand'),('water','AntiAqua'),('space','AntiSpace')]},'requiredParts':[]}
   sample=next(iter(template['weapons'].values()))
   for field in ['projectile','hitEffect','sound']:w[field]=copy.deepcopy(sample[field])
   if kind=='beam':
    image=next(p for p in (ASSETS/'projectiles').glob('Beam*.png') if 'Trail' not in p.name);w['projectile']['texture']='../../projectiles/'+image.name
   sound=resolve(t['shoot_sound'],source.parent);shutil.copy2(sound,ASSETS/'sounds'/sound.name);w['sound']={'file':'../../sounds/'+sound.name,'volume':float(t.get('shoot_sound_vol',.4))}
+  w['attackRounds']={'machineGun':2,'beam':3,'missile':2,'cannon':3}[kind]
   u['weapons'][wid]=w;u['weaponKits'][0]['weapons'].append(wid);u['stats']['visualTurrets']=[{'id':wid,'bone':'Turret','idleDir':0,'arc':180}]
  (ASSETS/'units'/uid/'unit.json').write_text(dumps(u),encoding='utf-8')
  return {'id':uid,'source':u['source'],'nativeHP':hp,'weapons':list(u['weapons']),'visual':u['sourceStats']['visual']}

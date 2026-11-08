@@ -23,6 +23,8 @@
 
 ## 文档维护
 
+- 新地图按地形和共享部署区安排出生位，优先紧凑的二维簇；不要为增加玩家席位而单向拉长出生位、部署区或地图。雇佣兵战争最多每队6个席位，其中1号位固定为阵营AI，普通玩家最多每队5人；同队部署区允许重叠，敌队部署区仍须分离。
+
 - 项目说明与生成的Markdown统一放入docs/，按docs/README.md分类。根README.md只作入口；根AGENTS.md与.agents/skills/*/SKILL.md因工具发现约定保留原位。不要在源码或素材目录新建说明MD。
 - 现行武器与技能规则只维护docs/rules/combat.md，由tools/export-combat-rules.cjs生成；AP仅保留stats.actionPoints与actionCost参考值，禁止新增AP倍率、预算、扣费、返还或减AP状态。穿甲beamAP等伤害分量与行动点无关，保持正常结算。
 - 移动文档须同步生成器、审计事务、打包输入与链接；已完成的临时速报不作为现行规则保留。维护记录及例外差值按原事务保留。

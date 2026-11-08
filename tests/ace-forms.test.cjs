@@ -5,6 +5,22 @@ const G = require("../shared/rules.js"),
   E = require("../shared/economy.js"),
   D = require("../shared/development.js");
 const entry = (id) => ({ unitId: id, kitId: E.defaultKit(id) });
+test("Char only converts MS-14S among every Gelgoog hull and weapon kit", () => {
+  const pilot = P.createAce("Pilot_ZEON_0079_N_ACE_CHA");
+  let hulls = 0, kits = 0;
+  for (const prefab of G.catalog.prefabs.filter(p => p.id.startsWith("MS_14"))) {
+    hulls++;
+    for (const kit of prefab.weaponKits) {
+      const input = {unitId:prefab.id,kitId:kit.id,customPilot:pilot};
+      const expected = prefab.id === "MS_14S" ? "MS_14S_CharCustom" : prefab.id;
+      assert.equal(G.formationModel(input).prefabId,expected,prefab.id+"/"+kit.id);
+      delete input.customPilot;
+      assert.equal(G.formationModel(input).prefabId,prefab.id);
+      kits++;
+    }
+  }
+  assert(hulls >= 10); assert(kits >= hulls);
+});
 function game(first) {
   const g = G.create(false, 1, [[first], [entry("Type61")]], false, {
     costLimit: 99999,

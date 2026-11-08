@@ -2128,6 +2128,7 @@ const Formation = (() => {
     aceRecruit.showModal();
   }
   function renderAceRecruitment() {
+    const listScrollTop = aceList.scrollTop;
     const candidates = aceCandidates();
     if (previewAceId && !candidates.some((p) => p.id === previewAceId)) {
       const preview = PilotSystem.aceProfile(previewAceId);
@@ -2161,9 +2162,11 @@ const Formation = (() => {
       button.onclick = () => {
         selectedAce = profile.id;
         renderAceRecruitment();
+        acePreview.scrollTop = 0;
       };
       aceList.append(button);
     }
+    aceList.scrollTop = listScrollTop;
     acePreview.replaceChildren();
     const profile = PilotSystem.aceProfile(selectedAce);
     const previous = pilotStore.pilots.find((p) => p.aceId === profile?.id);

@@ -1036,8 +1036,33 @@ const Tactics = (() => {
   }
   const scaledModels = new WeakMap();
   const pilotModels = new WeakMap();
+  const facilityModels = new WeakMap();
+  function facilityModelOf(unit) {
+    const base = models[unit.model];
+    const level = unit.facility?.level;
+    if (!Number.isInteger(level) || level < 1 || level > 4 ||
+        !["machineGun","beam","missile","cannon"].includes(unit.facility?.type)) return base;
+    let levels = facilityModels.get(base);
+    if (!levels) facilityModels.set(base,levels=new Map());
+    if (!levels.has(level)) {
+      const factor = 1.25 ** (level-1);
+      levels.set(level,{
+        ...base,
+        get name(){return base.name+" Lv."+level;},
+        hp:Math.round(base.hp*factor),
+        accuracy:Math.round(base.accuracy*1.1**(level-1)),
+        weapons:base.weapons.map(weapon=>damagePolicy.compile({
+          ...weapon,level,
+          damageComponents:damagePolicy.roundComponents(weapon.damageComponents,factor),
+          attack:{...weapon.attack,steps:weapon.attack.steps.map(step=>step.damageComponents?
+            {...step,damageComponents:damagePolicy.roundComponents(step.damageComponents,factor)}:{...step})},
+        })),
+      });
+    }
+    return levels.get(level);
+  }
   function performanceModelOf(unit) {
-    const base = models[unit.model],
+    const base = facilityModelOf(unit),
       factor = unit.performance ?? 1;
     if (factor === 1) return base;
     let variants = scaledModels.get(base);
@@ -1942,7 +1967,7 @@ const Tactics = (() => {
     let units = [];
     if (settings.mode === "battlefield") {
       if (!map.battlefield) throw Error("雇佣兵战争模式需要专用地图");
-      units = battlefieldMode.facilities(Tactics, { mapId: map.id, seed });
+      units = battlefieldMode.facilities(Tactics, { mapId: map.id, seed }, settings);
     }
     const sourceIndices = [];
     for (let seat = 0; seat < formations.length; seat++) {

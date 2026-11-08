@@ -513,7 +513,9 @@
     "maps/encounter/a_baoa_qu_space_3v3.json",
     "maps/encounter/colony_interior_3v3.json",
     "maps/encounter/mass_driver_facility_3v3.json",
-    "maps/battlefield/frontline.json"
+    "maps/battlefield/frontline.json",
+    "maps/battlefield/twin_ridges.json",
+    "maps/battlefield/ruined_basin.json"
   ],
   "defaultMap": "frontier_1v1",
   "scenarioIndex": "maps/strategy/index.json"

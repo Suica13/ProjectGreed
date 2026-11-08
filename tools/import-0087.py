@@ -49,10 +49,6 @@ def main():
         tree[faction] = []
         for page in (0, 1):
             nodes = tech.import_faction(ROOT, faction, page, "0087")
-            if page == 1:
-                first = nodes[0]
-                first["temporaryPointOverride"] = {"nativePoints": first["points"], "reason": "0087 Page_01 temporary lock"}
-                first["points"] = 999999
             tree[faction].extend(nodes)
             for node in nodes:
                 for ident in node["unlocks"]:

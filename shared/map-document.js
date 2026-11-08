@@ -35,26 +35,27 @@ const MapDocument = (() => {
     return prefix + "_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 9);
   }
   function setPlayers(doc, teams, playersPerTeam) {
-    if (!integer(teams, 2, 8) || !integer(playersPerTeam, 1, 5))
-      throw Error("队伍需为2–8队，每队1–5名玩家。");
+    if (!integer(teams, 2, 8) || !integer(playersPerTeam, 1, 6))
+      throw Error("队伍需为2–8队，每队1–6个席位。");
     doc.maxTeams = teams;
     doc.playersPerTeam = playersPerTeam;
     doc.spawns = [];
     doc.deploymentAreas = [];
-    // Teams occupy disjoint vertical strips; players within a team occupy separate rows.
+    // Teammates share a compact staging area; extra seats do not stretch the map.
     for (let position = 0; position < playersPerTeam; position++) {
       for (let team = 0; team < teams; team++) {
         const strip = Math.max(1, Math.floor(doc.width / teams));
-        const width = Math.max(1, Math.min(10, strip));
-        const x = teams === 2 ? (team ? doc.width - width : 0) : team * strip;
-        const y = Math.floor((position * doc.height) / playersPerTeam);
-        const height = Math.floor(((position + 1) * doc.height) / playersPerTeam) - y;
+        const width = Math.max(1, Math.min(14, strip-2));
+        const x = teams === 2 ? (team ? doc.width-width-1 : 1) : team*strip;
+        const height = Math.max(1,Math.min(16,doc.height-2));
+        const y = Math.floor((doc.height-height)/2);
+        const columns = Math.ceil(Math.sqrt(playersPerTeam)), rows = Math.ceil(playersPerTeam/columns);
         doc.deploymentAreas.push({ x, y, width, height });
         doc.spawns.push({
           team,
           position: position + 1,
-          x: x + Math.floor(width / 2),
-          y: y + Math.floor(height / 2),
+          x: x + Math.floor(((position%columns)+0.5)*width/columns),
+          y: y + Math.floor((Math.floor(position/columns)+0.5)*height/rows),
         });
       }
     }
@@ -134,7 +135,7 @@ const MapDocument = (() => {
       throw Error("地图应为12–128列、9–128行；Tile尺寸应为4–512像素。");
     if (!["ground", "space"].includes(doc.environment) || !terrains[doc.defaultTerrain])
       throw Error("地图环境或默认地形无效。");
-    if (!integer(doc.maxTeams, 2, 8) || !integer(doc.playersPerTeam, 1, 5))
+    if (!integer(doc.maxTeams, 2, 8) || !integer(doc.playersPerTeam, 1, 6))
       throw Error("玩家配置无效。");
     if (
       !Array.isArray(doc.supportedModes) ||
@@ -504,7 +505,7 @@ const MapDocument = (() => {
         doc.deploymentAreas
           .slice(0, i)
           .some(
-            (b) =>
+            (b, j) => doc.spawns[j].team !== s.team &&
               area.x < b.x + b.width &&
               b.x < area.x + area.width &&
               area.y < b.y + b.height &&

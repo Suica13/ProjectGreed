@@ -16,7 +16,7 @@ test("every offered faction and era has an initial force inside the selected yea
 });
 
 test("0079 fixed waves scale every contingent by surviving bases and honor exact phase boundaries", () => {
-  for (const era of B.eras) for (const faction of B.factions) for (const round of [1, 9, 10, 50, 51, 100]) {
+  for (const faction of B.factions) for (const era of B.erasForFaction(G,faction)) for (const round of [1, 9, 10, 50, 51, 100]) {
     const stage = B.waveStage(round), row = B.fixedWaves[era][stage];
     const entries = B.wavePlan(G, { faction, era }, round, 2, () => 0.99);
     for (const [id, count] of Object.entries(row[faction]))
@@ -29,10 +29,10 @@ test("0079 fixed waves scale every contingent by surviving bases and honor exact
   assert.equal(B.waveStage(9), "early"); assert.equal(B.waveStage(10), "middle");
   assert.equal(B.waveStage(50), "middle"); assert.equal(B.waveStage(51), "late");
   assert.throws(() => B.teams(G, [{ faction: "EFSF", era: "0087T1" }, { faction: "ZEON", era: "0079T1" }]));
-  assert(!B.eras.includes("0087T1") && !B.factions.includes("AEUG"));
+  assert(B.eras.includes("0087T1") && B.factions.includes("AEUG"));
 });
 function game() {
-  const armies = Array(10).fill(null);
+  const armies = Array(12).fill(null);
   armies[2] = [{ unitId: "Type61", kitId: "standard" }];
   return G.create(false, 7319, armies, false, { mode: "battlefield", mapId: B.defaultMapId });
 }
@@ -53,7 +53,7 @@ test("dedicated battlefield map creates six reusable facility types for each tea
   assert(g.units.filter((unit) => unit.facility).every((unit) => G.modelOf(unit).move === 0));
   assert(g.units.filter(unit => unit.facility?.type === "base").every(unit => unit.hp === 300000));
   assert(g.units.filter(unit => ["machineGun", "beam", "missile", "cannon"].includes(unit.facility?.type))
-    .every(unit => unit.hp === 20000));
+    .every(unit => unit.hp === 25000));
   assert.throws(() =>
     G.create(false, 1, [null, null], false, { mode: "battlefield", mapId: "frontier_1v1" }),
   );
@@ -465,7 +465,7 @@ test("hostile kills pay COST/8, zero-damage attack participation pays COST/16 an
   engine.broadcast(room);
   const results = room.economyAwards.filter(award => award.kind === "result");
   assert.equal(results.length, 2);
-  assert(results.every(award => award.money === 2500 && award.supplies === 5000));
+  assert(results.every(award => award.money === 1125 && award.supplies === 2250));
   assert.deepEqual(room.techAwards, []); assert.deepEqual(room.pilotAwards, []);
 });
 test("fixed AI slots cannot be removed, taken or relocated by host requests", (t) => {
@@ -490,7 +490,7 @@ test("PMC deployment uses inventory and receives fixed era rewards without techn
   engine.broadcast(room);
   assert.equal(room.game.winner, 0);
   assert.equal(room.phase, "finished");
-  assert.deepEqual(room.economyAwards.map(award => [award.kind, award.money, award.supplies]), [["result", 4000, 8000]]);
+  assert.deepEqual(room.economyAwards.map(award => [award.kind, award.money, award.supplies]), [["result", 1250, 2500]]);
   assert.deepEqual(room.techAwards, []);
   assert.deepEqual(room.pilotAwards, []);
   assert.deepEqual({ inventory: player.inventory, kits: player.kits }, before);

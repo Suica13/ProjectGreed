@@ -290,7 +290,7 @@ const MapCamera = (() => {
       return zoomPercent() >= 50 - zoomEpsilon;
     },
     get unitThumbnails() {
-      return zoomPercent() <= 10 + zoomEpsilon;
+      return zoomPercent() <= 5 + zoomEpsilon;
     },
     get zoomPercent() {
       return zoomPercent();

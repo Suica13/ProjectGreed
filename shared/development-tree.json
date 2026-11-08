@@ -1544,7 +1544,7 @@
         "points": 10800,
         "researchSeconds": 30
       },
-      "points": 999999,
+      "points": 10800,
       "requires": [
         "Tech_AEUG_0087_MethussDevelopmentPlan"
       ],
@@ -1556,11 +1556,7 @@
         "Refinery_Common_T4"
       ],
       "page": 1,
-      "era": "0087T2",
-      "temporaryPointOverride": {
-        "nativePoints": 10800,
-        "reason": "0087 Page_01 temporary lock"
-      }
+      "era": "0087T2"
     },
     {
       "id": "Tech_AEUG_0087_T2_ZPlusDevelopmentPlan",
@@ -2074,7 +2070,7 @@
         "points": 10800,
         "researchSeconds": 30
       },
-      "points": 999999,
+      "points": 10800,
       "requires": [
         "Tech_TITANS_0087_AsshimarDevelopmentPlan"
       ],
@@ -2085,11 +2081,7 @@
         "Refinery_Common_T4"
       ],
       "page": 1,
-      "era": "0087T2",
-      "temporaryPointOverride": {
-        "nativePoints": 10800,
-        "reason": "0087 Page_01 temporary lock"
-      }
+      "era": "0087T2"
     },
     {
       "id": "Tech_TITANS_0087_T2_TheODevelopmentPlan",
@@ -2439,7 +2431,7 @@
         "points": 10800,
         "researchSeconds": 30
       },
-      "points": 999999,
+      "points": 10800,
       "requires": [
         "Tech_NEO_ZEON_0087_GazaCDevelopmentPlan"
       ],
@@ -2451,11 +2443,7 @@
         "Refinery_Common_T4"
       ],
       "page": 1,
-      "era": "0087T2",
-      "temporaryPointOverride": {
-        "nativePoints": 10800,
-        "reason": "0087 Page_01 temporary lock"
-      }
+      "era": "0087T2"
     },
     {
       "id": "Tech_NEO_ZEON_0087_T2_GallussJDevelopmentPlan",

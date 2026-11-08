@@ -1803,10 +1803,10 @@ function createRoomEngine({
       syncBattlefieldStock(room);
       for (const player of room.seats) {
         if (!player || player.bot) continue;
-        const late = room.settings.battlefieldTeams[G.seatTeam(player.seat)].era === "0079T2";
+        const entryReward = G.battlefieldMode.baseReward(room.settings, G.seatTeam(player.seat));
         room.economyAwards.push({ id: randomId(), matchId: room.matchId, memberId: player.id,
-          kind: "result", money: Math.floor((late ? 4000 : 2500) * bonus.money),
-          supplies: Math.floor((late ? 8000 : 5000) * bonus.supplies) });
+          kind: "result", money: Math.floor(entryReward.money * bonus.money),
+          supplies: Math.floor(entryReward.supplies * bonus.supplies) });
       }
       return;
     }

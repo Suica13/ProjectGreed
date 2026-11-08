@@ -1768,6 +1768,9 @@ function drawMapFrame(now) {
   ctx.fillRect(0, 0, w, h);
   const immersive = window.ReplayPresentation?.immersive;
   const unitThumbnails = MapCamera.unitThumbnails;
+  // Overview may trade animation cadence and raster size for speed. At 25%
+  // and above, draw native layers at the current animation time instead.
+  const reducedUnitDetail = MapCamera.zoomPercent < 25 - 1e-7;
   const chosen = immersive ? null : getUnit(selected),
     canMove = !!(
       chosen &&
@@ -2221,7 +2224,7 @@ function drawMapFrame(now) {
         false,
         !!(u.overBoost || u.fullBoost || u.overdrive || u.boostSkillActive),
         combatPose?.hiddenLayers || [],
-        !combatPose && !skillPose ? 2048 : 0,
+        reducedUnitDetail && !combatPose && !skillPose ? 2048 : 0,
       );
       const fieldImpact = Math.min(
         MapCombat.fieldImpact(u.id),

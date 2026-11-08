@@ -5,7 +5,7 @@ const { randomUUID } = require("node:crypto"),
 const { createServer } = require("../server");
 const version = require("../project.json").version;
 const G = require("../shared/rules");
-test("two network PMC players use fixed faction AI slots and receive one authoritative battlefield result", async (t) => {
+for (const presetId of [null,"0079T1-small","0079T2-large","0087T1-small","0087T2-large"]) test("network PMC players receive one authoritative battlefield result / "+(presetId || "custom"), async (t) => {
   const app = createServer({ port: 0, host: "127.0.0.1", aiDelayMs: 999999 });
   const address = await app.listen(),
     sockets = [];
@@ -97,6 +97,13 @@ test("two network PMC players use fixed faction AI slots and receive one authori
   assert.equal(host.state.you.seat, 2);
   assert.equal(guest.state.you.seat, 3);
   assert.equal((await host.act("remove_ai", { seat: 1 })).type, "error");
+  if (presetId) {
+    const patch = G.battlefieldMode.presetSettings(presetId,host.state.settings.battlefieldTeams,G.eras);
+    const configured = await host.act("configure_room",{...host.state.settings,...patch});
+    assert.equal(configured.type,"state");
+    assert.equal(G.battlefieldMode.roomPreset(configured.settings).id,presetId);
+    assert.equal((await guest.act("configure_room",{...configured.settings,costLimit:1})).type,"error");
+  }
   const formation = [{ unitId: "Type61", kitId: "standard" }];
   assert.equal((await guest.act("set_ready", { ready: true, formation })).type, "state");
   assert.equal((await host.act("start_game", { formation })).phase, "assembly");
@@ -137,6 +144,11 @@ test("two network PMC players use fixed faction AI slots and receive one authori
   assert.equal(result.game.seed, undefined);
   assert.equal(result.game.partSeed, undefined);
   assert.equal(room.economyAwards.filter(award => award.kind === "result").length, 2);
+  for (const award of room.economyAwards.filter(award=>award.kind === "result")) {
+    const player=room.members.get(award.memberId);
+    const expected=G.battlefieldMode.baseReward(room.settings,G.seatTeam(player.seat));
+    assert.equal(award.money,expected.money);assert.equal(award.supplies,expected.supplies);
+  }
   assert.deepEqual(room.techAwards, []);
   const again = await host.act("sync");
   assert.deepEqual(again.game.battlefield.strength, result.game.battlefield.strength);

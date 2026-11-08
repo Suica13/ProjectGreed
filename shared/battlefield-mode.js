@@ -11,12 +11,63 @@ const BattlefieldMode = (() => {
     cannon: "Facility_Cannon",
     radar: "Facility_Radar",
   });
-  const factions = ["EFSF", "ZEON"];
-  const eras = ["0079T1", "0079T2"];
+  const factions = ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"];
+  const eras = ["0079T1", "0079T2", "0087T1", "0087T2"];
+  const factionEras = faction => ["EFSF","ZEON"].includes(faction) ? eras.slice(0,2) : eras.slice(2);
+  // PMC limits and entry pay only: faction AI waves keep their own era rules.
+  const legacyRoomPresets = [
+    {id:"0079T1-small",era:"0079T1",name:"小规模",costLimit:4000,unitCostLimit:500,unitLimit:24,money:2250,supplies:4500},
+    {id:"0079T1-standard",era:"0079T1",name:"标准规模",costLimit:10000,unitCostLimit:1000,unitLimit:36,money:3750,supplies:7500},
+    {id:"0079T1-large",era:"0079T1",name:"大规模",costLimit:20000,unitCostLimit:2000,unitLimit:48,money:6000,supplies:12000},
+    {id:"0079T2-small",era:"0079T2",name:"小规模",costLimit:6000,unitCostLimit:1000,unitLimit:24,money:3750,supplies:7500},
+    {id:"0079T2-standard",era:"0079T2",name:"标准规模",costLimit:15000,unitCostLimit:2000,unitLimit:36,money:6000,supplies:12000},
+    {id:"0079T2-large",era:"0079T2",name:"大规模",costLimit:30000,unitCostLimit:3000,unitLimit:48,money:9000,supplies:18000},
+  ];
+  const roomPresets = Object.freeze([
+    ...legacyRoomPresets,
+    ...legacyRoomPresets.map(preset => ({
+      ...preset, id:preset.id.replace("0079","0087"), era:preset.era.replace("0079","0087"),
+      costLimit:preset.costLimit*1.5, unitCostLimit:preset.unitCostLimit*1.5,
+      money:preset.money*1.5, supplies:preset.supplies*1.5,
+    })),
+  ].map(Object.freeze));
+  function roomPreset(settings) {
+    if (settings.mode !== "battlefield") return null;
+    return roomPresets.find(preset =>
+      ["costLimit","unitCostLimit","unitLimit"].every(key => settings[key] === preset[key]) &&
+      settings.battlefieldTeams?.length === 2 && settings.battlefieldTeams.every(team => team.era === preset.era)) || null;
+  }
+  function presetSettings(id, currentTeams, availableEras = []) {
+    const preset = roomPresets.find(preset => preset.id === id);
+    if (!preset) throw Error("雇佣兵战争规模预设无效");
+    const eraIndex = eras.indexOf(preset.era);
+    const defaults = eraIndex >= 2 ? ["AEUG","TITANS"] : ["EFSF","ZEON"];
+    return {
+      costLimit:preset.costLimit,unitCostLimit:preset.unitCostLimit,unitLimit:preset.unitLimit,
+      bannedEras:availableEras.filter(era => {
+        const order = ["0079T1","0079T2","0083","0087T1","0087T2"].indexOf(era);
+        return order < 0 || order > ["0079T1","0079T2","0083","0087T1","0087T2"].indexOf(preset.era);
+      }),
+      battlefieldTeams:(currentTeams || defaults.map(faction=>({faction}))).map((team,index) => ({
+        faction:factionEras(team.faction).includes(preset.era) && factions.includes(team.faction) ? team.faction : defaults[index],era:preset.era,
+      })),
+    };
+  }
+  function baseReward(settings, team) {
+    const era = settings.battlefieldTeams?.[team]?.era || "0079T2";
+    const points = [{costLimit:0,money:0}, ...roomPresets.filter(preset => preset.era === era)];
+    const maximum = points.at(-1);
+    const cost = Math.max(0,Math.min(maximum.costLimit,Number(settings.costLimit) || 0));
+    const upper = points.findIndex(point => point.costLimit >= cost);
+    const lower = points[Math.max(0,upper-1)], next = points[upper];
+    const money = lower.costLimit === next.costLimit ? lower.money : Math.floor(
+      lower.money + (cost-lower.costLimit)*(next.money-lower.money)/(next.costLimit-lower.costLimit));
+    return {money,supplies:money*2};
+  }
   const affiliated = (model, faction) =>
     (model.availableFactions || [model.faction]).includes(faction);
   const erasForFaction = (G, faction) =>
-    eras.filter((era) =>
+    factionEras(faction).filter((era) =>
       Object.values(G.models).some(
         (model) =>
           !model.formOnly &&
@@ -37,6 +88,7 @@ const BattlefieldMode = (() => {
     return input.map((item) => {
       if (!item || !factions.includes(item.faction) || !eras.includes(item.era))
         throw Error("雇佣兵战争模式 AI 阵营或年代无效");
+      if (!factionEras(item.faction).includes(item.era)) throw Error("所选阵营不属于该年代");
       const available = Object.values(G.models).some(
         (model) =>
           !model.disabled &&
@@ -84,8 +136,9 @@ const BattlefieldMode = (() => {
       throw Error("战地地图设施、据点或战力配置无效");
     return config;
   }
-  function facilities(G, game) {
+  function facilities(G, game, settings = {}) {
     const config = validateMap(G.getMap(game.mapId));
+    const selections = teams(G,settings.battlefieldTeams);
     const indices = [0, 0];
     return config.facilities.map((item) => {
       const actor = G.makeUnit(
@@ -97,6 +150,10 @@ const BattlefieldMode = (() => {
         game.seed || 1,
       );
       actor.facility = { id: item.id, type: item.type };
+      if (["machineGun","beam","missile","cannon"].includes(item.type)) {
+        actor.facility.level = eras.indexOf(selections[item.team].era)+1;
+        actor.hp = G.modelOf(actor).hp;
+      }
       actor.formationIndex = indices[item.team]++;
       return actor;
     });
@@ -256,11 +313,21 @@ const BattlefieldMode = (() => {
       middle: { EFSF: { RGM_79C: 9 }, ZEON: { MS_06FZ: 9 }, randomMS: 3 },
       late: { EFSF: { RGM_79C: 12 }, ZEON: { MS_06FZ: 12 }, randomMS: 5 },
     },
+    "0087T1": {
+      early: {AEUG:{RMS_179_AEUG:9},TITANS:{RMS_106:9},NEO_ZEON:{MS_09R_Stutzer:9},randomMS:3},
+      middle: {AEUG:{MSA_003:9},TITANS:{RMS_108:9},NEO_ZEON:{AMX_003:9},randomMS:3},
+      late: {AEUG:{MSA_003:12},TITANS:{RMS_108:12},NEO_ZEON:{AMX_003:12},randomMS:5},
+    },
+    "0087T2": {
+      early: {AEUG:{MSA_003:9},TITANS:{RMS_108:9},NEO_ZEON:{AMX_003:9},randomMS:3},
+      middle: {AEUG:{RGM_86R:9},TITANS:{RMS_154_Kai:9},NEO_ZEON:{AMX_009:9},randomMS:3},
+      late: {AEUG:{RGM_86R:12},TITANS:{RMS_154_Kai:12},NEO_ZEON:{AMX_009:12},randomMS:5},
+    },
   };
   const waveStage = round => round < 10 ? "early" : round <= 50 ? "middle" : "late";
   function pool(G, state, team) {
     const selected = state.teams[team];
-    const allowedEras = eras.slice(0, eras.indexOf(selected.era) + 1);
+    const allowedEras = eras.slice(selected.era.startsWith("0087") ? 2 : 0, eras.indexOf(selected.era) + 1);
     const choices = G.catalog.prefabs.flatMap(prefab => {
       const kit = prefab.weaponKits[0], model = kit && G.models[prefab.id + "__" + kit.id];
       return model && !model.disabled && !model.wip && !model.formOnly && !prefab.facility &&
@@ -277,7 +344,8 @@ const BattlefieldMode = (() => {
   }
   function wavePlan(G, selected, round, baseCount, random) {
     const stage = waveStage(round), row = fixedWaves[selected.era][stage];
-    const available = pool(G, { teams: [selected, selected] }, 0), entries = [];
+    const effective = selected.era === "0087T2" && stage === "early" ? {...selected,era:"0087T1"} : selected;
+    const available = pool(G, { teams: [effective, effective] }, 0), entries = [];
     const choose = list => list[Math.min(list.length - 1, Math.floor(random() * list.length))];
     for (let base = 0; base < baseCount; base++) {
       for (const [unitId, count] of Object.entries(row[selected.faction])) {
@@ -450,6 +518,10 @@ const BattlefieldMode = (() => {
     );
   }
   return {
+    roomPresets,
+    roomPreset,
+    presetSettings,
+    baseReward,
     defaultMapId,
     captureRadius,
     facilityIds,

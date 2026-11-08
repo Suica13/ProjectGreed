@@ -33,7 +33,7 @@ for (const width of [1600, 390])
       selected = null;
       weaponId = moving = null;
       setPageView("game");
-      MapCamera.setPercent(5);
+      MapCamera.setPercent(3);
       MapCamera.focus(9, 8, { preserveZoom: true });
       update();
       cancelAnimationFrame(animationFrameId);
@@ -87,11 +87,11 @@ for (const width of [1600, 390])
             .filter((u) => u.mapPose)
             .map((u) => ({ clip: u.mapPose.clip, moving: u.mapPose.moving })),
         };
-        const threshold = [0, 1, 9.99, 10, 10.01].map((value) => {
+        const threshold = [0, 1, 4.99, 5, 5.01].map((value) => {
           MapCamera.setPercent(value);
           return { value, icons: MapCamera.unitThumbnails };
         });
-        MapCamera.setPercent(10.01);
+        MapCamera.setPercent(5.01);
         sprites = symbols = 0;
         drawMap(performance.now());
         const high = {
