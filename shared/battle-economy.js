@@ -4,9 +4,10 @@ const BattleEconomy = (() => {
   const rewardMultiplier = 1.25;
   // Apply once, before the existing final integer rounding. Event settings stay
   // independent so online and offline matches use the same global balance.
+  // Pilot experience keeps its existing event and quick-mode multipliers.
   function rewardMultipliers(activity = {}) {
     return Object.fromEntries(["money", "supplies", "technology", "experience"].map((key) =>
-      [key, rewardMultiplier * (activity[key] ?? 1)]));
+      [key, (key === "experience" ? 1 : rewardMultiplier) * (activity[key] ?? 1)]));
   }
   const catalog =
     typeof PRODUCTION_CATALOG !== "undefined"

@@ -3,11 +3,12 @@ const test = require("node:test"),
 const G = require("../shared/rules.js"),
   R = require("../shared/battle-economy.js");
 const { createRoomEngine } = require("../shared/room-engine.js");
-test("global rewards add 25 percent exactly once and keep activity multipliers independent", () => {
+test("currency and research add 25 percent once while pilot experience keeps its original multipliers", () => {
   const activity = { money: 2, supplies: 3, technology: 4, experience: 0 };
-  assert.deepEqual(R.rewardMultipliers(), { money: 1.25, supplies: 1.25, technology: 1.25, experience: 1.25 });
+  assert.deepEqual(R.rewardMultipliers(), { money: 1.25, supplies: 1.25, technology: 1.25, experience: 1 });
   assert.deepEqual(R.rewardMultipliers(activity), { money: 2.5, supplies: 3.75, technology: 5, experience: 0 });
   assert.deepEqual(activity, { money: 2, supplies: 3, technology: 4, experience: 0 });
+  assert.equal(R.rewardMultipliers({ experience: 2 }).experience, 2);
   assert.equal(R.technologyReward(true, "regular", R.rewardMultipliers().technology), 825);
   assert.equal(R.technologyReward(true, "quick", R.rewardMultipliers().technology), 82);
 });
@@ -152,7 +153,7 @@ function fixture(
 }
 function rewardRates(faction, mode) {
   const rates = R.rates(faction, mode);
-  return {currency: rates.currency * 1.25, experience: rates.experience * 1.25};
+  return {currency: rates.currency * 1.25, experience: rates.experience};
 }
 function baseReward(f, team = 0) {
   return R.calculateBattleReward(R.teamAverageFormationCost(f.room.battleRoster, team));
@@ -442,7 +443,7 @@ test("individual target strength no longer stacks on the match strength ratio", 
   );
   assert.equal(
     view.pilotAwards.find((a) => a.kind === "kill").experiencePoints,
-    Math.floor(100 * G.modelOf(f.target).cost / G.modelOf(f.attacker).cost * 1.25),
+    Math.floor(100 * G.modelOf(f.target).cost / G.modelOf(f.attacker).cost),
   );
 });
 
@@ -569,7 +570,7 @@ test("ACE experience acceleration is credited once by the authoritative award pa
   assert.equal(G.modelOf(u).pilotExperienceMultiplier, 1.35);
   f.kill();
   const award = f.frames.get(f.clients[0]).pilotAwards.find((a) => a.kind === "kill");
-  assert.equal(award.experiencePoints, Math.floor(100 * G.modelOf(f.target).cost / G.modelOf(u).cost * 1.35 * 1.25));
+  assert.equal(award.experiencePoints, Math.floor(100 * G.modelOf(f.target).cost / G.modelOf(u).cost * 1.35));
   assert.equal(u.pilot.experience, award.experiencePoints);
   assert(!u.pilot.stats.shooting.temporary);
 });

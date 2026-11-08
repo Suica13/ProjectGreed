@@ -2158,7 +2158,7 @@ function createRoomEngine({
     const beforeLevel = actor.pilot.level;
     // Campaign progression belongs to the campaign save, independent of account identity/events.
     const battleRate = room.campaign
-      ? roomBattleEconomy().rewardMultiplier
+      ? 1
       : roomBattleEconomy().rates(owner?.characterFaction, room.settings.mode).experience *
         roomBattleEconomy().rewardRatio(room.battleRoster, actor.team, room.settings.mode) *
         getRewardMultipliers().experience;
