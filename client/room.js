@@ -320,14 +320,8 @@ const RoomPanel = (() => {
     scaleRow.style.gridColumn = "1 / -1";
     const reward = element("p", "muted");
     reward.id = "battlefieldEntryReward";
-    reward.textContent = (custom ? "自定义规则：按编组COST插值，年代大规模收益封顶" : "固定入场收益") + " · " + [0,1].map(team => {
-      const pay = mode.baseReward(settings, team);
-      return `${I18n.text("队伍")}${team+1}: ${I18n.text("资金")} ${formatNumber(pay.money)} / ${I18n.text("物资")} ${formatNumber(pay.supplies)} / ${I18n.text("科技点")} ${mode.technologyReward(settings,team,false)}～${mode.technologyReward(settings,team,true)}`;
-    }).join(" · ");
+    reward.textContent = "阵营AI每5回合空投增援 · 单位阵亡扣除库存 · 击坠与助攻给予奖励";
     panel.append(reward);
-    panel.append(element("p", "muted", "100回合 · " + config.map((team, index) =>
-      `队伍${index+1}初始战力${formatNumber(mode.eraStrength[team.era])}`).join(" / ") +
-      " · 每5回合空投增援 · 阵亡扣除库存 · 击坠与助攻给予奖励"));
   }
   function renderCampaignOptions(snapshot, locked) {
     let panel = byId("campaignRoomOptions");
@@ -875,6 +869,30 @@ const RoomPanel = (() => {
         image.src = unitIcon(id, entry.customPilot);
         image.alt = model.name;
         icon.append(image);
+        const editable = player.memberId === snapshot.you?.id && !player.ready && !snapshot.loadedSave && !player.assignedPreset;
+        icon.draggable = editable;
+        if (editable) {
+          icon.ondragstart = event => event.dataTransfer.setData("application/x-projectgreed-formation", JSON.stringify({memberId:player.memberId,index}));
+          if (model.hangars?.length) {
+            icon.ondragover = event => { event.preventDefault(); event.dataTransfer.dropEffect="move"; };
+            icon.ondrop = event => {
+              event.preventDefault();
+              try {
+                const source = JSON.parse(event.dataTransfer.getData("application/x-projectgreed-formation"));
+                if (source.memberId !== player.memberId || !Number.isInteger(source.index) || !player.entries[source.index] || source.index === index)
+                  throw Error("请选择自己的其他单位进行搭载");
+                let formation = null;
+                for (const hangar of model.hangars) {
+                  const next = structuredClone(player.entries);
+                  next[source.index].preload = {carrierIndex:index,hangarId:hangar.id};
+                  try { Rules.validateFormation(next,Infinity,Rules.catalog.formation.maxUnits); formation=next; break; } catch {}
+                }
+                if (!formation) throw Error("格纳库不兼容或剩余容量不足");
+                Net.request("update_formation",{formation});
+              } catch(error) { note(error.message); }
+            };
+          }
+        }
         if (player.reasons?.[index] === "not_developed")
           icon.append(element("span", "unit-undeveloped", "⚠︎ 尚未开发"));
         if (player.disabled.includes(index) && player.reasons?.[index] !== "not_developed")
@@ -918,12 +936,11 @@ const RoomPanel = (() => {
     byId("editFinalFormation").disabled = busy || !!own?.assignedPreset;
     byId("confirmFinalFormation").disabled =
       busy ||
-      !!own?.ready ||
       (!!snapshot.loadedSave && Object.keys(own?.reasons || {}).length > 0) ||
       (!snapshot.loadedSave && !allBots && !own?.entries.length) ||
       !snapshot.connected.every(Boolean);
     byId("confirmFinalFormation").textContent = own?.ready
-      ? "已确认，等待其他玩家"
+      ? "取消确认编组"
       : "确认出击编组";
     byId("finalAssemblyStatus").textContent = !snapshot.connected.every(Boolean)
       ? "等待全部席位玩家连接。"
@@ -1260,6 +1277,7 @@ const RoomPanel = (() => {
   byId("confirmFinalFormation").onclick = () => {
     const snapshot = Net.snapshot;
     const own = snapshot?.assembly?.players.find((p) => p.memberId === snapshot.you?.id);
+    if (own?.ready) return Net.request("confirm_formation", {ready:false});
     const proceed = () => Net.request("confirm_formation");
     if (!snapshot?.loadedSave && own) Formation.checkLicenses(own.entries, proceed);
     else proceed();

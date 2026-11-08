@@ -1,5 +1,11 @@
 /* Canvas TileMap rendering shared by the standalone editor and battle renderer. */
 const TileMapView = (() => {
+  function resolveSource(src) {
+    if (!src.startsWith("asset:")) return src;
+    return (
+      (typeof ART !== "undefined" ? ART.assets[src] : globalThis.ProjectGreedMapAssets?.[src]) || ""
+    );
+  }
   function create({ changed = () => {}, loadImage } = {}) {
     const images = new Map();
     let indexes = new WeakMap();
@@ -9,9 +15,16 @@ const TileMapView = (() => {
         else {
           const img = new Image();
           images.set(src, img);
-          img.onload = changed;
+          img.onload = () => {
+            if (src === "asset:encounter-pixel-props-v1" && typeof BiomeTiles !== "undefined") {
+              images.set(src, BiomeTiles.prepareSpriteImage(img));
+              img.onload = img.onerror = null;
+              img.src = "";
+            }
+            changed();
+          };
           img.onerror = changed;
-          img.src = src;
+          img.src = resolveSource(src);
         }
       }
       const img = images.get(src);
@@ -19,10 +32,15 @@ const TileMapView = (() => {
     }
     function retainImages(sources = []) {
       const keep = new Set(sources);
-      for (const [src, img] of images) if (!keep.has(src)) {
-        if (!loadImage) { img.onload = img.onerror = null; img.src = ""; }
-        images.delete(src);
-      }
+      for (const [src, img] of images)
+        if (!keep.has(src)) {
+          if (!loadImage) {
+            img.onload = img.onerror = null;
+            if (img.getContext) img.width = img.height = 0;
+            else img.src = "";
+          }
+          images.delete(src);
+        }
       indexes = new WeakMap();
     }
     function index(doc) {
@@ -33,22 +51,29 @@ const TileMapView = (() => {
         });
       return indexes.get(doc);
     }
+    let currentOrigin = {x:0,y:0};
     function drawTile(ctx, doc, id, x, y, width, height) {
       const lookup = index(doc),
         tile = lookup.tiles.get(id);
-      if (!tile) return;
+      if (!tile || (doc.biomeStyle && tile.noSprite)) return;
       const set = lookup.sets.get(tile.tilesetId),
         img = set && image(set.image);
       if (set) {
-        if (img)
-          ctx.drawImage(img, tile.x, tile.y, set.tileWidth, set.tileHeight, x, y, width, height);
-      } else {
+        if (img) {
+          const handled = doc.biomeStyle?.version === 2 && typeof BiomeTiles !== "undefined" &&
+            BiomeTiles.drawAtlasTile(ctx,img,tile,set,x,y,width,height,
+              Math.round((x - currentOrigin.x) / width),Math.round((y - currentOrigin.y) / height),doc.biomeStyle.autotile);
+          if (!handled) ctx.drawImage(img, tile.x, tile.y, tile.frameWidth || set.tileWidth, tile.frameHeight || set.tileHeight, x, y, width, height);
+        }
+      }
+      if (!img) {
         ctx.fillStyle = tile.color;
         ctx.fillRect(x, y, width, height);
       }
     }
     function draw(ctx, doc, placement, view) {
       const { ox, oy, cellWidth: cw, cellHeight: ch, width, height } = view;
+      currentOrigin = {x:ox,y:oy};
       const x0 = Math.max(0, Math.floor(-ox / cw)),
         y0 = Math.max(0, Math.floor(-oy / ch));
       const x1 = Math.min(doc.width, Math.ceil((width - ox) / cw)),
@@ -58,6 +83,8 @@ const TileMapView = (() => {
       ctx.rect(ox, oy, doc.width * cw, doc.height * ch);
       ctx.clip();
       ctx.imageSmoothingEnabled = false;
+      if (doc.biomeStyle && doc.biomeStyle.version !== 2 && placement === "below" && typeof BiomeTiles !== "undefined")
+        BiomeTiles.draw(ctx, doc, view);
       for (const layer of doc.layers) {
         if (!layer.visible || layer.opacity <= 0 || layer.placement !== placement) continue;
         ctx.globalAlpha = layer.opacity;
@@ -85,6 +112,6 @@ const TileMapView = (() => {
       },
     };
   }
-  return { create };
+  return { create, resolveSource };
 })();
 if (typeof module !== "undefined") module.exports = TileMapView;

@@ -5,6 +5,10 @@ from unit_visuals import BONE_NAMES
 
 
 def correct_effects(prefab, native):
+    # Native deploy states set flyUnit=0 and targetHeightDrift=0.
+    if prefab["stats"].get("deployed") and prefab["stats"].get("movementType") == "air":
+        prefab["stats"]["movementType"] = "ground"
+        prefab["presentation"].update(thrusters=False, movement="walk")
     # Rotorcraft fly with rotors, not the inherited generic aircraft jet decal.
     helicopter = any("heli" in tag.lower() for tag in prefab.get("sourceStats", {}).get("nativeTags", []))
     if helicopter:

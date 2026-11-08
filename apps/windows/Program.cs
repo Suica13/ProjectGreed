@@ -58,7 +58,7 @@ namespace ProjectGreed.Client {
                     core.Settings.IsStatusBarEnabled = false;
                     core.Settings.IsZoomControlEnabled = true;
                     core.SetVirtualHostNameToFolderMapping("projectgreed.localhost", content, CoreWebView2HostResourceAccessKind.Deny);
-                    core.AddHostObjectToScript("projectGreed", new NativeStore(dataDirectory));
+                    core.AddHostObjectToScript("projectGreed", new NativeStore(dataDirectory, Path.Combine(dataDirectory, "records")));
                     core.NavigationStarting += (_, e) => {
                         if (IsAppUri(e.Uri)) return;
                         e.Cancel = true;
@@ -71,6 +71,7 @@ namespace ProjectGreed.Client {
                         if (!IsAppUri(e.Source)) return;
                         var message = new JavaScriptSerializer { MaxJsonLength = NativeStore.MaxBytes * 2 }.Deserialize<System.Collections.Generic.Dictionary<string, string>>(e.WebMessageAsJson);
                         if (message.TryGetValue("action", out string action)) {
+                            if (action == "open_save_folder") BeginInvoke(new Action(() => { Directory.CreateDirectory(dataDirectory); Process.Start(new ProcessStartInfo(dataDirectory) { UseShellExecute = true }); }));
                             if (action == "exit") BeginInvoke(new Action(Close));
                             if (action == "export") BeginInvoke(new Action(() => Export(message)));
                             if (action == "fullscreen") BeginInvoke(new Action(ToggleFullScreen));

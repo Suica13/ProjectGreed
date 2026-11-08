@@ -2481,3 +2481,38 @@ body[data-page="campaign"] #openClientSettings {
 .campaign-encounter-dialog[data-expanded="false"] .campaign-encounter-footer { gap:4px; padding-top:4px; }
 .campaign-encounter-dialog[data-expanded="false"] .campaign-encounter-readiness { gap:4px; }
 .campaign-encounter-dialog[data-expanded="false"] .campaign-encounter-actions button { padding:6px 10px; }
+/* Mobile strategic detail is one scrollable panel beneath the map. Desktop
+ * force/order columns keep their independent bounded viewports. */
+@media (max-width: 700px) {
+  .campaign-detail {
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
+  }
+  .campaign-detail > * { flex-shrink: 0; }
+  .campaign-detail > .campaign-forces,
+  .campaign-detail > .campaign-order-list,
+  .campaign-detail .campaign-force-list {
+    flex: none;
+    max-height: none;
+    overflow: visible;
+  }
+}
+@media (max-width: 760px) {
+  .campaign-workspace-body {
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
+  }
+  .campaign-workspace .campaign-inspector {
+    min-height: 0;
+    overflow: visible;
+  }
+  .campaign-workspace .campaign-inspector-content {
+    flex: none;
+    overflow: visible;
+  }
+}

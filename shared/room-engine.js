@@ -33,10 +33,16 @@ function createRoomEngine({
 }) {
   const Records =
     typeof MatchRecords === "undefined" ? require("./match-records.js") : MatchRecords;
-  const Climate = typeof BattlefieldClimate !== "undefined" ? BattlefieldClimate : require("./battlefield-climate.js");
-  const radioRange = typeof DialogueRange !== "undefined" ? DialogueRange : require("./dialogue-range.js");
-  const Dialogue = typeof BattleDialogue !== "undefined"
-    ? BattleDialogue : require("../client/battle-dialogue.js");
+  const Climate =
+    typeof BattlefieldClimate !== "undefined"
+      ? BattlefieldClimate
+      : require("./battlefield-climate.js");
+  const radioRange =
+    typeof DialogueRange !== "undefined" ? DialogueRange : require("./dialogue-range.js");
+  const Dialogue =
+    typeof BattleDialogue !== "undefined"
+      ? BattleDialogue
+      : require("../client/battle-dialogue.js");
   let campaignAdapter = null;
   const automatedRequests = new WeakSet();
   const delegated = (room, seat) =>
@@ -175,7 +181,11 @@ function createRoomEngine({
         snapshot.effectCombats = [];
         snapshot.combatActors = [];
       }
-      const captured = Records.capture(room.recordPrevious[perspective], snapshot, room.record.tiles);
+      const captured = Records.capture(
+        room.recordPrevious[perspective],
+        snapshot,
+        room.record.tiles,
+      );
       frame.views[perspective] = captured.change;
       next[perspective] = captured.baseline;
     }
@@ -516,7 +526,8 @@ function createRoomEngine({
   }
   let roomListKey = null;
   function broadcastRooms() {
-    const summary = roomList(), key = JSON.stringify(summary);
+    const summary = roomList(),
+      key = JSON.stringify(summary);
     if (key === roomListKey) return;
     onRooms(summary);
     roomListKey = key;
@@ -582,14 +593,27 @@ function createRoomEngine({
   // 公开快照不包含随机 seed；席位 token 不放入广播。
   const safeGame = (game, recipient, intel, visibleIds) => {
     let { seed, partSeed, ...view } = game;
-    if (game.battlefield?.reserves) view.battlefield = {
-      ...Object.fromEntries(Object.entries(game.battlefield).filter(([key]) => key !== "reinforcementQueue")),
-      reserves: game.battlefield.reserves.filter((item) => item.ownerSeat === recipient?.seat)
-        .map(({ template, ...item }) => item),
-    };
+    if (game.battlefield?.reserves)
+      view.battlefield = {
+        ...Object.fromEntries(
+          Object.entries(game.battlefield).filter(([key]) => key !== "reinforcementQueue"),
+        ),
+        reserves: game.battlefield.reserves
+          .filter((item) => item.ownerSeat === recipient?.seat)
+          .map(({ template, ...item }) => item),
+      };
+    const ruinCells = intel && game.battlefield ? new Set(intel.visibleCells || []) : null;
     if (intel)
       view.units = game.units
-        .filter((u) => u.team === intel.team || visibleIds.has(u.id))
+        .filter(
+          (u) =>
+            u.team === intel.team ||
+            visibleIds.has(u.id) ||
+            (ruinCells &&
+              u.facility &&
+              u.hp <= 0 &&
+              G.cells(u).some((cell) => ruinCells.has(cell.x + "," + cell.y))),
+        )
         .map((u) => (u.team === intel.team ? u : { ...u, origin: null, pendingMove: null }));
     if (intel) {
       view.visionAreas = (game.visionAreas || []).filter((area) => area.team === intel.team);
@@ -720,8 +744,7 @@ function createRoomEngine({
       team === null ? [] : room.game.units.filter((u) => !known(u.id)).map((u) => u.id);
     const eventText = room.lastEvent && hiddenIds.length ? JSON.stringify(room.lastEvent) : "";
     let lastEvent =
-      room.lastEvent &&
-      !hiddenIds.some((id) => eventText.includes('"' + id + '"'))
+      room.lastEvent && !hiddenIds.some((id) => eventText.includes('"' + id + '"'))
         ? room.lastEvent
         : null;
     if (
@@ -770,13 +793,21 @@ function createRoomEngine({
         room.started && room.phase === "finished"
           ? [0, 1].map((teamId) => ({
               team: teamId,
-              units: Object.entries(room.battleRoster || {})
-                .filter(
-                  ([id, record]) =>
-                    record.team === teamId &&
-                    !room.game.units.some((actor) => actor.id === id && actor.hp > 0),
-                )
-                .map(([id, record]) => ({ id, model: record.model, unitId: record.unitId })),
+              units: room.game.battlefield
+                ? (room.game.battlefield.reserves || [])
+                    .filter((reserve) => reserve.team === teamId)
+                    .flatMap((reserve) =>
+                      battlefieldLosses(room, reserve.ownerSeat).lostUnits.filter((record) =>
+                        record.id.startsWith(reserve.id + ":loss:"),
+                      ),
+                    )
+                : Object.entries(room.battleRoster || {})
+                    .filter(
+                      ([id, record]) =>
+                        record.team === teamId &&
+                        !room.game.units.some((actor) => actor.id === id && actor.hp > 0),
+                    )
+                    .map(([id, record]) => ({ id, model: record.model, unitId: record.unitId })),
             }))
           : null,
       economyAwards: recipient
@@ -948,7 +979,13 @@ function createRoomEngine({
           shareUnits: !!member.shareUnits,
           aiSettings: member.bot ? member.aiSettings : undefined,
           formationPreset: member.formationPreset || null,
-          ...(member.id === recipient?.id ? { licenses: member.licenses || {}, ...G.normalizeStock(member), technologyPoints: member.technologyPoints } : {}),
+          ...(member.id === recipient?.id
+            ? {
+                licenses: member.licenses || {},
+                ...G.normalizeStock(member),
+                technologyPoints: member.technologyPoints,
+              }
+            : {}),
           armySettings: G.armySettings(member),
         })),
       you: recipient
@@ -972,10 +1009,12 @@ function createRoomEngine({
         options: exportPerspectives(room, recipient),
       },
       log: team === null || !room.matchId ? room.log : room.teamLogs?.[team] || [],
-      dialogueEvents: (room.dialogueEvents || []).filter((entry) =>
-        team === null || !room.matchId || entry.visibleTeams.includes(team))
-        .slice(-40).map(({ visibleTeams, positionTeams, position, ...entry }) => ({
-          ...entry, ...(team === null || positionTeams?.includes(team) ? {position} : {}),
+      dialogueEvents: (room.dialogueEvents || [])
+        .filter((entry) => team === null || !room.matchId || entry.visibleTeams.includes(team))
+        .slice(-40)
+        .map(({ visibleTeams, positionTeams, position, ...entry }) => ({
+          ...entry,
+          ...(team === null || positionTeams?.includes(team) ? { position } : {}),
         })),
       logNames: !room.started
         ? room.logNames || []
@@ -1033,7 +1072,7 @@ function createRoomEngine({
       const target = room.game.units.find((u) => u.id === event.unitId),
         source = room.game.units.find((u) => u.id === event.sourceId);
       if (!target) continue;
-      markBattlefieldAttack(room, source, target);
+      markBattlefieldAttack(room, source, target, event);
       markTechParticipation(room, source, target, event.damage);
       if (source && source.team !== target.team && event.damage > 0) {
         const owner = room.seats[G.ownerOf(source)],
@@ -1115,6 +1154,7 @@ function createRoomEngine({
       scheduleResultReturn(room);
     }
     logClimate(room);
+    syncRegularStock(room);
     settleBattleEconomy(room);
     recordSettlement(room);
     const recipients = members(room);
@@ -1200,6 +1240,7 @@ function createRoomEngine({
     room.pilotDamage = {};
     room.playerDamage = {};
     room.battlefieldAttackers = {};
+    room.baseAttackProgress = {};
     room.techParticipation = {};
     room.technologyStartPoints = {};
     room.stockReservations = {};
@@ -1356,7 +1397,7 @@ function createRoomEngine({
     room.pilotDamage ||= {};
     for (const battle of battles)
       for (const e of battle.events) {
-        markBattlefieldAttack(room, unit(room, e.from), unit(room, e.to));
+        markBattlefieldAttack(room, unit(room, e.from), unit(room, e.to), e);
         if (e.empty || !(e.damage > 0)) continue;
         const source = unit(room, e.from),
           target = unit(room, e.to);
@@ -1530,8 +1571,7 @@ function createRoomEngine({
     entry.unitName = G.unitLogName(speaker);
     entry.position = radioRange.position(speaker, (id) => unit(room, id));
     entry.positionTeams = logTeamIds(room).filter(
-      (team) =>
-        speaker.team === team || visibleBefore[team]?.includes(speaker.id),
+      (team) => speaker.team === team || visibleBefore[team]?.includes(speaker.id),
     );
     // A direct radio challenge is audible to both combatants, even if
     // the target lacks visual contact. Do not disclose the speaker's map position.
@@ -1582,12 +1622,35 @@ function createRoomEngine({
       if (ally) emitPilotDialogue(room, kind, ally, actor, visibleBefore, to.id);
     }
   }
-  function markBattlefieldAttack(room, source, target) {
+  function markBattlefieldAttack(room, source, target, hit = null) {
     if (!room.game.battlefield || !source || !target || source.team === target.team) return;
     const owner = room.seats[G.ownerOf(source)];
     if (!owner || owner.bot) return;
     const attackers = ((room.battlefieldAttackers ||= {})[target.id] ||= []);
     if (!attackers.includes(owner.id)) attackers.push(owner.id);
+    if (target.facility?.type !== "base" || !hit || room.startedFromSave || room.replay) return;
+    const damage = Math.max(0, (hit.before || 0) - Math.max(0, hit.after ?? hit.before));
+    if (!damage) return;
+    const maximum = G.modelOf(target).hp,
+      progress = ((room.baseAttackProgress ||= {})[target.id] ||= {});
+    const entry = (progress[owner.id] ||= { damage: 0, paid: 0 });
+    entry.damage = Math.min(maximum, entry.damage + damage);
+    const earned = Math.min(10, Math.floor((entry.damage * 10) / maximum)),
+      steps = earned - entry.paid;
+    if (steps <= 0) return;
+    entry.paid = earned;
+    const reward = G.battlefieldMode.baseDamageReward(room.settings, target.team),
+      bonus = getRewardMultipliers();
+    room.economyAwards.push({
+      id: randomId(),
+      matchId: room.matchId,
+      memberId: owner.id,
+      kind: "base_damage",
+      targetId: target.id,
+      steps,
+      money: Math.floor(reward.money * steps * bonus.money),
+      supplies: Math.floor(reward.supplies * steps * bonus.supplies),
+    });
   }
   function awardBattlefieldCaptures(room) {
     const pending = room.game.battlefield?.captureRewards;
@@ -1599,17 +1662,29 @@ function createRoomEngine({
       const owner = room.seats[capture.ownerSeat];
       if (!owner || owner.bot || G.seatTeam(owner.seat) !== capture.team) continue;
       const reward = G.battlefieldMode.captureReward(room.settings, capture.team);
-      (room.economyAwards ||= []).push({id:randomId(), matchId:room.matchId,
-        memberId:owner.id, kind:"capture", pointId:capture.pointId, captureId:capture.captureId,
-        money:Math.floor(reward.money*bonus.money), supplies:Math.floor(reward.supplies*bonus.supplies)});
-      log(room, `[据点占领] ${owner.name}占领据点，获得${reward.money}资金、${reward.supplies}物资（基础奖励）。`, {teams:[capture.team]});
+      (room.economyAwards ||= []).push({
+        id: randomId(),
+        matchId: room.matchId,
+        memberId: owner.id,
+        kind: "capture",
+        pointId: capture.pointId,
+        captureId: capture.captureId,
+        money: Math.floor(reward.money * bonus.money),
+        supplies: Math.floor(reward.supplies * bonus.supplies),
+      });
+      log(
+        room,
+        `[据点占领] ${owner.name}占领据点，获得${reward.money}资金、${reward.supplies}物资（基础奖励）。`,
+        { teams: [capture.team] },
+      );
     }
   }
   function awardBattlefieldDefeat(room, from, to, defeatedModel) {
     if (room.startedFromSave || room.replay || from?.team === to.team) return;
     room.economyDefeats ||= new Set();
-    if (room.economyDefeats.has(to.id)) return;
-    room.economyDefeats.add(to.id);
+    const defeatKey = to.id + ":" + (to.facility?.cycle || 0);
+    if (room.economyDefeats.has(defeatKey)) return;
+    room.economyDefeats.add(defeatKey);
     const killer = from && room.seats[G.ownerOf(from)];
     const participants = new Set(room.battlefieldAttackers?.[to.id] || []);
     if (killer) participants.add(killer.id);
@@ -1621,17 +1696,37 @@ function createRoomEngine({
     const bonus = getRewardMultipliers();
     for (const memberId of participants) {
       const owner = room.members.get(memberId);
-      if (!owner || owner.bot || owner.seat === null || G.seatTeam(owner.seat) === to.team) continue;
-      const assist = owner.id !== killer?.id, divisor = assist ? 4 : 2;
-      (room.economyAwards ||= []).push({ id: randomId(), matchId: room.matchId,
-        memberId: owner.id, kind: assist ? "assist" : "kill", targetId: to.id, model: to.model,
-        money: Math.floor(cost / divisor * bonus.money), supplies: Math.floor(cost / divisor * bonus.supplies) });
+      if (!owner || owner.bot || owner.seat === null || G.seatTeam(owner.seat) === to.team)
+        continue;
+      const assist = owner.id !== killer?.id,
+        divisor = assist ? 4 : 2;
+      const facility =
+        to.facility && to.facility.type !== "base"
+          ? G.battlefieldMode.facilityReward(to.facility.level || 1)
+          : null;
+      (room.economyAwards ||= []).push({
+        id: randomId(),
+        matchId: room.matchId,
+        memberId: owner.id,
+        kind: assist ? "assist" : "kill",
+        targetId: to.id,
+        model: to.model,
+        money: Math.floor(
+          (facility ? facility.money / (assist ? 2 : 1) : cost / divisor) * bonus.money,
+        ),
+        supplies: Math.floor(
+          (facility ? facility.supplies / (assist ? 2 : 1) : cost / divisor) * bonus.supplies,
+        ),
+      });
     }
     if (room.battlefieldAttackers) delete room.battlefieldAttackers[to.id];
   }
   function awardDefeat(room, from, to, defeatedModel, visibleBefore = {}) {
     recordDefeatDialogue(room, from, to, visibleBefore);
-    if (room.settings.mode === "battlefield") { awardBattlefieldDefeat(room, from, to, defeatedModel); return; }
+    if (room.settings.mode === "battlefield") {
+      awardBattlefieldDefeat(room, from, to, defeatedModel);
+      return;
+    }
     if (room.campaign) {
       if (from && from.team !== to.team) to.campaignDefeatedBy = from.team;
       return;
@@ -1714,8 +1809,14 @@ function createRoomEngine({
   }
   function reserveBattleStock(room) {
     if (room.startedFromSave || room.campaign) return;
-    room.technologyStartPoints = Object.fromEntries(room.seats.filter(Boolean).map(player =>
-      [player.id, roomDevelopment().normalizeTechnologyPoints(player.technologyPoints)]));
+    room.technologyStartPoints = Object.fromEntries(
+      room.seats
+        .filter(Boolean)
+        .map((player) => [
+          player.id,
+          roomDevelopment().normalizeTechnologyPoints(player.technologyPoints),
+        ]),
+    );
     if (room.settings.mode === "battlefield") return;
     for (const player of room.seats) {
       if (!player || player.bot || player.formationPreset) continue;
@@ -1725,14 +1826,22 @@ function createRoomEngine({
         used.inventory[record.unitId] = (used.inventory[record.unitId] || 0) + 1;
       }
       const next = G.normalizeStock(player);
-      for (const kind of ["inventory", "kits"]) for (const [id, count] of Object.entries(used[kind])) {
-        if (room.settings.mode !== "quick" && (next[kind][id] || 0) < count) throw Error("出战库存不足：" + id);
-      }
+      for (const kind of ["inventory", "kits"])
+        for (const [id, count] of Object.entries(used[kind])) {
+          if (room.settings.mode !== "quick" && (next[kind][id] || 0) < count)
+            throw Error("出战库存不足：" + id);
+        }
       Object.assign(player, next);
       room.stockReservations[player.id] = used;
-      room.economyAwards.push({ id: randomId(), matchId: room.matchId, memberId: player.id,
-        kind: "deployment", money: 0, supplies: 0,
-        stockUsed: { inventory: {}, kits: {} } });
+      room.economyAwards.push({
+        id: randomId(),
+        matchId: room.matchId,
+        memberId: player.id,
+        kind: "deployment",
+        money: 0,
+        supplies: 0,
+        stockUsed: { inventory: {}, kits: {} },
+      });
     }
   }
   function syncBattlefieldStock(room) {
@@ -1740,18 +1849,29 @@ function createRoomEngine({
     if (!reserves) return;
     for (const reserve of reserves) {
       const player = room.seats[reserve.ownerSeat];
-      if (!player || player.bot) { reserve.stockAvailable = true; continue; }
+      if (!player || player.bot) {
+        reserve.stockAvailable = true;
+        continue;
+      }
       const settled = reserve.stockLossesSettled || 0;
       const losses = (reserve.losses || 0) - settled;
       if (losses <= 0) continue;
       const lost = { inventory: { [reserve.unitId]: losses }, kits: {} };
-      for (const [kind, values] of Object.entries(lost)) for (const [id, count] of Object.entries(values)) {
-        player[kind] ||= {};
-        player[kind][id] = Math.max(0, (player[kind][id] || 0) - count);
-      }
+      for (const [kind, values] of Object.entries(lost))
+        for (const [id, count] of Object.entries(values)) {
+          player[kind] ||= {};
+          player[kind][id] = Math.max(0, (player[kind][id] || 0) - count);
+        }
       reserve.stockLossesSettled = reserve.losses;
-      room.economyAwards.push({ id: randomId(), matchId: room.matchId, memberId: player.id,
-        kind: "loss", money: 0, supplies: 0, stockLost: lost });
+      room.economyAwards.push({
+        id: randomId(),
+        matchId: room.matchId,
+        memberId: player.id,
+        kind: "loss",
+        money: 0,
+        supplies: 0,
+        stockLost: lost,
+      });
     }
     const occupied = new Map();
     for (const reserve of reserves) {
@@ -1765,39 +1885,108 @@ function createRoomEngine({
       if (!player || player.bot) continue;
       const counts = occupied.get(reserve.ownerSeat);
       const chassis = counts?.chassis.get(reserve.unitId) || 0;
-      reserve.stockAvailable = (player.inventory?.[reserve.unitId] || 0) > chassis;
+      reserve.stockRemaining = player.inventory?.[reserve.unitId] || 0;
+      reserve.stockAvailable = reserve.stockRemaining > chassis;
+    }
+  }
+  function syncRegularStock(room) {
+    if (
+      !room.started ||
+      room.settings.mode !== "regular" ||
+      room.campaign ||
+      room.startedFromSave ||
+      room.replay
+    )
+      return;
+    const living = new Set(
+      room.game.units
+        .filter((actor) => actor.hp > 0)
+        .map((actor) => G.ownerOf(actor) + ":" + actor.formationIndex),
+    );
+    for (const [id, record] of Object.entries(room.battleRoster || {})) {
+      if (record.stockLossSettled) continue;
+      const alive =
+        record.formationIndex === undefined
+          ? room.game.units.some((actor) => actor.id === id && actor.hp > 0)
+          : living.has(record.seat + ":" + record.formationIndex);
+      if (alive) continue;
+      const player = room.members.get(record.memberId);
+      if (!player || player.bot || !room.stockReservations?.[player.id]) continue;
+      record.stockLossSettled = true;
+      player.inventory ||= {};
+      player.inventory[record.unitId] = Math.max(0, (player.inventory[record.unitId] || 0) - 1);
+      room.economyAwards.push({
+        id: randomId(),
+        matchId: room.matchId,
+        memberId: player.id,
+        kind: "loss",
+        money: 0,
+        supplies: 0,
+        stockLost: { inventory: { [record.unitId]: 1 }, kits: {} },
+      });
     }
   }
   function settleBattleStock(room, player) {
-    if (!room.stockReservations?.[player.id]) return undefined;
-    // Launch only validates stock. Charge actual casualties once at the end,
-    // using the original chassis/kit identity even after in-battle transformations.
-    const lost = { inventory: {}, kits: {} };
-    if (room.settings.mode !== "quick") for (const [id, record] of Object.entries(room.battleRoster || {})) {
-      if (record.memberId !== player.id || room.game.units.some(actor => actor.id === id && actor.hp > 0)) continue;
-      lost.inventory[record.unitId] = (lost.inventory[record.unitId] || 0) + 1;
+    syncRegularStock(room);
+    if (room.stockReservations) delete room.stockReservations[player.id];
+    // Casualty receipts are already applied during combat, never again at settlement.
+    return undefined;
+  }
+  function battlefieldLosses(room, seat) {
+    const lostUnits = [],
+      losses = {};
+    for (const reserve of room.game.battlefield?.reserves || []) {
+      if (reserve.ownerSeat !== seat) continue;
+      const count = reserve.losses || 0;
+      losses[reserve.unitId] = (losses[reserve.unitId] || 0) + count;
+      for (let i = 0; i < count; i++)
+        lostUnits.push({
+          id: reserve.id + ":loss:" + i,
+          unitId: reserve.unitId,
+          model: reserve.unitId + "__" + reserve.kitId,
+        });
     }
-    for (const kind of ["inventory", "kits"]) for (const [id, count] of Object.entries(lost[kind]))
-      player[kind][id] = Math.max(0, (player[kind][id] || 0) - count);
-    delete room.stockReservations[player.id];
-    return lost;
+    return { lostUnits, losses };
   }
   function awardMatchTechnology(room, player, won, bonus) {
     const participated = room.techParticipation?.[player.id];
     if (!participated?.length) return;
-    const economy = roomBattleEconomy(), development = roomDevelopment();
-    const weights = economy.technologyWeights(room.battleRoster, player.id, player.characterFaction);
-    const balances = room.technologyStartPoints?.[player.id] || development.normalizeTechnologyPoints(player.technologyPoints);
-    const limits = Object.fromEntries(development.factions.map(faction => [faction, development.maximumPoints(faction)]));
-    const total = room.settings.mode === "battlefield"
-      ? G.battlefieldMode.technologyReward(room.settings,G.seatTeam(player.seat),won,bonus.technology)
-      : economy.technologyReward(won, room.settings.mode, bonus.technology);
+    const economy = roomBattleEconomy(),
+      development = roomDevelopment();
+    const weights = economy.technologyWeights(
+      room.battleRoster,
+      player.id,
+      player.characterFaction,
+    );
+    const balances =
+      room.technologyStartPoints?.[player.id] ||
+      development.normalizeTechnologyPoints(player.technologyPoints);
+    const limits = Object.fromEntries(
+      development.factions.map((faction) => [faction, development.maximumPoints(faction)]),
+    );
+    const total =
+      room.settings.mode === "battlefield"
+        ? G.battlefieldMode.technologyReward(
+            room.settings,
+            G.seatTeam(player.seat),
+            won,
+            bonus.technology,
+          )
+        : economy.technologyReward(won, room.settings.mode, bonus.technology);
     const awards = economy.allocateTechnology(total, weights, balances, limits);
     player.technologyPoints = development.normalizeTechnologyPoints(player.technologyPoints);
     for (const [faction, points] of Object.entries(awards)) {
       player.technologyPoints[faction] = balances[faction] + points;
-      room.techAwards.push({ id: randomId(), matchId: room.matchId,
-        memberId: player.id, faction, points, kind: "result", round: room.game.round, team: room.game.team });
+      room.techAwards.push({
+        id: randomId(),
+        matchId: room.matchId,
+        memberId: player.id,
+        faction,
+        points,
+        kind: "result",
+        round: room.game.round,
+        team: room.game.team,
+      });
     }
   }
   function settleBattleEconomy(room) {
@@ -1818,10 +2007,16 @@ function createRoomEngine({
       for (const player of room.seats) {
         if (!player || player.bot) continue;
         const entryReward = G.battlefieldMode.baseReward(room.settings, G.seatTeam(player.seat));
-        awardMatchTechnology(room,player,G.seatTeam(player.seat) === room.game.winner,bonus);
-        room.economyAwards.push({ id: randomId(), matchId: room.matchId, memberId: player.id,
-          kind: "result", money: Math.floor(entryReward.money * bonus.money),
-          supplies: Math.floor(entryReward.supplies * bonus.supplies) });
+        awardMatchTechnology(room, player, G.seatTeam(player.seat) === room.game.winner, bonus);
+        room.economyAwards.push({
+          id: randomId(),
+          matchId: room.matchId,
+          memberId: player.id,
+          kind: "result",
+          ...battlefieldLosses(room, player.seat),
+          money: Math.floor(entryReward.money * bonus.money),
+          supplies: Math.floor(entryReward.supplies * bonus.supplies),
+        });
       }
       return;
     }
@@ -1832,10 +2027,19 @@ function createRoomEngine({
       for (const [id, record] of Object.entries(room.battleRoster || {})) {
         if (
           record.memberId !== player.id ||
-          room.game.units.some((actor) => actor.id === id && actor.hp > 0)
+          room.game.units.some(
+            (actor) =>
+              actor.hp > 0 &&
+              (record.formationIndex === undefined
+                ? actor.id === id
+                : G.ownerOf(actor) === record.seat &&
+                  actor.formationIndex === record.formationIndex),
+          )
         )
           continue;
         lostUnits.push({ id, unitId: record.unitId, model: record.model });
+        if (room.settings.mode !== "quick")
+          losses[record.unitId] = (losses[record.unitId] || 0) + 1;
       }
       const won = G.seatTeam(player.seat) === room.game.winner;
       awardMatchTechnology(room, player, won, bonus);
@@ -1860,10 +2064,10 @@ function createRoomEngine({
         kind: "result",
         ...(stockLost ? { stockLost } : {}),
         destroyedCost,
-        money: Math.floor(
-          (won ? base.money : destroyedCost) * rate * battleRate * bonus.money,
+        money: Math.floor((won ? base.money : destroyedCost) * rate * battleRate * bonus.money),
+        supplies: Math.floor(
+          (won ? base.supplies : destroyedCost * 2) * rate * battleRate * bonus.supplies,
         ),
-        supplies: Math.floor((won ? base.supplies : destroyedCost * 2) * rate * battleRate * bonus.supplies),
         losses,
         lostUnits,
       });
@@ -2042,9 +2246,14 @@ function createRoomEngine({
       }
     for (const effect of room.game.turnEffects || [])
       if (effect.type === "battlefield_control_loss")
-        log(room, `[据点压制] 队伍${effect.team + 1}据点数量落后，战力减少${effect.amount}（初始战力的1%）。`);
+        log(
+          room,
+          `[据点压制] 队伍${effect.team + 1}据点数量落后，战力减少${effect.amount}（初始战力的1%）。`,
+        );
       else if (effect.type === "battlefield_deploy_cancelled")
-        log(room, "[部署取消] 申请的据点或主基地已失守，请重新选择部署地点。", { teams: [G.seatTeam(effect.ownerSeat)] });
+        log(room, "[部署取消] 申请的据点或主基地已失守，请重新选择部署地点。", {
+          teams: [G.seatTeam(effect.ownerSeat)],
+        });
       else if (effect.type === "evacuation")
         log(
           room,
@@ -2141,7 +2350,7 @@ function createRoomEngine({
   function aiPacing(room) {
     let pacing = aiActionPacing.get(room);
     if (!pacing || pacing.matchId !== room.matchId || pacing.round !== room.game.round) {
-      pacing = {matchId: room.matchId, round: room.game.round, seat: -1, nextAt: 0};
+      pacing = { matchId: room.matchId, round: room.game.round, seat: -1, nextAt: 0 };
       aiActionPacing.set(room, pacing);
     }
     return pacing;
@@ -2176,7 +2385,8 @@ function createRoomEngine({
       formationVariation: G.aiFormationVariation(room.aiFormationSeed, player.seat),
     };
   }
-  const playerBudget = (room, player) => player?.battlefieldAI ? 10000 : G.armyBudget(room.settings, formationPlayer(room, player));
+  const playerBudget = (room, player) =>
+    player?.battlefieldAI ? 10000 : G.armyBudget(room.settings, formationPlayer(room, player));
   const playerUnitLimit = (room, player) =>
     player?.battlefieldAI ? 36 : G.armyUnitLimit(room.settings, formationPlayer(room, player));
   const aiResearchCache = new WeakMap();
@@ -2202,8 +2412,10 @@ function createRoomEngine({
     return value;
   }
   function roomAIEras(room) {
-    if (room.settings.mode !== "regular" || room.resumeSave || room.startedFromSave) return undefined;
-    if (room.started && room.phase !== "assembly" && room.aiFormationEras) return room.aiFormationEras;
+    if (room.settings.mode !== "regular" || room.resumeSave || room.startedFromSave)
+      return undefined;
+    if (room.started && room.phase !== "assembly" && room.aiFormationEras)
+      return room.aiFormationEras;
     const allowed = new Set();
     for (const player of room.seats) {
       if (!player || player.bot) continue;
@@ -2235,7 +2447,12 @@ function createRoomEngine({
     G.planFormation(
       formation,
       playerBudget(room, player),
-      { ...playerRestrictions(room, player), licenses: undefined, inventory: undefined, kits: undefined },
+      {
+        ...playerRestrictions(room, player),
+        licenses: undefined,
+        inventory: undefined,
+        kits: undefined,
+      },
       playerUnitLimit(room, player),
     );
   // Preview generation is deterministic for the merged room progression.
@@ -2457,7 +2674,12 @@ function createRoomEngine({
           !G.planFormation(
             army,
             playerBudget(room, room.seats[seat]),
-            { ...playerRestrictions(room, room.seats[seat]), licenses: undefined, inventory: undefined, kits: undefined },
+            {
+              ...playerRestrictions(room, room.seats[seat]),
+              licenses: undefined,
+              inventory: undefined,
+              kits: undefined,
+            },
             playerUnitLimit(room, room.seats[seat]),
           ).deployable.length
         )
@@ -2485,6 +2707,7 @@ function createRoomEngine({
     room.pilotDamage = {};
     room.playerDamage = {};
     room.battlefieldAttackers = {};
+    room.baseAttackProgress = {};
     room.techParticipation = {};
     room.technologyStartPoints = {};
     room.stockReservations = {};
@@ -2561,12 +2784,15 @@ function createRoomEngine({
           playerName: room.seats[G.ownerOf(actor)]?.name,
           characterFaction: room.seats[G.ownerOf(actor)]?.characterFaction,
           seat: G.ownerOf(actor),
+          formationIndex: actor.formationIndex,
           bot: !!room.seats[G.ownerOf(actor)]?.bot,
           unitId: actor.deploymentUnitId || G.models[actor.model].prefabId,
           model: actor.model,
           stockModel: actor.deploymentModel || actor.model,
           cost: G.modelOf(actor).cost + (actor.pilot?.custom ? G.pilots.cost(actor.pilot) : 0),
-          technologyFactions: roomBattleEconomy().technologyFactions(G.models[actor.deploymentModel || actor.model]),
+          technologyFactions: roomBattleEconomy().technologyFactions(
+            G.models[actor.deploymentModel || actor.model],
+          ),
           money: roomBattleEconomy().price(actor.deploymentModel || actor.model),
           supplies: roomBattleEconomy().price(actor.deploymentModel || actor.model, "supplies"),
           team: actor.team,
@@ -2615,32 +2841,39 @@ function createRoomEngine({
     room.lastEvent = { id: randomId(), type: "battle_end" };
   }
   async function nextAIAction(room, onlySeat = null, excluded = new Set()) {
-    const revision = room.revision, board = room.game;
+    const revision = room.revision,
+      board = room.game;
     const query = queryAIAction(room, onlySeat, excluded);
-    const clock = () => typeof performance !== "undefined" ? performance.now() : Date.now();
+    const clock = () => (typeof performance !== "undefined" ? performance.now() : Date.now());
     while (rooms.get(room.code) === room && room.revision === revision && room.game === board) {
       const step = G.withModelQuery(() => {
         const deadline = clock() + 8;
         let result;
-        do { result = query.next(); } while (!result.done && clock() < deadline);
+        do {
+          result = query.next();
+        } while (!result.done && clock() < deadline);
         return result;
       });
       if (step.done) return step.value;
       // Let rendering, other rooms and human commands run between expensive
       // transport probes. Any intervening revision discards the stale decision.
-      await new Promise(resolve => setTimeout(resolve, 0));
+      await new Promise((resolve) => setTimeout(resolve, 0));
     }
     return null;
   }
   function* queryAIAction(room, onlySeat = null, excluded = new Set()) {
     const allowed = (player) => player && (onlySeat === null || player.seat === onlySeat);
-    const moves = aiUnitMoves(room), now = Date.now(), availability = new Map();
-    const actors = new Map(room.game.units.map(unit => [unit.id, unit]));
+    const moves = aiUnitMoves(room),
+      now = Date.now(),
+      availability = new Map();
+    const actors = new Map(room.game.units.map((unit) => [unit.id, unit]));
     const available = (unit) => {
       if (availability.has(unit.id)) return availability.get(unit.id);
       const carrier = unit.embarked && actors.get(unit.embarked.carrierId);
       const members = G.squadMembers(room.game, carrier || unit);
-      const value = members.every(member => !excluded.has(member.id) && (moves.get(member.id) || 0) <= now);
+      const value = members.every(
+        (member) => !excluded.has(member.id) && (moves.get(member.id) || 0) <= now,
+      );
       for (const member of members) availability.set(member.id, value);
       availability.set(unit.id, value);
       return value;
@@ -2694,17 +2927,30 @@ function createRoomEngine({
     if (room.game.battlefield) {
       for (const reserve of room.game.battlefield.reserves || []) {
         const player = room.seats[reserve.ownerSeat];
-        if (!aiControlled(room, player) || !allowed(player) || room.turnDone[player.seat] ||
-          G.seatTeam(player.seat) !== room.game.team || reserve.readyRound === null ||
-          reserve.readyRound > room.game.round || reserve.request || reserve.stockAvailable === false) continue;
+        if (
+          !aiControlled(room, player) ||
+          !allowed(player) ||
+          room.turnDone[player.seat] ||
+          G.seatTeam(player.seat) !== room.game.team ||
+          reserve.readyRound === null ||
+          reserve.readyRound > room.game.round ||
+          reserve.request ||
+          reserve.stockAvailable === false
+        )
+          continue;
         const sites = G.battlefieldMode.deploymentSites(G, room.game, room.game.team);
-        if (sites.length) return { player, action: "battlefield_deploy",
-          fields: { reserveId: reserve.id, siteId: sites[0].id } };
+        if (sites.length)
+          return {
+            player,
+            action: "battlefield_deploy",
+            fields: { reserveId: reserve.id, siteId: sites[0].id },
+          };
       }
     }
     const pendingMover = room.game.units.find(
       (u) =>
-        u.pendingMove && !u.pendingMove.launchMemberOf &&
+        u.pendingMove &&
+        !u.pendingMove.launchMemberOf &&
         aiControlled(room, room.seats[u.pendingMove.seat]) &&
         allowed(room.seats[u.pendingMove.seat]),
     );
@@ -2739,7 +2985,11 @@ function createRoomEngine({
         room.turnDone[owner.seat]
       )
         continue;
-      const transport = G.hangars.recoveryOrder(room.game, passenger);
+      const transport = G.hangars.recoveryOrder(
+        room.game,
+        passenger,
+        (carrier) => !!room.seats[G.ownerOf(carrier)]?.bot,
+      );
       if (transport) return { player: owner, ...transport };
       yield;
     }
@@ -2780,7 +3030,11 @@ function createRoomEngine({
       const group = actor.squadId || actor.id;
       if (checkedSquads.has(group)) continue;
       checkedSquads.add(group);
-      if (room.game.battlefield || (room.campaignBattle && G.campaignBattlefield.canCapture(G, room.game, actor))) continue;
+      if (
+        room.game.battlefield ||
+        (room.campaignBattle && G.campaignBattlefield.canCapture(G, room.game, actor))
+      )
+        continue;
       const gather = G.aiSquadChoice(room.game, actor, available);
       if (gather)
         return { player, action: "move", fields: { unitId: actor.id, x: gather.x, y: gather.y } };
@@ -2928,7 +3182,9 @@ function createRoomEngine({
       })
     )
       return { player, action: "wait", fields: { unitId: u.id, single: true } };
-    const choice = u.plan ? null : G.battlefieldMode.aiChoice(G, room.game, u) || G.aiChoice(room.game, u);
+    const choice = u.plan
+      ? null
+      : G.battlefieldMode.aiChoice(G, room.game, u) || G.aiChoice(room.game, u);
     if (choice?.rotation)
       return { player, action: "rotate", fields: { unitId: u.id, direction: choice.rotation } };
     if (choice && !u.moved && (choice.x !== u.x || choice.y !== u.y))
@@ -3005,8 +3261,14 @@ function createRoomEngine({
       cancel();
       return;
     }
-    if (room.phase === "battle" && !room.battle.ready.every(Boolean)) { cancel(); return; }
-    if (room.phase === "reaction" && !botReaction(room)) { cancel(); return; }
+    if (room.phase === "battle" && !room.battle.ready.every(Boolean)) {
+      cancel();
+      return;
+    }
+    if (room.phase === "reaction" && !botReaction(room)) {
+      cancel();
+      return;
+    }
     if (
       room.phase === "idle" &&
       !room.seats.some(
@@ -3035,14 +3297,21 @@ function createRoomEngine({
       room.phase === "battle"
         ? aiBattleMs
         : Math.max(
-            movementDelay > 0 ? movementDelay : room.phase === "idle" ? Math.max(80, Math.min(160, aiDelayMs)) : aiDelayMs,
+            movementDelay > 0
+              ? movementDelay
+              : room.phase === "idle"
+                ? Math.max(80, Math.min(160, aiDelayMs))
+                : aiDelayMs,
             room.phase === "idle" ? aiPacing(room).nextAt - Date.now() : 0,
             (room.turnNotBefore || 0) - Date.now(),
           );
     const timer = setTimeout(async () => {
       aiTimers.delete(room);
-      if (rooms.get(room.code) !== room ||
-          key !== `${room.matchId}:${room.game.round}:${room.game.team}:${room.phase}`) return;
+      if (
+        rooms.get(room.code) !== room ||
+        key !== `${room.matchId}:${room.game.round}:${room.game.team}:${room.phase}`
+      )
+        return;
       aiQueries.add(room);
       async function advancePlayer(onlySeat = null, excluded = new Set()) {
         let intent;
@@ -3111,20 +3380,23 @@ function createRoomEngine({
       }
       try {
         if (room.phase === "idle") {
-          const pacing = aiPacing(room), now = Date.now();
+          const pacing = aiPacing(room),
+            now = Date.now();
           // Spread both pathfinding and broadcasts over different event-loop turns.
           // A player's already moving units do not block a different player's start.
-          const ordered = [...bots].sort((a,b) => a.seat - b.seat);
-          const pivot = ordered.findIndex(player => player.seat > pacing.seat);
-          const lanes = pivot < 0 ? ordered : [...ordered.slice(pivot), ...ordered.slice(0,pivot)];
+          const ordered = [...bots].sort((a, b) => a.seat - b.seat);
+          const pivot = ordered.findIndex((player) => player.seat > pacing.seat);
+          const lanes = pivot < 0 ? ordered : [...ordered.slice(pivot), ...ordered.slice(0, pivot)];
           for (const player of lanes) {
-            if (room.turnDone[player.seat] || aiMoveUntil(room,player.seat) > now) continue;
-            const army = room.game.units.filter(u => u.hp > 0 && G.controllerOf(room.game,u) === player.seat);
-            const parallel = army.length < 8 ? 1 : Math.min(4,Math.ceil(army.length/4));
-            const moving = army.filter(u => (aiUnitMoves(room).get(u.id) || 0) > now).length;
+            if (room.turnDone[player.seat] || aiMoveUntil(room, player.seat) > now) continue;
+            const army = room.game.units.filter(
+              (u) => u.hp > 0 && G.controllerOf(room.game, u) === player.seat,
+            );
+            const parallel = army.length < 8 ? 1 : Math.min(4, Math.ceil(army.length / 4));
+            const moving = army.filter((u) => (aiUnitMoves(room).get(u.id) || 0) > now).length;
             if (moving >= parallel) continue;
             pacing.seat = player.seat;
-            await advancePlayer(player.seat,new Set());
+            await advancePlayer(player.seat, new Set());
             pacing.nextAt = Date.now() + 120 + Math.floor(aiMoveJitter() * 0.08);
             break;
           }
@@ -3153,20 +3425,51 @@ function createRoomEngine({
   // Track the game object as well as values so rematches and campaign local battles
   // record their own opening conditions without duplicating them on sync/reconnect.
   function logClimate(room) {
-    if (!room.started || room.phase === "assembly" || (room.campaign && !room.campaignBattle)) return;
+    if (!room.started || room.phase === "assembly" || (room.campaign && !room.campaignBattle))
+      return;
     const game = room.game;
-    const current = Climate.resolve(game.climateMap || G.getMap(game.mapId),
-      game.climateSettings || room.settings, game.round, game.climateSeed || game.seed || 1);
+    const current = Climate.resolve(
+      game.climateMap || G.getMap(game.mapId),
+      game.climateSettings || room.settings,
+      game.round,
+      game.climateSeed || game.seed || 1,
+    );
     const previous = room.climateLogState;
-    if (previous?.game === game && previous.weather === current.weather && previous.time === current.time) return;
+    if (
+      previous?.game === game &&
+      previous.weather === current.weather &&
+      previous.time === current.time
+    )
+      return;
     const opening = previous?.game !== game;
-    room.climateLogState = { game, weather:current.weather, time:current.time };
-    const weatherNames = {clear:"晴天",rain:"雨天",heavy_rain:"暴雨",fog:"雾天",overcast:"阴天",
-      snow:"雪天",blizzard:"暴雪",sand:"沙尘",sandstorm:"沙尘暴"};
-    const timeNames = {dawn:"清晨",morning:"上午",noon:"正午",afternoon:"下午",dusk:"黄昏",
-      evening:"晚上",late_night:"深夜",pre_dawn:"凌晨"};
-    log(room, current.space ? "[战场环境] 宇宙 · 无天气与昼夜变化。" :
-      `[${opening ? "战场环境" : "环境变化"}] 第${game.round}回合 · 天气：${weatherNames[current.weather]} · 时间：${timeNames[current.time]}。`);
+    room.climateLogState = { game, weather: current.weather, time: current.time };
+    const weatherNames = {
+      clear: "晴天",
+      rain: "雨天",
+      heavy_rain: "暴雨",
+      fog: "雾天",
+      overcast: "阴天",
+      snow: "雪天",
+      blizzard: "暴雪",
+      sand: "沙尘",
+      sandstorm: "沙尘暴",
+    };
+    const timeNames = {
+      dawn: "清晨",
+      morning: "上午",
+      noon: "正午",
+      afternoon: "下午",
+      dusk: "黄昏",
+      evening: "晚上",
+      late_night: "深夜",
+      pre_dawn: "凌晨",
+    };
+    log(
+      room,
+      current.space
+        ? "[战场环境] 宇宙 · 无天气与昼夜变化。"
+        : `[${opening ? "战场环境" : "环境变化"}] 第${game.round}回合 · 天气：${weatherNames[current.weather]} · 时间：${timeNames[current.time]}。`,
+    );
   }
   // Record the information available when an event happens, never retroactively reveal it.
   function log(
@@ -3231,28 +3534,52 @@ function createRoomEngine({
       ]),
     );
   }
-  function transportDialogue(room, passenger, carrier, launching, visibleBefore = null, preloaded = false) {
+  function transportDialogue(
+    room,
+    passenger,
+    carrier,
+    launching,
+    visibleBefore = null,
+    preloaded = false,
+  ) {
     if (room.settings.pilotDialogue === false) return;
     if (!passenger || !carrier || passenger.id === carrier.id) return;
     const event = launching ? "launch" : preloaded ? "preload" : "board";
     // The transport's pilot speaks first. The passenger may acknowledge.
     const sequence = room.log.length;
-    const first = Dialogue.transport({ event, speaker: carrier, target: passenger, sequence, preloaded });
-    const response = Dialogue.transportReply({ event, speaker: passenger, target: carrier, sequence });
+    const first = Dialogue.transport({
+      event,
+      speaker: carrier,
+      target: passenger,
+      sequence,
+      preloaded,
+    });
+    const response = Dialogue.transportReply({
+      event,
+      speaker: passenger,
+      target: carrier,
+      sequence,
+    });
     const participants = [carrier, passenger];
     const visibleTeams = logTeamIds(room).filter((team) =>
-      participants.some((actor) => actor.team === team ||
-        (visibleBefore?.[team] || []).includes(actor.id)));
+      participants.some(
+        (actor) => actor.team === team || (visibleBefore?.[team] || []).includes(actor.id),
+      ),
+    );
     for (const entry of [first, response].filter(Boolean)) {
-      const speaker = participants.find(actor => actor.id === entry.speakerId);
+      const speaker = participants.find((actor) => actor.id === entry.speakerId);
       entry.unitName = G.unitLogName(speaker);
-      entry.position = radioRange.position(speaker, id => unit(room, id));
-      entry.positionTeams = logTeamIds(room).filter(team => speaker.team === team ||
-        (visibleBefore?.[team] || []).includes(speaker.id));
+      entry.position = radioRange.position(speaker, (id) => unit(room, id));
+      entry.positionTeams = logTeamIds(room).filter(
+        (team) => speaker.team === team || (visibleBefore?.[team] || []).includes(speaker.id),
+      );
       log(room, Dialogue.format(entry), { units: [], teams: visibleTeams });
       (room.dialogueEvents ||= []).push({
-        ...entry, visibleTeams, round: room.game.round,
-        timestamp: Date.now(), id: room.matchId + ":" + room.log.length,
+        ...entry,
+        visibleTeams,
+        round: room.game.round,
+        timestamp: Date.now(),
+        id: room.matchId + ":" + room.log.length,
       });
     }
     if ((room.dialogueEvents?.length || 0) > 240)
@@ -3279,7 +3606,15 @@ function createRoomEngine({
           : null,
       },
     );
-    if (speak) transportDialogue(room, passenger, carrier, launching, visibleBefore, room.phase === "deployment");
+    if (speak)
+      transportDialogue(
+        room,
+        passenger,
+        carrier,
+        launching,
+        visibleBefore,
+        room.phase === "deployment",
+      );
   }
   const unit = (room, id) => room.game.units.find((u) => u.id === id);
   function cancelSeatMoves(room, seat) {
@@ -3538,7 +3873,30 @@ function createRoomEngine({
       if (!text || Array.from(text).length > 300) throw Error("聊天内容需为1到300个字符。");
       if (member.chatAt && Date.now() - member.chatAt < 500) throw Error("发送过于频繁，请稍候。");
       member.chatAt = Date.now();
+      let marker;
+      if (msg.marker !== undefined) {
+        const m = msg.marker;
+        if (
+          !room.started ||
+          member.seat === null ||
+          channel !== chatChannels.teamChannel(member.seat) ||
+          msg.matchId !== room.matchId ||
+          !Number.isSafeInteger(msg.revision) ||
+          msg.revision > room.revision ||
+          !m ||
+          !["attack", "defend", "retreat", "move"].includes(m.kind) ||
+          !Number.isInteger(m.x) ||
+          !Number.isInteger(m.y) ||
+          m.x < 0 ||
+          m.y < 0 ||
+          m.x >= G.mapWidth(room.game) ||
+          m.y >= G.mapHeight(room.game)
+        )
+          throw Error("队伍标记无效，请重新同步战局。");
+        marker = { kind: m.kind, x: m.x, y: m.y, matchId: room.matchId };
+      }
       const message = {
+        ...(marker ? { marker } : {}),
         id: randomId(),
         memberId: member.id,
         name: member.name,
@@ -3581,12 +3939,21 @@ function createRoomEngine({
       }
       clearTimeout(resultTimers.get(room));
       resultTimers.delete(room);
-      if (!room.campaign && !room.startedFromSave) for (const player of room.seats) {
-        if (!player || player.bot) continue;
-        const stockLost = settleBattleStock(room, player);
-        if (stockLost) room.economyAwards.push({ id: randomId(), matchId: room.matchId,
-          memberId: player.id, kind: "return", money: 0, supplies: 0, stockLost });
-      }
+      if (!room.campaign && !room.startedFromSave)
+        for (const player of room.seats) {
+          if (!player || player.bot) continue;
+          const stockLost = settleBattleStock(room, player);
+          if (stockLost)
+            room.economyAwards.push({
+              id: randomId(),
+              matchId: room.matchId,
+              memberId: player.id,
+              kind: "return",
+              money: 0,
+              supplies: 0,
+              stockLost,
+            });
+        }
       room.returnCountdown = {
         id: randomId(),
         at: Date.now() + roomReturnMs,
@@ -3645,9 +4012,14 @@ function createRoomEngine({
       const previousStock = G.normalizeStock(member);
       const previousTechnologyPoints = member.technologyPoints;
       try {
-        if ((!room.started || room.phase === "assembly") && msg.technologyPoints !== undefined &&
-            ["set_ready", "start_game", "update_formation", "confirm_formation"].includes(msg.action))
-          member.technologyPoints = roomDevelopment().normalizeTechnologyPoints(msg.technologyPoints);
+        if (
+          (!room.started || room.phase === "assembly") &&
+          msg.technologyPoints !== undefined &&
+          ["set_ready", "start_game", "update_formation", "confirm_formation"].includes(msg.action)
+        )
+          member.technologyPoints = roomDevelopment().normalizeTechnologyPoints(
+            msg.technologyPoints,
+          );
         if (
           !room.started &&
           msg.researched !== undefined &&
@@ -3660,9 +4032,11 @@ function createRoomEngine({
           ["set_ready", "start_game", "update_formation", "confirm_formation"].includes(msg.action)
         )
           member.licenses = G.normalizeLicenses(msg.licenses);
-        if ((!room.started || room.phase === "assembly") &&
-            (msg.inventory !== undefined || msg.kits !== undefined) &&
-            ["set_ready", "start_game", "update_formation", "confirm_formation"].includes(msg.action))
+        if (
+          (!room.started || room.phase === "assembly") &&
+          (msg.inventory !== undefined || msg.kits !== undefined) &&
+          ["set_ready", "start_game", "update_formation", "confirm_formation"].includes(msg.action)
+        )
           Object.assign(member, G.normalizeStock(msg));
         if (msg.action === "rename_unit") {
           throw Error("单位不支持改名");
@@ -3719,6 +4093,15 @@ function createRoomEngine({
             throw error;
           }
         } else if (msg.action === "update_formation" || msg.action === "confirm_formation") {
+          if (msg.action === "confirm_formation" && msg.ready === false) {
+            if (room.phase !== "assembly" || member.seat === null)
+              throw Error("当前不能取消编组确认");
+            member.finalReady = false;
+            room.revision++;
+            cache.set(id, true);
+            broadcast(room, id, member);
+            return;
+          }
           if (room.resumeSave) {
             if (msg.action !== "confirm_formation" || room.phase !== "assembly")
               throw Error("存档编组不可更改。");
@@ -3810,10 +4193,10 @@ function createRoomEngine({
           });
           target.ready = false;
         } else if (msg.action === "set_faction") {
-          if (room.settings.mode === "campaign") throw Error("历史战役模式每支队伍固定使用一个阵营");
+          if (room.settings.mode === "campaign")
+            throw Error("历史战役模式每支队伍固定使用一个阵营");
           if (room.started) throw Error("对局开始后不能切换阵营。");
-          if (msg.faction !== "PMC")
-            throw Error("常规战和快速战固定使用 PMC 阵营。");
+          if (msg.faction !== "PMC") throw Error("常规战和快速战固定使用 PMC 阵营。");
           if (!["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(msg.faction))
             throw Error("玩家阵营无效。");
           const required = forcedFaction(room, member.seat);
@@ -3873,7 +4256,8 @@ function createRoomEngine({
           if (room.hostId !== member.id) throw Error("只有房主可以添加或移除 AI");
           if (room.started && !room.campaign) throw Error("对局开始后不能添加或移除 AI");
           const destination = msg.seat;
-          if (room.settings.mode === "battlefield" && destination < 2) throw Error("雇佣兵战争模式的阵营 AI 不可移除");
+          if (room.settings.mode === "battlefield" && destination < 2)
+            throw Error("雇佣兵战争模式的阵营 AI 不可移除");
           if (!Number.isInteger(destination) || destination < 0 || destination >= room.seats.length)
             throw Error("无效的席位");
           if (msg.action === "add_ai") {
@@ -3935,23 +4319,65 @@ function createRoomEngine({
             G.validateBattleMode(msg.battleMode ?? room.settings.mode) === "campaign";
           const nextMode = G.validateBattleMode(msg.battleMode ?? room.settings.mode);
           const requestedMap = G.getMap(msg.mapId || room.settings.mapId);
-          const map = G.getMap(strategic ? G.campaignRoomSettings().mapId :
-            nextMode === "battlefield" ? (requestedMap.battlefield ? requestedMap.id : G.battlefieldMode.defaultMapId) :
-            requestedMap.battlefield ? G.defaultRoomSettings().mapId : requestedMap.id);
+          const map = G.getMap(
+            strategic
+              ? G.campaignRoomSettings().mapId
+              : nextMode === "battlefield"
+                ? requestedMap.battlefield
+                  ? requestedMap.id
+                  : G.battlefieldMode.defaultMapId
+                : requestedMap.battlefield
+                  ? G.defaultRoomSettings().mapId
+                  : requestedMap.id,
+          );
           if (!strategic && map.supportedModes && !map.supportedModes.includes(nextMode))
             throw Error("此地图不支持所选模式");
-          if (!strategic && map.scope === "strategic") throw Error("区块局地战地图仅用于历史战役模式");
+          if (!strategic && map.scope === "strategic")
+            throw Error("区块局地战地图仅用于历史战役模式");
           if (
             !strategic &&
             msg.shareAlliedUnits !== undefined &&
             typeof msg.shareAlliedUnits !== "boolean"
           )
             throw Error("友军单位共享设置无效");
-          if (msg.pilotDialogue !== undefined && typeof msg.pilotDialogue !== "boolean") throw Error("驾驶员对话设置无效");
-          if (msg.surfaceCover !== undefined && typeof msg.surfaceCover !== "boolean") throw Error("地表覆盖设置无效");
-          if (msg.weather !== undefined && !["map","clear","rain","heavy_rain","fog","overcast","snow","blizzard","sand","sandstorm"].includes(msg.weather)) throw Error("天气设置无效");
-          if (msg.dayNight !== undefined && !["map","dawn","morning","noon","afternoon","dusk","evening","late_night","pre_dawn"].includes(msg.dayNight)) throw Error("昼夜设置无效");
-          for (const key of ["weatherCycle","timeCycle","climateBuffs"]) if (msg[key] !== undefined && typeof msg[key] !== "boolean") throw Error("环境循环与效果设置无效");
+          if (msg.pilotDialogue !== undefined && typeof msg.pilotDialogue !== "boolean")
+            throw Error("驾驶员对话设置无效");
+          if (msg.surfaceCover !== undefined && typeof msg.surfaceCover !== "boolean")
+            throw Error("地表覆盖设置无效");
+          if (
+            msg.weather !== undefined &&
+            ![
+              "map",
+              "clear",
+              "rain",
+              "heavy_rain",
+              "fog",
+              "overcast",
+              "snow",
+              "blizzard",
+              "sand",
+              "sandstorm",
+            ].includes(msg.weather)
+          )
+            throw Error("天气设置无效");
+          if (
+            msg.dayNight !== undefined &&
+            ![
+              "map",
+              "dawn",
+              "morning",
+              "noon",
+              "afternoon",
+              "dusk",
+              "evening",
+              "late_night",
+              "pre_dawn",
+            ].includes(msg.dayNight)
+          )
+            throw Error("昼夜设置无效");
+          for (const key of ["weatherCycle", "timeCycle", "climateBuffs"])
+            if (msg[key] !== undefined && typeof msg[key] !== "boolean")
+              throw Error("环境循环与效果设置无效");
           const settings = strategic
             ? G.campaignRoomSettings({
                 mapId: map.id,
@@ -3994,19 +4420,33 @@ function createRoomEngine({
                       ),
               };
           if (settings.mode === "battlefield") {
-            settings.battlefieldTeams = G.battlefieldMode.teams(G,
-              msg.battlefieldTeams ?? room.settings.battlefieldTeams);
+            settings.battlefieldTeams = G.battlefieldMode.teams(
+              G,
+              msg.battlefieldTeams ?? room.settings.battlefieldTeams,
+            );
             settings.battlefieldEra = G.battlefieldMode.validateRoomSelection({
-              ...settings, battlefieldEra:msg.battlefieldEra ?? room.settings.battlefieldEra ?? "custom",
+              ...settings,
+              battlefieldEra: msg.battlefieldEra ?? room.settings.battlefieldEra ?? "custom",
             });
           }
-          if (strategic) Object.assign(settings, { surfaceCover: msg.surfaceCover ?? room.settings.surfaceCover ?? true, pilotDialogue: msg.pilotDialogue ?? room.settings.pilotDialogue ?? true, weather: msg.weather ?? room.settings.weather ?? "map", dayNight: msg.dayNight ?? room.settings.dayNight ?? "map", weatherCycle: msg.weatherCycle ?? room.settings.weatherCycle ?? true, timeCycle: msg.timeCycle ?? room.settings.timeCycle ?? true, climateBuffs: msg.climateBuffs ?? room.settings.climateBuffs ?? true });
+          if (strategic)
+            Object.assign(settings, {
+              surfaceCover: msg.surfaceCover ?? room.settings.surfaceCover ?? true,
+              pilotDialogue: msg.pilotDialogue ?? room.settings.pilotDialogue ?? true,
+              weather: msg.weather ?? room.settings.weather ?? "map",
+              dayNight: msg.dayNight ?? room.settings.dayNight ?? "map",
+              weatherCycle: msg.weatherCycle ?? room.settings.weatherCycle ?? true,
+              timeCycle: msg.timeCycle ?? room.settings.timeCycle ?? true,
+              climateBuffs: msg.climateBuffs ?? room.settings.climateBuffs ?? true,
+            });
           if (JSON.stringify(settings) !== JSON.stringify(room.settings)) {
             const mapChanged = settings.mapId !== room.settings.mapId;
             const modeChanged = settings.mode !== room.settings.mode;
             const factionsChanged =
-              JSON.stringify(settings.teamFactions) !== JSON.stringify(room.settings.teamFactions) ||
-              JSON.stringify(settings.battlefieldTeams) !== JSON.stringify(room.settings.battlefieldTeams);
+              JSON.stringify(settings.teamFactions) !==
+                JSON.stringify(room.settings.teamFactions) ||
+              JSON.stringify(settings.battlefieldTeams) !==
+                JSON.stringify(room.settings.battlefieldTeams);
             const tagsChanged = [
               "bannedFactions",
               "bannedEras",
@@ -4095,7 +4535,10 @@ function createRoomEngine({
             (!Number.isInteger(destination) || destination < 0 || destination >= room.seats.length)
           )
             throw Error("无效的席位");
-          if (room.settings.mode === "battlefield" && (movingMember.battlefieldAI || (destination !== null && destination < 2)))
+          if (
+            room.settings.mode === "battlefield" &&
+            (movingMember.battlefieldAI || (destination !== null && destination < 2))
+          )
             throw Error("雇佣兵战争模式的一号席位固定为阵营 AI");
           const takingAI = room.campaign && destination !== null && room.seats[destination]?.bot;
           if (
@@ -4167,7 +4610,12 @@ function createRoomEngine({
                 !G.planFormation(
                   formation,
                   playerBudget(room, member),
-                  { ...playerRestrictions(room, member), licenses: undefined, inventory: undefined, kits: undefined },
+                  {
+                    ...playerRestrictions(room, member),
+                    licenses: undefined,
+                    inventory: undefined,
+                    kits: undefined,
+                  },
                   playerUnitLimit(room, member),
                 ).deployable.length
               )
@@ -4292,7 +4740,9 @@ function createRoomEngine({
       case "battlefield_deploy": {
         validateActive(room, seat);
         event = G.battlefieldMode.requestDeployment(G, room.game, seat, msg.reserveId, msg.siteId);
-        log(room, `${member.name}申请部署维修完成的单位，将于下一回合空投入场。`, { teams: [G.seatTeam(seat)] });
+        log(room, `${member.name}申请部署维修完成的单位，将于下一回合空投入场。`, {
+          teams: [G.seatTeam(seat)],
+        });
         break;
       }
       case "unit_control_transfer": {
@@ -4328,19 +4778,32 @@ function createRoomEngine({
         if (room.campaignBattle && room.phase === "deployment" && !passenger.campaignDeploying)
           throw Error("原战场存活部队不能重新部署");
         if (msg.action === "embark") {
-          if (msg.deploymentDrop && room.phase !== "deployment") throw Error("仅部署阶段可拖拽搭载");
+          if (msg.deploymentDrop && room.phase !== "deployment")
+            throw Error("仅部署阶段可拖拽搭载");
           const carrier = unit(room, msg.carrierId);
           const visibleBefore = transportSight(room, [passenger, carrier]);
           const members = msg.single === true ? [passenger] : G.squadMembers(room.game, passenger);
           for (const actor of members) ownUnit(room, seat, actor.id);
-          event = G.hangars.embarkSquad(room.game, passenger, carrier, msg.hangarId, msg.single === true, msg.deploymentDrop === true);
+          event = G.hangars.embarkSquad(
+            room.game,
+            passenger,
+            carrier,
+            msg.hangarId,
+            msg.single === true,
+            msg.deploymentDrop === true,
+          );
           for (const actor of members) logTransport(room, actor, carrier, false, visibleBefore);
         } else {
           const carrier = unit(room, passenger.embarked?.carrierId);
           const ids = msg.unitIds || [passenger.id];
-          if (!Array.isArray(ids) || ids.length > 6 || ids[0] !== passenger.id) throw Error("无效出击小队");
-          const members = ids.map(id => ownUnit(room, seat, id, true));
-          if (room.campaignBattle && room.phase === "deployment" && members.some(u => !u.campaignDeploying))
+          if (!Array.isArray(ids) || ids.length > 6 || ids[0] !== passenger.id)
+            throw Error("无效出击小队");
+          const members = ids.map((id) => ownUnit(room, seat, id, true));
+          if (
+            room.campaignBattle &&
+            room.phase === "deployment" &&
+            members.some((u) => !u.campaignDeploying)
+          )
             throw Error("原战场存活部队不能重新部署");
           event = aiControlled(room, member)
             ? G.hangars.launchSquad(room.game, members, msg.x, msg.y)
@@ -4425,7 +4888,7 @@ function createRoomEngine({
           for (const hit of event.hits) {
             const target = room.game.units.find((other) => other.id === hit.unitId);
             if (!target) continue;
-            markBattlefieldAttack(room, u, target);
+            markBattlefieldAttack(room, u, target, hit);
             markTechParticipation(room, u, target, hit.damage);
             if (u.team !== target.team && hit.damage > 0) {
               const owner = room.seats[G.ownerOf(u)],
@@ -4526,16 +4989,14 @@ function createRoomEngine({
           unitId: u.id,
           from,
           path: steps,
-          squadIds:
-            u.pendingMove?.squadIds || movingMembers.map((member) => member.id),
+          squadIds: u.pendingMove?.squadIds || movingMembers.map((member) => member.id),
           squadPaths: u.pendingMove?.squadPaths,
         };
         if (aiControlled(room, member)) {
           if (u.embarked) {
             for (const actor of movingMembers)
               logTransport(room, actor, unit(room, actor.embarked.carrierId), false, visibleBefore);
-          }
-          else
+          } else
             log(room, `${unitLabel(room, u)} 移动至${G.columnLabel(u.x)}${u.y + 1}。`, {
               units: [u],
               movement: event,
@@ -4572,9 +5033,15 @@ function createRoomEngine({
           if (pending.launch || pending.boarding) {
             const ids = pending.squadIds || [u.id];
             for (const [index, id] of ids.entries())
-              logTransport(room, unit(room, id), carrier, !!pending.launch, visibleBefore, !pending.launch || index === 0);
-          }
-          else
+              logTransport(
+                room,
+                unit(room, id),
+                carrier,
+                !!pending.launch,
+                visibleBefore,
+                !pending.launch || index === 0,
+              );
+          } else
             log(
               room,
               pending.rotation

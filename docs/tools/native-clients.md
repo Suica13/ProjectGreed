@@ -1,3 +1,5 @@
+> 安卓版现已改用 APK 内置 GeckoView，无需系统 WebView；安装、存档兼容与当前构建要求见 [Android 内置 Gecko 客户端](android-gecko.md)。下文 WebView80 验证记录描述之前的系统内核版及保留的兼容层。
+
 # 原生客户端（V100）
 
 原生客户端最初在 AppTest2 试验分支开发，V93 已纳入主分支；对外名称统一为 ProjectGreed；应用 ID、签名密钥及 Windows 存档目录沿用旧版，方便覆盖更新。Windows 使用 .NET Framework 4.8 WinForms / WebView2，Android 使用系统 WebView；两个外壳使用同一份游戏源码、同一套原生存档适配器和同一份构建资源。不启动本地游戏服务器，不引入账号或数据库，不修改现有 WebSocket 协议。
@@ -7,7 +9,7 @@
 - Windows：`build/V103/ProjectGreed-V103-windows-x64/ProjectGreed.exe`，完整复制文件夹后启动，不要只复制 EXE。要求 Windows 10/11 x64、.NET Framework 4.8、Microsoft Edge WebView2 Evergreen Runtime 120 或更新。F11 切换全屏。
 - Android：`build/V103/ProjectGreed-V103-android/ProjectGreed-V103.apk`。要求 Android 8.0 / API 26 或更新，以及具备所需功能的 Android System WebView / Chrome（启动时检测实际能力，不强制120版）。APK 沿用原有 Android Debug 签名密钥，支持覆盖旧客户端；对外应用名和文件名不含 Test。应用 ID 为 `io.projectgreed.apptest2`。
 - 两个平台均包含本地游戏资源，支持现有离线房间和同版本服务端联机。继续支持现有 HTTP / WS 地址，沿用现有网络协议，联机需使用同版本服务端。手机离开前台会暂停音乐，回到前台触发现有连接同步逻辑。
-- 同签名、同应用 ID 覆盖安装可以保留应用数据；更换 Android 签名或卸载之前，先在设置中导出个人存档。原网页版与软件版之间使用原有 JSON 存档导入导出迁移，不自动读取个人浏览器目录。
+- 同签名、同应用 ID 覆盖安装可以保留应用数据；更换 Android 签名或卸载之前，先在设置中打开存档文件夹，备份profile.json。原网页版与软件版之间使用原有 JSON 存档导入导出迁移，不自动读取个人浏览器目录。
 
 ## WebView 80 兼容
 
@@ -25,11 +27,15 @@ npm run app:test:chrome80
 
 默认读取`build/toolchains/chromium80/chrome-win/chrome.exe`，也可用`PROJECTGREED_CHROMIUM80`指定已安装的Chromium80。测试浏览器仅访问本机测试资源，使用`tmp/`内的独立数据，不打开玩家浏览器资料。源码仓库不包含旧浏览器二进制。旧内核来源与补丁说明：[Puppeteer2.1固定快照](https://github.com/puppeteer/puppeteer/blob/v2.1.0/package.json)、[esbuild目标语法](https://esbuild.github.io/api/#target)、[关系选择器补丁](https://github.com/csstools/postcss-plugins/tree/main/plugins/css-has-pseudo)。
 
+## 设置与个人存档
+
+设置分为显示、声音、存档、记录、工具。软件版存档页提供“打开存档文件夹”和“导入存档”，不再显示个人存档导出按钮；可直接复制本地profile.json备份，导入同时支持原生profile.json和既有跨平台JSON。Windows沿用现有应用数据目录，LOG和回放放在该目录的records子文件夹。安卓版打开已选的外置存档文件夹；尚未指定时先打开系统文件夹选择器。HTML版保留原有JSON导入、导出操作。
+
 ## 安卓横竖屏与存档文件夹
 
 安卓显示版本为 `V104`，安装版本码为 `104000`，应用 ID 和签名沿用之前的版本，支持覆盖安装。主菜单、房间准备、编组、生产、驾驶员、图鉴和历史战役战略地图固定竖屏；进入战斗场景（包括战斗回放）后允许随设备传感器切换横竖屏，退出战斗恢复竖屏。WebView 启用 viewport meta 支持，横屏沿用现有完整 1600×900 虚拟布局并缩放适配，不裁切中央区域。
 
-第一次进入主菜单时弹出“将存档保存在其他文件夹可以避免意外丢失存档,要指定外置文件夹保存存档吗?”，提供“选择文件夹”和“关闭”。关闭后继续使用内部存档，不反复提示；设置里的“选择存档文件夹”按钮允许以后重新选择。战斗中该按钮不可用，以免切换位置重新加载中断对局。
+第一次进入主菜单时弹出“将存档保存在其他文件夹可以避免意外丢失存档,要指定外置文件夹保存存档吗?”，提供“选择文件夹”和“关闭”。关闭后继续使用内部存档，不反复提示；设置里的“更改存档文件夹”按钮允许以后重新选择。战斗中该按钮不可用，以免切换位置重新加载中断对局。
 
 选择本机文档中的专用子文件夹（例如 `Documents/ProjectGreed`）。使用 Android 系统文件夹选择器和持久化目录授权，不申请整盘管理权限。Android 11 及以上不允许直接选中存储根目录或 Download 根目录，可使用其允许的子文件夹。以 [Android 官方目录授权说明](https://developer.android.com/training/data-storage/shared/documents-files) 为准。
 
@@ -56,7 +62,7 @@ npm ci
 npm run app:windows
 ```
 
-Android 需要 JDK 17/21、Gradle 8.13、Android SDK platform 36 与 build-tools 36.0.0。可以复用已安装的 Unity Android 工具链，不修改它。将 `apps/toolchain.example.json` 复制为被 Git 忽略的 `apps/toolchain.local.json` 并填入路径，或设置 `ANDROID_HOME`、`JAVA_HOME`、`GRADLE_HOME`。
+Android 需要 JDK 17/21、Gradle 9.3.1、Android SDK platform 37.0 与 build-tools 36.0.0。可以复用已安装的 Unity Android 工具链，不修改它。将 `apps/toolchain.example.json` 复制为被 Git 忽略的 `apps/toolchain.local.json` 并填入路径，或设置 `ANDROID_HOME`、`JAVA_HOME`、`GRADLE_HOME`。
 
 ```text
 npm run app:android
@@ -92,3 +98,7 @@ adb shell am instrument -w io.projectgreed.apptest2.test/io.projectgreed.apptest
 
 
 发行产物统一放在 `build/<版本号>/` 下，每次打包从 `project.json` 读取版本号；APK文件名为 `ProjectGreed-<版本号>.apk`。通用构建缓存保留在 `build/app-client/`，不属于发行目录。
+
+## 完整版本构建
+
+`npm run release:all` 默认生成 Windows 客户端、内置 GeckoView 的 Android 客户端、独立 HTML 和含网页客户端的服务端文件夹，归档到 `build/<版本号>/`。APK 名称为 `ProjectGreed-<版本号>.apk`。独立 HTML 的图鉴／资源数据采用 gzip 无损内嵌，浏览器使用随文件携带的解压代码，不依赖新版系统解压 API；原生和HTTP客户端在构建／提供资源时展开数据，继续使用独立资源文件与缓存。

@@ -3512,3 +3512,50 @@ body.menu-shell-active #formationScreen #formationUnits .formation-row > .format
 }
 #roomRulesPanel #battlefieldRoomOptions > p { grid-column:1/-1; margin:0; line-height:1.5; overflow-wrap:anywhere; }
 @media(max-width:1000px) { #roomRulesPanel #battlefieldRoomOptions { grid-template-columns:minmax(0,1fr); } }
+
+/* One column keeps each carrier's indented cargo directly underneath. */
+#formationScreen #formationUnits { grid-template-columns:minmax(0,1fr) !important; }
+#formationScreen #formationUnits > .formation-preloaded-row { margin-left:18px !important; width:calc(100% - 18px) !important; }
+#formationUnits .formation-row-actions > .danger, .formation-cargo-row > .danger { background:#713747 !important; border-color:#b65e73 !important; color:#fff; }
+#formationUnits .formation-row-actions { grid-template-rows:repeat(3,minmax(0,1fr)) !important; }
+#formationUnits .formation-row-actions > .danger { grid-column:2; grid-row:3; }
+.formation-kit-dialog { max-width:min(90vw,520px); }
+.formation-kit-options { display:grid; gap:6px; max-height:60dvh; overflow:auto; margin:12px 0; }
+.formation-kit-options > button { min-height:38px; text-align:left; }
+.final-unit-icon[draggable=true] { cursor:grab; }
+
+/* Formation actions remain inside the fixed-height card, including the kit switch. */
+body.menu-shell-active #formationScreen #formationUnits .formation-row-actions { grid-auto-rows:30px !important; grid-template-rows:repeat(3,30px) !important; gap:3px !important; }
+body.menu-shell-active #formationScreen #formationUnits .formation-row-actions > button { height:30px !important; min-height:30px !important; }
+.team-marker-controls { position:relative; pointer-events:auto; }
+.team-marker-choices { position:absolute; top:0; left:100%; display:grid; grid-template-columns:repeat(2,72px); gap:4px; padding:5px; background:#152430ed; border:1px solid #688ca0; z-index:5; }
+.team-marker-choices[hidden] { display:none; }
+.team-marker-choices button[aria-pressed="true"] { background:#346d91; }
+.local-record-settings { margin:12px 0; padding:10px; border:1px solid #607b8f; }
+.local-record-settings > button { margin:4px; }
+.local-record-row { display:flex; align-items:center; gap:12px; justify-content:space-between; padding:8px 0; border-bottom:1px solid #344d5e; }
+#localRecordsDialog { max-height:80vh; overflow:auto; }
+@media(max-width:720px) { body.menu-shell-active #formationScreen #formationUnits .formation-row-actions { grid-auto-rows:25px !important; grid-template-rows:repeat(3,25px) !important; gap:2px !important; } body.menu-shell-active #formationScreen #formationUnits .formation-row-actions > button { height:25px !important; min-height:25px !important; } }
+
+/* Settings use independent sections and a scrolling content area on every device. */
+#clientSettingsDialog.settings-redesigned { width:min(760px,calc(100vw - 24px)); padding:0; max-height:calc(100dvh - 24px); overflow:hidden; border-radius:8px; }
+#clientSettingsDialog.settings-redesigned[open] { display:grid; grid-template-rows:auto auto minmax(0,1fr); }
+#clientSettingsDialog.settings-redesigned .settings-heading { margin:0; padding:14px 18px; border-bottom:1px solid #405b6d; }
+#clientSettingsDialog.settings-redesigned .settings-tabs { display:flex; gap:5px; padding:10px 14px; overflow-x:auto; border-bottom:1px solid #405b6d; }
+#clientSettingsDialog.settings-redesigned .settings-tabs button { flex:1; min-width:62px; padding:8px; }
+#clientSettingsDialog.settings-redesigned .settings-tabs button[aria-selected="true"] { background:#245a78; border-color:#72bfdc; }
+#clientSettingsDialog.settings-redesigned .settings-pages { overflow:auto; padding:16px 18px; min-height:210px; max-height:calc(100dvh - 165px); }
+#clientSettingsDialog.settings-redesigned .settings-page[hidden] { display:none !important; }
+#clientSettingsDialog.settings-redesigned .settings-page h3 { margin:0 0 14px; font-size:17px; }
+#clientSettingsDialog.settings-redesigned label { margin:0; display:flex; gap:12px; align-items:center; justify-content:space-between; min-width:0; line-height:1.5; }
+#clientSettingsDialog.settings-redesigned .settings-toggle { padding:12px 0; border-bottom:1px solid #304b5c; }
+#clientSettingsDialog.settings-redesigned .settings-field { display:grid; grid-template-columns:minmax(100px,1fr) minmax(120px,1.4fr); gap:18px; align-items:center; padding:12px 0; border-bottom:1px solid #304b5c; }
+#clientSettingsDialog.settings-redesigned input[type="range"],#clientSettingsDialog.settings-redesigned select { min-width:0; width:100%; }
+#clientSettingsDialog.settings-redesigned input[type="number"] { width:5em; min-width:4em; }
+#clientSettingsDialog.settings-redesigned input[type="checkbox"] { flex:0 0 22px; width:22px; height:22px; margin:0; }
+#clientSettingsDialog.settings-redesigned .local-record-settings { margin:0; padding:0; border:0; display:grid; gap:12px; }
+#clientSettingsDialog.settings-redesigned .local-record-settings > button { margin:0; width:100%; }
+#clientSettingsDialog.settings-redesigned .profile-save-actions { display:flex; flex-wrap:wrap; gap:8px; }
+#clientSettingsDialog.settings-redesigned .profile-save-actions button { flex:1 1 160px; white-space:normal; min-height:38px; margin:0; }
+#clientSettingsDialog.settings-redesigned .settings-help,#clientSettingsDialog.settings-redesigned .settings-save-path { margin:6px 0; overflow-wrap:anywhere; line-height:1.6; }
+@media(max-width:520px) { #clientSettingsDialog.settings-redesigned .settings-pages { padding:12px; } #clientSettingsDialog.settings-redesigned .settings-field { grid-template-columns:minmax(80px,1fr) minmax(100px,1.2fr); gap:10px; } #clientSettingsDialog.settings-redesigned .profile-save-actions button { flex-basis:130px; } }

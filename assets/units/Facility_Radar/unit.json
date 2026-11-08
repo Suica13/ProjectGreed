@@ -1,1 +1,294 @@
-{"schemaVersion": 2, "stats": {"hp": 3750, "en": 1000, "move": 0, "mobility": 25, "cost": 250, "counterLimit": 1, "accuracy": 115, "partStructuralStrength": 100, "partsBreakable": false, "movementType": "ground", "adaptability": {"ground": 100, "space": 50, "water": 50, "air": 10, "atmosphere": 0, "mountain": 100, "forest": 75, "snow": 75, "desert": 75, "rubble": 75}, "ship": false, "visualTurrets": [], "actionPoints": 10, "sensors": {"sight": 12, "radar": 24, "antiDetection": 0, "revealOnDetection": true, "antiDetect": true, "stealth": false, "stealthAqua": false, "antiDetectAqua": false}, "speed": 100, "deployed": true, "facilityType": "radar"}, "shield": {"hp": 0, "blockChance": 0, "coverage": 0, "defenses": {"beam": {"percent": 1, "flat": 0}, "shell": {"percent": 1, "flat": 0}, "melee": {"percent": 1, "flat": 0}, "dp": {"percent": 1, "flat": 0}}}, "defenses": {"beam": {"percent": 5, "flat": 0}, "shell": {"percent": 10, "flat": 45}, "melee": {"percent": 5, "flat": 0}, "dp": {"percent": 5, "flat": 0}, "sp": {"percent": 0, "flat": 0}}, "attackBonuses": {"melee": 0, "shooting": 15, "beam": 0, "shell": 0}, "presentation": {"shield": false, "mapScale": 2.6666666666666665, "battleScale": 1, "idle": "ImportedIdle", "move": "ImportedIdle", "stagger": "ImportedIdle", "dodge": "ImportedIdle", "deathEffect": "Explosion_Ground_1", "walk": "ImportedIdle", "movement": "walk", "moveSoundKey": "tankMoveSound", "fixedFacing": 0}, "id": "Facility_Radar", "code": "Facility_Radar", "name": "\u96f7\u8fbe", "description": "\u901a\u7528\u6218\u573a\u8bbe\u65bd", "source": "GW_BattleUniverse_Main/Units/Buildings/Turret/TypeA/Turret_Radar_A.ini", "tags": ["EFSF", "0079T1"], "availableFactions": ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"], "unitTags": ["Building", "MediumUnit"], "formOnly": true, "facility": {"type": "radar"}, "production": {"enabled": false}, "skeleton": {"Pelvis": {"x": 0, "y": 0}, "Body": {"x": 0, "y": 0}, "LeftArm": {"x": -9, "y": 0}, "RightArm": {"x": 9, "y": 0}, "LeftShoulder": {"x": -9, "y": 0}, "RightShoulder": {"x": 9, "y": 0}, "LeftWeapon": {"x": 0, "y": 0}, "RightWeapon": {"x": 0, "y": 0}, "Attachment12": {"x": 0, "y": 0}, "Attachment13": {"x": 0, "y": 0}, "Attachment15": {"x": 0, "y": 0}, "Head": {"x": 0, "y": 0}, "Eye": {"x": 0, "y": 0}, "LeftFoot": {"x": -6, "y": 0, "endDirOffset": -8}, "LeftLeg": {"x": -6, "y": 0, "endDirOffset": -8}, "RightFoot": {"x": 6, "y": 0, "endDirOffset": 8}, "RightLeg": {"x": 6, "y": 0, "endDirOffset": 8}, "Turret_EF_Type61_Cannon": {"x": 0, "y": 0, "endDirOffset": 0}, "Turret": {"x": 0, "y": 3}}, "materials": {"textures": {"Radar_1_A.png": "textures/Radar_1_A.png"}, "icon": "Radar_1_A.png"}, "layers": [{"name": "A", "texture": "Radar_1_A.png", "bone": "Body", "order": 1.0, "scale": 0.75, "rotation": 0.0, "offset": {"x": 0.0, "y": 0.0}, "worldOffset": {"x": -1.875, "y": 0.0}, "source": "GW_BattleUniverse_Main/Units/Buildings/Turret/Image/Common/Radar/Radar_1_A.png"}], "weapons": {}, "animations": {"OnMoving": "../../animations/OnMoving.json", "OnMovingReversing": "../../animations/OnMovingReversing.json", "Common_Dead": "../../animations/Common_Dead__AMX_002.json", "Common_Stun": "../../animations/Common_Stun__AMX_002.json", "Common_Idle": "../../animations/Common_Idle__AntiZakuTank.json", "ImportedIdle": "../../animations/ImportedIdle.json"}, "skills": [], "transport": {"slotCost": 1, "loadTags": []}, "weaponKits": [{"id": "standard", "name": "\u6807\u51c6\u5957\u4ef6", "cost": 0, "weapons": []}], "mechanics": [{"id": "facility", "name": "\u901a\u7528\u6218\u573a\u8bbe\u65bd", "status": "implemented"}], "sourceStats": {"nativeHP": 7500, "facilitySource": "GW_BattleUniverse_Main/Units/Buildings/Turret/TypeA/Turret_Radar_A.ini", "conversion": "HP and projectile payload / 2, followed by global conversion; turn volleys MG8 / Beam2 / Missile4 / Cannon1", "visual": {"nativeBounds": [-8.625, -32.5, 12.375, 12.5], "targetCells": 1, "mapScale": 2.6666666666666665, "layers": [{"name": "A", "source": "GW_BattleUniverse_Main/Units/Buildings/Turret/Image/Common/Radar/Radar_1_A.png"}]}}}
+{
+  "schemaVersion": 2,
+  "stats": {
+    "hp": 3750,
+    "en": 1000,
+    "move": 0,
+    "mobility": 25,
+    "cost": 250,
+    "counterLimit": 1,
+    "accuracy": 115,
+    "partStructuralStrength": 100,
+    "partsBreakable": false,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 100,
+      "space": 50,
+      "water": 50,
+      "air": 10,
+      "atmosphere": 0,
+      "mountain": 100,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "visualTurrets": [],
+    "actionPoints": 10,
+    "sensors": {
+      "sight": 12,
+      "radar": 24,
+      "antiDetection": 0,
+      "revealOnDetection": true,
+      "antiDetect": true,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    },
+    "speed": 100,
+    "deployed": true,
+    "facilityType": "radar"
+  },
+  "shield": {
+    "hp": 0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1,
+        "flat": 0
+      },
+      "shell": {
+        "percent": 1,
+        "flat": 0
+      },
+      "melee": {
+        "percent": 1,
+        "flat": 0
+      },
+      "dp": {
+        "percent": 1,
+        "flat": 0
+      }
+    }
+  },
+  "defenses": {
+    "beam": {
+      "percent": 5,
+      "flat": 0
+    },
+    "shell": {
+      "percent": 10,
+      "flat": 45
+    },
+    "melee": {
+      "percent": 5,
+      "flat": 0
+    },
+    "dp": {
+      "percent": 5,
+      "flat": 0
+    },
+    "sp": {
+      "percent": 0,
+      "flat": 0
+    }
+  },
+  "attackBonuses": {
+    "melee": 0,
+    "shooting": 15,
+    "beam": 0,
+    "shell": 0
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 2.6666666666666665,
+    "battleScale": 1,
+    "idle": "ImportedIdle",
+    "move": "ImportedIdle",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "walk",
+    "moveSoundKey": "tankMoveSound",
+    "fixedFacing": 0
+  },
+  "id": "Facility_Radar",
+  "code": "Facility_Radar",
+  "name": "雷达",
+  "description": "通用战场设施",
+  "source": "GW_BattleUniverse_Main/Units/Buildings/Turret/TypeA/Turret_Radar_A.ini",
+  "tags": [
+    "EFSF",
+    "0079T1"
+  ],
+  "availableFactions": [
+    "EFSF",
+    "ZEON",
+    "AEUG",
+    "TITANS",
+    "NEO_ZEON"
+  ],
+  "unitTags": [
+    "Building",
+    "MediumUnit"
+  ],
+  "formOnly": true,
+  "facility": {
+    "type": "radar"
+  },
+  "production": {
+    "enabled": false
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0,
+      "y": 0
+    },
+    "Body": {
+      "x": 0,
+      "y": 0
+    },
+    "LeftArm": {
+      "x": -9,
+      "y": 0
+    },
+    "RightArm": {
+      "x": 9,
+      "y": 0
+    },
+    "LeftShoulder": {
+      "x": -9,
+      "y": 0
+    },
+    "RightShoulder": {
+      "x": 9,
+      "y": 0
+    },
+    "LeftWeapon": {
+      "x": 0,
+      "y": 0
+    },
+    "RightWeapon": {
+      "x": 0,
+      "y": 0
+    },
+    "Attachment12": {
+      "x": 0,
+      "y": 0
+    },
+    "Attachment13": {
+      "x": 0,
+      "y": 0
+    },
+    "Attachment15": {
+      "x": 0,
+      "y": 0
+    },
+    "Head": {
+      "x": 0,
+      "y": 0
+    },
+    "Eye": {
+      "x": 0,
+      "y": 0
+    },
+    "LeftFoot": {
+      "x": -6,
+      "y": 0,
+      "endDirOffset": -8
+    },
+    "LeftLeg": {
+      "x": -6,
+      "y": 0,
+      "endDirOffset": -8
+    },
+    "RightFoot": {
+      "x": 6,
+      "y": 0,
+      "endDirOffset": 8
+    },
+    "RightLeg": {
+      "x": 6,
+      "y": 0,
+      "endDirOffset": 8
+    },
+    "Turret_EF_Type61_Cannon": {
+      "x": 0,
+      "y": 0,
+      "endDirOffset": 0
+    },
+    "Turret": {
+      "x": 0,
+      "y": 3
+    }
+  },
+  "materials": {
+    "textures": {
+      "Radar_1_A.png": "textures/Radar_1_A.png"
+    },
+    "icon": "Radar_1_A.png"
+  },
+  "layers": [
+    {
+      "name": "A",
+      "texture": "Radar_1_A.png",
+      "bone": "Body",
+      "order": 1,
+      "scale": 0.75,
+      "rotation": 0,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "worldOffset": {
+        "x": -1.875,
+        "y": 0
+      },
+      "source": "GW_BattleUniverse_Main/Units/Buildings/Turret/Image/Common/Radar/Radar_1_A.png"
+    }
+  ],
+  "weapons": {},
+  "animations": {
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Idle": "../../animations/Common_Idle__AntiZakuTank.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "skills": [],
+  "transport": {
+    "slotCost": 1,
+    "loadTags": []
+  },
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": []
+    }
+  ],
+  "mechanics": [
+    {
+      "id": "facility",
+      "name": "通用战场设施",
+      "status": "implemented"
+    }
+  ],
+  "sourceStats": {
+    "nativeHP": 7500,
+    "facilitySource": "GW_BattleUniverse_Main/Units/Buildings/Turret/TypeA/Turret_Radar_A.ini",
+    "conversion": "HP and projectile payload / 2, followed by global conversion; turn volleys MG8 / Beam2 / Missile4 / Cannon1",
+    "visual": {
+      "nativeBounds": [
+        -8.625,
+        -32.5,
+        12.375,
+        12.5
+      ],
+      "targetCells": 1,
+      "mapScale": 2.6666666666666665,
+      "layers": [
+        {
+          "name": "A",
+          "source": "GW_BattleUniverse_Main/Units/Buildings/Turret/Image/Common/Radar/Radar_1_A.png"
+        }
+      ]
+    }
+  },
+  "faction": "EFSF"
+}

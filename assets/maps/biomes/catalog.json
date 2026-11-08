@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "biomes": [
+    "tropical",
+    "temperate",
+    "desert",
+    "snow",
+    "urban",
+    "space"
+  ]
+}

@@ -9,7 +9,7 @@ function buildMapEditor(root = path.resolve(__dirname, "..")) {
     .replace("__VERSION__", () => version)
     .replace("__EDITOR_CSS__", () => read("map-editor/editor.css"))
     .replace("__MAP_DOCUMENT__", () =>
-      script(read("shared/map-document.js") + "\n" + read("shared/tilemap-view.js")),
+      script("globalThis.ProjectGreedMapAssets = " + JSON.stringify(Object.fromEntries(JSON.parse(read("assets/maps/biomes/catalog.json")).biomes.map(id => ["asset:biome-"+id,"data:image/png;base64,"+fs.readFileSync(path.join(root,"assets/maps/biomes",id,"tiles.png")).toString("base64")]).concat([["asset:encounter-pixel-props-v1","data:image/png;base64,"+fs.readFileSync(path.join(root,"assets/maps/tilesets/encounter-pixel-props-v1.png")).toString("base64")]]))) + ";\n" + read("shared/map-document.js") + "\n" + read("shared/biome-tiles.js") + "\n" + read("shared/tilemap-view.js")),
     )
     .replace("__EDITOR_JS__", () => script("const MapEditorUnits = " + JSON.stringify(JSON.parse(read("assets/unit-catalog.json")).units.map(file => { const u = JSON.parse(read("assets/" + file)); return {id:u.id,name:u.name}; })) + ";\n" + "const MAP_EDITOR_LOCALES = " + JSON.stringify(JSON.parse(read("map-editor/locales.json"))) + ";\n" + read("map-editor/i18n.js") + "\n" + read("map-editor/authoring.js") + "\n" + read("map-editor/editor.js")));
   fs.mkdirSync(path.join(root, "public"), { recursive: true });

@@ -15,8 +15,9 @@ const UnitHangars = {
     captureObjective = () => null,
     squadMembers = (g, u) => [u],
     squadEligible = () => false,
-    squadFits = members => members.length <= 6,
+    squadFits = (members) => members.length <= 6,
     environmentOf = (g, u) => u.environment,
+    waterCell = (g, x, y) => g.tiles?.[y]?.[x] === "water",
     squadJoinTarget = () => null,
     joinSquad = () => {},
     deploymentCells = () => [],
@@ -80,6 +81,14 @@ const UnitHangars = {
         g.winner !== null
       )
         return false;
+      // A carrier with its own passengers can board; only ancestry cycles are forbidden.
+      const ancestry = new Set();
+      let parent = carrier;
+      while (parent) {
+        if (parent.id === u.id || ancestry.has(parent.id)) return false;
+        ancestry.add(parent.id);
+        parent = parent.embarked && g.units.find((unit) => unit.id === parent.embarked.carrierId);
+      }
       const hangar = of(carrier).find((h) => h.id === hangarId),
         transport = modelOf(u).transport;
       if (
@@ -90,13 +99,22 @@ const UnitHangars = {
       )
         return false;
       if (hangar.kind === "sfs") {
-        const projected = { ...g, units: g.units.map(actor => actor.id === u.id
-          ? { ...actor, embarked: { carrierId: carrier.id, hangarId, exposed: true } } : actor) };
+        const projected = {
+          ...g,
+          units: g.units.map((actor) =>
+            actor.id === u.id
+              ? { ...actor, embarked: { carrierId: carrier.id, hangarId, exposed: true } }
+              : actor,
+          ),
+        };
         if (!squadFits(squadMembers(projected, carrier), projected)) return false;
       }
       if (deploying(g)) {
-        const inDeploymentArea = deploymentDrop && deploymentCells(g, ownerOf(u), u).some(
-          cell => cells(carrier).some(target => cell.x === target.x && cell.y === target.y));
+        const inDeploymentArea =
+          deploymentDrop &&
+          deploymentCells(g, ownerOf(u), carrier).some((cell) =>
+            cells(carrier).some((target) => cell.x === target.x && cell.y === target.y),
+          );
         return !g.deployment[ownerOf(u)] && (edgeDistance(carrier, u) === 1 || inDeploymentArea);
       }
       return (
@@ -115,7 +133,10 @@ const UnitHangars = {
     function boardingPlan(g, members, carrier, hangarId = null, deploymentDrop = false) {
       if (!members.length || new Set(members.map((u) => u.id)).size !== members.length) return null;
       const slots = of(carrier).filter((h) => !hangarId || h.id === hangarId);
-      if (!slots.length || members.some((u) => !slots.some((h) => canEmbark(g, u, carrier, h.id, deploymentDrop))))
+      if (
+        !slots.length ||
+        members.some((u) => !slots.some((h) => canEmbark(g, u, carrier, h.id, deploymentDrop)))
+      )
         return null;
       const view = { ...g, units: g.units.map((u) => ({ ...u })) };
       const plan = [];
@@ -181,6 +202,9 @@ const UnitHangars = {
         return [];
       const carrier = g.units.find((c) => c.id === u.embarked.carrierId);
       if (!carrier || (!emergency && !onMap(carrier))) return [];
+      const overWater = cells(carrier).some((cell) => waterCell(g, cell.x, cell.y));
+      const waterLaunch = (x, y) =>
+        !overWater || cells(u, x, y).every((cell) => waterCell(g, cell.x, cell.y));
       if (
         !emergency &&
         (deploying(g)
@@ -207,6 +231,7 @@ const UnitHangars = {
             if (
               seen.has(key) ||
               edgeDistance(carrier, passenger, x, y) !== 1 ||
+              !waterLaunch(x, y) ||
               !fits(view, passenger, x, y, passenger.angle, true)
             )
               continue;
@@ -217,6 +242,8 @@ const UnitHangars = {
           .filter(
             (p) =>
               edgeDistance(carrier, passenger, p.x, p.y) >= 1 &&
+              waterLaunch(p.x, p.y) &&
+              (!overWater || (p.path || []).every((cell) => waterLaunch(cell.x, cell.y))) &&
               (fits(
                 view,
                 passenger,
@@ -252,6 +279,7 @@ const UnitHangars = {
           if (
             distance < 1 ||
             distance > range ||
+            !waterLaunch(x, y) ||
             !fits(g, u, x, y, u.angle, false, !emergency && deploying(g) ? ownerOf(u) : null)
           )
             continue;
@@ -335,7 +363,16 @@ const UnitHangars = {
         (c) =>
           others.every((keys) => keys.has(c.x + "," + c.y)) &&
           (!c.squadTarget ||
-            squadFits([...members, ...squadMembers(g, g.units.find(u => u.id === c.squadTarget))], g)),
+            squadFits(
+              [
+                ...members,
+                ...squadMembers(
+                  g,
+                  g.units.find((u) => u.id === c.squadTarget),
+                ),
+              ],
+              g,
+            )),
       );
     }
     function launchGroupPlan(g, members, x, y) {
@@ -446,13 +483,15 @@ const UnitHangars = {
         energyWeapons.length > 0 && energyWeapons.every((weapon) => weapon.en > u.en);
       return u.hp < m.hp * 0.25 || u.en < m.en * 0.5 || outOfAmmo || damaged;
     }
-    function recoveryOrder(g, u) {
+    function recoveryOrder(g, u, allowRide = () => true) {
       if (!onMap(u) || u.acted || u.plan || u.lastLaunchRound === g.round) return null;
       const m = modelOf(u);
       if (!m.transport?.loadTags?.length) return null;
       // Check actual carriers before distance/contact searches. A normal ally is
       // never a boarding destination, regardless of its proximity to the enemy.
-      const carriers = g.units.filter(c => c.id !== u.id && onMap(c) && c.team === u.team && of(c).length);
+      const carriers = g.units.filter(
+        (c) => c.id !== u.id && onMap(c) && c.team === u.team && of(c).length,
+      );
       if (!carriers.length) return null;
       const members = squadMembers(g, u);
       if (members.some((member) => member.acted || member.plan || member.pendingMove)) return null;
@@ -465,6 +504,7 @@ const UnitHangars = {
       if (!repair && !longJourney) return null;
       const candidates = carriers.filter(
         (c) =>
+          (repair || allowRide(c)) &&
           of(c).some(
             (h) =>
               (!repair || h.kind !== "sfs") &&
@@ -498,9 +538,10 @@ const UnitHangars = {
       }
       // Search from all carrier edges to avoid steering into a dead end around terrain.
       const occupancy = placementQuery?.(g);
-      const canFit = (x, y, throughAllies = false) => occupancy
-        ? occupancy.fits(u, x, y, u.angle, throughAllies)
-        : fits(g, u, x, y, u.angle, throughAllies);
+      const canFit = (x, y, throughAllies = false) =>
+        occupancy
+          ? occupancy.fits(u, x, y, u.angle, throughAllies)
+          : fits(g, u, x, y, u.angle, throughAllies);
       const distances = new Map(),
         queue = [];
       for (const c of candidates)

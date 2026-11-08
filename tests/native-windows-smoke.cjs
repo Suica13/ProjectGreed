@@ -17,7 +17,7 @@ const exe = path.join(
   `ProjectGreed-${version}-windows-x64`,
   "ProjectGreed.exe",
 );
-fs.mkdirSync(path.join(root, "tmp/verification/native"), {recursive:true});
+fs.mkdirSync(path.join(root, "tmp/verification/native"), { recursive: true });
 const evidence = fs.mkdtempSync(path.join(root, "tmp/verification/native", "native-client-"));
 const data = path.join(evidence, "data"),
   exportsPath = path.join(evidence, "exports");
@@ -155,23 +155,19 @@ async function stop() {
   assert.deepEqual(await page.evaluate(() => Economy.snapshot()), original);
   assert.equal(await page.evaluate(() => ProfileSave.exportData().pilots.PMC.pilots.length), 1);
   await page.evaluate(() => localStorage.removeItem("projectgreed.native-size-test"));
-  // Export through the real native bridge; the test-only directory replaces only the OS picker.
+  // Native clients expose the on-disk profile and import it directly.
   await page.locator("#shellSettings").click();
-  await page.locator("#exportProfileSave").click();
-  for (let i = 0; i < 100 && !fs.existsSync(exportsPath); i++) await delay(50);
-  for (let i = 0; i < 100 && fs.readdirSync(exportsPath).length === 0; i++) await delay(50);
-  const exported = fs.readdirSync(exportsPath).find((n) => n.startsWith("ProjectGreed-profile-"));
-  assert.ok(exported);
-  const archive = fs.readFileSync(path.join(exportsPath, exported), "utf8");
-  assert.equal(JSON.parse(archive).format, "ProjectGreed-profile");
+  await page.locator('[data-settings-tab="storage"]').click();
+  assert.equal(await page.locator("#exportProfileSave").count(), 0);
+  assert(await page.locator("#openNativeSaveFolder").isVisible());
+  const archive = fs.readFileSync(path.join(data, "profile.json"), "utf8");
+  assert.equal(JSON.parse(archive).format, "ProjectGreed-app-store");
   const loaded = page.waitForEvent("load");
-  await page
-    .locator("#profileSaveFile")
-    .setInputFiles({
-      name: "roundtrip.json",
-      mimeType: "application/json",
-      buffer: Buffer.from(archive),
-    });
+  await page.locator("#profileSaveFile").setInputFiles({
+    name: "roundtrip.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(archive),
+  });
   await loaded;
   await page.waitForFunction(() => assetsReady);
   assert.deepEqual(await page.evaluate(() => Economy.snapshot()), original);
@@ -220,7 +216,7 @@ async function stop() {
           "real locked-file rollback",
           "6 MiB save",
           "full process restart",
-          "native export and import",
+          "native save folder and profile import",
           "existing server join",
           "offline engine",
           "asset images",

@@ -8,7 +8,7 @@ function createClientResources({ loadDocument = null } = {}) {
     const html = buffer.toString("utf8");
     const match = /(<script id="art" type="application\/json">)([\s\S]*?)(<\/script>)/.exec(html);
     if (!match) return buffer;
-    const catalog = JSON.parse(match[2]);
+    const catalog = require("../shared/catalog-codec.cjs").decode(JSON.parse(match[2]));
     if (!Array.isArray(catalog.assetSources)) return buffer;
     function media(source) {
       const encoded = /^data:(image\/png|audio\/ogg|audio\/mpeg);base64,([\s\S]+)$/.exec(source);

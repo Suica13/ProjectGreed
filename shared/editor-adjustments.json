@@ -23,6 +23,21 @@
     },
     "Facility_Cannon": {
       "/stats/hp": 10000
+    },
+    "RGM_79_E": {
+      "/stats/cost": -25
+    },
+    "MS_06G": {
+      "/weaponKits/2/cost": 50
+    },
+    "MS_06R_2": {
+      "/weaponKits/2/cost": 50
+    },
+    "MS_06R_2_JonCustom": {
+      "/weaponKits/2/cost": 50
+    },
+    "Facility_Radar": {
+      "/stats/hp": 3750
     }
   },
   "weapons": {

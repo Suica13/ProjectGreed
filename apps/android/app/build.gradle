@@ -1,8 +1,9 @@
 plugins { id 'com.android.application' }
+def engine = new groovy.json.JsonSlurper().parse(rootProject.file('engine.json'))
 
 android {
     namespace 'io.projectgreed.apptest2'
-    compileSdk 36
+    compileSdk 37
     buildToolsVersion '36.0.0'
     buildFeatures { buildConfig true }
     defaultConfig {
@@ -10,14 +11,14 @@ android {
         minSdk 26
         targetSdk 35
         testInstrumentationRunner 'io.projectgreed.apptest2.StoreInstrumentation'
-        versionCode 104000
-        versionName 'V104'
+        versionCode 105001
+        versionName 'V105'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-    sourceSets.main.assets.srcDirs = ["${rootDir}/../../build/app-client/content"]
+    sourceSets.main.assets.srcDirs = ["${rootDir}/../../build/app-client/content", "${rootDir}/engine-assets"]
     // Keep debug update identity independent of the sandbox Java user.home.
     signingConfigs {
         debug {
@@ -30,10 +31,26 @@ android {
         debug { debuggable true }
         release { minifyEnabled false }
     }
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'arm64-v8a', 'armeabi-v7a'
+            universalApk true
+        }
+    }
+    packaging {
+        jniLibs {
+            // Compress the bundled engine in APKs; Android extracts it at install time.
+            useLegacyPackaging true
+            excludes += ['**/x86/**', '**/x86_64/**']
+        }
+    }
     androidResources { noCompress 'ogg', 'mp3', 'wav' }
 }
 
 dependencies {
+    implementation "org.mozilla.geckoview:geckoview:${engine.version}"
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.json:json:20240303'
 }

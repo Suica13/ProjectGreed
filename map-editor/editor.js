@@ -390,15 +390,15 @@ const MapEditor = (() => {
     c.strokeStyle = "#ffffff40";
     c.lineWidth = 0.5;
     for (const t of doc.tiles.filter((t) => t.tilesetId === set.id)) {
-      c.strokeRect(t.x * scale, t.y * scale, set.tileWidth * scale, set.tileHeight * scale);
+      c.strokeRect(t.x * scale, t.y * scale, (t.frameWidth || set.tileWidth) * scale, (t.frameHeight || set.tileHeight) * scale);
       if (t.id === tileId) {
         c.strokeStyle = "#ffdf64";
         c.lineWidth = 2;
         c.strokeRect(
           t.x * scale + 1,
           t.y * scale + 1,
-          set.tileWidth * scale - 2,
-          set.tileHeight * scale - 2,
+          (t.frameWidth || set.tileWidth) * scale - 2,
+          (t.frameHeight || set.tileHeight) * scale - 2,
         );
         c.strokeStyle = "#ffffff40";
         c.lineWidth = 0.5;
@@ -434,8 +434,8 @@ const MapEditor = (() => {
         t.tilesetId === set.id &&
         x >= t.x &&
         y >= t.y &&
-        x < t.x + set.tileWidth &&
-        y < t.y + set.tileHeight,
+        x < t.x + (t.frameWidth || set.tileWidth) &&
+        y < t.y + (t.frameHeight || set.tileHeight),
     );
   }
   $("atlasCanvas").onpointerdown = (e) => {

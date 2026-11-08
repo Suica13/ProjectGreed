@@ -75,14 +75,14 @@ const Net = (() => {
     },
   };
   const chatRequestIds = new Set();
-  function sendChat(message, retryId = null, channel = "all") {
+  function sendChat(message, retryId = null, channel = "all", marker = null) {
     if (!n.active || !n.memberId || n.socket?.readyState !== WebSocket.OPEN) return null;
     const id =
       retryId ||
       "chat-" + (crypto.randomUUID?.() || Date.now() + "-" + Math.random().toString(16).slice(2));
     chatRequestIds.add(id);
     if (chatRequestIds.size > 100) chatRequestIds.delete(chatRequestIds.values().next().value);
-    n.socket.send(JSON.stringify({ type: "action", action: "chat", id, message, channel }));
+    n.socket.send(JSON.stringify({ type: "action", action: "chat", id, message, channel, ...(marker ? { marker, matchId: n.snapshot?.matchId, revision: n.revision } : {}) }));
     return id;
   }
   function endpoint(s) {
@@ -403,6 +403,7 @@ const Net = (() => {
       if (n.snapshot && !(n.snapshot.chat || []).some((old) => old.id === msg.message.id))
         n.snapshot.chat = [...(n.snapshot.chat || []), msg.message].slice(-100);
       Chat.receive(msg.message, msg.ack);
+      window.TeamMarkers?.receive(msg.message);
     } else if (msg.type === "campaign_save" || msg.type === "campaign_upload_ack") {
       finishAction(msg.ack);
       window.CampaignUI?.reply(msg);
@@ -437,6 +438,7 @@ const Net = (() => {
       n.revision = msg.revision;
       msg.receivedAt = performance.now();
       n.snapshot = msg;
+      window.LocalRecords?.receive(msg);
       closeDisconnect();
       if (!window.ReplayPlayer?.receive(msg)) applySnapshot(msg);
       queueMicrotask(drainActions);

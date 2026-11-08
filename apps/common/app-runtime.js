@@ -123,6 +123,9 @@
         exit: () => root.chrome.webview.postMessage({ action: "exit" }),
       };
     } else throw Error("未找到原生客户端接口，请从 ProjectGreed 程序启动。");
+    const archiveHost = root.ProjectGreedAndroid || root.chrome?.webview?.hostObjects?.projectGreed;
+    root.ProjectGreedArchive = Object.freeze({ request: (text) => root.ProjectGreedAndroid
+      ? archiveHost.archive(text) : archiveHost.Archive(text) });
     const area = createStorage(bridge);
     if (!root.ProjectGreedAndroid)
       document.addEventListener(
@@ -138,11 +141,13 @@
     Object.defineProperty(root, "localStorage", { value: area.storage, configurable: true });
     root.AppRuntime = Object.freeze({
       native: true,
+      openSaveFolder: () => root.ProjectGreedAndroid ? root.ProjectGreedAndroid.openStorageFolder() : root.chrome.webview.postMessage({action:"open_save_folder"}),
+      saveDirectory: root.ProjectGreedAndroid ? "" : root.chrome.webview.hostObjects.sync.projectGreed.Location(),
       ready: true,
       edition: "NativeJSON",
       replaceItems: area.batch,
       requestBack: async () => {
-        const dialog = document.querySelector("dialog[open]");
+        const dialog = document.activeElement?.closest("dialog[open]") || [...document.querySelectorAll("dialog[open]")].at(-1);
         if (dialog) {
           if (dialog.dispatchEvent(new Event("cancel", { cancelable: true }))) dialog.close();
           return;
@@ -223,13 +228,13 @@
           ready = true;
           syncScene();
         });
-        const exportButton = document.getElementById("exportProfileSave");
+        const exportButton = document.getElementById("openNativeSaveFolder");
         if (exportButton && host.chooseStorageFolder) {
           const button = document.createElement("button");
           button.id = "nativeSaveFolder";
           button.type = "button";
           button.className = exportButton.className;
-          button.textContent = "选择存档文件夹";
+          button.textContent = "更改存档文件夹";
           button.onclick = () => host.chooseStorageFolder();
           exportButton.parentElement.append(button);
         }

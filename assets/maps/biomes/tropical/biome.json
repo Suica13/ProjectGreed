@@ -1,0 +1,172 @@
+{
+  "id": "tropical",
+  "version": 1,
+  "image": "tiles.png",
+  "asset": "asset:biome-tropical",
+  "width": 1254,
+  "height": 1254,
+  "frames": {
+    "plain": [
+      {
+        "x": 527,
+        "y": 422,
+        "width": 96,
+        "height": 96
+      }
+    ],
+    "soil": [
+      {
+        "x": 108,
+        "y": 421,
+        "width": 97,
+        "height": 98
+      }
+    ],
+    "water": [
+      {
+        "x": 108,
+        "y": 4,
+        "width": 97,
+        "height": 98
+      }
+    ],
+    "shallow": [
+      {
+        "x": 734,
+        "y": 4,
+        "width": 98,
+        "height": 98
+      }
+    ],
+    "forest": [
+      {
+        "x": 212,
+        "y": 630,
+        "width": 98,
+        "height": 98
+      },
+      {
+        "x": 317,
+        "y": 630,
+        "width": 97,
+        "height": 98
+      },
+      {
+        "x": 422,
+        "y": 630,
+        "width": 97,
+        "height": 98
+      },
+      {
+        "x": 526,
+        "y": 630,
+        "width": 97,
+        "height": 98
+      }
+    ],
+    "rock": [
+      {
+        "x": 4,
+        "y": 630,
+        "width": 97,
+        "height": 98
+      },
+      {
+        "x": 108,
+        "y": 630,
+        "width": 97,
+        "height": 98
+      }
+    ],
+    "rubble": [
+      {
+        "x": 734,
+        "y": 1048,
+        "width": 98,
+        "height": 98
+      },
+      {
+        "x": 839,
+        "y": 1048,
+        "width": 98,
+        "height": 98
+      }
+    ],
+    "cliff": [
+      {
+        "x": 212,
+        "y": 734,
+        "width": 98,
+        "height": 99
+      }
+    ],
+    "road": [
+      {
+        "x": 734,
+        "y": 525,
+        "width": 98,
+        "height": 99
+      },
+      {
+        "x": 839,
+        "y": 525,
+        "width": 98,
+        "height": 99
+      }
+    ],
+    "concrete": [
+      {
+        "x": 630,
+        "y": 1048,
+        "width": 98,
+        "height": 98
+      }
+    ],
+    "details": [
+      {
+        "x": 630,
+        "y": 630,
+        "width": 98,
+        "height": 98
+      },
+      {
+        "x": 734,
+        "y": 630,
+        "width": 98,
+        "height": 98
+      },
+      {
+        "x": 839,
+        "y": 630,
+        "width": 98,
+        "height": 98
+      },
+      {
+        "x": 943,
+        "y": 630,
+        "width": 98,
+        "height": 98
+      }
+    ],
+    "roadSurface": [
+      {
+        "x": 55,
+        "y": 426,
+        "width": 38,
+        "height": 30
+      }
+    ]
+  },
+  "autotile": {
+    "neighbors": [
+      "north",
+      "east",
+      "south",
+      "west"
+    ],
+    "shoreWidth": 7,
+    "cliffHeight": 10,
+    "roadInset": 3
+  },
+  "source": "user-reference"
+}

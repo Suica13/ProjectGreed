@@ -11,6 +11,7 @@ function buildAppClient() {
   let html = fs.readFileSync(path.join(root, "public/client.html"), "utf8");
   const project = require("../project.json");
   if (!html.includes(JSON.stringify(project))) throw Error("Run npm run build first");
+  html = require("../shared/catalog-codec.cjs").expandHTML(html);
   const assets = new Map();
   const extensions = {
     "image/png": "png",

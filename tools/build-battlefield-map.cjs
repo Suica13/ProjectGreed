@@ -154,5 +154,5 @@ doc.climate={weather:{allowed:["clear","overcast","sand"],weights:{clear:14,over
 doc.lighting=previous.lighting;
 const compiled=M.compile(doc);
 compiled.battlefield={...previous.battlefield,facilities,points};
-fs.writeFileSync(destination,JSON.stringify(compiled,null,2)+"\n");
+fs.writeFileSync(destination,JSON.stringify(require("./rebuild-biome-maps.cjs").rebuild(compiled),null,2)+"\n");
 console.log("Rebuilt canyon battlefield:",width+"x"+height,"/",points.length,"capture sites");

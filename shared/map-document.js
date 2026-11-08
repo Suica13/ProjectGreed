@@ -173,7 +173,7 @@ const MapDocument = (() => {
       if (
         typeof value !== "string" ||
         value.length > 48 * 1024 * 1024 + 64 ||
-        !/^data:image\/(png|jpeg|webp|gif);base64,[A-Za-z0-9+/]+={0,2}$/.test(value)
+        !(value === "asset:encounter-pixel-props-v1" || /^asset:biome-[a-z0-9-]+$/.test(value) || /^data:image\/(png|jpeg|webp|gif);base64,[A-Za-z0-9+/]+={0,2}$/.test(value))
       )
         throw Error("图片必须嵌入为PNG/JPEG/WebP/GIF，单图不超过36MB。");
     };
@@ -202,8 +202,10 @@ const MapDocument = (() => {
           !set ||
           !integer(tile.x, 0, 8192) ||
           !integer(tile.y, 0, 8192) ||
-          tile.x + set.tileWidth > set.width ||
-          tile.y + set.tileHeight > set.height
+          (tile.frameWidth !== undefined && !integer(tile.frameWidth,1,512)) ||
+          (tile.frameHeight !== undefined && !integer(tile.frameHeight,1,512)) ||
+          tile.x + (tile.frameWidth || set.tileWidth) > set.width ||
+          tile.y + (tile.frameHeight || set.tileHeight) > set.height
         )
           throw Error("图块超出图集：" + tile.id);
       }

@@ -26,6 +26,7 @@ const MapAuthoring = (() => {
     const files = [], seen = new Map(), manifest = [];
     const add = (src, owner) => {
       if (typeof src !== 'string') throw Error('图片资源缺失');
+      if (src.startsWith('asset:') && typeof TileMapView !== 'undefined') src = TileMapView.resolveSource(src);
       const match = /^data:image\/(png|jpeg|webp|gif);base64,([A-Za-z0-9+/]+={0,2})$/.exec(src);
       if (!match) throw Error('资源尚未嵌入，请先通过导入图片加载资源');
       let path = seen.get(src);

@@ -4,22 +4,24 @@ import android.app.*;
 import android.content.*;
 import android.content.pm.ActivityInfo;
 import org.json.JSONObject;
+import org.json.JSONArray;
 import android.net.Uri;
 import android.os.*;
 import android.util.Base64;
 import android.view.*;
-import android.webkit.*;
 import java.io.*;
-import java.util.Locale;
+import org.mozilla.geckoview.*;
 
-/** Only bundled, trusted game content can navigate in this WebView. */
+/** Gecko is bundled in the APK; no Android System WebView provider is needed. */
 public final class MainActivity extends Activity {
-    private static final String HOST = "projectgreed.localhost";
-    private WebView web;
+    private static GeckoRuntime runtime;
+    private GeckoSession web;
+    private GeckoPrompts prompts;
+    private NativeAssetServer assets;
     private boolean clientStarted;
-    private ValueCallback<Uri[]> fileChoice;
     private File pendingExport;
     private NativeStore store;
+    private LocalArchive archive;
     private String storeEpoch = java.util.UUID.randomUUID().toString();
     private final Object storageLock = new Object();
     private SharedPreferences preferences;
@@ -42,104 +44,71 @@ public final class MainActivity extends Activity {
                 if (staged.isFile()) pendingExport = staged;
             }
         }
-
-        android.content.pm.PackageInfo provider = WebView.getCurrentWebViewPackage();
-        if (provider != null) {
-            try {
-                if (Integer.parseInt(provider.versionName.split("[.]")[0]) < 80) {
-                    new AlertDialog.Builder(this).setMessage("当前 WebView 为" + provider.versionName + "，低于客户端支持的80版语法基线，请更新系统 WebView 后重试。")
-                        .setPositiveButton("关闭", (d,w)->finish()).setCancelable(false).show();
-                    return;
+        try {
+            Bridge bridge = new Bridge();
+            assets = new NativeAssetServer(name -> getAssets().open(name), (method, text) -> {
+                JSONArray args = new JSONArray(text);
+                switch (method) {
+                    case "archive": return bridge.archive(args.getString(0));
+                    case "read": return bridge.read();
+                    case "commit": return bridge.commit(args.getString(0));
+                    case "compatibilityResult": bridge.compatibilityResult(args.getString(0)); break;
+                    case "sceneChanged": bridge.sceneChanged(args.getString(0),args.getBoolean(1)); break;
+                    case "openStorageFolder": bridge.openStorageFolder(); break;
+                    case "chooseStorageFolder": bridge.chooseStorageFolder(); break;
+                    case "exit": bridge.exit(); break;
+                    case "exportFile": bridge.exportFile(args.getString(0),args.getString(1),args.getString(2)); break;
+                    default: throw new IOException("Unknown native method");
                 }
-            } catch (NumberFormatException ignored) { }
-        }
-        web = new WebView(this);
-        android.widget.FrameLayout safeArea = new android.widget.FrameLayout(this);
-        safeArea.addView(web, new android.widget.FrameLayout.LayoutParams(-1, -1));
-        safeArea.setOnApplyWindowInsetsListener((v, insets) -> {
-            if (Build.VERSION.SDK_INT >= 30) {
-                android.graphics.Insets bars = insets.getInsets(WindowInsets.Type.systemBars() | WindowInsets.Type.displayCutout());
-                android.graphics.Insets keyboard = insets.getInsets(WindowInsets.Type.ime());
-                v.setPadding(bars.left, bars.top, bars.right, Math.max(bars.bottom, keyboard.bottom));
-            } else v.setPadding(0, 0, 0, 0);
-            return insets;
-        });
-        setContentView(safeArea);
-        WebSettings settings = web.getSettings();
-        // The existing 1600x900 landscape meta viewport must be honored, not cropped
-        // into a device-width WebView with its centre as the only visible area.
-        settings.setUseWideViewPort(true);
-        settings.setLoadWithOverviewMode(true);
-        settings.setJavaScriptEnabled(true);
-        settings.setDomStorageEnabled(true);
-        settings.setAllowFileAccess(false);
-        settings.setAllowContentAccess(true);
-        // Local virtual HTTP origin preserves existing HTTP/WS servers without mixed-content changes.
-        settings.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
-        settings.setMediaPlaybackRequiresUserGesture(false);
-        settings.setSupportMultipleWindows(false);
-        settings.setBuiltInZoomControls(false);
-        settings.setTextZoom(100);
-        WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG);
-        web.addJavascriptInterface(new Bridge(), "ProjectGreedAndroid");
-        web.setWebViewClient(new WebViewClient() {
-            @Override public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                if (isApp(request.getUrl())) return false;
-                if (request.isForMainFrame() && request.hasGesture()) openExternal(request.getUrl());
-                return true;
-            }
-            @Override public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-                Uri uri = request.getUrl();
-                if (!HOST.equals(uri.getHost())) return null;
-                try {
-                    String path = uri.getPath();
-                    if (path == null || path.contains("..") || path.contains("\\") || !"http".equals(uri.getScheme())) throw new IOException("Invalid asset path");
-                    if (path.equals("/")) path = "/client.html";
-                    InputStream input = getAssets().open(path.substring(1));
-                    String type = mime(path);
-                    return new WebResourceResponse(type, type.startsWith("text/") || type.contains("javascript") || type.contains("json") ? "UTF-8" : null, input);
-                } catch (IOException error) {
-                    return new WebResourceResponse("text/plain", "UTF-8", 404, "Not Found", java.util.Collections.emptyMap(), new ByteArrayInputStream(new byte[0]));
+                return "{\"ok\":true}";
+            });
+            if (runtime == null) runtime = GeckoRuntime.create(getApplicationContext(),new GeckoRuntimeSettings.Builder()
+                .javaScriptEnabled(true).consoleOutput(BuildConfig.DEBUG).remoteDebuggingEnabled(BuildConfig.DEBUG).build());
+            web = new GeckoSession(new GeckoSessionSettings.Builder().build());
+            web.setNavigationDelegate(new GeckoSession.NavigationDelegate() {
+                @Override public GeckoResult<AllowOrDeny> onLoadRequest(GeckoSession session, LoadRequest request) {
+                    if (assets.isApp(request.uri)) return GeckoResult.fromValue(AllowOrDeny.ALLOW);
+                    if (request.hasUserGesture) openExternal(Uri.parse(request.uri));
+                    return GeckoResult.fromValue(AllowOrDeny.DENY);
                 }
-            }
-            @Override public boolean onRenderProcessGone(WebView view, RenderProcessGoneDetail detail) {
-                new AlertDialog.Builder(MainActivity.this).setMessage("网页渲染进程已停止，请重新打开客户端。已保存的数据会保留。")
-                    .setPositiveButton("关闭", (d,w)->finish()).setCancelable(false).show();
-                return true;
-            }
-        });
-        web.setWebChromeClient(new WebChromeClient() {
-            @Override public boolean onShowFileChooser(WebView view, ValueCallback<Uri[]> callback, FileChooserParams params) {
-                if (fileChoice != null) fileChoice.onReceiveValue(null);
-                fileChoice = callback;
-                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT).addCategory(Intent.CATEGORY_OPENABLE).setType("*/*");
-                String[] accept = params.getAcceptTypes();
-                if (accept != null && accept.length == 1 && accept[0].startsWith("image/")) intent.setType(accept[0]);
-                try { startActivityForResult(intent, 101); }
-                catch (ActivityNotFoundException error) { fileChoice.onReceiveValue(null); fileChoice = null; alert("未找到系统文件选择器"); }
-                return true;
-            }
-            @Override public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
-                new AlertDialog.Builder(MainActivity.this).setMessage(message).setPositiveButton("确定", (d,w)->result.confirm()).setOnCancelListener(d->result.cancel()).show();
-                return true;
-            }
-        });
-        // Probe actual capabilities before any gameplay or native profile writes.
-        web.loadUrl("http://" + HOST + "/compatibility.html");
+                @Override public GeckoResult<GeckoSession> onNewSession(GeckoSession session, String uri) {
+                    return GeckoResult.fromValue(null);
+                }
+            });
+            web.setPermissionDelegate(new GeckoSession.PermissionDelegate() {
+                @Override public GeckoResult<Integer> onContentPermissionRequest(GeckoSession session, ContentPermission permission) {
+                    boolean media = permission.permission == PERMISSION_AUTOPLAY_AUDIBLE || permission.permission == PERMISSION_AUTOPLAY_INAUDIBLE;
+                    return GeckoResult.fromValue(media && assets.isOrigin(permission.uri) ? ContentPermission.VALUE_ALLOW : ContentPermission.VALUE_DENY);
+                }
+            });
+            web.setContentDelegate(new GeckoSession.ContentDelegate() {
+                @Override public void onCrash(GeckoSession session) { alert("内置渲染进程异常，请重新打开客户端。已保存的数据会保留。"); }
+                @Override public void onKill(GeckoSession session) { alert("系统因内存不足停止了渲染进程，请重新打开客户端。"); }
+            });
+            prompts = new GeckoPrompts(this); web.setPromptDelegate(prompts);
+            web.open(runtime);
+            GeckoView view = new GeckoView(this); view.setSession(web);
+            android.widget.FrameLayout safeArea = new android.widget.FrameLayout(this);
+            safeArea.addView(view,new android.widget.FrameLayout.LayoutParams(-1,-1));
+            safeArea.setOnApplyWindowInsetsListener((v,insets)->{
+                if(Build.VERSION.SDK_INT>=30){
+                    android.graphics.Insets bars=insets.getInsets(WindowInsets.Type.systemBars()|WindowInsets.Type.displayCutout());
+                    android.graphics.Insets keyboard=insets.getInsets(WindowInsets.Type.ime());
+                    v.setPadding(bars.left,bars.top,bars.right,Math.max(bars.bottom,keyboard.bottom));
+                } else v.setPadding(0,0,0,0);
+                return insets;
+            });
+            setContentView(safeArea);
+            web.loadUri(assets.url("compatibility.html"));
+        } catch(Exception error) { alert("内置 Gecko 内核启动失败："+error.getMessage()); }
     }
     private void openProfile() {
         String folder = preferences.getString("saveTree", null);
+        archive = folder == null ? new LocalArchive(new File(getFilesDir(), "records")) : new LocalArchive(getContentResolver(), Uri.parse(folder));
         store = folder == null ? new NativeStore(new File(getFilesDir(), "profile"))
             : new NativeStore(new SnapshotFiles.Documents(getContentResolver(), Uri.parse(folder)), true, null);
     }
-    private static boolean isApp(Uri uri) { return "http".equals(uri.getScheme()) && HOST.equals(uri.getHost()); }
-    private static String mime(String path) {
-        String ext = path.substring(path.lastIndexOf('.') + 1).toLowerCase(Locale.ROOT);
-        if (ext.equals("js")) return "application/javascript";
-        if (ext.equals("json")) return "application/json";
-        String type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext);
-        return type == null ? "application/octet-stream" : type;
-    }
+    private static String mime(String path) { return NativeAssetServer.mime(path); }
     private void openExternal(Uri uri) {
         if (!"https".equals(uri.getScheme()) && !"http".equals(uri.getScheme())) return;
         try { startActivity(new Intent(Intent.ACTION_VIEW, uri)); } catch (ActivityNotFoundException ignored) { }
@@ -150,36 +119,25 @@ public final class MainActivity extends Activity {
         });
     }
     public final class Bridge {
-        @JavascriptInterface public void compatibilityResult(String result) {
+        public void compatibilityResult(String result) {
             runOnUiThread(()->{
                 if (clientStarted || isFinishing() || isDestroyed()) return;
                 try {
                     org.json.JSONArray missing = new org.json.JSONArray(result);
-                    if (missing.length() == 0) {
-                        openProfile();
-                        clientStarted = true;
-                        web.loadUrl("http://" + HOST + "/client.html");
-                        return;
-                    }
-                    web.stopLoading();
-                    StringBuilder detail = new StringBuilder();
-                    for (int i = 0; i < missing.length(); i++) detail.append("\n• ").append(missing.getString(i));
-                    android.content.pm.PackageInfo provider = WebView.getCurrentWebViewPackage();
-                    String version = provider == null ? "未知" : provider.versionName;
-                    new AlertDialog.Builder(MainActivity.this)
-                        .setMessage("当前系统 WebView（" + version + "）缺少游戏必需的功能：" + detail
-                            + "\n\n请更新设备当前使用的 Android System WebView 或 Chrome 后重试。客户端不再强制要求120版。")
-                        .setPositiveButton("关闭", (d,w)->finish()).setCancelable(false).show();
-                } catch (Exception error) { alert("无法完成 WebView 功能检查，请重新打开客户端：" + error.getMessage()); }
+                    if (missing.length() != 0) throw new IOException("内置 Gecko 内核缺少功能：" + missing);
+                    openProfile(); clientStarted = true;
+                    web.loadUri(assets.url("client.html"));
+                } catch (Exception error) { alert("无法加载客户端：" + error.getMessage()); }
             });
         }
-        @JavascriptInterface public String read() {
+        public String archive(String value) { synchronized(storageLock) { return archive.request(value); } }
+        public String read() {
             synchronized (storageLock) {
                 try { return new JSONObject(store.read()).put("epoch", storeEpoch).toString(); }
                 catch (Exception error) { return "{\"ok\":false,\"error\":\"无法读取应用存档\"}"; }
             }
         }
-        @JavascriptInterface public String commit(String value) {
+        public String commit(String value) {
             synchronized (storageLock) {
                 try {
                     if (!storeEpoch.equals(new JSONObject(value).optString("epoch")))
@@ -188,7 +146,7 @@ public final class MainActivity extends Activity {
                 } catch (Exception error) { return "{\"ok\":false,\"error\":\"存档请求无效\"}"; }
             }
         }
-        @JavascriptInterface public void sceneChanged(String scene, boolean ready) {
+        public void sceneChanged(String scene, boolean ready) {
             runOnUiThread(()->{
                 currentScene = scene;
                 int orientation = "game".equals(scene) ? ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
@@ -196,9 +154,18 @@ public final class MainActivity extends Activity {
                 if (ready && "menu".equals(scene)) showStoragePrompt();
             });
         }
-        @JavascriptInterface public void chooseStorageFolder() { runOnUiThread(()->MainActivity.this.chooseStorageFolder()); }
-        @JavascriptInterface public void exit() { runOnUiThread(()->finish()); }
-        @JavascriptInterface public void exportFile(String name, String mime, String base64) {
+        public void openStorageFolder() { runOnUiThread(() -> {
+            String folder = preferences.getString("saveTree", null);
+            if (folder == null) { MainActivity.this.chooseStorageFolder(); return; }
+            Uri tree = Uri.parse(folder);
+            Uri directory = android.provider.DocumentsContract.buildDocumentUriUsingTree(tree, android.provider.DocumentsContract.getTreeDocumentId(tree));
+            Intent intent = new Intent(Intent.ACTION_VIEW).setDataAndType(directory, android.provider.DocumentsContract.Document.MIME_TYPE_DIR)
+                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            try { startActivity(intent); } catch (ActivityNotFoundException error) { MainActivity.this.chooseStorageFolder(); }
+        }); }
+        public void chooseStorageFolder() { runOnUiThread(()->MainActivity.this.chooseStorageFolder()); }
+        public void exit() { runOnUiThread(()->finish()); }
+        public void exportFile(String name, String mime, String base64) {
             try {
                 if (base64.length() > NativeStore.MAX_BYTES * 4L / 3L + 8) throw new IOException("导出文件过大");
                 final byte[] bytes = Base64.decode(base64, Base64.DEFAULT);
@@ -244,7 +211,7 @@ public final class MainActivity extends Activity {
     private void activateStorageFolder(Uri uri, int grantedFlags) {
         // Freeze the page while copying its current, acknowledged native snapshot. A reload
         // then rebuilds the synchronous JS view from the newly authoritative directory.
-        web.evaluateJavascript("document.documentElement.inert=true", null);
+        assets.event("freeze", true);
         new Thread(()->{
             boolean acquired = false, activated = false;
             String old = preferences.getString("saveTree", null);
@@ -262,6 +229,7 @@ public final class MainActivity extends Activity {
                     next.ensureSaved();
                     if (!preferences.edit().putString("saveTree", uri.toString()).putBoolean("storagePromptSeen", true).commit())
                         throw new IOException("未能保存文件夹设置，仍使用原存档位置");
+                    archive = new LocalArchive(getContentResolver(), uri);
                     store = next; storeEpoch = java.util.UUID.randomUUID().toString(); activated = true;
                     runOnUiThread(()->{
                         choosingFolder = false;
@@ -274,7 +242,7 @@ public final class MainActivity extends Activity {
                 runOnUiThread(()->{
                     choosingFolder = false;
                     if (isFinishing() || isDestroyed()) return;
-                    web.evaluateJavascript("document.documentElement.inert=false", null);
+                    assets.event("freeze", false);
                     alert("未能切换存档文件夹，原存档位置保持不变：" + error.getMessage());
                 });
             } finally {
@@ -293,10 +261,7 @@ public final class MainActivity extends Activity {
                 activateStorageFolder(data.getData(), data.getFlags());
             else choosingFolder = false;
         }
-        if (request == 101 && fileChoice != null) {
-            fileChoice.onReceiveValue(result == RESULT_OK && data != null && data.getData() != null ? new Uri[]{data.getData()} : null);
-            fileChoice = null;
-        }
+        if (request == 101) prompts.fileResult(result, data);
         if (request == 102) {
             File staged = pendingExport; pendingExport = null;
             if (result != RESULT_OK || data == null || data.getData() == null || staged == null) {
@@ -321,26 +286,23 @@ public final class MainActivity extends Activity {
         if (pendingExport != null) state.putString("pendingExport", pendingExport.getName());
     }
     @Override public void onBackPressed() {
-        if (web == null) { finish(); return; }
-        web.evaluateJavascript("if(window.AppRuntime) AppRuntime.requestBack()", null);
+        if (assets == null || !clientStarted) { finish(); return; }
+        assets.event("back", true);
     }
     @Override protected void onPause() {
+        if (assets != null) assets.event("background", true);
+        if (web != null) web.setActive(false);
         super.onPause();
-        if (web != null) {
-            web.evaluateJavascript("window.dispatchEvent(new Event('app-background'));", null);
-            web.onPause();
-        }
     }
     @Override protected void onResume() {
         super.onResume();
-        if (web != null) {
-            web.onResume();
-            web.evaluateJavascript("window.dispatchEvent(new Event('app-foreground'));window.dispatchEvent(new Event('focus'));document.dispatchEvent(new Event('visibilitychange'));", null);
-        }
+        if (web != null) web.setActive(true);
+        if (assets != null) assets.event("foreground", true);
     }
     @Override protected void onDestroy() {
-        if (fileChoice != null) fileChoice.onReceiveValue(null);
-        if (web != null) { web.removeJavascriptInterface("ProjectGreedAndroid"); web.destroy(); }
+        if (prompts != null) prompts.cancelFile();
+        if (web != null) web.close();
+        if (assets != null) assets.close();
         super.onDestroy();
     }
 }

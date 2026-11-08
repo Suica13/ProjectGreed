@@ -1229,6 +1229,10 @@
     "ja": {
       "name": "初期型ジム",
       "description": "ルナツーで開発された初期型ジム。性能は平凡。"
+    },
+    "en": {
+      "name": "GM Early Type",
+      "description": "An early-type GM developed by Luna II, with rather mediocre performance"
     }
   },
   "RGM_79_G": {
@@ -2887,6 +2891,10 @@
     "ja": {}
   },
   "Facility_Cannon": {
+    "en": {},
+    "ja": {}
+  },
+  "Facility_Radar": {
     "en": {},
     "ja": {}
   }

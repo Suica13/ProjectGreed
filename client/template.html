@@ -3416,7 +3416,7 @@
             <div id="customPilotPortraits"></div>
             <label class="pilot-upload">上传头像 <input id="uploadPilotPortrait" type="file" accept="image/png,image/jpeg,image/webp" /></label>
           </div>
-          <div class="pilot-narrative-settings"><label>驾驶员性格 <select id="customPilotPersonality"><option value="">自动分配</option><option value="calm">冷静</option><option value="aggressive">激进</option><option value="cautious">谨慎</option><option value="idealist">理想主义</option><option value="strategic">谋略型</option><option value="sarcastic">讽刺型</option><option value="strict">严厉</option><option value="zealous">狂热</option><option value="proud">自负</option><option value="obsessive">执念型</option><option value="empathetic">共情型</option></select></label><label>出身阵营 <select id="customPilotOriginFaction"><option value="PMC">PMC</option><option value="EFSF">地球联邦军</option><option value="ZEON">吉翁公国</option><option value="AEUG">奥古</option><option value="TITANS">提坦斯</option><option value="NEO_ZEON">新吉翁</option></select></label><label>人物背景 <input id="customPilotBackground" maxlength="160" placeholder="例如：一年战争老兵、殖民卫星幸存者" /></label></div>
+          <div class="pilot-narrative-settings"><label>驾驶员性格 <select id="customPilotPersonality"><option value="">自动分配</option><option value="calm">冷静</option><option value="aggressive">激进</option><option value="cautious">谨慎</option><option value="idealist">理想主义</option><option value="strategic">谋略型</option><option value="sarcastic">讽刺型</option><option value="strict">严厉</option><option value="zealous">狂热</option><option value="proud">自负</option><option value="obsessive">执念型</option><option value="empathetic">共情型</option></select></label><label>出身阵营 <select id="customPilotOriginFaction"><option value="PMC">PMC</option><option value="EFSF">地球联邦军</option><option value="ZEON">吉翁公国</option><option value="AEUG">奥古</option><option value="TITANS">提坦斯</option><option value="NEO_ZEON">新吉翁</option></select></label></div>
           <p id="customPilotProgress"></p>
           <div id="customPilotRecord" class="pilot-record"></div><section id="acePilotDetails" hidden></section>
           <section class="pilot-training" aria-labelledby="pilotTrainingTitle">
@@ -5375,6 +5375,7 @@
       __BATTLE_SCENE__;
       __BATTLE_WINDOW__;
       __SKILL_CONTROLS__;
+      __BIOME_TILES__;
       __TILEMAP_VIEW__;
       __TILEMAP_RENDERER__;
       __APP__;
@@ -5400,6 +5401,7 @@
       __NETWORK__;
       __LOCAL_ROOM__;
       __CHAT__;
+      __TEAM_MARKERS__;
       __MATCH_RESULTS__;
       __SERVER_ACTIVITIES__;
       __LOBBY__;
@@ -5420,6 +5422,8 @@
       __BATTLE_HUD__;
       __BATTLEFIELD_UI__;
       __REPLAY_PLAYER__;
+      __LOCAL_RECORDS__;
+      __SETTINGS_LAYOUT__;
       __MENU_SHELL__;
       I18n.start();
     </script>

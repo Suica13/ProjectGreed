@@ -56,6 +56,24 @@ const AssetPool = (() => {
     };
   }
   function unpack(catalog) {
+    if (catalog.catalogEncoding === "gzip-base64") {
+      if (typeof CatalogInflate === "undefined")
+        catalog = require("./catalog-codec.cjs").decode(catalog);
+      else {
+        if (
+          !Number.isSafeInteger(catalog.uncompressedBytes) ||
+          catalog.uncompressedBytes < 1 ||
+          catalog.uncompressedBytes > 256 * 1024 * 1024
+        )
+          throw Error("Invalid compressed catalog size");
+        const binary = atob(catalog.payload),
+          bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+        const unpacked = CatalogInflate.gunzipSync(bytes);
+        if (unpacked.length !== catalog.uncompressedBytes) throw Error("Catalog size mismatch");
+        catalog = JSON.parse(new TextDecoder().decode(unpacked));
+      }
+    }
     if (catalog.assetPoolVersion === undefined) return catalog;
     if (![1, 2].includes(catalog.assetPoolVersion) || !Array.isArray(catalog.assetSources))
       throw Error("Invalid asset pool");

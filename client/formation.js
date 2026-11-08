@@ -650,7 +650,7 @@ const Formation = (() => {
         const row = element("div", "formation-cargo-row"),
           image = element("img"),
           m = Rules.formationModel(entry),
-          remove = element("button", "", "移除");
+          remove = element("button", "danger", "移除");
         image.src = unitIcon(Rules.formationModelId(entry), entry.customPilot);
         image.alt = "";
         const label = element("span"),
@@ -779,6 +779,34 @@ const Formation = (() => {
     footer.append(close,confirm);boardingPicker.replaceChildren(title,list,footer);boardingPicker.showModal();
   }
   window.addEventListener("page-changing", () => boardingPicker.close());
+  function openKitPicker(index) {
+    const entry = draft[index];
+    if (!entry) return;
+    const prefab = Rules.catalog.prefabs.find(unit => unit.id === entry.unitId);
+    const dialog = element("dialog", "formation-kit-dialog");
+    dialog.append(element("h3", "", "切换套件 · " + Rules.formationModel(entry).name));
+    const list = element("div", "formation-kit-options");
+    for (const kit of prefab.weaponKits) {
+      const button = element("button", kit.id === entry.kitId ? "selected" : "", kit.name + " · COST " + (prefab.stats.cost + kit.cost));
+      button.dataset.kitId = kit.id;
+      button.setAttribute("aria-pressed", String(kit.id === entry.kitId));
+      button.onclick = () => {
+        try {
+          const next = draft.map((unit, i) => i === index ? {...unit, kitId:kit.id} : unit);
+          Rules.validateFormation(next, Infinity, Rules.catalog.formation.maxUnits);
+          draft[index] = next[index];
+          GameAudio.play("changeEquipmentSound");
+          dialog.close(); render();
+        } catch(error) { note(error.message); }
+      };
+      list.append(button);
+    }
+    const close = element("button", "", "关闭");
+    close.onclick = () => dialog.close();
+    dialog.append(list, close);
+    dialog.addEventListener("close", () => dialog.remove(), {once:true});
+    document.body.append(dialog); dialog.showModal();
+  }
   function pilotButtonText(button, prefix, entry, model) {
     const name = entry.customPilot?.name || PilotSystem.defaultName(model);
     button.classList.add("formation-pilot-button");
@@ -1192,7 +1220,7 @@ const Formation = (() => {
         element("strong", "", `${i + 1}. ${model.name}`),
         metadata,
       );
-      const remove = element("button", "", "移除");
+      const remove = element("button", "danger", "移除");
 
       remove.onclick = (event) => {
         event.stopPropagation();
@@ -1242,7 +1270,9 @@ const Formation = (() => {
       board.dataset.boardFormation = String(i);
       board.setAttribute("aria-pressed", String(!!entry.preload));
       board.onclick = () => openBoarding(i);
-      actions.append(details, board, pilot, remove);
+      const kitButton = element("button", "formation-kit-button", "切换套件");
+      kitButton.onclick = () => openKitPicker(i);
+      actions.append(details, kitButton, board, pilot, remove);
       label.append(stockLine);
       row.append(portrait, label, actions);
       list.append(row);
@@ -1302,6 +1332,13 @@ const Formation = (() => {
       const bottom = Math.min(maxY, cell.bottom + gapY);
       const edges = paths.get(cell.group) || [];
       if (!same(i - columns)) edges.push(`M${left},${top}H${right}`);
+      else if (columns === 1) {
+        // Indented cargo shifts the left perimeter; connect the step at the shared edge.
+        const previousLeft = Math.max(minX, cells[i-1].left-gapX);
+        const previousRight = Math.min(maxX, cells[i-1].right+gapX);
+        if (Math.abs(previousLeft-left) > .5) edges.push(`M${previousLeft},${top}H${left}`);
+        if (Math.abs(previousRight-right) > .5) edges.push(`M${previousRight},${top}H${right}`);
+      }
       if (!same(i + columns)) edges.push(`M${left},${bottom}H${right}`);
       if (i % columns === 0 || !same(i - 1)) edges.push(`M${left},${top}V${bottom}`);
       if (i % columns === columns - 1 || !same(i + 1)) edges.push(`M${right},${top}V${bottom}`);
@@ -1909,7 +1946,25 @@ const Formation = (() => {
       note("已补充机体库存。"); return true;
     } catch (error) { note("库存购买失败：" + Economy.errorMessage(error)); return false; }
   }
+  let reserveAcknowledgment = "";
+  async function checkBattlefieldReserves(entries, proceed) {
+    if (Net.snapshot?.settings.mode !== "battlefield") return proceed();
+    const counts = new Map();
+    for (const entry of entries) counts.set(entry.unitId, (counts.get(entry.unitId) || 0) + 1);
+    const signature = (Net.snapshot?.matchId || Net.room || "") + JSON.stringify([...counts].map(([id, count]) => [id,count,Economy.quantity(id)]));
+    if (signature === reserveAcknowledgment) return proceed();
+    const missing = [...counts].filter(([id, count]) => Economy.quantity(id) - count < 2);
+    if (missing.length && !await GameDialog.confirm("以下单位没有预备库存，确定要准备吗？", {
+      title:"预备库存不足",
+      items:missing.map(([id,count]) => (UnitModels[Economy.defaultModel(id)]?.name || id) + " · 出击 " + count + " · 备用 " + Math.max(0,Economy.quantity(id)-count)),
+      confirmText:"确定准备",
+    })) return;
+    reserveAcknowledgment = signature;
+    return proceed();
+  }
   function checkLicenses(entries, proceed) {
+    const originalProceed = proceed;
+    proceed = () => checkBattlefieldReserves(entries, originalProceed);
     const quick = Net.snapshot?.settings.mode === "quick";
     if (quick ? !Economy.licensePlan(entries).items.length : !Economy.purchasePlan(entries).items.length) return proceed();
     showLicenseDialog(quick ? "部署许可不足" : "出战库存不足", quick ? "快速战可凭部署许可或完整机体库存出战。不满足条件的单位不会生成。" : "编组缺少机体库存。强制准备后，不足的单位不会生成。", [], [
@@ -2455,10 +2510,8 @@ const Formation = (() => {
     byId("customPilotName").value = I18n.pilotName(pilotEdit);
     byId("customPilotPersonality").value = pilotEdit.personality || "";
     byId("customPilotOriginFaction").value = pilotEdit.originFaction || pilotEdit.faction || "PMC";
-    byId("customPilotBackground").value = pilotEdit.background || "";
     byId("customPilotPersonality").disabled = !!pilotEdit.ace;
     byId("customPilotOriginFaction").disabled = !!pilotEdit.ace;
-    byId("customPilotBackground").disabled = !!pilotEdit.ace;
     byId("customPilotName").disabled = true;
     byId("renameCustomPilot").textContent = "修改名称";
     byId("renameCustomPilot").hidden = !!pilotEdit.ace;
@@ -2797,9 +2850,6 @@ const Formation = (() => {
   };
   byId("customPilotOriginFaction").onchange = () => {
     if (pilotEdit && !pilotEdit.ace) savePilotIdentity({ originFaction: byId("customPilotOriginFaction").value });
-  };
-  byId("customPilotBackground").onchange = () => {
-    if (pilotEdit && !pilotEdit.ace) savePilotIdentity({ background: byId("customPilotBackground").value });
   };
   byId("createPilotConfirm").onclick = () => {
     if (!pilotEdit || !pilotIsNew) return;

@@ -46,6 +46,7 @@ function prepareLegacy(html, root, output) {
     ["wicg-inert", "LICENSE.md"],
     ["css-has-pseudo", "LICENSE.md"],
     ["esbuild", "LICENSE.md"],
+    ["fflate", "LICENSE"],
   ].map(
     ([name, license]) =>
       name + "\n" + fs.readFileSync(path.join(root, "node_modules", name, license), "utf8"),

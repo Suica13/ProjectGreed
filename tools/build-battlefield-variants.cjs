@@ -75,7 +75,8 @@ function generate(kind){
     }
     terrain.push(row);
   }
-  doc.tilesets=structuredClone(template.tileMap.tilesets);doc.tiles=structuredClone(template.tileMap.tiles);
+  doc.tilesets=[];doc.tiles=[...new Map(data.map((tileId,i)=>[tileId,{id:tileId,name:tileId,terrain:terrain[Math.floor(i/width)][i%width],environment:'ground',color:M.terrains[terrain[Math.floor(i/width)][i%width]].color,decorative:false,dynamic:false}])).values()];
+  for(const id of new Set(props.filter(Boolean)))doc.tiles.push({id,name:id,terrain:'plain',environment:'ground',color:M.terrains.plain.color,decorative:true,dynamic:false});
   doc.layers=[{...M.layer(doc,"地形与坡道"),id:id+"_ground",data},
     {...M.layer(doc,"岩石、灌木与遗迹"),id:id+"_props",decorative:true,data:props}];
   doc.spawns=[];doc.deploymentAreas=[];
@@ -90,7 +91,7 @@ function generate(kind){
   if(basin)doc.climate.weather={allowed:["clear","overcast","rain","fog"],weights:{clear:8,overcast:5,rain:3,fog:2},durationRounds:5,fixed:false};
   const map=M.compile(doc);map.battlefield={...structuredClone(template.battlefield),facilities,points};
   const issues=M.gameIssues(doc);if(issues.length)throw Error(id+": "+issues.join("; "));
-  fs.writeFileSync(path.join(root,"assets/maps/battlefield/"+(basin?"ruined_basin":"twin_ridges")+".json"),JSON.stringify(map,null,2)+"\n");
+  fs.writeFileSync(path.join(root,"assets/maps/battlefield/"+(basin?"ruined_basin":"twin_ridges")+".json"),JSON.stringify(require("./rebuild-biome-maps.cjs").rebuild(map),null,2)+"\n");
   console.log("Built",id,width+"x"+height,"6v6 (one faction AI per team)");
 }
 generate("ridges");generate("basin");

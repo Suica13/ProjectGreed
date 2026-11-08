@@ -1296,6 +1296,11 @@ const Tactics = (() => {
       throw Error("请在己方出生区的有效格子部署");
     if (u.embarked && !g.units.some(carrier => carrier.id === u.embarked.carrierId && carrier.hp > 0))
       throw Error("运输单位不存在或已被击毁");
+    if(u.embarked) {
+      const carrier=g.units.find(other=>other.id===u.embarked.carrierId);
+      if(carrier && cells(carrier).some(cell=>g.tiles[cell.y]?.[cell.x]==='water') &&
+         cells(u,x,y).some(cell=>g.tiles[cell.y]?.[cell.x]!=='water'))throw Error('运输单位处于水上，只能在水域出击');
+    }
     const target = squadJoinTarget(g, u, x, y, [u]);
     if (!target && !fits(g, u, x, y, u.angle, false, team)) throw Error("该部署位置已有单位");
     delete u.embarked;
@@ -1703,6 +1708,7 @@ const Tactics = (() => {
     deploymentArea = null,
     occupancy = null,
   ) {
+    const blocked = g.battlefield && !unit.facility ? battlefieldMode.blockedCells({cells}, g) : null;
     const footprint = cells(unit, x, y, angle),
       area =
         seat === null
@@ -1714,6 +1720,7 @@ const Tactics = (() => {
         c.y >= 0 &&
         c.x < mapWidth(g) &&
         c.y < mapHeight(g) &&
+        !blocked?.has(key(c.x,c.y)) &&
         Number.isFinite(terrainCost(g, unit, c.x, c.y)) &&
         (!area || area.has(key(c.x, c.y))) &&
         !(occupancy ? occupancy.reserved.get(key(c.x, c.y)) || [] : g.units || []).some(
@@ -3832,6 +3839,7 @@ const Tactics = (() => {
         (u.moved ? [{ x: u.x, y: u.y, cost: 0, path: [] }] : [...reachable(g, u).values()]),
       enemies = g.units.filter((e) => e.team !== u.team && onMap(e)),
       best = null;
+    cells = cells.filter(cell => !cell.boarding);
     const weapons = modelOf(u).weapons,
       pressure = aiTargetPressure(g, u.team),
       strategy = aiTactics.forUnit(Tactics, g, u, aiTactics.decide(Tactics, g, u)),
@@ -4030,6 +4038,7 @@ const Tactics = (() => {
     squadEligible,
     squadFits,
     environmentOf,
+    waterCell: (g,x,y) => ["water","deep_water","shallow_water"].includes(g.tiles?.[y]?.[x]),
     squadJoinTarget,
     joinSquad,
     deploymentCells,

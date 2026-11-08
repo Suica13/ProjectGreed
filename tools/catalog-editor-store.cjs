@@ -495,6 +495,22 @@ function createEditorStore(root = path.resolve(__dirname, ".."), validate = null
       id: next.id,
     };
   }
+  function saveKitCost(payload, actor = {}) {
+    assertRevision(payload.revision);
+    if (!Number.isInteger(payload.cost) || payload.cost < 0 || payload.cost % 25) throw Error("套件COST必须为25的非负整数倍");
+    const unit = getUnit(payload.id).unit;
+    const index = unit.weaponKits.findIndex(kit => kit.id === payload.kitId);
+    if (index < 0) throw Error("套件不存在");
+    const registry = read(Adjust.file);
+    const pointer = "/weaponKits/" + index + "/cost";
+    registry.units[unit.id] ||= {};
+    const delta = (registry.units[unit.id][pointer] || 0) + payload.cost - unit.weaponKits[index].cost;
+    if (delta) registry.units[unit.id][pointer] = delta;
+    else delete registry.units[unit.id][pointer];
+    return transaction(new Map([[Adjust.file,encode(registry)]]), {
+      operation:"unit", target:{id:unit.id,newId:unit.id,name:unit.name}, revision:payload.revision, actor,
+    });
+  }
   function getConversion() {
     return {
       revision: revision(),
@@ -557,6 +573,7 @@ function createEditorStore(root = path.resolve(__dirname, ".."), validate = null
     getWeapon,
     templates,
     saveUnit,
+    saveKitCost,
     saveWeapon,
     revision,
     getConversion,

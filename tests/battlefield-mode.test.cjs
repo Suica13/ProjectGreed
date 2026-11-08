@@ -16,7 +16,7 @@ test("every offered faction and era has an initial force inside the selected yea
 });
 
 test("0079 fixed waves scale every contingent by surviving bases and honor exact phase boundaries", () => {
-  for (const faction of B.factions) for (const era of B.erasForFaction(G,faction)) for (const round of [1, 9, 10, 11, 50, 51, 100]) {
+  for (const faction of B.factions) for (const era of B.erasForFaction(G,faction)) for (const round of [1, 19, 20, 21, 59, 60, 61, 100]) {
     const stage = B.waveStage(round), row = B.fixedWaves[era][stage];
     const entries = B.wavePlan(G, { faction, era }, round, 2, () => 0.99);
     for (const [id, count] of Object.entries(row[faction]))
@@ -26,8 +26,8 @@ test("0079 fixed waves scale every contingent by surviving bases and honor exact
     const ships = B.wavePlan(G, { faction, era }, round, 2, () => 0);
     assert.equal(ships.filter(entry => entry.group.endsWith(":ship")).length, 2);
   }
-  assert.equal(B.waveStage(9), "early"); assert.equal(B.waveStage(10), "early"); assert.equal(B.waveStage(11), "middle");
-  assert.equal(B.waveStage(50), "middle"); assert.equal(B.waveStage(51), "late");
+  assert.equal(B.waveStage(19), "early"); assert.equal(B.waveStage(20), "early"); assert.equal(B.waveStage(21), "middle");
+  assert.equal(B.waveStage(60), "middle"); assert.equal(B.waveStage(61), "late");
   assert.throws(() => B.teams(G, [{ faction: "EFSF", era: "0087T1" }, { faction: "ZEON", era: "0079T1" }]));
   assert(B.eras.includes("0087T1") && B.factions.includes("AEUG"));
 });

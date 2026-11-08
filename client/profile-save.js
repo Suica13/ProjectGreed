@@ -154,6 +154,25 @@ const ProfileSave = (() => {
       createdAt: new Date().toISOString(),
     };
   }
+  function fromNativeSnapshot(value) {
+    if (value?.format !== "ProjectGreed-app-store" || value.version !== 1 || !value.values ||
+      Object.values(value.values).some(v => typeof v !== "string")) throw Error("原生存档格式无效");
+    const read = (key, fallback = null) => value.values[key] === undefined ? fallback : JSON.parse(value.values[key]);
+    const shared = read("projectgreed.custom-pilots.v3.shared", {pilots:[],awards:[]});
+    const old = factions.map(f => read(pilotKey+f, {pilots:[],awards:[]}));
+    const roster = [...shared.pilots,...old.flatMap(store=>store.pilots)];
+    const unique = new Map();
+    for (const pilot of roster) if (!unique.has(pilot.id) || pilot.level > unique.get(pilot.id).level) unique.set(pilot.id,pilot);
+    const pilots={},formations={};
+    for (const faction of factions) {
+      pilots[faction]={pilots:[...unique.values()].filter(p=>p.faction===faction),awards:[...new Set([...shared.awards,...old.flatMap(store=>store.awards)])]};
+      const saved=read(formationKey+faction);
+      formations[faction]=saved?{...saved,index:Number(value.values[formationKey+faction+"-active"]||0),squads:ProfileStorage.expandSquads(saved.squads,[...unique.values()])}:null;
+    }
+    const economy=read(Economy.key);if(!economy)throw Error("原生存档中缺少个人进度");
+    return validate({format:"ProjectGreed-profile",schemaVersion:1,pilots,formations,economy,
+      identity:read(ProfileIdentity.key),development:read("projectgreed.developmentProgress.v1",Development.exportProgress())});
+  }
   function importData(value) {
     const clean = validate(value),
       writes = new Map();
@@ -249,7 +268,8 @@ const ProfileSave = (() => {
       const file = input.files[0];
       if (!file) return;
       if (file.size > 32 * 1024 * 1024) throw Error("存档超过32MB");
-      importData(JSON.parse(await file.text()));
+      const value = JSON.parse(await file.text());
+      importData(window.AppRuntime?.native && value?.format === "ProjectGreed-app-store" ? fromNativeSnapshot(value) : value);
       location.reload();
     } catch (error) {
       status.textContent = "导入失败：" + Economy.errorMessage(error);
@@ -346,5 +366,5 @@ const ProfileSave = (() => {
   diagnostics.append(checkStorage, exportDiagnostic);
   panel.append(diagnostics, diagnosticText);
   document.getElementById("clientSettingsDialog").append(panel);
-  return { validate, exportData, encodeData, importData };
+  return { validate, exportData, encodeData, importData, fromNativeSnapshot };
 })();

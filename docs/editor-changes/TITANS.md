@@ -11,6 +11,7 @@
 
 | 时间（日本时间） | 来源IP | 单位 | 修改对象 | 修改内容 | 详细日志 |
 |---|---|---|---|---|---|
+| 2026-11-08 20:01:02 | local | 雷达（Facility_Radar） | 单位特例 | /displayLocalization：null → {"en":{},"ja":{}}<br>/faction：（无） → "EFSF"<br>/stats/hp：3750 → 7500 | [JSON](../../server-data/editor-changes/2026-11-08/2026-11-08T11-01-02-880Z-26e8b135-ac8d-4a88-897f-95276b8005a2.json) |
 | 2026-11-08 01:57:50 | local | 加农炮炮塔（Facility_Cannon） | 单位特例 | /displayLocalization：null → {"en":{},"ja":{}}<br>/faction：（无） → "EFSF"<br>/stats/hp：10000 → 20000 | [JSON](../../server-data/editor-changes/2026-11-08/2026-11-07T16-57-50-746Z-65624efa-5a35-4026-8c82-d7073faa858b.json) |
 | 2026-11-08 01:57:49 | local | 导弹炮塔（Facility_Missile） | 单位特例 | /displayLocalization：null → {"en":{},"ja":{}}<br>/faction：（无） → "EFSF"<br>/stats/hp：7500 → 20000 | [JSON](../../server-data/editor-changes/2026-11-08/2026-11-07T16-57-49-817Z-40d7ca91-afc7-4175-9065-77bdce6d763d.json) |
 | 2026-11-08 01:57:48 | local | 光束炮塔（Facility_Beam） | 单位特例 | /displayLocalization：null → {"en":{},"ja":{}}<br>/faction：（无） → "EFSF"<br>/stats/hp：10000 → 20000 | [JSON](../../server-data/editor-changes/2026-11-08/2026-11-07T16-57-48-920Z-8691afa7-9e32-4ea1-b5cb-9d39bd678afd.json) |

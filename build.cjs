@@ -93,9 +93,11 @@ html = html.replace(
 function clientCatalogData() {
   const catalog = require("./tools/load-catalog.cjs").loadCatalog({ embedMusic: true });
   require("./tools/export-combat-rules.cjs").writeReport(catalog);
-  return JSON.stringify(require("./shared/asset-pool.js").pack(catalog)).replace(/</g, "\\u003c");
+  const data=Buffer.from(JSON.stringify(require("./shared/asset-pool.js").pack(catalog)));
+  return JSON.stringify({catalogEncoding:"gzip-base64",uncompressedBytes:data.length,payload:zlib.gzipSync(data,{level:6}).toString("base64")});
 }
 for (const [key, file] of [
+  ["BIOME_TILES", "shared/biome-tiles.js"],
   ["TILEMAP_VIEW", "shared/tilemap-view.js"],
   ["TILEMAP_RENDERER", "client/tilemap-renderer.js"],
   ["MENU_SHELL", "client/menu-shell.js"],
@@ -162,10 +164,13 @@ for (const [key, file] of [
   ["PLAYER_PROFILE", "client/player-profile.js"],
   ["CHAT_CHANNELS", "shared/chat-channels.js"],
   ["CHAT", "client/chat.js"],
+  ["TEAM_MARKERS", "client/team-markers.js"],
   ["MATCH_RESULTS", "client/match-results.js"],
   ["ATTACK_PLANS", "shared/attack-plans.js"],
   ["MATCH_RECORDS", "shared/match-records.js"],
   ["REPLAY_PLAYER", "client/replay-player.js"],
+  ["LOCAL_RECORDS", "client/local-records.js"],
+  ["SETTINGS_LAYOUT", "client/settings-layout.js"],
   ["MOVEMENT_TIMING", "shared/movement-timing.js"],
   ["CAMPAIGN_PILOTS", "shared/campaign-pilots.js"],
   ["CAMPAIGN_RULES", "shared/campaign.js"],
@@ -183,6 +188,10 @@ for (const [key, file] of [
   html = html.replace("__" + key + "__", () =>
     key === "DATA"
       ? clientCatalogData()
+      : key === "ASSET_POOL" ? inlineScript(require("esbuild").buildSync({
+          stdin:{contents:'export { gunzipSync } from "fflate";',resolveDir:root},bundle:true,write:false,
+          platform:"browser",format:"iife",globalName:"CatalogInflate",target:"chrome80",minify:true,legalComments:"eof"
+        }).outputFiles[0].text + "\n/*! " + read("node_modules/fflate/LICENSE") + " */\n" + read(file))
       : inlineScript(read(file)),
   );
 html = html.replace("</body>", () => `<style>${read("client/campaign.css")}</style><script>const CAMPAIGN_WORLD=ART.scenarios.earth_0079_mid.world;${inlineScript(read("client/campaign-workspace.js"))}${inlineScript(read("client/campaign-pilots.js"))}${inlineScript(read("client/campaign-console.js"))}${inlineScript(read("client/campaign.js"))}</script></body>`);

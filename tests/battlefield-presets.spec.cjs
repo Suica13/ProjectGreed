@@ -28,12 +28,8 @@ for (const width of [1600, 390])
       await expect(page.locator("#roomUnitLimit")).toHaveValue(String(preset.unitLimit));
       for (const team of [0, 1])
         await expect(page.locator(`#battlefieldTeam${team}era`)).toHaveValue(preset.era);
-      await expect(page.locator("#battlefieldEntryReward")).toContainText(
-        preset.money.toLocaleString("en-US"),
-      );
-      await expect(page.locator("#battlefieldEntryReward")).toContainText(
-        preset.supplies.toLocaleString("en-US"),
-      );
+      await expect(page.locator("#battlefieldEntryReward")).toHaveText("阵营AI每5回合空投增援 · 单位阵亡扣除库存 · 击坠与助攻给予奖励");
+      expect(await page.evaluate(()=>Rules.battlefieldMode.baseReward(Net.snapshot.settings,0))).toMatchObject({money:preset.money,supplies:preset.supplies});
     }
     await page.locator("#roomPresetName").fill("War room size");
     await page.locator("#saveRoomPreset").click();
@@ -52,13 +48,13 @@ for (const width of [1600, 390])
     await page.locator("#roomCostLimit").fill("99999");
     await page.locator("#roomCostLimit").blur();
     await expect.poll(() => page.evaluate(() => Net.snapshot.settings.costLimit)).toBe(99999);
-    await expect(page.locator("#battlefieldEntryReward")).toContainText("13,500");
+    expect(await page.evaluate(()=>Rules.battlefieldMode.baseReward(Net.snapshot.settings,1).money)).toBe(13500);
     await page.locator("#battlefieldTeam0faction").selectOption("EFSF");
     await expect
       .poll(() => page.evaluate(() => Net.snapshot.settings.battlefieldTeams[0].era))
       .toBe("0079T1");
-    await expect(page.locator("#battlefieldEntryReward")).toContainText("6,000");
-    await expect(page.locator("#battlefieldEntryReward")).toContainText("13,500");
+    expect(await page.evaluate(()=>Rules.battlefieldMode.baseReward(Net.snapshot.settings,0).money)).toBe(6000);
+    expect(await page.evaluate(()=>Rules.battlefieldMode.baseReward(Net.snapshot.settings,1).money)).toBe(13500);
     expect(
       await page
         .locator("#roomSettingsPage")

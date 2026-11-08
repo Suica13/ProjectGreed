@@ -4,6 +4,7 @@ const fs = require("node:fs"),
   { spawnSync } = require("node:child_process"),
   crypto = require("node:crypto");
 const os = require("node:os");
+const androidEngine = require("../apps/android/engine.json");
 const root = path.resolve(__dirname, ".."),
   project = require("../project.json");
 const args = process.argv.slice(2),
@@ -27,7 +28,7 @@ const delivery = path.join(
   root,
   "build",
   project.version,
-  `ProjectGreed-${project.version}-${mode === "windows" ? "windows-x64" : "android"}`,
+  `ProjectGreed-${project.version}-${mode === "windows" ? "windows-x64" : "android-gecko"}`,
 );
 if (!delivery.startsWith(path.join(root, "build") + path.sep))
   throw Error("Output outside workspace build folder");
@@ -59,7 +60,13 @@ if (mode === "windows") {
   // The resolved target is checked before removing an old generated content tree.
   if (
     destination !==
-    path.resolve(root, "build", project.version, `ProjectGreed-${project.version}-windows-x64`, "content")
+    path.resolve(
+      root,
+      "build",
+      project.version,
+      `ProjectGreed-${project.version}-windows-x64`,
+      "content",
+    )
   )
     throw Error("Unsafe content destination");
   fs.rmSync(destination, { recursive: true, force: true });
@@ -80,8 +87,8 @@ if (mode === "windows") {
       "Set ANDROID_HOME, JAVA_HOME and GRADLE_HOME, or apps/toolchain.local.json (see docs/tools/native-clients.md)",
     );
   const sdkPath = path.resolve(sdk);
-  if (!fs.existsSync(path.join(sdkPath, "platforms", "android-36", "android.jar")))
-    throw Error("Android SDK platform 36 missing");
+  if (!fs.existsSync(path.join(sdkPath, "platforms", "android-37.0", "android.jar")))
+    throw Error("Android SDK platform 37.0 missing");
   fs.writeFileSync(
     path.join(root, "apps/android/local.properties"),
     "sdk.dir=" + sdkPath.replaceAll("\\", "/").replace(":", "\\:") + "\n",
@@ -103,9 +110,24 @@ if (mode === "windows") {
     ],
     { env: { ...process.env, JAVA_HOME: jdk, ANDROID_HOME: sdkPath } },
   );
+  for (const [source, name] of [
+    ["app-universal-debug.apk", `ProjectGreed-${project.version}.apk`],
+    ["app-arm64-v8a-debug.apk", `ProjectGreed-${project.version}-arm64.apk`],
+    ["app-armeabi-v7a-debug.apk", `ProjectGreed-${project.version}-armv7.apk`],
+  ])
+    fs.copyFileSync(
+      path.join(root, "apps/android/app/build/outputs/apk/debug", source),
+      path.join(delivery, name),
+    );
+  fs.mkdirSync(path.join(delivery, "docs/tools"), { recursive: true });
+  fs.mkdirSync(path.join(delivery, "docs/legal"), { recursive: true });
   fs.copyFileSync(
-    path.join(root, "apps/android/app/build/outputs/apk/debug/app-debug.apk"),
-    path.join(delivery, `ProjectGreed-${project.version}.apk`),
+    path.join(root, "docs/tools/android-gecko.md"),
+    path.join(delivery, "docs/tools/android-gecko.md"),
+  );
+  fs.copyFileSync(
+    path.join(root, "docs/legal/gecko-licenses.html"),
+    path.join(delivery, "docs/legal/gecko-licenses.html"),
   );
 } else throw Error("Unknown target: " + mode);
 const records = [];
@@ -127,7 +149,15 @@ scan(delivery);
 fs.writeFileSync(
   path.join(delivery, "distribution-manifest.json"),
   JSON.stringify(
-    { edition: "ProjectGreed", version: project.version, platform: mode, files: records },
+    {
+      edition: "ProjectGreed",
+      version: project.version,
+      platform: mode,
+      ...(mode === "android"
+        ? { engine: androidEngine.name, engineVersion: androidEngine.version }
+        : {}),
+      files: records,
+    },
     null,
     2,
   ),

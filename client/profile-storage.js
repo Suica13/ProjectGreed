@@ -32,7 +32,7 @@ const ProfileStorage = (() => {
         group.records++;
         groups.set(name, group);
         result.estimatedBytes += bytes;
-        result.largestRecords.push({ key, bytes, category: name });
+        result.largestRecords.push({ key: name === "其他页面数据" ? "外部存储项" : key, bytes, category: name });
       }
       result.readable = true;
       // Probe a new, tiny record. Never overwrite or remove an existing save.

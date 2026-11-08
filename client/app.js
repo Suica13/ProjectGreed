@@ -2482,6 +2482,7 @@ function drawMapFrame(now) {
       if (label.textContent !== next) label.textContent = next;
     }
   }
+  window.TeamMarkers?.draw(ctx, mapGeo, now);
   drawDialogueBubbles(ctx, mapPosesById, intel, w, h, now, pilotLabels);
 }
 function drawDialogueBubbles(ctx, poses, intel, width, height, now, labelsVisible = MapCamera.pilotLabels) {
@@ -2607,6 +2608,7 @@ byId("map").onpointermove = (e) => {
 };
 byId("map").onpointerleave = () => (hover = null);
 byId("map").onclick = async (e) => {
+  if (window.TeamMarkers?.click(cellAt(e))) return;
   if (TurnFlow.active) return;
   if (["hangar-launch", "hangar-board"].includes(mode) && window.HangarUI?.click(cellAt(e))) return;
   if (phase === "deployment") {

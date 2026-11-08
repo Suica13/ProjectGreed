@@ -31,7 +31,7 @@ test('carrier outlines follow wrapped groups and resize without changing cards o
       const a = rows[0].getBoundingClientRect(), b = rows[1].getBoundingClientRect();
       const frame = document.querySelector('#formationUnits > svg');
       return { columns: Math.abs(a.top - b.top) < 1 ? 2 : 1, width: Number(frame.getAttribute('width')), listWidth: document.querySelector('#formationUnits').clientWidth };
-    })).toEqual(expect.objectContaining({ columns: width > 1280 ? 2 : 1, width: expect.any(Number), listWidth: expect.any(Number) }));
+    })).toEqual(expect.objectContaining({ columns: 1, width: expect.any(Number), listWidth: expect.any(Number) }));
     const geometry = await page.evaluate(() => {
       const list = document.querySelector('#formationUnits');
       const svg = list.querySelector('svg');
@@ -46,9 +46,8 @@ test('carrier outlines follow wrapped groups and resize without changing cards o
     expect(geometry.width).toBe(geometry.listWidth);
     expect(geometry.heights.every(height => height === 116)).toBe(true);
     expect(geometry.pointerEvents).toBe('none');
-    // The group starts in the right column, crosses a full row, then ends left:
-    // four exposed horizontal edges rather than a bounding rectangle.
-    expect(geometry.horizontalEdges).toBe(width > 1280 ? 4 : 2);
+    // The single-column outline joins the carrier to its indented cargo with a step.
+    expect(geometry.horizontalEdges).toBe(3);
     if (width === 390 || width === 1600) await page.screenshot({ path: `tmp/verification/screenshots/transport-frame-${width}.png` });
   }
   expect(await page.evaluate(() => JSON.stringify(Formation.current()))).toBe(saved);

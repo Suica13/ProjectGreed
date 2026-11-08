@@ -24,8 +24,8 @@ const TileMapRenderer = (() => {
     }
     const {tile, ox, oy} = geometry;
     if (!(tile > 0)) return;
-    // Overview chunks stay small; close-up chunks retain the native 32px tile detail.
-    const resolution = tile < 16 ? 8 : 32;
+    // Overview chunks stay small; close-up chunks preserve 64px atlas detail.
+    const resolution = tile < 16 ? 16 : tile < 48 ? 32 : 64;
     const x0 = Math.max(0, Math.floor(-ox / (tile * chunkCells)));
     const y0 = Math.max(0, Math.floor(-oy / (tile * chunkCells)));
     const x1 = Math.min(Math.ceil(doc.width / chunkCells), Math.ceil((width - ox) / (tile * chunkCells)));

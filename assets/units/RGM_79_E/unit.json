@@ -626,7 +626,10 @@
       "name": "GM Early Type",
       "description": "An early-type GM developed by Luna II, with rather mediocre performance"
     },
-    "ja": {}
+    "ja": {
+      "name": "初期型ジム",
+      "description": "ルナツーで開発された初期型ジム。性能は平凡。"
+    }
   },
   "weapons": {
     "Common_Push_A": {
@@ -649,7 +652,7 @@
               "delay": 0.45
             },
             {
-              "delay": 1.0
+              "delay": 1
             }
           ],
           "startAnimation": "Common_Push_A"

@@ -114,6 +114,11 @@ function loadCatalog({
   result.sounds["pilot/activation"] =
     "data:audio/ogg;base64," +
     fs.readFileSync(file(root, "sounds/Action_8.ogg")).toString("base64");
+  if (embedAssets) result.assets["asset:encounter-pixel-props-v1"] = "data:image/png;base64," + fs.readFileSync(file(root, "maps/tilesets/encounter-pixel-props-v1.png")).toString("base64");
+  for (const id of read(file(root, "maps/biomes/catalog.json")).biomes) {
+    const biome = read(file(root, "maps/biomes/" + id + "/biome.json"));
+    if (embedAssets) result.assets[biome.asset] = "data:image/png;base64," + fs.readFileSync(file(root, "maps/biomes/" + id + "/" + biome.image)).toString("base64");
+  }
   result.maps = {};
   result.scenarios = {};
   const mapReferences = [...catalog.maps];
@@ -505,6 +510,11 @@ function loadCatalog({
     const prefab = WeaponStore.expandPrefab(raw, weaponDefinitionsOverride || undefined);
     if (prefab.enabled === false) continue;
     prefab.skills = (prefab.skills || []).filter(skill => skill.type !== "emp");
+    if (prefab.stats.deployed && prefab.stats.movementType === "air") {
+      prefab.stats.movementType = "ground";
+      prefab.presentation.thrusters = false;
+      prefab.presentation.movement = "walk";
+    }
     localize.prefab(prefab);
     require("./unit-footprint.cjs").compactShipFootprint(prefab);
     require("./weapon-balance.cjs").applyWeaponBalance(prefab, conversion);

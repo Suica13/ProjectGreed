@@ -216,7 +216,7 @@ const SpriteRenderer = (() => {
       ART.models[model].weapons.find((w) => w.id === variables.heldWeapon)?.displayIndex ??
       0;
     variables.brokenParts = brokenParts;
-    const thrusters = ART.models[model].presentation.thrusters !== false;
+    const thrusters = !ART.models[model].deployed && ART.models[model].presentation.thrusters !== false;
     variables.boosting = thrusters && models[model].presentation.movement === "boost";
     const airborne = flying || ART.models[model].movementType === "air";
     variables.sustainedThrust = thrusters && (environment === "space" || airborne);
@@ -396,7 +396,7 @@ const SpriteRenderer = (() => {
   }
   // A small visual-only height variation in source pixels. Shadows and map cells stay fixed.
   function flightOffset(model, now, flying = false, environment = "ground") {
-    if (environment === "space" || !(flying || ART.models[model].movementType === "air")) return 0;
+    if (ART.models[model].deployed || environment === "space" || !(flying || ART.models[model].movementType === "air")) return 0;
     let phase = 0;
     for (const character of model) phase = (phase * 31 + character.charCodeAt(0)) >>> 0;
     const t = now / 1000,

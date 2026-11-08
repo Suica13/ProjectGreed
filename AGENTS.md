@@ -35,3 +35,5 @@
 
 
 - 发行产物按 `project.json` 的版本统一归档到 `build/<版本号>/`（例如 `build/V103/`）。Windows、Android、服务端和HTML产物均放在该版本目录内；APK命名为 `ProjectGreed-<版本号>.apk`。`public/client.html`仍保留为服务端读取的生成文件，通用构建缓存与验证目录不作为发行包交付。
+
+- 用户明确说“build／构建／打包”且未限定目标时，默认同时构建 Windows 客户端、新 Android GeckoView 客户端、独立 HTML 和含 HTML 的服务端文件夹，执行 `npm run release:all`，统一归档 `build/<版本号>/`。日常修改后的 `npm run build` 仍只用于网页生成与验证；不因例行验证自动打包原生客户端或服务端。

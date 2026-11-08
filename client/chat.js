@@ -324,6 +324,7 @@ const Chat = (() => {
     ]);
     // A seat change can remove access to the previous team's history.
     messages = (snapshot.chat || []).slice(-100);
+    window.TeamMarkers?.snapshot(snapshot);
     render();
     refreshNames(snapshot);
     if (connected() && !pending) status("");
@@ -336,7 +337,7 @@ const Chat = (() => {
       messages = messages.slice(-100);
       render();
     }
-    if (pending?.id === ack) {
+    if (pending && pending.id === ack) {
       clearTimeout(timer);
       const input = byId(pending.view.input);
       if (input.value.trim() === pending.text) input.value = "";

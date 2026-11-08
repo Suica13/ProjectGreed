@@ -42,37 +42,73 @@ const BattlefieldUI = (() => {
   document.body.append(deploymentDialog);
   let deploymentSiteId = null;
   window.addEventListener("page-changing", () => deploymentDialog.close());
-  for (const type of ["keydown", "keyup"]) deploymentDialog.addEventListener(type, event => event.stopPropagation());
+  for (const type of ["keydown", "keyup"])
+    deploymentDialog.addEventListener(type, (event) => event.stopPropagation());
   function renderDeployment() {
     if (!deploymentDialog.open) return;
-    if (!game.battlefield || pageView !== "game" || game.winner !== null) { deploymentDialog.close(); return; }
-    const site = Rules.battlefieldMode.deploymentSites(Rules, game, Net.team()).find(item => item.id === deploymentSiteId);
+    if (!game.battlefield || pageView !== "game" || game.winner !== null) {
+      deploymentDialog.close();
+      return;
+    }
+    const site = Rules.battlefieldMode
+      .deploymentSites(Rules, game, Net.team())
+      .find((item) => item.id === deploymentSiteId);
     const heading = element("div", "battlefield-deployment-heading");
     heading.append(element("h3", "", (site?.name || "部署地点已失守") + " · 申请部署"));
     const close = element("button", "", "关闭");
     close.onclick = () => deploymentDialog.close();
     heading.append(close);
-    const description = element("p", "", "阵亡单位维修完成后可申请部署，下一回合空投入场。落点被占满时等待空位。");
+    const description = element(
+      "p",
+      "",
+      "阵亡单位维修完成后可申请部署，下一回合空投入场。落点被占满时等待空位。",
+    );
     const list = element("div", "battlefield-reserves");
-    const reserves = (game.battlefield.reserves || []).filter(item => item.ownerSeat === Net.seat && item.readyRound !== null);
+    const reserves = (game.battlefield.reserves || []).filter(
+      (item) => item.ownerSeat === Net.seat && item.readyRound !== null,
+    );
     for (const reserve of reserves) {
-      const modelId = reserve.unitId + "__" + reserve.kitId, model = Rules.models[modelId];
+      const modelId = reserve.unitId + "__" + reserve.kitId,
+        model = Rules.models[modelId];
       const row = element("div", "battlefield-reserve");
       row.dataset.reserveId = reserve.id;
-      const image = element("img", ""); image.src = unitIcon(modelId); image.alt = "";
+      const image = element("img", "");
+      image.src = unitIcon(modelId);
+      image.alt = "";
       const info = element("div", "");
-      info.append(element("strong", "", (reserve.formationIndex + 1) + ". " + (model?.name || reserve.unitId)));
+      info.append(
+        element("strong", "", reserve.formationIndex + 1 + ". " + (model?.name || reserve.unitId)),
+      );
       const remaining = Math.max(0, reserve.readyRound - game.round);
-      const status = reserve.request ? (reserve.request.arrivalRound > game.round ? "已申请 · 下一回合空投" : "等待可用落点") :
-        reserve.stockAvailable === false ? "库存已耗尽" : remaining ? `维修中 · 剩余${remaining}回合` : "维修完成";
+      const status = reserve.request
+        ? reserve.request.arrivalRound > game.round
+          ? "已申请 · 下一回合空投"
+          : "等待可用落点"
+        : reserve.stockAvailable === false
+          ? "库存已耗尽"
+          : remaining
+            ? `维修中 · 剩余${remaining}回合`
+            : "维修完成";
       info.append(element("small", "", status));
-      const button = element("button", "", "申请部署");
-      button.disabled = !site || reserve.stockAvailable === false || !!reserve.request || remaining > 0 || !Net.canAct() || !!Net.awaiting;
+      info.append(element("small", "", "剩余库存 " + (reserve.stockRemaining ?? "—")));
+      const button = element(
+        "button",
+        "",
+        reserve.request ? "已申请" : reserve.stockAvailable === false ? "暂无库存" : "申请部署",
+      );
+      button.disabled =
+        !site ||
+        reserve.stockAvailable === false ||
+        !!reserve.request ||
+        remaining > 0 ||
+        !Net.canAct() ||
+        !!Net.awaiting;
       button.onclick = () => {
         button.disabled = true;
         Net.request("battlefield_deploy", { reserveId: reserve.id, siteId: deploymentSiteId });
       };
-      row.append(image, info, button); list.append(row);
+      row.append(image, info, button);
+      list.append(row);
     }
     if (!reserves.length) list.append(element("p", "", "暂无阵亡单位。"));
     const scroll = deploymentDialog.querySelector(".battlefield-reserves")?.scrollTop || 0;
@@ -82,32 +118,44 @@ const BattlefieldUI = (() => {
   function click(cell) {
     if (!game.battlefield || !cell || phase !== "idle" || !Net.canAct()) return false;
     const base = Rules.at(game, cell.x, cell.y);
-    const site = Rules.battlefieldMode.deploymentSites(Rules, game, Net.team()).find(item =>
-      item.id === "base:" + base?.facility?.id || item.id.startsWith("point:") && item.x === cell.x && item.y === cell.y);
+    const site = Rules.battlefieldMode
+      .deploymentSites(Rules, game, Net.team())
+      .find(
+        (item) =>
+          item.id === "base:" + base?.facility?.id ||
+          (item.id.startsWith("point:") && item.x === cell.x && item.y === cell.y),
+      );
     if (!site) return false;
     deploymentSiteId = site.id;
     deploymentDialog.showModal();
     renderDeployment();
     return true;
   }
-  let pointSource="";
+  let pointSource = "";
   let identity = "",
     arrivals = new Map();
-  const pointIcon = new Image(), pointHighlight = new Image();
+  const pointIcon = new Image(),
+    pointHighlight = new Image();
   let pointGlows = [];
   const teamColors = ["#73caf7", "#fb9688"];
   // Build the capture perimeter once; drawing must not rebuild geometry each frame.
   const captureEdges = (() => {
-    const radius = Rules.battlefieldMode.captureRadius, area = new Set(), edges = [];
-    for (let dy = -radius; dy <= radius; dy++) for (let dx = -radius; dx <= radius; dx++)
-      if (Math.hypot(dx, dy) <= radius) area.add(dx + "," + dy);
+    const radius = Rules.battlefieldMode.captureRadius,
+      area = new Set(),
+      edges = [];
+    for (let dy = -radius; dy <= radius; dy++)
+      for (let dx = -radius; dx <= radius; dx++)
+        if (Math.max(Math.abs(dx), Math.abs(dy)) <= radius) area.add(dx + "," + dy);
     for (const cell of area) {
       const [dx, dy] = cell.split(",").map(Number);
       for (const [nx, ny, ax, ay, bx, by] of [
-        [0, -1, 0, 0, 1, 0], [1, 0, 1, 0, 1, 1],
-        [0, 1, 1, 1, 0, 1], [-1, 0, 0, 1, 0, 0],
-      ]) if (!area.has((dx + nx) + "," + (dy + ny)))
-        edges.push([dx - 0.5 + ax, dy - 0.5 + ay, dx - 0.5 + bx, dy - 0.5 + by]);
+        [0, -1, 0, 0, 1, 0],
+        [1, 0, 1, 0, 1, 1],
+        [0, 1, 1, 1, 0, 1],
+        [-1, 0, 0, 1, 0, 0],
+      ])
+        if (!area.has(dx + nx + "," + (dy + ny)))
+          edges.push([dx - 0.5 + ax, dy - 0.5 + ay, dx - 0.5 + bx, dy - 0.5 + by]);
     }
     return edges;
   })();
@@ -125,21 +173,37 @@ const BattlefieldUI = (() => {
     });
   };
   function preparePoints(config) {
-    if(pointSource===config.pointIcon)return;
-    pointSource=config.pointIcon;pointIcon.src=config.pointIcon||"";
-    pointGlows=[];pointHighlight.src=config.pointHighlight||"";
+    if (pointSource === config.pointIcon) return;
+    pointSource = config.pointIcon;
+    pointIcon.src = config.pointIcon || "";
+    pointGlows = [];
+    pointHighlight.src = config.pointHighlight || "";
   }
-  function drawCampaignObjective(ctx,node,team,x,y,tile) {
+  function drawCampaignObjective(ctx, node, team, x, y, tile) {
     preparePoints(Rules.getMap(Rules.battlefieldMode.defaultMapId).battlefield);
-    if(node.kind==="base") {
-      const model=Rules.models.Facility_HQ__standard;
-      const scale=tile/Rules.mapCellPixels*ART.presentation.unitMapScale*model.presentation.mapScale;
-      SpriteRenderer.draw(ctx,"Facility_HQ__standard",x,y,scale,0,"Common_Idle",0);
-    } else if(pointIcon.complete&&pointIcon.naturalWidth) {
-      const scale=tile*1.7/Math.max(pointIcon.naturalWidth,pointIcon.naturalHeight);
-      ctx.drawImage(pointIcon,x-pointIcon.naturalWidth*scale/2,y-pointIcon.naturalHeight*scale/2,pointIcon.naturalWidth*scale,pointIcon.naturalHeight*scale);
-      const glow=pointGlows[team];
-      if(glow)ctx.drawImage(glow,x-glow.width*scale/2,y-glow.height*scale/2,glow.width*scale,glow.height*scale);
+    if (node.kind === "base") {
+      const model = Rules.models.Facility_HQ__standard;
+      const scale =
+        (tile / Rules.mapCellPixels) * ART.presentation.unitMapScale * model.presentation.mapScale;
+      SpriteRenderer.draw(ctx, "Facility_HQ__standard", x, y, scale, 0, "Common_Idle", 0);
+    } else if (pointIcon.complete && pointIcon.naturalWidth) {
+      const scale = (tile * 1.7) / Math.max(pointIcon.naturalWidth, pointIcon.naturalHeight);
+      ctx.drawImage(
+        pointIcon,
+        x - (pointIcon.naturalWidth * scale) / 2,
+        y - (pointIcon.naturalHeight * scale) / 2,
+        pointIcon.naturalWidth * scale,
+        pointIcon.naturalHeight * scale,
+      );
+      const glow = pointGlows[team];
+      if (glow)
+        ctx.drawImage(
+          glow,
+          x - (glow.width * scale) / 2,
+          y - (glow.height * scale) / 2,
+          glow.width * scale,
+          glow.height * scale,
+        );
     }
   }
   function refresh() {
@@ -172,10 +236,37 @@ const BattlefieldUI = (() => {
   }
   function draw(ctx, ox, oy, tile) {
     if (!game.battlefield) return;
+    const battleSettings = BattleScene.settings();
     ctx.save();
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.font = `bold ${Math.max(10, Math.min(15, tile * 0.5))}px system-ui`;
+    for (const unit of game.units) {
+      if (!unit.facility) continue;
+      const center = Rules.center(unit),
+        x = ox + (center.x + 0.5) * tile,
+        y = oy + (center.y + 0.5) * tile;
+      if (unit.facility.type === "base" && unit.hp > 0) {
+        ctx.strokeStyle = teamColors[unit.team];
+        ctx.globalAlpha = 0.6;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(x, y, Rules.battlefieldMode.baseRadius * tile, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+      if (unit.hp > 0 || unit.facility.type === "base") continue;
+      const model = Rules.modelOf(unit),
+        scale =
+          (tile / Rules.mapCellPixels) *
+          ART.presentation.unitMapScale *
+          (battleSettings.mapScale / (ART.presentation.mapCellScale || 1)) *
+          model.presentation.mapScale;
+      ctx.save();
+      ctx.filter = "grayscale(1) brightness(0.28)";
+      SpriteRenderer.draw(ctx, unit.model, x, y, scale, unit.angle, model.presentation.idle, 0);
+      ctx.restore();
+    }
     for (const point of game.battlefield.points) {
       const x = ox + (point.x + 0.5) * tile,
         y = oy + (point.y + 0.5) * tile;
@@ -189,12 +280,19 @@ const BattlefieldUI = (() => {
       ctx.stroke();
       if (pointIcon.complete && pointIcon.naturalWidth) {
         // Preserve the SL artwork's aspect ratio, including matching light layers.
-        const scale = tile * 1.7 / Math.max(pointIcon.naturalWidth, pointIcon.naturalHeight);
-        const width = pointIcon.naturalWidth * scale, height = pointIcon.naturalHeight * scale;
+        const scale = (tile * 1.7) / Math.max(pointIcon.naturalWidth, pointIcon.naturalHeight);
+        const width = pointIcon.naturalWidth * scale,
+          height = pointIcon.naturalHeight * scale;
         ctx.drawImage(pointIcon, x - width / 2, y - height / 2, width, height);
         const glow = pointGlows[point.owner];
-        if (glow) ctx.drawImage(glow, x - glow.width * scale / 2,
-          y - glow.height * scale / 2, glow.width * scale, glow.height * scale);
+        if (glow)
+          ctx.drawImage(
+            glow,
+            x - (glow.width * scale) / 2,
+            y - (glow.height * scale) / 2,
+            glow.width * scale,
+            glow.height * scale,
+          );
       }
       ctx.fillStyle = "#fff4d4";
       ctx.fillText(point.name, x, y + tile * 1.2);
