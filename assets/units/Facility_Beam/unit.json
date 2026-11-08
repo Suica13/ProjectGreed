@@ -269,6 +269,10 @@
     "Common_Turret_BM_Double": {
       "ref": "Common_Turret_BM_Double__lv1",
       "overrides": {
+        "damagePerShot": 3750,
+        "damageComponents": {
+          "beam": 3750
+        },
         "actionCost": 2,
         "source": {
           "file": "GW_BattleUniverse_Main/Units/Buildings/Turret/TypeA/Turret_BM_A.ini",

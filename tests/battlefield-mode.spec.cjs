@@ -30,7 +30,7 @@ for (const width of [1600, 390])
     await page.locator("#confirmDeployment").click();
     await expect(page.locator("#battlefieldStatus")).toBeVisible();
     await expect(page.locator("#battlefieldRounds")).toHaveText("0/100");
-    await expect(page.locator(".battlefield-strength-text").first()).toHaveText("20,000/20,000");
+    await expect(page.locator(".battlefield-strength-text").first()).toHaveText("30,000/30,000");
     await expect.poll(() => page.evaluate(() => !BattleAssets.loading && Net.canAct())).toBe(true);
     await page.evaluate(() => {
       const room = [...bfEngine.rooms.values()][0];

@@ -34,7 +34,8 @@ test("0079 fixed waves scale every contingent by surviving bases and honor exact
 function game() {
   const armies = Array(12).fill(null);
   armies[2] = [{ unitId: "Type61", kitId: "standard" }];
-  return G.create(false, 7319, armies, false, { mode: "battlefield", mapId: B.defaultMapId });
+  return G.create(false, 7319, armies, false, { mode: "battlefield", mapId: B.defaultMapId,
+    battlefieldTeams:[{faction:"EFSF",era:"0079T1"},{faction:"ZEON",era:"0079T1"}] });
 }
 test("dedicated battlefield map creates six reusable facility types for each team", () => {
   const g = game();
@@ -53,7 +54,7 @@ test("dedicated battlefield map creates six reusable facility types for each tea
   assert(g.units.filter((unit) => unit.facility).every((unit) => G.modelOf(unit).move === 0));
   assert(g.units.filter(unit => unit.facility?.type === "base").every(unit => unit.hp === 300000));
   assert(g.units.filter(unit => ["machineGun", "beam", "missile", "cannon"].includes(unit.facility?.type))
-    .every(unit => unit.hp === 25000));
+    .every(unit => unit.hp === 20000));
   assert.throws(() =>
     G.create(false, 1, [null, null], false, { mode: "battlefield", mapId: "frontier_1v1" }),
   );
@@ -210,7 +211,7 @@ test("fixed waves include the first force, selected-era pools and idempotent lat
   assert.equal(g.units.length, count);
   for (const team of [0, 1]) {
     const available = B.pool(G, g.battlefield, team);
-    assert.equal(available.era, "0079T2");
+    assert.equal(available.era, g.battlefield.teams[team].era);
     assert(available.ms.every(entry => G.models[entry.unitId + "__" + entry.kitId].unitTags.includes("MS")));
     assert(available.choices.every(entry => entry.unitId !== "MS_06C"));
   }

@@ -269,6 +269,10 @@
     "Common_Turret_MG_Double": {
       "ref": "Common_Turret_MG_Double__lv1",
       "overrides": {
+        "damagePerShot": 425,
+        "damageComponents": {
+          "shell": 425
+        },
         "attack": {
           "steps": [
             {

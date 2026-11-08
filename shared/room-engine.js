@@ -3978,8 +3978,13 @@ function createRoomEngine({
                         msg.teamFactions ?? room.settings.teamFactions ?? [null, null],
                       ),
               };
-          if (settings.mode === "battlefield") settings.battlefieldTeams = G.battlefieldMode.teams(G,
-            msg.battlefieldTeams ?? room.settings.battlefieldTeams);
+          if (settings.mode === "battlefield") {
+            settings.battlefieldTeams = G.battlefieldMode.teams(G,
+              msg.battlefieldTeams ?? room.settings.battlefieldTeams);
+            settings.battlefieldEra = G.battlefieldMode.validateRoomSelection({
+              ...settings, battlefieldEra:msg.battlefieldEra ?? room.settings.battlefieldEra ?? "custom",
+            });
+          }
           if (strategic) Object.assign(settings, { surfaceCover: msg.surfaceCover ?? room.settings.surfaceCover ?? true, pilotDialogue: msg.pilotDialogue ?? room.settings.pilotDialogue ?? true, weather: msg.weather ?? room.settings.weather ?? "map", dayNight: msg.dayNight ?? room.settings.dayNight ?? "map", weatherCycle: msg.weatherCycle ?? room.settings.weatherCycle ?? true, timeCycle: msg.timeCycle ?? room.settings.timeCycle ?? true, climateBuffs: msg.climateBuffs ?? room.settings.climateBuffs ?? true });
           if (JSON.stringify(settings) !== JSON.stringify(room.settings)) {
             const mapChanged = settings.mapId !== room.settings.mapId;

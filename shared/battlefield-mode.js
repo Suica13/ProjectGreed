@@ -13,6 +13,19 @@ const BattlefieldMode = (() => {
   });
   const factions = ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"];
   const eras = ["0079T1", "0079T2", "0087T1", "0087T2"];
+  const eraStrength = Object.freeze({"0079T1":20000,"0079T2":30000,"0087T1":45000,"0087T2":60000});
+  function roomEra(settings) {
+    const era = settings.battlefieldEra ?? "custom";
+    if (era !== "custom" && !eras.includes(era)) throw Error("战场年代设置无效");
+    return era;
+  }
+  function validateRoomSelection(settings) {
+    const era = roomEra(settings);
+    if (era !== "custom" && (!roomPreset(settings) ||
+        settings.battlefieldTeams.some(team => team.era !== era)))
+      throw Error("固定年代必须使用对应年代和作战规模模板");
+    return era;
+  }
   const factionEras = faction => ["EFSF","ZEON"].includes(faction) ? eras.slice(0,2) : eras.slice(2);
   // PMC limits and entry pay only: faction AI waves keep their own era rules.
   const legacyRoomPresets = [
@@ -43,6 +56,7 @@ const BattlefieldMode = (() => {
     const eraIndex = eras.indexOf(preset.era);
     const defaults = eraIndex >= 2 ? ["AEUG","TITANS"] : ["EFSF","ZEON"];
     return {
+      battlefieldEra:preset.era,
       costLimit:preset.costLimit,unitCostLimit:preset.unitCostLimit,unitLimit:preset.unitLimit,
       bannedEras:availableEras.filter(era => {
         const order = ["0079T1","0079T2","0083","0087T1","0087T2"].indexOf(era);
@@ -160,13 +174,15 @@ const BattlefieldMode = (() => {
   }
   function initialize(G, game, settings) {
     const config = validateMap(G.getMap(game.mapId));
+    const selections = teams(G, settings.battlefieldTeams);
+    const maximum = selections.map(team => eraStrength[team.era]);
     // Fixed faction seats are supplied entirely by the wave table, including wave one.
     game.units = game.units.filter(unit => unit.facility || G.ownerOf(unit) >= 2);
     game.battlefield = {
-      teams: teams(G, settings.battlefieldTeams),
+      teams: selections,
       maxRounds: config.maxRounds,
-      maximum: [config.strength, config.strength],
-      strength: [config.strength, config.strength],
+      maximum: maximum.slice(),
+      strength: maximum.slice(),
       losses: [0, 0],
       controlLosses: [0, 0],
       lastControlRound: 0,
@@ -518,6 +534,9 @@ const BattlefieldMode = (() => {
     );
   }
   return {
+    eraStrength,
+    roomEra,
+    validateRoomSelection,
     roomPresets,
     roomPreset,
     presetSettings,

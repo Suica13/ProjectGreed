@@ -102,6 +102,12 @@ for (const presetId of [null,"0079T1-small","0079T2-large","0087T1-small","0087T
     const configured = await host.act("configure_room",{...host.state.settings,...patch});
     assert.equal(configured.type,"state");
     assert.equal(G.battlefieldMode.roomPreset(configured.settings).id,presetId);
+    assert.equal(configured.settings.battlefieldEra, patch.battlefieldEra);
+    assert.equal((await host.act("configure_room",{...configured.settings,costLimit:patch.costLimit+25})).type,"error");
+    const custom = await host.act("configure_room",{...configured.settings,battlefieldEra:"custom",costLimit:patch.costLimit+25});
+    assert.equal(custom.type,"state");
+    assert.equal(custom.settings.battlefieldEra,"custom");
+    assert.equal((await host.act("configure_room",configured.settings)).type,"state");
     assert.equal((await guest.act("configure_room",{...configured.settings,costLimit:1})).type,"error");
   }
   const formation = [{ unitId: "Type61", kitId: "standard" }];
@@ -140,7 +146,8 @@ for (const presetId of [null,"0079T1-small","0079T2-large","0087T1-small","0087T
   });
   assert.equal(result.phase, "finished");
   assert.equal(result.game.winner, 0);
-  assert.deepEqual(result.game.battlefield.strength, [20000 - G.models.Type61__standard.cost, 0]);
+  assert.deepEqual(result.game.battlefield.strength, [
+    G.battlefieldMode.eraStrength[room.settings.battlefieldTeams[0].era] - G.models.Type61__standard.cost, 0]);
   assert.equal(result.game.seed, undefined);
   assert.equal(result.game.partSeed, undefined);
   assert.equal(room.economyAwards.filter(award => award.kind === "result").length, 2);

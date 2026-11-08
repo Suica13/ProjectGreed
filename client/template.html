@@ -2581,7 +2581,7 @@
                     <h3 id="roomRulesTitle">房间规则</h3>
                     <div id="roomRulesActions"></div>
                   </div>
-                  <details class="room-rule-group" open>
+                  <details id="roomFormationRules" class="room-rule-group" open>
                     <summary>编组限制</summary>
                     <div class="room-options room-formation-options">
                       <label
@@ -2643,9 +2643,6 @@
                 <option value="campaign">历史战役模式</option>
               </optgroup>
                       </select></label>
-                      <label>驾驶员使用<select id="roomPilotPolicy" aria-label="驾驶员使用">
-                        <option value="allow">允许</option><option value="no_custom">禁止PMC驾驶员</option><option value="no_ace">禁止ACE驾驶员</option><option value="none">全部禁止</option>
-                      </select></label>
                       <label class="room-fog-option"
                         >战争迷雾
                         <select id="roomFogMode" aria-label="战争迷雾">
@@ -2654,7 +2651,17 @@
                           <option value="disabled">禁用</option>
                         </select>
                       </label>
-                      <label>驾驶员战场对话 <select id="roomPilotDialogue"><option value="enabled">开启</option><option value="disabled">关闭</option></select></label>
+                      <label class="room-sharing-option"
+                        >友军单位共享
+                        <select id="roomShareAlliedUnits" aria-label="友军单位共享">
+                          <option value="disabled">禁用</option>
+                          <option value="enabled">启用</option>
+                        </select>
+                      </label>
+                      <label class="room-pilot-option">驾驶员启用<select id="roomPilotPolicy" aria-label="驾驶员使用">
+                        <option value="allow">允许</option><option value="no_custom">禁止PMC驾驶员</option><option value="no_ace">禁止ACE驾驶员</option><option value="none">全部禁止</option>
+                      </select></label>
+                      <label>战场对话 <select id="roomPilotDialogue"><option value="enabled">开启</option><option value="disabled">关闭</option></select></label>
                       <details id="roomClimateOptions" class="room-climate-options">
                         <summary>天气与昼夜设置</summary>
                         <div class="room-climate-fields">
@@ -2666,18 +2673,12 @@
                       <label>天气与昼夜视野影响 <select id="roomClimateBuffs"><option value="enabled">开启</option><option value="disabled">关闭</option></select></label>
                         </div>
                       </details>
-                      <label class="room-sharing-option"
-                        >友军单位共享
-                        <select id="roomShareAlliedUnits" aria-label="友军单位共享">
-                          <option value="disabled">禁用</option>
-                          <option value="enabled">启用</option>
-                        </select>
-                      </label>
                     </div>
                   </details>
                   <details id="battlefieldRoomRules" class="room-rule-group" open hidden>
                     <summary>雇佣兵战争模式设置</summary>
                     <section id="battlefieldRoomOptions" class="battlefield-ai-options" aria-label="雇佣兵战争模式设置"></section>
+                    <fieldset id="battlefieldCustomScale" hidden><legend>自定义战场规模</legend></fieldset>
                   </details>
                   <details class="room-rule-group">
                     <summary>房间禁用标签</summary>

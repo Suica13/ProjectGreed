@@ -287,6 +287,10 @@
     "Common_Turret_CN": {
       "ref": "Common_Turret_CN__lv1",
       "overrides": {
+        "damagePerShot": 7500,
+        "damageComponents": {
+          "shell": 7500
+        },
         "actionCost": 2,
         "source": {
           "file": "GW_BattleUniverse_Main/Units/Buildings/Turret/TypeA/Turret_CN_A.ini",

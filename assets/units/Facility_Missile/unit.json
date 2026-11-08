@@ -269,6 +269,10 @@
     "Common_Turret_MS_Double": {
       "ref": "Common_Turret_MS_Double__lv1",
       "overrides": {
+        "damagePerShot": 2250,
+        "damageComponents": {
+          "shell": 2250
+        },
         "actionCost": 2,
         "source": {
           "file": "GW_BattleUniverse_Main/Units/Buildings/Turret/TypeA/Turret_MS_A.ini",

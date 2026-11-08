@@ -28,7 +28,7 @@ const RoomPanel = (() => {
         ["bannedFactions", "bannedEras", "bannedTypes"].map(key => [key, settings[key]])
       )),
       teamRestrictions: Rules.validateTeamRestrictions(settings.teamRestrictions),
-      ...(settings.battlefieldTeams ? {battlefieldTeams:Rules.battlefieldMode.teams(Rules,settings.battlefieldTeams)} : {}),
+      ...(settings.battlefieldTeams ? {battlefieldTeams:Rules.battlefieldMode.teams(Rules,settings.battlefieldTeams), battlefieldEra:Rules.battlefieldMode.roomEra(settings)} : {}),
     };
   }
   let savedPresets = [];
@@ -249,60 +249,85 @@ const RoomPanel = (() => {
     return restrictions;
   }
   function renderBattlefieldOptions(snapshot, locked) {
+    const settings = snapshot.settings;
+    const battlefield = settings.mode === "battlefield";
     const panel = byId("battlefieldRoomOptions");
-    byId("battlefieldRoomRules").hidden = snapshot.settings.mode !== "battlefield";
-    if (snapshot.settings.mode !== "battlefield") return;
+    const customScale = byId("battlefieldCustomScale");
+    const formationRules = byId("roomFormationRules");
+    const destination = battlefield ? customScale : formationRules;
+    for (const controls of [byId("roomFormationPreset").closest(".room-formation-options"),
+        byId("roomPresetName").closest(".room-preset-editor")]) {
+      if (controls.parentElement !== destination) destination.append(controls);
+    }
+    formationRules.hidden = battlefield || settings.mode === "campaign";
+    byId("battlefieldRoomRules").hidden = !battlefield;
+    if (!battlefield) return;
     panel.replaceChildren();
-    const config = Rules.battlefieldMode.teams(Rules, snapshot.settings.battlefieldTeams);
-    const scaleLabel = element("label", "", "战争规模预设"), scaleSelect = element("select");
-    scaleLabel.style.gridColumn = "1 / -1";
-    scaleSelect.id = "battlefieldScalePreset";
-    scaleSelect.add(new Option(I18n.text("自定义"), "custom"));
-    for (const preset of Rules.battlefieldMode.roomPresets)
-      scaleSelect.add(new Option(`${preset.era} · ${I18n.text(preset.name)} · ${preset.costLimit}/${preset.unitCostLimit}/${preset.unitLimit}`,preset.id));
-    scaleSelect.value = Rules.battlefieldMode.roomPreset(snapshot.settings)?.id || "custom";
-    scaleSelect.disabled = locked;
-    scaleSelect.onchange = () => {
-      if (scaleSelect.value === "custom") return;
+    const mode = Rules.battlefieldMode;
+    const config = mode.teams(Rules, settings.battlefieldTeams);
+    const era = mode.roomEra(settings), custom = era === "custom";
+    customScale.hidden = !custom;
+    function selectRow(parent, id, label, choices, value, change) {
+      const row = element("label", "", label), select = element("select");
+      select.id = id;
+      for (const [key, text] of choices) select.add(new Option(I18n.text(text), key));
+      select.value = value; select.disabled = locked;
+      select.onchange = () => change(select.value);
+      row.append(select); parent.append(row);
+      return row;
+    }
+    function applyPreset(id, selectedEra = era) {
       clearTimeout(numericSettingsTimer);
       numericSettingsTimer = null; queuedNumericSettings = {}; submittedNumericSettings = null;
       numericDrafts.costLimit = numericDrafts.unitCostLimit = numericDrafts.unitLimit = null;
-      sendSettings(Rules.battlefieldMode.presetSettings(scaleSelect.value,config,Rules.eras));
-    };
-    scaleLabel.append(scaleSelect);panel.append(scaleLabel);
+      sendSettings({...mode.presetSettings(id, config, Rules.eras), battlefieldEra:selectedEra});
+    }
+    const eraRow = selectRow(panel, "battlefieldEra", "年代",
+      [...mode.eras.map(value => [value, value]), ["custom", "自定义"]], era, value => {
+        if (value === "custom") sendSettings({battlefieldEra:"custom"});
+        else {
+          const size = mode.roomPreset(settings)?.id.split("-")[1] || "standard";
+          applyPreset(value + "-" + size, value);
+        }
+      });
+    eraRow.style.gridColumn = "1 / -1";
+    for (const team of [0, 1]) {
+      const group = element("fieldset", "battlefield-team-options");
+      group.append(element("legend", "", "队伍" + (team + 1) + " · 固定阵营 AI"));
+      const factions = mode.factions.filter(faction => custom || mode.erasForFaction(Rules, faction).includes(era));
+      selectRow(group, "battlefieldTeam" + team + "faction", "阵营",
+        factions.map(value => [value, value]), config[team].faction, value => {
+          config[team].faction = value;
+          const available = mode.erasForFaction(Rules, value);
+          if (!available.includes(config[team].era)) config[team].era = available[0];
+          sendSettings({battlefieldTeams:config});
+        });
+      if (custom) selectRow(group, "battlefieldTeam" + team + "era", "年代上限",
+        mode.erasForFaction(Rules, config[team].faction).map(value => [value, value]),
+        config[team].era, value => {
+          config[team].era = value;
+          sendSettings({battlefieldTeams:config});
+        });
+      group.classList.toggle("battlefield-fixed-era", !custom);
+      panel.append(group);
+    }
+    const preset = mode.roomPreset(settings);
+    const presets = mode.roomPresets.filter(item => custom || item.era === era);
+    const scaleRow = selectRow(panel, "battlefieldScalePreset", "作战规模模板",
+      [...(custom ? [["custom", "自定义"]] : []), ...presets.map(item => [item.id,
+        `${custom ? item.era + " · " : ""}${I18n.text(item.name)} · ${item.costLimit}/${item.unitCostLimit}/${item.unitLimit}`])],
+      preset?.id || "custom", id => { if (id !== "custom") applyPreset(id); });
+    scaleRow.style.gridColumn = "1 / -1";
     const reward = element("p", "muted");
-    reward.id = "battlefieldEntryReward";reward.style.gridColumn = "1 / -1";
-    const preset = Rules.battlefieldMode.roomPreset(snapshot.settings);
-    reward.textContent = (preset ? "固定入场收益" : "自定义规则：按编组COST插值，年代大规模收益封顶") + " · " + [0,1].map(team => {
-      const pay = Rules.battlefieldMode.baseReward(snapshot.settings,team);
+    reward.id = "battlefieldEntryReward";
+    reward.textContent = (custom ? "自定义规则：按编组COST插值，年代大规模收益封顶" : "固定入场收益") + " · " + [0,1].map(team => {
+      const pay = mode.baseReward(settings, team);
       return `${I18n.text("队伍")}${team+1}: ${I18n.text("资金")} ${formatNumber(pay.money)} / ${I18n.text("物资")} ${formatNumber(pay.supplies)}`;
     }).join(" · ");
     panel.append(reward);
-    for (const team of [0, 1]) {
-      const group = element("fieldset", "battlefield-team-options"), legend = element("legend", "", "队伍" + (team + 1) + " · 固定阵营 AI");
-      group.append(legend);
-      for (const [key, label, choices] of [["faction", "阵营", Rules.battlefieldMode.factions], ["era", "年代上限", Rules.battlefieldMode.eras]]) {
-        const container = element("label", "", label), select = element("select");
-        select.id = "battlefieldTeam" + team + key;
-        for (const value of choices) {
-          const option = new Option(value, value);
-          if (key === "era") option.disabled = !Rules.battlefieldMode.erasForFaction(Rules, config[team].faction).includes(value);
-          select.add(option);
-        }
-        select.value = config[team][key]; select.disabled = locked;
-        select.onchange = () => {
-          config[team][key] = select.value;
-          if (key === "faction") {
-            const eras = Rules.battlefieldMode.erasForFaction(Rules, config[team].faction);
-            if (!eras.includes(config[team].era)) config[team].era = eras[0];
-          }
-          sendSettings({battlefieldTeams:config});
-        };
-        container.append(select); group.append(container);
-      }
-      panel.append(group);
-    }
-      panel.append(element("p", "muted", "100回合 · 初始战力20000 · 每5回合空投增援 · 阵亡扣除库存 · 击坠与助攻给予奖励"));
+    panel.append(element("p", "muted", "100回合 · " + config.map((team, index) =>
+      `队伍${index+1}初始战力${formatNumber(mode.eraStrength[team.era])}`).join(" / ") +
+      " · 每5回合空投增援 · 阵亡扣除库存 · 击坠与助攻给予奖励"));
   }
   function renderCampaignOptions(snapshot, locked) {
     let panel = byId("campaignRoomOptions");
@@ -480,8 +505,8 @@ const RoomPanel = (() => {
     byId("roomScenarioSelect").hidden = !strategic;
     byId("roomScenarioSelect").disabled = locked;
     mapSelect.hidden = strategic;
-    for (const id of ["roomFormationPreset", "roomTagRestrictions"])
-      byId(id).closest("details").hidden = strategic;
+    byId("roomFormationRules").hidden = strategic || settings.mode === "battlefield";
+    byId("roomTagRestrictions").closest("details").hidden = strategic;
     teamRulesPanel.closest("details").hidden = settings.mode !== "quick";
     for (const id of ["roomFogMode", "roomShareAlliedUnits"])
       byId(id).closest("label").hidden = strategic;

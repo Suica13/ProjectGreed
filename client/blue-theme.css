@@ -3501,5 +3501,14 @@ body.menu-shell-active #formationScreen #formationUnits .formation-row > .format
 #roomRulesPanel #battlefieldRoomOptions legend { padding:0 5px; white-space:normal; }
 #roomRulesPanel #battlefieldRoomOptions label { display:flex; flex-direction:column; gap:6px; margin:0; min-width:0; }
 #roomRulesPanel #battlefieldRoomOptions select { width:100%; min-width:0; max-width:100%; height:38px; }
+#roomRulesPanel #battlefieldRoomOptions .battlefield-fixed-era { grid-template-columns:minmax(0,1fr); }
+#battlefieldCustomScale { min-width:0; margin:12px 0 0; padding:10px; border:1px solid #47718b; }
+#roomRulesPanel .room-battle-rules { grid-template-columns:repeat(3,minmax(0,1fr)); align-items:start; }
+#roomRulesPanel .room-battle-rules > .room-pilot-option { grid-column:1; }
+#roomRulesPanel #roomClimateOptions { grid-column:1/-1; width:100%; }
+@media(max-width:600px) {
+  #roomRulesPanel .room-battle-rules { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  #roomRulesPanel .room-battle-rules > .room-pilot-option { grid-column:auto; }
+}
 #roomRulesPanel #battlefieldRoomOptions > p { grid-column:1/-1; margin:0; line-height:1.5; overflow-wrap:anywhere; }
 @media(max-width:1000px) { #roomRulesPanel #battlefieldRoomOptions { grid-template-columns:minmax(0,1fr); } }
