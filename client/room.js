@@ -39,7 +39,12 @@ const RoomPanel = (() => {
         if (typeof item.name !== "string" || !item.name.trim() || item.name.length > 40 ||
             typeof item.id !== "string" || !/^saved-[a-z0-9-]{1,80}$/.test(item.id) ||
             savedPresets.some(p => p.id === item.id || p.name === item.name.trim())) continue;
-        savedPresets.push({id:item.id, name:item.name.trim(), rules:presetRules(item.rules)});
+        const rules = presetRules(item.rules);
+        // Keep old numeric presets usable when built-in scale templates change.
+        if (rules.battlefieldTeams && rules.battlefieldEra !== "custom" &&
+            !Rules.battlefieldMode.roomPreset({ ...rules, mode: "battlefield" }))
+          rules.battlefieldEra = "custom";
+        savedPresets.push({id:item.id, name:item.name.trim(), rules});
       } catch { /* Ignore an invalid entry without losing other saved presets. */ }
     }
   } catch { /* A damaged browser setting must not prevent room creation. */ }

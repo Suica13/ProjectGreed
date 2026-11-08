@@ -69,7 +69,7 @@ for (const width of [1440, 390])
     const errors = [];
     page.on("pageerror", (e) => errors.push(e.message));
     await page.setViewportSize({ width, height: 900 });
-    await page.goto(pathToFileURL(path.resolve("public/save-editor.html")).href);
+    await page.goto(pathToFileURL(path.resolve("admin/save-editor.html")).href);
     await page.locator("#openSave").setInputFiles(file(fixture()));
     await expect(page.locator("#status")).toContainText("已读取");
     await fs.mkdir("tmp/verification/screenshots", { recursive: true });
@@ -121,7 +121,7 @@ test("native save editor preserves unrelated campaign/settings values and origin
     values["projectgreed.settings"] = '{"music":0.3}';
     return { format: "ProjectGreed-app-store", version: 1, revision: 17, values };
   }, fixture());
-  await page.goto(pathToFileURL(path.resolve("public/save-editor.html")).href);
+  await page.goto(pathToFileURL(path.resolve("admin/save-editor.html")).href);
   await page.locator("#openSave").setInputFiles(file(snapshot));
   await expect(page.locator("#status")).toContainText("已读取");
   await page.getByRole("spinbutton", { name: "资金", exact: true }).fill("98765");
@@ -156,7 +156,7 @@ test("native save editor preserves unrelated campaign/settings values and origin
 test("pilot creation, ACE growth, research and formation edits share the same validated save", async ({
   page,
 }) => {
-  await page.goto(pathToFileURL(path.resolve("public/save-editor.html")).href);
+  await page.goto(pathToFileURL(path.resolve("admin/save-editor.html")).href);
   await page.locator("#openSave").setInputFiles(file(fixture()));
   await page.locator('[data-tab="formations"]').click();
   const formation = JSON.parse(await page.locator("#formationJson").inputValue());
@@ -189,16 +189,14 @@ test("pilot creation, ACE growth, research and formation edits share the same va
   expect(value.development.researched.EFSF).toContain(node.id);
   expect(value.formations.PMC.squads[0].name).toBe("修改编组");
 });
-test("game settings exports the standalone editor without a server", async ({ page }) => {
+test("player settings keep save controls without exposing the admin editor", async ({ page }) => {
   await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
   await page.waitForFunction(() => assetsReady);
   await page.locator("#shellSettings").click();
   await page.getByRole("tab", { name: "存档", exact: true }).click();
-  const pending = page.waitForEvent("download");
-  await page.locator("#downloadSaveEditor").click();
-  const html = await fs.readFile(await (await pending).path(), "utf8");
-  expect(html).toContain("ProjectGreed 存档编辑器");
-  expect(html).not.toContain("__SCRIPT__");
+  await expect(page.locator("#downloadSaveEditor")).toHaveCount(0);
+  await expect(page.locator("#importProfileSave")).toBeVisible();
+  expect(await page.evaluate(() => typeof SAVE_EDITOR_BUNDLE)).toBe("undefined");
 });
 test("compact runtime receipts survive restart and still reject duplicate economy and technology awards", async ({
   page,

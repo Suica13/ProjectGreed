@@ -51,6 +51,7 @@
 - [imports/skill-conversion.md](imports/skill-conversion.md)
 - [imports/skill-mechanics.md](imports/skill-mechanics.md)
 - [imports/skill-pipeline.md](imports/skill-pipeline.md)
+- [imports/0093-selected.md](imports/0093-selected.md)
 - [imports/weapon-names.md](imports/weapon-names.md)
 - [maintenance/v86-release.md](maintenance/v86-release.md)
 - [maintenance/editor-save-and-armor-piercing.md](maintenance/editor-save-and-armor-piercing.md)

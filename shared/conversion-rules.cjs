@@ -208,7 +208,7 @@ function globals(prefab, rules) {
     }
     for (const key of ["hit", "baseHit"])
       if (base[key] !== undefined)
-        weapon[key] = Math.max(0, (group.baseHit >= 0 ? group.baseHit : base[key]) + hitOffset) * accuracy;
+        weapon[key] = Math.max(0, (weapon.baseHitOverride ?? (group.baseHit >= 0 ? group.baseHit : base[key])) + hitOffset) * accuracy;
     if (prefab.stats?.ship) weapon.shipWeapon = true;
     else delete weapon.shipWeapon;
     if (Classes.wristWeapon(weapon)) weapon.maxUsesPerTurn = 1;
@@ -262,7 +262,7 @@ function globals(prefab, rules) {
     for (const [index, step] of steps.entries())
       if (step.accuracy !== undefined)
         step.accuracy =
-          Math.max(0, (group.baseHit >= 0 ? group.baseHit : base.stepAccuracy[index]) + hitOffset) *
+          Math.max(0, (weapon.baseHitOverride ?? (group.baseHit >= 0 ? group.baseHit : base.stepAccuracy[index])) + hitOffset) *
           accuracy;
     weapon.conversionMultipliers = { ...base, damageScale, accuracyScale: accuracy };
   }

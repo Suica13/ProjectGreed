@@ -6,6 +6,7 @@ const ProductionUI = (() => {
   let returnView = "menu",
     onReturn = null;
   const filters = { faction: "", era: "", type: "" };
+  let salePending = false;
   const screen = byId("productionScreen");
   const resourceIcon = (kind) => {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -104,6 +105,30 @@ const ProductionUI = (() => {
   function productionNote(prefab) {
     return I18n.text("无法直接购买许可");
   }
+  function saleTitle(unitId) {
+    const offer = Economy.saleOffer(unitId);
+    return Net.started ? I18n.text("对局进行中不能出售") : offer
+      ? I18n.text(`出售价格：资金 ${formatNumber(offer.money)} · 物资 ${formatNumber(offer.supplies)}`) : "";
+  }
+  async function sellStock(unitId) {
+    if (Net.started || salePending || Economy.quantity(unitId) < 1) return null;
+    const offer = Economy.saleOffer(unitId);
+    if (!offer) return null;
+    salePending = true;
+    try {
+      const confirmed = await GameDialog.confirm(
+        I18n.text(`出售1台库存单位，获得资金 ${formatNumber(offer.money)}、物资 ${formatNumber(offer.supplies)}，是否继续？`),
+        { title: I18n.text("出售库存单位") },
+      );
+      if (!confirmed) return null;
+      if (Net.started) return I18n.text("对局进行中不能出售");
+      return I18n.text(Economy.sellUnit(unitId) ? "库存单位已出售" : "无可出售库存");
+    } catch (error) {
+      return Economy.errorMessage(error);
+    } finally {
+      salePending = false;
+    }
+  }
   function renderLicensePurchase(unitId, selectedKit = Economy.defaultKit(unitId)) {
     let panel=byId("formationInventorySale");
     if (!panel) {
@@ -129,7 +154,20 @@ const ProductionUI = (() => {
       Formation.refresh();renderLicensePurchase(unitId,selectedKit);
       if(pageView==="production")render();
     };
-    panel.append(caption,price,button);
+    const sell = element("button", "danger", "出售");
+    sell.id = "sellPreviewUnit";
+    sell.disabled = Net.started || salePending || !Economy.saleOffer(unitId) || Economy.quantity(unitId) < 1;
+    sell.title = saleTitle(unitId);
+    sell.onclick = async () => {
+      sell.disabled = true;
+      const message = await sellStock(unitId);
+      if (message) note(message);
+      Formation.refresh(); renderLicensePurchase(unitId, selectedKit);
+      if (pageView === "production") render();
+    };
+    const row = element("div", "inventory-transaction-row");
+    row.append(price, button, sell);
+    panel.append(caption, row);
   }
   function allows(prefab) {
     const faction = PlayerProfile.faction();
@@ -277,7 +315,7 @@ const ProductionUI = (() => {
       byId("productionPrice").replaceChildren();
       byId("productionQuantity").textContent = "";
       byId("productionBaseKitName").textContent = "购买部署许可";
-      for (const button of ["produceUnit", "purchaseProductionLicense"]) byId(button).disabled = true;
+      for (const button of ["produceUnit", "sellProductionUnit", "purchaseProductionLicense"]) byId(button).disabled = true;
       byId("purchaseProductionLicense").hidden = true;
       byId("productionLicensePrice").hidden = true;
       const canvas = byId("productionPreview");
@@ -327,8 +365,10 @@ const ProductionUI = (() => {
     resources(permitPrice, permit || {}, { compact: true });
     byId("produceUnit").dataset.licenseLocked = String(!owned);
     byId("produceUnit").disabled = !owned || !offer || locked || busy || !Economy.affordable(offer);
-    byId("produceUnit").textContent = "生产机体 ×1";
+    byId("produceUnit").textContent = "生产";
     byId("produceUnit").title = !owned ? "请先购买部署许可" : locked ? "尚未开发或阵营不匹配" : "";
+    byId("sellProductionUnit").disabled = Net.started || salePending || !Economy.saleOffer(prefab.id) || Economy.quantity(prefab.id) < 1;
+    byId("sellProductionUnit").title = saleTitle(prefab.id);
   }
 
   function render() {
@@ -498,6 +538,11 @@ const ProductionUI = (() => {
       if(ok)GameAudio.play("productionSound");
       finishPurchase(ok?"已生产机体 ×1":"无法生产，请检查许可、科技及资金物资");
     } catch(error){finishPurchase("生产失败："+Economy.errorMessage(error));}
+  };
+  byId("sellProductionUnit").onclick = async () => {
+    byId("sellProductionUnit").disabled = true;
+    const message = await sellStock(selectedId);
+    finishPurchase(message || "");
   };
   window.addEventListener("economy-changed", refreshBalances);
   window.addEventListener("character-selected", () => {

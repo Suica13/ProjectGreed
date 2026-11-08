@@ -1,6 +1,6 @@
 # 存档编辑器与精简存档
 
-运行 `npm run build` 会同时生成 `public/save-editor.html`；也可运行 `npm run build:save-editor` 单独生成。双击此 HTML 即可离线使用，服务端也提供 `/save-editor.html`。游戏设置中的“下载存档编辑器”可直接取得同一工具，独立 HTML 客户端无需连接服务器。
+存档编辑器属于管理员／开发者工具。运行 `npm run build` 会同时生成 `admin/save-editor.html`；也可运行 `npm run build:save-editor` 单独生成。双击此 HTML 即可离线使用。普通客户端不内嵌此工具，设置页不提供下载入口，游戏服务器不提供公开访问路径。服务端打包时随 `admin` 目录收录。
 
 支持游戏导出的 `ProjectGreed-profile` 个人进度 JSON（版本 1、2、3），以及 Windows / Android 的 `ProjectGreed-app-store` `profile.json`。不编辑独立历史战役存档；打开客户端完整存档时，保留设置、战役备份和其他不属于个人进度的记录。
 

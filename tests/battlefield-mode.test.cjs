@@ -466,7 +466,7 @@ test("hostile kills pay COST/2, zero-damage attack participation pays COST/4 and
   engine.broadcast(room);
   const results = room.economyAwards.filter(award => award.kind === "result");
   assert.equal(results.length, 2);
-  assert(results.every(award => award.money === 1406 && award.supplies === 2812));
+  assert(results.every(award => award.money === 1500 && award.supplies === 3000));
   assert(room.techAwards.length>0);
   assert.equal(room.techAwards.filter(a=>a.memberId===room.seats[2].id).reduce((sum,a)=>sum+a.points,0),B.technologyReward(room.settings,0,true,1.25));
   assert.deepEqual(room.pilotAwards, []);
@@ -493,7 +493,7 @@ test("PMC deployment uses inventory and receives fixed era rewards without techn
   engine.broadcast(room);
   assert.equal(room.game.winner, 0);
   assert.equal(room.phase, "finished");
-  assert.deepEqual(room.economyAwards.map(award => [award.kind, award.money, award.supplies]), [["result", 1562, 3125]]);
+  assert.deepEqual(room.economyAwards.map(award => [award.kind, award.money, award.supplies]), [["result", 1250, 2500]]);
   assert.deepEqual(room.techAwards, []);
   assert.deepEqual(room.pilotAwards, []);
   assert.deepEqual({ inventory: player.inventory, kits: player.kits }, before);

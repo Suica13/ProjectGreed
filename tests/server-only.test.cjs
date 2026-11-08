@@ -52,3 +52,12 @@ test("dedicated server retains health and local activity administration, exclude
     assert.equal((await fetch(base + route)).status, 404, route);
   }
 });
+
+test("game server does not publish the offline admin save editor", async (t) => {
+  const app = createServer({ host: "127.0.0.1", port: 0 });
+  const address = await app.listen();
+  t.after(() => app.close());
+  const base = `http://127.0.0.1:${address.port}`;
+  for (const route of ["/save-editor", "/save-editor.html", "/admin/save-editor.html"])
+    assert.equal((await fetch(base + route)).status, 404, route);
+});

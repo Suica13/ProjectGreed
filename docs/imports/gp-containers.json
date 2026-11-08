@@ -1,0 +1,106 @@
+[
+  {
+    "unit": "RX_78GP03D",
+    "weapon": "EF_GP_03D_MSL_AMS",
+    "source": {
+      "file": "Units/BattleUnits/Weapon/Shell/EF_GP_03D_MSL_AMS.gw",
+      "barrels": [
+        {
+          "id": "EF_GP_03D_MSL_AMS",
+          "x": 35,
+          "y": 25
+        },
+        {
+          "id": "EF_GP_03D_MSL_AMS_L",
+          "x": -35,
+          "y": 25
+        }
+      ]
+    },
+    "nativeTiming": {
+      "source": "Units/BattleUnits/Weapon/Shell/EF_GP_03D_MSL_AMS.gw",
+      "containerSource": "Units/BattleUnits/Weapon/Shell/Unit/EF_GP_03D_MSL_AMS.ini",
+      "containers": 2,
+      "missilesPerContainer": 72,
+      "projectiles": 144,
+      "energy": 250,
+      "cooldown": 90,
+      "firstShot": 1.15,
+      "lastShot": 6.4,
+      "duration": 10
+    }
+  },
+  {
+    "unit": "RX_78GP03D",
+    "weapon": "EF_GP_03D_MSL_ASP",
+    "source": {
+      "file": "Units/BattleUnits/Weapon/Shell/EF_GP_03D_MSL_ASP.gw",
+      "barrels": [
+        {
+          "id": "EF_GP_03D_MSL_ASP",
+          "x": 40,
+          "y": 25
+        }
+      ]
+    },
+    "nativeTiming": {
+      "source": "Units/BattleUnits/Weapon/Shell/EF_GP_03D_MSL_ASP.gw",
+      "containerSource": "Units/BattleUnits/Weapon/Shell/Unit/EF_GP_03D_MSL_ASP.ini",
+      "containers": 2,
+      "missilesPerContainer": 3,
+      "projectiles": 6,
+      "energy": 250,
+      "cooldown": 90,
+      "firstShot": 1.15,
+      "lastShot": 1.2,
+      "duration": 10
+    }
+  },
+  {
+    "unit": "RX_78GP02A",
+    "weapon": "EF_RX_78GP02A_Bombing_Nuke",
+    "source": {
+      "file": "Units/BattleUnits/Weapon/Shell/EF_RX_78GP02A_Bombing_Nuke.gw",
+      "barrels": [
+        {
+          "id": "EF_RX_78GP02A_Bombing_Nuke",
+          "x": 12,
+          "y": 42
+        }
+      ]
+    },
+    "nativeTiming": {
+      "source": "Units/BattleUnits/Weapon/Shell/EF_RX_78GP02A_Bombing_Nuke.gw",
+      "barrel": "EF_RX_78GP02A_Bombing_Nuke",
+      "entry": "action_EF_RX_78GP02A_Bombing_Nuke_Trigger",
+      "cooldown": 10000,
+      "duration": 4.5,
+      "firstShot": 3,
+      "lastShot": 3,
+      "firingEvents": 1,
+      "projectiles": 1,
+      "declaredEnergy": 600,
+      "energyMode": "perVolley",
+      "energyPerEmission": 0,
+      "energy": 600,
+      "actions": [
+        "action_EF_RX_78GP02A_Bombing_Nuke_Trigger",
+        "hiddenAction_SetAttackingCantAimOn",
+        "hiddenAction_SetAttackingCantTurnOn",
+        "hiddenAction_SetAttackingOn",
+        "hiddenAction_SetOnSkillOn",
+        "hiddenAction_EF_RX_78GP02A_Bombing_Nuke_SetWeaponIndex",
+        "hiddenAction_EF_RX_78GP02A_Bombing_Nuke_B1_Step_1",
+        "hiddenAction_EF_RX_78GP02A_Bombing_Nuke_Fire_Step_ChargeEffect_1",
+        "hiddenAction_EF_RX_78GP02A_Bombing_Nuke_Fire_Step_1",
+        "hiddenAction_EF_RX_78GP02A_Bombing_Nuke_Fire_Step_2",
+        "hiddenAction_EF_RX_78GP02A_Bombing_Nuke_Fire_Step_3",
+        "hiddenAction_EF_RX_78GP02A_Bombing_Nuke_Fire_Step_Final",
+        "hiddenAction_SetAttackingOff",
+        "hiddenAction_SetOnSkillOff",
+        "hiddenAction_SetAttackingCantAimOff",
+        "hiddenAction_SetAttackingCantTurnOff"
+      ]
+    }
+  }
+]

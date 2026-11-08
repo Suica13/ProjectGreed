@@ -6,6 +6,12 @@ const WeaponEffects = (() => {
       ? ART.presentation.meleeAnimationSpeed
       : ART.presentation.animationSpeed;
   }
+  function containerScale(weapon, source) {
+    // Cargo has its own native sprite size; do not inherit the large MA hull's
+    // per-model texture downscaling or the containers become almost invisible.
+    return weapon.projectile.container.scale * source.scale /
+      (ART.models[source.unit.model]?.presentation?.mapScale || 1);
+  }
   // 开火挂点和可见机体共用同一根坐标，闪避后不会重复或遗漏位移。
   function firingPose(weapon, source, event, originalTime) {
     const animation = WeaponSequence.pose(weapon, originalTime);
@@ -369,6 +375,30 @@ const WeaponEffects = (() => {
         shot.flight = Math.max(0, shot.impactAt - shot.at);
       }
     }
+    if (weapon.projectile?.container) {
+      const config = weapon.projectile.container;
+      for (const shot of shots) {
+        shot.launchOrigin = shot.origin;
+        const dx = shot.destination.x - source.x, dy = shot.destination.y - source.y;
+        const angle = Math.atan2(dy, dx);
+        const center = event?.containerCell
+          ? { x: (event.containerCell.x + 0.5) * Rules.mapCellPixels,
+              y: (event.containerCell.y + 0.5) * Rules.mapCellPixels }
+          : { x: shot.destination.x + Math.cos(angle) * 64, y: shot.destination.y + Math.sin(angle) * 64 };
+        const index = event?.shotIndices?.[shot.index] ?? shot.index;
+        const side = config.count === 2 ? (index % 2 ? -1 : 1) * 30 * containerScale(weapon, source) : 0;
+        shot.origin = { x: center.x - Math.sin(angle) * side, y: center.y + Math.cos(angle) * side };
+        shot.containerAngle = angle;
+        shot.control = {
+          x: (shot.origin.x + shot.destination.x) / 2 - Math.sin(angle) * 64 * config.curve * (index % 2 ? -1 : 1),
+          y: (shot.origin.y + shot.destination.y) / 2 + Math.cos(angle) * 64 * config.curve * (index % 2 ? -1 : 1),
+        };
+        if (!event?.crossfire) {
+          shot.flight = 0.5;
+          shot.impactAt = shot.at + shot.flight;
+        }
+      }
+    }
     const steps = weapon.attack.strikes;
     const contacts = steps
       .map((step, index) => {
@@ -444,7 +474,7 @@ const WeaponEffects = (() => {
       ) {
         const image = SpriteRenderer.images[weapon.projectile.asset],
           margin =
-            Math.max(image?.width || 64, image?.height || 64) *
+            (weapon.projectile.sequence ? 64 : Math.max(image?.width || 64, image?.height || 64)) *
               source.scale *
               weapon.projectile.scale +
             16,
@@ -489,6 +519,8 @@ const WeaponEffects = (() => {
         end = Math.max(end, contact.at + ART.effects[effect].duration / speed);
       }
     }
+    if (event?.containerEndAt !== undefined && !event.containerFollowup)
+      end = Math.max(end, event.containerEndAt - event.timelineStart);
     for (const [index, contact] of contacts.entries())
       if (nuclear || contact.hit || ["bomb", "mortar"].includes(weapon.projectile?.motion)) {
         const impactEffect =
@@ -894,17 +926,88 @@ const WeaponEffects = (() => {
       ctx.restore();
     }
   }
+  function drawBeamSequence(ctx, sequence, shot, age, source, size) {
+    if (age < 0 || age > shot.flight) return;
+    const dx = shot.destination.x - shot.origin.x,
+      dy = shot.destination.y - shot.origin.y,
+      distance = Math.hypot(dx, dy),
+      progress = Math.min(1, age / Math.max(0.001, shot.flight)),
+      lengthScale = distance / sequence.length;
+    // The MOD's start/middle/end sheets form one pulse anchored at the muzzle.
+    // Sample that pulse with the damage carrier's flight clock. Moving the full
+    // sequence as another bullet would count its travel twice and miss the hit.
+    ctx.save();
+    ctx.translate(shot.origin.x, shot.origin.y);
+    ctx.rotate(Math.atan2(dy, dx));
+    for (const segment of sequence.segments) {
+      const image = SpriteRenderer.images[segment.asset];
+      if (!image) continue;
+      const frame = Math.min(segment.frames - 1, Math.floor(progress * segment.frames));
+      ctx.save();
+      ctx.translate(segment.forward * lengthScale, segment.lateral * source.scale);
+      ctx.rotate((segment.rotation * Math.PI) / 180);
+      ctx.scale(segment.scaleX * lengthScale, segment.scaleY * source.scale * size);
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(image, frame * segment.width, 0, segment.width, segment.height,
+        -segment.width / 2, -segment.height / 2, segment.width, segment.height);
+      ctx.restore();
+    }
+    ctx.restore();
+  }
+  function drawContainers(ctx, weapon, plan, time, source, event) {
+    if (event?.containerFollowup || !plan.shots.length) return;
+    const config = weapon.projectile.container, first = plan.shots[0];
+    const elapsed = event?.containerLaunchAt !== undefined
+      ? time + event.timelineStart - event.containerLaunchAt : time;
+    if (elapsed < 0) return;
+    const progress = Math.min(1, elapsed * plan.actionSpeed / config.deploySeconds);
+    const angle = first.containerAngle;
+    const center = event?.containerCell
+      ? { x: (event.containerCell.x + 0.5) * Rules.mapCellPixels, y: (event.containerCell.y + 0.5) * Rules.mapCellPixels }
+      : { x: first.destination.x + Math.cos(angle) * 64, y: first.destination.y + Math.sin(angle) * 64 };
+    for (let index = 0; index < config.count; index++) {
+      const muzzleWeapon = { ...weapon, attack: { ...weapon.attack, muzzleIndices: [index], muzzleShotIndices: [0] } };
+      const origin = SpriteRenderer.muzzle(source.unit.model, muzzleWeapon, source, null, 0, 0);
+      const cargoScale = containerScale(weapon, source);
+      const side = config.count === 2 ? (index ? -1 : 1) * 30 * cargoScale : 0;
+      const destination = { x: center.x - Math.sin(angle) * side, y: center.y + Math.cos(angle) * side };
+      const bend = Math.sin(progress * Math.PI) * 35 * (index ? -1 : 1);
+      const x = origin.x + (destination.x - origin.x) * progress - Math.sin(angle) * bend;
+      const y = origin.y + (destination.y - origin.y) * progress + Math.cos(angle) * bend;
+      const image = SpriteRenderer.images[progress < 1 ? config.closedAsset : config.openAsset];
+      if (!image) continue;
+      ctx.save(); ctx.translate(x, y); ctx.rotate(angle + Math.PI / 2);
+      ctx.scale(cargoScale, cargoScale);
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(image, -image.width / 2, -image.height / 2);
+      const thrust = SpriteRenderer.images[config.thrustAsset];
+      if (progress < 1 && thrust) {
+        const width = thrust.width / config.thrustFrames;
+        const frame = Math.floor(elapsed * 12) % config.thrustFrames;
+        ctx.globalAlpha *= 0.75;
+        ctx.drawImage(thrust, frame*width, 0, width, thrust.height,
+          -width/2, image.height/2-4, width, thrust.height);
+      }
+      ctx.restore();
+    }
+  }
   function drawUnclipped(ctx, weapon, plan, time, source, event, size, pose, layer) {
     if (weapon.projectile?.motion === "tether") {
       drawTether(ctx, weapon, plan, time, source, event, size, pose, layer);
       return;
     }
     if (weapon.remote) drawRemotes(ctx, weapon, plan, time, source, size);
+    if (weapon.projectile?.container) drawContainers(ctx, weapon, plan, time, source, event);
     drawMuzzle(ctx, weapon, plan, time, source, event, pose);
     if (!weapon.projectile) return;
     const viewport = ctx.canvas && ctx.getTransform?.();
     for (const shot of plan.shots) {
       const projectile = shot.isFragment ? weapon.projectile.cluster : weapon.projectile;
+      if (projectile.sequence) {
+        if (time <= shot.visibleUntil)
+          drawBeamSequence(ctx, projectile.sequence, shot, time - shot.at, source, size);
+        continue;
+      }
       const image = SpriteRenderer.images[projectile.asset];
       if (!image) continue;
       const age = time - shot.at;
@@ -918,13 +1021,21 @@ const WeaponEffects = (() => {
           weapon.projectile.motion === "mortar" && travel < 1
             ? Math.PI * 80 * source.scale * Math.cos(Math.PI * Math.max(0, travel))
             : 0,
-        angle = Math.atan2(dy - arcSlope, dx),
-        scale = source.scale * projectile.scale * size,
+        angle = shot.control
+          ? Math.atan2((1-travel)*(shot.control.y-shot.origin.y)+travel*(shot.destination.y-shot.control.y),
+              (1-travel)*(shot.control.x-shot.origin.x)+travel*(shot.destination.x-shot.control.x))
+          : Math.atan2(dy - arcSlope, dx),
+        scale = (projectile.container ? containerScale(weapon, source) : source.scale) * projectile.scale * size,
         offset = ["bomb", "mortar"].includes(weapon.projectile.motion)
           ? 0
           : (source.projectileForwardOffset ?? weapon.projectile.forwardOffset) * source.scale;
-      const x = shot.origin.x + dx * travel + Math.cos(angle) * offset;
-      const y = shot.origin.y + dy * travel + Math.sin(angle) * offset -
+      if (shot.control && travel > 1) continue;
+      const x = (shot.control
+        ? (1-travel)**2*shot.origin.x+2*(1-travel)*travel*shot.control.x+travel**2*shot.destination.x
+        : shot.origin.x + dx * travel) + Math.cos(angle) * offset;
+      const y = (shot.control
+        ? (1-travel)**2*shot.origin.y+2*(1-travel)*travel*shot.control.y+travel**2*shot.destination.y
+        : shot.origin.y + dy * travel) + Math.sin(angle) * offset -
         (weapon.projectile.motion === "mortar" ? Math.sin(Math.PI * Math.min(1, travel)) * 80 * source.scale : 0);
       if (viewport) {
         // Conservative bounds include rotation, camera scale and device pixels.

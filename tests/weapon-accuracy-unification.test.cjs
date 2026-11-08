@@ -16,7 +16,7 @@ test("all specified types use fixed accuracy, including levels, mounts and firin
       if (!Object.hasOwn(Classes.baseHits, kind)) continue;
       seen.add(kind);
       const cannon = Classes.shipCannon(weapon, prefab.stats.ship);
-      const expected = Math.round((Classes.baseHits[kind] + (!["melee", "ram"].includes(kind) ? config.weapons.shootingHitOffset : 0)) * (cannon ? 0.85 : 1));
+      const expected = Math.round(((weapon.baseHitOverride ?? Classes.baseHits[kind]) + (!["melee", "ram"].includes(kind) ? config.weapons.shootingHitOffset : 0)) * (cannon ? 0.85 : 1));
       assert.equal(weapon.hit, expected, prefab.id + "/" + weapon.id);
       for (const step of weapon.attack?.steps || [])
         if (step.accuracy !== undefined) assert.equal(step.accuracy, expected);

@@ -82,9 +82,9 @@ ${inflate}
   const html = read("save-editor/editor.html")
     .replace("__STYLE__", () => read("save-editor/editor.css"))
     .replace("__SCRIPT__", () => source.replace(/<\/script/gi, "<\\/script"));
-  fs.mkdirSync(path.join(root, "public"), { recursive: true });
-  fs.writeFileSync(path.join(root, "public/save-editor.html"), html);
-  console.log("Built save-editor.html: " + Buffer.byteLength(html) + " bytes");
+  fs.mkdirSync(path.join(root, "admin"), { recursive: true });
+  fs.writeFileSync(path.join(root, "admin/save-editor.html"), html);
+  console.log("Built admin/save-editor.html: " + Buffer.byteLength(html) + " bytes");
 }
 module.exports = { buildSaveEditor };
 if (require.main === module) buildSaveEditor();

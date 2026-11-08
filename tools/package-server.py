@@ -69,7 +69,7 @@ def main():
         if args.with_client:
             (stage / "public").mkdir()
             shutil.copy2(client, stage / "public/client.html")
-            for editor in ["map-editor.html", "unit-editor.html", "save-editor.html"]:
+            for editor in ["map-editor.html", "unit-editor.html"]:
                 shutil.copy2(ROOT / "public" / editor, stage / "public" / editor)
         for filename in TOOLS + (["client-resources.cjs", "static-client.cjs"] if args.with_client else []):
             destination = stage / "tools" / filename

@@ -108,20 +108,6 @@
   };
   actions.className = "profile-save-actions";
   actions.append(exportButton, importButton, newButton);
-  const saveEditorButton = document.createElement("button");
-  saveEditorButton.id = "downloadSaveEditor";
-  saveEditorButton.type = "button";
-  saveEditorButton.textContent = "下载存档编辑器";
-  saveEditorButton.onclick = () => {
-    try {
-      const bytes = Uint8Array.from(atob(SAVE_EDITOR_BUNDLE), character => character.charCodeAt(0));
-      const url = URL.createObjectURL(new Blob([CatalogInflate.gunzipSync(bytes)], { type:"text/html;charset=utf-8" }));
-      const link = document.createElement("a"); link.href = url; link.download = "ProjectGreed-save-editor.html"; link.click();
-      setTimeout(() => URL.revokeObjectURL(url),1000);
-      status.textContent = "存档编辑器已导出，打开该 HTML 文件后选择存档即可离线编辑。";
-    } catch(error) { status.textContent = "导出编辑器失败：" + error.message; }
-  };
-  actions.append(saveEditorButton);
   panel.append(actions, input, status);
   const diagnostics = document.createElement("div");
   diagnostics.className = "profile-save-actions";

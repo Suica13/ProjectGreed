@@ -882,6 +882,84 @@
     "EF_RX_78GP03D_BeamCannon": {
       "ref": "EF_RX_78GP03D_BeamCannon__lv1",
       "overrides": {
+        "projectile": {
+          "texture": "../../projectiles/Beam_2_Yellow.png",
+          "scale": 1,
+          "speed": 55.0,
+          "forwardOffset": -10,
+          "rotation": 0,
+          "sequence": {
+            "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamCannon/Projectile_HighBeamCannon_Yellow_Effect.ini",
+            "color": "Yellow",
+            "length": 800.0,
+            "segments": [
+              {
+                "texture": "../../projectiles/HighBeamCannon_1_Yellow_Start.png",
+                "frames": 16,
+                "width": 664,
+                "height": 150,
+                "scaleX": 0.5,
+                "scaleY": 0.5,
+                "forward": 130.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              },
+              {
+                "texture": "../../projectiles/HighBeamCannon_1_Yellow_Mid.png",
+                "frames": 16,
+                "width": 545,
+                "height": 150,
+                "scaleX": 0.5,
+                "scaleY": 0.5,
+                "forward": 432.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              },
+              {
+                "texture": "../../projectiles/HighBeamCannon_1_Yellow_End.png",
+                "frames": 16,
+                "width": 464,
+                "height": 150,
+                "scaleX": 0.5,
+                "scaleY": 0.5,
+                "forward": 684.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              }
+            ],
+            "clock": "flight"
+          },
+          "nativeSpeed": 55.0
+        },
+        "nativePayload": {
+          "BeamDamage": 24000,
+          "BeamAPDamage": 8000,
+          "DpDamage": 900,
+          "WeaponAccuracy": 75,
+          "PartBreakModifier": 1.25,
+          "CockpitBreakModifier": 0.75,
+          "PilotDamageModifier": 1,
+          "PilotTrueDamage": 0,
+          "AntiAqua": 0.75,
+          "AntiAir": 0.75,
+          "AntiLand": 1,
+          "AntiSpace": 1,
+          "AntiSizeLargeDamage": 1.25,
+          "AntiSizeSmallDamage": 0.75,
+          "AntiSizeLargeAccuracy": 1.25,
+          "AntiSizeSmallAccuracy": 0.75,
+          "AntiBuilding": 1.5,
+          "HeightChangeSpeed": 2,
+          "HeightHitRange": 20,
+          "ProjectileSpeed": 55.0,
+          "ProjectileSpread": 1,
+          "ProjectileExplosionRange": 45,
+          "ProjectileLife": 25,
+          "ProjectileAttackTimes": 7,
+          "ProjectileAttackTimesDamageModifier": 0.75,
+          "EquipmentIndex": 2,
+          "EquipmentIndex2": 750
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Beam/EF_RX_78GP03D_BeamCannon.gw",
@@ -1100,6 +1178,72 @@
       "remove": [
         "swingEffects"
       ]
+    },
+    "EF_GP_03D_MSL_AMS": {
+      "ref": "EF_GP_03D_MSL_AMS__lv1",
+      "overrides": {
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/EF_GP_03D_MSL_AMS.gw",
+          "barrels": [
+            {
+              "id": "EF_GP_03D_MSL_AMS",
+              "x": 35,
+              "y": 25
+            },
+            {
+              "id": "EF_GP_03D_MSL_AMS_L",
+              "x": -35,
+              "y": 25
+            }
+          ]
+        },
+        "requiredParts": [],
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 35,
+                "y": 25
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -35,
+                "y": 25
+              }
+            }
+          ]
+        }
+      }
+    },
+    "EF_GP_03D_MSL_ASP": {
+      "ref": "EF_GP_03D_MSL_ASP__lv1",
+      "overrides": {
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/EF_GP_03D_MSL_ASP.gw",
+          "barrels": [
+            {
+              "id": "EF_GP_03D_MSL_ASP",
+              "x": 40,
+              "y": 25
+            }
+          ]
+        },
+        "requiredParts": [],
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 40,
+                "y": 25
+              }
+            }
+          ]
+        }
+      }
     }
   },
   "mechanics": [
@@ -1142,7 +1286,9 @@
         "EF_RX_78GP01_BR",
         "EF_RX_78GP03D_BeamCannon",
         "EF_HypeBazooka_GP03S_Double",
-        "Common_ArmBeamSaber_XL_F_GP_03D"
+        "Common_ArmBeamSaber_XL_F_GP_03D",
+        "EF_GP_03D_MSL_AMS",
+        "EF_GP_03D_MSL_ASP"
       ]
     }
   ],

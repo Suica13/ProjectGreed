@@ -615,6 +615,43 @@
     "ZN_MSM_10_HighBeamRifle": {
       "ref": "ZN_MSM_10_HighBeamRifle__lv1",
       "overrides": {
+        "projectile": {
+          "texture": "../../projectiles/Beam_2_Yellow.png",
+          "scale": 1,
+          "speed": 70,
+          "forwardOffset": -7.5,
+          "rotation": 0,
+          "sequence": {
+            "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle_Fast/HighBeamRifle_1_Fast_EffectUnit.ini",
+            "color": "Yellow",
+            "length": 591.25,
+            "segments": [
+              {
+                "texture": "../../projectiles/HighBeamRifle_1_Fast_Start_Yellow.png",
+                "frames": 10,
+                "width": 625,
+                "height": 242,
+                "scaleX": 0.5,
+                "scaleY": 0.25,
+                "forward": 125.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              },
+              {
+                "texture": "../../projectiles/HighBeamRifle_1_Fast_End_Yellow.png",
+                "frames": 10,
+                "width": 625,
+                "height": 242,
+                "scaleX": 0.5,
+                "scaleY": 0.25,
+                "forward": 435.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              }
+            ],
+            "clock": "flight"
+          }
+        },
         "requiredParts": [
           "rightArm"
         ],

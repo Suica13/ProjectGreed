@@ -288,6 +288,22 @@ const Economy = (() => {
     next.inventory[unitId] = quantity(unitId) + 1;
     return commit(next);
   }
+  function saleOffer(unitId) {
+    const offer = Object.hasOwn(catalog.licenseOffers, unitId) ? unitOffer(unitId) : null;
+    return offer ? { unitId, quantity: 1,
+      money: Math.floor(offer.money / 2), supplies: Math.floor(offer.supplies / 2) } : null;
+  }
+  function sellUnit(unitId) {
+    const offer = saleOffer(unitId);
+    if (!offer || quantity(unitId) < 1) return false;
+    const next = snapshot();
+    next.inventory[unitId]--;
+    next.money += offer.money;
+    next.supplies += offer.supplies;
+    // A sale is an inventory transaction, not a battle/event reward. Keep the
+    // permit and use the same atomic persistence/rollback path as production.
+    return commit(next);
+  }
   function purchasePlan(entries) {
     const units = {};
     for (const entry of entries) units[entry.unitId] = (units[entry.unitId] || 0) + 1;
@@ -396,6 +412,8 @@ const Economy = (() => {
     productionOffer,
     productionTiming,
     produce,
+    saleOffer,
+    sellUnit,
     purchasePlan,
     purchaseMissingStock,
     initial,

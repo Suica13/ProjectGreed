@@ -415,6 +415,43 @@
     "ZN_MA_08_AA_BeamCannon": {
       "ref": "ZN_MA_08_AA_BeamCannon__lv1",
       "overrides": {
+        "projectile": {
+          "texture": "../../projectiles/Beam_2_Yellow.png",
+          "scale": 1,
+          "speed": 135,
+          "forwardOffset": -7.5,
+          "rotation": 0,
+          "sequence": {
+            "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+            "color": "Yellow",
+            "length": 591.25,
+            "segments": [
+              {
+                "texture": "../../projectiles/HighBeamRifle_1_Start_Yellow.png",
+                "frames": 23,
+                "width": 625,
+                "height": 242,
+                "scaleX": 0.5,
+                "scaleY": 0.325,
+                "forward": 125.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              },
+              {
+                "texture": "../../projectiles/HighBeamRifle_1_End_Yellow.png",
+                "frames": 23,
+                "width": 625,
+                "height": 242,
+                "scaleX": 0.5,
+                "scaleY": 0.325,
+                "forward": 435.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              }
+            ],
+            "clock": "flight"
+          }
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
@@ -599,6 +636,43 @@
     "ZN_MA_08_AA_BeamCannon_L": {
       "ref": "ZN_MA_08_AA_BeamCannon_L__lv1",
       "overrides": {
+        "projectile": {
+          "texture": "../../projectiles/Beam_2_Yellow.png",
+          "scale": 1,
+          "speed": 135,
+          "forwardOffset": -7.5,
+          "rotation": 0,
+          "sequence": {
+            "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+            "color": "Yellow",
+            "length": 591.25,
+            "segments": [
+              {
+                "texture": "../../projectiles/HighBeamRifle_1_Start_Yellow.png",
+                "frames": 23,
+                "width": 625,
+                "height": 242,
+                "scaleX": 0.5,
+                "scaleY": 0.325,
+                "forward": 125.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              },
+              {
+                "texture": "../../projectiles/HighBeamRifle_1_End_Yellow.png",
+                "frames": 23,
+                "width": 625,
+                "height": 242,
+                "scaleX": 0.5,
+                "scaleY": 0.325,
+                "forward": 435.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              }
+            ],
+            "clock": "flight"
+          }
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
@@ -790,6 +864,43 @@
     "ZN_MA_08_AA_BeamCannon_R2": {
       "ref": "ZN_MA_08_AA_BeamCannon_R2__lv1",
       "overrides": {
+        "projectile": {
+          "texture": "../../projectiles/Beam_2_Yellow.png",
+          "scale": 1,
+          "speed": 135,
+          "forwardOffset": -7.5,
+          "rotation": 0,
+          "sequence": {
+            "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+            "color": "Yellow",
+            "length": 591.25,
+            "segments": [
+              {
+                "texture": "../../projectiles/HighBeamRifle_1_Start_Yellow.png",
+                "frames": 23,
+                "width": 625,
+                "height": 242,
+                "scaleX": 0.5,
+                "scaleY": 0.325,
+                "forward": 125.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              },
+              {
+                "texture": "../../projectiles/HighBeamRifle_1_End_Yellow.png",
+                "frames": 23,
+                "width": 625,
+                "height": 242,
+                "scaleX": 0.5,
+                "scaleY": 0.325,
+                "forward": 435.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              }
+            ],
+            "clock": "flight"
+          }
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
@@ -981,6 +1092,43 @@
     "ZN_MA_08_AA_BeamCannon_L2": {
       "ref": "ZN_MA_08_AA_BeamCannon_L2__lv1",
       "overrides": {
+        "projectile": {
+          "texture": "../../projectiles/Beam_2_Yellow.png",
+          "scale": 1,
+          "speed": 135,
+          "forwardOffset": -7.5,
+          "rotation": 0,
+          "sequence": {
+            "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+            "color": "Yellow",
+            "length": 591.25,
+            "segments": [
+              {
+                "texture": "../../projectiles/HighBeamRifle_1_Start_Yellow.png",
+                "frames": 23,
+                "width": 625,
+                "height": 242,
+                "scaleX": 0.5,
+                "scaleY": 0.325,
+                "forward": 125.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              },
+              {
+                "texture": "../../projectiles/HighBeamRifle_1_End_Yellow.png",
+                "frames": 23,
+                "width": 625,
+                "height": 242,
+                "scaleX": 0.5,
+                "scaleY": 0.325,
+                "forward": 435.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              }
+            ],
+            "clock": "flight"
+          }
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
@@ -1172,6 +1320,43 @@
     "ZN_MA_08_AA_BeamCannon_R3": {
       "ref": "ZN_MA_08_AA_BeamCannon_R3__lv1",
       "overrides": {
+        "projectile": {
+          "texture": "../../projectiles/Beam_2_Yellow.png",
+          "scale": 1,
+          "speed": 135,
+          "forwardOffset": -7.5,
+          "rotation": 0,
+          "sequence": {
+            "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+            "color": "Yellow",
+            "length": 591.25,
+            "segments": [
+              {
+                "texture": "../../projectiles/HighBeamRifle_1_Start_Yellow.png",
+                "frames": 23,
+                "width": 625,
+                "height": 242,
+                "scaleX": 0.5,
+                "scaleY": 0.325,
+                "forward": 125.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              },
+              {
+                "texture": "../../projectiles/HighBeamRifle_1_End_Yellow.png",
+                "frames": 23,
+                "width": 625,
+                "height": 242,
+                "scaleX": 0.5,
+                "scaleY": 0.325,
+                "forward": 435.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              }
+            ],
+            "clock": "flight"
+          }
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
@@ -1363,6 +1548,43 @@
     "ZN_MA_08_AA_BeamCannon_L3": {
       "ref": "ZN_MA_08_AA_BeamCannon_L3__lv1",
       "overrides": {
+        "projectile": {
+          "texture": "../../projectiles/Beam_2_Yellow.png",
+          "scale": 1,
+          "speed": 135,
+          "forwardOffset": -7.5,
+          "rotation": 0,
+          "sequence": {
+            "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+            "color": "Yellow",
+            "length": 591.25,
+            "segments": [
+              {
+                "texture": "../../projectiles/HighBeamRifle_1_Start_Yellow.png",
+                "frames": 23,
+                "width": 625,
+                "height": 242,
+                "scaleX": 0.5,
+                "scaleY": 0.325,
+                "forward": 125.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              },
+              {
+                "texture": "../../projectiles/HighBeamRifle_1_End_Yellow.png",
+                "frames": 23,
+                "width": 625,
+                "height": 242,
+                "scaleX": 0.5,
+                "scaleY": 0.325,
+                "forward": 435.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              }
+            ],
+            "clock": "flight"
+          }
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
@@ -1554,6 +1776,43 @@
     "ZN_MA_08_AA_BeamCannon_R4": {
       "ref": "ZN_MA_08_AA_BeamCannon_R4__lv1",
       "overrides": {
+        "projectile": {
+          "texture": "../../projectiles/Beam_2_Yellow.png",
+          "scale": 1,
+          "speed": 135,
+          "forwardOffset": -7.5,
+          "rotation": 0,
+          "sequence": {
+            "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+            "color": "Yellow",
+            "length": 591.25,
+            "segments": [
+              {
+                "texture": "../../projectiles/HighBeamRifle_1_Start_Yellow.png",
+                "frames": 23,
+                "width": 625,
+                "height": 242,
+                "scaleX": 0.5,
+                "scaleY": 0.325,
+                "forward": 125.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              },
+              {
+                "texture": "../../projectiles/HighBeamRifle_1_End_Yellow.png",
+                "frames": 23,
+                "width": 625,
+                "height": 242,
+                "scaleX": 0.5,
+                "scaleY": 0.325,
+                "forward": 435.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              }
+            ],
+            "clock": "flight"
+          }
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
@@ -1745,6 +2004,43 @@
     "ZN_MA_08_AA_BeamCannon_L4": {
       "ref": "ZN_MA_08_AA_BeamCannon_L4__lv1",
       "overrides": {
+        "projectile": {
+          "texture": "../../projectiles/Beam_2_Yellow.png",
+          "scale": 1,
+          "speed": 135,
+          "forwardOffset": -7.5,
+          "rotation": 0,
+          "sequence": {
+            "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+            "color": "Yellow",
+            "length": 591.25,
+            "segments": [
+              {
+                "texture": "../../projectiles/HighBeamRifle_1_Start_Yellow.png",
+                "frames": 23,
+                "width": 625,
+                "height": 242,
+                "scaleX": 0.5,
+                "scaleY": 0.325,
+                "forward": 125.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              },
+              {
+                "texture": "../../projectiles/HighBeamRifle_1_End_Yellow.png",
+                "frames": 23,
+                "width": 625,
+                "height": 242,
+                "scaleX": 0.5,
+                "scaleY": 0.325,
+                "forward": 435.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              }
+            ],
+            "clock": "flight"
+          }
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
@@ -1936,6 +2232,43 @@
     "ZN_MA_08_AA_BeamCannon_R5": {
       "ref": "ZN_MA_08_AA_BeamCannon_R5__lv1",
       "overrides": {
+        "projectile": {
+          "texture": "../../projectiles/Beam_2_Yellow.png",
+          "scale": 1,
+          "speed": 135,
+          "forwardOffset": -7.5,
+          "rotation": 0,
+          "sequence": {
+            "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+            "color": "Yellow",
+            "length": 591.25,
+            "segments": [
+              {
+                "texture": "../../projectiles/HighBeamRifle_1_Start_Yellow.png",
+                "frames": 23,
+                "width": 625,
+                "height": 242,
+                "scaleX": 0.5,
+                "scaleY": 0.325,
+                "forward": 125.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              },
+              {
+                "texture": "../../projectiles/HighBeamRifle_1_End_Yellow.png",
+                "frames": 23,
+                "width": 625,
+                "height": 242,
+                "scaleX": 0.5,
+                "scaleY": 0.325,
+                "forward": 435.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              }
+            ],
+            "clock": "flight"
+          }
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
@@ -2127,6 +2460,43 @@
     "ZN_MA_08_AA_BeamCannon_L5": {
       "ref": "ZN_MA_08_AA_BeamCannon_L5__lv1",
       "overrides": {
+        "projectile": {
+          "texture": "../../projectiles/Beam_2_Yellow.png",
+          "scale": 1,
+          "speed": 135,
+          "forwardOffset": -7.5,
+          "rotation": 0,
+          "sequence": {
+            "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+            "color": "Yellow",
+            "length": 591.25,
+            "segments": [
+              {
+                "texture": "../../projectiles/HighBeamRifle_1_Start_Yellow.png",
+                "frames": 23,
+                "width": 625,
+                "height": 242,
+                "scaleX": 0.5,
+                "scaleY": 0.325,
+                "forward": 125.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              },
+              {
+                "texture": "../../projectiles/HighBeamRifle_1_End_Yellow.png",
+                "frames": 23,
+                "width": 625,
+                "height": 242,
+                "scaleX": 0.5,
+                "scaleY": 0.325,
+                "forward": 435.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              }
+            ],
+            "clock": "flight"
+          }
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
@@ -2318,6 +2688,43 @@
     "ZN_MA_08_AA_BeamCannon_R6": {
       "ref": "ZN_MA_08_AA_BeamCannon_R6__lv1",
       "overrides": {
+        "projectile": {
+          "texture": "../../projectiles/Beam_2_Yellow.png",
+          "scale": 1,
+          "speed": 135,
+          "forwardOffset": -7.5,
+          "rotation": 0,
+          "sequence": {
+            "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+            "color": "Yellow",
+            "length": 591.25,
+            "segments": [
+              {
+                "texture": "../../projectiles/HighBeamRifle_1_Start_Yellow.png",
+                "frames": 23,
+                "width": 625,
+                "height": 242,
+                "scaleX": 0.5,
+                "scaleY": 0.325,
+                "forward": 125.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              },
+              {
+                "texture": "../../projectiles/HighBeamRifle_1_End_Yellow.png",
+                "frames": 23,
+                "width": 625,
+                "height": 242,
+                "scaleX": 0.5,
+                "scaleY": 0.325,
+                "forward": 435.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              }
+            ],
+            "clock": "flight"
+          }
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
@@ -2509,6 +2916,43 @@
     "ZN_MA_08_AA_BeamCannon_L6": {
       "ref": "ZN_MA_08_AA_BeamCannon_L6__lv1",
       "overrides": {
+        "projectile": {
+          "texture": "../../projectiles/Beam_2_Yellow.png",
+          "scale": 1,
+          "speed": 135,
+          "forwardOffset": -7.5,
+          "rotation": 0,
+          "sequence": {
+            "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+            "color": "Yellow",
+            "length": 591.25,
+            "segments": [
+              {
+                "texture": "../../projectiles/HighBeamRifle_1_Start_Yellow.png",
+                "frames": 23,
+                "width": 625,
+                "height": 242,
+                "scaleX": 0.5,
+                "scaleY": 0.325,
+                "forward": 125.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              },
+              {
+                "texture": "../../projectiles/HighBeamRifle_1_End_Yellow.png",
+                "frames": 23,
+                "width": 625,
+                "height": 242,
+                "scaleX": 0.5,
+                "scaleY": 0.325,
+                "forward": 435.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              }
+            ],
+            "clock": "flight"
+          }
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
@@ -2700,6 +3144,43 @@
     "ZN_MA_08_AA_BeamCannon_R7": {
       "ref": "ZN_MA_08_AA_BeamCannon_R7__lv1",
       "overrides": {
+        "projectile": {
+          "texture": "../../projectiles/Beam_2_Yellow.png",
+          "scale": 1,
+          "speed": 135,
+          "forwardOffset": -7.5,
+          "rotation": 0,
+          "sequence": {
+            "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+            "color": "Yellow",
+            "length": 591.25,
+            "segments": [
+              {
+                "texture": "../../projectiles/HighBeamRifle_1_Start_Yellow.png",
+                "frames": 23,
+                "width": 625,
+                "height": 242,
+                "scaleX": 0.5,
+                "scaleY": 0.325,
+                "forward": 125.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              },
+              {
+                "texture": "../../projectiles/HighBeamRifle_1_End_Yellow.png",
+                "frames": 23,
+                "width": 625,
+                "height": 242,
+                "scaleX": 0.5,
+                "scaleY": 0.325,
+                "forward": 435.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              }
+            ],
+            "clock": "flight"
+          }
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
@@ -2891,6 +3372,43 @@
     "ZN_MA_08_AA_BeamCannon_L7": {
       "ref": "ZN_MA_08_AA_BeamCannon_L7__lv1",
       "overrides": {
+        "projectile": {
+          "texture": "../../projectiles/Beam_2_Yellow.png",
+          "scale": 1,
+          "speed": 135,
+          "forwardOffset": -7.5,
+          "rotation": 0,
+          "sequence": {
+            "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+            "color": "Yellow",
+            "length": 591.25,
+            "segments": [
+              {
+                "texture": "../../projectiles/HighBeamRifle_1_Start_Yellow.png",
+                "frames": 23,
+                "width": 625,
+                "height": 242,
+                "scaleX": 0.5,
+                "scaleY": 0.325,
+                "forward": 125.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              },
+              {
+                "texture": "../../projectiles/HighBeamRifle_1_End_Yellow.png",
+                "frames": 23,
+                "width": 625,
+                "height": 242,
+                "scaleX": 0.5,
+                "scaleY": 0.325,
+                "forward": 435.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              }
+            ],
+            "clock": "flight"
+          }
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_AA_BeamCannon.gw",
@@ -3082,6 +3600,55 @@
     "ZN_MA_08_BeamCannon": {
       "ref": "ZN_MA_08_BeamCannon__lv1",
       "overrides": {
+        "projectile": {
+          "texture": "../../projectiles/Beam_2_Yellow.png",
+          "scale": 1,
+          "speed": 55.0,
+          "forwardOffset": -10,
+          "rotation": 0,
+          "sequence": {
+            "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamCannon/Projectile_HighBeamCannon_Yellow_Effect.ini",
+            "color": "Yellow",
+            "length": 800.0,
+            "segments": [
+              {
+                "texture": "../../projectiles/HighBeamCannon_1_Yellow_Start.png",
+                "frames": 16,
+                "width": 664,
+                "height": 150,
+                "scaleX": 0.5,
+                "scaleY": 0.5,
+                "forward": 130.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              },
+              {
+                "texture": "../../projectiles/HighBeamCannon_1_Yellow_Mid.png",
+                "frames": 16,
+                "width": 545,
+                "height": 150,
+                "scaleX": 0.5,
+                "scaleY": 0.5,
+                "forward": 432.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              },
+              {
+                "texture": "../../projectiles/HighBeamCannon_1_Yellow_End.png",
+                "frames": 16,
+                "width": 464,
+                "height": 150,
+                "scaleX": 0.5,
+                "scaleY": 0.5,
+                "forward": 684.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              }
+            ],
+            "clock": "flight"
+          },
+          "nativeSpeed": 55.0
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Beam/ZN_MA_08_BeamCannon.gw",

@@ -1,4 +1,13 @@
 {
+  "小型合同": "Small contract",
+  "中型合同": "Medium contract",
+  "大型合同": "Large contract",
+  "巨型合同": "Massive contract",
+  "战争合同": "War contract",
+  "对局进行中不能出售": "Units cannot be sold during a match",
+  "出售价格：资金 {money} · 物资 {supplies}": "Sale price: Funds {money} · Supplies {supplies}",
+  "出售1台库存单位，获得资金 {money}、物资 {supplies}，是否继续？": "Sell one unit for {money} funds and {supplies} supplies?",
+  "无可出售库存": "No stock available to sell",
   "允许": "Allow",
   "100回合 · 初始战力20000 · 每5回合空投增援 · 阵亡扣除库存 · 击坠与助攻给予奖励": "100 rounds · 20000 strength · Reinforce every 5 rounds · Casualties consume stock · Kill and assist rewards",
   "库存已耗尽": "Stock exhausted",

@@ -1,0 +1,345 @@
+[
+  {
+    "id": "RGM_89",
+    "source": "GW_BattleUniverse_DLC_0093/Units/BattleUnits/RGM_89/RGM_89.ini",
+    "era": "0093T1",
+    "faction": "EFSF",
+    "weapons": [
+      "Common_Push_A",
+      "EF_RGM_89_BR",
+      "EF_RGM_89_BZ",
+      "EF_RGM_89_ShieldMS",
+      "EF_RGM_89_CrotchGL_L",
+      "EF_RGM_89_Decoy",
+      "EF_RGM_89_BeamSaber_AF_A",
+      "Common_DoubleVulcan_MS"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ],
+    "beams": [],
+    "forms": []
+  },
+  {
+    "id": "AMS_119",
+    "source": "GW_BattleUniverse_DLC_0093/Units/BattleUnits/AMS_119/AMS_119.ini",
+    "era": "0093T1",
+    "faction": "NEO_ZEON",
+    "weapons": [
+      "Common_Push_A",
+      "NZN_AMS_119_BR_WGL",
+      "NZN_AMS_119_BR_GL",
+      "NZN_AMS_119_BeamHawk_AF_A",
+      "NZN_AMS_119_SeaSerpent",
+      "NZN_AMS_119_Panzerfaust"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ],
+    "beams": [],
+    "forms": []
+  },
+  {
+    "id": "RGZ_91",
+    "source": "GW_BattleUniverse_DLC_0093/Units/BattleUnits/RGZ_91/RGZ_91.ini",
+    "era": "0093T1",
+    "faction": "EFSF",
+    "weapons": [
+      "Common_Push_A",
+      "Common_DoubleVulcan_MS",
+      "EF_RGZ_91_BR",
+      "EF_RGZ_91_BWS_HighBeamCannon",
+      "Common_ArmGL_L",
+      "EF_RGZ_91_CrotchGL_L",
+      "EF_RGZ_91_Decoy",
+      "EF_BeamSaber_AF_Yellow_A"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ],
+    "beams": [
+      "EF_RGZ_91_BWS_HighBeamCannon"
+    ],
+    "forms": []
+  },
+  {
+    "id": "RGZ_91B",
+    "source": "GW_BattleUniverse_DLC_0093/Units/BattleUnits/RGZ_91B/RGZ_91B.ini",
+    "era": "0093T1",
+    "faction": "EFSF",
+    "weapons": [
+      "Common_Push_A",
+      "Common_DoubleVulcan_MS",
+      "Common_ArmGL_L",
+      "EF_RGZ_91B_BeamSaber_AF_Large_Yellow_A",
+      "EF_RGZ_91B_BR",
+      "EF_RGZ_91B_CrotchBeamCannon",
+      "EF_RGZ_91B_CrotchBeamCannon_L",
+      "EF_RGZ_91B_MS",
+      "EF_RGZ_91B_MS_L",
+      "EF_RGZ_91B_HighBeamCannon",
+      "EF_RGZ_91_BWS_DBC",
+      "EF_RGZ_91_BWS_DBC_R"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "Transform_LandFly_SFS_OFF",
+        "source": "Template/Unit/Skill/Transform_LandFly_SFS_OFF.gw",
+        "status": "adapted",
+        "name": "变形：保留资源比例与破损部位，不恢复HP或EN"
+      }
+    ],
+    "beams": [
+      "EF_RGZ_91B_HighBeamCannon"
+    ],
+    "forms": [
+      "RGZ_91B_MA"
+    ]
+  },
+  {
+    "id": "MSN_03",
+    "source": "GW_BattleUniverse_DLC_0093/Units/BattleUnits/MSN_03/MSN_03.ini",
+    "era": "0093T1",
+    "faction": "NEO_ZEON",
+    "weapons": [
+      "NZN_MSN_03_BR_WGL",
+      "NZN_MSN_03_BR_GL",
+      "NZN_MSN_03_BeamSaber_AF_Green_A",
+      "NZN_MSN_03_ShieldBSG",
+      "NZN_MSN_03_ShieldBSG_L",
+      "Common_Push_A",
+      "NZN_MSN_03_Funnel"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "remote_weapon_NZN_MSN_03_Funnel",
+        "name": "浮游炮：逐发判定、错峰飞行与回收",
+        "status": "adapted",
+        "source": "Units/BattleUnits/Weapon/Funnel/NZN_MSN_03_Funnel.gw"
+      }
+    ],
+    "beams": [],
+    "forms": []
+  },
+  {
+    "id": "MSN_04",
+    "source": "GW_BattleUniverse_DLC_0093/Units/BattleUnits/MSN_04/MSN_04.ini",
+    "era": "0093T1",
+    "faction": "NEO_ZEON",
+    "weapons": [
+      "Common_Push_A",
+      "NZN_MSN_04_BSG",
+      "NZN_MSN_04_BR",
+      "NZN_MSN_04_HighBeamCannon",
+      "NZN_MSN_04_ShieldMS",
+      "NZN_MSN_04_BeamHawk_AF_A",
+      "NZN_MSN_04_DoubleSaber",
+      "NZN_MSN_04_Funnel"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "remote_weapon_NZN_MSN_04_Funnel",
+        "name": "浮游炮：逐发判定、错峰飞行与回收",
+        "status": "adapted",
+        "source": "Units/BattleUnits/Weapon/Funnel/NZN_MSN_04_Funnel.gw"
+      }
+    ],
+    "beams": [
+      "NZN_MSN_04_HighBeamCannon"
+    ],
+    "forms": []
+  },
+  {
+    "id": "RX_93",
+    "source": "GW_BattleUniverse_DLC_0093/Units/BattleUnits/RX_93/RX_93.ini",
+    "era": "0093T1",
+    "faction": "EFSF",
+    "weapons": [
+      "Common_Push_A",
+      "EF_RX_93_BR",
+      "EF_RX_93_BZ",
+      "EF_RX_93_ShieldBC",
+      "EF_RX_93_ShieldMS",
+      "EF_RX_93_BeamSaber_BF_B",
+      "Common_DoubleVulcan_MS",
+      "EF_RX_93_Funnel"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "remote_weapon_EF_RX_93_Funnel",
+        "name": "浮游炮：逐发判定、错峰飞行与回收",
+        "status": "adapted",
+        "source": "Units/BattleUnits/Weapon/Funnel/EF_RX_93_Funnel.gw"
+      }
+    ],
+    "beams": [],
+    "forms": []
+  },
+  {
+    "id": "RX_93_Test",
+    "source": "GW_BattleUniverse_DLC_0093/Units/BattleUnits/RX_93/RX_93_Test.ini",
+    "era": "0093T1",
+    "faction": "EFSF",
+    "weapons": [
+      "Common_Push_A",
+      "EF_RX_93_BR",
+      "EF_RX_93_BZ",
+      "EF_RX_93_ShieldBC",
+      "EF_RX_93_ShieldMS",
+      "EF_RX_93_BeamSaber_BF_B",
+      "Common_DoubleVulcan_MS"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "CustomUnit",
+        "source": "Template/Unit/Skill/CustomUnit.gw",
+        "status": "adapted",
+        "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
+      }
+    ],
+    "beams": [],
+    "forms": []
+  },
+  {
+    "id": "RGZ_91_MA",
+    "source": "GW_BattleUniverse_DLC_0093/Units/BattleUnits/RGZ_91/RGZ_91_MA.ini",
+    "era": "0093T1",
+    "faction": "EFSF",
+    "weapons": [
+      "EF_RGZ_91_BWS_DBC",
+      "EF_RGZ_91_BWS_DBC_R",
+      "EF_RGZ_91_BWS_HighBeamCannon",
+      "EF_RGZ_91_BWS_DMS",
+      "EF_RGZ_91_BWS_DMS_L",
+      "Common_Push_A"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "FlyUnit_Fighter",
+        "source": "Template/Unit/Skill/FlyUnit_Fighter.gw",
+        "status": "review",
+        "name": "FlyUnit_Fighter"
+      },
+      {
+        "id": "CantDeconstruct",
+        "source": "Template/Unit/Skill/CantDeconstruct.gw",
+        "status": "not_applicable",
+        "name": "CantDeconstruct"
+      },
+      {
+        "id": "ExitUnit",
+        "source": "Template/Unit/Skill/ExitUnit.gw",
+        "status": "adapted",
+        "name": "爆甲：原生形态转换，资源与部位规则使用显式配置"
+      },
+      {
+        "id": "DogFight_A",
+        "source": "Template/Unit/Skill/DogFight_A.gw",
+        "status": "review",
+        "name": "空中缠斗"
+      }
+    ],
+    "beams": [
+      "EF_RGZ_91_BWS_HighBeamCannon"
+    ],
+    "forms": [
+      "RGZ_91"
+    ]
+  },
+  {
+    "id": "RGZ_91B_MA",
+    "source": "GW_BattleUniverse_DLC_0093/Units/BattleUnits/RGZ_91B/RGZ_91B_MA.ini",
+    "era": "0093T1",
+    "faction": "EFSF",
+    "weapons": [
+      "EF_RGZ_91_BWS_DBC",
+      "EF_RGZ_91_BWS_DBC_R",
+      "EF_RGZ_91B_BR",
+      "EF_RGZ_91B_CrotchBeamCannon",
+      "EF_RGZ_91B_CrotchBeamCannon_L",
+      "EF_RGZ_91B_MS",
+      "EF_RGZ_91B_MS_L",
+      "EF_RGZ_91B_HighBeamCannon",
+      "Common_Push_A"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "FlyUnit_Fighter",
+        "source": "Template/Unit/Skill/FlyUnit_Fighter.gw",
+        "status": "review",
+        "name": "FlyUnit_Fighter"
+      },
+      {
+        "id": "CantDeconstruct",
+        "source": "Template/Unit/Skill/CantDeconstruct.gw",
+        "status": "not_applicable",
+        "name": "CantDeconstruct"
+      },
+      {
+        "id": "Transform_LandFly_SFS_OFF",
+        "source": "Template/Unit/Skill/Transform_LandFly_SFS_OFF.gw",
+        "status": "adapted",
+        "name": "变形：保留资源比例与破损部位，不恢复HP或EN"
+      },
+      {
+        "id": "DogFight_A",
+        "source": "Template/Unit/Skill/DogFight_A.gw",
+        "status": "review",
+        "name": "空中缠斗"
+      }
+    ],
+    "beams": [
+      "EF_RGZ_91B_HighBeamCannon"
+    ],
+    "forms": [
+      "RGZ_91B"
+    ]
+  }
+]

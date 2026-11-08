@@ -462,7 +462,17 @@
     "AMX_011": "standard",
     "AMX_014": "standard",
     "AMX_107": "standard",
-    "AMX_107M": "standard"
+    "AMX_107M": "standard",
+    "RGM_89": "kit_0",
+    "AMS_119": "standard",
+    "RGZ_91": "standard",
+    "RGZ_91B": "standard",
+    "MSN_03": "standard",
+    "MSN_04": "standard",
+    "RX_93": "standard",
+    "RX_93_Test": "standard",
+    "RGZ_91_MA": "standard",
+    "RGZ_91B_MA": "standard"
   },
   "baseModels": {
     "RGM_79": "RGM_79__machine_gun",
@@ -923,7 +933,17 @@
     "MedeaKai_DeployState": "MedeaKai_DeployState__standard",
     "MS_06V_DeployState": "MS_06V_DeployState__standard",
     "RX_75R_DeployState": "RX_75R_DeployState__standard",
-    "Type61_SPG_DeployState": "Type61_SPG_DeployState__standard"
+    "Type61_SPG_DeployState": "Type61_SPG_DeployState__standard",
+    "RGM_89": "RGM_89__kit_0",
+    "AMS_119": "AMS_119__standard",
+    "RGZ_91": "RGZ_91__standard",
+    "RGZ_91B": "RGZ_91B__standard",
+    "MSN_03": "MSN_03__standard",
+    "MSN_04": "MSN_04__standard",
+    "RX_93": "RX_93__standard",
+    "RX_93_Test": "RX_93_Test__standard",
+    "RGZ_91_MA": "RGZ_91_MA__standard",
+    "RGZ_91B_MA": "RGZ_91B_MA__standard"
   },
   "offers": {
     "RGM_79__beam_spray": {

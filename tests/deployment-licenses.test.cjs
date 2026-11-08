@@ -21,6 +21,7 @@ function load(
       }),
     );
   const context = vm.createContext({
+    SaveCodec: require("../shared/save-codec.js"),
     PILOT_DATA: require("../shared/pilots.json"),
     STARTER_PROFILE: require("../shared/starter-profile.json"),
     PRODUCTION_CATALOG: catalog,
@@ -36,7 +37,7 @@ function load(
   });
   for (const name of ["economy", "development"])
     vm.runInContext(fs.readFileSync("shared/" + name + ".js", "utf8"), context);
-  return { ...vm.runInContext("({E:Economy,D:Development})", context), storage };
+  return { ...vm.runInContext("({E:Economy,D:Development})", context), storage, context };
 }
 test("legacy inventories retain permits and migrate to zero counted stock", () => {
   const old = {
@@ -83,7 +84,39 @@ test("one paid permit grants one default-equipped chassis exactly once", () => {
   assert(!E.purchaseLicense("RGM_79", "EFSF"));
   assert.equal(E.snapshot().money, after);
   assert.equal(typeof E.buyKit, "undefined");
-  assert.equal(typeof E.sellUnit, "undefined");
+  assert.equal(typeof E.sellUnit, "function");
+});
+
+test("selling removes one chassis and refunds half the production price without removing its permit", () => {
+  const { E } = load({ schemaVersion: 3, money: 1000, supplies: 2000,
+    licenses: { RGM_79: true }, inventory: { RGM_79: 2 }, kits: {} });
+  const price = E.unitOffer("RGM_79"), before = E.snapshot();
+  assert(E.sellUnit("RGM_79"));
+  assert.equal(E.quantity("RGM_79"), 1);
+  assert.equal(E.snapshot().money, before.money + Math.floor(price.money / 2));
+  assert.equal(E.snapshot().supplies, before.supplies + Math.floor(price.supplies / 2));
+  assert(E.hasLicense("RGM_79"));
+  assert(E.sellUnit("RGM_79"));
+  assert.equal(E.quantity("RGM_79"), 0);
+  const empty = JSON.stringify(E.snapshot());
+  assert(!E.sellUnit("RGM_79")); assert(!E.sellUnit("missing-unit"));
+  assert(!E.sellUnit("constructor")); assert.equal(E.saleOffer("__proto__"), null);
+  assert.equal(JSON.stringify(E.snapshot()), empty);
+});
+
+test("unlicensed reward stock can be sold and failed storage leaves inventory and wallet intact", () => {
+  const profile = { schemaVersion: 3, money: 1000, supplies: 2000,
+    licenses: {}, inventory: { RGM_79: 1 }, kits: {} };
+  const { E, context, storage } = load(profile, false);
+  assert(!E.hasLicense("RGM_79"));
+  const before = JSON.stringify(E.snapshot()), saved = storage.get(key);
+  context.localStorage.setItem = () => { throw Error("quota"); };
+  assert.throws(() => E.sellUnit("RGM_79"), /quota/);
+  assert.equal(JSON.stringify(E.snapshot()), before);
+  assert.equal(storage.get(key), saved);
+  context.localStorage.setItem = (k, v) => storage.set(k, v);
+  assert(E.sellUnit("RGM_79"));
+  assert(!E.hasLicense("RGM_79"));
 });
 test("bulk permit purchases deduplicate chassis, reject undeveloped/unaffordable units atomically", () => {
   const { E } = load();
@@ -137,5 +170,18 @@ test("default equipment matches native index zero independently of cheapest fact
     const { E } = load();
     assert.equal(E.defaultKit(id), kit);
     assert.equal(G.catalog.prefabs.find((p) => p.id === id).weaponKits[0].id, kit);
+  }
+});
+
+test("0093 event inventory is usable without unlocking research or purchasing a permit", () => {
+  const { E, D } = load({schemaVersion:3,money:100000,supplies:100000,licenses:{},inventory:{},kits:{}},false);
+  const inventory = Object.fromEntries(["RGM_89","AMS_119","RGZ_91","RGZ_91B","MSN_03","MSN_04","RX_93","RX_93_Test"].map(id=>[id,2]));
+  const award={id:"0093-stock",matchId:"event",money:0,supplies:0,inventory};
+  assert(E.creditActivity(award));assert(!E.creditActivity(award));
+  for (const id of Object.keys(inventory)) {
+    assert.equal(E.quantity(id),2);assert(!E.hasLicense(id));assert(!D.allows("PMC",id));
+    assert(!E.purchaseLicense(id,"PMC"));
+    const kitId=E.defaultKit(id);
+    assert.equal(E.stockPlan([{unitId:id,kitId}],E.snapshot()).missing.length,0);
   }
 });

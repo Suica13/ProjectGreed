@@ -30,6 +30,8 @@ def attach(prefab,native):
     if ident in PURGES:kind,target,recovery,repair=PURGES[ident]
     elif ident in ["YMT_05","YMT_05_ModeB"]:
         kind="transform";target="YMT_05_ModeB" if ident=="YMT_05" else "YMT_05";recovery=0;repair=False
+    elif ident in ("RGZ_91B", "RGZ_91B_MA"):
+        kind="transform";target="RGZ_91B_MA" if ident=="RGZ_91B" else "RGZ_91B";recovery=0;repair=False
     elif ident=="FA_78_1_NA":kind="escape";target="FF_X7";recovery=100;repair=True
     elif ident=="MTank":kind="escape";target="MTank_Top";recovery=100;repair=True
     if not kind and not any(s.get('type') in ('escape', 'armor_purge') for s in prefab.get('skills', [])):
@@ -55,6 +57,11 @@ def attach(prefab,native):
         **({"actionCost":1} if kind!="transform" else {}),
         effect="Light_75_NotAttached",sound={"file":"../../sounds/Transform_4.ogg","volume":.6},
         nativeAction="action_Transform_LandLand_TankB" if ident=="YMT_05" else "action_Transform_LandLand_TankA" if ident=="YMT_05_ModeB" else "action_ExitUnit")
+    if ident in ("RGZ_91B", "RGZ_91B_MA"):
+        skill["nativeAction"] = "action_Transform_LandFlyB" if ident == "RGZ_91B" else "action_Transform_LandFlyA"
+        for mechanic in prefab.get("mechanics", []):
+            if mechanic["id"].startswith("Transform_LandFly"):
+                mechanic.update(status="adapted", name="变形：保留资源比例与破损部位，不恢复HP或EN")
     if kind=="escape":
         skill.update(source={"mode":"remove"},spawn=config)
         if ident=="MTank":

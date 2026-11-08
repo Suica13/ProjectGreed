@@ -465,7 +465,17 @@
     "units/Facility_Beam/unit.json",
     "units/Facility_Missile/unit.json",
     "units/Facility_Cannon/unit.json",
-    "units/Facility_Radar/unit.json"
+    "units/Facility_Radar/unit.json",
+    "units/RGM_89/unit.json",
+    "units/AMS_119/unit.json",
+    "units/RGZ_91/unit.json",
+    "units/RGZ_91B/unit.json",
+    "units/MSN_03/unit.json",
+    "units/MSN_04/unit.json",
+    "units/RX_93/unit.json",
+    "units/RX_93_Test/unit.json",
+    "units/RGZ_91_MA/unit.json",
+    "units/RGZ_91B_MA/unit.json"
   ],
   "effects": "effects/effects.json",
   "presentation": "presentation.json",

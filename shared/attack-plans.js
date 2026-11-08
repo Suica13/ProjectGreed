@@ -358,8 +358,10 @@ function createAttackPlanner(rules, randomId) {
         const blastId = randomId();
         // A mortar salvo is launched once at a cell. Resolve every occupant at
         // each shell's impact, rather than queuing a full hidden salvo per victim.
-        if (weapon.category === "mortar") {
-          result.push({ ...intent, impactCell: impact, blastId, cellBlast: true });
+        if (weapon.category === "mortar" || weapon.special.perProjectileBlast) {
+          const salvo = { ...intent, impactCell: impact, blastId, cellBlast: true };
+          if (intent.target && find(room, intent.target)) result.push(salvo);
+          else room.emptyImpacts.push(salvo);
           continue;
         }
         const victims = room.game.units

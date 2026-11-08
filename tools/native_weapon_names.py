@@ -2,6 +2,16 @@
 import re
 
 EXACT = {
+    "EF_RGM_89_BZ": ("火箭筒", "Bazooka", "バズーカ"),
+    "EF_RX_93_BZ": ("火箭筒", "Bazooka", "バズーカ"),
+    "EF_RGM_89_ShieldMS": ("盾牌导弹", "Shield Missiles", "シールド・ミサイル"),
+    "EF_RX_93_ShieldMS": ("盾牌导弹", "Shield Missiles", "シールド・ミサイル"),
+    "EF_RGM_89_CrotchGL": ("腰部榴弹发射器", "Waist Grenade Launcher", "腰部グレネードランチャー"),
+    "EF_RGZ_91_CrotchGL": ("腰部榴弹发射器", "Waist Grenade Launcher", "腰部グレネードランチャー"),
+    "EF_RGM_89_Decoy": ("诱饵弹", "Decoy Balloons", "ダミーバルーン"),
+    "EF_RGZ_91_Decoy": ("诱饵弹", "Decoy Balloons", "ダミーバルーン"),
+    "NZN_AMS_119_Panzerfaust": ("铁拳火箭筒", "Panzerfaust", "シュツルム・ファウスト"),
+    "EF_RGZ_91_BWS_DMS": ("BWS双联导弹", "BWS Twin Missiles", "BWS二連装ミサイル"),
     "EF_GMRifle": ("90mm机枪", "90mm Machine Gun", "90mmマシンガン"),
     "EF_BeamSprayGunB2": ("光束喷枪", "Beam Spray Gun", "ビーム・スプレーガン"),
     "EF_LongRifle": ("长距离步枪", "Long-Range Rifle", "ロング・ライフル"),

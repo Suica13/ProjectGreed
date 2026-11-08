@@ -34,9 +34,13 @@ test("beam bazooka draws its native bullet and both impact layers on the map", a
 });
 
 
-for (const [unitId, weaponId] of [
+for (const [unitId, weaponId, expectedSpeed = 5.5] of [
   ["MA_08", "ZN_MA_08_BeamCannon"],
   ["AMX_002", "ZN_AMX_002_BeamCannon"],
+  ["RX_78GP03D", "EF_RX_78GP03D_BeamCannon"],
+  ["AMX_014", "NZN_AMX_014_BR", 7.5],
+  ["FA_010A", "AEUG_FA_010A_BeamCannon", 15],
+  ["FA_010S", "AEUG_FA_010S_MegaBeamCannon", 7.5],
 ]) {
   test(`${unitId} heavy beam cannon reaches its target at the corrected speed`, async ({ page }) => {
     const errors = [];
@@ -77,13 +81,15 @@ for (const [unitId, weaponId] of [
       context.drawImage = image => drawn.push(image);
       const geometry = { ox: 0, oy: 0, tile: Rules.mapCellPixels };
       const plan = MapCombat.frames[0].plan, shot = plan.shots[0]; MapCombat.update(zero + (shot.at + shot.flight / 2) * 1000 / rate); MapCombat.draw(context, geometry);
-      const flying = drawn.includes(SpriteRenderer.images[weapon.projectile.asset]);
+      const flying = weapon.projectile.sequence
+        ? weapon.projectile.sequence.segments.some(segment => drawn.includes(SpriteRenderer.images[segment.asset]))
+        : drawn.includes(SpriteRenderer.images[weapon.projectile.asset]);
       drawn.length = 0;
       MapCombat.update(zero + (plan.contacts[0].at + 0.05) * 1000 / rate); MapCombat.draw(context, geometry);
       const effects = weapon.hitEffects || [weapon.hitEffect]; const impacted = effects.some(id => drawn.includes(SpriteRenderer.images[ART.effects[id].asset]));
       return { speed: weapon.projectile.speed, flight, flying, impacted };
     }, { unitId, weaponId });
-    expect(result.speed).toBe(5.5);
+    expect(result.speed).toBe(expectedSpeed);
     expect(result.flight).toBeLessThan(1);
     expect(result.flying).toBe(true);
     expect(result.impacted).toBe(true);

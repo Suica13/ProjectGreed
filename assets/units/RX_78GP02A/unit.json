@@ -905,6 +905,58 @@
     "EF_RX_78GP02A_Bombing_Nuke": {
       "ref": "EF_RX_78GP02A_Bombing_Nuke__lv1",
       "overrides": {
+        "name": "核弹轰炸",
+        "min": 3,
+        "max": 8,
+        "slot": "skill",
+        "damagePerShot": 30000,
+        "damageComponents": {
+          "shell": 30000
+        },
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Shoot_A_LongTime",
+              "delay": 0
+            },
+            {
+              "weaponDisplayIndex": 0,
+              "delay": 0
+            },
+            {
+              "animation": "Common_Shoot_A",
+              "delay": 3
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.5,
+              "requiredParts": [
+                "rightArm",
+                "leftArm"
+              ],
+              "delay": 0,
+              "damageComponents": {
+                "shell": 30000
+              },
+              "damageMultiplier": 1
+            },
+            {
+              "delay": 1.5
+            }
+          ],
+          "startAnimation": null
+        },
+        "projectile": {
+          "texture": "../../projectiles/Missile_Nuke_1.png",
+          "scale": 0.25,
+          "speed": 30,
+          "forwardOffset": -5,
+          "rotation": 0,
+          "motion": "mortar"
+        },
+        "hitEffect": "Nuke_Hit_1",
+        "category": "nuke",
         "requiredParts": [
           "rightArm"
         ],
@@ -929,12 +981,28 @@
             }
           ]
         },
-        "availability": {
-          "hidden": true,
-          "reasons": [
-            "energy_capacity_review"
-          ]
-        }
+        "noCounter": true,
+        "maxUses": 1,
+        "special": {
+          "type": "nuke",
+          "radius": 3,
+          "emptyCells": true,
+          "shape": "circle"
+        },
+        "localization": {
+          "zh": {
+            "name": "核弹轰炸"
+          },
+          "en": {
+            "name": "Nuclear Bombardment",
+            "description": "Nuclear bombardment: targets a circular area with a radius of 3 cells. One use per life; cannot counterattack."
+          },
+          "ja": {
+            "name": "核爆撃",
+            "description": "核爆撃：指定マスを中心に半径3マスを攻撃。1回の出撃につき1回。反撃不可。"
+          }
+        },
+        "description": "核弹轰炸：指定目标格，攻击半径3格的圆形区域，每条命限用1次，不能反击。"
       }
     },
     "EF_RX_78GP02A_BeamBazooka": {
@@ -1245,12 +1313,6 @@
       "id": "movement",
       "name": "地面移动",
       "status": "implemented"
-    },
-    {
-      "id": "energy_capacity_EF_RX_78GP02A_Bombing_Nuke",
-      "name": "待适配：航空炸弹（原生EN消费超过减半后的机体容量）",
-      "status": "review",
-      "source": "Units/BattleUnits/Weapon/Shell/EF_RX_78GP02A_Bombing_Nuke.gw"
     }
   ],
   "weaponKits": [
@@ -1265,7 +1327,8 @@
         "EF_RX_78GP02A_MRLS_L",
         "EF_RX_78GP02A_MRLS_L_L",
         "EF_RX_78GP02A_MRLS_S",
-        "Common_Push_A"
+        "Common_Push_A",
+        "EF_RX_78GP02A_Bombing_Nuke"
       ]
     }
   ],

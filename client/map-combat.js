@@ -125,21 +125,24 @@ const MapCombat = (() => {
         if (!previous || (event.shotIndices?.length || 1) > (previous.shotIndices?.length || 1))
           nuclearLaunches.set(event.blastId, event);
       }
+    const containerSalvos = new Set();
     const visualBattles = orderedBattles.map((battle) => ({
       ...battle,
       events: battle.events.map((event) => {
+        const containerFollowup = !!event.containerSalvoId && containerSalvos.has(event.containerSalvoId);
+        if (event.containerSalvoId) containerSalvos.add(event.containerSalvoId);
         const actor = displayed.get(event.from) || battle.actors.find((u) => u.id === event.from);
         if (
           !actor ||
           !event.impactCell ||
           !["nuke", "blast"].includes(Rules.eventWeapon(actor, event)?.special?.type)
         )
-          return event;
+          return event.containerSalvoId ? { ...event, containerFollowup } : event;
         const key = event.blastId || JSON.stringify([event.from, event.weapon, event.impactCell]);
         const representative = nuclearLaunches.get(key);
         const nuclearFollowup = !!representative && representative !== event;
         if (!representative) nuclearLaunches.set(key, event);
-        return { ...event, nuclearFollowup };
+        return { ...event, nuclearFollowup, containerFollowup };
       }),
     }));
     lanes = visualBattles.map((battle) => ({

@@ -1,0 +1,1095 @@
+{
+  "schemaVersion": 2,
+  "id": "RGM_89",
+  "code": "RGM-89",
+  "source": "GW_BattleUniverse_DLC_0093/Units/BattleUnits/RGM_89/RGM_89.ini",
+  "materials": {
+    "textures": {
+      "RGM_89_Crotch_1.png": "textures/RGM_89_Crotch_1.png",
+      "RGM_89_Body_1.png": "textures/RGM_89_Body_1.png",
+      "RGM_89_ArmL_1.png": "textures/RGM_89_ArmL_1.png",
+      "RGM_89_ArmR_1.png": "textures/RGM_89_ArmR_1.png",
+      "RGM_89_ShoulderL_1.png": "textures/RGM_89_ShoulderL_1.png",
+      "RGM_89_ShoulderR_1.png": "textures/RGM_89_ShoulderR_1.png",
+      "RGM_89_Head_1.png": "textures/RGM_89_Head_1.png",
+      "RGM_89_Foot_1.png": "textures/RGM_89_Foot_1.png",
+      "RGM_89_LegL_1.png": "textures/RGM_89_LegL_1.png",
+      "RGM_89_LegR_1.png": "textures/RGM_89_LegR_1.png",
+      "EF_RGM_89_BR_0.png": "textures/EF_RGM_89_BR_0.png",
+      "EF_RGM_89_BZ_0.png": "textures/EF_RGM_89_BZ_0.png",
+      "EF_BeamSaber.png": "textures/EF_BeamSaber.png",
+      "EF_RGM_89_Shield_B.png": "textures/EF_RGM_89_Shield_B.png",
+      "EF_RGM_89_Shield_B_Breaked.png": "textures/EF_RGM_89_Shield_B_Breaked.png",
+      "RGM_89.png": "textures/RGM_89.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
+    },
+    "icon": "RGM_89.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "EF_RGM_89_BZ_NotUsing",
+      "texture": "EF_RGM_89_BZ_0.png",
+      "bone": "Pelvis",
+      "order": 0.0,
+      "scale": 0.75,
+      "scaleY": -1.0,
+      "rotation": 90.0,
+      "offset": {
+        "x": 0.0,
+        "y": -9.5
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_1"
+        ],
+        "weaponDisplayIndex": {
+          "not": 0
+        }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "LeftFoot",
+      "texture": "RGM_89_Foot_1.png",
+      "bone": "LeftFoot",
+      "order": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightFoot",
+      "texture": "RGM_89_Foot_1.png",
+      "bone": "RightFoot",
+      "order": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "LeftLeg",
+      "texture": "RGM_89_LegL_1.png",
+      "bone": "LeftLeg",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightLeg",
+      "texture": "RGM_89_LegR_1.png",
+      "bone": "RightLeg",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "EF_RGM_89_BR_NotUsing",
+      "texture": "EF_RGM_89_BR_0.png",
+      "bone": "Pelvis",
+      "order": 3.0,
+      "scale": 0.7,
+      "rotation": -90.0,
+      "offset": {
+        "x": 3.5,
+        "y": -8.5
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_0"
+        ],
+        "weaponDisplayIndex": {
+          "not": 0
+        }
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "Crotch",
+      "texture": "RGM_89_Crotch_1.png",
+      "bone": "Pelvis",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmL",
+      "texture": "RGM_89_ArmL_1.png",
+      "bone": "LeftArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmR",
+      "texture": "RGM_89_ArmR_1.png",
+      "bone": "RightArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "scaleX": 1.0,
+      "independentClock": true
+    },
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 4.1,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -7.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Body",
+      "texture": "RGM_89_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "EF_RGM_89_BR",
+      "texture": "EF_RGM_89_BR_0.png",
+      "bone": "RightArm",
+      "order": 5.5,
+      "scale": 0.85,
+      "rotation": 0.0,
+      "offset": {
+        "x": 2.0,
+        "y": 13.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_0"
+        ],
+        "weaponDisplayIndex": 0
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "EF_RGM_89_BeamSaber_AF",
+      "texture": "EF_BeamSaber.png",
+      "bone": "RightWeapon",
+      "order": 5.5,
+      "scale": 0.85,
+      "rotation": -16.0,
+      "frames": 5.0,
+      "frame": 1.0,
+      "offset": {
+        "x": 7.0,
+        "y": 23.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {
+        "kit": [
+          "kit_0",
+          "kit_1"
+        ],
+        "weaponDisplayIndex": 1
+      }
+    },
+    {
+      "name": "ShoulderL",
+      "texture": "RGM_89_ShoulderL_1.png",
+      "bone": "LeftShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ShoulderR",
+      "texture": "RGM_89_ShoulderR_1.png",
+      "bone": "RightShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "EF_RGM_89_BZ",
+      "texture": "EF_RGM_89_BZ_0.png",
+      "bone": "RightArm",
+      "order": 6.5,
+      "scale": 0.85,
+      "rotation": 0.0,
+      "offset": {
+        "x": 1.0,
+        "y": 7.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "kit_1"
+        ],
+        "weaponDisplayIndex": 0
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "Shield",
+      "texture": "EF_RGM_89_Shield_B.png",
+      "bone": "LeftArm",
+      "order": 6.6,
+      "scale": 1.0,
+      "rotation": 10.0,
+      "offset": {
+        "x": -8.0,
+        "y": 8.0
+      },
+      "visibleWhen": {
+        "shieldVisible": true
+      },
+      "requiredParts": [
+        "leftArm"
+      ]
+    },
+    {
+      "name": "Shield_Breaked",
+      "texture": "EF_RGM_89_Shield_B_Breaked.png",
+      "bone": "LeftArm",
+      "order": 6.6,
+      "scale": 1.0,
+      "rotation": 10.0,
+      "offset": {
+        "x": -8.0,
+        "y": 8.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "Head",
+      "texture": "RGM_89_Head_1.png",
+      "bone": "Head",
+      "order": 7.0,
+      "scale": 0.95,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      },
+      "requiredParts": [
+        "head"
+      ]
+    },
+    {
+      "name": "Head_Close",
+      "texture": "RGM_89_Head_1.png",
+      "bone": "Head",
+      "order": 7.0,
+      "scale": 0.95,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": true
+      },
+      "requiredParts": [
+        "head"
+      ]
+    }
+  ],
+  "animations": {
+    "EnterPilot": "../../animations/EnterPilot.json",
+    "QuitPilot": "../../animations/QuitPilot.json",
+    "NoPilotIdle": "../../animations/NoPilotIdle.json",
+    "Common_Idle": "../../animations/Common_Idle__EMS_10.json",
+    "Common_Dodge_L": "../../animations/Common_Dodge_L.json",
+    "Common_Dodge_R": "../../animations/Common_Dodge_R.json",
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "OnMovingWalk": "../../animations/OnMovingWalk.json",
+    "Guard": "../../animations/Guard__AMX_002.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Daze": "../../animations/Common_Daze__AMX_002.json",
+    "Common_Stagger": "../../animations/Common_Stagger__AMX_002.json",
+    "Common_Push_A": "../../animations/Common_Push_A__ApsarasII.json",
+    "Common_Shoot_A": "../../animations/Common_Shoot_A__AMX_002.json",
+    "Common_Shoot_A_FA": "../../animations/Common_Shoot_A_FA__AMX_002.json",
+    "Common_Shoot_A_L": "../../animations/Common_Shoot_A_L.json",
+    "Common_Melee_A": "../../animations/Common_Melee_A__FA_78_1.json",
+    "Common_Melee_F": "../../animations/Common_Melee_F__EMS_10.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 56500,
+    "en": 1250.0,
+    "move": 8,
+    "mobility": 170.0,
+    "cost": 1125,
+    "counterLimit": 1,
+    "accuracy": 165.0,
+    "partStructuralStrength": 155.0,
+    "partsBreakable": true,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 100,
+      "space": 100,
+      "water": 75.0,
+      "air": 50.0,
+      "atmosphere": 0,
+      "mountain": 100.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "speed": 155,
+    "actionPoints": 12,
+    "sensors": {
+      "sight": 10,
+      "radar": 13.0,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
+  },
+  "attackBonuses": {
+    "melee": 60.0,
+    "shooting": 60.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 20.0,
+      "flat": 375.0
+    },
+    "shell": {
+      "percent": 20.0,
+      "flat": 375.0
+    },
+    "melee": {
+      "percent": 20.0,
+      "flat": 425.0
+    },
+    "dp": {
+      "percent": 20.0,
+      "flat": 25.0
+    },
+    "sp": {
+      "percent": 5.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 10000.0,
+    "blockChance": 0.55,
+    "coverage": 0.75,
+    "defenses": {
+      "beam": {
+        "percent": 5.0,
+        "flat": 250.0
+      },
+      "shell": {
+        "percent": 10.0,
+        "flat": 250.0
+      },
+      "melee": {
+        "percent": 5.0,
+        "flat": 300.0
+      },
+      "dp": {
+        "percent": 10.0,
+        "flat": 25.0
+      }
+    },
+    "requiredParts": [
+      "leftArm"
+    ]
+  },
+  "sourceStats": {
+    "hp": 45000.0,
+    "walkSpeed": 0.8,
+    "boostSpeed": 2.15,
+    "turnSpeed": 3.75,
+    "reaction": 170.0,
+    "shooting": 160.0,
+    "melee": 160.0,
+    "nativeTags": [
+      "RGM_89",
+      "Unit",
+      "MS",
+      "EFSF",
+      "0093",
+      "UC",
+      "0093_EFSF"
+    ],
+    "nativeSkills": [],
+    "accuracy": 165.0,
+    "partStructuralStrength": 155.0,
+    "actionTurnSpeed": 3.75,
+    "movementBeforeMobility": 8,
+    "mobilityMoveTarget": 9,
+    "enBeforeReduction": 1250.0,
+    "enCapacityMultiplier": 1,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 100.0,
+      "water": 75.0,
+      "air": 50.0,
+      "mountain": 100.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 26.0,
+      "radar": 468.0,
+      "antiDetection": 0.0
+    },
+    "balanceStatus": "native-level",
+    "unitLevel": 4500.0,
+    "tacticalMoveBeforeBonus": 8,
+    "v17BaseHp": 45000.0,
+    "technologyEra": "0093T1"
+  },
+  "presentation": {
+    "shield": true,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMoving",
+    "stagger": "Common_Stagger",
+    "dodge": "Common_Dodge_L",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "OnMovingWalk",
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "杰刚",
+  "faction": "EFSF",
+  "tags": [
+    "EFSF",
+    "0093T1"
+  ],
+  "localization": {
+    "zh": {
+      "name": "杰刚",
+      "description": "地球联邦军新一代主力泛用型MS,是吉姆系列技术积累的集大成者"
+    },
+    "en": {
+      "name": "Jegan",
+      "description": "The Federation's new mainstay MS, bringing together the technology of the GM series."
+    },
+    "ja": {
+      "name": "ジェガン",
+      "description": "The Federation's new mainstay MS, bringing together the technology of the GM series."
+    }
+  },
+  "weapons": {
+    "Common_Push_A": {
+      "ref": "Common_Push_A__lv3",
+      "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Push_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Kick_White_R"
+              ],
+              "delay": 0.45
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Push_A"
+        },
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+          "barrel": "Common_Push_A",
+          "entry": "hiddenAction_Common_Push_A_Fire",
+          "cooldown": 3.0,
+          "duration": 1.45,
+          "firstShot": 0.45,
+          "lastShot": 0.45,
+          "firingEvents": 1,
+          "projectiles": 1,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "hiddenAction_Common_Push_A_Fire",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SendEnemyTryAttack_Cqb",
+            "hiddenAction_Common_Push_A_SetWeaponIndex",
+            "hiddenAction_Common_Push_A_Step_1",
+            "hiddenAction_Common_Push_A_Fire_Step_1",
+            "hiddenAction_Common_Push_A_Fire_Step_2",
+            "hiddenAction_Common_Push_A_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff"
+          ]
+        },
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+          "barrelX": 0,
+          "barrelY": 0,
+          "cooldownSeconds": 3,
+          "barrels": [
+            {
+              "id": "Common_Push_A",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      },
+      "remove": [
+        "swingEffects"
+      ]
+    },
+    "EF_RGM_89_BR": {
+      "ref": "EF_RGM_89_BR__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/EF_RGM_89_BR.gw",
+          "barrels": [
+            {
+              "id": "EF_RGM_89_BR",
+              "x": 9.0,
+              "y": 22.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "EF_RGM_89_BR",
+              "point": {
+                "x": -2.352941176470588,
+                "y": -10.588235294117647
+              }
+            }
+          ]
+        }
+      }
+    },
+    "EF_RGM_89_BZ": {
+      "ref": "EF_RGM_89_BZ__lv1",
+      "overrides": {
+        "name": "火箭筒",
+        "min": 2,
+        "max": 4,
+        "category": "bazooka",
+        "actionCost": 3,
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/EF_RGM_89_BZ.gw",
+          "barrels": [
+            {
+              "id": "EF_RGM_89_BZ",
+              "x": 10.0,
+              "y": 17.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "EF_RGM_89_BZ",
+              "point": {
+                "x": 7.203804700866784e-16,
+                "y": -11.764705882352942
+              }
+            }
+          ]
+        },
+        "localization": {
+          "zh": {
+            "name": "火箭筒"
+          },
+          "en": {
+            "name": "Bazooka"
+          },
+          "ja": {
+            "name": "バズーカ"
+          }
+        }
+      }
+    },
+    "EF_RGM_89_ShieldMS": {
+      "ref": "EF_RGM_89_ShieldMS__lv1",
+      "overrides": {
+        "name": "盾牌导弹",
+        "min": 3,
+        "max": 4,
+        "category": "missile",
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/EF_RGM_89_ShieldMS.gw",
+          "barrels": [
+            {
+              "id": "EF_RGM_89_ShieldMS",
+              "x": -16.0,
+              "y": 12.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -16.0,
+                "y": 12.0
+              }
+            }
+          ]
+        },
+        "localization": {
+          "zh": {
+            "name": "盾牌导弹"
+          },
+          "en": {
+            "name": "Shield Missiles"
+          },
+          "ja": {
+            "name": "シールド・ミサイル"
+          }
+        }
+      }
+    },
+    "EF_RGM_89_CrotchGL_L": {
+      "ref": "EF_RGM_89_CrotchGL_L__lv1",
+      "overrides": {
+        "name": "腰部榴弹发射器",
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/EF_RGM_89_CrotchGL_L.gw",
+          "barrels": [
+            {
+              "id": "EF_RGM_89_CrotchGL_L",
+              "x": -10.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -10.0,
+                "y": 0.0
+              }
+            }
+          ]
+        },
+        "localization": {
+          "zh": {
+            "name": "腰部榴弹发射器"
+          },
+          "en": {
+            "name": "Waist Grenade Launcher"
+          },
+          "ja": {
+            "name": "腰部グレネードランチャー"
+          }
+        }
+      }
+    },
+    "EF_RGM_89_Decoy": {
+      "ref": "EF_RGM_89_Decoy__lv1",
+      "overrides": {
+        "name": "诱饵弹",
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/EF_RGM_89_Decoy.gw",
+          "barrels": [
+            {
+              "id": "EF_RGM_89_Decoy",
+              "x": -16.0,
+              "y": 12.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -16.0,
+                "y": 12.0
+              }
+            }
+          ]
+        },
+        "localization": {
+          "zh": {
+            "name": "诱饵弹"
+          },
+          "en": {
+            "name": "Decoy Balloons"
+          },
+          "ja": {
+            "name": "ダミーバルーン"
+          }
+        }
+      }
+    },
+    "EF_RGM_89_BeamSaber_AF_A": {
+      "ref": "EF_RGM_89_BeamSaber_AF_A__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/EF_RGM_89_BeamSaber_AF.gw",
+          "barrels": [
+            {
+              "id": "EF_RGM_89_BeamSaber_AF_A",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      }
+    },
+    "Common_DoubleVulcan_MS": {
+      "ref": "Common_DoubleVulcan_MS__lv3",
+      "overrides": {
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw",
+          "barrel": "Common_DoubleVulcan_MS",
+          "entry": "automatic_turret",
+          "cooldown": 4.0,
+          "duration": 1.125,
+          "firstShot": 0.0,
+          "lastShot": 1.125,
+          "firingEvents": 16,
+          "projectiles": 16,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perShot",
+          "energyPerEmission": 0.0,
+          "energy": 0.0,
+          "actions": []
+        },
+        "requiredParts": [
+          "head"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw",
+          "barrels": [
+            {
+              "id": "Common_DoubleVulcan_MS",
+              "x": 3.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Head",
+              "offset": {
+                "x": 3.0,
+                "y": 0.0
+              },
+              "alternatingOffsetX": -6.0
+            }
+          ]
+        }
+      }
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "kit_0",
+      "name": "光束步枪套件",
+      "cost": 75,
+      "weapons": [
+        "EF_RGM_89_BR",
+        "EF_RGM_89_ShieldMS",
+        "EF_RGM_89_CrotchGL_L",
+        "EF_RGM_89_Decoy",
+        "EF_RGM_89_BeamSaber_AF_A",
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
+      ],
+      "localization": {
+        "zh": {
+          "name": "光束步枪套件"
+        },
+        "en": {
+          "name": "Beam Rifle Kit"
+        },
+        "ja": {
+          "name": "ビーム・ライフル装備"
+        }
+      }
+    },
+    {
+      "id": "kit_1",
+      "name": "火箭筒套件",
+      "cost": 0,
+      "weapons": [
+        "EF_RGM_89_BZ",
+        "EF_RGM_89_ShieldMS",
+        "EF_RGM_89_CrotchGL_L",
+        "EF_RGM_89_Decoy",
+        "EF_RGM_89_BeamSaber_AF_A",
+        "Common_DoubleVulcan_MS",
+        "Common_Push_A"
+      ],
+      "localization": {
+        "zh": {
+          "name": "火箭筒套件"
+        },
+        "en": {
+          "name": "Bazooka Kit"
+        },
+        "ja": {
+          "name": "バズーカ装備"
+        }
+      }
+    }
+  ],
+  "description": "地球联邦军新一代主力泛用型MS,是吉姆系列技术积累的集大成者",
+  "skills": [],
+  "kitAliases": {
+    "kit_2": "kit_0",
+    "kit_3": "kit_0",
+    "kit_4": "kit_0"
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 4500.0,
+    "levelMultiplier": 0.25,
+    "published": 1125
+  },
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto",
+      "CanUseSFS"
+    ]
+  },
+  "hangars": [],
+  "refits": [],
+  "production": {
+    "enabled": false
+  }
+}

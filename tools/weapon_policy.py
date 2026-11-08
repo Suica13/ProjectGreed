@@ -37,7 +37,7 @@ def category(weapon_id, weapon):
         return "mortar"
     if "sniper" in text or "狙击" in text:
         return "sniper"
-    if weapon_id == "ZN_MS_06C_Bombing_Nuke":
+    if weapon_id in ("ZN_MS_06C_Bombing_Nuke", "EF_RX_78GP02A_Bombing_Nuke"):
         return "nuke"
     if "bomb" in text or "航空炸弹" in text:
         return "bomb"
@@ -379,4 +379,5 @@ def configure(prefab, native):
     apply_footprint(prefab)
     from repair_weapon_presentation import repair_scatter
     repair_scatter(prefab)
-    return apply_levels(finalize_weapon_slots(apply_classification(apply_big_zam(prefab, native))))
+    from native_gp_containers import apply as apply_gp_containers
+    return apply_levels(apply_gp_containers(finalize_weapon_slots(apply_classification(apply_big_zam(prefab, native)))))

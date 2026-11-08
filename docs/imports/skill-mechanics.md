@@ -71,3 +71,17 @@ Bazooka_SG、BZ_SG和Bazooka_ShotgunMode为扩散火箭筒。沿母弹Projectile
 ## 蓄力狙击辅助弹
 
 原MOD的Sniper_Aim辅助单位承载锁定标记与延迟触发，不是飞行伤害弹。保留其nativePayload供审计，锁定标记使用SniperLock逐帧绘制；实际发射使用special.baseWeapon对应的弹丸贴图和原生弹速，再应用全局弹速规则。不能把LockTarget整张序列图画成弹丸，也不能使用辅助单位的1～1.35弹速，否则会使全员演出屏障长时间无法结束。
+
+
+## 大型光束序列帧
+
+`native_beam_projectiles.py` 沿真实伤害弹和挂载特效识别 HighBeamCannon / HighBeamRifle / HighBeamRifle_Fast，导入原始两段或三段图片、帧数、颜色、偏移与缩放。`python tools/refresh-native-beam-projectiles.py --write` 只刷新相关表现配置和误读弹速，生成[来源清单](beam-projectiles.json)，不重新生成伤害、命中、EN、发数或套件。
+
+HighBeamCannon 的伤害弹和动画辅助单位分别携带资源。辅助单位的0.75／1.0是动画参数，不能覆盖判定弹的55／75弹速。运行时仍按判定弹速应用全局换算；分段动画锚定炮口，沿弹道按目标距离适配长度，按同一弹丸飞行进度采样，不再叠加普通光束贴图。贴图由战斗资源列表预载并共用，不在逐帧绘制中创建图片或计时器。连续照射仍走原有照射技能，不按名称将其转成这类弹丸。
+
+
+## GP计划货柜与核弹
+
+`python tools/native_gp_containers.py` 定向刷新GP03D货柜与GP02A核弹，生成[原生来源清单](gp-containers.json)。AMS原流程为两个货柜，每柜36次双发，合计144枚。ASP原本为反舰货柜，现按用户规则转为3枚核弹技能；nativeTiming保留原发数，tacticalPattern保存适配发数。货柜独立使用原生尺寸与推进器帧，不继承大型MA的图片缩小倍率。
+
+权威结算保留逐弹随机选敌和独立核爆标识，同一齐射只扣一次EN与每回合次数。客户端按服务端提供的后方格位置、发射和命中时刻播放，用曲线连接导弹出口与目标，同一货柜只绘制一组。GP02A移除旧的能量容量待核查隐藏标记，恢复核弹分类、核爆特效、核弹射程和套件入口，每条命一次。

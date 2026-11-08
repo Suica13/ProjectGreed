@@ -105,6 +105,7 @@ const AutomaticFire = (() => {
       distance = Math.hypot(a.x - b.x, a.y - b.y) * 64;
     const motion = weapon.projectile?.motion;
     if (!weapon.projectile) return 0;
+    if (weapon.projectile.container) return 0.5;
     if (motion === "bomb") return 0.6;
     if (motion === "mortar") return 2 * Math.max(0.18, Math.min(0.45, distance / 1800));
     if (motion === "tether")
@@ -210,6 +211,13 @@ const AutomaticFire = (() => {
           rounds: new Map(),
           targets: intent.targetSquad || G.squadMembers(game, to).map((unit) => unit.id),
           volleyTargets: new Map(),
+          containerCell: weapon.projectile?.container ? (() => {
+            const aim = intent.impactCell || intent.aimCell || G.attackAimCell(game, from, to, [weapon]) || to;
+            const origin = G.center(from), dx = Math.sign(aim.x - origin.x), dy = Math.sign(aim.y - origin.y);
+            const candidates = [[dx,dy],[-dy,dx],[dy,-dx]].map(([x,y]) => ({ x:aim.x+x, y:aim.y+y }));
+            return candidates.find(p => p.x >= 0 && p.y >= 0 && p.x < G.mapWidth(game) && p.y < G.mapHeight(game) &&
+              (p.x !== aim.x || p.y !== aim.y)) || {x:aim.x,y:aim.y};
+          })() : null,
         };
         runs.push(run);
       }
@@ -436,7 +444,7 @@ const AutomaticFire = (() => {
           !run.intent.impactCell &&
           run.targets.length > 1
         ) {
-          let chosen = find(run.volleyTargets.get(job.round));
+          let chosen = run.weapon.projectile?.container ? null : find(run.volleyTargets.get(job.round));
           if (!chosen || !G.onMap(chosen)) {
             const candidateWeapon = run.rounds.has(job.round)
               ? { ...run.weapon, en: 0, maxUses: undefined, turnUseContinuation: true }
@@ -584,7 +592,8 @@ const AutomaticFire = (() => {
           weapon,
           destination: to,
           impactCell,
-          blastId: run.intent.blastId || randomId(),
+          blastId: run.weapon.special?.perProjectileBlast && run.intent.blastId
+            ? `${run.intent.blastId}:${job.round}:${job.shotIndex}` : run.intent.blastId || randomId(),
           energySpent: paid,
           sequence: ++sequence,
         });
@@ -659,6 +668,12 @@ const AutomaticFire = (() => {
               shotIndices: [job.shotIndex],
               energySpent: victimIndex === 0 ? job.energySpent : 0,
               sequence: ++sequence,
+              ...(run.containerCell ? {
+                containerCell: run.containerCell,
+                containerSalvoId: `${run.from}:${run.weapon.id}:${job.round}:${job.start}`,
+                containerLaunchAt: job.start,
+                containerEndAt: job.stageEnd,
+              } : {}),
               ...(job.impactCell ? { impactCell: job.impactCell, blastId: job.blastId } : {}),
               ...(victim.visualOnly ? { empty: true } : {}),
             });
@@ -690,7 +705,8 @@ const AutomaticFire = (() => {
     for (const battle of battles) {
       let rounds = groups.get(battle._run);
       if (!rounds) groups.set(battle._run, (rounds = new Map()));
-      const key = battle._round + ":" + battle.b;
+      const key = battle._round + ":" + battle.b +
+        (battle._run.weapon.special?.perProjectileBlast ? ":" + battle.events[0].blastId : "");
       if (!rounds.has(key)) {
         rounds.set(key, []);
         result.push(rounds.get(key));
@@ -728,6 +744,8 @@ const AutomaticFire = (() => {
         event.timelineStart = compactTime(event.timelineStart);
         event.fireAt = compactTime(event.fireAt);
         event.impactAt = compactTime(event.impactAt);
+        if (event.containerLaunchAt !== undefined) event.containerLaunchAt = compactTime(event.containerLaunchAt);
+        if (event.containerEndAt !== undefined) event.containerEndAt = compactTime(event.containerEndAt);
       }
     }
     for (const pair of meleePairs.values()) {

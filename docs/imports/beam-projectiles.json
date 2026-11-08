@@ -1,0 +1,470 @@
+[
+  {
+    "unit": "AMA_01X",
+    "weapon": "NZN_AMA_01X_BeamCannon",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamCannon/Projectile_HighBeamCannon_Yellow_Effect.ini",
+    "color": "Yellow",
+    "segments": 3,
+    "frames": 16,
+    "speed": 55.0
+  },
+  {
+    "unit": "AMX_002",
+    "weapon": "ZN_AMX_002_BeamCannon",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamCannon/Projectile_HighBeamCannon_Yellow_Effect.ini",
+    "color": "Yellow",
+    "segments": 3,
+    "frames": 16,
+    "speed": 55.0
+  },
+  {
+    "unit": "AMX_014",
+    "weapon": "NZN_AMX_014_BR",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamCannon/Projectile_HighBeamCannon_Yellow_Effect.ini",
+    "color": "Yellow",
+    "segments": 3,
+    "frames": 16,
+    "speed": 75.0
+  },
+  {
+    "unit": "AMX_014",
+    "weapon": "NZN_AMX_014_BeamCannon",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle_Fast/HighBeamRifle_1_Fast_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 10,
+    "speed": 150
+  },
+  {
+    "unit": "AMX_014",
+    "weapon": "NZN_AMX_014_BeamCannon_L",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle_Fast/HighBeamRifle_1_Fast_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 10,
+    "speed": 150
+  },
+  {
+    "unit": "FA_010A",
+    "weapon": "AEUG_FA_010A_BeamCannon",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle_Fast/HighBeamRifle_1_Fast_EffectUnit.ini",
+    "color": "Blue",
+    "segments": 2,
+    "frames": 10,
+    "speed": 150
+  },
+  {
+    "unit": "FA_010A",
+    "weapon": "AEUG_FA_010A_BeamCannon_L",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle_Fast/HighBeamRifle_1_Fast_EffectUnit.ini",
+    "color": "Blue",
+    "segments": 2,
+    "frames": 10,
+    "speed": 150
+  },
+  {
+    "unit": "FA_010S",
+    "weapon": "AEUG_MSZ_010_BeamCannon",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle_Fast/HighBeamRifle_1_Fast_EffectUnit.ini",
+    "color": "Pink",
+    "segments": 2,
+    "frames": 10,
+    "speed": 150
+  },
+  {
+    "unit": "FA_010S",
+    "weapon": "AEUG_MSZ_010_BeamCannon_L",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle_Fast/HighBeamRifle_1_Fast_EffectUnit.ini",
+    "color": "Pink",
+    "segments": 2,
+    "frames": 10,
+    "speed": 150
+  },
+  {
+    "unit": "FA_010S",
+    "weapon": "AEUG_FA_010S_MegaBeamCannon",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamCannon/Projectile_HighBeamCannon_Pink_Effect.ini",
+    "color": "Pink",
+    "segments": 3,
+    "frames": 16,
+    "speed": 75.0
+  },
+  {
+    "unit": "MA_08",
+    "weapon": "ZN_MA_08_AA_BeamCannon",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 23,
+    "speed": 135
+  },
+  {
+    "unit": "MA_08",
+    "weapon": "ZN_MA_08_AA_BeamCannon_L",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 23,
+    "speed": 135
+  },
+  {
+    "unit": "MA_08",
+    "weapon": "ZN_MA_08_AA_BeamCannon_R2",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 23,
+    "speed": 135
+  },
+  {
+    "unit": "MA_08",
+    "weapon": "ZN_MA_08_AA_BeamCannon_L2",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 23,
+    "speed": 135
+  },
+  {
+    "unit": "MA_08",
+    "weapon": "ZN_MA_08_AA_BeamCannon_R3",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 23,
+    "speed": 135
+  },
+  {
+    "unit": "MA_08",
+    "weapon": "ZN_MA_08_AA_BeamCannon_L3",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 23,
+    "speed": 135
+  },
+  {
+    "unit": "MA_08",
+    "weapon": "ZN_MA_08_AA_BeamCannon_R4",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 23,
+    "speed": 135
+  },
+  {
+    "unit": "MA_08",
+    "weapon": "ZN_MA_08_AA_BeamCannon_L4",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 23,
+    "speed": 135
+  },
+  {
+    "unit": "MA_08",
+    "weapon": "ZN_MA_08_AA_BeamCannon_R5",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 23,
+    "speed": 135
+  },
+  {
+    "unit": "MA_08",
+    "weapon": "ZN_MA_08_AA_BeamCannon_L5",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 23,
+    "speed": 135
+  },
+  {
+    "unit": "MA_08",
+    "weapon": "ZN_MA_08_AA_BeamCannon_R6",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 23,
+    "speed": 135
+  },
+  {
+    "unit": "MA_08",
+    "weapon": "ZN_MA_08_AA_BeamCannon_L6",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 23,
+    "speed": 135
+  },
+  {
+    "unit": "MA_08",
+    "weapon": "ZN_MA_08_AA_BeamCannon_R7",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 23,
+    "speed": 135
+  },
+  {
+    "unit": "MA_08",
+    "weapon": "ZN_MA_08_AA_BeamCannon_L7",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 23,
+    "speed": 135
+  },
+  {
+    "unit": "MA_08",
+    "weapon": "ZN_MA_08_BeamCannon",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamCannon/Projectile_HighBeamCannon_Yellow_Effect.ini",
+    "color": "Yellow",
+    "segments": 3,
+    "frames": 16,
+    "speed": 55.0
+  },
+  {
+    "unit": "MA_08_DZL",
+    "weapon": "ZN_MA_08_AA_BeamCannon",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 23,
+    "speed": 135
+  },
+  {
+    "unit": "MA_08_DZL",
+    "weapon": "ZN_MA_08_AA_BeamCannon_L",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 23,
+    "speed": 135
+  },
+  {
+    "unit": "MA_08_DZL",
+    "weapon": "ZN_MA_08_AA_BeamCannon_R2",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 23,
+    "speed": 135
+  },
+  {
+    "unit": "MA_08_DZL",
+    "weapon": "ZN_MA_08_AA_BeamCannon_L2",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 23,
+    "speed": 135
+  },
+  {
+    "unit": "MA_08_DZL",
+    "weapon": "ZN_MA_08_AA_BeamCannon_R3",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 23,
+    "speed": 135
+  },
+  {
+    "unit": "MA_08_DZL",
+    "weapon": "ZN_MA_08_AA_BeamCannon_L3",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 23,
+    "speed": 135
+  },
+  {
+    "unit": "MA_08_DZL",
+    "weapon": "ZN_MA_08_AA_BeamCannon_R4",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 23,
+    "speed": 135
+  },
+  {
+    "unit": "MA_08_DZL",
+    "weapon": "ZN_MA_08_AA_BeamCannon_L4",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 23,
+    "speed": 135
+  },
+  {
+    "unit": "MA_08_DZL",
+    "weapon": "ZN_MA_08_AA_BeamCannon_R5",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 23,
+    "speed": 135
+  },
+  {
+    "unit": "MA_08_DZL",
+    "weapon": "ZN_MA_08_AA_BeamCannon_L5",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 23,
+    "speed": 135
+  },
+  {
+    "unit": "MA_08_DZL",
+    "weapon": "ZN_MA_08_AA_BeamCannon_R6",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 23,
+    "speed": 135
+  },
+  {
+    "unit": "MA_08_DZL",
+    "weapon": "ZN_MA_08_AA_BeamCannon_L6",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 23,
+    "speed": 135
+  },
+  {
+    "unit": "MA_08_DZL",
+    "weapon": "ZN_MA_08_AA_BeamCannon_R7",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 23,
+    "speed": 135
+  },
+  {
+    "unit": "MA_08_DZL",
+    "weapon": "ZN_MA_08_AA_BeamCannon_L7",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle/HighBeamRifle_1_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 23,
+    "speed": 135
+  },
+  {
+    "unit": "MA_08_DZL",
+    "weapon": "ZN_MA_08_BeamCannon",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamCannon/Projectile_HighBeamCannon_Yellow_Effect.ini",
+    "color": "Yellow",
+    "segments": 3,
+    "frames": 16,
+    "speed": 55.0
+  },
+  {
+    "unit": "MRX_009",
+    "weapon": "TITANS_MRX_009_BeamCannon",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamCannon/Projectile_HighBeamCannon_Yellow_Effect.ini",
+    "color": "Yellow",
+    "segments": 3,
+    "frames": 16,
+    "speed": 55.0
+  },
+  {
+    "unit": "MRX_010",
+    "weapon": "TITANS_MRX_009_BeamCannon",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamCannon/Projectile_HighBeamCannon_Yellow_Effect.ini",
+    "color": "Yellow",
+    "segments": 3,
+    "frames": 16,
+    "speed": 55.0
+  },
+  {
+    "unit": "MSM_10",
+    "weapon": "ZN_MSM_10_HighBeamRifle",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle_Fast/HighBeamRifle_1_Fast_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 10,
+    "speed": 70
+  },
+  {
+    "unit": "MSZ_006",
+    "weapon": "AEUG_MSZ_006_HML",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamCannon/Projectile_HighBeamCannon_Pink_Effect.ini",
+    "color": "Pink",
+    "segments": 3,
+    "frames": 16,
+    "speed": 75.0
+  },
+  {
+    "unit": "MSZ_006A1",
+    "weapon": "AEUG_MSZ_006A1_HML",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamCannon/Projectile_HighBeamCannon_Pink_Effect.ini",
+    "color": "Pink",
+    "segments": 3,
+    "frames": 16,
+    "speed": 75.0
+  },
+  {
+    "unit": "MSZ_010",
+    "weapon": "AEUG_MSZ_010_BeamCannon",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle_Fast/HighBeamRifle_1_Fast_EffectUnit.ini",
+    "color": "Pink",
+    "segments": 2,
+    "frames": 10,
+    "speed": 150
+  },
+  {
+    "unit": "MSZ_010",
+    "weapon": "AEUG_MSZ_010_BeamCannon_L",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle_Fast/HighBeamRifle_1_Fast_EffectUnit.ini",
+    "color": "Pink",
+    "segments": 2,
+    "frames": 10,
+    "speed": 150
+  },
+  {
+    "unit": "MSZ_010S",
+    "weapon": "AEUG_MSZ_010_BeamCannon",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle_Fast/HighBeamRifle_1_Fast_EffectUnit.ini",
+    "color": "Pink",
+    "segments": 2,
+    "frames": 10,
+    "speed": 150
+  },
+  {
+    "unit": "MSZ_010S",
+    "weapon": "AEUG_MSZ_010_BeamCannon_L",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle_Fast/HighBeamRifle_1_Fast_EffectUnit.ini",
+    "color": "Pink",
+    "segments": 2,
+    "frames": 10,
+    "speed": 150
+  },
+  {
+    "unit": "PMX_000",
+    "weapon": "TITANS_PMX_000_MegaBeamCannon",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle_Fast/HighBeamRifle_1_Fast_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 10,
+    "speed": 150
+  },
+  {
+    "unit": "PMX_000",
+    "weapon": "TITANS_PMX_000_MegaBeamCannon_L",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamRifle_Fast/HighBeamRifle_1_Fast_EffectUnit.ini",
+    "color": "Yellow",
+    "segments": 2,
+    "frames": 10,
+    "speed": 150
+  },
+  {
+    "unit": "RX_78GP03D",
+    "weapon": "EF_RX_78GP03D_BeamCannon",
+    "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamCannon/Projectile_HighBeamCannon_Yellow_Effect.ini",
+    "color": "Yellow",
+    "segments": 3,
+    "frames": 16,
+    "speed": 55.0
+  }
+]

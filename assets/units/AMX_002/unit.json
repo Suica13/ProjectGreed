@@ -560,6 +560,55 @@
     "ZN_AMX_002_BeamCannon": {
       "ref": "ZN_AMX_002_BeamCannon__lv1",
       "overrides": {
+        "projectile": {
+          "texture": "../../projectiles/Beam_2_Yellow.png",
+          "scale": 1,
+          "speed": 55.0,
+          "forwardOffset": -10,
+          "rotation": 0,
+          "sequence": {
+            "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamCannon/Projectile_HighBeamCannon_Yellow_Effect.ini",
+            "color": "Yellow",
+            "length": 800.0,
+            "segments": [
+              {
+                "texture": "../../projectiles/HighBeamCannon_1_Yellow_Start.png",
+                "frames": 16,
+                "width": 664,
+                "height": 150,
+                "scaleX": 0.5,
+                "scaleY": 0.5,
+                "forward": 130.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              },
+              {
+                "texture": "../../projectiles/HighBeamCannon_1_Yellow_Mid.png",
+                "frames": 16,
+                "width": 545,
+                "height": 150,
+                "scaleX": 0.5,
+                "scaleY": 0.5,
+                "forward": 432.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              },
+              {
+                "texture": "../../projectiles/HighBeamCannon_1_Yellow_End.png",
+                "frames": 16,
+                "width": 464,
+                "height": 150,
+                "scaleX": 0.5,
+                "scaleY": 0.5,
+                "forward": 684.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              }
+            ],
+            "clock": "flight"
+          },
+          "nativeSpeed": 55.0
+        },
         "requiredParts": [],
         "source": {
           "file": "Units/BattleUnits/Weapon/Beam/ZN_AMX_002_BeamCannon.gw",

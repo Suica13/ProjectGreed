@@ -10,6 +10,11 @@ def correct(prefab, native):
            for name, source in [("ground","ground"),("space","space"),("water","water"),("air","sky"),("mountain","cliff")]}
     raw["atmosphere"] = 0
     prefab.setdefault("sourceStats", {})["adaptability"] = raw
+    # The native movement framework also covers flying MS without Aircraft tags.
+    if native.get("movement", {}).get("movementType", "").upper() == "AIR":
+        prefab["stats"]["movementType"] = "air"
+        for mechanic in prefab.get("mechanics", []):
+            if mechanic["id"] == "movement": mechanic["name"] = "空中移动：可跨越山岩与水域"
     current = prefab["stats"].setdefault("adaptability", {})
     for name in ["ground", "space"]:
         current.setdefault(name, raw[name])

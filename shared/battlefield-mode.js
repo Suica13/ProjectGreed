@@ -97,82 +97,32 @@ const BattlefieldMode = (() => {
   const factionEras = (faction) =>
     ["EFSF", "ZEON"].includes(faction) ? eras.slice(0, 2) : eras.slice(2);
   // PMC limits and entry pay only: faction AI waves keep their own era rules.
-  const legacyRoomPresets = [
-    {
-      id: "0079T1-small",
-      era: "0079T1",
-      name: "小规模",
-      costLimit: 4000,
-      unitCostLimit: 500,
-      unitLimit: 24,
-      money: 2250,
-      supplies: 4500,
-    },
-    {
-      id: "0079T1-standard",
-      era: "0079T1",
-      name: "标准规模",
-      costLimit: 10000,
-      unitCostLimit: 1000,
-      unitLimit: 36,
-      money: 3750,
-      supplies: 7500,
-    },
-    {
-      id: "0079T1-large",
-      era: "0079T1",
-      name: "大规模",
-      costLimit: 20000,
-      unitCostLimit: 2000,
-      unitLimit: 48,
-      money: 6000,
-      supplies: 12000,
-    },
-    {
-      id: "0079T2-small",
-      era: "0079T2",
-      name: "小规模",
-      costLimit: 6000,
-      unitCostLimit: 1000,
-      unitLimit: 24,
-      money: 3750,
-      supplies: 7500,
-    },
-    {
-      id: "0079T2-standard",
-      era: "0079T2",
-      name: "标准规模",
-      costLimit: 15000,
-      unitCostLimit: 2000,
-      unitLimit: 36,
-      money: 6000,
-      supplies: 12000,
-    },
-    {
-      id: "0079T2-large",
-      era: "0079T2",
-      name: "大规模",
-      costLimit: 30000,
-      unitCostLimit: 3000,
-      unitLimit: 48,
-      money: 9000,
-      supplies: 18000,
-    },
+  // Scale from the original values, then round once: repeated rounding would
+  // compound across eras. Reward anchors remain pre-global-multiplier values.
+  const contractSizes = [
+    { id: "small", name: "小型合同", cost: 1800, single: 300 },
+    { id: "standard", name: "中型合同", cost: 3600, single: 600 },
+    { id: "large", name: "大型合同", cost: 5400, single: 900 },
+    { id: "huge", name: "巨型合同", cost: 7200, single: 1200 },
+    { id: "war", name: "战争合同", cost: 9000, single: 1500 },
   ];
-  const roomPresets = Object.freeze(
-    [
-      ...legacyRoomPresets,
-      ...legacyRoomPresets.map((preset) => ({
-        ...preset,
-        id: preset.id.replace("0079", "0087"),
-        era: preset.era.replace("0079", "0087"),
-        costLimit: preset.costLimit * 1.5,
-        unitCostLimit: preset.unitCostLimit * 1.5,
-        money: preset.money * 1.5,
-        supplies: preset.supplies * 1.5,
-      })),
-    ].map(Object.freeze),
-  );
+  const roomPresets = Object.freeze(eras.flatMap((era, eraIndex) => {
+    const factor = 1.25 ** eraIndex;
+    const costFactor = 1.5 ** eraIndex;
+    return contractSizes.map((size, index) => {
+      const money = Math.floor(1200 * (index + 1) * factor);
+      return Object.freeze({
+        id: era + "-" + size.id,
+        era,
+        name: size.name,
+        costLimit: Math.ceil((size.cost * costFactor) / 500) * 500,
+        unitCostLimit: Math.ceil((size.single * costFactor) / 50) * 50,
+        unitLimit: 18,
+        money,
+        supplies: money * 2,
+      });
+    });
+  }));
   function roomPreset(settings) {
     if (settings.mode !== "battlefield") return null;
     return (

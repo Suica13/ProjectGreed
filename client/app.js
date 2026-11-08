@@ -1928,7 +1928,7 @@ function drawMapFrame(now) {
           x < Math.min(lastX, hover.x + radius + 1);
           x++
         ) {
-          if (!Rules.blastContains(hover, { x, y }, radius)) continue;
+          if (!Rules.blastContains(hover, { x, y }, radius, weapon.special.shape)) continue;
           const px = ox + x * tile,
             py = oy + y * tile;
           ctx.fillRect(px, py, tile, tile);

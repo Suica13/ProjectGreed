@@ -19,11 +19,11 @@ for(const width of [1600,390]) test('fixed era and custom battlefield settings a
     await expect(page.locator('#roomCostLimit')).toBeHidden();
     expect(await page.locator('#battlefieldTeam0era').count()).toBe(0);
     expect(await page.locator('#battlefieldTeam1era').count()).toBe(0);
-    expect(await page.locator('#battlefieldScalePreset option').count()).toBe(3);
+    expect(await page.locator('#battlefieldScalePreset option').count()).toBe(5);
     const factions=await page.locator('#battlefieldTeam0faction option').evaluateAll(o=>o.map(v=>v.value));
     expect(factions).toEqual(era.startsWith('0079')?['EFSF','ZEON']:['AEUG','TITANS','NEO_ZEON']);
-    await page.locator('#battlefieldScalePreset').selectOption(era+'-large');
-    await expect.poll(()=>page.evaluate(()=>Rules.battlefieldMode.roomPreset(Net.snapshot.settings)?.id)).toBe(era+'-large');
+    await page.locator('#battlefieldScalePreset').selectOption(era+'-war');
+    await expect.poll(()=>page.evaluate(()=>Rules.battlefieldMode.roomPreset(Net.snapshot.settings)?.id)).toBe(era+'-war');
   }
   await page.locator('#battlefieldTeam0faction').selectOption('NEO_ZEON');
   await expect.poll(()=>page.evaluate(()=>Net.snapshot.settings.battlefieldTeams[0].faction)).toBe('NEO_ZEON');
@@ -31,14 +31,14 @@ for(const width of [1600,390]) test('fixed era and custom battlefield settings a
   await expect(page.locator('#battlefieldCustomScale')).toBeVisible();
   await expect(page.locator('#battlefieldTeam0era')).toBeVisible();
   await expect(page.locator('#roomCostLimit')).toBeVisible();
-  expect(await page.locator('#battlefieldScalePreset option').count()).toBe(13);
+  expect(await page.locator('#battlefieldScalePreset option').count()).toBe(21);
   await page.locator('#roomCostLimit').fill('99999');
   await page.locator('#roomCostLimit').blur();
   await expect.poll(()=>page.evaluate(()=>Net.snapshot.settings.costLimit)).toBe(99999);
   await page.locator('#battlefieldTeam1faction').selectOption('EFSF');
   await expect.poll(()=>page.evaluate(()=>Net.snapshot.settings.battlefieldTeams[1].era)).toBe('0079T1');
   await expect(page.locator('#battlefieldEntryReward')).toHaveText('阵营AI每5回合空投增援 · 单位阵亡扣除库存 · 击坠与助攻给予奖励');
-  expect(await page.evaluate(()=>[0,1].map(team=>Rules.battlefieldMode.baseReward(Net.snapshot.settings,team).money))).toEqual([13500,6000]);
+  expect(await page.evaluate(()=>[0,1].map(team=>Rules.battlefieldMode.baseReward(Net.snapshot.settings,team).money))).toEqual([11718,6000]);
   const order=await page.locator('.room-battle-rules > label select, .room-battle-rules > details').evaluateAll(els=>els.map(el=>el.id));
   expect(order).toEqual(['roomBattleMode','roomFogMode','roomShareAlliedUnits','roomPilotPolicy','roomPilotDialogue','roomClimateOptions']);
   expect(await page.locator('#roomSettingsPage').evaluate(el=>el.scrollWidth<=el.clientWidth+1)).toBe(true);

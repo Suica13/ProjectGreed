@@ -99,7 +99,7 @@ def native_weapon(prefab, weapon, unit_data):
         if not components:
             return
         conditions = action.get("requireConditional","")
-        required = [PARTS[name] for name in re.findall(r"memory\.(head|backpack|armL|armR|legL|legR)Breaked\s*==\s*false",conditions)]
+        required = list(dict.fromkeys(PARTS[name] for name in re.findall(r"memory\.(head|backpack|armL|armR|legL|legR)Breaked\s*==\s*false",conditions)))
         events.append({"at":at,"shots":count,"muzzleIndex":min(barrels.index(turret_id),len(weapon.get("muzzle",{}).get("mounts",[0]))-1),"nativeBarrel":turret_id,"damageComponents":components,"accuracy":values.get("WeaponAccuracy",100),"partBreakModifier":values.get("PartBreakModifier",1),"nativePayload":values,"requiredParts":required})
         if weapon.get("type") == "melee":
             events[-1]["swingEffects"] = [name.strip() for name in action.get("spawnEffects", "").split(",")
@@ -255,6 +255,8 @@ def native_weapon(prefab, weapon, unit_data):
     weapon["changeHeldWeapon"] = any(re.search(r"\bnowWeaponIndex\s*=", section(data, action).get("setUnitMemory", ""))
         for action in visited_actions)
     weapon["nativeTiming"]={"source":path.relative_to(source_root(path)).as_posix(),"barrel":first["nativeBarrel"],"entry":root or "automatic_turret", "cooldown":cooldown,"duration":duration,"firstShot":min(e["at"] for e in events if e.get("shots")),"lastShot":max(e["at"] for e in events if e.get("shots")),"firingEvents":sum(1 for e in events if e.get("shots") and e.get("clusterRole") != "fragment"),"projectiles":sum(e.get("shots",0) for e in events if e.get("clusterRole") != "fragment"),"secondaryProjectiles":sum(e.get("shots",0) for e in events if e.get("clusterRole") == "fragment"),"declaredEnergy":number(variables.get(native_name+"_EN",variables.get(stem+"_EN",0))),"energyMode":"perShot" if per_shot else "perVolley","energyPerEmission":energy_unit,"energy":energy,"actions":list(dict.fromkeys(visited_actions))}
+    from native_beam_projectiles import apply as apply_beam_projectile
+    apply_beam_projectile(prefab, weapon, data)
     return weapon
 
 

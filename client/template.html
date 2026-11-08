@@ -1443,6 +1443,13 @@
       #roomResources { flex:none; margin-top:8px; padding:8px; border-top:1px solid #405968; font-size:12px; gap:16px; }
       .inventory-sale { display:flex; flex-wrap:wrap; align-items:center; gap:10px; padding:10px 0; }
       .inventory-sale .resource-balance { gap:10px; font-size:12px; }
+      .inventory-transaction-row { display:flex; align-items:center; gap:8px; min-width:0; width:100%; }
+      .inventory-transaction-row > .resource-balance { flex:1; min-width:0; }
+      .inventory-transaction-row > button { flex:none; min-height:32px; padding:5px 8px; font-size:12px; white-space:nowrap; }
+      #productionSaleRow { display:flex; align-items:center; gap:8px; min-width:0; }
+      #productionSaleRow > #productionPrice { flex:1; min-width:0; }
+      #productionSaleRow > button { flex:none; min-height:32px; padding:5px 8px; font-size:12px; white-space:nowrap; }
+      #productionSaleRow .production-price-row { flex-wrap:wrap; justify-content:flex-start; gap:3px 8px; }
       .custom-pilot-stat > span { flex:1; }
       .pilot-plus-five { margin-left:4px; }
       .unit-pilot-experience { grid-column:1/-1; font-size:12px; color:#a9dabe; }
@@ -3146,11 +3153,14 @@
               <div class="production-purchases">
                 <div class="production-purchase">
                   <span id="productionBaseKitName" class="muted">选择出厂套件</span>
-                  <div id="productionPrice" class="resource-balance"></div>
+                  <div id="productionSaleRow">
+                    <div id="productionPrice" class="resource-balance"></div>
+                    <button id="produceUnit" type="button" class="primary">生产</button>
+                    <button id="sellProductionUnit" type="button" class="danger">出售</button>
+                  </div>
                   <div id="productionQuantity"></div>
                   <div id="productionLicensePrice" class="resource-balance"></div>
                   <button id="purchaseProductionLicense" type="button">购买部署许可</button>
-                  <button id="produceUnit" type="button" class="primary">生产机体 ×1</button>
                 </div>
               </div>
               <p id="productionStatus" role="status" aria-live="polite"></p>

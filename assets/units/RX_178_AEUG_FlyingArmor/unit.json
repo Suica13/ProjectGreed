@@ -594,7 +594,7 @@
     "accuracy": 155.0,
     "partStructuralStrength": 155.0,
     "partsBreakable": true,
-    "movementType": "ground",
+    "movementType": "air",
     "adaptability": {
       "ground": 25.0,
       "space": 100,
@@ -1136,7 +1136,7 @@
   "mechanics": [
     {
       "id": "movement",
-      "name": "地面移动",
+      "name": "空中移动：可跨越山岩与水域",
       "status": "implemented"
     },
     {
@@ -1154,19 +1154,19 @@
     {
       "id": "DogFight_A",
       "source": "Template/Unit/Skill/DogFight_A.gw",
-      "status": "review",
+      "status": "adapted",
       "name": "空中缠斗"
     },
     {
       "id": "FlyUnit",
       "source": "Template/Unit/Skill/FlyUnit.gw",
-      "status": "review",
+      "status": "adapted",
       "name": "飞行模式"
     },
     {
       "id": "FlyMS",
       "source": "Template/Unit/Skill/FlyMS.gw",
-      "status": "review",
+      "status": "adapted",
       "name": "FlyMS"
     },
     {

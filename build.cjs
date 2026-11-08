@@ -97,7 +97,6 @@ function clientCatalogData() {
   return JSON.stringify({catalogEncoding:"gzip-base64",uncompressedBytes:data.length,payload:zlib.gzipSync(data,{level:6}).toString("base64")});
 }
 require("./tools/build-save-editor.cjs").buildSaveEditor(root);
-const saveEditorBundle = zlib.gzipSync(Buffer.from(read("public/save-editor.html")), {level:9}).toString("base64");
 for (const [key, file] of [
   ["BIOME_TILES", "shared/biome-tiles.js"],
   ["TILEMAP_VIEW", "shared/tilemap-view.js"],
@@ -195,7 +194,7 @@ for (const [key, file] of [
           stdin:{contents:'export { gunzipSync } from "fflate";',resolveDir:root},bundle:true,write:false,
           platform:"browser",format:"iife",globalName:"CatalogInflate",target:"chrome80",minify:true,legalComments:"eof"
         }).outputFiles[0].text + "\n/*! " + read("node_modules/fflate/LICENSE") + " */\n" + read(file))
-      : inlineScript((key === "PROFILE_SAVE" ? "const SAVE_EDITOR_BUNDLE = " + json(saveEditorBundle) + ";\n" + read("client/profile-save-core.js") + "\n" : "") + read(file)),
+      : inlineScript((key === "PROFILE_SAVE" ? read("client/profile-save-core.js") + "\n" : "") + read(file)),
   );
 html = html.replace("</body>", () => `<style>${read("client/campaign.css")}</style><script>const CAMPAIGN_WORLD=ART.scenarios.earth_0079_mid.world;${inlineScript(read("client/campaign-workspace.js"))}${inlineScript(read("client/campaign-pilots.js"))}${inlineScript(read("client/campaign-console.js"))}${inlineScript(read("client/campaign.js"))}</script></body>`);
 const layout = JSON.parse(read("client/ui-layout.json"));

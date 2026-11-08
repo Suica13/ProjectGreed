@@ -154,7 +154,7 @@ for (const presetId of [null,"0079T1-small","0079T2-large","0087T1-small","0087T
   for (const award of room.economyAwards.filter(award=>award.kind === "result")) {
     const player=room.members.get(award.memberId);
     const expected=G.battlefieldMode.baseReward(room.settings,G.seatTeam(player.seat));
-    assert.equal(award.money,expected.money);assert.equal(award.supplies,expected.supplies);
+    assert.equal(award.money,Math.floor(expected.money*1.25));assert.equal(award.supplies,Math.floor(expected.supplies*1.25));
   }
   assert.deepEqual(room.techAwards, []);
   const again = await host.act("sync");

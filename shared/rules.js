@@ -2557,7 +2557,8 @@ const Tactics = (() => {
     return u.weaponCooldowns?.[w?.id] || 0;
   }
   function startWeaponCooldown(u, w) {
-    if (["mortar", "snipe"].includes(w?.special?.type)) (u.weaponCooldowns ||= {})[w.id] = 2;
+    const turns = w?.cooldownTurns ?? (["mortar", "snipe"].includes(w?.special?.type) ? 2 : 0);
+    if (Number.isInteger(turns) && turns > 0) (u.weaponCooldowns ||= {})[w.id] = turns;
   }
   // Shared by attacks, counters and AI; always read the assigned pilot.
   function pilotWeaponAllowed(u, w) {
@@ -2621,6 +2622,8 @@ const Tactics = (() => {
     return cells(unit).some((cell) =>
       shape === "cross"
         ? Math.abs(cell.x - impact.x) + Math.abs(cell.y - impact.y) <= radius
+        : shape === "square"
+          ? Math.max(Math.abs(cell.x - impact.x), Math.abs(cell.y - impact.y)) <= radius
         : (cell.x - impact.x) ** 2 + (cell.y - impact.y) ** 2 <= radius ** 2,
     );
   }
@@ -2658,6 +2661,7 @@ const Tactics = (() => {
     const targetModel = modelOf(target);
     if (
       ["bomb", "mortar", "nuke"].includes(weapon.special?.type) &&
+      !weapon.special.affectsAir &&
       (targetModel.movementType === "air" ||
         targetModel.sourceStats?.nativeTags?.includes("Aircraft"))
     )

@@ -1052,6 +1052,40 @@ function loadCatalog({
                 "data:image/png;base64," +
                 fs.readFileSync(file(base, weapon.projectile.texture)).toString("base64");
             weapon.projectile = { ...weapon.projectile, asset: projectileKey };
+            if (weapon.projectile.container) {
+              const container = weapon.projectile.container;
+              if (![1,2].includes(container.count) || !(container.deploySeconds > 0) || !(container.scale > 0))
+                throw Error("Invalid missile container: " + key);
+              for (const state of ["closed", "open", "thrust"]) {
+                const imagePath = file(base, container[state + "Texture"]);
+                container[state + "Asset"] = "container/" + path.basename(imagePath);
+                if (embedAssets && !result.assets[container[state + "Asset"]])
+                  result.assets[container[state + "Asset"]] = "data:image/png;base64," + fs.readFileSync(imagePath).toString("base64");
+              }
+            }
+            if (weapon.projectile.sequence) {
+              const sequence = weapon.projectile.sequence;
+              if (sequence.clock !== "flight" || !Number.isFinite(sequence.length) || sequence.length <= 0 ||
+                  !Array.isArray(sequence.segments) || sequence.segments.length < 1 || sequence.segments.length > 3)
+                throw Error("Invalid beam sequence: " + key);
+              for (const segment of sequence.segments) {
+                if (!Number.isInteger(segment.frames) || segment.frames < 2 || segment.frames > 64 ||
+                    !Number.isInteger(segment.width) || segment.width < 1 ||
+                    !Number.isInteger(segment.height) || segment.height < 1 ||
+                    ![segment.scaleX, segment.scaleY].every(value => Number.isFinite(value) && value > 0) ||
+                    ![segment.forward, segment.lateral, segment.rotation].every(Number.isFinite))
+                  throw Error("Invalid beam segment: " + key);
+                const imagePath = file(base, segment.texture);
+                const header = fs.readFileSync(imagePath);
+                if (header.readUInt32BE(16) !== segment.width * segment.frames ||
+                    header.readUInt32BE(20) !== segment.height)
+                  throw Error("Beam strip dimensions do not match: " + key);
+                segment.asset = "projectile-sequence/" + path.basename(imagePath);
+                if (embedAssets && !result.assets[segment.asset])
+                  result.assets[segment.asset] = "data:image/png;base64," + header.toString("base64");
+              }
+            }
+
             if (weapon.projectile.cluster) {
               const cluster = weapon.projectile.cluster;
               if (
@@ -1241,7 +1275,7 @@ function loadCatalog({
         if (normalMelee.length > 1 && normalMelee.includes(w) && w !== basicMelee && !WeaponClasses.pilotGateExempt(w) && !w.pilotRequirements?.length)
           w.pilotRequirements = [{ stat: "melee", operator: ">=", value: 125 }];
         if (w.pilotRequirements?.length) w.maxUsesPerTurn = 1;
-        else if (w.maxUsesPerTurn === 1) delete w.maxUsesPerTurn;
+        else if (w.maxUsesPerTurn === 1 && !w.projectile?.container) delete w.maxUsesPerTurn;
       });
       result.models[id] = {
         ...prefab.stats,
