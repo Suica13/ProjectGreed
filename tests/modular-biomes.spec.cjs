@@ -67,7 +67,9 @@ test("all modular biomes load and render their actual terrain layers", async ({ 
   });
   for (const r of results) {
     expect(r.opaque, r.id).toBe(1);
-    expect(r.colors, r.id).toBeGreaterThan(60);
+    // The tactical style deliberately uses fewer colours and broad silhouettes.
+    // Still require multiple terrain/edge colours rather than a flat placeholder.
+    expect(r.colors, r.id).toBeGreaterThan(20);
     await page.evaluate((id) => {
       document.querySelectorAll("canvas").forEach((c) => {
         if (c.id) c.style.display = c.id === id ? "block" : "none";

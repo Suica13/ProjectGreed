@@ -26,7 +26,8 @@ function load(
     STARTER_PROFILE: require("../shared/starter-profile.json"),
     PRODUCTION_CATALOG: catalog,
     ProfileMigrations: require("../shared/profile-migrations.js"),
-    ART: { models: G.models },
+    ART: { models: G.models, prefabs: G.catalog.prefabs },
+    NormalForms: require("../shared/normal-forms"),
     DEVELOPMENT_TREE: tree,
     structuredClone,
     localStorage: {
@@ -39,6 +40,40 @@ function load(
     vm.runInContext(fs.readFileSync("shared/" + name + ".js", "utf8"), context);
   return { ...vm.runInContext("({E:Economy,D:Development})", context), storage, context };
 }
+
+test("mission stock rewards credit once and ordinary form changes conserve hull count without granting permits", () => {
+  const { E } = load({
+    schemaVersion: 3,
+    money: 0,
+    supplies: 0,
+    inventory: { RGZ_91: 1 },
+    licenses: {},
+    kits: {},
+  });
+  E.creditAward({
+    id: "sweep-result",
+    matchId: "run",
+    kind: "result",
+    money: 100,
+    supplies: 200,
+    stockGained: { inventory: { RGZ_91: 2 } },
+  });
+  E.creditAward({
+    id: "sweep-result",
+    matchId: "run",
+    kind: "result",
+    money: 100,
+    supplies: 200,
+    stockGained: { inventory: { RGZ_91: 2 } },
+  });
+  assert.equal(E.quantity("RGZ_91"), 3);
+  assert.equal(E.snapshot().money, 100);
+  E.transformStock("RGZ_91", "RGZ_91_MA");
+  assert.equal(E.quantity("RGZ_91"), 2);
+  assert.equal(E.quantity("RGZ_91_MA"), 1);
+  assert(!E.snapshot().licenses.RGZ_91_MA);
+  assert.throws(() => E.transformStock("RGZ_91_MA", "Type61"));
+});
 test("legacy inventories retain permits and migrate to zero counted stock", () => {
   const old = {
     money: 10000,
@@ -88,9 +123,16 @@ test("one paid permit grants one default-equipped chassis exactly once", () => {
 });
 
 test("selling removes one chassis and refunds half the production price without removing its permit", () => {
-  const { E } = load({ schemaVersion: 3, money: 1000, supplies: 2000,
-    licenses: { RGM_79: true }, inventory: { RGM_79: 2 }, kits: {} });
-  const price = E.unitOffer("RGM_79"), before = E.snapshot();
+  const { E } = load({
+    schemaVersion: 3,
+    money: 1000,
+    supplies: 2000,
+    licenses: { RGM_79: true },
+    inventory: { RGM_79: 2 },
+    kits: {},
+  });
+  const price = E.unitOffer("RGM_79"),
+    before = E.snapshot();
   assert(E.sellUnit("RGM_79"));
   assert.equal(E.quantity("RGM_79"), 1);
   assert.equal(E.snapshot().money, before.money + Math.floor(price.money / 2));
@@ -99,18 +141,29 @@ test("selling removes one chassis and refunds half the production price without 
   assert(E.sellUnit("RGM_79"));
   assert.equal(E.quantity("RGM_79"), 0);
   const empty = JSON.stringify(E.snapshot());
-  assert(!E.sellUnit("RGM_79")); assert(!E.sellUnit("missing-unit"));
-  assert(!E.sellUnit("constructor")); assert.equal(E.saleOffer("__proto__"), null);
+  assert(!E.sellUnit("RGM_79"));
+  assert(!E.sellUnit("missing-unit"));
+  assert(!E.sellUnit("constructor"));
+  assert.equal(E.saleOffer("__proto__"), null);
   assert.equal(JSON.stringify(E.snapshot()), empty);
 });
 
 test("unlicensed reward stock can be sold and failed storage leaves inventory and wallet intact", () => {
-  const profile = { schemaVersion: 3, money: 1000, supplies: 2000,
-    licenses: {}, inventory: { RGM_79: 1 }, kits: {} };
+  const profile = {
+    schemaVersion: 3,
+    money: 1000,
+    supplies: 2000,
+    licenses: {},
+    inventory: { RGM_79: 1 },
+    kits: {},
+  };
   const { E, context, storage } = load(profile, false);
   assert(!E.hasLicense("RGM_79"));
-  const before = JSON.stringify(E.snapshot()), saved = storage.get(key);
-  context.localStorage.setItem = () => { throw Error("quota"); };
+  const before = JSON.stringify(E.snapshot()),
+    saved = storage.get(key);
+  context.localStorage.setItem = () => {
+    throw Error("quota");
+  };
   assert.throws(() => E.sellUnit("RGM_79"), /quota/);
   assert.equal(JSON.stringify(E.snapshot()), before);
   assert.equal(storage.get(key), saved);
@@ -132,7 +185,10 @@ test("bulk permit purchases deduplicate chassis, reject undeveloped/unaffordable
   assert(!poor.hasLicense("RGM_79"));
   const locked = load(undefined, false);
   const id = Object.keys(catalog.baseModels).find(
-    (id) => !locked.D.allows("EFSF", id) && !locked.E.hasLicense(id) && G.models[catalog.baseModels[id]]?.faction === "EFSF",
+    (id) =>
+      !locked.D.allows("EFSF", id) &&
+      !locked.E.hasLicense(id) &&
+      G.models[catalog.baseModels[id]]?.faction === "EFSF",
   );
   assert(id);
   assert(!locked.E.purchaseLicense(id, "EFSF"));
@@ -148,7 +204,13 @@ test("battle losses never revoke licenses; activity grants are permanent and rec
     losses: { Type61: 100 },
   });
   assert(E.hasLicense("Type61"));
-  const reward = { id: "event", matchId: "mail", money: 5, supplies: 10, licenses: { RGM_79: true } };
+  const reward = {
+    id: "event",
+    matchId: "mail",
+    money: 5,
+    supplies: 10,
+    licenses: { RGM_79: true },
+  };
   assert(E.creditActivity(reward));
   assert(!E.creditActivity(reward));
   assert(E.hasLicense("RGM_79"));
@@ -156,10 +218,17 @@ test("battle losses never revoke licenses; activity grants are permanent and rec
 });
 test("paid refit operations have been removed from the live economy", () => {
   const { E } = load();
-  for (const name of ["refitOptions", "refitReason", "refitUnit", "produceMissing", "productionPlan", "fitKits"])
+  for (const name of [
+    "refitOptions",
+    "refitReason",
+    "refitUnit",
+    "produceMissing",
+    "productionPlan",
+    "fitKits",
+  ])
     assert.equal(typeof E[name], "undefined", name);
-  assert.throws(() => E.validate({money:0,supplies:0,inventory:{Type61:1}}));
-  assert.throws(() => E.transact({}, {Type61:1}));
+  assert.throws(() => E.validate({ money: 0, supplies: 0, inventory: { Type61: 1 } }));
+  assert.throws(() => E.transact({}, { Type61: 1 }));
 });
 test("default equipment matches native index zero independently of cheapest factory price", () => {
   for (const [id, kit] of [
@@ -174,14 +243,24 @@ test("default equipment matches native index zero independently of cheapest fact
 });
 
 test("0093 event inventory is usable without unlocking research or purchasing a permit", () => {
-  const { E, D } = load({schemaVersion:3,money:100000,supplies:100000,licenses:{},inventory:{},kits:{}},false);
-  const inventory = Object.fromEntries(["RGM_89","AMS_119","RGZ_91","RGZ_91B","MSN_03","MSN_04","RX_93","RX_93_Test"].map(id=>[id,2]));
-  const award={id:"0093-stock",matchId:"event",money:0,supplies:0,inventory};
-  assert(E.creditActivity(award));assert(!E.creditActivity(award));
+  const { E, D } = load(
+    { schemaVersion: 3, money: 100000, supplies: 100000, licenses: {}, inventory: {}, kits: {} },
+    false,
+  );
+  const inventory = Object.fromEntries(
+    ["RGM_89", "AMS_119", "RGZ_91", "RGZ_91B", "MSN_03", "MSN_04", "RX_93", "RX_93_Test"].map(
+      (id) => [id, 2],
+    ),
+  );
+  const award = { id: "0093-stock", matchId: "event", money: 0, supplies: 0, inventory };
+  assert(E.creditActivity(award));
+  assert(!E.creditActivity(award));
   for (const id of Object.keys(inventory)) {
-    assert.equal(E.quantity(id),2);assert(!E.hasLicense(id));assert(!D.allows("PMC",id));
-    assert(!E.purchaseLicense(id,"PMC"));
-    const kitId=E.defaultKit(id);
-    assert.equal(E.stockPlan([{unitId:id,kitId}],E.snapshot()).missing.length,0);
+    assert.equal(E.quantity(id), 2);
+    assert(!E.hasLicense(id));
+    assert(!D.allows("PMC", id));
+    assert(!E.purchaseLicense(id, "PMC"));
+    const kitId = E.defaultKit(id);
+    assert.equal(E.stockPlan([{ unitId: id, kitId }], E.snapshot()).missing.length, 0);
   }
 });

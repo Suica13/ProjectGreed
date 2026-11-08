@@ -272,7 +272,7 @@ const BattleHUD = (() => {
     const snapshot = Net.active ? Net.snapshot : null;
     MatchIncome.render(byId("hudMatchIncome"), snapshot);
     const roomName = Net.local
-      ? "离线" + (snapshot?.settings?.mode === "quick" ? "快速战" : "常规战")
+      ? "离线" + ({sweep:"战场扫荡",battlefield:"雇佣兵战争模式",quick:"快速战"}[snapshot?.settings?.mode]||"常规战")
       : snapshot?.room || Net.room || "—";
     const roomLabel = byId("hudRoomName");
     roomLabel.textContent = I18n.text("房间名") + ": " + roomName;

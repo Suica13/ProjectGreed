@@ -150,153 +150,155 @@ const BiomeTiles = (() => {
     return canvas;
   }
 
-  // Textures are reduced to native game pixels once, then mirrored at world-cell
-  // boundaries. Adjacent terrain of the same type shares identical edge pixels.
-  const textureCache = new WeakMap();
-  function texture(img, tile, kind = "base") {
-    let frames = textureCache.get(img);
-    if (!frames) textureCache.set(img, (frames = new Map()));
-    const key = [tile.x, tile.y, tile.frameWidth, tile.frameHeight, tile.biomeRole, kind].join(":");
-    if (frames.has(key)) return frames.get(key);
-    const c = document.createElement("canvas");
-    const integrated = ["forest", "rock", "rubble"].includes(tile.biomeRole);
-    const span = integrated ? 64 : 128,
-      size = span * 2;
-    c.width = c.height = size;
-    const g = c.getContext("2d");
-    g.imageSmoothingEnabled = false;
-    const fw = tile.frameWidth || 32,
-      fh = tile.frameHeight || 32;
-    for (let y = 0; y < 2; y++)
-      for (let x = 0; x < 2; x++) {
-        g.save();
-        g.translate(x ? size : 0, y ? size : 0);
-        g.scale(x ? -1 : 1, y ? -1 : 1);
-        g.drawImage(img, tile.x, tile.y, fw, fh, 0, 0, span, span);
-        g.restore();
-      }
-    if (integrated) {
-      const pixels = g.getImageData(0, 0, size, size),
-        data = pixels.data;
-      for (let y = 0; y < size; y++)
-        for (let x = 0; x < size; x++) {
-          const px = x % 64,
-            py = y % 64,
-            edge = Math.min(px, py, 63 - px, 63 - py);
-          data[(y * size + x) * 4 + 3] *= Math.min(1, edge / 4);
-        }
-      g.putImageData(pixels, 0, 0);
-    }
-    frames.set(key, c);
-    return c;
-  }
   function drawAtlasTile(ctx, img, tile, set, x, y, width, height, cellX, cellY, options = {}) {
     const role = tile.biomeRole;
     if (!role) return false;
-    const tex = texture(img, tile),
-      sx = (cellX & (tex.width === 128 ? 1 : 3)) * 64,
-      sy = (cellY & (tex.width === 128 ? 1 : 3)) * 64;
+    // Clean tactical silhouettes are deterministic geometry, baked into the same
+    // bounded world chunks. No image filtering, dithering or per-frame pixel reads.
+    drawTacticalTile(ctx, tile, set, x, y, width, height, cellX, cellY);
+    return true;
+  }
+  function drawTacticalTile(ctx, tile, set, x, y, width, height, cellX, cellY) {
+    const role = tile.biomeRole,
+      key = String(set.image) + String(set.id);
+    const space = /space/.test(key),
+      snow = /snow/.test(key),
+      desert = /desert/.test(key),
+      urban = /urban/.test(key),
+      tropical = /tropical/.test(key);
+    const land = space
+      ? "#101c2b"
+      : snow
+        ? "#a9b8bd"
+        : desert
+          ? "#918167"
+          : urban
+            ? "#586765"
+            : tropical
+              ? "#647d65"
+              : "#677661";
+    const shade = space ? "#344351" : snow ? "#7c959e" : desert ? "#6e6659" : "#42544c";
+    const light = snow ? "#c9d3d3" : desert ? "#afa184" : "#85917c";
+    const n = hash(cellX, cellY, 71),
+      mask = tile.mask || 0;
     ctx.save();
     ctx.translate(x, y);
     ctx.scale(width / 32, height / 32);
-    ctx.imageSmoothingEnabled = false;
-    const patch = (dx = 0, dy = 0, w = 32, h = 32) =>
-      ctx.drawImage(tex, sx + dx*2, sy + dy*2, w*2, h*2, dx, dy, w, h);
-    if (role === "shore") {
-      const mask = tile.mask,
-        edge = (side, depth) => {
-          if (side === 0) return [0, 0, 32, depth];
-          if (side === 1) return [32 - depth, 0, depth, 32];
-          if (side === 2) return [0, 32 - depth, 32, depth];
-          return [0, 0, depth, 32];
-        };
-      // Pixel steps follow the same shoreline phase on neighbouring cells.
-      for (let side = 0; side < 4; side++)
-        if (mask & (1 << side)) {
-          for (let k = 0; k < 8; k++) {
-            const depth =
-              (options.shoreWidth || 7) -
-              1 +
-              ((hash(side & 1 ? cellY * 8 + k : cellX * 8 + k, side, 7) >>> 2) % 3);
-            let [a, b, w, h] = edge(side, depth);
-            if (side & 1) {
-              b = k * 4;
-              h = 4;
-            } else {
-              a = k * 4;
-              w = 4;
-            }
-            ctx.fillStyle = "#8fa9a3";
-            ctx.fillRect(a, b, w, h);
-            if (side === 0) h -= 2;
-            else if (side === 1) {
-              a += 2;
-              w -= 2;
-            } else if (side === 2) {
-              b += 2;
-              h -= 2;
-            } else w -= 2;
-            patch(a, b, w, h);
-          }
+    const rect = (color, a, b, w, h) => {
+      ctx.fillStyle = color;
+      ctx.fillRect(a, b, w, h);
+    };
+    const polygon = (points, color, outline = shade) => {
+      ctx.beginPath();
+      points.forEach(([a, b], i) => (i ? ctx.lineTo(a, b) : ctx.moveTo(a, b)));
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
+      ctx.strokeStyle = outline;
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
+    };
+    if (!["cliff", "shore", "road", "details"].includes(role)) rect(land, 0, 0, 32, 32);
+    if (["water", "shallow", "shore"].includes(role)) {
+      if (role !== "shore") {
+        rect(role === "shallow" ? "#537985" : "#3c6377", 0, 0, 32, 32);
+        if (n % 3 === 0) {
+          rect("#628593", 4, 11, 10, 1);
+          rect("#628593", 19, 24, 8, 1);
         }
+      } else {
+        // Neighbour masks share straight bank edges; retain small pixel steps at corners.
+        const bands = [
+          [land, 0, 3],
+          [desert ? "#b5a581" : "#98a994", 3, 2],
+          ["#688c91", 5, 1],
+        ];
+        for (const [color, start, size] of bands) {
+          if (mask & 1) rect(color, 0, start, 32, size);
+          if (mask & 2) rect(color, 32 - start - size, 0, size, 32);
+          if (mask & 4) rect(color, 0, 32 - start - size, 32, size);
+          if (mask & 8) rect(color, start, 0, size, 32);
+        }
+      }
+    } else if (role === "forest") {
+      for (const [a, b, r] of [
+        [8, 10, 6],
+        [23, 9, 5],
+        [17, 22, 7],
+      ]) {
+        rect(shade, a - 1, b + 2, 2, 7);
+        polygon(
+          [
+            [a - r, b + 2],
+            [a - r + 1, b - 3],
+            [a - 1, b - r],
+            [a + r - 1, b - 3],
+            [a + r, b + 3],
+            [a, b + 5],
+          ],
+          snow ? "#b8c8c5" : tropical ? "#466c59" : "#4d6650",
+        );
+        ctx.strokeStyle = light;
+        ctx.beginPath();
+        ctx.moveTo(a - r + 2, b - 2);
+        ctx.lineTo(a, b - r + 2);
+        ctx.lineTo(a + r - 2, b - 2);
+        ctx.stroke();
+      }
+    } else if (role === "rock" || role === "rubble") {
+      for (const [a, b, r] of [
+        [9, 12, 7],
+        [23, 23, 6],
+      ]) {
+        polygon(
+          [
+            [a - r, b + 3],
+            [a - r + 2, b - r],
+            [a + 2, b - r - 2],
+            [a + r, b - 1],
+            [a + r - 2, b + 5],
+          ],
+          role === "rubble" ? "#7b8178" : light,
+        );
+        ctx.strokeStyle = shade;
+        ctx.beginPath();
+        ctx.moveTo(a - r, b + 3);
+        ctx.lineTo(a, b - 1);
+        ctx.lineTo(a + r, b - 1);
+        ctx.stroke();
+      }
+      if (role === "rubble") rect(shade, 4, 25, 6, 2);
     } else if (role === "cliff") {
-      const mask = tile.mask,
-        fw = tile.frameWidth || 32,
-        fh = tile.frameHeight || 32;
-      const stripe = (dx, dy, w, h) =>
-        ctx.drawImage(
-          img,
-          tile.x + fw * 0.12,
-          tile.y + fh * 0.58,
-          fw * 0.76,
-          fh * 0.35,
-          dx,
-          dy,
-          w,
-          h,
-        );
-      if (mask & 4)
-        stripe(
-          0,
-          32 - (options.cliffHeight || 10) - (tile.elevation > 1 ? 3 : 0),
-          32,
-          (options.cliffHeight || 10) + (tile.elevation > 1 ? 3 : 0),
-        );
+      const stripe = (a, b, w, h) => {
+        rect(shade, a, b, w, h);
+        rect(light, a, b, w, 1);
+      };
+      if (mask & 4) stripe(0, 23, 32, 9);
       if (mask & 2) stripe(27, 0, 5, 32);
       if (mask & 8) stripe(0, 0, 5, 32);
-      if (mask & 1) {
-        ctx.fillStyle = "rgba(22,29,28,.5)";
-        ctx.fillRect(0, 0, 32, 2);
+      if (mask & 1) stripe(0, 0, 32, 3);
+      if (mask & 4) {
+        rect("#34453f", 7, 27, 1, 5);
+        rect("#34453f", 22, 26, 1, 6);
       }
     } else if (role === "road") {
-      const inset = options.roadInset ?? 3;
-      const left = tile.mask & 8 ? 0 : inset,
-        top = tile.mask & 1 ? 0 : inset;
-      const right = tile.mask & 2 ? 32 : 32 - inset,
-        bottom = tile.mask & 4 ? 32 : 32 - inset;
-      ctx.beginPath();
-      ctx.rect(left, top, right - left, bottom - top);
-      ctx.clip();
-      patch();
+      const a = mask & 8 ? 0 : 4,
+        b = mask & 1 ? 0 : 4,
+        w = (mask & 2 ? 32 : 28) - a,
+        h = (mask & 4 ? 32 : 28) - b;
+      rect(desert ? "#a1947b" : "#7c8376", a, b, w, h);
+      rect("#929888", a, b, w, 1);
+      rect(shade, a, b + h - 1, w, 1);
     } else if (role === "details") {
-      ctx.globalAlpha *= 0.7;
-      ctx.drawImage(img, tile.x, tile.y, tile.frameWidth, tile.frameHeight, 2, 2, 28, 28);
-    } else {
-      if (tile.underlay) {
-        const f = tile.underlay,
-          base = texture(img, {
-            x: f.x,
-            y: f.y,
-            frameWidth: f.width,
-            frameHeight: f.height,
-            biomeRole: "plain",
-          });
-        ctx.drawImage(base, (cellX & 3) * 64, (cellY & 3) * 64, 64, 64, 0, 0, 32, 32);
+      if (n % 3 === 0) {
+        rect(shade, 9, 16, 3, 1);
+        rect(light, 11, 15, 3, 1);
       }
-      patch();
-    }
+    } else if (!space && n % 4 === 0) {
+      rect(light, 7, 15, 5, 1);
+      rect(shade, 19, 24, 4, 1);
+    } else if (space && n % 9 === 0) rect("#78909f", n % 29, (n >>> 8) % 29, 1, 1);
     ctx.restore();
-    return true;
   }
   return {
     drawAtlasTile,

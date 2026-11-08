@@ -332,6 +332,7 @@ const Net = (() => {
     }
   }
   function leave({ notify = true, forget = true } = {}) {
+    SweepUI.receive({phase:"waiting"});
     BattleAssets.release();
     if (window.ReplayPlayer?.active) window.ReplayPlayer.stop(false);
     window.BattlePrompts?.reset();
@@ -499,7 +500,7 @@ const Net = (() => {
     foregroundSyncAt = -Infinity;
     session++;
     moving = null;
-    status("离线" + ({battlefield:"雇佣兵战争模式",campaign:"历史战役",quick:"快速战"}[byId("offlineRoomMode").value] || "常规战"));
+    status("离线" + ({sweep:"战场扫荡",battlefield:"雇佣兵战争模式",campaign:"历史战役",quick:"快速战"}[byId("offlineRoomMode").value] || "常规战"));
   }
   function connect(mode = "join", auto = false, roomCode = null, credentials = {}) {
     cancelReconnect();
@@ -676,6 +677,7 @@ const Net = (() => {
       n.memberId = s.you.id;
     }
     n.started = s.started;
+    SweepUI.receive(s);
     window.CampaignUI?.refreshBattleControls(s);
     document.body.classList.toggle("campaign-active", !!s.campaign);
     document.body.classList.toggle("campaign-room", s.settings.mode === "campaign");
@@ -859,7 +861,7 @@ const Net = (() => {
     if (s.started && online)
       status(
         (n.local
-          ? "离线" + (s.settings?.mode === "quick" ? "快速战" : "常规战")
+          ? "离线" + ({sweep:"战场扫荡",battlefield:"雇佣兵战争模式",quick:"快速战"}[s.settings?.mode]||"常规战")
           : "房间 " + n.room) +
           " · " +
           roleName(),

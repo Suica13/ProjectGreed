@@ -278,12 +278,14 @@ const Tactics = (() => {
     return value;
   }
   function validateBattleMode(value = "regular") {
-    if (!["regular", "quick", "campaign", "battlefield"].includes(value)) throw Error("对战模式无效");
+    if (!["regular", "quick", "campaign", "battlefield", "sweep"].includes(value)) throw Error("对战模式无效");
     return value;
   }
   function defaultRoomSettings() {
     return {
       mode: "regular",
+      sweepFaction: "ZEON",
+      sweepEra: "0079T1",
       fogMode: "full",
       mapId: catalog.defaultMap,
       costLimit: 2000,
@@ -601,7 +603,7 @@ const Tactics = (() => {
       // Readiness may skip quantity checks while retaining ownership-based deployment access.
       rules.ownedLicenses = rules.licenses;
       rules.ownedStock = economy.normalizeStock(player);
-      if ((!player.formationPreset && settings.mode === "regular") || settings.mode === "battlefield")
+      if ((!player.formationPreset && settings.mode === "regular") || ["battlefield", "sweep"].includes(settings.mode))
         Object.assign(rules, economy.normalizeStock(player));
     }
     const config = armySettings(player);
@@ -1961,7 +1963,7 @@ const Tactics = (() => {
     if (
       map.supportedModes &&
       !map.supportedModes.includes(
-        settings.mode === "campaign" ? "regular" : settings.mode || "regular",
+        ["campaign", "sweep"].includes(settings.mode) ? "regular" : settings.mode || "regular",
       )
     )
       throw Error("此地图不支持所选对战模式");

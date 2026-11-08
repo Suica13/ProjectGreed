@@ -14,21 +14,35 @@ const Economy = (() => {
         ? ART.models
         : require("../tools/load-catalog.cjs").loadCatalog().models);
   }
-  const starter = typeof STARTER_PROFILE !== "undefined" ? STARTER_PROFILE : require("./starter-profile.json");
-  const tree = typeof DEVELOPMENT_TREE !== "undefined" ? DEVELOPMENT_TREE : require("./development-tree.json");
-  const defaultPermits = [...new Set([
-    ...starter.units.map(unit => unit.unitId),
-    ...Object.values(tree).flatMap(nodes => nodes.filter(node => /BaseTech$/i.test(node.id))
-      .flatMap(node => node.unlocks)).filter(id => Object.hasOwn(catalog.baseModels, id)),
-  ])];
-  const defaultLicenses = () => Object.fromEntries(defaultPermits.map(id => [id, true]));
+  const starter =
+    typeof STARTER_PROFILE !== "undefined" ? STARTER_PROFILE : require("./starter-profile.json");
+  const tree =
+    typeof DEVELOPMENT_TREE !== "undefined" ? DEVELOPMENT_TREE : require("./development-tree.json");
+  const defaultPermits = [
+    ...new Set([
+      ...starter.units.map((unit) => unit.unitId),
+      ...Object.values(tree)
+        .flatMap((nodes) =>
+          nodes.filter((node) => /BaseTech$/i.test(node.id)).flatMap((node) => node.unlocks),
+        )
+        .filter((id) => Object.hasOwn(catalog.baseModels, id)),
+    ]),
+  ];
+  const defaultLicenses = () => Object.fromEntries(defaultPermits.map((id) => [id, true]));
   function initial() {
-    const inventory = {}, kits = {};
+    const inventory = {},
+      kits = {};
     for (const entry of starter.units) {
       inventory[entry.unitId] = (inventory[entry.unitId] || 0) + starter.stockSets;
     }
-    return { schemaVersion: 3, inventory, kits, money: starter.money, supplies: starter.supplies,
-      licenses: defaultLicenses() };
+    return {
+      schemaVersion: 3,
+      inventory,
+      kits,
+      money: starter.money,
+      supplies: starter.supplies,
+      licenses: defaultLicenses(),
+    };
   }
   function validate(value) {
     if (value === undefined) return initial();
@@ -179,6 +193,7 @@ const Economy = (() => {
     for (const [field, direction] of [
       ["stockUsed", -1],
       ["stockReturned", 1],
+      ["stockGained", 1],
       ["stockLost", -1],
     ]) {
       if (!award[field]) continue;
@@ -204,11 +219,13 @@ const Economy = (() => {
     next.money += award.money;
     next.supplies += award.supplies;
     const awardedStock = normalizeStock(award);
-    for (const kind of ["inventory"]) for (const [id, count] of Object.entries(awardedStock[kind])) {
-      const quantity = (next[kind][id] || 0) + count;
-      if (!Number.isSafeInteger(quantity) || quantity > 1000000) throw Error("库存数量超过上限：" + id);
-      next[kind][id] = quantity;
-    }
+    for (const kind of ["inventory"])
+      for (const [id, count] of Object.entries(awardedStock[kind])) {
+        const quantity = (next[kind][id] || 0) + count;
+        if (!Number.isSafeInteger(quantity) || quantity > 1000000)
+          throw Error("库存数量超过上限：" + id);
+        next[kind][id] = quantity;
+      }
     for (const [id, owned] of Object.entries(award.licenses || {})) {
       if (!Object.hasOwn(catalog.baseModels, id) || owned !== true) throw Error("活动单位奖励无效");
       next.licenses[id] = true;
@@ -263,18 +280,30 @@ const Economy = (() => {
   // the same single-unit duration; personal production remains immediate for now.
   function productionTiming(unitId, kitId = defaultKit(unitId), production = catalog) {
     const native = production.nativePricing?.[unitId]?.kits?.[kitId];
-    const offer = production.offers?.[unitId + "__" + kitId] || production.offers?.[production.baseModels?.[unitId]];
+    const offer =
+      production.offers?.[unitId + "__" + kitId] ||
+      production.offers?.[production.baseModels?.[unitId]];
     const source = native?.source || offer?.source;
     const quantity = Math.max(1, native?.quantity || offer?.quantity || 1);
     const seconds = ((source?.buildSeconds ?? 30) + (source?.queueSeconds || 0)) / quantity;
     const secondsPerTurn = production.productionSecondsPerTurn || 20;
-    return { seconds, secondsPerTurn, turns: Math.max(1, Math.min(5, Math.ceil(seconds / secondsPerTurn))) };
+    return {
+      seconds,
+      secondsPerTurn,
+      turns: Math.max(1, Math.min(5, Math.ceil(seconds / secondsPerTurn))),
+    };
   }
   function productionOffer(unitId, kitId, production = catalog, models = modelsForUnits()) {
-    const chassis = unitOffer(unitId, production), model = models[unitId + "__" + kitId];
+    const chassis = unitOffer(unitId, production),
+      model = models[unitId + "__" + kitId];
     if (!chassis || !model || model.formOnly || model.wip) return null;
-    return {...chassis, unitId, kitId, chassis,
-      turns:productionTiming(unitId,kitId,production).turns};
+    return {
+      ...chassis,
+      unitId,
+      kitId,
+      chassis,
+      turns: productionTiming(unitId, kitId, production).turns,
+    };
   }
   function mayProduce(unitId, faction) {
     return !!state.licenses[unitId] && available(licenseOffer(unitId), faction);
@@ -290,8 +319,14 @@ const Economy = (() => {
   }
   function saleOffer(unitId) {
     const offer = Object.hasOwn(catalog.licenseOffers, unitId) ? unitOffer(unitId) : null;
-    return offer ? { unitId, quantity: 1,
-      money: Math.floor(offer.money / 2), supplies: Math.floor(offer.supplies / 2) } : null;
+    return offer
+      ? {
+          unitId,
+          quantity: 1,
+          money: Math.floor(offer.money / 2),
+          supplies: Math.floor(offer.supplies / 2),
+        }
+      : null;
   }
   function sellUnit(unitId) {
     const offer = saleOffer(unitId);
@@ -307,18 +342,19 @@ const Economy = (() => {
   function purchasePlan(entries) {
     const units = {};
     for (const entry of entries) units[entry.unitId] = (units[entry.unitId] || 0) + 1;
-    const items = [], total = {money:0,supplies:0};
-    function add(kind,id,count,offer) {
+    const items = [],
+      total = { money: 0, supplies: 0 };
+    function add(kind, id, count, offer) {
       if (count <= 0) return;
-      items.push({kind,id,unitId:id,count,offer});
-      if (offer) for (const key of ["money","supplies"]) total[key] += offer[key]*count;
+      items.push({ kind, id, unitId: id, count, offer });
+      if (offer) for (const key of ["money", "supplies"]) total[key] += offer[key] * count;
     }
-    for (const [id,needed] of Object.entries(units)) {
-      const gift = !state.licenses[id] && quantity(id)<needed ? 1 : 0;
-      if (gift) add("licenses",id,1,licenseOffer(id));
-      add("inventory",id,Math.max(0,needed-quantity(id)-gift),unitOffer(id));
+    for (const [id, needed] of Object.entries(units)) {
+      const gift = !state.licenses[id] && quantity(id) < needed ? 1 : 0;
+      if (gift) add("licenses", id, 1, licenseOffer(id));
+      add("inventory", id, Math.max(0, needed - quantity(id) - gift), unitOffer(id));
     }
-    return {...total,items};
+    return { ...total, items };
   }
   function purchaseMissingStock(entries, faction) {
     const plan = purchasePlan(entries);
@@ -352,7 +388,9 @@ const Economy = (() => {
   function licenseOffer(unitId) {
     const base = catalog.licenseOffers[unitId];
     const production = productionOffer(unitId, defaultKit(unitId));
-    return base && production ? { ...base, money: production.money * 3, supplies: production.supplies * 3 } : null;
+    return base && production
+      ? { ...base, money: production.money * 3, supplies: production.supplies * 3 }
+      : null;
   }
   function grantPurchasedLicense(next, unitId) {
     if (next.licenses[unitId]) return;
@@ -380,9 +418,9 @@ const Economy = (() => {
   function licensePlan(entries) {
     const items = [],
       total = { money: 0, supplies: 0 };
-    const unlicensed = entries.filter(entry => !state.licenses[entry.unitId]);
-    const missingStock = stockPlan(unlicensed, state).missing.map(index => unlicensed[index]);
-    for (const unitId of new Set(missingStock.map(entry => entry.unitId))) {
+    const unlicensed = entries.filter((entry) => !state.licenses[entry.unitId]);
+    const missingStock = stockPlan(unlicensed, state).missing.map((index) => unlicensed[index]);
+    for (const unitId of new Set(missingStock.map((entry) => entry.unitId))) {
       if (state.licenses[unitId]) continue;
       const offer = licenseOffer(unitId);
       items.push({ unitId });
@@ -402,7 +440,22 @@ const Economy = (() => {
     const licenses = Object.fromEntries(plan.items.map((item) => [item.unitId, true]));
     return { ok: transact(plan, licenses), reason: "funds", plan };
   }
+  function transformStock(from, to) {
+    const catalog =
+      typeof ART !== "undefined"
+        ? ART
+        : require("../tools/load-catalog.cjs").loadCatalog({ embedAssets: false });
+    const forms = typeof NormalForms !== "undefined" ? NormalForms : require("./normal-forms.js");
+    if (!forms.options(catalog, from).some((o) => o.unitId === to) || quantity(from) < 1)
+      throw Error("没有可变形的机体库存");
+    const next = snapshot();
+    next.inventory[from]--;
+    next.inventory[to] = (next.inventory[to] || 0) + 1;
+    normalizeStock(next);
+    return commit(next);
+  }
   return {
+    transformStock,
     key,
     catalog,
     normalizeStock,

@@ -52,7 +52,7 @@ def main():
         # Native text is kept by the introduction importer. Names use the requested roster labels.
         prefab['sourceStats']['technologyEra'] = '0093T1'
         if ident.endswith('_MA'):
-            prefab.update(formOnly=True, formOf=ident.removesuffix('_MA'))
+            prefab.update(formOnly=False, formOf=ident.removesuffix('_MA'))
         write(path,prefab)
         prefabs.append(prefab)
         ref=f'units/{ident}/unit.json'

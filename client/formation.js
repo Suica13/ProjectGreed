@@ -75,8 +75,10 @@ const Formation = (() => {
     try {
       ProfileStorage.replace([
         [sharedPilotKey, JSON.stringify(pilotStore)],
-        ...["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].map(faction =>
-          [pilotStorageKey + faction, null]),
+        ...["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].map((faction) => [
+          pilotStorageKey + faction,
+          null,
+        ]),
         ["projectgreed.custom-pilots.v1", null],
       ]);
       pilotStorageReady = true;
@@ -146,7 +148,8 @@ const Formation = (() => {
     developmentPreviewFocus = null,
     pilotIndex = null;
   const pickerKits = new Map();
-  let catalogRevision = 0, catalogRenderKey = null;
+  let catalogRevision = 0,
+    catalogRenderKey = null;
   const catalogFilters = { faction: "", era: "", type: "" };
   const current = () =>
     !squads[index].units.length
@@ -159,10 +162,15 @@ const Formation = (() => {
   const ownPlayer = () => Net.snapshot?.members.find((player) => player.id === Net.memberId);
   function canEditRoom() {
     const snapshot = Net.snapshot;
-    return !!snapshot && Net.seat !== null && !snapshot.loadedSave &&
+    return (
+      !!snapshot &&
+      Net.seat !== null &&
+      !snapshot.loadedSave &&
       !ownPlayer()?.formationPreset &&
-      (!snapshot.started || (snapshot.phase === "assembly" &&
-        !snapshot.assembly?.players.find(p => p.memberId === Net.memberId)?.ready));
+      (!snapshot.started ||
+        (snapshot.phase === "assembly" &&
+          !snapshot.assembly?.players.find((p) => p.memberId === Net.memberId)?.ready))
+    );
   }
   const budget = () =>
     Net.active && Net.snapshot?.settings
@@ -175,7 +183,9 @@ const Formation = (() => {
     characterFaction: group,
     licenses: Economy.snapshot().licenses,
     ownedStock: Economy.normalizeStock(Economy.snapshot()),
-    ...(Net.active && Net.snapshot?.settings.mode === "quick" ? {} : Economy.normalizeStock(Economy.snapshot())),
+    ...(Net.active && Net.snapshot?.settings.mode === "quick"
+      ? {}
+      : Economy.normalizeStock(Economy.snapshot())),
   });
   // Drafts may contain future units; technology is required to produce them; owned stock can deploy.
   const canAddUnit = (model) =>
@@ -235,10 +245,15 @@ const Formation = (() => {
     });
     try {
       // Assigned pilots are references into the shared roster, not copies of avatars/statistics.
-      localStorage.setItem(storageKey, JSON.stringify({
-        version: formationSaveVersion,
-        squads: pilotStorageReady ? ProfileStorage.compactSquads(squads, pilotStore.pilots) : squads,
-      }));
+      localStorage.setItem(
+        storageKey,
+        JSON.stringify({
+          version: formationSaveVersion,
+          squads: pilotStorageReady
+            ? ProfileStorage.compactSquads(squads, pilotStore.pilots)
+            : squads,
+        }),
+      );
       localStorage.removeItem(legacyStorageKey);
       localStorage.removeItem(legacyStorageKey + "-active");
       localStorage.setItem(storageKey + "-active", String(index));
@@ -253,13 +268,22 @@ const Formation = (() => {
         const merged = [];
         const seen = new Set();
         for (const faction of ["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"]) {
-          const saved = JSON.parse(localStorage.getItem(legacyStorageKey + "." + faction) || "null");
+          const saved = JSON.parse(
+            localStorage.getItem(legacyStorageKey + "." + faction) || "null",
+          );
           for (const squad of saved?.version === formationSaveVersion ? saved.squads || [] : []) {
             const key = JSON.stringify(squad);
-            if (!seen.has(key)) { merged.push(squad); seen.add(key); }
+            if (!seen.has(key)) {
+              merged.push(squad);
+              seen.add(key);
+            }
           }
         }
-        if (merged.length) localStorage.setItem(legacyStorageKey + ".PMC", JSON.stringify({version: formationSaveVersion, squads: merged}));
+        if (merged.length)
+          localStorage.setItem(
+            legacyStorageKey + ".PMC",
+            JSON.stringify({ version: formationSaveVersion, squads: merged }),
+          );
         localStorage.setItem(marker, "1");
       }
     } catch {}
@@ -443,8 +467,12 @@ const Formation = (() => {
       byId("formationMain").inert = true;
       const list = byId("formationCatalog");
       const card = list.querySelector(`[data-unit-id="${inspectedId}"]`);
-      if (!card || list.dataset.revision !== String(catalogRevision) ||
-          card.dataset.previewKit !== (pickerKits.get(inspectedId) || "")) renderCatalog();
+      if (
+        !card ||
+        list.dataset.revision !== String(catalogRevision) ||
+        card.dataset.previewKit !== (pickerKits.get(inspectedId) || "")
+      )
+        renderCatalog();
       (
         byId("formationCatalog").querySelector(`[data-detail-unit-id="${inspectedId}"]`) ||
         byId("closeFormationPicker")
@@ -727,15 +755,18 @@ const Formation = (() => {
     const previous = detailIndex;
     detailIndex = index;
     renderCarrierChoice(entry, Rules.formationModel(entry));
-    const options = [...byId("formationDetailCarrier").options].map(o => ({
-      value: o.value, text: o.text,
-      hangar: o.dataset.hangarLabel, capacity: o.dataset.capacityLabel,
+    const options = [...byId("formationDetailCarrier").options].map((o) => ({
+      value: o.value,
+      text: o.text,
+      hangar: o.dataset.hangarLabel,
+      capacity: o.dataset.capacityLabel,
     }));
     detailIndex = previous;
     let choice = entry.preload ? JSON.stringify(entry.preload) : "";
     const title = element("h3", "", I18n.text("搭乘") + " · " + Rules.formationModel(entry).name),
       list = element("div", "formation-boarding-options"),
-      footer = element("footer"), close = element("button", "", "关闭"),
+      footer = element("footer"),
+      close = element("button", "", "关闭"),
       confirm = element("button", "", "搭乘");
     close.onclick = () => boardingPicker.close();
     const carriers = new Map();
@@ -747,16 +778,26 @@ const Formation = (() => {
       if (option.value) {
         const { carrierIndex } = JSON.parse(option.value);
         if (!carriers.has(carrierIndex)) {
-          const carrier = draft[carrierIndex], group = element("section", "formation-boarding-carrier"),
-            heading = element("h4", "formation-boarding-carrier-heading"), image = element("img");
+          const carrier = draft[carrierIndex],
+            group = element("section", "formation-boarding-carrier"),
+            heading = element("h4", "formation-boarding-carrier-heading"),
+            image = element("img");
           group.dataset.carrierIndex = carrierIndex;
           image.src = unitIcon(Rules.formationModelId(carrier), carrier.customPilot);
           image.alt = "";
-          heading.append(image, element("span", "", `${carrierIndex + 1}. ${Rules.formationModel(carrier).name}`));
-          group.append(heading); list.append(group); carriers.set(carrierIndex, group);
+          heading.append(
+            image,
+            element("span", "", `${carrierIndex + 1}. ${Rules.formationModel(carrier).name}`),
+          );
+          group.append(heading);
+          list.append(group);
+          carriers.set(carrierIndex, group);
         }
         container = carriers.get(carrierIndex);
-        button.append(element("span", "", option.hangar), element("small", "muted", option.capacity));
+        button.append(
+          element("span", "", option.hangar),
+          element("small", "muted", option.capacity),
+        );
       } else button.textContent = option.text;
       button.onclick = () => {
         choice = option.value;
@@ -768,44 +809,62 @@ const Formation = (() => {
     }
     confirm.onclick = () => {
       try {
-        const next = {...draft[index]};
-        if (choice) next.preload = JSON.parse(choice); else delete next.preload;
-        Rules.validateFormation(draft.map((e,i) => i === index ? next : e),Infinity,Rules.catalog.formation.maxUnits);
+        const next = { ...draft[index] };
+        if (choice) next.preload = JSON.parse(choice);
+        else delete next.preload;
+        Rules.validateFormation(
+          draft.map((e, i) => (i === index ? next : e)),
+          Infinity,
+          Rules.catalog.formation.maxUnits,
+        );
         draft[index] = next;
         GameAudio.play("changeEquipmentSound");
-        boardingPicker.close(); render();
-      } catch(error) { note(error.message); }
+        boardingPicker.close();
+        render();
+      } catch (error) {
+        note(error.message);
+      }
     };
-    footer.append(close,confirm);boardingPicker.replaceChildren(title,list,footer);boardingPicker.showModal();
+    footer.append(close, confirm);
+    boardingPicker.replaceChildren(title, list, footer);
+    boardingPicker.showModal();
   }
   window.addEventListener("page-changing", () => boardingPicker.close());
   function openKitPicker(index) {
     const entry = draft[index];
     if (!entry) return;
-    const prefab = Rules.catalog.prefabs.find(unit => unit.id === entry.unitId);
+    const prefab = Rules.catalog.prefabs.find((unit) => unit.id === entry.unitId);
     const dialog = element("dialog", "formation-kit-dialog");
     dialog.append(element("h3", "", "切换套件 · " + Rules.formationModel(entry).name));
     const list = element("div", "formation-kit-options");
     for (const kit of prefab.weaponKits) {
-      const button = element("button", kit.id === entry.kitId ? "selected" : "", kit.name + " · COST " + (prefab.stats.cost + kit.cost));
+      const button = element(
+        "button",
+        kit.id === entry.kitId ? "selected" : "",
+        kit.name + " · COST " + (prefab.stats.cost + kit.cost),
+      );
       button.dataset.kitId = kit.id;
       button.setAttribute("aria-pressed", String(kit.id === entry.kitId));
       button.onclick = () => {
         try {
-          const next = draft.map((unit, i) => i === index ? {...unit, kitId:kit.id} : unit);
+          const next = draft.map((unit, i) => (i === index ? { ...unit, kitId: kit.id } : unit));
           Rules.validateFormation(next, Infinity, Rules.catalog.formation.maxUnits);
           draft[index] = next[index];
           GameAudio.play("changeEquipmentSound");
-          dialog.close(); render();
-        } catch(error) { note(error.message); }
+          dialog.close();
+          render();
+        } catch (error) {
+          note(error.message);
+        }
       };
       list.append(button);
     }
     const close = element("button", "", "关闭");
     close.onclick = () => dialog.close();
     dialog.append(list, close);
-    dialog.addEventListener("close", () => dialog.remove(), {once:true});
-    document.body.append(dialog); dialog.showModal();
+    dialog.addEventListener("close", () => dialog.remove(), { once: true });
+    document.body.append(dialog);
+    dialog.showModal();
   }
   function pilotButtonText(button, prefix, entry, model) {
     const name = entry.customPilot?.name || PilotSystem.defaultName(model);
@@ -859,7 +918,7 @@ const Formation = (() => {
     const model = Rules.formationModel(entry);
     window.dispatchEvent(new CustomEvent("unit-preview", { detail: { id: entry.unitId } }));
     byId("formationDetailTitle").textContent = model.name;
-    byId("formationDetailTags").replaceChildren(unitTags(model, {limit: Infinity}));
+    byId("formationDetailTags").replaceChildren(unitTags(model, { limit: Infinity }));
     ProductionUI.renderLicensePurchase(originalEntry.unitId, originalEntry.kitId);
     const pilotButton = byId("formationDetailPilot");
     pilotButton.hidden = detailIndex === null || !!previewModel;
@@ -892,7 +951,9 @@ const Formation = (() => {
       ["HP", model.hp.toLocaleString()],
       ["EN", model.en],
       ["COST", model.cost],
-      ...(!model.formOnly ? [["生产周期", Economy.productionTiming(entry.unitId, entry.kitId).turns + "回合／台"]] : []),
+      ...(!model.formOnly
+        ? [["生产周期", Economy.productionTiming(entry.unitId, entry.kitId).turns + "回合／台"]]
+        : []),
       ["视野距离", formatDistance(model.sensors.sight)],
       ["侦察距离", formatDistance(model.sensors.radar)],
       ["机动", model.speed ?? 100],
@@ -1087,13 +1148,18 @@ const Formation = (() => {
   }
   byId("formationName").oninput = saveDraft;
   function unitStatusBadge(unitId) {
-    const status = !Development.allows(group, unitId) ? "未开发" : !Economy.hasLicense(unitId) ? "未许可" : null;
+    const status = !Development.allows(group, unitId)
+      ? "未开发"
+      : !Economy.hasLicense(unitId)
+        ? "未许可"
+        : null;
     return status ? element("small", "unit-undeveloped", status) : null;
   }
   function render() {
     saveDraft();
     byId("formationGroup").disabled = Net.active && Net.snapshot?.settings?.mode === "quick";
-    const unitCostLimit = restrictions().unitCostLimit, draftPoints = points(draft);
+    const unitCostLimit = restrictions().unitCostLimit,
+      draftPoints = points(draft);
     const unitCostRule = element(
       "span",
       "formation-unit-cost-limit" + (Number.isFinite(unitCostLimit) ? " has-limit" : ""),
@@ -1131,7 +1197,10 @@ const Formation = (() => {
       scrollTop = list.scrollTop;
     list.replaceChildren();
     // 仅调整显示顺序，保留保存序号、搭载引用和 OVER COST 的末尾优先规则。
-    const displayOrder = [], visited = new Set(), cargoByHangar = new Map(), transportRoots = new Map();
+    const displayOrder = [],
+      visited = new Set(),
+      cargoByHangar = new Map(),
+      transportRoots = new Map();
     draft.forEach((entry, i) => {
       if (!entry.preload) return;
       const key = entry.preload.carrierIndex + "/" + entry.preload.hangarId;
@@ -1149,7 +1218,9 @@ const Formation = (() => {
     draft.forEach((entry, i) => {
       if (!entry.preload) appendCargo(i);
     });
-    const loadedRoots = new Set(displayOrder.filter((i) => draft[i].preload).map((i) => transportRoots.get(i)));
+    const loadedRoots = new Set(
+      displayOrder.filter((i) => draft[i].preload).map((i) => transportRoots.get(i)),
+    );
     displayOrder.forEach((i) => {
       const entry = draft[i];
       const row = element(
@@ -1158,7 +1229,8 @@ const Formation = (() => {
         ),
         model = Rules.formationModel(entry);
       row.dataset.formationIndex = String(i);
-      if (loadedRoots.has(transportRoots.get(i))) row.dataset.transportGroup = String(transportRoots.get(i));
+      if (loadedRoots.has(transportRoots.get(i)))
+        row.dataset.transportGroup = String(transportRoots.get(i));
       if (entry.preload) row.dataset.carrierIndex = String(entry.preload.carrierIndex);
       const show = () => {
         GameAudio.selectUnit(model);
@@ -1192,21 +1264,25 @@ const Formation = (() => {
           element(
             "span",
             "overcost-label",
-            plan.reasons[i] === "pilot_banned" ? "驾驶员被禁用，请解除配属" : plan.reasons[i] === "stock" ? "机体库存不足" : plan.reasons[i] === "license"
-              ? "未许可"
-              : plan.reasons[i] === "wip"
-                ? "WIP"
-                : plan.reasons[i] === "faction_mismatch"
-                  ? "阵营不匹配"
-                  : ["pilot_faction", "pilot_required"].includes(plan.reasons[i])
-                    ? "驾驶员配属条件不满足"
-                    : plan.reasons[i] === "not_developed"
-                      ? "尚未开发"
-                      : plan.reasons[i] === "count"
-                        ? "超过单位点数"
-                        : plan.reasons[i] === "not_allowed"
-                          ? "不被允许的单位"
-                          : "OVER COST",
+            plan.reasons[i] === "pilot_banned"
+              ? "驾驶员被禁用，请解除配属"
+              : plan.reasons[i] === "stock"
+                ? "机体库存不足"
+                : plan.reasons[i] === "license"
+                  ? "未许可"
+                  : plan.reasons[i] === "wip"
+                    ? "WIP"
+                    : plan.reasons[i] === "faction_mismatch"
+                      ? "阵营不匹配"
+                      : ["pilot_faction", "pilot_required"].includes(plan.reasons[i])
+                        ? "驾驶员配属条件不满足"
+                        : plan.reasons[i] === "not_developed"
+                          ? "尚未开发"
+                          : plan.reasons[i] === "count"
+                            ? "超过单位点数"
+                            : plan.reasons[i] === "not_allowed"
+                              ? "不被允许的单位"
+                              : "OVER COST",
           ),
         );
       }
@@ -1214,12 +1290,9 @@ const Formation = (() => {
       const prefab = Rules.catalog.prefabs.find((p) => p.id === entry.unitId),
         kit = prefab.weaponKits.find((k) => k.id === entry.kitId);
       const metadata = element("span", "unit-line-meta");
-      metadata.append(unitTags(model, {cost: model.cost, kitName: model.kitName, twoRows: true}));
+      metadata.append(unitTags(model, { cost: model.cost, kitName: model.kitName, twoRows: true }));
       label.title = model.description || "";
-      label.append(
-        element("strong", "", `${i + 1}. ${model.name}`),
-        metadata,
-      );
+      label.append(element("strong", "", `${i + 1}. ${model.name}`), metadata);
       const remove = element("button", "danger", "移除");
 
       remove.onclick = (event) => {
@@ -1231,20 +1304,21 @@ const Formation = (() => {
       const actions = element("div", "formation-row-actions");
       const stockLine = element("span", "formation-stock-line");
       stockLine.append(
-        element(
-          "small",
-          "formation-inventory-count",
-          "库存 " + Economy.quantity(entry.unitId),
-        ),
+        element("small", "formation-inventory-count", "库存 " + Economy.quantity(entry.unitId)),
       );
       const status = unitStatusBadge(entry.unitId);
       if (status) portrait.append(status);
       if (entry.preload) {
         const carrier = draft[entry.preload.carrierIndex],
           note = element("small", "formation-cargo-note"),
-          destination = Rules.formationModel(carrier).name + " · " + hangarLabel(entry.preload.carrierIndex, entry.preload.hangarId);
-        note.append(element("span", "formation-preload-badge", "预先搭载"),
-          element("span", "formation-cargo-destination", destination));
+          destination =
+            Rules.formationModel(carrier).name +
+            " · " +
+            hangarLabel(entry.preload.carrierIndex, entry.preload.hangarId);
+        note.append(
+          element("span", "formation-preload-badge", "预先搭载"),
+          element("span", "formation-cargo-destination", destination),
+        );
         note.title = I18n.text("预先搭载") + " · " + destination;
         stockLine.append(note);
       }
@@ -1254,7 +1328,20 @@ const Formation = (() => {
         produce.type = "button";
         produce.onclick = () => openProduction(entry.unitId);
         const prompt = element("div", "inventory-shortage-prompt");
-        prompt.append(element("span", "", plan.reasons[i] === "license" ? "未许可" : plan.reasons[i] === "pilot_banned" ? "驾驶员被禁用，请解除配属" : plan.reasons[i] === "stock" ? "机体库存不足" : "机体库存不足"), produce);
+        prompt.append(
+          element(
+            "span",
+            "",
+            plan.reasons[i] === "license"
+              ? "未许可"
+              : plan.reasons[i] === "pilot_banned"
+                ? "驾驶员被禁用，请解除配属"
+                : plan.reasons[i] === "stock"
+                  ? "机体库存不足"
+                  : "机体库存不足",
+          ),
+          produce,
+        );
         row.querySelector(":scope > .overcost-label")?.remove();
         row.append(prompt);
       }
@@ -1272,7 +1359,43 @@ const Formation = (() => {
       board.onclick = () => openBoarding(i);
       const kitButton = element("button", "formation-kit-button", "切换套件");
       kitButton.onclick = () => openKitPicker(i);
-      actions.append(details, kitButton, board, pilot, remove);
+      const forms = NormalForms.options(ART, entry.unitId);
+      const transform = element("button", "formation-transform-button", "变形");
+      transform.hidden = !forms.length;
+      transform.onclick = async () => {
+        const dialog = document.createElement("dialog");
+        dialog.className = "game-dialog";
+        dialog.append(element("h3", "", "选择机库形态"));
+        for (const form of forms) {
+          const target = ART.prefabs.find((p) => p.id === form.unitId),
+            button = element("button", "", target.name);
+          button.onclick = () => {
+            try {
+              const next = { ...entry, unitId: target.id, kitId: Economy.defaultKit(target.id) };
+              const preview = draft.map((e, j) => (j === i ? next : e));
+              Rules.validateFormation(preview, Infinity, Rules.catalog.formation.maxUnits);
+              Economy.transformStock(entry.unitId, target.id);
+              draft[i] = next;
+              saveDraft();
+              render();
+              dialog.close();
+              dialog.remove();
+            } catch (error) {
+              GameDialog.alert(error.message);
+            }
+          };
+          dialog.append(button);
+        }
+        const close = element("button", "", "取消");
+        close.onclick = () => {
+          dialog.close();
+          dialog.remove();
+        };
+        dialog.append(close);
+        document.body.append(dialog);
+        dialog.showModal();
+      };
+      actions.append(details, kitButton, transform, board, pilot, remove);
       label.append(stockLine);
       row.append(portrait, label, actions);
       list.append(row);
@@ -1334,10 +1457,10 @@ const Formation = (() => {
       if (!same(i - columns)) edges.push(`M${left},${top}H${right}`);
       else if (columns === 1) {
         // Indented cargo shifts the left perimeter; connect the step at the shared edge.
-        const previousLeft = Math.max(minX, cells[i-1].left-gapX);
-        const previousRight = Math.min(maxX, cells[i-1].right+gapX);
-        if (Math.abs(previousLeft-left) > .5) edges.push(`M${previousLeft},${top}H${left}`);
-        if (Math.abs(previousRight-right) > .5) edges.push(`M${previousRight},${top}H${right}`);
+        const previousLeft = Math.max(minX, cells[i - 1].left - gapX);
+        const previousRight = Math.min(maxX, cells[i - 1].right + gapX);
+        if (Math.abs(previousLeft - left) > 0.5) edges.push(`M${previousLeft},${top}H${left}`);
+        if (Math.abs(previousRight - right) > 0.5) edges.push(`M${previousRight},${top}H${right}`);
       }
       if (!same(i + columns)) edges.push(`M${left},${bottom}H${right}`);
       if (i % columns === 0 || !same(i - 1)) edges.push(`M${left},${top}V${bottom}`);
@@ -1371,8 +1494,7 @@ const Formation = (() => {
         ? byId("formationDetailHangars").querySelector(`[data-preload-pilot="${index}"]`)
         : byId("formationDetailPilot");
       (target || byId("formationDetailPilot")).focus();
-    }
-    else
+    } else
       byId("formationUnits")
         .querySelector('[data-formation-index="' + index + '"] .formation-pilot-button')
         ?.focus();
@@ -1389,7 +1511,10 @@ const Formation = (() => {
     list.replaceChildren();
     const command = PilotSystem.commandUnit(model);
     const available = pilotStore.pilots.filter(
-      (p) => !p.needsRecruitment && PilotSystem.canAssign(p, group) && PilotSystem.allowed(p, restrictions()),
+      (p) =>
+        !p.needsRecruitment &&
+        PilotSystem.canAssign(p, group) &&
+        PilotSystem.allowed(p, restrictions()),
     );
     for (const profile of [null, ...available]) {
       const id = profile?.id || null,
@@ -1431,7 +1556,11 @@ const Formation = (() => {
           ),
         );
       if (profile) {
-        const progress = element("small", "pilot-roster-progress", `Lv.${profile.level} · ${pilotExperienceText(profile)}`);
+        const progress = element(
+          "small",
+          "pilot-roster-progress",
+          `Lv.${profile.level} · ${pilotExperienceText(profile)}`,
+        );
         progress.append(pilotCostTag(profile));
         details.append(progress, SkillControls.pilotSummary(profile));
       }
@@ -1687,20 +1816,30 @@ const Formation = (() => {
     const previous = byId("formationCatalog").querySelector('[aria-selected="true"]');
     if (previous !== card) previous?.setAttribute("aria-selected", "false");
     card.setAttribute("aria-selected", "true");
-    byId("addFormationUnit").disabled = points(draft) + pickerWeight() > unitLimit() || !canAddUnit(prefab);
+    byId("addFormationUnit").disabled =
+      points(draft) + pickerWeight() > unitLimit() || !canAddUnit(prefab);
     renderPickerCost();
   }
   function renderCatalog() {
     const query = byId("formationSearch").value.trim().toLocaleLowerCase();
     const list = byId("formationCatalog");
     const renderKey = JSON.stringify([
-      catalogRevision, group, PlayerProfile.faction(), I18n.language,
+      catalogRevision,
+      group,
+      PlayerProfile.faction(),
+      I18n.language,
       matchMedia("(max-width:720px)").matches,
-      query, catalogFilters, byId("formationStock").value, [...pickerKits], pickerContext,
-      pickerContext ? draft.map(entry => [entry.unitId, entry.kitId, entry.preload]) : null,
+      query,
+      catalogFilters,
+      byId("formationStock").value,
+      [...pickerKits],
+      pickerContext,
+      pickerContext ? draft.map((entry) => [entry.unitId, entry.kitId, entry.preload]) : null,
     ]);
     if (renderKey === catalogRenderKey) {
-      const selected = Rules.catalog.prefabs.find(prefab => prefab.id === byId("formationPrefab").value);
+      const selected = Rules.catalog.prefabs.find(
+        (prefab) => prefab.id === byId("formationPrefab").value,
+      );
       const card = selected && list.querySelector(`[data-unit-id="${selected.id}"]`);
       if (card) selectCatalogUnit(selected, card);
       else {
@@ -1713,11 +1852,18 @@ const Formation = (() => {
       .filter(
         (prefab) =>
           pickerCompatible(prefab) &&
-          (byId("formationStock").value === "licensed" ? Economy.hasLicense(prefab.id)
-            : byId("formationStock").value === "owned" ? Economy.quantity(prefab.id) > 0 : true),
+          (byId("formationStock").value === "licensed"
+            ? Economy.hasLicense(prefab.id)
+            : byId("formationStock").value === "owned"
+              ? Economy.quantity(prefab.id) > 0
+              : true),
       )
-      .sort(UnitCatalog.compareDevelopedCost(group,
-        byId("formationStock").value === "licensed" ? () => true : undefined));
+      .sort(
+        UnitCatalog.compareDevelopedCost(
+          group,
+          byId("formationStock").value === "licensed" ? () => true : undefined,
+        ),
+      );
     if (!prefabs.some((p) => p.id === byId("formationPrefab").value))
       byId("formationPrefab").value = prefabs[0]?.id || "";
     const scroll = list.scrollTop;
@@ -1741,16 +1887,22 @@ const Formation = (() => {
       const title = element("strong", "", prefab.name);
       const info = element("span", "catalog-unit-info");
       const costs = prefab.weaponKits.map((k) => prefab.stats.cost + k.cost);
-      const selectedKit = prefab.weaponKits.find(kit => kit.id === pickerKits.get(prefab.id)) || prefab.weaponKits[0];
-      const costLabel = Math.min(...costs) === Math.max(...costs)
-        ? Math.min(...costs) : Math.min(...costs) + "～" + Math.max(...costs);
-      info.append(title, unitTags(prefab, {cost: costLabel, kitName: selectedKit.name}));
+      const selectedKit =
+        prefab.weaponKits.find((kit) => kit.id === pickerKits.get(prefab.id)) ||
+        prefab.weaponKits[0];
+      const costLabel =
+        Math.min(...costs) === Math.max(...costs)
+          ? Math.min(...costs)
+          : Math.min(...costs) + "～" + Math.max(...costs);
+      info.append(title, unitTags(prefab, { cost: costLabel, kitName: selectedKit.name }));
       const stockLine = element("span", "formation-stock-line");
       stockLine.append(
         element(
           "small",
           "formation-inventory-count",
-          "机体库存 " + Economy.quantity(prefab.id) + (Economy.hasLicense(prefab.id) ? "" : " · 未许可"),
+          "机体库存 " +
+            Economy.quantity(prefab.id) +
+            (Economy.hasLicense(prefab.id) ? "" : " · 未许可"),
         ),
       );
       info.append(stockLine);
@@ -1918,47 +2070,92 @@ const Formation = (() => {
   async function replenish(entries, faction = group) {
     const plan = Economy.purchasePlan(entries);
     if (!plan.items.length) return true;
-    const unavailable = plan.items.filter(item => !item.offer ||
-      !Development.allows(faction, item.unitId));
+    const unavailable = plan.items.filter(
+      (item) => !item.offer || !Development.allows(faction, item.unitId),
+    );
     if (unavailable.length) {
-      showLicenseDialog("无法补充库存", "存在尚未开发或无法生产的单位，本次未扣费。",
-        [...new Set(unavailable.map(item => item.unitId))], [["确认", "acknowledgeUnavailableUnits"]]);
+      showLicenseDialog(
+        "无法补充库存",
+        "存在尚未开发或无法生产的单位，本次未扣费。",
+        [...new Set(unavailable.map((item) => item.unitId))],
+        [["确认", "acknowledgeUnavailableUnits"]],
+      );
       return false;
     }
-    const original = JSON.stringify(entries), originalGroup = group, originalIndex = index;
+    const original = JSON.stringify(entries),
+      originalGroup = group,
+      originalIndex = index;
     const confirmed = await GameDialog.confirm("购买缺少的部署许可，并补充机体库存？", {
       title: "一键补充库存",
-      items: [...plan.items.map(item => {
-        const model = UnitModels[Economy.defaultModel(item.unitId)];
-        return (model?.name || item.unitId) + " · " +
-          (item.kind === "licenses" ? "部署许可（赠送默认配置1台）" : item.kind === "inventory" ? "机体" : model?.kitName || "套件") + " ×" + item.count;
-      }), "资金：" + formatNumber(plan.money), "物资：" + formatNumber(plan.supplies)],
+      items: [
+        ...plan.items.map((item) => {
+          const model = UnitModels[Economy.defaultModel(item.unitId)];
+          return (
+            (model?.name || item.unitId) +
+            " · " +
+            (item.kind === "licenses"
+              ? "部署许可（赠送默认配置1台）"
+              : item.kind === "inventory"
+                ? "机体"
+                : model?.kitName || "套件") +
+            " ×" +
+            item.count
+          );
+        }),
+        "资金：" + formatNumber(plan.money),
+        "物资：" + formatNumber(plan.supplies),
+      ],
       confirmText: "确认购买",
     });
     if (!confirmed) return false;
-    if (group !== originalGroup || index !== originalIndex || JSON.stringify(entries) !== original ||
-        JSON.stringify(Economy.purchasePlan(entries)) !== JSON.stringify(plan)) {
-      note("编组或库存已变化，请重新确认。"); return false;
+    if (
+      group !== originalGroup ||
+      index !== originalIndex ||
+      JSON.stringify(entries) !== original ||
+      JSON.stringify(Economy.purchasePlan(entries)) !== JSON.stringify(plan)
+    ) {
+      note("编组或库存已变化，请重新确认。");
+      return false;
     }
     try {
       const result = Economy.purchaseMissingStock(entries, faction);
-      if (!result.ok) { note(result.reason === "funds" ? "资金或物资不足，未扣费。" : "无法补充库存，未扣费。"); return false; }
-      note("已补充机体库存。"); return true;
-    } catch (error) { note("库存购买失败：" + Economy.errorMessage(error)); return false; }
+      if (!result.ok) {
+        note(result.reason === "funds" ? "资金或物资不足，未扣费。" : "无法补充库存，未扣费。");
+        return false;
+      }
+      note("已补充机体库存。");
+      return true;
+    } catch (error) {
+      note("库存购买失败：" + Economy.errorMessage(error));
+      return false;
+    }
   }
   let reserveAcknowledgment = "";
   async function checkBattlefieldReserves(entries, proceed) {
     if (Net.snapshot?.settings.mode !== "battlefield") return proceed();
     const counts = new Map();
     for (const entry of entries) counts.set(entry.unitId, (counts.get(entry.unitId) || 0) + 1);
-    const signature = (Net.snapshot?.matchId || Net.room || "") + JSON.stringify([...counts].map(([id, count]) => [id,count,Economy.quantity(id)]));
+    const signature =
+      (Net.snapshot?.matchId || Net.room || "") +
+      JSON.stringify([...counts].map(([id, count]) => [id, count, Economy.quantity(id)]));
     if (signature === reserveAcknowledgment) return proceed();
     const missing = [...counts].filter(([id, count]) => Economy.quantity(id) - count < 2);
-    if (missing.length && !await GameDialog.confirm("以下单位没有预备库存，确定要准备吗？", {
-      title:"预备库存不足",
-      items:missing.map(([id,count]) => (UnitModels[Economy.defaultModel(id)]?.name || id) + " · 出击 " + count + " · 备用 " + Math.max(0,Economy.quantity(id)-count)),
-      confirmText:"确定准备",
-    })) return;
+    if (
+      missing.length &&
+      !(await GameDialog.confirm("以下单位没有预备库存，确定要准备吗？", {
+        title: "预备库存不足",
+        items: missing.map(
+          ([id, count]) =>
+            (UnitModels[Economy.defaultModel(id)]?.name || id) +
+            " · 出击 " +
+            count +
+            " · 备用 " +
+            Math.max(0, Economy.quantity(id) - count),
+        ),
+        confirmText: "确定准备",
+      }))
+    )
+      return;
     reserveAcknowledgment = signature;
     return proceed();
   }
@@ -1966,12 +2163,24 @@ const Formation = (() => {
     const originalProceed = proceed;
     proceed = () => checkBattlefieldReserves(entries, originalProceed);
     const quick = Net.snapshot?.settings.mode === "quick";
-    if (quick ? !Economy.licensePlan(entries).items.length : !Economy.purchasePlan(entries).items.length) return proceed();
-    showLicenseDialog(quick ? "部署许可不足" : "出战库存不足", quick ? "快速战可凭部署许可或完整机体库存出战。不满足条件的单位不会生成。" : "编组缺少机体库存。强制准备后，不足的单位不会生成。", [], [
-      ["取消", "cancelMissingStock"],
-      ["去往机库", "openStockWarehouse", () => open()],
-      ["强制准备", "forceReadyWithoutStock", proceed],
-    ]);
+    if (
+      quick
+        ? !Economy.licensePlan(entries).items.length
+        : !Economy.purchasePlan(entries).items.length
+    )
+      return proceed();
+    showLicenseDialog(
+      quick ? "部署许可不足" : "出战库存不足",
+      quick
+        ? "快速战可凭部署许可或完整机体库存出战。不满足条件的单位不会生成。"
+        : "编组缺少机体库存。强制准备后，不足的单位不会生成。",
+      [],
+      [
+        ["取消", "cancelMissingStock"],
+        ["去往机库", "openStockWarehouse", () => open()],
+        ["强制准备", "forceReadyWithoutStock", proceed],
+      ],
+    );
   }
   function openProduction(unitId) {
     closeDetail();
@@ -2090,7 +2299,13 @@ const Formation = (() => {
       "",
       `${I18n.text("悟性")} ${profile.comprehension} · ${I18n.text("最高等级")} ${profile.maxLevel}`,
     );
-    growth.append(element("span", "unit-summary-tag cost", `COST ${PilotSystem.aceBaseCost(profile)} + ${profile.costPerLevel}/Lv.`));
+    growth.append(
+      element(
+        "span",
+        "unit-summary-tag cost",
+        `COST ${PilotSystem.aceBaseCost(profile)} + ${profile.costPerLevel}/Lv.`,
+      ),
+    );
     const description = element(
       "p",
       "ace-biography",
@@ -2313,15 +2528,25 @@ const Formation = (() => {
     if (aceRecruit.open) renderAceRecruitment();
   });
   function pilotCostTag(pilot) {
-    return element("span", "unit-summary-tag cost pilot-cost-tag", "COST +" + PilotSystem.cost(pilot));
+    return element(
+      "span",
+      "unit-summary-tag cost pilot-cost-tag",
+      "COST +" + PilotSystem.cost(pilot),
+    );
   }
   function pilotExperienceText(pilot) {
     return `EXP ${pilot.experience}/${pilot.level >= PilotSystem.maxLevel(pilot) ? "MAX" : PilotSystem.experienceRequired(pilot.level, pilot)}`;
   }
   function populatePilotFilters() {
-    const filter = byId("pilotRosterFilter"), selected = filter.value || "all";
-    filter.replaceChildren(new Option(I18n.text("全部"), "all"), new Option(I18n.text("PMC驾驶员"), "custom"),
-      ...Rules.factions.map(faction => new Option(PlayerProfile.displayFaction(faction), faction)));
+    const filter = byId("pilotRosterFilter"),
+      selected = filter.value || "all";
+    filter.replaceChildren(
+      new Option(I18n.text("全部"), "all"),
+      new Option(I18n.text("PMC驾驶员"), "custom"),
+      ...Rules.factions.map(
+        (faction) => new Option(PlayerProfile.displayFaction(faction), faction),
+      ),
+    );
     filter.value = selected;
   }
   populatePilotFilters();
@@ -2334,11 +2559,17 @@ const Formation = (() => {
       `驾驶员 ${pilotStore.pilots.length} 名 · COST +${pilotStore.pilots.reduce((sum, p) => sum + PilotSystem.cost(p), 0)}`;
     if (!pilotStore.pilots.length)
       list.append(
-        element("p", "muted", "点击下方“新增PMC驾驶员”创建。未配属时使用单位所属阵营的默认驾驶员。"),
+        element(
+          "p",
+          "muted",
+          "点击下方“新增PMC驾驶员”创建。未配属时使用单位所属阵营的默认驾驶员。",
+        ),
       );
     const search = byId("pilotRosterSearch").value.trim().toLocaleLowerCase();
-    const visible = pilotStore.pilots.filter((p) =>
-      (p.name + " " + I18n.pilotName(p)).toLocaleLowerCase().includes(search) && PilotSystem.matchesFilter(p, byId("pilotRosterFilter").value),
+    const visible = pilotStore.pilots.filter(
+      (p) =>
+        (p.name + " " + I18n.pilotName(p)).toLocaleLowerCase().includes(search) &&
+        PilotSystem.matchesFilter(p, byId("pilotRosterFilter").value),
     );
     if (pilotStore.pilots.length && !visible.length)
       list.append(element("p", "muted", "没有符合条件的驾驶员。"));
@@ -2354,10 +2585,18 @@ const Formation = (() => {
         : element("span", "", I18n.pilotName(p));
       pilotName.dataset.i18nIgnore = "";
       const heading = element("span", "pilot-roster-heading");
-      const state = element("small", "pilot-recruit-state", p.needsRecruitment ? "待回归" : "已招募");
+      const state = element(
+        "small",
+        "pilot-recruit-state",
+        p.needsRecruitment ? "待回归" : "已招募",
+      );
       state.title = I18n.text(p.needsRecruitment ? "待回归" : "已招募");
       heading.append(pilotName, element("span", "", `Lv.${p.level}`), state);
-      const progress = element("small", "pilot-roster-progress", (p.ace ? "ACE · " : "") + pilotExperienceText(p));
+      const progress = element(
+        "small",
+        "pilot-roster-progress",
+        (p.ace ? "ACE · " : "") + pilotExperienceText(p),
+      );
       if (!p.ace && p.points > 0) {
         const points = element("span", "pilot-training-points", I18n.text("强化点+"));
         points.title = I18n.text("可用强化点") + "：" + p.points;
@@ -2374,7 +2613,6 @@ const Formation = (() => {
       if (p.ace) {
         const tags = aceTags(PilotSystem.aceProfile(p));
         factionTags.append(...tags.children);
-
       } else {
         const faction = element("span", "faction-tag", "PMC");
         faction.dataset.faction = "PMC";
@@ -2417,7 +2655,6 @@ const Formation = (() => {
       actions.append(details);
       if (!p.ace) actions.append(remove);
       if (p.needsRecruitment) {
-
         const recruit = element("button", "", "重新招募");
         recruit.type = "button";
         recruit.onclick = () => openAceRecruitment(p.aceId);
@@ -2482,11 +2719,7 @@ const Formation = (() => {
     renderPilotRoster();
     // Refresh a submitted room squad after training or rank changes. The room
     // otherwise retains the profile captured when the player last readied.
-    if (
-      Net.active &&
-      canEditRoom()
-    )
-      Net.request("update_formation", { formation: current() });
+    if (Net.active && canEditRoom()) Net.request("update_formation", { formation: current() });
     return clean;
   }
   function editPilot(p = null) {
@@ -2619,8 +2852,12 @@ const Formation = (() => {
     resetTraining.textContent = "重置属性点 · 资金 " + 1000 * pilotEdit.level;
     resetTraining.disabled = pilotIsNew || !Economy.affordable({ money: 1000 * pilotEdit.level });
     byId("customPilotProgress").replaceChildren(
-      document.createTextNode(`Lv.${pilotEdit.level} · `), pilotCostTag(pilotEdit),
-      document.createTextNode(` · ${pilotExperienceText(pilotEdit)}${pilotEdit.ace ? " · ACE · " + I18n.text("悟性") + " " + PilotSystem.aceProfile(pilotEdit).comprehension : " · 强化点 " + pilotEdit.points}`));
+      document.createTextNode(`Lv.${pilotEdit.level} · `),
+      pilotCostTag(pilotEdit),
+      document.createTextNode(
+        ` · ${pilotExperienceText(pilotEdit)}${pilotEdit.ace ? " · ACE · " + I18n.text("悟性") + " " + PilotSystem.aceProfile(pilotEdit).comprehension : " · 强化点 " + pilotEdit.points}`,
+      ),
+    );
     renderPilotRecord(byId("customPilotRecord"), pilotEdit);
     byId("customPilotSkills").replaceChildren(SkillControls.pilotSummary(pilotEdit));
     learnPilotSkillButton.hidden = !!pilotEdit.ace;
@@ -2664,7 +2901,11 @@ const Formation = (() => {
       " " +
       (PilotSystem.demotionCost(pilotEdit) ?? "—");
     byId("createPilotConfirm").textContent =
-      I18n.text("招募PMC驾驶员") + " · " + I18n.text("资金") + " " + PilotSystem.customRecruitmentCost;
+      I18n.text("招募PMC驾驶员") +
+      " · " +
+      I18n.text("资金") +
+      " " +
+      PilotSystem.customRecruitmentCost;
     byId("createPilotConfirm").disabled = !Economy.affordable({
       money: PilotSystem.customRecruitmentCost,
     });
@@ -2846,10 +3087,12 @@ const Formation = (() => {
     renderPilotStats();
   };
   byId("customPilotPersonality").onchange = () => {
-    if (pilotEdit && !pilotEdit.ace) savePilotIdentity({ personality: byId("customPilotPersonality").value || null });
+    if (pilotEdit && !pilotEdit.ace)
+      savePilotIdentity({ personality: byId("customPilotPersonality").value || null });
   };
   byId("customPilotOriginFaction").onchange = () => {
-    if (pilotEdit && !pilotEdit.ace) savePilotIdentity({ originFaction: byId("customPilotOriginFaction").value });
+    if (pilotEdit && !pilotEdit.ace)
+      savePilotIdentity({ originFaction: byId("customPilotOriginFaction").value });
   };
   byId("createPilotConfirm").onclick = () => {
     if (!pilotEdit || !pilotIsNew) return;
@@ -3136,6 +3379,20 @@ const Deployment = (() => {
       "assembly",
       "finished",
     ].includes(phase);
+    let transform = byId("deploymentTransform");
+    if (!transform) {
+      transform = element("button", "", "变形");
+      transform.id = "deploymentTransform";
+      byId("confirmDeployment").before(transform);
+    }
+    const actor = getUnit(selected),
+      forms = actor
+        ? NormalForms.options(ART, Rules.modelOf(actor).prefabId).filter((f) => f.skillId)
+        : [];
+    transform.hidden =
+      phase !== "deployment" || !actor || actor.embarked || !Net.canControl(actor) || !forms.length;
+    transform.onclick = () =>
+      Net.request("deployment_transform", { unitId: actor.id, skillId: forms[0].skillId });
     if (phase !== "deployment") return;
     const seat = team();
     byId("deploymentHint").textContent = game.campaignBattlefield
@@ -3146,9 +3403,11 @@ const Deployment = (() => {
       : seat === null
         ? "观战：等待两队部署。"
         : `${teamName(Rules.seatTeam(seat))}全队共享部署区 · 选中己方单位，再点击高亮空格调整位置。`;
-    const roster = byId("deploymentRoster"), scrollTop = roster.scrollTop;
+    const roster = byId("deploymentRoster"),
+      scrollTop = roster.scrollTop;
     roster.replaceChildren();
-    const living = game.units.filter(u => u.hp > 0), cargo = new Map();
+    const living = game.units.filter((u) => u.hp > 0),
+      cargo = new Map();
     for (const unit of living) {
       const carrierId = unit.embarked?.carrierId;
       if (!carrierId) continue;
@@ -3158,7 +3417,7 @@ const Deployment = (() => {
     function family(root, seen = new Set()) {
       if (seen.has(root.id)) return [];
       seen.add(root.id);
-      return [root, ...(cargo.get(root.id) || []).flatMap(unit => family(unit, seen))];
+      return [root, ...(cargo.get(root.id) || []).flatMap((unit) => family(unit, seen))];
     }
     function icon(u) {
       const button = document.createElement("button");
@@ -3168,7 +3427,8 @@ const Deployment = (() => {
       button.classList.toggle("is-staged", !!u.deploymentStaged);
       button.classList.toggle("is-passenger", !!u.embarked);
       button.disabled = !canEditUnit(u);
-      button.title = unitName(u) + (u.embarked ? " · 预先搭载" : u.deploymentStaged ? " · 待放置" : " · 已部署");
+      button.title =
+        unitName(u) + (u.embarked ? " · 预先搭载" : u.deploymentStaged ? " · 待放置" : " · 已部署");
       button.setAttribute("aria-label", button.title);
       button.setAttribute("role", "option");
       button.setAttribute("aria-selected", String(selected === u.id));
@@ -3183,7 +3443,7 @@ const Deployment = (() => {
       button.onclick = () => choose(u);
       return button;
     }
-    for (const root of living.filter(unit => !unit.embarked)) {
+    for (const root of living.filter((unit) => !unit.embarked)) {
       const members = family(root);
       if (!members.some(canEditUnit)) continue;
       if (members.length === 1) roster.append(icon(root));
@@ -3191,14 +3451,18 @@ const Deployment = (() => {
         const group = element("div", "deployment-transport-group");
         group.dataset.carrierId = root.id;
         group.setAttribute("role", "group");
-        group.setAttribute("aria-label", unitName(root) + " · " + I18n.text("格纳库") + " " + (members.length - 1));
+        group.setAttribute(
+          "aria-label",
+          unitName(root) + " · " + I18n.text("格纳库") + " " + (members.length - 1),
+        );
         group.append(...members.map(icon));
         roster.append(group);
       }
     }
     roster.scrollTop = scrollTop;
     const canChange = canEdit();
-    byId("deploymentUnplace").disabled = !canChange || !canEditUnit(getUnit(selected)) || !!getUnit(selected)?.embarked;
+    byId("deploymentUnplace").disabled =
+      !canChange || !canEditUnit(getUnit(selected)) || !!getUnit(selected)?.embarked;
     byId("deploymentClear").disabled = !canChange;
     byId("deploymentAuto").disabled = !canChange;
     byId("confirmDeployment").disabled = !canEdit() || !!pendingMovement();
@@ -3228,34 +3492,54 @@ const Deployment = (() => {
       }
     }
   }
-  let dragging = null, pendingDrop = null;
+  let dragging = null,
+    pendingDrop = null;
   function failedDrop(message = "加入失败") {
     note(message);
     GameAudio.play("underAttackSound");
   }
   function beginDrag(event) {
     if (phase !== "deployment" || ["hangar-board", "hangar-launch"].includes(mode)) return false;
-    const cell = cellAt(event), target = cell && Rules.at(game, cell.x, cell.y);
+    const cell = cellAt(event),
+      target = cell && Rules.at(game, cell.x, cell.y);
     let unit = getUnit(selected);
-    if (!unit || !Rules.cells(unit).some(p => p.x === cell?.x && p.y === cell?.y)) unit = target;
+    if (!unit || !Rules.cells(unit).some((p) => p.x === cell?.x && p.y === cell?.y)) unit = target;
     if (!canEditUnit(unit) || unit.embarked || unit.deploymentStaged || unit.facility) return false;
-    dragging = { unitId:unit.id, session, moved:false, x:event.clientX, y:event.clientY, image:new Image() };
+    dragging = {
+      unitId: unit.id,
+      session,
+      moved: false,
+      x: event.clientX,
+      y: event.clientY,
+      image: new Image(),
+    };
     dragging.image.src = unitIcon(unit.model, unit.pilot);
     return true;
   }
   function moveDrag(event) {
     if (!dragging || dragging.session !== session || phase !== "deployment") return cancelDrag();
-    dragging.x = event.clientX; dragging.y = event.clientY;
-    if (!dragging.moved) { dragging.moved = true; selected = dragging.unitId; update(); }
+    dragging.x = event.clientX;
+    dragging.y = event.clientY;
+    if (!dragging.moved) {
+      dragging.moved = true;
+      selected = dragging.unitId;
+      update();
+    }
   }
-  function cancelDrag() { dragging = null; }
+  function cancelDrag() {
+    dragging = null;
+  }
   function sendDrop(unit, x, y, message) {
     if (Net.active) {
-      const id = Net.request("deploy", { unitId:unit.id, x, y });
+      const id = Net.request("deploy", { unitId: unit.id, x, y });
       if (id) pendingDrop = { id, message };
     } else {
-      try { Rules.deploy(game, team(), unit.id, x, y); GameAudio.selectUnit(unit); }
-      catch { failedDrop(message); }
+      try {
+        Rules.deploy(game, team(), unit.id, x, y);
+        GameAudio.selectUnit(unit);
+      } catch {
+        failedDrop(message);
+      }
       update();
     }
   }
@@ -3263,10 +3547,17 @@ const Deployment = (() => {
     const drag = dragging;
     cancelDrag();
     if (!drag?.moved || drag.session !== session || phase !== "deployment") return;
-    const unit = getUnit(drag.unitId), cell = cellAt(event);
+    const unit = getUnit(drag.unitId),
+      cell = cellAt(event);
     if (!canEditUnit(unit)) return;
     const rect = byId("map").getBoundingClientRect();
-    if (!cell || event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom)
+    if (
+      !cell ||
+      event.clientX < rect.left ||
+      event.clientX > rect.right ||
+      event.clientY < rect.top ||
+      event.clientY > rect.bottom
+    )
       return failedDrop("部署失败");
     const target = Rules.at(game, cell.x, cell.y);
     if (target && target.id !== unit.id) {
@@ -3274,7 +3565,8 @@ const Deployment = (() => {
         HangarUI.openDeploymentBoarding(unit, target);
         return;
       }
-      if (!canEditUnit(target) || !Rules.squadJoinTarget(game,unit,target.x,target.y,[unit])) return failedDrop();
+      if (!canEditUnit(target) || !Rules.squadJoinTarget(game, unit, target.x, target.y, [unit]))
+        return failedDrop();
       squadSingleMove = false;
       sendDrop(unit, target.x, target.y, "加入失败");
     } else {
@@ -3284,29 +3576,49 @@ const Deployment = (() => {
   }
   function dropRejected(id) {
     if (!pendingDrop || pendingDrop.id !== id) return false;
-    const message = pendingDrop.message; pendingDrop = null;
-    failedDrop(message); return true;
+    const message = pendingDrop.message;
+    pendingDrop = null;
+    failedDrop(message);
+    return true;
   }
-  function dropAccepted(id) { if (pendingDrop?.id === id) pendingDrop = null; }
+  function dropAccepted(id) {
+    if (pendingDrop?.id === id) pendingDrop = null;
+  }
   function drawDrag(ctx) {
     if (!dragging?.moved || dragging.session !== session || phase !== "deployment") return;
-    const box = byId("map").getBoundingClientRect(), size = Math.max(36, Math.min(72, mapGeo.tile * 1.5));
-    ctx.save();ctx.globalAlpha = .8;
+    const box = byId("map").getBoundingClientRect(),
+      size = Math.max(36, Math.min(72, mapGeo.tile * 1.5));
+    ctx.save();
+    ctx.globalAlpha = 0.8;
     if (dragging.image.complete && dragging.image.naturalWidth)
-      ctx.drawImage(dragging.image, dragging.x-box.left-size/2, dragging.y-box.top-size/2, size, size);
+      ctx.drawImage(
+        dragging.image,
+        dragging.x - box.left - size / 2,
+        dragging.y - box.top - size / 2,
+        size,
+        size,
+      );
     ctx.restore();
   }
   function updateClearance() {
-    const panel = byId("deploymentBottomBar"), scene = byId("gameScene");
+    const panel = byId("deploymentBottomBar"),
+      scene = byId("gameScene");
     let clearance = 0;
     if (!panel.hidden) {
-      const top = Math.min(panel.getBoundingClientRect().top, byId("deploymentAuto").getBoundingClientRect().top);
+      const top = Math.min(
+        panel.getBoundingClientRect().top,
+        byId("deploymentAuto").getBoundingClientRect().top,
+      );
       clearance = Math.ceil(byId("mapWrap").getBoundingClientRect().bottom - top + 10);
     }
-    scene.style.setProperty("--deployment-panel-clearance",clearance+"px");
+    scene.style.setProperty("--deployment-panel-clearance", clearance + "px");
     // Commands belong to the scene; the portrait strip belongs to mapWrap.
-    const sceneClearance = clearance ? clearance + scene.getBoundingClientRect().bottom - byId("mapWrap").getBoundingClientRect().bottom : 0;
-    scene.style.setProperty("--deployment-command-clearance",sceneClearance+"px");
+    const sceneClearance = clearance
+      ? clearance +
+        scene.getBoundingClientRect().bottom -
+        byId("mapWrap").getBoundingClientRect().bottom
+      : 0;
+    scene.style.setProperty("--deployment-command-clearance", sceneClearance + "px");
   }
   new ResizeObserver(updateClearance).observe(byId("deploymentBottomBar"));
   window.addEventListener("resize", updateClearance);
@@ -3318,7 +3630,9 @@ const Deployment = (() => {
         if (action === "stage_deployment") Rules.stageDeployment(game, team(), id);
         if (action === "clear_deployment") Rules.clearDeployment(game, team());
         if (action === "auto_place_deployment") Rules.autoPlaceDeployment(game, team());
-      } catch (error) { note(error.message); }
+      } catch (error) {
+        note(error.message);
+      }
       update();
     }
   }
@@ -3329,7 +3643,10 @@ const Deployment = (() => {
     if (pendingMovement()) return;
     if (!canEdit()) return;
     if (Net.active) return Net.request("confirm_deployment");
-    if (game.ai && !game.deployment[1]) { Rules.aiDeployment(game, 1); Rules.confirmDeployment(game, 1); }
+    if (game.ai && !game.deployment[1]) {
+      Rules.aiDeployment(game, 1);
+      Rules.confirmDeployment(game, 1);
+    }
     const finished = Rules.confirmDeployment(game, team());
     GameAudio.play("deploymentSound");
     if (finished) {
@@ -3346,8 +3663,20 @@ const Deployment = (() => {
   return {
     render,
     click,
-    beginDrag, moveDrag, drop, cancelDrag, drawDrag, dropAccepted, dropRejected,
-    isDragging: id => !!(dragging?.moved && dragging.unitId === id && dragging.session === session && phase === "deployment"),
+    beginDrag,
+    moveDrag,
+    drop,
+    cancelDrag,
+    drawDrag,
+    dropAccepted,
+    dropRejected,
+    isDragging: (id) =>
+      !!(
+        dragging?.moved &&
+        dragging.unitId === id &&
+        dragging.session === session &&
+        phase === "deployment"
+      ),
     team,
     canEdit,
     canEditUnit,
@@ -3355,7 +3684,8 @@ const Deployment = (() => {
     areaSeat,
     reset: () => {
       previewSeat = 0;
-      cancelDrag(); pendingDrop = null;
+      cancelDrag();
+      pendingDrop = null;
     },
   };
 })();

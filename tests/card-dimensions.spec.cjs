@@ -29,10 +29,13 @@ for (const width of [1440, 390, 360]) test(`unit lists keep equal card dimension
   await page.evaluate(() => MenuShell.go('production'));
   await equal('#productionList > .production-unit','workshop');
   await page.evaluate(() => MenuShell.go('formation'));
-  await equal('#formationUnits > .formation-row','formation');
+  await equal('#formationUnits > .formation-row:not(.formation-preloaded-row)','formation');
   await expect(page.locator('#formationUnits > .formation-hangar-divider')).toHaveCount(0);
   const positions=await page.locator('#formationUnits > .formation-row').evaluateAll(rows=>rows.map(row=>({x:row.getBoundingClientRect().x,y:row.getBoundingClientRect().y})));
-  expect(positions[0].y === positions[1].y).toBe(width > 1100);
+  // Current layout is one column on both devices; passengers intentionally
+  // indent below their carrier and therefore have a slightly narrower card.
+  expect(positions[0].y < positions[1].y).toBe(true);
+  expect(positions.at(-1).x).toBeGreaterThan(positions.at(-2).x);
   const pilot=page.locator('#formationUnits .formation-pilot-button').first();
   await expect(pilot).toHaveCSS('text-align','center');
   await expect(pilot.locator('.pilot-name-viewport')).toHaveCount(0);

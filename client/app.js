@@ -477,7 +477,7 @@ function updateContents() {
   );
   byId("modeLabel").textContent = Net.active
     ? (Net.local ? "离线" : "联机") +
-      ({ battlefield: "雇佣兵战争模式", campaign: "历史战役模式", quick: "快速战", regular: "常规战" }[Net.snapshot?.settings?.mode] || "常规战") +
+      ({ sweep: "战场扫荡", battlefield: "雇佣兵战争模式", campaign: "历史战役模式", quick: "快速战", regular: "常规战" }[Net.snapshot?.settings?.mode] || "常规战") +
       " · " +
       Net.roleName()
     : "常规战";

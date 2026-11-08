@@ -870,7 +870,7 @@
     }
   ],
   "nativeCombatRevision": 1,
-  "formOnly": true,
+  "formOnly": false,
   "unitTags": [
     "MS"
   ],

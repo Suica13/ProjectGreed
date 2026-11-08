@@ -112,6 +112,10 @@ const MatchResults = (() => {
           { label: I18n.text("损失单位"), records: awards.flatMap((a) => a.lostUnits || []) },
           { label: I18n.text("击毁单位"), records: awards.filter((a) => a.kind === "kill") },
         ];
+    const stockGained = awards.flatMap(a => Object.entries(a.stockGained?.inventory || {}).flatMap(
+      ([id, count]) => Array.from({ length: count }, () => ({ model: Economy.defaultModel(id) })),
+    ));
+    if (stockGained.length) sections.push({ label: "获得单位库存", records: stockGained });
     for (const { label, records, team } of sections) {
       const section = element("section", team === undefined ? "" : "result-team-losses");
       if (team !== undefined) section.dataset.team = String(team);

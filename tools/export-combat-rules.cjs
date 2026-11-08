@@ -139,7 +139,7 @@ function render(catalog) {
           [rule.baseEN, rule.baseHit].join(" / "), rule.minRange + " / " + rule.maxRange];
       })),
     "## 技能共用条件与计时", "",
-    "- 通常须在己方行动阶段，单位存活且在地图上、未搭载、无待确认移动或攻击计划，战局结束或部署阶段不能发动。一般技能要求尚未结束行动；驾驶员技能可对已行动单位使用，但仍受其余条件约束。passive不可主动发动。",
+    "- 通常须在己方行动阶段，单位存活且在地图上、未搭载、无待确认移动或攻击计划，战局结束或部署阶段不能发动。普通变形与爆甲可在部署阶段通过独立按钮发动，仍校验形态、部位和空间，不占用首回合变形次数；EXAM等临时系统不在此列。机库普通形态切换仅转换一台库存，不授予目标许可。一般技能要求尚未结束行动；驾驶员技能可对已行动单位使用，但仍受其余条件约束。passive不可主动发动。",
     "- actionCost仅保留AP数值，不校验或扣费；consumeAction=true仍独立结束本次行动。enCost优先作为固定消耗，无该字段时才用enCostPercent×最大EN；EXAM类使用enPercent。",
     "- game.round每次队伍交接+1；durationRounds=2相当于一次双方循环。durationTurns、cooldownTurns为己方回合；duration是推进/系统的己方回合计数。",
     "- 驾驶员强化与全力推进在效果结束后开始冷却；多数其他cooldownTurns从发动时起计。maxUses保留实际次数（99不写成无限）。", "",

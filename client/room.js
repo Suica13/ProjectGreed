@@ -419,7 +419,7 @@ const RoomPanel = (() => {
     mapSelect.replaceChildren();
     for (const map of Object.values(Rules.catalog.maps).filter(
       (map) => settings.mode !== "campaign" && map.scope !== "strategic" &&
-        (map.supportedModes || ["regular", "quick"]).includes(settings.mode || "regular"),
+        (map.supportedModes || ["regular", "quick"]).includes(settings.mode==="sweep"?"regular":settings.mode || "regular"),
     )) {
       mapSelect.add(new Option(map.name, map.id));
     }
@@ -438,6 +438,18 @@ const RoomPanel = (() => {
     byId("roomUnitCostLimit").value = numericDrafts.unitCostLimit ?? settings.unitCostLimit;
     const locked = snapshot.started || snapshot.you?.id !== snapshot.hostId || busy;
     showFormationPreset(settings);
+    let sweepOptions=byId("sweepRoomOptions");
+    if(!sweepOptions){sweepOptions=element("fieldset");sweepOptions.id="sweepRoomOptions";byId("roomFormationRules").after(sweepOptions);}
+    sweepOptions.hidden=settings.mode!=="sweep";sweepOptions.replaceChildren();
+    if(settings.mode==="sweep") {
+      sweepOptions.append(element("legend","","战场扫荡 · 敌军设置"));
+      for(const [key,name,values]of [["sweepFaction","敌军阵营",Rules.factions],["sweepEra","敌军年代",Rules.eras]]) {
+        const label=element("label","",name),select=document.createElement("select");
+        for(const value of values)select.add(new Option(value,value));select.value=settings[key];select.disabled=locked;
+        select.onchange=()=>sendSettings({[key]:select.value});label.append(select);sweepOptions.append(label);
+      }
+      sweepOptions.append(element("p","helper","纯PVE；敌军按实际出战COST与推进深度生成，精英战增加精锐部队。战利品仅在撤离时结算。"));
+    }
     byId("roomFormationPreset").disabled = locked;
     byId("roomPresetName").disabled = locked;
     byId("saveRoomPreset").disabled = locked;
@@ -1048,7 +1060,7 @@ const RoomPanel = (() => {
     formationSelect.setAttribute("aria-invalid", String(!valid || !!disabledCount));
     byId("roomTitle").textContent = Net.local
       ? "离线" +
-        { battlefield: "雇佣兵战争模式", quick: "快速战模式", campaign: "历史战役模式", regular: "常规战模式" }[snapshot.settings.mode] +
+        { sweep: "战场扫荡", battlefield: "雇佣兵战争模式", quick: "快速战模式", campaign: "历史战役模式", regular: "常规战模式" }[snapshot.settings.mode] +
         "房间"
       : "房间 " + snapshot.room;
     byId("roomStatus").hidden = !snapshot.started && !snapshot.loadedSave;

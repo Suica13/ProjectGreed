@@ -964,6 +964,6 @@
   "production": {
     "enabled": false
   },
-  "formOnly": true,
+  "formOnly": false,
   "formOf": "RGZ_91"
 }

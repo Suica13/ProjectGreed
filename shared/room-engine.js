@@ -18,7 +18,12 @@ function createRoomEngine({
   onRooms = () => {},
   onHostileDefeat = () => {},
   onSettlement = () => {},
-  getRewardMultipliers: activityRewardMultipliers = () => ({ experience: 1, money: 1, supplies: 1, technology: 1 }),
+  getRewardMultipliers: activityRewardMultipliers = () => ({
+    experience: 1,
+    money: 1,
+    supplies: 1,
+    technology: 1,
+  }),
   randomId,
   randomSeed,
   randomToken,
@@ -31,7 +36,8 @@ function createRoomEngine({
   hostReconnectMs = 0,
   reconnectGraceMs = 60000,
 }) {
-  const getRewardMultipliers = () => roomBattleEconomy().rewardMultipliers(activityRewardMultipliers());
+  const getRewardMultipliers = () =>
+    roomBattleEconomy().rewardMultipliers(activityRewardMultipliers());
   const Records =
     typeof MatchRecords === "undefined" ? require("./match-records.js") : MatchRecords;
   const Climate =
@@ -44,6 +50,7 @@ function createRoomEngine({
     typeof BattleDialogue !== "undefined"
       ? BattleDialogue
       : require("../client/battle-dialogue.js");
+  const Sweep = typeof SweepMode !== "undefined" ? SweepMode : require("./sweep-mode.js");
   let campaignAdapter = null;
   const automatedRequests = new WeakSet();
   const delegated = (room, seat) =>
@@ -116,6 +123,161 @@ function createRoomEngine({
       bot.formation = null;
       bot.ready = bot.finalReady = true;
     }
+  }
+  function ensureSweepSeats(room) {
+    if (room.settings.mode !== "sweep") {
+      for (const p of members(room).filter((p) => p.sweepEnemy)) {
+        room.seats[p.seat] = null;
+        room.members.delete(p.id);
+      }
+      return;
+    }
+    for (const p of members(room).filter(
+      (p) => !p.bot && p.seat !== null && G.seatTeam(p.seat) === 1,
+    )) {
+      room.seats[p.seat] = null;
+      p.seat = room.seats.findIndex((q, i) => !q && G.seatTeam(i) === 0);
+      if (p.seat < 0) p.seat = null;
+      if (p.ws) p.ws.seat = p.seat;
+      if (p.seat !== null) room.seats[p.seat] = p;
+    }
+    // Switching an existing encounter room must not leave an ordinary bot in
+    // the fixed enemy slot or extra independent armies on the enemy team.
+    for (const p of members(room).filter(
+      (p) => p.bot && p.seat !== null && G.seatTeam(p.seat) === 1,
+    )) {
+      if (p.seat === 1) {
+        p.sweepEnemy = true;
+        p.ready = p.finalReady = true;
+      } else {
+        room.seats[p.seat] = null;
+        room.members.delete(p.id);
+      }
+    }
+    if (!room.seats[1]) {
+      const id = randomId(),
+        p = {
+          id,
+          name: "扫荡敌军",
+          bot: true,
+          sweepEnemy: true,
+          characterFaction: "PMC",
+          seat: 1,
+          ready: true,
+          finalReady: true,
+          requests: new Map(),
+          aiSettings: G.validateAISettings(),
+          ws: { room: room.code, memberId: id, seat: 1 },
+        };
+      room.seats[1] = p;
+      room.members.set(id, p);
+    }
+  }
+  function sweepEventLosses(room) {
+    for (const [id, losses] of Object.entries(room.sweep?.losses || {}))
+      for (const loss of losses) {
+        if (loss.settled) continue;
+        loss.settled = true;
+        const p = room.members.get(id);
+        if (!p || p.bot) continue;
+        // Combat casualties were already receipted by syncRegularStock.
+        if (!loss.eventLoss) continue;
+        const unitId = loss.entry.unitId;
+        p.inventory[unitId] = Math.max(0, (p.inventory[unitId] || 0) - 1);
+        room.economyAwards.push({
+          id: randomId(),
+          matchId: room.matchId,
+          memberId: id,
+          kind: "loss",
+          money: 0,
+          supplies: 0,
+          stockLost: { inventory: { [unitId]: 1 } },
+        });
+      }
+  }
+  function settleSweep(room) {
+    if (!room.sweep.ended || room.economySettled) return;
+    room.economySettled = true;
+    const bonus = getRewardMultipliers();
+    for (const p of room.seats.filter((p) => p && !p.bot && G.seatTeam(p.seat) === 0)) {
+      const loot = room.sweep.pending[p.id],
+        ratio = room.sweep.failed ? 0.5 : 1;
+      const records = (room.sweep.losses[p.id] || []).map((r, i) => ({
+        id: "sweep-loss-" + i,
+        unitId: r.entry.unitId,
+        model: r.state.model,
+      }));
+      const losses = {};
+      for (const r of records) losses[r.unitId] = (losses[r.unitId] || 0) + 1;
+      const award = {
+        id: randomId(),
+        matchId: room.matchId,
+        memberId: p.id,
+        kind: "result",
+        money: Math.floor(loot.money * bonus.money * ratio),
+        supplies: Math.floor(loot.supplies * bonus.supplies * ratio),
+        stockGained: { inventory: loot.inventory },
+        lostUnits: records,
+        losses,
+      };
+      room.economyAwards.push(award);
+      const economy = roomBattleEconomy(),
+        dev = roomDevelopment();
+      const weights = {};
+      for (const r of [...(room.sweep.rosters[p.id] || []), ...(room.sweep.losses[p.id] || [])])
+        for (const f of economy.technologyFactions(G.models[r.state.model]))
+          weights[f] = (weights[f] || 0) + 1;
+      if (!Object.keys(weights).length) weights[room.settings.sweepFaction] = 1;
+      const balances = dev.normalizeTechnologyPoints(p.technologyPoints),
+        limits = Object.fromEntries(dev.factions.map((f) => [f, dev.maximumPoints(f)]));
+      for (const [faction, points] of Object.entries(
+        economy.allocateTechnology(
+          Math.floor(loot.technology * bonus.technology * ratio),
+          weights,
+          balances,
+          limits,
+        ),
+      ))
+        room.techAwards.push({
+          id: randomId(),
+          matchId: room.matchId,
+          memberId: p.id,
+          kind: "result",
+          faction,
+          points,
+        });
+    }
+  }
+  function launchSweepBattle(room) {
+    const s = room.sweep;
+    room.pending = null;
+    room.battle = null;
+    room.playback = null;
+    room.combats = [];
+    room.effectEvent = null;
+    for (const p of room.seats.filter((p) => p && G.seatTeam(p.seat) === 0)) {
+      const roster = s.rosters[p.id] || [],
+        indices = new Map(roster.map((r, i) => [r.key, i]));
+      p.formation = roster.map((r, i) => {
+        r.battleSlot = i;
+        const entry = structuredClone(r.entry);
+        if (entry.preload) {
+          const carrier = indices.get(entry.preload.carrierIndex);
+          if (carrier === undefined) delete entry.preload;
+          else entry.preload.carrierIndex = carrier;
+        }
+        return entry;
+      });
+      p.finalReady = true;
+    }
+    const enemy = room.seats[1];
+    enemy.formation = Sweep.enemies(room, G, randomSeed());
+    enemy.finalReady = true;
+    if (!enemy.formation.length) throw Error("当前年代和单位限制下没有可用的敌军");
+    room.phase = "assembly";
+    s.launching = true;
+    startDeployment(room);
+    s.launching = false;
   }
   function captureRecord(room, intelCache) {
     const chatOnly = ["move_preview", "move_cancel"].includes(room.lastEvent?.type);
@@ -865,6 +1027,7 @@ function createRoomEngine({
         .filter((battle) => !combats.includes(battle))
         .map(effectBattle),
       phase: room.phase,
+      sweep: Sweep.view(room, recipient?.id),
       campaign: room.campaign ? campaign().view(room, team) : null,
       pending,
       reactions,
@@ -1152,7 +1315,10 @@ function createRoomEngine({
     }
     if (!room.returnCountdown) {
       completePlayback(room);
-      scheduleResultReturn(room);
+      syncRegularStock(room);
+      if (room.sweep && !room.sweep.ended && room.phase === "finished" && !room.playback)
+        Sweep.checkpoint(room, G);
+      if (!room.sweep || room.sweep.ended) scheduleResultReturn(room);
     }
     logClimate(room);
     syncRegularStock(room);
@@ -1220,6 +1386,7 @@ function createRoomEngine({
   }
   function returnToRoom(room) {
     if (rooms.get(room.code) !== room || !room.started) return;
+    room.sweep = null;
     clearTimeout(returnTimers.get(room));
     returnTimers.delete(room);
     clearTimeout(resultTimers.get(room));
@@ -1724,6 +1891,7 @@ function createRoomEngine({
   }
   function awardDefeat(room, from, to, defeatedModel, visibleBefore = {}) {
     recordDefeatDialogue(room, from, to, visibleBefore);
+    if (room.sweep) return;
     if (room.settings.mode === "battlefield") {
       awardBattlefieldDefeat(room, from, to, defeatedModel);
       return;
@@ -1893,7 +2061,7 @@ function createRoomEngine({
   function syncRegularStock(room) {
     if (
       !room.started ||
-      room.settings.mode !== "regular" ||
+      !["regular", "sweep"].includes(room.settings.mode) ||
       room.campaign ||
       room.startedFromSave ||
       room.replay
@@ -1991,6 +2159,10 @@ function createRoomEngine({
     }
   }
   function settleBattleEconomy(room) {
+    if (room.sweep) {
+      settleSweep(room);
+      return;
+    }
     if (
       !room.started ||
       room.phase !== "finished" ||
@@ -2151,6 +2323,7 @@ function createRoomEngine({
     }
   }
   function recordPilotBattle(room, actor, kind, cost, shipKill = false) {
+    if (room.sweep) return;
     if (room.settings.mode === "battlefield") return;
     if ((room.startedFromSave && !room.campaign) || !actor?.pilot?.custom) return;
     const owner = room.seats[G.ownerOf(actor)];
@@ -2387,9 +2560,17 @@ function createRoomEngine({
     };
   }
   const playerBudget = (room, player) =>
-    player?.battlefieldAI ? 10000 : G.armyBudget(room.settings, formationPlayer(room, player));
+    player?.sweepEnemy
+      ? 99999
+      : player?.battlefieldAI
+        ? 10000
+        : G.armyBudget(room.settings, formationPlayer(room, player));
   const playerUnitLimit = (room, player) =>
-    player?.battlefieldAI ? 36 : G.armyUnitLimit(room.settings, formationPlayer(room, player));
+    player?.sweepEnemy
+      ? G.catalog.formation.maxUnits
+      : player?.battlefieldAI
+        ? 36
+        : G.armyUnitLimit(room.settings, formationPlayer(room, player));
   const aiResearchCache = new WeakMap();
   function roomAIResearch(room) {
     if (room.started && room.aiResearch) return room.aiResearch;
@@ -2434,6 +2615,27 @@ function createRoomEngine({
       player?.bot ? { ...formationPlayer(room, player), researched: roomAIResearch(room) } : player,
     );
     if (player?.bot) rules.aiAllowedEras = roomAIEras(room);
+    if (
+      player?.bot &&
+      rules.aiAllowedEras?.length &&
+      rules.aiAllowedEras.every((era) => era.startsWith("0093"))
+    )
+      Object.assign(rules, { characterFaction: null, researched: undefined });
+    if (player?.sweepEnemy)
+      Object.assign(rules, {
+        researched: undefined,
+        licenses: undefined,
+        inventory: undefined,
+        characterFaction: null,
+        bannedFactions: [
+          ...new Set([
+            ...rules.bannedFactions,
+            ...G.factions.filter((f) => f !== room.settings.sweepFaction),
+          ]),
+        ],
+        aiAllowedEras: [room.settings.sweepEra],
+        unitCostLimit: Math.round(room.settings.unitCostLimit * (room.sweep?.elite ? 1.5 : 1)),
+      });
     if (player?.battlefieldAI) {
       Object.assign(rules, G.validateTagRestrictions());
       rules.pilotPolicy = "allow";
@@ -2460,6 +2662,21 @@ function createRoomEngine({
   // Cache by all effective inputs, never by mutable player/room identity.
   const previewArmies = new Map();
   function randomArmy(room, player, seed = randomSeed()) {
+    if (player.sweepEnemy)
+      return room.sweep
+        ? player.formation
+        : G.randomFormation(
+            seed,
+            room.settings.costLimit,
+            {
+              characterFaction: null,
+              bannedFactions: G.factions.filter((f) => f !== room.settings.sweepFaction),
+              aiAllowedEras: [room.settings.sweepEra],
+              unitCostLimit: room.settings.unitCostLimit,
+              environment: G.getMap(room.settings.mapId).environment,
+            },
+            room.settings.unitLimit,
+          );
     if (player.battlefieldAI) {
       const faction = room.settings.battlefieldTeams[player.seat].faction;
       const unitId = faction === "EFSF" ? "Type61" : "MTank";
@@ -2748,6 +2965,7 @@ function createRoomEngine({
       plans.some(
         (plan, seat) =>
           plan &&
+          !(room.sweep && G.seatTeam(seat) === 0 && !plan.entries.length) &&
           !plan.deployable.length &&
           !readinessPlan(room, room.seats[seat], plan.entries).deployable.length,
       )
@@ -2801,6 +3019,14 @@ function createRoomEngine({
         },
       ]),
     );
+    if (room.sweep?.launching)
+      for (const p of room.seats.filter((p) => p && G.seatTeam(p.seat) === 0))
+        for (const r of room.sweep.rosters[p.id] || []) {
+          const u = room.game.units.find(
+            (u) => G.ownerOf(u) === p.seat && u.formationIndex === r.battleSlot,
+          );
+          if (u) Object.assign(u, structuredClone(r.state), { moved: false, acted: false });
+        }
     reserveBattleStock(room);
     room.phase = room.game.deployment.every(Boolean) ? "idle" : "deployment";
     planner.reset(room);
@@ -2813,6 +3039,7 @@ function createRoomEngine({
     recordPilotParticipation(room);
     logDeploymentArmies(room);
     log(room, "最终编组已确认，请在各自出生区部署并确认。");
+    if (room.settings.mode === "sweep" && !room.sweep) Sweep.init(room, G, randomSeed());
   }
   // 从已裁定的出战单位生成一次开局编制记录，包含载员，不统计禁用单位。
   function logDeploymentArmies(room) {
@@ -3031,10 +3258,7 @@ function createRoomEngine({
       const group = actor.squadId || actor.id;
       if (checkedSquads.has(group)) continue;
       checkedSquads.add(group);
-      if (
-        room.game.battlefield || room.game.campaignBattlefield
-      )
-        continue;
+      if (room.game.battlefield || room.game.campaignBattlefield) continue;
       const gather = G.aiSquadChoice(room.game, actor, available);
       if (gather)
         return { player, action: "move", fields: { unitId: actor.id, x: gather.x, y: gather.y } };
@@ -3045,11 +3269,17 @@ function createRoomEngine({
     if (room.campaignBattle && G.campaignBattlefield.canCapture(G, room.game, u))
       return { player, action: "capture_point", fields: { unitId: u.id } };
     const objective = room.game.battlefield
-      ? room.game.battlefield.points.find((point) => point.owner !== u.team &&
-          G.cells(u).some((cell) => G.battlefieldMode.containsSite(point, cell.x, cell.y)))
+      ? room.game.battlefield.points.find(
+          (point) =>
+            point.owner !== u.team &&
+            G.cells(u).some((cell) => G.battlefieldMode.containsSite(point, cell.x, cell.y)),
+        )
       : room.campaignBattle && G.campaignBattlefield.nodeAt(G, room.game, u);
-    if (objective && u.flying && (room.game.battlefield ||
-        room.game.campaignBattlefield.owners[objective.id] !== u.team)) {
+    if (
+      objective &&
+      u.flying &&
+      (room.game.battlefield || room.game.campaignBattlefield.owners[objective.id] !== u.team)
+    ) {
       const landing = G.unitSkills(u).find(
         (skill) => skill.type === "flight" && G.canUseSkill(room.game, u, skill.id),
       );
@@ -3735,6 +3965,93 @@ function createRoomEngine({
           ? "战局已中断，正在返回战略地图"
           : "正在返回房间，请稍候。",
       );
+    if (
+      room.settings.mode === "sweep" &&
+      ["switch_seat", "join_team", "move_player", "remove_ai", "add_ai"].includes(msg.action)
+    ) {
+      if (
+        msg.team === 1 ||
+        msg.seat === 1 ||
+        (Number.isInteger(msg.seat) && G.seatTeam(msg.seat) === 1)
+      )
+        throw Error("战场扫荡的队伍2仅限敌人AI");
+    }
+    if (
+      room.settings.mode === "sweep" &&
+      msg.memberId &&
+      room.members.get(msg.memberId)?.sweepEnemy
+    )
+      throw Error("战场扫荡的敌人AI不可移除或移动");
+    if (msg.action.startsWith("sweep_")) {
+      if (
+        !room.sweep ||
+        room.sweep.ended ||
+        !["sweep_map", "sweep_event", "sweep_resupply"].includes(room.phase)
+      )
+        throw Error("当前不在任务地图");
+      if (msg.matchId !== room.matchId || msg.revision !== room.revision)
+        throw Error("任务地图已更新，请重新选择");
+      const host = member.id === room.hostId;
+      if (msg.action !== "sweep_reinforce" && !host) throw Error("路线和事件由房主确认");
+      if (msg.action === "sweep_select" && room.phase === "sweep_map")
+        Sweep.select(room, msg.nodeId);
+      else if (msg.action === "sweep_confirm" && room.phase === "sweep_map") {
+        if (Sweep.arrived(room, G) === "battle") launchSweepBattle(room);
+      } else if (msg.action === "sweep_event" && room.phase === "sweep_event") {
+        const before = new Set(Object.values(room.sweep.rosters).flat());
+        Sweep.event(room, G, msg.choice);
+        for (const losses of Object.values(room.sweep.losses))
+          for (const loss of losses) if (before.has(loss)) loss.eventLoss = true;
+        sweepEventLosses(room);
+      } else if (msg.action === "sweep_extract" && room.phase === "sweep_map") {
+        if (room.sweep.depth < 0) throw Error("请先完成一个任务节点");
+        Sweep.finish(room, false);
+      } else if (msg.action === "sweep_resupply_done" && room.phase === "sweep_resupply") {
+        room.phase = "sweep_map";
+        room.sweep.event = null;
+        room.sweep.resupply = false;
+      } else if (msg.action === "sweep_reinforce" && room.phase === "sweep_resupply") {
+        if (seat === null || G.seatTeam(seat) !== 0) throw Error("观战者不能补员");
+        const roster = room.sweep.rosters[member.id],
+          entry = G.validateFormation([msg.entry], Infinity)[0];
+        const entries = [...roster.map((r) => r.entry), entry];
+        const plan = G.planFormation(
+          entries,
+          playerBudget(room, member),
+          playerRestrictions(room, member),
+          playerUnitLimit(room, member),
+        );
+        if (plan.disabled.length) throw Error("补员库存不足或超出房间编组规则");
+        const formations = room.seats.map((p, i) => (i === seat ? [entry] : null));
+        const g = G.create(false, randomSeed(), formations, false, {
+          ...room.settings,
+          mode: "regular",
+          seatFormationRules: room.seats.map(() => ({})),
+          costLimit: 99999,
+        });
+        const u = g.units.find((u) => G.ownerOf(u) === seat);
+        roster.push({ key: room.sweep.nextKey[member.id]++, entry, state: Sweep.save(u) });
+      } else throw Error("无效的任务操作");
+      room.lastEvent = { id: randomId(), type: "sweep_changed" };
+      log(
+        room,
+        "[战场扫荡] " +
+          {
+            sweep_select: "选择路线",
+            sweep_confirm: "前往任务节点",
+            sweep_event: "完成事件",
+            sweep_extract: "全队撤离",
+            sweep_reinforce: "机库补员",
+            sweep_resupply_done: "整备完成",
+          }[msg.action] +
+          " · 节点 " +
+          (room.sweep.depth + 1),
+      );
+      room.revision++;
+      cache.set(id, true);
+      broadcast(room, id, member);
+      return;
+    }
     if (msg.action === "set_ai_delegate") {
       if (
         !room.started ||
@@ -4059,7 +4376,7 @@ function createRoomEngine({
             room.settings.mode !== "campaign" &&
             G.getMap(room.settings.mapId).supportedModes &&
             !G.getMap(room.settings.mapId).supportedModes.includes(
-              room.settings.mode === "campaign" ? "regular" : room.settings.mode,
+              ["campaign", "sweep"].includes(room.settings.mode) ? "regular" : room.settings.mode,
             )
           )
             throw Error("此地图不支持所选对战模式");
@@ -4334,7 +4651,11 @@ function createRoomEngine({
                   ? G.defaultRoomSettings().mapId
                   : requestedMap.id,
           );
-          if (!strategic && map.supportedModes && !map.supportedModes.includes(nextMode))
+          if (
+            !strategic &&
+            map.supportedModes &&
+            !map.supportedModes.includes(nextMode === "sweep" ? "regular" : nextMode)
+          )
             throw Error("此地图不支持所选模式");
           if (!strategic && map.scope === "strategic")
             throw Error("区块局地战地图仅用于历史战役模式");
@@ -4389,6 +4710,8 @@ function createRoomEngine({
               })
             : {
                 mode: G.validateBattleMode(msg.battleMode ?? room.settings.mode),
+                sweepFaction: msg.sweepFaction ?? room.settings.sweepFaction ?? "ZEON",
+                sweepEra: msg.sweepEra ?? room.settings.sweepEra ?? "0079T1",
                 mapId: map.id,
                 fogMode: G.validateFogMode(msg.fogMode ?? room.settings.fogMode),
                 pilotDialogue: msg.pilotDialogue ?? room.settings.pilotDialogue ?? true,
@@ -4423,6 +4746,11 @@ function createRoomEngine({
                         msg.teamFactions ?? room.settings.teamFactions ?? [null, null],
                       ),
               };
+          if (
+            settings.mode === "sweep" &&
+            (!G.factions.includes(settings.sweepFaction) || !G.eras.includes(settings.sweepEra))
+          )
+            throw Error("扫荡敌军阵营或年代无效");
           if (settings.mode === "battlefield") {
             settings.battlefieldTeams = G.battlefieldMode.teams(
               G,
@@ -4472,6 +4800,7 @@ function createRoomEngine({
             for (const player of members(room))
               if (player.seat !== null) room.seats[player.seat] = player;
             ensureBattlefieldSeats(room);
+            ensureSweepSeats(room);
             for (const player of members(room)) applyForcedFaction(room, player);
             if (modeChanged && settings.mode === "regular") {
               for (const player of members(room)) {
@@ -4814,6 +5143,29 @@ function createRoomEngine({
             : G.hangars.previewLaunchSquad(room.game, members, msg.x, msg.y, seat);
           if (aiControlled(room, member)) logTransport(room, passenger, carrier, true);
         }
+        break;
+      }
+      case "deployment_transform": {
+        if (room.phase !== "deployment") throw Error("只能在部署阶段变形");
+        const actor = ownUnit(room, seat, msg.unitId, true),
+          skill = G.unitSkills(actor).find((s) => s.id === msg.skillId);
+        if (!skill || !["transform", "armor_purge"].includes(skill.type) || skill.deploymentMode)
+          throw Error("该形态不能在部署阶段切换");
+        const deployment = room.game.deployment,
+          activeTeam = room.game.team;
+        try {
+          room.game.deployment = null;
+          room.game.team = actor.team;
+          event = G.useSkill(room.game, actor, skill.id, actor.x, actor.y);
+        } finally {
+          room.game.deployment = deployment;
+          room.game.team = activeTeam;
+        }
+        actor.moved = false;
+        actor.acted = false;
+        delete actor.pendingMove;
+        if (actor.skillTurnUses)
+          delete actor.skillTurnUses[skill.type === "transform" ? "transformation" : skill.id];
         break;
       }
       case "deploy": {
@@ -5302,7 +5654,9 @@ function createRoomEngine({
         room.seats = Array(G.getMap(room.settings.mapId).spawns.length).fill(null);
         room.turnDone = room.seats.map(() => false);
         ensureBattlefieldSeats(room);
+        ensureSweepSeats(room);
       }
+      ensureSweepSeats(room);
       rooms.set(code, room);
       seat = room.settings.mode === "battlefield" ? 2 : 0;
     } else {
@@ -5318,7 +5672,9 @@ function createRoomEngine({
       seat =
         room.started && room.phase !== "assembly"
           ? null
-          : room.seats.findIndex((player) => !player);
+          : room.seats.findIndex(
+              (player, i) => !player && (room.settings.mode !== "sweep" || G.seatTeam(i) === 0),
+            );
       if (seat === -1) seat = null;
     }
     characterFaction = forcedFaction(room, seat) || characterFaction;
