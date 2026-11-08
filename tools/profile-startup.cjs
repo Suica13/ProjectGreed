@@ -70,7 +70,7 @@ new PerformanceObserver(list=>startupLongTasks.push(...list.getEntries().map(e=>
 window.addEventListener("game-assets-ready",()=>performance.mark("assets:ready"));
 </script>`,
   );
-  const profileFile = path.join(root, ".openai/startup-profile.html");
+  const profileFile = path.join(root, "tmp/verification/reports/startup-profile.html");
   fs.mkdirSync(path.dirname(profileFile), { recursive: true });
   fs.writeFileSync(profileFile, html);
   const browser = await chromium.launch({
@@ -147,7 +147,7 @@ window.addEventListener("game-assets-ready",()=>performance.mark("assets:ready")
       );
       await context.close();
     }
-    const output = path.resolve(root, process.argv[2] || ".openai/startup-profile.json");
+    const output = path.resolve(root, process.argv[2] || "tmp/verification/reports/startup-profile.json");
     fs.mkdirSync(path.dirname(output), { recursive: true });
     fs.writeFileSync(output, JSON.stringify(result, null, 2));
     console.log(JSON.stringify(result, null, 2));

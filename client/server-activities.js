@@ -264,7 +264,7 @@ const ServerActivities = (() => {
       row.append(element("span", "", unitLabel(id) + " · 部署许可"));
       rewards.append(row);
     }
-    for (const kind of ["inventory", "kits"]) for (const [id, count] of Object.entries(item.rewards[kind] || {})) {
+    for (const kind of ["inventory"]) for (const [id, count] of Object.entries(item.rewards[kind] || {})) {
       const row = element("div", "server-activity-unit"), image = element("img");
       const modelId = kind === "kits" ? id : Economy.baseModel(id);
       if (modelId && UnitModels[modelId]) { image.src = unitIcon(modelId); image.alt = ""; row.append(image); }

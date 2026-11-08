@@ -62,7 +62,7 @@ test("Salamis can join a formation, deploy as a six-cell hull, rotate and displa
       return Rules.cells(u).every((c) => Rules.at(game, c.x, c.y)?.id === id);
     }, placement.id),
   ).toBe(true);
-  await page.screenshot({ path: ".openai/salamis-deployment.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/salamis-deployment.png" });
   await page.locator("#confirmDeployment").click();
   await expect(page.locator("#deploymentPanel")).toBeHidden();
   await page.evaluate((id) => {
@@ -160,6 +160,6 @@ test("Salamis map volley uses independent turret muzzles and keeps the hull on i
   expect(result.shots).toBeGreaterThan(0);
   expect(result.shots).toBeLessThan(result.total);
   expect(result.origins).toBe(result.shots);
-  await page.screenshot({ path: ".openai/salamis-volley.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/salamis-volley.png" });
   expect(errors).toEqual([]);
 });

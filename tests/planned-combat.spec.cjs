@@ -121,7 +121,7 @@ test("allied planning arrows, concurrent map moves, parallel owner responses and
       Net.request("attack", { unitId: "0-2", targetId: "1-0", weaponId: "EF_HypeBazooka" }),
     );
     await expect.poll(() => room.plans.length).toBe(3);
-    await page.screenshot({ path: ".openai/planned-attacks.png" });
+    await page.screenshot({ path: "tmp/verification/screenshots/planned-attacks.png" });
     expect(room.phase).toBe("idle");
     expect(room.game.units.find((u) => u.id === "1-0").hp).toBe(100000);
     await expect(pages[1].locator("#reaction")).toBeHidden();
@@ -197,7 +197,7 @@ test("allied planning arrows, concurrent map moves, parallel owner responses and
       .poll(() => pages[1].locator("#map").getAttribute("data-counter-plan-count"))
       .toBe("1");
     await expect.poll(() => pages[1].locator("#map").getAttribute("data-plan-count")).toBe("3");
-    await pages[1].screenshot({ path: ".openai/counter-target-arrow.png" });
+    await pages[1].screenshot({ path: "tmp/verification/screenshots/counter-target-arrow.png" });
     await pages[1].locator("#confirmResponse").click();
     expect(room.combats.length).toBe(0);
     await expect(pages[1].locator("#reaction")).toBeHidden();
@@ -236,7 +236,7 @@ test("allied planning arrows, concurrent map moves, parallel owner responses and
     }
     await expect(page.locator("#battle")).toBeHidden();
     const batchId = room.playback.id;
-    await page.screenshot({ path: ".openai/parallel-map-combat.png" });
+    await page.screenshot({ path: "tmp/verification/screenshots/parallel-map-combat.png" });
     await page.locator("#mapSkipBattle").click();
     await expect(page.locator("#mapCombatControls")).toBeHidden();
     await expect.poll(() => room.playback.ready.length).toBe(1);

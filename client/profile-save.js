@@ -219,7 +219,7 @@ const ProfileSave = (() => {
   status.setAttribute("role", "status");
   status.textContent = Economy.storageIssue()
     ? "存档读取失败，原始数据已保留。请导入有效存档或新建存档：" + Economy.storageIssue()
-    : "个人进度：驾驶员、编组、累计科技、资金、物资、部署许可及机体／套件库存。Windows / Android 可互相导入 JSON；导入将覆盖个人进度并刷新页面。";
+    : "个人进度：驾驶员、编组、累计科技、资金、物资、部署许可及机体库存。Windows / Android 可互相导入 JSON；导入将覆盖个人进度并刷新页面。";
   exportButton.onclick = () => {
     try {
       const url = URL.createObjectURL(

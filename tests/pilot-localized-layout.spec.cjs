@@ -125,6 +125,6 @@ for (const width of [1912, 1440, 1281, 1280, 1101, 1024, 820, 768, 721, 390, 360
       if (language === "en")
         await page
           .locator("#customPilotList")
-          .screenshot({ path: `tmp/pilot-localized-${width}.png` });
+          .screenshot({ path: `tmp/verification/screenshots/pilot-localized-${width}.png` });
     }
   });

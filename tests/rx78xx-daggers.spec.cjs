@@ -92,5 +92,5 @@ test("RX-78XX shows both shared dagger sprites throughout its melee sequence", a
     expect(row.idle).toBe(0);
     expect(row.hiddenCombo).toBe(true);
   }
-  await page.screenshot({ path: ".openai/rx78xx-dual-daggers.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/rx78xx-dual-daggers.png" });
 });

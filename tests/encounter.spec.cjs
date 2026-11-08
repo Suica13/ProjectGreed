@@ -20,7 +20,7 @@ test("faction cards filter and offline encounter uses room preparation without n
   await page.locator("#openFormation").click();
   await expect(page.locator(".catalog-unit")).toHaveCount(11);
   await expect(page.locator(".catalog-unit img")).toHaveCount(11);
-  await page.screenshot({ path: ".openai/faction-formation.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/faction-formation.png" });
   await page.locator("#formationFaction").selectOption("ZEON");
   await expect(page.locator(".catalog-unit")).toHaveCount(6);
   await expect(page.locator(".catalog-unit .faction-tag")).toHaveText(Array(6).fill("ZEON"));
@@ -52,7 +52,7 @@ test("faction cards filter and offline encounter uses room preparation without n
   expect(await page.evaluate(() => Net.canAct())).toBe(true);
   expect(sockets).toEqual([]);
   expect(errors).toEqual([]);
-  await page.screenshot({ path: ".openai/offline-encounter.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/offline-encounter.png" });
   await page.evaluate(() => Net.leave());
 });
 

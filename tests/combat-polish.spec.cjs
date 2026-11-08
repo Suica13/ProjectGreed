@@ -32,14 +32,14 @@ test("formation keeps controls fixed while the native scrollbar is dragged throu
   expect(await region.evaluate((list) => list.scrollTop)).toBeGreaterThan(0);
   await expect(page.locator(".formation-row").last()).toBeInViewport();
   expect((await page.locator("#saveFormation").boundingBox()).y).toBe(footer.y);
-  await page.screenshot({ path: ".openai/formation-scroll-list.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/formation-scroll-list.png" });
   await page.locator("#saveFormation").click();
   expect(await page.evaluate(() => Formation.current().length)).toBe(9);
   await page.setViewportSize({ width: 430, height: 900 });
   await page.locator("#openFormation").click();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await expect(page.locator("#saveFormation")).toBeInViewport();
-  await page.screenshot({ path: ".openai/formation-scroll-mobile.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/formation-scroll-mobile.png" });
 });
 test("one local movement plays one boost-start sound, and failed movement does not play it", async ({
   page,

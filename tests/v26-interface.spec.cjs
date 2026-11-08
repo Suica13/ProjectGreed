@@ -71,7 +71,7 @@ for (const width of [1280, 390])
         .toBeLessThan(geometry.zoom * 1.5);
       await page.locator("#mapZoomReset").click();
       await expect(page.locator("#mapZoomLabel")).toHaveText(Math.round(geometry.zoom * 100) + "%");
-      await page.screenshot({ path: ".openai/pinch-" + width + ".png" });
+      await page.screenshot({ path: "tmp/verification/screenshots/pinch-" + width + ".png" });
       expect(errors).toEqual([]);
     } finally {
       await context.close();

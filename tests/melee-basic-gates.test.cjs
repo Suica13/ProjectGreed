@@ -16,8 +16,7 @@ test("one ordinary melee remains ungated even with extra melee or a native gated
     [{ stat:"melee",operator:">",value:145 }]);
   const gouf = Object.values(G.models).find(m => m.prefabId === "MS_07B");
   assert.equal(gouf.weapons.find(w => w.id === "ZN_HeatSword_A").pilotRequirements,undefined);
-  assert.deepEqual(gouf.weapons.find(w => w.id.includes("HeatRod")).pilotRequirements,
-    [{ stat:"melee",operator:">=",value:125 }]);
+  assert.equal(gouf.weapons.find(w => w.id.includes("HeatRod")).pilotRequirements, undefined);
 });
 
 test("ram is never counted as a second ordinary melee, and native gates are unchanged", () => {
@@ -32,7 +31,7 @@ test("ram is never counted as a second ordinary melee, and native gates are unch
     }
     for (const w of melee) {
       const source = raw.get(m.prefabId).weapons[w.id];
-      if (source?.pilotRequirements?.length) assert.deepEqual(w.pilotRequirements,source.pilotRequirements);
+      if (source?.pilotRequirements?.length && !Classes.pilotGateExempt(w)) assert.deepEqual(w.pilotRequirements,source.pilotRequirements);
     }
     for (const w of m.weapons.filter(w => Classes.classify(w) === "ram"))
       assert(!w.pilotRequirements?.length,m.prefabId);
@@ -41,7 +40,7 @@ test("ram is never counted as a second ordinary melee, and native gates are unch
 });
 
 
-test("ordinary pilots counter with a usable sword after skipping a gated utility whip", () => {
+test("ordinary pilots can counter with the newly ungated utility whip", () => {
   const entry = {unitId:"RGM_79",kitId:"machine_gun"};
   const game = G.create(false,1,[[entry],[entry]],false,{fogMode:"disabled"});
   game.tiles.forEach(row => row.fill("plain"));
@@ -50,6 +49,6 @@ test("ordinary pilots counter with a usable sword after skipping a gated utility
   Object.assign(a,{x:5,y:5,en:10000});
   Object.assign(b,{model,x:6,y:5,en:10000});
   const available = require("../shared/automatic-fire.js").weapons(G,game,b,a,true);
-  assert(available.some(w => w.id === "ZN_HeatSword_A"));
-  assert(!available.some(w => w.id.includes("HeatRod") || Classes.classify(w) === "ram"));
+  assert(available.some(w => w.id.includes("HeatRod")));
+  assert(!available.some(w => Classes.classify(w) === "ram"));
 });

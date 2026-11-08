@@ -35,7 +35,7 @@ test("one picker replaces the sidebar and configures saved ship preloads with we
   await expect(page.locator("#formationUnitPicker")).toBeHidden();
   await expect(page.locator("#formationDetailHangars")).toContainText("2 / 6");
   await expect(page.locator(".formation-cargo-row")).toContainText("火箭筒");
-  await page.screenshot({ path: ".openai/formation-preloads.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/formation-preloads.png" });
   await page.locator("#closeFormationDetail").click();
   await expect(page.locator(".formation-row").last()).toContainText("预先搭载");
   await page.locator("#saveFormation").click();

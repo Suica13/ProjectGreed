@@ -73,7 +73,7 @@ test("both formation lists have equal scroll heights on desktop and mobile with 
     expect(geometry.rightScroll).toBeGreaterThan(0);
     expect(geometry.footer).toBeLessThanOrEqual(geometry.height);
     expect(geometry.width).toBeLessThanOrEqual(geometry.screen);
-    await page.screenshot({ path: ".openai/formation-lists-" + size.width + ".png" });
+    await page.screenshot({ path: "tmp/verification/screenshots/formation-lists-" + size.width + ".png" });
   }
   await page.evaluate(() => I18n.setLanguage("en"));
   await expect(page.locator("#deleteFormation")).toHaveText("Delete formation");

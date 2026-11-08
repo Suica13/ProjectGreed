@@ -227,7 +227,7 @@ test("campaign WebSocket orders pause tactical combat, export private saves and 
   await enter();
   assert.equal(room.phase, "idle");
   assert.equal(room.settings.mode, "campaign");
-  assert.equal(room.game.units.length, room.campaign.units.filter((unit) => !unit.destroyed && unit.region === room.campaignBattle.region).length);
+  assert.equal(room.game.units.filter(unit=>!unit.facility).length, room.campaign.units.filter((unit) => !unit.destroyed && unit.region === room.campaignBattle.region).length);
   const survivor = room.game.units.find((unit) => unit.team === 0);
   assert.equal(survivor.pilot.id, crew.profile.id);
   assert.equal(survivor.pilot.stats.speed, 105);

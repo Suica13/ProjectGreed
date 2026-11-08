@@ -23,5 +23,5 @@ for (const width of [1440, 390, 360]) test(`workshop aligns identity to portrait
     expect(Math.abs(geometry.image-geometry.text)).toBeLessThanOrEqual(1);
   }
   await page.locator('#productionSearch').fill('Type');
-  await page.locator('#productionList').screenshot({path:`.openai/v85-workshop-${width}.png`});
+  await page.locator('#productionList').screenshot({path:`tmp/verification/screenshots/v85-workshop-${width}.png`});
 });

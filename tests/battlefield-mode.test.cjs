@@ -16,7 +16,7 @@ test("every offered faction and era has an initial force inside the selected yea
 });
 
 test("0079 fixed waves scale every contingent by surviving bases and honor exact phase boundaries", () => {
-  for (const faction of B.factions) for (const era of B.erasForFaction(G,faction)) for (const round of [1, 9, 10, 50, 51, 100]) {
+  for (const faction of B.factions) for (const era of B.erasForFaction(G,faction)) for (const round of [1, 9, 10, 11, 50, 51, 100]) {
     const stage = B.waveStage(round), row = B.fixedWaves[era][stage];
     const entries = B.wavePlan(G, { faction, era }, round, 2, () => 0.99);
     for (const [id, count] of Object.entries(row[faction]))
@@ -26,7 +26,7 @@ test("0079 fixed waves scale every contingent by surviving bases and honor exact
     const ships = B.wavePlan(G, { faction, era }, round, 2, () => 0);
     assert.equal(ships.filter(entry => entry.group.endsWith(":ship")).length, 2);
   }
-  assert.equal(B.waveStage(9), "early"); assert.equal(B.waveStage(10), "middle");
+  assert.equal(B.waveStage(9), "early"); assert.equal(B.waveStage(10), "early"); assert.equal(B.waveStage(11), "middle");
   assert.equal(B.waveStage(50), "middle"); assert.equal(B.waveStage(51), "late");
   assert.throws(() => B.teams(G, [{ faction: "EFSF", era: "0087T1" }, { faction: "ZEON", era: "0079T1" }]));
   assert(B.eras.includes("0087T1") && B.factions.includes("AEUG"));
@@ -375,7 +375,7 @@ test("battlefield losses consume stock once, reserve concurrent deployments and 
   player.inventory.Type61 = player.kits.Type61__standard = 3;
   const own = room.game.units.filter(unit => unit.ownerSeat === 2);
   own.forEach(unit => unit.hp = 0); engine.broadcast(room);
-  assert.equal(player.inventory.Type61, 1); assert.equal(player.kits.Type61__standard, 1);
+  assert.equal(player.inventory.Type61, 1); assert.equal(player.kits.Type61__standard, 3);
   const receipts = room.economyAwards.filter(award => award.kind === "loss");
   assert.equal(receipts.length, 2);
   engine.broadcast(room); assert.equal(room.economyAwards.filter(award => award.kind === "loss").length, 2);
@@ -387,7 +387,7 @@ test("battlefield losses consume stock once, reserve concurrent deployments and 
   const arrival = room.game.units.find(unit => unit.id.startsWith("pmc-airdrop-"));
   arrival.hp = 0; engine.broadcast(room);
   assert.equal(player.inventory.Type61, 0);
-  assert.equal(player.kits.Type61__standard, 0);
+  assert.equal(player.kits.Type61__standard, 3, "legacy kit quantities are never consumed");
   room.game.round = reserves[0].readyRound;
   assert.throws(() => act("battlefield_deploy", { reserveId: reserves[0].id, siteId: site.id }), /库存/);
   // Settlement markers belong to the saved game, not an ephemeral room counter.
@@ -421,7 +421,7 @@ test("ordinary AI players automatically request repaired roster units", async (t
   assert.deepEqual(errors, []);
 });
 
-test("hostile kills pay COST/8, zero-damage attack participation pays COST/16 and result follows team era", (t) => {
+test("hostile kills pay COST/2, zero-damage attack participation pays COST/4 and result follows team era", (t) => {
   let target, killNext = false;
   // Exercise authoritative accounting independently of weapon hit randomness.
   const rules = { ...G,
@@ -456,8 +456,8 @@ test("hostile kills pay COST/8, zero-damage attack participation pays COST/16 an
   act("skill", { unitId: room.game.units.find(unit => unit.ownerSeat === 2).id, skillId: "TestIrradiation" });
   const kill = room.economyAwards.find(award => award.kind === "kill");
   const assist = room.economyAwards.find(award => award.kind === "assist");
-  assert.deepEqual([kill.money, kill.supplies], [Math.floor(cost / 8), Math.floor(cost / 8)]);
-  assert.deepEqual([assist.money, assist.supplies], [Math.floor(cost / 16), Math.floor(cost / 16)]);
+  assert.deepEqual([kill.money, kill.supplies], [Math.floor(cost / 2), Math.floor(cost / 2)]);
+  assert.deepEqual([assist.money, assist.supplies], [Math.floor(cost / 4), Math.floor(cost / 4)]);
   assert.equal(assist.memberId, room.seats[4].id);
   engine.broadcast(room); engine.broadcast(room);
   assert.equal(room.economyAwards.filter(award => award.kind === "kill" || award.kind === "assist").length, 2);
@@ -467,7 +467,9 @@ test("hostile kills pay COST/8, zero-damage attack participation pays COST/16 an
   const results = room.economyAwards.filter(award => award.kind === "result");
   assert.equal(results.length, 2);
   assert(results.every(award => award.money === 1125 && award.supplies === 2250));
-  assert.deepEqual(room.techAwards, []); assert.deepEqual(room.pilotAwards, []);
+  assert(room.techAwards.length>0);
+  assert.equal(room.techAwards.filter(a=>a.memberId===room.seats[2].id).reduce((sum,a)=>sum+a.points,0),B.technologyReward(room.settings,0,true));
+  assert.deepEqual(room.pilotAwards, []);
 });
 test("fixed AI slots cannot be removed, taken or relocated by host requests", (t) => {
   const { room, act } = roomFixture(t);
@@ -591,4 +593,36 @@ test("opening climate and actual weather/time changes enter both team logs once"
   const old = room.game;
   room.game=structuredClone(old);engine.broadcast(room);
   assert.equal(room.log.filter(line=>line.includes("[战场环境]")).length,2);
+});
+
+
+test("only campaign-eligible ground units suppress sites and each real PMC capture pays once", (t) => {
+  const {engine,room,act}=roomFixture(t);
+  act("start_game",{formation:[{unitId:"Type61",kitId:"standard"}]});
+  act("confirm_formation");act("confirm_deployment");
+  const game=room.game, point=game.battlefield.points[0];
+  const own=game.units.find(unit=>unit.ownerSeat===2);
+  for(const unit of game.units) if(!unit.facility){unit.x=0;unit.y=0;}
+  Object.assign(own,{x:point.x,y:point.y,flying:true});
+  engine.broadcast(room);assert.equal(point.owner,null);
+  own.flying=false;own.plan={};
+  engine.broadcast(room);assert.equal(point.owner,null);
+  delete own.plan;
+  engine.broadcast(room);assert.equal(point.owner,0);
+  let awards=room.economyAwards.filter(a=>a.kind==="capture");
+  assert.equal(awards.length,1);assert.equal(awards[0].memberId,room.seats[2].id);
+  assert.deepEqual([awards[0].money,awards[0].supplies],[750,1500]);
+  engine.broadcast(room);engine.broadcast(room);
+  assert.equal(room.economyAwards.filter(a=>a.kind==="capture").length,1);
+  assert.equal(game.battlefield.captureRewards.length,0);
+  // Losing and retaking a site is a new capture; faction AI receives no PMC receipt.
+  own.x=0;own.y=0;
+  const enemy=game.units.find(unit=>unit.ownerSeat===1&&!unit.facility);
+  Object.assign(enemy,{x:point.x,y:point.y,flying:false});
+  engine.broadcast(room);assert.equal(point.owner,1);
+  assert.equal(room.economyAwards.filter(a=>a.kind==="capture").length,1);
+  enemy.x=0;enemy.y=0;own.x=point.x;own.y=point.y;
+  engine.broadcast(room);assert.equal(point.owner,0);
+  awards=room.economyAwards.filter(a=>a.kind==="capture");
+  assert.equal(awards.length,2);assert.notEqual(awards[0].captureId,awards[1].captureId);
 });

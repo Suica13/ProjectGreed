@@ -133,7 +133,7 @@ test("developer catalog edits unit overrides, offers save/discard on close, and 
     expect(editorRequests.filter((url) => url.pathname === "/api/editor/bootstrap")).toHaveLength(
       1,
     );
-    await page.screenshot({ path: "tmp/catalog-developer.png" });
+    await page.screenshot({ path: "tmp/verification/screenshots/catalog-developer.png" });
   } finally {
     await page.close();
     await app.close();
@@ -190,7 +190,7 @@ test("mobile developer preview keeps edit and close controls accessible", async 
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
       true,
     );
-    await page.screenshot({ path: "tmp/catalog-developer-mobile.png" });
+    await page.screenshot({ path: "tmp/verification/screenshots/catalog-developer-mobile.png" });
   } finally {
     await page.close();
     await app.close();

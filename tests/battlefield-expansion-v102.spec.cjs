@@ -38,6 +38,6 @@ test(`0087 battle deploys and renders on ${mapId} at ${width}px`,async({page})=>
   expect(state.map).toBe(mapId);expect(state.slots).toBe(12);expect(state.units).toBeGreaterThan(12);
   expect(state.factions.map(t=>t.faction)).toEqual(['AEUG','TITANS']);expect(state.points).toBe(4);
   expect(state.towers.every(t=>t.level===4&&t.hp===39063&&t.name.includes('Lv.4'))).toBe(true);
-  await page.locator('#map').screenshot({path:`build/v102-${mapId}-${width}.png`});
+  await page.locator('#map').screenshot({path:`tmp/verification/screenshots/v102-${mapId}-${width}.png`});
   expect(errors).toEqual([]);
 });

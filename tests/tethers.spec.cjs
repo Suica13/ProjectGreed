@@ -112,7 +112,7 @@ test("Gouf heat rods and Ball K anchors render a native tip and an attached cabl
     assert.ok(result.order.indexOf("cable") >= 0);
     assert.ok(result.order.indexOf("cable") < result.order.indexOf("unit"));
     assert.ok(result.order.indexOf("tip") > result.order.indexOf("unit"));
-    await page.screenshot({ path: ".openai/" + unitId + "-tether.png" });
+    await page.screenshot({ path: "tmp/verification/screenshots/" + unitId + "-tether.png" });
     const stages = await page.evaluate(() => {
       const f = MapCombat.frame,
         shot = f.plan.shots[0],

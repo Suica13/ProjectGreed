@@ -2050,10 +2050,10 @@
             <div id="deploymentBottomBar" hidden>
                   <div id="deploymentRoster" role="listbox" aria-label="待部署单位"></div>
                   <div id="deploymentControls">
+                    <button id="deploymentAuto" type="button">自动部署</button>
                     <button id="deploymentUnplace" type="button">取消部署</button>
                     <button id="deploymentClear" type="button">全部清空</button>
                   </div>
-                  <button id="deploymentAuto" type="button">自动部署</button>
             </div>
             <span id="mapEnvironment" class="map-environment is-ground">地面</span><span id="mapClimateStatus" aria-live="polite" style="position:absolute;top:42px;left:12px;z-index:8;padding:3px 8px;background:#071b2bbd;border-radius:4px;font-size:12px"></span>
             <div class="map-camera-controls" aria-label="地图缩放">
@@ -3076,8 +3076,8 @@
       .production-purchase .resource-balance span { gap:3px; }
       .production-purchase .resource-balance svg { width:12px; height:12px; }
       .production-purchases { grid-template-columns:1fr; }
-      #produceUnit[data-license-locked="true"], #buyProductionKit[data-license-locked="true"] { position:relative; opacity:1; }
-      #produceUnit[data-license-locked="true"]::after, #buyProductionKit[data-license-locked="true"]::after { content:""; position:absolute; inset:0; border-radius:inherit; background:rgba(0,0,0,0.68); pointer-events:none; }
+      #produceUnit[data-license-locked="true"] { position:relative; opacity:1; }
+      #produceUnit[data-license-locked="true"]::after::after { content:""; position:absolute; inset:0; border-radius:inherit; background:rgba(0,0,0,0.68); pointer-events:none; }
       .production-price-row { display:flex; align-items:center; justify-content:space-between; gap:12px; width:100%; }
       #productionPrice { display:flex; flex-direction:column; align-items:stretch; }
       #formationInventorySale { flex-wrap:wrap; }
@@ -3149,8 +3149,7 @@
                   <div id="productionQuantity"></div>
                   <div id="productionLicensePrice" class="resource-balance"></div>
                   <button id="purchaseProductionLicense" type="button">购买部署许可</button>
-                  <button id="produceUnit" type="button" class="primary">生产机体＋套件 ×1</button>
-                  <button id="buyProductionKit" type="button">仅购买所选套件 ×1</button>
+                  <button id="produceUnit" type="button" class="primary">生产机体 ×1</button>
                 </div>
               </div>
               <p id="productionStatus" role="status" aria-live="polite"></p>

@@ -64,7 +64,7 @@ test("unlimited saved formations, era tags, default room caps and full-row panel
   await page.locator("#roomFormation").click();
   await expect(page.locator(".formation-row.unit-disabled")).toHaveCount(4);
   await expect(page.locator(".formation-row").first()).not.toHaveClass(/unit-disabled/);
-  await page.screenshot({ path: ".openai/tail-overcost-roster.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/tail-overcost-roster.png" });
   await page.locator("#saveFormation").click();
   await page.locator("#roomCostLimit").fill("5000");
   await page.locator("#roomBan-bannedFactions").selectOption("ZEON");
@@ -158,7 +158,7 @@ test("room join controls sit in team headers, AI settings stay in a dialog and h
     await page.locator("#kickPlayer").click();
     await expect(guest.locator("#openSkirmish")).toBeVisible();
     await expect(page.locator("#roomDetailPanel")).toBeHidden();
-    await page.screenshot({ path: ".openai/room-new-controls.png" });
+    await page.screenshot({ path: "tmp/verification/screenshots/room-new-controls.png" });
     expect(errors).toEqual([]);
   } finally {
     await guest.close();
@@ -204,6 +204,6 @@ test("MS-06F2 renders native eye, three kits and Panzerfaust on both facings", a
     return eyes;
   });
   expect(eyes).toBe(8);
-  await page.screenshot({ path: ".openai/ms-06f2-native-gallery.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/ms-06f2-native-gallery.png" });
   expect(errors).toEqual([]);
 });

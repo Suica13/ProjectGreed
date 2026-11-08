@@ -253,7 +253,7 @@ for (const viewport of [{width:320,height:640}, {width:390,height:844}, {width:4
       await page.locator("#productionFaction").selectOption("EFSF");
       await page.locator("#productionEra").selectOption("0079T1");
       await page.locator("#productionType").selectOption("type:MS");
-      await page.screenshot({path:"tmp/workshop-mobile-readable.png"});
+      await page.screenshot({path:"tmp/verification/screenshots/workshop-mobile-readable.png"});
     }
   });
 }

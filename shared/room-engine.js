@@ -1092,6 +1092,7 @@ function createRoomEngine({
     refreshHost(room);
     if (room.started && room.game.battlefield) {
       G.battlefieldMode.captureNearby(G, room.game);
+      awardBattlefieldCaptures(room);
       G.battlefieldMode.sync(G, room.game);
       syncBattlefieldStock(room);
       if (room.game.winner !== null && room.phase === "idle") room.phase = "finished";
@@ -1588,6 +1589,22 @@ function createRoomEngine({
     const attackers = ((room.battlefieldAttackers ||= {})[target.id] ||= []);
     if (!attackers.includes(owner.id)) attackers.push(owner.id);
   }
+  function awardBattlefieldCaptures(room) {
+    const pending = room.game.battlefield?.captureRewards;
+    if (!pending?.length) return;
+    const captures = pending.splice(0);
+    if (room.startedFromSave || room.replay) return;
+    const bonus = getRewardMultipliers();
+    for (const capture of captures) {
+      const owner = room.seats[capture.ownerSeat];
+      if (!owner || owner.bot || G.seatTeam(owner.seat) !== capture.team) continue;
+      const reward = G.battlefieldMode.captureReward(room.settings, capture.team);
+      (room.economyAwards ||= []).push({id:randomId(), matchId:room.matchId,
+        memberId:owner.id, kind:"capture", pointId:capture.pointId, captureId:capture.captureId,
+        money:Math.floor(reward.money*bonus.money), supplies:Math.floor(reward.supplies*bonus.supplies)});
+      log(room, `[据点占领] ${owner.name}占领据点，获得${reward.money}资金、${reward.supplies}物资（基础奖励）。`, {teams:[capture.team]});
+    }
+  }
   function awardBattlefieldDefeat(room, from, to, defeatedModel) {
     if (room.startedFromSave || room.replay || from?.team === to.team) return;
     room.economyDefeats ||= new Set();
@@ -1605,7 +1622,7 @@ function createRoomEngine({
     for (const memberId of participants) {
       const owner = room.members.get(memberId);
       if (!owner || owner.bot || owner.seat === null || G.seatTeam(owner.seat) === to.team) continue;
-      const assist = owner.id !== killer?.id, divisor = assist ? 16 : 8;
+      const assist = owner.id !== killer?.id, divisor = assist ? 4 : 2;
       (room.economyAwards ||= []).push({ id: randomId(), matchId: room.matchId,
         memberId: owner.id, kind: assist ? "assist" : "kill", targetId: to.id, model: to.model,
         money: Math.floor(cost / divisor * bonus.money), supplies: Math.floor(cost / divisor * bonus.supplies) });
@@ -1696,16 +1713,16 @@ function createRoomEngine({
     }
   }
   function reserveBattleStock(room) {
-    if (room.startedFromSave || room.campaign || room.settings.mode === "battlefield") return;
+    if (room.startedFromSave || room.campaign) return;
     room.technologyStartPoints = Object.fromEntries(room.seats.filter(Boolean).map(player =>
       [player.id, roomDevelopment().normalizeTechnologyPoints(player.technologyPoints)]));
+    if (room.settings.mode === "battlefield") return;
     for (const player of room.seats) {
       if (!player || player.bot || player.formationPreset) continue;
       const used = { inventory: {}, kits: {} };
       for (const record of Object.values(room.battleRoster)) {
         if (record.memberId !== player.id) continue;
         used.inventory[record.unitId] = (used.inventory[record.unitId] || 0) + 1;
-        used.kits[record.stockModel] = (used.kits[record.stockModel] || 0) + 1;
       }
       const next = G.normalizeStock(player);
       for (const kind of ["inventory", "kits"]) for (const [id, count] of Object.entries(used[kind])) {
@@ -1727,8 +1744,7 @@ function createRoomEngine({
       const settled = reserve.stockLossesSettled || 0;
       const losses = (reserve.losses || 0) - settled;
       if (losses <= 0) continue;
-      const stockModel = reserve.unitId + "__" + reserve.kitId;
-      const lost = { inventory: { [reserve.unitId]: losses }, kits: { [stockModel]: losses } };
+      const lost = { inventory: { [reserve.unitId]: losses }, kits: {} };
       for (const [kind, values] of Object.entries(lost)) for (const [id, count] of Object.entries(values)) {
         player[kind] ||= {};
         player[kind][id] = Math.max(0, (player[kind][id] || 0) - count);
@@ -1740,19 +1756,16 @@ function createRoomEngine({
     const occupied = new Map();
     for (const reserve of reserves) {
       if (reserve.readyRound !== null && !reserve.request) continue;
-      if (!occupied.has(reserve.ownerSeat)) occupied.set(reserve.ownerSeat, { chassis: new Map(), kits: new Map() });
-      const counts = occupied.get(reserve.ownerSeat), kit = reserve.unitId + "__" + reserve.kitId;
+      if (!occupied.has(reserve.ownerSeat)) occupied.set(reserve.ownerSeat, { chassis: new Map() });
+      const counts = occupied.get(reserve.ownerSeat);
       counts.chassis.set(reserve.unitId, (counts.chassis.get(reserve.unitId) || 0) + 1);
-      counts.kits.set(kit, (counts.kits.get(kit) || 0) + 1);
     }
     for (const reserve of reserves) {
       const player = room.seats[reserve.ownerSeat];
       if (!player || player.bot) continue;
       const counts = occupied.get(reserve.ownerSeat);
       const chassis = counts?.chassis.get(reserve.unitId) || 0;
-      const kits = counts?.kits.get(reserve.unitId + "__" + reserve.kitId) || 0;
-      reserve.stockAvailable = (player.inventory?.[reserve.unitId] || 0) > chassis &&
-        (player.kits?.[reserve.unitId + "__" + reserve.kitId] || 0) > kits;
+      reserve.stockAvailable = (player.inventory?.[reserve.unitId] || 0) > chassis;
     }
   }
   function settleBattleStock(room, player) {
@@ -1763,7 +1776,6 @@ function createRoomEngine({
     if (room.settings.mode !== "quick") for (const [id, record] of Object.entries(room.battleRoster || {})) {
       if (record.memberId !== player.id || room.game.units.some(actor => actor.id === id && actor.hp > 0)) continue;
       lost.inventory[record.unitId] = (lost.inventory[record.unitId] || 0) + 1;
-      lost.kits[record.stockModel] = (lost.kits[record.stockModel] || 0) + 1;
     }
     for (const kind of ["inventory", "kits"]) for (const [id, count] of Object.entries(lost[kind]))
       player[kind][id] = Math.max(0, (player[kind][id] || 0) - count);
@@ -1777,7 +1789,9 @@ function createRoomEngine({
     const weights = economy.technologyWeights(room.battleRoster, player.id, player.characterFaction);
     const balances = room.technologyStartPoints?.[player.id] || development.normalizeTechnologyPoints(player.technologyPoints);
     const limits = Object.fromEntries(development.factions.map(faction => [faction, development.maximumPoints(faction)]));
-    const total = economy.technologyReward(won, room.settings.mode, bonus.technology);
+    const total = room.settings.mode === "battlefield"
+      ? G.battlefieldMode.technologyReward(room.settings,G.seatTeam(player.seat),won,bonus.technology)
+      : economy.technologyReward(won, room.settings.mode, bonus.technology);
     const awards = economy.allocateTechnology(total, weights, balances, limits);
     player.technologyPoints = development.normalizeTechnologyPoints(player.technologyPoints);
     for (const [faction, points] of Object.entries(awards)) {
@@ -1804,6 +1818,7 @@ function createRoomEngine({
       for (const player of room.seats) {
         if (!player || player.bot) continue;
         const entryReward = G.battlefieldMode.baseReward(room.settings, G.seatTeam(player.seat));
+        awardMatchTechnology(room,player,G.seatTeam(player.seat) === room.game.winner,bonus);
         room.economyAwards.push({ id: randomId(), matchId: room.matchId, memberId: player.id,
           kind: "result", money: Math.floor(entryReward.money * bonus.money),
           supplies: Math.floor(entryReward.supplies * bonus.supplies) });

@@ -83,7 +83,7 @@ test("all source ship turret sprites exist and render above or below hull accord
   expect(result.reduce((n, r) => n + r.modules, 0)).toBe(275);
   expect(result.reduce((n, r) => n + r.sprites, 0)).toBe(206);
   for (const row of result) expect(row.issues, row.id).toEqual([]);
-  await page.screenshot({ path: ".openai/all-ship-turrets.png", fullPage: true });
+  await page.screenshot({ path: "tmp/verification/screenshots/all-ship-turrets.png", fullPage: true });
   expect(errors).toEqual([]);
 });
 test("Salamis rear turrets rest facing aft, only firing legal turrets aim, and display aim cannot change traverse checks", async ({

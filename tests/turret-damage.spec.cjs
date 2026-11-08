@@ -109,6 +109,6 @@ test("broken ship turrets retain their art and show small looping electricity at
     expect(sample.calls[0].y).toBeCloseTo(sample.point.y);
     expect(sample.calls[0].size).toBeCloseTo(sample.expectedSize);
   }
-  await page.screenshot({ path: ".openai/turret-damage-electric.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/turret-damage-electric.png" });
   expect(errors).toEqual([]);
 });

@@ -73,7 +73,7 @@ test("global settings switch language, mix music and effects live, mute active g
   const bounds = await page.locator("#clientSettingsDialog").boundingBox();
   expect(bounds.x).toBeGreaterThanOrEqual(0);
   expect(bounds.x + bounds.width).toBeLessThanOrEqual(390);
-  await page.screenshot({ path: ".openai/settings-mobile.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/settings-mobile.png" });
   expect(errors).toEqual([]);
 });
 test("host readiness is gold and all new maps resize room seats and render in battle", async ({
@@ -134,6 +134,6 @@ test("host readiness is gold and all new maps resize room seats and render in ba
       drawMap(1000);
     }
   });
-  await page.screenshot({ path: ".openai/plains-5v5.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/plains-5v5.png" });
   expect(errors).toEqual([]);
 });

@@ -21,6 +21,10 @@
 - `docs/rules/combat.md` 是现行战斗规则统一查询入口，由 `tools/export-combat-rules.cjs` 生成。修改武器、技能、状态、格纳库或驾驶员技能后执行 `npm run docs:combat-rules`；执行逻辑变化时同步维护生成器中的文字说明。普通客户端构建自动刷新报告，`npm run docs:combat-rules -- --check` 校验是否过时，不直接手改生成表格。
 
 
+## 临时文件与验证产物
+
+- 临时文件统一放在根目录 `tmp/`，不得在根目录、`.openai/` 或 `build/` 留下验证产物。截图写入 `tmp/verification/screenshots/`，测试日志写入 `tmp/verification/logs/`，性能报告写入 `tmp/verification/reports/`，Playwright 输出写入 `tmp/verification/browser-results/`，原生客户端验证隔离数据放在 `tmp/verification/native/`。一次性脚本放在 `tmp/scripts/`，验证完成后删除；长期可复用的测试保留在 `tests/`，工具保留在 `tools/`。`build/` 仅存放构建、打包产物及必要的构建缓存；不要用 `--output build/...` 覆盖测试输出目录。历史验证材料统一归档在 `tmp/verification/archive/`，清理时不得删除正式发行包、玩家存档或服务端运行日志。
+
 ## 文档维护
 
 - 新地图按地形和共享部署区安排出生位，优先紧凑的二维簇；不要为增加玩家席位而单向拉长出生位、部署区或地图。雇佣兵战争最多每队6个席位，其中1号位固定为阵营AI，普通玩家最多每队5人；同队部署区允许重叠，敌队部署区仍须分离。
@@ -28,3 +32,6 @@
 - 项目说明与生成的Markdown统一放入docs/，按docs/README.md分类。根README.md只作入口；根AGENTS.md与.agents/skills/*/SKILL.md因工具发现约定保留原位。不要在源码或素材目录新建说明MD。
 - 现行武器与技能规则只维护docs/rules/combat.md，由tools/export-combat-rules.cjs生成；AP仅保留stats.actionPoints与actionCost参考值，禁止新增AP倍率、预算、扣费、返还或减AP状态。穿甲beamAP等伤害分量与行动点无关，保持正常结算。
 - 移动文档须同步生成器、审计事务、打包输入与链接；已完成的临时速报不作为现行规则保留。维护记录及例外差值按原事务保留。
+
+
+- 发行产物按 `project.json` 的版本统一归档到 `build/<版本号>/`（例如 `build/V103/`）。Windows、Android、服务端和HTML产物均放在该版本目录内；APK命名为 `ProjectGreed-<版本号>.apk`。`public/client.html`仍保留为服务端读取的生成文件，通用构建缓存与验证目录不作为发行包交付。

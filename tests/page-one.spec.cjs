@@ -18,7 +18,7 @@ test("Page_00 roster shows native icons, support skills and explicit pending mec
   await expect(page.locator("#formationUnitDetail")).toContainText("自动补给");
   await expect(page.locator("#formationUnitDetail")).toContainText("战场侦察");
   await expect(page.locator("#formationUnitDetail")).toContainText("待接入");
-  await page.screenshot({ path: ".openai/page-one-support-unit.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/page-one-support-unit.png" });
   expect(errors).toEqual([]);
 });
 test("unarmed aircraft render and space ship death uses the large space sequence through its final frame", async ({

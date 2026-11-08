@@ -1,4 +1,4 @@
-/* Permanent permits, counted chassis and independently counted equipment kits. */
+/* Permanent permits and counted chassis; equipment selection is free. */
 "use strict";
 const Economy = (() => {
   const key = "projectgreed.economy.v1";
@@ -25,8 +25,6 @@ const Economy = (() => {
     const inventory = {}, kits = {};
     for (const entry of starter.units) {
       inventory[entry.unitId] = (inventory[entry.unitId] || 0) + starter.stockSets;
-      const modelId = entry.unitId + "__" + entry.kitId;
-      kits[modelId] = (kits[modelId] || 0) + starter.stockSets;
     }
     return { schemaVersion: 3, inventory, kits, money: starter.money, supplies: starter.supplies,
       licenses: defaultLicenses() };
@@ -184,7 +182,7 @@ const Economy = (() => {
     ]) {
       if (!award[field]) continue;
       const stock = normalizeStock(award[field]);
-      for (const kind of ["inventory", "kits"])
+      for (const kind of ["inventory"])
         for (const [id, count] of Object.entries(stock[kind])) {
           const change = (next[kind][id] || 0) + direction * count;
           // A delayed result may arrive after stock was used elsewhere. Still save
@@ -205,7 +203,7 @@ const Economy = (() => {
     next.money += award.money;
     next.supplies += award.supplies;
     const awardedStock = normalizeStock(award);
-    for (const kind of ["inventory", "kits"]) for (const [id, count] of Object.entries(awardedStock[kind])) {
+    for (const kind of ["inventory"]) for (const [id, count] of Object.entries(awardedStock[kind])) {
       const quantity = (next[kind][id] || 0) + count;
       if (!Number.isSafeInteger(quantity) || quantity > 1000000) throw Error("库存数量超过上限：" + id);
       next[kind][id] = quantity;
@@ -219,7 +217,7 @@ const Economy = (() => {
   }
   function normalizeStock(value = {}) {
     const result = { inventory: {}, kits: {} };
-    for (const kind of ["inventory", "kits"]) {
+    for (const kind of ["inventory"]) {
       const items = value[kind] ?? {};
       if (!items || typeof items !== "object" || Array.isArray(items)) throw Error("库存格式无效");
       for (const [id, count] of Object.entries(items)) {
@@ -244,10 +242,8 @@ const Economy = (() => {
     entries.forEach((entry, index) => {
       const model = entry.unitId + "__" + entry.kitId;
       if (!(available.inventory[entry.unitId] > 0)) reasons[index] = "stock";
-      else if (!(available.kits[model] > 0)) reasons[index] = "kit_stock";
       else {
         available.inventory[entry.unitId]--;
-        available.kits[model]--;
       }
       if (reasons[index]) missing.push(index);
     });
@@ -256,31 +252,11 @@ const Economy = (() => {
   function quantity(unitId) {
     return state.inventory[unitId] || 0;
   }
-  function kitQuantity(modelId) {
-    return state.kits[modelId] || 0;
-  }
   function unitOffer(unitId, production = catalog) {
     const permit = production.licenseOffers[unitId];
     if (!permit) return null;
     // Retain the original single-chassis production basis independently of permit pricing.
     return { unitId, money: permit.money, supplies: permit.supplies, quantity: 1 };
-  }
-  function kitOffer(modelId, production = catalog, models = modelsForUnits()) {
-    const model = models[modelId];
-    if (!model || model.formOnly || model.wip) return null;
-    const chassis = unitOffer(model.prefabId, production);
-    if (!chassis) return null;
-    const native = production.nativeEquipmentCosts?.[modelId];
-    // Independent items always have a non-negative absolute price. Native zero-fee
-    // switching did not manufacture equipment; use 20% of chassis as its fallback.
-    const fallback = (key) => Math.max(key === "money" ? 25 : 50, Math.round(chassis[key] * 0.2));
-    return {
-      unitId: model.prefabId,
-      kitId: model.kitId,
-      quantity: 1,
-      money: native?.money > 0 ? Math.ceil(native.money) : fallback("money"),
-      supplies: native?.supplies > 0 ? Math.ceil(native.supplies) : fallback("supplies"),
-    };
   }
   // Factory times are batch totals. Both campaign orders and the catalog expose
   // the same single-unit duration; personal production remains immediate for now.
@@ -294,20 +270,10 @@ const Economy = (() => {
     return { seconds, secondsPerTurn, turns: Math.max(1, Math.min(5, Math.ceil(seconds / secondsPerTurn))) };
   }
   function productionOffer(unitId, kitId, production = catalog, models = modelsForUnits()) {
-    const chassis = unitOffer(unitId, production),
-      kit = kitOffer(unitId + "__" + kitId, production, models);
-    return chassis && kit
-      ? {
-          unitId,
-          kitId,
-          quantity: 1,
-          chassis,
-          kit,
-          turns: productionTiming(unitId, kitId, production).turns,
-          money: chassis.money + kit.money,
-          supplies: chassis.supplies + kit.supplies,
-        }
-      : null;
+    const chassis = unitOffer(unitId, production), model = models[unitId + "__" + kitId];
+    if (!chassis || !model || model.formOnly || model.wip) return null;
+    return {...chassis, unitId, kitId, chassis,
+      turns:productionTiming(unitId,kitId,production).turns};
   }
   function mayProduce(unitId, faction) {
     return !!state.licenses[unitId] && available(licenseOffer(unitId), faction);
@@ -315,56 +281,27 @@ const Economy = (() => {
   function produce(unitId, kitId, faction) {
     const offer = productionOffer(unitId, kitId);
     if (!offer || !mayProduce(unitId, faction) || !affordable(offer)) return false;
-    const next = snapshot(),
-      modelId = unitId + "__" + kitId;
-    next.money -= offer.money;
-    next.supplies -= offer.supplies;
-    next.inventory[unitId] = quantity(unitId) + 1;
-    next.kits[modelId] = kitQuantity(modelId) + 1;
-    return commit(next);
-  }
-  function buyKit(unitId, kitId, faction) {
-    const modelId = unitId + "__" + kitId,
-      offer = kitOffer(modelId);
-    if (!offer || !mayProduce(unitId, faction) || !affordable(offer)) return false;
     const next = snapshot();
     next.money -= offer.money;
     next.supplies -= offer.supplies;
-    next.kits[modelId] = kitQuantity(modelId) + 1;
+    next.inventory[unitId] = quantity(unitId) + 1;
     return commit(next);
   }
   function purchasePlan(entries) {
-    const units = {},
-      kits = {};
-    for (const entry of entries) {
-      units[entry.unitId] = (units[entry.unitId] || 0) + 1;
-      const modelId = entry.unitId + "__" + entry.kitId;
-      kits[modelId] = (kits[modelId] || 0) + 1;
-    }
-    const items = [],
-      total = { money: 0, supplies: 0 };
-    function add(kind, id, count, offer) {
+    const units = {};
+    for (const entry of entries) units[entry.unitId] = (units[entry.unitId] || 0) + 1;
+    const items = [], total = {money:0,supplies:0};
+    function add(kind,id,count,offer) {
       if (count <= 0) return;
-      items.push({ kind, id, unitId: kind === "kits" ? id.split("__")[0] : id, count, offer });
-      if (offer) for (const key of ["money", "supplies"]) total[key] += offer[key] * count;
+      items.push({kind,id,unitId:id,count,offer});
+      if (offer) for (const key of ["money","supplies"]) total[key] += offer[key]*count;
     }
-    const buyingLicenses = new Set();
-    for (const [id, needed] of Object.entries(units)) {
-      const short = quantity(id) < needed || Object.entries(kits).some(([model, count]) =>
-        model.startsWith(id + "__") && kitQuantity(model) < count);
-      if (!state.licenses[id] && short) {
-        buyingLicenses.add(id);
-        add("licenses", id, 1, licenseOffer(id));
-      }
-      const gift = buyingLicenses.has(id) ? 1 : 0;
-      add("inventory", id, Math.max(0, needed - quantity(id) - gift), unitOffer(id));
+    for (const [id,needed] of Object.entries(units)) {
+      const gift = !state.licenses[id] && quantity(id)<needed ? 1 : 0;
+      if (gift) add("licenses",id,1,licenseOffer(id));
+      add("inventory",id,Math.max(0,needed-quantity(id)-gift),unitOffer(id));
     }
-    for (const [id, needed] of Object.entries(kits)) {
-      const unitId = id.split("__")[0];
-      const gift = buyingLicenses.has(unitId) && id === unitId + "__" + defaultKit(unitId) ? 1 : 0;
-      add("kits", id, Math.max(0, needed - kitQuantity(id) - gift), kitOffer(id));
-    }
-    return { ...total, items };
+    return {...total,items};
   }
   function purchaseMissingStock(entries, faction) {
     const plan = purchasePlan(entries);
@@ -405,8 +342,6 @@ const Economy = (() => {
     if (!licenseOffer(unitId)) throw Error("部署许可无效：" + unitId);
     next.licenses[unitId] = true;
     next.inventory[unitId] = (next.inventory[unitId] || 0) + 1;
-    const modelId = unitId + "__" + defaultKit(unitId);
-    next.kits[modelId] = (next.kits[modelId] || 0) + 1;
   }
   function available(offer, faction) {
     if (
@@ -456,13 +391,10 @@ const Economy = (() => {
     normalizeStock,
     stockPlan,
     quantity,
-    kitQuantity,
     unitOffer,
-    kitOffer,
     productionOffer,
     productionTiming,
     produce,
-    buyKit,
     purchasePlan,
     purchaseMissingStock,
     initial,

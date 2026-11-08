@@ -24,6 +24,6 @@ test("weapon details show attack steps, target multipliers and unit size", async
   await card.locator(".weapon-timeline > summary").click();
   await expect(card.locator(".weapon-flow li").first()).toBeVisible();
   await expect(card.locator(".weapon-inspector .weapon-effect-tag")).toHaveCount(7);
-  await page.screenshot({ path: ".openai/weapon-inspection.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/weapon-inspection.png" });
   expect(errors).toEqual([]);
 });

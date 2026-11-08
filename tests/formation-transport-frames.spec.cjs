@@ -49,7 +49,7 @@ test('carrier outlines follow wrapped groups and resize without changing cards o
     // The group starts in the right column, crosses a full row, then ends left:
     // four exposed horizontal edges rather than a bounding rectangle.
     expect(geometry.horizontalEdges).toBe(width > 1280 ? 4 : 2);
-    if (width === 390 || width === 1600) await page.screenshot({ path: `build/transport-frame-${width}.png` });
+    if (width === 390 || width === 1600) await page.screenshot({ path: `tmp/verification/screenshots/transport-frame-${width}.png` });
   }
   expect(await page.evaluate(() => JSON.stringify(Formation.current()))).toBe(saved);
   await page.setViewportSize({ width: 390, height: 844 });

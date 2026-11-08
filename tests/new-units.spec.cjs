@@ -110,7 +110,7 @@ test("new unit art, all native weapons and mixed-shot battle frames render offli
     expect(row.contacts, row.key).toBe(row.strikes);
     expect(row.finalHp, row.key).toBe(row.after);
   }
-  await page.locator("#native-gallery").screenshot({ path: ".openai/new-unit-gallery.png" });
+  await page.locator("#native-gallery").screenshot({ path: "tmp/verification/screenshots/new-unit-gallery.png" });
   expect(errors).toEqual([]);
 });
 class Peer {
@@ -236,7 +236,7 @@ test("red-side player's own ring is green, allies blue, enemies red, and non-act
     }
     expect(room.revision).toBe(revision);
     await expect(page.locator("#unitOwnership script")).toHaveCount(0);
-    await page.screenshot({ path: ".openai/player-ring-ownership.png" });
+    await page.screenshot({ path: "tmp/verification/screenshots/player-ring-ownership.png" });
     expect(errors).toEqual([]);
   } finally {
     for (const p of peers) p.ws.terminate();

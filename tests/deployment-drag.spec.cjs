@@ -18,12 +18,15 @@ for(const width of [1600,390]) test('two-row deployment grid, click selection an
   const roster=document.querySelector('#deploymentRoster'),controls=document.querySelector('#deploymentControls');
   const items=[...roster.children].map(el=>el.getBoundingClientRect());
   const r=roster.getBoundingClientRect(),c=controls.getBoundingClientRect(),b=document.querySelector('#deploymentBottomBar').getBoundingClientRect(),a=document.querySelector('#deploymentAuto').getBoundingClientRect();
-  return {height:r.height,rowHeight:items[0].height,first:items[0].toJSON(),second:items[1].toJSON(),roster:r.toJSON(),controls:c.toJSON(),panel:b.toJSON(),auto:a.toJSON(),overflow:roster.scrollHeight>roster.clientHeight};
+  return {confirm:document.querySelector("#confirmDeployment").getBoundingClientRect().toJSON(),height:r.height,rowHeight:items[0].height,first:items[0].toJSON(),second:items[1].toJSON(),roster:r.toJSON(),controls:c.toJSON(),panel:b.toJSON(),auto:a.toJSON(),overflow:roster.scrollHeight>roster.clientHeight};
  });
  expect(geometry.height).toBe(geometry.rowHeight*2+14);
  expect(geometry.second.y).toBe(geometry.first.y);expect(geometry.second.x).toBeGreaterThan(geometry.first.x);
  expect(geometry.roster.right).toBeLessThan(geometry.controls.left);
- expect(geometry.auto.bottom).toBeLessThanOrEqual(geometry.panel.top);
+ expect(geometry.auto.top).toBeGreaterThanOrEqual(geometry.panel.top);
+ expect(geometry.auto.right).toBeLessThanOrEqual(geometry.controls.right);
+ expect(Math.abs(geometry.auto.top-geometry.confirm.top)).toBeLessThan(1);
+ expect(geometry.auto.right).toBeLessThanOrEqual(geometry.confirm.left);
  if(width===390) expect(geometry.overflow).toBe(true);
  const ids=await page.evaluate(()=>{
   const room=[...dragEngine.rooms.values()][0],g=room.game,own=g.units.filter(u=>u.ownerSeat===Net.seat);
@@ -65,7 +68,7 @@ for(const width of [1600,390]) test('two-row deployment grid, click selection an
  const strip=await page.locator('#hudSquad').boundingBox();
  const auto=await page.locator('#deploymentAuto').boundingBox();
  expect(strip.y+strip.height).toBeLessThan(auto.y);
- await page.screenshot({path:'build/deployment-drag-'+width+'.png'});
+ await page.screenshot({path:'tmp/verification/screenshots/deployment-drag-'+width+'.png'});
  // Fill the receiving squad, keeping the next passenger separate for a rejected drop.
  const extra=await page.evaluate(ids=>{
   const room=[...dragEngine.rooms.values()][0],g=room.game,target=g.units.find(u=>u.id===ids.b);
@@ -73,12 +76,13 @@ for(const width of [1600,390]) test('two-row deployment grid, click selection an
   Rules.deploy(g,Net.seat,ids.others[4],5,7);
   room.revision++;dragEngine.broadcast(room);return ids.others[4];
  },ids);
- if(width===390) await page.evaluate(()=>MapCamera.focus(5,7,{preserveZoom:true}));
+ await page.evaluate(()=>MapCamera.focus(5,7,{preserveZoom:true}));
  const before=await page.evaluate(id=>{const u=getUnit(id);return{x:u.x,y:u.y};},extra);
  await drag(extra,ids.b);
  expect(await page.evaluate(id=>{const u=getUnit(id);return{x:u.x,y:u.y};},extra)).toEqual(before);
  expect(await page.evaluate(()=>dragNotes.filter(text=>text==='加入失败').length)).toBe(1);
  expect(await page.evaluate(()=>dragSounds.filter(key=>key==='underAttackSound').length)).toBe(1);
+ if(width===1600) await page.evaluate(()=>{MapCamera.setPercent(25);MapCamera.focus(4,5,{preserveZoom:true});});
  await drag(extra,ids.carrier);
  await expect(page.locator('#hangarDialog')).toBeVisible();
  const board=page.locator('#hangarDialog [data-board-id="'+extra+'"]');

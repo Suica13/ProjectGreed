@@ -142,7 +142,7 @@ for (const width of [1280, 390, 360])
     expect(
       await page.locator(".production-order").evaluate((el) => el.getBoundingClientRect().bottom),
     ).toBeCloseTo(geometry.footerBottom, 0);
-    await page.screenshot({ path: `.openai/production-${width}.png`, fullPage: true });
+    await page.screenshot({ path: `tmp/verification/screenshots/production-${width}.png`, fullPage: true });
     expect(await page.evaluate(() => ProfileSave.exportData().economy)).toMatchObject({
       money: 4200,
       supplies: 7800,
@@ -176,7 +176,7 @@ for (const width of [1280, 390])
         expect(await page.locator("#formationKitShop").evaluate((d) => d.matches(":modal"))).toBe(
           true,
         );
-        await page.screenshot({ path: `.openai/kit-purchase-modal-${width}.png` });
+        await page.screenshot({ path: `tmp/verification/screenshots/kit-purchase-modal-${width}.png` });
         await page.locator("#formationKitPurchase").press("Escape");
         await expect(page.locator("#formationKitShop")).not.toBeVisible();
         await expect(page.locator("#formationUnitDetail")).toBeVisible();

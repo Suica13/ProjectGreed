@@ -30,7 +30,7 @@ test("compact roster opens details only on selection and persists weapon changes
   await expect(page.locator("#formationDetailMovement")).toContainText("Move");
   await expect(page.locator("#formationDetailWeapons")).not.toContainText("发射次数");
   await page.evaluate(() => I18n.setLanguage("zh"));
-  await page.screenshot({ path: ".openai/formation-unit-details.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/formation-unit-details.png" });
   await page.locator("#formationDetailKit").selectOption("bazooka");
   await page.keyboard.press("Escape");
   await expect(page.locator("#formationUnitDetail")).toBeHidden();
@@ -49,7 +49,7 @@ test("compact roster opens details only on selection and persists weapon changes
   await expect(page.locator(".formation-row").first().locator(".formation-row-kit")).toContainText(
     "火箭筒",
   );
-  await page.screenshot({ path: ".openai/formation-12-units.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/formation-12-units.png" });
   expect(errors).toEqual([]);
 });
 test("offline room cap blocks oversized saved squads and limits the editor and AI to three", async ({

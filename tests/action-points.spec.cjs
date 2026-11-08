@@ -47,7 +47,7 @@ test("target-first editor permits repeating a weapon, enforces AP and preserves 
   await expect(page.locator("[data-remove-queue-weapon]")).toHaveCount(3);
   const draft = await page.evaluate(() => AttackControls.draft(game.units[0]).weapons);
   expect(draft).toEqual(["EF_RX_78NT_1_BR", "EF_RX_78NT_1_BR", "Common_DoubleVulcan_MS"]);
-  await page.screenshot({ path: ".openai/action-points-queue.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/action-points-queue.png" });
   await page.evaluate(() => {
     beginAttack = (a, b, w, weapons) => {
       window.queuedRequest = { target: b.id, weapons: weapons.map((w) => w.id) };

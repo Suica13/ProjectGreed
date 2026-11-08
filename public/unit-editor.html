@@ -5282,6 +5282,7 @@ const SpriteRenderer = (() => {
         if (!["tiles", "log", "chat", "researched"].includes(key)) visit(child);
     }
     visit(snapshot);
+    if(snapshot.game?.campaignBattlefield)ids.add("Facility_HQ__standard");
     const prefabs = new Set([...ids].map((id) => ART.models[id].prefabId));
     // Preload explicit conversion/ejection destinations, including every mapped kit.
     for (const id of prefabs) {

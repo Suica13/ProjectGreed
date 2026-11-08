@@ -67,6 +67,6 @@ test("native tanks render turrets, hidden equipment stays invisible and all ring
       (n) => n.startsWith("EF_BeamJavelin_BF") || n.startsWith("EF_BeamSaber_Double_AALDF"),
     ),
   ).toBe(false);
-  await page.screenshot({ path: ".openai/native-turrets-and-rings.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/native-turrets-and-rings.png" });
   expect(errors).toEqual([]);
 });

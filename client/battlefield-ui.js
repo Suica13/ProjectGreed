@@ -90,6 +90,7 @@ const BattlefieldUI = (() => {
     renderDeployment();
     return true;
   }
+  let pointSource="";
   let identity = "",
     arrivals = new Map();
   const pointIcon = new Image(), pointHighlight = new Image();
@@ -123,6 +124,24 @@ const BattlefieldUI = (() => {
       return canvas;
     });
   };
+  function preparePoints(config) {
+    if(pointSource===config.pointIcon)return;
+    pointSource=config.pointIcon;pointIcon.src=config.pointIcon||"";
+    pointGlows=[];pointHighlight.src=config.pointHighlight||"";
+  }
+  function drawCampaignObjective(ctx,node,team,x,y,tile) {
+    preparePoints(Rules.getMap(Rules.battlefieldMode.defaultMapId).battlefield);
+    if(node.kind==="base") {
+      const model=Rules.models.Facility_HQ__standard;
+      const scale=tile/Rules.mapCellPixels*ART.presentation.unitMapScale*model.presentation.mapScale;
+      SpriteRenderer.draw(ctx,"Facility_HQ__standard",x,y,scale,0,"Common_Idle",0);
+    } else if(pointIcon.complete&&pointIcon.naturalWidth) {
+      const scale=tile*1.7/Math.max(pointIcon.naturalWidth,pointIcon.naturalHeight);
+      ctx.drawImage(pointIcon,x-pointIcon.naturalWidth*scale/2,y-pointIcon.naturalHeight*scale/2,pointIcon.naturalWidth*scale,pointIcon.naturalHeight*scale);
+      const glow=pointGlows[team];
+      if(glow)ctx.drawImage(glow,x-glow.width*scale/2,y-glow.height*scale/2,glow.width*scale,glow.height*scale);
+    }
+  }
   function refresh() {
     renderDeployment();
     const state = game?.battlefield;
@@ -182,6 +201,6 @@ const BattlefieldUI = (() => {
     }
     ctx.restore();
   }
-  return { refresh, draw, dropHeight, click };
+  return { refresh, draw, dropHeight, click, drawCampaignObjective };
 })();
 window.BattlefieldUI = BattlefieldUI;

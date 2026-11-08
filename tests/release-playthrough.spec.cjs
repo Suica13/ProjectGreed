@@ -125,7 +125,7 @@ test("two clients keep their room across production, resolve combat, settle inve
     await expect(blue.locator("#victory")).toBeVisible();
     expect(await blue.evaluate(() => Economy.snapshot().money)).toBeGreaterThan(money);
     expect(await red.evaluate(() => Economy.quantity("Type61"))).toBe(redStock - 1);
-    await blue.screenshot({ path: ".openai/release-victory.png" });
+    await blue.screenshot({ path: "tmp/verification/screenshots/release-victory.png" });
     for (const p of [blue, red])
       await expect(p.locator("#roomPreparation")).toBeVisible({ timeout: 10000 });
     const wallet = await blue.evaluate(() => Economy.snapshot());

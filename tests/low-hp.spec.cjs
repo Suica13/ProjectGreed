@@ -37,7 +37,7 @@ test("map low HP effect loops on live units and stops immediately when HP recove
     return frames;
   });
   expect(frames).toEqual([0, 85, 85, 170, 340]);
-  await page.screenshot({ path: ".openai/low-hp-map.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/low-hp-map.png" });
   expect(errors).toEqual([]);
 });
 
@@ -130,7 +130,7 @@ test("battle electricity starts only after displayed HP drops below the threshol
     return counts;
   });
   expect(counts).toEqual([0, 0, 1, 0]);
-  await page.screenshot({ path: ".openai/low-hp-battle.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/low-hp-battle.png" });
   expect(errors).toEqual([]);
 });
 test("lethal hit plays one accelerated electric burst before explosion and sprite hiding", async ({
@@ -211,6 +211,6 @@ test("lethal hit plays one accelerated electric burst before explosion and sprit
   expect(samples.map((s) => s.electric)).toEqual([[], [0], [85], [340], [], [], []]);
   expect(samples.map((s) => s.targetSprites)).toEqual([1, 1, 1, 1, 1, 0, 0]);
   expect(samples[5].explosions).toBe(1);
-  await page.screenshot({ path: ".openai/death-electric-burst.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/death-electric-burst.png" });
   expect(errors).toEqual([]);
 });

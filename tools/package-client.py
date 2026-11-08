@@ -2,12 +2,19 @@
 from pathlib import Path
 from zipfile import ZipFile, ZIP_DEFLATED
 import json
+import shutil
 
 root = Path(__file__).resolve().parents[1]
 client = root / 'public/client.html'
 notes = root / 'dist/客户端使用说明.txt'
 project = json.loads((root / 'project.json').read_text(encoding='utf-8'))
-archive = root / f'dist/{project["name"]}-{project["version"]}-client.zip'
+output = root / 'build' / project['version']
+output.mkdir(parents=True, exist_ok=True)
+folder = output / f'{project["name"]}-{project["version"]}-client'
+folder.mkdir(exist_ok=True)
+for name in ['client.html', 'map-editor.html', 'unit-editor.html']:
+    shutil.copy2(root / 'public' / name, folder / name)
+archive = output / f'{project["name"]}-{project["version"]}-client.zip'
 with ZipFile(archive, 'w', compression=ZIP_DEFLATED, compresslevel=9) as bundle:
     bundle.write(client, 'client.html')
     bundle.write(root / 'public/map-editor.html', 'map-editor.html')

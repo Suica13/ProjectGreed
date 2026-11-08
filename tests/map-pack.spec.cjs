@@ -44,7 +44,7 @@ test("all thirteen maps can be selected in an offline room with descriptions and
       () => new Set(game.units.map((u) => u.x + "," + u.y)).size === game.units.length,
     ),
   ).toBe(true);
-  await page.screenshot({ path: ".openai/new-city-3v3.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/new-city-3v3.png" });
   expect(errors).toEqual([]);
 });
 
@@ -119,7 +119,7 @@ test("new map themes render in battle and an overview shows all ten different la
     }
     document.body.append(panel);
   });
-  await page.screenshot({ path: ".openai/map-pack-overview.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/map-pack-overview.png" });
   expect(errors).toEqual([]);
 });
 
@@ -174,5 +174,5 @@ test("cells use 75 percent of the previous size without enlarging units and the 
   await page.mouse.up();
   expect(await page.evaluate(() => mapGeo.oy)).not.toBe(metrics.oy);
   expect(await page.evaluate(() => MapCamera.zoom)).toBe(1);
-  await page.screenshot({ path: ".openai/map-grid-spacing.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/map-grid-spacing.png" });
 });

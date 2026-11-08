@@ -36,5 +36,5 @@ test("storm and day/night visual comparison",async({page})=>{
    ctx.fillStyle="#fff";ctx.font="20px sans-serif";ctx.fillText(weather+" / "+time,12,330);ctx.restore();
   }
  });
- await page.locator("#weather-quality").screenshot({path:"build/weather-quality.png"});
+ await page.locator("#weather-quality").screenshot({path:"tmp/verification/screenshots/weather-quality.png"});
 });

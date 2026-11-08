@@ -34,10 +34,14 @@ test('regional deployment at '+region+' / '+width+'px',async({page})=>{
  const info=await page.evaluate(()=>{
    const g=Net.snapshot.game,m=Rules.getMap(g.mapId),f=g.campaignBattlefield;
    return {width:Rules.mapWidth(g),height:Rules.mapHeight(g),areas:m.deploymentAreas||null,
-     valid:g.units.every(u=>Rules.campaignBattlefield.deploymentCells(Rules,g,u).some(c=>c.x===u.x&&c.y===u.y)),
+     valid:g.units.filter(u=>!u.facility).every(u=>Rules.campaignBattlefield.deploymentCells(Rules,g,u).some(c=>c.x===u.x&&c.y===u.y)),
      strip:m.geography.landingPlatforms.some(id=>id.startsWith('staging_'))};
  });
  expect(info).toEqual({width:43,height:51,areas:null,valid:true,strip:false});
  await expect(page.locator('#hudCampaignRegion')).toBeVisible();
+ await expect.poll(()=>page.evaluate(()=>!BattleAssets.loading)).toBe(true);
+ expect(await page.evaluate(()=>game.units.filter(u=>u.facility?.campaignDefense).length)).toBe(4);
+ await page.evaluate(()=>{MapCamera.setPercent(15);const node=game.campaignBattlefield.layout.nodes[0];MapCamera.focus(node.x,node.y,{preserveZoom:true});});
+ await page.screenshot({path:`tmp/verification/screenshots/campaign-facilities-${region}-${width}.png`});
  expect(errors).toEqual([]);
 });

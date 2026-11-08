@@ -65,7 +65,7 @@ for (const width of [1280, 390])
     });
     expect(footer.buyLeft).toBeGreaterThanOrEqual(footer.back);
     expect(footer.faction).toBeGreaterThanOrEqual(footer.buyRight);
-    await page.screenshot({ path: `.openai/stock-formation-${width}.png` });
+    await page.screenshot({ path: `tmp/verification/screenshots/stock-formation-${width}.png` });
     await row.locator(".produce-shortage-unit").click();
     await expect(page.locator("#productionScreen")).toBeVisible();
     await expect(page.locator("#productionUnitName")).toContainText("61式");

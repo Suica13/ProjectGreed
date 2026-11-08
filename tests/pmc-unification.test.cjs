@@ -35,50 +35,14 @@ test("all strategic production uses the PMC single-unit price and bounded source
   assert.equal(E.productionTiming("A", "k", fake).turns, 5);
 });
 
-test("campaigns buy and count kits independently, reuse removed equipment and preserve save validation", () => {
-  const s = C.create(ctx, members),
-    pool = s.teams[0];
-  pool.researched = D.nodes("EFSF").map((n) => n.id);
-  const unit = C.addUnit(ctx, s, 0, "jaburo", "RGM_79"),
-    old = unit.kitId;
-  const fee = E.kitOffer("RGM_79__bazooka"),
-    before = { money: pool.money, supplies: pool.supplies };
-  C.action(ctx, s, members, 0, {
-    action: "campaign_buy_kit",
-    turn: 1,
-    unitId: "RGM_79",
-    kitId: "bazooka",
-  });
-  assert.equal(pool.kits.RGM_79__bazooka, 1);
-  assert.equal(pool.money, before.money - fee.money);
-  const paid = pool.money;
-  C.action(ctx, s, members, 0, {
-    action: "campaign_equip",
-    turn: 1,
-    armyId: unit.id,
-    kitId: "bazooka",
-  });
-  assert.equal(pool.money, paid);
-  assert.equal(pool.kits.RGM_79__bazooka, 0);
-  assert.equal(pool.kits["RGM_79__" + old], 1);
-  C.action(ctx, s, members, 0, { action: "campaign_equip", turn: 1, armyId: unit.id, kitId: old });
-  assert.equal(pool.money, paid);
-  assert.equal(pool.kits.RGM_79__bazooka, 1);
-  assert.equal(C.validate(ctx, s, members).teams[0].kits.RGM_79__bazooka, 1);
-  assert.equal(C.view(s, 1, ctx).teams[0].kits, undefined);
-  const bad = structuredClone(s);
-  bad.teams[0].kits.RGM_79__bazooka = -1;
-  assert.throws(() => C.validate(ctx, bad, members), /库存/);
-  const unchanged = structuredClone(s);
-  assert.throws(
-    () =>
-      C.action(ctx, s, members, 1, {
-        action: "campaign_buy_kit",
-        turn: 1,
-        unitId: "RGM_79",
-        kitId: "bazooka",
-      }),
-    /开发/,
-  );
-  assert.deepEqual(s, unchanged);
+test("campaign equipment switches freely without stock or resource changes",()=>{
+ const s=C.create(ctx,members), pool=s.teams[0];
+ pool.researched=D.nodes("EFSF").map(n=>n.id);
+ const unit=C.addUnit(ctx,s,0,"jaburo","RGM_79"), old=unit.kitId;
+ const money=pool.money,supplies=pool.supplies;
+ for(const kitId of ["bazooka",old,"bazooka"]){
+   C.action(ctx,s,members,0,{action:"campaign_equip",turn:1,armyId:unit.id,kitId});
+   assert.equal(unit.kitId,kitId);assert.equal(pool.money,money);assert.equal(pool.supplies,supplies);
+ }
+ assert.deepEqual(C.validate(ctx,s,members).teams[0].kits,{});
 });

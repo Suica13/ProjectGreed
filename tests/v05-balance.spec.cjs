@@ -36,7 +36,7 @@ test("EXAM button immediately switches to native form and returns after three ow
   await expect(page.locator("#unitPanel")).toContainText("EXAM强化中");
   expect(await page.evaluate(() => game.units[0].en)).toBe(562.5);
   expect(await page.evaluate(() => game.units[0].model)).not.toBe(base);
-  await page.screenshot({ path: ".openai/exam-native-form.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/exam-native-form.png" });
   await page.evaluate(() => {
     for (let i = 0; i < 5; i++) Rules.end(game);
     update();
@@ -85,6 +85,6 @@ test("ship movement clicks use the hull centre even when destination overlaps it
     .poll(() => page.evaluate(() => Rules.center(game.units[0])))
     .toEqual({ x: 14, y: 10.5 });
   expect(await page.evaluate(() => game.units[0].x)).toBe(13);
-  await page.screenshot({ path: ".openai/ship-centre-movement.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/ship-centre-movement.png" });
   expect(errors).toEqual([]);
 });

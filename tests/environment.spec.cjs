@@ -52,7 +52,7 @@ test("space room deployment halves ground-unit movement and mobility, shows purp
       await page.evaluate(() => I18n.setLanguage("en"));
       await expect(page.locator("#mapEnvironment")).toHaveText("Space");
       await page.evaluate(() => I18n.setLanguage("zh"));
-      await page.screenshot({ path: ".openai/orbital-debris-space.png" });
+      await page.screenshot({ path: "tmp/verification/screenshots/orbital-debris-space.png" });
       await page.evaluate(() => Net.request("return_room"));
       await expect(page.locator("#roomPreparation")).toBeVisible();
     }

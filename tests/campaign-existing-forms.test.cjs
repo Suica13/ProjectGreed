@@ -62,7 +62,7 @@ test("New York restores deployed carriers and their passengers without dropping 
     preparationId: prep.id, delegate: false,
   });
   assert.equal(room.started, true);
-  assert.equal(room.game.units.length, 5);
+  assert.equal(room.game.units.filter(unit=>!unit.facility).length, 5);
   const restored = room.game.units.find(unit => unit.id === "saved-carrier");
   assert.equal(G.modelOf(restored).prefabId, "Medea_DeployState");
   assert.equal(restored.hp, 10000);

@@ -161,7 +161,7 @@ for (const [width, height] of [
         expect(geometry.tagRows, view + " tag rows").toBe(true);
         expect(geometry.overflow, view + " " + language).toEqual([]);
         if (language === "en")
-          await page.locator("#" + id).screenshot({ path: `tmp/density-${view}-${width}.png` });
+          await page.locator("#" + id).screenshot({ path: `tmp/verification/screenshots/density-${view}-${width}.png` });
         if (view === "pilots")
           expect(await page.locator("#customPilotList .pilot-record-cell").count()).toBe(
             profiles.length * 4,

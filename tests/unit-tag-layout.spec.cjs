@@ -51,13 +51,13 @@ for (const width of [1440, 390])
     await expect(carrier.locator("[data-tag]")).toHaveCount(width <= 720 ? 4 : 8);
     await expect(carrier.locator(".cost")).toBeVisible();
     if (width > 720) await expect(carrier.locator(".space")).toContainText("%");
-    await carrier.screenshot({path: `.openai/unit-tag-card-${width}.png`});
+    await carrier.screenshot({path: `tmp/verification/screenshots/unit-tag-card-${width}.png`});
     await carrier.locator(".unit-tags-more").click();
     const dialog = page.locator("#unitTagsDialog");
     await expect(dialog).toBeVisible();
     await expect(dialog.locator("[data-tag]")).toHaveCount(9);
     await expect(dialog.locator('[data-tag="Transport"]')).toBeVisible();
-    await dialog.screenshot({path: `.openai/unit-tag-panel-${width}.png`});
+    await dialog.screenshot({path: `tmp/verification/screenshots/unit-tag-panel-${width}.png`});
     await page.keyboard.press("Escape");
     await expect(dialog).not.toBeVisible();
     await expect(carrier.locator(".unit-tags-more")).toBeFocused();

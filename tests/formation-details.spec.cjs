@@ -36,7 +36,7 @@ test("catalog and enlisted units reuse details with a preview and isolated kit e
   await expect(
     page.locator("#formationDetailSlots .formation-weapon-detail").first(),
   ).toContainText("AP");
-  await page.screenshot({ path: ".openai/formation-catalog-detail.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/formation-catalog-detail.png" });
   await page.locator("#formationDetailKit").press("Escape");
   await expect(details).toBeFocused();
   assert.equal(await page.locator(".formation-row").count(), count);
@@ -188,7 +188,7 @@ test("environment block, grouped heading tags and inclusion dropdowns share the 
   await expect(page.locator("#formationDetailTags .unit-tags-primary")).toContainText("0079");
   await expect(page.locator("#formationDetailTags .unit-tags-types")).toContainText("MS");
   await expect(page.locator("#formationDetailStats")).not.toContainText("适应性");
-  await page.screenshot({ path: ".openai/formation-movement-tags.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/formation-movement-tags.png" });
   await page.locator("#closeFormationDetail").click();
   await page.setViewportSize({ width: 430, height: 900 });
   assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));

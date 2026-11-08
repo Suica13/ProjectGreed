@@ -68,7 +68,7 @@ for (const width of [1600, 390])
     await deploy.click();
     await expect(page.locator(".battlefield-reserve small")).toContainText("下一回合空投");
     await expect(deploy).toBeDisabled();
-    await page.screenshot({ path: "build/mercenary-deployment-" + width + ".png" });
+    await page.screenshot({ path: "tmp/verification/screenshots/mercenary-deployment-" + width + ".png" });
     await page.locator("#battlefieldDeploymentDialog").getByRole("button", { name: "关闭", exact: true }).click();
     await page.evaluate(() => {
       const room = [...bfEngine.rooms.values()][0];
@@ -107,6 +107,6 @@ for (const width of [1600, 390])
     const box = await page.locator("#battlefieldStatus").boundingBox();
     expect(box.x).toBeGreaterThanOrEqual(0);
     expect(box.x + box.width).toBeLessThanOrEqual(width);
-    await page.screenshot({ path: "build/battlefield-" + width + ".png" });
+    await page.screenshot({ path: "tmp/verification/screenshots/battlefield-" + width + ".png" });
     expect(errors).toEqual([]);
   });

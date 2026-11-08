@@ -67,7 +67,7 @@ test("offline AI profiles and OVERCOST final assembly edit, ally preview and dep
     ),
   );
   await expect(own).toContainText("编组COST: " + totalCost + " / 700");
-  await page.screenshot({ path: ".openai/final-assembly.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/final-assembly.png" });
   await page.locator("#editFinalFormation").click();
   await expect(page.locator(".formation-row.unit-disabled")).toHaveCount(2);
   await page.locator('[data-unit-id="MS_06F"]').click();
@@ -251,7 +251,7 @@ test("new high-tier native parts, eye, shield and weapon variants render in both
     return count;
   });
   expect(count).toBe(4);
-  await page.screenshot({ path: ".openai/high-tier-units.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/high-tier-units.png" });
   expect(errors).toEqual([]);
 });
 

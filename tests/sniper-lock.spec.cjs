@@ -71,7 +71,7 @@ test("native lock stays white through the charge and turns red only for a valid 
   expect(result.projectileTexture).not.toMatch(/LockTarget/);
   expect(result.speed).toBe(result.ordinarySpeed);
   expect(result.speed).toBeGreaterThan(1);
-  await page.screenshot({ path: "tmp/sniper-lock-red.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/sniper-lock-red.png" });
   expect(errors).toEqual([]);
 });
 

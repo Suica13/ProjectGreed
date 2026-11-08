@@ -80,7 +80,7 @@ test("completed legacy tree opens free BASE, new faction starts empty, old saves
     "data-state",
     "unlocked",
   );
-  await page.screenshot({ path: "tmp/0087-tech-unlocked.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/0087-tech-unlocked.png" });
   await page.reload();
   await ready(page);
   expect(await page.evaluate(() => PlayerProfile.faction())).toBe("TITANS");

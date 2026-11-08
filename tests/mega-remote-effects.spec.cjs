@@ -37,6 +37,6 @@ test("MEGA uses native three-part sheets at ten by three cells; remote bursts re
  expect(result.finite).toBe(true);expect(result.opacity).toBe(true);
  expect(result.origins.slice(0,5).every(point=>point.x===result.origins[0].x&&point.y===result.origins[0].y)).toBe(true);
  expect(result.origins[5]).not.toEqual(result.origins[0]);
- await page.locator("#mega-effect-evidence").screenshot({path:"build/mega-remote-effects.png"});
+ await page.locator("#mega-effect-evidence").screenshot({path:"tmp/verification/screenshots/mega-remote-effects.png"});
  expect(errors).toEqual([]);
 });

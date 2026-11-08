@@ -74,8 +74,9 @@ const BattleEconomy = (() => {
   }
   function price(modelId, resource = "money") {
     const unitId = modelId.split("__")[0];
-    const offer = catalog.offers[modelId] || catalog.offers[catalog.baseModels[unitId]];
-    return offer ? (offer[resource] ?? 0) / offer.quantity : 0;
+    const offer = catalog.licenseOffers[unitId];
+    const fallback = catalog.offers[catalog.baseModels[unitId]];
+    return offer ? (offer[resource] ?? 0) : fallback ? (fallback[resource] ?? 0)/fallback.quantity : 0;
   }
   function rates(faction, mode) {
     const speed = mode === "quick" ? 0.1 : 1;

@@ -82,6 +82,6 @@ test("ended-action E stays above the health bar right edge at every zoom and is 
       c = Rules.center(u);
     MapCamera.focus(c.x, c.y, { preserveZoom: true });
   });
-  await page.screenshot({ path: ".openai/action-marker-right-edge.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/action-marker-right-edge.png" });
   expect(errors).toEqual([]);
 });

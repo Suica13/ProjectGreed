@@ -54,7 +54,7 @@ for (const width of [1440, 390])
       expect(layout.headingOverlap).toBeLessThanOrEqual(1);
       expect(layout.identityOverlap).toBeLessThanOrEqual(1);
     }
-    await page.screenshot({ path: `.openai/page-two-tech-${width}.png` });
+    await page.screenshot({ path: `tmp/verification/screenshots/page-two-tech-${width}.png` });
     expect(errors).toEqual([]);
   });
 
@@ -113,6 +113,6 @@ test("shared clips load and render representative late MS, MA and ship loadouts"
     return result;
   });
   expect(samples).toHaveLength(7);
-  await page.screenshot({ path: ".openai/page-two-render.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/page-two-render.png" });
   expect(errors).toEqual([]);
 });

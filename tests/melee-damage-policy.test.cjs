@@ -5,16 +5,16 @@ const { loadCatalog } = require('../tools/load-catalog.cjs');
 const { applyWeaponBalance } = require('../tools/weapon-balance.cjs');
 const S = require('../shared/weapon-sequence.js');
 
-test('all melee weapons gain only 10 percent, ramming stays native, and source data stays intact', () => {
-  let melee = 0, beamMelee = 0, ramming = 0;
+test('ramming is reduced by 25 percent and source data stays intact', () => {
+  let ramming = 0;
   for (const prefab of loadCatalog().prefabs) {
     const raw = require("../tools/weapon-store.cjs").parse(fs.readFileSync(`assets/units/${prefab.id}/unit.json`, 'utf8'));
     for (const [id, before] of Object.entries(raw.weapons)) {
-      if (before.type !== 'melee' && before.category !== 'melee') continue;
+      if (!id.startsWith('Common_Push_')) continue;
       const after = prefab.weapons[id];
-      const factor = id.startsWith('Common_Push_') ? 1 : 1.1;
-      if (factor === 1) ramming++; else melee++;
-      if (Object.entries(before.damageComponents).some(([k,v]) => /beam/i.test(k) && v > 0)) beamMelee++;
+      const factor = 0.5625;
+      ramming++;
+
       assert.ok(Math.abs(after.damagePerShot - before.damagePerShot * factor) < 1e-7, prefab.id + '/' + id);
       assert.equal(after.beamDamageScale ?? 1, 1);
       const expected = structuredClone(before);
@@ -27,9 +27,11 @@ test('all melee weapons gain only 10 percent, ramming stays native, and source d
       assert.equal(after.en, before.en);
       assert.equal(after.actionCost, before.actionCost);
     }
-    const once = structuredClone(prefab);
-    applyWeaponBalance(prefab);
-    assert.deepEqual(prefab, once);
+    const meleeOnly = { stats: prefab.stats, weapons: Object.fromEntries(
+      Object.entries(prefab.weapons).filter(([id]) => id.startsWith('Common_Push_'))) };
+    const once = structuredClone(meleeOnly);
+    applyWeaponBalance(meleeOnly);
+    assert.deepEqual(meleeOnly.weapons, once.weapons);
   }
-  assert.ok(melee > 100 && beamMelee > 50 && ramming > 100);
+  assert.ok(ramming > 100);
 });

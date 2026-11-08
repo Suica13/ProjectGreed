@@ -9,7 +9,7 @@ const { chromium } = require("@playwright/test"),
   { createServer } = require("../server.js");
 async function main() {
   const root = path.resolve(__dirname, ".."),
-    output = process.argv[2] || ".openai/performance.json";
+    output = process.argv[2] || "tmp/verification/reports/performance.json";
   const app = createServer({ host: "127.0.0.1", port: 0 });
   let browser;
 

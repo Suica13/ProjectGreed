@@ -13,10 +13,12 @@ const root = path.resolve(__dirname, ".."),
 const exe = path.join(
   root,
   "build",
+  version,
   `ProjectGreed-${version}-windows-x64`,
   "ProjectGreed.exe",
 );
-const evidence = fs.mkdtempSync(path.join(root, "tmp", "native-client-"));
+fs.mkdirSync(path.join(root, "tmp/verification/native"), {recursive:true});
+const evidence = fs.mkdtempSync(path.join(root, "tmp/verification/native", "native-client-"));
 const data = path.join(evidence, "data"),
   exportsPath = path.join(evidence, "exports");
 let child, browser, page, lock, app;
@@ -110,10 +112,10 @@ async function stop() {
   await page.locator("#productionSearch").fill("Type61");
   await page.locator('#productionList [data-unit-id="Type61"] .production-unit-portrait').click();
   await page.locator("#produceUnit").click();
-  await page.locator("#buyProductionKit").click();
+  assert.equal(await page.locator("#buyProductionKit").count(), 0);
   const original = await page.evaluate(() => Economy.snapshot());
   assert.equal(original.inventory.Type61, 31);
-  assert.equal(original.kits.Type61__standard, 32);
+  assert.deepEqual(original.kits, {});
   // A real Windows file lock must reject the purchase without changing wallet or stock.
   lock = spawn(checks, ["--lock", path.join(data, "profile.json")], {
     windowsHide: true,
@@ -214,7 +216,7 @@ async function stop() {
           "native startup",
           "pilot recruitment",
           "production",
-          "kit purchase",
+          "free equipment and chassis-only production",
           "real locked-file rollback",
           "6 MiB save",
           "full process restart",

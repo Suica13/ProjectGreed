@@ -28,7 +28,7 @@ for (const width of [1600, 1000, 390]) test('separate battlefield settings and m
   });
   expect(layout).toBe(true);
   expect(await page.locator('#roomSettingsPage').evaluate(el=>el.scrollWidth<=el.clientWidth+1)).toBe(true);
-  await page.screenshot({path:'build/canyon-room-'+width+'.png'});
+  await page.screenshot({path:'tmp/verification/screenshots/canyon-room-'+width+'.png'});
   expect(await page.locator('#battlefieldTeam0era option').evaluateAll(options => options.map(option => option.value))).toEqual(['0079T1','0079T2']);
   await page.locator('#battlefieldTeam0faction').selectOption('ZEON');
   await expect.poll(()=>page.evaluate(()=>Net.snapshot.settings.battlefieldTeams[0].faction)).toBe('ZEON');

@@ -2379,3 +2379,12 @@ body.replay-active #gameScene .hud-terrain-strip {
   #gameScene #deploymentRoster { --deployment-cell:42px; }
   #gameScene #deploymentControls button { font-size:11px; }
 }
+
+/* Deployment commands stay together, two buttons per row. */
+#gameScene #deploymentBottomBar #deploymentControls { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px; }
+#gameScene #deploymentAuto { position:static;height:40px;margin:0;padding:5px; }
+#gameScene #deploymentBottomBar { grid-template-columns:minmax(0,1fr) minmax(168px,240px); }
+@media(max-width:650px) {
+  #gameScene #deploymentBottomBar { grid-template-columns:minmax(0,1fr) 146px; }
+  #gameScene #deploymentBottomBar #deploymentControls button { min-width:0!important; font-size:11px; }
+}

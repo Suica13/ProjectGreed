@@ -85,7 +85,7 @@ test("RX-78-1 formation explains ejection and offline room uses a clicked legal 
   expect(craft.old).toBe(false);
   expect(craft.selected).toBe(craft.id);
   await expect(page.locator("#unitPartStatus")).toContainText("空军");
-  await page.screenshot({ path: ".openai/rx78-ejection.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/rx78-ejection.png" });
   expect(errors).toEqual([]);
 });
 
@@ -162,7 +162,7 @@ test("RX-78-1 weapon layers and muzzles match the selected kit and melee weapon 
     return issues;
   });
   expect(result).toEqual([]);
-  await page.locator("#rx78-preview").screenshot({ path: ".openai/rx78-weapons.png" });
+  await page.locator("#rx78-preview").screenshot({ path: "tmp/verification/screenshots/rx78-weapons.png" });
 });
 
 test("core fighter moves across water and mountains with a rigid body and the native boost loop", async ({

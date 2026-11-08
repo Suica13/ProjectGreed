@@ -85,7 +85,7 @@ for (const width of [1440, 390]) test(`preview layering, sale confirmation and s
   await page.locator("#producePreviewUnit").click();
   const expected = await page.evaluate(() => Economy.catalog.offers[Economy.baseModel("Type61")].quantity);
   await expect(page.locator(".inventory-owned")).toHaveText("持有 " + expected + " 台");
-  await page.screenshot({ path: `.openai/preview-release-${width}.png` });
+  await page.screenshot({ path: `tmp/verification/screenshots/preview-release-${width}.png` });
   expect(errors).toEqual([]);
 });
 test("host edits AI faction inline and chat input aligns with room information", async ({ page }) => {
@@ -152,5 +152,5 @@ for (const width of [1440, 1001, 390]) test(`technology branches fit vertically 
     accents.push(geometry.accent);
   }
   expect(accents).toEqual(["rgb(122, 203, 255)", "rgb(255, 140, 150)"]);
-  await page.screenshot({ path: `.openai/technology-release-${width}.png` });
+  await page.screenshot({ path: `tmp/verification/screenshots/technology-release-${width}.png` });
 });

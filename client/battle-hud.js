@@ -73,7 +73,8 @@ const BattleHUD = (() => {
     confirm = byId("confirmResponse");
   responseBody.append(...[...defender.childNodes].filter((node) => node !== confirm));
   defender.append(responseBody, confirm);
-  byId("hudTurnActions").append(byId("confirmDeployment"), byId("endTurn"));
+  byId("deploymentControls").prepend(byId("deploymentAuto"),byId("confirmDeployment"));
+  byId("hudTurnActions").append(byId("endTurn"));
   // 查看资料是玩家主动打开的开关，不随单位选择重置。
   let infoEnabled = false;
   const infoButton = element("button", "", "信息");

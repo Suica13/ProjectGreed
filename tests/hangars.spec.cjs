@@ -73,7 +73,7 @@ test("hangar preview boards and launches existing units through visible controls
     HangarUI.open(getUnit("0-0"));
   });
   assert.equal(await dialog.locator("[data-board-id]").count(), 0);
-  await page.screenshot({ path: "tmp/hangar-preview.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/hangar-preview.png" });
   assert(await dialog.locator('[data-cargo-id="0-1"] button:not([data-inspect-cargo])').isDisabled());
   await page.evaluate(() => {
     Rules.end(game);

@@ -7,7 +7,7 @@ const { chromium } = require("@playwright/test");
 const root = path.resolve(__dirname, "..");
 const args = process.argv.slice(2);
 const option = (name, fallback) => (args.includes(name) ? args[args.indexOf(name) + 1] : fallback);
-const output = path.resolve(root, option("--output", "build/performance-v98/render.json"));
+const output = path.resolve(root, option("--output", "tmp/verification/reports/performance/render.json"));
 const html = path.resolve(root, option("--html", "public/client.html"));
 const samples = Number(option("--samples", "90"));
 const fixturePath = option("--game", null);

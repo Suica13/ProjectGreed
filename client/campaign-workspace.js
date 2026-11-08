@@ -147,7 +147,7 @@ window.CampaignWorkspace = (() => {
       m = UnitModels[prefab.id + "__" + price.kitId];
     const content = node("div", "", "campaign-inspector-content");
     content.append(node("h3", name(prefab)), UnitPreview.unitTags(m, {limit: Infinity}));
-    const equipment = node("label", "生产套件", "campaign-kit-choice");
+    const equipment = node("label", "出厂配置", "campaign-kit-choice");
     const kits = node("select");
     kits.id = "campaignProductionKit";
     for (const kit of prefab.weaponKits) {
@@ -243,17 +243,8 @@ window.CampaignWorkspace = (() => {
       node("summary", "价格明细"),
       node("small", "机体生产费"),
       money(price.chassis),
-      node("small", "出厂套件费"),
-      money(price.kit),
     );
     footer.append(breakdown);
-    const kitPrice = Economy.kitOffer(prefab.id + "__" + price.kitId);
-    const kitCount = pool().kits?.[prefab.id + "__" + price.kitId] || 0;
-    footer.append(node("p", `该套件库存 ${kitCount}`), money(kitPrice), action(
-      "单独购买套件 ×1",
-      () => Net.request("campaign_buy_kit", {turn: state().turn, unitId: prefab.id, kitId: price.kitId}),
-      !editable() || !CampaignRules.available(context(), state(), team(), prefab.id, price.kitId) || pool().money < kitPrice.money || pool().supplies < kitPrice.supplies,
-    ));
     const region = state().regions.find((item) => item.id === regionId),
       base = CAMPAIGN_WORLD.regions.find((item) => item.id === regionId);
     const reason = !CampaignRules.available(context(), state(), team(), prefab.id, price.kitId)

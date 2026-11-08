@@ -245,3 +245,11 @@ for (const [name, content] of outputs)
 require("./tools/build-map-editor.cjs").buildMapEditor(root);
 
 require("./tools/build-unit-editor.cjs").buildUnitEditor(root);
+
+// Keep the distributable HTML beside the other artifacts for this version.
+if (grantFlag < 0) {
+  const releaseDirectory = path.join(root, "build", project.version);
+  fs.mkdirSync(releaseDirectory, { recursive: true });
+  fs.copyFileSync(path.join(root, "public/client.html"),
+    path.join(releaseDirectory, `${project.name}-${project.version}.html`));
+}

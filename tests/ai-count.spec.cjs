@@ -35,7 +35,7 @@ test("AI quantity ratio has twelve choices, localizes, stays independent per bot
   await page.evaluate(() => I18n.setLanguage("ja"));
   await expect(page.locator("#roomDetailContent")).toContainText("編成機体数比率");
   await page.evaluate(() => I18n.setLanguage("zh"));
-  await page.screenshot({ path: ".openai/ai-count-settings.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/ai-count-settings.png" });
   await page.locator("#closeRoomDetail").click();
   await page.locator("#aiSettings2").click();
   await expect(page.locator("#ai-countPercent-2")).toHaveValue("100");

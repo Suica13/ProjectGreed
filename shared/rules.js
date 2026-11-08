@@ -359,8 +359,7 @@ const Tactics = (() => {
   }
   function stockAccess(model, restrictions) {
     const stock = restrictions.ownedStock || restrictions;
-    return (stock.inventory?.[model.prefabId] || 0) > 0 &&
-      (stock.kits?.[model.prefabId + "__" + model.kitId] || 0) > 0;
+    return (stock.inventory?.[model.prefabId] || 0) > 0;
   }
   function restrictionReason(model, restrictions = {}) {
     if (model.wip) return "wip";
@@ -3317,7 +3316,7 @@ const Tactics = (() => {
       event.evacuations = evacuations.filter(
         (e) => e.carrierId === event.to && event.after <= 0 && event.before > 0,
       );
-    let alive = [0, 1].map((t) => g.units.some((u) => u.team === t && u.hp > 0));
+    let alive = [0, 1].map((t) => g.units.some((u) => !u.facility?.campaignDefense && u.team === t && u.hp > 0));
     if (g.battlefield) battlefieldMode.sync(Tactics, g);
     else if (!options.deferVictory && (!alive[0] || !alive[1])) g.winner = alive[0] ? 0 : 1;
     return events;
@@ -3452,7 +3451,7 @@ const Tactics = (() => {
       });
     }
     const evacuations = hangars.evacuate(g);
-    const alive = [0, 1].map((team) => g.units.some((u) => u.hp > 0 && u.team === team));
+    const alive = [0, 1].map((team) => g.units.some((u) => !u.facility?.campaignDefense && u.hp > 0 && u.team === team));
     if (g.battlefield) battlefieldMode.sync(Tactics, g);
     else if (!alive[0] || !alive[1]) g.winner = alive[0] ? 0 : 1;
     return {
@@ -3543,7 +3542,7 @@ const Tactics = (() => {
     }
     if (events.some((e) => e.after <= 0)) {
       events.push(...hangars.evacuate(g).map((e) => ({ type: "evacuation", ...e })));
-      const alive = [0, 1].map((team) => g.units.some((u) => u.team === team && u.hp > 0));
+      const alive = [0, 1].map((team) => g.units.some((u) => !u.facility?.campaignDefense && u.team === team && u.hp > 0));
       if (g.battlefield) battlefieldMode.sync(Tactics, g);
     else if (!alive[0] || !alive[1]) g.winner = alive[0] ? 0 : 1;
     }
@@ -3611,7 +3610,7 @@ const Tactics = (() => {
       });
     }
     const teamsAlive = [0, 1].map((team) =>
-      g.units.some((unit) => unit.team === team && unit.hp > 0),
+      g.units.some((unit) => !unit.facility?.campaignDefense && unit.team === team && unit.hp > 0),
     );
     if (!g.battlefield && (!teamsAlive[0] || !teamsAlive[1])) g.winner = teamsAlive[0] ? 0 : 1;
     g.team = 1 - g.team;
@@ -3672,6 +3671,7 @@ const Tactics = (() => {
       u.origin = null;
     }
     campaignBattlefield.heal(Tactics, g);
+    battlefieldMode.heal(Tactics, g);
     // Supply ticks once on the recipient team's turn, with no stacking from overlapping providers.
     const providers = g.units.filter((u) => onMap(u) && u.team === g.team && modelOf(u).supplyAura);
     for (const u of g.units.filter((u) => onMap(u) && u.team === g.team)) {
@@ -3705,7 +3705,7 @@ const Tactics = (() => {
       }
     }
     g.turnEffects.push(...hangars.evacuate(g).map((e) => ({ type: "evacuation", ...e })));
-    const alive = [0, 1].map((team) => g.units.some((u) => u.team === team && u.hp > 0));
+    const alive = [0, 1].map((team) => g.units.some((u) => !u.facility?.campaignDefense && u.team === team && u.hp > 0));
     if (g.battlefield) battlefieldMode.sync(Tactics, g);
     else if (!alive[0] || !alive[1]) g.winner = alive[0] ? 0 : 1;
     if (g.battlefield) battlefieldMode.advance(Tactics, g);

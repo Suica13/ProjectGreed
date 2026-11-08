@@ -35,7 +35,7 @@ for(const width of [1440,390]) test(`compact strategic labels preserve intellige
   await expect(page.locator('[data-region-label="odessa"] .campaign-region-count')).toContainText("未知");
   await page.evaluate(()=>{const room=[...testEngine.rooms.values()][0];room.campaign.teams[0].intelligence.progress=75;room.revision++;testEngine.broadcast(room);});
   await expect(page.locator('[data-region-label="odessa"] .campaign-region-count')).not.toContainText(/约|未知/);
-  await page.screenshot({path:`tmp/campaign-compact-labels-${width}.png`});
+  await page.screenshot({path:`tmp/verification/screenshots/campaign-compact-labels-${width}.png`});
   if(width===1440) {
     await page.evaluate(()=>{
       const room=[...testEngine.rooms.values()][0],s=room.campaign;

@@ -681,10 +681,10 @@ test("stock rewards validate separate chassis and kits and survive a claim retry
   const mail=f.frames.get(ws).at(-1).mail.find(item=>item.activityId===published.id);
   assert(mail);assert.deepEqual(mail.rewards.inventory,{RGM_79:2});
   f.service.receive(ws,{type:"activity_claim",mailId:mail.id});
-  const award=f.frames.get(ws).at(-1).award;assert.deepEqual(award.kits,{RGM_79__beam_spray:4});
+  const award=f.frames.get(ws).at(-1).award;assert.equal(award.kits,undefined);
   f.service.receive(ws,{type:"activity_claim",mailId:mail.id});assert.deepEqual(f.frames.get(ws).at(-1).award,award);
   assert.throws(()=>f.service.publish(activity("online_now",{rewards:{inventory:{not_a_unit:1}}})));
-  assert.throws(()=>f.service.publish(activity("online_now",{rewards:{kits:{RGM_79__beam_spray:-1}}})));
+  assert.throws(()=>f.service.publish(activity("online_now",{rewards:{inventory:{RGM_79:-1}}})));
 });
 
 test("published reward edits update pending mail, preserve in-flight receipts and persist for later delivery", (t) => {
@@ -727,19 +727,14 @@ test("published reward edits update pending mail, preserve in-flight receipts an
   assert.deepEqual(f.frames.get(players[1].ws).at(-1).award, receipt);
   assert.throws(() =>
     f.service.updateCopy(event.id, "Invalid", "Invalid", {
-      rewards: { kits: { RGM_79__beam_spray: -1 } },
+      rewards: { inventory: { RGM_79: -1 } },
     }),
   );
   assert.deepEqual(
     f.service.adminSnapshot().activities.find((a) => a.id === event.id),
     current,
   );
-  assert.throws(() => f.service.updateCopy(event.id, "Invalid kit", "Invalid", {
-    rewards, stockConfigurations:{RGM_79:{kitId:"MS_06F__machine_gun",extraKits:{}}}
-  }));
-  assert.throws(() => f.service.updateCopy(event.id, "Wrong count", "Invalid", {
-    rewards, stockConfigurations:{RGM_79:{kitId:"RGM_79__beam_spray",extraKits:{RGM_79__beam_spray:2}}}
-  }));
+
   assert.deepEqual(f.service.adminSnapshot().activities.find(a => a.id === event.id), current);
   f.restart();
   assert.deepEqual(f.service.adminSnapshot().activities.find(a => a.id === event.id).stockConfigurations,current.stockConfigurations);

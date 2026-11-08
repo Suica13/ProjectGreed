@@ -36,12 +36,10 @@ test("regional orders and reserved production slots update immediately",async({p
  await workspace.locator("#campaignProductionKit").selectOption("bazooka");
  await workspace.locator(".campaign-kit-breakdown summary").click();
  await expect(workspace.locator(".campaign-kit-breakdown")).toContainText("机体生产费");
- await expect(workspace.locator(".campaign-kit-breakdown")).toContainText("出厂套件费");
+ await expect(workspace.locator(".campaign-kit-breakdown")).not.toContainText("出厂套件费");
  expect(await page.evaluate(()=>Economy.hasLicense("RGM_79"))).toBe(false);
  await expect(workspace.locator('.campaign-purchase')).toContainText("每次生产1台");
- await workspace.getByRole("button",{name:"单独购买套件 ×1",exact:true}).click();
- await expect.poll(()=>page.evaluate(()=>Net.snapshot.campaign.teams[0].kits.RGM_79__bazooka)).toBe(1);
- await expect(workspace.locator('.campaign-purchase')).toContainText("该套件库存 1");
+ expect(await workspace.getByRole("button",{name:"单独购买套件 ×1",exact:true}).count()).toBe(0);
  await expect.poll(()=>page.evaluate(()=>Net.awaiting)).toBe(null);
  await workspace.getByRole("button",{name:"提交生产请求",exact:true}).click();
  await expect.poll(()=>page.evaluate(()=>Net.snapshot.campaign.orders.filter(o=>o.unitId==="RGM_79"&&o.kitId==="bazooka").length)).toBe(1);

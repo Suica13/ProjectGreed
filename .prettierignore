@@ -2,3 +2,5 @@ public/
 client/art.json
 node_modules/
 .openai/
+tmp/
+build/

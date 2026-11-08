@@ -62,7 +62,7 @@ test("offline room deploys into the new strip and rejects the original battlefie
       ),
     ),
   ).toBe(true);
-  await page.screenshot({ path: ".openai/expanded-deployment-strips.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/expanded-deployment-strips.png" });
   await page.locator("#confirmDeployment").click();
   await expect(page.locator("#deploymentPanel")).toBeHidden();
   expect(errors).toEqual([]);

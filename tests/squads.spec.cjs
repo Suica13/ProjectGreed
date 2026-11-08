@@ -233,7 +233,7 @@ test("large cells render squad members at the same scale as a standalone unit", 
   expect(result.groupScale).toBe(1);
   expect(result.scales.length).toBeGreaterThanOrEqual(4);
   expect(result.scales.every((scale) => Math.abs(scale - result.scales[0]) < 0.0001)).toBe(true);
-  await page.screenshot({ path: "tmp/squad-large-grid.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/squad-large-grid.png" });
 });
 
 test("hangar launch can be confirmed onto a two-member squad", async ({ page }) => {
@@ -419,7 +419,7 @@ for (const width of [1440, 390])
     expect(new Set(facing.result).size).toBe(1);
     expect(facing.tip.y).toBeGreaterThan(0);
     expect(facing.mutated).toBe(false);
-    await page.screenshot({ path: `tmp/squad-plan-${width}.png` });
+    await page.screenshot({ path: `tmp/verification/screenshots/squad-plan-${width}.png` });
     await page.locator('[data-squad-member="squad-2"]').click();
     await page.evaluate(() => AttackControls.choose(getUnit(selected), game.units.at(-1)));
     await expect(page.locator("#attackEditor [data-attack-member]")).toHaveCount(1);
@@ -500,7 +500,7 @@ for (const width of [1440, 390])
       "counter",
       "evade",
     ]);
-    await page.screenshot({ path: `tmp/squad-counter-${width}.png` });
+    await page.screenshot({ path: `tmp/verification/screenshots/squad-counter-${width}.png` });
     await page.locator("#confirmResponse").click();
     await expect(page.locator("#reaction")).toBeHidden();
     expect(

@@ -81,7 +81,7 @@ test("four players choose spawn seats, room budget gates readiness, names and ch
     for (const p of pages)
       await expect(p.locator("#roomChatLines")).toContainText("Room chat is visible");
     await expect(guest.locator("#roomChatLines strong")).toHaveCSS("color", "rgb(101, 207, 255)");
-    await host.screenshot({ path: ".openai/multiplayer-room.png" });
+    await host.screenshot({ path: "tmp/verification/screenshots/multiplayer-room.png" });
     for (const p of pages) {
       await p.locator("#roomFormation").click();
       while ((await p.locator(".formation-row").count()) > 1)
@@ -218,7 +218,7 @@ test("room controls and chat stay inside the desktop viewport and the compact la
       expect(layout.dialog).toBeLessThanOrEqual(height);
     }
     await page.setViewportSize({ width: 1366, height: 768 });
-    await page.screenshot({ path: ".openai/multiplayer-room-final.png" });
+    await page.screenshot({ path: "tmp/verification/screenshots/multiplayer-room-final.png" });
     await page.evaluate(() => I18n.setLanguage("en"));
 
     await expect(page.locator("#roomMapSelect option:checked")).toHaveText(

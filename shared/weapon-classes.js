@@ -92,6 +92,10 @@ const WeaponClasses = (() => {
     /(?:^|_)(?:Arm(?:BR|BSG|BMG|MG|GL|MS|BeamSaber|Saber)|Wrist)(?:_|$|__lv)/i.test(
       weapon.sourceName || weapon.sourceWeapon || weapon.id || "",
     );
+  // These utility melee families are usable without any pilot-stat threshold.
+  const pilotGateExempt = (weapon) => weapon.type === "melee" &&
+    /(?:^|_)(?:HeatRod|SeaSerpent|SeaSnake|SHM|HyperHammer|SuperHammer)(?:_|$)/i.test(
+      weapon.sourceName || weapon.sourceWeapon || weapon.id || "");
   const headBeam = (weapon) =>
     weapon.type === "beam" &&
     (/(?:^|_)Head(?:_|Beam|BR|BSG|BMG)/i.test(
@@ -141,7 +145,7 @@ const WeaponClasses = (() => {
                   ? 1.15
                   : kind === "melee"
                     ? 1.1
-                    : 1,
+                    : kind === "ram" ? 0.75 : 1,
           accuracy: 1,
           en: 1,
           range: 1,
@@ -205,6 +209,7 @@ const WeaponClasses = (() => {
     machineGun,
     headVulcan,
     wristWeapon,
+    pilotGateExempt,
     headBeam,
     defaultRules,
     isWeaponSkill,

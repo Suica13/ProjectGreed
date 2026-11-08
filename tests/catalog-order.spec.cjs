@@ -53,6 +53,6 @@ test("all factions sort by faction then localized name and show corrected model 
     "MS_06F2",
     "MS_06J",
   ]);
-  await page.screenshot({ path: ".openai/catalog-order.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/catalog-order.png" });
   expect(errors).toEqual([]);
 });

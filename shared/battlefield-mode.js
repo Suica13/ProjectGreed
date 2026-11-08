@@ -78,6 +78,27 @@ const BattlefieldMode = (() => {
       lower.money + (cost-lower.costLimit)*(next.money-lower.money)/(next.costLimit-lower.costLimit));
     return {money,supplies:money*2};
   }
+  function captureReward(settings, team) {
+    const era = settings.battlefieldTeams?.[team]?.era || "0079T2";
+    const money = {"0079T1":500,"0079T2":750,"0087T1":1000,"0087T2":1500}[era];
+    return {money,supplies:money*2};
+  }
+  function technologyReward(settings,team,won,activity=1) {
+    return Math.floor((won?660:540)*baseReward(settings,team).money/3750*activity);
+  }
+  function heal(G,game) {
+    if (!game.battlefield) return;
+    const sites = deploymentSites(G,game,game.team);
+    for (const unit of game.units) {
+      if (!G.onMap(unit) || unit.team!==game.team || unit.embarked || unit.facility) continue;
+      const nearby=sites.filter(site=>G.cells(unit).some(cell=>
+        Math.hypot(cell.x-site.x,cell.y-site.y)<=captureRadius));
+      if (!nearby.length) continue;
+      const base=nearby.some(site=>site.id.startsWith("base:")), model=G.modelOf(unit);
+      unit.hp=Math.min(model.hp,unit.hp+Math.round(model.hp*(base?0.2:0.15)));
+      unit.en=Math.min(model.en,unit.en+Math.ceil(model.en*(base?0.4:0.3)));
+    }
+  }
   const affiliated = (model, faction) =>
     (model.availableFactions || [model.faction]).includes(faction);
   const erasForFaction = (G, faction) =>
@@ -304,10 +325,17 @@ const BattlefieldMode = (() => {
           G.cells(unit).some((cell) => Math.hypot(cell.x - point.x, cell.y - point.y) <= captureRadius),
       );
       const present = new Set(occupants.map((unit) => unit.team));
-      if (present.size === 1) {
+      const capturer = occupants.filter(unit => G.campaignBattlefield.canSuppress(G, unit))
+        .sort((a,b) => Math.hypot(a.x-point.x,a.y-point.y)-Math.hypot(b.x-point.x,b.y-point.y) ||
+          String(a.id).localeCompare(String(b.id)))[0];
+      if (present.size === 1 && capturer) {
         const owner = [...present][0];
         if (point.owner !== owner) {
           point.owner = owner;
+          const captureId = (game.battlefield.captureSequence || 0) + 1;
+          game.battlefield.captureSequence = captureId;
+          (game.battlefield.captureRewards ||= []).push({captureId, pointId:point.id,
+            ownerSeat:G.ownerOf(capturer), team:owner, unitId:capturer.id});
           for (const unit of occupants) unit.origin = null;
           (game.turnEffects ||= []).push({
             type: "battlefield_capture",
@@ -340,7 +368,7 @@ const BattlefieldMode = (() => {
       late: {AEUG:{RGM_86R:12},TITANS:{RMS_154_Kai:12},NEO_ZEON:{AMX_009:12},randomMS:5},
     },
   };
-  const waveStage = round => round < 10 ? "early" : round <= 50 ? "middle" : "late";
+  const waveStage = round => round < 11 ? "early" : round <= 50 ? "middle" : "late";
   function pool(G, state, team) {
     const selected = state.teams[team];
     const allowedEras = eras.slice(selected.era.startsWith("0087") ? 2 : 0, eras.indexOf(selected.era) + 1);
@@ -534,6 +562,9 @@ const BattlefieldMode = (() => {
     );
   }
   return {
+    captureReward,
+    technologyReward,
+    heal,
     eraStrength,
     roomEra,
     validateRoomSelection,

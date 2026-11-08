@@ -145,9 +145,9 @@ test("melee crosses the divider, draws native slash sprites for both strikes and
     expect(first.ellipses).toBe(0);
   }
   await sample(false, "first");
-  await page.screenshot({ path: ".openai/melee-divider-swing.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/melee-divider-swing.png" });
   await sample(false, "second");
-  await page.screenshot({ path: ".openai/melee-second-swing.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/melee-second-swing.png" });
   expect(errors).toEqual([]);
 });
 
@@ -188,5 +188,5 @@ test("Dom chest shotgun renders eight separated native pellets", async ({ page }
     };
   });
   expect(result).toEqual({ count: 8, lanes: 8 });
-  await page.screenshot({ path: ".openai/dom-shotgun-fan.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/dom-shotgun-fan.png" });
 });

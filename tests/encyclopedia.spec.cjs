@@ -46,7 +46,7 @@ for (const width of [2400, 1440, 390]) {
     expect(positions[0].y).toBe(positions[1].y);
     expect(positions[1].x).toBeGreaterThan(positions[0].x);
     expect(positions[2].y).toBeGreaterThan(positions[0].y);
-    if (width !== 2400) await page.screenshot({ path: 'tmp/encyclopedia-' + width + '.png' });
+    if (width !== 2400) await page.screenshot({ path: 'tmp/verification/screenshots/encyclopedia-' + width + '.png' });
     await page.locator('#encyclopediaSearch').fill('RX_78_4');
     await expect(cards).toHaveCount(2);
     await cards.first().getByRole('button', { name: '详细', exact: true }).click();

@@ -98,7 +98,7 @@ test("map fills the battle stage and unit inspection is contextual", async ({ pa
   );
   await page.evaluate(() => byId("hudSelectionSummary").click());
   assert.equal(await page.evaluate(() => byId("hudUnitPanel").hidden), false);
-  await page.screenshot({ path: ".openai/hud-selected.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/hud-selected.png" });
   await page.keyboard.press("Escape");
   assert.equal(await page.evaluate(() => selected), null);
   assert.deepEqual(errors, []);
@@ -147,7 +147,7 @@ test("floating movement and target-first weapon commands reuse existing actions"
     await page.evaluate(() => byId("hudAttackPlanner").parentElement.id),
     "hudUnitPanel",
   );
-  await page.screenshot({ path: ".openai/hud-attack-planner.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/hud-attack-planner.png" });
   await page.evaluate(() => document.querySelector('[data-queue-weapon="EF_90mmMG"]').click());
   assert.ok((await page.evaluate(() => byId("attackQueueBudget").textContent)).includes("3 AP"));
   await page.evaluate(() => byId("confirmAttackQueue").click());
@@ -158,7 +158,7 @@ test("floating movement and target-first weapon commands reuse existing actions"
     reaction: byId("reaction").hidden,
   }));
   assert.deepEqual(reaction, { phase: "reaction", panel: true, commands: true, reaction: false });
-  await page.screenshot({ path: ".openai/hud-reaction.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/hud-reaction.png" });
   assert.deepEqual(errors, []);
 });
 
@@ -249,7 +249,7 @@ test("laptop and phone keep the map full width and floating panels within the vi
     assert.ok(result.commands.bottom <= result.dock.top);
     assert.equal(result.scroll, viewport.width);
     await page.screenshot({
-      path: viewport.width === 390 ? ".openai/hud-phone.png" : ".openai/hud-laptop.png",
+      path: viewport.width === 390 ? "tmp/verification/screenshots/hud-phone.png" : "tmp/verification/screenshots/hud-laptop.png",
     });
   }
   assert.deepEqual(errors, []);
@@ -412,7 +412,7 @@ test("map clicks cannot move or attack before an explicit command, and cancellat
     ) < 1,
   );
   assert.ok(cancelLayout.turn.top >= cancelLayout.map.top + 10);
-  await page.screenshot({ path: ".openai/hud-floating-cancel.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/hud-floating-cancel.png" });
   await page.evaluate(() => byId("hudCancelAction").click());
   assert.deepEqual(await page.evaluate(() => [mode, selected, byId("hudUnitPanel").hidden]), [
     "select",
@@ -477,7 +477,7 @@ test("terrain badges and chat compose as full-width rows, with a right-side plan
     assert.ok(info.channel.width >= 80);
     assert.ok(info.dock.height >= (viewport.width === 390 ? 165 : 158));
     await page.screenshot({
-      path: viewport.width === 390 ? ".openai/hud-chat-phone.png" : ".openai/hud-chat-laptop.png",
+      path: viewport.width === 390 ? "tmp/verification/screenshots/hud-chat-phone.png" : "tmp/verification/screenshots/hud-chat-laptop.png",
     });
     await clickCell(page, 10, 10);
     await page.evaluate(() => document.querySelector('[data-unit-command="attack"]').click());
@@ -495,7 +495,7 @@ test("terrain badges and chat compose as full-width rows, with a right-side plan
     assert.ok(plan.rect.left >= 0 && plan.rect.right <= viewport.width);
     assert.ok(plan.confirm.bottom <= plan.rect.bottom && plan.confirm.top >= plan.rect.top);
     await page.screenshot({
-      path: viewport.width === 390 ? ".openai/hud-plan-phone.png" : ".openai/hud-plan-laptop.png",
+      path: viewport.width === 390 ? "tmp/verification/screenshots/hud-plan-phone.png" : "tmp/verification/screenshots/hud-plan-laptop.png",
     });
   }
   assert.deepEqual(errors, []);
@@ -537,7 +537,7 @@ test("unit commands stay in a horizontal row at the screen right above the messa
   assert.equal(after.right, before.right);
   assert.equal(after.top, before.top);
   assert.equal(after.left, before.left);
-  await page.screenshot({ path: ".openai/hud-fixed-command-row.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/hud-fixed-command-row.png" });
 });
 
 test("room status measures a real WebSocket ping and counts connected seats and spectators", async ({
@@ -790,7 +790,7 @@ test("attack editor and independent response columns clear the whole draft", asy
       await clickCell(page, 11, 10);
       assert.equal(await page.evaluate(() => counterTargetId), target);
     }
-    await page.screenshot({ path: `.openai/response-single-scroll-${viewport.width}.png` });
+    await page.screenshot({ path: `tmp/verification/screenshots/response-single-scroll-${viewport.width}.png` });
   }
 });
 
@@ -862,7 +862,7 @@ test("ship attack outlines share the damage eligibility set", async ({ page }) =
     [...new Set(result.expected)].sort(),
   );
   assert.equal(result.damage, result.filteredDamage);
-  await page.screenshot({ path: ".openai/ship-turret-outlines.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/ship-turret-outlines.png" });
 });
 
 
@@ -889,7 +889,7 @@ test("50 percent zoom renders occupancy thumbnails and restores sprites above th
   return {small,large};
  });
  assert.deepEqual(result.small,{zoom:.5,mode:'true',calls:0});assert.equal(result.large.mode,'false');assert(result.large.calls>0);
- await page.screenshot({path:'.openai/map-thumbnails.png'});
+ await page.screenshot({path:'tmp/verification/screenshots/map-thumbnails.png'});
 });
 
 

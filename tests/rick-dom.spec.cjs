@@ -41,6 +41,6 @@ test("formation rows and catalog show native Rick Dom icon and all three adaptat
   await page.evaluate(() => I18n.setLanguage("en"));
   await expect(page.locator('[data-unit-id="MS_09R"]')).toContainText("Space");
   await page.evaluate(() => I18n.setLanguage("zh"));
-  await page.screenshot({ path: ".openai/rick-dom-formation.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/rick-dom-formation.png" });
   expect(errors).toEqual([]);
 });

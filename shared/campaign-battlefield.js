@@ -26,6 +26,39 @@ const CampaignBattlefield = (() => {
       capturedBaseTeam: null,
     };
   }
+  function ensureTurrets(G, game, state) {
+    const field=game.campaignBattlefield;
+    if (!field || field.turretsInitialized) return;
+    const team=field.defender;
+    const owner=state.units.filter(u=>!u.destroyed&&u.team===team).map(u=>u.ownerSeat)
+      .filter(Number.isInteger).sort((a,b)=>a-b)[0] ?? team;
+    const tree=typeof DEVELOPMENT_TREE!=="undefined"?DEVELOPMENT_TREE:require("./development-tree.json");
+    const researched=new Set(state.teams[team].researched||[]);
+    const faction=state.teams[team].faction;
+    const unlocked=(tree[faction]||[]).filter(node=>researched.has(node.id));
+    const era=Math.max(["EFSF","ZEON"].includes(faction)?1:3,...unlocked.map(node=>G.battlefieldMode.eras.indexOf(node.era)+1));
+    for(const base of field.layout.nodes.filter(node=>node.kind==="base")) {
+      for(const [index,type] of ["machineGun","beam","missile","cannon"].entries()) {
+        const id="campaign-turret-"+base.id+"-"+type;
+        if(game.units.some(u=>u.id===id))continue;
+        const actor=G.makeUnit({unitId:G.battlefieldMode.facilityIds[type],kitId:"standard"},owner,id,base,0,game.seed||1);
+        actor.facility={id,type,level:era,campaignDefense:true};
+        actor.campaignDurability=state.options?.teams?.[team]?.durability ?? 1;
+        actor.hp=G.modelOf(actor).hp;
+        const angle=index*Math.PI/2, target={x:base.x+Math.round(Math.cos(angle)*4),y:base.y+Math.round(Math.sin(angle)*4)};
+        const candidates=[];
+        for(let y=Math.max(0,base.y-10);y<=Math.min(game.tiles.length-1,base.y+10);y++)
+          for(let x=Math.max(0,base.x-10);x<=Math.min(game.tiles[0].length-1,base.x+10);x++) {
+            const distance=Math.hypot(x-base.x,y-base.y);
+            if(distance>=3&&G.fits(game,actor,x,y,0))candidates.push({x,y});
+          }
+        candidates.sort((a,b)=>Math.hypot(a.x-target.x,a.y-target.y)-Math.hypot(b.x-target.x,b.y-target.y)||a.y-b.y||a.x-b.x);
+        if(!candidates.length)throw Error("主基地附近没有合法炮塔位置："+field.regionId);
+        Object.assign(actor,candidates[0]);game.units.push(actor);
+      }
+    }
+    field.turretsInitialized=true;
+  }
   function network(g) {
     const field = g.campaignBattlefield;
     if (!field) return null;
@@ -77,19 +110,12 @@ const CampaignBattlefield = (() => {
     const nodes = g.campaignBattlefield?.layout.nodes || [];
     return nodes.find((node) => G.cells(u).some((cell) => Math.max(Math.abs(cell.x - node.x), Math.abs(cell.y - node.y)) <= 1));
   }
+  function canSuppress(G, u) {
+    return !!u && G.onMap(u) && !u.embarked && !u.pendingMove && !u.plan &&
+      !u.flying && G.modelOf(u).movementType !== "air";
+  }
   function canCapture(G, g, u) {
-    if (
-      !g.campaignBattlefield ||
-      !u ||
-      !G.onMap(u) ||
-      u.embarked ||
-      u.pendingMove ||
-      u.plan ||
-      u.flying ||
-      G.modelOf(u).movementType === "air" ||
-      u.team !== g.team ||
-      u.acted
-    )
+    if (!g.campaignBattlefield || !canSuppress(G, u) || u.team !== g.team || u.acted)
       return null;
     const node = nodeAt(G, g, u);
     const defended = node && g.units.some((enemy) => enemy.team !== u.team && G.onMap(enemy) &&
@@ -258,8 +284,10 @@ const CampaignBattlefield = (() => {
   }
   return {
     create,
+    ensureTurrets,
     network,
     nodeAt,
+    canSuppress,
     canCapture,
     capture,
     onSupply,

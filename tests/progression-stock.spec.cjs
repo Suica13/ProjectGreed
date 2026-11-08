@@ -92,7 +92,7 @@ for (const width of [1280, 390])
       return a.bottom > b.top + 1;
     });
     expect(overlap).toBe(false);
-    await page.screenshot({ path: `.openai/counted-stock-production-${width}.png` });
+    await page.screenshot({ path: `tmp/verification/screenshots/counted-stock-production-${width}.png` });
     await page.reload();
     await page.waitForFunction(() => assetsReady);
     const save = await page.evaluate(() => ProfileSave.validate(ProfileSave.exportData()).economy);

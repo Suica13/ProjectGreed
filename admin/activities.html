@@ -580,11 +580,10 @@
                 <button id="addUnit" type="button">添加部署许可</button>
               </section>
               <section>
-                <h3>机体与套件库存奖励</h3>
-                <p class="muted">机体与套件独立计数；领取库存不自动授予开发或部署许可。</p>
+                <h3>机体库存奖励</h3>
+                <p class="muted">领取机体库存不自动授予开发或部署许可；套件可自由选择。</p>
                 <div id="stockRewards"></div>
                 <button id="addChassisStock" type="button">添加单位</button>
-                <button id="addKitStock" type="button">添加套件</button>
               </section>
               <section>
                 <h3>开发奖励</h3>
@@ -638,19 +637,7 @@
               step="1"
               required
           /></label>
-          <label>随附套件版本<select id="rewardBaseKit" aria-label="随附套件版本"></select></label>
         </div>
-        <p class="muted">
-          每台机体随附一份所选套件；额外套件独立计数。机体数量为0时可仅赠送额外套件。
-        </p>
-        <h3>额外赠送套件</h3>
-        <input
-          id="rewardKitSearch"
-          type="search"
-          placeholder="搜索此单位的套件"
-          aria-label="搜索额外套件"
-        />
-        <div id="extraKitRows"></div>
         <p id="rewardConfigError" role="status"></p>
         <div class="picker-actions">
           <button id="cancelRewardConfig" type="button">取消</button
@@ -819,15 +806,6 @@
           Object.entries(rewards.inventory || {})
             .map(([id, count]) => "\n机体库存：" + unitName(id) + " ×" + count)
             .join("") +
-          Object.entries(rewards.kits || {})
-            .map(
-              ([id, count]) =>
-                "\n套件库存：" +
-                (snapshot.kits.find((k) => k.id === id)?.name || id) +
-                " ×" +
-                count,
-            )
-            .join("") +
           rewards.unlockUnits.map((id) => "\n立即开发：" + unitName(id)).join("") +
           (rewards.unlockAces || [])
             .map((id) => "\n解锁ACE：" + (snapshot.aces.find((p) => p.id === id)?.name || id))
@@ -905,21 +883,13 @@
           renderUnlocks();
         });
       }
-      function unitKits(id) {
-        return (snapshot?.kits || [])
-          .filter((kit) => kit.unitId === id)
-          .sort((a, b) => rewardOrder.compare(a.name, b.name) || a.id.localeCompare(b.id));
-      }
       function clearUnitStock(id) {
-        delete stockRewards.inventory[id];
-        delete stockConfigurations[id];
-        for (const kit of unitKits(id)) delete stockRewards.kits[kit.id];
+        delete stockRewards.inventory[id];delete stockConfigurations[id];
       }
       function renderStockRewards() {
         const list = byId("stockRewards");
         list.replaceChildren();
         const ids = new Set(Object.keys(stockRewards.inventory));
-        for (const kit of snapshot?.kits || []) if (stockRewards.kits[kit.id]) ids.add(kit.unitId);
         for (const id of [...ids].sort((a, b) => rewardOrder.compare(unitName(a), unitName(b)))) {
           const row = document.createElement("div"),
             info = document.createElement("div");
@@ -928,12 +898,7 @@
           const name = document.createElement("strong"),
             details = document.createElement("p");
           name.textContent = unitName(id);
-          details.textContent = [
-            "机体 ×" + (stockRewards.inventory[id] || 0),
-            ...unitKits(id)
-              .filter((kit) => stockRewards.kits[kit.id])
-              .map((kit) => (kit.kitName || kit.name) + " ×" + stockRewards.kits[kit.id]),
-          ].join(" · ");
+          details.textContent = "机体 ×"+(stockRewards.inventory[id] || 0);
           info.append(name, details);
           row.append(
             info,
@@ -947,13 +912,13 @@
         }
       }
       function loadRewards(rewards = {}, configurations = {}) {
-        stockConfigurations = structuredClone(configurations);
+        stockConfigurations = {};
         byId("money").value = rewards.money || 0;
         byId("supplies").value = rewards.supplies || 0;
         licenseUnits = Object.keys(rewards.licenses || {}).filter((id) => rewards.licenses[id]);
         unlockUnits = [...(rewards.unlockUnits || [])];
         unlockAces = [...(rewards.unlockAces || [])];
-        stockRewards = { inventory: { ...rewards.inventory }, kits: { ...rewards.kits } };
+        stockRewards = { inventory: { ...rewards.inventory }, kits: {} };
         renderLicenses();
         renderUnlocks();
         renderAceUnlocks();
@@ -965,7 +930,6 @@
           supplies: Number(byId("supplies").value),
           licenses: Object.fromEntries(licenseUnits.map((id) => [id, true])),
           inventory: { ...stockRewards.inventory },
-          kits: { ...stockRewards.kits },
           unlockUnits: [...unlockUnits],
           unlockAces: [...unlockAces],
         };
@@ -1017,7 +981,7 @@
               (!era || unit.eras?.includes(era)) &&
               (!type || unit.tags?.includes(type)) &&
               (!query ||
-                [unit.id, unit.name, ...unitKits(unit.id).map((kit) => kit.name + " " + kit.id)]
+                [unit.id, unit.name]
                   .join(" ")
                   .toLocaleLowerCase()
                   .includes(query)),
@@ -1045,88 +1009,22 @@
           }),
         );
       }
-      function openUnitConfig(id, editing) {
-        configUnitId = id;
-        editingStock = editing;
-        const unit = snapshot.units.find((unit) => unit.id === id),
-          kits = unitKits(id);
-        const hasStock =
-          !!stockRewards.inventory[id] || kits.some((kit) => stockRewards.kits[kit.id]);
-        const count = hasStock ? stockRewards.inventory[id] || 0 : pickerKind === "kits" ? 0 : 1;
-        let baseKit =
-          stockConfigurations[id]?.kitId ??
-          (hasStock
-            ? kits.find((kit) => count > 0 && stockRewards.kits[kit.id] >= count)?.id || ""
-            : unit.defaultKit);
-        if (!kits.some((kit) => kit.id === baseKit)) baseKit = "";
-        byId("rewardConfigTitle").textContent = "配置奖励：" + unit.name;
-        byId("rewardChassisCount").value = count;
-        byId("rewardBaseKit").replaceChildren(
-          new Option("不随附套件", ""),
-          ...kits.map((kit) => new Option(kit.kitName || kit.name, kit.id)),
-        );
-        byId("rewardBaseKit").value = baseKit;
-        byId("rewardKitSearch").value = "";
-        byId("rewardConfigError").textContent = "";
-        byId("extraKitRows").replaceChildren(
-          ...kits.map((kit) => {
-            const row = document.createElement("label"),
-              name = document.createElement("span"),
-              input = document.createElement("input");
-            row.className = "extra-kit-row";
-            row.dataset.kitId = kit.id;
-            name.textContent = kit.kitName || kit.name;
-            input.type = "number";
-            input.min = "0";
-            input.max = "1000000";
-            input.step = "1";
-            input.required = true;
-            input.value = stockConfigurations[id]
-              ? stockConfigurations[id].extraKits[kit.id] || 0
-              : (stockRewards.kits[kit.id] || 0) - (hasStock && kit.id === baseKit ? count : 0);
-            input.setAttribute("aria-label", "额外套件数量 " + (kit.kitName || kit.name));
-            row.append(name, input);
-            return row;
-          }),
-        );
-        byId("rewardConfigDialog").showModal();
-        byId("rewardChassisCount").focus();
+      function openUnitConfig(id,editing) {
+        configUnitId=id;editingStock=editing;
+        const unit=snapshot.units.find(unit=>unit.id===id);
+        byId("rewardConfigTitle").textContent="配置奖励："+unit.name;
+        byId("rewardChassisCount").value=stockRewards.inventory[id] || 1;
+        byId("rewardConfigError").textContent="";
+        byId("rewardConfigDialog").showModal();byId("rewardChassisCount").focus();
       }
-      byId("rewardKitSearch").oninput = () => {
-        const query = byId("rewardKitSearch").value.trim().toLocaleLowerCase();
-        for (const row of byId("extraKitRows").children)
-          row.hidden = ![row.textContent, row.dataset.kitId]
-            .join(" ")
-            .toLocaleLowerCase()
-            .includes(query);
-      };
-      byId("rewardConfigForm").onsubmit = (event) => {
+      byId("rewardConfigForm").onsubmit=event=>{
         event.preventDefault();
-        const count = Number(byId("rewardChassisCount").value),
-          baseKit = byId("rewardBaseKit").value,
-          kits = {},
-          extraKits = {};
-        for (const row of byId("extraKitRows").children) {
-          const value =
-            Number(row.querySelector("input").value) + (row.dataset.kitId === baseKit ? count : 0);
-          if (!Number.isSafeInteger(value) || value < 0 || value > 1000000) {
-            byId("rewardConfigError").textContent = "每种套件的总数量须为0至100万的整数";
-            return;
-          }
-          const extra = Number(row.querySelector("input").value);
-          if (extra) extraKits[row.dataset.kitId] = extra;
-          if (value) kits[row.dataset.kitId] = value;
+        const count=Number(byId("rewardChassisCount").value);
+        if(!Number.isSafeInteger(count)||count<1||count>1000000){
+          byId("rewardConfigError").textContent="机体数量须为1至100万的整数";return;
         }
-        if (!count && !Object.keys(kits).length) {
-          byId("rewardConfigError").textContent = "请至少配置一台机体或一份套件";
-          return;
-        }
-        clearUnitStock(configUnitId);
-        if (count) stockRewards.inventory[configUnitId] = count;
-        Object.assign(stockRewards.kits, kits);
-        stockConfigurations[configUnitId] = { kitId: baseKit, extraKits };
-        renderStockRewards();
-        byId("rewardConfigDialog").close();
+        clearUnitStock(configUnitId);stockRewards.inventory[configUnitId]=count;
+        renderStockRewards();byId("rewardConfigDialog").close();
       };
       byId("cancelRewardUnit").onclick = () => byId("rewardUnitDialog").close();
       byId("cancelRewardConfig").onclick = () => {
@@ -1140,7 +1038,6 @@
       for (const id of ["rewardUnitFaction", "rewardUnitEra", "rewardUnitType"])
         byId(id).onchange = renderUnitPicker;
       byId("addChassisStock").onclick = () => openUnitPicker("inventory");
-      byId("addKitStock").onclick = () => openUnitPicker("kits");
       function addUnit() {
         openUnitPicker("license");
       }
@@ -1275,7 +1172,7 @@
           snapshot = await api("/edit", {
             id: selectedId,
             rewards: readRewards(),
-            stockConfigurations: structuredClone(stockConfigurations),
+            stockConfigurations: {},
             title: byId("editTitle").value,
             text: byId("editBody").value,
             ...period("editStartsAt", "editEndsAt"),
@@ -1302,7 +1199,7 @@
           text: byId("body").value,
           mode: byId("mode").value,
           rewards: readRewards(),
-          stockConfigurations: structuredClone(stockConfigurations),
+          stockConfigurations: {},
         };
         byId("publish").disabled = true;
         try {

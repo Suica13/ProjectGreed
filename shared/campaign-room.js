@@ -228,6 +228,7 @@ function createCampaignRoom({
       }
     }
     for (const actor of game.units) {
+      if (actor.facility?.campaignDefense) continue;
       let armyId = actor.campaignId || encounter.roster[actor.id];
       if (!armyId) {
         const model = G.modelOf(actor);
@@ -308,7 +309,7 @@ function createCampaignRoom({
     if (game)
       game.units = game.units.filter((actor) => {
         const unit = state.units.find((unit) => unit.id === actor.campaignId);
-        if (!unit) return actor.hp <= 0;
+        if (!unit) return actor.facility?.campaignDefense || actor.hp <= 0;
         actor.ownerSeat = unit.ownerSeat;
         actor.team = unit.team;
         return unit.region === regionId;
@@ -469,6 +470,7 @@ function createCampaignRoom({
       }
       encounter.roster[actor.id] = source.id;
     }
+    G.campaignBattlefield.ensureTurrets(G,game,state);
     G.hangars.sync(game);
     check(
       [0, 1].every((team) => game.units.some((unit) => unit.team === team && unit.hp > 0)),
@@ -767,7 +769,7 @@ function createCampaignRoom({
       );
     }
     const alive = [0, 1].map((team) =>
-      room.game.units.some((unit) => unit.hp > 0 && unit.team === team),
+      room.game.units.some((unit) => !unit.facility?.campaignDefense && unit.hp > 0 && unit.team === team),
     );
     if (!alive[0] || !alive[1]) room.game.winner = alive[0] ? 0 : 1;
     return { type: "region_transfer", unitId: actor.id, region: regionId };

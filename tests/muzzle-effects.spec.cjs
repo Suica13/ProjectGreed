@@ -66,7 +66,7 @@ test("native muzzle flash renders on the map after dodge and reaction labels loc
   expect(result.rendered).toBeGreaterThan(0);
   await expect(page.locator("#battle")).toBeHidden();
   await expect(page.locator("#unitPanel .stats")).toContainText("反应系数");
-  await page.screenshot({ path: ".openai/native-muzzle-map.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/native-muzzle-map.png" });
   await page.evaluate(() => I18n.setLanguage("en"));
   await expect(page.locator("#unitPanel .stats")).toContainText("Reaction coefficient");
   await page.evaluate(() => I18n.setLanguage("ja"));

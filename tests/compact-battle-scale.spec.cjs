@@ -72,5 +72,5 @@ test("normal units, MS, MA, aircraft and ships all use the enlarged map scale", 
     width: 2,
     height: 2,
   });
-  await page.screenshot({ path: "tmp/compact-battle-scale.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/compact-battle-scale.png" });
 });

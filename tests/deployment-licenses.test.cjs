@@ -76,13 +76,13 @@ test("one paid permit grants one default-equipped chassis exactly once", () => {
   assert.equal(G.licensePlan(entries, E.snapshot().licenses).missing.length, 0);
   assert.equal(typeof E.fitKits, "undefined");
   assert.equal(E.quantity("RGM_79"), 1);
-  assert.equal(E.kitQuantity("RGM_79__beam_spray"), 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(E.snapshot().kits)), {});
   assert.equal(typeof E.produce, "function");
   assert.equal(Object.keys(E.snapshot().inventory).length, 1);
   const after = E.snapshot().money;
   assert(!E.purchaseLicense("RGM_79", "EFSF"));
   assert.equal(E.snapshot().money, after);
-  assert.equal(typeof E.buyKit, "function");
+  assert.equal(typeof E.buyKit, "undefined");
   assert.equal(typeof E.sellUnit, "undefined");
 });
 test("bulk permit purchases deduplicate chassis, reject undeveloped/unaffordable units atomically", () => {

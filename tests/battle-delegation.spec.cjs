@@ -49,6 +49,6 @@ for(const width of [1440,390]) test(`encounter AI toggle and presentation rates 
   });
   expect(continuity.newStep/continuity.step).toBeCloseTo(1.5/2,5);
   expect(continuity.progress).toBeLessThan(2);
-  await page.screenshot({path:`tmp/battle-delegation-${width}.png`});
+  await page.screenshot({path:`tmp/verification/screenshots/battle-delegation-${width}.png`});
   expect(errors).toEqual([]);
 });

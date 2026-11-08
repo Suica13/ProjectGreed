@@ -36,7 +36,7 @@ test("V squad default and read-only form preview", async ({ page }) => {
   await page.locator("#formationDetailForms button:not(:disabled)").first().click();
   await expect(page.locator("#formationDetailKit")).toBeDisabled();
   await expect(page.locator("#formationDetailStats")).not.toHaveText(before);
-  await page.screenshot({ path: ".openai/form-preview.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/form-preview.png" });
   await page.locator("#formationDetailForms button").first().click();
   await expect(page.locator("#formationDetailKit")).toBeEnabled();
   expect(await page.evaluate(() => Formation.presets()[0])).toEqual(preset);

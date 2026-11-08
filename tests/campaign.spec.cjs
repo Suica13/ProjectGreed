@@ -210,7 +210,7 @@ for (const viewport of [
       campaignTestEngine.broadcast(room);
     });
     await expect(seatsPanel).toBeVisible();
-    await page.screenshot({ path: `tmp/campaign-seats-${viewport.width}.png` });
+    await page.screenshot({ path: `tmp/verification/screenshots/campaign-seats-${viewport.width}.png` });
     await seatsPanel.getByRole("button", { name: "关闭", exact: true }).click();
     await expect(page.locator("#roomPreparation #roomSeatsPage")).toHaveCount(1);
 
@@ -223,7 +223,7 @@ for (const viewport of [
     await expect(
       intelligence.getByRole("button", { name: "本回合已投入", exact: true }),
     ).toBeDisabled();
-    await page.screenshot({ path: `tmp/campaign-intelligence-${viewport.width}.png` });
+    await page.screenshot({ path: `tmp/verification/screenshots/campaign-intelligence-${viewport.width}.png` });
     expect(await page.evaluate(() => Net.snapshot.campaign.teams[0].money)).toBe(
       beforeIntelligence - 2000,
     );
@@ -325,7 +325,7 @@ for (const viewport of [
     const messages = await page.locator("#campaignChatLines").boundingBox();
     expect(messages.y + messages.height).toBeLessThanOrEqual(chatRow.y + 1);
     expect(chatRow.x + chatRow.width).toBeLessThanOrEqual(viewport.width);
-    await page.screenshot({ path: `tmp/campaign-chat-dock-${viewport.width}.png` });
+    await page.screenshot({ path: `tmp/verification/screenshots/campaign-chat-dock-${viewport.width}.png` });
     await page.locator("#campaignShowLog").click();
     await page.locator("#campaignConsoleFold").click();
     await expect(consolePanel).toHaveAttribute("data-collapsed", "true");
@@ -355,7 +355,7 @@ for (const viewport of [
     const zoomedOut = await page.locator(".campaign-map-scroll svg").boundingBox();
     expect(zoomedOut.width).toBeLessThan(mapBounds.width * 0.9);
     expect(zoomedOut.height).toBeLessThan(mapBounds.height * 0.9);
-    await page.screenshot({path:`tmp/campaign-map-panels-${viewport.width}.png`});
+    await page.screenshot({path:`tmp/verification/screenshots/campaign-map-panels-${viewport.width}.png`});
     await page.locator(".campaign-map-tools button").last().click();
     const beforeZoom = await page.locator(".campaign-map-scroll svg").boundingBox();
     const anchoredX = (mouseX - beforeZoom.x) / beforeZoom.width;
@@ -398,7 +398,7 @@ for (const viewport of [
       .click();
     await expect(page.locator('.campaign-header-balances [aria-label^="资金"]')).toBeVisible();
 
-    await page.screenshot({ path: `tmp/campaign-earth-overview-${viewport.width}.png` });
+    await page.screenshot({ path: `tmp/verification/screenshots/campaign-earth-overview-${viewport.width}.png` });
     for (let i = 0; i < 4; i++) await page.locator(".campaign-map-tools button").last().click();
     const position = await page.evaluate(() => {
       const map = document.querySelector(".campaign-map-scroll");
@@ -470,7 +470,7 @@ for (const viewport of [
       .click();
     await expect(crews.locator(".campaign-pilot-stat").first()).toContainText("105");
     await expect(crews.locator(".campaign-pilot-details")).toContainText("剩余强化点：75");
-    await page.screenshot({ path: `tmp/campaign-pilots-${viewport.width}.png` });
+    await page.screenshot({ path: `tmp/verification/screenshots/campaign-pilots-${viewport.width}.png` });
     await crews.getByRole("button", { name: "关闭", exact: true }).click();
     await expect(page.locator("#campaignStrategicLog")).toContainText("招募驾驶员：战略驾驶员");
     await expect(page.locator("#campaignStrategicLog")).toContainText("强化驾驶员");
@@ -484,7 +484,7 @@ for (const viewport of [
         ),
       ),
     ).toEqual(personalBefore);
-    await page.screenshot({ path: `tmp/campaign-scene-${viewport.width}.png` });
+    await page.screenshot({ path: `tmp/verification/screenshots/campaign-scene-${viewport.width}.png` });
     const transportId = await firstArmy.getAttribute("data-unit-id");
     await firstArmy.getByRole("button", {name:"搭载",exact:true}).click();
     await page.locator("#campaignOrderDialog [data-carrier-id]").first().click();
@@ -516,7 +516,7 @@ for (const viewport of [
       return result;
     });
     expect(scrollingTargets).toEqual({overflow:"auto", scrolls:true, moved:true});
-    await page.screenshot({path:`tmp/campaign-move-cost-${viewport.width}.png`});
+    await page.screenshot({path:`tmp/verification/screenshots/campaign-move-cost-${viewport.width}.png`});
     await expect(page.locator("#campaignConfirmMove")).toBeHidden();
     const movingArmyId = await firstArmy.getAttribute("data-unit-id");
     const beforeOrder = await page.evaluate((id) => Net.snapshot.campaign.units.find((u) => u.id === id).moveTo, movingArmyId);
@@ -731,7 +731,7 @@ for (const viewport of [
         }),
       )
       .toBe(true);
-    await page.screenshot({ path: `tmp/campaign-compact-${viewport.width}.png` });
+    await page.screenshot({ path: `tmp/verification/screenshots/campaign-compact-${viewport.width}.png` });
     await encounter.getByRole("button", { name: "展开详情", exact: true }).click();
     await expect(encounter).toHaveAttribute("data-expanded", "true");
     await expect.poll(async () => (await encounter.boundingBox()).y).toBeLessThan(compact.y - 100);
@@ -746,7 +746,7 @@ for (const viewport of [
     await expect(encounter.locator(".campaign-ready-group").first()).toHaveAttribute("data-team", "0");
     await expect(encounter.locator(".campaign-ready-group").last()).toHaveAttribute("data-team", "1");
     await expect(encounter.locator('.campaign-ready-marker[data-ready="true"]')).toHaveCount(1);
-    await page.screenshot({ path: `tmp/campaign-ready-${viewport.width}.png` });
+    await page.screenshot({ path: `tmp/verification/screenshots/campaign-ready-${viewport.width}.png` });
     await expect(encounter.locator(".campaign-encounter-team")).toHaveCount(2);
     await expect(encounter.locator(".campaign-encounter-unit").first()).toContainText("驾驶员");
     await expect(encounter.locator(".campaign-encounter-unit").first()).toContainText("HP");
@@ -870,7 +870,7 @@ for (const viewport of [
       await page.locator("#hudTransferRegion").click();
       await expect(page.locator("#gameDialog")).toContainText("下一战略回合");
       await page.locator("#gameDialog").getByRole("button", { name: "取消", exact: true }).click();
-      await page.screenshot({ path: "tmp/campaign-supply-objectives.png" });
+      await page.screenshot({ path: "tmp/verification/screenshots/campaign-supply-objectives.png" });
       const previousRegion = await page.evaluate(() => Net.snapshot.campaign.activeRegion);
       await expect.poll(() => page.evaluate(() => Net.awaiting)).toBe(null);
       await page.evaluate(() => {
@@ -884,7 +884,7 @@ for (const viewport of [
         "秒后所有玩家一起返回战略地图",
       );
       await expect(page.locator("#turnBadge")).toContainText("1 / 1");
-      await page.screenshot({ path: "tmp/campaign-interrupted-countdown.png" });
+      await page.screenshot({ path: "tmp/verification/screenshots/campaign-interrupted-countdown.png" });
       await expect.poll(() => page.evaluate(() => Net.started), { timeout: 8000 }).toBe(false);
       await expect(page.locator("#campaignScreen")).toBeVisible();
       await expect(page.locator("#roomReturnCountdown")).toBeHidden();

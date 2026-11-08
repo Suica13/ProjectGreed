@@ -40,7 +40,7 @@ for (const width of [1440, 390]) {
     expect(rect.x).toBeGreaterThanOrEqual(0);
     expect(rect.x + rect.width).toBeLessThanOrEqual(width);
     expect(rect.y + rect.height).toBeLessThanOrEqual(960);
-    if (width === 390) await page.screenshot({ path: 'tmp/weapon-users-phone.png' });
+    if (width === 390) await page.screenshot({ path: 'tmp/verification/screenshots/weapon-users-phone.png' });
     await dialog.locator('[data-unit-id="RX_78_4_Bst"]').getByRole('button', { name: '详细', exact: true }).click();
     await expect(dialog).toBeHidden();
     await expect(preview).toBeVisible();

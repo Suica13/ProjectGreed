@@ -133,7 +133,7 @@ test("minimum zoom symbols outline occupied cells and overlay a pilot portrait o
       }),
     )
     .toEqual({ outline: true, images: true, noBlockFill: true });
-  await page.screenshot({ path: "tmp/map-minimum-unit-symbols.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/map-minimum-unit-symbols.png" });
 });
 
 test("bubbles and pilot labels share the exact 50 percent threshold", async ({ page }) => {

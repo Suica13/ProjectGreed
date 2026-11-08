@@ -8,7 +8,7 @@ const root = path.resolve(__dirname, ".."),
   args = process.argv.slice(2);
 const option = (key, fallback) => (args.includes(key) ? args[args.indexOf(key) + 1] : fallback);
 const duration = Number(option("--duration", "1800000"));
-const output = path.resolve(root, option("--output", "build/performance-v98/scene-soak.json"));
+const output = path.resolve(root, option("--output", "tmp/verification/reports/performance/scene-soak.json"));
 const html = path.resolve(root, option("--html", "public/client.html"));
 async function main() {
   fs.mkdirSync(path.dirname(output), { recursive: true });

@@ -43,7 +43,7 @@ for(const width of [1600,390]) test('fixed era and custom battlefield settings a
   expect(order).toEqual(['roomBattleMode','roomFogMode','roomShareAlliedUnits','roomPilotPolicy','roomPilotDialogue','roomClimateOptions']);
   expect(await page.locator('#roomSettingsPage').evaluate(el=>el.scrollWidth<=el.clientWidth+1)).toBe(true);
   await page.locator('#battlefieldEra').scrollIntoViewIfNeeded();
-  await page.screenshot({path:`build/battlefield-era-settings-${width}.png`});
+  await page.screenshot({path:`tmp/verification/screenshots/battlefield-era-settings-${width}.png`});
   await page.locator('#roomBattleMode').selectOption('regular');
   await expect.poll(()=>page.evaluate(()=>Net.snapshot.settings.mode)).toBe('regular');
   await expect(page.locator('#roomFormationRules')).toBeVisible();

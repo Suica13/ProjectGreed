@@ -81,7 +81,7 @@ test("map boost uses original posture and loops attached flames only while movin
     };
     drawMap(500);
   });
-  await page.screenshot({ path: ".openai/boost-map.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/boost-map.png" });
   expect(errors).toEqual([]);
 });
 

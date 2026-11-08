@@ -39,12 +39,14 @@ def main():
         client = ROOT / "public/client.html"
         if not client.is_file() or f'"version":"{project["version"]}"' not in client.read_text(encoding="utf-8"):
             raise SystemExit("Build the matching client first: npm run build")
-    output = ROOT / "build"
-    output.mkdir(exist_ok=True)
+    output = ROOT / "build" / project["version"]
+    output.mkdir(parents=True, exist_ok=True)
     if args.folder and (output / name).exists():
         raise SystemExit(f"Output already exists; choose a new destination before packaging: {output / name}")
     # Cache the full upstream notices for the exact runtime being redistributed.
-    license_file = output / f'node-{runtime["version"]}-LICENSE.txt'
+    license_cache = ROOT / "tmp/cache/packaging"
+    license_cache.mkdir(parents=True, exist_ok=True)
+    license_file = license_cache / f'node-{runtime["version"]}-LICENSE.txt'
     if not license_file.exists():
         url = f'https://raw.githubusercontent.com/nodejs/node/{runtime["version"]}/LICENSE'
         with urllib.request.urlopen(url, timeout=45) as response:

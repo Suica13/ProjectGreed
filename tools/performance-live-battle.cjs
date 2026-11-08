@@ -6,7 +6,7 @@ const { chromium } = require("@playwright/test");
 const root = path.resolve(__dirname, ".."),
   args = process.argv.slice(2);
 const option = (key, value) => (args.includes(key) ? args[args.indexOf(key) + 1] : value);
-const output = path.resolve(root, option("--output", "build/performance-v98/live.json"));
+const output = path.resolve(root, option("--output", "tmp/verification/reports/performance/live.json"));
 const html = path.resolve(root, option("--html", "public/client.html"));
 const duration = Number(option("--duration", "20000"));
 const delegate = args.includes("--delegate"),

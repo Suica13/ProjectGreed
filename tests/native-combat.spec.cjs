@@ -37,7 +37,7 @@ test("native sniper swaps holding and firing layers and anchors its muzzle to fi
   expect(result.firing).toContain("EF_LongRangeBeamSniperRifle_Attack");
   expect(result.firing).not.toContain("EF_LongRangeBeamSniperRifle_Idle");
   expect(result.mount.layer).toBe("EF_LongRangeBeamSniperRifle_Attack");
-  await page.screenshot({ path: ".openai/native-sniper-poses.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/native-sniper-poses.png" });
   expect(errors).toEqual([]);
 });
 test("Guntank cannon is above body, Guncannon kit art is exclusive and mortar points along its fast arc", async ({

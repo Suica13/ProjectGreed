@@ -158,7 +158,7 @@ test("map zoom anchors the cursor, drag pans without moving units, and zoomed cl
   await page.locator("#mapZoomReset").click();
   await expect(page.locator("#mapZoomLabel")).toHaveText("50%");
   await expect(page.locator("#mapZoomOut")).toBeDisabled();
-  await page.screenshot({ path: ".openai/projectgreed-map.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/projectgreed-map.png" });
 });
 test("both network teams see one cutin per authoritative turn and repeated snapshots do not replay it", async ({
   page,
@@ -274,5 +274,5 @@ test("map shows HP and proportional yellow EN at every zoom, names only from 300
     expect(sample.names).toBe(sample.zoom >= 3 ? sample.units : 0);
   }
   await expect(page.locator("#mapZoomLabel")).toHaveText("500%");
-  await page.locator("#map").screenshot({ path: ".openai/map-500-percent-bars.png" });
+  await page.locator("#map").screenshot({ path: "tmp/verification/screenshots/map-500-percent-bars.png" });
 });

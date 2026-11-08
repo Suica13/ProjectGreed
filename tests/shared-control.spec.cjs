@@ -45,7 +45,7 @@ test("room filters align on desktop and phone and global sharing grants allied u
         Math.max(...boxes.map((b) => b.top)) - Math.min(...boxes.map((b) => b.top)),
       ).toBeLessThan(2);
     else expect(boxes[1].top).toBeGreaterThan(boxes[0].bottom);
-    await page.screenshot({ path: `.openai/room-sharing-${viewport.width}.png` });
+    await page.screenshot({ path: `tmp/verification/screenshots/room-sharing-${viewport.width}.png` });
   }
   await page.setViewportSize({ width: 1366, height: 768 });
   await page.locator("#roomShareAlliedUnits").check();

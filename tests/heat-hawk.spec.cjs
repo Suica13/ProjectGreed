@@ -54,6 +54,6 @@ test("actual Zaku draw renders one axe layer and flips during the swing", async 
     return draws;
   });
   expect(result).toEqual(Array(9).fill(1));
-  await page.locator("#heatHawkPreview").screenshot({ path: ".openai/heat-hawk-switch.png" });
+  await page.locator("#heatHawkPreview").screenshot({ path: "tmp/verification/screenshots/heat-hawk-switch.png" });
   expect(errors).toEqual([]);
 });

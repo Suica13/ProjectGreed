@@ -171,7 +171,7 @@ test("formation persists selected weapon kits and offline deployment uses map cl
   await page.locator("#closeFormationDetail").click();
   await expect(page.locator("#formationName")).toHaveValue("火箭筒单机编组");
   await expect(page.locator("#formationBudget")).toContainText("1 / 12");
-  await page.screenshot({ path: ".openai/rgm79-formation.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/rgm79-formation.png" });
   await page.locator("#saveFormation").click();
   await page.reload();
   await expect(page.locator("#openSkirmish")).toBeEnabled();
@@ -203,7 +203,7 @@ test("formation persists selected weapon kits and offline deployment uses map cl
   await cell(2, 8);
   await cell(3, 8);
   expect(await page.evaluate(() => game.units[0].x)).toBe(3);
-  await page.screenshot({ path: ".openai/rgm79-deployment.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/rgm79-deployment.png" });
   await page.locator("#confirmDeployment").click();
   await expect(page.locator("#deploymentPanel")).toBeHidden();
   await expect(page.locator("#endTurn")).toBeEnabled();
@@ -340,7 +340,7 @@ test("lethal hit plays death explosion once in battle then once on map before sh
   await page.locator("#confirmResponse").click();
   await expect.poll(() => page.evaluate(() => window.deathPlays.battle)).toBe(1);
   expect(await page.evaluate(() => window.deathPlays.map)).toBe(0);
-  await page.screenshot({ path: ".openai/death-battle.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/death-battle.png" });
   await expect(page.locator("#continueBattle")).toBeEnabled();
   await page.evaluate(() => {
     MapEffects.capture(battleView);
@@ -349,7 +349,7 @@ test("lethal hit plays death explosion once in battle then once on map before sh
   await returnFromBattle(page);
   await expect(page.locator("#victory")).toBeHidden();
   await expect.poll(() => page.evaluate(() => window.deathPlays.map)).toBe(1);
-  await page.screenshot({ path: ".openai/death-map.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/death-map.png" });
   await expect(page.locator("#victory")).toBeVisible();
   expect(await page.evaluate(() => window.deathPlays)).toEqual({ battle: 1, map: 1 });
   expect(await page.evaluate(() => window.deathOrder)).toEqual(["battle", "map"]);

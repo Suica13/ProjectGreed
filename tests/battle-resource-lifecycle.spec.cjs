@@ -39,7 +39,8 @@ test("restarting and alternating maps release derived canvases and retain only t
  expect(rounds.at(-1).sources).toBeLessThanOrEqual(rounds[0].sources+5);
  const released=records.at(-1);expect(released.idlePixels+released.shadowPixels+released.outlinePixels+released.tiles.pixels).toBe(0);
  expect(released.decodedPixels).toBeLessThan(rounds[0].decodedPixels);
- require("node:fs").writeFileSync("build/battle-resource-cycles.json",JSON.stringify(records,null,2));
+ require("node:fs").mkdirSync("tmp/verification/reports",{recursive:true});
+ require("node:fs").writeFileSync("tmp/verification/reports/battle-resource-cycles.json",JSON.stringify(records,null,2));
  expect(errors).toEqual([]);
 });
 test("a previous battle's delayed image cannot resurrect discarded textures or resume its scene",async({page})=>{

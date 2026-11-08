@@ -67,7 +67,7 @@ test('faction rosters, explicit renaming, training confirm/cancel and uploaded p
   const expected=P.catalog.portraits.map(portrait=>'data:image/png;base64,'+require('node:fs').readFileSync(path.resolve(portrait.icon)).toString('base64'));
   expect(choices).toEqual(expected);
   expect(await page.locator('#customPilotPortraits img').evaluateAll(images=>images.every(image=>image.complete && image.naturalWidth>0))).toBe(true);
-  await page.screenshot({path:'.openai/ordinary-pilot-portraits.png'});
+  await page.screenshot({path:'tmp/verification/screenshots/ordinary-pilot-portraits.png'});
   const selected=P.catalog.portraits.at(-1);
   await page.getByRole('button',{name:selected.name,exact:true}).click();
   await expect(page.locator('#customPilotPortraitPicker')).toBeHidden();

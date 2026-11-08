@@ -22,3 +22,18 @@ AP仅保留单位stats.actionPoints、武器及技能actionCost参考字段；�
 修改源码后执行npm run build重建public/client.html。服务端规则修改需重启游戏服务；编辑保存只写源配置，不自动构建。默认不构建开发者版、不打包服务端、不生成br/gz。
 
 现行规则见[武器与技能](../rules/combat.md)，文档总入口见[索引](../README.md)。
+
+## 临时文件与验证输出
+
+`build/` 只保存构建产物、发行文件夹和必要构建缓存。测试源码保留在 `tests/`；一次性脚本统一放在 `tmp/scripts/`，使用后删除。所有验证材料统一在 `tmp/verification/`，该目录不提交到仓库：
+
+| 子目录 | 内容 |
+| --- | --- |
+| screenshots | 人工检查用截图 |
+| logs | 测试、构建及验证命令日志 |
+| reports | 性能测量JSON、CPU分析和清理清单 |
+| browser-results | Playwright结果及失败附件，由配置自动生成 |
+| native | Windows／Android验证使用的隔离数据与证据 |
+| archive | 从根目录、旧tmp和.openai整合的历史验证材料 |
+
+浏览器验证直接使用默认 `npx playwright test` 输出目录；如需重定向日志，先创建 `tmp/verification/logs/`。不要再用 `--output build/...`，也不要将日志或截图写回项目根目录和 `.openai/`。本机缓存可放在 `tmp/cache/`；清理临时文件不应触及发行包、玩家存档及服务端运行数据。

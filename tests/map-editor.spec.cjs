@@ -115,7 +115,7 @@ test("standalone editor paints an atlas, nine-slice and random rules, embeds ima
   // A full image becomes a separate embedded decoration layer.
   await upload(page, "addImage", image);
   await expect.poll(() => page.evaluate(() => MapEditor.document.layers.length)).toBe(3);
-  await page.screenshot({ path: ".openai/map-editor-desktop.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/map-editor-desktop.png" });
   expect(
     await page.evaluate(() => MapEditor.activeLayer.image.src.startsWith("data:image/png;base64,")),
   ).toBe(true);
@@ -186,7 +186,7 @@ test("editor tools remain usable on mobile and deployment/spawn drawing validate
   expect(await page.evaluate(() => MapEditor.document.deploymentAreas[0].height)).toBe(17);
   await page.locator("#validateMap").click();
   await expect(page.locator("#validation")).toContainText("可导出");
-  await page.screenshot({ path: ".openai/map-editor-mobile.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/map-editor-mobile.png" });
 });
 test("battle draws authored terrain, ground units, over-ground layers, then aircraft", async ({
   page,

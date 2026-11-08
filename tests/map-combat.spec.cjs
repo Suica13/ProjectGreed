@@ -108,7 +108,7 @@ test("map melee approaches vertically, plays its native swing and keeps real gri
   expect(swing.nativeClips).toContain(swing.units.find((u) => u.id === swing.source).pose.clip);
   expect(swing.events).toBe(2);
   await expect(page.locator("#battle")).toBeHidden();
-  await page.screenshot({ path: "tmp/map-combat-melee.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/map-combat-melee.png" });
   await page.locator("#roomSettings").evaluate(() => {
     setPageView("room");
   });
@@ -135,7 +135,7 @@ test("map death keeps the unit during electricity and hides its sprite when the 
   expect(target.pose.hidden).toBe(false);
   const explosion = await at(page, "explosion");
   expect(explosion.units.find((u) => u.id === explosion.target).pose.hidden).toBe(true);
-  await page.screenshot({ path: "tmp/map-combat-death.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/map-combat-death.png" });
   expect(errors).toEqual([]);
 });
 

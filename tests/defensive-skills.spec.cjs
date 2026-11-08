@@ -71,7 +71,7 @@ for (const entry of ["client", "developer"])
       expect(result.orders.indexOf("unit:YMT_05")).toBeLessThan(result.orders.indexOf("smoke"));
       expect(result.orders.indexOf("smoke")).toBeLessThan(result.orders.indexOf("unit:FF_B2"));
       expect(result.pixel[0]).toBeGreaterThan(150);
-      await page.screenshot({ path: ".openai/smoke-" + entry + ".png" });
+      await page.screenshot({ path: "tmp/verification/screenshots/smoke-" + entry + ".png" });
       expect(errors).toEqual([]);
     },
   );
@@ -169,6 +169,6 @@ test("I-field values and native impact effect follow projectile arrival rather t
   expect(result.description).toContain("95%");
   expect(result.english).toContain("Separate capacity");
   expect(result.japanese).toContain("独立耐久");
-  await page.screenshot({ path: ".openai/i-field-impact.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/i-field-impact.png" });
   expect(errors).toEqual([]);
 });

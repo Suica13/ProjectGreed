@@ -108,7 +108,7 @@ test("nine-unit rosters and long logs scroll inside a bounded desktop viewport",
   await expect(page.locator("#chatSend")).toBeDisabled();
   await page.locator("#showLog").click();
   await expect(page.locator("#log")).toBeVisible();
-  await page.screenshot({ path: ".openai/desktop-scroll-console.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/desktop-scroll-console.png" });
 });
 test("player IDs persist and repeated room leave/connect cycles keep the endpoint parser callable", async ({
   page,

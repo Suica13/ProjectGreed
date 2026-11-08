@@ -5,7 +5,7 @@ module.exports = defineConfig({
   testMatch: "**/*.spec.cjs",
   workers: 1,
   timeout: 30000,
-  outputDir: ".openai/browser-results",
+  outputDir: "tmp/verification/browser-results",
   use: {
     viewport: { width: 1600, height: 1000 },
     locale: "zh-CN",

@@ -54,12 +54,12 @@ test("response sidebars identify both owners and leave the defender visible with
   await expect(page.locator("#estimate")).toContainText("本次不进行反击");
   await page.locator("#responseCounter").click();
   await expect(page.locator("#counterList .weapon")).not.toHaveCount(0);
-  await page.screenshot({ path: ".openai/response-sidebars-desktop.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/response-sidebars-desktop.png" });
   await page.setViewportSize({ width: 430, height: 900 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await expect(page.locator("#confirmResponse")).toBeInViewport();
   await expect(page.locator("#responseCounter")).toBeInViewport();
-  await page.screenshot({ path: ".openai/response-sidebars-mobile.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/response-sidebars-mobile.png" });
   expect(errors).toEqual([]);
 });
 test("map bullets originate from the rendered gun after either dodge lane at every facing", async ({
@@ -183,5 +183,5 @@ test("all incoming attackers remain visible in an independently scrollable list"
   await expect(page.locator("#engagement .incoming-entry")).toHaveCount(9);
   await page.locator("#engagement .incoming-entry").last().scrollIntoViewIfNeeded();
   expect(await page.locator("#engagement").evaluate((e) => e.scrollTop)).toBeGreaterThan(0);
-  await page.screenshot({ path: ".openai/incoming-units-scroll.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/incoming-units-scroll.png" });
 });

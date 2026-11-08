@@ -43,7 +43,7 @@ for(const width of [1440,390]) test(`campaign map drawer leaves chat usable at $
  await page.waitForTimeout(350);
  await expect(drawer.locator(".campaign-encounter-body")).toBeVisible();
  const expanded=await drawer.boundingBox();expect(expanded.height).toBeLessThanOrEqual(map.height+1);
- await page.screenshot({path:`tmp/campaign-map-drawer-${width}.png`});
+ await page.screenshot({path:`tmp/verification/screenshots/campaign-map-drawer-${width}.png`});
  await drawer.getByRole("button",{name:"手动指挥",exact:true}).click();
  await expect.poll(()=>page.evaluate(()=>Net.started)).toBe(true);
  expect(await page.evaluate(()=>Net.snapshot.game.fogMode)).toBe("disabled");

@@ -54,7 +54,7 @@ test("native single eyes render over the four ZEON heads with semantic animated 
   });
   expect(result.count).toBe(8);
   expect(result.dom).toBe("380mm火箭筒");
-  await page.screenshot({ path: ".openai/zeon-eyes-semantic-bones.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/zeon-eyes-semantic-bones.png" });
   expect(errors).toEqual([]);
 });
 test("quick checkbox silences battle cues immediately and normal playback can resume audio", async ({

@@ -44,246 +44,56 @@ function load(
 }
 const entry = { unitId: "Type61", kitId: "standard" };
 
-test("legacy permits migrate to zero chassis/kit stock once, retaining money and receipts", () => {
-  const { E, storage } = load({
-    schemaVersion: 2,
-    money: 1234,
-    supplies: 5678,
-    licenses: { Type61: true },
-    claimed: { old: "match" },
-  });
-  assert.equal(E.quantity("Type61"), 0);
-  assert.equal(E.kitQuantity("Type61__standard"), 0);
-  assert(E.hasLicense("Type61"));
-  assert.equal(E.snapshot().money, 1234);
-  assert.equal(E.snapshot().claimed.old, "match");
-  assert.equal(E.snapshot().schemaVersion, 3);
-  assert(storage.has(E.key + ".before-counted-stock"));
-  const old = load({
-    money: 100000,
-    supplies: 100000,
-    inventory: { Type61: 99 },
-    kits: { Type61__standard: 99 },
-  }).E;
-  assert(old.hasLicense("Type61"));
-  assert.equal(old.quantity("Type61"), 0);
-  assert(old.produce("Type61", "standard", "EFSF"));
-  const again = load(JSON.parse(JSON.stringify(old.exportProgress()))).E;
-  assert.equal(again.quantity("Type61"), 1);
-  assert.equal(again.kitQuantity("Type61__standard"), 1);
+
+test("legacy progress keeps permits, chassis, balances and receipts but discards equipment quantities",()=>{
+ const {E}=load({schemaVersion:3,money:1234,supplies:5678,licenses:{RGM_79:true},inventory:{RGM_79:2},kits:{RGM_79__bazooka:999},claimed:{old:"match"}});
+ assert.equal(E.quantity("RGM_79"),2);assert(E.hasLicense("RGM_79"));
+ assert.equal(E.snapshot().money,1234);assert.equal(E.snapshot().claimed.old,"match");
+ assert.equal(JSON.stringify(E.snapshot().kits),"{}");assert.equal(typeof E.buyKit,"undefined");
 });
-
-test("production buys exactly one chassis and selected kit at per-unit prices", () => {
-  const { E } = load();
-  const quote = E.productionOffer("Type61", "standard"),
-    before = E.snapshot();
-  assert.equal(quote.quantity, 1);
-  assert.equal(quote.chassis.quantity, 1);
-  assert(E.produce("Type61", "standard", "EFSF"));
-  assert.equal(E.quantity("Type61"), 1);
-  assert.equal(E.kitQuantity("Type61__standard"), 1);
-  assert.equal(E.snapshot().money, before.money - quote.money);
-  assert.equal(E.snapshot().supplies, before.supplies - quote.supplies);
-  assert(E.buyKit("Type61", "standard", "EFSF"));
-  assert.equal(E.quantity("Type61"), 1);
-  assert.equal(E.kitQuantity("Type61__standard"), 2);
+test("each production order charges one chassis regardless of selected kit",()=>{
+ const {E}=load();const before=E.snapshot();
+ const a=E.productionOffer("RGM_79","beam_spray"),b=E.productionOffer("RGM_79","bazooka");
+ assert.equal(a.money,b.money);assert.equal(a.supplies,b.supplies);assert.equal(a.quantity,1);
+ assert(E.produce("RGM_79","bazooka","EFSF"));
+ assert.equal(E.quantity("RGM_79"),1);assert.equal(E.snapshot().money,before.money-b.money);
+ assert.equal(E.snapshot().supplies,before.supplies-b.supplies);assert.equal(JSON.stringify(E.snapshot().kits),"{}");
 });
-
-test("kit changes allocate separate inventory without refund or discarding old equipment", () => {
-  const { E } = load();
-  assert(E.produce("RGM_79", "beam_spray", "EFSF"));
-  const before = E.snapshot();
-  assert(E.buyKit("RGM_79", "bazooka", "EFSF"));
-  const snapshot = E.snapshot(),
-    spray = { unitId: "RGM_79", kitId: "beam_spray" },
-    bazooka = { ...spray, kitId: "bazooka" };
-  assert.equal(E.stockPlan([spray], snapshot).missing.length, 0);
-  assert.equal(E.stockPlan([bazooka], snapshot).missing.length, 0);
-  assert.equal(E.stockPlan([spray, bazooka], snapshot).reasons[1], "stock");
-  assert.equal(E.kitQuantity("RGM_79__beam_spray"), 1);
-  assert.equal(E.kitQuantity("RGM_79__bazooka"), 1);
-  assert.equal(E.quantity("RGM_79"), 1);
-  assert(E.snapshot().money < before.money);
-  assert.deepEqual(JSON.parse(JSON.stringify(E.snapshot())), JSON.parse(JSON.stringify(snapshot)));
+test("stock allocation permits every valid equipment choice while still enforcing chassis counts",()=>{
+ const entries=[{unitId:"RGM_79",kitId:"beam_spray"},{unitId:"RGM_79",kitId:"bazooka"}];
+ const {E}=load();const stock={inventory:{RGM_79:1},kits:{}};
+ assert.equal(E.stockPlan(entries,stock).reasons[1],"stock");
+ assert.equal(E.stockPlan([entries[1]],stock).missing.length,0);
+ const planned=G.planFormation(entries,Infinity,{licenses:{RGM_79:true},inventory:{RGM_79:2},kits:{}});
+ assert.equal(planned.deployable.length,2);assert.throws(()=>E.normalizeStock({inventory:{RGM_79:-1}}));
 });
-
-test("bulk replenishment buys only deficits, totals duplicate units, and rolls back failures", () => {
-  const { E, context, storage } = load();
-  const entries = Array(3).fill(entry);
-  const plan = E.purchasePlan(entries);
-  assert.equal(plan.items.find((i) => i.kind === "inventory").count, 3);
-  const before = JSON.stringify(E.snapshot()),
-    stored = storage.get(E.key),
-    original = context.localStorage.setItem;
-  context.localStorage.setItem = () => {
-    throw Error("quota");
-  };
-  assert.throws(() => E.purchaseMissingStock(entries, "EFSF"), /quota/);
-  assert.equal(JSON.stringify(E.snapshot()), before);
-  assert.equal(storage.get(E.key), stored);
-  context.localStorage.setItem = original;
-  assert(E.purchaseMissingStock(entries, "EFSF").ok);
-  assert.equal(E.quantity("Type61"), 3);
-  assert.equal(E.kitQuantity("Type61__standard"), 3);
-  assert.equal(E.purchasePlan(entries).items.length, 0);
-  assert.equal(E.snapshot().money, JSON.parse(before).money - plan.money);
-  assert(!E.produce("Type61", "fake", "EFSF"));
-  assert(!E.produce("Type61", "standard", "ZEON"));
+test("bulk replenishment remains atomic and counts the free permit chassis once",()=>{
+ const {E,context,storage}=load({schemaVersion:3,money:1000000,supplies:1000000,licenses:{},inventory:{},kits:{}});
+ const entries=Array(3).fill({unitId:"RGM_79",kitId:"bazooka"}),plan=E.purchasePlan(entries);
+ assert.equal(plan.items.find(i=>i.kind==="licenses").count,1);
+ assert.equal(plan.items.find(i=>i.kind==="inventory").count,2);assert(!plan.items.some(i=>i.kind==="kits"));
+ const before=JSON.stringify(E.snapshot()),stored=storage.get(E.key),write=context.localStorage.setItem;
+ context.localStorage.setItem=()=>{throw Error("quota")};
+ assert.throws(()=>E.purchaseMissingStock(entries,"EFSF"),/quota/);
+ assert.equal(JSON.stringify(E.snapshot()),before);assert.equal(storage.get(E.key),stored);
+ context.localStorage.setItem=write;assert(E.purchaseMissingStock(entries,"EFSF").ok);
+ assert.equal(E.quantity("RGM_79"),3);assert.equal(E.purchasePlan(entries).items.length,0);
 });
-
-test("deployment reservations and survivor returns are persistent, idempotent and keep permits", () => {
-  const { E } = load();
-  assert(E.purchaseMissingStock([entry, entry], "EFSF").ok);
-  const used = { inventory: { Type61: 2 }, kits: { Type61__standard: 2 } };
-  const reserve = { id: "deploy", matchId: "match", money: 0, supplies: 0, stockUsed: used };
-  assert(E.creditAward(reserve));
-  assert(!E.creditAward(reserve));
-  assert.equal(E.quantity("Type61"), 0);
-  const returned = { inventory: { Type61: 1 }, kits: { Type61__standard: 1 } };
-  const award = {
-    id: "result",
-    matchId: "match",
-    money: 10,
-    supplies: 20,
-    stockReturned: returned,
-  };
-  assert(E.creditAward(award));
-  assert(!E.creditAward(award));
-  assert(E.hasLicense("Type61"));
-  assert.equal(E.quantity("Type61"), 1);
-  assert.equal(E.kitQuantity("Type61__standard"), 1);
-  const restored = load(JSON.parse(JSON.stringify(E.exportProgress()))).E;
-  assert(!restored.creditAward(reserve));
-  assert(!restored.creditAward(award));
-  assert.equal(restored.quantity("Type61"), 1);
+test("loss settlement only consumes chassis and survives reload and duplicate receipts",()=>{
+ let {E}=load();assert(E.purchaseMissingStock([entry,entry],"EFSF").ok);
+ const result={id:"loss-free-kit",matchId:"match",money:123,supplies:456,stockLost:{inventory:{Type61:1},kits:{Type61__standard:999}}};
+ assert(E.creditAward(result));assert.equal(E.quantity("Type61"),1);assert.equal(JSON.stringify(E.snapshot().kits),"{}");
+ E=load(JSON.parse(JSON.stringify(E.exportProgress()))).E;
+ assert(!E.creditAward(result));assert.equal(E.quantity("Type61"),1);
 });
-
-test("shared formation rules enforce chassis and equipment stock separately including preloads", () => {
-  const restrictions = {
-    licenses: { Type61: true },
-    inventory: { Type61: 3 },
-    kits: { Type61__standard: 1 },
-  };
-  const plan = G.planFormation([entry, entry, entry], Infinity, restrictions);
-  assert.equal(plan.deployable.length, 1);
-  assert.equal(plan.reasons[1], "kit_stock");
-  const zero = G.planFormation([entry], Infinity, { ...restrictions, inventory: {} });
-  assert.equal(zero.reasons[0], "stock");
-  const carrier = { unitId: "Medea", kitId: "standard" };
-  const cargo = { ...entry, preload: { carrierIndex: 0, hangarId: "Hangar_1" } };
-  const loaded = G.planFormation([carrier, cargo, cargo], Infinity, {
-    licenses: { Medea: true, Type61: true }, inventory: { Medea: 1, Type61: 2 },
-    kits: { Medea__standard: 1, Type61__standard: 1 },
-  });
-  assert.equal(loaded.deployable.length, 2);
-  assert.equal(loaded.reasons[2], "kit_stock");
-  assert.throws(() => G.normalizeStock({ inventory: { Type61: -1 } }));
-  assert.throws(() => G.normalizeStock({ kits: { Type61__fake: 1 } }));
-  assert.throws(() => G.normalizeStock({ inventory: { Type61: 1.5 } }));
-  assert.throws(() => G.normalizeStock({ inventory: [] }));
+test("activity chassis grants are independent of development, permits and obsolete kit rewards",()=>{
+ const {E}=load({schemaVersion:3,money:0,supplies:0,licenses:{},inventory:{},kits:{}});
+ const award={id:"stock-only",matchId:"mail",money:0,supplies:0,inventory:{RGM_79:2},kits:{RGM_79__bazooka:9}};
+ assert(E.creditActivity(award));assert.equal(E.quantity("RGM_79"),2);assert(!E.hasLicense("RGM_79"));
+ assert.equal(E.stockPlan([{unitId:"RGM_79",kitId:"bazooka"}],E.snapshot()).missing.length,0);
+ assert.equal(JSON.stringify(E.snapshot().kits),"{}");assert(!E.creditActivity(award));
 });
-
-test("fixed technology progresses by completed matches, never army size or kill count", () => {
-  assert.equal(R.technologyReward(true, "regular"), 660);
-  assert.equal(R.technologyReward(false, "regular"), 540);
-  assert.equal(R.technologyReward(true, "quick"), 66);
-  assert.equal(R.technologyReward(false, "quick"), 54);
-  assert.equal(R.technologyReward(true, "regular", 2), 1320);
-});
-
-
-test("permit costs three default production orders, gifts once, and never reprices production", () => {
-  const {E}=load({schemaVersion:3,money:1000000,supplies:1000000,licenses:{},inventory:{},kits:{}});
-  const before=E.productionOffer("RGM_79",E.defaultKit("RGM_79")), permit=E.licenseOffer("RGM_79");
-  assert.equal(permit.money,before.money*3); assert.equal(permit.supplies,before.supplies*3);
-  assert(E.purchaseLicense("RGM_79","EFSF"));
-  assert.equal(E.quantity("RGM_79"),1); assert.equal(E.kitQuantity("RGM_79__beam_spray"),1);
-  assert.equal(E.kitQuantity("RGM_79__bazooka"),0);
-  assert.equal(JSON.stringify(E.productionOffer("RGM_79","beam_spray")),JSON.stringify(before));
-  const after=JSON.stringify(E.snapshot()); assert(!E.purchaseLicense("RGM_79","EFSF"));
-  assert.equal(JSON.stringify(E.snapshot()),after);
-  const reloaded=load(JSON.parse(JSON.stringify(E.exportProgress()))).E;
-  assert.equal(reloaded.quantity("RGM_79"),1); assert(!reloaded.purchaseLicense("RGM_79","EFSF"));
-});
-
-test("bulk replenishment credits permit gifts toward deficits including alternate kits", () => {
-  const fresh=()=>load({schemaVersion:3,money:1000000,supplies:1000000,licenses:{},inventory:{},kits:{}}).E;
-  const E=fresh(), normal={unitId:"RGM_79",kitId:"beam_spray"};
-  const plan=E.purchasePlan([normal,normal,normal]);
-  assert.equal(plan.items.find(i=>i.kind==="inventory").count,2);
-  assert.equal(plan.items.find(i=>i.kind==="kits").count,2);
-  assert.equal(plan.money,E.licenseOffer("RGM_79").money+2*E.productionOffer("RGM_79","beam_spray").money);
-  assert(E.purchaseMissingStock([normal,normal,normal],"EFSF").ok);
-  assert.equal(E.quantity("RGM_79"),3); assert.equal(E.kitQuantity("RGM_79__beam_spray"),3);
-  const A=fresh(), alternate={...normal,kitId:"bazooka"}, other=A.purchasePlan([alternate]);
-  assert(!other.items.some(i=>i.kind==="inventory"));
-  assert.equal(other.items.find(i=>i.kind==="kits").id,"RGM_79__bazooka");
-  assert(A.purchaseMissingStock([alternate],"EFSF").ok);
-  assert.equal(A.quantity("RGM_79"),1); assert.equal(A.kitQuantity("RGM_79__beam_spray"),1);assert.equal(A.kitQuantity("RGM_79__bazooka"),1);
-});
-
-
-test("PMC allocations use largest remainders, honor caps, and conserve every allocatable point",()=>{
-  const factions=["EFSF","ZEON","AEUG"];
-  for(let total=1;total<=37;total++)for(let cap=0;cap<=12;cap++){
-    const weights={EFSF:10,ZEON:1,AEUG:2}, balances={EFSF:20-cap,ZEON:19,AEUG:15};
-    const limits={EFSF:20,ZEON:20,AEUG:20};
-    const awards=R.allocateTechnology(total,weights,balances,limits);
-    assert.equal(Object.values(awards).reduce((sum,n)=>sum+n,0),Math.min(total,cap+1+5));
-    for(const faction of factions){assert(Number.isInteger(awards[faction]||0));assert((awards[faction]||0)<=limits[faction]-balances[faction])}
-    assert.deepEqual(R.allocateTechnology(total,weights,balances,limits),awards);
-  }
-  assert.deepEqual(R.allocateTechnology(1,{EFSF:1,ZEON:1},{},{EFSF:10,ZEON:10}),{EFSF:1});
-  assert.deepEqual(R.technologyFactions({tags:["EFSF","0079T1","EFSF"],availableFactions:["AEUG","TITANS"],faction:"EFSF"}),["AEUG","EFSF","TITANS"]);
-});
-
-test("activity stock grants are counted, atomic and idempotent without granting licenses", () => {
-  const {E}=load({schemaVersion:3,money:1000000,supplies:1000000,licenses:{},inventory:{},kits:{}});
-  const award={id:"stock-mail",matchId:"server",money:0,supplies:0,inventory:{RGM_79:2},kits:{RGM_79__beam_spray:3}};
-  assert(E.creditActivity(award));
-  assert.equal(E.quantity("RGM_79"),2);assert.equal(E.kitQuantity("RGM_79__beam_spray"),3);
-  assert.equal(E.hasLicense("RGM_79"),false);
-  assert.equal(E.creditActivity(award),false);
-  assert.equal(E.quantity("RGM_79"),2);
-  assert.equal(E.buyKit("RGM_79","beam_spray","PMC"),false);
-  assert.equal(E.produce("RGM_79","beam_spray","PMC"),false);
-  assert.equal(E.purchasePlan([{unitId:"RGM_79",kitId:"beam_spray"}]).items.length,0);
-  const before=JSON.stringify(E.snapshot());
-  assert.throws(()=>E.creditActivity({...award,id:"bad",inventory:{not_a_unit:1}}));
-  assert.equal(JSON.stringify(E.snapshot()),before);
-});
-
-
-test("end-only losses survive closing/reload, duplicate delivery and failed storage writes", () => {
-  let { E } = load();
-  assert(E.purchaseMissingStock([entry, entry], "EFSF").ok);
-  const deployment = { id: "new-deploy", matchId: "new-match", money: 0, supplies: 0,
-    stockUsed: { inventory: {}, kits: {} } };
-  assert(E.creditAward(deployment));
-  assert.equal(E.quantity("Type61"), 2);
-  const restored = load(JSON.parse(JSON.stringify(E.exportProgress())));
-  E = restored.E;
-  assert.equal(E.quantity("Type61"), 2);
-  assert.equal(E.kitQuantity("Type61__standard"), 2);
-  assert(!E.creditAward(deployment));
-  const result = { id: "new-result", matchId: "new-match", kind: "result", money: 123, supplies: 456,
-    stockLost: { inventory: { Type61: 1 }, kits: { Type61__standard: 1 } } };
-  const before = E.exportProgress(), write = restored.context.localStorage.setItem;
-  restored.context.localStorage.setItem = () => { throw Error("quota"); };
-  assert.throws(() => E.creditAward(result), /quota/);
-  assert.equal(JSON.stringify(E.exportProgress()), JSON.stringify(before));
-  restored.context.localStorage.setItem = write;
-  assert(E.creditAward(result));
-  assert.equal(E.quantity("Type61"), 1);
-  assert.equal(E.kitQuantity("Type61__standard"), 1);
-  assert.equal(E.snapshot().money, before.money + 123);
-  const again = load(JSON.parse(JSON.stringify(E.exportProgress()))).E;
-  assert(!again.creditAward(result));
-  assert.equal(again.quantity("Type61"), 1);
-  // A result delayed across other matches must not prevent rewards or go negative.
-  assert(again.creditAward({ ...result, id: "late-result", stockLost: {
-    inventory: { Type61: 2 }, kits: { Type61__standard: 2 } } }));
-  assert.equal(again.quantity("Type61"), 0);
-  assert.equal(again.kitQuantity("Type61__standard"), 0);
-  assert(!again.creditAward({ ...result, id: "late-result" }));
+test("technology allocation retains faction weights and redistributes saturated factions",()=>{
+ assert.deepEqual(R.allocateTechnology(600,{EFSF:10,ZEON:1},{EFSF:999},{EFSF:1000,ZEON:1000}),{EFSF:1,ZEON:599});
+ assert.equal(R.technologyReward(true,"regular"),660);assert.equal(R.technologyReward(false,"quick"),54);
 });

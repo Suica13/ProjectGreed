@@ -31,8 +31,8 @@ test("selected equipment is produced one unit at the shared PMC price", () => {
   const state = C.create(ctx, players),
     base = C.quote(ctx, "RFF_06"),
     quote = C.quote(ctx, "RFF_06", "kit_1");
-  assert.equal(quote.money, base.money + 50);
-  assert.equal(quote.supplies, base.supplies + 170);
+  assert.equal(quote.money, base.money);
+  assert.equal(quote.supplies, base.supplies);
   assert.equal(quote.quantity, 1);
   const money = state.teams[0].money,
     supplies = state.teams[0].supplies;
@@ -43,10 +43,11 @@ test("selected equipment is produced one unit at the shared PMC price", () => {
     unitId: "RFF_06",
     kitId: "kit_1",
   });
-  assert.equal(state.teams[0].money, money - 650);
-  assert.equal(state.teams[0].supplies, supplies - 950);
+  assert.equal(state.teams[0].money, money - quote.money);
+  assert.equal(state.teams[0].supplies, supplies - quote.supplies);
   assert.equal(state.orders[0].kitId, "kit_1");
-  assert.match(state.history.at(-1), /生产.*×1.*资金 650.*物资 950/);
+  assert(state.history.at(-1).includes("资金 "+quote.money));
+  assert(state.history.at(-1).includes("物资 "+quote.supplies));
   const before = structuredClone(state);
   assert.throws(
     () =>
@@ -247,16 +248,16 @@ test("strategic re-equipment uses the shared target-kit price and cannot heal or
   unit.state.en = Math.floor(C.model(ctx, unit).en / 2);
   unit.state.weaponUses = { test: 2 };
   const treasury = state.teams[0].money;
-  assert.deepEqual(C.equipmentQuote(ctx, unit, "kit_1"), { money: 150, supplies: 300 });
+  assert.deepEqual(C.equipmentQuote(ctx, unit, "kit_1"), { money: 0, supplies: 0 });
   const order = { action: "campaign_equip", turn: 1, armyId: unit.id, kitId: "kit_1", money: 0 };
   assert.throws(() => C.action(ctx, state, players, 1, order), /无权/);
   C.action(ctx, state, players, 0, order);
-  assert.equal(state.teams[0].money, treasury - 150);
+  assert.equal(state.teams[0].money, treasury);
   assert.equal(unit.kitId, "kit_1");
   assert(unit.state.hp <= C.model(ctx, unit).hp / 2);
   assert(unit.state.en <= C.model(ctx, unit).en / 2);
   assert.deepEqual(unit.state.weaponUses, { test: 2 });
-  assert.deepEqual(C.equipmentQuote(ctx, unit, "kit_0"), { money: 100, supplies: 130 });
+  assert.deepEqual(C.equipmentQuote(ctx, unit, "kit_0"), { money: 0, supplies: 0 });
   const before = structuredClone(state);
   assert.throws(() => C.action(ctx, state, players, 0, { ...order, kitId: "missing" }), /套件/);
   assert.deepEqual(state, before);
@@ -371,8 +372,8 @@ test("a cheaper kit lowers the single-unit price without refunding other equipme
   state.teams[0].researched = ctx.development.nodes("EFSF").map((node) => node.id);
   const standard = C.quote(ctx, "RGM_79"),
     cheaper = C.quote(ctx, "RGM_79", "machine_gun");
-  assert(cheaper.money < standard.money);
-  assert(cheaper.supplies < standard.supplies);
+  assert(cheaper.money === standard.money);
+  assert(cheaper.supplies === standard.supplies);
   const before = { money: state.teams[0].money, supplies: state.teams[0].supplies };
   C.action(ctx, state, players, 0, {
     action: "campaign_produce",
@@ -381,8 +382,8 @@ test("a cheaper kit lowers the single-unit price without refunding other equipme
     unitId: "RGM_79",
     kitId: "machine_gun",
   });
-  assert.equal(before.money - state.teams[0].money, 600);
-  assert.equal(before.supplies - state.teams[0].supplies, 900);
+  assert.equal(before.money - state.teams[0].money, cheaper.money);
+  assert.equal(before.supplies - state.teams[0].supplies, cheaper.supplies);
   assert.equal(state.orders[0].quantity, 1);
 });
 
@@ -392,14 +393,14 @@ test("campaign re-equipment returns removed kits and reuses stock before purchas
   const before = state.teams[0].supplies;
   const equip = (kitId) =>
     C.action(ctx, state, players, 0, { action: "campaign_equip", turn: 1, armyId: unit.id, kitId });
-  assert.deepEqual(C.equipmentQuote(ctx, unit, "bazooka"), { money: 100, supplies: 200 });
-  assert.deepEqual(C.equipmentQuote(ctx, unit, "beam_spray"), { money: 150, supplies: 300 });
+  assert.deepEqual(C.equipmentQuote(ctx, unit, "bazooka"), { money: 0, supplies: 0 });
+  assert.deepEqual(C.equipmentQuote(ctx, unit, "beam_spray"), { money: 0, supplies: 0 });
   equip("bazooka");
-  assert.equal(state.teams[0].supplies, before - 200);
+  assert.equal(state.teams[0].supplies, before);
   equip("beam_spray");
-  assert.equal(state.teams[0].supplies, before - 200);
+  assert.equal(state.teams[0].supplies, before);
   equip("bazooka");
-  assert.equal(state.teams[0].supplies, before - 200);
+  assert.equal(state.teams[0].supplies, before);
   const fee = ctx.production.nativeEquipmentCosts.RGM_79__bazooka;
   assert.equal(fee.sources[0].action, "action_Set_Equipment2");
   assert.equal(fee.sources[0].seconds, 3);
@@ -547,8 +548,8 @@ test("campaign research unlocks direct production without personal permits or in
   assert.equal(E.hasLicense("RGM_79"),false); assert.equal(E.quantity("RGM_79"),0);
   assert(C.available(ctx,state,0,"RGM_79","bazooka"));
   const price=C.quote(ctx,"RGM_79","bazooka"), funds=team.money;
-  assert.equal(price.money,price.chassis.money+price.kit.money);
-  assert.equal(price.kit.money,E.kitOffer("RGM_79__bazooka").money*price.quantity);
+  assert.equal(price.money,price.chassis.money);
+  assert.equal(price.kit,undefined);
   C.action(ctx,state,players,0,{action:"campaign_produce",turn:state.turn,region:"jaburo",unitId:"RGM_79",kitId:"bazooka"});
   assert.equal(team.money,funds-price.money);
   assert.equal(state.orders[0].kitId,"bazooka");
@@ -557,5 +558,5 @@ test("campaign research unlocks direct production without personal permits or in
   assert.equal(JSON.stringify(E.exportProgress()),before);
   const custom={...ctx,production:structuredClone(ctx.production)};
   custom.production.nativeEquipmentCosts.RGM_79__bazooka.money=222;
-  assert.equal(C.quote(custom,"RGM_79","bazooka").kit.money,222*price.quantity);
+  assert.equal(C.quote(custom,"RGM_79","bazooka").money,price.money);
 });

@@ -104,7 +104,7 @@ for (const width of [1280, 390, 360])
     await page.locator("#addFormationUnit").click();
     await page.locator("#closeFormationPicker").click();
     expect((await saved()).squads[0].units).toHaveLength(2);
-    await page.screenshot({ path: `.openai/formation-autosave-${width}.png` });
+    await page.screenshot({ path: `tmp/verification/screenshots/formation-autosave-${width}.png` });
     await page.reload();
     await page.waitForFunction(() => assetsReady);
     await page.locator("#openFormation").click();

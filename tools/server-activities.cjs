@@ -11,23 +11,6 @@ function createActivityService({ rules, send, storePath = null, now = Date.now,
   const aceMap = new Map(require("../shared/pilots.json").aces.map((p) => [p.id, p]));
   const production = require("../shared/production-data.cjs");
   const unitMap = new Map(rules.catalog.prefabs.map((unit) => [unit.id, unit]));
-  const kitMap = new Map(
-    rules.catalog.prefabs.flatMap((unit) =>
-      unit.weaponKits.map((kit) => {
-        const id = unit.id + "__" + kit.id;
-        return [
-          id,
-          {
-            id,
-            unitId: unit.id,
-            name: unit.name + " · " + (rules.models[id]?.kitName || kit.name || kit.id),
-            faction: unit.faction,
-            kitName: rules.models[id]?.kitName || kit.name || kit.id,
-          },
-        ];
-      }),
-    ),
-  );
   let state = { schemaVersion: 2, serverId: crypto.randomUUID(), players: {}, activities: [] };
   function save(next) {
     if (storePath) {
@@ -193,10 +176,7 @@ function createActivityService({ rules, send, storePath = null, now = Date.now,
     )
       throw Error("资金、物资必须为0至10亿的整数");
     const stock = rules.normalizeStock({ inventory: value.inventory, kits: value.kits });
-    for (const id of Object.keys(stock.kits))
-      if (!kitMap.has(id)) throw Error("套件奖励无效：" + id);
     if (Object.keys(stock.inventory).length) rewards.inventory = stock.inventory;
-    if (Object.keys(stock.kits).length) rewards.kits = stock.kits;
     if (
       value.licenses !== undefined &&
       (!value.licenses || typeof value.licenses !== "object" || Array.isArray(value.licenses))
@@ -222,29 +202,8 @@ function createActivityService({ rules, send, storePath = null, now = Date.now,
   }
   // Presentation metadata preserves the selected bundled kit when several extra kits exist.
   // Actual awards continue to use the independently counted inventory/kits maps.
-  function validateStockConfigurations(value = {}, rewards) {
-    if (!value || typeof value !== "object" || Array.isArray(value))
-      throw Error("单位套件配置格式无效");
-    const result = {};
-    for (const [unitId, config] of Object.entries(value)) {
-      if (!unitMap.has(unitId) || !config || typeof config !== "object" || Array.isArray(config))
-        throw Error("单位套件配置无效");
-      const kitId = config.kitId;
-      if (kitId !== "" && kitMap.get(kitId)?.unitId !== unitId)
-        throw Error("随附套件不属于所选单位");
-      const extraKits = rules.normalizeStock({ kits: config.extraKits }).kits;
-      for (const id of Object.keys(extraKits))
-        if (kitMap.get(id)?.unitId !== unitId) throw Error("额外套件不属于所选单位");
-      for (const kit of kitMap.values()) {
-        if (kit.unitId !== unitId) continue;
-        const total =
-          (extraKits[kit.id] || 0) + (kit.id === kitId ? rewards.inventory?.[unitId] || 0 : 0);
-        if (total !== (rewards.kits?.[kit.id] || 0)) throw Error("套件配置与奖励数量不一致");
-      }
-      result[unitId] = { kitId, extraKits };
-    }
-    return result;
-  }
+  // Legacy bundled-kit metadata has no economic meaning after free equipment selection.
+  function validateStockConfigurations() { return {}; }
   function validateMultipliers(value) {
     if (!value || typeof value !== "object" || Array.isArray(value))
       throw Error("请配置战斗收益倍率");
@@ -650,7 +609,7 @@ function createActivityService({ rules, send, storePath = null, now = Date.now,
         faction: p.faction,
         era: p.era || "0079",
       })),
-      kits: [...kitMap.values()],
+      kits: [],
       units: [...unitMap.values()].map((unit) => ({
         id: unit.id,
         name: unit.code + " " + unit.name,

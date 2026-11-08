@@ -134,12 +134,12 @@ test("lineup buttons, three-column observers and shared room/game channel permis
     await page.locator("#roomSettings").click();
     await expect(page.locator("#roomChatChannel")).toHaveValue("all");
     await expect(page.locator("#roomChatLines")).toContainText("IN GAME PUBLIC");
-    await page.screenshot({ path: ".openai/lineup-chat-desktop.png" });
+    await page.screenshot({ path: "tmp/verification/screenshots/lineup-chat-desktop.png" });
     await page.setViewportSize({ width: 430, height: 900 });
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
       true,
     );
-    await page.screenshot({ path: ".openai/lineup-chat-mobile.png" });
+    await page.screenshot({ path: "tmp/verification/screenshots/lineup-chat-mobile.png" });
     expect(errors).toEqual([]);
   } finally {
     peers.forEach((ws) => ws.terminate());

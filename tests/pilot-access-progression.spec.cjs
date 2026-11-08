@@ -122,7 +122,7 @@ for (const width of [1440, 390, 360])
       await maxCard.locator(".formation-detail-button").click();
       await expect(page.locator("#customPilotSkills .pilot-list-skill")).toHaveCount(1);
       await page.locator("#finishCustomPilot").click();
-      await page.screenshot({ path: ".openai/pilot-roster-" + width + ".png" });
+      await page.screenshot({ path: "tmp/verification/screenshots/pilot-roster-" + width + ".png" });
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
         true,
       );

@@ -1695,8 +1695,10 @@ function drawCampaignSupply(ctx, ox, oy, tile) {
       ctx.restore();
     }
     const radius = Math.max(6, tile * 0.45);
-    ctx.fillRect(p.x - radius, p.y - radius, radius * 2, radius * 2);
-    ctx.strokeRect(p.x - radius, p.y - radius, radius * 2, radius * 2);
+    if (node.region) {
+      ctx.fillRect(p.x-radius,p.y-radius,radius*2,radius*2);
+      ctx.strokeRect(p.x-radius,p.y-radius,radius*2,radius*2);
+    } else BattlefieldUI.drawCampaignObjective(ctx,node,team,p.x,p.y,tile);
     ctx.fillStyle = color(team);
     ctx.font = `bold ${Math.max(9, Math.min(13, tile * 0.6))}px sans-serif`;
     ctx.textAlign = "center";
@@ -1706,7 +1708,7 @@ function drawCampaignSupply(ctx, ox, oy, tile) {
         ? I18n.text("基地")
         : I18n.text(node.name);
     ctx.fillText(label, p.x, p.y - radius - 4);
-    ctx.fillText(team === null ? "—" : String(team + 1), p.x, p.y + 4);
+    if(node.region)ctx.fillText(team === null ? "—" : String(team + 1), p.x, p.y + 4);
   }
   ctx.restore();
 }

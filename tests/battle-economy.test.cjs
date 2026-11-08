@@ -231,7 +231,7 @@ test("all production-backed chassis have original factory-backed per-unit prices
   const catalog = require("../shared/production-catalog.json");
   for (const base of Object.values(catalog.baseModels).filter((id) => catalog.offers[id]))
     assert(R.price(base) > 0, base);
-  assert(R.price("RX_80PR_2__kit_0") > R.price("RX_80PR_2__kit_3"));
+  assert(R.price("RX_80PR_2__kit_0") === R.price("RX_80PR_2__kit_3"));
 });
 
 test("identity and quick-mode multiplier contract", () => {
@@ -437,10 +437,10 @@ test("individual target strength no longer stacks on the match strength ratio", 
 test("money and supplies prices retain per-unit batch division and fallback independently", () => {
   const c = require("../shared/production-catalog.json"),
     o = c.offers.Type61__standard;
-  assert.equal(R.price("Type61__standard"), o.money / o.quantity);
-  assert.equal(R.price("Type61__standard", "supplies"), o.supplies / o.quantity);
+  assert.equal(R.price("Type61__standard"), c.licenseOffers.Type61.money);
+  assert.equal(R.price("Type61__standard", "supplies"), c.licenseOffers.Type61.supplies);
   const base = c.offers[c.baseModels.RGM_79_G];
-  assert.equal(R.price("RGM_79_G__cannon", "supplies"), base.supplies / base.quantity);
+  assert.equal(R.price("RGM_79_G__cannon", "supplies"), c.licenseOffers.RGM_79_G.supplies);
 });
 
 test("both battle modes use the same starting participant composition coefficient", () => {
@@ -605,7 +605,7 @@ test('aborted matches do not produce settlement audit records',t=>{
 test("counted stock stays intact until settlement deducts only casualties and awards fixed research", t => {
   const f = fixture(t, {faction:"EFSF", strength:4});
   const own = f.room.seats[0], enemy = f.room.seats[1];
-  assert.equal(own.inventory.Type61,10); assert.equal(own.kits.Type61__standard,10);
+  assert.equal(own.inventory.Type61,10); assert.deepEqual(own.kits,{});
   assert.equal(enemy.inventory.Type61,10);
   assert.equal(f.frames.get(f.clients[0]).economyAwards.filter(a=>a.kind==="deployment").length,1);
   f.ally.hp=0;
@@ -618,8 +618,8 @@ test("counted stock stays intact until settlement deducts only casualties and aw
   assert.equal(winner.techAwards.reduce((sum,a)=>sum+a.points,0),660);
   assert.equal(loser.techAwards.reduce((sum,a)=>sum+a.points,0),540);
   assert.equal(winner.economyAwards.find(a=>a.kind==="result").stockLost.inventory.Type61,1);
-  assert.equal(own.inventory.Type61,9); assert.equal(own.kits.Type61__standard,9);
-  assert.equal(enemy.inventory.Type61,9); assert.equal(enemy.kits.Type61__standard,9);
+  assert.equal(own.inventory.Type61,9); assert.deepEqual(own.kits,{});
+  assert.equal(enemy.inventory.Type61,9); assert.deepEqual(enemy.kits,{});
   const before=JSON.stringify([f.room.economyAwards,f.room.techAwards,own.inventory]);
   f.act(0,"sync");
   assert.equal(JSON.stringify([f.room.economyAwards,f.room.techAwards,own.inventory]),before);
@@ -700,13 +700,13 @@ test("common units count every playable faction without requiring each one to at
 for(const path of ["finish","return"]) test("quick casualties never remove chassis or kits, path="+path,t=>{
   const f=fixture(t,{mode:"quick"});
   assert.equal(f.room.seats[0].inventory.Type61,10);
-  assert.equal(f.room.seats[0].kits.Type61__standard,10);
+  assert.deepEqual(f.room.seats[0].kits,{});
   const deployment=f.frames.get(f.clients[0]).economyAwards.find(award=>award.kind==="deployment");
   assert.deepEqual(deployment.stockUsed,{inventory:{},kits:{}});
   f.ally.hp=0;
   if(path==="finish"){f.kill();f.finish()}else f.act(0,"return_room");
   for(const player of f.room.seats.filter(Boolean)){
-    assert.equal(player.inventory.Type61,10);assert.equal(player.kits.Type61__standard,10);
+    assert.equal(player.inventory.Type61,10);assert.deepEqual(player.kits,{});
   }
   const before=JSON.stringify(f.room.economyAwards);f.act(0,"sync");
   assert.equal(JSON.stringify(f.room.economyAwards),before);
@@ -784,9 +784,9 @@ test("closing and resuming regular battle keeps deployed stock until one final s
   assert.equal(player.inventory.Type61, 10);
   f.finish();
   const award = f.frames.get(resumed).economyAwards.find(a => a.kind === "result");
-  assert.deepEqual(award.stockLost, { inventory: { Type61: 1 }, kits: { Type61__standard: 1 } });
+  assert.deepEqual(award.stockLost, { inventory: { Type61: 1 }, kits: {} });
   assert.equal(player.inventory.Type61, 9);
-  assert.equal(player.kits.Type61__standard, 9);
+  assert.deepEqual(player.kits,{});
   f.act(0, "sync");
   assert.equal(player.inventory.Type61, 9);
   assert.equal(f.frames.get(resumed).economyAwards.filter(a => a.kind === "result").length, 1);

@@ -23,7 +23,7 @@ for (const width of [1440, 390, 360]) test(`unit lists keep equal card dimension
     expect(Math.min(...sizes.map(s=>s.h)),name+' height').toBeGreaterThan(50);
     expect(sizes.some(s=>s.overflow),name+' overflow').toBe(false);
     expect(sizes.filter(s=>s.vertical),name+' vertical overflow').toEqual([]);
-    await cards.first().screenshot({path:`.openai/${name}-equal-${width}.png`});
+    await cards.first().screenshot({path:`tmp/verification/screenshots/${name}-equal-${width}.png`});
   }
   await equal('#encyclopediaList > .encyclopedia-unit','encyclopedia');
   await page.evaluate(() => MenuShell.go('production'));
@@ -36,7 +36,7 @@ for (const width of [1440, 390, 360]) test(`unit lists keep equal card dimension
   const pilot=page.locator('#formationUnits .formation-pilot-button').first();
   await expect(pilot).toHaveCSS('text-align','center');
   await expect(pilot.locator('.pilot-name-viewport')).toHaveCount(0);
-  await page.locator('#formationUnits').screenshot({path:`.openai/formation-compact-list-${width}.png`});
+  await page.locator('#formationUnits').screenshot({path:`tmp/verification/screenshots/formation-compact-list-${width}.png`});
   await page.locator('#openFormationPicker').click();
   await equal('#formationCatalog > .catalog-unit-row','picker');
   expect(await page.locator('#formationCatalog').evaluate(list => parseFloat(getComputedStyle(list).rowGap))).toBeLessThanOrEqual(3);

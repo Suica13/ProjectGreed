@@ -1220,13 +1220,15 @@ function loadCatalog({
       });
       const meleeWeapons = weapons.filter((w) => w.type === "melee");
       const normalMelee = meleeWeapons.filter((w) => WeaponClasses.classify(w) !== "ram");
+      for (const w of normalMelee)
+        if (WeaponClasses.pilotGateExempt(w)) delete w.pilotRequirements;
       const ungatedMelee = normalMelee.filter((w) => !w.pilotRequirements?.length);
       // Leave a basic melee option usable by ordinary pilots. Utility whips do
       // not take that slot ahead of a conventional sword; native gates stay intact.
       const basicMelee = ungatedMelee.find((w) =>
         w.rangeRole !== "tether_melee" && !w.nativePayload?.StunDamage) || ungatedMelee[0];
       meleeWeapons.forEach((w) => {
-        if (normalMelee.length > 1 && normalMelee.includes(w) && w !== basicMelee && !w.pilotRequirements?.length)
+        if (normalMelee.length > 1 && normalMelee.includes(w) && w !== basicMelee && !WeaponClasses.pilotGateExempt(w) && !w.pilotRequirements?.length)
           w.pilotRequirements = [{ stat: "melee", operator: ">=", value: 125 }];
         if (w.pilotRequirements?.length) w.maxUsesPerTurn = 1;
         else if (w.maxUsesPerTurn === 1) delete w.maxUsesPerTurn;

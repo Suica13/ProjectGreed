@@ -82,7 +82,7 @@ for (const width of [1440, 390, 360])
       await expect(cargo.locator(`[data-preload-pilot="${i}"]`)).toContainText(name);
       await expect(cargo.locator(`[data-preload-pilot="${i}"]`)).toBeFocused();
     }
-    await cargo.screenshot({ path: `tmp/preload-pilots-${width}.png` });
+    await cargo.screenshot({ path: `tmp/verification/screenshots/preload-pilots-${width}.png` });
     const bounds = await cargo.locator(".formation-cargo-row").evaluateAll((rows) =>
       rows.map((r) => ({
         overflow: r.scrollWidth > r.clientWidth + 1,

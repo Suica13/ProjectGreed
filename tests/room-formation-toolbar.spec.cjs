@@ -68,7 +68,7 @@ test("room formation dropdown sits beside start, switches the active army and wa
   assert.ok(await page.locator("#roomFormationWarning").isHidden());
   assert.equal(await page.evaluate(() => Formation.name()), "有效预设");
   assert.ok(await page.locator("#startRoomGame").isEnabled());
-  await page.screenshot({ path: ".openai/room-formation-toolbar.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/room-formation-toolbar.png" });
   await page.setViewportSize({ width: 390, height: 844 });
   const mobile = await page.evaluate(() => ({
     right: document.querySelector(".room-formation-controls").getBoundingClientRect().right,

@@ -104,8 +104,8 @@ test("friendly owner roster hides enemies, shows names, HP/EN/status and focuses
     expect(focus.p.x).toBeLessThan(focus.w);
     expect(focus.p.y).toBeGreaterThan(0);
     expect(focus.p.y).toBeLessThan(focus.h);
-    await page.screenshot({ path: ".openai/owner-roster-en.png" });
-    await watch.screenshot({ path: ".openai/spectator-owner-roster.png" });
+    await page.screenshot({ path: "tmp/verification/screenshots/owner-roster-en.png" });
+    await watch.screenshot({ path: "tmp/verification/screenshots/spectator-owner-roster.png" });
     await page.locator("#roomSettings").click();
     await expect(page.locator("#roomMainMenu")).toHaveText("返回战斗");
     await expect(page.locator("#roomReturn")).toHaveCount(0);
@@ -123,7 +123,7 @@ test("friendly owner roster hides enemies, shows names, HP/EN/status and focuses
     await expect(page.locator("#roomChatLines")).toContainText("房间聊天保留");
     await page.locator("#roomShowLog").click();
     await expect(page.locator("#roomCombatLog")).toBeVisible();
-    await page.screenshot({ path: ".openai/room-combat-log.png" });
+    await page.screenshot({ path: "tmp/verification/screenshots/room-combat-log.png" });
     await page.locator("#roomMainMenu").click();
     await expect(page.locator("#gameScene")).toBeVisible();
     expect(errors).toEqual([]);
@@ -199,6 +199,6 @@ test("red-side offline player sees only red allies and owner groups remain bound
   await page.locator('.roster-unit[data-unit-id="1-0"]').click();
   expect(await page.evaluate(() => selected)).toBe("1-0");
   expect(await page.evaluate(() => MapCamera.zoom)).toBeGreaterThanOrEqual(1.75);
-  await page.screenshot({ path: ".openai/mobile-friendly-roster.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/mobile-friendly-roster.png" });
   expect(errors).toEqual([]);
 });

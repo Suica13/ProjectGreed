@@ -55,6 +55,6 @@ for (let i = 0; i < measurements.frames; i++) {
   measurements.deltaDeflateMs += performance.now() - at;
   require("node:assert/strict").deepEqual(decoder.decode(JSON.parse(encoded)), state);
 }
-fs.mkdirSync(".openai", { recursive: true });
-fs.writeFileSync(".openai/performance-wire.json", JSON.stringify(measurements, null, 2));
+fs.mkdirSync("tmp/verification/reports", { recursive: true });
+fs.writeFileSync("tmp/verification/reports/performance-wire.json", JSON.stringify(measurements, null, 2));
 console.log(JSON.stringify(measurements, null, 2));

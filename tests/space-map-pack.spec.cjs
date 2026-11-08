@@ -17,7 +17,7 @@ for (const [id, name, players, width, height] of [
     await page.locator("#roomMapSelect").selectOption(id);
     await expect.poll(() => page.evaluate(() => Net.snapshot.settings.mapId)).toBe(id);
     await expect(page.locator("#roomMapInfo")).toContainText(`${players * 2}人`);
-    await page.screenshot({ path: `.openai/${id}-room.png` });
+    await page.screenshot({ path: `tmp/verification/screenshots/${id}-room.png` });
     await page.locator("#startRoomGame").click();
     await page.locator("#confirmFinalFormation").click();
     await expect(page.locator("#deploymentPanel")).toBeVisible();

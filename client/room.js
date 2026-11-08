@@ -322,7 +322,7 @@ const RoomPanel = (() => {
     reward.id = "battlefieldEntryReward";
     reward.textContent = (custom ? "自定义规则：按编组COST插值，年代大规模收益封顶" : "固定入场收益") + " · " + [0,1].map(team => {
       const pay = mode.baseReward(settings, team);
-      return `${I18n.text("队伍")}${team+1}: ${I18n.text("资金")} ${formatNumber(pay.money)} / ${I18n.text("物资")} ${formatNumber(pay.supplies)}`;
+      return `${I18n.text("队伍")}${team+1}: ${I18n.text("资金")} ${formatNumber(pay.money)} / ${I18n.text("物资")} ${formatNumber(pay.supplies)} / ${I18n.text("科技点")} ${mode.technologyReward(settings,team,false)}～${mode.technologyReward(settings,team,true)}`;
     }).join(" · ");
     panel.append(reward);
     panel.append(element("p", "muted", "100回合 · " + config.map((team, index) =>
@@ -887,8 +887,6 @@ const RoomPanel = (() => {
                 ? "驾驶员被禁用，请解除配属"
                 : player.reasons?.[index] === "stock"
                   ? "机体库存不足"
-                  : player.reasons?.[index] === "kit_stock"
-                    ? "套件库存不足"
                     : player.reasons?.[index] === "license"
                       ? "未许可"
                       : player.reasons?.[index] === "wip"

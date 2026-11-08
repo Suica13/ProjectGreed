@@ -131,7 +131,7 @@ for (const entry of ["client", "developer"])
     expect(result.opaque).toBeGreaterThan(10000);
     await page
       .locator("#remote-test-canvas")
-      .screenshot({ path: "build/remote-" + entry + ".png" });
+      .screenshot({ path: "tmp/verification/screenshots/remote-" + entry + ".png" });
     expect(errors).toEqual([]);
   });
 

@@ -12,7 +12,8 @@ const root = path.resolve(__dirname, ".."),
 const exe =
   process.env.PROJECTGREED_CHROMIUM80 ||
   path.join(root, "build/toolchains/chromium80/chrome-win/chrome.exe");
-const evidence = fs.mkdtempSync(path.join(root, "tmp/chromium80-"));
+fs.mkdirSync(path.join(root, "tmp/verification/native"), {recursive:true});
+const evidence = fs.mkdtempSync(path.join(root, "tmp/verification/native/chromium80-"));
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let child, socket, server, gameServer;
 const errors = [],

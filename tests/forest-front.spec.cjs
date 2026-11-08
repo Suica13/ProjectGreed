@@ -33,7 +33,7 @@ test("forest front presents six seats, capacity-sorted maps, AI preparation and 
       () => new Set(game.units.map((u) => u.x + "," + u.y)).size === game.units.length,
     ),
   ).toBe(true);
-  await page.screenshot({ path: ".openai/forest-front-3v3.png" });
+  await page.screenshot({ path: "tmp/verification/screenshots/forest-front-3v3.png" });
   expect(errors).toEqual([]);
 });
 

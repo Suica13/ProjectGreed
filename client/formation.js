@@ -854,7 +854,7 @@ const Formation = (() => {
       const displayKit = previewModel
         ? model
         : Rules.formationModel({ ...originalEntry, kitId: kit.id });
-      kits.add(new Option(`${displayKit.kitName} · COST ${displayKit.cost} · 库存 ${Economy.kitQuantity(equipmentPrefab.id + "__" + kit.id)}${suffix}`, kit.id));
+      kits.add(new Option(`${displayKit.kitName} · COST ${displayKit.cost}${suffix}`, kit.id));
     }
     kits.value = previewModel ? entry.kitId : originalEntry.kitId;
     kits.disabled = !!previewModel;
@@ -1164,7 +1164,7 @@ const Formation = (() => {
           element(
             "span",
             "overcost-label",
-            plan.reasons[i] === "pilot_banned" ? "驾驶员被禁用，请解除配属" : plan.reasons[i] === "stock" ? "机体库存不足" : plan.reasons[i] === "kit_stock" ? "套件库存不足" : plan.reasons[i] === "license"
+            plan.reasons[i] === "pilot_banned" ? "驾驶员被禁用，请解除配属" : plan.reasons[i] === "stock" ? "机体库存不足" : plan.reasons[i] === "license"
               ? "未许可"
               : plan.reasons[i] === "wip"
                 ? "WIP"
@@ -1206,7 +1206,7 @@ const Formation = (() => {
         element(
           "small",
           "formation-inventory-count",
-          "库存 " + Economy.quantity(entry.unitId) + " · 套件 " + Economy.kitQuantity(entry.unitId + "__" + entry.kitId),
+          "库存 " + Economy.quantity(entry.unitId),
         ),
       );
       const status = unitStatusBadge(entry.unitId);
@@ -1220,13 +1220,13 @@ const Formation = (() => {
         note.title = I18n.text("预先搭载") + " · " + destination;
         stockLine.append(note);
       }
-      if (["license", "stock", "kit_stock"].includes(plan.reasons[i])) {
+      if (["license", "stock"].includes(plan.reasons[i])) {
         row.classList.add("inventory-shortage");
         const produce = element("button", "produce-shortage-unit", "前往生产");
         produce.type = "button";
         produce.onclick = () => openProduction(entry.unitId);
         const prompt = element("div", "inventory-shortage-prompt");
-        prompt.append(element("span", "", plan.reasons[i] === "license" ? "未许可" : plan.reasons[i] === "pilot_banned" ? "驾驶员被禁用，请解除配属" : plan.reasons[i] === "stock" ? "机体库存不足" : "套件库存不足"), produce);
+        prompt.append(element("span", "", plan.reasons[i] === "license" ? "未许可" : plan.reasons[i] === "pilot_banned" ? "驾驶员被禁用，请解除配属" : plan.reasons[i] === "stock" ? "机体库存不足" : "机体库存不足"), produce);
         row.querySelector(":scope > .overcost-label")?.remove();
         row.append(prompt);
       }
@@ -1884,15 +1884,15 @@ const Formation = (() => {
     const unavailable = plan.items.filter(item => !item.offer ||
       !Development.allows(faction, item.unitId));
     if (unavailable.length) {
-      showLicenseDialog("无法补充库存", "存在尚未开发或无法生产的单位／套件，本次未扣费。",
+      showLicenseDialog("无法补充库存", "存在尚未开发或无法生产的单位，本次未扣费。",
         [...new Set(unavailable.map(item => item.unitId))], [["确认", "acknowledgeUnavailableUnits"]]);
       return false;
     }
     const original = JSON.stringify(entries), originalGroup = group, originalIndex = index;
-    const confirmed = await GameDialog.confirm("购买缺少的部署许可，并补充机体与套件库存？", {
+    const confirmed = await GameDialog.confirm("购买缺少的部署许可，并补充机体库存？", {
       title: "一键补充库存",
       items: [...plan.items.map(item => {
-        const model = UnitModels[item.kind === "kits" ? item.id : Economy.defaultModel(item.unitId)];
+        const model = UnitModels[Economy.defaultModel(item.unitId)];
         return (model?.name || item.unitId) + " · " +
           (item.kind === "licenses" ? "部署许可（赠送默认配置1台）" : item.kind === "inventory" ? "机体" : model?.kitName || "套件") + " ×" + item.count;
       }), "资金：" + formatNumber(plan.money), "物资：" + formatNumber(plan.supplies)],
@@ -1906,13 +1906,13 @@ const Formation = (() => {
     try {
       const result = Economy.purchaseMissingStock(entries, faction);
       if (!result.ok) { note(result.reason === "funds" ? "资金或物资不足，未扣费。" : "无法补充库存，未扣费。"); return false; }
-      note("已补充机体与套件库存。"); return true;
+      note("已补充机体库存。"); return true;
     } catch (error) { note("库存购买失败：" + Economy.errorMessage(error)); return false; }
   }
   function checkLicenses(entries, proceed) {
     const quick = Net.snapshot?.settings.mode === "quick";
     if (quick ? !Economy.licensePlan(entries).items.length : !Economy.purchasePlan(entries).items.length) return proceed();
-    showLicenseDialog(quick ? "部署许可不足" : "出战库存不足", quick ? "快速战可凭部署许可或完整机体与套件库存出战。不满足条件的单位不会生成。" : "编组缺少机体或套件库存。强制准备后，不足的单位不会生成。", [], [
+    showLicenseDialog(quick ? "部署许可不足" : "出战库存不足", quick ? "快速战可凭部署许可或完整机体库存出战。不满足条件的单位不会生成。" : "编组缺少机体库存。强制准备后，不足的单位不会生成。", [], [
       ["取消", "cancelMissingStock"],
       ["去往机库", "openStockWarehouse", () => open()],
       ["强制准备", "forceReadyWithoutStock", proceed],

@@ -17,7 +17,7 @@ test('additive bazooka and shooting coefficients scale every payload without cha
   }
   assert.equal(p.weapons.rifle.damagePerShot,5000);
   assert.equal(p.weapons.melee.damagePerShot,7500);
-  assert.equal(p.weapons.ram.damagePerShot,7500);
+  assert.equal(p.weapons.ram.damagePerShot,5625);
   assert.equal(p.skills[0].damageComponents.beam,5000);
   assert.equal(p.skills[0].baseHit,50);
   const first = structuredClone(p); applyWeaponBalance(p,config); assert.deepEqual(p,first);
