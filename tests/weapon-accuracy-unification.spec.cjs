@@ -19,8 +19,8 @@ test("built client uses fixed weapon accuracy and shows the ship cannon trait", 
     card.remove();
     return { bazooka: bazooka.hit, cannon: cannon.hit, text };
   });
-  expect(result.bazooka).toBe(75);
-  expect(result.cannon).toBe(60);
+  expect(result.bazooka).toBe(65);
+  expect(result.cannon).toBe(51);
   expect(result.text).toContain("舰炮");
   expect(result.text).toContain("命85%");
   expect(errors).toEqual([]);

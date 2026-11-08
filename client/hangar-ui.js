@@ -12,6 +12,13 @@ const HangarUI = (() => {
     return members.length === ids.length ? Rules.hangars.launchSquadCells(game,members) : [];
   }
   function startLaunch(ids, carrier) {
+    if (phase === "deployment" && ids.length === 1) {
+      const passenger = getUnit(ids[0]);
+      if (!Deployment.canEditUnit(passenger)) return;
+      if (dialog.open) dialog.close();
+      Deployment.choose(passenger);
+      return;
+    }
     const locations = commonLaunchCells(ids);
     if (!locations.length) return note("所选单位没有共同的出击落点");
     launchingIds = ids; launching = ids[0]; launchLocations = locations;

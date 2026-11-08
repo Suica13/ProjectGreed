@@ -3060,6 +3060,15 @@ const Deployment = (() => {
       ? Rules.ownerOf(u)
       : team();
   };
+  function choose(unit) {
+    if (!canEditUnit(unit)) return;
+    window.HangarUI?.cancel();
+    selected = unit.id;
+    mode = "select";
+    weaponId = null;
+    if (unit.embarked) squadSingleMove = true;
+    update();
+  }
   function render() {
     byId("deploymentPanel").hidden = phase !== "deployment";
     byId("deploymentBottomBar").hidden = phase !== "deployment";
@@ -3086,14 +3095,27 @@ const Deployment = (() => {
         : `${teamName(Rules.seatTeam(seat))}全队共享部署区 · 选中己方单位，再点击高亮空格调整位置。`;
     const roster = byId("deploymentRoster"), scrollTop = roster.scrollTop;
     roster.replaceChildren();
-    const controllable = game.units.filter((u) => u.hp > 0 && !u.embarked && canEditUnit(u));
-    for (const u of controllable) {
+    const living = game.units.filter(u => u.hp > 0), cargo = new Map();
+    for (const unit of living) {
+      const carrierId = unit.embarked?.carrierId;
+      if (!carrierId) continue;
+      if (!cargo.has(carrierId)) cargo.set(carrierId, []);
+      cargo.get(carrierId).push(unit);
+    }
+    function family(root, seen = new Set()) {
+      if (seen.has(root.id)) return [];
+      seen.add(root.id);
+      return [root, ...(cargo.get(root.id) || []).flatMap(unit => family(unit, seen))];
+    }
+    function icon(u) {
       const button = document.createElement("button");
       button.type = "button";
       button.className = "deployment-unit-icon";
       button.dataset.unitId = u.id;
       button.classList.toggle("is-staged", !!u.deploymentStaged);
-      button.title = unitName(u) + (u.deploymentStaged ? " · 待放置" : " · 已部署");
+      button.classList.toggle("is-passenger", !!u.embarked);
+      button.disabled = !canEditUnit(u);
+      button.title = unitName(u) + (u.embarked ? " · 预先搭载" : u.deploymentStaged ? " · 待放置" : " · 已部署");
       button.setAttribute("aria-label", button.title);
       button.setAttribute("role", "option");
       button.setAttribute("aria-selected", String(selected === u.id));
@@ -3105,12 +3127,25 @@ const Deployment = (() => {
       label.className = "deployment-unit-number";
       label.textContent = String((u.formationIndex ?? game.units.indexOf(u)) + 1);
       button.append(img, label);
-      button.onclick = () => { selected = u.id; update(); };
-      roster.append(button);
+      button.onclick = () => choose(u);
+      return button;
+    }
+    for (const root of living.filter(unit => !unit.embarked)) {
+      const members = family(root);
+      if (!members.some(canEditUnit)) continue;
+      if (members.length === 1) roster.append(icon(root));
+      else {
+        const group = element("div", "deployment-transport-group");
+        group.dataset.carrierId = root.id;
+        group.setAttribute("role", "group");
+        group.setAttribute("aria-label", unitName(root) + " · " + I18n.text("格纳库") + " " + (members.length - 1));
+        group.append(...members.map(icon));
+        roster.append(group);
+      }
     }
     roster.scrollTop = scrollTop;
     const canChange = canEdit();
-    byId("deploymentUnplace").disabled = !canChange || !canEditUnit(getUnit(selected));
+    byId("deploymentUnplace").disabled = !canChange || !canEditUnit(getUnit(selected)) || !!getUnit(selected)?.embarked;
     byId("deploymentClear").disabled = !canChange;
     byId("deploymentAuto").disabled = !canChange;
     byId("confirmDeployment").disabled = !canEdit() || !!pendingMovement();
@@ -3135,8 +3170,8 @@ const Deployment = (() => {
         Rules.deploy(game, team(), u.id, anchor.x, anchor.y);
         GameAudio.selectUnit(u);
         update();
-      } catch {
-        note("请在己方出生区的空格部署。");
+      } catch (error) {
+        note(error.message || "请在己方出生区的空格部署。");
       }
     }
   }
@@ -3216,6 +3251,9 @@ const Deployment = (() => {
       clearance = Math.ceil(byId("mapWrap").getBoundingClientRect().bottom - top + 10);
     }
     scene.style.setProperty("--deployment-panel-clearance",clearance+"px");
+    // Commands belong to the scene; the portrait strip belongs to mapWrap.
+    const sceneClearance = clearance ? clearance + scene.getBoundingClientRect().bottom - byId("mapWrap").getBoundingClientRect().bottom : 0;
+    scene.style.setProperty("--deployment-command-clearance",sceneClearance+"px");
   }
   new ResizeObserver(updateClearance).observe(byId("deploymentBottomBar"));
   window.addEventListener("resize", updateClearance);
@@ -3260,6 +3298,7 @@ const Deployment = (() => {
     team,
     canEdit,
     canEditUnit,
+    choose,
     areaSeat,
     reset: () => {
       previewSeat = 0;

@@ -1,7 +1,7 @@
 const { test, expect } = require("@playwright/test"),
   { pathToFileURL } = require("node:url"),
   path = require("node:path");
-test("overview sprites reuse surfaces, preserve live effects and bypass moving or damaged actors", async ({
+test("sprites reuse static bodies while preserving live effects and damage states", async ({
   page,
 }) => {
   await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
@@ -199,8 +199,8 @@ test("overview sprites reuse surfaces, preserve live effects and bypass moving o
   expect(result.cached.allocations).toBe(1);
   expect(result.cached.bodyCalls).toBe(0);
   expect(result.cached.effectCalls).toBe(120);
-  expect(result.movingBodyCalls).toBe(1);
-  expect(result.damagedBodyCalls).toBe(2);
+  expect(result.movingBodyCalls).toBe(0);
+  expect(result.damagedBodyCalls).toBe(0);
   expect(result.prefixPixel).toEqual([255, 0, 0, 255]);
   expect(result.breatheMotion).toBeGreaterThan(2);
   expect(result.shadowAlpha).toBe(64);

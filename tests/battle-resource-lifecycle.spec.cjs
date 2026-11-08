@@ -34,7 +34,7 @@ test("restarting and alternating maps release derived canvases and retain only t
   return records;
  });
  const rounds=records.filter(row=>!row.released);expect(rounds).toHaveLength(12);
- for(const row of rounds){expect(row.idlePixels).toBeLessThanOrEqual(16*1024*1024);expect(row.shadowPixels).toBeLessThanOrEqual(8*1024*1024);expect(row.tiles.pixels).toBeLessThanOrEqual(8*1024*1024);}
+ for(const row of rounds){expect(row.idlePixels).toBeLessThanOrEqual(row.idlePixelLimit);expect(row.idle).toBeLessThanOrEqual(row.idleEntryLimit);expect(row.shadowPixels).toBeLessThanOrEqual(8*1024*1024);expect(row.tiles.pixels).toBeLessThanOrEqual(8*1024*1024);}
  expect(rounds.at(-1).decodedPixels).toBeLessThanOrEqual(rounds[0].decodedPixels*1.05);
  expect(rounds.at(-1).sources).toBeLessThanOrEqual(rounds[0].sources+5);
  const released=records.at(-1);expect(released.idlePixels+released.shadowPixels+released.outlinePixels+released.tiles.pixels).toBe(0);

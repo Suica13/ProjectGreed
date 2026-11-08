@@ -37,3 +37,24 @@ test('deployment drag flag never bypasses ordinary battle boarding distance',()=
  assert.throws(()=>G.hangars.embarkSquad(g,u,carrier,hangar.id,true,true));
  assert(!u.embarked);
 });
+
+test('deployment places preloaded passengers directly and preserves resources',()=>{
+ const {g,carrier,u,hangar}=fixture();
+ G.hangars.embarkSquad(g,u,carrier,hangar.id,true,true);
+ const before={hp:u.hp,en:u.en,shield:u.shield,moved:u.moved,acted:u.acted};
+ const cell=G.deploymentCells(g,0,u).find(p=>G.fits(g,u,p.x,p.y,u.angle,false,0));
+ assert(cell);G.deploy(g,0,u.id,cell.x,cell.y);
+ assert(!u.embarked);assert.deepEqual({x:u.x,y:u.y},cell);
+ assert.equal(G.hangars.cargo(g,carrier).some(actor=>actor.id===u.id),false);
+ assert.deepEqual({hp:u.hp,en:u.en,shield:u.shield,moved:u.moved,acted:u.acted},before);
+});
+
+test('invalid or unauthorized passenger deployment keeps the transport manifest unchanged',()=>{
+ const {g,carrier,u,hangar}=fixture();
+ G.hangars.embarkSquad(g,u,carrier,hangar.id,true,true);
+ const before=JSON.stringify(g);
+ assert.throws(()=>G.deploy(g,1,u.id,2,4));assert.equal(JSON.stringify(g),before);
+ assert.throws(()=>G.deploy(g,0,u.id,-1,-1));assert.equal(JSON.stringify(g),before);
+ g.deployment[0]=true;const locked=JSON.stringify(g);
+ assert.throws(()=>G.deploy(g,0,u.id,2,4));assert.equal(JSON.stringify(g),locked);
+});

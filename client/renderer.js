@@ -35,9 +35,41 @@ const SpriteRenderer = (() => {
     return sample(animation, at);
   }
   let drawSamples = new WeakMap(),
+    frameLayerLists = new Map(),
+    frameBodyUses = new Map(),
+    frameLayersActive = false,
     idleBakeSpent = 0;
   const idleImages = new Map(),
     staticAnimations = new WeakMap();
+  // Capacity is a ceiling, not preallocated memory. A mixed, multi-heading army
+  // can exceed the old 16M-pixel/256-entry working set and otherwise churn forever.
+  const idlePixelLimit = (globalThis.navigator?.deviceMemory <= 2 ? 16 : 32) * 1024 * 1024;
+  const idleEntryLimit = 512;
+  function reserveIdleSurface(pixels, release = true) {
+    if (pixels > idlePixelLimit) return false;
+    if (idleImagePixels + pixels <= idlePixelLimit && idleImages.size < idleEntryLimit) return true;
+    let remainingPixels = idleImagePixels,
+      remainingEntries = idleImages.size;
+    const victims = [];
+    for (const [key, entry] of idleImages) {
+      if (remainingPixels + pixels <= idlePixelLimit && remainingEntries < idleEntryLimit) break;
+      // Do not cycle through an army that is larger than the cache every frame.
+      // Keep its hot subset; new camera regions become eligible after two frames.
+      if (entry.seenFrame >= idleFrame - 1) continue;
+      victims.push([key, entry]);
+      remainingPixels -= entry.canvas.width * entry.canvas.height;
+      remainingEntries--;
+    }
+    if (remainingPixels + pixels > idlePixelLimit || remainingEntries >= idleEntryLimit)
+      return false;
+    if (!release) return true;
+    for (const [key, entry] of victims) {
+      idleImages.delete(key);
+      idleImagePixels -= entry.canvas.width * entry.canvas.height;
+      entry.canvas.width = entry.canvas.height = 0;
+    }
+    return true;
+  }
   function staticPose(animation) {
     if (!animation) return true;
     if (!staticAnimations.has(animation))
@@ -59,6 +91,9 @@ const SpriteRenderer = (() => {
     idleUpdateCursor = 0;
   function beginFrame() {
     drawSamples = new WeakMap();
+    frameLayerLists.clear();
+    frameBodyUses.clear();
+    frameLayersActive = true;
     idleBakeSpent = 0;
     idleFrame++;
     idleColdPending = idleMissing > 0;
@@ -70,6 +105,11 @@ const SpriteRenderer = (() => {
         idleUpdateKeys.push(key);
     });
     idleUpdateKeys.sort((a, b) => idleImages.get(a).bakedFrame - idleImages.get(b).bakedFrame);
+  }
+  function endFrame() {
+    frameLayersActive = false;
+    frameLayerLists.clear();
+    frameBodyUses.clear();
   }
   function drawPose(model, clip, time, loop) {
     const animation = models[model].animations[clip];
@@ -136,6 +176,29 @@ const SpriteRenderer = (() => {
         ? time % animation.duration
         : Math.min(time, animation.duration)
       : 0;
+    // Visibility depends on animation time only for explicit visibility windows.
+    // Share the result across identical actors and body/effect passes this frame.
+    const timed = models[model].decals.some((layer) => layer.animationVisibility);
+    const key = frameLayersActive
+      ? JSON.stringify([
+          model,
+          heldWeapon,
+          shieldVisible,
+          moving,
+          clip,
+          timed ? at : 0,
+          brokenParts,
+          attacking,
+          onLand,
+          environment,
+          attackWeapon,
+          weaponDisplayIndex,
+          flying,
+          boostSkillActive,
+        ])
+      : null;
+    const cached = key && frameLayerLists.get(key);
+    if (cached) return cached;
     const variables = state(model, heldWeapon);
     variables.shieldVisible = variables.shieldVisible && shieldVisible;
     variables.moving = moving;
@@ -161,7 +224,13 @@ const SpriteRenderer = (() => {
     variables.thrustActive =
       (moving && variables.boosting) ||
       ((ART.models[model].ship || airborne) && variables.sustainedThrust);
-    return models[model].decals.filter((layer) => visible(layer, variables, clip, at));
+    const layers = models[model].decals.filter((layer) => visible(layer, variables, clip, at));
+    // Previews also render outside beginFrame(); keep that path bounded.
+    if (key) {
+      if (frameLayerLists.size >= 512) frameLayerLists.clear();
+      frameLayerLists.set(key, layers);
+    }
+    return layers;
   }
   function turretPose(model, sampled, angle, aimAngle = angle, firingModules = []) {
     const modules = [
@@ -277,7 +346,8 @@ const SpriteRenderer = (() => {
     const key = [asset, frame, usable].join(":");
     if (outlineCache.has(key)) {
       const canvas = outlineCache.get(key);
-      outlineCache.delete(key); outlineCache.set(key, canvas);
+      outlineCache.delete(key);
+      outlineCache.set(key, canvas);
       return canvas;
     }
     const canvas = document.createElement("canvas");
@@ -315,9 +385,11 @@ const SpriteRenderer = (() => {
     outlineCache.set(key, canvas);
     outlinePixels += canvas.width * canvas.height;
     while (outlineCache.size > 128 || outlinePixels > 4 * 1024 * 1024) {
-      const oldest = outlineCache.keys().next().value, removed = outlineCache.get(oldest);
+      const oldest = outlineCache.keys().next().value,
+        removed = outlineCache.get(oldest);
       if (removed === canvas) break;
-      outlineCache.delete(oldest); outlinePixels -= removed.width * removed.height;
+      outlineCache.delete(oldest);
+      outlinePixels -= removed.width * removed.height;
       removed.width = removed.height = 0;
     }
     return canvas;
@@ -543,12 +615,13 @@ const SpriteRenderer = (() => {
     idleRasterSize = 0,
   ) {
     const isFiring = attacking ?? (!!clip && /Shoot|Fire|Attack/.test(clip));
-    // Overview idle poses are sampled at 12fps into reusable, bounded surfaces.
-    // Position, camera scale, live effects, movement and combat remain frame-driven.
+    // Cache the body independently of camera labels and world position. Moving
+    // actors with static bones reuse it across frames. Matching walking poses
+    // share only the exact current sample, with a live fallback under load.
     if (
       idleRasterSize > 0 &&
       !effectsOnly &&
-      !moving &&
+      (!moving || staticPose(models[model].animations[clip]) || frameLayersActive) &&
       !isFiring &&
       !flying &&
       ART.models[model].movementType !== "air" &&
@@ -561,7 +634,7 @@ const SpriteRenderer = (() => {
         model,
         heldWeapon,
         shieldVisible,
-        false,
+        moving,
         clip,
         time,
         loop,
@@ -648,8 +721,11 @@ const SpriteRenderer = (() => {
         angle,
         aimAngle,
         clip,
+        loop,
         heldWeapon,
+        attackWeapon,
         shieldVisible,
+        moving,
         onLand,
         environment,
         weaponDisplayIndex,
@@ -660,83 +736,114 @@ const SpriteRenderer = (() => {
         idleRasterSize,
       ]);
       let entry = idleImages.get(key);
-      const bucket =
-        staticPose(models[model].animations[clip]) &&
-        !layers.some(
-          (layer) =>
-            !effects.includes(layer.name) && layer.frameFps && !layer.onlyAnimateWhenMoving,
-        )
+      let capacityBlocked = false;
+      const livePose =
+        moving &&
+        (!staticPose(models[model].animations[clip]) ||
+          layers.some((layer) => !effects.includes(layer.name) && layer.frameFps));
+      let poseUses = 0;
+      if (livePose && frameLayersActive) {
+        const poseKey = key + ":" + time;
+        poseUses = (frameBodyUses.get(poseKey) || 0) + 1;
+        if (frameBodyUses.size < 512) frameBodyUses.set(poseKey, poseUses);
+      }
+      const bucket = livePose
+        ? time
+        : staticPose(models[model].animations[clip]) &&
+            !layers.some(
+              (layer) =>
+                !effects.includes(layer.name) && layer.frameFps && !layer.onlyAnimateWhenMoving,
+            )
           ? 0
           : Math.floor(time * 12);
       if (entry) {
         entry.desiredBucket = bucket;
         entry.seenFrame = idleFrame;
       }
-      const mayUpdate =
-        !entry ||
-        (!idleColdPending && (!idleUpdateKeys.length || idleUpdateKeys[idleUpdateCursor] === key));
-      if (
-        (!entry || entry.bucket !== bucket) &&
-        mayUpdate &&
-        idleBakeSpent < 2 &&
-        layers.every((layer) => images[layer.asset])
-      ) {
+      let nextSurface = null;
+      if (!entry) {
         let extent = radius(model) + 4;
         if (lighting?.enabled && lighting.intensity > 0) {
           const projection = MapShadowLighting.projection(lighting, 1 + extent / 64);
           extent = extent * 2 + Math.hypot(projection.x, projection.y) * 64;
         }
         if (Number.isFinite(extent) && extent > 0) {
+          const resolution = Math.min(1, idleRasterSize / (extent * 2));
+          const side = Math.ceil(extent * 2 * resolution);
+          nextSurface = { extent, resolution, side };
+          // Capacity misses must not block resident animation updates, even
+          // after this frame's baking budget is exhausted.
+          capacityBlocked = !reserveIdleSurface(side * side, false);
+        }
+      }
+      const mayUpdate =
+        !entry ||
+        (!idleColdPending && (!idleUpdateKeys.length || idleUpdateKeys[idleUpdateCursor] === key));
+      if (
+        (!entry || entry.bucket !== bucket) &&
+        // A lone walking actor is cheaper to draw directly. Never reuse an old
+        // walking sample or repeatedly bake different phases of one rig per frame.
+        (!livePose || (poseUses >= 2 && entry?.bakedFrame !== idleFrame)) &&
+        mayUpdate &&
+        !capacityBlocked &&
+        idleBakeSpent < 2 &&
+        layers.every((layer) => images[layer.asset])
+      ) {
+        if (entry || nextSurface) {
           const started = performance.now();
           if (!entry) {
             // Preserve native texels in overview, including large hulls and
             // the padding required by their combined shadow. Resolution stays
             // independent of zoom, so wheel/pinch never triggers rebaking.
-            const resolution = Math.min(1, idleRasterSize / (extent * 2));
-            const canvas = document.createElement("canvas");
-            canvas.width = canvas.height = Math.ceil(extent * 2 * resolution);
-            entry = { canvas, extent, resolution, bucket: null };
-            idleImagePixels += canvas.width * canvas.height;
+            const { extent, resolution, side } = nextSurface;
+            if (reserveIdleSurface(side * side)) {
+              const canvas = document.createElement("canvas");
+              canvas.width = canvas.height = side;
+              entry = { canvas, extent, resolution, bucket: null };
+              idleImagePixels += canvas.width * canvas.height;
+            } else capacityBlocked = true;
           }
-          const surface = entry.canvas.getContext("2d");
-          surface.clearRect(0, 0, entry.canvas.width, entry.canvas.height);
-          draw(
-            surface,
-            model,
-            entry.extent * entry.resolution,
-            entry.extent * entry.resolution,
-            entry.resolution,
-            angle,
-            clip,
-            bucket / 12,
-            heldWeapon,
-            loop,
-            shieldVisible,
-            false,
-            brokenParts,
-            aimAngle,
-            attacking,
-            onLand,
-            environment,
-            attackWeapon,
-            weaponDisplayIndex,
-            false,
-            null,
-            false,
-            boostSkillActive,
-            [...hiddenLayers, ...effects],
-          );
-          if (idleUpdateKeys[idleUpdateCursor] === key) idleUpdateCursor++;
-          entry.bucket = entry.desiredBucket = bucket;
-          entry.seenFrame = entry.bakedFrame = idleFrame;
-          idleBakeSpent += performance.now() - started;
+          if (entry) {
+            const surface = entry.canvas.getContext("2d");
+            surface.clearRect(0, 0, entry.canvas.width, entry.canvas.height);
+            draw(
+              surface,
+              model,
+              entry.extent * entry.resolution,
+              entry.extent * entry.resolution,
+              entry.resolution,
+              angle,
+              clip,
+              livePose ? time : bucket / 12,
+              heldWeapon,
+              loop,
+              shieldVisible,
+              moving,
+              brokenParts,
+              aimAngle,
+              attacking,
+              onLand,
+              environment,
+              attackWeapon,
+              weaponDisplayIndex,
+              false,
+              null,
+              false,
+              boostSkillActive,
+              [...hiddenLayers, ...effects],
+            );
+            if (idleUpdateKeys[idleUpdateCursor] === key) idleUpdateCursor++;
+            entry.bucket = entry.desiredBucket = bucket;
+            entry.seenFrame = entry.bakedFrame = idleFrame;
+            idleBakeSpent += performance.now() - started;
+          }
         }
       }
-      if (!entry) idleMissing++;
-      if (entry) {
+      if (!entry && !livePose && !capacityBlocked) idleMissing++;
+      if (entry && (!livePose || entry.bucket === bucket)) {
         idleImages.delete(key);
         idleImages.set(key, entry);
-        while (idleImages.size > 256 || idleImagePixels > 16 * 1024 * 1024) {
+        while (idleImages.size > idleEntryLimit || idleImagePixels > idlePixelLimit) {
           const oldest = idleImages.keys().next().value,
             removed = idleImages.get(oldest);
           idleImages.delete(oldest);
@@ -757,7 +864,7 @@ const SpriteRenderer = (() => {
             heldWeapon,
             loop,
             shieldVisible,
-            false,
+            moving,
             brokenParts,
             aimAngle,
             attacking,
@@ -782,8 +889,8 @@ const SpriteRenderer = (() => {
           entry.canvas,
           x - entry.extent * scale,
           y - entry.extent * scale,
-          entry.extent * scale * 2,
-          entry.extent * scale * 2,
+          (entry.canvas.width / entry.resolution) * scale,
+          (entry.canvas.height / entry.resolution) * scale,
         );
         ctx.restore();
         drawEffects(effects.filter((name) => !prefixEffects.includes(name)));
@@ -959,15 +1066,22 @@ const SpriteRenderer = (() => {
     for (const entry of [...idleImages.values(), ...shadowCache.values()])
       entry.canvas.width = entry.canvas.height = 0;
     for (const canvas of outlineCache.values()) canvas.width = canvas.height = 0;
-    idleImages.clear(); shadowCache.clear(); outlineCache.clear(); modelRadii.clear();
+    idleImages.clear();
+    shadowCache.clear();
+    outlineCache.clear();
+    modelRadii.clear();
     idleImagePixels = shadowPixels = outlinePixels = idleBakeSpent = idleFrame = idleMissing = 0;
-    idleColdPending = false; idleUpdateKeys = []; idleUpdateCursor = 0;
+    idleColdPending = false;
+    idleUpdateKeys = [];
+    idleUpdateCursor = 0;
     drawSamples = new WeakMap();
+    endFrame();
   }
   // One bounded queue serves startup, previews and battle preparation.
   const requests = new Map(),
     queue = [];
-  let workers = 0, assetGeneration = 0;
+  let workers = 0,
+    assetGeneration = 0;
   const pendingSources = new Set();
   let retainedSources = new Set();
   function releaseBattleResources(keys = []) {
@@ -975,21 +1089,33 @@ const SpriteRenderer = (() => {
     assetGeneration++;
     // Small menu icons are shared across screens; decoded battle sheets are
     // leased to the current battle, not retained for every battle ever played.
-    const keep = new Set([...keys, ...ART.units.map(unit => unit.icon)]);
-    retainedSources = new Set([...keep].map(key => ART.assets[key]).filter(Boolean));
+    const keep = new Set([...keys, ...ART.units.map((unit) => unit.icon)]);
+    retainedSources = new Set([...keep].map((key) => ART.assets[key]).filter(Boolean));
     for (const key of Object.keys(images)) if (!keep.has(key)) delete images[key];
     for (const source of requests.keys())
       if (!retainedSources.has(source) && !pendingSources.has(source)) requests.delete(source);
-    for (let i = queue.length - 1; i >= 0; i--) if (!retainedSources.has(queue[i].source)) {
-      const [obsolete] = queue.splice(i, 1); obsolete.resolve(null);
-    }
+    for (let i = queue.length - 1; i >= 0; i--)
+      if (!retainedSources.has(queue[i].source)) {
+        const [obsolete] = queue.splice(i, 1);
+        obsolete.resolve(null);
+      }
   }
   function cacheStats() {
     const decoded = new Set(Object.values(images));
-    return { idle: idleImages.size, idlePixels: idleImagePixels, shadow: shadowCache.size,
-      shadowPixels, outlines: outlineCache.size, outlinePixels, sources: requests.size,
-      decoded: decoded.size, decodedPixels: [...decoded].reduce((sum, image) => sum + image.width * image.height, 0),
-      pending: pendingSources.size };
+    return {
+      idle: idleImages.size,
+      idlePixels: idleImagePixels,
+      idlePixelLimit,
+      idleEntryLimit,
+      shadow: shadowCache.size,
+      shadowPixels,
+      outlines: outlineCache.size,
+      outlinePixels,
+      sources: requests.size,
+      decoded: decoded.size,
+      decodedPixels: [...decoded].reduce((sum, image) => sum + image.width * image.height, 0),
+      pending: pendingSources.size,
+    };
   }
   function pump() {
     while (workers < 8 && queue.length) {
@@ -1001,10 +1127,14 @@ const SpriteRenderer = (() => {
         image.onload = image.onerror = null;
         // Loading a PNG is not the same as decoding it. Finish asynchronous
         // decoding behind the readiness gate instead of on the first draw.
-        try { if (typeof image.decode === "function") await image.decode(); }
-        catch { /* Older WebViews can reject decode even after a valid load. */ }
+        try {
+          if (typeof image.decode === "function") await image.decode();
+        } catch {
+          /* Older WebViews can reject decode even after a valid load. */
+        }
         pendingSources.delete(task.source);
-        if (task.generation !== assetGeneration && !retainedSources.has(task.source)) requests.delete(task.source);
+        if (task.generation !== assetGeneration && !retainedSources.has(task.source))
+          requests.delete(task.source);
         workers--;
         task.resolve(image);
         pump();
@@ -1115,6 +1245,7 @@ const SpriteRenderer = (() => {
   return {
     draw,
     beginFrame,
+    endFrame,
     releaseBattleResources,
     cacheStats,
     radius,

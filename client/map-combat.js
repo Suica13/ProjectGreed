@@ -1,5 +1,6 @@
 /* 大地图交战演出：使用地图坐标和已裁定逐发结果，不修改权威战局。 */
 const MapCombat = (() => {
+  const iconPlayback = () => typeof MapCamera !== "undefined" && MapCamera.unitThumbnails;
   const restingPoses = new Map(),
     meleeExchanges = new Map();
   const dodgeTracks = new Map();
@@ -494,15 +495,40 @@ const MapCombat = (() => {
   function framePoses() {
     if (!frame) return new Map();
     const cached = poseCache.get(frame);
-    if (cached?.time === frame.time) return cached.poses;
+    const icons = iconPlayback();
+    if (cached?.time === frame.time && cached.icons === icons) return cached.poses;
     const result = computeFramePoses();
-    poseCache.set(frame, {time:frame.time, poses:result});
+    poseCache.set(frame, {time:frame.time, icons, poses:result});
     return result;
   }
   function computeFramePoses() {
     const result = new Map();
     if (!frame || !battleView?.mapBattle) return result;
     const { source, target, plan, event, weapon, time } = frame;
+    if (iconPlayback()) {
+      // Keep impact timing, damage, transformations and death visibility, but
+      // leave unit icons on their board cells instead of animating their rigs.
+      const arrived = contactsFor(frame), latest = arrived.at(-1);
+      const sourcePose = {
+        x: source.x, y: source.y, angle: source.angle, aimAngle: source.aimAngle,
+        clip: null, time: 0, moving: false, attacking: false, firing: true,
+        heldWeapon: event.heldWeapon ?? event.weapon, attackWeapon: event.weapon,
+      };
+      if (!event.nuclearFollowup) result.set(source.unit.id, sourcePose);
+      result.set(target.unit.id, {
+        x: target.x, y: target.y, angle: target.angle,
+        model: latest?.modelAfter ?? target.unit.model,
+        flying: latest?.flyingAfter ?? !!target.unit.flying,
+        clip: null, time: 0, moving: false,
+        hp: Math.max(0, (event.before ?? target.unit.hp) - arrived.reduce((sum,c)=>sum+c.damage,0)),
+        shield: Math.max(0, (event.shieldBefore ?? target.unit.shield ?? 0) - arrived.reduce((sum,c)=>sum+(c.shieldDamage || 0),0)),
+        dying: plan.deathSoundAt !== null && time >= plan.deathSoundAt,
+        keepVisible: plan.deathHideAt !== null && time < plan.deathHideAt,
+        hidden: plan.deathHideAt !== null && time >= plan.deathHideAt,
+        dodge: {active:false,x:0,y:0,time:0}, sourcePose,
+      });
+      return result;
+    }
     const animation = WeaponEffects.firingPose(
       weapon,
       source,
@@ -758,7 +784,10 @@ const MapCombat = (() => {
     return result;
   }
   function poses() {
-    if (!lanes.length) return dodgePoses(new Map([...restingPoses, ...framePoses()]));
+    if (!lanes.length) {
+      const result = new Map([...restingPoses, ...framePoses()]);
+      return iconPlayback() ? result : dodgePoses(result);
+    }
     const result = new Map(restingPoses),
       priority = new Map(
         [...restingPoses].filter(([, pose]) => pose.hidden).map(([id]) => [id, 7]),
@@ -784,7 +813,7 @@ const MapCombat = (() => {
         }
       }
     frame = saved;
-    const composed = meleePoses(dodgePoses(result));
+    const composed = iconPlayback() ? result : meleePoses(dodgePoses(result));
     // An older volley may finish after a newer incoming attack. Keep the most
     // recent command/attack facing, rather than restoring that lane's old angle.
     for (const [id, pose] of composed) {

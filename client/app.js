@@ -69,6 +69,7 @@ function setPageView(view) {
   else if (!window.isLayoutPreview) {
     cancelAnimationFrame(animationFrameId);
     animationFrameId = null;
+    window.BattleHUD?.resetFps();
   }
 }
 function startRendering() {
@@ -1710,7 +1711,14 @@ function drawCampaignSupply(ctx, ox, oy, tile) {
   ctx.restore();
 }
 function drawMap(now) {
-  return Rules.withModelQuery(() => drawMapFrame(now));
+  MapCamera.beginFrame?.();
+  return Rules.withModelQuery(() => {
+    try {
+      return drawMapFrame(now);
+    } finally {
+      SpriteRenderer.endFrame?.();
+    }
+  });
 }
 function drawMapFrame(now) {
   const battleSettings = BattleScene.settings();
@@ -1759,6 +1767,7 @@ function drawMapFrame(now) {
   ctx.fillStyle = "#111e27";
   ctx.fillRect(0, 0, w, h);
   const immersive = window.ReplayPresentation?.immersive;
+  const unitThumbnails = MapCamera.unitThumbnails;
   const chosen = immersive ? null : getUnit(selected),
     canMove = !!(
       chosen &&
@@ -2022,7 +2031,7 @@ function drawMapFrame(now) {
       anim = SpriteRenderer.movement(u.model);
       t = (now - motion.start) / 1000;
     }
-    const combatPose = u.mapPose;
+    const combatPose = unitThumbnails ? null : u.mapPose;
     const formationMembers = frameMembersOf(u);
     const formationLeader = formationMembers[0] || u;
     const formationOffset = MapCombat.formationOffset(u, PlanningUI.facing(formationLeader,formationLeader.angle,frameModelOf(formationLeader)), formationMembers);
@@ -2040,7 +2049,7 @@ function drawMapFrame(now) {
     if (!combatPose) angle = PlanningUI.facing(u, angle, frameModelOf(u));
     if (Number.isFinite(frameModelOf(u).presentation.fixedFacing))
       angle = frameModelOf(u).presentation.fixedFacing;
-    const skillPose = !combatPose && SkillEffects.pose(u, now);
+    const skillPose = !combatPose && !unitThumbnails && SkillEffects.pose(u, now);
     if (skillPose) {
       angle = skillPose.angle;
       anim = skillPose.clip;
@@ -2070,7 +2079,9 @@ function drawMapFrame(now) {
     EnvironmentVisuals.observe(u, groundCell, now);
     const visualScale = (tile/Rules.mapCellPixels) * ART.presentation.unitMapScale *
       (battleSettings.mapScale/(ART.presentation.mapCellScale || 1)) * frameModelOf(u).presentation.mapScale * formationOffset.scale;
-    const radius = SpriteRenderer.radius(u.model)*visualScale + tile;
+    const radius = unitThumbnails
+      ? tile * Math.max(unitSize.width, unitSize.height) / 2 + 32
+      : SpriteRenderer.radius(u.model)*visualScale + tile;
     const parentCarrier = u.embarked?.exposed && frameUnit(u.embarked.carrierId);
     const pose = {
       u,
@@ -2098,7 +2109,6 @@ function drawMapFrame(now) {
   if (!immersive)
     for (const { u, pos } of mapUnitPoses)
       UnitIdentity.drawCommandAura(ctx, u, pos, tile, getUnit(selected));
-  const unitThumbnails = !immersive && MapCamera.unitThumbnails;
   byId("map").dataset.unitThumbnails = String(unitThumbnails);
   if (!immersive && !unitThumbnails)
     for (const { u, pos } of mapUnitPoses)
@@ -2211,7 +2221,7 @@ function drawMapFrame(now) {
         false,
         !!(u.overBoost || u.fullBoost || u.overdrive || u.boostSkillActive),
         combatPose?.hiddenLayers || [],
-        !pilotLabels && !combatPose && !motion && !skillPose ? 2048 : 0,
+        !combatPose && !skillPose ? 2048 : 0,
       );
       const fieldImpact = Math.min(
         MapCombat.fieldImpact(u.id),
@@ -2552,7 +2562,7 @@ function drawDialogueBubbles(ctx, poses, intel, width, height, now, labelsVisibl
 }
 function cellAt(e) {
   if (!mapGeo) return null;
-  let r = byId("map").getBoundingClientRect(),
+  let r = MapCamera.inputBounds(),
     x = Math.floor((e.clientX - r.left - mapGeo.ox) / mapGeo.tile),
     y = Math.floor((e.clientY - r.top - mapGeo.oy) / mapGeo.tile);
   return x >= 0 && x < Rules.mapWidth(game) && y >= 0 && y < Rules.mapHeight(game)
@@ -2565,6 +2575,10 @@ function cellAt(e) {
     : null;
 }
 byId("map").onpointermove = (e) => {
+  if (MapCamera.isInteracting) {
+    hover = null;
+    return;
+  }
   hover = cellAt(e);
   if (hover) {
     let unit = Rules.at(game, hover.x, hover.y),
@@ -3540,6 +3554,7 @@ byId("closeHelp").onclick = () => {
 let lastRenderError = null;
 function tick(now) {
   animationFrameId = null;
+  const realFrameTime = now;
   try {
     if (window.ReplayPlayer?.active) now = window.ReplayPlayer.tick(now);
     clock = now / 1000;
@@ -3549,6 +3564,7 @@ function tick(now) {
         MapCombat.update(now);
         drawMap(now);
         drawBattle(now);
+        window.BattleHUD?.recordFrame(realFrameTime);
       }
     }
   } catch (error) {

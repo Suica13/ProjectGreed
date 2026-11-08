@@ -304,7 +304,7 @@ test("offline room uses the same dock through final assembly, deployment and ret
   assert.deepEqual(
     await page.evaluate(() => [
       byId("hudRoomName").textContent,
-      byId("hudPing").textContent,
+      byId("hudPing").textContent.split(" / FPS ")[0],
       byId("hudPlayerCount").textContent,
     ]),
     ["房间名: 离线遭遇战", "PING 离线", "玩家人数: 2/2"],
@@ -589,9 +589,9 @@ test("room status measures a real WebSocket ping and counts connected seats and 
       Net.leave();
       return result;
     }, server.address().port);
-    assert.equal(result.before, "PING —");
+    assert.equal(result.before, "PING — / FPS —");
     assert.ok(Number.isInteger(result.ping) && result.ping >= 0);
-    assert.equal(result.label, "PING " + result.ping + " ms");
+    assert.equal(result.label, "PING " + result.ping + " ms / FPS —");
     assert.equal(result.room, "房间名: 状态测试房间");
     assert.equal(result.players, "玩家人数: 2/4 · 观战玩家: 1");
   } finally {

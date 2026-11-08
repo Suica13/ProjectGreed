@@ -16,7 +16,7 @@ test("all specified types use fixed accuracy, including levels, mounts and firin
       if (!Object.hasOwn(Classes.baseHits, kind)) continue;
       seen.add(kind);
       const cannon = Classes.shipCannon(weapon, prefab.stats.ship);
-      const expected = Math.round(Classes.baseHits[kind] * (cannon ? 0.85 : 1));
+      const expected = Math.round((Classes.baseHits[kind] + (!["melee", "ram"].includes(kind) ? config.weapons.shootingHitOffset : 0)) * (cannon ? 0.85 : 1));
       assert.equal(weapon.hit, expected, prefab.id + "/" + weapon.id);
       for (const step of weapon.attack?.steps || [])
         if (step.accuracy !== undefined) assert.equal(step.accuracy, expected);
@@ -43,13 +43,13 @@ test("ship trait excludes non-cannons and non-ships, and reloading does not stac
   changed.weapons.shipCannonAccuracy = 0.8;
   Conversion.globals(prefab, changed);
   for (const weapon of Object.values(prefab.weapons))
-    assert.equal(weapon.hit, Math.round(Classes.baseHits[Classes.classify(weapon)] * (Classes.shipCannon(weapon, true) ? 0.8 : 1)));
+    assert.equal(weapon.hit, Math.round((Classes.baseHits[Classes.classify(weapon)] + (!["melee", "ram"].includes(Classes.classify(weapon)) ? config.weapons.shootingHitOffset : 0)) * (Classes.shipCannon(weapon, true) ? 0.8 : 1)));
 });
 
-test("unspecified classes inherit native accuracy; irradiation keeps 60 and MEGA irradiation uses 50", () => {
+test("unspecified classes inherit native accuracy; shooting offset includes both irradiation types", () => {
   assert.equal(config.weaponClasses.beam.baseHit, -1);
   assert.equal(config.weaponClasses.other.baseHit, -1);
   const skills = catalog.prefabs.flatMap(p => p.skills || []).filter(s => s.type === "irradiation");
   assert(skills.length > 0);
-  assert(skills.every(s => s.baseHit === (s.areaWidth === 3 ? 50 : 60)));
+  assert(skills.every(s => s.baseHit === (s.areaWidth === 3 ? 40 : 50)));
 });

@@ -4331,7 +4331,7 @@ function createRoomEngine({
       }
       case "deploy": {
         if (room.phase !== "deployment") throw Error("Not deploying");
-        const deployingUnit = ownUnit(room, seat, msg.unitId);
+        const deployingUnit = ownUnit(room, seat, msg.unitId, true);
         G.deploy(
           room.game,
           room.campaignBattle ? seat : G.ownerOf(deployingUnit),

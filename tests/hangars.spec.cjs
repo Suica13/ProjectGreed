@@ -130,14 +130,13 @@ test("deployment exposes hangar command and preloading keeps deployment confirma
   await fixture(page, true);
   const errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
-  await page.locator('[data-unit-command="hangar"]').click();
-  await clickCarrier(page);
-  await page.locator('#hangarDialog [data-board-id="0-1"]').first().click();
-  assert(!(await page.locator("#hangarDialog").isVisible()));
   await page.evaluate(() => {
-    select("0-0");
-    HangarUI.open(getUnit("0-0"));
+    const carrier = getUnit("0-0");
+    Rules.hangars.embark(game, getUnit("0-1"), carrier, Rules.hangars.of(carrier)[0].id);
+    update();
   });
+  await page.locator('#deploymentRoster [data-unit-id="0-0"]').click();
+  await page.locator('#hudDeploymentHangar').click();
   assert(await page.locator('#hangarDialog [data-cargo-id="0-1"]').isVisible());
   await page.locator("#hangarDialog").getByRole("button", { name: "关闭", exact: true }).click();
   const result = await page.evaluate(() => {
@@ -192,7 +191,7 @@ test("hangar shows resource maxima and opens live cargo status with bottom instr
  assert(await page.locator('[data-cargo-id="0-1"]').isVisible());
 });
 
-test("cancel launch restores carrier focus and reopens remaining cargo",async({page})=>{
+test("deployment passenger selection can return to the carrier without launching",async({page})=>{
  await fixture(page,true);
  await page.evaluate(()=>{
   const c=getUnit("0-0"),u=getUnit("0-1");
@@ -200,13 +199,11 @@ test("cancel launch restores carrier focus and reopens remaining cargo",async({p
   select(c.id);HangarUI.open(c);
  });
  await page.locator('[data-cargo-id="0-1"] button:not([data-inspect-cargo])').click();
- await page.evaluate(()=>{const p=Rules.hangars.launchCells(game,getUnit("0-1"))[0];HangarUI.click(p);});
  assert.equal(await page.evaluate(()=>selected),"0-1");
  assert.equal(await page.evaluate(()=>Rules.onMap(getUnit("0-1"))),false);
- assert(await page.locator('#hudConfirmMove').isVisible());
- const enabled=await page.locator('#hudUnitCommands button:enabled').count();
- assert.equal(enabled,0);
- await page.locator('#hudCancelAction').click();
+ assert.equal(await page.evaluate(()=>!!getUnit("0-1").pendingMove),false);
+ await page.locator('#deploymentRoster [data-unit-id="0-0"]').click();
+ await page.locator('#hudDeploymentHangar').click();
  assert.equal(await page.evaluate(()=>selected),"0-0");
  assert(await page.locator('#hangarDialog').isVisible());
  assert.equal(await page.evaluate(()=>!!getUnit("0-1").embarked),true);

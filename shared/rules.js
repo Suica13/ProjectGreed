@@ -1263,15 +1263,18 @@ const Tactics = (() => {
           : ownerOf(u) === team),
     );
     if (
-      (!onMap(u) && !u.deploymentStaged) ||
-      !!u.embarked ||
+      (!onMap(u) && !u.deploymentStaged && !u.embarked) ||
+      u.hp <= 0 ||
       !Number.isInteger(x) ||
       !Number.isInteger(y) ||
       !deploymentCells(g, team, u).some((c) => c.x === x && c.y === y)
     )
       throw Error("请在己方出生区的有效格子部署");
+    if (u.embarked && !g.units.some(carrier => carrier.id === u.embarked.carrierId && carrier.hp > 0))
+      throw Error("运输单位不存在或已被击毁");
     const target = squadJoinTarget(g, u, x, y, [u]);
     if (!target && !fits(g, u, x, y, u.angle, false, team)) throw Error("该部署位置已有单位");
+    delete u.embarked;
     delete u.rotationPivot;
     delete u.squadId; delete u.squadSlot;
     u.x = x;

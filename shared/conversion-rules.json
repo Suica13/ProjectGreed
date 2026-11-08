@@ -2,6 +2,9 @@
   "schemaVersion": 3,
   "weapons": {
     "damage": 0.75,
+    "shootingDamageOffset": -0.25,
+    "shootingHitOffset": -10,
+    "shipMediumAccuracyBonus": 0.15,
     "accuracy": 1,
     "en": 1,
     "range": 0.5,
@@ -67,7 +70,7 @@
       "maxRange": -1
     },
     "bazooka": {
-      "damage": 1.25,
+      "damage": 1.15,
       "accuracy": 1,
       "en": 1,
       "range": 1,
@@ -276,7 +279,7 @@
       "maxRange": -1
     },
     "beam_bazooka": {
-      "damage": 1.25,
+      "damage": 1.15,
       "accuracy": 1,
       "en": 1,
       "range": 1,
@@ -298,7 +301,7 @@
       "maxRange": -1
     },
     "panzerfaust": {
-      "damage": 1.25,
+      "damage": 1.15,
       "accuracy": 1,
       "en": 1,
       "range": 1,

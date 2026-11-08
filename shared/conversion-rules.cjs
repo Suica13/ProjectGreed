@@ -6,6 +6,9 @@ const file = "shared/conversion-rules.json";
 const Classes = require("./weapon-classes.js");
 const fields = {
   weapons: {
+    shootingDamageOffset: ["射击全局伤害系数增减", -0.99, 10, false, "加到全部武装伤害倍率上，仅射击武器及伤害型射击技能生效；不影响近战与冲撞。"],
+    shootingHitOffset: ["射击基础命中增减", -100, 100, false, "分类基础命中直接增减百分点，再应用命中倍率；包含分段射击及照射。"],
+    shipMediumAccuracyBonus: ["战舰对中型命中补偿", 0, 1, false, "只减轻已有对中型命中惩罚，最高恢复到1；不影响非战舰。"],
     damage: ["全部武装伤害倍率", 0.01, 10, false, "在武器分类倍率之后叠乘，包含有伤害的机体技能。"],
     accuracy: ["武器命中率倍率", 0.01, 10, false, "同时处理单发及分段命中率。"],
     shipCannonAccuracy: ["舰炮命中倍率", 0.01, 10, false, "战舰的加农炮、光束炮和迫击炮额外乘此系数；不包含机枪、对空炮、导弹和航空炸弹。"],
@@ -51,6 +54,8 @@ const classFields = {
   rangeBonus: ["分类最大射程增减", -100, 100, true],
 };
 function validate(value) {
+  if (value?.weapons) for (const key of ["shootingDamageOffset", "shootingHitOffset", "shipMediumAccuracyBonus"])
+    value.weapons[key] ??= 0;
   if (value?.weapons && value.weapons.shipCannonAccuracy === undefined) value.weapons.shipCannonAccuracy = 0.85;
   if (value?.weapons && value.weapons.armorPiercingIgnore === undefined) value.weapons.armorPiercingIgnore = 0.5;
   // Older editor clients may omit this newly introduced setting.
@@ -139,6 +144,7 @@ function globals(prefab, rules) {
       }
     }
     const group = Classes.rule(weapon, rules);
+    const shooting = !["melee", "ram"].includes(Classes.classify(weapon));
     const old = weapon.conversionMultipliers;
     const numericFields = [
       "armorPiercingIgnore",
@@ -161,6 +167,12 @@ function globals(prefab, rules) {
           .map((key) => [key, weapon[key]]),
       );
     weapon.armorPiercingIgnore = base.armorPiercingIgnore ?? w.armorPiercingIgnore;
+    const medium = weapon.antiSize?.medium;
+    if (prefab.stats?.ship && Number.isFinite(medium?.accuracy)) {
+      base.antiMediumAccuracy ??= medium.accuracy;
+      medium.accuracy = base.antiMediumAccuracy < 1
+        ? Math.min(1, base.antiMediumAccuracy + (w.shipMediumAccuracyBonus || 0)) : base.antiMediumAccuracy;
+    }
     const shipCannon = Classes.shipCannon(weapon, prefab.stats?.ship);
     const accuracy = w.accuracy * group.accuracy * (shipCannon ? (w.shipCannonAccuracy ?? 0.85) : 1),
       en = w.en * group.en,
@@ -174,7 +186,9 @@ function globals(prefab, rules) {
         delete payload.penetrationBonus;
       }
     }
-    scaleDamage(weapon, w.damage * sniperScale / (old?.damageScale || 1));
+    const damageScale = Math.max(0.01, w.damage + (shooting ? w.shootingDamageOffset || 0 : 0)) * sniperScale;
+    const hitOffset = shooting ? w.shootingHitOffset || 0 : 0;
+    scaleDamage(weapon, damageScale / (old?.damageScale || 1));
     if (weapon.type !== "melee" && weapon.nativePayload?.ProjectileAttackTimesDamageModifier < 1 &&
         weapon.nativePayload.ProjectileAttackTimes > 1) {
       const count = weapon.nativePayload.ProjectileAttackTimes;
@@ -194,7 +208,7 @@ function globals(prefab, rules) {
     }
     for (const key of ["hit", "baseHit"])
       if (base[key] !== undefined)
-        weapon[key] = (group.baseHit >= 0 ? group.baseHit : base[key]) * accuracy;
+        weapon[key] = Math.max(0, (group.baseHit >= 0 ? group.baseHit : base[key]) + hitOffset) * accuracy;
     if (prefab.stats?.ship) weapon.shipWeapon = true;
     else delete weapon.shipWeapon;
     if (Classes.wristWeapon(weapon)) weapon.maxUsesPerTurn = 1;
@@ -243,19 +257,24 @@ function globals(prefab, rules) {
       weapon.min = Math.min(weapon.min, weapon.max);
     if (weapon.minRange !== undefined && weapon.range !== undefined)
       weapon.minRange = Math.min(weapon.minRange, weapon.range);
-    for (const step of weapon.attack?.steps || [])
+    const steps = weapon.attack?.steps || [];
+    base.stepAccuracy ??= steps.map(step => step.accuracy ?? null);
+    for (const [index, step] of steps.entries())
       if (step.accuracy !== undefined)
         step.accuracy =
-          (group.baseHit >= 0 ? group.baseHit : step.accuracy / (old?.accuracyScale || 1)) *
+          Math.max(0, (group.baseHit >= 0 ? group.baseHit : base.stepAccuracy[index]) + hitOffset) *
           accuracy;
-    weapon.conversionMultipliers = { ...base, damageScale: w.damage * sniperScale, accuracyScale: accuracy };
+    weapon.conversionMultipliers = { ...base, damageScale, accuracyScale: accuracy };
   }
   for (const skill of (prefab.skills || []).filter((skill) => !isWeaponSkill(skill)))
     if (skill.damageComponents) {
       const old = skill.conversionMultipliers;
-      scaleDamage(skill, w.damage / (old?.damageScale || 1));
-      if (w.damage !== 1) skill.conversionMultipliers = { damageScale: w.damage };
-      else delete skill.conversionMultipliers;
+      const shooting = !["melee", "ram"].includes(Classes.classify(skill));
+      const damageScale = Math.max(0.01, w.damage + (shooting ? w.shootingDamageOffset || 0 : 0));
+      const baseHit = old?.baseHit ?? skill.baseHit;
+      scaleDamage(skill, damageScale / (old?.damageScale || 1));
+      if (Number.isFinite(baseHit)) skill.baseHit = Math.max(0, baseHit + (shooting ? w.shootingHitOffset || 0 : 0));
+      skill.conversionMultipliers = { damageScale, ...(Number.isFinite(baseHit) ? {baseHit} : {}) };
     }
   const fields = {
     hp: "hp",

@@ -53,6 +53,7 @@
 - [maintenance/editor-save-and-armor-piercing.md](maintenance/editor-save-and-armor-piercing.md)
 - [maintenance/performance-unit-ai.md](maintenance/performance-unit-ai.md)
 - [maintenance/performance-v98.md](maintenance/performance-v98.md)
+- [maintenance/rendering-v100.md](maintenance/rendering-v100.md)
 - [maintenance/roadmap.md](maintenance/roadmap.md)
 - [maintenance/unit-exceptions.md](maintenance/unit-exceptions.md)
 - [maps/campaign-regional-geography.md](maps/campaign-regional-geography.md)

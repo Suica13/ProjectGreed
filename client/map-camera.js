@@ -16,8 +16,15 @@ const MapCamera = (() => {
   const touches = new Map();
   let pinch = null,
     pinchConsumed = false;
-  let viewportSize = null;
+  let viewportSize = null, pointerBounds = null;
+  function invalidateBounds() {
+    pointerBounds = null;
+  }
+  function inputBounds() {
+    return pointerBounds ||= canvas.getBoundingClientRect();
+  }
   function rememberSize(box) {
+    if (viewportSize?.width !== box.width || viewportSize?.height !== box.height) invalidateBounds();
     viewportSize = { width: box.width, height: box.height };
     return viewportSize;
   }
@@ -25,7 +32,7 @@ const MapCamera = (() => {
     // Rendering needs dimensions, not a fresh DOM position. Input handlers still
     // measure the live rectangle before mapping pointer coordinates.
     return window.ResizeObserver && viewportSize?.width > 0 && viewportSize?.height > 0
-      ? viewportSize : rememberSize(canvas.getBoundingClientRect());
+      ? viewportSize : rememberSize(inputBounds());
   }
   function baseTile(width, height) {
     return (
@@ -43,7 +50,7 @@ const MapCamera = (() => {
   }
   function maximumZoom(width, height) {
     if (!(width > 0 && height > 0)) {
-      const box = canvas.getBoundingClientRect();
+      const box = renderSize();
       width = box.width || 800;
       height = box.height || 600;
     }
@@ -63,7 +70,7 @@ const MapCamera = (() => {
     return { tile, ox: width / 2 - centerX * tile, oy: height / 2 - centerY * tile };
   }
   function refresh(box = null) {
-    if (!box || typeof box.width !== "number") box = canvas.getBoundingClientRect();
+    if (!box || typeof box.width !== "number") box = inputBounds();
     rememberSize(box);
     const maximum = maximumZoom(box.width || 800, box.height || 600);
     if (box.width > 0 && box.height > 0) {
@@ -72,11 +79,13 @@ const MapCamera = (() => {
     }
     const label = Math.round(zoomPercent(box.width || 800, box.height || 600)) + "%";
     if (byId("mapZoomLabel").textContent !== label) byId("mapZoomLabel").textContent = label;
-    byId("mapZoomOut").disabled = zoom <= minimumZoom;
-    byId("mapZoomIn").disabled = zoom >= maximum;
-    if (canvas.style.cursor !== "grab") canvas.style.cursor = "grab";
+    const out = byId("mapZoomOut"), inside = byId("mapZoomIn");
+    if (out.disabled !== (zoom <= minimumZoom)) out.disabled = zoom <= minimumZoom;
+    if (inside.disabled !== (zoom >= maximum)) inside.disabled = zoom >= maximum;
+    const cursor = drag?.moved ? "grabbing" : "grab";
+    if (canvas.style.cursor !== cursor) canvas.style.cursor = cursor;
   }
-  function setZoom(value, x, y, box = canvas.getBoundingClientRect()) {
+  function setZoom(value, x, y, box = inputBounds()) {
     const old = geometry(box.width, box.height);
     x ??= box.width / 2;
     y ??= box.height / 2;
@@ -111,6 +120,7 @@ const MapCamera = (() => {
     focus((a.x + b.x) / 2, (a.y + b.y) / 2, { preserveZoom: true });
   }
   function reset(fullMap = false) {
+    invalidateBounds();
     zoom = fullMap ? fitZoom : 1 / cellScale;
     centerX = Rules.mapWidth(game) / 2;
     centerY = Rules.mapHeight(game) / 2;
@@ -129,7 +139,7 @@ const MapCamera = (() => {
     (event) => {
       if (window.GamePreview?.active || pageView !== "game") return;
       event.preventDefault();
-      const box = canvas.getBoundingClientRect();
+      const box = inputBounds();
       setZoom(
         zoom * Math.exp(-event.deltaY * 0.0015),
         event.clientX - box.left,
@@ -141,7 +151,7 @@ const MapCamera = (() => {
   );
   function touchPair() {
     const [a, b] = [...touches.values()];
-    const box = canvas.getBoundingClientRect();
+    const box = inputBounds();
     return {
       distance: Math.hypot(a.x - b.x, a.y - b.y),
       x: (a.x + b.x) / 2 - box.left,
@@ -160,7 +170,7 @@ const MapCamera = (() => {
       if (touches.size >= 2) {
         event.preventDefault();
         const pair = touchPair(),
-          box = canvas.getBoundingClientRect(),
+          box = inputBounds(),
           old = geometry(box.width, box.height);
         pinch = {
           distance: Math.max(1, pair.distance),
@@ -194,7 +204,7 @@ const MapCamera = (() => {
       if (pinch && touches.size >= 2) {
         event.preventDefault();
         const pair = touchPair(),
-          box = canvas.getBoundingClientRect();
+          box = inputBounds();
         setZoom((pinch.zoom * pair.distance) / pinch.distance, pair.x, pair.y, box);
         const tile = baseTile(box.width, box.height) * zoom;
         centerX = pinch.cellX - (pair.x - box.width / 2) / tile;
@@ -252,15 +262,23 @@ const MapCamera = (() => {
     },
     true,
   );
-  window.addEventListener("resize", refresh);
+  window.addEventListener("resize", () => { invalidateBounds(); refresh(); });
+  window.addEventListener("scroll", invalidateBounds, true);
+  window.visualViewport?.addEventListener("scroll", invalidateBounds);
   if (window.ResizeObserver) new ResizeObserver(entries => {
     const box = entries[0]?.contentRect;
-    if (box && (box.width !== viewportSize?.width || box.height !== viewportSize?.height)) refresh(box);
+    if (box && (box.width !== viewportSize?.width || box.height !== viewportSize?.height)) {
+      invalidateBounds();
+      refresh(box);
+    }
   }).observe(canvas);
   byId("mapZoomIn").onclick = () => setZoom(zoom * zoomStep);
   byId("mapZoomOut").onclick = () => setZoom(zoom / zoomStep);
   byId("mapZoomReset").onclick = fit;
   return {
+    beginFrame: invalidateBounds,
+    inputBounds,
+    get isInteracting() { return !!(drag?.moved || pinch); },
     renderSize,
     geometry,
     frame,
@@ -272,13 +290,13 @@ const MapCamera = (() => {
       return zoomPercent() >= 50 - zoomEpsilon;
     },
     get unitThumbnails() {
-      return zoom <= minimumZoom + zoomEpsilon;
+      return zoomPercent() <= 10 + zoomEpsilon;
     },
     get zoomPercent() {
       return zoomPercent();
     },
     setPercent(value) {
-      const box = canvas.getBoundingClientRect();
+      const box = inputBounds();
       if (value <= 0) {
         setZoom(minimumZoom, undefined, undefined, box);
         setZoom(minimumZoom, undefined, undefined, box);

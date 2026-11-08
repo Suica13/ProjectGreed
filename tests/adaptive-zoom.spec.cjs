@@ -127,15 +127,17 @@ for (const input of ["mouse", "touch"]) {
   });
 }
 
-test("each percent change reads the viewport once before updating the zoom controls",async({page})=>{
+test("same-frame percent changes share viewport bounds while updating the zoom controls",async({page})=>{
  await page.goto(pathToFileURL(path.resolve("public/client.html")).href);await page.waitForFunction(()=>assetsReady);
  const rows=await page.evaluate(()=>{
    Net.leave();const e={unitId:"Type61",kitId:"standard"};game=Rules.create(false,1,[[e],[e]],false);
    phase="idle";mode="select";selected=null;moving=battleView=null;setPageView("game");MapCamera.fit();
    const canvas=byId("map"),read=canvas.getBoundingClientRect.bind(canvas);let count=0;
    canvas.getBoundingClientRect=()=>{count++;return read();};
+   MapCamera.beginFrame();
    try {return [25,50,100,0].map(percent=>{const before=count;MapCamera.setPercent(percent);return {percent,reads:count-before,label:byId("mapZoomLabel").textContent};});}
    finally {canvas.getBoundingClientRect=read;}
  });
- for(const row of rows){expect(row.reads).toBe(1);expect(row.label).toBe(row.percent+"%");}
+ expect(rows.reduce((sum,row)=>sum+row.reads,0)).toBe(1);
+ for(const row of rows){expect(row.reads).toBeLessThanOrEqual(1);expect(row.label).toBe(row.percent+"%");}
 });

@@ -138,7 +138,7 @@ const WeaponClasses = (() => {
               : ["small_vulcan", "close_defense"].includes(kind)
                 ? 0.75
                 : ["bazooka", "beam_bazooka", "panzerfaust"].includes(kind)
-                  ? 1.25
+                  ? 1.15
                   : kind === "melee"
                     ? 1.1
                     : 1,
@@ -174,7 +174,8 @@ const WeaponClasses = (() => {
         value: String(inherited(group[key])),
       })),
       { label: "分类伤害倍率", value: "×" + group.damage },
-      { label: "通用伤害倍率", value: "×" + global.damage },
+      { label: "通用伤害倍率", value: "×" + Math.max(0.01, global.damage + (!["melee", "ram"].includes(kind) ? global.shootingDamageOffset || 0 : 0)) },
+      ...(!["melee", "ram"].includes(kind) ? [{ label: "射击基础命中增减", value: String(global.shootingHitOffset || 0) }] : []),
       { label: "基础命中倍率", value: "×" + global.accuracy * group.accuracy },
       ...(shipCannon(weapon, weapon.shipWeapon) ? [{ label: "舰炮命中倍率", value: "×" + (global.shipCannonAccuracy ?? 0.85) }] : []),
       {

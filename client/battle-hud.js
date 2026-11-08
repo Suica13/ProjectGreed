@@ -17,9 +17,11 @@ const BattleHUD = (() => {
   byId("mapWrap").append(terrainInfo, byId("hudActionBand"));
   // Phase information and zoom share one flowing column, including translated text.
   const phaseControls = element("div", "hud-phase-controls");
-  phaseControls.append(scene.querySelector(".phase-row"));
+  phaseControls.append(scene.querySelector(".phase-row"), scene.querySelector(".map-camera-controls"));
+  // Playback tools get their own row; they must not stretch the zoom row.
+  phaseControls.append(phaseControls.querySelector("#mapCombatControls"));
   const topControls = element("div", "hud-top-controls");
-  topControls.append(scene.querySelector(".map-camera-controls"), byId("hudTurnActions"));
+  topControls.append(byId("hudTurnActions"));
   const topLine = element("div", "hud-top-line");
   topLine.append(phaseControls, topControls);
   byId("mapWrap").append(topLine);
@@ -236,6 +238,35 @@ const BattleHUD = (() => {
     else if (rosterOpen) toggleRoster(false);
     else clearSelection();
   });
+  let fps = null, fpsWindowStart = null, fpsFrames = 0;
+  function refreshPing() {
+    const text = "PING " +
+      (Net.local ? I18n.text("离线") : Net.pingMs === null ? "—" : Net.pingMs + " ms") +
+      " / FPS " + (fps ?? "—");
+    const label = byId("hudPing");
+    if (label.textContent !== text) label.textContent = text;
+  }
+  function resetFps() {
+    fps = fpsWindowStart = null;
+    fpsFrames = 0;
+    refreshPing();
+  }
+  function recordFrame(realTime) {
+    // Use the original RAF timestamp, independent of replay speed or game time.
+    if (fpsWindowStart === null || realTime < fpsWindowStart) {
+      fpsWindowStart = realTime;
+      fpsFrames = 0;
+      return;
+    }
+    fpsFrames++;
+    const elapsed = realTime - fpsWindowStart;
+    if (elapsed < 500) return;
+    fps = Math.round(fpsFrames * 1000 / elapsed);
+    fpsWindowStart = realTime;
+    fpsFrames = 0;
+    refreshPing();
+  }
+  document.addEventListener("visibilitychange", resetFps);
   function refreshRoomStatus() {
     const snapshot = Net.active ? Net.snapshot : null;
     const roomName = Net.local
@@ -244,8 +275,7 @@ const BattleHUD = (() => {
     const roomLabel = byId("hudRoomName");
     roomLabel.textContent = I18n.text("房间名") + ": " + roomName;
     roomLabel.title = roomName;
-    byId("hudPing").textContent =
-      "PING " + (Net.local ? I18n.text("离线") : Net.pingMs === null ? "—" : Net.pingMs + " ms");
+    refreshPing();
     const members = (snapshot?.members || []).filter((member) => member.connected);
     const players = members.filter((member) => member.seat !== null).length;
     const spectators = members.length - players;
@@ -284,10 +314,11 @@ const BattleHUD = (() => {
       squadUnit = reacting ? getUnit(pending.target) : unit,
       squad = squadUnit ? Rules.squadMembers(game, squadUnit) : [],
       responseMember = reacting ? counterDraft(squadUnit).memberId : null;
-    squadStrip.hidden =
-      !active || !squad.length || !squad.every(Rules.squadEligible) || !!pendingMovement() || (inCombat && !reacting);
+    const showSquad = active && squad.length && squad.every(Rules.squadEligible) && !pendingMovement() && (!inCombat || reacting);
+    const deploymentCarrier = active && phase === "deployment" && unit && Rules.hangars.of(unit).length > 0;
+    squadStrip.hidden = !showSquad && !deploymentCarrier;
     squadStrip.replaceChildren();
-    if (!squadStrip.hidden) {
+    if (showSquad) {
       const heading = element("strong", "", I18n.text("小队") + ` ${squad.length}/6 · ${squad.reduce((sum,u)=>sum+Rules.squadCapacity(u, game),0)}/6`);
       const members = element("div", "squad-members");
       const all = element("button", "", I18n.text("全队"));
@@ -331,6 +362,13 @@ const BattleHUD = (() => {
         };
         members.append(fight);
       }
+    }
+    if (deploymentCarrier) {
+      const hangar = element("button", "", "格纳库");
+      hangar.id = "hudDeploymentHangar";
+      hangar.disabled = !Deployment.canEditUnit(unit) && !Rules.hangars.cargo(game, unit).some(Deployment.canEditUnit);
+      hangar.onclick = () => HangarUI.open(unit);
+      squadStrip.append(hangar);
     }
     const regionId = Net.snapshot?.campaign?.activeRegion;
     const region =
@@ -540,7 +578,7 @@ const BattleHUD = (() => {
     applyTab();
     updateSquadClearance();
   }
-  window.BattleHUD = { refresh, refreshMovement, refreshRoomStatus, setTab, clearSelection };
+  window.BattleHUD = { refresh, refreshMovement, refreshRoomStatus, recordFrame, resetFps, setTab, clearSelection };
   refresh();
   return window.BattleHUD;
 })();
