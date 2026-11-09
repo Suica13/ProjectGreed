@@ -3,9 +3,9 @@ const dialogue=require("../client/battle-dialogue.js");
 test("carrier speaks first when boarding and launching",()=>{
  const carrier={id:"ship",pilot:{name:"舰长",personality:"strategic",originFaction:"EFSF"}};
  const passenger={id:"unit",pilot:{name:"机师",personality:"aggressive",originFaction:"EFSF"}};
- const board=dialogue.transport({event:"board",speaker:carrier,target:passenger,sequence:3});
- const launch=dialogue.transport({event:"launch",speaker:carrier,target:passenger,sequence:3});
- const preload=dialogue.transport({event:"preload",speaker:carrier,target:passenger,sequence:3,preloaded:true});
+ const first = event => Array.from({length:64}, (_,sequence) =>
+   dialogue.transport({event,speaker:carrier,target:passenger,sequence,preloaded:event==="preload"})).find(Boolean);
+ const board=first("board"), launch=first("launch"), preload=first("preload");
  assert.equal(board.speakerId,"ship");
  assert.equal(launch.speakerId,"ship");
  assert.equal(preload.preloaded,true);

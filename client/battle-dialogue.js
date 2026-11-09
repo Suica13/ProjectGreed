@@ -142,6 +142,7 @@ const BattleDialogue = (() => {
     const pilot=speaker.pilot || {};
     const trait=personality(pilot);
     const seed=hash([speaker.id,target.id,event,sequence].join(":"));
+    if ((seed >>> 16) % 2) return null;
     const pool=transportLines[event][trait];
     const text=pool[seed % pool.length];
     return { event, speakerId:speaker.id, targetId:target.id,
@@ -187,6 +188,7 @@ const BattleDialogue = (() => {
     const background = typeof pilot.background === "string" ? pilot.background.slice(0, 160) : "";
     const identity = pilot.id || pilot.name || speaker.id;
     const seed = hash([identity, target?.id, event, sequence].join(":"));
+    if (event !== "reply" && (seed >>> 16) % 2) return null;
     // Suppress most routine remarks to avoid flooding the battlefield and transcript.
     if (event === "taunt" && seed % 5 !== 0) return null;
     if (event === "reply" && seed % 3 !== 0) return null;

@@ -11,8 +11,8 @@ android {
         minSdk 26
         targetSdk 35
         testInstrumentationRunner 'io.projectgreed.apptest2.StoreInstrumentation'
-        versionCode 109001
-        versionName 'V109'
+        versionCode 110001
+        versionName 'V110'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17

@@ -20,6 +20,20 @@ const DialogueRange = (() => {
   function eligible(speaker, target, lookup = () => null) {
     return nearby(speaker, target, lookup);
   }
-  return { radius, position, nearby, eligible };
+  const speakingCells = new WeakMap();
+  function claimCell(game, pos) {
+    if (!pos) return true;
+    const turn = game.round + ":" + game.team;
+    let state = speakingCells.get(game);
+    if (state?.turn !== turn) {
+      state = { turn, cells: new Set() };
+      speakingCells.set(game, state);
+    }
+    const cell = pos.x + "," + pos.y;
+    if (state.cells.has(cell)) return false;
+    state.cells.add(cell);
+    return true;
+  }
+  return { radius, position, nearby, eligible, claimCell };
 })();
 if (typeof module !== "undefined") module.exports = DialogueRange;

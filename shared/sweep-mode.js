@@ -332,15 +332,17 @@ const SweepMode = (() => {
     room.returnAt = null;
     room.returnCountdown = null;
   }
+  function enemyLimits(room) {
+    return {
+      costLimit: Math.floor(room.settings.costLimit / 2),
+      unitCostLimit: Math.floor(room.settings.unitCostLimit * (room.sweep?.elite ? 1.25 : 0.75)),
+    };
+  }
   function enemies(room, G, seed) {
-    const s = room.sweep;
-    const total = Object.values(s.rosters)
-      .flat()
-      .reduce((sum, r) => sum + G.formationModel(r.entry).cost, 0);
-    const factor = Math.min(2.5, 0.65 + s.depth * 0.06) * (s.elite ? 1.45 : 1);
+    const limits = enemyLimits(room);
     return G.randomFormation(
       seed,
-      Math.max(250, Math.min(99999, Math.round(total * factor))),
+      limits.costLimit,
       {
         ...G.validateTagRestrictions({
           bannedFactions: [
@@ -354,12 +356,12 @@ const SweepMode = (() => {
         }),
         characterFaction: null,
         aiAllowedEras: [room.settings.sweepEra],
-        unitCostLimit: Math.round(room.settings.unitCostLimit * (s.elite ? 1.5 : 1)),
+        unitCostLimit: limits.unitCostLimit,
         environment: G.getMap(room.settings.mapId).environment,
       },
       G.catalog.formation.maxUnits,
     );
   }
-  return { events, rows, init, view, select, arrived, event, finish, checkpoint, enemies, save };
+  return { events, rows, init, view, select, arrived, event, finish, checkpoint, enemyLimits, enemies, save };
 })();
 if (typeof module !== "undefined") module.exports = SweepMode;

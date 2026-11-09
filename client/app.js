@@ -207,6 +207,15 @@ function addLog(text) {
   log.unshift(text);
   Chat.setLog(log);
 }
+let nextDialogueStart = 0;
+function queueDialogueBubble(record) {
+  const pos = record.position;
+  for (const bubble of dialogueBubbles.values()) {
+    if (pos && bubble.position?.x === pos.x && bubble.position?.y === pos.y) return;
+  }
+  if (!dialogueBubbles.has(record.speakerId))
+    dialogueBubbles.set(record.speakerId, { ...record, until: 0 });
+}
 function recordBattleDialogue(event, speaker, target) {
   if (typeof BattleDialogue === "undefined" || Net.active) return;
   if (!["kill", "defeat"].includes(event) && typeof DialogueRange !== "undefined" && !DialogueRange.eligible(speaker, target, getUnit)) return;
@@ -217,11 +226,11 @@ function recordBattleDialogue(event, speaker, target) {
   if (!record) return;
   record.unitName = Rules.unitLogName(speaker);
   record.position = DialogueRange.position(speaker, getUnit);
+  if (!DialogueRange.claimCell(game, record.position)) return;
   const line = BattleDialogue.format(record);
   dialogueHistory.push({ ...record, line, logIndex: log.length, round: game.round });
   if (!ClientSettings.hidePilotDialogue()) {
-    dialogueBubbles.set(record.speakerId, { text: record.text, pilotName: record.pilotName, position: record.position, defeatUnitId: record.defeatUnitId, voiceRecord: record.defeatUnitId ? record : null, until: 0 });
-    if (!record.defeatUnitId && typeof DialogueAudio !== "undefined") DialogueAudio.play(record);
+    queueDialogueBubble(record);
   }
   addLog(line);
 }
@@ -241,8 +250,7 @@ globalThis.receiveBattleDialogue = function (events = [], matchId = "") {
   lastNetworkDialogueId = identity;
   for (const record of added) {
     if (ClientSettings.hidePilotDialogue()) continue;
-    dialogueBubbles.set(record.speakerId, { text: record.text, pilotName: record.pilotName, position: record.position, defeatUnitId: record.defeatUnitId, voiceRecord: record.defeatUnitId ? record : null, until: 0 });
-    if (!record.defeatUnitId && typeof DialogueAudio !== "undefined") DialogueAudio.play(record);
+    queueDialogueBubble(record);
   }
 };
 function playerNameClass(memberId, hostId = Net.snapshot?.hostId, selfId = Net.memberId) {
@@ -2496,11 +2504,12 @@ function drawDialogueBubbles(ctx, poses, intel, width, height, now, labelsVisibl
     if (bubble.defeatUnitId && Net.snapshot?.phase === "playback") {
       if (!battleView || battleView.networkId !== Net.snapshot.playback?.id || MapCombat.health(bubble.defeatUnitId) > 0) continue;
     }
-    if (bubble.voiceRecord) {
-      if (typeof DialogueAudio !== "undefined") DialogueAudio.play(bubble.voiceRecord);
-      bubble.voiceRecord = null;
+    if (!bubble.until) {
+      if (now < nextDialogueStart) continue;
+      nextDialogueStart = now + 350 + Math.random() * 350;
+      bubble.until = now + 4500;
+      if (typeof DialogueAudio !== "undefined") DialogueAudio.play(bubble);
     }
-    if (!bubble.until) bubble.until = now + 4500;
     if (bubble.until <= now) {
       dialogueBubbles.delete(id);
       continue;

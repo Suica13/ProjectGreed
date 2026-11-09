@@ -2,7 +2,7 @@
 
 > 按武器类型和技能机制整理的现行规则，由 tools/export-combat-rules.cjs 维护和生成。
 
-规则指纹：`6a786e4a2fc6c5c570db413431a9d1864a7fd13ed87cc91d4876cffa4e27d912`。
+规则指纹：`bea943779bc34ab7b6c9519629ed07551e8075c936b75d53b1dd894adf389abc`。
 
 ## 数值取整
 

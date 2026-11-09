@@ -2,8 +2,10 @@ const {test}=require("node:test"), assert=require("node:assert/strict");
 const dialogue=require("../client/battle-dialogue.js");
 test("dialogue is deterministic and respects pilot personality",()=>{
  const speaker={id:"u1",pilot:{id:"p1",name:"驾驶员",faction:"TITANS",personality:"cautious"}};
- const a=dialogue.generate({event:"kill",speaker,sequence:3});
- const b=dialogue.generate({event:"kill",speaker,sequence:3});
+ const samples=Array.from({length:1000},(_,sequence)=>dialogue.generate({event:"kill",speaker,sequence})).filter(Boolean);
+ assert.ok(samples.length > 400 && samples.length < 600);
+ const a=samples[0];
+ const b=dialogue.generate({event:"kill",speaker,sequence:a.sequence});
  assert.deepEqual(a,b);
  assert.equal(a.personality,"cautious");
  assert.equal(a.faction,"TITANS");

@@ -1738,6 +1738,7 @@ function createRoomEngine({
     entry.defeatUnitId = defeatUnitId;
     entry.unitName = G.unitLogName(speaker);
     entry.position = radioRange.position(speaker, (id) => unit(room, id));
+    if (!radioRange.claimCell(room.game, entry.position)) return;
     entry.positionTeams = logTeamIds(room).filter(
       (team) => speaker.team === team || visibleBefore[team]?.includes(speaker.id),
     );
@@ -2561,7 +2562,7 @@ function createRoomEngine({
   }
   const playerBudget = (room, player) =>
     player?.sweepEnemy
-      ? 99999
+      ? Sweep.enemyLimits(room).costLimit
       : player?.battlefieldAI
         ? 10000
         : G.armyBudget(room.settings, formationPlayer(room, player));
@@ -2634,7 +2635,7 @@ function createRoomEngine({
           ]),
         ],
         aiAllowedEras: [room.settings.sweepEra],
-        unitCostLimit: Math.round(room.settings.unitCostLimit * (room.sweep?.elite ? 1.5 : 1)),
+        unitCostLimit: Sweep.enemyLimits(room).unitCostLimit,
       });
     if (player?.battlefieldAI) {
       Object.assign(rules, G.validateTagRestrictions());
@@ -2663,20 +2664,7 @@ function createRoomEngine({
   const previewArmies = new Map();
   function randomArmy(room, player, seed = randomSeed()) {
     if (player.sweepEnemy)
-      return room.sweep
-        ? player.formation
-        : G.randomFormation(
-            seed,
-            room.settings.costLimit,
-            {
-              characterFaction: null,
-              bannedFactions: G.factions.filter((f) => f !== room.settings.sweepFaction),
-              aiAllowedEras: [room.settings.sweepEra],
-              unitCostLimit: room.settings.unitCostLimit,
-              environment: G.getMap(room.settings.mapId).environment,
-            },
-            room.settings.unitLimit,
-          );
+      return room.sweep ? player.formation : Sweep.enemies(room, G, seed);
     if (player.battlefieldAI) {
       const faction = room.settings.battlefieldTeams[player.seat].faction;
       const unitId = faction === "EFSF" ? "Type61" : "MTank";
@@ -3788,6 +3776,7 @@ function createRoomEngine({
       sequence,
       preloaded,
     });
+    if (!first) return;
     const response = Dialogue.transportReply({
       event,
       speaker: passenger,
@@ -3804,6 +3793,7 @@ function createRoomEngine({
       const speaker = participants.find((actor) => actor.id === entry.speakerId);
       entry.unitName = G.unitLogName(speaker);
       entry.position = radioRange.position(speaker, (id) => unit(room, id));
+      if (!radioRange.claimCell(room.game, entry.position)) continue;
       entry.positionTeams = logTeamIds(room).filter(
         (team) => speaker.team === team || (visibleBefore?.[team] || []).includes(speaker.id),
       );
