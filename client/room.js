@@ -24,30 +24,51 @@ const RoomPanel = (() => {
       fogMode: Rules.validateFogMode(settings.fogMode),
       shareAlliedUnits: settings.shareAlliedUnits,
       pilotPolicy: Rules.validatePilotPolicy(settings.pilotPolicy),
-      ...Rules.validateTagRestrictions(Object.fromEntries(
-        ["bannedFactions", "bannedEras", "bannedTypes"].map(key => [key, settings[key]])
-      )),
+      ...Rules.validateTagRestrictions(
+        Object.fromEntries(
+          ["bannedFactions", "bannedEras", "bannedTypes"].map((key) => [key, settings[key]]),
+        ),
+      ),
       teamRestrictions: Rules.validateTeamRestrictions(settings.teamRestrictions),
-      ...(settings.battlefieldTeams ? {battlefieldTeams:Rules.battlefieldMode.teams(Rules,settings.battlefieldTeams), battlefieldEra:Rules.battlefieldMode.roomEra(settings)} : {}),
+      ...(settings.battlefieldTeams
+        ? {
+            battlefieldTeams: Rules.battlefieldMode.teams(Rules, settings.battlefieldTeams),
+            battlefieldEra: Rules.battlefieldMode.roomEra(settings),
+          }
+        : {}),
     };
   }
   let savedPresets = [];
   try {
     const stored = JSON.parse(localStorage.getItem(presetStorageKey) || "[]");
-    if (Array.isArray(stored)) for (const item of stored.slice(0, 30)) {
-      try {
-        if (typeof item.name !== "string" || !item.name.trim() || item.name.length > 40 ||
-            typeof item.id !== "string" || !/^saved-[a-z0-9-]{1,80}$/.test(item.id) ||
-            savedPresets.some(p => p.id === item.id || p.name === item.name.trim())) continue;
-        const rules = presetRules(item.rules);
-        // Keep old numeric presets usable when built-in scale templates change.
-        if (rules.battlefieldTeams && rules.battlefieldEra !== "custom" &&
-            !Rules.battlefieldMode.roomPreset({ ...rules, mode: "battlefield" }))
-          rules.battlefieldEra = "custom";
-        savedPresets.push({id:item.id, name:item.name.trim(), rules});
-      } catch { /* Ignore an invalid entry without losing other saved presets. */ }
-    }
-  } catch { /* A damaged browser setting must not prevent room creation. */ }
+    if (Array.isArray(stored))
+      for (const item of stored.slice(0, 30)) {
+        try {
+          if (
+            typeof item.name !== "string" ||
+            !item.name.trim() ||
+            item.name.length > 40 ||
+            typeof item.id !== "string" ||
+            !/^saved-[a-z0-9-]{1,80}$/.test(item.id) ||
+            savedPresets.some((p) => p.id === item.id || p.name === item.name.trim())
+          )
+            continue;
+          const rules = presetRules(item.rules);
+          // Keep old numeric presets usable when built-in scale templates change.
+          if (
+            rules.battlefieldTeams &&
+            rules.battlefieldEra !== "custom" &&
+            !Rules.battlefieldMode.roomPreset({ ...rules, mode: "battlefield" })
+          )
+            rules.battlefieldEra = "custom";
+          savedPresets.push({ id: item.id, name: item.name.trim(), rules });
+        } catch {
+          /* Ignore an invalid entry without losing other saved presets. */
+        }
+      }
+  } catch {
+    /* A damaged browser setting must not prevent room creation. */
+  }
   function savedPresetOptions() {
     const select = byId("roomFormationPreset");
     select.querySelector("optgroup[data-saved-presets]")?.remove();
@@ -65,22 +86,29 @@ const RoomPanel = (() => {
   savedPresetOptions();
   function showFormationPreset(settings) {
     const values = ["costLimit", "unitCostLimit", "unitLimit"].map(
-      key => numericDrafts[key] ?? settings[key],
+      (key) => numericDrafts[key] ?? settings[key],
     );
     let saved;
     try {
-      const current = presetRules({...settings, ...Object.fromEntries(
-        ["costLimit", "unitCostLimit", "unitLimit"].map((key, i) => [key, Number(values[i])])
-      )});
-      saved = savedPresets.find(p => JSON.stringify(p.rules) === JSON.stringify(current));
-    } catch { /* An unfinished numeric input is a custom draft. */ }
+      const current = presetRules({
+        ...settings,
+        ...Object.fromEntries(
+          ["costLimit", "unitCostLimit", "unitLimit"].map((key, i) => [key, Number(values[i])]),
+        ),
+      });
+      saved = savedPresets.find((p) => JSON.stringify(p.rules) === JSON.stringify(current));
+    } catch {
+      /* An unfinished numeric input is a custom draft. */
+    }
     const preset = values.join(",");
-    byId("roomFormationPreset").value = saved?.id || (formationPresets.has(preset) ? preset : "custom");
+    byId("roomFormationPreset").value =
+      saved?.id || (formationPresets.has(preset) ? preset : "custom");
     byId("deleteRoomPreset").disabled = !saved || byId("roomFormationPreset").disabled;
   }
   const joinButtons = [byId("joinTeam1"), byId("joinTeam2")];
   let detail = null;
-  let reconnectTimer = null, reconnectLabels = [];
+  let reconnectTimer = null,
+    reconnectLabels = [];
   function stopReconnectCountdowns() {
     clearInterval(reconnectTimer);
     reconnectTimer = null;
@@ -129,6 +157,74 @@ const RoomPanel = (() => {
     return badge;
   }
 
+  function drawSweepCover() {
+    const canvas = byId("roomMapPreview"),
+      ctx = canvas.getContext("2d");
+    canvas.width = 520;
+    canvas.height = 190;
+    ctx.fillStyle = "#162735";
+    ctx.fillRect(0, 0, 520, 190);
+    ctx.strokeStyle = "#213b4b";
+    ctx.lineWidth = 1;
+    for (let x = 0; x < 520; x += 26) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, 190);
+      ctx.stroke();
+    }
+    for (let y = 0; y < 190; y += 26) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(520, y);
+      ctx.stroke();
+    }
+    const nodes = [
+      [310, 150],
+      [380, 110],
+      [450, 150],
+      [310, 65],
+      [380, 25],
+      [450, 65],
+    ];
+    ctx.strokeStyle = "#718c96";
+    ctx.lineWidth = 2;
+    for (const [a, b] of [
+      [0, 1],
+      [1, 2],
+      [0, 3],
+      [1, 3],
+      [1, 5],
+      [2, 5],
+      [3, 4],
+      [4, 5],
+    ]) {
+      ctx.beginPath();
+      ctx.moveTo(...nodes[a]);
+      ctx.lineTo(...nodes[b]);
+      ctx.stroke();
+    }
+    nodes.forEach(([x, y], i) => {
+      ctx.beginPath();
+      ctx.arc(x, y, 12, 0, Math.PI * 2);
+      ctx.fillStyle = i === 0 ? "#d8ba72" : "#3a6275";
+      ctx.fill();
+      ctx.strokeStyle = "#a6c7ce";
+      ctx.stroke();
+    });
+    ctx.textAlign = "left";
+    ctx.fillStyle = "#a4bac7";
+    ctx.font = "13px sans-serif";
+    ctx.fillText("PMC / OPERATIONS", 24, 44);
+    ctx.fillStyle = "#e0edf3";
+    ctx.font = "bold 30px sans-serif";
+    ctx.fillText(I18n.text("战场扫荡"), 24, 100, 265);
+    ctx.fillStyle = "#99b9c9";
+    ctx.font = "14px sans-serif";
+    ctx.fillText("PVE · PMC", 25, 136);
+    canvas.setAttribute("aria-label", I18n.text("战场扫荡"));
+    byId("roomMapTitle").textContent = I18n.text("战场扫荡");
+    byId("roomMapInfo").textContent = I18n.text("合约模式") + " · " + I18n.text("战场扫荡");
+  }
   function drawMap(map) {
     const canvas = byId("roomMapPreview"),
       ctx = canvas.getContext("2d");
@@ -260,8 +356,10 @@ const RoomPanel = (() => {
     const customScale = byId("battlefieldCustomScale");
     const formationRules = byId("roomFormationRules");
     const destination = battlefield ? customScale : formationRules;
-    for (const controls of [byId("roomFormationPreset").closest(".room-formation-options"),
-        byId("roomPresetName").closest(".room-preset-editor")]) {
+    for (const controls of [
+      byId("roomFormationPreset").closest(".room-formation-options"),
+      byId("roomPresetName").closest(".room-preset-editor"),
+    ]) {
       if (controls.parentElement !== destination) destination.append(controls);
     }
     formationRules.hidden = battlefield || settings.mode === "campaign";
@@ -270,58 +368,96 @@ const RoomPanel = (() => {
     panel.replaceChildren();
     const mode = Rules.battlefieldMode;
     const config = mode.teams(Rules, settings.battlefieldTeams);
-    const era = mode.roomEra(settings), custom = era === "custom";
+    const era = mode.roomEra(settings),
+      custom = era === "custom";
     customScale.hidden = !custom;
     function selectRow(parent, id, label, choices, value, change) {
-      const row = element("label", "", label), select = element("select");
+      const row = element("label", "", label),
+        select = element("select");
       select.id = id;
       for (const [key, text] of choices) select.add(new Option(I18n.text(text), key));
-      select.value = value; select.disabled = locked;
+      select.value = value;
+      select.disabled = locked;
       select.onchange = () => change(select.value);
-      row.append(select); parent.append(row);
+      row.append(select);
+      parent.append(row);
       return row;
     }
     function applyPreset(id, selectedEra = era) {
       clearTimeout(numericSettingsTimer);
-      numericSettingsTimer = null; queuedNumericSettings = {}; submittedNumericSettings = null;
+      numericSettingsTimer = null;
+      queuedNumericSettings = {};
+      submittedNumericSettings = null;
       numericDrafts.costLimit = numericDrafts.unitCostLimit = numericDrafts.unitLimit = null;
-      sendSettings({...mode.presetSettings(id, config, Rules.eras), battlefieldEra:selectedEra});
+      sendSettings({ ...mode.presetSettings(id, config, Rules.eras), battlefieldEra: selectedEra });
     }
-    const eraRow = selectRow(panel, "battlefieldEra", "年代",
-      [...mode.eras.map(value => [value, value]), ["custom", "自定义"]], era, value => {
-        if (value === "custom") sendSettings({battlefieldEra:"custom"});
+    const eraRow = selectRow(
+      panel,
+      "battlefieldEra",
+      "年代",
+      [...mode.eras.map((value) => [value, value]), ["custom", "自定义"]],
+      era,
+      (value) => {
+        if (value === "custom") sendSettings({ battlefieldEra: "custom" });
         else {
           const size = mode.roomPreset(settings)?.id.split("-")[1] || "standard";
           applyPreset(value + "-" + size, value);
         }
-      });
+      },
+    );
     eraRow.style.gridColumn = "1 / -1";
     for (const team of [0, 1]) {
       const group = element("fieldset", "battlefield-team-options");
       group.append(element("legend", "", "队伍" + (team + 1) + " · 固定阵营 AI"));
-      const factions = mode.factions.filter(faction => custom || mode.erasForFaction(Rules, faction).includes(era));
-      selectRow(group, "battlefieldTeam" + team + "faction", "阵营",
-        factions.map(value => [value, value]), config[team].faction, value => {
+      const factions = mode.factions.filter(
+        (faction) => custom || mode.erasForFaction(Rules, faction).includes(era),
+      );
+      selectRow(
+        group,
+        "battlefieldTeam" + team + "faction",
+        "阵营",
+        factions.map((value) => [value, value]),
+        config[team].faction,
+        (value) => {
           config[team].faction = value;
           const available = mode.erasForFaction(Rules, value);
           if (!available.includes(config[team].era)) config[team].era = available[0];
-          sendSettings({battlefieldTeams:config});
-        });
-      if (custom) selectRow(group, "battlefieldTeam" + team + "era", "年代上限",
-        mode.erasForFaction(Rules, config[team].faction).map(value => [value, value]),
-        config[team].era, value => {
-          config[team].era = value;
-          sendSettings({battlefieldTeams:config});
-        });
+          sendSettings({ battlefieldTeams: config });
+        },
+      );
+      if (custom)
+        selectRow(
+          group,
+          "battlefieldTeam" + team + "era",
+          "年代上限",
+          mode.erasForFaction(Rules, config[team].faction).map((value) => [value, value]),
+          config[team].era,
+          (value) => {
+            config[team].era = value;
+            sendSettings({ battlefieldTeams: config });
+          },
+        );
       group.classList.toggle("battlefield-fixed-era", !custom);
       panel.append(group);
     }
     const preset = mode.roomPreset(settings);
-    const presets = mode.roomPresets.filter(item => custom || item.era === era);
-    const scaleRow = selectRow(panel, "battlefieldScalePreset", "作战规模模板",
-      [...(custom ? [["custom", "自定义"]] : []), ...presets.map(item => [item.id,
-        `${custom ? item.era + " · " : ""}${I18n.text(item.name)} · ${item.costLimit}/${item.unitCostLimit}/${item.unitLimit}`])],
-      preset?.id || "custom", id => { if (id !== "custom") applyPreset(id); });
+    const presets = mode.roomPresets.filter((item) => custom || item.era === era);
+    const scaleRow = selectRow(
+      panel,
+      "battlefieldScalePreset",
+      "作战规模模板",
+      [
+        ...(custom ? [["custom", "自定义"]] : []),
+        ...presets.map((item) => [
+          item.id,
+          `${custom ? item.era + " · " : ""}${I18n.text(item.name)} · ${item.costLimit}/${item.unitCostLimit}/${item.unitLimit}`,
+        ]),
+      ],
+      preset?.id || "custom",
+      (id) => {
+        if (id !== "custom") applyPreset(id);
+      },
+    );
     scaleRow.style.gridColumn = "1 / -1";
     const reward = element("p", "muted");
     reward.id = "battlefieldEntryReward";
@@ -418,8 +554,10 @@ const RoomPanel = (() => {
     const mapSelect = byId("roomMapSelect");
     mapSelect.replaceChildren();
     for (const map of Object.values(Rules.catalog.maps).filter(
-      (map) => settings.mode !== "campaign" && map.scope !== "strategic" &&
-        (map.supportedModes || ["regular", "quick"]).includes(settings.mode==="sweep"?"regular":settings.mode || "regular"),
+      (map) =>
+        settings.mode !== "campaign" &&
+        map.scope !== "strategic" &&
+        (map.supportedModes || ["regular", "quick"]).includes(settings.mode || "regular"),
     )) {
       mapSelect.add(new Option(map.name, map.id));
     }
@@ -433,27 +571,49 @@ const RoomPanel = (() => {
       numericSettingsTimer = null;
     }
     mapSelect.value = settings.mapId;
+    mapSelect.hidden = settings.mode === "sweep";
+    byId("roomMapChoiceHint").hidden = settings.mode === "sweep";
     byId("roomUnitLimit").value = numericDrafts.unitLimit ?? settings.unitLimit;
     byId("roomCostLimit").value = numericDrafts.costLimit ?? settings.costLimit;
     byId("roomUnitCostLimit").value = numericDrafts.unitCostLimit ?? settings.unitCostLimit;
     const locked = snapshot.started || snapshot.you?.id !== snapshot.hostId || busy;
     showFormationPreset(settings);
-    let sweepOptions=byId("sweepRoomOptions");
-    if(!sweepOptions){sweepOptions=element("fieldset");sweepOptions.id="sweepRoomOptions";byId("roomFormationRules").after(sweepOptions);}
-    sweepOptions.hidden=settings.mode!=="sweep";sweepOptions.replaceChildren();
-    if(settings.mode==="sweep") {
-      sweepOptions.append(element("legend","","战场扫荡 · 敌军设置"));
-      for(const [key,name,values]of [["sweepFaction","敌军阵营",Rules.factions],["sweepEra","敌军年代",Rules.eras]]) {
-        const label=element("label","",name),select=document.createElement("select");
-        for(const value of values)select.add(new Option(value,value));select.value=settings[key];select.disabled=locked;
-        select.onchange=()=>sendSettings({[key]:select.value});label.append(select);sweepOptions.append(label);
+    let sweepOptions = byId("sweepRoomOptions");
+    if (!sweepOptions) {
+      sweepOptions = element("fieldset");
+      sweepOptions.id = "sweepRoomOptions";
+      byId("roomFormationRules").after(sweepOptions);
+    }
+    sweepOptions.hidden = settings.mode !== "sweep";
+    sweepOptions.replaceChildren();
+    if (settings.mode === "sweep") {
+      sweepOptions.append(element("legend", "", "战场扫荡 · 敌军设置"));
+      for (const [key, name, values] of [
+        ["sweepFaction", "敌军阵营", Rules.factions],
+        ["sweepEra", "敌军年代", Rules.eras],
+      ]) {
+        const label = element("label", "", name),
+          select = document.createElement("select");
+        for (const value of values) select.add(new Option(value, value));
+        select.value = settings[key];
+        select.disabled = locked;
+        select.onchange = () => sendSettings({ [key]: select.value });
+        label.append(select);
+        sweepOptions.append(label);
       }
-      sweepOptions.append(element("p","helper","纯PVE；敌军按实际出战COST与推进深度生成，精英战增加精锐部队。战利品仅在撤离时结算。"));
+      sweepOptions.append(
+        element(
+          "p",
+          "helper",
+          "纯PVE；敌军按实际出战COST与推进深度生成，精英战增加精锐部队。战利品仅在撤离时结算。",
+        ),
+      );
     }
     byId("roomFormationPreset").disabled = locked;
     byId("roomPresetName").disabled = locked;
     byId("saveRoomPreset").disabled = locked;
-    byId("deleteRoomPreset").disabled = locked || !savedPresets.some(p => p.id === byId("roomFormationPreset").value);
+    byId("deleteRoomPreset").disabled =
+      locked || !savedPresets.some((p) => p.id === byId("roomFormationPreset").value);
     byId("roomShareAlliedUnits").value = settings.shareAlliedUnits ? "enabled" : "disabled";
     byId("roomShareAlliedUnits").disabled = locked;
     byId("roomFogMode").value = settings.fogMode || "full";
@@ -465,14 +625,29 @@ const RoomPanel = (() => {
     byId("roomWeatherCycle").value = settings.weatherCycle === false ? "disabled" : "enabled";
     byId("roomTimeCycle").value = settings.timeCycle === false ? "disabled" : "enabled";
     byId("roomClimateBuffs").value = settings.climateBuffs === false ? "disabled" : "enabled";
-    const spaceMap = (() => { try { return Rules.getMap(settings.mapId).environment === "space"; } catch { return false; } })();
-    for (const id of ["roomPilotDialogue","roomWeather","roomDayNight","roomWeatherCycle","roomTimeCycle","roomClimateBuffs"]) byId(id).disabled = locked || (spaceMap && id !== "roomPilotDialogue");
+    const spaceMap = (() => {
+      try {
+        return Rules.getMap(settings.mapId).environment === "space";
+      } catch {
+        return false;
+      }
+    })();
+    for (const id of [
+      "roomPilotDialogue",
+      "roomWeather",
+      "roomDayNight",
+      "roomWeatherCycle",
+      "roomTimeCycle",
+      "roomClimateBuffs",
+    ])
+      byId(id).disabled = locked || (spaceMap && id !== "roomPilotDialogue");
     byId("roomPilotPolicy").value = settings.pilotPolicy || "allow";
     byId("roomPilotPolicy").disabled = locked;
     byId("roomPilotPolicy").closest("label").hidden = settings.mode === "campaign";
     byId("roomBattleMode").value = settings.mode || "regular";
     for (const id of ["roomMapSelect", "roomFogMode", "roomBattleMode"])
-      byId(id).disabled = locked || (id === "roomMapSelect" && !!snapshot.loadedSave);
+      byId(id).disabled =
+        locked || (id === "roomMapSelect" && (!!snapshot.loadedSave || settings.mode === "sweep"));
     byId("roomMapChoiceHint").textContent = I18n.text(
       snapshot.loadedSave ? "存档地图已锁定" : locked ? "地图由房主选择" : "点击名称更换地图",
     );
@@ -515,7 +690,7 @@ const RoomPanel = (() => {
     const strategic = settings.mode === "campaign";
     byId("roomScenarioSelect").hidden = !strategic;
     byId("roomScenarioSelect").disabled = locked;
-    mapSelect.hidden = strategic;
+    mapSelect.hidden = strategic || settings.mode === "sweep";
     byId("roomFormationRules").hidden = strategic || settings.mode === "battlefield";
     byId("roomTagRestrictions").closest("details").hidden = strategic;
     teamRulesPanel.closest("details").hidden = settings.mode !== "quick";
@@ -544,7 +719,8 @@ const RoomPanel = (() => {
         I18n.text("个区域") +
         " · EFSF / ZEON";
       byId("roomMapChoiceHint").textContent = I18n.text("战役剧本");
-    } else drawMap(Rules.getMap(mapSelect.value));
+    } else if (settings.mode === "sweep") drawSweepCover();
+    else drawMap(Rules.getMap(mapSelect.value));
   }
   function closeDetail() {
     detail = null;
@@ -723,7 +899,10 @@ const RoomPanel = (() => {
     seatRow.append(label, move);
     seatSection.append(seatRow);
     content.append(seatSection);
-    if ((player.bot || player.id !== snapshot.you.id) && !(snapshot.settings.mode === "battlefield" && player.bot && player.seat < 2)) {
+    if (
+      (player.bot || player.id !== snapshot.you.id) &&
+      !(snapshot.settings.mode === "battlefield" && player.bot && player.seat < 2)
+    ) {
       const actionSection = element("section", "room-detail-section room-detail-danger");
       actionSection.append(element("h3", "", player.bot ? "移除 AI" : "玩家操作"));
       const remove = element("button", "danger", player.bot ? "移除 AI" : "踢出玩家");
@@ -886,27 +1065,51 @@ const RoomPanel = (() => {
         image.src = unitIcon(id, entry.customPilot);
         image.alt = model.name;
         icon.append(image);
-        const editable = player.memberId === snapshot.you?.id && !player.ready && !snapshot.loadedSave && !player.assignedPreset;
+        const editable =
+          player.memberId === snapshot.you?.id &&
+          !player.ready &&
+          !snapshot.loadedSave &&
+          !player.assignedPreset;
         icon.draggable = editable;
         if (editable) {
-          icon.ondragstart = event => event.dataTransfer.setData("application/x-projectgreed-formation", JSON.stringify({memberId:player.memberId,index}));
+          icon.ondragstart = (event) =>
+            event.dataTransfer.setData(
+              "application/x-projectgreed-formation",
+              JSON.stringify({ memberId: player.memberId, index }),
+            );
           if (model.hangars?.length) {
-            icon.ondragover = event => { event.preventDefault(); event.dataTransfer.dropEffect="move"; };
-            icon.ondrop = event => {
+            icon.ondragover = (event) => {
+              event.preventDefault();
+              event.dataTransfer.dropEffect = "move";
+            };
+            icon.ondrop = (event) => {
               event.preventDefault();
               try {
-                const source = JSON.parse(event.dataTransfer.getData("application/x-projectgreed-formation"));
-                if (source.memberId !== player.memberId || !Number.isInteger(source.index) || !player.entries[source.index] || source.index === index)
+                const source = JSON.parse(
+                  event.dataTransfer.getData("application/x-projectgreed-formation"),
+                );
+                if (
+                  source.memberId !== player.memberId ||
+                  !Number.isInteger(source.index) ||
+                  !player.entries[source.index] ||
+                  source.index === index
+                )
                   throw Error("请选择自己的其他单位进行搭载");
                 let formation = null;
                 for (const hangar of model.hangars) {
                   const next = structuredClone(player.entries);
-                  next[source.index].preload = {carrierIndex:index,hangarId:hangar.id};
-                  try { Rules.validateFormation(next,Infinity,Rules.catalog.formation.maxUnits); formation=next; break; } catch {}
+                  next[source.index].preload = { carrierIndex: index, hangarId: hangar.id };
+                  try {
+                    Rules.validateFormation(next, Infinity, Rules.catalog.formation.maxUnits);
+                    formation = next;
+                    break;
+                  } catch {}
                 }
                 if (!formation) throw Error("格纳库不兼容或剩余容量不足");
-                Net.request("update_formation",{formation});
-              } catch(error) { note(error.message); }
+                Net.request("update_formation", { formation });
+              } catch (error) {
+                note(error.message);
+              }
             };
           }
         }
@@ -922,19 +1125,19 @@ const RoomPanel = (() => {
                 ? "驾驶员被禁用，请解除配属"
                 : player.reasons?.[index] === "stock"
                   ? "机体库存不足"
-                    : player.reasons?.[index] === "license"
-                      ? "未许可"
-                      : player.reasons?.[index] === "wip"
-                        ? "WIP"
-                        : player.reasons?.[index] === "faction_mismatch"
-                          ? "阵营不匹配"
-                          : player.reasons?.[index] === "not_developed"
-                            ? "尚未开发"
-                            : player.reasons?.[index] === "count"
-                              ? "超过单位点数"
-                              : player.reasons?.[index] === "not_allowed"
-                                ? "不被允许的单位"
-                                : "OVER COST",
+                  : player.reasons?.[index] === "license"
+                    ? "未许可"
+                    : player.reasons?.[index] === "wip"
+                      ? "WIP"
+                      : player.reasons?.[index] === "faction_mismatch"
+                        ? "阵营不匹配"
+                        : player.reasons?.[index] === "not_developed"
+                          ? "尚未开发"
+                          : player.reasons?.[index] === "count"
+                            ? "超过单位点数"
+                            : player.reasons?.[index] === "not_allowed"
+                              ? "不被允许的单位"
+                              : "OVER COST",
             ),
           );
         icons.append(icon);
@@ -956,9 +1159,7 @@ const RoomPanel = (() => {
       (!!snapshot.loadedSave && Object.keys(own?.reasons || {}).length > 0) ||
       (!snapshot.loadedSave && !allBots && !own?.entries.length) ||
       !snapshot.connected.every(Boolean);
-    byId("confirmFinalFormation").textContent = own?.ready
-      ? "取消确认编组"
-      : "确认出击编组";
+    byId("confirmFinalFormation").textContent = own?.ready ? "取消确认编组" : "确认出击编组";
     byId("finalAssemblyStatus").textContent = !snapshot.connected.every(Boolean)
       ? "等待全部席位玩家连接。"
       : snapshot.loadedSave
@@ -1060,7 +1261,13 @@ const RoomPanel = (() => {
     formationSelect.setAttribute("aria-invalid", String(!valid || !!disabledCount));
     byId("roomTitle").textContent = Net.local
       ? "离线" +
-        { sweep: "战场扫荡", battlefield: "雇佣兵战争模式", quick: "快速战模式", campaign: "历史战役模式", regular: "常规战模式" }[snapshot.settings.mode] +
+        {
+          sweep: "战场扫荡",
+          battlefield: "雇佣兵战争模式",
+          quick: "快速战模式",
+          campaign: "历史战役模式",
+          regular: "常规战模式",
+        }[snapshot.settings.mode] +
         "房间"
       : "房间 " + snapshot.room;
     byId("roomStatus").hidden = !snapshot.started && !snapshot.loadedSave;
@@ -1155,7 +1362,8 @@ const RoomPanel = (() => {
           (!snapshot.started || !!snapshot.campaign) &&
           self.id === snapshot.hostId &&
           (!member || member.bot) &&
-          !reserved && !(snapshot.settings.mode === "battlefield" && seat < 2)
+          !reserved &&
+          !(snapshot.settings.mode === "battlefield" && seat < 2)
         ) {
           const addAI = element(
             "button",
@@ -1281,7 +1489,9 @@ const RoomPanel = (() => {
     renderDetail(snapshot);
     refreshReconnectCountdowns();
     if (snapshot.settings.mode === "battlefield") {
-      for (const seat of [0,1]) { byId("removeSeatAI" + seat)?.remove(); }
+      for (const seat of [0, 1]) {
+        byId("removeSeatAI" + seat)?.remove();
+      }
     }
   }
   function joinTeam(team) {
@@ -1294,7 +1504,7 @@ const RoomPanel = (() => {
   byId("confirmFinalFormation").onclick = () => {
     const snapshot = Net.snapshot;
     const own = snapshot?.assembly?.players.find((p) => p.memberId === snapshot.you?.id);
-    if (own?.ready) return Net.request("confirm_formation", {ready:false});
+    if (own?.ready) return Net.request("confirm_formation", { ready: false });
     const proceed = () => Net.request("confirm_formation");
     if (!snapshot?.loadedSave && own) Formation.checkLicenses(own.entries, proceed);
     else proceed();
@@ -1360,12 +1570,17 @@ const RoomPanel = (() => {
   byId("roomMapSelect").onchange = () => sendSettings({ mapId: byId("roomMapSelect").value });
   byId("roomFormationPreset").onchange = () => {
     const preset = byId("roomFormationPreset").value;
-    const saved = savedPresets.find(p => p.id === preset);
+    const saved = savedPresets.find((p) => p.id === preset);
     if (!saved && !formationPresets.has(preset)) return;
-    const rules = saved?.rules || Object.fromEntries(
-      ["costLimit", "unitCostLimit", "unitLimit"].map((key, i) => [key, Number(preset.split(",")[i])])
-    );
-    const {costLimit, unitCostLimit, unitLimit} = rules;
+    const rules =
+      saved?.rules ||
+      Object.fromEntries(
+        ["costLimit", "unitCostLimit", "unitLimit"].map((key, i) => [
+          key,
+          Number(preset.split(",")[i]),
+        ]),
+      );
+    const { costLimit, unitCostLimit, unitLimit } = rules;
     byId("roomPresetName").value = saved?.name || "";
     clearTimeout(numericSettingsTimer);
     numericSettingsTimer = null;
@@ -1385,29 +1600,50 @@ const RoomPanel = (() => {
   }
   byId("saveRoomPreset").onclick = () => {
     const snapshot = Net.snapshot;
-    if (!snapshot || snapshot.started || snapshot.you?.id !== snapshot.hostId || Net.awaiting) return;
+    if (!snapshot || snapshot.started || snapshot.you?.id !== snapshot.hostId || Net.awaiting)
+      return;
     try {
       const name = byId("roomPresetName").value.trim();
       if (!name) throw Error("请输入预设名称");
       if (name.length > 40) throw Error("预设名称最多40个字符");
-      const previous = savedPresets.find(p => p.name === name);
+      const previous = savedPresets.find((p) => p.name === name);
       if (!previous && savedPresets.length >= 30) throw Error("最多保存30个预设");
-      const rules = presetRules({...snapshot.settings, ...Object.fromEntries(
-        Object.entries(numericDrafts).filter(([, value]) => value !== null).map(([key, value]) => [key, Number(value)])
-      )});
-      const entry = {id:previous?.id || "saved-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8), name, rules};
-      storePresets(previous ? savedPresets.map(p => p.id === previous.id ? entry : p) : [...savedPresets, entry]);
+      const rules = presetRules({
+        ...snapshot.settings,
+        ...Object.fromEntries(
+          Object.entries(numericDrafts)
+            .filter(([, value]) => value !== null)
+            .map(([key, value]) => [key, Number(value)]),
+        ),
+      });
+      const entry = {
+        id:
+          previous?.id ||
+          "saved-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8),
+        name,
+        rules,
+      };
+      storePresets(
+        previous
+          ? savedPresets.map((p) => (p.id === previous.id ? entry : p))
+          : [...savedPresets, entry],
+      );
       byId("roomPresetStatus").textContent = I18n.text("预设已保存到当前浏览器");
-    } catch (error) { byId("roomPresetStatus").textContent = I18n.text(error.message); }
+    } catch (error) {
+      byId("roomPresetStatus").textContent = I18n.text(error.message);
+    }
   };
   byId("deleteRoomPreset").onclick = () => {
     const selected = byId("roomFormationPreset").value;
-    if (byId("roomFormationPreset").disabled || !savedPresets.some(p => p.id === selected)) return;
+    if (byId("roomFormationPreset").disabled || !savedPresets.some((p) => p.id === selected))
+      return;
     try {
-      storePresets(savedPresets.filter(p => p.id !== selected));
+      storePresets(savedPresets.filter((p) => p.id !== selected));
       byId("roomPresetName").value = "";
       byId("roomPresetStatus").textContent = I18n.text("预设已删除");
-    } catch (error) { byId("roomPresetStatus").textContent = I18n.text(error.message); }
+    } catch (error) {
+      byId("roomPresetStatus").textContent = I18n.text(error.message);
+    }
   };
   function flushNumericSettings() {
     clearTimeout(numericSettingsTimer);
@@ -1461,13 +1697,18 @@ const RoomPanel = (() => {
   byId("roomShareAlliedUnits").onchange = () =>
     sendSettings({ shareAlliedUnits: byId("roomShareAlliedUnits").value === "enabled" });
   byId("roomFogMode").onchange = () => sendSettings({ fogMode: byId("roomFogMode").value });
-  byId("roomPilotDialogue").onchange = () => sendSettings({ pilotDialogue: byId("roomPilotDialogue").value === "enabled" });
-  byId("roomSurfaceCover").onchange = () => sendSettings({ surfaceCover: byId("roomSurfaceCover").value === "enabled" });
+  byId("roomPilotDialogue").onchange = () =>
+    sendSettings({ pilotDialogue: byId("roomPilotDialogue").value === "enabled" });
+  byId("roomSurfaceCover").onchange = () =>
+    sendSettings({ surfaceCover: byId("roomSurfaceCover").value === "enabled" });
   byId("roomWeather").onchange = () => sendSettings({ weather: byId("roomWeather").value });
   byId("roomDayNight").onchange = () => sendSettings({ dayNight: byId("roomDayNight").value });
-  byId("roomWeatherCycle").onchange = () => sendSettings({ weatherCycle: byId("roomWeatherCycle").value === "enabled" });
-  byId("roomTimeCycle").onchange = () => sendSettings({ timeCycle: byId("roomTimeCycle").value === "enabled" });
-  byId("roomClimateBuffs").onchange = () => sendSettings({ climateBuffs: byId("roomClimateBuffs").value === "enabled" });
+  byId("roomWeatherCycle").onchange = () =>
+    sendSettings({ weatherCycle: byId("roomWeatherCycle").value === "enabled" });
+  byId("roomTimeCycle").onchange = () =>
+    sendSettings({ timeCycle: byId("roomTimeCycle").value === "enabled" });
+  byId("roomClimateBuffs").onchange = () =>
+    sendSettings({ climateBuffs: byId("roomClimateBuffs").value === "enabled" });
   byId("roomPilotPolicy").onchange = () =>
     sendSettings({ pilotPolicy: byId("roomPilotPolicy").value });
   byId("roomBattleMode").onchange = () =>

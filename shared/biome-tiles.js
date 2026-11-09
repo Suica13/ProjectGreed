@@ -180,6 +180,7 @@ const BiomeTiles = (() => {
     const shade = space ? "#344351" : snow ? "#7c959e" : desert ? "#6e6659" : "#42544c";
     const light = snow ? "#c9d3d3" : desert ? "#afa184" : "#85917c";
     const n = hash(cellX, cellY, 71),
+      variant = n % 6,
       mask = tile.mask || 0;
     ctx.save();
     ctx.translate(x, y);
@@ -198,14 +199,130 @@ const BiomeTiles = (() => {
       ctx.lineWidth = 0.8;
       ctx.stroke();
     };
+    const shadow = (points, opacity = 0.18) => {
+      ctx.save();
+      ctx.globalAlpha *= opacity;
+      polygon(points, "#07131d", "#07131d");
+      ctx.restore();
+    };
     if (!["cliff", "shore", "road", "details"].includes(role)) rect(land, 0, 0, 32, 32);
+    // Broad, low-contrast ground shapes carry detail without photograph-like grain.
+    // Keep overlay layers transparent so roads, banks and cliff faces still join.
+    if (["ground", "plain", "forest", "rock", "rubble"].includes(role) && !space) {
+      const tone = snow
+        ? "#b4c2c5"
+        : desert
+          ? "#9c8b70"
+          : urban
+            ? "#62706b"
+            : tropical
+              ? "#6b8469"
+              : "#71806a";
+      const shift = n % 6;
+      // World-space patches join across cells instead of stamping one mark per tile.
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(0, 0, 32, 32);
+      ctx.clip();
+      for (let gy = Math.floor(cellY / 3) - 1; gy <= Math.floor(cellY / 3) + 1; gy++)
+        for (let gx = Math.floor(cellX / 3) - 1; gx <= Math.floor(cellX / 3) + 1; gx++) {
+          const q = hash(gx, gy, 409),
+            a = gx * 96 + 18 + (q % 60) - cellX * 32,
+            b = gy * 96 + 18 + ((q >>> 8) % 60) - cellY * 32;
+          if (a < -48 || b < -48 || a > 80 || b > 80) continue;
+          const points = Array.from({ length: 8 }, (_, i) => {
+            const angle = (i * Math.PI) / 4,
+              radius = 26 + (hash(gx + i, gy, 71) % 18);
+            return [a + Math.cos(angle) * radius, b + Math.sin(angle) * radius * 0.65];
+          });
+          const patchTone = q % 3 === 0 ? land : tone;
+          polygon(points, patchTone, patchTone);
+        }
+      ctx.restore();
+      if (urban) {
+        if (cellY % 2 === 0) rect("#788077", 0, 0, 32, 1);
+        if (cellX % 2 === 0) rect("#435452", 0, 0, 1, 32);
+        if (n % 4 === 0) rect("#879083", 6, 7, 8, 2);
+        if (variant === 1 || variant === 4) {
+          ctx.strokeStyle = "#435452";
+          ctx.beginPath();
+          ctx.moveTo(8, 4);
+          ctx.lineTo(13, 10);
+          ctx.lineTo(11, 15);
+          ctx.lineTo(18, 19);
+          ctx.stroke();
+        }
+      } else if (desert) {
+        rect("#b0a080", 3 + variant, 10 + shift, 12 + variant, 1);
+        rect("#a69678", 8, 14 + shift, 16 - variant, 1);
+        if (variant === 2)
+          polygon(
+            [
+              [5, 24],
+              [9, 21],
+              [16, 22],
+              [19, 25],
+            ],
+            "#a09072",
+            "#a09072",
+          );
+      } else if (snow) {
+        rect("#d0d9d8", 3 + variant, 11 + shift, 20 - variant, 2);
+        rect("#c4d0d0", 9, 14 + shift, 12 + variant, 2);
+        if (variant === 3) rect("#8da7b3", 18, 24, 8, 2);
+      } else {
+        // Six quiet surface accents: tufts, exposed soil, pebbles and worn tracks.
+        const grass = tropical ? "#4d7155" : "#587151";
+        if (variant === 0) {
+          rect(grass, 7, 23, 2, 3);
+          rect(grass, 10, 21, 2, 5);
+          rect(light, 10, 21, 2, 1);
+        }
+        if (variant === 1)
+          polygon(
+            [
+              [19, 23],
+              [23, 20],
+              [28, 22],
+              [27, 25],
+            ],
+            "#7e8067",
+            "#7e8067",
+          );
+        if (variant === 2) {
+          rect(shade, 6, 25, 5, 2);
+          rect(light, 7, 24, 3, 1);
+        }
+        if (variant === 3) {
+          rect(grass, 22, 13, 2, 3);
+          rect(grass, 25, 12, 2, 4);
+        }
+        if (variant === 4) {
+          rect("#5a6c52", 6, 25, 13, 1);
+          rect("#5a6c52", 10, 28, 13, 1);
+        }
+        if (variant === 5)
+          polygon(
+            [
+              [4, 8],
+              [9, 5],
+              [14, 8],
+              [12, 11],
+              [6, 12],
+            ],
+            grass,
+            grass,
+          );
+      }
+    }
     if (["water", "shallow", "shore"].includes(role)) {
       if (role !== "shore") {
         rect(role === "shallow" ? "#537985" : "#3c6377", 0, 0, 32, 32);
-        if (n % 3 === 0) {
-          rect("#628593", 4, 11, 10, 1);
-          rect("#628593", 19, 24, 8, 1);
-        }
+        const offset = n % 5;
+        rect("#487284", 2 + variant, 8 + offset, 17 - variant, 2);
+        rect("#587e8c", 6 + variant, 8 + offset, 10 - variant, 1);
+        rect("#487284", 12 + offset, 22 - offset, 16 - variant, 2);
+        if (variant % 2 === 0) rect("#628593", 18, 22 - offset, 8, 1);
       } else {
         // Neighbour masks share straight bank edges; retain small pixel steps at corners.
         const bands = [
@@ -221,12 +338,36 @@ const BiomeTiles = (() => {
         }
       }
     } else if (role === "forest") {
-      for (const [a, b, r] of [
-        [8, 10, 6],
-        [23, 9, 5],
-        [17, 22, 7],
-      ]) {
+      const trees =
+        variant % 3 === 0
+          ? [
+              [9, 11, 8],
+              [22, 22, 8],
+            ]
+          : variant % 3 === 1
+            ? [
+                [10, 9, 7],
+                [24, 13, 6],
+                [14, 23, 8],
+              ]
+            : [
+                [8, 12, 7],
+                [23, 9, 7],
+                [21, 24, 7],
+              ];
+      for (const [a, b, r] of trees) {
+        shadow(
+          [
+            [a - r + 3, b + 4],
+            [a + r - 1, b + 3],
+            [Math.min(31, a + r + 4), Math.min(31, b + 9)],
+            [a + 2, Math.min(31, b + 11)],
+            [a - r + 2, b + 8],
+          ],
+          0.23,
+        );
         rect(shade, a - 1, b + 2, 2, 7);
+        rect("#927e60", a, b + 5, 1, 4);
         polygon(
           [
             [a - r, b + 2],
@@ -236,7 +377,26 @@ const BiomeTiles = (() => {
             [a + r, b + 3],
             [a, b + 5],
           ],
-          snow ? "#b8c8c5" : tropical ? "#466c59" : "#4d6650",
+          snow
+            ? "#b8c8c5"
+            : tropical
+              ? variant % 2
+                ? "#4b7057"
+                : "#466c59"
+              : variant % 2
+                ? "#536c51"
+                : "#4d6650",
+        );
+        polygon(
+          [
+            [a - r + 2, b],
+            [a - 2, b - r + 2],
+            [a + r - 2, b - 2],
+            [a + 3, b + 2],
+            [a - 2, b + 3],
+          ],
+          snow ? "#d3dcda" : tropical ? "#608568" : "#70865f",
+          snow ? "#d3dcda" : tropical ? "#608568" : "#70865f",
         );
         ctx.strokeStyle = light;
         ctx.beginPath();
@@ -246,10 +406,29 @@ const BiomeTiles = (() => {
         ctx.stroke();
       }
     } else if (role === "rock" || role === "rubble") {
-      for (const [a, b, r] of [
-        [9, 12, 7],
-        [23, 23, 6],
-      ]) {
+      const rocks =
+        variant % 3 === 0
+          ? [[13, 15, 10]]
+          : variant % 3 === 1
+            ? [
+                [8, 11, 6],
+                [23, 23, 7],
+              ]
+            : [
+                [10, 19, 8],
+                [25, 10, 5],
+              ];
+      for (const [a, b, r] of rocks) {
+        shadow(
+          [
+            [a - r + 1, b + 3],
+            [a + r, b],
+            [Math.min(31, a + r + 5), b + 6],
+            [a + 2, Math.min(31, b + 10)],
+            [a - r + 2, b + 7],
+          ],
+          0.22,
+        );
         polygon(
           [
             [a - r, b + 3],
@@ -267,17 +446,96 @@ const BiomeTiles = (() => {
         ctx.lineTo(a + r, b - 1);
         ctx.stroke();
       }
-      if (role === "rubble") rect(shade, 4, 25, 6, 2);
+      if (role === "rubble") {
+        // Broken walls and floor slabs read as ruins, rather than loose gravel.
+        shadow(
+          [
+            [3, 19],
+            [23, 16],
+            [31, 23],
+            [28, 30],
+            [8, 29],
+          ],
+          0.25,
+        );
+        if (variant % 3 === 0) {
+          rect("#7d8980", 5, 10, 6, 16);
+          rect("#a0a89b", 5, 10, 6, 2);
+          rect("#879087", 11, 20, 16, 6);
+          rect("#626f68", 11, 24, 16, 4);
+          rect("#414f4d", 16, 21, 4, 4);
+          rect("#a3a89a", 11, 20, 16, 1);
+        } else if (variant % 3 === 1) {
+          rect("#879087", 3, 14, 16, 8);
+          rect("#626f68", 3, 19, 16, 6);
+          rect("#a3a89a", 3, 14, 16, 2);
+          rect("#414f4d", 7, 17, 4, 5);
+          rect("#414f4d", 14, 17, 3, 4);
+          rect("#7d8980", 23, 9, 5, 15);
+          rect("#a0a89b", 23, 9, 5, 2);
+          rect("#586761", 21, 24, 8, 3);
+          rect("#8e9689", 5, 27, 8, 2);
+        } else {
+          polygon(
+            [
+              [4, 18],
+              [14, 10],
+              [28, 15],
+              [23, 26],
+              [9, 27],
+            ],
+            "#7f897d",
+          );
+          polygon(
+            [
+              [4, 18],
+              [9, 23],
+              [23, 22],
+              [23, 26],
+              [9, 27],
+            ],
+            "#596b63",
+          );
+          rect("#a0a89b", 13, 14, 9, 2);
+          rect("#465a56", 14, 19, 4, 3);
+          rect(shade, 3, 28, 5, 2);
+        }
+      } else {
+        polygon(
+          [
+            [3, 15],
+            [7, 6],
+            [14, 4],
+            [12, 12],
+          ],
+          snow ? "#e0e5df" : desert ? "#c0ae88" : space ? "#819095" : "#a1ab94",
+          light,
+        );
+        rect(shade, 4, 27, 12, 2);
+      }
     } else if (role === "cliff") {
       const stripe = (a, b, w, h) => {
         rect(shade, a, b, w, h);
         rect(light, a, b, w, 1);
+        if (h > 4) {
+          rect(desert ? "#897b65" : "#607063", a, b + 3, w, 2);
+          rect(desert ? "#aa9877" : "#82907b", a, b + 6, w, 1);
+        }
       };
       if (mask & 4) stripe(0, 23, 32, 9);
       if (mask & 2) stripe(27, 0, 5, 32);
       if (mask & 8) stripe(0, 0, 5, 32);
       if (mask & 1) stripe(0, 0, 32, 3);
       if (mask & 4) {
+        shadow(
+          [
+            [0, 29],
+            [32, 29],
+            [32, 32],
+            [0, 32],
+          ],
+          0.3,
+        );
         rect("#34453f", 7, 27, 1, 5);
         rect("#34453f", 22, 26, 1, 6);
       }
@@ -289,10 +547,110 @@ const BiomeTiles = (() => {
       rect(desert ? "#a1947b" : "#7c8376", a, b, w, h);
       rect("#929888", a, b, w, 1);
       rect(shade, a, b + h - 1, w, 1);
+      if (w > h) {
+        rect("#a4aa94", 10, 15, 12, 1);
+        rect("#65715e", 3, 4, 7, 1);
+      } else {
+        rect("#a4aa94", 15, 10, 1, 12);
+        rect("#65715e", 4, 3, 1, 7);
+      }
     } else if (role === "details") {
-      if (n % 3 === 0) {
-        rect(shade, 9, 16, 3, 1);
-        rect(light, 11, 15, 3, 1);
+      if ((n >>> 5) % 3 === 0 && !space) {
+        shadow(
+          [
+            [8, 18],
+            [19, 17],
+            [23, 23],
+            [10, 25],
+          ],
+          0.2,
+        );
+        if (variant === 0) {
+          rect(shade, 7, 19, 12, 3);
+          polygon(
+            [
+              [8, 18],
+              [9, 12],
+              [13, 10],
+              [18, 13],
+              [19, 19],
+            ],
+            desert ? "#8d8966" : snow ? "#a0b5af" : "#526e50",
+          );
+          rect(light, 10, 13, 5, 1);
+          rect(shade, 24, 26, 4, 2);
+        } else if (variant === 1) {
+          rect(shade, 8, 21, 17, 3);
+          rect(desert ? "#a49974" : snow ? "#c7d4ce" : "#7d8970", 9, 17, 8, 5);
+          rect(light, 9, 17, 8, 1);
+          rect("#475b53", 19, 12, 4, 10);
+          rect(light, 19, 12, 4, 1);
+        } else if (variant === 2) {
+          polygon(
+            [
+              [7, 21],
+              [13, 15],
+              [24, 17],
+              [26, 24],
+              [14, 26],
+            ],
+            snow ? "#ccd5cd" : "#8a9381",
+          );
+          rect(shade, 13, 22, 10, 2);
+          rect(light, 13, 17, 9, 1);
+        } else if (variant === 3) {
+          rect("#716951", 11, 11, 4, 13);
+          rect(light, 11, 11, 4, 1);
+          rect(shade, 15, 20, 9, 3);
+          rect("#716951", 17, 15, 3, 7);
+        } else if (variant === 4) {
+          rect(shade, 8, 20, 18, 5);
+          polygon(
+            [
+              [8, 17],
+              [13, 13],
+              [25, 15],
+              [23, 21],
+              [11, 22],
+            ],
+            "#667f78",
+          );
+          rect("#9bab9b", 13, 15, 8, 2);
+        } else {
+          polygon(
+            [
+              [7, 20],
+              [9, 15],
+              [15, 13],
+              [18, 18],
+              [15, 23],
+            ],
+            desert ? "#a99a78" : snow ? "#c3d3cc" : "#688661",
+          );
+          polygon(
+            [
+              [19, 25],
+              [20, 21],
+              [25, 20],
+              [28, 24],
+              [25, 27],
+            ],
+            light,
+          );
+          rect(shade, 10, 25, 8, 1);
+        }
+      } else if (space && variant < 2) {
+        polygon(
+          [
+            [7, 17],
+            [12, 11],
+            [25, 15],
+            [22, 21],
+          ],
+          "#596a72",
+        );
+        rect("#99a3a0", 12, 13, 9, 1);
+        rect("#344a59", 18, 16, 4, 4);
       }
     } else if (!space && n % 4 === 0) {
       rect(light, 7, 15, 5, 1);

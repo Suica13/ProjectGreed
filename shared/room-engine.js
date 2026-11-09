@@ -4025,7 +4025,7 @@ function createRoomEngine({
         const formations = room.seats.map((p, i) => (i === seat ? [entry] : null));
         const g = G.create(false, randomSeed(), formations, false, {
           ...room.settings,
-          mode: "regular",
+          mode: "sweep",
           seatFormationRules: room.seats.map(() => ({})),
           costLimit: 99999,
         });
@@ -4376,7 +4376,7 @@ function createRoomEngine({
             room.settings.mode !== "campaign" &&
             G.getMap(room.settings.mapId).supportedModes &&
             !G.getMap(room.settings.mapId).supportedModes.includes(
-              ["campaign", "sweep"].includes(room.settings.mode) ? "regular" : room.settings.mode,
+              room.settings.mode === "campaign" ? "regular" : room.settings.mode,
             )
           )
             throw Error("此地图不支持所选对战模式");
@@ -4643,18 +4643,18 @@ function createRoomEngine({
           const map = G.getMap(
             strategic
               ? G.campaignRoomSettings().mapId
-              : nextMode === "battlefield"
+              : nextMode === "sweep" ? G.sweepMapId : nextMode === "battlefield"
                 ? requestedMap.battlefield
                   ? requestedMap.id
                   : G.battlefieldMode.defaultMapId
-                : requestedMap.battlefield
+                : requestedMap.battlefield || requestedMap.id === G.sweepMapId
                   ? G.defaultRoomSettings().mapId
                   : requestedMap.id,
           );
           if (
             !strategic &&
             map.supportedModes &&
-            !map.supportedModes.includes(nextMode === "sweep" ? "regular" : nextMode)
+            !map.supportedModes.includes(nextMode)
           )
             throw Error("此地图不支持所选模式");
           if (!strategic && map.scope === "strategic")
@@ -5645,6 +5645,11 @@ function createRoomEngine({
         lastEvent: null,
         updated: Date.now(),
       };
+      if (room.settings.mode === "sweep") {
+        room.settings.mapId=G.sweepMapId;
+        room.seats=Array(G.getMap(G.sweepMapId).spawns.length).fill(null);
+        room.turnDone=room.seats.map(()=>false);
+      }
       if (room.settings.mode === "campaign") {
         room.seats = Array(G.getMap(room.settings.mapId).spawns.length).fill(null);
         room.turnDone = room.seats.map(() => false);

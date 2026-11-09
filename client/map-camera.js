@@ -277,6 +277,7 @@ const MapCamera = (() => {
   byId("mapZoomReset").onclick = fit;
   return {
     beginFrame: invalidateBounds,
+    refresh: () => { invalidateBounds(); refresh(); },
     inputBounds,
     get isInteracting() { return !!(drag?.moved || pinch); },
     renderSize,

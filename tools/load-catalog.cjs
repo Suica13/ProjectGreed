@@ -232,7 +232,7 @@ function loadCatalog({
       map.supportedModes !== undefined &&
       (!Array.isArray(map.supportedModes) ||
         !map.supportedModes.length ||
-        map.supportedModes.some((mode) => !["regular", "quick", "battlefield"].includes(mode)))
+        map.supportedModes.some((mode) => !["regular", "quick", "battlefield", "sweep"].includes(mode)))
     )
       throw Error("Invalid map modes: " + map.id);
     if (

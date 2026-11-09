@@ -12,12 +12,43 @@ for (const width of [1440, 390])
     await page.locator("#offlineRoomMode").selectOption("sweep");
     await page.locator("#createOfflineRoom").click();
     await expect(page.locator("#roomPreparation")).toBeVisible();
+    await expect(page.locator("#roomMapSelect")).toBeHidden();
+    await expect(page.locator("#roomMapTitle")).toHaveText("战场扫荡");
+    if (width < 600) await page.getByRole("button", { name: "房间设置", exact: true }).click();
+    await page
+      .locator("#roomMapPreview")
+      .screenshot({ path: `tmp/verification/screenshots/sweep-cover-${width}.png` });
+    if (width < 600)
+      await page
+        .locator("#roomSettingsSheet")
+        .getByRole("button", { name: "关闭", exact: true })
+        .click();
     await page.evaluate(() =>
       Net.request("start_game", { formation: [{ unitId: "Type61", kitId: "standard" }] }),
     );
     await expect(page.locator("#confirmFinalFormation")).toBeVisible();
     await page.locator("#confirmFinalFormation").click();
     await expect(page.locator("#sweepMission")).toBeVisible();
+    await expect(page.locator("#gameScene")).toBeVisible();
+    await page.locator("#showChat").click();
+    const normalMissionHeight=(await page.locator('#sweepMission').boundingBox()).height;
+    await page.locator("#hudExpandConsole").click();
+    await expect(page.locator("#gameScene")).toHaveAttribute("data-console-size", "expanded");
+    await expect(page.locator("#chatInput")).toBeVisible();
+    const expandedMission = await page.locator("#sweepMission").boundingBox();
+    expect(expandedMission.height).toBeLessThan(normalMissionHeight);
+    await page.locator("#hudExpandConsole").click();
+    await expect(page.locator("#chatInput")).toBeVisible();
+    const missionBounds = await page.locator("#sweepMission").boundingBox(),
+      consoleBounds = await page.locator("#gameScene .log").boundingBox();
+    expect(missionBounds.y + missionBounds.height).toBeLessThanOrEqual(consoleBounds.y + 1);
+    await page.locator("#chatInput").fill("扫荡路线确认");
+    await page.locator("#chatSend").click();
+    await expect(page.locator("#chatLines")).toContainText("扫荡路线确认");
+    await page.locator("#showLog").click();
+    await expect(page.locator("#log")).toBeVisible();
+    await expect(page.locator("#log")).toContainText("最终编组已确认");
+    await page.locator("#showChat").click();
     await page.locator('[data-sweep-node="0:1"]').click();
     await expect(page.locator("#sweepConfirm")).toBeEnabled();
     await page.screenshot({ path: `tmp/verification/screenshots/sweep-map-${width}.png` });

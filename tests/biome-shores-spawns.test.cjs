@@ -24,7 +24,9 @@ test("all sixteen shore edge combinations follow neighbouring terrain", () => {
   }
 });
 test("encounter spawn positions and deployment areas are centrally mirrored and space stays mostly empty", () => {
-  const maps = Object.values(G.catalog.maps).filter((m) => m.encounterScale?.version === 4);
+  const maps = Object.values(G.catalog.maps).filter(
+    (m) => m.encounterScale?.version === 4 && (m.supportedModes || ["regular"]).includes("regular"),
+  );
   assert.equal(maps.length, 17);
   for (const m of maps) {
     for (let i = 0; i < m.spawns.length; i += 2) {

@@ -103,8 +103,9 @@ test("real WebSocket cooperative sweep synchronizes routes, partial defeat, rest
       .type,
     "state",
   );
-  // A two-seat lobby can place a joining player in observation; explicitly take
-  // an allied slot once the four-seat map is configured.
+  assert.equal(room.settings.mapId,G.sweepMapId);
+  assert.equal(G.getMap(room.settings.mapId).name,"战场扫荡");
+  // The dedicated mission map provides shared allied deployment slots.
   if (guest.state.you.seat === null)
     assert.equal((await guest.act("switch_seat", { seat: 2 })).type, "state");
   assert.equal(host.state.you.seat, 0);

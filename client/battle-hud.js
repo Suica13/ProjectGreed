@@ -19,7 +19,8 @@ const BattleHUD = (() => {
   const phaseControls = element("div", "hud-phase-controls");
   phaseControls.append(scene.querySelector(".phase-row"), scene.querySelector(".map-camera-controls"));
   // CampaignUI attaches these controls beside presentation speed in the lower toolbar.
-  scene.querySelector(".log-tabs").append(byId("mapCombatControls"));
+  const combatControls=byId("mapCombatControls");
+  if(combatControls)scene.querySelector(".log-tabs").append(combatControls);
   const topControls = element("div", "hud-top-controls");
   topControls.append(byId("hudTurnActions"));
   const topLine = element("div", "hud-top-line");

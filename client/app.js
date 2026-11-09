@@ -3568,9 +3568,11 @@ function tick(now) {
     if (assetsReady) {
       if (window.GamePreview?.active) window.GamePreview.tick(now);
       else if (pageView === "game" && !window.BattleAssets?.loading) {
-        MapCombat.update(now);
-        drawMap(now);
-        drawBattle(now);
+        if (typeof SweepUI === "undefined" || !SweepUI.active) {
+          MapCombat.update(now);
+          drawMap(now);
+          drawBattle(now);
+        }
         window.BattleHUD?.recordFrame(realFrameTime);
       }
     }

@@ -81,3 +81,62 @@ test("all modular biomes load and render their actual terrain layers", async ({ 
   }
   expect(errors).toEqual([]);
 });
+
+test("clean terrain and decoration variants are stable and visibly distinct", async ({ page }) => {
+  await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
+  await page.waitForFunction(() => assetsReady);
+  const results = await page.evaluate(() => {
+    const sheet = document.createElement("canvas");
+    sheet.id = "terrainVariants";
+    sheet.width = 552;
+    sheet.height = 480;
+    sheet.style.cssText = "position:fixed;inset:0;z-index:999999";
+    document.body.append(sheet);
+    const target = sheet.getContext("2d");
+    target.fillStyle = "#142632";
+    target.fillRect(0, 0, 552, 480);
+    return ["plain", "forest", "rock", "rubble", "water", "details"].map((role, row) => {
+      const signatures = new Set();
+      let stable = true;
+      target.fillStyle = "#dcebf2";
+      target.font = "14px sans-serif";
+      target.fillText(role, 8, row * 80 + 36);
+      for (let x = 0; x < 500 && signatures.size < 6; x++) {
+        const canvas = document.createElement("canvas");
+        canvas.width = canvas.height = 64;
+        const ctx = canvas.getContext("2d");
+        const paint = () => {
+          ctx.clearRect(0, 0, 64, 64);
+          BiomeTiles.drawAtlasTile(
+            ctx,
+            null,
+            { biomeRole: role },
+            { image: "asset:biome-temperate" },
+            0,
+            0,
+            64,
+            64,
+            x,
+            7,
+          );
+        };
+        paint();
+        const signature = canvas.toDataURL();
+        if (!ctx.getImageData(0, 0, 64, 64).data.some((v, i) => i % 4 === 3 && v > 0)) continue;
+        paint();
+        stable &&= canvas.toDataURL() === signature;
+        if (signatures.has(signature)) continue;
+        target.drawImage(canvas, 120 + signatures.size * 72, row * 80 + 6);
+        signatures.add(signature);
+      }
+      return { role, count: signatures.size, stable };
+    });
+  });
+  for (const r of results) {
+    expect(r.count, r.role).toBe(6);
+    expect(r.stable, r.role).toBe(true);
+  }
+  await page
+    .locator("#terrainVariants")
+    .screenshot({ path: "tmp/verification/screenshots/terrain-variants-shadows.png" });
+});

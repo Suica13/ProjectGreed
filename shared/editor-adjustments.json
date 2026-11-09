@@ -76,6 +76,89 @@
     "AEUG_RMS_099_BeamGun__lv1": {
       "/damagePerShot": -625,
       "/damageComponents/beam": -625
+    },
+    "EF_BeamSaber_AF_Large_A__lv2": {
+      "/damagePerShot": 625,
+      "/damageComponents/melee": 312.5,
+      "/damageComponents/meleeBeam": 312.5
+    },
+    "AEUG_MSZ_006_BR__lv1": {
+      "/attackRounds": 1
+    },
+    "AEUG_MSZ_006A1_BR__lv1": {
+      "/attackRounds": 1
+    },
+    "AEUG_MSZ_006C1_BeamSmartGun__lv1": {
+      "/max": 2,
+      "/hit": 10,
+      "/damagePerShot": 5250,
+      "/damageComponents/beam": 2500,
+      "/damageComponents/beamAP": 2750,
+      "/attack/steps/2/partBreakModifier": 0.25,
+      "/partBreakModifier": 0.25
+    },
+    "AEUG_MSZ_006A1_MA_BeamGun__lv1": {
+      "/damagePerShot": 500,
+      "/damageComponents/beam": 500
+    },
+    "AEUG_MSZ_006C1_BeamSmartGun_Sniper_Aim__lv1": {
+      "/damagePerShot": 8125,
+      "/damageComponents/beam": 4375,
+      "/damageComponents/beamAP": 3750,
+      "/max": 1
+    },
+    "AEUG_MSA_0011_BeamSmartGun__lv1": {
+      "/max": 2,
+      "/hit": 10,
+      "/damagePerShot": 13300,
+      "/damageComponents/beam": 9000,
+      "/damageComponents/beamAP": 4300
+    },
+    "EF_BeamSaber_AF_Large_Blue_A__lv2": {
+      "/damagePerShot": 1125,
+      "/damageComponents/melee": 562.5,
+      "/damageComponents/meleeBeam": 562.5
+    },
+    "NZN_AMX_014_BR__lv1": {
+      "/hit": -10,
+      "/damagePerShot": -11812.5,
+      "/damageComponents/beam": -1250,
+      "/damageComponents/beamAP": -10562.5
+    },
+    "NZN_AMX_107_BR__lv1": {
+      "/damagePerShot": -1262.5,
+      "/damageComponents/beam": -1125,
+      "/damageComponents/beamAP": -137.5
+    },
+    "EF_BeamSaber_AF_Large_Yellow_A__lv2": {
+      "/damagePerShot": 625,
+      "/damageComponents/melee": 312.5,
+      "/damageComponents/meleeBeam": 312.5
+    },
+    "TITANS_PMX_003_BR__lv1": {
+      "/damagePerShot": 381.25,
+      "/damageComponents/beam": 1875,
+      "/damageComponents/beamAP": -1493.75,
+      "/max": 2,
+      "/attackRounds": 1
+    },
+    "EF_RX_93_BR__lv1": {
+      "/max": 1,
+      "/attackRounds": 1
+    },
+    "EF_RX_93_ShieldBC__lv1": {
+      "/damagePerShot": 2737.5,
+      "/damageComponents/beam": 750,
+      "/damageComponents/beamAP": 1987.5
+    },
+    "EF_RX_93_ShieldMS__lv1": {
+      "/damagePerShot": 2750,
+      "/damageComponents/shell": 2750
+    },
+    "EF_RX_93_BeamSaber_BF_B__lv1": {
+      "/damagePerShot": 2625,
+      "/damageComponents/melee": 1312.5,
+      "/damageComponents/meleeBeam": 1312.5
     }
   },
   "prices": {}

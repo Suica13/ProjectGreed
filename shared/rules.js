@@ -7,6 +7,7 @@ const Tactics = (() => {
   const catalog =
     typeof ART !== "undefined" ? ART : require("../tools/load-catalog.cjs").loadCatalog();
   const models = catalog.models;
+  const sweepMapId = "battlefield_sweep";
   const automaticFire =
     typeof AutomaticFire !== "undefined" ? AutomaticFire : require("./automatic-fire.js");
   const aiTactics = typeof AITactics !== "undefined" ? AITactics : require("./ai-tactics.js");
@@ -1948,6 +1949,7 @@ const Tactics = (() => {
     };
   }
   function create(ai = false, seed = 7319, formations, deploying = false, settings = {}, restoration = null) {
+    if (settings.mode === "sweep") settings = {...settings,mapId:sweepMapId};
     const map = getMap(settings.mapId),
       costLimit = validateCostLimit(settings.costLimit ?? catalog.formation.maxCost),
       unitLimit = validateUnitLimit(settings.unitLimit ?? catalog.formation.maxUnits),
@@ -1963,7 +1965,7 @@ const Tactics = (() => {
     if (
       map.supportedModes &&
       !map.supportedModes.includes(
-        ["campaign", "sweep"].includes(settings.mode) ? "regular" : settings.mode || "regular",
+        settings.mode === "campaign" ? "regular" : settings.mode || "regular",
       )
     )
       throw Error("此地图不支持所选对战模式");
@@ -4166,6 +4168,7 @@ const Tactics = (() => {
     placementQuery,
     campaignRoomSettings,
     defaultRoomSettings,
+    sweepMapId,
     formationRestrictions,
     restrictionReason,
     normalizeLicenses,

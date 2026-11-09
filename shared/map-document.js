@@ -140,7 +140,7 @@ const MapDocument = (() => {
     if (
       !Array.isArray(doc.supportedModes) ||
       !doc.supportedModes.length ||
-      doc.supportedModes.some((m) => !["regular", "quick", "battlefield"].includes(m))
+      doc.supportedModes.some((m) => !["regular", "quick", "battlefield", "sweep"].includes(m))
     )
       throw Error("至少启用一种有效对战模式。");
     if (!Number.isSafeInteger(doc.seed)) throw Error("随机种子必须为整数。");
