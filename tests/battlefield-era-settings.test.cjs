@@ -4,7 +4,7 @@ const G = require('../shared/rules');
 const B = G.battlefieldMode;
 
 test('era strength is authoritative for both sides, including mixed eras and control damage', () => {
-  const rows = [['0079T1',20000],['0079T2',30000],['0087T1',45000],['0087T2',60000]];
+  const rows = [['0079T1',40000],['0079T2',60000],['0087T1',90000],['0087T2',120000]];
   for (const [era, maximum] of rows) {
     const settings = {...B.presetSettings(era+'-standard',null,G.eras),mode:'battlefield',mapId:B.defaultMapId};
     const game = G.create(false,7319,Array(12).fill(null),false,settings);
@@ -21,7 +21,7 @@ test('era strength is authoritative for both sides, including mixed eras and con
   }
   const game=G.create(false,3,Array(12).fill(null),false,{mode:'battlefield',mapId:B.defaultMapId,
     battlefieldTeams:[{faction:'EFSF',era:'0079T1'},{faction:'TITANS',era:'0087T2'}]});
-  assert.deepEqual(game.battlefield.maximum,[20000,60000]);
+  assert.deepEqual(game.battlefield.maximum,[40000,120000]);
 });
 
 test('fixed eras require compatible teams and an exact scale, custom keeps arbitrary valid scales', () => {

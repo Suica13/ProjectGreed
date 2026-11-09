@@ -110,6 +110,7 @@ test("real WebSocket cooperative sweep synchronizes routes, partial defeat, rest
     assert.equal((await guest.act("switch_seat", { seat: 2 })).type, "state");
   assert.equal(host.state.you.seat, 0);
   assert.equal(guest.state.you.seat, 2);
+  assert.equal(room.seats.filter(p => p?.sweepEnemy).length, 2);
   const formation = [{ unitId: "Type61", kitId: "standard" }];
   assert.equal((await guest.act("set_ready", { ready: true, formation })).type, "state");
   assert.equal((await host.act("start_game", { formation })).phase, "assembly");
@@ -120,6 +121,7 @@ test("real WebSocket cooperative sweep synchronizes routes, partial defeat, rest
   await guest.wait((f) => f.type === "state" && f.sweep?.selected === "0:1");
   assert.equal(chosen.sweep.seed, undefined);
   assert.equal((await host.act("sweep_confirm")).phase, "deployment");
+  assert.deepEqual([...new Set(room.game.units.filter(u => u.team === 1).map(u => G.ownerOf(u)))].sort(), [1, 3]);
   await host.act("confirm_deployment");
   await guest.act("confirm_deployment");
   const dead = room.game.units.find((u) => u.ownerSeat === 2);
@@ -157,6 +159,7 @@ test("real WebSocket cooperative sweep synchronizes routes, partial defeat, rest
   await host.act("sweep_select", { nodeId: "3:1" });
   room.sweep.nodes.find((n) => n.id === "3:1").type = "battle";
   assert.equal((await host.act("sweep_confirm")).phase, "deployment");
+  assert.deepEqual([...new Set(room.game.units.filter(u => u.team === 1).map(u => G.ownerOf(u)))].sort(), [1, 3]);
   await host.act("confirm_deployment");
   assert.equal((await guest.act("confirm_deployment")).phase, "idle");
   room.game.units.filter((u) => u.team === 1).forEach((u) => (u.hp = 0));

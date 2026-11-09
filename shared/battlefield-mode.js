@@ -75,10 +75,10 @@ const BattlefieldMode = (() => {
   const factions = ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"];
   const eras = ["0079T1", "0079T2", "0087T1", "0087T2"];
   const eraStrength = Object.freeze({
-    "0079T1": 20000,
-    "0079T2": 30000,
-    "0087T1": 45000,
-    "0087T2": 60000,
+    "0079T1": 40000,
+    "0079T2": 60000,
+    "0087T1": 90000,
+    "0087T2": 120000,
   });
   function roomEra(settings) {
     const era = settings.battlefieldEra ?? "custom";

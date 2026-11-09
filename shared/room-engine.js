@@ -141,35 +141,37 @@ function createRoomEngine({
       if (p.ws) p.ws.seat = p.seat;
       if (p.seat !== null) room.seats[p.seat] = p;
     }
-    // Switching an existing encounter room must not leave an ordinary bot in
-    // the fixed enemy slot or extra independent armies on the enemy team.
-    for (const p of members(room).filter(
-      (p) => p.bot && p.seat !== null && G.seatTeam(p.seat) === 1,
-    )) {
-      if (p.seat === 1) {
-        p.sweepEnemy = true;
-        p.ready = p.finalReady = true;
-      } else {
-        room.seats[p.seat] = null;
-        room.members.delete(p.id);
+    const count = room.seats.filter((p, seat) => p && G.seatTeam(seat) === 0).length;
+    const enemySeats = room.seats.map((_, seat) => seat).filter(seat => G.seatTeam(seat) === 1);
+    for (const [index, seat] of enemySeats.entries()) {
+      const existing = room.seats[seat];
+      if (index >= count) {
+        if (existing) {
+          room.seats[seat] = null;
+          room.members.delete(existing.id);
+        }
+        continue;
       }
-    }
-    if (!room.seats[1]) {
+      if (existing) {
+        existing.sweepEnemy = true;
+        existing.ready = existing.finalReady = true;
+        continue;
+      }
       const id = randomId(),
         p = {
           id,
-          name: "扫荡敌军",
+          name: "扫荡敌军 " + (index + 1),
           bot: true,
           sweepEnemy: true,
           characterFaction: "PMC",
-          seat: 1,
+          seat,
           ready: true,
           finalReady: true,
           requests: new Map(),
           aiSettings: G.validateAISettings(),
-          ws: { room: room.code, memberId: id, seat: 1 },
+          ws: { room: room.code, memberId: id, seat },
         };
-      room.seats[1] = p;
+      room.seats[seat] = p;
       room.members.set(id, p);
     }
   }
@@ -270,10 +272,11 @@ function createRoomEngine({
       });
       p.finalReady = true;
     }
-    const enemy = room.seats[1];
-    enemy.formation = Sweep.enemies(room, G, randomSeed());
-    enemy.finalReady = true;
-    if (!enemy.formation.length) throw Error("当前年代和单位限制下没有可用的敌军");
+    for (const enemy of room.seats.filter(p => p?.sweepEnemy)) {
+      enemy.formation = Sweep.enemies(room, G, randomSeed());
+      enemy.finalReady = true;
+      if (!enemy.formation.length) throw Error("当前年代和单位限制下没有可用的敌军");
+    }
     room.phase = "assembly";
     s.launching = true;
     startDeployment(room);
@@ -1293,6 +1296,8 @@ function createRoomEngine({
       return;
     }
     refreshHost(room);
+    if (room.settings.mode === "sweep" && (!room.started || room.phase === "assembly"))
+      ensureSweepSeats(room);
     if (room.started && room.game.battlefield) {
       G.battlefieldMode.captureNearby(G, room.game);
       awardBattlefieldCaptures(room);

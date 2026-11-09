@@ -998,7 +998,7 @@ const RoomPanel = (() => {
     squads.classList.toggle("team-grouped", observing);
     const teamLists = new Map();
     if (observing)
-      for (const team of [0, 1]) {
+      for (const team of snapshot.settings.mode === "sweep" ? [0] : [0, 1]) {
         const section = element("section", "final-squad-team");
         section.dataset.team = team;
         section.setAttribute("aria-label", I18n.text("队伍" + (team + 1)));
@@ -1008,6 +1008,8 @@ const RoomPanel = (() => {
         teamLists.set(team, list);
       }
     for (const player of snapshot.assembly?.players || []) {
+      if (snapshot.settings.mode === "battlefield" && player.seat < 2) continue;
+      if (snapshot.settings.mode === "sweep" && Rules.seatTeam(player.seat) === 1) continue;
       const card = element("section", "final-squad");
       card.dataset.memberId = player.memberId;
       const team = Rules.seatTeam(player.seat);
@@ -1287,7 +1289,7 @@ const RoomPanel = (() => {
     teams.classList.toggle("pmc-room", snapshot.settings.mode !== "campaign");
     for (const button of joinButtons) button.remove();
     teams.replaceChildren();
-    for (let team = 0; team < 2; team++) {
+    for (const team of snapshot.settings.mode === "sweep" ? [0] : [0, 1]) {
       const column = element("section", "team-slot");
       column.dataset.team = String(team);
       const teamHeading = element("div", "team-heading");
@@ -1328,7 +1330,7 @@ const RoomPanel = (() => {
       column.setAttribute("aria-label", "队伍" + (team + 1));
       const seats = map.spawns
         .map((spawn, seat) => ({ spawn, seat }))
-        .filter((item) => item.spawn.team === team);
+        .filter((item) => item.spawn.team === team && (snapshot.settings.mode !== "battlefield" || item.seat >= 2));
       const header = element("div", "lineup-header");
       header.append(
         element("span", "", "玩家ID / 空位"),

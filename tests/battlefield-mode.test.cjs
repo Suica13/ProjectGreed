@@ -50,7 +50,7 @@ test("dedicated battlefield map creates six reusable facility types for each tea
       6,
     );
   assert.equal(g.battlefield.points.length, 4);
-  assert.deepEqual(g.battlefield.strength, [20000, 20000]);
+  assert.deepEqual(g.battlefield.strength, [40000, 40000]);
   assert(g.units.filter((unit) => unit.facility).every((unit) => G.modelOf(unit).move === 0));
   assert(g.units.filter(unit => unit.facility?.type === "base").every(unit => unit.hp === 300000));
   assert(g.units.filter(unit => ["machineGun", "beam", "missile", "cannon"].includes(unit.facility?.type))
@@ -134,7 +134,7 @@ test("unit losses count once and base damage deducts the same percentage of init
   tank.hp = 0;
   base.hp *= 0.75;
   B.sync(G, g);
-  assert.equal(g.battlefield.strength[0], 15000 - G.modelOf(tank).cost);
+  assert.equal(g.battlefield.strength[0], 30000 - G.modelOf(tank).cost);
   const expected = structuredClone(g.battlefield.strength);
   B.sync(G, g);
   assert.deepEqual(g.battlefield.strength, expected);
@@ -149,7 +149,7 @@ test("a destroyed base wins despite surviving defenders; zero strength and time 
   B.sync(G, g);
   assert.equal(g.winner, 0);
   const zero = game();
-  zero.battlefield.losses[0] = 20000;
+  zero.battlefield.losses[0] = 40000;
   B.sync(G, zero);
   assert.equal(zero.winner, 1);
   const timed = game();
@@ -172,7 +172,7 @@ test("maps support multiple main bases and proportional aggregate base damage", 
     bases[0].hp = 0;
     B.sync(G, g);
     assert.equal(g.winner, null);
-    assert.equal(g.battlefield.strength[1], 10000);
+    assert.equal(g.battlefield.strength[1], 20000);
     bases[1].hp = 0;
     B.sync(G, g);
     assert.equal(g.winner, 0);
@@ -221,18 +221,18 @@ test("point advantage drains one percent of initial strength once per round and 
   const g = game(), state = g.battlefield;
   state.points[0].owner = 0;
   B.advance(G, g);
-  assert.deepEqual(state.strength, [20000, 20000], "no drain before a completed round");
+  assert.deepEqual(state.strength, [40000, 40000], "no drain before a completed round");
   g.round = 2;
   B.advance(G, g);
-  assert.deepEqual(state.strength, [20000, 19800]);
+  assert.deepEqual(state.strength, [40000, 39600]);
   B.advance(G, g);
   B.sync(G, g);
-  assert.deepEqual(state.strength, [20000, 19800], "duplicate settlement and snapshots cannot drain twice");
+  assert.deepEqual(state.strength, [40000, 39600], "duplicate settlement and snapshots cannot drain twice");
   state.points[1].owner = 0;
   state.losses[1] = 1000;
   g.round = 3;
   B.advance(G, g);
-  assert.deepEqual(state.strength, [20000, 18600], "multiple extra points still drain a flat 200");
+  assert.deepEqual(state.strength, [40000, 38200], "multiple extra points still drain a flat 400");
   const restored = structuredClone(g);
   B.advance(G, restored);
   assert.deepEqual(restored.battlefield.strength, state.strength, "serialized settlement marker survives reload");
@@ -244,22 +244,22 @@ test("tied points stop the drain and a reversed advantage drains the other team"
   state.points[1].owner = 1;
   g.round = 2;
   B.advance(G, g);
-  assert.deepEqual(state.strength, [20000, 20000]);
+  assert.deepEqual(state.strength, [40000, 40000]);
   state.points[2].owner = 1;
   g.round = 3;
   B.advance(G, g);
-  assert.deepEqual(state.strength, [19800, 20000]);
+  assert.deepEqual(state.strength, [39600, 40000]);
   state.points[3].owner = 0;
   g.round = 4;
   B.advance(G, g);
-  assert.deepEqual(state.strength, [19800, 20000]);
+  assert.deepEqual(state.strength, [39600, 40000]);
 });
 
 test("point drain can end a battle before reinforcements or decide the final round", () => {
   for (const round of [6, 101]) {
     const g = game(), state = g.battlefield;
     state.points[0].owner = 0;
-    state.losses[1] = 19800;
+    state.losses[1] = 39600;
     g.round = round;
     B.advance(G, g);
     assert.equal(g.winner, 0);
