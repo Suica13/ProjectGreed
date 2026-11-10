@@ -553,9 +553,11 @@ const RoomPanel = (() => {
     const settings = snapshot.settings || Rules.defaultRoomSettings();
     const mapSelect = byId("roomMapSelect");
     mapSelect.replaceChildren();
+    if (settings.mode === "sweep") mapSelect.add(new Option(I18n.text("战场扫荡"), settings.mapId));
     for (const map of Object.values(Rules.catalog.maps).filter(
       (map) =>
         settings.mode !== "campaign" &&
+        settings.mode !== "sweep" &&
         map.scope !== "strategic" &&
         (map.supportedModes || ["regular", "quick"]).includes(settings.mode || "regular"),
     )) {
@@ -601,11 +603,25 @@ const RoomPanel = (() => {
         label.append(select);
         sweepOptions.append(label);
       }
+      const environment = element("label", "", "作战环境"),
+        environmentSelect = document.createElement("select");
+      environmentSelect.id = "sweepEnvironment";
+      for (const [value, name] of [
+        ["ground", "地面"],
+        ["space", "宇宙"],
+      ])
+        environmentSelect.add(new Option(I18n.text(name), value));
+      environmentSelect.value = settings.sweepEnvironment || "ground";
+      environmentSelect.disabled = locked;
+      environmentSelect.onchange = () =>
+        sendSettings({ sweepEnvironment: environmentSelect.value });
+      environment.append(environmentSelect);
+      sweepOptions.append(environment);
       sweepOptions.append(
         element(
           "p",
           "helper",
-          "纯PVE；敌军按实际出战COST与推进深度生成，精英战增加精锐部队。战利品仅在撤离时结算。",
+          "纯PVE；按人数和作战环境随机抽选战斗地图。敌军上限与节点奖励每节点增长5%，战利品仅在撤离时结算。",
         ),
       );
     }
@@ -1330,7 +1346,11 @@ const RoomPanel = (() => {
       column.setAttribute("aria-label", "队伍" + (team + 1));
       const seats = map.spawns
         .map((spawn, seat) => ({ spawn, seat }))
-        .filter((item) => item.spawn.team === team && (snapshot.settings.mode !== "battlefield" || item.seat >= 2));
+        .filter(
+          (item) =>
+            item.spawn.team === team &&
+            (snapshot.settings.mode !== "battlefield" || item.seat >= 2),
+        );
       const header = element("div", "lineup-header");
       header.append(
         element("span", "", "玩家ID / 空位"),

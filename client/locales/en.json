@@ -3897,5 +3897,13 @@
   "事件选项无效": "Invalid event choice",
   "本局暂存资金不足1000": "Each player needs 1,000 banked funds",
   "已推进 {depth} 处 · 暂存资金 {money} · 物资 {supplies} · 科技点 {technology} · 获得机体 {units}台": "Nodes cleared {depth} · Banked funds {money} · Supplies {supplies} · Tech {technology} · Units {units}",
-  "{name} · {count}台": "{name} · {count} units"
+  "{name} · {count}台": "{name} · {count} units",
+  "全队恢复100%耐久和EN": "Restore all surviving units to full HP and EN",
+  "本次收获单位": "Recovered units",
+  "没有符合人数和环境的扫荡地图": "No sweep map matches the player count and environment",
+  "扫荡作战环境无效": "Invalid sweep environment",
+  "作战环境": "Operational environment",
+  "纯PVE；按人数和作战环境随机抽选战斗地图。敌军上限与节点奖励每节点增长5%，战利品仅在撤离时结算。": "PvE only. Battle maps are selected randomly for the player count and environment. Enemy limits and node rewards grow by 5% per node. Loot is settled on extraction.",
+  "本次扫荡尚未获得机体": "No units recovered on this sweep yet",
+  "没有剩余单位": "No surviving units"
 }

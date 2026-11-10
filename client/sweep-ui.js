@@ -36,12 +36,15 @@ const SweepUI = (() => {
   const info = document.createElement("dialog");
   info.id = "sweepInfo";
   info.setAttribute("aria-labelledby", "sweepInfoTitle");
-  info.innerHTML = '<header><h3 id="sweepInfoTitle"></h3><button type="button">关闭</button></header><div class="sweep-info-list"></div>';
+  info.innerHTML =
+    '<header><h3 id="sweepInfoTitle"></h3><button type="button">关闭</button></header><div class="sweep-info-list"></div>';
   document.body.append(info);
   const list = info.lastElementChild;
   let mission, selectedTeam;
   info.querySelector("button").onclick = () => info.close();
-  window.addEventListener("page-changing", () => { if (info.open) info.close(); });
+  window.addEventListener("page-changing", () => {
+    if (info.open) info.close();
+  });
   function showInfo(teamId) {
     selectedTeam = teamId;
     renderInfo();
@@ -62,22 +65,31 @@ const SweepUI = (() => {
   function renderInfo() {
     list.replaceChildren();
     if (selectedTeam === null) {
-      byId("sweepInfoTitle").textContent = I18n.text("本次收获 MS");
+      byId("sweepInfoTitle").textContent = I18n.text("本次收获单位");
       for (const [id, count] of Object.entries(mission.pending.inventory)) {
-        const prefab = ART.prefabs.find(p => p.id === id);
-        infoRow(id + "__" + prefab?.weaponKits?.[0]?.id, I18n.text(prefab?.name || id) + " × " + count);
+        const prefab = ART.prefabs.find((p) => p.id === id);
+        infoRow(
+          id + "__" + prefab?.weaponKits?.[0]?.id,
+          I18n.text(prefab?.name || id) + " × " + count,
+        );
       }
       if (!list.childElementCount) list.append(element("p", "", "本次扫荡尚未获得机体"));
       return;
     }
-    const team = mission.teams.find(team => team.id === selectedTeam);
+    const team = mission.teams.find((team) => team.id === selectedTeam);
     byId("sweepInfoTitle").textContent = team?.name || "PMC";
     for (const u of team?.units || []) {
       const m = Rules.models[u.model];
-      const parts = Object.keys(u.brokenParts || {}).filter(k => u.brokenParts[k]);
-      const details = [I18n.text(m?.name || u.unitId), `HP ${u.hp}/${m?.hp}`, `EN ${u.en}/${m?.en}`];
-      if (m?.shield?.hp && u.shield != null) details.push(I18n.text("盾牌HP") + ` ${u.shield}/${m.shield.hp}`);
-      if (parts.length) details.push(parts.map(k => I18n.text(Rules.partNames[k] || k)).join(" / "));
+      const parts = Object.keys(u.brokenParts || {}).filter((k) => u.brokenParts[k]);
+      const details = [
+        I18n.text(m?.name || u.unitId),
+        `HP ${u.hp}/${m?.hp}`,
+        `EN ${u.en}/${m?.en}`,
+      ];
+      if (m?.shield?.hp && u.shield != null)
+        details.push(I18n.text("盾牌HP") + ` ${u.shield}/${m.shield.hp}`);
+      if (parts.length)
+        details.push(parts.map((k) => I18n.text(Rules.partNames[k] || k)).join(" / "));
       infoRow(u.model, details.join(" · "));
     }
     if (!list.childElementCount) list.append(element("p", "", "没有剩余单位"));
@@ -164,8 +176,7 @@ const SweepUI = (() => {
         button.dataset.sweepNode = n.id;
         button.style.left = (100 + n.lane * 200) / 6 + "%";
         button.style.top = (600 - (n.depth - start) * 96) / 6.5 + "%";
-        button.disabled =
-          !host || n.depth !== s.depth + 1 || (s.depth >= 0 && Math.abs(n.lane - s.lane) > 1);
+        button.disabled = !host || !s.reachable.includes(n.id);
         button.onclick = () => request("sweep_select", { nodeId: n.id });
         route.append(button);
       }
@@ -213,12 +224,22 @@ const SweepUI = (() => {
     fleet.replaceChildren();
     for (const team of s.teams) {
       const article = element("article");
-      const cost = team.units.reduce((sum, u) => sum + (Rules.models[u.unitId + "__" + u.kitId]?.cost || 0), 0);
+      const cost = team.units.reduce(
+        (sum, u) => sum + (Rules.models[u.unitId + "__" + u.kitId]?.cost || 0),
+        0,
+      );
       const detail = element("button", "", "详情");
       detail.setAttribute("aria-haspopup", "dialog");
       detail.onclick = () => showInfo(team.id);
-      article.append(element("h3", "", team.name),
-        element("p", "", format("剩余 {count} 台 · 编组 COST {cost}", {count: team.units.length, cost})), detail);
+      article.append(
+        element("h3", "", team.name),
+        element(
+          "p",
+          "",
+          format("剩余 {count} 台 · 编组 COST {cost}", { count: team.units.length, cost }),
+        ),
+        detail,
+      );
       fleet.append(article);
     }
   }

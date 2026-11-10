@@ -287,6 +287,7 @@ const Tactics = (() => {
       mode: "regular",
       sweepFaction: "ZEON",
       sweepEra: "0079T1",
+      sweepEnvironment: "ground",
       fogMode: "full",
       mapId: catalog.defaultMap,
       costLimit: 2000,
@@ -1949,7 +1950,6 @@ const Tactics = (() => {
     };
   }
   function create(ai = false, seed = 7319, formations, deploying = false, settings = {}, restoration = null) {
-    if (settings.mode === "sweep") settings = {...settings,mapId:sweepMapId};
     const map = getMap(settings.mapId),
       costLimit = validateCostLimit(settings.costLimit ?? catalog.formation.maxCost),
       unitLimit = validateUnitLimit(settings.unitLimit ?? catalog.formation.maxUnits),
@@ -1965,7 +1965,7 @@ const Tactics = (() => {
     if (
       map.supportedModes &&
       !map.supportedModes.includes(
-        settings.mode === "campaign" ? "regular" : settings.mode || "regular",
+        settings.mode === "campaign" || (settings.mode==="sweep"&&map.id!==sweepMapId) ? "regular" : settings.mode || "regular",
       )
     )
       throw Error("此地图不支持所选对战模式");

@@ -142,7 +142,7 @@ function createRoomEngine({
       if (p.seat !== null) room.seats[p.seat] = p;
     }
     const count = room.seats.filter((p, seat) => p && G.seatTeam(seat) === 0).length;
-    const enemySeats = room.seats.map((_, seat) => seat).filter(seat => G.seatTeam(seat) === 1);
+    const enemySeats = room.seats.map((_, seat) => seat).filter((seat) => G.seatTeam(seat) === 1);
     for (const [index, seat] of enemySeats.entries()) {
       const existing = room.seats[seat];
       if (index >= count) {
@@ -252,6 +252,21 @@ function createRoomEngine({
   }
   function launchSweepBattle(room) {
     const s = room.sweep;
+    const map = Sweep.chooseMap(room, G, randomSeed());
+    const allies = room.seats.filter((p) => p && G.seatTeam(p.seat) === 0),
+      enemies = room.seats.filter((p) => p?.sweepEnemy);
+    room.seats = Array(map.spawns.length).fill(null);
+    for (const [index, p] of allies.entries()) {
+      p.seat = index * 2;
+      if (p.ws) p.ws.seat = p.seat;
+      room.seats[p.seat] = p;
+    }
+    for (const [index, p] of enemies.entries()) {
+      p.seat = index * 2 + 1;
+      if (p.ws) p.ws.seat = p.seat;
+      room.seats[p.seat] = p;
+    }
+    room.settings.mapId = map.id;
     room.pending = null;
     room.battle = null;
     room.playback = null;
@@ -272,7 +287,7 @@ function createRoomEngine({
       });
       p.finalReady = true;
     }
-    for (const enemy of room.seats.filter(p => p?.sweepEnemy)) {
+    for (const enemy of room.seats.filter((p) => p?.sweepEnemy)) {
       enemy.formation = Sweep.enemies(room, G, randomSeed());
       enemy.finalReady = true;
       if (!enemy.formation.length) throw Error("当前年代和单位限制下没有可用的敌军");
@@ -1391,6 +1406,13 @@ function createRoomEngine({
   }
   function returnToRoom(room) {
     if (rooms.get(room.code) !== room || !room.started) return;
+    if (room.settings.mode === "sweep") {
+      room.settings.mapId =
+        room.settings.sweepEnvironment === "space" ? "outer_orbit_5v5" : G.sweepMapId;
+      const seats = Array(G.getMap(room.settings.mapId).spawns.length).fill(null);
+      for (const player of room.seats.filter(Boolean)) seats[player.seat] = player;
+      room.seats = seats;
+    }
     room.sweep = null;
     clearTimeout(returnTimers.get(room));
     returnTimers.delete(room);
@@ -2567,7 +2589,7 @@ function createRoomEngine({
   }
   const playerBudget = (room, player) =>
     player?.sweepEnemy
-      ? Sweep.enemyLimits(room).costLimit
+      ? Sweep.enemyLimits(room, G).costLimit
       : player?.battlefieldAI
         ? 10000
         : G.armyBudget(room.settings, formationPlayer(room, player));
@@ -2640,7 +2662,7 @@ function createRoomEngine({
           ]),
         ],
         aiAllowedEras: [room.settings.sweepEra],
-        unitCostLimit: Sweep.enemyLimits(room).unitCostLimit,
+        unitCostLimit: Sweep.enemyLimits(room, G).unitCostLimit,
       });
     if (player?.battlefieldAI) {
       Object.assign(rules, G.validateTagRestrictions());
@@ -2668,8 +2690,7 @@ function createRoomEngine({
   // Cache by all effective inputs, never by mutable player/room identity.
   const previewArmies = new Map();
   function randomArmy(room, player, seed = randomSeed()) {
-    if (player.sweepEnemy)
-      return room.sweep ? player.formation : Sweep.enemies(room, G, seed);
+    if (player.sweepEnemy) return room.sweep ? player.formation : Sweep.enemies(room, G, seed);
     if (player.battlefieldAI) {
       const faction = room.settings.battlefieldTeams[player.seat].faction;
       const unitId = faction === "EFSF" ? "Type61" : "MTank";
@@ -4371,7 +4392,10 @@ function createRoomEngine({
             room.settings.mode !== "campaign" &&
             G.getMap(room.settings.mapId).supportedModes &&
             !G.getMap(room.settings.mapId).supportedModes.includes(
-              room.settings.mode === "campaign" ? "regular" : room.settings.mode,
+              room.settings.mode === "campaign" ||
+                (room.settings.mode === "sweep" && room.settings.mapId !== G.sweepMapId)
+                ? "regular"
+                : room.settings.mode,
             )
           )
             throw Error("此地图不支持所选对战模式");
@@ -4638,18 +4662,24 @@ function createRoomEngine({
           const map = G.getMap(
             strategic
               ? G.campaignRoomSettings().mapId
-              : nextMode === "sweep" ? G.sweepMapId : nextMode === "battlefield"
-                ? requestedMap.battlefield
-                  ? requestedMap.id
-                  : G.battlefieldMode.defaultMapId
-                : requestedMap.battlefield || requestedMap.id === G.sweepMapId
-                  ? G.defaultRoomSettings().mapId
-                  : requestedMap.id,
+              : nextMode === "sweep"
+                ? (msg.sweepEnvironment ?? room.settings.sweepEnvironment ?? "ground") === "space"
+                  ? "outer_orbit_5v5"
+                  : G.sweepMapId
+                : nextMode === "battlefield"
+                  ? requestedMap.battlefield
+                    ? requestedMap.id
+                    : G.battlefieldMode.defaultMapId
+                  : requestedMap.battlefield || requestedMap.id === G.sweepMapId
+                    ? G.defaultRoomSettings().mapId
+                    : requestedMap.id,
           );
           if (
             !strategic &&
             map.supportedModes &&
-            !map.supportedModes.includes(nextMode)
+            !map.supportedModes.includes(
+              nextMode === "sweep" && map.id !== G.sweepMapId ? "regular" : nextMode,
+            )
           )
             throw Error("此地图不支持所选模式");
           if (!strategic && map.scope === "strategic")
@@ -4707,6 +4737,8 @@ function createRoomEngine({
                 mode: G.validateBattleMode(msg.battleMode ?? room.settings.mode),
                 sweepFaction: msg.sweepFaction ?? room.settings.sweepFaction ?? "ZEON",
                 sweepEra: msg.sweepEra ?? room.settings.sweepEra ?? "0079T1",
+                sweepEnvironment:
+                  msg.sweepEnvironment ?? room.settings.sweepEnvironment ?? "ground",
                 mapId: map.id,
                 fogMode: G.validateFogMode(msg.fogMode ?? room.settings.fogMode),
                 pilotDialogue: msg.pilotDialogue ?? room.settings.pilotDialogue ?? true,
@@ -4746,6 +4778,8 @@ function createRoomEngine({
             (!G.factions.includes(settings.sweepFaction) || !G.eras.includes(settings.sweepEra))
           )
             throw Error("扫荡敌军阵营或年代无效");
+          if (settings.mode === "sweep" && !["ground", "space"].includes(settings.sweepEnvironment))
+            throw Error("扫荡作战环境无效");
           if (settings.mode === "battlefield") {
             settings.battlefieldTeams = G.battlefieldMode.teams(
               G,
@@ -5641,9 +5675,9 @@ function createRoomEngine({
         updated: Date.now(),
       };
       if (room.settings.mode === "sweep") {
-        room.settings.mapId=G.sweepMapId;
-        room.seats=Array(G.getMap(G.sweepMapId).spawns.length).fill(null);
-        room.turnDone=room.seats.map(()=>false);
+        room.settings.mapId = G.sweepMapId;
+        room.seats = Array(G.getMap(G.sweepMapId).spawns.length).fill(null);
+        room.turnDone = room.seats.map(() => false);
       }
       if (room.settings.mode === "campaign") {
         room.seats = Array(G.getMap(room.settings.mapId).spawns.length).fill(null);

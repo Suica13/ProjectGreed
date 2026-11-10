@@ -469,7 +469,31 @@ test("hostile kills pay COST/2, zero-damage attack participation pays COST/4 and
   assert(results.every(award => award.money === 1500 && award.supplies === 3000));
   assert(room.techAwards.length>0);
   assert.equal(room.techAwards.filter(a=>a.memberId===room.seats[2].id).reduce((sum,a)=>sum+a.points,0),B.technologyReward(room.settings,0,true,1.25));
+  const awards=structuredClone(room.techAwards);
+  engine.broadcast(room);engine.broadcast(room);
+  assert.deepEqual(room.techAwards,awards);
   assert.deepEqual(room.pilotAwards, []);
+});
+
+test("mercenary technology applies activity once and stops at the remaining faction requirement", (t) => {
+  const D=require("../shared/development");
+  for(const remaining of [17,null]) {
+  const {engine,room,act}=roomFixture(t,{getRewardMultipliers:()=>({technology:2})});
+  act("start_game",{formation:[{unitId:"Type61",kitId:"standard"}]});
+  act("confirm_formation");act("confirm_deployment");
+  const player=room.seats[2];
+  room.technologyStartPoints[player.id]=Object.fromEntries(D.factions.map(f=>[f,D.maximumPoints(f)]));
+  room.technologyStartPoints[player.id].EFSF=remaining===null?0:D.maximumPoints("EFSF")-remaining;
+  room.techParticipation[player.id]=["enemy-hit"];
+  room.game.units.find(u=>u.team===1&&u.facility?.type==="base").hp=0;
+  engine.broadcast(room);
+  const awards=room.techAwards.filter(a=>a.memberId===player.id);
+  const expected=remaining??B.technologyReward(room.settings,0,true,2*1.25);
+  assert.equal(awards.reduce((n,a)=>n+a.points,0),expected);
+  assert.equal(player.technologyPoints.EFSF,remaining===null?expected:D.maximumPoints("EFSF"));
+  engine.broadcast(room);
+  assert.equal(room.techAwards.filter(a=>a.memberId===player.id).length,awards.length);
+  }
 });
 test("fixed AI slots cannot be removed, taken or relocated by host requests", (t) => {
   const { room, act } = roomFixture(t);

@@ -59,11 +59,17 @@ const SweepMode = (() => {
     };
   }
   function rows(seed, start = 0, count = 7) {
-    const random = rng(seed + start * 7309),
-      result = [];
+    const result = [];
+    const lanesAt = (depth) => {
+      if (depth === 0) return [0, 1, 2];
+      const r = rng(seed + depth * 7309)();
+      return r < 0.35 ? (r < 0.175 ? [0, 1] : [1, 2]) : [0, 1, 2];
+    };
     for (let depth = start; depth < start + count; depth++) {
-      const nodes = [];
-      for (let lane = 0; lane < 3; lane++) {
+      const random = rng(seed + depth * 7309 + 613),
+        nodes = [],
+        nextLanes = lanesAt(depth + 1);
+      for (const lane of lanesAt(depth)) {
         const r = random();
         const type =
           depth === 0
@@ -84,9 +90,34 @@ const SweepMode = (() => {
           depth,
           lane,
           type,
-          next: [0, 1, 2].filter((n) => Math.abs(n - lane) <= 1).map((n) => depth + 1 + ":" + n),
+          next: [],
         });
       }
+      // Each node has an exit and each following node is reachable; most
+      // routes have one exit, with occasional forks instead of a full mesh.
+      for (const node of nodes) {
+        const candidates = nextLanes
+          .filter((l) => Math.abs(l - node.lane) <= 1)
+          .sort((a, b) => Math.abs(a - node.lane) - Math.abs(b - node.lane) || a - b);
+        node.next.push(`${depth + 1}:${candidates[0]}`);
+      }
+      for (const lane of nextLanes)
+        if (!nodes.some((n) => n.next.includes(`${depth + 1}:${lane}`))) {
+          const from = nodes
+            .filter((n) => Math.abs(n.lane - lane) <= 1)
+            .sort(
+              (a, b) =>
+                a.next.length - b.next.length || Math.abs(a.lane - lane) - Math.abs(b.lane - lane),
+            )[0];
+          from.next.push(`${depth + 1}:${lane}`);
+        }
+      for (const node of nodes)
+        if (node.next.length === 1 && random() < 0.22) {
+          const extra = nextLanes.find(
+            (l) => Math.abs(l - node.lane) <= 1 && !node.next.includes(`${depth + 1}:${l}`),
+          );
+          if (extra !== undefined) node.next.push(`${depth + 1}:${extra}`);
+        }
       result.push(...nodes);
     }
     return result;
@@ -159,6 +190,7 @@ const SweepMode = (() => {
       nodes: s.nodes,
       ended: s.ended,
       event: s.event,
+      reachable: s.nodes.filter((n) => selectable(room, n)).map((n) => n.id),
       pending: structuredClone(s.pending[memberId] || blank()),
       teams: Object.entries(s.rosters).map(([id, roster]) => ({
         id,
@@ -179,7 +211,10 @@ const SweepMode = (() => {
   function selectable(room, node) {
     const s = room.sweep;
     return (
-      !!node && node.depth === s.depth + 1 && (s.depth < 0 || Math.abs(s.lane - node.lane) <= 1)
+      !!node &&
+      node.depth === s.depth + 1 &&
+      (s.depth < 0 ||
+        !!s.nodes.find((n) => n.depth === s.depth && n.lane === s.lane)?.next.includes(node.id))
     );
   }
   function select(room, id) {
@@ -187,31 +222,53 @@ const SweepMode = (() => {
     if (!selectable(room, node)) throw Error("请选择相邻的下一处任务节点");
     room.sweep.selected = id;
   }
-  function reward(room, G, multiplier = 1, rare = false) {
+  const rewardPools = new WeakMap();
+  function rewardPool(room, G) {
+    let pools = rewardPools.get(G.catalog);
+    if (!pools) rewardPools.set(G.catalog, (pools = new Map()));
+    const era = room.settings.sweepEra;
+    if (!pools.has(era))
+      pools.set(
+        era,
+        G.catalog.prefabs
+          .filter(
+            (u) =>
+              !u.formOnly &&
+              !u.wip &&
+              !u.facility &&
+              !u.requiredPilotId &&
+              u.weaponKits.length &&
+              u.tags.includes(era),
+          )
+          .map((u) => ({
+            id: u.id,
+            cost: G.formationModel({ unitId: u.id, kitId: u.defaultKit || u.weaponKits[0].id })
+              .cost,
+          }))
+          .filter((u) => u.cost > 0),
+      );
+    return pools.get(era);
+  }
+  const growth = (room) => 1.05 ** Math.min(10000, Math.max(0, room.sweep?.depth || 0));
+  function reward(room, G, multiplier = 1, unitCount = 0) {
     const s = room.sweep,
       eraIndex = Math.max(0, G.eras.indexOf(room.settings.sweepEra));
     for (const p of room.seats.filter((p) => p && !p.bot && G.seatTeam(p.seat) === 0)) {
       const scale =
         Math.max(0.25, Math.min(room.settings.costLimit, s.initialCost[p.id]) / 2000) *
-        (1 + Math.min(s.depth, 30) * 0.06);
+        growth(room) *
+        0.75;
       const pending = s.pending[p.id];
       pending.money += Math.floor(500 * scale * multiplier);
       pending.supplies += Math.floor(1000 * scale * multiplier);
       pending.technology += Math.floor(100 * scale * multiplier);
-      if (rare) {
-        const pool = G.catalog.prefabs.filter(
-          (u) =>
-            !u.formOnly &&
-            !u.wip &&
-            u.weaponKits.length &&
-            u.tags.includes(room.settings.sweepEra) &&
-            !u.facility &&
-            u.stats.cost <= Math.max(500, room.settings.unitCostLimit * 1.5) &&
-            !u.requiredPilotId &&
-            !u.stats.ship,
+      if (unitCount) {
+        const limit = enemyLimits(room, G).unitCostLimit;
+        const pool = rewardPool(room, G).filter(
+          (u) => u.cost >= limit * 0.5 && u.cost <= limit * 1.25,
         );
         const random = rng(s.seed + s.depth * 1789 + eraIndex + p.seat * 97);
-        if (pool.length) {
+        for (let i = 0; i < Number(unitCount) && pool.length; i++) {
           const unit = pool[Math.floor(random() * pool.length)];
           pending.inventory[unit.id] = (pending.inventory[unit.id] || 0) + 1;
         }
@@ -249,7 +306,7 @@ const SweepMode = (() => {
             id: "rest",
             name: "PMC前沿休息区",
             text: "整备舰队提供一次服务。补员由每位玩家从个人机库选择，房主确认后继续。",
-            choices: ["全队恢复50%耐久和EN", "开放机库补员"],
+            choices: ["全队恢复100%耐久和EN", "开放机库补员"],
           }
         : structuredClone(events[Math.floor(rng(s.seed + s.depth * 331)() * events.length)]);
     room.phase = "sweep_event";
@@ -260,7 +317,7 @@ const SweepMode = (() => {
       e = s.event;
     if (!e || ![0, 1].includes(choice)) throw Error("事件选项无效");
     if (e.id === "rest") {
-      if (choice === 0) recover(room, G, 0.5);
+      if (choice === 0) recover(room, G, 1);
       else {
         s.resupply = true;
         room.phase = "sweep_resupply";
@@ -284,7 +341,7 @@ const SweepMode = (() => {
         (e.id === "salvage" && choice === 1) || (e.id === "survivors" && choice === 0),
       );
       if ((e.id === "intel" && choice === 0) || (e.id === "storm" && choice === 1))
-        for (const p of Object.values(s.pending)) p.technology += 200;
+        for (const p of Object.values(s.pending)) p.technology += Math.floor(150 * growth(room));
     }
     for (const [id, roster] of Object.entries(s.rosters)) {
       for (const r of roster.filter((r) => r.state.hp <= 0)) {
@@ -324,24 +381,51 @@ const SweepMode = (() => {
       }
       s.rosters[p.id] = next;
     }
+    for (const roster of Object.values(s.rosters)) {
+      const hasSupport = roster.some((r) => {
+        const m = G.models[r.state.model];
+        return (
+          m.supplyAura ||
+          m.hangars?.length ||
+          m.skills?.some((skill) => ["resupply", "repair"].includes(skill.type))
+        );
+      });
+      if (hasSupport)
+        for (const r of roster) {
+          const m = G.models[r.state.model];
+          r.state.hp = m.hp;
+          r.state.en = m.en;
+        }
+    }
     if (!survivors(room, G)) {
       finish(room, true);
       return;
     }
-    if (room.game.winner === 0) reward(room, G, s.elite ? 2 : 1, s.elite);
+    if (room.game.winner === 0) reward(room, G, s.elite ? 2 : 1, s.elite ? 3 : 1);
     room.game.winner = null;
     room.phase = "sweep_map";
     room.returnAt = null;
     room.returnCountdown = null;
   }
-  function enemyLimits(room) {
+  function enemyLimits(room, G) {
+    const pool = G ? rewardPool(room, G) : [],
+      maximum = pool.length ? Math.min(99999, Math.max(...pool.map((u) => u.cost)) * 2) : 99999;
+    const minimum = pool.length ? Math.ceil(Math.min(...pool.map((u) => u.cost)) / 1.25) : 1;
     return {
-      costLimit: Math.floor(room.settings.costLimit / 2),
-      unitCostLimit: Math.floor(room.settings.unitCostLimit * (room.sweep?.elite ? 1.25 : 0.75)),
+      costLimit: Math.min(99999, Math.floor((room.settings.costLimit / 2) * growth(room))),
+      unitCostLimit: Math.max(
+        minimum,
+        Math.min(
+          maximum,
+          Math.floor(
+            room.settings.unitCostLimit * (room.sweep?.elite ? 1.25 : 0.75) * growth(room),
+          ),
+        ),
+      ),
     };
   }
   function enemies(room, G, seed) {
-    const limits = enemyLimits(room);
+    const limits = enemyLimits(room, G);
     return G.randomFormation(
       seed,
       limits.costLimit,
@@ -364,6 +448,45 @@ const SweepMode = (() => {
       G.catalog.formation.maxUnits,
     );
   }
-  return { events, rows, init, view, select, arrived, event, finish, checkpoint, enemyLimits, enemies, save };
+  function mapPool(room, G) {
+    const count = Math.max(1, room.seats.filter((p) => p && G.seatTeam(p.seat) === 0).length),
+      environment = room.settings.sweepEnvironment || "ground";
+    const pool = Object.values(G.catalog.maps).filter(
+      (m) =>
+        !m.strategic &&
+        !m.battlefield &&
+        m.scope !== "strategic" &&
+        (m.supportedModes || ["regular"]).includes("regular") &&
+        m.environment === environment &&
+        m.playersPerTeam >= count,
+    );
+    const capacity = Math.min(...pool.map((m) => m.playersPerTeam));
+    return pool.filter((m) => m.playersPerTeam === capacity);
+  }
+  function chooseMap(room, G, seed) {
+    const pool = mapPool(room, G),
+      alternatives = pool.filter((m) => m.id !== room.settings.mapId),
+      choices = alternatives.length ? alternatives : pool;
+    if (!choices.length) throw Error("没有符合人数和环境的扫荡地图");
+    return choices[Math.floor(rng(seed)() * choices.length)];
+  }
+  return {
+    events,
+    rows,
+    init,
+    view,
+    select,
+    arrived,
+    event,
+    finish,
+    checkpoint,
+    enemyLimits,
+    enemies,
+    save,
+    reward,
+    rewardPool,
+    mapPool,
+    chooseMap,
+  };
 })();
 if (typeof module !== "undefined") module.exports = SweepMode;

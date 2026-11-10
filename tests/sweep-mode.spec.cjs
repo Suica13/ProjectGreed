@@ -15,6 +15,12 @@ for (const width of [1440, 390])
     await expect(page.locator("#roomMapSelect")).toBeHidden();
     await expect(page.locator("#roomMapTitle")).toHaveText("战场扫荡");
     if (width < 600) await page.getByRole("button", { name: "房间设置", exact: true }).click();
+    await expect(page.locator("#sweepEnvironment")).toHaveValue("ground");
+    await page.locator("#sweepEnvironment").selectOption("space");
+    await expect(page.locator("#sweepEnvironment")).toHaveValue("space");
+    await expect(page.locator("#roomMapTitle")).toHaveText("战场扫荡");
+    await page.locator("#sweepEnvironment").selectOption("ground");
+    await expect(page.locator("#sweepEnvironment")).toHaveValue("ground");
     await page
       .locator("#roomMapPreview")
       .screenshot({ path: `tmp/verification/screenshots/sweep-cover-${width}.png` });
@@ -31,7 +37,7 @@ for (const width of [1440, 390])
     await expect(page.locator("#sweepMission")).toBeVisible();
     await expect(page.locator("#gameScene")).toBeVisible();
     await page.locator("#showChat").click();
-    const normalMissionHeight=(await page.locator('#sweepMission').boundingBox()).height;
+    const normalMissionHeight = (await page.locator("#sweepMission").boundingBox()).height;
     await page.locator("#hudExpandConsole").click();
     await expect(page.locator("#gameScene")).toHaveAttribute("data-console-size", "expanded");
     await expect(page.locator("#chatInput")).toBeVisible();
