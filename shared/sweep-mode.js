@@ -170,6 +170,8 @@ const SweepMode = (() => {
           hp: r.state.hp,
           en: r.state.en,
           model: r.state.model,
+          shield: r.state.shield,
+          brokenParts: r.state.brokenParts,
         })),
       })),
     };

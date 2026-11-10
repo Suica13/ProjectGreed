@@ -25,7 +25,63 @@ const SweepUI = (() => {
     #gameScene[data-sweep-mission=true]{--hud-planner:0px!important;--hud-action:0px!important}
     @media(max-width:700px){#sweepMission{padding:8px;gap:6px}#sweepMission h2{font-size:15px}#sweepMission header{gap:8px}#sweepSummary,#sweepNotice{font-size:11px}#sweepMission .sweep-workspace{display:flex;flex-direction:column;gap:6px}#sweepMission .sweep-stage{order:0;flex:1}#sweepMission .sweep-fleet-panel{order:1;flex:none;max-height:30%;padding:4px}#sweepRoute{min-height:340px}#sweepRoute button{width:86px;min-height:38px;font-size:12px}#sweepEvent{padding:8px}}
   `;
+  style.textContent += `
+    #sweepFleet article{border:1px solid var(--line);border-radius:5px;padding:8px;margin:6px 0;background:#1c3040}
+    #sweepInfo{width:min(460px,88vw);max-height:76vh;overflow:auto;color:var(--text);background:#162632;border:1px solid var(--line);border-radius:8px;padding:12px}
+    #sweepInfo::backdrop{background:#071019aa}#sweepInfo header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    #sweepInfo h3{margin:0}#sweepInfo p{display:flex;align-items:center;gap:10px;padding:8px 0;margin:0;border-bottom:1px solid var(--line)}
+    #sweepInfo img{width:42px;height:42px;object-fit:contain;image-rendering:pixelated}
+  `;
   document.head.append(style);
+  const info = document.createElement("dialog");
+  info.id = "sweepInfo";
+  info.setAttribute("aria-labelledby", "sweepInfoTitle");
+  info.innerHTML = '<header><h3 id="sweepInfoTitle"></h3><button type="button">关闭</button></header><div class="sweep-info-list"></div>';
+  document.body.append(info);
+  const list = info.lastElementChild;
+  let mission, selectedTeam;
+  info.querySelector("button").onclick = () => info.close();
+  window.addEventListener("page-changing", () => { if (info.open) info.close(); });
+  function showInfo(teamId) {
+    selectedTeam = teamId;
+    renderInfo();
+    if (!info.open) info.showModal();
+  }
+  byId("sweepLootButton").onclick = () => showInfo(null);
+  function infoRow(modelId, text) {
+    const row = element("p");
+    if (Rules.models[modelId]) {
+      const img = element("img");
+      img.alt = "";
+      img.src = unitIcon(modelId);
+      row.append(img);
+    }
+    row.append(document.createTextNode(text));
+    list.append(row);
+  }
+  function renderInfo() {
+    list.replaceChildren();
+    if (selectedTeam === null) {
+      byId("sweepInfoTitle").textContent = I18n.text("本次收获 MS");
+      for (const [id, count] of Object.entries(mission.pending.inventory)) {
+        const prefab = ART.prefabs.find(p => p.id === id);
+        infoRow(id + "__" + prefab?.weaponKits?.[0]?.id, I18n.text(prefab?.name || id) + " × " + count);
+      }
+      if (!list.childElementCount) list.append(element("p", "", "本次扫荡尚未获得机体"));
+      return;
+    }
+    const team = mission.teams.find(team => team.id === selectedTeam);
+    byId("sweepInfoTitle").textContent = team?.name || "PMC";
+    for (const u of team?.units || []) {
+      const m = Rules.models[u.model];
+      const parts = Object.keys(u.brokenParts || {}).filter(k => u.brokenParts[k]);
+      const details = [I18n.text(m?.name || u.unitId), `HP ${u.hp}/${m?.hp}`, `EN ${u.en}/${m?.en}`];
+      if (m?.shield?.hp && u.shield != null) details.push(I18n.text("盾牌HP") + ` ${u.shield}/${m.shield.hp}`);
+      if (parts.length) details.push(parts.map(k => I18n.text(Rules.partNames[k] || k)).join(" / "));
+      infoRow(u.model, details.join(" · "));
+    }
+    if (!list.childElementCount) list.append(element("p", "", "没有剩余单位"));
+  }
   let wasActive = false;
   const format = (source, values) =>
     I18n.text(source.replace(/\{(\w+)\}/g, (_, key) => values[key]));
@@ -37,6 +93,12 @@ const SweepUI = (() => {
     byId("gameScene").dataset.sweepMission = String(active);
     if (active && !wasActive)
       panel.querySelector("details").open = !matchMedia("(max-width:700px)").matches;
+    mission = s;
+    byId("sweepLootButton").hidden = !s || s.ended;
+    if (info.open) {
+      if (!s || s.ended || (selectedTeam !== null && !active)) info.close();
+      else renderInfo();
+    }
     wasActive = active;
     if (!active) return;
     const host = snapshot.you?.id === snapshot.hostId;
@@ -151,26 +213,12 @@ const SweepUI = (() => {
     fleet.replaceChildren();
     for (const team of s.teams) {
       const article = element("article");
-      article.append(
-        element(
-          "h3",
-          "",
-          format("{name} · {count}台", { name: team.name, count: team.units.length }),
-        ),
-      );
-      for (const u of team.units) {
-        const row = element("p"),
-          m = Rules.models[u.model],
-          img = element("img");
-        img.src = unitIcon(u.model);
-        row.append(
-          img,
-          document.createTextNode(
-            `${m?.name || u.unitId} · HP ${u.hp}/${m?.hp} · EN ${u.en}/${m?.en}`,
-          ),
-        );
-        article.append(row);
-      }
+      const cost = team.units.reduce((sum, u) => sum + (Rules.models[u.unitId + "__" + u.kitId]?.cost || 0), 0);
+      const detail = element("button", "", "详情");
+      detail.setAttribute("aria-haspopup", "dialog");
+      detail.onclick = () => showInfo(team.id);
+      article.append(element("h3", "", team.name),
+        element("p", "", format("剩余 {count} 台 · 编组 COST {cost}", {count: team.units.length, cost})), detail);
       fleet.append(article);
     }
   }
