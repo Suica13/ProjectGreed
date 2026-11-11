@@ -5,7 +5,7 @@ const { randomUUID } = require("node:crypto"),
 const { createServer } = require("../server");
 const version = require("../project.json").version;
 const G = require("../shared/rules");
-for (const presetId of [null,"0079T1-small","0079T2-large","0087T1-small","0087T2-large"]) test("network PMC players receive one authoritative battlefield result / "+(presetId || "custom"), async (t) => {
+for (const presetId of [null,"0079T1-cost-1500","0079T2-cost-10000","0087T1-cost-1500","0087T2-cost-20000"]) test("network PMC players receive one authoritative battlefield result / "+(presetId || "custom"), async (t) => {
   const app = createServer({ port: 0, host: "127.0.0.1", aiDelayMs: 999999 });
   const address = await app.listen(),
     sockets = [];
@@ -54,9 +54,9 @@ for (const presetId of [null,"0079T1-small","0079T2-large","0087T1-small","0087T
         room: "BFNETWORK",
         roomMode: "battlefield",
         characterFaction: "PMC",
-        licenses: { Type61: true },
-        inventory: {Type61:5},
-        kits: {Type61__standard:5},
+        licenses: { Medea: true },
+        inventory: {Medea:5},
+        kits: {},
       }),
     );
     await wait((frame) => frame.type === "joined");
@@ -110,7 +110,7 @@ for (const presetId of [null,"0079T1-small","0079T2-large","0087T1-small","0087T
     assert.equal((await host.act("configure_room",configured.settings)).type,"state");
     assert.equal((await guest.act("configure_room",{...configured.settings,costLimit:1})).type,"error");
   }
-  const formation = [{ unitId: "Type61", kitId: "standard" }];
+  const formation = [{ unitId: "Medea", kitId: "standard" }];
   assert.equal((await guest.act("set_ready", { ready: true, formation })).type, "state");
   assert.equal((await host.act("start_game", { formation })).phase, "assembly");
   await host.act("confirm_formation");
@@ -147,14 +147,14 @@ for (const presetId of [null,"0079T1-small","0079T2-large","0087T1-small","0087T
   assert.equal(result.phase, "finished");
   assert.equal(result.game.winner, 0);
   assert.deepEqual(result.game.battlefield.strength, [
-    G.battlefieldMode.eraStrength[room.settings.battlefieldTeams[0].era] - G.models.Type61__standard.cost, 0]);
+    G.battlefieldMode.eraStrength[room.settings.battlefieldTeams[0].era] - G.models.Medea__standard.cost, 0]);
   assert.equal(result.game.seed, undefined);
   assert.equal(result.game.partSeed, undefined);
   assert.equal(room.economyAwards.filter(award => award.kind === "result").length, 2);
   for (const award of room.economyAwards.filter(award=>award.kind === "result")) {
     const player=room.members.get(award.memberId);
     const expected=G.battlefieldMode.baseReward(room.settings,G.seatTeam(player.seat));
-    assert.equal(award.money,Math.floor(expected.money*1.25));assert.equal(award.supplies,Math.floor(expected.supplies*1.25));
+    assert.equal(award.money,expected.money);assert.equal(award.supplies,expected.supplies);
   }
   assert.deepEqual(room.techAwards, []);
   const again = await host.act("sync");

@@ -2594,41 +2594,21 @@
                   <details id="roomFormationRules" class="room-rule-group" open>
                     <summary>编组限制</summary>
                     <div class="room-options room-formation-options">
-                      <label
-                        >编组 COST 上限<input
-                          id="roomCostLimit"
-                          type="number"
-                          min="250"
-                          max="99999"
-                          step="25"
-                          aria-label="编组 COST 上限"
-                      /></label>
-                      <label
-                        >单位 COST 上限<input
-                          id="roomUnitCostLimit"
-                          type="number"
-                          min="1"
-                          max="99999"
-                          step="25"
-                          aria-label="单位 COST 上限"
-                      /></label>
-                      <label
-                        >每位玩家单位点数上限<input
-                          id="roomUnitLimit"
-                          type="number"
-                          min="3"
-                          max="72"
-                          step="1"
-                          aria-label="每位玩家单位点数上限"
-                      /></label>
+                      <label hidden>编组方式<select id="roomFormationStyle"><option value="standard">常规编组</option><option value="free">自由编组</option></select></label>
+                      <label hidden>单机 COST 上限<input id="roomUnitCostLimit" type="number" min="25" max="99999" step="25" /></label>
+                      <label>编组 COST 上限<input id="roomCostLimit" type="number" min="250" max="99999" step="25" aria-label="编组 COST 上限" /></label>
+                      <label>单位容量点上限<input id="roomUnitLimit" type="number" min="3" max="72" step="1" aria-label="单位容量点上限" /></label>
                       <label
                         >规则预设<select id="roomFormationPreset" aria-label="编组限制预设">
-                          <option value="2000,250,36">2000/250/36</option>
-                          <option value="2000,400,36">2000/400/36</option>
-                          <option value="4000,800,36">4000/800/36</option>
-                          <option value="6000,1200,36">6000/1200/36</option>
-                          <option value="8000,1600,36">8000/1600/36</option>
-                          <option value="10000,2000,36">10000/2000/36</option>
+                          <option value="1500,18">1500/18</option>
+                          <option value="2500,18">2500/18</option>
+                          <option value="5000,18">5000/18</option>
+                          <option value="7500,18">7500/18</option>
+                          <option value="10000,18">10000/18</option>
+                          <option value="12500,18">12500/18</option>
+                          <option value="15000,18">15000/18</option>
+                          <option value="17500,18">17500/18</option>
+                          <option value="20000,18">20000/18</option>
                           <option value="custom">自定义</option>
                         </select></label
                       >
@@ -2640,6 +2620,7 @@
                       <small id="roomPresetStatus" class="muted" role="status"></small>
                     </div>
                   </details>
+                  <fieldset class="room-rule-group" id="roomTechnologyRules"><legend>单位科技限制</legend><div class="room-options"><label>科技点限制<select id="roomTechnologyLimitMode"><option value="host">依据房主</option><option value="custom">自定义</option></select></label><label hidden>科技点上限<input id="roomTechnologyLimit" type="number" min="0" max="1000000000" step="25" value="0" /></label></div><small>按解锁科技门槛限制玩家与普通AI；雇佣兵战争阵营友军除外。</small></fieldset>
                   <details class="room-rule-group" open>
                     <summary>战场规则</summary>
                     <div class="room-battle-rules">
@@ -3212,6 +3193,7 @@
           <h2 data-ui-node="node-207" id="formationPageTitle" class="shell-page-title">编组</h2>
           <p id="formationPilotBudget" hidden></p>
           <div id="formationHeadingActions" class="formation-heading-actions">
+            <label class="formation-style-picker">编组方式<select id="formationEditorStyle"><option value="standard">常规编组</option><option value="free">自由编组</option></select></label>
             <p id="formationBudget" data-ui-node="node-213"></p>
         <select id="formationGroup" hidden disabled><option value="PMC">PMC</option></select>
           </div>
@@ -3235,6 +3217,7 @@
         </div>
         <div id="formationPilotToolbar" class="formation-toolbar" hidden>
           <label for="pilotRosterSearch"><span>搜索驾驶员</span><input id="pilotRosterSearch" type="search" placeholder="按名称搜索驾驶员" /></label>
+          <label for="pilotRosterSort"><span>排序</span><select id="pilotRosterSort" aria-label="驾驶员排序"><option value="name">名称排序</option><option value="level">等级排序</option></select></label>
           <label for="pilotRosterFilter"><span>驾驶员筛选</span><select id="pilotRosterFilter" aria-label="驾驶员筛选"></select></label>
         </div>
         <div id="formationUnitsWorkspace" class="formation-workspace">
@@ -3247,7 +3230,7 @@
               aria-label="出战单位滚动列表"
             ></div>
             <div class="formation-unit-actions">
-              <button id="openFormationPicker" type="button">添加单位</button>
+              <button id="openFormationPicker" type="button">添加战舰或运输机</button>
               <button id="produceMissingFormation" type="button" hidden>一键补充库存</button>
                 </div>
           </section>

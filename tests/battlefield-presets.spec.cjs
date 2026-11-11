@@ -2,7 +2,7 @@ const { test, expect } = require("@playwright/test");
 const { pathToFileURL } = require("node:url");
 const path = require("node:path");
 for (const width of [1600, 390])
-  test(`twenty battlefield room sizes apply era, PMC limits and entry pay at ${width}px`, async ({
+  test(`thirty-six battlefield room sizes apply era, PMC limits and entry pay at ${width}px`, async ({
     page,
   }) => {
     test.setTimeout(60000);
@@ -37,7 +37,7 @@ for (const width of [1600, 390])
         )
         .toBe(preset.id);
       await expect(page.locator("#roomCostLimit")).toHaveValue(String(preset.costLimit));
-      await expect(page.locator("#roomUnitCostLimit")).toHaveValue(String(preset.unitCostLimit));
+      await expect(page.locator("#roomUnitCostLimit")).toHaveValue("500");
       await expect(page.locator("#roomUnitLimit")).toHaveValue(String(preset.unitLimit));
       expect(await page.evaluate(() => Net.snapshot.settings.battlefieldTeams.map(t => t.era))).toEqual([preset.era, preset.era]);
       await expect(page.locator("#battlefieldEntryReward")).toHaveText("阵营AI每5回合空投增援 · 单位阵亡扣除库存 · 击坠与助攻给予奖励");
@@ -53,13 +53,13 @@ for (const width of [1600, 390])
     );
     expect(saved.rules.battlefieldTeams.every((t) => t.era === "0087T2")).toBe(true);
     await page.locator("#battlefieldEra").selectOption("0079T1");
-    await page.locator("#battlefieldScalePreset").selectOption("0079T1-small");
-    await expect.poll(() => page.evaluate(() => Net.snapshot.settings.costLimit)).toBe(2000);
+    await page.locator("#battlefieldScalePreset").selectOption("0079T1-cost-1500");
+    await expect.poll(() => page.evaluate(() => Net.snapshot.settings.costLimit)).toBe(1500);
     await page.locator("#battlefieldEra").selectOption("custom");
     await page.locator("#roomFormationPreset").selectOption(saved.id);
     await expect
       .poll(() => page.evaluate(() => Rules.battlefieldMode.roomPreset(Net.snapshot.settings)?.id))
-      .toBe("0087T2-war");
+      .toBe("0087T2-cost-20000");
     await page.locator("#battlefieldEra").selectOption("custom");
     await page.locator("#roomCostLimit").fill("99999");
     await page.locator("#roomCostLimit").blur();

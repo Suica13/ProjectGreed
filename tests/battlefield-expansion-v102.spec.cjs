@@ -11,7 +11,7 @@ test(`0087 battle deploys and renders on ${mapId} at ${width}px`,async({page})=>
   await page.evaluate(()=>{
     const original=createRoomEngine;
     createRoomEngine=options=>(window.v102Engine=original({...options,aiDelayMs:999999}));
-    Formation.current=()=>[{unitId:'Type61',kitId:'standard'}];
+    Formation.current=()=>[{unitId:'Medea',kitId:'standard'}];
   });
   await page.locator('#openSkirmish').click();
   await page.locator('#offlineRoomMode').selectOption('battlefield');
@@ -19,7 +19,7 @@ test(`0087 battle deploys and renders on ${mapId} at ${width}px`,async({page})=>
   if(width===390)await page.getByRole('button',{name:'房间设置',exact:true}).click();
   await page.locator('#roomMapSelect').selectOption(mapId);
   await expect.poll(()=>page.evaluate(()=>Net.snapshot.settings.mapId)).toBe(mapId);
-  await page.locator('#battlefieldScalePreset').selectOption('0087T2-standard');
+  await page.locator('#battlefieldScalePreset').selectOption('0087T2-cost-10000');
   await expect.poll(()=>page.evaluate(()=>Net.snapshot.settings.battlefieldTeams[0].era)).toBe('0087T2');
   expect(await page.evaluate(()=>Rules.getMap(Net.snapshot.settings.mapId).spawns.length)).toBe(12);
   if(width===390)await page.locator('#closeRoomSettingsSheet').click();

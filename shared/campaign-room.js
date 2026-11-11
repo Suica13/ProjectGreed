@@ -9,6 +9,7 @@ function createCampaignRoom({
   planner,
   log,
   pauseBattle,
+  technologyCaps = () => undefined,
 }) {
   const C = typeof CampaignRules !== "undefined" ? CampaignRules : require("./campaign.js");
   const crews =
@@ -27,11 +28,13 @@ function createCampaignRoom({
     if (!value) throw Error(message);
   };
   function indexedMap(room, region) {
+    ctx.technologyCaps = technologyCaps(room);
     const entry =
       G.catalog.scenarios[room.settings.scenarioId || "earth_0079_mid"]?.regions[region];
     return entry && G.getMap(entry.mapId).spawns.length === room.seats.length ? entry.mapId : null;
   }
   function eligible(room) {
+    ctx.technologyCaps = technologyCaps(room);
     return room.seats.map(
       (member, seat) =>
         !!member &&
@@ -44,10 +47,12 @@ function createCampaignRoom({
     );
   }
   function resetTurns(room) {
+    ctx.technologyCaps = technologyCaps(room);
     room.turnDone = eligible(room).map((active) => !active);
     room.campaignSeatCompletion = room.seats.map(() => false);
   }
   function bindTeams(room) {
+    ctx.technologyCaps = technologyCaps(room);
     for (const member of members(room)) {
       if (Number.isInteger(member.seat)) member.campaignTeam = G.seatTeam(member.seat);
       if (Number.isInteger(member.campaignTeam)) {
@@ -57,6 +62,7 @@ function createCampaignRoom({
     }
   }
   function configureDeployment(room) {
+    ctx.technologyCaps = technologyCaps(room);
     const game = room.game;
     if (!game.campaignBattlefield) return;
     game.campaignBattlefield.deploymentControllers = {};
@@ -79,9 +85,11 @@ function createCampaignRoom({
     room.phase = game.deployment.every(Boolean) ? "idle" : "deployment";
   }
   function finishDeployment(room) {
+    ctx.technologyCaps = technologyCaps(room);
     if (room.campaignBattle) planner.resumeCharges(room);
   }
   function refreshControl(room) {
+    ctx.technologyCaps = technologyCaps(room);
     const roster = members(room);
     room.settings.campaignCommanders = [0, 1].map((team) => C.commander(roster, team));
     room.game.campaignControllers = Object.fromEntries(
@@ -96,6 +104,7 @@ function createCampaignRoom({
     }
   }
   function refreshSeats(room) {
+    ctx.technologyCaps = technologyCaps(room);
     refreshControl(room);
     if (room.phase === "deployment") configureDeployment(room);
     const previous = room.activeSeats || [];
@@ -109,6 +118,7 @@ function createCampaignRoom({
   // One regional engagement at a time. Choices belong to this exact queue item,
   // never to a player's next battle or to a client-selected region.
   function hostControlsAI(room) {
+    ctx.technologyCaps = technologyCaps(room);
     const roster = members(room);
     const seated = roster.filter((member) => Number.isInteger(member.seat));
     return (
@@ -118,6 +128,7 @@ function createCampaignRoom({
     );
   }
   function preparation(room) {
+    ctx.technologyCaps = technologyCaps(room);
     const state = room.campaign;
     if (!state || room.started || state.winner !== null || state.phase !== "encounters")
       return null;
@@ -159,6 +170,7 @@ function createCampaignRoom({
   }
   // A spectator host controls strategic pacing when both armies consist only of AI.
   function automaticPhase(room) {
+    ctx.technologyCaps = technologyCaps(room);
     const state = room.campaign;
     if (
       !state ||
@@ -187,6 +199,7 @@ function createCampaignRoom({
     return null;
   }
   function advanceAutomatic(room, expectedKey) {
+    ctx.technologyCaps = technologyCaps(room);
     const next = automaticPhase(room);
     if (!next || next.key !== expectedKey) return null;
     if (next.type === "strategy") C.advance(ctx, room.campaign, members(room));
@@ -194,6 +207,7 @@ function createCampaignRoom({
     return { type: "campaign_changed" };
   }
   function view(room, team = null) {
+    ctx.technologyCaps = technologyCaps(room);
     if (!room.campaign) return null;
     return {
       ...C.view(room.campaign, team, ctx),
@@ -208,6 +222,7 @@ function createCampaignRoom({
     };
   }
   function battlefieldSave(room, preserveTurnDone = false) {
+    ctx.technologyCaps = technologyCaps(room);
     const result = Records.createSave(G, room);
     // A local wave ending does not mean the regional campaign battle has ended.
     result.game.winner = null;
@@ -257,6 +272,7 @@ function createCampaignRoom({
     crews.capture(state, game);
   }
   function save(room) {
+    ctx.technologyCaps = technologyCaps(room);
     const state = Records.clone(room.campaign);
     if (room.started) {
       check(
@@ -277,6 +293,7 @@ function createCampaignRoom({
     return state;
   }
   function begin(room, regionId, requestedMap) {
+    ctx.technologyCaps = technologyCaps(room);
     const state = room.campaign;
     check(state && state.phase === "encounters" && !room.started, "当前不能进入局地战");
     const encounter = state.encounters.find(
@@ -341,6 +358,10 @@ function createCampaignRoom({
       const trial = Records.clone(armies);
       let legal = true;
       for (const source of incoming) {
+        if (!ctx.development.allowsPointCaps(G.technologyUnitId(source.unitId), ctx.technologyCaps)) {
+          legal=false;
+          break;
+        }
         if (!room.seats[source.ownerSeat] && C.commander(members(room), source.team) === null) {
           legal = false;
           break;
@@ -556,6 +577,7 @@ function createCampaignRoom({
     if (game.round >= room.campaignBattle.stopRound && pauseBattle) pauseBattle(room);
   }
   function archiveLog(room, encounter) {
+    ctx.technologyCaps = technologyCaps(room);
     (room.campaign.battleLogs ||= {})[encounter.region] = Records.clone({
       log: room.log || [],
       teamLogs: room.teamLogs || {},
@@ -563,6 +585,7 @@ function createCampaignRoom({
     });
   }
   function logReturnReason(room) {
+    ctx.technologyCaps = technologyCaps(room);
     const battle = room.campaignBattle;
     if (battle.returnReasonLogged) return;
     const name =
@@ -584,6 +607,7 @@ function createCampaignRoom({
     battle.returnReasonLogged = true;
   }
   function writeBriefing(room, encounter, final = false) {
+    ctx.technologyCaps = technologyCaps(room);
     const state = room.campaign,
       battle = room.campaignBattle;
     const round = room.game.winner === null ? room.game.round - 1 : room.game.round;
@@ -637,6 +661,7 @@ function createCampaignRoom({
     }
   }
   function checkpoint(room) {
+    ctx.technologyCaps = technologyCaps(room);
     const state = room.campaign,
       encounter = state.encounters.find((item) => item.region === room.campaignBattle.region);
     logReturnReason(room);
@@ -684,6 +709,7 @@ function createCampaignRoom({
     return { type: "campaign_checkpoint" };
   }
   function transferControl(room, actor, to, seat) {
+    ctx.technologyCaps = technologyCaps(room);
     check(
       room.campaignBattle && room.phase === "idle" && room.game.winner === null,
       "仅可在局地战规划阶段转交控制权",
@@ -733,6 +759,7 @@ function createCampaignRoom({
     return { type: "unit_control_transfer", unitId: actor.id, to };
   }
   function transfer(room, actor, regionId) {
+    ctx.technologyCaps = technologyCaps(room);
     check(
       room.campaignBattle &&
         G.campaignBattlefield.exits(G, room.game, actor).some((gate) => gate.region === regionId),
@@ -775,6 +802,7 @@ function createCampaignRoom({
     return { type: "region_transfer", unitId: actor.id, region: regionId };
   }
   function suspend(room) {
+    ctx.technologyCaps = technologyCaps(room);
     check(
       room.campaignBattle &&
         ["idle", "deployment"].includes(room.phase) &&
@@ -803,6 +831,7 @@ function createCampaignRoom({
     return { type: "campaign_suspended" };
   }
   function freeze(room) {
+    ctx.technologyCaps = technologyCaps(room);
     const encounter = room.campaign.encounters.find(
       (item) => item.region === room.campaignBattle.region,
     );
@@ -811,6 +840,7 @@ function createCampaignRoom({
     captureArmies(room.campaign, encounter, encounter.battleSave.game);
   }
   function boundary(room) {
+    ctx.technologyCaps = technologyCaps(room);
     if (!room.campaignBattle) return null;
     const encounter = room.campaign.encounters.find(
       (item) => item.region === room.campaignBattle.region,
@@ -822,6 +852,7 @@ function createCampaignRoom({
     return null;
   }
   function start(room, member, rounds) {
+    ctx.technologyCaps = technologyCaps(room);
     check(
       member.id === room.hostId &&
         room.settings.mode === "campaign" &&
@@ -836,6 +867,7 @@ function createCampaignRoom({
     bindTeams(room);
   }
   function handle(room, member, msg) {
+    ctx.technologyCaps = technologyCaps(room);
     check(room.settings.mode === "campaign", "请先选择历史战役模式房间");
     check(member.id === room.hostId || room.campaign, "当前没有战役");
     if (msg.action === "campaign_import_begin") {

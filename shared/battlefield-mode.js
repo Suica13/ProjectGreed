@@ -97,40 +97,35 @@ const BattlefieldMode = (() => {
   const factionEras = (faction) =>
     ["EFSF", "ZEON"].includes(faction) ? eras.slice(0, 2) : eras.slice(2);
   // PMC limits and entry pay only: faction AI waves keep their own era rules.
-  // Scale from the original values, then round once: repeated rounding would
-  // compound across eras. Reward anchors remain pre-global-multiplier values.
-  const contractSizes = [
-    { id: "small", name: "小型合同", cost: 1800, single: 300 },
-    { id: "standard", name: "中型合同", cost: 3600, single: 600 },
-    { id: "large", name: "大型合同", cost: 5400, single: 900 },
-    { id: "huge", name: "巨型合同", cost: 7200, single: 1200 },
-    { id: "war", name: "战争合同", cost: 9000, single: 1500 },
-  ];
-  const roomPresets = Object.freeze(eras.flatMap((era, eraIndex) => {
-    const factor = 1.25 ** eraIndex;
-    const costFactor = 1.5 ** eraIndex;
-    return contractSizes.map((size, index) => {
-      const money = Math.floor(1200 * (index + 1) * factor);
-      return Object.freeze({
-        id: era + "-" + size.id,
-        era,
-        name: size.name,
-        costLimit: Math.ceil((size.cost * costFactor) / 500) * 500,
-        unitCostLimit: Math.ceil((size.single * costFactor) / 50) * 50,
-        unitLimit: 18,
-        money,
-        supplies: money * 2,
+  const formationBudgets = [1500, 2500, 5000, 7500, 10000, 12500, 15000, 17500, 20000];
+  const roomPresets = Object.freeze(
+    eras.flatMap((era, eraIndex) => {
+      const factor = 1.25 ** eraIndex;
+      return formationBudgets.map((cost) => {
+        const progress = (cost - 1500) / 18500;
+        const round = (value) => Math.round(value / 25) * 25;
+        const money = round((5000 + 10000 * progress) * factor);
+        return Object.freeze({
+          id: era + "-cost-" + cost,
+          era,
+          name: cost + " COST / 18",
+          costLimit: cost,
+          // Compatibility only; normal PMC formations have no single-unit cap.
+          unitCostLimit: 250,
+          unitLimit: 18,
+          money,
+          supplies: round((7500 + 15000 * progress) * factor),
+          technology: round((1000 + 1000 * progress) * factor),
+        });
       });
-    });
-  }));
+    }),
+  );
   function roomPreset(settings) {
     if (settings.mode !== "battlefield") return null;
     return (
       roomPresets.find(
         (preset) =>
-          ["costLimit", "unitCostLimit", "unitLimit"].every(
-            (key) => settings[key] === preset[key],
-          ) &&
+          ["costLimit", "unitLimit"].every((key) => settings[key] === preset[key]) &&
           settings.battlefieldTeams?.length === 2 &&
           settings.battlefieldTeams.every((team) => team.era === preset.era),
       ) || null
@@ -144,7 +139,6 @@ const BattlefieldMode = (() => {
     return {
       battlefieldEra: preset.era,
       costLimit: preset.costLimit,
-      unitCostLimit: preset.unitCostLimit,
       unitLimit: preset.unitLimit,
       bannedEras: availableEras.filter((era) => {
         const order = ["0079T1", "0079T2", "0083", "0087T1", "0087T2"].indexOf(era);
@@ -165,24 +159,14 @@ const BattlefieldMode = (() => {
   }
   function baseReward(settings, team) {
     const era = settings.battlefieldTeams?.[team]?.era || "0079T2";
-    const points = [
-      { costLimit: 0, money: 0 },
-      ...roomPresets.filter((preset) => preset.era === era),
-    ];
-    const maximum = points.at(-1);
-    const cost = Math.max(0, Math.min(maximum.costLimit, Number(settings.costLimit) || 0));
-    const upper = points.findIndex((point) => point.costLimit >= cost);
-    const lower = points[Math.max(0, upper - 1)],
-      next = points[upper];
-    const money =
-      lower.costLimit === next.costLimit
-        ? lower.money
-        : Math.floor(
-            lower.money +
-              ((cost - lower.costLimit) * (next.money - lower.money)) /
-                (next.costLimit - lower.costLimit),
-          );
-    return { money, supplies: money * 2 };
+    const factor = 1.25 ** Math.max(0, eras.indexOf(era));
+    const progress = Math.max(0, Math.min(1, ((Number(settings.costLimit) || 0) - 1500) / 18500));
+    const round = (value) => Math.round(value / 25) * 25;
+    return {
+      money: round((5000 + 10000 * progress) * factor),
+      supplies: round((7500 + 15000 * progress) * factor),
+      technology: round((1000 + 1000 * progress) * factor),
+    };
   }
   function captureReward(settings, team) {
     const era = settings.battlefieldTeams?.[team]?.era || "0079T2";
@@ -190,13 +174,23 @@ const BattlefieldMode = (() => {
     return { money, supplies: money * 2 };
   }
   function technologyReward(settings, team, won, activity = 1) {
-    return Math.floor((((won ? 660 : 540) * baseReward(settings, team).money) / 3750) * activity);
+    return (
+      Math.round(
+        (baseReward(settings, team).technology * (won === null ? 1 : 1.1) * activity) / 25,
+      ) * 25
+    );
   }
   function heal(G, game) {
     if (!game.battlefield) return;
-    const sites = deploymentSites(G, game, game.team).filter((site) =>
-      !game.units.some((enemy) => enemy.team !== game.team && G.onMap(enemy) &&
-        G.cells(enemy).some((cell) => containsSite(site, cell.x, cell.y))));
+    const sites = deploymentSites(G, game, game.team).filter(
+      (site) =>
+        !game.units.some(
+          (enemy) =>
+            enemy.team !== game.team &&
+            G.onMap(enemy) &&
+            G.cells(enemy).some((cell) => containsSite(site, cell.x, cell.y)),
+        ),
+    );
     for (const unit of game.units) {
       if (!G.onMap(unit) || unit.team !== game.team || unit.embarked || unit.facility) continue;
       const nearby = sites.filter((site) =>

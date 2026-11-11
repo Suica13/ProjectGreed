@@ -111,10 +111,11 @@ async function stop() {
   await page.evaluate(() => MenuShell.go("production"));
   await page.locator("#productionSearch").fill("Type61");
   await page.locator('#productionList [data-unit-id="Type61"] .production-unit-portrait').click();
+  const beforeProduction = await page.evaluate(() => Economy.quantity("Type61"));
   await page.locator("#produceUnit").click();
   assert.equal(await page.locator("#buyProductionKit").count(), 0);
   const original = await page.evaluate(() => Economy.snapshot());
-  assert.equal(original.inventory.Type61, 31);
+  assert.equal(original.inventory.Type61, beforeProduction + 1);
   assert.deepEqual(original.kits, {});
   // A real Windows file lock must reject the purchase without changing wallet or stock.
   lock = spawn(checks, ["--lock", path.join(data, "profile.json")], {

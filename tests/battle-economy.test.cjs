@@ -727,12 +727,7 @@ for(const path of ["finish","return"]) test("quick casualties never remove chass
   assert.equal(JSON.stringify(f.room.economyAwards),before);
 });
 
-for (const [cost, money, supplies] of [
-  [0,2500,5000], [1999,2500,5000], [2000,2500,5000], [2499,2500,5000],
-  [2500,2750,5500], [4999,3750,7500], [5000,4000,8000], [7500,5150,10300],
-  [10000,6220,12440], [15000,8120,16240], [17000,8800,17600],
-  [19999,9550,19100], [20000,9700,19400], [20001,9700,19400], [24000,9700,19400], [24500,9700,19400], [99999,9700,19400],
-]) test(`integer staircase base reward at COST ${cost}`, () => {
+for (const [cost, money, supplies] of [[0,2500,5000],[1499,2500,5000],[1500,2500,5000],[1999,2500,5000],[2000,2750,5500],[2499,2750,5500],[2500,3000,6000],[4999,4000,8000],[5000,4230,8460],[7500,5380,10760],[10000,6430,12860],[12500,7400,14800],[15000,8290,16580],[17000,8950,17900],[19999,9700,19400],[20000,9850,19700],[20001,9850,19700],[24000,9850,19700],[99999,9850,19700]]) test(`integer staircase base reward at COST ${cost}`, () => {
   assert.deepEqual(R.calculateBattleReward(cost), {money,supplies});
 });
 
@@ -746,7 +741,7 @@ test("formation COST sums each participant before averaging and keeps teams inde
   assert.equal(R.teamAverageFormationCost({},0),0);
   roster.c.cost=2999;
   assert.equal(R.teamAverageFormationCost(roster,0),4999.5);
-  assert.deepEqual(R.calculateBattleReward(R.teamAverageFormationCost(roster,0)),{money:3750,supplies:7500});
+  assert.deepEqual(R.calculateBattleReward(R.teamAverageFormationCost(roster,0)),{money:4000,supplies:8000});
 });
 
 for (const mode of ["regular", "quick"]) test(`authoritative ${mode} staircase reward freezes cost and uses teammate average`, t => {
@@ -764,8 +759,8 @@ for (const mode of ["regular", "quick"]) test(`authoritative ${mode} staircase r
   const rate=(mode==="quick"?0.1:1)*1.25;
   for (const seat of [0,2]) {
     const result=f.frames.get(f.clients[seat]).economyAwards.find(a=>a.kind==="result");
-    assert.equal(result.money,4000*rate);
-    assert.equal(result.supplies,8000*rate);
+    assert.equal(result.money,Math.floor(4230*rate));
+    assert.equal(result.supplies,Math.floor(8460*rate));
   }
   assert.equal(R.teamAverageFormationCost(f.room.battleRoster,0),5000);
 });
@@ -777,8 +772,8 @@ for (const mode of ["regular", "quick"]) test(`authoritative ${mode} victory bas
   f.kill(); f.finish();
   const award = f.frames.get(f.clients[0]).economyAwards.find(a => a.kind === "result");
   const rate = (mode === "quick" ? .1 : 1) * 1.25;
-  assert.equal(award.money, Math.floor(9700 * rate));
-  assert.equal(award.supplies, Math.floor(19400 * rate));
+  assert.equal(award.money, Math.floor(9850 * rate));
+  assert.equal(award.supplies, Math.floor(19700 * rate));
 });
 
 

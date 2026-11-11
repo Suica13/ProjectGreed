@@ -17,10 +17,13 @@ const BattleHUD = (() => {
   byId("mapWrap").append(terrainInfo, byId("hudActionBand"));
   // Zoom sits immediately to the right of the fixed-width phase badge.
   const phaseControls = element("div", "hud-phase-controls");
-  phaseControls.append(scene.querySelector(".phase-row"), scene.querySelector(".map-camera-controls"));
+  phaseControls.append(
+    scene.querySelector(".phase-row"),
+    scene.querySelector(".map-camera-controls"),
+  );
   // CampaignUI attaches these controls beside presentation speed in the lower toolbar.
-  const combatControls=byId("mapCombatControls");
-  if(combatControls)scene.querySelector(".log-tabs").append(combatControls);
+  const combatControls = byId("mapCombatControls");
+  if (combatControls) scene.querySelector(".log-tabs").append(combatControls);
   const topControls = element("div", "hud-top-controls");
   topControls.append(byId("hudTurnActions"));
   const topLine = element("div", "hud-top-line");
@@ -74,7 +77,7 @@ const BattleHUD = (() => {
     confirm = byId("confirmResponse");
   responseBody.append(...[...defender.childNodes].filter((node) => node !== confirm));
   defender.append(responseBody, confirm);
-  byId("deploymentControls").prepend(byId("deploymentAuto"),byId("confirmDeployment"));
+  byId("deploymentControls").prepend(byId("deploymentAuto"), byId("confirmDeployment"));
   byId("hudTurnActions").append(byId("endTurn"));
   // 查看资料是玩家主动打开的开关，不随单位选择重置。
   let infoEnabled = false;
@@ -240,11 +243,15 @@ const BattleHUD = (() => {
     else if (rosterOpen) toggleRoster(false);
     else clearSelection();
   });
-  let fps = null, fpsWindowStart = null, fpsFrames = 0;
+  let fps = null,
+    fpsWindowStart = null,
+    fpsFrames = 0;
   function refreshPing() {
-    const text = "PING " +
+    const text =
+      "PING " +
       (Net.local ? I18n.text("离线") : Net.pingMs === null ? "—" : Net.pingMs + " ms") +
-      " / FPS " + (fps ?? "—");
+      " / FPS " +
+      (fps ?? "—");
     const label = byId("hudPing");
     if (label.textContent !== text) label.textContent = text;
   }
@@ -263,7 +270,7 @@ const BattleHUD = (() => {
     fpsFrames++;
     const elapsed = realTime - fpsWindowStart;
     if (elapsed < 500) return;
-    fps = Math.round(fpsFrames * 1000 / elapsed);
+    fps = Math.round((fpsFrames * 1000) / elapsed);
     fpsWindowStart = realTime;
     fpsFrames = 0;
     refreshPing();
@@ -273,13 +280,20 @@ const BattleHUD = (() => {
     const snapshot = Net.active ? Net.snapshot : null;
     MatchIncome.render(byId("hudMatchIncome"), snapshot);
     const roomName = Net.local
-      ? "离线" + ({sweep:"战场扫荡",battlefield:"雇佣兵战争模式",quick:"快速战"}[snapshot?.settings?.mode]||"常规战")
+      ? "离线" +
+        ({ sweep: "战场扫荡", battlefield: "雇佣兵战争模式", quick: "快速战" }[
+          snapshot?.settings?.mode
+        ] || "常规战")
       : snapshot?.room || Net.room || "—";
     const roomLabel = byId("hudRoomName");
     roomLabel.textContent = I18n.text("房间名") + ": " + roomName;
     roomLabel.title = roomName;
     refreshPing();
-    const members = (snapshot?.members || []).filter((member) => member.connected);
+    const members = (snapshot?.members || []).filter(
+      (member) =>
+        member.connected &&
+        !(snapshot?.settings?.mode === "battlefield" && member.seat !== null && member.seat < 2),
+    );
     const players = members.filter((member) => member.seat !== null).length;
     const spectators = members.length - players;
     byId("hudPlayerCount").textContent =
@@ -287,7 +301,7 @@ const BattleHUD = (() => {
       ": " +
       players +
       "/" +
-      (snapshot?.connected?.length || 0) +
+      ((snapshot?.connected?.length || 0) - (snapshot?.settings?.mode === "battlefield" ? 2 : 0)) +
       (spectators ? " · " + I18n.text("观战玩家") + ": " + spectators : "");
     byId("hudPlayerCount").title = byId("hudPlayerCount").textContent;
   }
@@ -297,12 +311,15 @@ const BattleHUD = (() => {
   };
   function updateSquadClearance() {
     const bounds = squadStrip.hidden ? null : squadStrip.getBoundingClientRect();
-    const clearance=bounds ? Math.ceil(scene.getBoundingClientRect().bottom-bounds.top+8) : 0;
-    scene.style.setProperty("--squad-strip-clearance",clearance+"px");
-    scene.style.setProperty("--squad-strip-height",bounds ? Math.ceil(bounds.height+8)+"px" : "0px");
+    const clearance = bounds ? Math.ceil(scene.getBoundingClientRect().bottom - bounds.top + 8) : 0;
+    scene.style.setProperty("--squad-strip-clearance", clearance + "px");
+    scene.style.setProperty(
+      "--squad-strip-height",
+      bounds ? Math.ceil(bounds.height + 8) + "px" : "0px",
+    );
   }
-  if(window.ResizeObserver) new ResizeObserver(updateSquadClearance).observe(squadStrip);
-  window.addEventListener("resize",updateSquadClearance);
+  if (window.ResizeObserver) new ResizeObserver(updateSquadClearance).observe(squadStrip);
+  window.addEventListener("resize", updateSquadClearance);
   function refreshMovement() {
     const unit = mode === "move-confirm" ? pendingMovement() : null;
     const animating = unit && PlanningUI.motion(unit, performance.now());
@@ -317,18 +334,29 @@ const BattleHUD = (() => {
       squadUnit = reacting ? getUnit(pending.target) : unit,
       squad = squadUnit ? Rules.squadMembers(game, squadUnit) : [],
       responseMember = reacting ? counterDraft(squadUnit).memberId : null;
-    const showSquad = active && squad.length && squad.every(Rules.squadEligible) && !pendingMovement() && (!inCombat || reacting);
-    const deploymentCarrier = active && phase === "deployment" && unit && Rules.hangars.of(unit).length > 0;
+    const showSquad =
+      active &&
+      squad.length &&
+      squad.every(Rules.squadEligible) &&
+      !pendingMovement() &&
+      (!inCombat || reacting);
+    const deploymentCarrier =
+      active && phase === "deployment" && unit && Rules.hangars.of(unit).length > 0;
     squadStrip.hidden = !showSquad && !deploymentCarrier;
     squadStrip.replaceChildren();
     if (showSquad) {
-      const heading = element("strong", "", I18n.text("小队") + ` ${squad.length}/6 · ${squad.reduce((sum,u)=>sum+Rules.squadCapacity(u, game),0)}/6`);
+      const heading = element(
+        "strong",
+        "",
+        I18n.text("小队") +
+          ` ${squad.length}/6 · ${squad.reduce((sum, u) => sum + Rules.squadCapacity(u, game), 0)}/6`,
+      );
       const members = element("div", "squad-members");
       const all = element("button", "", I18n.text("全队"));
       all.id = "squadSelectAll";
       all.setAttribute("aria-pressed", String(reacting ? !responseMember : !squadSingleMove));
       all.onclick = () => (reacting ? selectCounterMember(null) : select(unit.id));
-      const left=element("div","squad-left");
+      const left = element("div", "squad-left");
       const formation = element("div", "squad-portraits");
       for (const member of squad) {
         const button = element("button", "", "");
@@ -344,13 +372,14 @@ const BattleHUD = (() => {
         image.src = unitIcon(member.model, member.pilot);
         image.alt = unitName(member);
         button.append(image);
-        button.onclick = () => reacting ? selectCounterMember(member.id) : select(member.id, { single: true });
+        button.onclick = () =>
+          reacting ? selectCounterMember(member.id) : select(member.id, { single: true });
         formation.append(button);
       }
-      members.append(all,formation);
-      left.append(heading,members);
+      members.append(all, formation);
+      left.append(heading, members);
       squadStrip.append(left);
-      heading.title=I18n.text("回避加成")+" +"+Rules.squadEvasion(game,squadUnit)+"%";
+      heading.title = I18n.text("回避加成") + " +" + Rules.squadEvasion(game, squadUnit) + "%";
       if (phase === "idle" && unit.team === game.team && (!Net.active || Net.canControl(unit))) {
         const fight = element(
           "button",
@@ -358,7 +387,8 @@ const BattleHUD = (() => {
           I18n.text(squadCombatMode === "shooting" ? "射击战" : "格斗战"),
         );
         fight.id = "squadCombatMode";
-        fight.disabled = isBusy() || !AttackControls.editable(unit) || (Net.active && !Net.canAct());
+        fight.disabled =
+          isBusy() || !AttackControls.editable(unit) || (Net.active && !Net.canAct());
         fight.onclick = () => {
           squadCombatMode = squadCombatMode === "shooting" ? "melee" : "shooting";
           update();
@@ -369,7 +399,9 @@ const BattleHUD = (() => {
     if (deploymentCarrier) {
       const hangar = element("button", "", "格纳库");
       hangar.id = "hudDeploymentHangar";
-      hangar.disabled = !Deployment.canEditUnit(unit) && !Rules.hangars.cargo(game, unit).some(Deployment.canEditUnit);
+      hangar.disabled =
+        !Deployment.canEditUnit(unit) &&
+        !Rules.hangars.cargo(game, unit).some(Deployment.canEditUnit);
       hangar.onclick = () => HangarUI.open(unit);
       squadStrip.append(hangar);
     }
@@ -461,7 +493,8 @@ const BattleHUD = (() => {
     const attackPlanner = byId("hudAttackPlanner"),
       editor = byId("attackEditor");
     attackPlanner.replaceChildren();
-    attackPlanner.hidden = !actionActive || !["attack-weapons","attack-target"].includes(mode) || !editor;
+    attackPlanner.hidden =
+      !actionActive || !["attack-weapons", "attack-target"].includes(mode) || !editor;
     if (!attackPlanner.hidden) attackPlanner.append(editor);
     // 攻击编排临时使用同一个右侧栏，不改变信息开关。
     panel.hidden =
@@ -581,7 +614,15 @@ const BattleHUD = (() => {
     applyTab();
     updateSquadClearance();
   }
-  window.BattleHUD = { refresh, refreshMovement, refreshRoomStatus, recordFrame, resetFps, setTab, clearSelection };
+  window.BattleHUD = {
+    refresh,
+    refreshMovement,
+    refreshRoomStatus,
+    recordFrame,
+    resetFps,
+    setTab,
+    clearSelection,
+  };
   refresh();
   return window.BattleHUD;
 })();

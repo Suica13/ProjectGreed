@@ -1,13 +1,17 @@
 "use strict";
 // Prices are per deployed unit, including its selected kit, never tactical COST.
 const BattleEconomy = (() => {
-  const rewardMultiplier = 1.25;
-  // Apply once, before the existing final integer rounding. Event settings stay
-  // independent so online and offline matches use the same global balance.
+  const rewardMultiplier = 1;
+  const roundReward = (value) => Math.max(0, Math.round(value / 25) * 25);
+  // Current mode bases are final values; only live event multipliers apply.
   // Pilot experience keeps its existing event and quick-mode multipliers.
   function rewardMultipliers(activity = {}) {
-    return Object.fromEntries(["money", "supplies", "technology", "experience"].map((key) =>
-      [key, (key === "experience" ? 1 : rewardMultiplier) * (activity[key] ?? 1)]));
+    return Object.fromEntries(
+      ["money", "supplies", "technology", "experience"].map((key) => [
+        key,
+        (key === "experience" ? 1 : rewardMultiplier) * (activity[key] ?? 1),
+      ]),
+    );
   }
   const catalog =
     typeof PRODUCTION_CATALOG !== "undefined"
@@ -15,8 +19,13 @@ const BattleEconomy = (() => {
       : require("./production-data.cjs");
   // Fixed research progress per completed, actively contested match. Independent
   // of army size, unit COST, strength settings and the number of kills/assists.
-  function technologyReward(won, mode, activity = 1) {
-    return Math.floor((won ? 660 : 540) * (mode === "quick" ? 0.1 : 1) * activity);
+  function technologyReward(won, mode, activity = 1, formationCost = 1500) {
+    return roundReward(
+      calculateBattleReward(formationCost).technology *
+        (won === null ? 1 : 1.1) *
+        (mode === "quick" ? 0.1 : 1) *
+        activity,
+    );
   }
   const researchFactions = ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"];
   function technologyFactions(model) {
@@ -84,7 +93,11 @@ const BattleEconomy = (() => {
     const unitId = modelId.split("__")[0];
     const offer = catalog.licenseOffers[unitId];
     const fallback = catalog.offers[catalog.baseModels[unitId]];
-    return offer ? (offer[resource] ?? 0) : fallback ? (fallback[resource] ?? 0)/fallback.quantity : 0;
+    return offer
+      ? (offer[resource] ?? 0)
+      : fallback
+        ? (fallback[resource] ?? 0) / fallback.quantity
+        : 0;
   }
   function rates(faction, mode) {
     const speed = mode === "quick" ? 0.1 : 1;
@@ -106,16 +119,17 @@ const BattleEconomy = (() => {
       : 0;
   }
   function calculateBattleReward(formationCost) {
-    let steps = Math.max(0, Math.floor((Math.min(formationCost, 20000) - 2000) / 500));
-    let money = 2500;
-    // Six complete 500-COST steps per tier. All remaining steps use the floor.
-    for (let level = 0; level < 5 && steps > 0; level++) {
-      const count = Math.min(steps, 6);
-      money += count * (250 - 20 * level);
-      steps -= count;
-    }
-    money += steps * 150;
-    return { money, supplies: money * 2 };
+    // Preserve the existing 500-COST diminishing staircase, then normalize its
+    // 1500..20000 endpoints to the newly requested resource ranges.
+    const steps = Math.max(0, Math.floor((Math.min(formationCost, 20000) - 1500) / 500));
+    let increment = 0;
+    for (let i = 0; i < steps; i++) increment += 250 - 20 * Math.min(5, Math.floor(i / 6));
+    const progress = increment / 7350;
+    return {
+      money: roundReward(2000 + 8000 * progress),
+      supplies: roundReward(3000 + 12000 * progress),
+      technology: roundReward(500 + 500 * progress),
+    };
   }
   function strengthRatio(roster, team) {
     let own = 0,
@@ -165,7 +179,7 @@ const BattleEconomy = (() => {
   // This is presentation data: the original receipts remain the only credit operation.
   function rewardTotals(economyAwards = [], techAwards = [], matchId = null) {
     const totals = { money: 0, supplies: 0, technology: 0 };
-    const number = value => Number.isSafeInteger(value) && value >= 0 ? value : 0;
+    const number = (value) => (Number.isSafeInteger(value) && value >= 0 ? value : 0);
     function receipts(awards, add) {
       const seen = new Set();
       for (const award of awards || []) {
@@ -176,15 +190,16 @@ const BattleEconomy = (() => {
         add(award);
       }
     }
-    receipts(economyAwards, award => {
+    receipts(economyAwards, (award) => {
       totals.money += number(award.money);
       totals.supplies += number(award.supplies);
     });
-    receipts(techAwards, award => totals.technology += number(award.points));
+    receipts(techAwards, (award) => (totals.technology += number(award.points)));
     return totals;
   }
   return {
     rewardMultiplier,
+    roundReward,
     rewardMultipliers,
     price,
     rates,

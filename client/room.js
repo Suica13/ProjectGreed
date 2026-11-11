@@ -5,22 +5,21 @@ const RoomPanel = (() => {
     submittedNumericSettings = null,
     numericSettingsTimer = null,
     queuedNumericSettings = {};
-  const numericDrafts = { costLimit: null, unitCostLimit: null, unitLimit: null };
-  const formationPresets = new Set([
-    "2000,250,36",
-    "2000,400,36",
-    "4000,800,36",
-    "6000,1200,36",
-    "8000,1600,36",
-    "10000,2000,36",
-  ]);
+  const numericDrafts = { costLimit: null, unitLimit: null, unitCostLimit: null };
+  const formationPresets = new Set(
+    [1500, 2500, 5000, 7500, 10000, 12500, 15000, 17500, 20000].map((cost) => cost + ",18"),
+  );
   const presetStorageKey = "projectgreed.room-rule-presets.v1";
   function presetRules(settings) {
     if (typeof settings.shareAlliedUnits !== "boolean") throw Error("友军共享设置无效");
     return {
+      formationStyle: settings.formationStyle === "free" ? "free" : "standard",
+      technologyLimitMode: settings.technologyLimitMode === "custom" ? "custom" : "host",
+      technologyLimit: settings.technologyLimit ?? 0,
       costLimit: Rules.validateCostLimit(settings.costLimit),
-      unitCostLimit: Rules.validateUnitCostLimit(settings.unitCostLimit),
+      unitCostLimit: Rules.validateUnitCostLimit(settings.unitCostLimit ?? 250),
       unitLimit: Rules.validateUnitLimit(settings.unitLimit),
+      aiUnitLimit: Rules.validateUnitLimit(settings.aiUnitLimit ?? 36),
       fogMode: Rules.validateFogMode(settings.fogMode),
       shareAlliedUnits: settings.shareAlliedUnits,
       pilotPolicy: Rules.validatePilotPolicy(settings.pilotPolicy),
@@ -85,21 +84,14 @@ const RoomPanel = (() => {
   }
   savedPresetOptions();
   function showFormationPreset(settings) {
-    const values = ["costLimit", "unitCostLimit", "unitLimit"].map(
-      (key) => numericDrafts[key] ?? settings[key],
+    const values = ["costLimit", "unitLimit"].map((key) =>
+      Number(numericDrafts[key] ?? settings[key]),
     );
     let saved;
     try {
-      const current = presetRules({
-        ...settings,
-        ...Object.fromEntries(
-          ["costLimit", "unitCostLimit", "unitLimit"].map((key, i) => [key, Number(values[i])]),
-        ),
-      });
+      const current = presetRules({ ...settings, costLimit: values[0], unitLimit: values[1] });
       saved = savedPresets.find((p) => JSON.stringify(p.rules) === JSON.stringify(current));
-    } catch {
-      /* An unfinished numeric input is a custom draft. */
-    }
+    } catch {}
     const preset = values.join(",");
     byId("roomFormationPreset").value =
       saved?.id || (formationPresets.has(preset) ? preset : "custom");
@@ -274,7 +266,8 @@ const RoomPanel = (() => {
     ctx.textAlign = "left";
     ctx.fillText(I18n.text(map.environment === "space" ? "宇宙" : "地面"), 11, 22);
     canvas.setAttribute("aria-label", map.name + " · " + map.width + "×" + map.height);
-    byId("roomMapTitle").textContent = "[" + map.spawns.length + "P]" + map.name;
+    const playerPositions = map.spawns.filter((spawn) => !spawn.fixedAlly).length;
+    byId("roomMapTitle").textContent = "[" + playerPositions + "P]" + map.name;
     byId("roomMapInfo").textContent =
       map.name +
       " · " +
@@ -282,7 +275,7 @@ const RoomPanel = (() => {
       "×" +
       map.height +
       " · " +
-      map.spawns.length +
+      playerPositions +
       "人" +
       (map.description ? " · " + map.description : "");
   }
@@ -388,7 +381,7 @@ const RoomPanel = (() => {
       numericSettingsTimer = null;
       queuedNumericSettings = {};
       submittedNumericSettings = null;
-      numericDrafts.costLimit = numericDrafts.unitCostLimit = numericDrafts.unitLimit = null;
+      numericDrafts.costLimit = numericDrafts.unitLimit = numericDrafts.unitCostLimit = null;
       sendSettings({ ...mode.presetSettings(id, config, Rules.eras), battlefieldEra: selectedEra });
     }
     const eraRow = selectRow(
@@ -400,15 +393,15 @@ const RoomPanel = (() => {
       (value) => {
         if (value === "custom") sendSettings({ battlefieldEra: "custom" });
         else {
-          const size = mode.roomPreset(settings)?.id.split("-")[1] || "standard";
-          applyPreset(value + "-" + size, value);
+          const cost = mode.roomPreset(settings)?.costLimit || 1500;
+          applyPreset(value + "-cost-" + cost, value);
         }
       },
     );
     eraRow.style.gridColumn = "1 / -1";
     for (const team of [0, 1]) {
       const group = element("fieldset", "battlefield-team-options");
-      group.append(element("legend", "", "队伍" + (team + 1) + " · 固定阵营 AI"));
+      group.append(element("legend", "", "队伍" + (team + 1) + " · 阵营友军"));
       const factions = mode.factions.filter(
         (faction) => custom || mode.erasForFaction(Rules, faction).includes(era),
       );
@@ -450,7 +443,7 @@ const RoomPanel = (() => {
         ...(custom ? [["custom", "自定义"]] : []),
         ...presets.map((item) => [
           item.id,
-          `${custom ? item.era + " · " : ""}${I18n.text(item.name)} · ${item.costLimit}/${item.unitCostLimit}/${item.unitLimit}`,
+          `${custom ? item.era + " · " : ""}${item.costLimit}/${item.unitLimit}`,
         ]),
       ],
       preset?.id || "custom",
@@ -566,7 +559,7 @@ const RoomPanel = (() => {
     const nextKey = JSON.stringify([snapshot.room, snapshot.you?.id, snapshot.hostId]);
     if (nextKey !== settingsKey) {
       settingsKey = nextKey;
-      numericDrafts.costLimit = numericDrafts.unitCostLimit = numericDrafts.unitLimit = null;
+      numericDrafts.costLimit = numericDrafts.unitLimit = numericDrafts.unitCostLimit = null;
       submittedNumericSettings = null;
       queuedNumericSettings = {};
       clearTimeout(numericSettingsTimer);
@@ -579,6 +572,16 @@ const RoomPanel = (() => {
     byId("roomCostLimit").value = numericDrafts.costLimit ?? settings.costLimit;
     byId("roomUnitCostLimit").value = numericDrafts.unitCostLimit ?? settings.unitCostLimit;
     const locked = snapshot.started || snapshot.you?.id !== snapshot.hostId || busy;
+    byId("roomTechnologyLimitMode").value = settings.technologyLimitMode || "host";
+    byId("roomTechnologyLimitMode").disabled = locked;
+    byId("roomTechnologyLimit").value = settings.technologyLimit || 0;
+    byId("roomTechnologyLimit").disabled = locked;
+    byId("roomTechnologyLimit").parentElement.hidden = settings.technologyLimitMode !== "custom";
+    byId("roomFormationStyle").value = Rules.formationStyle(settings);
+    byId("roomFormationStyle").disabled = locked;
+    byId("roomFormationStyle").parentElement.hidden = settings.mode !== "quick";
+    byId("roomUnitCostLimit").parentElement.hidden = Rules.formationStyle(settings) !== "free";
+    byId("roomUnitCostLimit").disabled = locked;
     showFormationPreset(settings);
     let sweepOptions = byId("sweepRoomOptions");
     if (!sweepOptions) {
@@ -668,7 +671,7 @@ const RoomPanel = (() => {
       snapshot.loadedSave ? "存档地图已锁定" : locked ? "地图由房主选择" : "点击名称更换地图",
     );
     // 数值输入时仍可继续打字，不因上一笔请求未确认而失去焦点。
-    for (const id of ["roomCostLimit", "roomUnitCostLimit", "roomUnitLimit"])
+    for (const id of ["roomCostLimit", "roomUnitLimit"])
       byId(id).disabled = snapshot.started || snapshot.you?.id !== snapshot.hostId;
     tagControls(byId("roomTagRestrictions"), "roomBan", settings, locked, () => {
       sendSettings(readTags(byId("roomTagRestrictions")));
@@ -768,8 +771,10 @@ const RoomPanel = (() => {
     const config = Rules.armySettings(player);
     for (const [key, label, value] of [
       ["fill", "编组 COST 比例", config.fill],
-      ["unitCostPercent", "单位 COST 比例", config.unitCostPercent],
-      ["countPercent", "编组点数比例", config.countPercent],
+      ...(player.bot || Rules.formationStyle(snapshot.settings) === "free"
+        ? [["unitCostPercent", "单位 COST 比例", config.unitCostPercent]]
+        : []),
+      ["countPercent", player.bot ? "编组点数比例" : "单位容量点比例", config.countPercent],
       ["difficulty", "单位强度", Math.round(Rules.aiPerformance[config.difficulty] * 100)],
     ]) {
       const field = element("label", "", label);
@@ -798,7 +803,13 @@ const RoomPanel = (() => {
       element(
         "p",
         "muted room-army-summary",
-        "当前上限：编组 COST " + budget + " · 单位 COST " + unitCost + " · 单位点数 " + unitLimit,
+        I18n.text("编组COST") +
+          ": " +
+          budget +
+          " · " +
+          I18n.text("单位容量点上限") +
+          ": " +
+          unitLimit,
       ),
     );
     return section;
@@ -1041,13 +1052,14 @@ const RoomPanel = (() => {
         element(
           "span",
           "",
-          "编组COST: " +
+          I18n.text("编组COST") +
+            ": " +
             player.totalCost +
             " / " +
             (player.assignedPreset ? I18n.text("无限") : player.limit) +
-            " · 单位COST上限: " +
-            (player.assignedPreset ? I18n.text("无限") : player.unitCostLimit) +
-            " · 单位点数: " +
+            " · " +
+            I18n.text("单位容量点") +
+            ": " +
             Rules.formationPoints(player.entries) +
             " / " +
             player.unitLimit,
@@ -1342,6 +1354,10 @@ const RoomPanel = (() => {
         teamHeading.append(badge);
       }
       column.append(teamHeading);
+      if (snapshot.settings.mode === "battlefield")
+        column.append(
+          element("p", "muted", "阵营友军 · " + snapshot.settings.battlefieldTeams[team].faction),
+        );
       column.setAttribute("role", "table");
       column.setAttribute("aria-label", "队伍" + (team + 1));
       const seats = map.spawns
@@ -1597,20 +1613,16 @@ const RoomPanel = (() => {
     const rules =
       saved?.rules ||
       Object.fromEntries(
-        ["costLimit", "unitCostLimit", "unitLimit"].map((key, i) => [
-          key,
-          Number(preset.split(",")[i]),
-        ]),
+        ["costLimit", "unitLimit"].map((key, i) => [key, Number(preset.split(",")[i])]),
       );
-    const { costLimit, unitCostLimit, unitLimit } = rules;
+    const { costLimit, unitLimit } = rules;
     byId("roomPresetName").value = saved?.name || "";
     clearTimeout(numericSettingsTimer);
     numericSettingsTimer = null;
     queuedNumericSettings = {};
     submittedNumericSettings = null;
-    numericDrafts.costLimit = numericDrafts.unitCostLimit = numericDrafts.unitLimit = null;
+    numericDrafts.costLimit = numericDrafts.unitLimit = numericDrafts.unitCostLimit = null;
     byId("roomCostLimit").value = costLimit;
-    byId("roomUnitCostLimit").value = unitCostLimit;
     byId("roomUnitLimit").value = unitLimit;
     sendSettings(rules);
   };
@@ -1689,8 +1701,8 @@ const RoomPanel = (() => {
   }
   for (const [id, key, validate, maximum] of [
     ["roomCostLimit", "costLimit", Rules.validateCostLimit, Rules.maxCostLimit],
-    ["roomUnitCostLimit", "unitCostLimit", Rules.validateUnitCostLimit, Rules.maxCostLimit],
     ["roomUnitLimit", "unitLimit", Rules.validateUnitLimit, Rules.catalog.formation.maxUnits],
+    ["roomUnitCostLimit", "unitCostLimit", Rules.validateUnitCostLimit, Rules.maxCostLimit],
   ]) {
     const input = byId(id);
     input.max = String(maximum);
@@ -1716,6 +1728,12 @@ const RoomPanel = (() => {
       }
     };
   }
+  byId("roomTechnologyLimitMode").onchange = () =>
+    sendSettings({ technologyLimitMode: byId("roomTechnologyLimitMode").value });
+  byId("roomTechnologyLimit").onchange = () =>
+    sendSettings({ technologyLimit: Number(byId("roomTechnologyLimit").value) });
+  byId("roomFormationStyle").onchange = () =>
+    sendSettings({ formationStyle: byId("roomFormationStyle").value });
   byId("roomShareAlliedUnits").onchange = () =>
     sendSettings({ shareAlliedUnits: byId("roomShareAlliedUnits").value === "enabled" });
   byId("roomFogMode").onchange = () => sendSettings({ fogMode: byId("roomFogMode").value });

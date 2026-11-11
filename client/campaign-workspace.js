@@ -19,6 +19,7 @@ window.CampaignWorkspace = (() => {
     world: CAMPAIGN_WORLD,
     production: PRODUCTION_CATALOG,
     development: Development,
+    get technologyCaps() { return Net.snapshot?.settings?.technologyCaps; },
   });
   const state = () => Net.snapshot?.campaign;
   const team = () => (Number.isInteger(Net.seat) ? Rules.seatTeam(Net.seat) : 0);

@@ -38,6 +38,16 @@ function createRoomEngine({
 }) {
   const getRewardMultipliers = () =>
     roomBattleEconomy().rewardMultipliers(activityRewardMultipliers());
+  const roundReward = (value) => roomBattleEconomy().roundReward(value);
+  function roomTechnologyCaps(room) {
+    if (room.started && room.technologyCapSnapshot) return room.technologyCapSnapshot;
+    const dev = roomDevelopment();
+    if (room.settings.technologyLimitMode === "custom")
+      return Object.fromEntries(
+        dev.factions.map((faction) => [faction, room.settings.technologyLimit]),
+      );
+    return dev.normalizeTechnologyPoints(room.members.get(room.hostId)?.technologyPoints);
+  }
   const Records =
     typeof MatchRecords === "undefined" ? require("./match-records.js") : MatchRecords;
   const Climate =
@@ -77,6 +87,7 @@ function createRoomEngine({
         planner,
         log,
         pauseBattle: interruptCampaign,
+        technologyCaps: roomTechnologyCaps,
       });
     }
     return campaignAdapter;
@@ -105,7 +116,7 @@ function createRoomEngine({
         const id = randomId();
         const bot = {
           id,
-          name: "阵营 AI " + (seat + 1),
+          name: "队伍" + (seat + 1) + "阵营友军",
           bot: true,
           battlefieldAI: true,
           seat,
@@ -216,8 +227,8 @@ function createRoomEngine({
         matchId: room.matchId,
         memberId: p.id,
         kind: "result",
-        money: Math.floor(loot.money * bonus.money * ratio),
-        supplies: Math.floor(loot.supplies * bonus.supplies * ratio),
+        money: roundReward(loot.money * ratio),
+        supplies: roundReward(loot.supplies * ratio),
         stockGained: { inventory: loot.inventory },
         lostUnits: records,
         losses,
@@ -233,12 +244,7 @@ function createRoomEngine({
       const balances = dev.normalizeTechnologyPoints(p.technologyPoints),
         limits = Object.fromEntries(dev.factions.map((f) => [f, dev.maximumPoints(f)]));
       for (const [faction, points] of Object.entries(
-        economy.allocateTechnology(
-          Math.floor(loot.technology * bonus.technology * ratio),
-          weights,
-          balances,
-          limits,
-        ),
+        economy.allocateTechnology(roundReward(loot.technology * ratio), weights, balances, limits),
       ))
         room.techAwards.push({
           id: randomId(),
@@ -681,8 +687,10 @@ function createRoomEngine({
         return {
           code: room.code,
           locked: !!room.passwordMatches,
-          players: room.seats.filter((player) => player?.bot || onlineMember(player)).length,
-          capacity: room.seats.length,
+          players: room.seats.filter(
+            (player) => !player?.battlefieldAI && (player?.bot || onlineMember(player)),
+          ).length,
+          capacity: room.seats.length - (room.settings.mode === "battlefield" ? 2 : 0),
           mapId: room.settings.mapId,
           mode: room.settings.mode || "regular",
           costLimit: room.settings.costLimit,
@@ -1134,7 +1142,7 @@ function createRoomEngine({
       connected: connected(room),
       started: room.started,
       hostId: room.hostId,
-      settings: room.settings,
+      settings: { ...room.settings, technologyCaps: roomTechnologyCaps(room) },
       assembly: room.phase === "assembly" ? assemblyView(room, recipient) : null,
       turnDone: room.turnDone,
       delegatedSeats: room.campaignBattle?.delegatedSeats || room.delegatedSeats || [],
@@ -1336,8 +1344,10 @@ function createRoomEngine({
     if (!room.returnCountdown) {
       completePlayback(room);
       syncRegularStock(room);
-      if (room.sweep && !room.sweep.ended && room.phase === "finished" && !room.playback)
+      if (room.sweep && !room.sweep.ended && room.phase === "finished" && !room.playback) {
+        room.sweep.rewardMultipliers = getRewardMultipliers();
         Sweep.checkpoint(room, G);
+      }
       if (!room.sweep || room.sweep.ended) scheduleResultReturn(room);
     }
     logClimate(room);
@@ -1844,8 +1854,8 @@ function createRoomEngine({
       kind: "base_damage",
       targetId: target.id,
       steps,
-      money: Math.floor(reward.money * steps * bonus.money),
-      supplies: Math.floor(reward.supplies * steps * bonus.supplies),
+      money: roundReward(reward.money * steps * bonus.money),
+      supplies: roundReward(reward.supplies * steps * bonus.supplies),
     });
   }
   function awardBattlefieldCaptures(room) {
@@ -1865,8 +1875,8 @@ function createRoomEngine({
         kind: "capture",
         pointId: capture.pointId,
         captureId: capture.captureId,
-        money: Math.floor(reward.money * bonus.money),
-        supplies: Math.floor(reward.supplies * bonus.supplies),
+        money: roundReward(reward.money * bonus.money),
+        supplies: roundReward(reward.supplies * bonus.supplies),
       });
       log(
         room,
@@ -1907,10 +1917,10 @@ function createRoomEngine({
         kind: assist ? "assist" : "kill",
         targetId: to.id,
         model: to.model,
-        money: Math.floor(
+        money: roundReward(
           (facility ? facility.money / (assist ? 2 : 1) : cost / divisor) * bonus.money,
         ),
-        supplies: Math.floor(
+        supplies: roundReward(
           (facility ? facility.supplies / (assist ? 2 : 1) : cost / divisor) * bonus.supplies,
         ),
       });
@@ -1953,11 +1963,11 @@ function createRoomEngine({
       );
       const money = Math.max(
         0,
-        Math.floor(price * (assist ? 0.25 : 0.5) * rates.currency * battleRate * bonus.money),
+        roundReward(price * (assist ? 0.25 : 0.5) * rates.currency * battleRate * bonus.money),
       );
       const supplies = Math.max(
         0,
-        Math.floor(
+        roundReward(
           supplyPrice * (assist ? 0.25 : 0.5) * rates.currency * battleRate * bonus.supplies,
         ),
       );
@@ -2146,6 +2156,7 @@ function createRoomEngine({
     return { lostUnits, losses };
   }
   function awardMatchTechnology(room, player, won, bonus) {
+    if (room.game.winner === -1) won = null;
     const participated = room.techParticipation?.[player.id];
     if (!participated?.length) return;
     const economy = roomBattleEconomy(),
@@ -2169,7 +2180,12 @@ function createRoomEngine({
             won,
             bonus.technology,
           )
-        : economy.technologyReward(won, room.settings.mode, bonus.technology);
+        : economy.technologyReward(
+            won,
+            room.settings.mode,
+            bonus.technology,
+            economy.teamAverageFormationCost(room.battleRoster, G.seatTeam(player.seat)),
+          );
     const awards = economy.allocateTechnology(total, weights, balances, limits);
     player.technologyPoints = development.normalizeTechnologyPoints(player.technologyPoints);
     for (const [faction, points] of Object.entries(awards)) {
@@ -2215,8 +2231,8 @@ function createRoomEngine({
           memberId: player.id,
           kind: "result",
           ...battlefieldLosses(room, player.seat),
-          money: Math.floor(entryReward.money * bonus.money),
-          supplies: Math.floor(entryReward.supplies * bonus.supplies),
+          money: roundReward(entryReward.money * bonus.money),
+          supplies: roundReward(entryReward.supplies * bonus.supplies),
         });
       }
       return;
@@ -2265,8 +2281,8 @@ function createRoomEngine({
         kind: "result",
         ...(stockLost ? { stockLost } : {}),
         destroyedCost,
-        money: Math.floor((won ? base.money : destroyedCost) * rate * battleRate * bonus.money),
-        supplies: Math.floor(
+        money: roundReward((won ? base.money : destroyedCost) * rate * battleRate * bonus.money),
+        supplies: roundReward(
           (won ? base.supplies : destroyedCost * 2) * rate * battleRate * bonus.supplies,
         ),
         losses,
@@ -2639,10 +2655,11 @@ function createRoomEngine({
   }
   function playerRestrictions(room, player) {
     const rules = G.armyRestrictions(
-      room.settings,
+      { ...room.settings, technologyCaps: roomTechnologyCaps(room) },
       player?.bot ? { ...formationPlayer(room, player), researched: roomAIResearch(room) } : player,
     );
     if (player?.bot) rules.aiAllowedEras = roomAIEras(room);
+    if (room.sweep?.battleIndex > 0) rules.fleetEmbarkation = false;
     if (
       player?.bot &&
       rules.aiAllowedEras?.length &&
@@ -2698,7 +2715,7 @@ function createRoomEngine({
       return [{ unitId, kitId: "standard" }];
     }
     if (player.formationPreset)
-      return G.validateFormation(
+      return G.validateFleetFormation(
         player.formationPreset.units.slice(0, playerUnitLimit(room, player)),
         Infinity,
         playerUnitLimit(room, player),
@@ -2827,7 +2844,7 @@ function createRoomEngine({
   function formationPlan(room, player) {
     if (room.resumeSave) return savedPlan(room, player.seat);
     if (player.bot && !player.formationPreset && room.settings.mode === "regular") {
-      const eraKey = JSON.stringify(roomAIEras(room));
+      const eraKey = JSON.stringify([roomAIEras(room), roomTechnologyCaps(room)]);
       if (player.aiFormationEraKey !== eraKey) {
         player.formation = randomArmy(room, player, 7319);
         player.aiFormationEraKey = eraKey;
@@ -2871,6 +2888,7 @@ function createRoomEngine({
           limit: playerBudget(room, player),
           unitLimit: playerUnitLimit(room, player),
           unitCostLimit: playerRestrictions(room, player).unitCostLimit,
+          requiresCarriers: !!playerRestrictions(room, player).requiresCarriers,
           assignedPreset: !!player.formationPreset,
           ...formationPlan(room, player),
         })),
@@ -2945,6 +2963,8 @@ function createRoomEngine({
     room.stockReservations = {};
     room.saveTurn = null;
     room.aiResearch = roomAIResearch(room);
+    room.technologyCapSnapshot = roomTechnologyCaps(room);
+    room.settings.technologyCaps = room.technologyCapSnapshot;
     room.started = true;
     room.phase = "assembly";
     room.matchId = randomId();
@@ -4008,12 +4028,15 @@ function createRoomEngine({
       if (msg.matchId !== room.matchId || msg.revision !== room.revision)
         throw Error("任务地图已更新，请重新选择");
       const host = member.id === room.hostId;
-      if (msg.action !== "sweep_reinforce" && !host) throw Error("路线和事件由房主确认");
+      if (!["sweep_restock_commit", "sweep_restock_cancel"].includes(msg.action) && !host)
+        throw Error("路线和事件由房主确认");
       if (msg.action === "sweep_select" && room.phase === "sweep_map")
         Sweep.select(room, msg.nodeId);
       else if (msg.action === "sweep_confirm" && room.phase === "sweep_map") {
+        room.sweep.rewardMultipliers = getRewardMultipliers();
         if (Sweep.arrived(room, G) === "battle") launchSweepBattle(room);
       } else if (msg.action === "sweep_event" && room.phase === "sweep_event") {
+        room.sweep.rewardMultipliers = getRewardMultipliers();
         const before = new Set(Object.values(room.sweep.rosters).flat());
         Sweep.event(room, G, msg.choice);
         for (const losses of Object.values(room.sweep.losses))
@@ -4023,30 +4046,40 @@ function createRoomEngine({
         if (room.sweep.depth < 0) throw Error("请先完成一个任务节点");
         Sweep.finish(room, false);
       } else if (msg.action === "sweep_resupply_done" && room.phase === "sweep_resupply") {
+        if (
+          room.seats.some(
+            (p) => p && !p.bot && G.seatTeam(p.seat) === 0 && !room.sweep.restockCommitted?.[p.id],
+          )
+        )
+          throw Error("请等待所有玩家确认整备");
         room.phase = "sweep_map";
         room.sweep.event = null;
         room.sweep.resupply = false;
-      } else if (msg.action === "sweep_reinforce" && room.phase === "sweep_resupply") {
-        if (seat === null || G.seatTeam(seat) !== 0) throw Error("观战者不能补员");
-        const roster = room.sweep.rosters[member.id],
-          entry = G.validateFormation([msg.entry], Infinity)[0];
-        const entries = [...roster.map((r) => r.entry), entry];
-        const plan = G.planFormation(
-          entries,
-          playerBudget(room, member),
-          playerRestrictions(room, member),
-          playerUnitLimit(room, member),
-        );
-        if (plan.disabled.length) throw Error("补员库存不足或超出房间编组规则");
-        const formations = room.seats.map((p, i) => (i === seat ? [entry] : null));
-        const g = G.create(false, randomSeed(), formations, false, {
-          ...room.settings,
-          mode: "sweep",
-          seatFormationRules: room.seats.map(() => ({})),
-          costLimit: 99999,
+      } else if (msg.action === "sweep_restock_cancel" && room.phase === "sweep_resupply") {
+        if (Object.values(room.sweep.restockCommitted || {}).some(Boolean))
+          throw Error("已有玩家确认整备，请完成本次整备");
+        room.phase = "sweep_event";
+        room.sweep.resupply = false;
+      } else if (msg.action === "sweep_restock_commit" && room.phase === "sweep_resupply") {
+        if (seat === null || G.seatTeam(seat) !== 0 || room.sweep.restockCommitted?.[member.id])
+          throw Error("不能重复确认整备");
+        const plan = Sweep.restockPlan(G, room.sweep.rosters[member.id], msg.operations, {
+          budget: playerBudget(room, member),
+          unitLimit: playerUnitLimit(room, member),
+          restrictions: playerRestrictions(room, member),
+          inventory: member.inventory,
+          nextKey: room.sweep.nextKey[member.id],
         });
-        const u = g.units.find((u) => G.ownerOf(u) === seat);
-        roster.push({ key: room.sweep.nextKey[member.id]++, entry, state: Sweep.save(u) });
+        const pending = room.sweep.pending[member.id];
+        if (pending.money < plan.cost.money || pending.supplies < plan.cost.supplies)
+          throw Error("本局暂存资源不足");
+        pending.money -= plan.cost.money;
+        pending.supplies -= plan.cost.supplies;
+        room.sweep.rosters[member.id] = plan.roster;
+        room.sweep.nextKey[member.id] = plan.nextKey;
+        (room.sweep.restockUsed ||= {})[member.id] = plan.used;
+        (room.sweep.restockCost ||= {})[member.id] = plan.cost;
+        (room.sweep.restockCommitted ||= {})[member.id] = true;
       } else throw Error("无效的任务操作");
       room.lastEvent = { id: randomId(), type: "sweep_changed" };
       log(
@@ -4057,7 +4090,8 @@ function createRoomEngine({
             sweep_confirm: "前往任务节点",
             sweep_event: "完成事件",
             sweep_extract: "全队撤离",
-            sweep_reinforce: "机库补员",
+            sweep_restock_commit: "确认舰队整备",
+            sweep_restock_cancel: "取消舰队整备",
             sweep_resupply_done: "整备完成",
           }[msg.action] +
           " · 节点 " +
@@ -4419,7 +4453,7 @@ function createRoomEngine({
           try {
             if (member.seat !== null) {
               if (!room.resumeSave)
-                member.formation = G.validateFormation(
+                member.formation = G.validateFleetFormation(
                   member.formationPreset?.units ?? msg.formation ?? member.formation,
                   Infinity,
                   playerUnitLimit(room, member),
@@ -4463,7 +4497,7 @@ function createRoomEngine({
             member.finalReady &&
             msg.formation !== undefined &&
             JSON.stringify(
-              G.validateFormation(msg.formation, Infinity, playerUnitLimit(room, member)),
+              G.validateFleetFormation(msg.formation, Infinity, playerUnitLimit(room, member)),
             ) !== JSON.stringify(member.formationPreset?.units || member.formation)
           )
             throw Error("确认阶段不可修改编组。");
@@ -4490,7 +4524,7 @@ function createRoomEngine({
                   !msg.formation.length &&
                   msg.action === "update_formation"
                 ? []
-                : G.validateFormation(msg.formation, Infinity, playerUnitLimit(room, member)));
+                : G.validateFleetFormation(msg.formation, Infinity, playerUnitLimit(room, member)));
           const plan = !formation?.length
             ? { deployable: [] }
             : G.planFormation(
@@ -4750,8 +4784,15 @@ function createRoomEngine({
                 climateBuffs: msg.climateBuffs ?? room.settings.climateBuffs ?? true,
                 pilotPolicy: G.validatePilotPolicy(msg.pilotPolicy ?? room.settings.pilotPolicy),
                 shareAlliedUnits: msg.shareAlliedUnits ?? room.settings.shareAlliedUnits ?? false,
+                formationStyle: G.formationStyle({
+                  mode: nextMode,
+                  formationStyle: msg.formationStyle ?? room.settings.formationStyle,
+                }),
                 costLimit: G.validateCostLimit(msg.costLimit),
                 unitLimit: G.validateUnitLimit(msg.unitLimit ?? room.settings.unitLimit),
+                aiUnitLimit: G.validateUnitLimit(
+                  msg.aiUnitLimit ?? room.settings.aiUnitLimit ?? 36,
+                ),
                 unitCostLimit: G.validateUnitCostLimit(
                   msg.unitCostLimit ?? room.settings.unitCostLimit,
                 ),
@@ -4773,6 +4814,16 @@ function createRoomEngine({
                         msg.teamFactions ?? room.settings.teamFactions ?? [null, null],
                       ),
               };
+          settings.technologyLimitMode =
+            msg.technologyLimitMode ?? room.settings.technologyLimitMode ?? "host";
+          settings.technologyLimit = msg.technologyLimit ?? room.settings.technologyLimit ?? 0;
+          if (
+            !["host", "custom"].includes(settings.technologyLimitMode) ||
+            !Number.isSafeInteger(settings.technologyLimit) ||
+            settings.technologyLimit < 0 ||
+            settings.technologyLimit > 1000000000
+          )
+            throw Error("科技点限制无效");
           if (
             settings.mode === "sweep" &&
             (!G.factions.includes(settings.sweepFaction) || !G.eras.includes(settings.sweepEra))
@@ -4814,7 +4865,16 @@ function createRoomEngine({
               "bannedTypes",
               "teamRestrictions",
             ].some((key) => JSON.stringify(settings[key]) !== JSON.stringify(room.settings[key]));
+            const technologyChanged =
+              settings.technologyLimitMode !== room.settings.technologyLimitMode ||
+              settings.technologyLimit !== room.settings.technologyLimit;
             room.settings = settings;
+            if (technologyChanged)
+              for (const player of members(room))
+                if (player.bot && !player.battlefieldAI) {
+                  player.formation = null;
+                  player.aiFormationEraKey = null;
+                }
             for (const player of members(room)) {
               if (player.seat !== null && player.seat >= map.spawns.length) {
                 if (player.bot) {
@@ -4844,7 +4904,8 @@ function createRoomEngine({
               }
             }
             room.turnDone = Array(map.spawns.length).fill(false);
-            if (mapChanged || modeChanged || factionsChanged || tagsChanged) resetReady(room);
+            if (mapChanged || modeChanged || factionsChanged || tagsChanged || technologyChanged)
+              resetReady(room);
           }
         } else if (msg.action === "kick_player") {
           if (room.hostId !== member.id) throw Error("只有房主可以踢出玩家");
@@ -4963,7 +5024,7 @@ function createRoomEngine({
             oldReady = member.ready;
           try {
             if (msg.ready && !room.resumeSave && room.settings.mode !== "campaign") {
-              const formation = G.validateFormation(
+              const formation = G.validateFleetFormation(
                 member.formationPreset?.units || msg.formation,
                 Infinity,
                 playerUnitLimit(room, member),

@@ -154,12 +154,18 @@ const Formation = (() => {
   const current = () =>
     !squads[index].units.length
       ? []
-      : Rules.validateFormation(
+      : Rules.validateFleetFormation(
           hydratePilots(squads[index].units),
           Infinity,
           Rules.catalog.formation.maxUnits,
         );
   const ownPlayer = () => Net.snapshot?.members.find((player) => player.id === Net.memberId);
+  let editorStyle =
+    localStorage.getItem("projectgreed.formation-editor-style") === "free" ? "free" : "standard";
+  const freeFormation = () =>
+    Net.active && Net.snapshot?.settings
+      ? Rules.formationStyle(Net.snapshot.settings) === "free"
+      : editorStyle === "free";
   function canEditRoom() {
     const snapshot = Net.snapshot;
     return (
@@ -177,6 +183,18 @@ const Formation = (() => {
       ? Rules.armyBudget(Net.snapshot.settings, ownPlayer())
       : Infinity;
   const restrictions = () => ({
+    ...Rules.armyRestrictions(
+      Net.active && Net.snapshot?.settings
+        ? Net.snapshot.settings
+        : {
+            ...Rules.defaultRoomSettings(),
+            costLimit: 99999,
+            mode: "quick",
+            formationStyle: editorStyle,
+          },
+      Net.active ? ownPlayer() : null,
+    ),
+    ...(Net.active ? {} : { unitCostLimit: Infinity }),
     ...(Net.active && Net.snapshot?.settings
       ? Rules.armyRestrictions(Net.snapshot.settings, ownPlayer())
       : {}),
@@ -207,35 +225,25 @@ const Formation = (() => {
     return model ? Rules.formationWeight(model) : Infinity;
   }
   function renderPickerCost() {
-    const prefabId = byId("formationPrefab").value,
-      prefab = Rules.catalog.prefabs.find((candidate) => candidate.id === prefabId),
-      kitId =
-        prefab &&
-        (pickerKits.get(prefab.id) || Economy.defaultKit(prefab.id) || prefab.weaponKits[0].id),
-      model = kitId && UnitModels[prefab.id + "__" + kitId],
-      formationCost = cost(draft),
-      formationLimit = budget(),
-      unitCost = model?.cost,
-      unitCostLimit = restrictions().unitCostLimit ?? Infinity,
-      formation = element(
-        "span",
-        formationCost > formationLimit ? "danger-text" : "",
-        I18n.text("编组COST") + ": " + formationCost + " / " + displayLimit(formationLimit),
-      ),
-      unit = element(
-        "span",
-        Number.isFinite(unitCost) && unitCost > unitCostLimit ? "danger-text" : "",
-        I18n.text("单位COST") + ": " + (unitCost ?? "—") + " / " + displayLimit(unitCostLimit),
-      );
-    formation.id = "formationPickerSquadCost";
-    unit.id = "formationPickerUnitCost";
+    const id = byId("formationPrefab").value,
+      prefab = Rules.catalog.prefabs.find((p) => p.id === id);
+    const kit = prefab && (pickerKits.get(id) || Economy.defaultKit(id) || prefab.weaponKits[0].id);
+    const unit = kit && UnitModels[id + "__" + kit];
     const count = element(
       "span",
       "",
-      "编组单位点数: " + points(draft) + " / " + displayLimit(unitLimit()),
+      I18n.text("单位容量点") + ": " + points(draft) + " / " + displayLimit(unitLimit()),
     );
     count.id = "formationPickerUnitPoints";
-    byId("formationPickerCost").replaceChildren(count, formation, unit);
+    const total = element(
+      "span",
+      cost(draft) > budget() ? "danger-text" : "",
+      I18n.text("编组COST") + ": " + cost(draft) + " / " + displayLimit(budget()),
+    );
+    total.id = "formationPickerSquadCost";
+    const price = element("span", "", I18n.text("单位COST") + ": " + (unit?.cost ?? "—"));
+    price.id = "formationPickerUnitCost";
+    byId("formationPickerCost").replaceChildren(count, total, price);
   }
   function persist() {
     sessionSaves.set(storageKey, {
@@ -312,7 +320,7 @@ const Formation = (() => {
             units:
               Array.isArray(squad.units) && !squad.units.length
                 ? []
-                : Rules.validateFormation(
+                : Rules.validateFleetFormation(
                     hydratePilots(squad.units),
                     Infinity,
                     Rules.catalog.formation.maxUnits,
@@ -361,7 +369,7 @@ const Formation = (() => {
   }
   const sharePrefix = "PGF1.";
   function encodeShare(name, units) {
-    const clean = Rules.validateFormation(units, Infinity, Rules.catalog.formation.maxUnits),
+    const clean = Rules.validateFleetFormation(units, Infinity, Rules.catalog.formation.maxUnits),
       payload = JSON.stringify({
         version: 1,
         name: name.trim().slice(0, 32) || "未命名编组",
@@ -398,7 +406,7 @@ const Formation = (() => {
       !Array.isArray(payload.units)
     )
       throw Error("编组分享代码无效。");
-    const units = Rules.validateFormation(
+    const units = Rules.validateFleetFormation(
         payload.units.map(({ unitId, kitId, preload }) => ({
           unitId,
           kitId,
@@ -507,7 +515,7 @@ const Formation = (() => {
       }
   }
   function pickerCompatible(prefab) {
-    if (!pickerContext) return true;
+    if (!pickerContext) return freeFormation() || isFormationCarrier(prefab);
     const carrier = draft[pickerContext.carrierIndex],
       model = carrier && Rules.formationModel(carrier),
       h = model?.hangars.find((h) => h.id === pickerContext.hangarId);
@@ -523,12 +531,25 @@ const Formation = (() => {
       h.allowedTags.some((t) => prefab.transport.loadTags.includes(t))
     );
   }
-  function openPicker(context = null) {
+  let pickerFromHangarCard = false;
+  function isFormationCarrier(prefab) {
+    if (!prefab?.weaponKits?.length) return false;
+    const model = Rules.formationModel({
+      unitId: prefab.id,
+      kitId: Economy.defaultKit(prefab.id) || prefab.weaponKits[0].id,
+    });
+    return Rules.isFleetCarrier(model);
+  }
+  function openPicker(context = null, fromHangarCard = false) {
+    byId("formationSearch").value = "";
+    catalogFilters.type = "";
+    byId("formationType").value = "";
     catalogFilters.faction = Rules.factions.includes(PlayerProfile.faction())
       ? PlayerProfile.faction()
       : "";
     byId("formationFaction").value = catalogFilters.faction;
     pickerContext = context;
+    pickerFromHangarCard = fromHangarCard;
     pickerReturnIndex = context?.carrierIndex ?? null;
     detailIndex = null;
     catalogDetail = null;
@@ -538,18 +559,29 @@ const Formation = (() => {
     document.body.append(byId("formationUnitPicker"));
     byId("formationUnitPicker").hidden = false;
     byId("formationMain").inert = true;
-    byId("formationPickerTitle").textContent = context ? "预先搭载" : "添加单位";
+    byId("formationPickerTitle").textContent = context
+      ? "预先搭载"
+      : freeFormation()
+        ? "添加单位"
+        : "选择战舰或运输机";
     renderCatalog();
     byId("closeFormationPicker").focus();
   }
   function closePicker() {
     byId("formationUnitPicker").hidden = true;
     const returnIndex = pickerReturnIndex;
+    const returnToList = pickerFromHangarCard;
+    pickerFromHangarCard = false;
     pickerContext = null;
     pickerReturnIndex = null;
     detailFromPicker = false;
     byId("formationMain").inert = false;
-    if (returnIndex !== null && draft[returnIndex]) {
+    if (returnToList) {
+      (
+        byId("formationUnits").querySelector(`[data-add-hangar-carrier="${returnIndex}"]`) ||
+        byId("formationUnits")
+      ).focus();
+    } else if (returnIndex !== null && draft[returnIndex]) {
       detailIndex = returnIndex;
       catalogDetail = null;
       renderDetail();
@@ -650,7 +682,7 @@ const Formation = (() => {
         if (detailIndex === null) {
           const entry = { ...catalogDetail };
           try {
-            Rules.validateFormation([...draft, entry], Infinity, unitLimit());
+            Rules.validateFleetFormation([...draft, entry], Infinity, unitLimit());
           } catch (error) {
             note(error.message);
             return;
@@ -699,7 +731,7 @@ const Formation = (() => {
         kits.onchange = () => {
           const kitId = kits.value;
           try {
-            Rules.validateFormation(
+            Rules.validateFleetFormation(
               draft.map((e, index) => (index === i ? { ...e, kitId } : e)),
               Infinity,
               Rules.catalog.formation.maxUnits,
@@ -812,7 +844,7 @@ const Formation = (() => {
         const next = { ...draft[index] };
         if (choice) next.preload = JSON.parse(choice);
         else delete next.preload;
-        Rules.validateFormation(
+        Rules.validateFleetFormation(
           draft.map((e, i) => (i === index ? next : e)),
           Infinity,
           Rules.catalog.formation.maxUnits,
@@ -848,7 +880,7 @@ const Formation = (() => {
       button.onclick = () => {
         try {
           const next = draft.map((unit, i) => (i === index ? { ...unit, kitId: kit.id } : unit));
-          Rules.validateFormation(next, Infinity, Rules.catalog.formation.maxUnits);
+          Rules.validateFleetFormation(next, Infinity, Rules.catalog.formation.maxUnits);
           draft[index] = next[index];
           GameAudio.play("changeEquipmentSound");
           dialog.close();
@@ -1135,7 +1167,7 @@ const Formation = (() => {
   function saveDraft() {
     if (pageView !== "formation") return;
     const units = draft.length
-      ? Rules.validateFormation(draft, Infinity, Rules.catalog.formation.maxUnits)
+      ? Rules.validateFleetFormation(draft, Infinity, Rules.catalog.formation.maxUnits)
       : [];
     const name = byId("formationName").value.trim().slice(0, 32) || "未命名编组";
     const changed =
@@ -1157,26 +1189,31 @@ const Formation = (() => {
   }
   function render() {
     saveDraft();
+    byId("formationEditorStyle").value = freeFormation() ? "free" : "standard";
+    byId("formationEditorStyle").disabled = !!Net.active;
+    if (byId("formationMain").dataset.page !== "pilots")
+      byId("formationPageTitle").textContent = I18n.text(freeFormation() ? "自由编组" : "常规编组");
+    byId("openFormationPicker").textContent = freeFormation() ? "添加单位" : "添加战舰或运输机";
     byId("formationGroup").disabled = Net.active && Net.snapshot?.settings?.mode === "quick";
-    const unitCostLimit = restrictions().unitCostLimit,
-      draftPoints = points(draft);
-    const unitCostRule = element(
-      "span",
-      "formation-unit-cost-limit" + (Number.isFinite(unitCostLimit) ? " has-limit" : ""),
-      `单位COST上限: ${displayLimit(unitCostLimit)}`,
-    );
-    unitCostRule.id = "formationUnitCostLimit";
+    const draftPoints = points(draft);
     byId("formationBudget").replaceChildren(
       element(
         "span",
         "",
-        `${draftPoints} / ${unitLimit()} 点（${draft.length} 台）· 编组COST: ${cost(draft)} / ${displayLimit(budget())}`,
+        I18n.text("编组COST") +
+          ": " +
+          cost(draft) +
+          " / " +
+          displayLimit(budget()) +
+          "\u00a0·\u00a0",
       ),
-      document.createTextNode(" · "),
-      unitCostRule,
+      element("span", "", I18n.text("单位容量点") + ": " + draftPoints + " / " + unitLimit()),
     );
     byId("formationBudget").title = byId("formationBudget").textContent;
-    byId("formationBudget").classList.toggle("danger-text", draftPoints > unitLimit());
+    byId("formationBudget").classList.toggle(
+      "danger-text",
+      draftPoints > unitLimit() || cost(draft) > budget(),
+    );
     byId("addFormationUnit").disabled =
       draftPoints + pickerWeight() > unitLimit() ||
       !byId("formationPrefab").value ||
@@ -1184,7 +1221,7 @@ const Formation = (() => {
     byId("openFormationPicker").disabled = draftPoints >= unitLimit();
     renderPickerCost();
     const plan = draft.length
-      ? Rules.planFormation(draft, budget(), restrictions(), Rules.catalog.formation.maxUnits)
+      ? Rules.planFormation(draft, budget(), restrictions(), unitLimit())
       : { disabled: [] };
     const shortagePlan = Economy.purchasePlan(draft);
     byId("produceMissingFormation").hidden =
@@ -1255,7 +1292,7 @@ const Formation = (() => {
       if (plan.disabled.includes(i) && plan.reasons[i] !== "not_developed") {
         row.classList.add(
           "unit-disabled",
-          ["not_allowed", "not_developed", "wip"].includes(plan.reasons[i])
+          ["not_allowed", "not_developed", "wip", "technology_limit"].includes(plan.reasons[i])
             ? "not-allowed"
             : "overcost",
         );
@@ -1282,7 +1319,11 @@ const Formation = (() => {
                             ? "超过单位点数"
                             : plan.reasons[i] === "not_allowed"
                               ? "不被允许的单位"
-                              : "OVER COST",
+                              : {
+                                  technology_limit: "超出科技点限制",
+                                  not_embarked: "必须预先搭载",
+                                  carrier_disabled: "运输单位无法出击",
+                                }[plan.reasons[i]] || "OVER COST",
           ),
         );
       }
@@ -1373,7 +1414,7 @@ const Formation = (() => {
             try {
               const next = { ...entry, unitId: target.id, kitId: Economy.defaultKit(target.id) };
               const preview = draft.map((e, j) => (j === i ? next : e));
-              Rules.validateFormation(preview, Infinity, Rules.catalog.formation.maxUnits);
+              Rules.validateFleetFormation(preview, Infinity, Rules.catalog.formation.maxUnits);
               Economy.transformStock(entry.unitId, target.id);
               draft[i] = next;
               saveDraft();
@@ -1400,6 +1441,7 @@ const Formation = (() => {
       row.append(portrait, label, actions);
       list.append(row);
     });
+    renderFleetHangars(list);
     list.scrollTop = scrollTop;
     if (transportFrameList !== list) {
       transportFrameObserver.disconnect();
@@ -1407,6 +1449,90 @@ const Formation = (() => {
       transportFrameList = list;
     }
     scheduleTransportFrames();
+  }
+  function renderFleetHangars(list) {
+    if (freeFormation()) {
+      list.classList.remove("formation-carrier-view");
+      return;
+    }
+    list.classList.add("formation-carrier-view");
+    const cards = new Map(
+      [...list.querySelectorAll("[data-formation-index]")].map((row) => [
+        Number(row.dataset.formationIndex),
+        row,
+      ]),
+    );
+    const visited = new Set(),
+      fragment = document.createDocumentFragment();
+    function appendCarrier(index, parent) {
+      if (visited.has(index)) return;
+      visited.add(index);
+      parent.append(cards.get(index));
+      const model = Rules.formationModel(draft[index]);
+      for (const h of model.hangars) {
+        const hangar = element("section", "formation-hangar-card");
+        hangar.dataset.hangarCarrier = String(index);
+        hangar.dataset.hangarId = h.id;
+        const cargo = draft
+          .map((entry, i) => ({ entry, i }))
+          .filter(({ entry }) => preloadMatches(entry, index, h.id));
+        const used = cargo.reduce(
+          (n, { entry }) =>
+            n + (h.kind === "sfs" ? 1 : Rules.formationModel(entry).transport.slotCost || 1),
+          0,
+        );
+        hangar.append(
+          element(
+            "h3",
+            "formation-hangar-title",
+            `${hangarLabel(index, h.id)} · ${used} / ${h.capacity} ${I18n.text("容量点")}`,
+          ),
+        );
+        for (const { i } of cargo) appendCarrier(i, hangar);
+        if (used < h.capacity) {
+          const add = element("button", "formation-empty-slot");
+          add.type = "button";
+          add.dataset.addHangarCarrier = String(index);
+          add.dataset.addHangarId = h.id;
+          add.setAttribute(
+            "aria-label",
+            `${model.name} · ${hangarLabel(index, h.id)} · ${I18n.text("预先搭载")}`,
+          );
+          const portrait = element("span", "formation-empty-portrait", "＋");
+          portrait.setAttribute("aria-hidden", "true");
+          const text = element("span", "formation-empty-label");
+          text.append(
+            element("strong", "", "选择预先搭载单位"),
+            element("small", "", `${I18n.text("剩余容量")} ${h.capacity - used}`),
+          );
+          add.append(portrait, text);
+          add.disabled = points(draft) >= unitLimit();
+          add.onclick = () => openPicker({ carrierIndex: index, hangarId: h.id }, true);
+          hangar.append(add);
+        }
+        parent.append(hangar);
+      }
+    }
+    draft.forEach((entry, i) => {
+      if (entry.preload || !Rules.isFleetCarrier(Rules.formationModel(entry))) return;
+      const group = element("section", "formation-carrier-group");
+      group.dataset.fleetCarrier = String(i);
+      appendCarrier(i, group);
+      fragment.append(group);
+    });
+    if (visited.size < draft.length) {
+      const remaining = element("section", "formation-unassigned");
+      remaining.append(element("h3", "formation-hangar-title", "未搭载单位"));
+      draft.forEach((entry, i) => {
+        if (!visited.has(i)) appendCarrier(i, remaining);
+      });
+      fragment.append(remaining);
+    }
+    if (!draft.length)
+      fragment.append(
+        element("p", "formation-fleet-empty", "请先选择战舰或运输机，再配置格纳库。"),
+      );
+    list.replaceChildren(fragment);
   }
   // Draw only the perimeter of each carrier group. An overlay preserves the
   // roster grid and its original indices, including groups wrapping between columns.
@@ -1423,6 +1549,7 @@ const Formation = (() => {
   function drawTransportFrames() {
     const list = byId("formationUnits");
     list.querySelector(".formation-transport-frames")?.remove();
+    if (list.classList.contains("formation-carrier-view")) return;
     if (!list.clientWidth || !list.clientHeight) return;
     const rows = [...list.querySelectorAll(":scope > .formation-row")];
     if (!rows.length) return;
@@ -1640,7 +1767,7 @@ const Formation = (() => {
         detailIndex === null
           ? [...draft, next]
           : draft.map((e, i) => (i === detailIndex ? next : e));
-      Rules.validateFormation(entries, Infinity, Rules.catalog.formation.maxUnits);
+      Rules.validateFleetFormation(entries, Infinity, Rules.catalog.formation.maxUnits);
       const adding = detailIndex === null;
       if (adding) {
         appendUnit(next);
@@ -1756,6 +1883,11 @@ const Formation = (() => {
     render();
     note("编组已删除。");
   };
+  byId("formationEditorStyle").onchange = () => {
+    editorStyle = byId("formationEditorStyle").value;
+    localStorage.setItem("projectgreed.formation-editor-style", editorStyle);
+    render();
+  };
   byId("openFormationPicker").onclick = () => openPicker();
   byId("closeFormationPicker").onclick = closePicker;
   window.addEventListener("page-changing", () => {
@@ -1794,7 +1926,7 @@ const Formation = (() => {
       ...(pickerContext ? { preload: { ...pickerContext } } : {}),
     };
     try {
-      Rules.validateFormation([...draft, entry], Infinity, unitLimit());
+      Rules.validateFleetFormation([...draft, entry], Infinity, unitLimit());
     } catch (error) {
       note(error.message);
       return;
@@ -1825,6 +1957,7 @@ const Formation = (() => {
     const list = byId("formationCatalog");
     const renderKey = JSON.stringify([
       catalogRevision,
+      freeFormation(),
       group,
       PlayerProfile.faction(),
       I18n.language,
@@ -2570,7 +2703,11 @@ const Formation = (() => {
       (p) =>
         (p.name + " " + I18n.pilotName(p)).toLocaleLowerCase().includes(search) &&
         PilotSystem.matchesFilter(p, byId("pilotRosterFilter").value),
-    );
+    ).sort((a,b) => {
+      const factions=["PMC","EFSF","ZEON","AEUG","TITANS","NEO_ZEON"];
+      const rank=p=>p.ace ? Math.min(...PilotSystem.pilotFactions(p).map(f=>Math.max(1,factions.indexOf(f)))) : 0;
+      return rank(a)-rank(b) || (byId("pilotRosterSort").value === "level" ? b.level-a.level : 0) || I18n.pilotName(a).localeCompare(I18n.pilotName(b),I18n.language);
+    });
     if (pilotStore.pilots.length && !visible.length)
       list.append(element("p", "muted", "没有符合条件的驾驶员。"));
     for (const p of visible) {
@@ -2674,6 +2811,7 @@ const Formation = (() => {
     renderPilotRoster();
   };
   byId("pilotRosterFilter").onchange = renderPilotRoster;
+  byId("pilotRosterSort").onchange = renderPilotRoster;
   function showFormationTab(tab) {
     finishPilotEditor();
     const pilots = tab === "pilots";
@@ -3265,6 +3403,7 @@ const Formation = (() => {
   loadCharacter();
   return {
     renderPreview,
+    availablePilots: () => structuredClone(pilotStore.pilots.filter(p=>!p.needsRecruitment)),
     unitTags,
     unitSummaryTags,
     replenish,
@@ -3317,7 +3456,7 @@ const Formation = (() => {
         name: squad.name,
         units: !squad.units.length
           ? []
-          : Rules.validateFormation(
+          : Rules.validateFleetFormation(
               hydratePilots(squad.units),
               Infinity,
               Rules.catalog.formation.maxUnits,

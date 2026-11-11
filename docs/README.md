@@ -16,6 +16,7 @@
 - [现行武器与技能规则](rules/combat.md)
 - [驾驶员与指挥](rules/pilots.md)
 - [小队](rules/squads.md)
+- [舰队与搭载编组](rules/formation.md)
 - [战略模式](rules/campaign.md)
 - [收益](rules/economy.md)
 - [合约模式：战场扫荡](rules/sweep.md)

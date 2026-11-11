@@ -35,6 +35,30 @@ const Development = (() => {
   function nodes(faction) {
     return tree[faction] || [];
   }
+  const unitThresholds = new Map();
+  function allowsPointCaps(unitId, caps) {
+    if (!caps) return true;
+    if (!unitThresholds.has(unitId)) {
+      const thresholds = [];
+      for (const faction of factions) {
+        const byId = new Map(nodes(faction).map((node) => [node.id, node]));
+        const requirement = (node, seen = new Set()) => {
+          if (seen.has(node.id)) return Infinity;
+          const visited = new Set(seen).add(node.id);
+          return Math.max(
+            node.points || 0,
+            ...node.requires.map((id) =>
+              byId.has(id) ? requirement(byId.get(id), visited) : Infinity,
+            ),
+          );
+        };
+        for (const node of nodes(faction))
+          if (node.unlocks.includes(unitId)) thresholds.push([faction, requirement(node)]);
+      }
+      unitThresholds.set(unitId, thresholds);
+    }
+    return unitThresholds.get(unitId).some(([faction, points]) => points <= (caps[faction] || 0));
+  }
   function unlockedTech(faction) {
     return [...(currentResearch()[faction] || [])];
   }
@@ -280,6 +304,7 @@ const Development = (() => {
   }
   return {
     factions,
+    allowsPointCaps,
     hasCompleted0079,
     eraLocked,
     exportProgress,

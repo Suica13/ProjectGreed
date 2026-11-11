@@ -2,8 +2,8 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const G = require("../shared/rules.js");
 const B = G.battlefieldMode;
-test("twenty PMC room presets validate and preserve era-compatible factions", () => {
-  assert.equal(B.roomPresets.length, 20);
+test("thirty-six PMC room presets validate and preserve era-compatible factions", () => {
+  assert.equal(B.roomPresets.length, 36);
   const current = [
     { faction: "ZEON", era: "0079T2" },
     { faction: "EFSF", era: "0079T1" },
@@ -11,7 +11,11 @@ test("twenty PMC room presets validate and preserve era-compatible factions", ()
   for (const preset of B.roomPresets) {
     const rules = B.presetSettings(preset.id, current, G.eras);
     G.validateCostLimit(rules.costLimit);
-    G.validateUnitCostLimit(rules.unitCostLimit);
+    assert.equal(
+      rules.unitCostLimit,
+      undefined,
+      "PMC preset must preserve the existing AI single-unit setting",
+    );
     G.validateUnitLimit(rules.unitLimit);
     G.validateTagRestrictions({ bannedEras: rules.bannedEras });
     B.teams(G, rules.battlefieldTeams);
@@ -22,13 +26,14 @@ test("twenty PMC room presets validate and preserve era-compatible factions", ()
     assert(rules.battlefieldTeams.every((t) => t.era === preset.era));
     assert(!rules.bannedEras.includes("0079T1"));
     assert.equal(rules.bannedEras.includes("0079T2"), preset.era === "0079T1");
-    assert.equal(rules.bannedEras.includes("0083"),preset.era.startsWith("0079"));
+    assert.equal(rules.bannedEras.includes("0083"), preset.era.startsWith("0079"));
     const settings = { ...G.defaultRoomSettings(), mode: "battlefield", ...rules };
     assert.equal(B.roomPreset(settings).id, preset.id);
     for (const team of [0, 1])
       assert.deepEqual(B.baseReward(settings, team), {
         money: preset.money,
         supplies: preset.supplies,
+        technology: preset.technology,
       });
     assert.equal(B.roomPreset({ ...settings, mode: "quick" }), null);
     assert.equal(B.roomPreset({ ...settings, costLimit: rules.costLimit + 1 }), null);
@@ -50,44 +55,29 @@ test("custom and mixed-era rooms interpolate entry pay without a client-authored
     money: 999999,
   };
   assert.equal(B.roomPreset(settings), null);
-  assert.deepEqual(B.baseReward(settings, 0), { money: 1200, supplies: 2400 });
-  assert.deepEqual(B.baseReward(settings, 1), { money: 1000, supplies: 2000 });
+  assert.deepEqual(B.baseReward(settings, 0), { money: 5000, supplies: 7500, technology: 1000 });
+  assert.deepEqual(B.baseReward(settings, 1), { money: 6250, supplies: 9375, technology: 1250 });
 });
 
-test("five scales per era round limits upward once and cap custom pay at war scale", () => {
-  const expected = [
-    ["0079T1", [2000,4000,5500,7500,9000], [300,600,900,1200,1500], [1200,2400,3600,4800,6000]],
-    ["0079T2", [3000,5500,8500,11000,13500], [450,900,1350,1800,2250], [1500,3000,4500,6000,7500]],
-    ["0087T1", [4500,8500,12500,16500,20500], [700,1350,2050,2700,3400], [1875,3750,5625,7500,9375]],
-    ["0087T2", [6500,12500,18500,24500,30500], [1050,2050,3050,4050,5100], [2343,4687,7031,9375,11718]],
-  ];
-  for (const [era, costs, singles, funds] of expected) {
-    const presets = B.roomPresets.filter(p => p.era === era);
-    assert.deepEqual(presets.map(p => p.costLimit), costs);
-    assert.deepEqual(presets.map(p => p.unitCostLimit), singles);
-    assert.deepEqual(presets.map(p => p.money), funds);
-    assert.deepEqual(presets.map(p => p.id.split("-")[1]), ["small","standard","large","huge","war"]);
-    assert(presets.every(p => p.unitLimit === 18 && p.costLimit % 500 === 0 && p.unitCostLimit % 50 === 0));
-    const settings = { battlefieldTeams: [{ era }, { era }] };
-    for (let i = 0; i < presets.length; i++) {
-      const lowerCost = i ? costs[i - 1] : 0;
-      const lowerMoney = i ? funds[i - 1] : 0;
-      const cost = (lowerCost + costs[i]) / 2;
-      const money = Math.floor((lowerMoney + funds[i]) / 2);
-      assert.deepEqual(B.baseReward({ ...settings, costLimit: cost }, 0), { money, supplies: money * 2 });
-      assert.deepEqual(B.baseReward({ ...settings, costLimit: cost, unitCostLimit: 1, unitLimit: 72 }, 0), { money, supplies: money * 2 });
+test("all nine scales interpolate final resources and clamp custom rooms at the era maximum", () => {
+  const round = (n) => Math.round(n / 25) * 25,
+    costs = [1500, 2500, 5000, 7500, 10000, 12500, 15000, 17500, 20000];
+  for (const [index, era] of B.eras.entries()) {
+    const presets = B.roomPresets.filter((p) => p.era === era),
+      factor = 1.25 ** index;
+    assert.deepEqual(
+      presets.map((p) => p.costLimit),
+      costs,
+    );
+    for (let cost = 0; cost < 100000; cost += 337) {
+      const p = Math.max(0, Math.min(1, (cost - 1500) / 18500));
+      const settings = { costLimit: cost, battlefieldTeams: [{ era }] };
+      assert.deepEqual(B.baseReward(settings, 0), {
+        money: round((5000 + 10000 * p) * factor),
+        supplies: round((7500 + 15000 * p) * factor),
+        technology: round((1000 + 1000 * p) * factor),
+      });
+      assert.equal(B.technologyReward(settings, 0, true), B.technologyReward(settings, 0, false));
     }
-    let last = 0;
-    for (let cost = 0; cost <= 99999; cost += 337) {
-      const reward = B.baseReward({ ...settings, costLimit: cost }, 0);
-      assert(Number.isInteger(reward.money));
-      assert(reward.money >= last && reward.money <= funds.at(-1));
-      assert.equal(reward.supplies, reward.money * 2);
-      last = reward.money;
-    }
-    assert.equal(last, funds.at(-1));
-    const war = { ...settings, costLimit: costs.at(-1) };
-    assert.equal(B.technologyReward(war, 0, true, 1.25), Math.floor(660 * funds.at(-1) / 3750 * 1.25));
-    assert.equal(B.technologyReward({ ...war, costLimit: 99999 }, 0, false, 1.25), Math.floor(540 * funds.at(-1) / 3750 * 1.25));
   }
 });

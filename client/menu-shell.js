@@ -18,8 +18,14 @@ window.MenuShell = (() => {
     if (pageView === "formation") byId("saveFormation").click();
   }
   function go(view) {
-    if (Net.snapshot?.campaign && !Net.started && ["formation", "pilots", "production", "development"].includes(view)) {
-      window.CampaignUI?.open(view === "production" ? "production" : view === "development" ? "research" : "units");
+    if (
+      Net.snapshot?.campaign &&
+      !Net.started &&
+      ["formation", "pilots", "production", "development"].includes(view)
+    ) {
+      window.CampaignUI?.open(
+        view === "production" ? "production" : view === "development" ? "research" : "units",
+      );
       return;
     }
     if (navigating || (Net.started && Net.snapshot?.phase !== "assembly")) return;
@@ -56,7 +62,10 @@ window.MenuShell = (() => {
     return button;
   }
   function refresh() {
-    const inBattle = pageView === "campaign" || pageView === "game" || (Net.started && Net.snapshot?.phase !== "assembly");
+    const inBattle =
+      pageView === "campaign" ||
+      pageView === "game" ||
+      (Net.started && Net.snapshot?.phase !== "assembly");
     shell.hidden = inBattle;
     byId("shellSidebar").hidden = inBattle;
     document.body.classList.toggle("menu-shell-active", !inBattle);
@@ -65,14 +74,19 @@ window.MenuShell = (() => {
     if (inBattle) return;
     const section = sectionFor(pageView) || "lobby";
     byId("formationPageTitle").textContent = I18n.text(
-      byId("formationMain").dataset.page === "pilots" ? "驾驶员" : "编组",
+      byId("formationMain").dataset.page === "pilots"
+        ? "驾驶员"
+        : byId("formationEditorStyle").value === "free"
+          ? "自由编组"
+          : "常规编组",
     );
     byId("mainLobbyTitle").textContent = I18n.text(Lobby.endpoint() ? "服务器列表" : "大厅");
     for (const button of shell.querySelectorAll("[data-shell-section]"))
       button.setAttribute("aria-pressed", String(button.dataset.shellSection === section));
     const tabs = [];
     if (section === "lobby") {
-      if (Net.snapshot?.campaign) tabs.push(tab("战略地图", () => window.CampaignUI?.open(), pageView === "campaign"));
+      if (Net.snapshot?.campaign)
+        tabs.push(tab("战略地图", () => window.CampaignUI?.open(), pageView === "campaign"));
       tabs.push(tab("作战大厅", () => go("menu"), pageView === "menu"));
       tabs.push(tab("当前房间", () => go("room"), pageView === "room", !Net.active));
       tabs.push(
@@ -84,10 +98,9 @@ window.MenuShell = (() => {
         ),
       );
       tabs.at(-1).id = "shellActivities";
-      tabs.at(-1).classList.toggle(
-        "has-unclaimed",
-        Number(byId("openServerActivities").dataset.unread) > 0,
-      );
+      tabs
+        .at(-1)
+        .classList.toggle("has-unclaimed", Number(byId("openServerActivities").dataset.unread) > 0);
     } else if (section === "hangar") {
       const pilots = pageView === "formation" && byId("formationMain").dataset.page === "pilots";
       tabs.push(tab("编组", () => go("formation"), pageView === "formation" && !pilots));
@@ -124,7 +137,9 @@ window.MenuShell = (() => {
   }
   // Keep the battle-creation overlay outside the fixed, clipped lobby content pane.
   document.body.append(byId("skirmishSetup"));
-  window.addEventListener("page-changing", () => { byId("skirmishSetup").hidden = true; });
+  window.addEventListener("page-changing", () => {
+    byId("skirmishSetup").hidden = true;
+  });
   // Keep a single instance of editable profile controls and their existing handlers.
   const profileRow = byId("playerId").closest(".menu-profile-row");
   profileRow.prepend(byId("menuResources"));
@@ -134,7 +149,9 @@ window.MenuShell = (() => {
   progressRow.id = "menuFactionProgress";
   byId("menuTechProgress").before(progressRow);
   byId("shellIdentity").hidden = true;
-  byId("menuTechProgress").querySelector(".menu-tech-progress-title").prepend(ProductionUI.resourceIcon("technology"));
+  byId("menuTechProgress")
+    .querySelector(".menu-tech-progress-title")
+    .prepend(ProductionUI.resourceIcon("technology"));
   progressRow.append(byId("menuTechProgress"));
   byId("start").removeAttribute("aria-modal");
   byId("start").setAttribute("role", "region");
@@ -173,8 +190,10 @@ window.MenuShell = (() => {
     if (shell.hidden) return;
     document.body.style.setProperty("--shell-height", shell.getBoundingClientRect().height + "px");
     const sidebar = byId("shellSidebar");
-    const mobileHeight = window.matchMedia("(max-width: 720px)").matches && !sidebar.hidden
-      ? sidebar.getBoundingClientRect().height : 0;
+    const mobileHeight =
+      window.matchMedia("(max-width: 720px)").matches && !sidebar.hidden
+        ? sidebar.getBoundingClientRect().height
+        : 0;
     document.body.style.setProperty("--shell-subnav-height", mobileHeight + "px");
   }
   const shellResizeObserver = new ResizeObserver(updateShellMetrics);
@@ -189,30 +208,40 @@ window.MenuShell = (() => {
     const style = getComputedStyle(list);
     const columns = style.gridTemplateColumns.split(" ").length;
     const desktop = matchMedia("(min-width:1101px)").matches;
-    const count = desktop ? (list.id === "productionList" ? 6 : 8)
-      : list.id === "formationUnits" && matchMedia("(max-width:720px)").matches ? 6 : 4;
+    const count = desktop
+      ? list.id === "productionList"
+        ? 6
+        : 8
+      : list.id === "formationUnits" && matchMedia("(max-width:720px)").matches
+        ? 6
+        : 4;
     const rows = Math.ceil(count / columns);
     const rect = list.getBoundingClientRect();
     const clipped = Math.max(0, rect.bottom - innerHeight) + Math.max(0, -rect.top);
-    const available = list.clientHeight - clipped - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
+    const available =
+      list.clientHeight - clipped - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
     const gap = parseFloat(style.rowGap) || 0;
     let height = Math.floor((available - gap * (rows - 1)) / rows);
     if (["formationUnits", "customPilotList"].includes(list.id)) {
       // Keep portrait sizing independent from the new, compact shared card slots.
       const phone = matchMedia("(max-width:720px)").matches;
-      list.style.setProperty("--roster-reference-height", (height - (!phone && list.id === "customPilotList" ? 2 : 0)) + "px");
+      list.style.setProperty(
+        "--roster-reference-height",
+        height - (!phone && list.id === "customPilotList" ? 2 : 0) + "px",
+      );
       // Minimum visible counts are a floor, not a reason to stretch every card.
       height = 116;
     }
     // A short phone viewport must scroll instead of squeezing four text rows together.
-    if (list.id === "productionList" && matchMedia("(max-width:720px)").matches) height = Math.max(112, height);
+    if (list.id === "productionList" && matchMedia("(max-width:720px)").matches)
+      height = Math.max(112, height);
     if (height > 0) list.style.setProperty("--fitted-card-height", height + "px");
   }
-  const cardResizeObserver = new ResizeObserver(entries => {
+  const cardResizeObserver = new ResizeObserver((entries) => {
     for (const { target } of entries) fitCards(target);
   });
   for (const id of cardPanels) cardResizeObserver.observe(byId(id));
-  window.addEventListener("resize", () => cardPanels.forEach(id => fitCards(byId(id))));
+  window.addEventListener("resize", () => cardPanels.forEach((id) => fitCards(byId(id))));
   refresh();
   return { refresh, go, returnView: () => (Net.active ? "room" : "menu") };
 })();

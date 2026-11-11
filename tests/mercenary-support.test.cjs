@@ -3,20 +3,20 @@ const G=require('../shared/rules'),B=G.battlefieldMode;
 test('capture pay and research scale with era and room size and custom rooms cap research',()=>{
  for(const [era,money] of [['0079T1',500],['0079T2',750],['0087T1',1000],['0087T2',1500]]){
   let last=0;
-  for(const size of ['small','standard','large']){
+  for(const size of ['cost-1500','cost-10000','cost-20000']){
    const settings=B.presetSettings(era+'-'+size,null,G.eras);
    assert.deepEqual(B.captureReward(settings,0),{money,supplies:money*2});
    const points=B.technologyReward(settings,0,true);
    assert(points>last);last=points;
-   assert(points>B.technologyReward(settings,0,false));
+   assert.equal(points,B.technologyReward(settings,0,false));
   }
-  const large=B.presetSettings(era+'-large',null,G.eras);
+  const large=B.presetSettings(era+'-cost-20000',null,G.eras);
   assert.equal(B.technologyReward({...large,costLimit:99999},0,true),last);
  }
- assert.equal(B.technologyReward(B.presetSettings('0079T1-standard'),0,true),660);
+ assert.equal(B.technologyReward(B.presetSettings('0079T1-cost-1500'),0,true),1100);
 });
 test('friendly control healing uses strongest zone once and never repairs main bases or enemy troops',()=>{
- const game=G.create(false,123,Array(12).fill(null),false,{mode:'battlefield',mapId:B.defaultMapId});
+ const game=G.create(false,123,Array(G.getMap(B.defaultMapId).spawns.length).fill(null),false,{mode:'battlefield',mapId:B.defaultMapId});
  game.team=0;
  const point=game.battlefield.points[0];point.owner=0;
  const actor=G.makeUnit({unitId:'Type61',kitId:'standard'},2,'healing',point);

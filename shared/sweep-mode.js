@@ -75,9 +75,7 @@ const SweepMode = (() => {
           depth === 0
             ? "battle"
             : depth % 5 === 4
-              ? lane === 1
-                ? "rest"
-                : "elite"
+              ? "boss"
               : r < 0.5
                 ? "battle"
                 : r < 0.68
@@ -112,9 +110,11 @@ const SweepMode = (() => {
           from.next.push(`${depth + 1}:${lane}`);
         }
       for (const node of nodes)
-        if (node.next.length === 1 && random() < 0.22) {
+        if (node.next.length === 1 && (depth % 3 === 2 || random() < 0.5)) {
           const extra = nextLanes.find(
-            (l) => Math.abs(l - node.lane) <= 1 && !node.next.includes(`${depth + 1}:${l}`),
+            (l) =>
+              (depth % 3 === 2 || Math.abs(l - node.lane) <= 1) &&
+              !node.next.includes(`${depth + 1}:${l}`),
           );
           if (extra !== undefined) node.next.push(`${depth + 1}:${extra}`);
         }
@@ -192,6 +192,10 @@ const SweepMode = (() => {
       event: s.event,
       reachable: s.nodes.filter((n) => selectable(room, n)).map((n) => n.id),
       pending: structuredClone(s.pending[memberId] || blank()),
+      restockReady: Object.keys(s.restockCommitted || {}).filter((id) => s.restockCommitted[id]),
+      restockCost: s.restockCost?.[memberId] || { money: 0, supplies: 0 },
+      restockUsed: s.restockUsed?.[memberId] || { add: 0, remove: 0, assign: 0, dismiss: 0 },
+      restockCommitted: !!s.restockCommitted?.[memberId],
       teams: Object.entries(s.rosters).map(([id, roster]) => ({
         id,
         name: room.members.get(id)?.name || "PMC",
@@ -199,9 +203,11 @@ const SweepMode = (() => {
           key: r.key,
           unitId: r.entry.unitId,
           kitId: r.entry.kitId,
+          ...(r.entry.preload ? { preload: structuredClone(r.entry.preload) } : {}),
           hp: r.state.hp,
           en: r.state.en,
           model: r.state.model,
+          ...(r.entry.customPilot ? { customPilot: structuredClone(r.entry.customPilot) } : {}),
           shield: r.state.shield,
           brokenParts: r.state.brokenParts,
         })),
@@ -226,7 +232,7 @@ const SweepMode = (() => {
   function rewardPool(room, G) {
     let pools = rewardPools.get(G.catalog);
     if (!pools) rewardPools.set(G.catalog, (pools = new Map()));
-    const era = room.settings.sweepEra;
+    const era = room.settings.sweepEra + (room.sweep?.boss ? ":boss" : "");
     if (!pools.has(era))
       pools.set(
         era,
@@ -237,8 +243,12 @@ const SweepMode = (() => {
               !u.wip &&
               !u.facility &&
               !u.requiredPilotId &&
+              !G.isFleetCarrier(
+                G.formationModel({ unitId: u.id, kitId: u.defaultKit || u.weaponKits[0]?.id }),
+              ) &&
               u.weaponKits.length &&
-              u.tags.includes(era),
+              (u.tags.includes(room.settings.sweepEra) ||
+                (room.sweep?.boss && u.tags.includes("0093T1"))),
           )
           .map((u) => ({
             id: u.id,
@@ -249,24 +259,37 @@ const SweepMode = (() => {
       );
     return pools.get(era);
   }
-  const growth = (room) => 1.05 ** Math.min(10000, Math.max(0, room.sweep?.depth || 0));
-  function reward(room, G, multiplier = 1, unitCount = 0) {
+  const growth = (room) => 1 + 0.05 * Math.max(0, room.sweep?.depth || 0);
+  function reward(room, G, multiplier = 1, unitCount = 0, technologyOutcome = 1) {
     const s = room.sweep,
       eraIndex = Math.max(0, G.eras.indexOf(room.settings.sweepEra));
     for (const p of room.seats.filter((p) => p && !p.bot && G.seatTeam(p.seat) === 0)) {
-      const scale =
-        Math.max(0.25, Math.min(room.settings.costLimit, s.initialCost[p.id]) / 2000) *
-        growth(room) *
-        0.75;
+      const scale = growth(room),
+        bonus = s.rewardMultipliers || {};
+      const economy =
+        typeof BattleEconomy !== "undefined" ? BattleEconomy : require("./battle-economy.js");
       const pending = s.pending[p.id];
-      pending.money += Math.floor(500 * scale * multiplier);
-      pending.supplies += Math.floor(1000 * scale * multiplier);
-      pending.technology += Math.floor(100 * scale * multiplier);
+      pending.money += economy.roundReward(1000 * scale * multiplier * (bonus.money ?? 1));
+      pending.supplies += economy.roundReward(2000 * scale * multiplier * (bonus.supplies ?? 1));
+      pending.technology += economy.roundReward(
+        250 * scale * multiplier * technologyOutcome * (bonus.technology ?? 1),
+      );
       if (unitCount) {
         const limit = enemyLimits(room, G).unitCostLimit;
-        const pool = rewardPool(room, G).filter(
+        let pool = rewardPool(room, G).filter(
           (u) => u.cost >= limit * 0.5 && u.cost <= limit * 1.25,
         );
+        if (!pool.length)
+          pool = [...rewardPool(room, G)]
+            .sort((a, b) => Math.abs(a.cost - limit) - Math.abs(b.cost - limit))
+            .slice(0, 12);
+        if (s.boss)
+          pool = [
+            ...pool,
+            ...rewardPool(room, G).filter((u) =>
+              G.catalog.prefabs.find((p) => p.id === u.id)?.tags.includes("0093T1"),
+            ),
+          ];
         const random = rng(s.seed + s.depth * 1789 + eraIndex + p.seat * 97);
         for (let i = 0; i < Number(unitCount) && pool.length; i++) {
           const unit = pool[Math.floor(random() * pool.length)];
@@ -295,8 +318,9 @@ const SweepMode = (() => {
       s.nodes.push(...rows(s.seed, end, 7));
       s.nodes = s.nodes.filter((n) => n.depth >= s.depth - 2);
     }
-    if (node.type === "battle" || node.type === "elite") {
+    if (["battle", "elite", "boss"].includes(node.type)) {
       s.elite = node.type === "elite";
+      s.boss = node.type === "boss";
       s.battleIndex++;
       return "battle";
     }
@@ -320,6 +344,9 @@ const SweepMode = (() => {
       if (choice === 0) recover(room, G, 1);
       else {
         s.resupply = true;
+        s.restockUsed = {};
+        s.restockCommitted = {};
+        s.restockCost = {};
         room.phase = "sweep_resupply";
         return;
       }
@@ -341,7 +368,9 @@ const SweepMode = (() => {
         (e.id === "salvage" && choice === 1) || (e.id === "survivors" && choice === 0),
       );
       if ((e.id === "intel" && choice === 0) || (e.id === "storm" && choice === 1))
-        for (const p of Object.values(s.pending)) p.technology += Math.floor(150 * growth(room));
+        for (const p of Object.values(s.pending))
+          p.technology +=
+            Math.round((150 * growth(room) * (s.rewardMultipliers?.technology ?? 1)) / 25) * 25;
     }
     for (const [id, roster] of Object.entries(s.rosters)) {
       for (const r of roster.filter((r) => r.state.hp <= 0)) {
@@ -401,7 +430,8 @@ const SweepMode = (() => {
       finish(room, true);
       return;
     }
-    if (room.game.winner === 0) reward(room, G, s.elite ? 2 : 1, s.elite ? 3 : 1);
+    if (room.game.winner === 0)
+      reward(room, G, s.boss ? 3 : s.elite ? 2 : 1, s.boss ? 5 : s.elite ? 3 : 1, 1.1);
     room.game.winner = null;
     room.phase = "sweep_map";
     room.returnAt = null;
@@ -412,16 +442,103 @@ const SweepMode = (() => {
       maximum = pool.length ? Math.min(99999, Math.max(...pool.map((u) => u.cost)) * 2) : 99999;
     const minimum = pool.length ? Math.ceil(Math.min(...pool.map((u) => u.cost)) / 1.25) : 1;
     return {
-      costLimit: Math.min(99999, Math.floor((room.settings.costLimit / 2) * growth(room))),
+      costLimit: Math.min(
+        99999,
+        Math.floor(
+          room.settings.costLimit *
+            (room.sweep?.boss ? 1 : room.sweep?.elite ? 0.75 : 0.5) *
+            growth(room),
+        ),
+      ),
       unitCostLimit: Math.max(
         minimum,
         Math.min(
           maximum,
           Math.floor(
-            room.settings.unitCostLimit * (room.sweep?.elite ? 1.25 : 0.75) * growth(room),
+            room.settings.unitCostLimit *
+              (room.sweep?.boss ? 1.5 : room.sweep?.elite ? 1.25 : 0.75) *
+              growth(room),
           ),
         ),
       ),
+    };
+  }
+  // Pure draft validation. No wallet, roster or stock mutation until commit.
+  function restockPlan(
+    G,
+    source,
+    operations,
+    { budget, unitLimit, restrictions, inventory, nextKey = 0 },
+  ) {
+    if (!Array.isArray(operations) || operations.length > 12) throw Error("整备操作无效");
+    const roster = structuredClone(source),
+      used = { add: 0, remove: 0, assign: 0, dismiss: 0 },
+      cost = { money: 0, supplies: 0 };
+    const pricing = typeof Economy !== "undefined" ? Economy : require("./economy.js");
+    let key = Math.max(nextKey, ...roster.map((r) => r.key + 1), 0);
+    for (const op of operations) {
+      if (!Object.hasOwn(used, op.type) || ++used[op.type] > 3) throw Error("每类整备操作最多3次");
+      const target = roster.find((r) => r.key === op.key);
+      if (op.type === "add") {
+        const entry = G.validateFleetFormation(
+          [{ unitId: op.entry?.unitId, kitId: op.entry?.kitId }],
+          Infinity,
+        )[0];
+        if (!op.entry.preload || !roster.some((r) => r.key === op.entry.preload.carrierIndex))
+          throw Error("请选择存活母舰的格纳库");
+        entry.preload = structuredClone(op.entry.preload);
+        const u = G.makeUnit(entry, 0, "draft-" + key, { x: 0, y: 0 });
+        roster.push({ key: key++, entry, state: save(u) });
+        cost.supplies += Math.ceil(pricing.productionOffer(entry.unitId, entry.kitId).supplies / 4);
+      } else {
+        if (!target) throw Error("整备单位已变化");
+        if (op.type === "remove") {
+          if (
+            !target.entry.preload ||
+            roster.some((r) => r.entry.preload?.carrierIndex === target.key)
+          )
+            throw Error("只能遣返没有乘员的搭载单位");
+          if (target.entry.customPilot) throw Error("请先遣返驾驶员");
+          cost.supplies += Math.ceil(
+            pricing.productionOffer(target.entry.unitId, target.entry.kitId).supplies / 4,
+          );
+          roster.splice(roster.indexOf(target), 1);
+        } else {
+          cost.money += 500;
+          if (op.type === "dismiss") {
+            if (!target.entry.customPilot) throw Error("该单位没有配属驾驶员");
+            delete target.entry.customPilot;
+            target.state.pilot = G.makeUnit(target.entry, 0, "crew", { x: 0, y: 0 }).pilot;
+          } else {
+            if (target.entry.customPilot) throw Error("请先遣返当前驾驶员");
+            const pilot = G.pilots.custom(op.pilot);
+            if (pilot.needsRecruitment || !G.pilots.canAssign(pilot, "PMC"))
+              throw Error("驾驶员不可用");
+            target.entry.customPilot = pilot;
+            target.state.pilot = G.makeUnit(target.entry, 0, "crew", { x: 0, y: 0 }).pilot;
+          }
+        }
+      }
+    }
+    const positions = new Map(roster.map((r, i) => [r.key, i]));
+    const entries = roster.map((r) => {
+      const e = structuredClone(r.entry);
+      if (e.preload) {
+        const index = positions.get(e.preload.carrierIndex);
+        if (index === undefined) delete e.preload;
+        else e.preload.carrierIndex = index;
+      }
+      return e;
+    });
+    const plan = G.planFormation(entries, budget, { ...restrictions, inventory }, unitLimit);
+    if (plan.disabled.length) throw Error("库存、科技、格纳库、编组COST或容量不符合限制");
+    return {
+      roster,
+      used,
+      cost,
+      nextKey: key,
+      totalCost: plan.totalCost,
+      points: G.formationPoints(entries),
     };
   }
   function enemies(room, G, seed) {
@@ -443,6 +560,7 @@ const SweepMode = (() => {
         characterFaction: null,
         aiAllowedEras: [room.settings.sweepEra],
         unitCostLimit: limits.unitCostLimit,
+        technologyCaps: room.settings.technologyCaps,
         environment: G.getMap(room.settings.mapId).environment,
       },
       G.catalog.formation.maxUnits,
@@ -484,6 +602,7 @@ const SweepMode = (() => {
     enemies,
     save,
     reward,
+    restockPlan,
     rewardPool,
     mapPool,
     chooseMap,

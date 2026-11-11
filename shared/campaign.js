@@ -104,6 +104,7 @@ const CampaignRules = (() => {
       m &&
       !prefab.disabled &&
       !prefab.formOnly &&
+      ctx.development.allowsPointCaps(unitId, ctx.technologyCaps) &&
       (prefab.availableFactions || [prefab.faction]).includes(faction) &&
       prefab.production?.enabled !== false &&
       !m.requiredPilotId &&
@@ -825,9 +826,9 @@ const CampaignRules = (() => {
       holder = state.regions.find((region) => region.id === regionId);
     if (!base || !holder) return { money: 0, supplies: 0, technology: 0 };
     const amount = base.factory ? ctx.world.settings.factoryIncome : ctx.world.settings.ordinaryIncome;
-    return { money: Math.floor(amount.money * rewards.rewardMultiplier),
-      supplies: Math.floor(amount.supplies * rewards.rewardMultiplier),
-      technology: Math.floor(amount.technology * (state.options?.teams[holder.owner]?.research ?? 1) * rewards.rewardMultiplier) };
+    return { money: rewards.roundReward(amount.money * rewards.rewardMultiplier),
+      supplies: rewards.roundReward(amount.supplies * rewards.rewardMultiplier),
+      technology: rewards.roundReward(amount.technology * (state.options?.teams[holder.owner]?.research ?? 1) * rewards.rewardMultiplier) };
   }
   function income(ctx, state, team) {
     const total = { money: 0, supplies: 0, technology: 0 };

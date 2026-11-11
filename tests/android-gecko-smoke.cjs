@@ -191,7 +191,7 @@ async function stop() {
   assert.equal(await page.evaluate(() => Net.snapshot.members.length), 1);
   await page.evaluate(() => {
     Net.leave();
-    Formation.current = () => [{ unitId: "Type61", kitId: "standard" }];
+    Formation.current = () => [{ unitId: "Medea", kitId: "standard" }];
     byId("offlineRoomMode").value = "quick";
     LocalRoom.open();
   });

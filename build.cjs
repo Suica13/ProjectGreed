@@ -197,7 +197,7 @@ for (const [key, file] of [
           stdin:{contents:'export { gunzipSync } from "fflate";',resolveDir:root},bundle:true,write:false,
           platform:"browser",format:"iife",globalName:"CatalogInflate",target:"chrome80",minify:true,legalComments:"eof"
         }).outputFiles[0].text + "\n/*! " + read("node_modules/fflate/LICENSE") + " */\n" + read(file))
-      : inlineScript((key === "PROFILE_SAVE" ? read("client/profile-save-core.js") + "\n" : "") + read(file)),
+      : inlineScript((key === "PROFILE_SAVE" ? read("client/profile-save-core.js") + "\n" : key === "SWEEP_UI" ? read("client/sweep-restock.js") + "\n" : "") + read(file)),
   );
 html = html.replace("</body>", () => `<style>${read("client/campaign.css")}</style><script>const CAMPAIGN_WORLD=ART.scenarios.earth_0079_mid.world;${inlineScript(read("client/campaign-workspace.js"))}${inlineScript(read("client/campaign-pilots.js"))}${inlineScript(read("client/campaign-console.js"))}${inlineScript(read("client/campaign.js"))}</script></body>`);
 const layout = JSON.parse(read("client/ui-layout.json"));
@@ -208,7 +208,7 @@ html = html.replace(
 );
 html = html
   .replace("__MENU_SHELL_CSS__", () => read("client/menu-shell.css"))
-  .replace("__BLUE_THEME_CSS__", () => read("client/blue-theme.css"));
+  .replace("__BLUE_THEME_CSS__", () => read("client/blue-theme.css") + "\n" + read("client/sweep-ui.css"));
 // Fixed virtual game dimensions keep viewport-sized panels inside landscape black bars.
 // Use supported vh/vw fallbacks; CSS selects dynamic units only after feature detection.
 // Keep feature queries and the unit definitions themselves intact (no recursive variables).
@@ -234,6 +234,10 @@ if (grantFlag >= 0) {
     "</body>",
     () => `<script id="local-profile-grant">${inlineScript(script)}</script></body>`,
   );
+}
+for (const asset of ["mission-background.png", "mission-scenes.png"]) {
+  const name = "assets/sweep/" + asset;
+  html = html.replaceAll(name, "data:image/png;base64," + fs.readFileSync(path.join(root, name)).toString("base64"));
 }
 const outputs = [["client.html", html]];
 fs.mkdirSync(path.join(root, "public"), { recursive: true });

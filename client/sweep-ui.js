@@ -98,6 +98,13 @@ const SweepUI = (() => {
   const format = (source, values) =>
     I18n.text(source.replace(/\{(\w+)\}/g, (_, key) => values[key]));
   const request = (action, data = {}) => Net.request(action, data);
+  function scene(index, className = "") {
+    const image = element("div", "sweep-scene " + className);
+    image.style.backgroundPosition =
+      ((index % 4) * 100) / 3 + "% " + (Math.floor(index / 4) * 100) / 3 + "%";
+    image.setAttribute("aria-hidden", "true");
+    return image;
+  }
   function receive(snapshot) {
     const s = snapshot.sweep,
       active = !!s && ["sweep_map", "sweep_event", "sweep_resupply"].includes(snapshot.phase);
@@ -112,17 +119,20 @@ const SweepUI = (() => {
       else renderInfo();
     }
     wasActive = active;
+    if (snapshot.phase !== "sweep_resupply") SweepRestock.reset();
     if (!active) return;
     const host = snapshot.you?.id === snapshot.hostId;
-    byId("sweepSummary").textContent = format(
-      "已推进 {depth} 处 · 暂存资金 {money} · 物资 {supplies} · 科技点 {technology} · 获得机体 {units}台",
-      {
-        depth: s.depth + 1,
-        money: s.pending.money,
-        supplies: s.pending.supplies,
-        technology: s.pending.technology,
-        units: Object.values(s.pending.inventory).reduce((a, b) => a + b, 0),
-      },
+    ProductionUI.resources(byId("sweepSummary"), s.pending, { technology: true });
+    byId("sweepSummary").append(
+      element(
+        "span",
+        "",
+        "节点 " +
+          (s.depth + 1) +
+          " · 获得机体 " +
+          Object.values(s.pending.inventory).reduce((a, b) => a + b, 0) +
+          "台",
+      ),
     );
     byId("sweepNotice").textContent =
       I18n.text("本局收益撤离时发放；全灭保留机体库存，资金、物资和科技点减半。") +
@@ -171,8 +181,18 @@ const SweepUI = (() => {
         const button = element(
           "button",
           s.selected === n.id ? "selected" : "",
-          { battle: "⚔ 战斗", elite: "★ 精英战", rest: "＋ 休息区", event: "？ 随机事件" }[n.type],
+          { battle: "战斗", elite: "精英战", boss: "BOSS战", rest: "休息区", event: "随机事件" }[
+            n.type
+          ],
         );
+        const label = button.textContent;
+        const slot = { battle: 0, elite: 1, boss: 2, rest: 3, event: 8 }[n.type];
+        button.classList.add("sweep-node");
+        button.replaceChildren(
+          scene(snapshot.settings.sweepEnvironment === "space" && slot < 4 ? slot + 12 : slot),
+          element("strong", "", n.depth + 1 + " · " + label),
+        );
+        button.setAttribute("aria-label", n.depth + 1 + " · " + label);
         button.dataset.sweepNode = n.id;
         button.style.left = (100 + n.lane * 200) / 6 + "%";
         button.style.top = (600 - (n.depth - start) * 96) / 6.5 + "%";
@@ -182,6 +202,10 @@ const SweepUI = (() => {
       }
     }
     if (s.event) {
+      const illustration =
+        s.event.id === "rest" ? 3 : 4 + SweepMode.events.findIndex((e) => e.id === s.event.id);
+      if (snapshot.phase !== "sweep_resupply")
+        event.append(scene(illustration, "sweep-event-scene"));
       event.append(element("h3", "", s.event.name), element("p", "", s.event.text));
       if (snapshot.phase === "sweep_event")
         s.event.choices.forEach((text, choice) => {
@@ -191,33 +215,7 @@ const SweepUI = (() => {
           event.append(b);
         });
       else {
-        const select = document.createElement("select"),
-          search = document.createElement("input");
-        search.placeholder = "搜索可补员单位";
-        const refresh = () => {
-          select.replaceChildren();
-          for (const p of ART.prefabs
-            .filter(
-              (p) =>
-                !p.formOnly &&
-                Economy.quantity(p.id) > 0 &&
-                (p.name + p.id).toLowerCase().includes(search.value.toLowerCase()),
-            )
-            .sort((a, b) => a.stats.cost - b.stats.cost))
-            select.add(new Option(p.name + " · 库存" + Economy.quantity(p.id), p.id));
-        };
-        search.oninput = refresh;
-        refresh();
-        const add = element("button", "", "从机库补员");
-        add.onclick = () => {
-          const id = select.value;
-          if (id)
-            request("sweep_reinforce", { entry: { unitId: id, kitId: Economy.defaultKit(id) } });
-        };
-        const done = element("button", "", "完成补员并返回任务地图");
-        done.disabled = !host;
-        done.onclick = () => request("sweep_resupply_done");
-        event.append(search, select, add, done);
+        SweepRestock.render(event, snapshot);
       }
     }
     const fleet = byId("sweepFleet");

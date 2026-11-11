@@ -1,0 +1,206 @@
+#gameScene #sweepMission .sweep-stage {
+  background:
+    linear-gradient(#12243288, #102332cc),
+    url("assets/sweep/mission-background.png") center/cover;
+}
+#sweepSummary,
+.sweep-resource-row {
+  display: flex;
+  align-items: center;
+  gap: 8px 18px;
+  flex-wrap: wrap;
+}
+#sweepSummary > span,
+.sweep-resource-row > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+#gameScene #sweepSummary > span,
+#gameScene .sweep-resource-row > span {
+  flex: 0 0 auto;
+  min-width: max-content;
+  white-space: nowrap;
+}
+#gameScene #sweepSummary > span > span,
+#gameScene .sweep-resource-row > span > span {
+  flex: none;
+  min-width: auto;
+  white-space: nowrap;
+  display: inline-block;
+}
+#gameScene #sweepSummary svg,
+#gameScene .sweep-resource-row svg {
+  flex: none;
+  width: 20px;
+  height: 20px;
+}
+#sweepRoute .sweep-node {
+  padding: 0;
+  overflow: visible;
+  width: 132px;
+  height: 80px;
+  border-radius: 3px;
+  box-shadow: 0 3px 8px #0008;
+  background: #152b38;
+}
+.sweep-scene {
+  display: block;
+  background-image: url("assets/sweep/mission-scenes.png");
+  background-size: 400% 400%;
+  image-rendering: pixelated;
+}
+.sweep-node > .sweep-scene {
+  width: 100%;
+  height: 100%;
+}
+.sweep-node > strong {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #07131ee0;
+  padding: 3px;
+  font-size: 12px;
+}
+#gameScene #sweepRoute .sweep-node.selected {
+  border: 2px solid #91e6ff;
+  background: #163a50;
+}
+.sweep-node.selected:after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  pointer-events: none;
+  background:
+    linear-gradient(#91e6ff, #91e6ff) left top/12px 2px no-repeat,
+    linear-gradient(#91e6ff, #91e6ff) left top/2px 12px no-repeat,
+    linear-gradient(#91e6ff, #91e6ff) right bottom/12px 2px no-repeat,
+    linear-gradient(#91e6ff, #91e6ff) right bottom/2px 12px no-repeat;
+  animation: sweep-lock 0.4s ease-out both;
+}
+@keyframes sweep-lock {
+  from {
+    transform: scale(1.4) rotate(12deg);
+    opacity: 0.1;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sweep-node.selected:after {
+    animation: none;
+  }
+}
+.sweep-event-scene {
+  width: 100%;
+  max-width: 480px;
+  aspect-ratio: 3/2;
+  max-height: 260px;
+  border: 1px solid var(--line);
+  margin-bottom: 12px;
+}
+.sweep-restock-cost {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: #163044;
+  border: 1px solid #7cb7d5;
+  padding: 8px;
+}
+.sweep-restock-cost p {
+  margin: 6px 0;
+}
+.sweep-restock-card {
+  position: relative;
+  display: flex;
+  gap: 10px;
+  padding: 8px;
+  background: #1d3241;
+  border: 1px solid #527386;
+  margin-top: 6px;
+  min-width: 0;
+}
+.sweep-restock-card > img {
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  flex: none;
+}
+.sweep-restock-card > div {
+  min-width: 0;
+  flex: 1;
+}
+.sweep-restock-card strong {
+  display: block;
+  font-size: 13px;
+}
+.sweep-restock-card small {
+  display: block;
+  margin: 4px 0;
+  font-size: 11px;
+}
+.sweep-hangar {
+  border-left: 3px solid #6cc4e7;
+  margin: 6px 0 6px 10px;
+  padding-left: 8px;
+}
+.sweep-hangar > button {
+  width: 58px;
+  height: 54px;
+  font-size: 26px;
+  border: 1px dashed #7fc7df;
+}
+.sweep-picker {
+  background: #102735;
+  border: 1px solid #70b9d9;
+  padding: 8px;
+  margin: 8px 0;
+}
+.sweep-picker input {
+  width: 100%;
+  box-sizing: border-box;
+}
+.sweep-restock-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 6px;
+  max-height: 360px;
+  overflow: auto;
+}
+.sweep-restock-card.blocked:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #0009;
+  pointer-events: none;
+}
+.sweep-error {
+  color: #ffaaaa;
+  font-size: 12px;
+}
+@media (max-width: 700px) {
+  #sweepRoute .sweep-node {
+    width: 90px;
+    height: 66px;
+  }
+  #sweepRoute .sweep-node > strong {
+    font-size: 10px;
+  }
+  .sweep-restock-cards {
+    grid-template-columns: 1fr;
+  }
+  .sweep-event-scene {
+    max-height: 170px;
+  }
+  .sweep-restock-cost {
+    padding: 5px;
+  }
+  .sweep-resource-row {
+    gap: 5px 12px;
+    font-size: 11px;
+  }
+}

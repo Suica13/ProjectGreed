@@ -45,7 +45,7 @@ const MatchRecords = (() => {
     const { game, log, ...rest } = after,
       { units, tiles, ...board } = game;
     const oldUnits = new Map((before?.game.units || []).map((u) => [u.id, u]));
-    const currentIds = new Set(units.map(unit => unit.id));
+    const currentIds = new Set(units.map((unit) => unit.id));
     const oldLog = before?.log || [],
       append = log.length >= oldLog.length && same(log.slice(log.length - oldLog.length), oldLog);
     return {
@@ -228,8 +228,10 @@ const MatchRecords = (() => {
     });
     if (save?.format !== "ProjectGreed-save" || save.version !== 1 || save.rules !== fingerprint(G))
       throw Error("存档版本或单位规则不兼容。");
-    const migrations = typeof ProfileMigrations !== "undefined"
-      ? ProfileMigrations : require("./profile-migrations.js");
+    const migrations =
+      typeof ProfileMigrations !== "undefined"
+        ? ProfileMigrations
+        : require("./profile-migrations.js");
     migrations.battleGame(save.game);
     validateGame(G, save.game, save.game?.tiles);
     const g = save.game,
@@ -251,6 +253,7 @@ const MatchRecords = (() => {
     G.validateUnitCostLimit(settings.unitCostLimit);
     G.validateFogMode(settings.fogMode);
     G.validateBattleMode(settings.mode);
+    settings.formationStyle = G.formationStyle(settings);
     settings.pilotPolicy = G.validatePilotPolicy(settings.pilotPolicy);
     G.validateTagRestrictions(
       Object.fromEntries(
@@ -261,6 +264,10 @@ const MatchRecords = (() => {
     G.validateTeamFactions(settings.teamFactions ?? [null, null]);
     if (typeof settings.shareAlliedUnits !== "boolean") throw Error("存档房间规则无效。");
     const seats = G.getMap(g.mapId).spawns.length;
+    if (g.battlefield && Array.isArray(save.armies) && save.armies.length === seats-2) {
+      save.armies.push(null,null);
+      if(Array.isArray(g.deployment))g.deployment.push(true,true);
+    }
     if (!Array.isArray(save.armies) || save.armies.length !== seats) throw Error("存档席位无效。");
     save.armies = save.armies.map((army) => (army ? G.validateArmySettings(army) : null));
     for (const u of g.units) {
@@ -367,6 +374,7 @@ const MatchRecords = (() => {
     G.validateUnitCostLimit(record.settings.unitCostLimit);
     G.validateFogMode(record.settings.fogMode);
     G.validateBattleMode(record.settings.mode);
+    record.settings.formationStyle = G.formationStyle(record.settings);
     record.settings.pilotPolicy = G.validatePilotPolicy(record.settings.pilotPolicy);
     G.validateTagRestrictions(
       Object.fromEntries(
