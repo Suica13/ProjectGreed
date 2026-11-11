@@ -247,16 +247,17 @@ const DevelopmentUI = (() => {
     observer.observe(treeScroll);
   }
   window.addEventListener("resize", fitTree);
-  byId("developmentFactionSelect").onchange = render;
+  byId("developmentFactionSelect").onchange = () => {
+    render();
+    RoomPanel.selectTechnologyFaction(selectedFaction());
+  };
   byId("developmentPageSelect").onchange = () => {
     selectedId = null;
     treeScroll.scrollTop = 0;
     render();
   };
   byId("openDevelopment").onclick = () => {
-    byId("developmentFactionSelect").value = Development.factions.includes(PlayerProfile.faction())
-      ? PlayerProfile.faction()
-      : "EFSF";
+    byId("developmentFactionSelect").value = selectedFaction();
     setPageView("development");
     render();
     byId("closeDevelopment").focus();
@@ -273,5 +274,9 @@ const DevelopmentUI = (() => {
   });
   window.addEventListener("character-selected", render);
   window.addEventListener("language-change", render);
-  return { render, receiveAwards };
+  function selectedFaction() {
+    const value = byId("developmentFactionSelect").value;
+    return Development.factions.includes(value) ? value : "EFSF";
+  }
+  return { render, receiveAwards, selectedFaction };
 })();

@@ -15,6 +15,7 @@ const RoomPanel = (() => {
     return {
       formationStyle: settings.formationStyle === "free" ? "free" : "standard",
       technologyLimitMode: settings.technologyLimitMode === "custom" ? "custom" : "host",
+      technologyLimitFaction: Rules.factions.includes(settings.technologyLimitFaction) ? settings.technologyLimitFaction : "EFSF",
       technologyLimit: settings.technologyLimit ?? 0,
       costLimit: Rules.validateCostLimit(settings.costLimit),
       unitCostLimit: Rules.validateUnitCostLimit(settings.unitCostLimit ?? 250),
@@ -577,6 +578,10 @@ const RoomPanel = (() => {
     byId("roomTechnologyLimit").value = settings.technologyLimit || 0;
     byId("roomTechnologyLimit").disabled = locked;
     byId("roomTechnologyLimit").parentElement.hidden = settings.technologyLimitMode !== "custom";
+    byId("roomTechnologyLimitFaction").value = settings.technologyLimitFaction || "EFSF";
+    byId("roomTechnologyLimitFaction").disabled = locked;
+    byId("roomTechnologyLimitFaction").parentElement.hidden = settings.technologyLimitMode === "custom";
+    byId("roomTechnologyLimitSummary").textContent = I18n.text("科技点上限") + ": " + formatNumber(settings.technologyCaps?.[settings.technologyLimitFaction || "EFSF"] || 0);
     byId("roomFormationStyle").value = Rules.formationStyle(settings);
     byId("roomFormationStyle").disabled = locked;
     byId("roomFormationStyle").parentElement.hidden = settings.mode !== "quick";
@@ -1732,6 +1737,8 @@ const RoomPanel = (() => {
     sendSettings({ technologyLimitMode: byId("roomTechnologyLimitMode").value });
   byId("roomTechnologyLimit").onchange = () =>
     sendSettings({ technologyLimit: Number(byId("roomTechnologyLimit").value) });
+  byId("roomTechnologyLimitFaction").onchange = () =>
+    selectTechnologyFaction(byId("roomTechnologyLimitFaction").value);
   byId("roomFormationStyle").onchange = () =>
     sendSettings({ formationStyle: byId("roomFormationStyle").value });
   byId("roomShareAlliedUnits").onchange = () =>
@@ -1767,7 +1774,13 @@ const RoomPanel = (() => {
   window.addEventListener("language-change", () => {
     if (pageView === "room" && Net.snapshot) render(Net.snapshot);
   });
-  return { render };
+  function selectTechnologyFaction(faction) {
+    if (!Net.active || Net.started || Net.memberId !== Net.snapshot?.hostId ||
+      Net.snapshot.settings.technologyLimitMode === "custom") return;
+    byId("developmentFactionSelect").value = faction;
+    sendSettings({ technologyLimitFaction: faction });
+  }
+  return { render, selectTechnologyFaction };
 })();
 
 // Reuse the live room controls in a top-layer sheet on narrow screens.

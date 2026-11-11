@@ -1,0 +1,27 @@
+const {test,expect}=require("@playwright/test"),{pathToFileURL}=require("node:url"),path=require("node:path");
+for(const width of [1440,390]) test(`host faction research becomes a shared room cap at ${width}px`,async({page})=>{
+  const errors=[];page.on("pageerror",e=>errors.push(e.message));
+  await page.setViewportSize({width,height:950});
+  await page.addInitScript(()=>localStorage.setItem("projectgreed.developmentProgress.v1",JSON.stringify({points:{EFSF:5000,ZEON:100},claimed:{}})));
+  await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
+  await expect(page.locator("#openSkirmish")).toBeEnabled();
+  await page.evaluate(()=>{byId("developmentFactionSelect").value="ZEON";});
+  await page.locator("#openSkirmish").click();
+  await page.locator("#createOfflineRoom").click();
+  if(width<720)await page.getByRole("button",{name:"房间设置",exact:true}).click();
+  await expect(page.locator("#roomTechnologyLimitFaction")).toHaveValue("ZEON");
+  await expect.poll(()=>page.evaluate(()=>Object.values(Net.snapshot.settings.technologyCaps))).toEqual([100,100,100,100,100]);
+  await page.locator("#roomTechnologyLimitFaction").selectOption("EFSF");
+  await expect.poll(()=>page.evaluate(()=>Object.values(Net.snapshot.settings.technologyCaps))).toEqual([5000,5000,5000,5000,5000]);
+  await expect(page.locator("#roomTechnologyLimitSummary")).toContainText("5,000");
+  expect(await page.evaluate(()=>byId("developmentFactionSelect").value)).toBe("EFSF");
+  await page.evaluate(()=>{const s=byId("developmentFactionSelect");s.value="ZEON";s.dispatchEvent(new Event("change"));});
+  await expect(page.locator("#roomTechnologyLimitFaction")).toHaveValue("ZEON");
+  await expect.poll(()=>page.evaluate(()=>Object.values(Net.snapshot.settings.technologyCaps))).toEqual([100,100,100,100,100]);
+  await page.locator("#roomTechnologyLimitMode").selectOption("custom");
+  await expect(page.locator("#roomTechnologyLimitFaction")).toBeHidden();
+  await page.locator("#roomTechnologyLimit").fill("2500");
+  await page.locator("#roomTechnologyLimit").press("Tab");
+  await expect.poll(()=>page.evaluate(()=>Object.values(Net.snapshot.settings.technologyCaps))).toEqual([2500,2500,2500,2500,2500]);
+  expect(errors).toEqual([]);
+});

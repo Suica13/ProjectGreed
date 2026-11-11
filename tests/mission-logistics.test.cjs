@@ -257,6 +257,30 @@ test("faction allies do not consume any of the twelve human positions or lobby c
   assert.equal(engine.roomList()[0].players, 12);
   assert.equal(engine.roomList()[0].capacity, 12);
 });
+
+test("host research selection supplies one shared cap instead of per-faction balances", (t) => {
+  const { engine, room, act, messages } = fixture(t, "regular");
+  const host = room.seats[0];
+  host.technologyPoints = D.normalizeTechnologyPoints({EFSF:5000,ZEON:100,AEUG:200});
+  const caps = () => messages.findLast((m)=>m.type === "state").settings.technologyCaps;
+  engine.broadcast(room);
+  assert.deepEqual(caps(),Object.fromEntries(D.factions.map(f=>[f,5000])));
+  act("configure_room",{...room.settings,technologyLimitFaction:"ZEON"});
+  assert.deepEqual(caps(),Object.fromEntries(D.factions.map(f=>[f,100])));
+  assert.throws(()=>act("configure_room",{...room.settings,technologyLimitFaction:"PMC"}),/参考阵营无效/);
+  assert.equal(room.settings.technologyLimitFaction,"ZEON");
+  act("configure_room",{...room.settings,technologyLimitMode:"custom",technologyLimit:2500});
+  assert.deepEqual(caps(),Object.fromEntries(D.factions.map(f=>[f,2500])));
+  act("configure_room",{...room.settings,technologyLimitMode:"host",technologyLimitFaction:"EFSF"});
+  act("add_ai",{seat:1});
+  act("start_game",{formation:[carrier,tank]});
+  act("confirm_formation");
+  assert(room.started);
+  assert.deepEqual(room.technologyCapSnapshot,Object.fromEntries(D.factions.map(f=>[f,5000])));
+  host.technologyPoints.EFSF=9999;
+  engine.broadcast(room);
+  assert.deepEqual(caps(),Object.fromEntries(D.factions.map(f=>[f,5000])));
+});
 test("extraction never reapplies changed activity multipliers to accumulated node receipts", (t) => {
   let multiplier = 2;
   const { room, act } = fixture(t, "sweep", () => ({

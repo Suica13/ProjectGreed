@@ -1,4 +1,6 @@
 {
+  "参考科技阵营": "Reference research faction",
+  "科技点参考阵营无效": "Invalid reference research faction",
   "互动文本": "Custom dialogue",
   "互动事件": "Dialogue event",
   "随机台词": "Random lines",

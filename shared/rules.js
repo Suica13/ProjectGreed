@@ -314,6 +314,7 @@ const Tactics = (() => {
       mode: "regular",
       formationStyle: "standard",
       technologyLimitMode: "host",
+      technologyLimitFaction: "EFSF",
       technologyLimit: 0,
       sweepFaction: "ZEON",
       sweepEra: "0079T1",

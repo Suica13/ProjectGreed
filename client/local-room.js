@@ -53,6 +53,7 @@ const LocalRoom = (() => {
       characterFaction: PlayerProfile.faction(),
       researched: byId("offlineRoomMode").value === "campaign" ? {} : Development.researchSnapshot(),
       technologyPoints: Development.pointSnapshot(),
+      technologyLimitFaction: DevelopmentUI.selectedFaction(),
       licenses: byId("offlineRoomMode").value === "campaign" ? {} : Economy.snapshot().licenses,
       ...Economy.normalizeStock(Economy.snapshot()),
       roomMode: byId("offlineRoomMode").value,

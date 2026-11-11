@@ -583,6 +583,7 @@ const Net = (() => {
           characterFaction: PlayerProfile.faction(),
           researched: Development.researchSnapshot(),
           technologyPoints: Development.pointSnapshot(),
+          technologyLimitFaction: DevelopmentUI.selectedFaction(),
           licenses: Economy.snapshot().licenses,
           ...Economy.normalizeStock(Economy.snapshot()),
           roomMode: mode === "create" ? byId("newRoomMode").value : undefined,

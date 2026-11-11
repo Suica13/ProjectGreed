@@ -46,7 +46,9 @@ function createRoomEngine({
       return Object.fromEntries(
         dev.factions.map((faction) => [faction, room.settings.technologyLimit]),
       );
-    return dev.normalizeTechnologyPoints(room.members.get(room.hostId)?.technologyPoints);
+    const points = dev.normalizeTechnologyPoints(room.members.get(room.hostId)?.technologyPoints);
+    const limit = points[room.settings.technologyLimitFaction || "EFSF"] || 0;
+    return Object.fromEntries(dev.factions.map((faction) => [faction, limit]));
   }
   const Records =
     typeof MatchRecords === "undefined" ? require("./match-records.js") : MatchRecords;
@@ -4804,6 +4806,9 @@ function createRoomEngine({
           settings.technologyLimitMode =
             msg.technologyLimitMode ?? room.settings.technologyLimitMode ?? "host";
           settings.technologyLimit = msg.technologyLimit ?? room.settings.technologyLimit ?? 0;
+          settings.technologyLimitFaction = msg.technologyLimitFaction ?? room.settings.technologyLimitFaction ?? "EFSF";
+          if (!roomDevelopment().factions.includes(settings.technologyLimitFaction))
+            throw Error("科技点参考阵营无效");
           if (
             !["host", "custom"].includes(settings.technologyLimitMode) ||
             !Number.isSafeInteger(settings.technologyLimit) ||
@@ -4854,7 +4859,8 @@ function createRoomEngine({
             ].some((key) => JSON.stringify(settings[key]) !== JSON.stringify(room.settings[key]));
             const technologyChanged =
               settings.technologyLimitMode !== room.settings.technologyLimitMode ||
-              settings.technologyLimit !== room.settings.technologyLimit;
+              settings.technologyLimit !== room.settings.technologyLimit ||
+              settings.technologyLimitFaction !== room.settings.technologyLimitFaction;
             room.settings = settings;
             if (technologyChanged)
               for (const player of members(room))
@@ -5722,6 +5728,9 @@ function createRoomEngine({
         lastEvent: null,
         updated: Date.now(),
       };
+      room.settings.technologyLimitFaction = msg.technologyLimitFaction ?? "EFSF";
+      if (!roomDevelopment().factions.includes(room.settings.technologyLimitFaction))
+        throw Error("科技点参考阵营无效");
       if (room.settings.mode === "sweep") {
         room.settings.mapId = G.sweepMapId;
         room.seats = Array(G.getMap(G.sweepMapId).spawns.length).fill(null);

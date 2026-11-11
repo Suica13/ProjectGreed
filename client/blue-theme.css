@@ -3564,6 +3564,7 @@ body.menu-shell-active #formationScreen #formationUnits .formation-row-actions >
 #formationPilotToolbar>label[for="pilotRosterSearch"]{flex:3 1 180px;min-width:0}
 #formationPilotToolbar>label[for="pilotRosterSort"]{flex:1 1 80px;min-width:0}
 #pilotRosterSort{width:100%}
+#roomTechnologyLimitSummary{display:block;margin-top:4px}
 #pilotDialogueEditor { width:min(540px,calc(100vw - 28px)); max-height:calc(100vh - 32px); max-height:calc(100dvh - 32px); box-sizing:border-box; overflow:auto; padding:14px; background:#172936; color:#dbeaf2; border:1px solid #5b849b; }
 #pilotDialogueEditor::backdrop { background:#05131dc9; }
 #pilotDialogueEditor header,#pilotDialogueEditor footer { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
