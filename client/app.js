@@ -2535,7 +2535,7 @@ function drawDialogueBubbles(ctx, poses, intel, width, height, now, labelsVisibl
       anchor.y > height + 16
     )
       continue;
-    const text = I18n.text(bubble.text).slice(0, 48);
+    const text = (bubble.customText ? bubble.text : I18n.text(bubble.text)).slice(0, 48);
     const name = I18n.text(bubble.pilotName || actor?.pilot?.name || "驾驶员") + ":";
     const boxHeight = 50;
     const boxWidth = Math.min(

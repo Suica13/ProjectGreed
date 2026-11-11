@@ -270,6 +270,49 @@ const PilotSystem = (() => {
       throw Error("驾驶员技能不可选择");
     return custom({ ...pilot, selectedSkillId: id });
   }
+  const dialogueEvents = [
+    ["attack", "发动攻击"], ["hit", "受到攻击"], ["miss", "攻击落空"],
+    ["kill", "击破敌军"], ["defeat", "自身被击破"], ["allyKill", "友军击破敌军"],
+    ["allyLoss", "友军被击破"], ["taunt", "挑衅敌军"], ["reply", "回应挑衅"],
+    ["board", "接收搭乘单位"], ["launch", "送出出击单位"], ["preload", "预先搭载确认"],
+    ["passengerBoard", "搭乘时回应"], ["passengerLaunch", "出击时回应"],
+  ];
+  const dialogueLimits = { lines: 12, length: 120, total: 6000 };
+  function normalizeDialogue(value) {
+    if (value == null) return {};
+    if (typeof value !== "object" || Array.isArray(value) ||
+      Object.keys(value).some((key) => !dialogueEvents.some(([id]) => id === key)))
+      throw Error("互动文本事件无效");
+    const clean = {};
+    let total = 0;
+    for (const [event] of dialogueEvents) {
+      if (!Object.hasOwn(value, event)) continue;
+      const lines = value[event];
+      if (!Array.isArray(lines) || lines.length > dialogueLimits.lines)
+        throw Error("每个事件最多12句台词");
+      const phrases = [];
+      for (const line of lines) {
+        if (typeof line !== "string" || /[\u0000-\u001f\u007f]/.test(line))
+          throw Error("互动台词必须是单行文本");
+        const text = line.trim();
+        if (text.length > dialogueLimits.length) throw Error("每句台词最多120字");
+        if (!text) continue;
+        total += text.length;
+        if (total > dialogueLimits.total) throw Error("互动台词总长度最多6000字");
+        phrases.push(text);
+      }
+      if (phrases.length) clean[event] = phrases;
+    }
+    return clean;
+  }
+  function exportDialogue(value) {
+    return { format: "projectgreed.pilot-dialogue", version: 1, dialogue: normalizeDialogue(value) };
+  }
+  function importDialogue(value) {
+    if (!value || value.format !== "projectgreed.pilot-dialogue" || value.version !== 1 || !value.dialogue)
+      throw Error("互动文本JSON格式或版本无效");
+    return normalizeDialogue(value.dialogue);
+  }
   function custom(value) {
     if (value?.aceId || value?.ace) return ace(value);
     if (!value || typeof value !== "object" || !/^custom-[a-zA-Z0-9-]{1,80}$/.test(value.id || ""))
@@ -359,7 +402,7 @@ const PilotSystem = (() => {
     const faction = value.faction ?? "PMC";
     if (!["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(faction))
       throw Error("驾驶员阵营无效");
-    const allowedPersonalities = ["calm", "aggressive", "cautious", "idealist", "strategic", "sarcastic", "strict", "zealous", "proud", "obsessive", "empathetic"];
+    const allowedPersonalities = ["calm", "aggressive", "cautious", "idealist", "strategic", "sarcastic", "strict", "zealous", "proud", "obsessive", "empathetic", "custom"];
     const personality = value.personality == null ? null : value.personality;
     if (personality !== null && !allowedPersonalities.includes(personality))
       throw Error("驾驶员性格无效");
@@ -370,6 +413,7 @@ const PilotSystem = (() => {
     if (!["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(originFaction))
       throw Error("驾驶员出身阵营无效");
     const uploadedPortrait = portraitData(value.uploadedPortrait);
+    const dialogue = normalizeDialogue(value.dialogue);
     const portraitId = portraitsById.has(value.portraitId)
       ? value.portraitId
       : defaultPortrait(faction)?.id;
@@ -381,6 +425,7 @@ const PilotSystem = (() => {
       originFaction,
       ...(personality ? { personality } : {}),
       ...(background ? { background } : {}),
+      ...(Object.keys(dialogue).length ? { dialogue } : {}),
       portraitId,
       ...(uploadedPortrait ? { uploadedPortrait } : {}),
       level,
@@ -672,6 +717,11 @@ const PilotSystem = (() => {
     modifiers,
     baseStats,
     custom,
+    dialogueEvents,
+    dialogueLimits,
+    normalizeDialogue,
+    exportDialogue,
+    importDialogue,
     createCustom,
     gainExperience,
     upgradeCost,

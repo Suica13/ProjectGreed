@@ -3413,8 +3413,9 @@
             <div id="customPilotPortraits"></div>
             <label class="pilot-upload">上传头像 <input id="uploadPilotPortrait" type="file" accept="image/png,image/jpeg,image/webp" /></label>
           </div>
-          <div class="pilot-narrative-settings"><label>驾驶员性格 <select id="customPilotPersonality"><option value="">自动分配</option><option value="calm">冷静</option><option value="aggressive">激进</option><option value="cautious">谨慎</option><option value="idealist">理想主义</option><option value="strategic">谋略型</option><option value="sarcastic">讽刺型</option><option value="strict">严厉</option><option value="zealous">狂热</option><option value="proud">自负</option><option value="obsessive">执念型</option><option value="empathetic">共情型</option></select></label><label>出身阵营 <select id="customPilotOriginFaction"><option value="PMC">PMC</option><option value="EFSF">地球联邦军</option><option value="ZEON">吉翁公国</option><option value="AEUG">奥古</option><option value="TITANS">提坦斯</option><option value="NEO_ZEON">新吉翁</option></select></label></div>
+          <div class="pilot-narrative-settings"><label>驾驶员性格 <select id="customPilotPersonality"><option value="">自动分配</option><option value="calm">冷静</option><option value="aggressive">激进</option><option value="cautious">谨慎</option><option value="idealist">理想主义</option><option value="strategic">谋略型</option><option value="sarcastic">讽刺型</option><option value="strict">严厉</option><option value="zealous">狂热</option><option value="proud">自负</option><option value="obsessive">执念型</option><option value="empathetic">共情型</option><option value="custom">自定义</option></select></label><label>出身阵营 <select id="customPilotOriginFaction"><option value="PMC">PMC</option><option value="EFSF">地球联邦军</option><option value="ZEON">吉翁公国</option><option value="AEUG">奥古</option><option value="TITANS">提坦斯</option><option value="NEO_ZEON">新吉翁</option></select></label></div>
           <p id="customPilotProgress"></p>
+          <button id="editPilotDialogue" type="button">互动文本</button>
           <div id="customPilotRecord" class="pilot-record"></div><section id="acePilotDetails" hidden></section>
           <section class="pilot-training" aria-labelledby="pilotTrainingTitle">
             <div class="pilot-training-heading"><h3 id="pilotTrainingTitle">属性强化</h3><button id="openPilotAttributeHelp" type="button" aria-label="驾驶员属性说明">[?]</button></div>
@@ -5408,6 +5409,7 @@
       __ROOM__;
       __UNIT_CATALOG__;
       __UNIT_PREVIEW__;
+      __PILOT_DIALOGUE_EDITOR__;
       __FORMATION__;
       __REWARD_NOTIFICATIONS__;
       __DEVELOPMENT_UI__;

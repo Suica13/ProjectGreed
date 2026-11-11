@@ -107,6 +107,7 @@ for (const [key, file] of [
   ["ASSET_POOL", "shared/asset-pool.js"],
   ["DIALOG", "client/dialog.js"],
   ["FORMATION", "client/formation.js"],
+  ["PILOT_DIALOGUE_EDITOR", "client/pilot-dialogue-editor.js"],
   ["UNIT_PREVIEW", "client/unit-preview.js"],
   ["UNIT_CATALOG", "client/unit-catalog.js"],
   ["WEAPON_INFO", "client/weapon-info.js"],

@@ -143,12 +143,13 @@ const BattleDialogue = (() => {
     const trait=personality(pilot);
     const seed=hash([speaker.id,target.id,event,sequence].join(":"));
     if ((seed >>> 16) % 2) return null;
-    const pool=transportLines[event][trait];
-    const text=pool[seed % pool.length];
+    const customPool=customLines(pilot,event);
+    const pool=customPool || transportLines[event][trait];
+    const text=pool[(customPool ? seed >>> 8 : seed) % pool.length];
     return { event, speakerId:speaker.id, targetId:target.id,
       pilotName:pilot.name || speaker.name || speaker.id,
       personality:trait, faction:pilot.originFaction || pilot.faction || speaker.faction || "PMC",
-      text, sequence, preloaded, transport:true };
+      text, sequence, preloaded, transport:true, ...(customPool ? {customText:true} : {}) };
   }
   function transportReply({event,speaker,target,sequence=0}={}) {
     if (!speaker || !target || !["board","launch","preload"].includes(event)) return null;
@@ -156,11 +157,13 @@ const BattleDialogue = (() => {
     const trait=personality(pilot);
     const seed=hash([speaker.id,target.id,event,"reply",sequence].join(":"));
     if (seed % 3 !== 0) return null;
-    const pool=transportLines[event === "launch" ? "passengerLaunch" : "passengerBoard"][trait];
+    const replyEvent=event === "launch" ? "passengerLaunch" : "passengerBoard";
+    const customPool=customLines(pilot,replyEvent);
+    const pool=customPool || transportLines[replyEvent][trait];
     return {event:"transportReply",speakerId:speaker.id,targetId:target.id,
       pilotName:pilot.name || speaker.name || speaker.id,
       personality:trait,faction:pilot.originFaction || pilot.faction || speaker.faction || "PMC",
-      text:pool[seed % pool.length],sequence,transport:true};
+      text:pool[(customPool ? seed >>> 8 : seed) % pool.length],sequence,transport:true,...(customPool ? {customText:true} : {})};
   }
   const factionLines = {
     EFSF: { attack: "联邦军各机，按命令开火！" },
@@ -181,6 +184,10 @@ const BattleDialogue = (() => {
     return personalities.includes(explicit) ? explicit
       : personalities[hash(pilot?.id || pilot?.name || "anonymous") % personalities.length];
   }
+  function customLines(pilot,event) {
+    const pool=pilot?.custom && pilot.personality === "custom" && !pilot.ace && !pilot.aceId ? pilot.dialogue?.[event] : null;
+    return Array.isArray(pool) && pool.length ? pool : null;
+  }
   function generate({ event, speaker, target, sequence = 0, faction } = {}) {
     if (!speaker || !event || !(lines[event] || event === "taunt" || event === "reply")) return null;
     const pilot = speaker.pilot || {};
@@ -193,14 +200,15 @@ const BattleDialogue = (() => {
     if (event === "taunt" && seed % 5 !== 0) return null;
     if (event === "reply" && seed % 3 !== 0) return null;
     if (!["kill", "defeat", "allyKill", "allyLoss", "taunt", "reply"].includes(event) && seed % 4 !== 0) return null;
-    const pool = event === "taunt" ? taunts[trait] : event === "reply" ? replies[trait] : (lines[event][trait] || lines[event].calm);
+    const customPool = customLines(pilot,event);
+    const pool = customPool || (event === "taunt" ? taunts[trait] : event === "reply" ? replies[trait] : (lines[event][trait] || lines[event].calm));
     const factionId = pilot.originFaction || faction || pilot.faction || speaker.faction;
-    const text = factionLines[factionId]?.[event] && seed % 5 === 0
-      ? factionLines[factionId][event] : pool[seed % pool.length];
+    const text = !customPool && factionLines[factionId]?.[event] && seed % 5 === 0
+      ? factionLines[factionId][event] : pool[(customPool ? seed >>> 8 : seed) % pool.length];
     return { event, speakerId: speaker.id, targetId: target?.id || null,
       pilotName: pilot.name || speaker.name || speaker.id,
       personality: trait, background, faction: factionId || "PMC", text, sequence,
-      publicToOpponent: event === "taunt" || event === "reply" };
+      publicToOpponent: event === "taunt" || event === "reply", ...(customPool ? {customText:true} : {}) };
   }
   function format(record) {
     return `→ [战场对话][${record.faction}][${record.pilotName}]${record.unitName ? "[" + record.unitName + "]" : ""}「${record.text}」`;

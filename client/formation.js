@@ -2899,6 +2899,7 @@ const Formation = (() => {
     byId("customPilotName").disabled = true;
     byId("renameCustomPilot").textContent = "修改名称";
     byId("renameCustomPilot").hidden = !!pilotEdit.ace;
+    byId("editPilotDialogue").hidden = !!pilotEdit.ace || pilotEdit.personality !== "custom";
     byId("changeCustomPilotPortrait").disabled = !!pilotEdit.ace;
     byId("customPilotPortraitPicker").hidden = true;
     byId("createPilotConfirm").hidden = !pilotIsNew;
@@ -2909,6 +2910,7 @@ const Formation = (() => {
   }
   function savePilotIdentity(fields) {
     Object.assign(pilotEdit, fields);
+    byId("editPilotDialogue").hidden = !!pilotEdit.ace || pilotEdit.personality !== "custom";
     const original = { ...JSON.parse(pilotOriginal), ...fields };
     // Identity edits never commit pending training points.
     if (!pilotIsNew) commitPilot(original);
@@ -3199,6 +3201,7 @@ const Formation = (() => {
   };
   function finishPilotEditor() {
     if (!pilotEdit) return;
+    PilotDialogueEditor.close();
     pilotEdit = null;
     pilotEditor.hidden = true;
     byId("customPilotPortraitPicker").hidden = true;
@@ -3236,6 +3239,14 @@ const Formation = (() => {
   byId("cancelPilotTraining").onclick = () => {
     pilotEdit = structuredClone(JSON.parse(pilotOriginal));
     renderPilotStats();
+  };
+  byId("editPilotDialogue").onclick = () => {
+    if (!pilotEdit || pilotEdit.ace) return;
+    const pilotId = pilotEdit.id;
+    PilotDialogueEditor.open(pilotEdit, (dialogue) => {
+      if (!pilotEdit || pilotEdit.id !== pilotId) throw Error("驾驶员已变更，请重新打开编辑面板");
+      savePilotIdentity({ dialogue });
+    });
   };
   byId("customPilotPersonality").onchange = () => {
     if (pilotEdit && !pilotEdit.ace)
