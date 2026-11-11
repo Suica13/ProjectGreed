@@ -32,7 +32,7 @@ const DevelopmentUI = (() => {
 
   function receiveAwards(snapshot) {
     RewardNotifications.sync(snapshot);
-    if (snapshot.replay || snapshot.phase === "replay" || snapshot.startedFromSave) return;
+    if (!snapshot.rewardsSettled || snapshot.replay || snapshot.phase === "replay" || snapshot.startedFromSave) return;
     for (const award of snapshot.techAwards || [])
       if (Development.creditAward(award)) RewardNotifications.add("technology", award, snapshot);
   }

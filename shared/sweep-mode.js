@@ -180,6 +180,14 @@ const SweepMode = (() => {
     if (u.overdrive?.baseModel) state.model = u.overdrive.baseModel;
     return state;
   }
+  function remainingInventory(inventory = {}, losses = []) {
+    const remaining = { ...inventory };
+    for (const loss of losses || []) {
+      const id = loss.entry.unitId;
+      remaining[id] = Math.max(0, (remaining[id] || 0) - 1);
+    }
+    return remaining;
+  }
   function view(room, memberId) {
     const s = room.sweep;
     if (!s) return null;
@@ -192,6 +200,7 @@ const SweepMode = (() => {
       event: s.event,
       reachable: s.nodes.filter((n) => selectable(room, n)).map((n) => n.id),
       pending: structuredClone(s.pending[memberId] || blank()),
+      inventoryRemaining: remainingInventory(room.members.get(memberId)?.inventory, s.losses[memberId]),
       restockReady: Object.keys(s.restockCommitted || {}).filter((id) => s.restockCommitted[id]),
       restockCost: s.restockCost?.[memberId] || { money: 0, supplies: 0 },
       restockUsed: s.restockUsed?.[memberId] || { add: 0, remove: 0, assign: 0, dismiss: 0 },
@@ -603,6 +612,7 @@ const SweepMode = (() => {
     save,
     reward,
     restockPlan,
+    remainingInventory,
     rewardPool,
     mapPool,
     chooseMap,

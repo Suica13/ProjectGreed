@@ -27,7 +27,7 @@ const SweepRestock = (() => {
     return {
       budget: Rules.armyBudget(snapshot.settings, p),
       unitLimit: Rules.armyUnitLimit(snapshot.settings, p),
-      inventory: stock.inventory,
+      inventory: mission.inventoryRemaining || stock.inventory,
       restrictions: {
         ...Rules.armyRestrictions(snapshot.settings, p),
         ...Economy.normalizeStock(stock),
@@ -208,6 +208,7 @@ const SweepRestock = (() => {
     function refresh() {
       cards.replaceChildren();
       const query = search.value.toLocaleLowerCase();
+      const availableInventory = options().inventory;
       const items = pilots
         ? Formation.availablePilots().filter((p) =>
             I18n.pilotName(p).toLocaleLowerCase().includes(query),
@@ -218,7 +219,7 @@ const SweepRestock = (() => {
                 !p.formOnly &&
                 !p.facility &&
                 !p.wip &&
-                Economy.quantity(p.id) > 0 &&
+                (availableInventory[p.id] || 0) > 0 &&
                 (p.name + p.id).toLocaleLowerCase().includes(query),
             )
             .sort((a, b) => a.stats.cost - b.stats.cost);
@@ -260,7 +261,7 @@ const SweepRestock = (() => {
             "",
             pilots
               ? `Lv.${item.level}`
-              : `COST ${Rules.models[model]?.cost} · 库存 ${Economy.quantity(item.id)}`,
+              : `COST ${Rules.models[model]?.cost} · 库存 ${availableInventory[item.id] || 0}`,
           ),
           action(pilots ? "申请配属" : "申请部署", () => stage(op), !!error),
           element(

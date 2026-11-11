@@ -39,11 +39,25 @@ for (const width of [1440, 390])
     await empty.click();
     await page.locator('[data-unit-id="Type61"] strong').first().click();
     await page.locator("#addFormationUnit").click();
-    await expect(page.locator("#formationUnitPicker")).toBeHidden();
+    await expect(page.locator("#formationUnitPicker")).toBeVisible();
     await expect(page.locator("#formationUnitDetail")).toBeHidden();
-    await expect(group.locator(".formation-preloaded-row")).toHaveCount(1);
-    await expect(group.locator(".formation-hangar-title").first()).toContainText("1 /");
+    await page.locator("#addFormationUnit").click();
+    expect(await page.evaluate(() => Formation.current().length)).toBe(3);
+    await page.locator("#closeFormationPicker").click();
+    await expect(group.locator(".formation-preloaded-row")).toHaveCount(2);
+    await expect(group.locator(".formation-hangar-title").first()).toContainText("2 /");
     expect(await page.evaluate(() => Formation.current()[1].preload.carrierIndex)).toBe(0);
+    await group.locator(".formation-empty-slot").first().click();
+    await page.locator('[data-unit-id="Type61"] strong').first().click();
+    const capacity = await page.evaluate(() => Rules.formationModel(Formation.current()[0]).hangars[0].capacity);
+    for (let used = 2; used < capacity; used++) {
+      await page.locator("#addFormationUnit").click();
+      await expect(page.locator("#formationUnitPicker")).toBeVisible();
+    }
+    await expect(page.locator("#formationCatalog")).toContainText("格纳库已满");
+    await expect(page.locator("#addFormationUnit")).toBeDisabled();
+    expect(await page.evaluate(() => Formation.current().length)).toBe(capacity + 1);
+    await page.locator("#closeFormationPicker").click();
     const bounds = await group.boundingBox();
     expect(bounds.width).toBeLessThan(width);
     for (const card of await group.locator(".formation-row").all()) {

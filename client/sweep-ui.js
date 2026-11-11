@@ -94,7 +94,7 @@ const SweepUI = (() => {
     }
     if (!list.childElementCount) list.append(element("p", "", "没有剩余单位"));
   }
-  let wasActive = false;
+  let wasActive = false, routePosition = null;
   const format = (source, values) =>
     I18n.text(source.replace(/\{(\w+)\}/g, (_, key) => values[key]));
   const request = (action, data = {}) => Net.request(action, data);
@@ -119,6 +119,7 @@ const SweepUI = (() => {
       else renderInfo();
     }
     wasActive = active;
+    if (!active || snapshot.phase !== "sweep_map") routePosition = null;
     if (snapshot.phase !== "sweep_resupply") SweepRestock.reset();
     if (!active) return;
     const host = snapshot.you?.id === snapshot.hostId;
@@ -153,13 +154,24 @@ const SweepUI = (() => {
     confirm.disabled = !host || !s.selected;
     confirm.onclick = () => request("sweep_confirm");
     if (!route.hidden) {
-      const nodes = s.nodes.filter(
-          (n) => n.depth >= Math.max(0, s.depth) && n.depth <= s.depth + 6,
-        ),
-        start = Math.max(0, s.depth);
+      const start = Math.max(0, s.depth);
+      const nextBoss = Math.min(...s.nodes.filter((n) => n.type === "boss" && n.depth > s.depth).map((n) => n.depth));
+      const end = Number.isFinite(nextBoss) ? nextBoss : start + 4;
+      const nodes = s.nodes.filter((n) => n.depth >= start && n.depth <= end);
+      // Keep a readable fixed pitch and reveal only the route to the next boss.
+      const rowPitch = 150, routeHeight = (end - start) * rowPitch + 140, bottom = routeHeight - 70;
+      route.style.height = routeHeight + "px";
+      route.style.minHeight = routeHeight + "px";
       const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-      svg.setAttribute("viewBox", "0 0 600 650");
+      svg.setAttribute("viewBox", "0 0 600 " + routeHeight);
       svg.setAttribute("preserveAspectRatio", "none");
+      const defs = document.createElementNS(svg.namespaceURI, "defs");
+      const marker = document.createElementNS(svg.namespaceURI, "marker");
+      for (const [key, value] of Object.entries({ id: "sweepRouteArrow", viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 9, markerHeight: 9, markerUnits: "userSpaceOnUse", orient: "auto" })) marker.setAttribute(key, value);
+      const head = document.createElementNS(svg.namespaceURI, "path");
+      head.setAttribute("d", "M 0 0 L 10 5 L 0 10 Z");
+      head.setAttribute("fill", "#8ab4cc");
+      marker.append(head); defs.append(marker); svg.append(defs);
       for (const n of nodes)
         for (const next of n.next) {
           const t = nodes.find((t) => t.id === next);
@@ -167,11 +179,12 @@ const SweepUI = (() => {
           const line = document.createElementNS(svg.namespaceURI, "line");
           for (const [k, v] of Object.entries({
             x1: 100 + n.lane * 200,
-            y1: 600 - (n.depth - start) * 96,
+            y1: bottom - (n.depth - start) * rowPitch - 43,
             x2: 100 + t.lane * 200,
-            y2: 600 - (t.depth - start) * 96,
-            stroke: "#5e7e91",
-            "stroke-width": 2,
+            y2: bottom - (t.depth - start) * rowPitch + 43,
+            stroke: "#8ab4cc",
+            "stroke-width": 3.5,
+            "marker-end": "url(#sweepRouteArrow)",
           }))
             line.setAttribute(k, v);
           svg.append(line);
@@ -195,10 +208,19 @@ const SweepUI = (() => {
         button.setAttribute("aria-label", n.depth + 1 + " · " + label);
         button.dataset.sweepNode = n.id;
         button.style.left = (100 + n.lane * 200) / 6 + "%";
-        button.style.top = (600 - (n.depth - start) * 96) / 6.5 + "%";
+        button.style.top = bottom - (n.depth - start) * rowPitch + "px";
         button.disabled = !host || !s.reachable.includes(n.id);
         button.onclick = () => request("sweep_select", { nodeId: n.id });
         route.append(button);
+      }
+      const position = snapshot.matchId + ":" + s.depth;
+      if (routePosition !== position) {
+        routePosition = position;
+        // The game scene becomes visible after receive(), so scroll after that layout change.
+        requestAnimationFrame(() => {
+          if (!route.hidden && routePosition === position)
+            route.parentElement.scrollTop = route.parentElement.scrollHeight;
+        });
       }
     }
     if (s.event) {

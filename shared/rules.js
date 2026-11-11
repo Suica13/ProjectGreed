@@ -1487,7 +1487,8 @@ const Tactics = (() => {
       )
         throw Error("运输单位处于水上，只能在水域出击");
     }
-    const target = squadJoinTarget(g, u, x, y, [u]);
+    const placed = u.deploymentStaged ? { ...u, deploymentStaged: false } : u;
+    const target = squadJoinTarget(g, placed, x, y, [placed]);
     if (!target && !fits(g, u, x, y, u.angle, false, team)) throw Error("该部署位置已有单位");
     delete u.embarked;
     delete u.rotationPivot;
@@ -1537,11 +1538,13 @@ const Tactics = (() => {
     );
     for (const u of units) {
       const area = new Set(deploymentCells(g, seat, u).map((cell) => key(cell.x, cell.y)));
-      const position = deploymentCells(g, seat, u).find((cell) =>
-        fits(g, u, cell.x, cell.y, u.angle, false, seat, area),
-      );
+      const available = deploymentCells(g, seat, u);
+      const placed = { ...u, deploymentStaged: false };
+      const position = available.find((cell) => squadJoinTarget(g, placed, cell.x, cell.y, [placed])) ||
+        available.find((cell) => fits(g, u, cell.x, cell.y, u.angle, false, seat, area));
       if (position) deploy(g, seat, u.id, position.x, position.y);
     }
+    formDeploymentSquads(g, seat);
   }
   function aiDeployment(g, seat) {
     if (!g.deployment || g.deployment[seat]) return;
@@ -1577,7 +1580,15 @@ const Tactics = (() => {
         hangars.embark(g, passenger, carrier, h.id);
       }
     }
-    for (const unit of controlled.filter((u) => squadEligible(u) && !u.embarked)) {
+    formDeploymentSquads(g, seat);
+  }
+  function formDeploymentSquads(g, seat) {
+    const controlled = g.units.filter((u) =>
+      onMap(u) && !u.embarked && !u.deploymentStaged &&
+      (g.campaignBattlefield
+        ? u.campaignDeploying && campaignBattlefield.deploymentSeat(g, u) === seat
+        : ownerOf(u) === seat));
+    for (const unit of controlled.filter((u) => squadEligible(u))) {
       if (squadMembers(g, unit).length > 1) continue;
       const target = controlled
         .filter(
@@ -1589,6 +1600,7 @@ const Tactics = (() => {
         )
         .sort(
           (a, b) =>
+            squadMembers(g, b).length - squadMembers(g, a).length ||
             Number(b.model === unit.model) - Number(a.model === unit.model) ||
             dist(unit, a) - dist(unit, b),
         )[0];

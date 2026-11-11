@@ -102,7 +102,7 @@ const Formation = (() => {
     });
   }
   function receivePilotAwards(snapshot) {
-    if (snapshot.replay || snapshot.phase === "replay" || snapshot.startedFromSave) return;
+    if (!snapshot.rewardsSettled || snapshot.replay || snapshot.phase === "replay" || snapshot.startedFromSave) return;
     if (PilotSystem.creditAwards(pilotStore, snapshot.pilotAwards || [])) {
       savePilots();
       squads = squads.map((s) => ({ ...s, units: hydratePilots(s.units) }));
@@ -532,6 +532,16 @@ const Formation = (() => {
     );
   }
   let pickerFromHangarCard = false;
+  function pickerHangarFull() {
+    if (!pickerContext) return false;
+    const model = Rules.formationModel(draft[pickerContext.carrierIndex]);
+    const hangar = model.hangars.find((h) => h.id === pickerContext.hangarId);
+    if (!hangar) return false;
+    const used = draft
+      .filter((entry) => preloadMatches(entry, pickerContext.carrierIndex, hangar.id))
+      .reduce((sum, entry) => sum + (hangar.kind === "sfs" ? 1 : Rules.formationModel(entry).transport.slotCost || 1), 0);
+    return used >= hangar.capacity;
+  }
   function isFormationCarrier(prefab) {
     if (!prefab?.weaponKits?.length) return false;
     const model = Rules.formationModel({
@@ -1934,9 +1944,11 @@ const Formation = (() => {
     appendUnit(entry);
     render();
     byId("formationUnits").scrollTop = byId("formationUnits").scrollHeight;
-    // Adding a draft entry does not consume stock or change the normal catalog.
-    // render() already refreshes the selected unit's capacity/permission checks.
-    if (pickerContext) closePicker();
+    // Keep the hangar picker open and refresh its remaining capacity after each addition.
+    if (pickerContext) {
+      renderCatalog();
+      if (pickerHangarFull()) note("格纳库已满");
+    }
   };
   byId("formationSearch").oninput = () => {
     byId("formationCatalog").scrollTop = 0;
@@ -2087,7 +2099,8 @@ const Formation = (() => {
       }
       rows.append(row);
     }
-    if (!prefabs.length) rows.append(element("p", "empty", "没有符合筛选的单位"));
+    if (!prefabs.length)
+      rows.append(element("p", "empty", pickerHangarFull() ? "格纳库已满" : "没有符合筛选的单位"));
     list.replaceChildren(rows);
     list.scrollTop = scroll;
     catalogRenderKey = renderKey;

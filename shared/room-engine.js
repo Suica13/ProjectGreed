@@ -186,28 +186,6 @@ function createRoomEngine({
       room.members.set(id, p);
     }
   }
-  function sweepEventLosses(room) {
-    for (const [id, losses] of Object.entries(room.sweep?.losses || {}))
-      for (const loss of losses) {
-        if (loss.settled) continue;
-        loss.settled = true;
-        const p = room.members.get(id);
-        if (!p || p.bot) continue;
-        // Combat casualties were already receipted by syncRegularStock.
-        if (!loss.eventLoss) continue;
-        const unitId = loss.entry.unitId;
-        p.inventory[unitId] = Math.max(0, (p.inventory[unitId] || 0) - 1);
-        room.economyAwards.push({
-          id: randomId(),
-          matchId: room.matchId,
-          memberId: id,
-          kind: "loss",
-          money: 0,
-          supplies: 0,
-          stockLost: { inventory: { [unitId]: 1 } },
-        });
-      }
-  }
   function settleSweep(room) {
     if (!room.sweep.ended || room.economySettled) return;
     room.economySettled = true;
@@ -222,6 +200,7 @@ function createRoomEngine({
       }));
       const losses = {};
       for (const r of records) losses[r.unitId] = (losses[r.unitId] || 0) + 1;
+      p.inventory = Sweep.remainingInventory(p.inventory, room.sweep.losses[p.id]);
       const award = {
         id: randomId(),
         matchId: room.matchId,
@@ -230,6 +209,7 @@ function createRoomEngine({
         money: roundReward(loot.money * ratio),
         supplies: roundReward(loot.supplies * ratio),
         stockGained: { inventory: loot.inventory },
+        stockLost: { inventory: losses, kits: {} },
         lostUnits: records,
         losses,
       };
@@ -999,6 +979,8 @@ function createRoomEngine({
                     .map(([id, record]) => ({ id, model: record.model, unitId: record.unitId })),
             }))
           : null,
+      // Awards remain visible for the in-match HUD, but are not spendable until final settlement.
+      rewardsSettled: !!room.economySettled,
       economyAwards: recipient
         ? (room.economyAwards || [])
             .filter((a) => a.memberId === recipient.id)
@@ -2035,7 +2017,10 @@ function createRoomEngine({
       const next = G.normalizeStock(player);
       for (const kind of ["inventory", "kits"])
         for (const [id, count] of Object.entries(used[kind])) {
-          if (room.settings.mode !== "quick" && (next[kind][id] || 0) < count)
+          const available = room.sweep && kind === "inventory"
+            ? Sweep.remainingInventory(next.inventory, room.sweep.losses[player.id])
+            : next[kind];
+          if (room.settings.mode !== "quick" && (available[id] || 0) < count)
             throw Error("出战库存不足：" + id);
         }
       Object.assign(player, next);
@@ -2062,7 +2047,7 @@ function createRoomEngine({
       }
       const settled = reserve.stockLossesSettled || 0;
       const losses = (reserve.losses || 0) - settled;
-      if (losses <= 0) continue;
+      if (losses <= 0 || !room.economySettled) continue;
       const lost = { inventory: { [reserve.unitId]: losses }, kits: {} };
       for (const [kind, values] of Object.entries(lost))
         for (const [id, count] of Object.entries(values)) {
@@ -2081,6 +2066,11 @@ function createRoomEngine({
       });
     }
     const occupied = new Map();
+    const pendingLosses = new Map();
+    for (const reserve of reserves) {
+      const key = reserve.ownerSeat + ":" + reserve.unitId;
+      pendingLosses.set(key, (pendingLosses.get(key) || 0) + Math.max(0, (reserve.losses || 0) - (reserve.stockLossesSettled || 0)));
+    }
     for (const reserve of reserves) {
       if (reserve.readyRound !== null && !reserve.request) continue;
       if (!occupied.has(reserve.ownerSeat)) occupied.set(reserve.ownerSeat, { chassis: new Map() });
@@ -2092,14 +2082,15 @@ function createRoomEngine({
       if (!player || player.bot) continue;
       const counts = occupied.get(reserve.ownerSeat);
       const chassis = counts?.chassis.get(reserve.unitId) || 0;
-      reserve.stockRemaining = player.inventory?.[reserve.unitId] || 0;
+      reserve.stockRemaining = Math.max(0, (player.inventory?.[reserve.unitId] || 0) - (pendingLosses.get(reserve.ownerSeat + ":" + reserve.unitId) || 0));
       reserve.stockAvailable = reserve.stockRemaining > chassis;
     }
   }
   function syncRegularStock(room) {
     if (
       !room.started ||
-      !["regular", "sweep"].includes(room.settings.mode) ||
+      !room.economySettled ||
+      room.settings.mode !== "regular" ||
       room.campaign ||
       room.startedFromSave ||
       room.replay
@@ -2136,7 +2127,7 @@ function createRoomEngine({
   function settleBattleStock(room, player) {
     syncRegularStock(room);
     if (room.stockReservations) delete room.stockReservations[player.id];
-    // Casualty receipts are already applied during combat, never again at settlement.
+    // Only final settlement may turn recorded casualties into persistent stock receipts.
     return undefined;
   }
   function battlefieldLosses(room, seat) {
@@ -4037,11 +4028,7 @@ function createRoomEngine({
         if (Sweep.arrived(room, G) === "battle") launchSweepBattle(room);
       } else if (msg.action === "sweep_event" && room.phase === "sweep_event") {
         room.sweep.rewardMultipliers = getRewardMultipliers();
-        const before = new Set(Object.values(room.sweep.rosters).flat());
         Sweep.event(room, G, msg.choice);
-        for (const losses of Object.values(room.sweep.losses))
-          for (const loss of losses) if (before.has(loss)) loss.eventLoss = true;
-        sweepEventLosses(room);
       } else if (msg.action === "sweep_extract" && room.phase === "sweep_map") {
         if (room.sweep.depth < 0) throw Error("请先完成一个任务节点");
         Sweep.finish(room, false);
@@ -4067,7 +4054,7 @@ function createRoomEngine({
           budget: playerBudget(room, member),
           unitLimit: playerUnitLimit(room, member),
           restrictions: playerRestrictions(room, member),
-          inventory: member.inventory,
+          inventory: Sweep.remainingInventory(member.inventory, room.sweep.losses[member.id]),
           nextKey: room.sweep.nextKey[member.id],
         });
         const pending = room.sweep.pending[member.id];

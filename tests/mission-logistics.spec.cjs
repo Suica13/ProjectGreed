@@ -14,7 +14,7 @@ for (const width of [1440, 390])
     await page.evaluate(() => {
       const original = createRoomEngine;
       createRoomEngine = (options) =>
-        (window.logisticsEngine = original({ ...options, aiDelayMs: 999999 }));
+        (window.logisticsEngine = original({ ...options, randomSeed: () => 7319, aiDelayMs: 999999 }));
     });
     await page.locator("#openSkirmish").click();
     await page.locator("#offlineRoomMode").selectOption("sweep");
@@ -32,6 +32,20 @@ for (const width of [1440, 390])
     await expect(page.locator("#sweepMission")).toBeVisible();
     await expect(page.locator("#sweepSummary .resource-icon")).toHaveCount(3);
     await expect(page.locator(".sweep-node .sweep-scene").first()).toBeVisible();
+    const rowSpacing = await page.locator("#sweepRoute").evaluate((route) => {
+      const rows = [...new Set([...route.querySelectorAll("button[data-sweep-node]")].map((b) => b.offsetTop))].sort((a,b) => a-b);
+      return rows.slice(1).map((y,i) => y-rows[i]);
+    });
+    expect(rowSpacing.length).toBeGreaterThan(1);
+    expect(Math.min(...rowSpacing)).toBe(150);
+    const routeState = await page.locator("#sweepRoute").evaluate((route) => ({
+      depths: [...route.querySelectorAll("button[data-sweep-node]")].map((b) => Number(b.dataset.sweepNode.split(":")[0])),
+      bottom: route.parentElement.scrollHeight - route.parentElement.clientHeight - route.parentElement.scrollTop,
+    }));
+    expect(Math.max(...routeState.depths)).toBe(4);
+    expect(routeState.bottom).toBeLessThan(2);
+    await expect(page.locator("#sweepRoute svg line").first()).toHaveAttribute("stroke-width", "3.5");
+    await expect(page.locator("#sweepRoute svg line").first()).toHaveAttribute("marker-end", "url(#sweepRouteArrow)");
     expect(
       await page.locator(".sweep-stage").evaluate((el) => getComputedStyle(el).backgroundImage),
     ).toContain("data:image/png;base64");
