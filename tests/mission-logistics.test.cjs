@@ -97,6 +97,12 @@ test("routes insert a boss every fifth node and force branching within three sta
       if (node.depth % 5 === 4) assert.equal(node.type, "boss");
       if (node.depth % 3 === 2) assert(node.next.length >= 2);
       assert(node.next.length > 0);
+      for (const id of node.next) {
+        const [depth, lane] = id.split(":").map(Number);
+        assert.equal(depth, node.depth + 1);
+        assert(Math.abs(lane - node.lane) <= 1, "routes cannot connect opposite edges");
+        if (depth < 50) assert(nodes.some((next) => next.id === id));
+      }
     }
   }
 });

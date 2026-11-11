@@ -31,6 +31,13 @@ for (const width of [1440, 390])
     await page.locator("#confirmFinalFormation").click();
     await expect(page.locator("#sweepMission")).toBeVisible();
     await expect(page.locator("#sweepSummary .resource-icon")).toHaveCount(3);
+    const progressText = await page.locator(".sweep-progress > span").boundingBox();
+    const lootButton = await page.locator("#sweepLootButton").boundingBox();
+    expect(lootButton.x).toBeGreaterThanOrEqual(progressText.x + progressText.width);
+    expect(Math.abs(lootButton.y + lootButton.height / 2 - progressText.y - progressText.height / 2)).toBeLessThan(2);
+    await page.locator("#sweepLootButton").click();
+    await expect(page.locator("#sweepInfo")).toBeVisible();
+    await page.locator("#sweepInfo").getByRole("button", { name: "关闭", exact: true }).click();
     await expect(page.locator(".sweep-node .sweep-scene").first()).toBeVisible();
     const rowSpacing = await page.locator("#sweepRoute").evaluate((route) => {
       const rows = [...new Set([...route.querySelectorAll("button[data-sweep-node]")].map((b) => b.offsetTop))].sort((a,b) => a-b);
@@ -55,8 +62,11 @@ for (const width of [1440, 390])
       const own = room.seats[0];
       room.sweep.pending[own.id].money = 10000;
       room.sweep.pending[own.id].supplies = 10000;
+      room.sweep.pending[own.id].technology = 750;
       Net.request("sync");
     });
+    await expect(page.locator("#hudMatchIncome .resource-money")).toHaveText("10,000");
+    await expect(page.locator("#hudMatchIncome .resource-technology")).toHaveText("750");
     await page.locator('[data-sweep-node="0:0"]').click();
     await expect(page.locator(".sweep-node.selected")).toHaveCount(1);
     expect(

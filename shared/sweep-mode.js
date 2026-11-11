@@ -61,7 +61,8 @@ const SweepMode = (() => {
   function rows(seed, start = 0, count = 7) {
     const result = [];
     const lanesAt = (depth) => {
-      if (depth === 0) return [0, 1, 2];
+      // Forced branching layers need both adjacent exits even at the map edges.
+      if (depth % 3 === 0) return [0, 1, 2];
       const r = rng(seed + depth * 7309)();
       return r < 0.35 ? (r < 0.175 ? [0, 1] : [1, 2]) : [0, 1, 2];
     };
@@ -113,7 +114,7 @@ const SweepMode = (() => {
         if (node.next.length === 1 && (depth % 3 === 2 || random() < 0.5)) {
           const extra = nextLanes.find(
             (l) =>
-              (depth % 3 === 2 || Math.abs(l - node.lane) <= 1) &&
+              Math.abs(l - node.lane) <= 1 &&
               !node.next.includes(`${depth + 1}:${l}`),
           );
           if (extra !== undefined) node.next.push(`${depth + 1}:${extra}`);

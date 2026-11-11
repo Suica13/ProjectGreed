@@ -48,6 +48,31 @@ async function fixture(page, width) {
     byId("mapCombatStatus").textContent = "交战演出";
   });
 }
+for (const width of [1440, 390])
+  test(`sweep battle HUD shows pending run income and final settlement receipts at ${width}px`, async ({ page }) => {
+    await fixture(page, width);
+    await page.evaluate(() => {
+      Net.snapshot.settings.mode = "sweep";
+      Net.snapshot.rewardsSettled = false;
+      Net.snapshot.sweep = { pending: { money: 3450, supplies: 6900, technology: 750 }, ended: false };
+      update();
+    });
+    await expect(page.locator("#hudMatchIncome .resource-money")).toHaveText("3,450");
+    await expect(page.locator("#hudMatchIncome .resource-supplies")).toHaveText("6,900");
+    await expect(page.locator("#hudMatchIncome .resource-technology")).toHaveText("750");
+    await page.evaluate(() => {
+      Net.snapshot.sweep.pending.money = 3250;
+      MatchIncome.render(byId("hudMatchIncome"), Net.snapshot);
+    });
+    await expect(page.locator("#hudMatchIncome .resource-money")).toHaveText("3,250");
+    await page.evaluate(() => {
+      Net.snapshot.rewardsSettled = true;
+      Net.snapshot.sweep.ended = true;
+      MatchIncome.render(byId("hudMatchIncome"), Net.snapshot);
+    });
+    await expect(page.locator("#hudMatchIncome .resource-money")).toHaveText("500");
+    await expect(page.locator("#hudMatchIncome .resource-technology")).toHaveText("60");
+  });
 for (const width of [1920, 768, 390, 320])
   test(`phase, camera, playback toolbar and live income fit ${width}px`, async ({ page }) => {
     const errors = [];

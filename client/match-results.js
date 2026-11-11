@@ -3,6 +3,11 @@ const MatchIncome = (() => {
   let previous, economy, technology, economyLength, technologyLength, cached;
   const rendered = new WeakMap();
   function totals(snapshot = Net.snapshot) {
+    // Sweep receipts are emitted only at extraction; its live HUD uses the run's pending balance.
+    if (snapshot?.sweep && !snapshot.rewardsSettled) {
+      const pending = snapshot.sweep.pending || {};
+      return { money: pending.money || 0, supplies: pending.supplies || 0, technology: pending.technology || 0 };
+    }
     // Snapshots are immutable in live play; length checks also support appended local fixtures.
     if (
       cached &&

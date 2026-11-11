@@ -50,7 +50,8 @@ const SweepUI = (() => {
     renderInfo();
     if (!info.open) info.showModal();
   }
-  byId("sweepLootButton").onclick = () => showInfo(null);
+  const lootButton = byId("sweepLootButton"), lootButtonHome = lootButton.parentElement;
+  lootButton.onclick = () => showInfo(null);
   function infoRow(modelId, text) {
     const row = element("p");
     if (Rules.models[modelId]) {
@@ -113,7 +114,8 @@ const SweepUI = (() => {
     if (active && !wasActive)
       panel.querySelector("details").open = !matchMedia("(max-width:700px)").matches;
     mission = s;
-    byId("sweepLootButton").hidden = !s || s.ended;
+    lootButton.hidden = !s || s.ended;
+    if (!active && lootButton.parentElement !== lootButtonHome) lootButtonHome.prepend(lootButton);
     if (info.open) {
       if (!s || s.ended || (selectedTeam !== null && !active)) info.close();
       else renderInfo();
@@ -124,7 +126,8 @@ const SweepUI = (() => {
     if (!active) return;
     const host = snapshot.you?.id === snapshot.hostId;
     ProductionUI.resources(byId("sweepSummary"), s.pending, { technology: true });
-    byId("sweepSummary").append(
+    const progress = element("span", "sweep-progress");
+    progress.append(
       element(
         "span",
         "",
@@ -134,7 +137,9 @@ const SweepUI = (() => {
           Object.values(s.pending.inventory).reduce((a, b) => a + b, 0) +
           "台",
       ),
+      lootButton,
     );
+    byId("sweepSummary").append(progress);
     byId("sweepNotice").textContent =
       I18n.text("本局收益撤离时发放；全灭保留机体库存，资金、物资和科技点减半。") +
       (host ? "" : " " + I18n.text("路线由房主选择并确认。"));
