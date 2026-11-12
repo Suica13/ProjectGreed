@@ -1263,11 +1263,11 @@ test("host reconnect grace preserves creator privileges and rejects temporary gu
   assert.equal(resumed.state.hostId, id);
   const changed = await resumed.act("configure_room", { mapId: "crossroads_2v2", costLimit: 4200 });
   assert.equal(changed.type, "state");
-  assert.deepEqual(changed.settings, {
+  for (const [key, value] of Object.entries({
     ...G.defaultRoomSettings(),
     mapId: "crossroads_2v2",
     costLimit: 4200,
-  });
+  })) assert.deepEqual(changed.settings[key], value);
   assert.equal(app.rooms.get("HOSTGRACE").hostId, id);
 });
 

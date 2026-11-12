@@ -2,79 +2,31 @@ const { test, expect } = require("@playwright/test");
 const { pathToFileURL } = require("node:url");
 const path = require("node:path");
 for (const width of [1600, 390])
-  test(`thirty-six battlefield room sizes apply era, PMC limits and entry pay at ${width}px`, async ({
-    page,
-  }) => {
+  test(`thirty-six fixed battlefield presets apply era, limits and entry pay at ${width}px`, async ({ page }) => {
     test.setTimeout(60000);
     await page.setViewportSize({ width, height: width === 390 ? 844 : 1000 });
     const errors = [];
-    page.on("pageerror", (e) => errors.push(e.message));
-    const G = require("../shared/rules.js");
-    await page.addInitScript((rules) => {
-      localStorage.setItem("projectgreed.room-rule-presets.v1", JSON.stringify([
-        { id: "saved-legacy", name: "Legacy scale", rules },
-      ]));
-    }, { ...G.defaultRoomSettings(), battlefieldEra: "0079T1",
-      costLimit: 4000, unitCostLimit: 500, unitLimit: 24,
-      battlefieldTeams: [{ faction: "EFSF", era: "0079T1" }, { faction: "ZEON", era: "0079T1" }] });
+    page.on("pageerror", e => errors.push(e.message));
     await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
     await expect(page.locator("#openSkirmish")).toBeEnabled();
     await page.locator("#openSkirmish").click();
     await page.locator("#offlineRoomMode").selectOption("battlefield");
     await page.locator("#createOfflineRoom").click();
     if (width === 390) await page.getByRole("button", { name: "房间设置", exact: true }).click();
-    await page.locator("#roomFormationPreset").selectOption("saved-legacy");
-    await expect.poll(() => page.evaluate(() => Net.snapshot.settings)).toMatchObject({
-      battlefieldEra: "custom", costLimit: 4000, unitCostLimit: 500, unitLimit: 24,
-    });
+    await expect(page.locator("#roomFormationRules")).toBeHidden();
     const presets = await page.evaluate(() => Rules.battlefieldMode.roomPresets);
     for (const preset of presets) {
       await page.locator("#battlefieldEra").selectOption(preset.era);
+      await expect(page.locator("#battlefieldEra")).toHaveValue(preset.era);
       await page.locator("#battlefieldScalePreset").selectOption(preset.id);
-      await expect
-        .poll(() =>
-          page.evaluate(() => Rules.battlefieldMode.roomPreset(Net.snapshot.settings)?.id),
-        )
-        .toBe(preset.id);
+      await expect.poll(() => page.evaluate(() => Rules.battlefieldMode.roomPreset(Net.snapshot.settings)?.id)).toBe(preset.id);
       await expect(page.locator("#roomCostLimit")).toHaveValue(String(preset.costLimit));
-      await expect(page.locator("#roomUnitCostLimit")).toHaveValue("500");
       await expect(page.locator("#roomUnitLimit")).toHaveValue(String(preset.unitLimit));
       expect(await page.evaluate(() => Net.snapshot.settings.battlefieldTeams.map(t => t.era))).toEqual([preset.era, preset.era]);
-      await expect(page.locator("#battlefieldEntryReward")).toHaveText("阵营AI每5回合空投增援 · 单位阵亡扣除库存 · 击坠与助攻给予奖励");
-      expect(await page.evaluate(()=>Rules.battlefieldMode.baseReward(Net.snapshot.settings,0))).toMatchObject({money:preset.money,supplies:preset.supplies});
+      expect(await page.evaluate(() => Rules.battlefieldMode.baseReward(Net.snapshot.settings, 0))).toMatchObject({ money: preset.money, supplies: preset.supplies });
     }
-    await page.locator("#battlefieldEra").selectOption("custom");
-    await page.locator("#roomPresetName").fill("War room size");
-    await page.locator("#saveRoomPreset").click();
-    const saved = await page.evaluate(() =>
-      JSON.parse(localStorage.getItem("projectgreed.room-rule-presets.v1")).find(
-        (p) => p.name === "War room size",
-      ),
-    );
-    expect(saved.rules.battlefieldTeams.every((t) => t.era === "0087T2")).toBe(true);
-    await page.locator("#battlefieldEra").selectOption("0079T1");
-    await page.locator("#battlefieldScalePreset").selectOption("0079T1-cost-1500");
-    await expect.poll(() => page.evaluate(() => Net.snapshot.settings.costLimit)).toBe(1500);
-    await page.locator("#battlefieldEra").selectOption("custom");
-    await page.locator("#roomFormationPreset").selectOption(saved.id);
-    await expect
-      .poll(() => page.evaluate(() => Rules.battlefieldMode.roomPreset(Net.snapshot.settings)?.id))
-      .toBe("0087T2-cost-20000");
-    await page.locator("#battlefieldEra").selectOption("custom");
-    await page.locator("#roomCostLimit").fill("99999");
-    await page.locator("#roomCostLimit").blur();
-    await expect.poll(() => page.evaluate(() => Net.snapshot.settings.costLimit)).toBe(99999);
-    expect(await page.evaluate(()=>Rules.battlefieldMode.baseReward(Net.snapshot.settings,1).money)).toBe(11718);
-    await page.locator("#battlefieldTeam0faction").selectOption("EFSF");
-    await expect
-      .poll(() => page.evaluate(() => Net.snapshot.settings.battlefieldTeams[0].era))
-      .toBe("0079T1");
-    expect(await page.evaluate(()=>Rules.battlefieldMode.baseReward(Net.snapshot.settings,0).money)).toBe(6000);
-    expect(await page.evaluate(()=>Rules.battlefieldMode.baseReward(Net.snapshot.settings,1).money)).toBe(11718);
-    expect(
-      await page
-        .locator("#roomSettingsPage")
-        .evaluate((el) => el.scrollWidth <= el.clientWidth + 1),
-    ).toBe(true);
+    expect(await page.locator("#battlefieldEra option[value=custom]").count()).toBe(0);
+    expect(await page.locator("#battlefieldScalePreset option[value=custom]").count()).toBe(0);
+    expect(await page.locator("#roomSettingsPage").evaluate(el => el.scrollWidth <= el.clientWidth + 1)).toBe(true);
     expect(errors).toEqual([]);
   });

@@ -140,12 +140,7 @@ const BattlefieldMode = (() => {
       battlefieldEra: preset.era,
       costLimit: preset.costLimit,
       unitLimit: preset.unitLimit,
-      bannedEras: availableEras.filter((era) => {
-        const order = ["0079T1", "0079T2", "0083", "0087T1", "0087T2"].indexOf(era);
-        return (
-          order < 0 || order > ["0079T1", "0079T2", "0083", "0087T1", "0087T2"].indexOf(preset.era)
-        );
-      }),
+      bannedEras: [],
       battlefieldTeams: (currentTeams || defaults.map((faction) => ({ faction }))).map(
         (team, index) => ({
           faction:

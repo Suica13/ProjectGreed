@@ -23,13 +23,13 @@ for (const width of [1600, 1000, 390]) test('separate battlefield settings and m
       const selects=[...field.querySelectorAll('select')].map(el=>el.getBoundingClientRect());
       return rect.left>=root.left-1&&rect.right<=root.right+1&&
         selects.every(s=>s.left>=rect.left&&s.right<=rect.right+1&&s.top>=rect.top&&s.bottom<=rect.bottom+1)&&
-        selects[0].right<=selects[1].left;
+        selects.length===1;
     });
   });
   expect(layout).toBe(true);
   expect(await page.locator('#roomSettingsPage').evaluate(el=>el.scrollWidth<=el.clientWidth+1)).toBe(true);
   await page.screenshot({path:'tmp/verification/screenshots/canyon-room-'+width+'.png'});
-  expect(await page.locator('#battlefieldTeam0era option').evaluateAll(options => options.map(option => option.value))).toEqual(['0079T1','0079T2']);
+  expect(await page.locator('#battlefieldEra option').evaluateAll(options => options.map(option => option.value))).toEqual(['0079T1','0079T2','0087T1','0087T2']);
   await page.locator('#battlefieldTeam0faction').selectOption('ZEON');
   await expect.poll(()=>page.evaluate(()=>Net.snapshot.settings.battlefieldTeams[0].faction)).toBe('ZEON');
   for (const mode of ['battlefield','regular','quick','campaign','battlefield']) {

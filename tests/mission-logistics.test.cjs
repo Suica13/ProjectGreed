@@ -106,7 +106,7 @@ test("routes insert a boss every fifth node and force branching within three sta
     }
   }
 });
-test("node resources grow linearly and capture event multipliers; boss loot contains 0093 but no ships", () => {
+test("node resources grow linearly and capture event multipliers; boss loot stays in its era without ships", () => {
   const room = {
     settings: { costLimit: 20000, unitCostLimit: 2000, sweepEra: "0079T1" },
     seats: [{ id: "p", seat: 0 }],
@@ -128,7 +128,7 @@ test("node resources grow linearly and capture event multipliers; boss loot cont
   const boss = S.enemyLimits(room, G);
   assert(boss.costLimit > elite.costLimit);
   const pool = S.rewardPool(room, G);
-  assert(pool.some((u) => G.catalog.prefabs.find((p) => p.id === u.id).tags.includes("0093T1")));
+  assert(pool.every((u) => !G.catalog.prefabs.find((p) => p.id === u.id).tags.includes("0093T1")));
   assert(pool.every((u) => !G.isFleetCarrier(G.models[E.defaultModel(u.id)])));
   S.reward(room, G, 3, 5);
   assert.equal(
@@ -232,12 +232,12 @@ test("technology caps reject owned high technology and no-tree units, while fact
     undefined,
   );
   const { room, act } = fixture(t, "battlefield");
-  assert.equal(room.seats.length, 14);
+  assert.equal(room.seats.length, 12);
   assert.deepEqual(
     G.getMap(room.settings.mapId)
       .spawns.filter((s) => !s.fixedAlly && s.team === 0)
       .map((s) => s.position),
-    [1, 2, 3, 4, 5, 6],
+    [1, 2, 3, 4, 5],
   );
   act("configure_room", {
     ...room.settings,
@@ -247,15 +247,65 @@ test("technology caps reject owned high technology and no-tree units, while fact
   });
   assert.equal(room.settings.technologyLimit, 2500);
 });
-test("faction allies do not consume any of the twelve human positions or lobby capacity", (t) => {
+test("faction allies do not consume any of the ten human positions or lobby capacity", (t) => {
   const { engine, room } = fixture(t, "battlefield");
-  for (let i = 0; i < 11; i++)
+  for (let i = 0; i < 9; i++)
     engine.join({ readyState: 1 }, { mode: "join", room: "LOGISTICS", characterFaction: "PMC" });
-  assert.equal(room.seats.filter((p) => p && !p.bot).length, 12);
+  assert.equal(room.seats.filter((p) => p && !p.bot).length, 10);
   for (const team of [0, 1])
-    assert.equal(room.seats.filter((p) => p && !p.bot && p.seat % 2 === team).length, 6);
-  assert.equal(engine.roomList()[0].players, 12);
-  assert.equal(engine.roomList()[0].capacity, 12);
+    assert.equal(room.seats.filter((p) => p && !p.bot && p.seat % 2 === team).length, 5);
+  assert.equal(engine.roomList()[0].players, 10);
+  assert.equal(engine.roomList()[0].capacity, 10);
+});
+
+test("war and sweep use era availability instead of host research caps", () => {
+  const caps = Object.fromEntries(D.factions.map((f) => [f, 0]));
+  const first = G.models[E.defaultModel("Medea")];
+  const later = G.models[E.defaultModel("SalamisClassLateType")];
+  for (const mode of ["battlefield", "sweep"]) {
+    const settings = { ...G.defaultRoomSettings(), mapId: null, mode, technologyCaps: caps,
+      battlefieldEra: "0079T1", sweepEra: "0079T1" };
+    const player = { seat: 2, characterFaction: "PMC", licenses: { Medea: true, SalamisClassLateType: true },
+      inventory: { Medea: 5, SalamisClassLateType: 5 } };
+    const rules = G.armyRestrictions(settings, player);
+    assert.equal(rules.technologyCaps, undefined);
+    assert.equal(G.restrictionReason(first, rules), null);
+    assert.equal(G.restrictionReason(later, rules), "not_allowed");
+    const next = G.armyRestrictions({ ...settings, battlefieldEra: "0079T2", sweepEra: "0079T2" }, player);
+    assert.equal(G.restrictionReason(first, next), null, "earlier carriers remain usable");
+    assert.equal(G.restrictionReason(later, next), null);
+    const ai = G.armyRestrictions(settings, { seat: 3, bot: true, characterFaction: "ZEON", researched: [] });
+    assert.equal(ai.ignoreDevelopment, true);
+    assert.equal(ai.technologyCaps, undefined);
+    assert.deepEqual(ai.allowedEras, ["0079T1"]);
+  }
+  assert.equal(G.armyRestrictions({ ...G.defaultRoomSettings(), technologyCaps: caps }, {}).technologyCaps, caps);
+  assert.equal(G.armyRestrictions({ ...G.defaultRoomSettings(), mode: "battlefield" }, { battlefieldAI: true }).allowedEras, undefined);
+  for (const era of G.eras) {
+    for (const faction of S.factionsForEra(G, era)) assert(G.catalog.prefabs.some(p =>
+      !p.wip && !p.formOnly && !p.facility && p.faction === faction && p.tags.includes(era)));
+  }
+});
+
+test("server rejects custom war scales and enforces era availability at assembly", (t) => {
+  const { room, act, engine, messages } = fixture(t, "battlefield");
+  assert.equal(room.settings.battlefieldEra, "0079T1");
+  assert.throws(() => act("configure_room", { ...room.settings, battlefieldEra: "custom" }));
+  assert.throws(() => act("configure_room", { ...room.settings, costLimit: 1525 }));
+  assert.throws(() => act("configure_room", { ...room.settings, battlefieldTeams: [
+    { faction: "AEUG", era: "0087T1" }, { faction: "ZEON", era: "0079T1" }] }));
+  engine.broadcast(room);
+  assert.equal(messages.findLast(m => m.type === "state").settings.technologyCaps, undefined);
+  const host = room.seats.find(p => p && !p.bot);
+  host.inventory.SalamisClassLateType = 5;
+  host.licenses.SalamisClassLateType = true;
+  act("start_game", { formation: [{unitId: "SalamisClassLateType", kitId: "standard"}, carrier, {...tank,preload:{carrierIndex:1,hangarId:"Hangar_1"}}] });
+  assert.equal(room.phase, "assembly");
+  act("confirm_formation");
+  assert(room.started);
+  const deployed = room.game.units.filter(u => u.ownerSeat === host.seat);
+  assert(deployed.length > 0);
+  assert(deployed.every(u => G.modelOf(u).tags.includes("0079T1")));
 });
 
 test("host research selection supplies one shared cap instead of per-faction balances", (t) => {

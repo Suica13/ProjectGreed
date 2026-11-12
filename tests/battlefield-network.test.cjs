@@ -105,8 +105,7 @@ for (const presetId of [null,"0079T1-cost-1500","0079T2-cost-10000","0087T1-cost
     assert.equal(configured.settings.battlefieldEra, patch.battlefieldEra);
     assert.equal((await host.act("configure_room",{...configured.settings,costLimit:patch.costLimit+25})).type,"error");
     const custom = await host.act("configure_room",{...configured.settings,battlefieldEra:"custom",costLimit:patch.costLimit+25});
-    assert.equal(custom.type,"state");
-    assert.equal(custom.settings.battlefieldEra,"custom");
+    assert.equal(custom.type,"error");
     assert.equal((await host.act("configure_room",configured.settings)).type,"state");
     assert.equal((await guest.act("configure_room",{...configured.settings,costLimit:1})).type,"error");
   }

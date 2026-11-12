@@ -476,7 +476,7 @@ main { grid-template-columns: 310px minmax(260px, 1fr) 245px; }
   </head>
   <body>
     <header>
-      <div><strong>PROJECT GREED</strong><span>地图编辑器 · V118</span></div>
+      <div><strong>PROJECT GREED</strong><span>地图编辑器 · V119</span></div>
       <nav aria-label="文件操作">
         <button id="newMap">新建</button><button id="importMap">导入地图</button>
         <button id="exportProject">导出工程</button
@@ -1492,7 +1492,7 @@ const BiomeTiles = (() => {
   function drawTacticalTile(ctx, tile, set, x, y, width, height, cellX, cellY) {
     const role = tile.biomeRole,
       key = String(set.image) + String(set.id);
-    const space = /space/.test(key),
+    const space = tile.environment === "space" || /space/.test(key),
       snow = /snow/.test(key),
       desert = /desert/.test(key),
       urban = /urban/.test(key),
@@ -1509,7 +1509,7 @@ const BiomeTiles = (() => {
               ? "#647d65"
               : "#677661";
     const shade = space ? "#344351" : snow ? "#7c959e" : desert ? "#6e6659" : "#42544c";
-    const light = snow ? "#c9d3d3" : desert ? "#afa184" : "#85917c";
+    const light = space ? "#91a0a6" : snow ? "#c9d3d3" : desert ? "#afa184" : "#85917c";
     const n = hash(cellX, cellY, 71),
       variant = n % 6,
       mask = tile.mask || 0;
@@ -1535,6 +1535,13 @@ const BiomeTiles = (() => {
       ctx.globalAlpha *= opacity;
       polygon(points, "#07131d", "#07131d");
       ctx.restore();
+    };
+    const line = (points, color, thickness = 1) => {
+      ctx.strokeStyle = color;
+      ctx.lineWidth = thickness;
+      ctx.beginPath();
+      points.forEach(([a,b],i) => i ? ctx.lineTo(a,b) : ctx.moveTo(a,b));
+      ctx.stroke();
     };
     if (!["cliff", "shore", "road", "details"].includes(role)) rect(land, 0, 0, 32, 32);
     // Broad, low-contrast ground shapes carry detail without photograph-like grain.
@@ -1654,6 +1661,11 @@ const BiomeTiles = (() => {
         rect("#587e8c", 6 + variant, 8 + offset, 10 - variant, 1);
         rect("#487284", 12 + offset, 22 - offset, 16 - variant, 2);
         if (variant % 2 === 0) rect("#628593", 18, 22 - offset, 8, 1);
+        line([[3,17],[8,16],[13,17],[17,16]], "#456e80");
+        if (role === "shallow") {
+          polygon([[20,26],[24,23],[28,24],[27,27]], "#66868a", "#66868a");
+          rect("#7b9795",22,24,3,1);
+        }
       } else {
         // Neighbour masks share straight bank edges; retain small pixel steps at corners.
         const bands = [
@@ -1735,6 +1747,15 @@ const BiomeTiles = (() => {
         ctx.lineTo(a, b - r + 2);
         ctx.lineTo(a + r - 2, b - 2);
         ctx.stroke();
+        // Distinct crown lobes, short branch forks and leaf shelves retain the
+        // clean silhouette while making a forest read as layered vegetation.
+        polygon([[a-r+2,b],[a-r+3,b-4],[a-3,b-5],[a-1,b-1],[a-4,b+2]],
+          snow ? "#c6d4d1" : tropical ? "#557d60" : "#5d7857", shade);
+        polygon([[a+1,b-4],[a+4,b-r+2],[a+r-1,b-3],[a+r-2,b+1],[a+3,b+2]],
+          snow ? "#bacbc8" : tropical ? "#4b7358" : "#526e51", shade);
+        line([[a,b+6],[a-3,b+3],[a-4,b+1]], "#6d6a51");
+        rect(snow ? "#e0e6df" : "#89a171",a-3,b-5,3,1);
+        rect(snow ? "#d6e0dc" : "#779365",a+2,b-3,3,1);
       }
     } else if (role === "rock" || role === "rubble") {
       const rocks =
@@ -1768,7 +1789,7 @@ const BiomeTiles = (() => {
             [a + r, b - 1],
             [a + r - 2, b + 5],
           ],
-          role === "rubble" ? "#7b8178" : light,
+          role === "rubble" ? space ? "#6f7e87" : "#7b8178" : light,
         );
         ctx.strokeStyle = shade;
         ctx.beginPath();
@@ -1776,8 +1797,39 @@ const BiomeTiles = (() => {
         ctx.lineTo(a, b - 1);
         ctx.lineTo(a + r, b - 1);
         ctx.stroke();
+        polygon([[a-r+2,b-r],[a+2,b-r-2],[a,b-1],[a-r+3,b+2]],
+          snow ? "#c8d5d7" : desert ? "#b2a180" : space ? "#879395" : "#a1a98f", light);
+        polygon([[a,b-1],[a+r,b-1],[a+r-2,b+5],[a-1,b+3]],
+          space ? "#53616a" : desert ? "#82765f" : "#6c7b70", shade);
+        line([[a+1,b-r+1],[a+3,b-4],[a+1,b-1]], shade);
+        rect(light,a-r+3,b+5,3,1);
+        if (space) {
+          polygon([[a-3,b-6],[a,b-7],[a+2,b-5],[a,b-3],[a-3,b-4]], "#485864", "#677780");
+          rect("#8c999d",a-2,b-7,3,1);
+        }
       }
-      if (role === "rubble") {
+      if (role === "rubble" && space) {
+        // Orbital debris is fractured hull plating among asteroids, never
+        // terrestrial walls/windows. All variants stay in the space palette.
+        if (variant % 3 === 0) {
+          polygon([[4,19],[12,12],[25,14],[28,18],[20,26],[8,24]], "#637781", "#344855");
+          polygon([[8,24],[20,26],[28,18],[27,23],[20,29],[9,27]], "#3e5361");
+          line([[8,18],[13,15],[23,16]], "#a0acaf");
+          line([[15,16],[13,20],[19,23]], "#344855");
+          line([[8,21],[13,22]], "#899b9f");
+        } else if (variant % 3 === 1) {
+          polygon([[4,12],[9,10],[23,24],[20,28]], "#697d85", "#364b58");
+          line([[8,12],[20,24]], "#a0aeb0", 2);
+          polygon([[17,9],[26,12],[24,17],[19,15],[17,12]], "#536b78");
+          line([[19,10],[24,12]], "#8d9fa5");
+          polygon([[3,25],[8,24],[10,28],[5,29]], "#657781");
+        } else {
+          polygon([[5,18],[12,11],[21,12],[27,18],[22,25],[14,23],[10,26]], "#596f7b");
+          polygon([[10,18],[15,14],[20,15],[23,18],[19,21],[14,20]], "#253e4e", "#809399");
+          line([[7,18],[13,13],[19,14]], "#9aa8aa");
+          line([[22,23],[26,20],[28,24]], "#82969d");
+        }
+      } else if (role === "rubble") {
         // Broken walls and floor slabs read as ruins, rather than loose gravel.
         shadow(
           [
@@ -1831,6 +1883,15 @@ const BiomeTiles = (() => {
           rect("#465a56", 14, 19, 4, 3);
           rect(shade, 3, 28, 5, 2);
         }
+        // Window recesses, broken masonry courses and exposed floor plates.
+        for (let i=0;i<3;i++) {
+          const a=5+i*7, b=variant%2 ? 20 : 26;
+          rect("#485b56",a,b,3,2);
+          rect("#a8afa0",a,b-1,4,1);
+        }
+        line([[6,12],[11,15],[10,19]], "#4d5d57");
+        rect("#9da48f",23,27,5,2);
+        rect("#576961",25,29,4,1);
       } else {
         polygon(
           [
@@ -1857,6 +1918,14 @@ const BiomeTiles = (() => {
       if (mask & 2) stripe(27, 0, 5, 32);
       if (mask & 8) stripe(0, 0, 5, 32);
       if (mask & 1) stripe(0, 0, 32, 3);
+      if (mask & 4) {
+        line([[3,24],[5,27],[4,30]],shade);
+        line([[15,23],[17,26],[16,29],[19,31]],shade);
+        rect(desert ? "#b8a581" : "#9ba58a",11,24,6,1);
+        rect(shade,24,30,6,2);
+      }
+      if (mask & 2) line([[29,5],[31,10],[29,14],[30,20]],shade);
+      if (mask & 8) line([[2,5],[4,10],[2,14],[3,20]],shade);
       if (mask & 4) {
         shadow(
           [
@@ -1885,8 +1954,16 @@ const BiomeTiles = (() => {
         rect("#a4aa94", 15, 10, 1, 12);
         rect("#65715e", 4, 3, 1, 7);
       }
+      if (urban) {
+        rect("#4e625d",8,8,3,3);
+        rect("#919b8b",8,8,3,1);
+        line([[24,4],[23,11],[26,15]],"#55665e");
+      } else {
+        rect("#6b7562",a+3,b+3,Math.max(1,w-6),1);
+        rect("#8e957e",a+3,b+h-4,Math.max(1,w-6),1);
+      }
     } else if (role === "details") {
-      if ((n >>> 5) % 3 === 0 && !space) {
+      if (!space) {
         shadow(
           [
             [8, 18],

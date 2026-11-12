@@ -1,6 +1,45 @@
 const { test, expect } = require("@playwright/test");
 const { pathToFileURL } = require("node:url");
 const path = require("node:path");
+
+test("orbital rubble uses asteroids and hull debris instead of terrestrial buildings", async ({ page }) => {
+  await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
+  await page.waitForFunction(() => assetsReady);
+  const result = await page.evaluate(() => {
+    const sheet = document.createElement("canvas");
+    sheet.id = "orbitalDebris";
+    sheet.width = 768;
+    sheet.height = 384;
+    sheet.style.cssText = "position:fixed;inset:0;z-index:999999;background:#101c2b";
+    document.body.append(sheet);
+    const target = sheet.getContext("2d");
+    target.imageSmoothingEnabled = false;
+    const signatures = new Set();
+    let groundWalls = 0;
+    for (let x = 0; x < 12; x++) {
+      const c = document.createElement("canvas");
+      c.width = c.height = 32;
+      const ctx = c.getContext("2d");
+      BiomeTiles.drawAtlasTile(ctx, null, { biomeRole: "rubble", environment: "space" },
+        { image: "asset:biome-space" }, 0, 0, 32, 32, x, 7);
+      signatures.add(c.toDataURL());
+      const pixels = ctx.getImageData(0, 0, 32, 32).data;
+      for (let i = 0; i < pixels.length; i += 4)
+        if (pixels[i] === 125 && pixels[i+1] === 137 && pixels[i+2] === 128) groundWalls++;
+      target.drawImage(c, (x % 6) * 128, Math.floor(x / 6) * 192, 128, 128);
+      // Explicit space terrain also works when an atlas has a custom name.
+      const before = c.toDataURL();
+      ctx.clearRect(0, 0, 32, 32);
+      BiomeTiles.drawAtlasTile(ctx, null, { biomeRole: "rubble", environment: "space" },
+        { image: "custom-atlas" }, 0, 0, 32, 32, x, 7);
+      if (c.toDataURL() !== before) throw Error("space terrain depends on atlas filename");
+    }
+    return { count: signatures.size, groundWalls };
+  });
+  expect(result.count).toBeGreaterThanOrEqual(3);
+  expect(result.groundWalls).toBe(0);
+  await page.locator("#orbitalDebris").screenshot({ path: "tmp/verification/screenshots/orbital-debris.png" });
+});
 test("all modular biomes load and render their actual terrain layers", async ({ page }) => {
   const errors = [];
   page.on("pageerror", (e) => errors.push(e.message));

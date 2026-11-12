@@ -8,6 +8,7 @@ function fixture(mode,watchOnly=false) {
  const room=engine.rooms.get("ERAS");room.settings.mode=mode;
  const research=Object.fromEntries(D.factions.map(f=>[f,D.nodes(f).map(n=>n.id)]));
  const member=room.seats[0];member.researched=research;
+ member.technologyPoints=Object.fromEntries(D.factions.map(f=>[f,999999]));
  const early=Object.values(G.models).find(m=>m.tags.includes("0083")&&!m.formOnly&&!m.wip);
  member.formation=[{unitId:"FatUncle",kitId:"standard"},{unitId:early.prefabId,kitId:early.kitId,preload:{carrierIndex:0,hangarId:"Hangar_1"}}];
  // A second participant supplies a different era; spectators must not add theirs.
@@ -21,19 +22,21 @@ function fixture(mode,watchOnly=false) {
  const action=(name,fields={})=>engine.action(host,{id:"action-"+(++seq),revision:room.revision,round:room.game.round,matchId:room.matchId,action:name,...fields});
  return {engine,room,member,second,calls,action};
 }
-test("regular AI uses the union of all seated humans including preloads, not spectators",()=>{
+test("regular AI follows the room era rather than human or spectator formation tags",()=>{
  const f=fixture("regular");try{
+  f.room.settings.regularEra="0087T1";
   f.action("add_ai",{seat:1});
-  const allowed=[...new Set([f.member,f.second].flatMap(p=>p.formation).flatMap(e=>G.models[e.unitId+"__"+e.kitId].tags).filter(t=>G.eras.includes(t)))].sort();
-  assert(allowed.includes("0083"));assert(allowed.includes("0087T1"));assert(!allowed.includes("0087T2"));
+  const allowed=["0087T1"];
   assert(f.calls.length>0);
-  for(const c of f.calls){assert.deepEqual(c.rules.aiAllowedEras,allowed);assert(c.army.length>0);assert(c.army.every(e=>G.models[e.unitId+"__"+e.kitId].tags.some(t=>allowed.includes(t))));}
+  for(const c of f.calls){assert.deepEqual(c.rules.aiAllowedEras,allowed);assert(c.army.length>0);assert(c.army.every(e=>G.isFleetCarrier(G.formationModel(e))||G.formationModel(e).tags.some(t=>allowed.includes(t))));}
  }finally{f.engine.close();}
 });
-test("assembly previews regenerate bots when participants change their era union",()=>{
+test("assembly previews regenerate bots when the room era changes",()=>{
  const f=fixture("regular");try{
+  f.room.settings.regularEra="0087T1";
   f.action("add_ai",{seat:1});
   f.room.started=true;f.room.phase="assembly";
+  f.room.settings.regularEra="0079T1";
   f.member.formation=[{unitId:"Type61",kitId:"standard"}];
   f.second.formation=[{unitId:"Type61",kitId:"standard"}];
   f.calls.length=0;
@@ -43,9 +46,9 @@ test("assembly previews regenerate bots when participants change their era union
   assert(f.room.seats[1].formation.every(e=>G.models[e.unitId+"__"+e.kitId].tags.includes("0079T1")));
  }finally{f.engine.close();}
 });
-test("quick battle and AI-only regular rooms retain their existing era pools",()=>{
+test("quick battle keeps its era pool; AI-only regular rooms respect the selected era",()=>{
  for(const [mode,watchOnly] of [["quick",false],["regular",true]]){
-  const f=fixture(mode,watchOnly);try{f.action("add_ai",{seat:1});assert(f.calls.length>0);assert(f.calls.every(c=>c.rules.aiAllowedEras===undefined));}finally{f.engine.close();}
+  const f=fixture(mode,watchOnly);try{f.action("add_ai",{seat:1});assert(f.calls.length>0);for(const c of f.calls)assert.deepEqual(c.rules.aiAllowedEras,mode==="regular"?["0079T1"]:undefined);}finally{f.engine.close();}
  }
 });
 test("era-limited generation cannot reintroduce outside-era units through support or preload choices",()=>{

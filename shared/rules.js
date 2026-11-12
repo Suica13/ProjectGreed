@@ -313,6 +313,7 @@ const Tactics = (() => {
     return {
       mode: "regular",
       formationStyle: "standard",
+      regularEra: "0079T1",
       technologyLimitMode: "host",
       technologyLimitFaction: "EFSF",
       technologyLimit: 0,
@@ -403,7 +404,8 @@ const Tactics = (() => {
     if (restrictions.aiBannedUnits?.includes(model.prefabId)) return "not_allowed";
     if (
       restrictions.aiAllowedEras &&
-      !model.tags.some((tag) => restrictions.aiAllowedEras.includes(tag))
+      !model.tags.some((tag) => restrictions.aiAllowedEras.includes(tag)) &&
+      !(restrictions.aiEarlierCarriers && isFleetCarrier(model))
     )
       return "not_allowed";
     if (
@@ -415,12 +417,15 @@ const Tactics = (() => {
       ["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(
         restrictions.characterFaction,
       ) &&
+      !restrictions.ignoreDevelopment &&
       !development.allows(restrictions.characterFaction, model.prefabId, restrictions.researched) &&
       (restrictions.licenses ?? restrictions.ownedLicenses)?.[model.prefabId] !== true &&
       !stockAccess(model, restrictions)
     )
       return "not_developed";
     if (restrictions.environment && (model.adaptability?.[restrictions.environment] ?? 100) <= 0)
+      return "not_allowed";
+    if (restrictions.allowedEras?.length && !model.tags.some((tag) => restrictions.allowedEras.includes(tag)))
       return "not_allowed";
     if (
       model.movementType === "naval" &&
@@ -672,7 +677,7 @@ const Tactics = (() => {
       Math.max(
         1,
         Math.floor(
-          ((player?.bot ? (settings.aiUnitLimit ?? 36) : settings.unitLimit) *
+          ((player?.bot && formationStyle(settings) === "free" ? (settings.aiUnitLimit ?? 36) : settings.unitLimit) *
             armySettings(player).countPercent) /
             100,
         ),
@@ -684,7 +689,17 @@ const Tactics = (() => {
   }
   function armyRestrictions(settings, player) {
     const rules = formationRestrictions(settings, player?.seat ?? null);
-    if (!player?.battlefieldAI) rules.technologyCaps = settings.technologyCaps;
+    if (!["battlefield", "sweep"].includes(settings.mode) && !player?.battlefieldAI)
+      rules.technologyCaps = settings.technologyCaps;
+    if (!player?.battlefieldAI && ["regular", "battlefield", "sweep"].includes(settings.mode)) {
+      const era = settings.mode === "regular" ? settings.regularEra || "0079T1" :
+        settings.mode === "sweep" ? settings.sweepEra :
+        battlefieldMode.eras.includes(settings.battlefieldEra) ? settings.battlefieldEra :
+        settings.battlefieldTeams?.[(player?.seat ?? 0) % 2]?.era || "0079T1";
+      // An era is the upper bound. Earlier carriers remain usable in later eras,
+      // including stages that do not introduce any new carrier models.
+      rules.allowedEras = eras.slice(0, Math.max(0, eras.indexOf(era)) + 1);
+    }
     rules.characterFaction = ["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(
       player?.characterFaction,
     )
@@ -696,6 +711,7 @@ const Tactics = (() => {
       rules.aiBannedUnits = [...aiUnitBans[settings.mode || "regular"]];
     // Room authority supplies the merged, cross-faction AI progression.
     rules.researched = player?.researched;
+    if (player?.bot && (settings.technologyCaps || ["battlefield", "sweep"].includes(settings.mode))) rules.ignoreDevelopment = true;
     if (player && !player.bot) {
       rules.licenses = normalizeLicenses(player.licenses);
       // Readiness may skip quantity checks while retaining ownership-based deployment access.
@@ -708,11 +724,13 @@ const Tactics = (() => {
       )
         Object.assign(rules, economy.normalizeStock(player));
     }
-    if (settings.mode !== "campaign" && !player?.bot && formationStyle(settings) !== "free")
+    if (settings.mode !== "campaign" && !player?.battlefieldAI && !player?.sweepEnemy && formationStyle(settings) !== "free")
       rules.requiresCarriers = true;
-    // Standard PMC formations use only total COST and capacity. AI and quick
-    // free formations retain the legacy single-unit/per-player COST settings.
-    if (player?.bot) {
+    // Standard formations share total COST/capacity rules. Quick free formations
+    // retain the legacy single-unit limits.
+    if (player?.bot && formationStyle(settings) !== "free") {
+      rules.unitCostLimit = Infinity;
+    } else if (player?.bot) {
       const config = armySettings(player);
       rules.unitCostLimit =
         config.unitCostLimit ??
@@ -783,7 +801,7 @@ const Tactics = (() => {
           !restrictionReason(model, { ...restrictions, environment }) &&
           adaptation(model) > 0 &&
           !(environment === "space" && infantry(model) && adaptation(model) < 100) &&
-          (model.weapons.length > 0 ||
+          (model.hangars?.length > 0 || model.weapons.length > 0 ||
             model.supplyAura ||
             model.skills?.some((s) => ["repair", "recon"].includes(s.type))),
       ),
@@ -851,6 +869,11 @@ const Tactics = (() => {
     );
     const desiredShips = aiShipQuota(expectedCount, seed);
     const desiredTransports = expectedCount >= 8 ? Math.max(1, Math.floor(expectedCount / 12)) : 0;
+    const fleetMode = !!restrictions.requiresCarriers;
+    const slots = [];
+    const passengerSlot = (model) => slots.find(slot =>
+      slot.remaining >= (slot.hangar.kind === "sfs" ? 1 : model.transport?.slotCost || 1) &&
+      slot.hangar.allowedTags.some(tag => model.transport?.loadTags.includes(tag)));
     const frontlineTarget = Math.max(
       2,
       Math.ceil(((unitLimit - desiredShips * 4 - desiredTransports) * 0.8) / 2) * 2,
@@ -878,13 +901,16 @@ const Tactics = (() => {
       }, 0);
       const hasFrontline = choices.some(frontlineMS);
       const legal = choices.filter((model) => {
+        const firstCarrier = fleetMode && entries.length === 0;
+        if (firstCarrier && (!isFleetCarrier(model) || !model.hangars?.length)) return false;
+        if (fleetMode && !isFleetCarrier(model) && !passengerSlot(model)) return false;
         if (hasFrontline && lightAircraft(model) && aircraftPoints >= aircraftPointLimit)
           return false;
         if (model.ship && ships >= desiredShips && coreChoices.some((m) => !m.ship)) return false;
-        if (transport(model) && transports >= desiredTransports) return false;
+        if (transport(model) && transports >= desiredTransports && !firstCarrier) return false;
         // Keep at least three combat platforms per supply unit; never spend the army on logistics.
         if (
-          support(model) &&
+          support(model) && !firstCarrier &&
           (supportCount >= Math.floor(count / 4) ||
             combatCount < (supportCount + 1) * 3 ||
             model.cost > maxCost * 0.25)
@@ -1041,10 +1067,15 @@ const Tactics = (() => {
       const kits = affordableTier.filter((model) => model.prefabId === prefabId);
       seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
       const model = kits[seed % kits.length];
+      const slot = fleetMode && !isFleetCarrier(model) ? passengerSlot(model) : null;
       entries.push({
         unitId: model.prefabId,
         kitId: model.kitId,
+        ...(slot ? { preload: { carrierIndex: slot.carrierIndex, hangarId: slot.hangar.id } } : {}),
       });
+      if (slot) slot.remaining -= slot.hangar.kind === "sfs" ? 1 : model.transport.slotCost;
+      if (fleetMode) for (const hangar of model.hangars || [])
+        slots.push({ carrierIndex: entries.length - 1, hangar, remaining: hangar.capacity });
       remaining -= model.cost;
       remainingPoints -= formationWeight(model);
     }
@@ -1058,7 +1089,12 @@ const Tactics = (() => {
     );
     for (const [index, entry] of entries.entries()) {
       const model = formationModel(entry);
-      if (!model.transport || entry.preload) continue;
+      if (!model.transport) continue;
+      if (entry.preload) {
+        const slot = hangars.find(slot => slot.carrierIndex === entry.preload.carrierIndex && slot.hangar.id === entry.preload.hangarId);
+        if (slot) slot.remaining -= slot.hangar.kind === "sfs" ? 1 : model.transport.slotCost;
+        continue;
+      }
       const compatible = hangars
         .filter(
           (slot) =>
@@ -4731,6 +4767,7 @@ const Tactics = (() => {
     unitLogName,
     unitName,
     randomFormation,
+    deploymentPlacements,
     unitSkills: skills.of,
     canUseSkill: skills.canUse,
     skillTargets: skills.targets,

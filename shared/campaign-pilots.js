@@ -167,6 +167,10 @@ const CampaignPilots = (() => {
         money = P.demotionCost(p);
         next = P.demote(p);
         break;
+      case "campaign_pilot_reincarnate":
+        money = P.reincarnationCost(p);
+        next = P.reincarnate(p);
+        break;
       case "campaign_pilot_reset":
         money = 1000 * p.level;
         next = P.refundTraining(p);

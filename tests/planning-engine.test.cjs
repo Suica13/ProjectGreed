@@ -230,18 +230,17 @@ test("playback rejects stale batches, duplicate completion never changes HP, and
     hp,
   );
 });
-test("spectators present at batch start also complete playback; new spectators cannot confirm for anyone else", (t) => {
+test("spectators never gate playback and cannot confirm for participants", (t) => {
   const { room, engine, act } = fixture(t);
   const observer = { readyState: 1 };
   engine.join(observer, { mode: "join", room: "PLAN" });
   startPlayback(act);
   const batchId = room.playback.id;
-  act(0, "playback_ready", { batchId });
-  act(1, "playback_ready", { batchId });
+  assert(!room.playback.members.includes(observer.memberId));
   assert.equal(room.phase, "playback");
   const late = { readyState: 1 };
   engine.join(late, { mode: "join", room: "PLAN" });
-  assert.throws(() =>
+  assert.doesNotThrow(() =>
     engine.action(late, {
       id: "late-ready",
       action: "playback_ready",
@@ -257,6 +256,10 @@ test("spectators present at batch start also complete playback; new spectators c
     matchId: room.matchId,
     revision: room.revision,
   });
+  assert.equal(room.phase, "playback");
+  assert.deepEqual(room.playback.ready, []);
+  act(0, "playback_ready", { batchId });
+  act(1, "playback_ready", { batchId });
   assert.equal(room.game.team, 1);
 });
 test("victory and the return countdown wait for the last viewer to finish", (t) => {

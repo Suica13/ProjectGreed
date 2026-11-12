@@ -4,7 +4,7 @@ const { WebSocket, WebSocketServer } = require("ws");
 const G = require("../shared/rules.js");
 const { createRoomEngine } = require("../shared/room-engine.js");
 
-test("ten visible campaign turns wait for spectator playback, freeze and return everyone after five seconds", async (t) => {
+test("campaign waits only for participating players and returns without spectator acknowledgement", async (t) => {
   let sequence = 0;
   const wire = new WebSocketServer({ host: "127.0.0.1", port: 0 });
   await new Promise((resolve) => wire.once("listening", resolve));
@@ -130,8 +130,8 @@ test("ten visible campaign turns wait for spectator playback, freeze and return 
     assert.equal(room.returnCountdown, null);
     assert.equal(room.started, true);
   }
-  // The final combat has already been adjudicated. The playback barrier still
-  // includes observers, so neither advancing the turn nor the countdown can race it.
+  // Simulate an older batch that still includes an observer: the barrier must
+  // prune it and wait only for the two participating players.
   room.phase = "playback";
   room.playback = {
     id: "last-batch",
@@ -144,9 +144,6 @@ test("ten visible campaign turns wait for spectator playback, freeze and return 
   engine.broadcast(room);
   await act(host, "playback_ready", { batchId: "last-batch" });
   await act(guest, "playback_ready", { batchId: "last-batch" });
-  assert.equal(room.game.round, 10);
-  assert.equal(room.returnCountdown, null);
-  await act(observer, "playback_ready", { batchId: "last-batch" });
   assert.equal(room.game.round, 11);
   assert.equal(room.started, true);
   assert.equal(room.phase, "campaign_paused");

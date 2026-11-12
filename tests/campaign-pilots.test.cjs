@@ -21,6 +21,26 @@ function fixture() {
     });
   return { state, act };
 }
+
+test("campaign rebirth validates ownership and charges the treasury once before resetting progression", () => {
+  const {state,act}=fixture();
+  act(0,"recruit",{name:"Rebirth"});
+  const entry=state.pilots[0];
+  entry.profile=G.pilots.custom({...entry.profile,level:8,experience:30000});
+  const before=structuredClone(entry.profile);
+  state.teams[0].money=79999;
+  assert.throws(()=>act(0,"reincarnate",{pilotId:entry.profile.id}),/资金/);
+  assert.deepEqual(entry.profile,before);
+  state.teams[0].money=100000;
+  assert.throws(()=>act(1,"reincarnate",{pilotId:entry.profile.id}));
+  act(0,"reincarnate",{pilotId:entry.profile.id});
+  assert.equal(state.teams[0].money,20000);
+  assert.equal(entry.profile.level,0);
+  assert.equal(entry.profile.reincarnations,1);
+  assert.equal(entry.profile.points,80);
+  assert.throws(()=>act(0,"reincarnate",{pilotId:entry.profile.id}));
+  assert.equal(state.teams[0].money,20000);
+});
 test("campaign recruitment charges the shared treasury and rejects forged stats, duplicate assignment and enemy control", () => {
   const { state, act } = fixture(),
     before = state.teams[0].money;

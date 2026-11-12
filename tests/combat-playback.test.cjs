@@ -101,6 +101,16 @@ test("all results start as one parallel batch, repeated snapshots never restart 
   assert.equal(calls.requests[0].action, "playback_ready");
   assert.equal(calls.requests[0].batchId, "batch");
 });
+test("observers play locally without sending a participant acknowledgement", () => {
+  const {context,playback,calls}=runtime();
+  context.Net.snapshot=snapshot();
+  context.Net.snapshot.playback.members=["other"];
+  playback.receive(context.Net.snapshot,true);
+  assert.equal(playback.queued,1);
+  playback.show();playback.finish();playback.show();
+  assert.equal(calls.requests.length,0);
+});
+
 test("unfinished reconnects replay the active batch; a viewer who already confirmed completion does not replay it", () => {
   const first = runtime();
   first.context.Net.snapshot = snapshot();

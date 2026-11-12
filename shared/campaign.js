@@ -344,6 +344,7 @@ const CampaignRules = (() => {
           assign: "配属驾驶员",
           train: "强化驾驶员",
           upgrade: "驾驶员升职",
+          reincarnate: "驾驶员转生",
           demote: "驾驶员降职",
           reset: "重置驾驶员",
           skill: "学习驾驶员技能",

@@ -2892,7 +2892,7 @@ const PilotSystem = (() => {
     !aceProfile(value) ||
     faction === "PMC" ||
     (aceProfile(value).availableFactions || [aceProfile(value).faction]).includes(faction);
-  const maxLevel = (value) => aceProfile(value)?.maxLevel ?? growthRules.maxLevel;
+  const maxLevel = (value) => aceProfile(value)?.maxLevel ?? growthRules.maxLevel + (value?.reincarnations || 0);
   const aceStatCap = (value, key) =>
     aceProfile(value) ? Math.round(aceProfile(value).maxStats[key]) : undefined;
   const byId = new Map(catalog.named.map((pilot) => [pilot.id, pilot]));
@@ -2936,7 +2936,7 @@ const PilotSystem = (() => {
     statCapPerLevel: 10,
     statCap: 200,
   });
-  const customExperience = Object.freeze([500, 1500, 3000, 5000, 10000, 15000, 20000, 30000]);
+  const customExperience = Object.freeze([500, 1500, 3000, 5000, 10000, 15000, 20000, 30000, 200000, 3000000, 4000000, 5000000]);
   const aceExperience = Object.freeze([1500, 3000, 5000, 10000, 20000]);
   const experienceRequired = (level, value = null) =>
     (aceProfile(value) ? aceExperience : customExperience)[level] ?? Infinity;
@@ -3143,14 +3143,15 @@ const PilotSystem = (() => {
       !pilot.ace &&
       !pilot.aceId &&
       pilot.level >= skillUnlockLevel &&
-      !pilot.selectedSkillId
+      (!pilot.selectedSkillId || (pilot.level >= 12 && !pilot.selectedSecondSkillId))
     );
   }
   function learnSkill(value, id) {
     const pilot = custom(value);
-    if (!canLearnSkill(pilot) || !skillChoices.some((skill) => skill.id === id))
+    if (!canLearnSkill(pilot) || !skillChoices.some((skill) => skill.id === id) ||
+      [pilot.selectedSkillId, pilot.selectedSecondSkillId].includes(id))
       throw Error("驾驶员技能不可选择");
-    return custom({ ...pilot, selectedSkillId: id });
+    return custom({ ...pilot, [pilot.selectedSkillId ? "selectedSecondSkillId" : "selectedSkillId"]: id });
   }
   const dialogueEvents = [
     ["attack", "发动攻击"], ["hit", "受到攻击"], ["miss", "攻击落空"],
@@ -3159,8 +3160,8 @@ const PilotSystem = (() => {
     ["board", "接收搭乘单位"], ["launch", "送出出击单位"], ["preload", "预先搭载确认"],
     ["passengerBoard", "搭乘时回应"], ["passengerLaunch", "出击时回应"],
   ];
-  const dialogueLimits = { lines: 12, length: 120, total: 6000 };
-  function normalizeDialogue(value) {
+  const dialogueLimits = { lines: 10, length: 120, total: 6000 };
+  function normalizeDialogue(value, legacy = false) {
     if (value == null) return {};
     if (typeof value !== "object" || Array.isArray(value) ||
       Object.keys(value).some((key) => !dialogueEvents.some(([id]) => id === key)))
@@ -3170,8 +3171,8 @@ const PilotSystem = (() => {
     for (const [event] of dialogueEvents) {
       if (!Object.hasOwn(value, event)) continue;
       const lines = value[event];
-      if (!Array.isArray(lines) || lines.length > dialogueLimits.lines)
-        throw Error("每个事件最多12句台词");
+      if (!Array.isArray(lines) || lines.length > (legacy ? 12 : dialogueLimits.lines))
+        throw Error("每个事件最多10句台词");
       const phrases = [];
       for (const line of lines) {
         if (typeof line !== "string" || /[\u0000-\u001f\u007f]/.test(line))
@@ -3183,7 +3184,7 @@ const PilotSystem = (() => {
         if (total > dialogueLimits.total) throw Error("互动台词总长度最多6000字");
         phrases.push(text);
       }
-      if (phrases.length) clean[event] = phrases;
+      if (phrases.length) clean[event] = phrases.slice(0, dialogueLimits.lines);
     }
     return clean;
   }
@@ -3201,7 +3202,10 @@ const PilotSystem = (() => {
       throw Error("PMC驾驶员无效");
     if (!Number.isInteger(value.level) || value.level < 0 || value.level > 1000)
       throw Error("驾驶员等级无效");
-    const level = Math.min(value.level, growthRules.maxLevel);
+    const reincarnations = value.reincarnations ?? 0;
+    if (!Number.isInteger(reincarnations) || reincarnations < 0 || reincarnations > 4)
+      throw Error("驾驶员转生次数无效");
+    const level = Math.min(value.level, maxLevel({ reincarnations }));
     const name =
       typeof value.name === "string"
         ? value.name
@@ -3215,7 +3219,7 @@ const PilotSystem = (() => {
     if (!Number.isInteger(oldVersion) || oldVersion < 1 || oldVersion > trainingVersion)
       throw Error("驾驶员数据版本无效");
     if (oldVersion < 6 && value.level < 1) throw Error("驾驶员等级无效");
-    if (oldVersion === trainingVersion && value.level > growthRules.maxLevel)
+    if (oldVersion === trainingVersion && value.level > maxLevel({ reincarnations }))
       throw Error("驾驶员等级无效");
     const reset = oldVersion < 6;
     const legacySix = oldVersion === 6;
@@ -3267,6 +3271,10 @@ const PilotSystem = (() => {
         !skillChoices.some((skill) => skill.id === selectedSkillId))
     )
       throw Error("驾驶员技能无效");
+    const selectedSecondSkillId = value.selectedSecondSkillId;
+    if (selectedSecondSkillId != null && (level < 12 || !selectedSkillId ||
+      selectedSecondSkillId === selectedSkillId || !skillChoices.some(skill => skill.id === selectedSecondSkillId)))
+      throw Error("驾驶员技能无效");
 
     if (reset) spent = 0;
     // Former level 9/10 saves retain lifetime XP and records. Refund training
@@ -3295,7 +3303,7 @@ const PilotSystem = (() => {
     if (!["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(originFaction))
       throw Error("驾驶员出身阵营无效");
     const uploadedPortrait = portraitData(value.uploadedPortrait);
-    const dialogue = normalizeDialogue(value.dialogue);
+    const dialogue = normalizeDialogue(value.dialogue, true);
     const portraitId = portraitsById.has(value.portraitId)
       ? value.portraitId
       : defaultPortrait(faction)?.id;
@@ -3311,12 +3319,14 @@ const PilotSystem = (() => {
       portraitId,
       ...(uploadedPortrait ? { uploadedPortrait } : {}),
       level,
+      ...(reincarnations ? { reincarnations } : {}),
       experience,
       experienceVersion: 2,
       stats,
       record,
       points: trainingBudget(level) - spent,
       ...(selectedSkillId ? { selectedSkillId } : {}),
+      ...(selectedSecondSkillId ? { selectedSecondSkillId } : {}),
       custom: true,
     };
   }
@@ -3339,7 +3349,7 @@ const PilotSystem = (() => {
     return custom(p);
   }
   const upgradePrices = Object.freeze([
-    1000, 2000, 4000, 6000, 10000, 15000, 22000, 30000, 40000, 50000,
+    1000, 2000, 4000, 6000, 10000, 15000, 22000, 30000, 40000, 50000, 60000, 70000,
   ]);
   const customRecruitmentCost = 1000;
   const upgradeCost = (value) =>
@@ -3359,6 +3369,15 @@ const PilotSystem = (() => {
     value.level < maxLevel(value) &&
     upgradeCost(value) !== null &&
     value.experience >= experienceRequired(value.level, value);
+  const canReincarnate = (value) => !!value?.custom && !aceProfile(value) &&
+    !value.needsRecruitment && (value.reincarnations || 0) < 4 && value.level === maxLevel(value);
+  const reincarnationCost = (value) => canReincarnate(value) ? upgradePrices[value.level] * 2 : 0;
+  function reincarnate(value) {
+    const pilot = custom(value);
+    if (!canReincarnate(pilot)) throw Error("驾驶员尚未满足转生条件");
+    return custom({ ...pilot, reincarnations: (pilot.reincarnations || 0) + 1,
+      level: 0, experience: 0, stats: baseStats(), selectedSkillId: null, selectedSecondSkillId: null });
+  }
   function upgrade(value) {
     const p = custom(value);
     if (!canUpgrade(p)) throw Error("驾驶员尚未满足升职条件");
@@ -3375,13 +3394,14 @@ const PilotSystem = (() => {
     else {
       p.stats = baseStats();
       delete p.selectedSkillId;
+      delete p.selectedSecondSkillId;
     }
     return custom(p);
   }
   function refundTraining(value) {
     const pilot = custom(value);
     if (pilot.ace) throw Error("ACE不能重置属性点");
-    return custom({ ...pilot, stats: baseStats(), selectedSkillId: null });
+    return custom({ ...pilot, stats: baseStats(), selectedSkillId: null, selectedSecondSkillId: null });
   }
   function battleResult(value, kind, unitCost, experiencePoints = unitCost, details = {}) {
     if (
@@ -3511,8 +3531,8 @@ const PilotSystem = (() => {
     const aceSkills = aceProfile(pilot)?.skills;
     if (aceSkills) return aceSkills;
     if (!pilot?.custom || pilot.level < skillUnlockLevel) return [];
-    const skill = skillChoices.find((item) => item.id === pilot.selectedSkillId);
-    return skill ? [skill] : [];
+    return [pilot.selectedSkillId, ...(pilot.level >= 12 ? [pilot.selectedSecondSkillId] : [])]
+      .map(id => skillChoices.find(item => item.id === id)).filter(Boolean);
   }
   function hasPassive(unit, id) {
     return skillsOf(unit).some((s) => s.id === id && s.passive);
@@ -3608,6 +3628,9 @@ const PilotSystem = (() => {
     gainExperience,
     upgradeCost,
     canUpgrade,
+    canReincarnate,
+    reincarnationCost,
+    reincarnate,
     upgrade,
     demote,
     demotionCost,
@@ -5201,12 +5224,7 @@ const BattlefieldMode = (() => {
       battlefieldEra: preset.era,
       costLimit: preset.costLimit,
       unitLimit: preset.unitLimit,
-      bannedEras: availableEras.filter((era) => {
-        const order = ["0079T1", "0079T2", "0083", "0087T1", "0087T2"].indexOf(era);
-        return (
-          order < 0 || order > ["0079T1", "0079T2", "0083", "0087T1", "0087T2"].indexOf(preset.era)
-        );
-      }),
+      bannedEras: [],
       battlefieldTeams: (currentTeams || defaults.map((faction) => ({ faction }))).map(
         (team, index) => ({
           faction:
@@ -7327,6 +7345,7 @@ const Tactics = (() => {
     return {
       mode: "regular",
       formationStyle: "standard",
+      regularEra: "0079T1",
       technologyLimitMode: "host",
       technologyLimitFaction: "EFSF",
       technologyLimit: 0,
@@ -7417,7 +7436,8 @@ const Tactics = (() => {
     if (restrictions.aiBannedUnits?.includes(model.prefabId)) return "not_allowed";
     if (
       restrictions.aiAllowedEras &&
-      !model.tags.some((tag) => restrictions.aiAllowedEras.includes(tag))
+      !model.tags.some((tag) => restrictions.aiAllowedEras.includes(tag)) &&
+      !(restrictions.aiEarlierCarriers && isFleetCarrier(model))
     )
       return "not_allowed";
     if (
@@ -7429,12 +7449,15 @@ const Tactics = (() => {
       ["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(
         restrictions.characterFaction,
       ) &&
+      !restrictions.ignoreDevelopment &&
       !development.allows(restrictions.characterFaction, model.prefabId, restrictions.researched) &&
       (restrictions.licenses ?? restrictions.ownedLicenses)?.[model.prefabId] !== true &&
       !stockAccess(model, restrictions)
     )
       return "not_developed";
     if (restrictions.environment && (model.adaptability?.[restrictions.environment] ?? 100) <= 0)
+      return "not_allowed";
+    if (restrictions.allowedEras?.length && !model.tags.some((tag) => restrictions.allowedEras.includes(tag)))
       return "not_allowed";
     if (
       model.movementType === "naval" &&
@@ -7686,7 +7709,7 @@ const Tactics = (() => {
       Math.max(
         1,
         Math.floor(
-          ((player?.bot ? (settings.aiUnitLimit ?? 36) : settings.unitLimit) *
+          ((player?.bot && formationStyle(settings) === "free" ? (settings.aiUnitLimit ?? 36) : settings.unitLimit) *
             armySettings(player).countPercent) /
             100,
         ),
@@ -7698,7 +7721,17 @@ const Tactics = (() => {
   }
   function armyRestrictions(settings, player) {
     const rules = formationRestrictions(settings, player?.seat ?? null);
-    if (!player?.battlefieldAI) rules.technologyCaps = settings.technologyCaps;
+    if (!["battlefield", "sweep"].includes(settings.mode) && !player?.battlefieldAI)
+      rules.technologyCaps = settings.technologyCaps;
+    if (!player?.battlefieldAI && ["regular", "battlefield", "sweep"].includes(settings.mode)) {
+      const era = settings.mode === "regular" ? settings.regularEra || "0079T1" :
+        settings.mode === "sweep" ? settings.sweepEra :
+        battlefieldMode.eras.includes(settings.battlefieldEra) ? settings.battlefieldEra :
+        settings.battlefieldTeams?.[(player?.seat ?? 0) % 2]?.era || "0079T1";
+      // An era is the upper bound. Earlier carriers remain usable in later eras,
+      // including stages that do not introduce any new carrier models.
+      rules.allowedEras = eras.slice(0, Math.max(0, eras.indexOf(era)) + 1);
+    }
     rules.characterFaction = ["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(
       player?.characterFaction,
     )
@@ -7710,6 +7743,7 @@ const Tactics = (() => {
       rules.aiBannedUnits = [...aiUnitBans[settings.mode || "regular"]];
     // Room authority supplies the merged, cross-faction AI progression.
     rules.researched = player?.researched;
+    if (player?.bot && (settings.technologyCaps || ["battlefield", "sweep"].includes(settings.mode))) rules.ignoreDevelopment = true;
     if (player && !player.bot) {
       rules.licenses = normalizeLicenses(player.licenses);
       // Readiness may skip quantity checks while retaining ownership-based deployment access.
@@ -7722,11 +7756,13 @@ const Tactics = (() => {
       )
         Object.assign(rules, economy.normalizeStock(player));
     }
-    if (settings.mode !== "campaign" && !player?.bot && formationStyle(settings) !== "free")
+    if (settings.mode !== "campaign" && !player?.battlefieldAI && !player?.sweepEnemy && formationStyle(settings) !== "free")
       rules.requiresCarriers = true;
-    // Standard PMC formations use only total COST and capacity. AI and quick
-    // free formations retain the legacy single-unit/per-player COST settings.
-    if (player?.bot) {
+    // Standard formations share total COST/capacity rules. Quick free formations
+    // retain the legacy single-unit limits.
+    if (player?.bot && formationStyle(settings) !== "free") {
+      rules.unitCostLimit = Infinity;
+    } else if (player?.bot) {
       const config = armySettings(player);
       rules.unitCostLimit =
         config.unitCostLimit ??
@@ -7797,7 +7833,7 @@ const Tactics = (() => {
           !restrictionReason(model, { ...restrictions, environment }) &&
           adaptation(model) > 0 &&
           !(environment === "space" && infantry(model) && adaptation(model) < 100) &&
-          (model.weapons.length > 0 ||
+          (model.hangars?.length > 0 || model.weapons.length > 0 ||
             model.supplyAura ||
             model.skills?.some((s) => ["repair", "recon"].includes(s.type))),
       ),
@@ -7865,6 +7901,11 @@ const Tactics = (() => {
     );
     const desiredShips = aiShipQuota(expectedCount, seed);
     const desiredTransports = expectedCount >= 8 ? Math.max(1, Math.floor(expectedCount / 12)) : 0;
+    const fleetMode = !!restrictions.requiresCarriers;
+    const slots = [];
+    const passengerSlot = (model) => slots.find(slot =>
+      slot.remaining >= (slot.hangar.kind === "sfs" ? 1 : model.transport?.slotCost || 1) &&
+      slot.hangar.allowedTags.some(tag => model.transport?.loadTags.includes(tag)));
     const frontlineTarget = Math.max(
       2,
       Math.ceil(((unitLimit - desiredShips * 4 - desiredTransports) * 0.8) / 2) * 2,
@@ -7892,13 +7933,16 @@ const Tactics = (() => {
       }, 0);
       const hasFrontline = choices.some(frontlineMS);
       const legal = choices.filter((model) => {
+        const firstCarrier = fleetMode && entries.length === 0;
+        if (firstCarrier && (!isFleetCarrier(model) || !model.hangars?.length)) return false;
+        if (fleetMode && !isFleetCarrier(model) && !passengerSlot(model)) return false;
         if (hasFrontline && lightAircraft(model) && aircraftPoints >= aircraftPointLimit)
           return false;
         if (model.ship && ships >= desiredShips && coreChoices.some((m) => !m.ship)) return false;
-        if (transport(model) && transports >= desiredTransports) return false;
+        if (transport(model) && transports >= desiredTransports && !firstCarrier) return false;
         // Keep at least three combat platforms per supply unit; never spend the army on logistics.
         if (
-          support(model) &&
+          support(model) && !firstCarrier &&
           (supportCount >= Math.floor(count / 4) ||
             combatCount < (supportCount + 1) * 3 ||
             model.cost > maxCost * 0.25)
@@ -8055,10 +8099,15 @@ const Tactics = (() => {
       const kits = affordableTier.filter((model) => model.prefabId === prefabId);
       seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
       const model = kits[seed % kits.length];
+      const slot = fleetMode && !isFleetCarrier(model) ? passengerSlot(model) : null;
       entries.push({
         unitId: model.prefabId,
         kitId: model.kitId,
+        ...(slot ? { preload: { carrierIndex: slot.carrierIndex, hangarId: slot.hangar.id } } : {}),
       });
+      if (slot) slot.remaining -= slot.hangar.kind === "sfs" ? 1 : model.transport.slotCost;
+      if (fleetMode) for (const hangar of model.hangars || [])
+        slots.push({ carrierIndex: entries.length - 1, hangar, remaining: hangar.capacity });
       remaining -= model.cost;
       remainingPoints -= formationWeight(model);
     }
@@ -8072,7 +8121,12 @@ const Tactics = (() => {
     );
     for (const [index, entry] of entries.entries()) {
       const model = formationModel(entry);
-      if (!model.transport || entry.preload) continue;
+      if (!model.transport) continue;
+      if (entry.preload) {
+        const slot = hangars.find(slot => slot.carrierIndex === entry.preload.carrierIndex && slot.hangar.id === entry.preload.hangarId);
+        if (slot) slot.remaining -= slot.hangar.kind === "sfs" ? 1 : model.transport.slotCost;
+        continue;
+      }
       const compatible = hangars
         .filter(
           (slot) =>
@@ -11745,6 +11799,7 @@ const Tactics = (() => {
     unitLogName,
     unitName,
     randomFormation,
+    deploymentPlacements,
     unitSkills: skills.of,
     canUseSkill: skills.canUse,
     skillTargets: skills.targets,

@@ -1,5 +1,5 @@
 "use strict";
-// Two compact six-seat-per-team variants of the existing canyon battlefield.
+// Two compact five-seat-per-team variants of the existing canyon battlefield.
 // Reuse its atlas and facility artwork; all gameplay tiles remain editable.
 const fs = require("node:fs");
 const path = require("node:path");
@@ -17,7 +17,7 @@ function segmentDistance(x,y,a,b){
 function generate(kind){
   const basin=kind==="basin";
   const id=basin?"battlefield_ruined_basin":"battlefield_twin_ridges";
-  const doc=M.create({id,width,height,playersPerTeam:6,supportedModes:["battlefield"],
+  const doc=M.create({id,width,height,playersPerTeam:5,supportedModes:["battlefield"],
     name:basin?"雇佣兵战争 · 裂谷遗迹":"雇佣兵战争 · 双脊峡口",
     description:basin?"西北与东南基地夹住环形高地和中央遗迹盆地，四处据点由交错坡道相连。":"东西基地隔着中央谷道相望，南北双层山脊控制侧翼据点，主路与绕行路线并存。"});
   const leftArea=basin?{x:3,y:4,width:14,height:17}:{x:3,y:12,width:14,height:18};
@@ -80,7 +80,7 @@ function generate(kind){
   doc.layers=[{...M.layer(doc,"地形与坡道"),id:id+"_ground",data},
     {...M.layer(doc,"岩石、灌木与遗迹"),id:id+"_props",decorative:true,data:props}];
   doc.spawns=[];doc.deploymentAreas=[];
-  for(let position=0;position<6;position++)for(const team of [0,1]){
+  for(let position=0;position<5;position++)for(const team of [0,1]){
     const a=areas[team];
     const x=leftArea.x+3+(position%3)*4,y=leftArea.y+3+Math.floor(position/3)*9;
     doc.spawns.push({team,position:position+1,x:team?width-1-x:x,y:team?height-1-y:y});
@@ -92,7 +92,7 @@ function generate(kind){
   const map=M.compile(doc);map.battlefield={...structuredClone(template.battlefield),facilities,points};
   const issues=M.gameIssues(doc);if(issues.length)throw Error(id+": "+issues.join("; "));
   fs.writeFileSync(path.join(root,"assets/maps/battlefield/"+(basin?"ruined_basin":"twin_ridges")+".json"),JSON.stringify(require("./rebuild-biome-maps.cjs").rebuild(map),null,2)+"\n");
-  console.log("Built",id,width+"x"+height,"6v6 (one faction AI per team)");
+  console.log("Built",id,width+"x"+height,"5v5 (independent faction allies)");
 }
 generate("ridges");generate("basin");
 const catalogPath=path.join(root,"assets/unit-catalog.json");

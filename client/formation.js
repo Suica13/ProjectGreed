@@ -2677,7 +2677,7 @@ const Formation = (() => {
     return element(
       "span",
       "unit-summary-tag cost pilot-cost-tag",
-      "COST +" + PilotSystem.cost(pilot),
+      "COST " + PilotSystem.cost(pilot),
     );
   }
   function pilotExperienceText(pilot) {
@@ -2702,7 +2702,7 @@ const Formation = (() => {
     const scrollTop = list.scrollTop;
     list.replaceChildren();
     byId("formationPilotBudget").textContent =
-      `驾驶员 ${pilotStore.pilots.length} 名 · COST +${pilotStore.pilots.reduce((sum, p) => sum + PilotSystem.cost(p), 0)}`;
+      `驾驶员 ${pilotStore.pilots.length} 名 · COST ${pilotStore.pilots.reduce((sum, p) => sum + PilotSystem.cost(p), 0)}`;
     if (!pilotStore.pilots.length)
       list.append(
         element(
@@ -2745,12 +2745,15 @@ const Formation = (() => {
       const progress = element(
         "small",
         "pilot-roster-progress",
-        (p.ace ? "ACE · " : "") + pilotExperienceText(p),
       );
+      const badges = element("span", "pilot-progress-badges");
+      progress.append(element("span", "pilot-experience-value", (p.ace ? "ACE · " : "") + pilotExperienceText(p)), badges);
+      if (p.reincarnations) badges.append(element("span", "pilot-training-points pilot-reincarnation-tag", I18n.text(["", "一转", "二转", "三转", "四转"][p.reincarnations])));
+      if (PilotSystem.canUpgrade(p)) badges.append(element("span", "pilot-training-points pilot-promotion-tag", I18n.text("可升职")));
       if (!p.ace && p.points > 0) {
         const points = element("span", "pilot-training-points", I18n.text("强化点+"));
         points.title = I18n.text("可用强化点") + "：" + p.points;
-        progress.append(points);
+        badges.append(points);
       }
       const skills = SkillControls.pilotSummary(p);
       skills.prepend(pilotCostTag(p));
@@ -2899,7 +2902,7 @@ const Formation = (() => {
     byId("customPilotName").disabled = true;
     byId("renameCustomPilot").textContent = "修改名称";
     byId("renameCustomPilot").hidden = !!pilotEdit.ace;
-    byId("editPilotDialogue").hidden = !!pilotEdit.ace || pilotEdit.personality !== "custom";
+    byId("editPilotDialogue").hidden = !!pilotEdit.ace;
     byId("changeCustomPilotPortrait").disabled = !!pilotEdit.ace;
     byId("customPilotPortraitPicker").hidden = true;
     byId("createPilotConfirm").hidden = !pilotIsNew;
@@ -2910,7 +2913,8 @@ const Formation = (() => {
   }
   function savePilotIdentity(fields) {
     Object.assign(pilotEdit, fields);
-    byId("editPilotDialogue").hidden = !!pilotEdit.ace || pilotEdit.personality !== "custom";
+    byId("editPilotDialogue").hidden = !!pilotEdit.ace;
+    byId("customPilotPersonality").value = pilotEdit.personality || "";
     const original = { ...JSON.parse(pilotOriginal), ...fields };
     // Identity edits never commit pending training points.
     if (!pilotIsNew) commitPilot(original);
@@ -3020,7 +3024,7 @@ const Formation = (() => {
       PilotSystem.canLearnSkill(pilotEdit),
     );
     learnPilotSkillButton.textContent = I18n.text(
-      pilotEdit.selectedSkillId
+      pilotEdit.selectedSkillId && !PilotSystem.canLearnSkill(pilotEdit)
         ? "查看驾驶员技能"
         : pilotEdit.level >= PilotSystem.skillUnlockLevel
           ? "选择驾驶员技能"
@@ -3029,18 +3033,20 @@ const Formation = (() => {
     const original = JSON.parse(pilotOriginal);
     const pendingPoints = original.points - pilotEdit.points;
     const readyToUpgrade = PilotSystem.canUpgrade(pilotEdit);
-    upgradePilotButton.hidden = pilotIsNew || pilotEdit.level >= PilotSystem.maxLevel(pilotEdit);
-    upgradePilotButton.classList.toggle("pilot-skill-alert", readyToUpgrade);
+    const rebirth = PilotSystem.canReincarnate(pilotEdit);
+    const advancementCost = rebirth ? PilotSystem.reincarnationCost(pilotEdit) : PilotSystem.upgradeCost(pilotEdit);
+    upgradePilotButton.hidden = pilotIsNew || (pilotEdit.level >= PilotSystem.maxLevel(pilotEdit) && !rebirth);
+    upgradePilotButton.classList.toggle("pilot-skill-alert", readyToUpgrade || rebirth);
     upgradePilotButton.disabled =
-      !readyToUpgrade ||
+      !(readyToUpgrade || rebirth) ||
       pendingPoints !== 0 ||
-      !Economy.affordable({ money: PilotSystem.upgradeCost(pilotEdit) });
+      !Economy.affordable({ money: advancementCost });
     upgradePilotButton.textContent =
-      I18n.text("升职") +
+      I18n.text(rebirth ? "转生" : "升职") +
       " · " +
       I18n.text("资金") +
       " " +
-      (PilotSystem.upgradeCost(pilotEdit) ?? "—");
+      (advancementCost ?? "—");
     demotePilotButton.hidden = pilotIsNew || pilotEdit.level === 0;
     demotePilotButton.disabled =
       !!pilotEdit.needsRecruitment ||
@@ -3147,11 +3153,15 @@ const Formation = (() => {
       note(Economy.errorMessage(error));
     }
   };
-  upgradePilotButton.onclick = () => {
-    if (!pilotEdit || pilotIsNew || !PilotSystem.canUpgrade(pilotEdit)) return;
+  upgradePilotButton.onclick = async () => {
+    if (!pilotEdit || pilotIsNew || upgradePilotButton.disabled) return;
     if (JSON.parse(pilotOriginal).points !== pilotEdit.points) return;
-    const cost = PilotSystem.upgradeCost(pilotEdit);
-    const clean = PilotSystem.upgrade(pilotEdit);
+    const rebirth = PilotSystem.canReincarnate(pilotEdit);
+    const original = pilotOriginal;
+    if (rebirth && !(await GameDialog.confirm(I18n.text("转生将清空经验、强化和技能，回到0级并恢复初始80强化点，等级上限提高1级。是否继续？")))) return;
+    if (!pilotEdit || original !== pilotOriginal || upgradePilotButton.disabled) return;
+    const cost = rebirth ? PilotSystem.reincarnationCost(pilotEdit) : PilotSystem.upgradeCost(pilotEdit);
+    const clean = rebirth ? PilotSystem.reincarnate(pilotEdit) : PilotSystem.upgrade(pilotEdit);
     const next = {
       ...pilotStore,
       pilots: pilotStore.pilots.map((p) => (p.id === clean.id ? clean : p)),
@@ -3245,7 +3255,7 @@ const Formation = (() => {
     const pilotId = pilotEdit.id;
     PilotDialogueEditor.open(pilotEdit, (dialogue) => {
       if (!pilotEdit || pilotEdit.id !== pilotId) throw Error("驾驶员已变更，请重新打开编辑面板");
-      savePilotIdentity({ dialogue });
+      savePilotIdentity({ personality: "custom", dialogue });
     });
   };
   byId("customPilotPersonality").onchange = () => {
@@ -3294,8 +3304,9 @@ const Formation = (() => {
   function openPilotSkillPicker() {
     if (!pilotEdit || pilotEdit.ace || pilotEdit.level < PilotSystem.skillUnlockLevel) return;
     const ownerId = pilotEdit.id;
-    const readOnly = !!pilotEdit.selectedSkillId;
-    let choice = pilotEdit.selectedSkillId || null;
+    const readOnly = !PilotSystem.canLearnSkill(pilotEdit);
+    const learnedIds = [pilotEdit.selectedSkillId, pilotEdit.selectedSecondSkillId].filter(Boolean);
+    let choice = null;
     const title = element("h3", "", "选择驾驶员技能");
     title.id = "pilotSkillPickerTitle";
     const explanation = element("p", "muted", "选择一个技能；重置属性时会清除技能，可重新选择。");
@@ -3304,7 +3315,7 @@ const Formation = (() => {
     confirm.id = "confirmPilotSkill";
     confirm.disabled = true;
     confirm.hidden = readOnly;
-    for (const skill of PilotSystem.skillChoices.filter((s) => !readOnly || s.id === choice)) {
+    for (const skill of PilotSystem.skillChoices.filter((s) => readOnly ? learnedIds.includes(s.id) : !learnedIds.includes(s.id))) {
       const button = element("button", "pilot-skill-choice");
       button.type = "button";
       button.dataset.pilotSkillChoice = skill.id;
@@ -3331,7 +3342,7 @@ const Formation = (() => {
       if (!pilotEdit || pilotEdit.id !== ownerId) return;
       try {
         const learned = PilotSystem.learnSkill(pilotEdit, choice);
-        savePilotIdentity({ selectedSkillId: learned.selectedSkillId });
+        savePilotIdentity({ selectedSkillId: learned.selectedSkillId, selectedSecondSkillId: learned.selectedSecondSkillId });
         pilotSkillPicker.close();
       } catch (error) {
         note(error.message);

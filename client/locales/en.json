@@ -1,4 +1,22 @@
 {
+  "扫荡部署失败，请检查编组和地图限制后重试": "Sweep deployment failed. Check the formation and map restrictions, then retry.",
+  "请等待所有玩家重新连接后再进入任务节点": "Wait for all players to reconnect before entering the mission node.",
+  "驾驶员转生": "Pilot rebirth",
+  "每个文本框填写一句，留空使用默认台词。每个事件最多10句，每句最多120字。": "Enter one line per field. Leave empty for default dialogue. Up to 10 lines per event, 120 characters per line.",
+  "每个事件最多10句台词": "Each event supports up to 10 lines",
+  "增加台词": "Add line",
+  "删除台词": "Remove line",
+  "转生": "Rebirth",
+  "一转": "Rebirth I",
+  "二转": "Rebirth II",
+  "三转": "Rebirth III",
+  "四转": "Rebirth IV",
+  "可升职": "Promotion ready",
+  "驾驶员转生次数无效": "Invalid pilot rebirth count",
+  "驾驶员尚未满足转生条件": "Pilot is not eligible for rebirth",
+  "转生将清空经验、强化和技能，回到0级并恢复初始80强化点，等级上限提高1级。是否继续？": "Rebirth resets XP, training and skills, returns to level 0 with 80 initial training points, and raises the level cap by 1. Continue?",
+  "历史战役模式设置": "Historical campaign settings",
+  "战场扫荡模式设置": "Battlefield sweep settings",
   "参考科技阵营": "Reference research faction",
   "科技点参考阵营无效": "Invalid reference research faction",
   "互动文本": "Custom dialogue",
@@ -4004,5 +4022,7 @@
   "请先遣返当前驾驶员": "Return the current pilot first",
   "驾驶员不可用": "Pilot unavailable",
   "· 阵营友军": "· Faction allies",
-  "· 获得机体": "· Units recovered"
+  "· 获得机体": "· Units recovered",
+  "常规战模式设置": "Regular battle settings",
+  "常规战年代无效": "Invalid regular battle era"
 }

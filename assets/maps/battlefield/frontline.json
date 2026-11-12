@@ -45,7 +45,7 @@
   },
   "surfaceCover": true,
   "maxTeams": 2,
-  "playersPerTeam": 6,
+  "playersPerTeam": 5,
   "supportedModes": [
     "battlefield"
   ],
@@ -110,33 +110,9 @@
       "position": 5,
       "x": 59,
       "y": 25
-    },
-    {
-      "team": 0,
-      "position": 6,
-      "x": 15,
-      "y": 22
-    },
-    {
-      "team": 1,
-      "position": 6,
-      "x": 56,
-      "y": 25
     }
   ],
   "deploymentAreas": [
-    {
-      "x": 4,
-      "y": 7,
-      "width": 13,
-      "height": 22
-    },
-    {
-      "x": 55,
-      "y": 19,
-      "width": 13,
-      "height": 22
-    },
     {
       "x": 4,
       "y": 7,
@@ -7319,7 +7295,7 @@
     "environment": "ground",
     "defaultTerrain": "plain",
     "maxTeams": 2,
-    "playersPerTeam": 6,
+    "playersPerTeam": 5,
     "supportedModes": [
       "battlefield"
     ],
@@ -25971,33 +25947,9 @@
         "position": 5,
         "x": 59,
         "y": 25
-      },
-      {
-        "team": 0,
-        "position": 6,
-        "x": 15,
-        "y": 22
-      },
-      {
-        "team": 1,
-        "position": 6,
-        "x": 56,
-        "y": 25
       }
     ],
     "deploymentAreas": [
-      {
-        "x": 4,
-        "y": 7,
-        "width": 13,
-        "height": 22
-      },
-      {
-        "x": 55,
-        "y": 19,
-        "width": 13,
-        "height": 22
-      },
       {
         "x": 4,
         "y": 7,

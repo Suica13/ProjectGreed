@@ -20,7 +20,7 @@ window.createCampaignPilotUI = ({ state, command, node, button }) => {
   async function pay(action, profile, money) {
     if (
       await GameDialog.confirm(
-        `${I18n.text("资金")} ${formatNumber(money)} · ${I18n.text(action === "upgrade" ? "升职" : action === "demote" ? "降职" : "重置属性点")}？`,
+        `${I18n.text("资金")} ${formatNumber(money)} · ${I18n.text(action === "upgrade" ? "升职" : action === "reincarnate" ? "转生" : action === "demote" ? "降职" : "重置属性点")}？`,
       )
     )
       request(action, { pilotId: profile.id });
@@ -160,7 +160,7 @@ window.createCampaignPilotUI = ({ state, command, node, button }) => {
       const info = node("div", "", "campaign-pilot-copy");
       info.append(
         node("strong", p.name),
-        node("span", "COST +" + PilotSystem.cost(p), "unit-summary-tag cost"),
+        node("span", "COST " + PilotSystem.cost(p), "unit-summary-tag cost"),
         node(
           "small",
           `Lv.${p.level} · EXP ${formatNumber(p.experience)} / ${p.level >= PilotSystem.maxLevel(p) ? "MAX" : formatNumber(PilotSystem.experienceRequired(p.level, p))}`,
@@ -201,6 +201,8 @@ window.createCampaignPilotUI = ({ state, command, node, button }) => {
           refresh();
         }),
       );
+      if (p.reincarnations) info.append(node("span", ["", "一转", "二转", "三转", "四转"][p.reincarnations], "pilot-training-points"));
+      if (PilotSystem.canUpgrade(p)) info.append(node("span", "可升职", "pilot-training-points"));
       if (!p.ace && p.points > 0) {
         const points = node("span", "强化点+", "pilot-training-points");
         points.title = "可用强化点：" + p.points;
@@ -232,10 +234,12 @@ window.createCampaignPilotUI = ({ state, command, node, button }) => {
           details.append(stat);
         }
         const advancement = node("div", "", "campaign-pilot-advancement");
+        const rebirth = PilotSystem.canReincarnate(p);
+        const cost = rebirth ? PilotSystem.reincarnationCost(p) : PilotSystem.upgradeCost(p);
         const promote = button(
-          `升职 · 资金 ${formatNumber(PilotSystem.upgradeCost(p) || 0)}`,
-          () => pay("upgrade", p, PilotSystem.upgradeCost(p)),
-          !editable || !PilotSystem.canUpgrade(p) || pool.money < PilotSystem.upgradeCost(p),
+          `${rebirth ? "转生" : "升职"} · 资金 ${formatNumber(cost || 0)}`,
+          () => pay(rebirth ? "reincarnate" : "upgrade", p, cost),
+          !editable || !(rebirth || PilotSystem.canUpgrade(p)) || pool.money < cost,
         );
         promote.classList.toggle("campaign-pilot-upgrade-ready", PilotSystem.canUpgrade(p));
         advancement.append(
@@ -258,7 +262,7 @@ window.createCampaignPilotUI = ({ state, command, node, button }) => {
         if (PilotSystem.canLearnSkill(p)) {
           const skills = node("select");
           skills.setAttribute("aria-label", "驾驶员技能");
-          for (const skill of PilotSystem.skillChoices)
+          for (const skill of PilotSystem.skillChoices.filter(skill => ![p.selectedSkillId,p.selectedSecondSkillId].includes(skill.id)))
             skills.append(new Option(I18n.localized(skill), skill.id));
           details.append(
             skills,

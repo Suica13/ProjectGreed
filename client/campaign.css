@@ -2298,15 +2298,11 @@ body[data-page="campaign"] #openClientSettings {
   white-space: nowrap;
 }
 
-.campaign-room-options { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
-.campaign-room-options[hidden] { display: none; }
-.campaign-room-ai-options { grid-column: 1 / -1; display: flex; gap: 12px; }
-.campaign-room-options label { display: grid; gap: 5px; min-width: 0; }
-.campaign-room-options select { width: 100%; min-width: 0; }
+.campaign-room-ai-options { grid-column: 1 / -1; display: grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap: 12px; }
 .campaign-room-team-options { display: grid; gap: 8px; min-width: 0; border: 1px solid #546475; }
 .campaign-room-team-options:first-of-type { border-color: #6ab9e8; }
 .campaign-room-team-options:last-of-type { border-color: #c77e85; }
-@media(max-width:600px) { .campaign-room-options { grid-template-columns: minmax(0,1fr); } }
+@media(max-width:600px) { #campaignRoomOptions > .room-mode-fields { grid-template-columns: minmax(0,1fr); } }
 
 .commander-badge {
   display: inline-flex;

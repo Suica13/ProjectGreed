@@ -2589,8 +2589,23 @@
                 <section id="roomRulesPanel" aria-labelledby="roomRulesTitle">
                   <div class="room-rules-heading">
                     <h3 id="roomRulesTitle">房间规则</h3>
-                    <div id="roomRulesActions"></div>
+                    <div id="roomRulesActions"><label class="room-mode-selector"><span>对战模式</span><select id="roomBattleMode" aria-label="对战模式">
+                        <optgroup label="遭遇战模式">
+                <option value="regular">常规战模式</option>
+                <option value="quick">快速战模式</option>
+              </optgroup>
+              <optgroup label="合约模式"><option value="sweep">战场扫荡</option></optgroup>
+              <optgroup label="战场模式"><option value="battlefield">雇佣兵战争模式</option></optgroup>
+              <optgroup label="战略模式">
+                <option value="campaign">历史战役模式</option>
+              </optgroup>
+                      </select></label></div>
                   </div>
+                  <details id="battlefieldRoomRules" class="room-rule-group room-mode-rules" open hidden>
+                    <summary>雇佣兵战争模式设置</summary>
+                    <section id="battlefieldRoomOptions" class="battlefield-ai-options room-mode-fields" aria-label="雇佣兵战争模式设置"></section>
+                  </details>
+                  <details class="room-rule-group" id="roomTechnologyRules" open><summary>单位科技限制</summary><div class="room-options"><label>科技点限制<select id="roomTechnologyLimitMode"><option value="host">依据房主</option><option value="custom">自定义</option></select></label><label>参考科技阵营<select id="roomTechnologyLimitFaction"><option value="EFSF">EFSF</option><option value="ZEON">ZEON</option><option value="AEUG">AEUG</option><option value="TITANS">TITANS</option><option value="NEO_ZEON">NEO_ZEON</option></select></label><label hidden>科技点上限<input id="roomTechnologyLimit" type="number" min="0" max="1000000000" step="25" value="0" /></label></div><small id="roomTechnologyLimitSummary"></small><small>按解锁科技门槛限制玩家与普通AI；雇佣兵战争阵营友军除外。</small></details>
                   <details id="roomFormationRules" class="room-rule-group" open>
                     <summary>编组限制</summary>
                     <div class="room-options room-formation-options">
@@ -2620,21 +2635,10 @@
                       <small id="roomPresetStatus" class="muted" role="status"></small>
                     </div>
                   </details>
-                  <fieldset class="room-rule-group" id="roomTechnologyRules"><legend>单位科技限制</legend><div class="room-options"><label>科技点限制<select id="roomTechnologyLimitMode"><option value="host">依据房主</option><option value="custom">自定义</option></select></label><label>参考科技阵营<select id="roomTechnologyLimitFaction"><option value="EFSF">EFSF</option><option value="ZEON">ZEON</option><option value="AEUG">AEUG</option><option value="TITANS">TITANS</option><option value="NEO_ZEON">NEO_ZEON</option></select></label><label hidden>科技点上限<input id="roomTechnologyLimit" type="number" min="0" max="1000000000" step="25" value="0" /></label></div><small id="roomTechnologyLimitSummary"></small><small>按解锁科技门槛限制玩家与普通AI；雇佣兵战争阵营友军除外。</small></fieldset>
-                  <details class="room-rule-group" open>
+                  <details id="roomGeneralBattleRules" class="room-rule-group" open>
                     <summary>战场规则</summary>
                     <div class="room-battle-rules">
-                      <label>对战模式<select id="roomBattleMode" aria-label="对战模式">
-                        <optgroup label="遭遇战模式">
-                <option value="regular">常规战模式</option>
-                <option value="quick">快速战模式</option>
-              </optgroup>
-              <optgroup label="合约模式"><option value="sweep">战场扫荡</option></optgroup>
-              <optgroup label="战场模式"><option value="battlefield">雇佣兵战争模式</option></optgroup>
-              <optgroup label="战略模式">
-                <option value="campaign">历史战役模式</option>
-              </optgroup>
-                      </select></label>
+
                       <label class="room-fog-option"
                         >战争迷雾
                         <select id="roomFogMode" aria-label="战争迷雾">
@@ -2667,11 +2671,7 @@
                       </details>
                     </div>
                   </details>
-                  <details id="battlefieldRoomRules" class="room-rule-group" open hidden>
-                    <summary>雇佣兵战争模式设置</summary>
-                    <section id="battlefieldRoomOptions" class="battlefield-ai-options" aria-label="雇佣兵战争模式设置"></section>
-                    <fieldset id="battlefieldCustomScale" hidden><legend>自定义战场规模</legend></fieldset>
-                  </details>
+
                   <details class="room-rule-group">
                     <summary>房间禁用标签</summary>
                     <div id="roomTagRestrictions" class="tag-restrictions"></div>
@@ -3413,9 +3413,9 @@
             <div id="customPilotPortraits"></div>
             <label class="pilot-upload">上传头像 <input id="uploadPilotPortrait" type="file" accept="image/png,image/jpeg,image/webp" /></label>
           </div>
-          <div class="pilot-narrative-settings"><label>驾驶员性格 <select id="customPilotPersonality"><option value="">自动分配</option><option value="calm">冷静</option><option value="aggressive">激进</option><option value="cautious">谨慎</option><option value="idealist">理想主义</option><option value="strategic">谋略型</option><option value="sarcastic">讽刺型</option><option value="strict">严厉</option><option value="zealous">狂热</option><option value="proud">自负</option><option value="obsessive">执念型</option><option value="empathetic">共情型</option><option value="custom">自定义</option></select></label><label>出身阵营 <select id="customPilotOriginFaction"><option value="PMC">PMC</option><option value="EFSF">地球联邦军</option><option value="ZEON">吉翁公国</option><option value="AEUG">奥古</option><option value="TITANS">提坦斯</option><option value="NEO_ZEON">新吉翁</option></select></label></div>
+          <div class="pilot-narrative-settings"><label>驾驶员性格 <select id="customPilotPersonality"><option value="">自动分配</option><option value="calm">冷静</option><option value="aggressive">激进</option><option value="cautious">谨慎</option><option value="idealist">理想主义</option><option value="strategic">谋略型</option><option value="sarcastic">讽刺型</option><option value="strict">严厉</option><option value="zealous">狂热</option><option value="proud">自负</option><option value="obsessive">执念型</option><option value="empathetic">共情型</option><option value="custom">自定义</option></select></label><label hidden>出身阵营 <select id="customPilotOriginFaction"><option value="PMC">PMC</option><option value="EFSF">地球联邦军</option><option value="ZEON">吉翁公国</option><option value="AEUG">奥古</option><option value="TITANS">提坦斯</option><option value="NEO_ZEON">新吉翁</option></select></label><button id="editPilotDialogue" type="button">互动文本</button></div>
           <p id="customPilotProgress"></p>
-          <button id="editPilotDialogue" type="button">互动文本</button>
+
           <div id="customPilotRecord" class="pilot-record"></div><section id="acePilotDetails" hidden></section>
           <section class="pilot-training" aria-labelledby="pilotTrainingTitle">
             <div class="pilot-training-heading"><h3 id="pilotTrainingTitle">属性强化</h3><button id="openPilotAttributeHelp" type="button" aria-label="驾驶员属性说明">[?]</button></div>

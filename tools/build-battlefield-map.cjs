@@ -124,7 +124,7 @@ for(let y=0;y<height;y++) for(let x=0;x<width;x++) {
   data.push(id);
 }
 const spawns=[],deploymentAreas=[];
-for(let position=0;position<6;position++) for(const team of [0,1]) {
+for(let position=0;position<5;position++) for(const team of [0,1]) {
   const point=team?mirror([9+(position%3)*3,12+Math.floor(position/3)*10]):[9+(position%3)*3,12+Math.floor(position/3)*10];
   spawns.push({team,position:position+1,x:point[0],y:point[1]});
   deploymentAreas.push(team?{x:55,y:19,width:13,height:22}:{x:4,y:7,width:13,height:22});
@@ -135,7 +135,7 @@ for(const team of [0,1]) for(const [type,x,y] of [["base",7,16],["machineGun",15
   facilities.push({id:team+"-"+type,type,team,x:team?width-x-size:x,y:team?height-y-size:y});
 }
 const points=[[1,28,19],[2,28,38],[4,43,28],[5,43,9]].map(([id,x,y])=>({id:"point-"+id,name:"据点 "+id,x,y}));
-const doc=M.create({id:previous.id,name:"战地 · 环峡高地",description:"环形平原围绕双层中央高地，西南与东北散布丘陵，双方基地位于左右高地；从坡口出击，争夺1、2、4、5号据点。",width,height,playersPerTeam:6,environment:"ground",supportedModes:["battlefield"]});
+const doc=M.create({id:previous.id,name:"战地 · 环峡高地",description:"环形平原围绕双层中央高地，西南与东北散布丘陵，双方基地位于左右高地；从坡口出击，争夺1、2、4、5号据点。",width,height,playersPerTeam:5,environment:"ground",supportedModes:["battlefield"]});
 doc.spawns=spawns;doc.deploymentAreas=deploymentAreas;
 doc.tilesets=[{id:"canyon_atlas",name:"峡谷地表与崖壁",image:"data:image/png;base64,"+png.toString("base64"),width:atlasWidth,height:atlasHeight,tileWidth:cell,tileHeight:cell,margin:0,spacing:0}];
 doc.tiles=variants.map((tile,index)=>({id:tile.id,name:tile.id,terrain:tile.terrain,environment:"ground",color:"#"+colors[tile.terrain].map(v=>v.toString(16).padStart(2,"0")).join(""),tilesetId:"canyon_atlas",x:index%8*cell,y:Math.floor(index/8)*cell,decorative:!!tile.decoration,dynamic:false}));

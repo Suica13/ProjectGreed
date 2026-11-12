@@ -10,7 +10,7 @@ const PilotSystem = (() => {
     !aceProfile(value) ||
     faction === "PMC" ||
     (aceProfile(value).availableFactions || [aceProfile(value).faction]).includes(faction);
-  const maxLevel = (value) => aceProfile(value)?.maxLevel ?? growthRules.maxLevel;
+  const maxLevel = (value) => aceProfile(value)?.maxLevel ?? growthRules.maxLevel + (value?.reincarnations || 0);
   const aceStatCap = (value, key) =>
     aceProfile(value) ? Math.round(aceProfile(value).maxStats[key]) : undefined;
   const byId = new Map(catalog.named.map((pilot) => [pilot.id, pilot]));
@@ -54,7 +54,7 @@ const PilotSystem = (() => {
     statCapPerLevel: 10,
     statCap: 200,
   });
-  const customExperience = Object.freeze([500, 1500, 3000, 5000, 10000, 15000, 20000, 30000]);
+  const customExperience = Object.freeze([500, 1500, 3000, 5000, 10000, 15000, 20000, 30000, 200000, 3000000, 4000000, 5000000]);
   const aceExperience = Object.freeze([1500, 3000, 5000, 10000, 20000]);
   const experienceRequired = (level, value = null) =>
     (aceProfile(value) ? aceExperience : customExperience)[level] ?? Infinity;
@@ -261,14 +261,15 @@ const PilotSystem = (() => {
       !pilot.ace &&
       !pilot.aceId &&
       pilot.level >= skillUnlockLevel &&
-      !pilot.selectedSkillId
+      (!pilot.selectedSkillId || (pilot.level >= 12 && !pilot.selectedSecondSkillId))
     );
   }
   function learnSkill(value, id) {
     const pilot = custom(value);
-    if (!canLearnSkill(pilot) || !skillChoices.some((skill) => skill.id === id))
+    if (!canLearnSkill(pilot) || !skillChoices.some((skill) => skill.id === id) ||
+      [pilot.selectedSkillId, pilot.selectedSecondSkillId].includes(id))
       throw Error("驾驶员技能不可选择");
-    return custom({ ...pilot, selectedSkillId: id });
+    return custom({ ...pilot, [pilot.selectedSkillId ? "selectedSecondSkillId" : "selectedSkillId"]: id });
   }
   const dialogueEvents = [
     ["attack", "发动攻击"], ["hit", "受到攻击"], ["miss", "攻击落空"],
@@ -277,8 +278,8 @@ const PilotSystem = (() => {
     ["board", "接收搭乘单位"], ["launch", "送出出击单位"], ["preload", "预先搭载确认"],
     ["passengerBoard", "搭乘时回应"], ["passengerLaunch", "出击时回应"],
   ];
-  const dialogueLimits = { lines: 12, length: 120, total: 6000 };
-  function normalizeDialogue(value) {
+  const dialogueLimits = { lines: 10, length: 120, total: 6000 };
+  function normalizeDialogue(value, legacy = false) {
     if (value == null) return {};
     if (typeof value !== "object" || Array.isArray(value) ||
       Object.keys(value).some((key) => !dialogueEvents.some(([id]) => id === key)))
@@ -288,8 +289,8 @@ const PilotSystem = (() => {
     for (const [event] of dialogueEvents) {
       if (!Object.hasOwn(value, event)) continue;
       const lines = value[event];
-      if (!Array.isArray(lines) || lines.length > dialogueLimits.lines)
-        throw Error("每个事件最多12句台词");
+      if (!Array.isArray(lines) || lines.length > (legacy ? 12 : dialogueLimits.lines))
+        throw Error("每个事件最多10句台词");
       const phrases = [];
       for (const line of lines) {
         if (typeof line !== "string" || /[\u0000-\u001f\u007f]/.test(line))
@@ -301,7 +302,7 @@ const PilotSystem = (() => {
         if (total > dialogueLimits.total) throw Error("互动台词总长度最多6000字");
         phrases.push(text);
       }
-      if (phrases.length) clean[event] = phrases;
+      if (phrases.length) clean[event] = phrases.slice(0, dialogueLimits.lines);
     }
     return clean;
   }
@@ -319,7 +320,10 @@ const PilotSystem = (() => {
       throw Error("PMC驾驶员无效");
     if (!Number.isInteger(value.level) || value.level < 0 || value.level > 1000)
       throw Error("驾驶员等级无效");
-    const level = Math.min(value.level, growthRules.maxLevel);
+    const reincarnations = value.reincarnations ?? 0;
+    if (!Number.isInteger(reincarnations) || reincarnations < 0 || reincarnations > 4)
+      throw Error("驾驶员转生次数无效");
+    const level = Math.min(value.level, maxLevel({ reincarnations }));
     const name =
       typeof value.name === "string"
         ? value.name
@@ -333,7 +337,7 @@ const PilotSystem = (() => {
     if (!Number.isInteger(oldVersion) || oldVersion < 1 || oldVersion > trainingVersion)
       throw Error("驾驶员数据版本无效");
     if (oldVersion < 6 && value.level < 1) throw Error("驾驶员等级无效");
-    if (oldVersion === trainingVersion && value.level > growthRules.maxLevel)
+    if (oldVersion === trainingVersion && value.level > maxLevel({ reincarnations }))
       throw Error("驾驶员等级无效");
     const reset = oldVersion < 6;
     const legacySix = oldVersion === 6;
@@ -385,6 +389,10 @@ const PilotSystem = (() => {
         !skillChoices.some((skill) => skill.id === selectedSkillId))
     )
       throw Error("驾驶员技能无效");
+    const selectedSecondSkillId = value.selectedSecondSkillId;
+    if (selectedSecondSkillId != null && (level < 12 || !selectedSkillId ||
+      selectedSecondSkillId === selectedSkillId || !skillChoices.some(skill => skill.id === selectedSecondSkillId)))
+      throw Error("驾驶员技能无效");
 
     if (reset) spent = 0;
     // Former level 9/10 saves retain lifetime XP and records. Refund training
@@ -413,7 +421,7 @@ const PilotSystem = (() => {
     if (!["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(originFaction))
       throw Error("驾驶员出身阵营无效");
     const uploadedPortrait = portraitData(value.uploadedPortrait);
-    const dialogue = normalizeDialogue(value.dialogue);
+    const dialogue = normalizeDialogue(value.dialogue, true);
     const portraitId = portraitsById.has(value.portraitId)
       ? value.portraitId
       : defaultPortrait(faction)?.id;
@@ -429,12 +437,14 @@ const PilotSystem = (() => {
       portraitId,
       ...(uploadedPortrait ? { uploadedPortrait } : {}),
       level,
+      ...(reincarnations ? { reincarnations } : {}),
       experience,
       experienceVersion: 2,
       stats,
       record,
       points: trainingBudget(level) - spent,
       ...(selectedSkillId ? { selectedSkillId } : {}),
+      ...(selectedSecondSkillId ? { selectedSecondSkillId } : {}),
       custom: true,
     };
   }
@@ -457,7 +467,7 @@ const PilotSystem = (() => {
     return custom(p);
   }
   const upgradePrices = Object.freeze([
-    1000, 2000, 4000, 6000, 10000, 15000, 22000, 30000, 40000, 50000,
+    1000, 2000, 4000, 6000, 10000, 15000, 22000, 30000, 40000, 50000, 60000, 70000,
   ]);
   const customRecruitmentCost = 1000;
   const upgradeCost = (value) =>
@@ -477,6 +487,15 @@ const PilotSystem = (() => {
     value.level < maxLevel(value) &&
     upgradeCost(value) !== null &&
     value.experience >= experienceRequired(value.level, value);
+  const canReincarnate = (value) => !!value?.custom && !aceProfile(value) &&
+    !value.needsRecruitment && (value.reincarnations || 0) < 4 && value.level === maxLevel(value);
+  const reincarnationCost = (value) => canReincarnate(value) ? upgradePrices[value.level] * 2 : 0;
+  function reincarnate(value) {
+    const pilot = custom(value);
+    if (!canReincarnate(pilot)) throw Error("驾驶员尚未满足转生条件");
+    return custom({ ...pilot, reincarnations: (pilot.reincarnations || 0) + 1,
+      level: 0, experience: 0, stats: baseStats(), selectedSkillId: null, selectedSecondSkillId: null });
+  }
   function upgrade(value) {
     const p = custom(value);
     if (!canUpgrade(p)) throw Error("驾驶员尚未满足升职条件");
@@ -493,13 +512,14 @@ const PilotSystem = (() => {
     else {
       p.stats = baseStats();
       delete p.selectedSkillId;
+      delete p.selectedSecondSkillId;
     }
     return custom(p);
   }
   function refundTraining(value) {
     const pilot = custom(value);
     if (pilot.ace) throw Error("ACE不能重置属性点");
-    return custom({ ...pilot, stats: baseStats(), selectedSkillId: null });
+    return custom({ ...pilot, stats: baseStats(), selectedSkillId: null, selectedSecondSkillId: null });
   }
   function battleResult(value, kind, unitCost, experiencePoints = unitCost, details = {}) {
     if (
@@ -629,8 +649,8 @@ const PilotSystem = (() => {
     const aceSkills = aceProfile(pilot)?.skills;
     if (aceSkills) return aceSkills;
     if (!pilot?.custom || pilot.level < skillUnlockLevel) return [];
-    const skill = skillChoices.find((item) => item.id === pilot.selectedSkillId);
-    return skill ? [skill] : [];
+    return [pilot.selectedSkillId, ...(pilot.level >= 12 ? [pilot.selectedSecondSkillId] : [])]
+      .map(id => skillChoices.find(item => item.id === id)).filter(Boolean);
   }
   function hasPassive(unit, id) {
     return skillsOf(unit).some((s) => s.id === id && s.passive);
@@ -726,6 +746,9 @@ const PilotSystem = (() => {
     gainExperience,
     upgradeCost,
     canUpgrade,
+    canReincarnate,
+    reincarnationCost,
+    reincarnate,
     upgrade,
     demote,
     demotionCost,

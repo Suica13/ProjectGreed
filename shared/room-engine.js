@@ -40,6 +40,7 @@ function createRoomEngine({
     roomBattleEconomy().rewardMultipliers(activityRewardMultipliers());
   const roundReward = (value) => roomBattleEconomy().roundReward(value);
   function roomTechnologyCaps(room) {
+    if (["battlefield", "sweep"].includes(room.settings.mode)) return undefined;
     if (room.started && room.technologyCapSnapshot) return room.technologyCapSnapshot;
     const dev = roomDevelopment();
     if (room.settings.technologyLimitMode === "custom")
@@ -239,6 +240,7 @@ function createRoomEngine({
     }
   }
   function launchSweepBattle(room) {
+    if (!connected(room).every(Boolean)) throw Error("请等待所有玩家重新连接后再进入任务节点");
     const s = room.sweep;
     const map = Sweep.chooseMap(room, G, randomSeed());
     const allies = room.seats.filter((p) => p && G.seatTeam(p.seat) === 0),
@@ -282,8 +284,10 @@ function createRoomEngine({
     }
     room.phase = "assembly";
     s.launching = true;
-    startDeployment(room);
-    s.launching = false;
+    try {
+      startDeployment(room);
+      if (room.phase === "assembly") throw Error("扫荡部署失败，请检查编组和地图限制后重试");
+    } finally { s.launching = false; }
   }
   function captureRecord(room, intelCache) {
     const chatOnly = ["move_preview", "move_cancel"].includes(room.lastEvent?.type);
@@ -634,6 +638,8 @@ function createRoomEngine({
         onlineMember(player) ||
         (room.started && !player && (room.phase === "assembly" || !room.activeSeats?.[seat])),
     );
+  const playbackParticipant = (room, member) => !!member && !member.bot &&
+    Number.isInteger(member.seat) && room.seats[member.seat]?.id === member.id;
   const reconnectTimers = new Map();
   const retained = (room) => members(room).some((m) => onlineMember(m) || reconnectTimers.has(m));
   const onlineMember = (member) => member?.ws?.readyState === 1;
@@ -1207,10 +1213,11 @@ function createRoomEngine({
     clearTimeout(hostTimers.get(room)?.timer);
     hostTimers.delete(room);
   }
-  // Map 保持最初加入顺序；换队、观战与重连不改变房主继任顺序。
+  // 对局中优先在线参战者；同类候选保持最初加入顺序。
   function assignHost(room) {
     clearHostTimer(room);
-    room.hostId = members(room).find((member) => !member.bot && onlineMember(member))?.id || null;
+    const candidates = members(room).filter(member => !member.bot && onlineMember(member));
+    room.hostId = (room.started ? candidates.find(member => member.seat !== null) : null)?.id || candidates[0]?.id || null;
   }
   function refreshHost(room) {
     const host = room.members.get(room.hostId);
@@ -1219,7 +1226,7 @@ function createRoomEngine({
       return;
     }
     // 主动退出已删除成员，立即移交；仅连接中断才保留短暂重连窗口。
-    if (!host || host.bot || hostReconnectMs <= 0) {
+    if (!host || host.bot || host.seat === null || hostReconnectMs <= 0) {
       assignHost(room);
       return;
     }
@@ -1685,7 +1692,7 @@ function createRoomEngine({
         id: randomId(),
         matchId: room.matchId,
         members: members(room)
-          .filter((member) => !member.bot && onlineMember(member))
+          .filter((member) => playbackParticipant(room, member) && onlineMember(member))
           .map((member) => member.id),
         ready: [],
         automatic,
@@ -1705,8 +1712,17 @@ function createRoomEngine({
   function completePlayback(room) {
     const playback = room.playback;
     if (room.returnCountdown || room.phase !== "playback" || !playback) return;
-    playback.members = playback.members.filter((id) => room.members.has(id));
+    playback.members = playback.members.filter((id) => playbackParticipant(room, room.members.get(id)));
     if (!playback.members.every((id) => playback.ready.includes(id))) return;
+    // AI-only battles still deliver the adjudicated batch once. Progress on the
+    // next server microtask, independently of every spectator's playback speed.
+    if (!playback.members.length && !playback.announced) {
+      playback.announced = true;
+      queueMicrotask(() => {
+        if (rooms.get(room.code) === room && room.playback === playback) broadcast(room);
+      });
+      return;
+    }
     room.playback = null;
     room.irradiationActors = null;
     room.irradiationHits = null;
@@ -2635,23 +2651,18 @@ function createRoomEngine({
       return undefined;
     if (room.started && room.phase !== "assembly" && room.aiFormationEras)
       return room.aiFormationEras;
-    const allowed = new Set();
-    for (const player of room.seats) {
-      if (!player || player.bot) continue;
-      for (const entry of player.formationPreset?.units || player.formation || []) {
-        const model = G.models[entry.unitId + "__" + entry.kitId];
-        for (const tag of model?.tags || []) if (G.eras.includes(tag)) allowed.add(tag);
-      }
-    }
-    // AI-only rooms (including spectator hosts) have no human formation to follow.
-    return allowed.size ? [...allowed].sort() : undefined;
+    return [room.settings.regularEra || "0079T1"];
   }
   function playerRestrictions(room, player) {
     const rules = G.armyRestrictions(
       { ...room.settings, technologyCaps: roomTechnologyCaps(room) },
       player?.bot ? { ...formationPlayer(room, player), researched: roomAIResearch(room) } : player,
     );
-    if (player?.bot) rules.aiAllowedEras = roomAIEras(room);
+    if (player?.bot) {
+      rules.aiAllowedEras = roomAIEras(room);
+      // Earlier transports supply hangar slots in eras without new carriers.
+      rules.aiEarlierCarriers = room.settings.mode === "regular";
+    }
     if (room.sweep?.battleIndex > 0) rules.fleetEmbarkation = false;
     if (
       player?.bot &&
@@ -2780,6 +2791,12 @@ function createRoomEngine({
     room.resumeSave = Records.clone(save);
     room.turnSave = Records.clone(save);
     room.settings = { ...G.defaultRoomSettings(), ...Records.clone(save.settings) };
+    if (room.settings.mode === "regular" && !save.settings.regularEra) {
+      const savedEras = new Set((save.game?.units || []).flatMap(unit => G.models[unit.model]?.tags || []));
+      room.settings.regularEra = [...G.eras].reverse().find(era => savedEras.has(era)) || "0079T1";
+      room.resumeSave.settings.regularEra = room.settings.regularEra;
+      room.turnSave.settings.regularEra = room.settings.regularEra;
+    }
     room.replay = null;
     room.started = false;
     room.phase = "waiting";
@@ -4026,8 +4043,23 @@ function createRoomEngine({
       if (msg.action === "sweep_select" && room.phase === "sweep_map")
         Sweep.select(room, msg.nodeId);
       else if (msg.action === "sweep_confirm" && room.phase === "sweep_map") {
-        room.sweep.rewardMultipliers = getRewardMultipliers();
-        if (Sweep.arrived(room, G) === "battle") launchSweepBattle(room);
+        // Node progression and battle creation form one transaction. A rejected
+        // generation/deployment must not consume the route or strand assembly.
+        const previous = { ...room, sweep: structuredClone(room.sweep), settings: { ...room.settings },
+          seats: room.seats.slice(), log: room.log.slice() };
+        const players = [...room.members.values()].map(p => ({ p, seat:p.seat, formation:p.formation,
+          finalReady:p.finalReady, wsSeat:p.ws?.seat }));
+        try {
+          room.sweep.rewardMultipliers = getRewardMultipliers();
+          if (Sweep.arrived(room, G) === "battle") launchSweepBattle(room);
+        } catch (error) {
+          Object.assign(room, previous);
+          for (const saved of players) {
+            Object.assign(saved.p, {seat:saved.seat,formation:saved.formation,finalReady:saved.finalReady});
+            if (saved.p.ws) saved.p.ws.seat = saved.wsSeat;
+          }
+          throw error;
+        }
       } else if (msg.action === "sweep_event" && room.phase === "sweep_event") {
         room.sweep.rewardMultipliers = getRewardMultipliers();
         Sweep.event(room, G, msg.choice);
@@ -4188,6 +4220,13 @@ function createRoomEngine({
         msg.revision > room.revision
       )
         throw Error("演出批次已过期");
+      if (member.seat === null) {
+        // Older observers may still acknowledge a batch; this never changes
+        // revision, readiness or the participants' progress.
+        cache.set(id, true);
+        send(ws, state(room, id, member));
+        return;
+      }
       if (!playback.members.includes(member.id)) throw Error("你不在本批演出等待名单中");
       if (playback.ready.includes(member.id)) {
         cache.set(id, true);
@@ -4758,6 +4797,7 @@ function createRoomEngine({
               })
             : {
                 mode: G.validateBattleMode(msg.battleMode ?? room.settings.mode),
+                regularEra: msg.regularEra ?? room.settings.regularEra ?? "0079T1",
                 sweepFaction: msg.sweepFaction ?? room.settings.sweepFaction ?? "ZEON",
                 sweepEra: msg.sweepEra ?? room.settings.sweepEra ?? "0079T1",
                 sweepEnvironment:
@@ -4816,9 +4856,11 @@ function createRoomEngine({
             settings.technologyLimit > 1000000000
           )
             throw Error("科技点限制无效");
+          if (!G.eras.includes(settings.regularEra)) throw Error("常规战年代无效");
           if (
             settings.mode === "sweep" &&
-            (!G.factions.includes(settings.sweepFaction) || !G.eras.includes(settings.sweepEra))
+            (!G.factions.includes(settings.sweepFaction) || !G.eras.includes(settings.sweepEra) ||
+              !Sweep.factionsForEra(G, settings.sweepEra).includes(settings.sweepFaction))
           )
             throw Error("扫荡敌军阵营或年代无效");
           if (settings.mode === "sweep" && !["ground", "space"].includes(settings.sweepEnvironment))
@@ -4828,9 +4870,18 @@ function createRoomEngine({
               G,
               msg.battlefieldTeams ?? room.settings.battlefieldTeams,
             );
+            if (room.settings.mode !== "battlefield") {
+              const era = G.battlefieldMode.eras.includes(msg.battlefieldEra) ? msg.battlefieldEra : "0079T1";
+              const preset = G.battlefieldMode.roomPresets.find((p) => p.era === era && p.costLimit === settings.costLimit) ||
+                G.battlefieldMode.roomPresets.find((p) => p.era === era);
+              Object.assign(settings, G.battlefieldMode.presetSettings(preset.id, settings.battlefieldTeams, G.eras));
+            }
+            const era = room.settings.mode !== "battlefield" ? settings.battlefieldEra :
+              msg.battlefieldEra ?? settings.battlefieldEra ?? settings.battlefieldTeams[0].era;
+            if (!G.battlefieldMode.eras.includes(era)) throw Error("战场年代设置无效");
             settings.battlefieldEra = G.battlefieldMode.validateRoomSelection({
               ...settings,
-              battlefieldEra: msg.battlefieldEra ?? room.settings.battlefieldEra ?? "custom",
+              battlefieldEra: era,
             });
           }
           if (strategic)
@@ -4861,8 +4912,12 @@ function createRoomEngine({
               settings.technologyLimitMode !== room.settings.technologyLimitMode ||
               settings.technologyLimit !== room.settings.technologyLimit ||
               settings.technologyLimitFaction !== room.settings.technologyLimitFaction;
+            const eraChanged = settings.regularEra !== room.settings.regularEra ||
+              settings.sweepEra !== room.settings.sweepEra ||
+              settings.battlefieldEra !== room.settings.battlefieldEra ||
+              settings.sweepFaction !== room.settings.sweepFaction;
             room.settings = settings;
-            if (technologyChanged)
+            if (technologyChanged || eraChanged || modeChanged || factionsChanged)
               for (const player of members(room))
                 if (player.bot && !player.battlefieldAI) {
                   player.formation = null;
@@ -4897,7 +4952,7 @@ function createRoomEngine({
               }
             }
             room.turnDone = Array(map.spawns.length).fill(false);
-            if (mapChanged || modeChanged || factionsChanged || tagsChanged || technologyChanged)
+            if (mapChanged || modeChanged || factionsChanged || tagsChanged || technologyChanged || eraChanged)
               resetReady(room);
           }
         } else if (msg.action === "kick_player") {
@@ -5390,7 +5445,7 @@ function createRoomEngine({
             startedAt: Date.now(),
             matchId: room.matchId,
             members: members(room)
-              .filter((m) => !m.bot && onlineMember(m))
+              .filter((m) => playbackParticipant(room, m) && onlineMember(m))
               .map((m) => m.id),
             ready: [],
             automatic: false,
@@ -5741,6 +5796,7 @@ function createRoomEngine({
         room.turnDone = room.seats.map(() => false);
       }
       if (room.settings.mode === "battlefield") {
+        Object.assign(room.settings, G.battlefieldMode.presetSettings("0079T1-cost-1500", null, G.eras));
         room.settings.mapId = G.battlefieldMode.defaultMapId;
         room.seats = Array(G.getMap(room.settings.mapId).spawns.length).fill(null);
         room.turnDone = room.seats.map(() => false);

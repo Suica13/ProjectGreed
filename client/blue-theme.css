@@ -3502,9 +3502,23 @@ body.menu-shell-active #formationScreen #formationUnits .formation-row > .format
 #roomRulesPanel #battlefieldRoomOptions label { display:flex; flex-direction:column; gap:6px; margin:0; min-width:0; }
 #roomRulesPanel #battlefieldRoomOptions select { width:100%; min-width:0; max-width:100%; height:38px; }
 #roomRulesPanel #battlefieldRoomOptions .battlefield-fixed-era { grid-template-columns:minmax(0,1fr); }
-#battlefieldCustomScale { min-width:0; margin:12px 0 0; padding:10px; border:1px solid #47718b; }
-#roomRulesPanel .room-battle-rules { grid-template-columns:repeat(3,minmax(0,1fr)); align-items:start; }
-#roomRulesPanel .room-battle-rules > .room-pilot-option { grid-column:1; }
+#roomRulesActions { display:flex; align-items:center; gap:8px; min-width:0; width:min(100%,400px); }
+#roomRulesActions .room-mode-selector { display:flex; align-items:center; gap:8px; flex:1; min-width:0; margin:0; font-size:12px; }
+#roomRulesActions .room-mode-selector > span { flex:none; white-space:nowrap; }
+#roomRulesActions #roomBattleMode { height:36px; flex:1; width:0; min-width:0; margin:0; }
+#roomRulesActions #roomLoadSave { flex:none; }
+#roomRulesPanel .room-rules-heading { align-items:flex-end; flex-wrap:wrap; }
+#roomRulesPanel .room-battle-rules { grid-template-columns:repeat(2,minmax(0,1fr)); align-items:start; }
+#roomRulesPanel .room-battle-rules > label { padding:0; margin:0; display:flex; flex-direction:column; align-items:stretch; gap:6px; font-size:13px; }
+#roomRulesPanel .room-battle-rules > .room-pilot-option { grid-column:auto; }
+#roomRulesPanel .room-mode-fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; min-width:0; padding-top:10px; }
+#roomRulesPanel .room-mode-fields label { display:flex; flex-direction:column; gap:6px; margin:0; padding:0; min-width:0; }
+#roomRulesPanel .room-mode-fields select { width:100%; height:38px; margin:0; min-width:0; }
+#roomTechnologyRules > .room-options { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; padding:0; border:0; }
+#roomTechnologyRules > .room-options > label { display:flex; flex-direction:column; gap:6px; min-width:0; margin:0; padding:0; }
+#roomTechnologyRules :is(select,input) { width:100%; min-width:0; height:38px; margin:0; box-sizing:border-box; }
+#roomTechnologyRules > small { display:block; margin-top:8px; line-height:1.5; overflow-wrap:anywhere; }
+#sweepRoomOptions .room-mode-fields > label:first-child { grid-column:1/-1; }
 #roomRulesPanel #roomClimateOptions { grid-column:1/-1; width:100%; }
 @media(max-width:600px) {
   #roomRulesPanel .room-battle-rules { grid-template-columns:repeat(2,minmax(0,1fr)); }
@@ -3571,8 +3585,20 @@ body.menu-shell-active #formationScreen #formationUnits .formation-row-actions >
 #pilotDialogueEditor h3 { flex:1; margin:0; }
 #pilotDialogueEditor p { font-size:12px; }
 #pilotDialogueEditor label { display:block; margin:10px 0 4px; }
-#pilotDialogueEditor :is(select,textarea) { display:block; width:100%; min-width:0; box-sizing:border-box; }
-#pilotDialogueLines { resize:vertical; min-height:140px; font-family:inherit; font-size:14px; line-height:1.6; }
+#pilotDialogueEditor :is(select,input[type=text]) { display:block; width:100%; min-width:0; box-sizing:border-box; }
+#pilotDialogueLines { display:grid; gap:6px; }
+#pilotDialogueLines > div { display:flex; align-items:center; gap:6px; }
+#pilotDialogueLines input { flex:1; height:36px; font:14px/1.6 inherit; }
+#pilotDialogueLines button { flex:none; width:32px; height:32px; padding:0; }
+#addPilotDialogueLine { display:block; margin-top:6px; width:100%; height:30px; }
+.pilot-narrative-settings { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:10px; align-items:end; }
+.pilot-narrative-settings #editPilotDialogue { align-self:end; justify-self:start; width:auto; min-height:36px; padding:6px 14px; margin:0; }
+.pilot-promotion-tag { color:#bfe7ff; border-color:#69bce8; }
+.pilot-reincarnation-tag { color:#dfc5ff; border-color:#a68ccf; }
+#customPilotList .custom-pilot-summary { grid-template-rows:auto auto auto auto; align-content:start; }
+#customPilotList .pilot-roster-progress { height:auto; min-height:0; row-gap:2px; align-content:start; }
+.pilot-experience-value { white-space:nowrap; }
+.pilot-progress-badges { display:inline-flex; flex-wrap:wrap; gap:4px; align-items:center; }
 #pilotDialogueStatus { min-height:1.5em; color:#ffd796; }
 #pilotDialogueEditor footer button { flex:1; min-width:0; padding:6px; }
 body #formationScreen #formationPilotToolbar{display:grid;grid-template-columns:minmax(0,3fr) minmax(90px,1fr) minmax(160px,2fr)}

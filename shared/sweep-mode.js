@@ -242,7 +242,7 @@ const SweepMode = (() => {
   function rewardPool(room, G) {
     let pools = rewardPools.get(G.catalog);
     if (!pools) rewardPools.set(G.catalog, (pools = new Map()));
-    const era = room.settings.sweepEra + (room.sweep?.boss ? ":boss" : "");
+    const era = room.settings.sweepEra;
     if (!pools.has(era))
       pools.set(
         era,
@@ -257,8 +257,7 @@ const SweepMode = (() => {
                 G.formationModel({ unitId: u.id, kitId: u.defaultKit || u.weaponKits[0]?.id }),
               ) &&
               u.weaponKits.length &&
-              (u.tags.includes(room.settings.sweepEra) ||
-                (room.sweep?.boss && u.tags.includes("0093T1"))),
+              u.tags.includes(era),
           )
           .map((u) => ({
             id: u.id,
@@ -293,13 +292,6 @@ const SweepMode = (() => {
           pool = [...rewardPool(room, G)]
             .sort((a, b) => Math.abs(a.cost - limit) - Math.abs(b.cost - limit))
             .slice(0, 12);
-        if (s.boss)
-          pool = [
-            ...pool,
-            ...rewardPool(room, G).filter((u) =>
-              G.catalog.prefabs.find((p) => p.id === u.id)?.tags.includes("0093T1"),
-            ),
-          ];
         const random = rng(s.seed + s.depth * 1789 + eraIndex + p.seat * 97);
         for (let i = 0; i < Number(unitCount) && pool.length; i++) {
           const unit = pool[Math.floor(random() * pool.length)];
@@ -447,19 +439,52 @@ const SweepMode = (() => {
     room.returnAt = null;
     room.returnCountdown = null;
   }
+  function enemyRestrictions(room, G) {
+    return {
+      ...G.validateTagRestrictions({
+        bannedFactions: [...new Set([...(room.settings.bannedFactions || []), ...G.factions.filter(f => f !== room.settings.sweepFaction)])],
+        bannedEras: room.settings.bannedEras,
+        bannedTypes: room.settings.bannedTypes,
+      }),
+      characterFaction: null,
+      aiAllowedEras: [room.settings.sweepEra],
+      environment: G.getMap(room.settings.mapId).environment,
+      mapId: room.settings.mapId,
+      deploymentSeat: 1,
+    };
+  }
+  const enemyPools = new WeakMap();
+  function enemyPool(room, G) {
+    const map = G.getMap(room.settings.mapId), restrictions = enemyRestrictions(room, G);
+    let cache = enemyPools.get(map);
+    if (!cache) enemyPools.set(map, cache = new Map());
+    const key = JSON.stringify(restrictions);
+    if (!cache.has(key)) {
+      const pool = Object.values(G.models).filter(model => !model.formOnly && !model.requiredPilotId && !model.facility &&
+        !G.restrictionReason(model, restrictions) &&
+        !(map.environment === "space" && model.unitTags?.includes("Infantry") && (model.adaptability?.space ?? 100) < 100) &&
+        (model.weapons.length || model.hangars?.length || model.supplyAura || model.skills?.some(s => ["repair","recon"].includes(s.type))) &&
+        G.deploymentPlacements({mapId:map.id,tiles:map.tiles,environment:map.environment,units:[]},
+          [{unitId:model.prefabId,kitId:model.kitId}],1));
+      if (cache.size >= 128) cache.clear();
+      cache.set(key, pool);
+    }
+    return cache.get(key);
+  }
   function enemyLimits(room, G) {
     const pool = G ? rewardPool(room, G) : [],
       maximum = pool.length ? Math.min(99999, Math.max(...pool.map((u) => u.cost)) * 2) : 99999;
-    const minimum = pool.length ? Math.ceil(Math.min(...pool.map((u) => u.cost)) / 1.25) : 1;
+    const candidates = G ? enemyPool(room, G) : [];
+    const minimum = candidates.length ? Math.max(1, Math.min(...candidates.map(u => u.cost))) : 1;
     return {
-      costLimit: Math.min(
+      costLimit: Math.max(minimum, Math.min(
         99999,
         Math.floor(
           room.settings.costLimit *
             (room.sweep?.boss ? 1 : room.sweep?.elite ? 0.75 : 0.5) *
             growth(room),
         ),
-      ),
+      )),
       unitCostLimit: Math.max(
         minimum,
         Math.min(
@@ -557,24 +582,15 @@ const SweepMode = (() => {
       seed,
       limits.costLimit,
       {
-        ...G.validateTagRestrictions({
-          bannedFactions: [
-            ...new Set([
-              ...room.settings.bannedFactions,
-              ...G.factions.filter((f) => f !== room.settings.sweepFaction),
-            ]),
-          ],
-          bannedEras: room.settings.bannedEras,
-          bannedTypes: room.settings.bannedTypes,
-        }),
-        characterFaction: null,
-        aiAllowedEras: [room.settings.sweepEra],
+        ...enemyRestrictions(room, G),
         unitCostLimit: limits.unitCostLimit,
-        technologyCaps: room.settings.technologyCaps,
-        environment: G.getMap(room.settings.mapId).environment,
       },
       G.catalog.formation.maxUnits,
     );
+  }
+  function factionsForEra(G, era) {
+    return G.factions.filter((faction) => G.catalog.prefabs.some((p) =>
+      !p.wip && !p.formOnly && !p.facility && p.faction === faction && p.tags.includes(era)));
   }
   function mapPool(room, G) {
     const count = Math.max(1, room.seats.filter((p) => p && G.seatTeam(p.seat) === 0).length),
@@ -616,6 +632,7 @@ const SweepMode = (() => {
     remainingInventory,
     rewardPool,
     mapPool,
+    factionsForEra,
     chooseMap,
   };
 })();

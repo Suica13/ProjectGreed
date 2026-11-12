@@ -3,19 +3,41 @@ const PilotDialogueEditor = (() => {
   const panel = document.createElement("dialog");
   panel.id = "pilotDialogueEditor";
   panel.setAttribute("aria-labelledby", "pilotDialogueTitle");
-  panel.innerHTML = '<header><h3 id="pilotDialogueTitle">互动文本</h3><button type="button" id="cancelPilotDialogue">取消</button></header><p>每行一句，留空使用默认台词。每个事件最多12句，每句最多120字。</p><label for="pilotDialogueEvent">互动事件</label><select id="pilotDialogueEvent"></select><label for="pilotDialogueLines">随机台词</label><textarea id="pilotDialogueLines" rows="8" spellcheck="false"></textarea><p id="pilotDialogueStatus" role="status"></p><footer><button type="button" id="importPilotDialogue">导入JSON</button><button type="button" id="exportPilotDialogue">导出JSON</button><button type="button" id="savePilotDialogue" class="primary">保存</button></footer><input id="pilotDialogueFile" type="file" accept=".json,application/json" hidden>';
+  panel.innerHTML = '<header><h3 id="pilotDialogueTitle">互动文本</h3><button type="button" id="cancelPilotDialogue">取消</button></header><p>每个文本框填写一句，留空使用默认台词。每个事件最多10句，每句最多120字。</p><label for="pilotDialogueEvent">互动事件</label><select id="pilotDialogueEvent"></select><label>随机台词</label><div id="pilotDialogueLines"></div><button id="addPilotDialogueLine" type="button" aria-label="增加台词">＋</button><p id="pilotDialogueStatus" role="status"></p><footer><button type="button" id="importPilotDialogue">导入JSON</button><button type="button" id="exportPilotDialogue">导出JSON</button><button type="button" id="savePilotDialogue" class="primary">保存</button></footer><input id="pilotDialogueFile" type="file" accept=".json,application/json" hidden>';
   document.body.append(panel);
-  const event = panel.querySelector("select"), lines = panel.querySelector("textarea"),
+  const event = panel.querySelector("select"), lines = byId("pilotDialogueLines"),
     status = panel.querySelector('[role="status"]'), file = panel.querySelector('input[type="file"]');
   let draft, selected, commit, focus, pilotName, generation = 0;
   function flush() {
-    const phrases = lines.value.split(/\r?\n/).map((text) => text.trim()).filter(Boolean);
+    const phrases = [...lines.querySelectorAll("input")].map(input => input.value.trim()).filter(Boolean);
     if (phrases.length) draft[selected] = phrases;
     else delete draft[selected];
   }
   function showLines() {
-    lines.value = (draft[selected] || []).join("\n");
+    lines.replaceChildren();
+    for (const text of draft[selected]?.length ? draft[selected] : [""]) addLine(text);
   }
+  function addLine(text = "") {
+    if (lines.children.length >= PilotSystem.dialogueLimits.lines) return;
+    const row = document.createElement("div"), input = document.createElement("input"), remove = document.createElement("button");
+    input.type = "text";
+    input.maxLength = PilotSystem.dialogueLimits.length;
+    input.value = text;
+    input.setAttribute("aria-label", I18n.text("随机台词") + " " + (lines.children.length + 1));
+    remove.type = "button";
+    remove.textContent = "−";
+    remove.setAttribute("aria-label", I18n.text("删除台词"));
+    remove.onclick = () => {
+      row.remove();
+      if (!lines.children.length) addLine();
+      byId("addPilotDialogueLine").disabled = false;
+    };
+    row.append(input, remove);
+    lines.append(row);
+    byId("addPilotDialogueLine").disabled = lines.children.length >= PilotSystem.dialogueLimits.lines;
+    return input;
+  }
+  byId("addPilotDialogueLine").onclick = () => addLine()?.focus();
   function close() {
     if (panel.open) panel.close();
   }
@@ -69,7 +91,7 @@ const PilotDialogueEditor = (() => {
     } finally { file.value = ""; }
   };
   function open(pilot, onSave) {
-    if (!pilot?.custom || pilot.personality !== "custom" || pilot.ace || pilot.aceId) return;
+    if (!pilot?.custom || pilot.ace || pilot.aceId) return;
     if (panel.open) return;
     generation++;
     draft = PilotSystem.normalizeDialogue(pilot.dialogue);
@@ -81,7 +103,7 @@ const PilotDialogueEditor = (() => {
     status.textContent = "";
     showLines();
     panel.showModal();
-    lines.focus();
+    lines.querySelector("input").focus();
   }
   return { open, close };
 })();
