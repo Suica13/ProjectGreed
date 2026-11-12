@@ -526,7 +526,8 @@
     "maps/battlefield/frontline.json",
     "maps/battlefield/twin_ridges.json",
     "maps/battlefield/ruined_basin.json",
-    "maps/contracts/battlefield_sweep.json"
+    "maps/contracts/battlefield_sweep.json",
+    "maps/missions/white_base.json"
   ],
   "defaultMap": "frontier_1v1",
   "scenarioIndex": "maps/strategy/index.json"

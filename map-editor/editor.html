@@ -22,7 +22,7 @@
       <aside class="left">
         <div class="tabs">
           <button data-tab="map" class="active">地图</button><button data-tab="tiles">图块</button
-          ><button data-tab="rules">规则</button><button data-tab="units">单位</button>
+          ><button data-tab="rules">规则</button><button data-tab="units">单位</button><button data-tab="mission">任务事件</button>
         </div>
         <div class="sidebar-scroll">
           <section data-page="map">
@@ -106,6 +106,13 @@
               ><button id="drawDeployment">框选部署区</button>
             </div>
             <p class="hint">坐标从0开始。同队部署区在游戏中共享；不同席位的原始区域应互不重叠。</p>
+          </section>
+          <section data-page="mission" hidden>
+            <h2>任务关卡</h2>
+            <p class="hint">条件与动作按顺序执行，每个事件仅触发一次。点击地图的选择工具框选位置，可用于放置任务单位。</p>
+            <button id="missionCreate" type="button">创建任务脚本</button>
+            <button id="missionLoadSample" type="button">载入三分钟十二台大魔示例</button>
+            <div id="missionEditorFields"></div>
           </section>
           <section data-page="tiles" hidden>
             <h2>图集 / TileMap</h2>

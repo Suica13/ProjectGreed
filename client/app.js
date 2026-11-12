@@ -441,6 +441,8 @@ function playerHasActions() {
   return actionAvailabilityCache.value;
 }
 function updateContents() {
+  // Receipts/errors can clear awaiting without applying a new battle snapshot.
+  window.CampaignUI?.refreshBattleControls();
   namedTextNames = null;
   const pendingMove = pendingMovement();
   if (!pendingMove && mode === "move-confirm") mode = "select";
@@ -485,7 +487,7 @@ function updateContents() {
   );
   byId("modeLabel").textContent = Net.active
     ? (Net.local ? "离线" : "联机") +
-      ({ sweep: "战场扫荡", battlefield: "雇佣兵战争模式", campaign: "历史战役模式", quick: "快速战", regular: "常规战" }[Net.snapshot?.settings?.mode] || "常规战") +
+      ({ mission: "任务模式", sweep: "战场扫荡", battlefield: "雇佣兵战争模式", campaign: "历史战役模式", quick: "快速战", regular: "常规战" }[Net.snapshot?.settings?.mode] || "常规战") +
       " · " +
       Net.roleName()
     : "常规战";

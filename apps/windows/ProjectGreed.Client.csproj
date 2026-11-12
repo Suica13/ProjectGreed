@@ -8,7 +8,7 @@
     <AssemblyName>ProjectGreed</AssemblyName>
     <RootNamespace>ProjectGreed.Client</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Version>0.119.0</Version>
+    <Version>0.120.0</Version>
     <Product>ProjectGreed</Product>
     <Company>ProjectGreed</Company>
     <Description>ProjectGreed Windows client</Description>

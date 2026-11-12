@@ -41,7 +41,7 @@ async function main() {
     const health = await (await fetch(url + "/health")).json();
     assert.equal(health.version, project.version);
     const page = await (await fetch(url)).text();
-    assert(page.includes("V105"));
+    assert(page.includes(project.version));
     assert(page.includes("/client-assets/"));
     ws = new WebSocket(url.replace("http:", "ws:") + "/ws");
     await new Promise((resolve, reject) => {
@@ -82,6 +82,13 @@ async function main() {
       state.members.find((m) => m.seat === 0)?.bot && state.members.find((m) => m.seat === 1)?.bot,
     );
     assert.equal(state.game.seed, undefined);
+    const rules = require(path.join(serverDir,"shared/rules.js"));
+    const mission = rules.getMap("mission_white_base");
+    assert.equal(mission.playersPerTeam,5);
+    assert.equal(mission.mission.costLimit,1200);
+    assert.equal(mission.mission.unitLimit,12);
+    assert.equal(mission.mission.rewards.inventory.RX_77_2,2);
+    require(path.join(serverDir,"shared/mission-mode.js")).validate(mission.mission,mission,rules);
     console.log(
       "server: hashes, HTTP asset expansion, /health and real WebSocket battlefield room passed",
     );

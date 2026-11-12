@@ -301,7 +301,7 @@ const Tactics = (() => {
     return value;
   }
   function validateBattleMode(value = "regular") {
-    if (!["regular", "quick", "campaign", "battlefield", "sweep"].includes(value))
+    if (!["regular", "quick", "campaign", "battlefield", "sweep", "mission"].includes(value))
       throw Error("对战模式无效");
     return value;
   }
@@ -691,8 +691,9 @@ const Tactics = (() => {
     const rules = formationRestrictions(settings, player?.seat ?? null);
     if (!["battlefield", "sweep"].includes(settings.mode) && !player?.battlefieldAI)
       rules.technologyCaps = settings.technologyCaps;
-    if (!player?.battlefieldAI && ["regular", "battlefield", "sweep"].includes(settings.mode)) {
-      const era = settings.mode === "regular" ? settings.regularEra || "0079T1" :
+    if (!player?.battlefieldAI && ["regular", "battlefield", "sweep", "mission"].includes(settings.mode)) {
+      const era = settings.mode === "mission" ? settings.missionEra :
+        settings.mode === "regular" ? settings.regularEra || "0079T1" :
         settings.mode === "sweep" ? settings.sweepEra :
         battlefieldMode.eras.includes(settings.battlefieldEra) ? settings.battlefieldEra :
         settings.battlefieldTeams?.[(player?.seat ?? 0) % 2]?.era || "0079T1";
@@ -720,7 +721,7 @@ const Tactics = (() => {
       if (
         (settings.mode === "regular" &&
           (!player.formationPreset || formationStyle(settings) === "standard")) ||
-        ["battlefield", "sweep"].includes(settings.mode)
+        ["battlefield", "sweep", "mission"].includes(settings.mode)
       )
         Object.assign(rules, economy.normalizeStock(player));
     }
@@ -1372,6 +1373,21 @@ const Tactics = (() => {
     if (!variants.has(factor)) variants.set(factor, { ...base, hp: Math.ceil(base.hp * factor) });
     return variants.get(factor);
   }
+  const missionResourceModels = new WeakMap();
+  function missionModelOf(unit) {
+    const base = campaignModelOf(unit), factor = unit.missionResourceScale ?? 1;
+    if (factor === 1) return base;
+    let variants = missionResourceModels.get(base);
+    if (!variants) missionResourceModels.set(base, variants = new Map());
+    if (!variants.has(factor)) variants.set(factor, {
+      ...base,
+      get name() { return base.name; },
+      get description() { return base.description; },
+      get kitName() { return base.kitName; },
+      hp: Math.ceil(base.hp * factor), en: Math.ceil(base.en * factor),
+    });
+    return variants.get(factor);
+  }
   let modelQuery = null;
   // Explicit read-only scope. Presentation/AI queries share derived attributes,
   // but commands and damage resolution run outside it and always see live data.
@@ -1392,7 +1408,7 @@ const Tactics = (() => {
     return contexts.get(g);
   }
   function deriveModel(unit, g = null) {
-    const original = pilotModelOf(unit, campaignModelOf(unit)),
+    const original = pilotModelOf(unit, missionModelOf(unit)),
       base = unit.flying
         ? {
             ...original,
@@ -1495,6 +1511,7 @@ const Tactics = (() => {
 
   function deploy(g, team, id, x, y) {
     if (!g.deployment || g.deployment[team]) throw Error("部署已确认，不能再调整");
+    if(g.units.some(u=>u.id===id && u.missionActor)) throw Error("剧情单位已有固定出场位置");
     const u = g.units.find(
       (u) =>
         u.id === id &&
@@ -1546,7 +1563,7 @@ const Tactics = (() => {
           ? u.campaignDeploying && campaignBattlefield.deploymentSeat(g, u) === seat
           : ownerOf(u) === seat),
     );
-    if (!u || u.facility || u.embarked || u.hp <= 0) throw Error("该单位不能取消部署");
+    if (!u || u.missionActor || u.facility || u.embarked || u.hp <= 0) throw Error("该单位不能取消部署");
     u.deploymentStaged = true;
     delete u.squadId;
     delete u.squadSlot;
@@ -1555,7 +1572,7 @@ const Tactics = (() => {
   function clearDeployment(g, seat) {
     if (!g.deployment || g.deployment[seat]) throw Error("部署已确认");
     for (const u of g.units) {
-      if (u.facility || u.hp <= 0 || u.embarked) continue;
+      if (u.missionActor || u.facility || u.hp <= 0 || u.embarked) continue;
       if (
         g.campaignBattlefield
           ? u.campaignDeploying && campaignBattlefield.deploymentSeat(g, u) === seat
@@ -1586,7 +1603,7 @@ const Tactics = (() => {
   function aiDeployment(g, seat) {
     if (!g.deployment || g.deployment[seat]) return;
     const controlled = g.units.filter(
-      (u) => ownerOf(u) === seat && onMap(u) && (!g.campaignBattlefield || u.campaignDeploying),
+      (u) => !u.missionActor && ownerOf(u) === seat && onMap(u) && (!g.campaignBattlefield || u.campaignDeploying),
     );
     // Load compatible troops using real deployment, adjacency and native capacity checks.
     for (const carrier of controlled.filter((u) => !u.embarked && hangars.of(u).length)) {
@@ -1658,7 +1675,7 @@ const Tactics = (() => {
     );
     for (const u of controlled.filter(
       (u) =>
-        !u.facility && onMap(u) && !u.embarked && (!g.campaignBattlefield || u.campaignDeploying),
+        !u.missionActor && !u.facility && onMap(u) && !u.embarked && (!g.campaignBattlefield || u.campaignDeploying),
     )) {
       if (!deploymentCells(g, team, u).some((c) => c.x === u.x && c.y === u.y))
         throw Error("单位不在有效部署区域");
@@ -2085,7 +2102,7 @@ const Tactics = (() => {
     if (
       deploying
         ? g.deployment[ownerOf(unit)]
-        : unit.team !== g.team || unit.moved || g.winner !== null
+        : unit.team !== g.team || unit.moved || unit.rotated || g.winner !== null
     )
       return false;
     const angle = (((unit.angle + direction * 90) % 360) + 360) % 360;
@@ -2149,9 +2166,11 @@ const Tactics = (() => {
         x: unit.x,
         y: unit.y,
         angle: unit.angle,
+        rotated: !!unit.rotated,
         ...(unit.rotationPivot ? { rotationPivot: { ...unit.rotationPivot } } : {}),
       };
-      unit.moved = true;
+      unit.rotated = true;
+      unit.moved = !models[unit.model]?.ship;
     }
     unit.rotationPivot = unit.rotationPivot || center(unit);
     const nextAngle = (((unit.angle + direction * 90) % 360) + 360) % 360;
@@ -2320,6 +2339,8 @@ const Tactics = (() => {
       // null 明确表示空出生点，不生成单位，也无需确认部署。
       if (formations[seat] === null) continue;
       if (settings.mode === "battlefield" && seat < 2) continue;
+      // Scripted opponents are placed by MissionMode, not player deployment.
+      if (settings.mode === "mission" && seat === 1) continue;
       const seatRules = rulesForSeat(seat);
       formations[seat] = validateFormation(
         formations[seat],
@@ -2437,6 +2458,7 @@ const Tactics = (() => {
       seed: seed >>> 0,
       partSeed: (seed ^ 0x85ebca6b) >>> 0,
       winner: null,
+      ...(settings.mode === "mission" ? { mission: { pending: true } } : {}),
     };
     if (settings.mode === "battlefield") battlefieldMode.initialize(Tactics, game, settings);
     return game;
@@ -2467,7 +2489,8 @@ const Tactics = (() => {
   function reachableSingle(g, u, starts = null, occupancy = movementQuery(g)) {
     if (!onMap(u) || u.embarked) return new Map();
     const startAdaptation = adaptationOf(g, u);
-    const moveLimit = startAdaptation > 0 ? modelOf(u, g).move / startAdaptation : modelOf(u).move;
+    const moveLimit = (startAdaptation > 0 ? modelOf(u, g).move / startAdaptation : modelOf(u).move) *
+      (models[u.model]?.ship && u.rotated ? 0.5 : 1);
     // A search does not mutate the board. Evaluate each destination's expensive
     // collision/terrain/ZOC checks once, even when reached from several edges.
     const stepCosts = new Map();
@@ -2692,6 +2715,7 @@ const Tactics = (() => {
       x: u.x,
       y: u.y,
       angle: u.angle,
+      rotated: !!u.rotated,
       ...(u.rotationPivot ? { rotationPivot: { ...u.rotationPivot } } : {}),
     };
     const from = tile.path.length > 1 ? tile.path[tile.path.length - 2] : u;
@@ -2741,7 +2765,7 @@ const Tactics = (() => {
       onMap(u) &&
       u.team === g.team &&
       !u.acted &&
-      u.moved &&
+      (u.moved || u.rotated) &&
       !!u.origin &&
       u.lastCargoLaunchRound !== g.round &&
       fits(g, u, u.origin.x, u.origin.y, u.origin.angle)
@@ -3761,7 +3785,7 @@ const Tactics = (() => {
       g.units.some((u) => !u.facility?.campaignDefense && u.team === t && u.hp > 0),
     );
     if (g.battlefield) battlefieldMode.sync(Tactics, g);
-    else if (!options.deferVictory && (!alive[0] || !alive[1])) g.winner = alive[0] ? 0 : 1;
+    else if (!g.mission && !options.deferVictory && (!alive[0] || !alive[1])) g.winner = alive[0] ? 0 : 1;
     return events;
   }
   // Counter waves share reaction state across the entire batch; EN is checked per shot.
@@ -3906,7 +3930,7 @@ const Tactics = (() => {
       g.units.some((u) => !u.facility?.campaignDefense && u.hp > 0 && u.team === team),
     );
     if (g.battlefield) battlefieldMode.sync(Tactics, g);
-    else if (!alive[0] || !alive[1]) g.winner = alive[0] ? 0 : 1;
+    else if (!g.mission && (!alive[0] || !alive[1])) g.winner = alive[0] ? 0 : 1;
     return {
       type: "skill",
       skillId: skill.id,
@@ -3999,7 +4023,7 @@ const Tactics = (() => {
         g.units.some((u) => !u.facility?.campaignDefense && u.team === team && u.hp > 0),
       );
       if (g.battlefield) battlefieldMode.sync(Tactics, g);
-      else if (!alive[0] || !alive[1]) g.winner = alive[0] ? 0 : 1;
+      else if (!g.mission && (!alive[0] || !alive[1])) g.winner = alive[0] ? 0 : 1;
     }
     return events;
   }
@@ -4067,7 +4091,7 @@ const Tactics = (() => {
     const teamsAlive = [0, 1].map((team) =>
       g.units.some((unit) => !unit.facility?.campaignDefense && unit.team === team && unit.hp > 0),
     );
-    if (!g.battlefield && (!teamsAlive[0] || !teamsAlive[1])) g.winner = teamsAlive[0] ? 0 : 1;
+    if (!g.battlefield && !g.mission && (!teamsAlive[0] || !teamsAlive[1])) g.winner = teamsAlive[0] ? 0 : 1;
     g.team = 1 - g.team;
     g.round++;
     skills.tickPilotBuffs(g);
@@ -4129,6 +4153,7 @@ const Tactics = (() => {
       u.acted = false;
       u.moved = false;
       u.origin = null;
+      delete u.rotated;
     }
     campaignBattlefield.heal(Tactics, g);
     battlefieldMode.heal(Tactics, g);
@@ -4170,7 +4195,7 @@ const Tactics = (() => {
       g.units.some((u) => !u.facility?.campaignDefense && u.team === team && u.hp > 0),
     );
     if (g.battlefield) battlefieldMode.sync(Tactics, g);
-    else if (!alive[0] || !alive[1]) g.winner = alive[0] ? 0 : 1;
+    else if (!g.mission && (!alive[0] || !alive[1])) g.winner = alive[0] ? 0 : 1;
     if (g.battlefield) battlefieldMode.advance(Tactics, g);
   }
   // 待机不阻止自动结束；仍可使用脱出等非攻击技能时保留行动机会。

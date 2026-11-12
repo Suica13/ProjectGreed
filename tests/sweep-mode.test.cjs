@@ -23,7 +23,7 @@ function fixture(t, options = {}) {
     roomMode: options.mode || "sweep",
     characterFaction: "PMC",
     licenses: { Type61: true, RB_79: true },
-    inventory: { Type61: 10, RGZ_91B: 2, RB_79: 2 },
+    inventory: { Type61: 10, RGZ_91B: 2, RB_79: 2, ...options.inventory },
   });
   const room = engine.rooms.get("SWEEP");
   const act = (action, fields = {}) =>
@@ -62,6 +62,29 @@ test("sweep initializes a shared map with a locked enemy AI and private pending 
   assert.equal(snapshot.sweep.seed, undefined);
   assert.equal(snapshot.sweep.teams[0].units.length, 2);
   assert.equal(snapshot.sweep.pending.money, 0);
+});
+
+test("AI delegation is reversible after finishing one sweep battle and entering the next", t => {
+  const {room,act,engine} = fixture(t,{formation:[{unitId:"PegasusClass",kitId:"standard"}],inventory:{PegasusClass:5}});
+  act("sweep_select",{nodeId:"0:1"}); act("sweep_confirm");
+  room.turnNotBefore = Date.now()+60000;
+  act("set_ai_delegate",{delegate:true});
+  assert.deepEqual(room.delegatedSeats,[0]);
+  for (const u of room.game.units.filter(u => u.team === 1)) u.hp = 0;
+  room.game.winner = 0; room.phase = "finished"; engine.broadcast(room);
+  assert.equal(room.phase,"sweep_map");
+  const current = room.sweep.nodes.find(n => n.depth === room.sweep.depth && n.lane === room.sweep.lane);
+  const next = room.sweep.nodes.find(n => n.id === current.next[0]);
+  next.type = "battle";
+  act("sweep_select",{nodeId:next.id}); act("sweep_confirm");
+  assert.deepEqual(room.delegatedSeats,[]);
+  assert.equal(room.phase,"deployment");
+  G.aiDeployment(room.game,0); act("confirm_deployment");
+  room.turnNotBefore = Date.now()+60000;
+  act("set_ai_delegate",{delegate:true});
+  act("set_ai_delegate",{delegate:false});
+  assert.deepEqual(room.delegatedSeats,[]);
+  assert.equal(room.seats[0].bot,undefined);
 });
 test("battle loot is deferred, HP/EN persist, extraction emits one award and inventory losses are immediate", (t) => {
   const { room, act, engine } = fixture(t);

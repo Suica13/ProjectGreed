@@ -58,7 +58,7 @@ const LocalRoom = (() => {
       ...Economy.normalizeStock(Economy.snapshot()),
       roomMode: byId("offlineRoomMode").value,
     });
-    if (!["battlefield", "sweep"].includes(byId("offlineRoomMode").value)) engine.action(socket, {
+    if (!["battlefield", "sweep", "mission"].includes(byId("offlineRoomMode").value)) engine.action(socket, {
       action: "add_ai",
       seat: 1,
       id: id(),

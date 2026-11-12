@@ -122,6 +122,7 @@ const MapEditor = (() => {
     );
   }
   function tab(name) {
+    document.body.classList.toggle("mission-editing", name === "mission");
     document.querySelectorAll("[data-page]").forEach((e) => (e.hidden = e.dataset.page !== name));
     document
       .querySelectorAll("[data-tab]")
@@ -280,6 +281,7 @@ const MapEditor = (() => {
       ruleId,
     );
     refreshRule();
+    window.MissionEditor?.refresh();
     drawAtlas();
   }
   function refreshSpawn() {
@@ -604,11 +606,14 @@ const MapEditor = (() => {
         ctx.fillText(s.team + 1 + "-" + s.position, ox + s.x * cw, oy + s.y * ch - 2);
       }
     }
-    for (const u of doc.units || []) {
+    for (const u of [...(doc.units || []), ...(doc.mission?.actors || [])]) {
       const x = ox + u.x * cw, y = oy + u.y * ch;
       if (x + cw < 0 || y + ch < 0 || x > viewport.clientWidth || y > viewport.clientHeight) continue;
       ctx.fillStyle = ["#439aff", "#f26868", "#6cdb91", "#edc764"][u.team % 4];
-      ctx.fillRect(x + cw * .15, y + ch * .15, cw * .7, ch * .7);
+      if(u.initial===false) {
+        ctx.save();ctx.strokeStyle=ctx.fillStyle;ctx.setLineDash([3,2]);
+        ctx.strokeRect(x+cw*.15,y+ch*.15,cw*.7,ch*.7);ctx.restore();
+      } else ctx.fillRect(x + cw * .15, y + ch * .15, cw * .7, ch * .7);
       ctx.fillStyle = "#fff"; ctx.font = "12px sans-serif";
       ctx.fillText(`${u.team + 1}: ${u.name || u.unitId}`, x, y - 3);
     }
@@ -798,7 +803,7 @@ const MapEditor = (() => {
     }
   }
   function validate() {
-    const issues = M.gameIssues(doc);
+    const issues = [...M.gameIssues(doc), ...(window.MissionEditor?.issues() || [])];
     $("validation").replaceChildren(
       ...(issues.length ? issues : ["地图可导出为两队对战地图。"]).map((value) => node("li", t(value))),
     );
@@ -1280,6 +1285,11 @@ const MapEditor = (() => {
   });
   requestAnimationFrame(fit);
   return {
+    editMission(change) {
+      checkpoint();
+      change(doc);
+      changed("已修改任务脚本");
+    },
     get document() {
       return doc;
     },

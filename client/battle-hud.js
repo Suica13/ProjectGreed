@@ -281,7 +281,7 @@ const BattleHUD = (() => {
     MatchIncome.render(byId("hudMatchIncome"), snapshot);
     const roomName = Net.local
       ? "离线" +
-        ({ sweep: "战场扫荡", battlefield: "雇佣兵战争模式", quick: "快速战" }[
+        ({ mission: "任务模式", sweep: "战场扫荡", battlefield: "雇佣兵战争模式", quick: "快速战" }[
           snapshot?.settings?.mode
         ] || "常规战")
       : snapshot?.room || Net.room || "—";
@@ -292,6 +292,7 @@ const BattleHUD = (() => {
     const members = (snapshot?.members || []).filter(
       (member) =>
         member.connected &&
+        !(snapshot?.settings?.mode === "mission" && member.bot) &&
         !(snapshot?.settings?.mode === "battlefield" && member.seat !== null && member.seat < 2),
     );
     const players = members.filter((member) => member.seat !== null).length;
@@ -301,7 +302,7 @@ const BattleHUD = (() => {
       ": " +
       players +
       "/" +
-      ((snapshot?.connected?.length || 0) - (snapshot?.settings?.mode === "battlefield" ? 2 : 0)) +
+      (snapshot?.settings?.mode === "mission" ? (snapshot.connected?.length || 0) / 2 : (snapshot?.connected?.length || 0) - (snapshot?.settings?.mode === "battlefield" ? 2 : 0)) +
       (spectators ? " · " + I18n.text("观战玩家") + ": " + spectators : "");
     byId("hudPlayerCount").title = byId("hudPlayerCount").textContent;
   }

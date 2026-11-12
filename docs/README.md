@@ -20,6 +20,7 @@
 - [战略模式](rules/campaign.md)
 - [收益](rules/economy.md)
 - [合约模式：战场扫荡](rules/sweep.md)
+- [合约模式：任务模式](rules/missions.md)
 - [部署许可与库存](rules/licenses.md)
 - [服务器打包与运行](tools/server-package.md)
 - [Windows / Android 软件客户端](tools/native-clients.md)

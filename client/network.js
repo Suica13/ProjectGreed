@@ -113,6 +113,7 @@ const Net = (() => {
     ) &&
     Rules.canControlUnit(n.snapshot?.settings, n.snapshot?.members, n.seat, unit);
   function canAct() {
+    if(n.snapshot?.game.mission?.dialogue || n.snapshot?.game.mission?.error) return false;
     if (
       BattleAssets.loading ||
       (n.snapshot?.delegatedSeats || n.snapshot?.campaign?.delegatedSeats)?.includes(n.seat)
@@ -332,6 +333,7 @@ const Net = (() => {
     }
   }
   function leave({ notify = true, forget = true } = {}) {
+    window.MissionUI?.clear();
     SweepUI.receive({phase:"waiting"});
     BattleAssets.release();
     if (window.ReplayPlayer?.active) window.ReplayPlayer.stop(false);
@@ -500,7 +502,7 @@ const Net = (() => {
     foregroundSyncAt = -Infinity;
     session++;
     moving = null;
-    status("离线" + ({sweep:"战场扫荡",battlefield:"雇佣兵战争模式",campaign:"历史战役",quick:"快速战"}[byId("offlineRoomMode").value] || "常规战"));
+    status("离线" + ({mission:"任务模式",sweep:"战场扫荡",battlefield:"雇佣兵战争模式",campaign:"历史战役",quick:"快速战"}[byId("offlineRoomMode").value] || "常规战"));
   }
   function connect(mode = "join", auto = false, roomCode = null, credentials = {}) {
     cancelReconnect();
@@ -699,6 +701,7 @@ const Net = (() => {
       previousGame = game;
     game = s.game;
     if (previousGame.mapId !== game.mapId) MapCamera.reset();
+    window.MissionUI?.receive(s);
     game.ai = false;
     log = s.log.slice();
 
@@ -862,7 +865,7 @@ const Net = (() => {
     if (s.started && online)
       status(
         (n.local
-          ? "离线" + ({sweep:"战场扫荡",battlefield:"雇佣兵战争模式",quick:"快速战"}[s.settings?.mode]||"常规战")
+          ? "离线" + ({mission:"任务模式",sweep:"战场扫荡",battlefield:"雇佣兵战争模式",quick:"快速战"}[s.settings?.mode]||"常规战")
           : "房间 " + n.room) +
           " · " +
           roleName(),

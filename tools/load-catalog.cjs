@@ -232,9 +232,10 @@ function loadCatalog({
       map.supportedModes !== undefined &&
       (!Array.isArray(map.supportedModes) ||
         !map.supportedModes.length ||
-        map.supportedModes.some((mode) => !["regular", "quick", "battlefield", "sweep"].includes(mode)))
+        map.supportedModes.some((mode) => !["regular", "quick", "battlefield", "sweep", "mission"].includes(mode)))
     )
       throw Error("Invalid map modes: " + map.id);
+    if (map.mission) require("../shared/mission-mode.js").validate(map.mission, map);
     if (
       map.cellEnvironments !== undefined &&
       (!Array.isArray(map.cellEnvironments) ||
@@ -1386,6 +1387,25 @@ function loadCatalog({
       )
     )
       throw Error("Unknown WIP unit or series: " + pattern);
+  const missionPilots = new Set(require("../shared/pilots.json").aces.map(p => p.id));
+  for (const map of Object.values(result.maps)) if (map.mission) {
+    require("../shared/mission-mode.js").validate(map.mission, map, {
+      models: result.models, pilots: { aceProfile: id => missionPilots.has(id) },
+    });
+    for (const event of map.mission.events) for (const action of event.actions)
+      if (action.type === "dialogue") for (const line of action.lines) {
+        if (line.portrait && embedAssets)
+          result.assets[line.portrait] = "data:image/png;base64," + fs.readFileSync(file(root, line.portrait.slice(7))).toString("base64");
+        if (line.sound && line.sound.startsWith("assets/")) {
+          const audio = file(root, line.sound.slice(7));
+          if (!fs.existsSync(audio)) throw Error("Missing mission sound: " + line.sound);
+          if (embedAssets) {
+            const mime = /\.mp3$/.test(audio) ? "mpeg" : /\.ogg$/.test(audio) ? "ogg" : "wav";
+            result.sounds[line.sound] = "data:audio/" + mime + ";base64," + fs.readFileSync(audio).toString("base64");
+          }
+        }
+      }
+  }
   if (!result.prefabs.length) throw Error("No enabled units in catalog");
   return result;
 }

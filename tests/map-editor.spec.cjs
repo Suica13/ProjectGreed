@@ -172,6 +172,7 @@ test("editor tools remain usable on mobile and deployment/spawn drawing validate
   await page.locator("#placeSpawn").click();
   await paint(page, 4, 12);
   expect(await page.evaluate(() => MapEditor.document.spawns[0].x)).toBe(4);
+  const originalHeight=await page.evaluate(()=>MapEditor.document.deploymentAreas[0].height);
   await page.locator("#drawDeployment").click();
   await rectangle(page, 0, 4, 9, 20);
   expect(await page.evaluate(() => MapEditor.document.deploymentAreas[0])).toEqual({
@@ -181,7 +182,7 @@ test("editor tools remain usable on mobile and deployment/spawn drawing validate
     height: 17,
   });
   await page.locator("#undo").click();
-  expect(await page.evaluate(() => MapEditor.document.deploymentAreas[0].height)).toBe(32);
+  expect(await page.evaluate(() => MapEditor.document.deploymentAreas[0].height)).toBe(originalHeight);
   await page.locator("#redo").click();
   expect(await page.evaluate(() => MapEditor.document.deploymentAreas[0].height)).toBe(17);
   await page.locator("#validateMap").click();
@@ -226,6 +227,8 @@ test("battle draws authored terrain, ground units, over-ground layers, then airc
     setPageView("game");
     update();
     MapCamera.fit();
+    MapCamera.setPercent(50);
+    MapCamera.focus(21,12,{preserveZoom:true});
     const calls = [],
       oldTile = TileMapRenderer.draw,
       oldUnit = SpriteRenderer.draw;

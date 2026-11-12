@@ -151,8 +151,6 @@ for (const initialHp of [100000, 1])
     await act(host, "playback_ready", { batchId });
     assert.equal(room.phase, "playback");
     await act(first, "playback_ready", { batchId });
-    assert.equal(room.phase, "playback");
-    await act(second, "playback_ready", { batchId });
     assert.notEqual(room.phase, "playback");
     if (initialHp > 1) assert.equal(room.game.team, 1);
     else assert.equal(room.game.winner, 0);

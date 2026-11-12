@@ -3513,6 +3513,7 @@ const Deployment = (() => {
     (!Net.active || Net.snapshot.connected.every(Boolean));
   const canEditUnit = (u) =>
     !!u &&
+    !u.missionActor &&
     phase === "deployment" &&
     !Net.awaiting &&
     (!game.campaignBattlefield || !!u.campaignDeploying) &&

@@ -698,7 +698,7 @@ const AutomaticFire = (() => {
       }
     for (const unit of game.units) delete unit.squadOrder;
     const alive = [0, 1].map((team) => game.units.some((u) => u.team === team && u.hp > 0));
-    if (!alive[0] || !alive[1]) game.winner = alive[0] ? 0 : alive[1] ? 1 : -1;
+    if (!game.mission && (!alive[0] || !alive[1])) game.winner = alive[0] ? 0 : alive[1] ? 1 : -1;
     // Keep one playback lane per volley instead of duplicating actors for every bullet.
     const groups = new Map(),
       result = [];

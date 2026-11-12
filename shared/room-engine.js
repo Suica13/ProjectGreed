@@ -40,6 +40,8 @@ function createRoomEngine({
     roomBattleEconomy().rewardMultipliers(activityRewardMultipliers());
   const roundReward = (value) => roomBattleEconomy().roundReward(value);
   function roomTechnologyCaps(room) {
+    if (room.settings.mode === "mission") return Object.fromEntries(
+      roomDevelopment().factions.map(faction => [faction, G.getMap(room.settings.mapId).mission.technologyLimit]));
     if (["battlefield", "sweep"].includes(room.settings.mode)) return undefined;
     if (room.started && room.technologyCapSnapshot) return room.technologyCapSnapshot;
     const dev = roomDevelopment();
@@ -64,6 +66,7 @@ function createRoomEngine({
       ? BattleDialogue
       : require("../client/battle-dialogue.js");
   const Sweep = typeof SweepMode !== "undefined" ? SweepMode : require("./sweep-mode.js");
+  const Mission = typeof MissionMode !== "undefined" ? MissionMode : require("./mission-mode.js");
   let campaignAdapter = null;
   const automatedRequests = new WeakSet();
   const delegated = (room, seat) =>
@@ -138,7 +141,30 @@ function createRoomEngine({
       bot.ready = bot.finalReady = true;
     }
   }
+  function ensureMissionSeats(room) {
+    if (room.settings.mode !== "mission") {
+      for (const p of members(room).filter(p=>p.missionEnemy)) {
+        if(room.seats[p.seat]===p) room.seats[p.seat]=null;
+        room.members.delete(p.id);
+      }
+      return;
+    }
+    for(const p of members(room).filter(p=>p.seat!==null && G.seatTeam(p.seat)===1 && !p.missionEnemy)) {
+      room.seats[p.seat]=null;
+      p.seat=room.seats.findIndex((v,i)=>i%2===0 && !v);
+      if(p.seat<0)p.seat=null;
+      if(p.ws)p.ws.seat=p.seat;
+      if(p.seat!==null)room.seats[p.seat]=p;
+    }
+    if(!room.seats[1]) {
+      const id=randomId(), p={id,name:"任务敌军",bot:true,missionEnemy:true,seat:1,characterFaction:"PMC",
+        ready:true,finalReady:true,requests:new Map(),aiSettings:G.validateAISettings(),
+        ws:{room:room.code,memberId:id,seat:1}};
+      room.members.set(id,p);room.seats[1]=p;
+    }
+  }
   function ensureSweepSeats(room) {
+    ensureMissionSeats(room);
     if (room.settings.mode !== "sweep") {
       for (const p of members(room).filter((p) => p.sweepEnemy)) {
         room.seats[p.seat] = null;
@@ -676,9 +702,9 @@ function createRoomEngine({
           code: room.code,
           locked: !!room.passwordMatches,
           players: room.seats.filter(
-            (player) => !player?.battlefieldAI && (player?.bot || onlineMember(player)),
+            (player) => !player?.battlefieldAI && !player?.missionEnemy && (player?.bot || onlineMember(player)),
           ).length,
-          capacity: room.seats.length - (room.settings.mode === "battlefield" ? 2 : 0),
+          capacity: room.settings.mode === "mission" ? room.seats.length / 2 : room.seats.length - (room.settings.mode === "battlefield" ? 2 : 0),
           mapId: room.settings.mapId,
           mode: room.settings.mode || "regular",
           costLimit: room.settings.costLimit,
@@ -786,6 +812,7 @@ function createRoomEngine({
           (u) =>
             u.team === intel.team ||
             visibleIds.has(u.id) ||
+            (u.missionActor && u.missionActor === game.mission?.dialogue?.lines[game.mission.dialogue.index]?.actor) ||
             (ruinCells &&
               u.facility &&
               u.hp <= 0 &&
@@ -1310,7 +1337,15 @@ function createRoomEngine({
       return;
     }
     refreshHost(room);
-    if (room.settings.mode === "sweep" && (!room.started || room.phase === "assembly"))
+    if (room.game.mission && room.started && room.game.mission.fired) {
+      Mission.observe(room);
+      const host = Mission.commander(room);
+      room.game.mission.commanderId=host?.id ?? null;
+      if (host?.seat !== null && host?.seat !== undefined)
+        for (const actor of room.game.units.filter(u=>u.missionGuest)) actor.ownerSeat=host.seat;
+      Mission.poll(room, G, text=>log(room,text));
+    }
+    if (["sweep", "mission"].includes(room.settings.mode) && (!room.started || room.phase === "assembly"))
       ensureSweepSeats(room);
     if (room.started && room.game.battlefield) {
       G.battlefieldMode.captureNearby(G, room.game);
@@ -1334,6 +1369,7 @@ function createRoomEngine({
     }
     if (!room.returnCountdown) {
       completePlayback(room);
+      Mission.poll(room, G, text=>log(room,text));
       syncRegularStock(room);
       if (room.sweep && !room.sweep.ended && room.phase === "finished" && !room.playback) {
         room.sweep.rewardMultipliers = getRewardMultipliers();
@@ -1471,6 +1507,7 @@ function createRoomEngine({
   const autoEndTimers = new Map();
   function canAutoEnd(room) {
     return (
+      !room.game.mission?.dialogue && !room.game.mission?.error &&
       rooms.get(room.code) === room &&
       room.started &&
       !room.returnCountdown &&
@@ -2108,7 +2145,7 @@ function createRoomEngine({
     if (
       !room.started ||
       !room.economySettled ||
-      room.settings.mode !== "regular" ||
+      !["regular", "mission"].includes(room.settings.mode) ||
       room.campaign ||
       room.startedFromSave ||
       room.replay
@@ -2268,7 +2305,8 @@ function createRoomEngine({
           losses[record.unitId] = (losses[record.unitId] || 0) + 1;
       }
       const won = G.seatTeam(player.seat) === room.game.winner;
-      awardMatchTechnology(room, player, won, bonus);
+      const missionReward = room.settings.mode === "mission" ? Mission.reward(room,G) : null;
+      if (!missionReward) awardMatchTechnology(room, player, won, bonus);
       const stockLost = settleBattleStock(room, player);
       const battleRate = roomBattleEconomy().rewardRatio(
         room.battleRoster,
@@ -2278,11 +2316,11 @@ function createRoomEngine({
       const rate = roomBattleEconomy().rates(player.characterFaction, room.settings.mode).currency;
       const destroyedCost = room.teamDestroyedCost?.[G.seatTeam(player.seat)] || 0;
       const economy = roomBattleEconomy();
-      const base = ["regular", "quick"].includes(room.settings.mode)
+      const base = missionReward || (["regular", "quick", "mission"].includes(room.settings.mode)
         ? economy.calculateBattleReward(
             economy.teamAverageFormationCost(room.battleRoster, G.seatTeam(player.seat)),
           )
-        : { money: room.settings.costLimit * 1.5, supplies: destroyedCost * 3 };
+        : { money: room.settings.costLimit * 1.5, supplies: destroyedCost * 3 });
       (room.economyAwards ||= []).push({
         id: randomId(),
         matchId: room.matchId,
@@ -2290,9 +2328,10 @@ function createRoomEngine({
         kind: "result",
         ...(stockLost ? { stockLost } : {}),
         destroyedCost,
-        money: roundReward((won ? base.money : destroyedCost) * rate * battleRate * bonus.money),
+        ...(missionReward ? {stockGained:{inventory:missionReward.inventory}} : {}),
+        money: roundReward(missionReward ? base.money * bonus.money : (won ? base.money : destroyedCost) * rate * battleRate * bonus.money),
         supplies: roundReward(
-          (won ? base.supplies : destroyedCost * 2) * rate * battleRate * bonus.supplies,
+          missionReward ? base.supplies * bonus.supplies : (won ? base.supplies : destroyedCost * 2) * rate * battleRate * bonus.supplies,
         ),
         losses,
         lostUnits,
@@ -2376,6 +2415,7 @@ function createRoomEngine({
     }
   }
   function recordPilotBattle(room, actor, kind, cost, shipKill = false) {
+    if (actor?.missionActor) return;
     if (room.sweep) return;
     if (room.settings.mode === "battlefield") return;
     if ((room.startedFromSave && !room.campaign) || !actor?.pilot?.custom) return;
@@ -2613,13 +2653,13 @@ function createRoomEngine({
     };
   }
   const playerBudget = (room, player) =>
-    player?.sweepEnemy
+    player?.missionEnemy ? G.maxCostLimit : player?.sweepEnemy
       ? Sweep.enemyLimits(room, G).costLimit
       : player?.battlefieldAI
         ? 10000
         : G.armyBudget(room.settings, formationPlayer(room, player));
   const playerUnitLimit = (room, player) =>
-    player?.sweepEnemy
+    player?.missionEnemy ? G.catalog.formation.maxUnits : player?.sweepEnemy
       ? G.catalog.formation.maxUnits
       : player?.battlefieldAI
         ? 36
@@ -2658,6 +2698,7 @@ function createRoomEngine({
       { ...room.settings, technologyCaps: roomTechnologyCaps(room) },
       player?.bot ? { ...formationPlayer(room, player), researched: roomAIResearch(room) } : player,
     );
+    if (player?.missionEnemy) return { unitCostLimit:Infinity, ignoreDevelopment:true };
     if (player?.bot) {
       rules.aiAllowedEras = roomAIEras(room);
       // Earlier transports supply hangar slots in eras without new carriers.
@@ -2711,6 +2752,11 @@ function createRoomEngine({
   // Cache by all effective inputs, never by mutable player/room identity.
   const previewArmies = new Map();
   function randomArmy(room, player, seed = randomSeed()) {
+    if (player.missionEnemy) {
+      // The cooperative enemy seat is a controller, not a budgeted formation.
+      // A legal marker satisfies room readiness; create() never deploys it.
+      return [{unitId:"MS_09R",kitId:"bazooka"}];
+    }
     if (player.sweepEnemy) return room.sweep ? player.formation : Sweep.enemies(room, G, seed);
     if (player.battlefieldAI) {
       const faction = room.settings.battlefieldTeams[player.seat].faction;
@@ -2752,7 +2798,8 @@ function createRoomEngine({
       throw Error("AI 没有符合房间或队伍限制的可用单位，请调整限制或预算");
   }
   function savedPlan(room, seat) {
-    const units = room.resumeSave.game.units.filter((unit) => G.ownerOf(unit) === seat);
+    const units = room.resumeSave.game.units.filter((unit) => G.ownerOf(unit) === seat &&
+      (room.settings.mode !== "mission" || !unit.missionActor));
     const entries = units.map((unit) => {
       const model = G.models[unit.model];
       return {
@@ -2953,6 +3000,8 @@ function createRoomEngine({
     });
     room.turnSave = room.resumeSave ? Records.clone(room.resumeSave) : null;
     room.startedFromSave = !!room.resumeSave;
+    // Delegation belongs to one tactical battle, including sweep nodes.
+    room.delegatedSeats = [];
     room.techAwards = [];
     room.economyAwards = [];
     room.battleRoster = {};
@@ -3021,6 +3070,7 @@ function createRoomEngine({
       )
     )
       throw Error("两支队伍都至少需要一名玩家或 AI");
+    room.delegatedSeats = [];
     room.activeSeats = room.seats.map(Boolean);
     room.aiFormationEras = roomAIEras(room);
     room.game = G.create(
@@ -3039,8 +3089,9 @@ function createRoomEngine({
         formationIndices: plans.map((plan) => plan?.indices ?? []),
       },
     );
+    if (room.settings.mode === "mission") Mission.initialize(room, G);
     room.battleRoster = Object.fromEntries(
-      room.game.units.map((actor) => [
+      room.game.units.filter(actor=>!actor.missionGuest).map((actor) => [
         actor.id,
         {
           memberId: room.seats[G.ownerOf(actor)]?.id,
@@ -3076,7 +3127,7 @@ function createRoomEngine({
     planner.reset(room);
     room.turnDone = Array(room.seats.length).fill(false);
     for (const player of room.seats)
-      if (player?.bot) {
+      if (player?.bot && !player.missionEnemy) {
         G.aiDeployment(room.game, player.seat);
         if (G.confirmDeployment(room.game, player.seat)) room.phase = "idle";
       }
@@ -3150,7 +3201,7 @@ function createRoomEngine({
       availability.set(unit.id, value);
       return value;
     };
-    if (!room.started || !connected(room).every(Boolean)) return null;
+    if (!room.started || room.game.mission?.dialogue || room.game.mission?.error || !connected(room).every(Boolean)) return null;
     if (room.phase === "battle")
       return room.battle.ready.every(Boolean) ? { finishBattle: true } : null;
     if (room.game.winner !== null) return null;
@@ -3533,6 +3584,7 @@ function createRoomEngine({
       rooms.get(room.code) !== room ||
       !room.started ||
       room.returnCountdown ||
+      room.game.mission?.dialogue || room.game.mission?.error ||
       !connected(room).every(Boolean) ||
       !["idle", "reaction", "battle"].includes(room.phase)
     ) {
@@ -3594,8 +3646,10 @@ function createRoomEngine({
       async function advancePlayer(onlySeat = null, excluded = new Set()) {
         let intent;
         try {
+          const board = room.game, revision = room.revision;
           intent = await nextAIAction(room, onlySeat, excluded);
-          if (!intent) return;
+          if (!intent || room.game !== board || room.revision !== revision ||
+              (intent.player && !aiControlled(room, intent.player))) return;
           // The read-only query is complete. Broadcasts from applying its intent
           // keep the existing animation/pacing scheduler and may queue the next turn.
           aiQueries.delete(room);
@@ -3984,6 +4038,21 @@ function createRoomEngine({
       } else send(ws, state(room, id, member));
       return;
     }
+    if (msg.action === "mission_dialogue_next") {
+      if (room.settings.mode!=="mission" || member.id!==Mission.commander(room)?.id || member.seat===null)
+        throw Error("剧情由当前指挥玩家（默认房主）推进");
+      if(msg.matchId!==room.matchId || msg.revision!==room.revision) throw Error("对局状态已更新");
+      Mission.advance(room,G,msg.dialogueId,msg.lineIndex,text=>log(room,text));
+      cache.set(id,true);room.revision++;broadcast(room,id,member);return;
+    }
+    if ((room.game.mission?.dialogue || room.game.mission?.error) &&
+      !["sync","chat","return_room","playback_ready","download_log"].includes(msg.action))
+      throw Error("剧情演出中，请等待对话结束");
+    if (room.settings.mode === "mission" &&
+      (["add_ai","remove_ai","update_ai"].includes(msg.action) ||
+       (["switch_seat","join_team","move_player"].includes(msg.action) &&
+         (msg.team===1 || (Number.isInteger(msg.seat) && msg.seat%2===1) || room.members.get(msg.memberId)?.missionEnemy))))
+      throw Error("任务模式仅允许玩家加入我方，敌军由关卡控制");
     if (
       room.started &&
       !automatedRequests.has(msg) &&
@@ -4728,11 +4797,13 @@ function createRoomEngine({
                 ? (msg.sweepEnvironment ?? room.settings.sweepEnvironment ?? "ground") === "space"
                   ? "outer_orbit_5v5"
                   : G.sweepMapId
+                : nextMode === "mission"
+                  ? requestedMap.mission ? requestedMap.id : Mission.defaultMapId
                 : nextMode === "battlefield"
                   ? requestedMap.battlefield
                     ? requestedMap.id
                     : G.battlefieldMode.defaultMapId
-                  : requestedMap.battlefield || requestedMap.id === G.sweepMapId
+                  : requestedMap.battlefield || requestedMap.mission || requestedMap.id === G.sweepMapId
                     ? G.defaultRoomSettings().mapId
                     : requestedMap.id,
           );
@@ -4912,6 +4983,7 @@ function createRoomEngine({
               settings.technologyLimitMode !== room.settings.technologyLimitMode ||
               settings.technologyLimit !== room.settings.technologyLimit ||
               settings.technologyLimitFaction !== room.settings.technologyLimitFaction;
+            if(settings.mode === "mission") Object.assign(settings,Mission.settings(G,map.id));
             const eraChanged = settings.regularEra !== room.settings.regularEra ||
               settings.sweepEra !== room.settings.sweepEra ||
               settings.battlefieldEra !== room.settings.battlefieldEra ||
@@ -5784,6 +5856,11 @@ function createRoomEngine({
         updated: Date.now(),
       };
       room.settings.technologyLimitFaction = msg.technologyLimitFaction ?? "EFSF";
+      if(room.settings.mode === "mission") {
+        Object.assign(room.settings,Mission.settings(G));
+        room.seats=Array(G.getMap(room.settings.mapId).spawns.length).fill(null);
+        room.turnDone=room.seats.map(()=>false);
+      }
       if (!roomDevelopment().factions.includes(room.settings.technologyLimitFaction))
         throw Error("科技点参考阵营无效");
       if (room.settings.mode === "sweep") {
@@ -5820,7 +5897,7 @@ function createRoomEngine({
         room.started && room.phase !== "assembly"
           ? null
           : room.seats.findIndex(
-              (player, i) => !player && (room.settings.mode !== "sweep" || G.seatTeam(i) === 0),
+              (player, i) => !player && (!["sweep","mission"].includes(room.settings.mode) || G.seatTeam(i) === 0),
             );
       if (seat === -1) seat = null;
     }

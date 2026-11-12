@@ -14,12 +14,19 @@ function importMap(filename, { checkOnly = false } = {}) {
   const issues = M.gameIssues(doc, catalog.formation.maxUnits);
   if (issues.length) throw Error(issues.join("\n"));
   const map = M.compile(doc),
-    reference = "maps/encounter/" + doc.id + ".json";
+    existing = catalog.maps.find(reference => {
+      const source = path.join(root, "assets", reference);
+      return fs.existsSync(source) && JSON.parse(fs.readFileSync(source, "utf8")).id === doc.id;
+    }),
+    reference = existing || "maps/" + (doc.mission ? "missions/" : "encounter/") + doc.id + ".json";
   if (!catalog.maps.includes(reference)) catalog.maps.push(reference);
   loadCatalog({ catalogOverride: catalog, mapOverrides: { [reference]: map } });
   if (!checkOnly) {
-    const target = path.join(root, "assets", reference),
-      temporary = target + ".tmp";
+    const target = path.join(root, "assets", reference);
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+    const temporaryDirectory = path.join(root, "tmp", "map-import");
+    fs.mkdirSync(temporaryDirectory, { recursive: true });
+    const temporary = path.join(temporaryDirectory, doc.id + ".json.tmp");
     fs.writeFileSync(temporary, JSON.stringify(map, null, 2) + "\n");
     fs.renameSync(temporary, target);
     fs.writeFileSync(catalogFile, JSON.stringify(catalog, null, 2) + "\n");

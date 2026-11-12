@@ -268,7 +268,7 @@ const RoomPanel = (() => {
     ctx.textAlign = "left";
     ctx.fillText(I18n.text(map.environment === "space" ? "宇宙" : "地面"), 11, 22);
     canvas.setAttribute("aria-label", map.name + " · " + map.width + "×" + map.height);
-    const playerPositions = map.spawns.filter((spawn) => !spawn.fixedAlly).length;
+    const playerPositions = map.spawns.filter((spawn) => !spawn.fixedAlly && (!map.mission || spawn.team===0)).length;
     byId("roomMapTitle").textContent = "[" + playerPositions + "P]" + map.name;
     byId("roomMapInfo").textContent =
       map.name +
@@ -550,7 +550,7 @@ const RoomPanel = (() => {
     byId("roomCostLimit").value = numericDrafts.costLimit ?? settings.costLimit;
     byId("roomUnitCostLimit").value = numericDrafts.unitCostLimit ?? settings.unitCostLimit;
     const locked = snapshot.started || snapshot.you?.id !== snapshot.hostId || busy;
-    byId("roomTechnologyRules").hidden = ["battlefield", "sweep"].includes(settings.mode);
+    byId("roomTechnologyRules").hidden = ["battlefield", "sweep", "mission"].includes(settings.mode);
     byId("roomTechnologyLimitMode").value = settings.technologyLimitMode || "host";
     byId("roomTechnologyLimitMode").disabled = locked;
     byId("roomTechnologyLimit").value = settings.technologyLimit || 0;
@@ -566,6 +566,16 @@ const RoomPanel = (() => {
     byId("roomUnitCostLimit").parentElement.hidden = Rules.formationStyle(settings) !== "free";
     byId("roomUnitCostLimit").disabled = locked;
     showFormationPreset(settings);
+    let missionOptions=byId("missionRoomOptions");
+    if(!missionOptions){missionOptions=element("details","room-rule-group room-mode-rules");missionOptions.id="missionRoomOptions";missionOptions.open=true;byId("roomTechnologyRules").before(missionOptions);}
+    missionOptions.hidden=settings.mode!=="mission";
+    missionOptions.replaceChildren();
+    if(settings.mode==="mission") {
+      missionOptions.append(element("summary","","任务模式设置"));
+      const map=Rules.getMap(settings.mapId);
+      missionOptions.append(element("p","helper",map.description));
+      missionOptions.append(element("p","helper","年代："+settings.missionEra+" · 科技点上限："+formatNumber(settings.technologyLimit)+" · 地图固定编组规则"));
+    }
     let regularOptions = byId("regularRoomOptions");
     if (!regularOptions) {
       regularOptions = element("details", "room-rule-group room-mode-rules");
@@ -726,6 +736,10 @@ const RoomPanel = (() => {
     byId("roomScenarioSelect").disabled = locked;
     mapSelect.hidden = strategic || settings.mode === "sweep";
     byId("roomFormationRules").hidden = strategic || settings.mode === "battlefield";
+    if(settings.mode==="mission") {
+      for(const id of ["roomCostLimit","roomUnitLimit","roomFormationPreset","saveRoomPreset","deleteRoomPreset"])
+        byId(id).disabled=true;
+    }
     byId("roomTagRestrictions").closest("details").hidden = strategic;
     teamRulesPanel.closest("details").hidden = settings.mode !== "quick";
     for (const id of ["roomFogMode", "roomShareAlliedUnits"])
@@ -1040,7 +1054,7 @@ const RoomPanel = (() => {
     squads.classList.toggle("team-grouped", observing);
     const teamLists = new Map();
     if (observing)
-      for (const team of snapshot.settings.mode === "sweep" ? [0] : [0, 1]) {
+      for (const team of ["sweep","mission"].includes(snapshot.settings.mode) ? [0] : [0, 1]) {
         const section = element("section", "final-squad-team");
         section.dataset.team = team;
         section.setAttribute("aria-label", I18n.text("队伍" + (team + 1)));
@@ -1308,6 +1322,7 @@ const RoomPanel = (() => {
       ? "离线" +
         {
           sweep: "战场扫荡",
+          mission: "任务模式",
           battlefield: "雇佣兵战争模式",
           quick: "快速战模式",
           campaign: "历史战役模式",
@@ -1332,7 +1347,7 @@ const RoomPanel = (() => {
     teams.classList.toggle("pmc-room", snapshot.settings.mode !== "campaign");
     for (const button of joinButtons) button.remove();
     teams.replaceChildren();
-    for (const team of snapshot.settings.mode === "sweep" ? [0] : [0, 1]) {
+    for (const team of ["sweep","mission"].includes(snapshot.settings.mode) ? [0] : [0, 1]) {
       const column = element("section", "team-slot");
       column.dataset.team = String(team);
       const teamHeading = element("div", "team-heading");
@@ -1413,6 +1428,7 @@ const RoomPanel = (() => {
         }
         if (
           (!snapshot.started || !!snapshot.campaign) &&
+          snapshot.settings.mode !== "mission" &&
           self.id === snapshot.hostId &&
           (!member || member.bot) &&
           !reserved &&

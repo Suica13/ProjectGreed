@@ -464,3 +464,29 @@ main { grid-template-columns: 310px minmax(260px, 1fr) 245px; }
 .unit-row { display: flex; align-items: center; gap: 6px; margin: 6px 0; }
 .unit-row span { flex: 1; overflow-wrap: anywhere; }
 @media(max-width: 760px) { main { grid-template-columns: minmax(0,1fr) minmax(0,1fr); } #atlasPanel.expanded { inset: 10px; } }
+
+/* Event authoring keeps the map visible while giving the forms enough room. */
+.mission-editing main { grid-template-columns: minmax(360px, 43%) minmax(260px, 1fr); }
+.mission-editing aside.right { display: none; }
+.mission-editing .tabs { flex-wrap: wrap; }
+#missionEditorFields { overflow-wrap: anywhere; }
+#missionEditorFields fieldset { min-width: 0; margin: 12px 0; padding: 10px; border: 1px solid var(--border); border-left: 3px solid var(--accent); }
+#missionEditorFields details { margin: 10px 0; padding: 8px; border: 1px solid var(--border); }
+#missionEditorFields summary { cursor: pointer; font-weight: 600; }
+#missionEditorFields button { margin: 3px; white-space: normal; }
+.mission-guide { padding: 10px; background: #162e40; line-height: 1.7; border-left: 3px solid var(--accent); }
+.mission-templates { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 4px; }
+.mission-events { display: grid; gap: 6px; max-height: 260px; overflow: auto; margin: 12px 0; }
+.mission-event-card { text-align: left; padding: 10px; }
+.mission-event-card strong, .mission-event-card small { display: block; line-height: 1.6; }
+.mission-event-card small { color: #c1d4e5; }
+.mission-actor-choices { max-height: 220px; overflow: auto; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 4px; }
+.mission-actor-choices label { display: flex; align-items: center; gap: 6px; flex-direction: row-reverse; justify-content: flex-end; margin: 4px; }
+.mission-actor-choices input { flex: none; margin: 0; }
+#missionScriptValidation { padding: 10px; border: 1px solid var(--accent); }
+@media(max-width: 760px) {
+  .mission-editing main { grid-template-columns: minmax(0,1fr); overflow: auto; }
+  .mission-editing aside.left { min-height: 55dvh; }
+  .mission-editing .workspace { min-height: 40dvh; }
+  .mission-actor-choices { grid-template-columns: minmax(0,1fr); }
+}

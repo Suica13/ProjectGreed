@@ -435,6 +435,9 @@ const SweepMode = (() => {
     if (room.game.winner === 0)
       reward(room, G, s.boss ? 3 : s.elite ? 2 : 1, s.boss ? 5 : s.elite ? 3 : 1, 1.1);
     room.game.winner = null;
+    // The route screen is player-controlled. Never carry tactical delegation
+    // into node selection or the next battle's deployment.
+    room.delegatedSeats = [];
     room.phase = "sweep_map";
     room.returnAt = null;
     room.returnCountdown = null;

@@ -78,7 +78,7 @@ test("ships cannot squeeze through a one-cell channel or end over a friendly uni
   assert.equal(G.fits(g, a, 8, 5), false);
   assert.equal(G.fits(g, a, 8, 5, a.angle, true), true);
 });
-test("rotation checks its swept square, consumes movement, preserves fire heading and can be undone only into a free footprint", () => {
+test("rotation checks its swept square, leaves half movement, preserves fire heading and can be undone only into a free footprint", () => {
   const { g, a, b } = pair();
   g.tiles[11][11] = "rock";
   const before = JSON.stringify(a);
@@ -88,19 +88,43 @@ test("rotation checks its swept square, consumes movement, preserves fire headin
   g.tiles[11][11] = "plain";
   G.rotate(g, a, 1);
   assert.equal(a.angle, 90);
-  assert.equal(a.moved, true);
-  assert.deepEqual(G.dimensions(a), { width: 3, height: 1 });
+  assert.equal(a.moved, false);
+  assert.equal(a.rotated,true);
+  assert.deepEqual(G.dimensions(a), { width: 2, height: 1 });
   assert.equal(G.canRotate(g, a, -1), false);
   G.faceTarget(a, b);
   assert.equal(a.angle, 90);
   assert.ok(Number.isFinite(a.aimAngle));
-  Object.assign(b, { x: 10, y: 12, team: 0 });
+  Object.assign(b, { x: 10, y: 11, team: 0 });
   assert.equal(G.canUndo(g, a), false);
   Object.assign(b, { x: 20, y: 20 });
   assert.equal(G.canUndo(g, a), true);
   G.undo(g, a);
   assert.equal(a.angle, 0);
   assert.equal(a.moved, false);
+  assert.equal(a.rotated,false);
+});
+
+test("confirmed ship rotation allows only half-range movement and resets on its next turn",()=>{
+  const {g,a}=pair(),baseMove=G.modelOf(a,g).move;
+  G.previewRotate(g,a,1);G.cancelMove(g,a);
+  assert(!a.rotated);assert(!a.moved);
+  G.previewRotate(g,a,1);G.confirmMove(g,a);
+  assert(a.rotated);assert(!a.moved);
+  const reachable=G.reachable(g,a);
+  const routes=[...reachable.values()].filter(p=>p.path.length);
+  assert(routes.length>0);assert(routes.every(p=>p.cost<=baseMove/2));
+  const tooFar={x:a.x+Math.floor(baseMove/2)+1,y:a.y};
+  assert(!reachable.has(`${tooFar.x},${tooFar.y}`));
+  assert.throws(()=>G.move(g,a,tooFar.x,tooFar.y));
+  const to=routes.find(p=>p.path.length===Math.floor(baseMove/2));assert(to);
+  G.move(g,a,to.x,to.y);assert(a.moved);
+  assert.throws(()=>G.move(g,a,to.x+1,to.y));
+  G.undo(g,a);assert(a.rotated);assert(!a.moved);
+  assert([...G.reachable(g,a).values()].every(p=>p.cost<=baseMove/2));
+  G.end(g);G.end(g);
+  assert(!a.rotated);assert(!a.moved);
+  assert([...G.reachable(g,a).values()].some(p=>p.cost>baseMove/2));
 });
 test("deployment validates the full footprint and permits turning inside the expanded strip", () => {
   const { g, a } = pair(true);
@@ -109,7 +133,7 @@ test("deployment validates the full footprint and permits turning inside the exp
   Object.assign(a, { ...anchor, angle: 0 });
   assert.equal(G.canRotate(g, a, 1), true);
   G.rotate(g, a, 1);
-  assert.deepEqual(G.dimensions(a), { width: 3, height: 1 });
+  assert.deepEqual(G.dimensions(a), { width: 2, height: 1 });
   assert.equal(a.moved, false);
   const area = G.getMap(g.mapId).deploymentAreas[0];
   assert.throws(() => G.deploy(g, 0, a.id, area.x + area.width - 1, a.y));
@@ -188,7 +212,8 @@ test("rotation preview preserves authority until confirmed and cancel restores e
   G.previewRotate(g,a,-1);
   G.confirmMove(g,a);
   assert.equal(a.angle,270);
-  assert.equal(a.moved,true);
+  assert.equal(a.moved,false);
+  assert.equal(a.rotated,true);
   assert.equal(a.pendingMove,undefined);
   assert.equal(a.origin,null);
 });

@@ -26,7 +26,7 @@ for(const width of [1440,390]) test(`encounter AI toggle and presentation rates 
   const toggle=page.locator('#campaignDelegationToggle'),speed=page.locator('#battlePresentationSpeed');
   await expect(toggle).toBeVisible();await expect(toggle).toBeEnabled();
   await expect(speed).toHaveText('演出速度 ×1.5');
-  expect(await toggle.evaluate(el=>el.nextElementSibling.id)).toBe('battlePresentationSpeed');
+  expect(await toggle.evaluate(el=>el.nextElementSibling.id)).toBe('battlePresentationTools');
   await toggle.click();
   await expect(toggle).toHaveAttribute('aria-pressed','true');
   expect(await page.evaluate(()=>Net.canAct())).toBe(false);
@@ -34,6 +34,35 @@ for(const width of [1440,390]) test(`encounter AI toggle and presentation rates 
   await expect(toggle).toBeEnabled();await toggle.click();
   await expect(toggle).toHaveAttribute('aria-pressed','false');
   expect(await page.evaluate(()=>Net.canAct())).toBe(true);
+  // A receipt/error may clear the pending request without a new state snapshot.
+  await page.evaluate(()=>{
+    Net.awaiting={id:'temporary-pending'}; CampaignUI.refreshBattleControls();
+  });
+  await expect(toggle).toBeDisabled();
+  await page.evaluate(()=>{Net.awaiting=null; update();});
+  await expect(toggle).toBeEnabled();
+  // End one game and receive a different game, then toggle in both directions.
+  await page.evaluate(()=>{
+    const room=[...testEngine.rooms.values()][0];
+    room.game.winner=0;room.phase='finished';room.revision++;testEngine.broadcast(room);
+  });
+  await expect(page.locator('#victory')).toBeVisible();
+  await page.evaluate(()=>{
+    const room=[...testEngine.rooms.values()][0];
+    room.started=false;room.phase='waiting';room.revision++;testEngine.broadcast(room);
+  });
+  await expect(page.locator('#victory')).toBeHidden();
+  await page.evaluate(()=>{
+    const room=[...testEngine.rooms.values()][0];
+    room.game=Rules.create(false,2,[[{unitId:'Type61',kitId:'standard'}],[{unitId:'Type61',kitId:'standard'}]],false,room.settings);
+    room.started=true;room.phase='idle';room.matchId='presentation-test-next';
+    room.returnAt=null;room.returnCountdown=null;room.delegatedSeats=[];
+    room.turnDone=[false,false];room.turnNotBefore=Date.now()+60000;
+    room.revision++;testEngine.broadcast(room);
+  });
+  await expect(toggle).toBeEnabled();await toggle.click();
+  await expect(toggle).toHaveAttribute('aria-pressed','true');
+  await toggle.click();await expect(toggle).toHaveAttribute('aria-pressed','false');
   for(const value of [2,2.5,3,0.5,1,1.5]) {
     await speed.click();await expect(speed).toHaveText(`演出速度 ×${value.toFixed(1)}`);
     expect(await page.evaluate(()=>MovementTiming.presentationSpeed)).toBe(value);
