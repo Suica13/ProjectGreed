@@ -170,6 +170,10 @@ const SweepMode = (() => {
       "moduleHp",
       "moduleBroken",
       "iField",
+      "iFieldHp",
+      "abcHp",
+      "phaseShiftHp",
+      "phaseShiftEnabled",
       "weaponUses",
       "weaponCooldowns",
       "skillUses",
@@ -271,7 +275,7 @@ const SweepMode = (() => {
   const growth = (room) => 1 + 0.05 * Math.max(0, room.sweep?.depth || 0);
   function reward(room, G, multiplier = 1, unitCount = 0, technologyOutcome = 1) {
     const s = room.sweep,
-      eraIndex = Math.max(0, G.eras.indexOf(room.settings.sweepEra));
+      eraIndex = Math.max(0, G.technologyWeight(room.settings.sweepEra) - 1);
     for (const p of room.seats.filter((p) => p && !p.bot && G.seatTeam(p.seat) === 0)) {
       const scale = growth(room),
         bonus = s.rewardMultipliers || {};
@@ -576,7 +580,7 @@ const SweepMode = (() => {
       cost,
       nextKey: key,
       totalCost: plan.totalCost,
-      points: G.formationPoints(entries),
+      points: restrictions.requiresCarriers ? entries.filter(e=>!e.preload && G.isFleetCarrier(G.formationModel(e))).length : G.formationPoints(entries),
     };
   }
   function enemies(room, G, seed) {

@@ -27,7 +27,7 @@ const BattlefieldMode = (() => {
     return { money, supplies: money * 2 };
   }
   function baseDamageReward(settings, team) {
-    const level = eras.indexOf(settings.battlefieldTeams?.[team]?.era);
+    const level = eraData.weight(settings.battlefieldTeams?.[team]?.era) - 1;
     const money = 500 + 250 * Math.max(0, level);
     return { money, supplies: money * 2 };
   }
@@ -72,16 +72,18 @@ const BattlefieldMode = (() => {
     cannon: "Facility_Cannon",
     radar: "Facility_Radar",
   });
-  const factions = ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"];
-  const eras = ["0079T1", "0079T2", "0087T1", "0087T2"];
+  const factions = ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON", "EFSF_0093", "NEO_ZEON_0093", "OMNI", "ZAFT"];
+  const eraData = typeof TechnologyEras !== "undefined" ? TechnologyEras : require("./technology-eras.js");
+  const eras = ["UC_0079_T1", "UC_0079_T2", "UC_0087_T1", "UC_0087_T2", "CE_0071_T1"];
   const eraStrength = Object.freeze({
-    "0079T1": 40000,
-    "0079T2": 60000,
-    "0087T1": 90000,
-    "0087T2": 120000,
+    "UC_0079_T1": 40000,
+    "CE_0071_T1": 40000,
+    "UC_0079_T2": 60000,
+    "UC_0087_T1": 90000,
+    "UC_0087_T2": 120000,
   });
   function roomEra(settings) {
-    const era = settings.battlefieldEra ?? "custom";
+    const era = eraData.normalize(settings.battlefieldEra ?? "custom");
     if (era !== "custom" && !eras.includes(era)) throw Error("战场年代设置无效");
     return era;
   }
@@ -95,12 +97,12 @@ const BattlefieldMode = (() => {
     return era;
   }
   const factionEras = (faction) =>
-    ["EFSF", "ZEON"].includes(faction) ? eras.slice(0, 2) : eras.slice(2);
+    ["OMNI", "ZAFT"].includes(faction) ? ["CE_0071_T1"] : ["EFSF_0093", "NEO_ZEON_0093"].includes(faction) ? ["UC_0093_T1"] : ["EFSF", "ZEON"].includes(faction) ? eras.slice(0, 2) : eras.slice(2, 4);
   // PMC limits and entry pay only: faction AI waves keep their own era rules.
   const formationBudgets = [1500, 2500, 5000, 7500, 10000, 12500, 15000, 17500, 20000];
   const roomPresets = Object.freeze(
     eras.flatMap((era, eraIndex) => {
-      const factor = 1.25 ** eraIndex;
+      const factor = 1.25 ** (eraData.weight(era) - 1);
       return formationBudgets.map((cost) => {
         const progress = (cost - 1500) / 18500;
         const round = (value) => Math.round(value / 25) * 25;
@@ -132,10 +134,11 @@ const BattlefieldMode = (() => {
     );
   }
   function presetSettings(id, currentTeams, availableEras = []) {
+    id = String(id).replace(/^[^-]+(?=-cost-)/, eraData.normalize);
     const preset = roomPresets.find((preset) => preset.id === id);
     if (!preset) throw Error("雇佣兵战争规模预设无效");
-    const eraIndex = eras.indexOf(preset.era);
-    const defaults = eraIndex >= 2 ? ["AEUG", "TITANS"] : ["EFSF", "ZEON"];
+    const eraIndex = eraData.weight(preset.era) - 1;
+    const defaults = preset.era === "CE_0071_T1" ? ["OMNI", "ZAFT"] : eraIndex >= 2 ? ["AEUG", "TITANS"] : ["EFSF", "ZEON"];
     return {
       battlefieldEra: preset.era,
       costLimit: preset.costLimit,
@@ -153,8 +156,8 @@ const BattlefieldMode = (() => {
     };
   }
   function baseReward(settings, team) {
-    const era = settings.battlefieldTeams?.[team]?.era || "0079T2";
-    const factor = 1.25 ** Math.max(0, eras.indexOf(era));
+    const era = settings.battlefieldTeams?.[team]?.era || "UC_0079_T2";
+    const factor = 1.25 ** Math.max(0, eraData.weight(era) - 1);
     const progress = Math.max(0, Math.min(1, ((Number(settings.costLimit) || 0) - 1500) / 18500));
     const round = (value) => Math.round(value / 25) * 25;
     return {
@@ -164,8 +167,8 @@ const BattlefieldMode = (() => {
     };
   }
   function captureReward(settings, team) {
-    const era = settings.battlefieldTeams?.[team]?.era || "0079T2";
-    const money = { "0079T1": 500, "0079T2": 750, "0087T1": 1000, "0087T2": 1500 }[era];
+    const era = settings.battlefieldTeams?.[team]?.era || "UC_0079_T2";
+    const money = { "UC_0079_T1": 500, "CE_0071_T1": 500, "UC_0079_T2": 750, "UC_0087_T1": 1000, "UC_0087_T2": 1500 }[era];
     return { money, supplies: money * 2 };
   }
   function technologyReward(settings, team, won, activity = 1) {
@@ -214,8 +217,8 @@ const BattlefieldMode = (() => {
   function teams(
     G,
     input = [
-      { faction: "EFSF", era: "0079T2" },
-      { faction: "ZEON", era: "0079T2" },
+      { faction: "EFSF", era: "UC_0079_T2" },
+      { faction: "ZEON", era: "UC_0079_T2" },
     ],
   ) {
     if (!Array.isArray(input) || input.length !== 2) throw Error("雇佣兵战争模式需要两支阵营 AI");
@@ -286,11 +289,11 @@ const BattlefieldMode = (() => {
       actor.facility = {
         id: item.id,
         type: item.type,
-        level: eras.indexOf(selections[item.team].era) + 1,
+        level: eraData.weight(selections[item.team].era),
         cycle: 0,
       };
       if (["machineGun", "beam", "missile", "cannon"].includes(item.type)) {
-        actor.facility.level = eras.indexOf(selections[item.team].era) + 1;
+        actor.facility.level = eraData.weight(selections[item.team].era);
         actor.hp = G.modelOf(actor).hp;
       }
       actor.formationIndex = indices[item.team]++;
@@ -481,7 +484,7 @@ const BattlefieldMode = (() => {
     }
   }
   const fixedWaves = {
-    "0079T1": {
+    "UC_0079_T1": {
       early: {
         EFSF: { Type61: 18, FF_B2: 6, FF_S3: 6 },
         ZEON: { MTank: 9, MS_06F: 4, MS_06S: 2 },
@@ -490,12 +493,12 @@ const BattlefieldMode = (() => {
       middle: { EFSF: { RGM_79: 9 }, ZEON: { MS_06F2: 9 }, randomMS: 3 },
       late: { EFSF: { RGM_79: 12 }, ZEON: { MS_06F2: 12 }, randomMS: 4 },
     },
-    "0079T2": {
+    "UC_0079_T2": {
       early: { EFSF: { RGM_79: 9 }, ZEON: { MS_06F2: 9 }, randomMS: 3 },
       middle: { EFSF: { RGM_79C: 9 }, ZEON: { MS_06FZ: 9 }, randomMS: 3 },
       late: { EFSF: { RGM_79C: 12 }, ZEON: { MS_06FZ: 12 }, randomMS: 5 },
     },
-    "0087T1": {
+    "UC_0087_T1": {
       early: {
         AEUG: { RMS_179_AEUG: 9 },
         TITANS: { RMS_106: 9 },
@@ -515,7 +518,7 @@ const BattlefieldMode = (() => {
         randomMS: 5,
       },
     },
-    "0087T2": {
+    "UC_0087_T2": {
       early: {
         AEUG: { MSA_003: 9 },
         TITANS: { RMS_108: 9 },
@@ -539,10 +542,7 @@ const BattlefieldMode = (() => {
   const waveStage = (round) => (round < 21 ? "early" : round < 61 ? "middle" : "late");
   function pool(G, state, team) {
     const selected = state.teams[team];
-    const allowedEras = eras.slice(
-      selected.era.startsWith("0087") ? 2 : 0,
-      eras.indexOf(selected.era) + 1,
-    );
+    const allowedEras = factionEras(selected.faction).filter(era => eraData.weight(era) <= eraData.weight(selected.era));
     const choices = G.catalog.prefabs.flatMap((prefab) => {
       const kit = prefab.weaponKits[0],
         model = kit && G.models[prefab.id + "__" + kit.id];
@@ -571,9 +571,9 @@ const BattlefieldMode = (() => {
   }
   function wavePlan(G, selected, round, baseCount, random) {
     const stage = waveStage(round),
-      row = fixedWaves[selected.era][stage];
+      row = (fixedWaves[selected.era] || { early:{OMNI:{GAT_01:9},ZAFT:{ZGMF_1017:9},randomMS:2}, middle:{OMNI:{GAT_01:9},ZAFT:{ZGMF_1017:9},randomMS:3}, late:{OMNI:{GAT_01:12},ZAFT:{ZGMF_1017:12},randomMS:4} })[stage];
     const effective =
-      selected.era === "0087T2" && stage === "early" ? { ...selected, era: "0087T1" } : selected;
+      selected.era === "UC_0087_T2" && stage === "early" ? { ...selected, era: "UC_0087_T1" } : selected;
     const available = pool(G, { teams: [effective, effective] }, 0),
       entries = [];
     const choose = (list) => list[Math.min(list.length - 1, Math.floor(random() * list.length))];

@@ -1022,7 +1022,7 @@
         "projectile": {
           "texture": "../../projectiles/RailShell_1.png",
           "scale": 0.85,
-          "speed": 135,
+          "speed": 1.35,
           "forwardOffset": -2.5,
           "rotation": 0
         },

@@ -1249,7 +1249,7 @@ body.menu-shell-active #formationMain .formation-toolbar #openFormationShare { w
 }
 
 /* Creation panels stay within the viewport even while an open window is resized. */
-#skirmishSetup {
+:is(#skirmishSetup, #offlineModeSetup) {
   inset:0;
   width:100%;
   height:100dvh;
@@ -1258,7 +1258,7 @@ body.menu-shell-active #formationMain .formation-toolbar #openFormationShare { w
   overflow:auto;
   z-index:1200;
 }
-#skirmishSetup > .skirmish-dialog {
+:is(#skirmishSetup, #offlineModeSetup) > .skirmish-dialog {
   flex:0 1 560px;
   width:100%;
   min-width:0;
@@ -1269,8 +1269,8 @@ body.menu-shell-active #formationMain .formation-toolbar #openFormationShare { w
   overflow:auto;
   overflow-wrap:anywhere;
 }
-#skirmishSetup .skirmish-dialog label { display:grid; gap:6px; min-width:0; }
-#skirmishSetup .skirmish-dialog select { width:100%; min-width:0; }
+:is(#skirmishSetup, #offlineModeSetup) .skirmish-dialog label { display:grid; gap:6px; min-width:0; }
+:is(#skirmishSetup, #offlineModeSetup) .skirmish-dialog select { width:100%; min-width:0; }
 #roomCreateDialog {
   position:fixed;
   inset:0;
@@ -1289,9 +1289,9 @@ body.menu-shell-active #formationMain .formation-toolbar #openFormationShare { w
 #roomCreateForm .net-buttons { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
 #roomCreateForm .net-buttons button { min-width:0; white-space:normal; }
 @media(max-width:600px) {
-  #skirmishSetup > .skirmish-dialog, #roomCreateDialog { padding:16px; }
-  #skirmishSetup .skirmish-dialog .net-buttons { display:grid; grid-template-columns:minmax(0,1fr); }
-  #skirmishSetup .skirmish-dialog .net-buttons button { width:100%; min-width:0; min-height:40px; white-space:normal; }
+  :is(#skirmishSetup, #offlineModeSetup) > .skirmish-dialog, #roomCreateDialog { padding:16px; }
+  :is(#skirmishSetup, #offlineModeSetup) .skirmish-dialog .net-buttons { display:grid; grid-template-columns:minmax(0,1fr); }
+  :is(#skirmishSetup, #offlineModeSetup) .skirmish-dialog .net-buttons button { width:100%; min-width:0; min-height:40px; white-space:normal; }
 }
 
 /* Keep the faction label beside its fixed-size selector. */

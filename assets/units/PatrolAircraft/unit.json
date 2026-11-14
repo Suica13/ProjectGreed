@@ -1,0 +1,397 @@
+{
+  "schemaVersion": 2,
+  "id": "PatrolAircraft",
+  "code": "PatrolAircraft",
+  "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/PatrolAircraft/PatrolAircraft.ini",
+  "materials": {
+    "textures": {
+      "PatrolAircraft_Body_1.png": "textures/PatrolAircraft_Body_1.png",
+      "PatrolAircraft.png": "textures/PatrolAircraft.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
+    },
+    "icon": "PatrolAircraft.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "scaleX": 1.0,
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "frames": 3,
+      "frame": 0,
+      "frameFps": 12,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 4.1,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -3.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Body",
+      "texture": "PatrolAircraft_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 0.75,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    }
+  ],
+  "animations": {
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Idle": "../../animations/Common_Idle__AntiZakuTank.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 5000,
+    "en": 1500.0,
+    "move": 7,
+    "mobility": 155.0,
+    "cost": 125,
+    "counterLimit": 1,
+    "accuracy": 100.0,
+    "partStructuralStrength": 100.0,
+    "partsBreakable": false,
+    "movementType": "air",
+    "adaptability": {
+      "ground": 100,
+      "space": 50,
+      "water": 10.0,
+      "air": 100.0,
+      "atmosphere": 0,
+      "mountain": 10.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "speed": 270,
+    "actionPoints": 11,
+    "sensors": {
+      "sight": 10,
+      "radar": 13.88888888888889,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
+  },
+  "attackBonuses": {
+    "melee": 0.0,
+    "shooting": 0.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 5.0,
+      "flat": 0.0
+    },
+    "shell": {
+      "percent": 5.0,
+      "flat": 0.0
+    },
+    "melee": {
+      "percent": 5.0,
+      "flat": 0.0
+    },
+    "dp": {
+      "percent": 5.0,
+      "flat": 0.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 4000.0,
+    "walkSpeed": 2.25,
+    "boostSpeed": 3.75,
+    "turnSpeed": 2.25,
+    "reaction": 155.0,
+    "shooting": 100.0,
+    "melee": 100.0,
+    "nativeTags": [
+      "PatrolAircraft",
+      "Unit",
+      "Aircraft",
+      "OMNI",
+      "CE71",
+      "SEED"
+    ],
+    "nativeSkills": [
+      "Fighter",
+      "DogFight_A"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 100.0,
+    "unitLevel": 450.0,
+    "enBeforeReduction": 1500.0,
+    "enCapacityMultiplier": 1,
+    "tacticalMoveBeforeBonus": 9,
+    "actionTurnSpeed": 2.25,
+    "mobilityMoveTarget": 10,
+    "adaptability": {
+      "ground": 10.0,
+      "space": 10.0,
+      "water": 10.0,
+      "air": 100.0,
+      "mountain": 10.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 25.0,
+      "radar": 500.0,
+      "antiDetection": 0.0
+    },
+    "v17BaseHp": 4000.0,
+    "technologyEra": "CE_0071_T1"
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMoving",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "巡逻机",
+  "faction": "OMNI",
+  "tags": [
+    "OMNI",
+    "CE_0071_T1"
+  ],
+  "localization": {
+    "zh": {
+      "name": "巡逻机",
+      "description": "联合军高空侦察机"
+    },
+    "en": {
+      "name": "PatrolAircraft",
+      "description": "OMNI high-altitude reconnaissance aircraft"
+    },
+    "ja": {}
+  },
+  "weapons": {},
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "空中移动：可跨越山岩与水域",
+      "status": "implemented"
+    },
+    {
+      "id": "Fighter",
+      "source": "Template/Unit/Skill/Fighter.gw",
+      "status": "adapted",
+      "name": "战斗机特性"
+    },
+    {
+      "id": "DogFight_A",
+      "source": "Template/Unit/Skill/DogFight_A.gw",
+      "status": "review",
+      "name": "空中缠斗"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": []
+    }
+  ],
+  "description": "联合军高空侦察机",
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 450.0,
+    "levelMultiplier": 0.25,
+    "published": 125
+  },
+  "skills": [
+    {
+      "id": "Common_DetectArea",
+      "type": "recon",
+      "name": "索敌",
+      "reconMode": "scan",
+      "range": 25.0,
+      "enCost": 100,
+      "actionCost": 1,
+      "maxUses": 99,
+      "consumeAction": false,
+      "waterOnly": false,
+      "durationRounds": 2,
+      "cooldownTurns": 1,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Detect_3.ogg",
+        "volume": 0.5
+      },
+      "localization": {
+        "zh": {
+          "name": "索敌"
+        },
+        "en": {
+          "name": "Active Scan"
+        },
+        "ja": {
+          "name": "索敵"
+        }
+      }
+    }
+  ],
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "Aircraft",
+    "Recon"
+  ],
+  "transport": {
+    "slotCost": 1,
+    "loadTags": [
+      "CanLoadIntoAir"
+    ]
+  },
+  "hangars": [],
+  "refits": []
+}

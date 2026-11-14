@@ -107,9 +107,9 @@ const UnitPreview = (() => {
       ]),
     ].filter(Boolean);
     for (const faction of factions)
-      result.push({ label: faction, value: faction, className: "faction-tag", faction });
+      result.push({ label: ["OMNI", "ZAFT"].includes(faction) ? Rules.factionInfo?.[faction]?.name || faction : faction, value: faction, className: "faction-tag", faction });
     const otherTags = [...new Set((model.tags || []).filter((tag) => !factionIds.has(tag)))];
-    for (const tag of otherTags.filter((tag) => /^\d{4}(?:T[12])?$/.test(tag)))
+    for (const tag of otherTags.filter((tag) => Rules.eras.includes(tag)))
       result.push({ label: tag, value: tag, className: "era-tag" });
     const adaptability = model.adaptability || model.stats?.adaptability;
     for (const environment of ["ground", "space"]) {
@@ -130,7 +130,7 @@ const UnitPreview = (() => {
       if (["SmallUnit", "LargeUnit", "MediumUnit"].includes(tag)) continue;
       result.push({ label: I18n.text(Rules.unitTagName(tag)), value: tag, className: "type-tag" });
     }
-    for (const tag of otherTags.filter((tag) => !/^\d{4}(?:T[12])?$/.test(tag)))
+    for (const tag of otherTags.filter((tag) => !Rules.eras.includes(tag)))
       result.push({ label: I18n.text(tag), value: tag, className: "type-tag" });
     if (kitName) result.push({ label: kitName, value: "kit", className: "unit-summary-tag kit" });
     return result;
@@ -139,7 +139,14 @@ const UnitPreview = (() => {
   function tagElement(definition) {
     const tag = element("span", definition.className, definition.label);
     tag.dataset.tag = definition.value;
-    if (definition.faction) tag.dataset.faction = definition.faction;
+    if (definition.faction) {
+      tag.dataset.faction = definition.faction;
+      const color = Rules.factionInfo?.[definition.faction]?.color;
+      if (color) {
+        tag.style.color = color;
+        tag.style.borderColor = color;
+      }
+    }
     return tag;
   }
 

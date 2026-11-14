@@ -98,6 +98,33 @@ function finish(f, response = "defend") {
       f.planner.choose(f.room, request.id, response, [], f.a.id);
   return f.planner.resolve(f.room);
 }
+
+test("counter selection exposes only attacks from other enemy units", () => {
+  const f = fixture();
+  const other = structuredClone(f.a);
+  Object.assign(other,{id:"other-attacker",x:5,y:6,squadId:"other-squad"});
+  const wingman = structuredClone(f.b);
+  Object.assign(wingman,{id:"defending-wingman",squadId:"defenders",squadSlot:1});
+  f.b.squadId = "defenders";
+  f.game.units.push(other,wingman);
+  const calls = [], original = G.resolveProjectile;
+  G.resolveProjectile = function(game,from,to,weapon,...args) {
+    calls.push({from:from.id,to:to.id,multiplier:weapon.counterExposureMultiplier});
+    return original.call(this,game,from,to,weapon,...args);
+  };
+  try {
+    require("../shared/automatic-fire").resolve(G,f.room,[
+      {intent:{attacker:f.a.id,target:f.b.id,targetSquad:[f.b.id],weapons:["efficient"]},response:"counter",counterTargetId:f.a.id,counterIds:["efficient"]},
+      {intent:{attacker:other.id,target:f.b.id,targetSquad:[f.b.id],weapons:["efficient"]},response:"counter",counterTargetId:f.a.id,counterIds:[]},
+      {intent:{attacker:other.id,target:wingman.id,targetSquad:[wingman.id],weapons:["efficient"]},response:"defend",counterIds:[]},
+    ],()=>"counter-exposure");
+  } finally { G.resolveProjectile = original; }
+  assert(calls.some(call=>call.from===other.id && call.to===f.b.id && call.multiplier===1.1));
+  assert(calls.some(call=>call.from===f.a.id && call.to===f.b.id && call.multiplier===undefined));
+  assert(calls.filter(call=>call.to===f.a.id).every(call=>call.multiplier===undefined));
+  assert(calls.some(call=>call.to===wingman.id));
+  assert(calls.filter(call=>call.to===wingman.id).every(call=>call.multiplier===undefined));
+});
 test("all usable one-round weapons fire regardless of AP or expected damage", () => {
   const f = fixture();
   f.a.actionPoints = 0;

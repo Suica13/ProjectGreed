@@ -62,7 +62,7 @@ test("cooperative mission loads fixed enemy roster, host guest ship, map technol
   const f = fixture(t, true),
     { room, act, guest, frames } = f;
   assert.equal(room.settings.mode, "mission");
-  assert.equal(room.settings.missionEra, "0079T2");
+  assert.equal(room.settings.missionEra, "UC_0079_T2");
   assert.equal(room.settings.technologyLimit, 10000);
   assert.equal(room.settings.costLimit, 1200);
   assert.equal(room.settings.unitLimit, 12);

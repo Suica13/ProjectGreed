@@ -379,5 +379,7 @@ def configure(prefab, native):
     apply_footprint(prefab)
     from repair_weapon_presentation import repair_scatter
     repair_scatter(prefab)
+    from native_seed_repairs import railgun
+    railgun(prefab)
     from native_gp_containers import apply as apply_gp_containers
     return apply_levels(apply_gp_containers(finalize_weapon_slots(apply_classification(apply_big_zam(prefab, native)))))

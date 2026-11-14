@@ -761,6 +761,18 @@
     "EF_Railgun_79_D_RG": {
       "ref": "EF_Railgun_79_D_RG__lv1",
       "overrides": {
+        "name": "磁轨炮",
+        "localization": {
+          "zh": {
+            "name": "磁轨炮"
+          },
+          "en": {
+            "name": "Railgun"
+          },
+          "ja": {
+            "name": "レールガン"
+          }
+        },
         "requiredParts": [
           "rightArm"
         ],

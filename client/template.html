@@ -2126,7 +2126,6 @@
                 class="hud-selection-summary"
                 aria-label="查看单位信息"
               ></button>
-              <span id="hudMusicSlot"></span>
               <button
                 id="hudExpandConsole"
                 type="button"
@@ -2408,21 +2407,33 @@
           <section class="modal skirmish-dialog">
             <h3 id="skirmishSetupTitle">创建对战</h3>
             <p class="muted">创建离线房间与 AI 对战，或连接服务器加入多人房间。</p>
+
+            <div class="net-buttons">
+              <button id="createOfflineRoom">单机 · 创建房间</button>
+              <button data-ui-node="node-150" id="openRooms" class="primary">联机 · 连接服务器</button>
+              <button id="closeSkirmish">返回</button>
+            </div>
+          </section>
+        </div>
+        <div id="offlineModeSetup" class="overlay" hidden role="dialog" aria-modal="true" aria-labelledby="offlineModeSetupTitle">
+          <section class="modal skirmish-dialog">
+            <h3 id="offlineModeSetupTitle">选择模式</h3>
             <label>离线房间模式<select id="offlineRoomMode">
-              <optgroup label="遭遇战模式">
-                <option value="regular">常规战模式</option>
+              <optgroup label="合约模式">
+                <option value="mission">任务模式</option>
+                <option value="sweep">战场扫荡</option>
+              </optgroup>
+              <optgroup label="战场模式">
+                <option value="battlefield">雇佣兵战争模式</option>
                 <option value="quick">快速战模式</option>
               </optgroup>
-              <optgroup label="合约模式"><option value="mission">任务模式</option><option value="sweep">战场扫荡</option></optgroup>
-              <optgroup label="战场模式"><option value="battlefield">雇佣兵战争模式</option></optgroup>
-              <optgroup label="战略模式">
+              <optgroup label="策略模式">
                 <option value="campaign">历史战役模式</option>
               </optgroup>
             </select></label>
             <div class="net-buttons">
-              <button id="createOfflineRoom" class="primary">单机 · 创建房间</button>
-              <button data-ui-node="node-150" id="openRooms">联机 · 连接服务器</button>
-              <button id="closeSkirmish">返回</button>
+              <button id="confirmOfflineMode" class="primary">确认</button>
+              <button id="cancelOfflineMode">取消</button>
             </div>
           </section>
         </div>
@@ -2590,13 +2601,15 @@
                   <div class="room-rules-heading">
                     <h3 id="roomRulesTitle">房间规则</h3>
                     <div id="roomRulesActions"><label class="room-mode-selector"><span>对战模式</span><select id="roomBattleMode" aria-label="对战模式">
-                        <optgroup label="遭遇战模式">
-                <option value="regular">常规战模式</option>
+                        <optgroup label="合约模式">
+                <option value="mission">任务模式</option>
+                <option value="sweep">战场扫荡</option>
+              </optgroup>
+              <optgroup label="战场模式">
+                <option value="battlefield">雇佣兵战争模式</option>
                 <option value="quick">快速战模式</option>
               </optgroup>
-              <optgroup label="合约模式"><option value="mission">任务模式</option><option value="sweep">战场扫荡</option></optgroup>
-              <optgroup label="战场模式"><option value="battlefield">雇佣兵战争模式</option></optgroup>
-              <optgroup label="战略模式">
+              <optgroup label="策略模式">
                 <option value="campaign">历史战役模式</option>
               </optgroup>
                       </select></label></div>
@@ -2605,7 +2618,7 @@
                     <summary>雇佣兵战争模式设置</summary>
                     <section id="battlefieldRoomOptions" class="battlefield-ai-options room-mode-fields" aria-label="雇佣兵战争模式设置"></section>
                   </details>
-                  <details class="room-rule-group" id="roomTechnologyRules" open><summary>单位科技限制</summary><div class="room-options"><label>科技点限制<select id="roomTechnologyLimitMode"><option value="host">依据房主</option><option value="custom">自定义</option></select></label><label>参考科技阵营<select id="roomTechnologyLimitFaction"><option value="EFSF">EFSF</option><option value="ZEON">ZEON</option><option value="AEUG">AEUG</option><option value="TITANS">TITANS</option><option value="NEO_ZEON">NEO_ZEON</option></select></label><label hidden>科技点上限<input id="roomTechnologyLimit" type="number" min="0" max="1000000000" step="25" value="0" /></label></div><small id="roomTechnologyLimitSummary"></small><small>按解锁科技门槛限制玩家与普通AI；雇佣兵战争阵营友军除外。</small></details>
+                  <details class="room-rule-group" id="roomTechnologyRules" open><summary>单位科技限制</summary><div class="room-options"><label>科技点限制<select id="roomTechnologyLimitMode"><option value="host">依据房主</option><option value="custom">自定义</option></select></label><label>参考科技阵营<select id="roomTechnologyLimitFaction"><option value="EFSF">地球联邦军</option><option value="ZEON">吉翁公国军</option><option value="AEUG">奥古</option><option value="TITANS">提坦斯</option><option value="NEO_ZEON">新吉翁</option><option value="EFSF_0093">地球联邦军[0093]</option><option value="NEO_ZEON_0093">新吉翁[0093]</option><option value="OMNI">地球联合军</option><option value="ZAFT">扎夫特军</option></select></label><label hidden>科技点上限<input id="roomTechnologyLimit" type="number" min="0" max="1000000000" step="25" value="0" /></label></div><small id="roomTechnologyLimitSummary"></small><small>按解锁科技门槛限制玩家与普通AI；雇佣兵战争阵营友军除外。</small></details>
                   <details id="roomFormationRules" class="room-rule-group" open>
                     <summary>编组限制</summary>
                     <div class="room-options room-formation-options">
@@ -3161,13 +3174,7 @@
           </div>
           <div class="development-toolbar">
             <label class="development-faction-picker" for="developmentFactionSelect">
-              <select id="developmentFactionSelect" aria-label="阵营">
-                <option value="EFSF">地球联邦军[0079]</option>
-                <option value="ZEON">吉翁公国军[0079]</option>
-                <option value="AEUG">奥古[0087]</option>
-                <option value="TITANS">提坦斯[0087]</option>
-                <option value="NEO_ZEON">新吉翁[0087]</option>
-              </select>
+              <select id="developmentFactionSelect" aria-label="阵营"><option value="EFSF">地球联邦军</option><option value="ZEON">吉翁公国军</option><option value="AEUG">奥古</option><option value="TITANS">提坦斯</option><option value="NEO_ZEON">新吉翁</option><option value="EFSF_0093">地球联邦军[0093]</option><option value="NEO_ZEON_0093">新吉翁[0093]</option><option value="OMNI">地球联合军</option><option value="ZAFT">扎夫特军</option></select>
             </label>
             <div class="development-balance">科技点 <strong id="developmentPoints">0</strong></div>
           </div>
@@ -3177,7 +3184,7 @@
         <div class="development-workspace">
           <div class="development-tree-scroll">
             <select id="developmentPageSelect" aria-label="科技树页面" hidden disabled>
-              <option value="0">0079T1 · 早期</option>
+              <option value="0">UC_0079_T1 · 早期</option>
             </select>
             <div class="development-tree-stage">
               <div id="developmentTree" class="development-tree" aria-label="科技树"></div>
@@ -4763,25 +4770,34 @@
       }
 
       #musicPlayer {
-        position: fixed;
-        right: 12px;
-        bottom: 10px;
-        z-index: 160;
         display: flex;
         align-items: center;
-        gap: 7px;
+        gap: 8px;
         flex-wrap: wrap;
-        max-width: calc(100vw - 24px);
-        padding: 7px 10px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        margin-top: 14px;
+        padding: 12px;
         border: 1px solid #426474;
         border-radius: 7px;
         background: #10232bed;
         color: #d9eef6;
-        font-size: 12px;
+        font-size: 14px;
+      }
+      #musicTitle {
+        flex: 1 1 100%;
+        min-width: 0;
+        overflow-wrap: anywhere;
+        font-weight: 600;
       }
       #musicPlayer button {
-        padding: 4px 8px;
-        font-size: 12px;
+        min-height: 36px;
+        padding: 6px 12px;
+        font-size: 14px;
+      }
+      #musicStatus {
+        flex: 1 1 100%;
       }
       #musicStatus:empty {
         display: none;
@@ -5140,13 +5156,15 @@
               autocomplete="off"
           /></label>
           <label>新房间模式<select id="newRoomMode">
-            <optgroup label="遭遇战模式">
-                <option value="regular">常规战模式</option>
+            <optgroup label="合约模式">
+                <option value="mission">任务模式</option>
+                <option value="sweep">战场扫荡</option>
+              </optgroup>
+              <optgroup label="战场模式">
+                <option value="battlefield">雇佣兵战争模式</option>
                 <option value="quick">快速战模式</option>
               </optgroup>
-              <optgroup label="合约模式"><option value="mission">任务模式</option><option value="sweep">战场扫荡</option></optgroup>
-              <optgroup label="战场模式"><option value="battlefield">雇佣兵战争模式</option></optgroup>
-              <optgroup label="战略模式">
+              <optgroup label="策略模式">
                 <option value="campaign">历史战役模式</option>
               </optgroup>
           </select></label>
@@ -5348,7 +5366,9 @@
       __SAVE_CODEC__;
       __PROFILE_STORAGE__;
       __PROFILE_MIGRATIONS__;
+      const FACTION_DATA = __FACTION_DATA__;
       __ECONOMY__;
+      __TECHNOLOGY_ERAS__;
       __DEVELOPMENT__;
       __BATTLEFIELD_CLIMATE__
       __UNIT_SENSORS__;
@@ -5358,6 +5378,7 @@
       __NORMAL_FORMS__;
       __CAMPAIGN_BATTLEFIELD__;
       __AUTOMATIC_FIRE__
+    __ARMOR_COATINGS__;
     __CORE__;
       __WEAPON_INFO__;
       __MAP_SHADOW_LIGHTING__

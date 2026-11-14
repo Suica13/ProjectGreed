@@ -18,15 +18,16 @@ def find(pattern, source, context):
         raise ValueError(f"Missing {context}")
     return match.group(1).strip()
 
-def import_faction(root, faction, page_number=0, era="0079"):
+def import_faction(root, faction, page_number=0, era="0079", native_directory=None):
     tree = root / "Units" / "TechTree"
-    page = read(tree / "Core" / "Faction" / f"{faction}_{era}" /
-                f"TechTree_UI_Page_{faction}_{era}_{page_number:02d}.ini")
-    tech_list = read(tree / "Tech" / "Faction" / f"{faction}_{era}" /
-                     f"TechList_{faction}_{era}.ini")
-    marker_dir = tree / "Tech" / "Faction" / f"{faction}_{era}" / "Common"
+    directory = native_directory or f"{faction}_{era}"
+    page = read(tree / "Core" / "Faction" / directory /
+                f"TechTree_UI_Page_{directory}_{page_number:02d}.ini")
+    tech_list = read(tree / "Tech" / "Faction" / directory /
+                     f"TechList_{directory}.ini")
+    marker_dir = tree / "Tech" / "Faction" / directory / "Common"
     slots = re.findall(
-        r"\[attachment_Tech_(Mid|Top|Bot)_(\d+)\]"
+        r"\[attachment_Tech_(Mid|Top|Bot|Main)_(\d+)\]"
         r"(?:(?!\[attachment_Tech_)[\s\S])*?onCreateSpawnUnitOf:(Tech_\w+)\*1",
         page,
     )
@@ -54,8 +55,8 @@ def import_faction(root, faction, page_number=0, era="0079"):
             "name": find(r"^displayText_zh:([^\r\n]+)", info, f"{tech_id} name"),
             "description": find(r"^displayDescription_zh:([^\r\n]+)", info, f"{tech_id} description"),
             "icon": f"assets/tech-icons/{tech_id}.png",
-            "row": row.lower(),
-            "column": int(column),
+            "row": "mid" if row == "Main" else row.lower(),
+            "column": int(column) + (1 if row == "Main" else 0),
             "money": int(find(r"_Money=(\d+)", awake, f"{tech_id} money")) * 2,
             "supplies": int(find(r"_Resource=(\d+)", awake, f"{tech_id} supplies")) * 2,
             "sourceCosts": {
@@ -70,7 +71,11 @@ def import_faction(root, faction, page_number=0, era="0079"):
         })
     for node in nodes:
         node["page"] = page_number
-        node["era"] = ("0087T1" if page_number == 0 else "0087T2") if era == "0087" else "0079T1" if page_number == 0 else "0083" if node["id"].endswith(("_GPProject", "_OperationStardust")) else "0079T2"
+        node["era"] = ("UC_0087_T1" if page_number == 0 else "UC_0087_T2") if era == "0087" else "UC_0079_T1" if page_number == 0 else "UC_0079_T2" if node["id"].endswith(("_GPProject", "_OperationStardust")) else "UC_0079_T2"
+    if era == "CE71":
+        for node in nodes: node["era"] = "CE_0071_T1"
+    if era == "0093":
+        for node in nodes: node["era"] = "UC_0093_T1"
     return nodes
 
 def main():

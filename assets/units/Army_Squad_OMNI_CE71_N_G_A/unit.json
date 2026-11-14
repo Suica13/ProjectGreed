@@ -1,0 +1,518 @@
+{
+  "schemaVersion": 2,
+  "id": "Army_Squad_OMNI_CE71_N_G_A",
+  "code": "Army-Squad-OMNI-CE71-N-G-A",
+  "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/Army_Squad/Squad/Army_Squad_OMNI_CE71_N_G_A.ini",
+  "materials": {
+    "textures": {
+      "Pilot_OMNI_CE71_Common_1.png": "textures/Pilot_OMNI_CE71_Common_1.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png",
+      "OMNI_CE71_GroundArmy_Standard_4.png": "textures/OMNI_CE71_GroundArmy_Standard_4.png",
+      "OMNI_CE71_GroundArmy_Standard_5.png": "textures/OMNI_CE71_GroundArmy_Standard_5.png",
+      "OMNI_CE71_GroundArmy_Standard_7.png": "textures/OMNI_CE71_GroundArmy_Standard_7.png"
+    },
+    "icon": "Pilot_OMNI_CE71_Common_1.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "Member1": {
+      "x": -3.0,
+      "y": 2.0
+    },
+    "Member2": {
+      "x": 6.0,
+      "y": 12.0
+    },
+    "Member3": {
+      "x": -6.0,
+      "y": 12.0
+    },
+    "Member4": {
+      "x": -14.0,
+      "y": 7.0
+    },
+    "Member5": {
+      "x": 14.0,
+      "y": 7.0
+    },
+    "Member6": {
+      "x": 12.0,
+      "y": -10.0
+    },
+    "Member7": {
+      "x": 0.0,
+      "y": -14.0
+    },
+    "Member8": {
+      "x": -12.0,
+      "y": -10.0
+    },
+    "Member9": {
+      "x": 3.0,
+      "y": -2.0
+    }
+  },
+  "layers": [
+    {
+      "name": "Member1",
+      "bone": "Member1",
+      "texture": "OMNI_CE71_GroundArmy_Standard_4.png",
+      "order": 3,
+      "scale": 0.5
+    },
+    {
+      "name": "Member2",
+      "bone": "Member2",
+      "texture": "OMNI_CE71_GroundArmy_Standard_4.png",
+      "order": 3,
+      "scale": 0.5
+    },
+    {
+      "name": "Member3",
+      "bone": "Member3",
+      "texture": "OMNI_CE71_GroundArmy_Standard_4.png",
+      "order": 3,
+      "scale": 0.5
+    },
+    {
+      "name": "Member4",
+      "bone": "Member4",
+      "texture": "OMNI_CE71_GroundArmy_Standard_4.png",
+      "order": 3,
+      "scale": 0.5
+    },
+    {
+      "name": "Member5",
+      "bone": "Member5",
+      "texture": "OMNI_CE71_GroundArmy_Standard_4.png",
+      "order": 3,
+      "scale": 0.5
+    },
+    {
+      "name": "Member6",
+      "bone": "Member6",
+      "texture": "OMNI_CE71_GroundArmy_Standard_5.png",
+      "order": 3,
+      "scale": 0.5
+    },
+    {
+      "name": "Member7",
+      "bone": "Member7",
+      "texture": "OMNI_CE71_GroundArmy_Standard_5.png",
+      "order": 3,
+      "scale": 0.5
+    },
+    {
+      "name": "Member8",
+      "bone": "Member8",
+      "texture": "OMNI_CE71_GroundArmy_Standard_5.png",
+      "order": 3,
+      "scale": 0.5
+    },
+    {
+      "name": "Member9",
+      "bone": "Member9",
+      "texture": "OMNI_CE71_GroundArmy_Standard_7.png",
+      "order": 3,
+      "scale": 0.5
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "scaleX": 1.0,
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "frames": 3,
+      "frame": 0,
+      "frameFps": 12,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "independentClock": true
+    }
+  ],
+  "animations": {
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Idle": "../../animations/Common_Idle__AntiZakuTank.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 2000,
+    "en": 450.0,
+    "move": 5,
+    "mobility": 100.0,
+    "cost": 0,
+    "counterLimit": 1,
+    "accuracy": 100.0,
+    "partStructuralStrength": 999.0,
+    "partsBreakable": false,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 100,
+      "space": 50,
+      "water": 50.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 100.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "stealth": {
+      "waterOnly": false
+    },
+    "speed": 45,
+    "actionPoints": 10,
+    "sensors": {
+      "sight": 7,
+      "radar": 9.0,
+      "antiDetection": 3.4722222222222223,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": true,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
+  },
+  "attackBonuses": {
+    "melee": 0.0,
+    "shooting": 0.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 5.0,
+      "flat": 0
+    },
+    "shell": {
+      "percent": 5.0,
+      "flat": 0
+    },
+    "melee": {
+      "percent": 5.0,
+      "flat": 0
+    },
+    "dp": {
+      "percent": 5.0,
+      "flat": 0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 1500.0,
+    "walkSpeed": 0.4,
+    "boostSpeed": 0.65,
+    "turnSpeed": 2.0,
+    "reaction": 100.0,
+    "shooting": 100.0,
+    "melee": 100.0,
+    "nativeTags": [
+      "Army_Squad",
+      "Unit",
+      "Human",
+      "OMNI",
+      "CE71",
+      "SEED",
+      "SmallUnit"
+    ],
+    "nativeSkills": [
+      "CantDeconstruct",
+      "Stealth"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 100.0,
+    "unitLevel": 100.0,
+    "enBeforeReduction": 450.0,
+    "enCapacityMultiplier": 1,
+    "tacticalMoveBeforeBonus": 3,
+    "actionTurnSpeed": 2.0,
+    "mobilityMoveTarget": 4,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 10.0,
+      "water": 50.0,
+      "air": 10.0,
+      "mountain": 100.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 18.0,
+      "radar": 324.0,
+      "antiDetection": 100.0
+    },
+    "v17BaseHp": 1500.0,
+    "technologyEra": "CE_0071_T1",
+    "technologyWeight": 1
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "ImportedIdle",
+    "move": "ImportedIdle",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "walk",
+    "moveSoundKey": null
+  },
+  "name": "步兵班[OMNI][CE71]",
+  "faction": "OMNI",
+  "tags": [
+    "OMNI",
+    "CE_0071_T1"
+  ],
+  "localization": {
+    "zh": {
+      "name": "步兵班[OMNI][CE71]",
+      "description": "联合军一般士兵班组"
+    },
+    "en": {
+      "name": "Army Squad[OMNI][CE71]",
+      "description": "OMNI standard infantry squad"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "Squad_Combined_Weapons": {
+      "ref": "Army_Squad_OMNI_CE71_N_G_Member_MG__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Army_Squad/Member/OMNI_CE71/Army_Squad_OMNI_CE71_N_G_Member_MG.ini",
+          "barrels": [
+            {
+              "id": "Army_Squad_OMNI_CE71_N_G_Member_MG",
+              "x": 0.0,
+              "y": 5.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Member1",
+              "offset": {
+                "x": 3.0,
+                "y": 3.0
+              }
+            },
+            {
+              "bone": "Member2",
+              "offset": {
+                "x": -6.0,
+                "y": -7.0
+              }
+            },
+            {
+              "bone": "Member3",
+              "offset": {
+                "x": 6.0,
+                "y": -7.0
+              }
+            },
+            {
+              "bone": "Member4",
+              "offset": {
+                "x": 14.0,
+                "y": -2.0
+              }
+            },
+            {
+              "bone": "Member5",
+              "offset": {
+                "x": -14.0,
+                "y": -2.0
+              }
+            },
+            {
+              "bone": "Member6",
+              "offset": {
+                "x": -11.0,
+                "y": 10.0
+              }
+            },
+            {
+              "bone": "Member7",
+              "offset": {
+                "x": 1.0,
+                "y": 14.0
+              }
+            },
+            {
+              "bone": "Member8",
+              "offset": {
+                "x": 13.0,
+                "y": 10.0
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    },
+    {
+      "id": "CantDeconstruct",
+      "source": "Template/Unit/Skill/CantDeconstruct.gw",
+      "status": "not_applicable",
+      "name": "CantDeconstruct"
+    },
+    {
+      "id": "Stealth",
+      "source": "Template/Unit/Skill/Stealth.gw",
+      "status": "adapted",
+      "name": "隐蔽：降低敌方雷达的有效侦测距离"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": [
+        "Squad_Combined_Weapons"
+      ]
+    }
+  ],
+  "description": "联合军一般士兵班组",
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 100.0,
+    "levelMultiplier": 0.25,
+    "published": 0
+  },
+  "skills": [],
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "Infantry"
+  ],
+  "transport": {
+    "slotCost": 1,
+    "loadTags": [
+      "CanLoadInto",
+      "Human"
+    ]
+  },
+  "hangars": [],
+  "refits": []
+}

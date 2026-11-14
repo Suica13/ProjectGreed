@@ -56,7 +56,7 @@ def tech_costs():
 
 def main():
     offers=defaultdict(list)
-    for root in [MOD/"GW_BattleUniverse_DLC_0079", MOD/"GW_BattleUniverse_DLC_0087"]:
+    for root in [MOD/"GW_BattleUniverse_DLC_0079", MOD/"GW_BattleUniverse_DLC_0087", MOD/"GW_BattleUniverse_DLC_SEED", MOD/"GW_BattleUniverse_DLC_0093"]:
         for key, values in factory_offers(root).items(): offers[key].extend(values)
     result={};unavailable=[]
     registry=json.loads((ASSETS/'unit-catalog.json').read_text(encoding='utf8'))
@@ -79,7 +79,7 @@ def main():
             prices={(o['money'],o['supplies'],o['quantity']) for o in candidates}
             if len(prices)!=1:raise ValueError('Conflicting prices: '+model_id+': '+str(prices))
             selected=max(candidates,key=lambda o:o['source']['buildSeconds'])
-            result[model_id]={'output':{'unitId':p['id'],'kitId':kit['id'],'quantity':selected['quantity']},'unitId':p['id'],'faction':next(tag for tag in p['tags'] if tag in ('EFSF','ZEON','AEUG','TITANS','NEO_ZEON')),**({'availableFactions':p['availableFactions']} if p.get('availableFactions') else {}),**selected,'sourceAlternatives':[o['source'] for o in candidates if o!=selected]}
+            result[model_id]={'output':{'unitId':p['id'],'kitId':kit['id'],'quantity':selected['quantity']},'unitId':p['id'],'faction':next(tag for tag in p['tags'] if tag in ('EFSF','ZEON','AEUG','TITANS','NEO_ZEON','EFSF_0093','NEO_ZEON_0093','OMNI','ZAFT')),**({'availableFactions':p['availableFactions']} if p.get('availableFactions') else {}),**selected,'sourceAlternatives':[o['source'] for o in candidates if o!=selected]}
     units={}
     for model_id,offer in result.items():
         unit=offer['unitId'];previous=units.get(unit)

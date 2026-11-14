@@ -30,6 +30,10 @@ def attach(prefab,native):
     if ident in PURGES:kind,target,recovery,repair=PURGES[ident]
     elif ident in ["YMT_05","YMT_05_ModeB"]:
         kind="transform";target="YMT_05_ModeB" if ident=="YMT_05" else "YMT_05";recovery=0;repair=False
+    elif ident in ("TFA_2", "TFA_2_ModeB"):
+        kind="transform";target="TFA_2_ModeB" if ident=="TFA_2" else "TFA_2";recovery=0;repair=False
+    elif ident in ("GAT_X303", "GAT_X303_MA"):
+        kind="transform";target="GAT_X303_MA" if ident=="GAT_X303" else "GAT_X303";recovery=0;repair=False
     elif ident in ("RGZ_91B", "RGZ_91B_MA"):
         kind="transform";target="RGZ_91B_MA" if ident=="RGZ_91B" else "RGZ_91B";recovery=0;repair=False
     elif ident=="FA_78_1_NA":kind="escape";target="FF_X7";recovery=100;repair=True
@@ -84,7 +88,7 @@ def apply_action_cost(prefab):
 
 
 DEPLOYMENTS = {ident: ident + ("_Deploy" if ident == "AMS_Squad" else "_DeployState")
-    for ident in ["AMS_Squad", "FatUncle", "FatUncleKai", "Gunperry", "Medea", "MedeaKai", "MS_06V", "RX_75R", "Type61_SPG"]}
+    for ident in ["AMS_Squad", "FatUncle", "FatUncleKai", "Gunperry", "Medea", "MedeaKai", "MS_06V", "RX_75R", "Type61_SPG", "ConnectedArmoredVehicle", "LinearArtillery", "VTOLTransport"]}
 
 def attach_deployment(prefab, native):
     ident = prefab["id"]

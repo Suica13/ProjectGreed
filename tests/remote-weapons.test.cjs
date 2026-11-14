@@ -3,7 +3,7 @@ const test = require("node:test"),
 const fs = require("node:fs"),
   vm = require("node:vm");
 const G = require("../shared/rules.js");
-const salvoCount = w => w.remote.units.reduce((sum, unit) => sum + (unit.burstShots || 1) * 2, 0);
+const salvoCount = w => w.remote.units.reduce((sum, unit) => sum + (unit.burstShots || 1) * (unit.cycles ?? w.remote.shotsPerUnit), 0);
 const expected = { MAN_03: 4, MAN_08: 5, MSN_02: 2, MS_06Z: 2, MSN_01: 2 };
 function fixture(id = "MAN_08") {
   const m = Object.values(G.models).find((m) => m.prefabId === id);
@@ -44,7 +44,7 @@ test("native remote salvos keep original counts, gates and every kit; consume EN
     assert.equal(w.remote.units.length, count);
     assert.equal(w.attack.shots.length, salvoCount(w));
     assert(w.damage > 0);
-    assert.equal(w.hit, 95);
+    assert.equal(w.hit, 85);
     assert.equal(w.actionCost, 3);
     assert.deepEqual(w.pilotRequirements, [{ stat: "awakening", operator: ">=", value: 75 }]);
     for (const m of Object.values(G.models).filter((m) => m.prefabId === id))
@@ -71,9 +71,9 @@ test("wired hands lose only the broken arm volley, and both broken arms prohibit
     const { g, a, b, w } = fixture(id);
     a.brokenParts = { leftArm: true };
     assert.equal(G.canUse(a, w), true);
-    assert.equal(G.availableStrikes(a, w).length, 10);
+    assert.equal(G.availableStrikes(a, w).length, salvoCount(w) / 2);
     const events = G.fight(g, a, b, w, "evade", null, false);
-    assert.equal(events[0].strikes.filter((s) => s.executed !== false).length, 10);
+    assert.equal(events[0].strikes.filter((s) => s.executed !== false).length, salvoCount(w) / 2);
     a.brokenParts.rightArm = true;
     assert.equal(G.canUse(a, w), false);
   }
@@ -128,7 +128,7 @@ function fx() {
   );
   return context.fx;
 }
-test("remote paths are deterministic, staggered, stop to fire twice and preserve a half-second pause", () => {
+test("remote paths are deterministic, staggered, fire every native cycle and preserve a half-second pause", () => {
   for (const id of Object.keys(expected)) {
     const { a, b, w } = fixture(id),
       api = fx();
@@ -183,6 +183,6 @@ test("remote counterattacks use the same independent shot sequence and spend one
   const events = G.fight(g, b, a, gun, "counter", w.id, true);
   const remote = events.find((e) => e.from === a.id && e.weapon === w.id);
   assert.ok(remote);
-  assert.equal(remote.strikes.length, 10);
+  assert.equal(remote.strikes.length, salvoCount(w));
   assert.equal(a.en, before - w.en);
 });

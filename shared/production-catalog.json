@@ -472,7 +472,80 @@
     "RX_93": "standard",
     "RX_93_Test": "standard",
     "RGZ_91_MA": "standard",
-    "RGZ_91B_MA": "standard"
+    "RGZ_91B_MA": "standard",
+    "ACV": "standard",
+    "AgamemnonClass": "standard",
+    "Agile": "standard",
+    "AMF_101": "standard",
+    "AMF_101C": "standard",
+    "ArchangelClass": "standard",
+    "ConnectedArmoredVehicle": "standard",
+    "DrakeClass": "standard",
+    "F_7D": "standard",
+    "FX_550": "main_1",
+    "GAT_01": "standard",
+    "GAT_01A1": "kit_0",
+    "GAT_01D": "standard",
+    "GAT_01D1": "standard",
+    "GAT_02L2": "kit_0",
+    "GAT_X102": "kit_0",
+    "GAT_X102_AS": "standard",
+    "GAT_X103": "standard",
+    "GAT_X105": "standard",
+    "GAT_X207": "standard",
+    "GAT_X303": "standard",
+    "Guul": "standard",
+    "Infestus": "main_0",
+    "LaurasiaClass": "standard",
+    "LinearArtillery": "standard",
+    "LinearGunTank": "standard",
+    "MarseilleIIIClass": "standard",
+    "MBF_M1": "kit_0",
+    "MissileCar_CE": "standard",
+    "NazcaClass": "standard",
+    "NelsonClass": "standard",
+    "OMNI_MinigunAPC": "standard",
+    "PatrolAircraft": "standard",
+    "PowerCar": "standard",
+    "SupplyTruck": "standard",
+    "TFA_2": "standard",
+    "TMF_A_802": "standard",
+    "TS_MA2": "standard",
+    "UMF_4A": "standard",
+    "UMF_5": "standard",
+    "UWMF_S_1": "standard",
+    "VoLPHAU": "standard",
+    "VTOLFighter": "standard",
+    "VTOLTransport": "standard",
+    "ZGMF_1017": "kit_2",
+    "ZGMF_1017M": "kit_0",
+    "ZGMF_515": "standard",
+    "ZGMF_600": "standard",
+    "ZGMF_LRR704B": "standard",
+    "ZGMT_01": "standard",
+    "ConnectedArmoredVehicle_DeployState": "standard",
+    "GAT_01D_AS": "standard",
+    "GAT_01D1_AS": "standard",
+    "GAT_X105_A": "kit_0",
+    "GAT_X105_L": "standard",
+    "GAT_X105_S": "standard",
+    "GAT_X303_MA": "standard",
+    "LinearArtillery_DeployState": "standard",
+    "TS_MA2_H": "main_0",
+    "VTOLTransport_DeployState": "standard",
+    "ZGMF_1017_D": "standard",
+    "ZGMF_1017_H": "standard",
+    "TFA_2_ModeB": "standard",
+    "Army_Squad_OMNI_CE71_N_G_A": "standard",
+    "Army_Squad_ZAFT_CE71_N_G_A": "standard",
+    "RGM_86R_0093_EFSF": "kit_4",
+    "SalamisClassKai_0093_EFSF": "standard",
+    "MSZ_006A1_0093_EFSF": "kit_0",
+    "MSZ_006C1_0093_EFSF": "standard",
+    "AMX_101_0093_NZN": "standard",
+    "MusaiClassFinalType_0093_NZN": "standard",
+    "AMX_107_0093_NZN": "standard",
+    "AMX_006_0093_NZN": "standard"
   },
   "baseModels": {
     "RGM_79": "RGM_79__machine_gun",
@@ -943,7 +1016,80 @@
     "RX_93": "RX_93__standard",
     "RX_93_Test": "RX_93_Test__standard",
     "RGZ_91_MA": "RGZ_91_MA__standard",
-    "RGZ_91B_MA": "RGZ_91B_MA__standard"
+    "RGZ_91B_MA": "RGZ_91B_MA__standard",
+    "ACV": "ACV__standard",
+    "AgamemnonClass": "AgamemnonClass__standard",
+    "Agile": "Agile__standard",
+    "AMF_101": "AMF_101__standard",
+    "AMF_101C": "AMF_101C__standard",
+    "ArchangelClass": "ArchangelClass__standard",
+    "ConnectedArmoredVehicle": "ConnectedArmoredVehicle__standard",
+    "DrakeClass": "DrakeClass__standard",
+    "F_7D": "F_7D__standard",
+    "FX_550": "FX_550__main_1",
+    "GAT_01": "GAT_01__standard",
+    "GAT_01A1": "GAT_01A1__kit_0",
+    "GAT_01D": "GAT_01D__standard",
+    "GAT_01D1": "GAT_01D1__standard",
+    "GAT_02L2": "GAT_02L2__kit_0",
+    "GAT_X102": "GAT_X102__kit_0",
+    "GAT_X102_AS": "GAT_X102_AS__standard",
+    "GAT_X103": "GAT_X103__standard",
+    "GAT_X105": "GAT_X105__standard",
+    "GAT_X207": "GAT_X207__standard",
+    "GAT_X303": "GAT_X303__standard",
+    "Guul": "Guul__standard",
+    "Infestus": "Infestus__main_0",
+    "LaurasiaClass": "LaurasiaClass__standard",
+    "LinearArtillery": "LinearArtillery__standard",
+    "LinearGunTank": "LinearGunTank__standard",
+    "MarseilleIIIClass": "MarseilleIIIClass__standard",
+    "MBF_M1": "MBF_M1__kit_0",
+    "MissileCar_CE": "MissileCar_CE__standard",
+    "NazcaClass": "NazcaClass__standard",
+    "NelsonClass": "NelsonClass__standard",
+    "OMNI_MinigunAPC": "OMNI_MinigunAPC__standard",
+    "PatrolAircraft": "PatrolAircraft__standard",
+    "PowerCar": "PowerCar__standard",
+    "SupplyTruck": "SupplyTruck__standard",
+    "TFA_2": "TFA_2__standard",
+    "TMF_A_802": "TMF_A_802__standard",
+    "TS_MA2": "TS_MA2__standard",
+    "UMF_4A": "UMF_4A__standard",
+    "UMF_5": "UMF_5__standard",
+    "UWMF_S_1": "UWMF_S_1__standard",
+    "VoLPHAU": "VoLPHAU__standard",
+    "VTOLFighter": "VTOLFighter__standard",
+    "VTOLTransport": "VTOLTransport__standard",
+    "ZGMF_1017": "ZGMF_1017__kit_2",
+    "ZGMF_1017M": "ZGMF_1017M__kit_0",
+    "ZGMF_515": "ZGMF_515__standard",
+    "ZGMF_600": "ZGMF_600__standard",
+    "ZGMF_LRR704B": "ZGMF_LRR704B__standard",
+    "ZGMT_01": "ZGMT_01__standard",
+    "ConnectedArmoredVehicle_DeployState": "ConnectedArmoredVehicle_DeployState__standard",
+    "GAT_01D_AS": "GAT_01D_AS__standard",
+    "GAT_01D1_AS": "GAT_01D1_AS__standard",
+    "GAT_X105_A": "GAT_X105_A__kit_0",
+    "GAT_X105_L": "GAT_X105_L__standard",
+    "GAT_X105_S": "GAT_X105_S__standard",
+    "GAT_X303_MA": "GAT_X303_MA__standard",
+    "LinearArtillery_DeployState": "LinearArtillery_DeployState__standard",
+    "TS_MA2_H": "TS_MA2_H__main_0",
+    "VTOLTransport_DeployState": "VTOLTransport_DeployState__standard",
+    "ZGMF_1017_D": "ZGMF_1017_D__standard",
+    "ZGMF_1017_H": "ZGMF_1017_H__standard",
+    "TFA_2_ModeB": "TFA_2_ModeB__standard",
+    "Army_Squad_OMNI_CE71_N_G_A": "Army_Squad_OMNI_CE71_N_G_A__standard",
+    "Army_Squad_ZAFT_CE71_N_G_A": "Army_Squad_ZAFT_CE71_N_G_A__standard",
+    "RGM_86R_0093_EFSF": "RGM_86R_0093_EFSF__kit_4",
+    "SalamisClassKai_0093_EFSF": "SalamisClassKai_0093_EFSF__standard",
+    "MSZ_006A1_0093_EFSF": "MSZ_006A1_0093_EFSF__kit_0",
+    "MSZ_006C1_0093_EFSF": "MSZ_006C1_0093_EFSF__standard",
+    "AMX_101_0093_NZN": "AMX_101_0093_NZN__standard",
+    "MusaiClassFinalType_0093_NZN": "MusaiClassFinalType_0093_NZN__standard",
+    "AMX_107_0093_NZN": "AMX_107_0093_NZN__standard",
+    "AMX_006_0093_NZN": "AMX_006_0093_NZN__standard"
   },
   "offers": {
     "RGM_79__beam_spray": {
@@ -23624,6 +23770,2830 @@
         ]
       },
       "sourceAlternatives": []
+    },
+    "ACV__standard": {
+      "money": 200,
+      "supplies": 400,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/ACV.gw",
+        "action": "action_Produce_ACV_StandardSquad",
+        "buildSeconds": 20.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "ACV",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "ACV",
+      "faction": "OMNI",
+      "output": {
+        "unitId": "ACV",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "AgamemnonClass__standard": {
+      "money": 4500,
+      "supplies": 9000,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Space_Mega/AgamemnonClass.gw",
+        "action": "action_Produce_AgamemnonClass",
+        "buildSeconds": 70.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "AgamemnonClass",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:2101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "AgamemnonClass",
+      "faction": "OMNI",
+      "output": {
+        "unitId": "AgamemnonClass",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "Agile__standard": {
+      "money": 400,
+      "supplies": 650,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Air/Agile.gw",
+        "action": "action_Produce_Agile_StandardSquad",
+        "buildSeconds": 30.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "Agile",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "Agile",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "Agile",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "Agile",
+      "faction": "ZAFT",
+      "output": {
+        "unitId": "Agile",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "AMF_101__standard": {
+      "money": 1500,
+      "supplies": 2500,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/AMF_101.gw",
+        "action": "action_Produce_AMF_101_StandardSquad",
+        "buildSeconds": 70.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "AMF_101",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "AMF_101",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "AMF_101",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "AMF_101",
+      "faction": "ZAFT",
+      "output": {
+        "unitId": "AMF_101",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "AMF_101C__standard": {
+      "money": 1250,
+      "supplies": 1550,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/AMF_101C.gw",
+        "action": "action_Produce_AMF_101C",
+        "buildSeconds": 55.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "AMF_101C",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "AMF_101C",
+      "faction": "ZAFT",
+      "output": {
+        "unitId": "AMF_101C",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "ArchangelClass__standard": {
+      "money": 9000,
+      "supplies": 15000,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Space_Mega/ArchangelClass.gw",
+        "action": "action_Produce_ArchangelClass",
+        "buildSeconds": 80.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "ArchangelClass",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:2101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "ArchangelClass",
+      "faction": "OMNI",
+      "output": {
+        "unitId": "ArchangelClass",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "DrakeClass__standard": {
+      "money": 2000,
+      "supplies": 3500,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Space_Mega/DrakeClass.gw",
+        "action": "action_Produce_DrakeClass",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "DrakeClass",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:2101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "DrakeClass",
+      "faction": "OMNI",
+      "output": {
+        "unitId": "DrakeClass",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "F_7D__standard": {
+      "money": 500,
+      "supplies": 850,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Air/F_7D.gw",
+        "action": "action_Produce_F_7D_StandardSquad",
+        "buildSeconds": 25.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "F_7D",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "F_7D",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "F_7D",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "F_7D",
+      "faction": "OMNI",
+      "output": {
+        "unitId": "F_7D",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "FX_550__main_1": {
+      "money": 1250,
+      "supplies": 1750,
+      "quantity": 1,
+      "equipmentIndex": 1,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Air/FX_550.gw",
+        "action": "action_Produce_FX_550_ASquad",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "FX_550",
+            "quantity": 1,
+            "equipmentIndex": 1,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:1"
+          }
+        ]
+      },
+      "unitId": "FX_550",
+      "faction": "OMNI",
+      "output": {
+        "unitId": "FX_550",
+        "kitId": "main_1",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "FX_550__main_2": {
+      "money": 1250,
+      "supplies": 1750,
+      "quantity": 1,
+      "equipmentIndex": 2,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Air/FX_550.gw",
+        "action": "action_Produce_FX_550_LSquad",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "FX_550",
+            "quantity": 1,
+            "equipmentIndex": 2,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:2"
+          }
+        ]
+      },
+      "unitId": "FX_550",
+      "faction": "OMNI",
+      "output": {
+        "unitId": "FX_550",
+        "kitId": "main_2",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "FX_550__main_3": {
+      "money": 1250,
+      "supplies": 1750,
+      "quantity": 1,
+      "equipmentIndex": 3,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Air/FX_550.gw",
+        "action": "action_Produce_FX_550_SSquad",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "FX_550",
+            "quantity": 1,
+            "equipmentIndex": 3,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:3"
+          }
+        ]
+      },
+      "unitId": "FX_550",
+      "faction": "OMNI",
+      "output": {
+        "unitId": "FX_550",
+        "kitId": "main_3",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "GAT_01__standard": {
+      "money": 2000,
+      "supplies": 3450,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_01.gw",
+        "action": "action_Produce_GAT_01_StandardSquad",
+        "buildSeconds": 50.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "GAT_01",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "GAT_01",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "GAT_01",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "GAT_01",
+      "faction": "OMNI",
+      "output": {
+        "unitId": "GAT_01",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "GAT_01D__standard": {
+      "money": 2750,
+      "supplies": 3750,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_01D.gw",
+        "action": "action_Produce_GAT_01D_StandardSquad",
+        "buildSeconds": 55.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "GAT_01D",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "GAT_01D",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "GAT_01D",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "GAT_01D",
+      "faction": "OMNI",
+      "output": {
+        "unitId": "GAT_01D",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "GAT_01D1__standard": {
+      "money": 2750,
+      "supplies": 3750,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_01D1.gw",
+        "action": "action_Produce_GAT_01D1_StandardSquad",
+        "buildSeconds": 55.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "GAT_01D1",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "GAT_01D1",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "GAT_01D1",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "GAT_01D1",
+      "faction": "OMNI",
+      "output": {
+        "unitId": "GAT_01D1",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "GAT_X102__kit_0": {
+      "money": 2550,
+      "supplies": 3600,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_X102.gw",
+        "action": "action_Produce_GAT_X102_StandardSquad",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "GAT_X102",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "GAT_X102",
+      "faction": "OMNI",
+      "availableFactions": [
+        "OMNI",
+        "ZAFT"
+      ],
+      "output": {
+        "unitId": "GAT_X102",
+        "kitId": "kit_0",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "GAT_X102__kit_2": {
+      "money": 2550,
+      "supplies": 3600,
+      "quantity": 1,
+      "equipmentIndex": 1,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_X102.gw",
+        "action": "action_Produce_GAT_X102_BazookaSquad",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "GAT_X102",
+            "quantity": 1,
+            "equipmentIndex": 1,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:1"
+          }
+        ]
+      },
+      "unitId": "GAT_X102",
+      "faction": "OMNI",
+      "availableFactions": [
+        "OMNI",
+        "ZAFT"
+      ],
+      "output": {
+        "unitId": "GAT_X102",
+        "kitId": "kit_2",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "GAT_X102_AS__standard": {
+      "money": 3500,
+      "supplies": 4500,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_X102_AS.gw",
+        "action": "action_Produce_GAT_X102_AS_StandardSquad",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "GAT_X102_AS",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "GAT_X102_AS",
+      "faction": "OMNI",
+      "availableFactions": [
+        "OMNI",
+        "ZAFT"
+      ],
+      "output": {
+        "unitId": "GAT_X102_AS",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "GAT_X103__standard": {
+      "money": 3250,
+      "supplies": 4250,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_X103.gw",
+        "action": "action_Produce_GAT_X103_StandardSquad",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "GAT_X103",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "GAT_X103",
+      "faction": "OMNI",
+      "availableFactions": [
+        "OMNI",
+        "ZAFT"
+      ],
+      "output": {
+        "unitId": "GAT_X103",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "GAT_X105__standard": {
+      "money": 2250,
+      "supplies": 3200,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_X105.gw",
+        "action": "action_Produce_GAT_X105_NSquad",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "GAT_X105",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "GAT_X105",
+      "faction": "OMNI",
+      "output": {
+        "unitId": "GAT_X105",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "GAT_X207__standard": {
+      "money": 3250,
+      "supplies": 4250,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_X207.gw",
+        "action": "action_Produce_GAT_X207_StandardSquad",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "GAT_X207",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "GAT_X207",
+      "faction": "OMNI",
+      "availableFactions": [
+        "OMNI",
+        "ZAFT"
+      ],
+      "output": {
+        "unitId": "GAT_X207",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "GAT_X303__standard": {
+      "money": 3750,
+      "supplies": 5000,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_X303.gw",
+        "action": "action_Produce_GAT_X303_StandardSquad",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "GAT_X303",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "GAT_X303",
+      "faction": "OMNI",
+      "availableFactions": [
+        "OMNI",
+        "ZAFT"
+      ],
+      "output": {
+        "unitId": "GAT_X303",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "Guul__standard": {
+      "money": 550,
+      "supplies": 1000,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Air/Guul.gw",
+        "action": "action_Produce_Guul_StandardSquad",
+        "buildSeconds": 50.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "Guul",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "Guul",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "Guul",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "Guul",
+      "faction": "ZAFT",
+      "output": {
+        "unitId": "Guul",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "Infestus__main_0": {
+      "money": 500,
+      "supplies": 850,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Air/Infestus.gw",
+        "action": "action_Produce_Infestus_StandardSquad",
+        "buildSeconds": 35.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "Infestus",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "Infestus",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "Infestus",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "Infestus",
+      "faction": "ZAFT",
+      "output": {
+        "unitId": "Infestus",
+        "kitId": "main_0",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "LaurasiaClass__standard": {
+      "money": 4500,
+      "supplies": 9000,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Space_Mega/LaurasiaClass.gw",
+        "action": "action_Produce_LaurasiaClass",
+        "buildSeconds": 80.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "LaurasiaClass",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:2101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "LaurasiaClass",
+      "faction": "ZAFT",
+      "output": {
+        "unitId": "LaurasiaClass",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "LinearArtillery__standard": {
+      "money": 400,
+      "supplies": 750,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/LinearArtillery.gw",
+        "action": "action_Produce_LinearArtillery_StandardSquad",
+        "buildSeconds": 25.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "LinearArtillery",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "LinearArtillery",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "LinearArtillery",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "LinearArtillery",
+      "faction": "OMNI",
+      "output": {
+        "unitId": "LinearArtillery",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "MarseilleIIIClass__standard": {
+      "money": 750,
+      "supplies": 1750,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Space_Mega/MarseilleIIIClass.gw",
+        "action": "action_Produce_MarseilleIIIClass",
+        "buildSeconds": 35.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "MarseilleIIIClass",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:2101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "MarseilleIIIClass",
+      "faction": "OMNI",
+      "availableFactions": [
+        "OMNI",
+        "ZAFT"
+      ],
+      "output": {
+        "unitId": "MarseilleIIIClass",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "MissileCar_CE__standard": {
+      "money": 300,
+      "supplies": 400,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/MissileCar_CE.gw",
+        "action": "action_Produce_MissileCar_CE_StandardSquad",
+        "buildSeconds": 20.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "MissileCar_CE",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "MissileCar_CE",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "MissileCar_CE",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "MissileCar_CE",
+      "faction": "OMNI",
+      "output": {
+        "unitId": "MissileCar_CE",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "NazcaClass__standard": {
+      "money": 2000,
+      "supplies": 4500,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Space_Mega/NazcaClass.gw",
+        "action": "action_Produce_NazcaClass",
+        "buildSeconds": 55.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "NazcaClass",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:2101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "NazcaClass",
+      "faction": "ZAFT",
+      "output": {
+        "unitId": "NazcaClass",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "NelsonClass__standard": {
+      "money": 2000,
+      "supplies": 4500,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Space_Mega/NelsonClass.gw",
+        "action": "action_Produce_NelsonClass",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "NelsonClass",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:2101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "NelsonClass",
+      "faction": "OMNI",
+      "output": {
+        "unitId": "NelsonClass",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "OMNI_MinigunAPC__standard": {
+      "money": 250,
+      "supplies": 350,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/OMNI_MinigunAPC.gw",
+        "action": "action_Produce_OMNI_MinigunAPC_StandardSquad",
+        "buildSeconds": 20.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "OMNI_MinigunAPC",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "OMNI_MinigunAPC",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "OMNI_MinigunAPC",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "OMNI_MinigunAPC",
+      "faction": "OMNI",
+      "output": {
+        "unitId": "OMNI_MinigunAPC",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "PatrolAircraft__standard": {
+      "money": 250,
+      "supplies": 500,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Air/PatrolAircraft.gw",
+        "action": "action_Produce_PatrolAircraft_StandardSquad",
+        "buildSeconds": 25.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "PatrolAircraft",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "PatrolAircraft",
+      "faction": "OMNI",
+      "output": {
+        "unitId": "PatrolAircraft",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "PowerCar__standard": {
+      "money": 300,
+      "supplies": 600,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/PowerCar.gw",
+        "action": "action_Produce_PowerCar_StandardSquad",
+        "buildSeconds": 25.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "PowerCar",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "PowerCar",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "PowerCar",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "PowerCar",
+      "faction": "OMNI",
+      "output": {
+        "unitId": "PowerCar",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "SupplyTruck__standard": {
+      "money": 300,
+      "supplies": 600,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/SupplyTruck.gw",
+        "action": "action_Produce_SupplyTruck_StandardSquad",
+        "buildSeconds": 35.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "SupplyTruck",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "SupplyTruck",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "SupplyTruck",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "SupplyTruck",
+      "faction": "ZAFT",
+      "output": {
+        "unitId": "SupplyTruck",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "TFA_2__standard": {
+      "money": 3000,
+      "supplies": 4500,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/TFA_2.gw",
+        "action": "action_Produce_TFA_2_StandardSquad",
+        "buildSeconds": 75.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "TFA_2",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "TFA_2",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "TFA_2",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "TFA_2",
+      "faction": "ZAFT",
+      "output": {
+        "unitId": "TFA_2",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "TMF_A_802__standard": {
+      "money": 2600,
+      "supplies": 3350,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/TMF_A_802.gw",
+        "action": "action_Produce_TMF_A_802_StandardSquad",
+        "buildSeconds": 65.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "TMF_A_802",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "TMF_A_802",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "TMF_A_802",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "TMF_A_802",
+      "faction": "ZAFT",
+      "output": {
+        "unitId": "TMF_A_802",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "TS_MA2__standard": {
+      "money": 500,
+      "supplies": 1000,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Space/TS_MA2.gw",
+        "action": "action_Produce_TS_MA2_StandardSquad",
+        "buildSeconds": 30.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "TS_MA2",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "TS_MA2",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "TS_MA2",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "TS_MA2",
+      "faction": "OMNI",
+      "output": {
+        "unitId": "TS_MA2",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "UMF_4A__standard": {
+      "money": 1750,
+      "supplies": 2200,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/UMF_4A.gw",
+        "action": "action_Produce_UMF_4A_StandardSquad",
+        "buildSeconds": 65.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "UMF_4A",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "UMF_4A",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "UMF_4A",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "UMF_4A",
+      "faction": "ZAFT",
+      "output": {
+        "unitId": "UMF_4A",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "UMF_5__standard": {
+      "money": 800,
+      "supplies": 1350,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/UMF_5.gw",
+        "action": "action_Produce_UMF_5_StandardSquad",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "UMF_5",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "UMF_5",
+      "faction": "ZAFT",
+      "output": {
+        "unitId": "UMF_5",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "UWMF_S_1__standard": {
+      "money": 800,
+      "supplies": 1800,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/UWMF_S_1.gw",
+        "action": "action_Produce_UWMF_S_1_StandardSquad",
+        "buildSeconds": 60.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "UWMF_S_1",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "UWMF_S_1",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "UWMF_S_1",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "UWMF_S_1",
+      "faction": "ZAFT",
+      "output": {
+        "unitId": "UWMF_S_1",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "VoLPHAU__standard": {
+      "money": 500,
+      "supplies": 1000,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Air/VoLPHAU.gw",
+        "action": "action_Produce_VoLPHAU_StandardSquad",
+        "buildSeconds": 35.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "VoLPHAU",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "VoLPHAU",
+      "faction": "ZAFT",
+      "output": {
+        "unitId": "VoLPHAU",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "VTOLFighter__standard": {
+      "money": 400,
+      "supplies": 650,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Air/VTOLFighter.gw",
+        "action": "action_Produce_VTOLFighter_StandardSquad",
+        "buildSeconds": 20.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "VTOLFighter",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "VTOLFighter",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "VTOLFighter",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "VTOLFighter",
+      "faction": "OMNI",
+      "output": {
+        "unitId": "VTOLFighter",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "VTOLTransport__standard": {
+      "money": 500,
+      "supplies": 1000,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Air/VTOLTransport.gw",
+        "action": "action_Produce_VTOLTransport_StandardSquad",
+        "buildSeconds": 25.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "VTOLTransport",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "VTOLTransport",
+      "faction": "OMNI",
+      "output": {
+        "unitId": "VTOLTransport",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "ZGMF_1017__kit_2": {
+      "money": 800,
+      "supplies": 1600,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/ZGMF_1017.gw",
+        "action": "action_Produce_ZGMF_1017_StandardSquad",
+        "buildSeconds": 60.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "ZGMF_1017",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "ZGMF_1017",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "ZGMF_1017",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "ZGMF_1017",
+      "faction": "ZAFT",
+      "output": {
+        "unitId": "ZGMF_1017",
+        "kitId": "kit_2",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "ZGMF_1017__kit_3": {
+      "money": 800,
+      "supplies": 2200,
+      "quantity": 3,
+      "equipmentIndex": 1,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/ZGMF_1017.gw",
+        "action": "action_Produce_ZGMF_1017_BazookaSquad",
+        "buildSeconds": 50.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "ZGMF_1017",
+            "quantity": 1,
+            "equipmentIndex": 1,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:1"
+          },
+          {
+            "unitId": "ZGMF_1017",
+            "quantity": 1,
+            "equipmentIndex": 1,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:1"
+          },
+          {
+            "unitId": "ZGMF_1017",
+            "quantity": 1,
+            "equipmentIndex": 1,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:1"
+          }
+        ]
+      },
+      "unitId": "ZGMF_1017",
+      "faction": "ZAFT",
+      "output": {
+        "unitId": "ZGMF_1017",
+        "kitId": "kit_3",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "ZGMF_1017__kit_0": {
+      "money": 800,
+      "supplies": 2200,
+      "quantity": 3,
+      "equipmentIndex": 2,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/ZGMF_1017.gw",
+        "action": "action_Produce_ZGMF_1017_MGMSSquad",
+        "buildSeconds": 50.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "ZGMF_1017",
+            "quantity": 1,
+            "equipmentIndex": 2,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:2"
+          },
+          {
+            "unitId": "ZGMF_1017",
+            "quantity": 1,
+            "equipmentIndex": 2,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:2"
+          },
+          {
+            "unitId": "ZGMF_1017",
+            "quantity": 1,
+            "equipmentIndex": 2,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:2"
+          }
+        ]
+      },
+      "unitId": "ZGMF_1017",
+      "faction": "ZAFT",
+      "output": {
+        "unitId": "ZGMF_1017",
+        "kitId": "kit_0",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "ZGMF_1017M__kit_0": {
+      "money": 1200,
+      "supplies": 2750,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/ZGMF_1017M.gw",
+        "action": "action_Produce_ZGMF_1017M",
+        "buildSeconds": 65.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "ZGMF_1017M",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "ZGMF_1017M",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "ZGMF_1017M",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "ZGMF_1017M",
+      "faction": "ZAFT",
+      "output": {
+        "unitId": "ZGMF_1017M",
+        "kitId": "kit_0",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "ZGMF_515__standard": {
+      "money": 900,
+      "supplies": 1450,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/ZGMF_515.gw",
+        "action": "action_Produce_ZGMF_515",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "ZGMF_515",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "ZGMF_515",
+      "faction": "ZAFT",
+      "output": {
+        "unitId": "ZGMF_515",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "ZGMF_600__standard": {
+      "money": 3250,
+      "supplies": 4250,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/ZGMF_600.gw",
+        "action": "action_Produce_ZGMF_600",
+        "buildSeconds": 65.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "ZGMF_600",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "ZGMF_600",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "ZGMF_600",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "ZGMF_600",
+      "faction": "ZAFT",
+      "output": {
+        "unitId": "ZGMF_600",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "ZGMF_LRR704B__standard": {
+      "money": 850,
+      "supplies": 1250,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/ZGMF_LRR704B.gw",
+        "action": "action_Produce_ZGMF_LRR704B",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "ZGMF_LRR704B",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "ZGMF_LRR704B",
+      "faction": "ZAFT",
+      "output": {
+        "unitId": "ZGMF_LRR704B",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "ZGMT_01__standard": {
+      "money": 600,
+      "supplies": 1200,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/ZGMT_01.gw",
+        "action": "action_Produce_ZGMT_01",
+        "buildSeconds": 75.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "ZGMT_01",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "ZGMT_01",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "ZGMT_01",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "ZGMT_01",
+      "faction": "ZAFT",
+      "output": {
+        "unitId": "ZGMT_01",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "GAT_01D_AS__standard": {
+      "money": 3350,
+      "supplies": 4500,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_01D_AS.gw",
+        "action": "action_Produce_GAT_01D_AS_StandardSquad",
+        "buildSeconds": 65.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "GAT_01D_AS",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "GAT_01D_AS",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "GAT_01D_AS",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "GAT_01D_AS",
+      "faction": "OMNI",
+      "output": {
+        "unitId": "GAT_01D_AS",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "GAT_01D1_AS__standard": {
+      "money": 3350,
+      "supplies": 4500,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_01D1_AS.gw",
+        "action": "action_Produce_GAT_01D1_AS_StandardSquad",
+        "buildSeconds": 65.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "GAT_01D1_AS",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "GAT_01D1_AS",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "GAT_01D1_AS",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "GAT_01D1_AS",
+      "faction": "OMNI",
+      "output": {
+        "unitId": "GAT_01D1_AS",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "GAT_X105_A__kit_0": {
+      "money": 3000,
+      "supplies": 3950,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_X105.gw",
+        "action": "action_Produce_GAT_X105_ASquad",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "GAT_X105_A",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "GAT_X105_A",
+      "faction": "OMNI",
+      "output": {
+        "unitId": "GAT_X105_A",
+        "kitId": "kit_0",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "GAT_X105_L__standard": {
+      "money": 3000,
+      "supplies": 3950,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_X105.gw",
+        "action": "action_Produce_GAT_X105_LSquad",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "GAT_X105_L",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "GAT_X105_L",
+      "faction": "OMNI",
+      "output": {
+        "unitId": "GAT_X105_L",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "GAT_X105_S__standard": {
+      "money": 3000,
+      "supplies": 3950,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_X105.gw",
+        "action": "action_Produce_GAT_X105_SSquad",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "GAT_X105_S",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "GAT_X105_S",
+      "faction": "OMNI",
+      "output": {
+        "unitId": "GAT_X105_S",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "TS_MA2_H__main_0": {
+      "money": 650,
+      "supplies": 1250,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Space/TS_MA2_H.gw",
+        "action": "action_Produce_TS_MA2_H_StandardSquad",
+        "buildSeconds": 30.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "TS_MA2_H",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "TS_MA2_H",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "TS_MA2_H",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "TS_MA2_H",
+      "faction": "OMNI",
+      "output": {
+        "unitId": "TS_MA2_H",
+        "kitId": "main_0",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "ZGMF_1017_D__standard": {
+      "money": 1400,
+      "supplies": 3200,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/ZGMF_1017_D.gw",
+        "action": "action_Produce_ZGMF_1017_D",
+        "buildSeconds": 65.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "ZGMF_1017_D",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "ZGMF_1017_D",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "ZGMF_1017_D",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "ZGMF_1017_D",
+      "faction": "ZAFT",
+      "output": {
+        "unitId": "ZGMF_1017_D",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "ZGMF_1017_H__standard": {
+      "money": 1400,
+      "supplies": 3200,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/ZGMF_1017_H.gw",
+        "action": "action_Produce_ZGMF_1017_H",
+        "buildSeconds": 65.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "ZGMF_1017_H",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "ZGMF_1017_H",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "ZGMF_1017_H",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "ZGMF_1017_H",
+      "faction": "ZAFT",
+      "output": {
+        "unitId": "ZGMF_1017_H",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "ConnectedArmoredVehicle__standard": {
+      "money": 400,
+      "supplies": 800,
+      "quantity": 3,
+      "equipmentIndex": 1,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/ConnectedArmoredVehicle.gw",
+        "action": "action_Produce_ConnectedArmoredVehicle_StandardSquad",
+        "buildSeconds": 35.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "ConnectedArmoredVehicle",
+            "quantity": 1,
+            "equipmentIndex": 1,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:1"
+          },
+          {
+            "unitId": "ConnectedArmoredVehicle",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "ConnectedArmoredVehicle",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "ConnectedArmoredVehicle",
+      "faction": "ZAFT",
+      "output": {
+        "unitId": "ConnectedArmoredVehicle",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "LinearGunTank__standard": {
+      "money": 400,
+      "supplies": 800,
+      "quantity": 3,
+      "equipmentIndex": 1,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/LinearGunTank.gw",
+        "action": "action_Produce_LinearGunTank_StandardSquad",
+        "buildSeconds": 25.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "LinearGunTank",
+            "quantity": 1,
+            "equipmentIndex": 1,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:1"
+          },
+          {
+            "unitId": "LinearGunTank",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "LinearGunTank",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "LinearGunTank",
+      "faction": "OMNI",
+      "output": {
+        "unitId": "LinearGunTank",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "RGM_86R_0093_EFSF__kit_4": {
+      "money": 3650,
+      "supplies": 4700,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_EFSF/Units/Land/RGM_86R_0093_EFSF.gw",
+        "action": "action_Produce_RGM_86R_0093_EFSF_StandardSquad",
+        "buildSeconds": 50.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "RGM_86R_0093_EFSF",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "RGM_86R_0093_EFSF",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "RGM_86R_0093_EFSF",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "RGM_86R_0093_EFSF",
+      "faction": "EFSF_0093",
+      "output": {
+        "unitId": "RGM_86R_0093_EFSF",
+        "kitId": "kit_4",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "RGM_86R_0093_EFSF__kit_6": {
+      "money": 3050,
+      "supplies": 3800,
+      "quantity": 3,
+      "equipmentIndex": 1,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_EFSF/Units/Land/RGM_86R_0093_EFSF.gw",
+        "action": "action_Produce_RGM_86R_0093_EFSF_MGSquad",
+        "buildSeconds": 50.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "RGM_86R_0093_EFSF",
+            "quantity": 1,
+            "equipmentIndex": 1,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:1"
+          },
+          {
+            "unitId": "RGM_86R_0093_EFSF",
+            "quantity": 1,
+            "equipmentIndex": 1,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:1"
+          },
+          {
+            "unitId": "RGM_86R_0093_EFSF",
+            "quantity": 1,
+            "equipmentIndex": 1,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:1"
+          }
+        ]
+      },
+      "unitId": "RGM_86R_0093_EFSF",
+      "faction": "EFSF_0093",
+      "output": {
+        "unitId": "RGM_86R_0093_EFSF",
+        "kitId": "kit_6",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "RGM_86R_0093_EFSF__kit_5": {
+      "money": 3050,
+      "supplies": 4400,
+      "quantity": 3,
+      "equipmentIndex": 2,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_EFSF/Units/Land/RGM_86R_0093_EFSF.gw",
+        "action": "action_Produce_RGM_86R_0093_EFSF_BazookaSquad",
+        "buildSeconds": 50.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "RGM_86R_0093_EFSF",
+            "quantity": 1,
+            "equipmentIndex": 2,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:2"
+          },
+          {
+            "unitId": "RGM_86R_0093_EFSF",
+            "quantity": 1,
+            "equipmentIndex": 2,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:2"
+          },
+          {
+            "unitId": "RGM_86R_0093_EFSF",
+            "quantity": 1,
+            "equipmentIndex": 2,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:2"
+          }
+        ]
+      },
+      "unitId": "RGM_86R_0093_EFSF",
+      "faction": "EFSF_0093",
+      "output": {
+        "unitId": "RGM_86R_0093_EFSF",
+        "kitId": "kit_5",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "SalamisClassKai_0093_EFSF__standard": {
+      "money": 4000,
+      "supplies": 5250,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_EFSF/Units/Space_Mega/SalamisClassKai_0093_EFSF.gw",
+        "action": "action_Produce_SalamisClassKai_0093_EFSF",
+        "buildSeconds": 50.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "SalamisClassKai_0093_EFSF",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:2101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "SalamisClassKai_0093_EFSF",
+      "faction": "EFSF_0093",
+      "output": {
+        "unitId": "SalamisClassKai_0093_EFSF",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "RGM_89__kit_0": {
+      "money": 4500,
+      "supplies": 6000,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_EFSF/Units/Land/RGM_89.gw",
+        "action": "action_Produce_RGM_89_StandardSquad",
+        "buildSeconds": 55.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "RGM_89",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "RGM_89",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "RGM_89",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "RGM_89",
+      "faction": "EFSF_0093",
+      "output": {
+        "unitId": "RGM_89",
+        "kitId": "kit_0",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "RGM_89__kit_1": {
+      "money": 4500,
+      "supplies": 6000,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_EFSF/Units/Land/RGM_89.gw",
+        "action": "action_Produce_RGM_89_StandardSquad",
+        "buildSeconds": 55.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "RGM_89",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "RGM_89",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "RGM_89",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "RGM_89",
+      "faction": "EFSF_0093",
+      "output": {
+        "unitId": "RGM_89",
+        "kitId": "kit_1",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "MSZ_006A1_0093_EFSF__kit_0": {
+      "money": 16000,
+      "supplies": 16000,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_EFSF/Units/Land/MSZ_006A1_0093_EFSF.gw",
+        "action": "action_Produce_MSZ_006A1_0093_EFSF_StandardSquad",
+        "buildSeconds": 80.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "MSZ_006A1_0093_EFSF",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "MSZ_006A1_0093_EFSF",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "MSZ_006A1_0093_EFSF",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "MSZ_006A1_0093_EFSF",
+      "faction": "EFSF_0093",
+      "output": {
+        "unitId": "MSZ_006A1_0093_EFSF",
+        "kitId": "kit_0",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "MSZ_006A1_0093_EFSF__kit_1": {
+      "money": 16200,
+      "supplies": 18400,
+      "quantity": 3,
+      "equipmentIndex": 1,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_EFSF/Units/Land/MSZ_006A1_0093_EFSF.gw",
+        "action": "action_Produce_MSZ_006A1_0093_EFSF_HMLSquad",
+        "buildSeconds": 80.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "MSZ_006A1_0093_EFSF",
+            "quantity": 1,
+            "equipmentIndex": 1,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:1"
+          },
+          {
+            "unitId": "MSZ_006A1_0093_EFSF",
+            "quantity": 1,
+            "equipmentIndex": 1,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:1"
+          },
+          {
+            "unitId": "MSZ_006A1_0093_EFSF",
+            "quantity": 1,
+            "equipmentIndex": 1,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:1"
+          }
+        ]
+      },
+      "unitId": "MSZ_006A1_0093_EFSF",
+      "faction": "EFSF_0093",
+      "output": {
+        "unitId": "MSZ_006A1_0093_EFSF",
+        "kitId": "kit_1",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "MSZ_006C1_0093_EFSF__standard": {
+      "money": 17500,
+      "supplies": 20000,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_EFSF/Units/Land/MSZ_006C1_0093_EFSF.gw",
+        "action": "action_Produce_MSZ_006C1_0093_EFSF_StandardSquad",
+        "buildSeconds": 85.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "MSZ_006C1_0093_EFSF",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "MSZ_006C1_0093_EFSF",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "MSZ_006C1_0093_EFSF",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "MSZ_006C1_0093_EFSF",
+      "faction": "EFSF_0093",
+      "output": {
+        "unitId": "MSZ_006C1_0093_EFSF",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "RX_93__standard": {
+      "money": 15950,
+      "supplies": 19250,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_EFSF/Units/Land/RX_93.gw",
+        "action": "action_Produce_RX_93_StandardSquad",
+        "buildSeconds": 85.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "RX_93",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "RX_93",
+      "faction": "EFSF_0093",
+      "output": {
+        "unitId": "RX_93",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "RX_93_Test__standard": {
+      "money": 12100,
+      "supplies": 13750,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_EFSF/Units/Land/RX_93_Test.gw",
+        "action": "action_Produce_RX_93_Test_StandardSquad",
+        "buildSeconds": 80.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "RX_93_Test",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "RX_93_Test",
+      "faction": "EFSF_0093",
+      "output": {
+        "unitId": "RX_93_Test",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "AMX_101_0093_NZN__standard": {
+      "money": 9500,
+      "supplies": 9500,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_NZN/Units/Land/AMX_101_0093_NZN.gw",
+        "action": "action_Produce_AMX_101_0093_NZN_StandardSquad",
+        "buildSeconds": 65.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "AMX_101_0093_NZN",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "AMX_101_0093_NZN",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "AMX_101_0093_NZN",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "AMX_101_0093_NZN",
+      "faction": "NEO_ZEON_0093",
+      "output": {
+        "unitId": "AMX_101_0093_NZN",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "MusaiClassFinalType_0093_NZN__standard": {
+      "money": 3750,
+      "supplies": 4750,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_NZN/Units/Space_Mega/MusaiClassFinalType_0093_NZN.gw",
+        "action": "action_Produce_MusaiClassFinalType_0093_NZN",
+        "buildSeconds": 50.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "MusaiClassFinalType_0093_NZN",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:2101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "MusaiClassFinalType_0093_NZN",
+      "faction": "NEO_ZEON_0093",
+      "output": {
+        "unitId": "MusaiClassFinalType_0093_NZN",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "AMS_119__standard": {
+      "money": 5000,
+      "supplies": 6500,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_NZN/Units/Land/AMS_119.gw",
+        "action": "action_Produce_AMS_119_StandardSquad",
+        "buildSeconds": 55.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "AMS_119",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "AMS_119",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "AMS_119",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "AMS_119",
+      "faction": "NEO_ZEON_0093",
+      "output": {
+        "unitId": "AMS_119",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "MSN_03__standard": {
+      "money": 8500,
+      "supplies": 10000,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_NZN/Units/Land/MSN_03.gw",
+        "action": "action_Produce_MSN_03_StandardSquad",
+        "buildSeconds": 65.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "MSN_03",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "MSN_03",
+      "faction": "NEO_ZEON_0093",
+      "output": {
+        "unitId": "MSN_03",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "AMX_107_0093_NZN__standard": {
+      "money": 7500,
+      "supplies": 9000,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_NZN/Units/Land/AMX_107_0093_NZN.gw",
+        "action": "action_Produce_AMX_107_0093_NZN_StandardSquad",
+        "buildSeconds": 60.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "AMX_107_0093_NZN",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "AMX_107_0093_NZN",
+      "faction": "NEO_ZEON_0093",
+      "output": {
+        "unitId": "AMX_107_0093_NZN",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "AMX_006_0093_NZN__standard": {
+      "money": 4000,
+      "supplies": 5000,
+      "quantity": 3,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_NZN/Units/Land/AMX_006_0093_NZN.gw",
+        "action": "action_Produce_AMX_006_0093_NZN_StandardSquad",
+        "buildSeconds": 55.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "AMX_006_0093_NZN",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "AMX_006_0093_NZN",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "AMX_006_0093_NZN",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "AMX_006_0093_NZN",
+      "faction": "NEO_ZEON_0093",
+      "output": {
+        "unitId": "AMX_006_0093_NZN",
+        "kitId": "standard",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
+    },
+    "MSN_04__standard": {
+      "money": 15950,
+      "supplies": 19250,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_NZN/Units/Land/MSN_04.gw",
+        "action": "action_Produce_MSN_04_StandardSquad",
+        "buildSeconds": 85.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "MSN_04",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "MSN_04",
+      "faction": "NEO_ZEON_0093",
+      "output": {
+        "unitId": "MSN_04",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "RGZ_91_MA__standard": {
+      "money": 6500,
+      "supplies": 7500,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_EFSF/Units/Land/RGZ_91.gw",
+        "action": "action_Produce_RGZ_91_StandardSquad",
+        "buildSeconds": 55.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "RGZ_91_MA",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "RGZ_91_MA",
+      "faction": "EFSF_0093",
+      "output": {
+        "unitId": "RGZ_91_MA",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "RGZ_91__standard": {
+      "money": 6500,
+      "supplies": 7500,
+      "quantity": 1,
+      "equipmentIndex": 0,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_EFSF/Units/Land/RGZ_91.gw",
+        "action": "action_Produce_RGZ_91_StandardSquad",
+        "buildSeconds": 55.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "RGZ_91_MA",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      },
+      "unitId": "RGZ_91",
+      "faction": "EFSF_0093",
+      "output": {
+        "unitId": "RGZ_91",
+        "kitId": "standard",
+        "quantity": 1
+      },
+      "sourceAlternatives": []
+    },
+    "TMF_A_802__missile": {
+      "money": 2000,
+      "supplies": 3350,
+      "quantity": 3,
+      "equipmentIndex": 1,
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/TMF_A_802.gw",
+        "action": "action_Produce_TMF_A_802_MSSquad",
+        "buildSeconds": 60.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "TMF_A_802",
+            "quantity": 1,
+            "equipmentIndex": 1,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:1"
+          },
+          {
+            "unitId": "TMF_A_802",
+            "quantity": 1,
+            "equipmentIndex": 1,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:1"
+          },
+          {
+            "unitId": "TMF_A_802",
+            "quantity": 1,
+            "equipmentIndex": 1,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:1"
+          }
+        ]
+      },
+      "unitId": "TMF_A_802",
+      "faction": "ZAFT",
+      "output": {
+        "unitId": "TMF_A_802",
+        "kitId": "missile",
+        "quantity": 3
+      },
+      "sourceAlternatives": []
     }
   },
   "unavailable": [
@@ -34925,6 +37895,1965 @@
           },
           {
             "unitId": "AMX_107M",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "ACV": {
+      "unitId": "ACV",
+      "faction": "OMNI",
+      "money": 200,
+      "supplies": 400,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/ACV.gw",
+        "action": "action_Produce_ACV_StandardSquad",
+        "buildSeconds": 20.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "ACV",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "AgamemnonClass": {
+      "unitId": "AgamemnonClass",
+      "faction": "OMNI",
+      "money": 4500,
+      "supplies": 9000,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Space_Mega/AgamemnonClass.gw",
+        "action": "action_Produce_AgamemnonClass",
+        "buildSeconds": 70.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "AgamemnonClass",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:2101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "Agile": {
+      "unitId": "Agile",
+      "faction": "ZAFT",
+      "money": 150,
+      "supplies": 200,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Air/Agile.gw",
+        "action": "action_Produce_Agile_StandardSquad",
+        "buildSeconds": 30.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "Agile",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "Agile",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "Agile",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "AMF_101": {
+      "unitId": "AMF_101",
+      "faction": "ZAFT",
+      "money": 500,
+      "supplies": 850,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/AMF_101.gw",
+        "action": "action_Produce_AMF_101_StandardSquad",
+        "buildSeconds": 70.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "AMF_101",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "AMF_101",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "AMF_101",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "AMF_101C": {
+      "unitId": "AMF_101C",
+      "faction": "ZAFT",
+      "money": 1250,
+      "supplies": 1550,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/AMF_101C.gw",
+        "action": "action_Produce_AMF_101C",
+        "buildSeconds": 55.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "AMF_101C",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "ArchangelClass": {
+      "unitId": "ArchangelClass",
+      "faction": "OMNI",
+      "money": 9000,
+      "supplies": 15000,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Space_Mega/ArchangelClass.gw",
+        "action": "action_Produce_ArchangelClass",
+        "buildSeconds": 80.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "ArchangelClass",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:2101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "DrakeClass": {
+      "unitId": "DrakeClass",
+      "faction": "OMNI",
+      "money": 2000,
+      "supplies": 3500,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Space_Mega/DrakeClass.gw",
+        "action": "action_Produce_DrakeClass",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "DrakeClass",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:2101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "F_7D": {
+      "unitId": "F_7D",
+      "faction": "OMNI",
+      "money": 150,
+      "supplies": 300,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Air/F_7D.gw",
+        "action": "action_Produce_F_7D_StandardSquad",
+        "buildSeconds": 25.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "F_7D",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "F_7D",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "F_7D",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "FX_550": {
+      "unitId": "FX_550",
+      "faction": "OMNI",
+      "money": 1250,
+      "supplies": 1750,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Air/FX_550.gw",
+        "action": "action_Produce_FX_550_ASquad",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "FX_550",
+            "quantity": 1,
+            "equipmentIndex": 1,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:1"
+          }
+        ]
+      }
+    },
+    "GAT_01": {
+      "unitId": "GAT_01",
+      "faction": "OMNI",
+      "money": 650,
+      "supplies": 1150,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_01.gw",
+        "action": "action_Produce_GAT_01_StandardSquad",
+        "buildSeconds": 50.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "GAT_01",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "GAT_01",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "GAT_01",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "GAT_01D": {
+      "unitId": "GAT_01D",
+      "faction": "OMNI",
+      "money": 900,
+      "supplies": 1250,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_01D.gw",
+        "action": "action_Produce_GAT_01D_StandardSquad",
+        "buildSeconds": 55.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "GAT_01D",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "GAT_01D",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "GAT_01D",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "GAT_01D1": {
+      "unitId": "GAT_01D1",
+      "faction": "OMNI",
+      "money": 900,
+      "supplies": 1250,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_01D1.gw",
+        "action": "action_Produce_GAT_01D1_StandardSquad",
+        "buildSeconds": 55.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "GAT_01D1",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "GAT_01D1",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "GAT_01D1",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "GAT_X102": {
+      "unitId": "GAT_X102",
+      "faction": "OMNI",
+      "availableFactions": [
+        "OMNI",
+        "ZAFT"
+      ],
+      "money": 2550,
+      "supplies": 3600,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_X102.gw",
+        "action": "action_Produce_GAT_X102_StandardSquad",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "GAT_X102",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "GAT_X102_AS": {
+      "unitId": "GAT_X102_AS",
+      "faction": "OMNI",
+      "availableFactions": [
+        "OMNI",
+        "ZAFT"
+      ],
+      "money": 3500,
+      "supplies": 4500,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_X102_AS.gw",
+        "action": "action_Produce_GAT_X102_AS_StandardSquad",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "GAT_X102_AS",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "GAT_X103": {
+      "unitId": "GAT_X103",
+      "faction": "OMNI",
+      "availableFactions": [
+        "OMNI",
+        "ZAFT"
+      ],
+      "money": 3250,
+      "supplies": 4250,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_X103.gw",
+        "action": "action_Produce_GAT_X103_StandardSquad",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "GAT_X103",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "GAT_X105": {
+      "unitId": "GAT_X105",
+      "faction": "OMNI",
+      "money": 2250,
+      "supplies": 3200,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_X105.gw",
+        "action": "action_Produce_GAT_X105_NSquad",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "GAT_X105",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "GAT_X207": {
+      "unitId": "GAT_X207",
+      "faction": "OMNI",
+      "availableFactions": [
+        "OMNI",
+        "ZAFT"
+      ],
+      "money": 3250,
+      "supplies": 4250,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_X207.gw",
+        "action": "action_Produce_GAT_X207_StandardSquad",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "GAT_X207",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "GAT_X303": {
+      "unitId": "GAT_X303",
+      "faction": "OMNI",
+      "availableFactions": [
+        "OMNI",
+        "ZAFT"
+      ],
+      "money": 3750,
+      "supplies": 5000,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_X303.gw",
+        "action": "action_Produce_GAT_X303_StandardSquad",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "GAT_X303",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "Guul": {
+      "unitId": "Guul",
+      "faction": "ZAFT",
+      "money": 200,
+      "supplies": 350,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Air/Guul.gw",
+        "action": "action_Produce_Guul_StandardSquad",
+        "buildSeconds": 50.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "Guul",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "Guul",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "Guul",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "Infestus": {
+      "unitId": "Infestus",
+      "faction": "ZAFT",
+      "money": 150,
+      "supplies": 300,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Air/Infestus.gw",
+        "action": "action_Produce_Infestus_StandardSquad",
+        "buildSeconds": 35.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "Infestus",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "Infestus",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "Infestus",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "LaurasiaClass": {
+      "unitId": "LaurasiaClass",
+      "faction": "ZAFT",
+      "money": 4500,
+      "supplies": 9000,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Space_Mega/LaurasiaClass.gw",
+        "action": "action_Produce_LaurasiaClass",
+        "buildSeconds": 80.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "LaurasiaClass",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:2101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "LinearArtillery": {
+      "unitId": "LinearArtillery",
+      "faction": "OMNI",
+      "money": 150,
+      "supplies": 250,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/LinearArtillery.gw",
+        "action": "action_Produce_LinearArtillery_StandardSquad",
+        "buildSeconds": 25.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "LinearArtillery",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "LinearArtillery",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "LinearArtillery",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "MarseilleIIIClass": {
+      "unitId": "MarseilleIIIClass",
+      "faction": "OMNI",
+      "availableFactions": [
+        "OMNI",
+        "ZAFT"
+      ],
+      "money": 750,
+      "supplies": 1750,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Space_Mega/MarseilleIIIClass.gw",
+        "action": "action_Produce_MarseilleIIIClass",
+        "buildSeconds": 35.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "MarseilleIIIClass",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:2101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "MissileCar_CE": {
+      "unitId": "MissileCar_CE",
+      "faction": "OMNI",
+      "money": 100,
+      "supplies": 150,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/MissileCar_CE.gw",
+        "action": "action_Produce_MissileCar_CE_StandardSquad",
+        "buildSeconds": 20.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "MissileCar_CE",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "MissileCar_CE",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "MissileCar_CE",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "NazcaClass": {
+      "unitId": "NazcaClass",
+      "faction": "ZAFT",
+      "money": 2000,
+      "supplies": 4500,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Space_Mega/NazcaClass.gw",
+        "action": "action_Produce_NazcaClass",
+        "buildSeconds": 55.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "NazcaClass",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:2101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "NelsonClass": {
+      "unitId": "NelsonClass",
+      "faction": "OMNI",
+      "money": 2000,
+      "supplies": 4500,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Space_Mega/NelsonClass.gw",
+        "action": "action_Produce_NelsonClass",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "NelsonClass",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:2101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "OMNI_MinigunAPC": {
+      "unitId": "OMNI_MinigunAPC",
+      "faction": "OMNI",
+      "money": 100,
+      "supplies": 100,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/OMNI_MinigunAPC.gw",
+        "action": "action_Produce_OMNI_MinigunAPC_StandardSquad",
+        "buildSeconds": 20.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "OMNI_MinigunAPC",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "OMNI_MinigunAPC",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "OMNI_MinigunAPC",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "PatrolAircraft": {
+      "unitId": "PatrolAircraft",
+      "faction": "OMNI",
+      "money": 250,
+      "supplies": 500,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Air/PatrolAircraft.gw",
+        "action": "action_Produce_PatrolAircraft_StandardSquad",
+        "buildSeconds": 25.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "PatrolAircraft",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "PowerCar": {
+      "unitId": "PowerCar",
+      "faction": "OMNI",
+      "money": 100,
+      "supplies": 200,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/PowerCar.gw",
+        "action": "action_Produce_PowerCar_StandardSquad",
+        "buildSeconds": 25.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "PowerCar",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "PowerCar",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "PowerCar",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "SupplyTruck": {
+      "unitId": "SupplyTruck",
+      "faction": "ZAFT",
+      "money": 100,
+      "supplies": 200,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/SupplyTruck.gw",
+        "action": "action_Produce_SupplyTruck_StandardSquad",
+        "buildSeconds": 35.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "SupplyTruck",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "SupplyTruck",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "SupplyTruck",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "TFA_2": {
+      "unitId": "TFA_2",
+      "faction": "ZAFT",
+      "money": 1000,
+      "supplies": 1500,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/TFA_2.gw",
+        "action": "action_Produce_TFA_2_StandardSquad",
+        "buildSeconds": 75.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "TFA_2",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "TFA_2",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "TFA_2",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "TMF_A_802": {
+      "unitId": "TMF_A_802",
+      "faction": "ZAFT",
+      "money": 850,
+      "supplies": 1100,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/TMF_A_802.gw",
+        "action": "action_Produce_TMF_A_802_StandardSquad",
+        "buildSeconds": 65.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "TMF_A_802",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "TMF_A_802",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "TMF_A_802",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "TS_MA2": {
+      "unitId": "TS_MA2",
+      "faction": "OMNI",
+      "money": 150,
+      "supplies": 350,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Space/TS_MA2.gw",
+        "action": "action_Produce_TS_MA2_StandardSquad",
+        "buildSeconds": 30.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "TS_MA2",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "TS_MA2",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "TS_MA2",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "UMF_4A": {
+      "unitId": "UMF_4A",
+      "faction": "ZAFT",
+      "money": 600,
+      "supplies": 750,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/UMF_4A.gw",
+        "action": "action_Produce_UMF_4A_StandardSquad",
+        "buildSeconds": 65.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "UMF_4A",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "UMF_4A",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "UMF_4A",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "UMF_5": {
+      "unitId": "UMF_5",
+      "faction": "ZAFT",
+      "money": 800,
+      "supplies": 1350,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/UMF_5.gw",
+        "action": "action_Produce_UMF_5_StandardSquad",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "UMF_5",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "UWMF_S_1": {
+      "unitId": "UWMF_S_1",
+      "faction": "ZAFT",
+      "money": 250,
+      "supplies": 600,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/UWMF_S_1.gw",
+        "action": "action_Produce_UWMF_S_1_StandardSquad",
+        "buildSeconds": 60.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "UWMF_S_1",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "UWMF_S_1",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "UWMF_S_1",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "VoLPHAU": {
+      "unitId": "VoLPHAU",
+      "faction": "ZAFT",
+      "money": 500,
+      "supplies": 1000,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Air/VoLPHAU.gw",
+        "action": "action_Produce_VoLPHAU_StandardSquad",
+        "buildSeconds": 35.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "VoLPHAU",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "VTOLFighter": {
+      "unitId": "VTOLFighter",
+      "faction": "OMNI",
+      "money": 150,
+      "supplies": 200,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Air/VTOLFighter.gw",
+        "action": "action_Produce_VTOLFighter_StandardSquad",
+        "buildSeconds": 20.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "VTOLFighter",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "VTOLFighter",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "VTOLFighter",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "VTOLTransport": {
+      "unitId": "VTOLTransport",
+      "faction": "OMNI",
+      "money": 500,
+      "supplies": 1000,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Air/VTOLTransport.gw",
+        "action": "action_Produce_VTOLTransport_StandardSquad",
+        "buildSeconds": 25.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "VTOLTransport",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "ZGMF_1017": {
+      "unitId": "ZGMF_1017",
+      "faction": "ZAFT",
+      "money": 250,
+      "supplies": 550,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/ZGMF_1017.gw",
+        "action": "action_Produce_ZGMF_1017_StandardSquad",
+        "buildSeconds": 60.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "ZGMF_1017",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "ZGMF_1017",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "ZGMF_1017",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "ZGMF_1017M": {
+      "unitId": "ZGMF_1017M",
+      "faction": "ZAFT",
+      "money": 400,
+      "supplies": 900,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/ZGMF_1017M.gw",
+        "action": "action_Produce_ZGMF_1017M",
+        "buildSeconds": 65.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "ZGMF_1017M",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "ZGMF_1017M",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "ZGMF_1017M",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "ZGMF_515": {
+      "unitId": "ZGMF_515",
+      "faction": "ZAFT",
+      "money": 900,
+      "supplies": 1450,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/ZGMF_515.gw",
+        "action": "action_Produce_ZGMF_515",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "ZGMF_515",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "ZGMF_600": {
+      "unitId": "ZGMF_600",
+      "faction": "ZAFT",
+      "money": 1100,
+      "supplies": 1400,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/ZGMF_600.gw",
+        "action": "action_Produce_ZGMF_600",
+        "buildSeconds": 65.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "ZGMF_600",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "ZGMF_600",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "ZGMF_600",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "ZGMF_LRR704B": {
+      "unitId": "ZGMF_LRR704B",
+      "faction": "ZAFT",
+      "money": 850,
+      "supplies": 1250,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/ZGMF_LRR704B.gw",
+        "action": "action_Produce_ZGMF_LRR704B",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "ZGMF_LRR704B",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "ZGMT_01": {
+      "unitId": "ZGMT_01",
+      "faction": "ZAFT",
+      "money": 200,
+      "supplies": 400,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/ZGMT_01.gw",
+        "action": "action_Produce_ZGMT_01",
+        "buildSeconds": 75.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "ZGMT_01",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "ZGMT_01",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "ZGMT_01",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "GAT_01D_AS": {
+      "unitId": "GAT_01D_AS",
+      "faction": "OMNI",
+      "money": 1100,
+      "supplies": 1500,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_01D_AS.gw",
+        "action": "action_Produce_GAT_01D_AS_StandardSquad",
+        "buildSeconds": 65.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "GAT_01D_AS",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "GAT_01D_AS",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "GAT_01D_AS",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "GAT_01D1_AS": {
+      "unitId": "GAT_01D1_AS",
+      "faction": "OMNI",
+      "money": 1100,
+      "supplies": 1500,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_01D1_AS.gw",
+        "action": "action_Produce_GAT_01D1_AS_StandardSquad",
+        "buildSeconds": 65.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "GAT_01D1_AS",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "GAT_01D1_AS",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "GAT_01D1_AS",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "GAT_X105_A": {
+      "unitId": "GAT_X105_A",
+      "faction": "OMNI",
+      "money": 3000,
+      "supplies": 3950,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_X105.gw",
+        "action": "action_Produce_GAT_X105_ASquad",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "GAT_X105_A",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "GAT_X105_L": {
+      "unitId": "GAT_X105_L",
+      "faction": "OMNI",
+      "money": 3000,
+      "supplies": 3950,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_X105.gw",
+        "action": "action_Produce_GAT_X105_LSquad",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "GAT_X105_L",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "GAT_X105_S": {
+      "unitId": "GAT_X105_S",
+      "faction": "OMNI",
+      "money": 3000,
+      "supplies": 3950,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_X105.gw",
+        "action": "action_Produce_GAT_X105_SSquad",
+        "buildSeconds": 45.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "GAT_X105_S",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "TS_MA2_H": {
+      "unitId": "TS_MA2_H",
+      "faction": "OMNI",
+      "money": 200,
+      "supplies": 400,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Space/TS_MA2_H.gw",
+        "action": "action_Produce_TS_MA2_H_StandardSquad",
+        "buildSeconds": 30.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "TS_MA2_H",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "TS_MA2_H",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "TS_MA2_H",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "ZGMF_1017_D": {
+      "unitId": "ZGMF_1017_D",
+      "faction": "ZAFT",
+      "money": 450,
+      "supplies": 1050,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/ZGMF_1017_D.gw",
+        "action": "action_Produce_ZGMF_1017_D",
+        "buildSeconds": 65.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "ZGMF_1017_D",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "ZGMF_1017_D",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "ZGMF_1017_D",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "ZGMF_1017_H": {
+      "unitId": "ZGMF_1017_H",
+      "faction": "ZAFT",
+      "money": 450,
+      "supplies": 1050,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/ZGMF_1017_H.gw",
+        "action": "action_Produce_ZGMF_1017_H",
+        "buildSeconds": 65.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "ZGMF_1017_H",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "ZGMF_1017_H",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "ZGMF_1017_H",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "ConnectedArmoredVehicle": {
+      "unitId": "ConnectedArmoredVehicle",
+      "faction": "ZAFT",
+      "money": 150,
+      "supplies": 250,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/ConnectedArmoredVehicle.gw",
+        "action": "action_Produce_ConnectedArmoredVehicle_StandardSquad",
+        "buildSeconds": 35.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "ConnectedArmoredVehicle",
+            "quantity": 1,
+            "equipmentIndex": 1,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:1"
+          },
+          {
+            "unitId": "ConnectedArmoredVehicle",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "ConnectedArmoredVehicle",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "LinearGunTank": {
+      "unitId": "LinearGunTank",
+      "faction": "OMNI",
+      "money": 150,
+      "supplies": 250,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/LinearGunTank.gw",
+        "action": "action_Produce_LinearGunTank_StandardSquad",
+        "buildSeconds": 25.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "LinearGunTank",
+            "quantity": 1,
+            "equipmentIndex": 1,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:1"
+          },
+          {
+            "unitId": "LinearGunTank",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "LinearGunTank",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "RGM_86R_0093_EFSF": {
+      "unitId": "RGM_86R_0093_EFSF",
+      "faction": "EFSF_0093",
+      "money": 1200,
+      "supplies": 1550,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_EFSF/Units/Land/RGM_86R_0093_EFSF.gw",
+        "action": "action_Produce_RGM_86R_0093_EFSF_StandardSquad",
+        "buildSeconds": 50.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "RGM_86R_0093_EFSF",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "RGM_86R_0093_EFSF",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "RGM_86R_0093_EFSF",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "SalamisClassKai_0093_EFSF": {
+      "unitId": "SalamisClassKai_0093_EFSF",
+      "faction": "EFSF_0093",
+      "money": 4000,
+      "supplies": 5250,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_EFSF/Units/Space_Mega/SalamisClassKai_0093_EFSF.gw",
+        "action": "action_Produce_SalamisClassKai_0093_EFSF",
+        "buildSeconds": 50.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "SalamisClassKai_0093_EFSF",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:2101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "RGM_89": {
+      "unitId": "RGM_89",
+      "faction": "EFSF_0093",
+      "money": 1500,
+      "supplies": 2000,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_EFSF/Units/Land/RGM_89.gw",
+        "action": "action_Produce_RGM_89_StandardSquad",
+        "buildSeconds": 55.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "RGM_89",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "RGM_89",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "RGM_89",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "MSZ_006A1_0093_EFSF": {
+      "unitId": "MSZ_006A1_0093_EFSF",
+      "faction": "EFSF_0093",
+      "money": 5350,
+      "supplies": 5350,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_EFSF/Units/Land/MSZ_006A1_0093_EFSF.gw",
+        "action": "action_Produce_MSZ_006A1_0093_EFSF_StandardSquad",
+        "buildSeconds": 80.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "MSZ_006A1_0093_EFSF",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "MSZ_006A1_0093_EFSF",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "MSZ_006A1_0093_EFSF",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "MSZ_006C1_0093_EFSF": {
+      "unitId": "MSZ_006C1_0093_EFSF",
+      "faction": "EFSF_0093",
+      "money": 5850,
+      "supplies": 6650,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_EFSF/Units/Land/MSZ_006C1_0093_EFSF.gw",
+        "action": "action_Produce_MSZ_006C1_0093_EFSF_StandardSquad",
+        "buildSeconds": 85.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "MSZ_006C1_0093_EFSF",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "MSZ_006C1_0093_EFSF",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "MSZ_006C1_0093_EFSF",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "RX_93": {
+      "unitId": "RX_93",
+      "faction": "EFSF_0093",
+      "money": 15950,
+      "supplies": 19250,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_EFSF/Units/Land/RX_93.gw",
+        "action": "action_Produce_RX_93_StandardSquad",
+        "buildSeconds": 85.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "RX_93",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "RX_93_Test": {
+      "unitId": "RX_93_Test",
+      "faction": "EFSF_0093",
+      "money": 12100,
+      "supplies": 13750,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_EFSF/Units/Land/RX_93_Test.gw",
+        "action": "action_Produce_RX_93_Test_StandardSquad",
+        "buildSeconds": 80.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "RX_93_Test",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "AMX_101_0093_NZN": {
+      "unitId": "AMX_101_0093_NZN",
+      "faction": "NEO_ZEON_0093",
+      "money": 3150,
+      "supplies": 3150,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_NZN/Units/Land/AMX_101_0093_NZN.gw",
+        "action": "action_Produce_AMX_101_0093_NZN_StandardSquad",
+        "buildSeconds": 65.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "AMX_101_0093_NZN",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "AMX_101_0093_NZN",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "AMX_101_0093_NZN",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "MusaiClassFinalType_0093_NZN": {
+      "unitId": "MusaiClassFinalType_0093_NZN",
+      "faction": "NEO_ZEON_0093",
+      "money": 3750,
+      "supplies": 4750,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_NZN/Units/Space_Mega/MusaiClassFinalType_0093_NZN.gw",
+        "action": "action_Produce_MusaiClassFinalType_0093_NZN",
+        "buildSeconds": 50.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "MusaiClassFinalType_0093_NZN",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:2101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "AMS_119": {
+      "unitId": "AMS_119",
+      "faction": "NEO_ZEON_0093",
+      "money": 1650,
+      "supplies": 2150,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_NZN/Units/Land/AMS_119.gw",
+        "action": "action_Produce_AMS_119_StandardSquad",
+        "buildSeconds": 55.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "AMS_119",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "AMS_119",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "AMS_119",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "MSN_03": {
+      "unitId": "MSN_03",
+      "faction": "NEO_ZEON_0093",
+      "money": 8500,
+      "supplies": 10000,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_NZN/Units/Land/MSN_03.gw",
+        "action": "action_Produce_MSN_03_StandardSquad",
+        "buildSeconds": 65.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "MSN_03",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "AMX_107_0093_NZN": {
+      "unitId": "AMX_107_0093_NZN",
+      "faction": "NEO_ZEON_0093",
+      "money": 7500,
+      "supplies": 9000,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_NZN/Units/Land/AMX_107_0093_NZN.gw",
+        "action": "action_Produce_AMX_107_0093_NZN_StandardSquad",
+        "buildSeconds": 60.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "AMX_107_0093_NZN",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "AMX_006_0093_NZN": {
+      "unitId": "AMX_006_0093_NZN",
+      "faction": "NEO_ZEON_0093",
+      "money": 1350,
+      "supplies": 1650,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_NZN/Units/Land/AMX_006_0093_NZN.gw",
+        "action": "action_Produce_AMX_006_0093_NZN_StandardSquad",
+        "buildSeconds": 55.0,
+        "queueSeconds": 2.0,
+        "outputs": [
+          {
+            "unitId": "AMX_006_0093_NZN",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "AMX_006_0093_NZN",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          },
+          {
+            "unitId": "AMX_006_0093_NZN",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "MSN_04": {
+      "unitId": "MSN_04",
+      "faction": "NEO_ZEON_0093",
+      "money": 15950,
+      "supplies": 19250,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_NZN/Units/Land/MSN_04.gw",
+        "action": "action_Produce_MSN_04_StandardSquad",
+        "buildSeconds": 85.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "MSN_04",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "RGZ_91_MA": {
+      "unitId": "RGZ_91_MA",
+      "faction": "EFSF_0093",
+      "money": 6500,
+      "supplies": 7500,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_EFSF/Units/Land/RGZ_91.gw",
+        "action": "action_Produce_RGZ_91_StandardSquad",
+        "buildSeconds": 55.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "RGZ_91_MA",
+            "quantity": 1,
+            "equipmentIndex": 0,
+            "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+          }
+        ]
+      }
+    },
+    "RGZ_91": {
+      "unitId": "RGZ_91",
+      "faction": "EFSF_0093",
+      "money": 6500,
+      "supplies": 7500,
+      "sourceType": "factory",
+      "source": {
+        "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_EFSF/Units/Land/RGZ_91.gw",
+        "action": "action_Produce_RGZ_91_StandardSquad",
+        "buildSeconds": 55.0,
+        "queueSeconds": 0.0,
+        "outputs": [
+          {
+            "unitId": "RGZ_91_MA",
             "quantity": 1,
             "equipmentIndex": 0,
             "resources": "addResources=PilotType:1101|EquipmentIndex:0"

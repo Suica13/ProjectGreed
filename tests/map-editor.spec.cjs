@@ -74,6 +74,7 @@ test("standalone editor paints an atlas, nine-slice and random rules, embeds ima
   await page.locator("#tileDynamic").check();
   await paint(page, 18, 8);
   expect(await page.evaluate(() => MapEditor.exportMap().cellEnvironments[8][18])).toBe("space");
+  await page.locator('[data-tab="layers"]').click();
   await page.locator("#addLayer").click();
   await field(page, "layerName", "遮挡装饰");
   await page.locator("#layerPlacement").selectOption("above");
@@ -185,6 +186,7 @@ test("editor tools remain usable on mobile and deployment/spawn drawing validate
   expect(await page.evaluate(() => MapEditor.document.deploymentAreas[0].height)).toBe(originalHeight);
   await page.locator("#redo").click();
   expect(await page.evaluate(() => MapEditor.document.deploymentAreas[0].height)).toBe(17);
+  await page.locator('[data-tab="layers"]').click();
   await page.locator("#validateMap").click();
   await expect(page.locator("#validation")).toContainText("可导出");
   await page.screenshot({ path: "tmp/verification/screenshots/map-editor-mobile.png" });

@@ -63,7 +63,7 @@ function createDeveloperServer({
     }
     return JSON.parse(Buffer.concat(chunks).toString("utf8"));
   }
-  const editorFactions = ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"];
+  const editorFactions = Object.keys(require("../shared/factions.json"));
   function editorCatalog(faction = "EFSF") {
     if (!editorFactions.includes(faction)) throw Error("请选择一个有效阵营单位库");
     const full = catalog ? catalog() : store.catalog();

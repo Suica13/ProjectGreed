@@ -2,7 +2,7 @@ const test = require("node:test"),
   assert = require("node:assert/strict");
 const G = require("../shared/rules"),
   { createRoomEngine } = require("../shared/room-engine");
-function fixture(t, mode) {
+function fixture(t, mode, extraCarrier = false) {
   let n = 0;
   const e = createRoomEngine({
     rules: G,
@@ -39,6 +39,7 @@ function fixture(t, mode) {
     { unitId: "Medea", kitId: "standard" },
     { unitId: "Type61", kitId: "standard", preload: { carrierIndex: 0, hangarId: "Hangar_1" } },
   ];
+  if (extraCarrier) formation.push({unitId:"Medea",kitId:"standard"});
   act("start_game", { formation });
   assert.equal(room.phase, "assembly");
   act("confirm_formation");
@@ -59,7 +60,7 @@ for (const mode of ["regular", "quick", "battlefield", "sweep"])
       assert.equal(room.settings.unitLimit, 18);
   });
 test("sweep restock validates hangars using stable roster keys after the original carrier is lost", (t) => {
-  const { e, room, seat, act } = fixture(t, "sweep");
+  const { e, room, seat, act } = fixture(t, "sweep", true);
   act("confirm_deployment");
   const own = room.game.units.filter((u) => G.ownerOf(u) === seat),
     id = room.seats[seat].id;
@@ -69,25 +70,25 @@ test("sweep restock validates hangars using stable roster keys after the origina
   room.phase = "finished";
   e.broadcast(room);
   assert.equal(room.phase, "sweep_map");
-  assert.equal(room.sweep.rosters[id].length, 1);
+  assert.equal(room.sweep.rosters[id].length, 2);
   room.sweep.nodes.find((n) => n.id === "1:1").type = "rest";
   act("sweep_select", { nodeId: "1:1" });
   act("sweep_confirm");
   act("sweep_event", { choice: 1 });
   assert.equal(room.phase, "sweep_resupply");
   assert.throws(
-    () => act("sweep_reinforce", { entry: { unitId: "Type61", kitId: "standard" } }),
-    /预先搭载/,
+    () => act("sweep_restock_commit", { operations: [{type:"add",entry: { unitId: "Type61", kitId: "standard" }}] }),
+    /存活母舰的格纳库/,
   );
-  act("sweep_reinforce", { entry: { unitId: "Medea", kitId: "standard" } });
   const carrier = room.sweep.rosters[id].find((r) => r.entry.unitId === "Medea");
   assert.equal(carrier.key, 2);
-  act("sweep_reinforce", {
-    entry: {
+  room.sweep.pending[id].supplies = 10000;
+  act("sweep_restock_commit", {
+    operations: [{type:"add",entry: {
       unitId: "Type61",
       kitId: "standard",
       preload: { carrierIndex: carrier.key, hangarId: "Hangar_1" },
-    },
+    }}],
   });
   assert.equal(room.sweep.rosters[id].at(-1).entry.preload.carrierIndex, 2);
   act("sweep_resupply_done");

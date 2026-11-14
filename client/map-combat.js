@@ -832,7 +832,7 @@ const MapCombat = (() => {
     function state(id) {
       if (!values.has(id)) values.set(id, {
         hp:initialHp.get(id), shield:initialShield.get(id), en:initialEn.get(id),
-        iFieldHp:initialIField.get(id), parts:{...initialParts.get(id)}, impact:Infinity,
+        iFieldHp:initialIField.get(id), parts:{...initialParts.get(id)}, impact:Infinity, coatingImpact:Infinity,
       });
       return values.get(id);
     }
@@ -846,6 +846,8 @@ const MapCombat = (() => {
           if (target.shield !== undefined) target.shield -= contact.shieldDamage || 0;
           if (target.iFieldHp !== undefined) target.iFieldHp -= contact.iFieldDamage || 0;
           for (const part of contact.brokenParts || []) target.parts[part] = true;
+          if (item === lane.frame && !lane.view.completed && contact.abcDamage > 0)
+            target.coatingImpact = Math.min(target.coatingImpact, item.time - contact.at);
           if (item === lane.frame && !lane.view.completed && contact.iFieldDamage > 0)
             target.impact = Math.min(target.impact, item.time - contact.at);
         }
@@ -1097,6 +1099,7 @@ const MapCombat = (() => {
     units,
     formationOffset,
     fieldImpact,
+    coatingImpact: id => statistics().values.get(id)?.coatingImpact ?? Infinity,
     health,
     draw,
     drawUnderlay: (ctx, geometry) => draw(ctx, geometry, true),

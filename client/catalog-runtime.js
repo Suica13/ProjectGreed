@@ -15,10 +15,11 @@ const element = (tag, className = "", text = "") => {
 const formatDistance = (value) => String(Math.round(value));
 const Rules = {
   catalog: ART,
-  factions: ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"],
+  factions: Object.keys(FACTION_DATA),
+  factionInfo: FACTION_DATA,
   eras: [
     ...new Set(
-      ART.prefabs.flatMap((prefab) => prefab.tags).filter((tag) => /^\d{4}(?:T[12])?$/.test(tag)),
+      ART.prefabs.flatMap((prefab) => prefab.tags).filter((tag) => /^(?:\d{4}(?:T[12])?|(?:UC|CE)_\d{4}_T\d+)$/.test(tag)),
     ),
   ].sort(),
   roundDamage: (value) => WeaponSequence.roundDamage(value),

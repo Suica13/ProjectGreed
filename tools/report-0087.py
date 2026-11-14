@@ -23,14 +23,14 @@ def main():
     report=read("tools/0087-import-report.json")
     prefabs={r["id"]:read("assets/units/"+r["id"]+"/unit.json") for r in rows}
     native=[r for r in rows if prefabs[r["id"]]["source"].startswith("GW_BattleUniverse_DLC_0087/")]
-    lines=["# 0087单位与科技树移植清单", "", f"科技目录引用{len(rows)}种战斗单位，其中{len(native)}种使用0087来源，其余沿用已有0079／0083机体与人工配置。", "", "## 固定规则", "", "- 联邦或吉翁任一阵营的全部0079早期、0079后期和0083科技完成后，免费获得AEUG、TITANS、NEO_ZEON三个0087 BASE科技。", "- 未达门槛时，三个0087科技树及右侧单位详情均显示黑色遮罩：请先完成任何0079科技树。", "- 第二页首项恢复原MOD的10800科技点需求，原值保留在sourceCosts.points中；其余资金、物资沿用原MOD的两倍。", "- 单位套件沿用原生EquipmentIndex 0；部署许可及原生工厂整批／单机／换装费用独立归档，不恢复个人套件库存。", "- 不支持的机制显式标记review；原MOD只读，正常构建无需原MOD。", "", "## 第二页首项科技需求", "", "| 阵营 | 科技 | 原科技点 | 当前科技点 |", "|---|---|---:|---:|"]
+    lines=["# 0087单位与科技树移植清单", "", f"科技目录引用{len(rows)}种战斗单位，其中{len(native)}种使用0087来源，其余沿用已有0079／0083机体与人工配置。", "", "## 固定规则", "", "- 完成地球联邦军0079科技树中间主线后开放奥古、提坦斯；完成吉翁公国军0079科技树中间主线后开放新吉翁。主线包含两页的中间节点，不要求上下支线。", "- 未达门槛时，科技树及单位详情显示黑色遮罩，并明确提示所需前置阵营的主线。0093地球联邦军需要奥古或提坦斯任一完整主线；0093新吉翁需要新吉翁完整主线。", "- 第二页首项恢复原MOD的10800科技点需求，原值保留在sourceCosts.points中；其余资金、物资沿用原MOD的两倍。", "- 单位套件沿用原生EquipmentIndex 0；部署许可及原生工厂整批／单机／换装费用独立归档，不恢复个人套件库存。", "- 不支持的机制显式标记review；原MOD只读，正常构建无需原MOD。", "", "## 第二页首项科技需求", "", "| 阵营 | 科技 | 原科技点 | 当前科技点 |", "|---|---|---:|---:|"]
     for f in ("AEUG","TITANS","NEO_ZEON"):
-        n=next(n for n in tree[f] if n.get("era") == "0087T2")
+        n=next(n for n in tree[f] if n.get("era") == "UC_0087_T2")
         lines.append(f"| {f} | {n['id']} · {n['name']} | {n['sourceCosts']['points']} | {n['points']} |")
     lines += ["", "## 单位索引", "", "| ID | 中文名称 | 可用阵营 | 年代 | 套件数 | 部署许可：资金／物资 |", "|---|---|---|---|---:|---|"]
     for r in rows:
         p=prefabs[r['id']];price=production['licenseOffers'].get(r['id']); label=f"{price['money']} / {price['supplies']}" if price else "无法购买／形态或条件限定"
-        era=next((t for t in p['tags'] if re.fullmatch(r"\d{4}(?:T[12])?",t)),"")
+        era=next((t for t in p['tags'] if re.fullmatch(r"(?:\d{4}(?:T[12])?|(?:UC|CE)_\d{4}_T\d+)",t)),"")
         lines.append(f"| {r['id']} | {p['name']} | {', '.join(p.get('availableFactions',[next(t for t in p['tags'] if t in ('EFSF','ZEON','AEUG','TITANS','NEO_ZEON'))]))} | {era} | {len(p['weaponKits'])} | {label} |")
     (ROOT/'docs/imports/0087-units.md').write_text('\n'.join(lines)+'\n',encoding='utf8')
     gaps=collections.defaultdict(list)

@@ -4,10 +4,11 @@ Remote units are presentation objects, never extra simulation/network entities.
 from weapon_store import loads as load_source_json, dumps as dump_source_json
 import json
 import re
+import math
 import shutil
-from mod_source import ASSETS, MOD, ROOT, load, parse, section, resolve, source_root
+from mod_source import ASSETS, MOD, ROOT, load, parse, section, resolve, source_root, stat
 
-CARRIERS = ('MAN_03', 'MAN_08', 'MSN_02', 'MS_06Z', 'MSN_01')
+CARRIERS = ('AMX_004G', 'AMX_004_1', 'AMX_014', 'MAN_03', 'MAN_08', 'MSA_0011', 'MSA_0011_Ext', 'MSN_01', 'MSN_02', 'MS_06Z', 'MSN_03', 'MSN_04', 'RX_93')
 
 def globals_in(path):
     return {key: float(value) for key, value in re.findall(
@@ -52,6 +53,7 @@ def compile_launcher(prefab, path, root=ROOT, copy_assets=True):
     values = globals_in(path)
     units, mounts, bursts = [], [], []
     control = None
+    cycle_counts = []
     payloads = []
     color = "Yellow"
     projectile_texture = None
@@ -74,6 +76,13 @@ def compile_launcher(prefab, path, root=ROOT, copy_assets=True):
             raise ValueError('Unsupported remote payload (reflector or indirect control): ' + ident)
         burst = native_burst(prefab, child_path, child, root)
         bursts.append(burst)
+        from native_combat import globals_for
+        native_values = globals_for(child_path)
+        cooldown = max(burst['nativeTiming'].get('cooldown', 0), burst['nativeTiming']['duration'], .1)
+        energy = burst['nativeTiming'].get('energy', 0)
+        lifetime = float(native_values.get('lifeTime', 15))
+        energy_cycles = math.ceil(stat(child, 'enMax') / energy) if energy > 0 else 1
+        cycle_counts.append(max(1, min(energy_cycles, math.ceil(max(0, lifetime - 1) / cooldown))))
         payloads.append({name:float(value) for name,value in re.findall(r'(\w+)\s*[=:]\s*([-\d.]+)',projectile['spawnUnit'])})
         if not units:
             color = next((name for name in ('Yellow','Pink','Blue') if name in projectile['spawnUnit']), 'Yellow')
@@ -109,7 +118,7 @@ def compile_launcher(prefab, path, root=ROOT, copy_assets=True):
         local_name=ident.removeprefix(prefab['id']+'_')
         mounted=next((layer for layer in candidates if layer['name']==local_name), candidates[0] if candidates else None)
         units.append(dict(texture=image.name, scale=float(body.get('imageScale', 1)),
-                          burstShots=burst['nativeTiming']['projectiles'],trail=trail_config,
+                          burstShots=burst['nativeTiming']['projectiles'],cycles=cycle_counts[-1],trail=trail_config,
                           nativeUnit=ident, requiredParts=[side] if side else [],
                           hideLayers=[mounted['name']] if mounted else [],scaleX=mounted.get('scaleX',1) if mounted else 1))
         mounts.append(dict(layer=mounted['name'],point=dict(x=0,y=0)) if mounted else dict(bone=bone, offset=dict(x=0, y=0)))
@@ -129,8 +138,9 @@ def compile_launcher(prefab, path, root=ROOT, copy_assets=True):
     components = dict(native_components)
     if control != 'incom': awakening = 75
     events = []
-    for cycle in range(2):
+    for cycle in range(max(cycle_counts)):
         for index, burst in enumerate(bursts):
+            if cycle >= cycle_counts[index]: continue
             at = 0
             first = burst['nativeTiming']['firstShot']
             for step in burst['attack']['steps']:
@@ -146,7 +156,14 @@ def compile_launcher(prefab, path, root=ROOT, copy_assets=True):
     for at,item in sorted(events,key=lambda event:event[0]):
         steps.append(dict(item,delay=round(at-previous,6)))
         previous=at
-    weapon = dict(sourceName=key, name=names[0], localization={lang: {'name': name} for lang,name in zip(('zh','en','ja'),names)},
+    # Native volleys are much longer than the previous forced two positions.
+    # Keep every emission, but halve payloads for these larger volleys.
+    damage_scale = .5 if max(cycle_counts) > 2 else 1
+    shot_damage *= damage_scale
+    components = {k:v*damage_scale for k,v in components.items()}
+    for step in steps:
+        if step.get('damageComponents'): step['damageComponents'] = {k:v*damage_scale for k,v in step['damageComponents'].items()}
+    weapon = dict(level=1,levelSource=path.relative_to(root).as_posix(),sourceName=key, name=names[0], localization={lang: {'name': name} for lang,name in zip(('zh','en','ja'),names)},
         type='beam', category='remote', slot='secondary', min=1, max=6 if control=='funnel' else 4,
         hit=100 if control!='incom' else payloads[0].get('WeaponAccuracy',85), en=values[key + '_EN'], actionCost=3, damagePerShot=shot_damage, damageComponents=components,
         hitsPerShot=1, clip=None, changeHeldWeapon=False, requiredParts=[],
@@ -155,16 +172,16 @@ def compile_launcher(prefab, path, root=ROOT, copy_assets=True):
                     'forwardOffset':0,'rotation':0,'visibleInFog':False},
         hitEffect=projectile_hit, nativePayload=payloads[0], sound={'file':'../../sounds/BeamGun_3.ogg','volume':.45},
         source={'file':str(path.relative_to(root)).replace('\\','/'),'root':root.name},
-        remote={'kind':control,'units':units,'shotsPerUnit':2,'moveSeconds':.6,'settleSeconds':.1,
+        remote={'kind':control,'units':units,'shotsPerUnit':max(cycle_counts),'moveSeconds':.6,'settleSeconds':.1,
                 'waitSeconds':.5,'staggerSeconds':.13,'returnSeconds':.65,'awakeningScale':0 if control=='incom' else .04},
         nativeRemote={'count':len(units),'cooldownSeconds':values.get(key+'_CD'),
-                      'awakeningMinimum':awakening,'entry':key+'_Trigger','unitSources':children,'unitPayloads':payloads,'unitBursts':[burst['nativeTiming'] for burst in bursts]},
+                      'awakeningMinimum':awakening,'entry':key+'_Trigger','cycles':cycle_counts,'damageScale':damage_scale,'unitSources':children,'unitPayloads':payloads,'unitBursts':[burst['nativeTiming'] for burst in bursts]},
         description='')
     burst_counts = '/'.join(str(unit['burstShots']) for unit in units)
     descriptions = {
-        'zh': f'{len(units)}个单元，各射击2轮；每轮按原MOD动作链发射{burst_counts}发，独立逐发判定。原始载荷与连射间隔保留；伤害应用全局换算、人工差值及现有觉醒成长。',
-        'en': f'{len(units)} remote units, 2 firing positions each. Native burst: {burst_counts} shots per position, resolved separately before global, editor and Awakening modifiers.',
-        'ja': f'{len(units)}基が各2回射撃。各回の原作連射数は{burst_counts}発、1発ずつ判定。原作ダメージと間隔に全体換算・編集差分・覚醒補正を適用。',
+        'zh': f'{len(units)}个单元，按原MOD能量与存续时间发射{max(cycle_counts)}轮；每轮{burst_counts}发，逐发判定。完整齐射的单发伤害减半，再应用全局换算、人工差值与觉醒成长。',
+        'en': f'{len(units)} remote units, up to {max(cycle_counts)} native firing cycles. Native bursts: {burst_counts} shots, resolved separately. Full-volley damage per shot is halved before global, editor and Awakening modifiers.',
+        'ja': f'{len(units)}基、原作のエネルギーと存続時間に応じて最大{max(cycle_counts)}回射撃。各回{burst_counts}発を個別判定。単発ダメージは半分にしてから各補正を適用。',
     }
     weapon['description'] = descriptions['zh']
     for lang, text in descriptions.items(): weapon['localization'][lang]['description'] = text
@@ -172,7 +189,7 @@ def compile_launcher(prefab, path, root=ROOT, copy_assets=True):
     weapon['nativeTiming'] = dict(source=weapon['source']['file'], entry=key+'_Trigger',
         cooldown=values.get(key+'_CD',0), duration=previous, firstShot=.7,lastShot=previous,
         firingEvents=len(events),projectiles=sum(step.get("shots",0) for step in steps),declaredEnergy=weapon['en'],energyMode='perVolley',
-        energyPerEmission=0,energy=weapon['en'],adaptation='two_positions_with_native_bursts')
+        energyPerEmission=0,energy=weapon['en'],adaptation='native_energy_lifetime_and_bursts')
     if awakening is not None:
         weapon['pilotRequirements']=[dict(stat='awakening',operator='>=',value=awakening)]
     if any(u['requiredParts'] for u in units):

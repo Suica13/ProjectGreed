@@ -17,7 +17,7 @@ const Formation = (() => {
   // Modern saves need no reads or parsing of the six obsolete faction rosters.
   const migratePilots = !Array.isArray(pilotStore?.pilots) || !Array.isArray(pilotStore?.awards);
   if (migratePilots) {
-    for (const faction of ["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"]) {
+    for (const faction of ["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON", "EFSF_0093", "NEO_ZEON_0093", "OMNI", "ZAFT"]) {
       let saved = null;
       try {
         saved = JSON.parse(localStorage.getItem(pilotStorageKey + faction));
@@ -75,7 +75,7 @@ const Formation = (() => {
     try {
       ProfileStorage.replace([
         [sharedPilotKey, JSON.stringify(pilotStore)],
-        ...["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].map((faction) => [
+        ...["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON", "EFSF_0093", "NEO_ZEON_0093", "OMNI", "ZAFT"].map((faction) => [
           pilotStorageKey + faction,
           null,
         ]),
@@ -188,6 +188,8 @@ const Formation = (() => {
         ? Net.snapshot.settings
         : {
             ...Rules.defaultRoomSettings(),
+            // The hangar has no battlefield environment until a room is joined.
+            mapId: null,
             costLimit: 99999,
             mode: "quick",
             formationStyle: editorStyle,
@@ -205,15 +207,28 @@ const Formation = (() => {
       ? {}
       : Economy.normalizeStock(Economy.snapshot())),
   });
-  // Drafts may contain future units; technology is required to produce them; owned stock can deploy.
+  let technologyContext;
+  function roomTechnologyCaps() {
+    const settings = Net.active ? Net.snapshot?.settings : null, player = Net.active ? ownPlayer() : null;
+    if (!technologyContext || technologyContext.settings !== settings || technologyContext.player !== player)
+      technologyContext = { settings, player, caps: settings ? Rules.armyRestrictions(settings, player).technologyCaps : undefined };
+    return technologyContext.caps;
+  }
+  function exceedsTechnology(unit) {
+    if (!unit) return false;
+    const model = unit.prefabId ? unit : UnitModels[unit.id + "__" + (pickerKits.get(unit.id) || Economy.defaultKit(unit.id) || unit.weaponKits[0].id)];
+    return !!model && Rules.restrictionReason(model, { technologyCaps: roomTechnologyCaps() }) === "technology_limit";
+  }
+  // Owned stock can deploy without personal research, but room technology caps still apply.
   const canAddUnit = (model) =>
-    !!model && [null, "not_developed"].includes(PlayerProfile.restriction(model));
+    !!model && !exceedsTechnology(model) && [null, "not_developed"].includes(PlayerProfile.restriction(model));
   const displayLimit = (value) => (Number.isFinite(value) ? value : I18n.text("无限"));
   const unitLimit = () =>
-    Net.active && Net.snapshot?.settings
+    !freeFormation() ? 3 : Net.active && Net.snapshot?.settings
       ? Rules.armyUnitLimit(Net.snapshot.settings, ownPlayer())
       : Rules.catalog.formation.maxUnits;
-  const points = (entries) => Rules.formationPoints(entries);
+  const points = (entries) => freeFormation() ? Rules.formationPoints(entries) : entries.filter(e => !e.preload && Rules.isFleetCarrier(Rules.formationModel(e))).length;
+  const compositionWeight = model => freeFormation() ? Rules.formationWeight(model) : Number(Rules.isFleetCarrier(model));
   const cost = (entries) =>
     entries.reduce((n, e) => n + Rules.formationModel(e).cost + PilotSystem.cost(e.customPilot), 0);
   function pickerWeight() {
@@ -222,7 +237,7 @@ const Formation = (() => {
     const kitId =
       pickerKits.get(prefab.id) || Economy.defaultKit(prefab.id) || prefab.weaponKits[0].id;
     const model = UnitModels[prefab.id + "__" + kitId];
-    return model ? Rules.formationWeight(model) : Infinity;
+    return model ? (!freeFormation() && pickerContext ? 0 : compositionWeight(model)) : Infinity;
   }
   function renderPickerCost() {
     const id = byId("formationPrefab").value,
@@ -232,7 +247,7 @@ const Formation = (() => {
     const count = element(
       "span",
       "",
-      I18n.text("单位容量点") + ": " + points(draft) + " / " + displayLimit(unitLimit()),
+      I18n.text(freeFormation() ? "单位容量点" : "舰船数量") + ": " + points(draft) + " / " + displayLimit(unitLimit()),
     );
     count.id = "formationPickerUnitPoints";
     const total = element(
@@ -265,8 +280,10 @@ const Formation = (() => {
       localStorage.removeItem(legacyStorageKey);
       localStorage.removeItem(legacyStorageKey + "-active");
       localStorage.setItem(storageKey + "-active", String(index));
+      return true;
     } catch {
       note("浏览器无法保存编组，本次会话仍可使用。");
+      return false;
     }
   }
   function loadCharacter() {
@@ -275,7 +292,7 @@ const Formation = (() => {
       if (!localStorage.getItem(marker)) {
         const merged = [];
         const seen = new Set();
-        for (const faction of ["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"]) {
+        for (const faction of ["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON", "EFSF_0093", "NEO_ZEON_0093", "OMNI", "ZAFT"]) {
           const saved = JSON.parse(
             localStorage.getItem(legacyStorageKey + "." + faction) || "null",
           );
@@ -354,7 +371,7 @@ const Formation = (() => {
   }
   function setGroup(next) {
     next = "PMC";
-    if (!["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(next) || group === next)
+    if (!["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON", "EFSF_0093", "NEO_ZEON_0093", "OMNI", "ZAFT"].includes(next) || group === next)
       return;
     finishPilotEditor();
     group = next;
@@ -368,16 +385,26 @@ const Formation = (() => {
     }
   }
   const sharePrefix = "PGF1.";
-  function encodeShare(name, units) {
-    const clean = Rules.validateFleetFormation(units, Infinity, Rules.catalog.formation.maxUnits),
+  function sharedUnits(entries) {
+    if (!Array.isArray(entries) || !entries.length || entries.length > Rules.catalog.formation.maxUnits)
+      throw Error("编组分享代码无效。");
+    // A shared template contains no personal pilot references, records or attributes.
+    const units = entries.map((entry) => {
+      if (!entry || typeof entry !== "object" || Array.isArray(entry))
+        throw Error("编组分享代码无效。");
+      const { unitId, kitId, preload } = entry;
+      return { unitId, kitId, ...(preload === undefined ? {} : { preload }) };
+    });
+    return Rules.validateFleetFormation(units, Infinity, Rules.catalog.formation.maxUnits);
+  }
+  function encodeShare(name, units, formationStyle = "standard") {
+    if (!units.length) throw Error("空编组无法分享，请先添加单位。");
+    const clean = sharedUnits(units),
       payload = JSON.stringify({
         version: 1,
         name: name.trim().slice(0, 32) || "未命名编组",
-        units: clean.map(({ unitId, kitId, preload }) => ({
-          unitId,
-          kitId,
-          preload,
-        })),
+        formationStyle,
+        units: clean,
       }),
       bytes = new TextEncoder().encode(payload);
     let binary = "";
@@ -389,7 +416,10 @@ const Formation = (() => {
     code = code.trim();
     if (!code.startsWith(sharePrefix) || code.length > 4 * 1024 * 1024)
       throw Error("编组分享代码无效。");
-    let encoded = code.slice(sharePrefix.length).replace(/-/g, "+").replace(/_/g, "/");
+    let encoded = code.slice(sharePrefix.length).replace(/\s+/g, "");
+    if (!encoded || !/^[A-Za-z0-9_+/-]+={0,2}$/.test(encoded))
+      throw Error("编组分享代码无效。");
+    encoded = encoded.replace(/-/g, "+").replace(/_/g, "/");
     encoded += "=".repeat((4 - (encoded.length % 4)) % 4);
     let payload;
     try {
@@ -399,24 +429,15 @@ const Formation = (() => {
     } catch {
       throw Error("编组分享代码无效。");
     }
-    if (
-      !payload ||
-      payload.version !== 1 ||
-      typeof payload.name !== "string" ||
-      !Array.isArray(payload.units)
-    )
+    if (!payload || payload.version !== 1 || typeof payload.name !== "string" ||
+        (payload.formationStyle !== undefined && !["standard", "free"].includes(payload.formationStyle)))
       throw Error("编组分享代码无效。");
-    const units = Rules.validateFleetFormation(
-        payload.units.map(({ unitId, kitId, preload }) => ({
-          unitId,
-          kitId,
-          preload,
-        })),
-        Infinity,
-        Rules.catalog.formation.maxUnits,
-      ),
+    const units = sharedUnits(payload.units),
       name = payload.name.trim().slice(0, 32) || "分享编组";
-    return { name, units };
+    // Old codes predate formation styles. Independent combat units need the free editor.
+    const formationStyle = payload.formationStyle ||
+      (units.some(entry => !entry.preload && !Rules.isFleetCarrier(Rules.formationModel(entry))) ? "free" : "standard");
+    return { name, units, formationStyle };
   }
   function uniqueSquadName(name) {
     if (!squads.some((squad) => squad.name === name)) return name;
@@ -433,6 +454,8 @@ const Formation = (() => {
   }
   function openShare() {
     closeDetail();
+    saveDraft();
+    document.body.append(byId("formationSharePanel"));
     byId("formationShareCode").value = "";
     byId("formationSharePanel").hidden = false;
     byId("formationMain").inert = true;
@@ -655,7 +678,7 @@ const Formation = (() => {
     });
     select.value = entry.preload ? JSON.stringify(entry.preload) : "";
     const atLimit =
-      detailIndex === null && points(draft) + Rules.formationWeight(model) > unitLimit();
+      freeFormation() && detailIndex === null && points(draft) + compositionWeight(model) > unitLimit();
     select.disabled = select.options.length === 1 || atLimit;
     hint.textContent = atLimit
       ? "已达到编组单位点数上限。"
@@ -686,7 +709,7 @@ const Formation = (() => {
         add = element("button", "", "预先搭载");
       add.dataset.preloadHangar = h.id;
       add.disabled =
-        points(draft) + (detailIndex === null ? Rules.formationWeight(model) : 0) > unitLimit();
+        points(draft) + (detailIndex === null ? compositionWeight(model) : 0) > unitLimit();
       add.onclick = () => {
         if (!canAddUnit(model)) return note("单位禁用，或与当前阵营不匹配。");
         if (detailIndex === null) {
@@ -1217,7 +1240,7 @@ const Formation = (() => {
           displayLimit(budget()) +
           "\u00a0·\u00a0",
       ),
-      element("span", "", I18n.text("单位容量点") + ": " + draftPoints + " / " + unitLimit()),
+      element("span", "", I18n.text(freeFormation() ? "单位容量点" : "舰船数量") + ": " + draftPoints + " / " + unitLimit()),
     );
     byId("formationBudget").title = byId("formationBudget").textContent;
     byId("formationBudget").classList.toggle(
@@ -1298,11 +1321,13 @@ const Formation = (() => {
       icon.append(image);
       const portrait = element("span", "formation-unit-portrait");
       portrait.append(icon);
-      if (plan.reasons[i] === "faction_mismatch") row.classList.add("faction-mismatch");
-      if (plan.disabled.includes(i) && plan.reasons[i] !== "not_developed") {
+      const reason = exceedsTechnology(model) ? "technology_limit" : plan.reasons[i];
+      row.classList.toggle("technology-limited", reason === "technology_limit");
+      if (reason === "faction_mismatch") row.classList.add("faction-mismatch");
+      if ((plan.disabled.includes(i) || reason === "technology_limit") && reason !== "not_developed") {
         row.classList.add(
           "unit-disabled",
-          ["not_allowed", "not_developed", "wip", "technology_limit"].includes(plan.reasons[i])
+          ["not_allowed", "not_developed", "wip", "technology_limit"].includes(reason)
             ? "not-allowed"
             : "overcost",
         );
@@ -1311,29 +1336,29 @@ const Formation = (() => {
           element(
             "span",
             "overcost-label",
-            plan.reasons[i] === "pilot_banned"
+            reason === "pilot_banned"
               ? "驾驶员被禁用，请解除配属"
-              : plan.reasons[i] === "stock"
+              : reason === "stock"
                 ? "机体库存不足"
-                : plan.reasons[i] === "license"
+                : reason === "license"
                   ? "未许可"
-                  : plan.reasons[i] === "wip"
+                  : reason === "wip"
                     ? "WIP"
-                    : plan.reasons[i] === "faction_mismatch"
+                    : reason === "faction_mismatch"
                       ? "阵营不匹配"
-                      : ["pilot_faction", "pilot_required"].includes(plan.reasons[i])
+                      : ["pilot_faction", "pilot_required"].includes(reason)
                         ? "驾驶员配属条件不满足"
-                        : plan.reasons[i] === "not_developed"
+                        : reason === "not_developed"
                           ? "尚未开发"
-                          : plan.reasons[i] === "count"
+                          : reason === "count"
                             ? "超过单位点数"
-                            : plan.reasons[i] === "not_allowed"
+                            : reason === "not_allowed"
                               ? "不被允许的单位"
                               : {
-                                  technology_limit: "超出科技点限制",
+                                  technology_limit: "超出科技点",
                                   not_embarked: "必须预先搭载",
                                   carrier_disabled: "运输单位无法出击",
-                                }[plan.reasons[i]] || "OVER COST",
+                                }[reason] || "OVER COST",
           ),
         );
       }
@@ -1516,7 +1541,7 @@ const Formation = (() => {
             element("small", "", `${I18n.text("剩余容量")} ${h.capacity - used}`),
           );
           add.append(portrait, text);
-          add.disabled = points(draft) >= unitLimit();
+          add.disabled = freeFormation() && points(draft) >= unitLimit();
           add.onclick = () => openPicker({ carrierIndex: index, hangarId: h.id }, true);
           hangar.append(add);
         }
@@ -1771,7 +1796,7 @@ const Formation = (() => {
         if (!canAddUnit(Rules.formationModel(next)))
           throw Error("单位尚未开发，或与当前阵营不匹配。");
         if (!next.preload) return;
-        if (points(draft) >= unitLimit()) throw Error("已达到编组单位点数上限。");
+        if (freeFormation() && points(draft) >= unitLimit()) throw Error("已达到编组单位点数上限。");
       }
       const entries =
         detailIndex === null
@@ -1929,7 +1954,7 @@ const Formation = (() => {
     const prefab = Rules.catalog.prefabs.find((p) => p.id === byId("formationPrefab").value);
     if (!prefab || !pickerCompatible(prefab)) return;
     if (!canAddUnit(prefab)) return note("单位禁用，或与当前阵营不匹配。");
-    if (points(draft) >= unitLimit()) return note("已达到编组单位点数上限。");
+    if (points(draft) + pickerWeight() > unitLimit()) return note("已达到编组单位点数上限。");
     const entry = {
       unitId: prefab.id,
       kitId: pickerKits.get(prefab.id) || Economy.defaultKit(prefab.id) || prefab.weaponKits[0].id,
@@ -1969,6 +1994,7 @@ const Formation = (() => {
     const list = byId("formationCatalog");
     const renderKey = JSON.stringify([
       catalogRevision,
+      roomTechnologyCaps(),
       freeFormation(),
       group,
       PlayerProfile.faction(),
@@ -2081,7 +2107,8 @@ const Formation = (() => {
       };
       const row = element("div", "catalog-unit-row");
       row.append(card, details);
-      const restriction = PlayerProfile.restriction(prefab);
+      const restriction = exceedsTechnology(prefab) ? "technology_limit" : PlayerProfile.restriction(prefab);
+      row.classList.toggle("technology-limited", restriction === "technology_limit");
       if (restriction && restriction !== "not_developed") {
         row.classList.add("unit-disabled", restriction === "wip" ? "unit-wip" : "faction-mismatch");
         row.append(
@@ -2089,7 +2116,9 @@ const Formation = (() => {
           element(
             "span",
             "overcost-label",
-            restriction === "wip"
+            restriction === "technology_limit"
+              ? "超出科技点"
+              : restriction === "wip"
               ? "WIP"
               : restriction === "faction_mismatch"
                 ? "阵营不匹配"
@@ -2161,7 +2190,7 @@ const Formation = (() => {
   byId("generateFormationShare").onclick = async () => {
     try {
       const input = byId("formationShareCode"),
-        code = encodeShare(byId("formationName").value, draft);
+        code = encodeShare(byId("formationName").value, draft, freeFormation() ? "free" : "standard");
       input.value = code;
       input.focus();
       input.select();
@@ -2185,16 +2214,21 @@ const Formation = (() => {
     try {
       const imported = decodeShare(byId("formationShareCode").value);
       imported.name = uniqueSquadName(imported.name);
-      squads.push(imported);
+      const { formationStyle, ...squad } = imported;
+      squads.push(squad);
       index = squads.length - 1;
       draft = structuredClone(imported.units);
       byId("formationName").value = imported.name;
-      persist();
+      const saved = persist();
+      if (!Net.active) {
+        editorStyle = formationStyle;
+        try { localStorage.setItem("projectgreed.formation-editor-style", editorStyle); } catch {}
+      }
       refreshSelect();
       render();
       closeShare(false);
       byId("formationSelect").focus();
-      note("分享编组已加载并保存。");
+      note(saved ? "分享编组已加载并保存。" : "分享编组已加载，但浏览器无法保存，请检查存储空间。");
     } catch (error) {
       note(error.message || "编组分享代码无效。");
       byId("formationShareCode").focus();
@@ -2717,7 +2751,7 @@ const Formation = (() => {
         (p.name + " " + I18n.pilotName(p)).toLocaleLowerCase().includes(search) &&
         PilotSystem.matchesFilter(p, byId("pilotRosterFilter").value),
     ).sort((a,b) => {
-      const factions=["PMC","EFSF","ZEON","AEUG","TITANS","NEO_ZEON"];
+      const factions=["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON", "EFSF_0093", "NEO_ZEON_0093", "OMNI", "ZAFT"];
       const rank=p=>p.ace ? Math.min(...PilotSystem.pilotFactions(p).map(f=>Math.max(1,factions.indexOf(f)))) : 0;
       return rank(a)-rank(b) || (byId("pilotRosterSort").value === "level" ? b.level-a.level : 0) || I18n.pilotName(a).localeCompare(I18n.pilotName(b),I18n.language);
     });
@@ -3047,6 +3081,19 @@ const Formation = (() => {
       I18n.text("资金") +
       " " +
       (advancementCost ?? "—");
+    let advancementHint = byId("pilotAdvancementHint");
+    if (!advancementHint) {
+      advancementHint = element("p", "helper"); advancementHint.id="pilotAdvancementHint";
+      advancementHint.setAttribute("role","status"); upgradePilotButton.after(advancementHint);
+    }
+    const blockers=[];
+    if (pendingPoints !== 0) blockers.push(I18n.text("\u8bf7\u5148\u786e\u8ba4\u5f3a\u5316\u70b9\u5206\u914d"));
+    if (!Economy.affordable({money:advancementCost})) blockers.push(I18n.text("\u8d44\u91d1\u4e0d\u8db3")+" "+formatNumber(advancementCost));
+    if (!rebirth && pilotEdit.level < PilotSystem.maxLevel(pilotEdit) && !readyToUpgrade)
+      blockers.push("EXP "+formatNumber(pilotEdit.experience)+" / "+formatNumber(PilotSystem.experienceRequired(pilotEdit.level,pilotEdit)));
+    advancementHint.hidden=pilotIsNew || !blockers.length;
+    advancementHint.textContent=I18n.text("\u7b49\u7ea7\u4e0a\u9650")+" "+PilotSystem.maxLevel(pilotEdit)+" \u00b7 "+blockers.join(" \u00b7 ");
+    upgradePilotButton.title=advancementHint.hidden ? "" : advancementHint.textContent;
     demotePilotButton.hidden = pilotIsNew || pilotEdit.level === 0;
     demotePilotButton.disabled =
       !!pilotEdit.needsRecruitment ||
@@ -3447,7 +3494,7 @@ const Formation = (() => {
     receivePilotAwards,
     exportPilotStores: () =>
       Object.fromEntries(
-        ["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].map((faction) => [
+        ["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON", "EFSF_0093", "NEO_ZEON_0093", "OMNI", "ZAFT"].map((faction) => [
           faction,
           {
             pilots: structuredClone(pilotStore.pilots.filter((pilot) => pilot.faction === faction)),
@@ -3464,7 +3511,7 @@ const Formation = (() => {
       const member = snapshot?.members?.find((item) => item.id === snapshot.you?.id);
       if (
         !member ||
-        !["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(member.characterFaction)
+        !["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON", "EFSF_0093", "NEO_ZEON_0093", "OMNI", "ZAFT"].includes(member.characterFaction)
       )
         return;
       setGroup(member.characterFaction);
@@ -3475,6 +3522,7 @@ const Formation = (() => {
     refresh: () => {
       if (pageView === "formation") {
         render();
+        if (!byId("formationUnitPicker").hidden) renderCatalog();
         if (detailIndex !== null || catalogDetail) renderDetail();
       }
     },

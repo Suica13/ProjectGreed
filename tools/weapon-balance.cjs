@@ -2,6 +2,8 @@ const Classes = require("../shared/weapon-classes.js");
 // Applied before timeline/paired-weapon compilation in both server and client builds.
 // Raw MOD payloads stay intact for auditing and future imports.
 function applyWeaponBalance(prefab, rules = require("../shared/conversion-rules.cjs").read()) {
+  const production = require("../shared/native-production.json")[prefab.id];
+  if (production) prefab.sourceStats = { ...prefab.sourceStats, nativeProductionQuantity: production.quantity };
   // The native Unit 4 Lv2 left wrist file disagrees with its same-grade right copy.
   // Keep nativePayload intact while normalizing this explicit source-data exception.
   if (["RX_78_4", "RX_78_4_Bst"].includes(prefab.id)) {

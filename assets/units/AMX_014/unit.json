@@ -1195,17 +1195,22 @@
         "localization": {
           "zh": {
             "name": "INCOM有线炮",
-            "description": "2个单元，各射击2轮；每轮按原MOD动作链发射1/1发，独立逐发判定。原始载荷与连射间隔保留；伤害应用全局换算、人工差值及现有觉醒成长。"
+            "description": "2个单元，按原MOD能量与存续时间发射6轮；每轮1/1发，逐发判定。完整齐射的单发伤害减半，再应用全局换算、人工差值与觉醒成长。"
           },
           "en": {
             "name": "INCOM",
-            "description": "2 remote units, 2 firing positions each. Native burst: 1/1 shots per position, resolved separately before global, editor and Awakening modifiers."
+            "description": "2 remote units, up to 6 native firing cycles. Native bursts: 1/1 shots, resolved separately. Full-volley damage per shot is halved before global, editor and Awakening modifiers."
           },
           "ja": {
             "name": "インコム",
-            "description": "2基が各2回射撃。各回の原作連射数は1/1発、1発ずつ判定。原作ダメージと間隔に全体換算・編集差分・覚醒補正を適用。"
+            "description": "2基、原作のエネルギーと存続時間に応じて最大6回射撃。各回1/1発を個別判定。単発ダメージは半分にしてから各補正を適用。"
           }
         },
+        "damagePerShot": 2000.0,
+        "damageComponents": {
+          "beam": 2000.0
+        },
+        "requiredParts": [],
         "attack": {
           "startAnimation": null,
           "steps": [
@@ -1244,6 +1249,96 @@
                 "rightArm"
               ],
               "delay": 0.13
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 0,
+              "requiredParts": [
+                "leftArm"
+              ],
+              "delay": 1.07
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 1,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "delay": 0.13
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 0,
+              "requiredParts": [
+                "leftArm"
+              ],
+              "delay": 1.07
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 1,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "delay": 0.13
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 0,
+              "requiredParts": [
+                "leftArm"
+              ],
+              "delay": 1.07
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 1,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "delay": 0.13
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 0,
+              "requiredParts": [
+                "leftArm"
+              ],
+              "delay": 1.07
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 1,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "delay": 0.13
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "LeftArm",
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            {
+              "bone": "RightArm",
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
             }
           ]
         },
@@ -1256,6 +1351,10 @@
           "visibleInFog": false
         },
         "hitEffect": "Beam_Hit_1_S_Yellow",
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Funnel/NZN_AMX_014_Incom.gw",
+          "root": "GW_BattleUniverse_DLC_0087"
+        },
         "remote": {
           "kind": "incom",
           "units": [
@@ -1263,6 +1362,7 @@
               "texture": "Incom_AMX_014.png",
               "scale": 1.0,
               "burstShots": 1,
+              "cycles": 6,
               "trail": {
                 "texture": "../../projectiles/Beam_TrailLine_1_S_Yellow.png",
                 "alpha": 0.35,
@@ -1282,6 +1382,7 @@
               "texture": "Incom_AMX_014.png",
               "scale": 1.0,
               "burstShots": 1,
+              "cycles": 6,
               "trail": {
                 "texture": "../../projectiles/Beam_TrailLine_1_S_Yellow.png",
                 "alpha": 0.35,
@@ -1298,7 +1399,7 @@
               "scaleX": 1
             }
           ],
-          "shotsPerUnit": 2,
+          "shotsPerUnit": 6,
           "moveSeconds": 0.6,
           "settleSeconds": 0.1,
           "waitSeconds": 0.5,
@@ -1311,6 +1412,11 @@
           "cooldownSeconds": 18.0,
           "awakeningMinimum": null,
           "entry": "NZN_AMX_014_Incom_Trigger",
+          "cycles": [
+            6,
+            6
+          ],
+          "damageScale": 0.5,
           "unitSources": [
             "AMX_014_Incom_L",
             "AMX_014_Incom_R"
@@ -1418,44 +1524,21 @@
             }
           ]
         },
-        "description": "2个单元，各射击2轮；每轮按原MOD动作链发射1/1发，独立逐发判定。原始载荷与连射间隔保留；伤害应用全局换算、人工差值及现有觉醒成长。",
+        "description": "2个单元，按原MOD能量与存续时间发射6轮；每轮1/1发，逐发判定。完整齐射的单发伤害减半，再应用全局换算、人工差值与觉醒成长。",
         "nativeTiming": {
           "source": "Units/BattleUnits/Weapon/Funnel/NZN_AMX_014_Incom.gw",
           "entry": "NZN_AMX_014_Incom_Trigger",
           "cooldown": 18.0,
-          "duration": 2.03,
+          "duration": 6.83,
           "firstShot": 0.7,
-          "lastShot": 2.03,
-          "firingEvents": 4,
-          "projectiles": 4,
+          "lastShot": 6.83,
+          "firingEvents": 12,
+          "projectiles": 12,
           "declaredEnergy": 100.0,
           "energyMode": "perVolley",
           "energyPerEmission": 0,
           "energy": 100.0,
-          "adaptation": "two_positions_with_native_bursts"
-        },
-        "requiredParts": [],
-        "muzzle": {
-          "mounts": [
-            {
-              "bone": "LeftArm",
-              "offset": {
-                "x": 0,
-                "y": 0
-              }
-            },
-            {
-              "bone": "RightArm",
-              "offset": {
-                "x": 0,
-                "y": 0
-              }
-            }
-          ]
-        },
-        "source": {
-          "file": "Units/BattleUnits/Weapon/Funnel/NZN_AMX_014_Incom.gw",
-          "root": "GW_BattleUniverse_DLC_0087"
+          "adaptation": "native_energy_lifetime_and_bursts"
         },
         "anyParts": [
           "leftArm",

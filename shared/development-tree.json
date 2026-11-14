@@ -59,7 +59,8 @@
         "action": "hiddenAction_Tech_EFSF_0079_BaseTech_Awake"
       },
       "page": 0,
-      "era": "0079T1"
+      "era": "UC_0079_T1",
+      "technologyWeight": 1
     },
     {
       "id": "Tech_EFSF_0079_AntiMSPlan",
@@ -99,7 +100,8 @@
         "action": "hiddenAction_Tech_EFSF_0079_AntiMSPlan_Awake"
       },
       "page": 0,
-      "era": "0079T1"
+      "era": "UC_0079_T1",
+      "technologyWeight": 1
     },
     {
       "id": "Tech_EFSF_0079_EarlyTypeMSDevelopmentPlan",
@@ -138,7 +140,8 @@
         "action": "hiddenAction_Tech_EFSF_0079_EarlyTypeMSDevelopmentPlan_Awake"
       },
       "page": 0,
-      "era": "0079T1"
+      "era": "UC_0079_T1",
+      "technologyWeight": 1
     },
     {
       "id": "Tech_EFSF_0079_OperationVDataRecoveryProject",
@@ -174,7 +177,8 @@
         "action": "hiddenAction_Tech_EFSF_0079_OperationVDataRecoveryProject_Awake"
       },
       "page": 0,
-      "era": "0079T1"
+      "era": "UC_0079_T1",
+      "technologyWeight": 1
     },
     {
       "id": "Tech_EFSF_0079_GMDevelopmentPlan",
@@ -206,7 +210,8 @@
         "action": "hiddenAction_Tech_EFSF_0079_GMDevelopmentPlan_Awake"
       },
       "page": 0,
-      "era": "0079T1"
+      "era": "UC_0079_T1",
+      "technologyWeight": 1
     },
     {
       "id": "Tech_EFSF_0079_BlueDestinyProject",
@@ -236,7 +241,8 @@
         "action": "hiddenAction_Tech_EFSF_0079_BlueDestinyProject_Awake"
       },
       "page": 0,
-      "era": "0079T1"
+      "era": "UC_0079_T1",
+      "technologyWeight": 1
     },
     {
       "id": "Tech_EFSF_0079_PaleRiderProject",
@@ -266,7 +272,8 @@
         "action": "hiddenAction_Tech_EFSF_0079_PaleRiderProject_Awake"
       },
       "page": 0,
-      "era": "0079T1"
+      "era": "UC_0079_T1",
+      "technologyWeight": 1
     },
     {
       "id": "Tech_EFSF_0079_HeavyGuncannonPlan",
@@ -297,7 +304,8 @@
         "action": "hiddenAction_Tech_EFSF_0079_HeavyGuncannonPlan_Awake"
       },
       "page": 0,
-      "era": "0079T1"
+      "era": "UC_0079_T1",
+      "technologyWeight": 1
     },
     {
       "id": "Tech_EFSF_0079_T2_GMModularizationPlan",
@@ -338,7 +346,8 @@
         "Academy_Common_T2"
       ],
       "page": 1,
-      "era": "0079T2"
+      "era": "UC_0079_T2",
+      "technologyWeight": 2
     },
     {
       "id": "Tech_EFSF_0079_T2_Luna2TechnologyIntegrationPlan",
@@ -369,7 +378,8 @@
         "MagellanClassLateType"
       ],
       "page": 1,
-      "era": "0079T2"
+      "era": "UC_0079_T2",
+      "technologyWeight": 2
     },
     {
       "id": "Tech_EFSF_0079_T2_GundamNTCustomPlan",
@@ -403,7 +413,8 @@
         "GrayPhantomClass"
       ],
       "page": 1,
-      "era": "0079T2"
+      "era": "UC_0079_T2",
+      "technologyWeight": 2
     },
     {
       "id": "Tech_EFSF_0079_T2_GMKaiDevelopmentPlan",
@@ -435,7 +446,8 @@
         "Pilot_EFSF_0079_N_ACE_SLG"
       ],
       "page": 1,
-      "era": "0079T2"
+      "era": "UC_0079_T2",
+      "technologyWeight": 2
     },
     {
       "id": "Tech_EFSF_0079_T2_GLineDevelopmentPlan",
@@ -465,7 +477,8 @@
         "RX_81"
       ],
       "page": 1,
-      "era": "0079T2"
+      "era": "UC_0079_T2",
+      "technologyWeight": 2
     },
     {
       "id": "Tech_EFSF_0079_T2_GPProject",
@@ -506,7 +519,8 @@
         "FF_X_II_FB"
       ],
       "page": 1,
-      "era": "0083"
+      "era": "UC_0079_T2",
+      "technologyWeight": 2
     },
     {
       "id": "Tech_EFSF_0079_T2_G4Plan",
@@ -539,7 +553,8 @@
         "Pilot_EFSF_0079_N_ACE_JST"
       ],
       "page": 1,
-      "era": "0079T2"
+      "era": "UC_0079_T2",
+      "technologyWeight": 2
     },
     {
       "id": "Tech_EFSF_0079_T2_GMPowerfulPlan",
@@ -569,7 +584,8 @@
         "RX_78SP"
       ],
       "page": 1,
-      "era": "0079T2"
+      "era": "UC_0079_T2",
+      "technologyWeight": 2
     },
     {
       "id": "Tech_EFSF_0079_T2_FSWSPlan",
@@ -600,7 +616,8 @@
         "Burstliner"
       ],
       "page": 1,
-      "era": "0079T2"
+      "era": "UC_0079_T2",
+      "technologyWeight": 2
     },
     {
       "id": "Tech_EFSF_0079_T2_GundamUnit7Plan",
@@ -630,7 +647,8 @@
         "FA_78_G"
       ],
       "page": 1,
-      "era": "0079T2"
+      "era": "UC_0079_T2",
+      "technologyWeight": 2
     }
   ],
   "ZEON": [
@@ -692,7 +710,8 @@
         "action": "hiddenAction_Tech_ZEON_0079_BaseTech_Awake"
       },
       "page": 0,
-      "era": "0079T1"
+      "era": "UC_0079_T1",
+      "technologyWeight": 1
     },
     {
       "id": "Tech_ZEON_0079_GroundTypeZakuDevelopmentPlan",
@@ -731,7 +750,8 @@
         "action": "hiddenAction_Tech_ZEON_0079_GroundTypeZakuDevelopmentPlan_Awake"
       },
       "page": 0,
-      "era": "0079T1"
+      "era": "UC_0079_T1",
+      "technologyWeight": 1
     },
     {
       "id": "Tech_ZEON_0079_GroundTypeMSDevelopmentPlan",
@@ -769,7 +789,8 @@
         "action": "hiddenAction_Tech_ZEON_0079_GroundTypeMSDevelopmentPlan_Awake"
       },
       "page": 0,
-      "era": "0079T1"
+      "era": "UC_0079_T1",
+      "technologyWeight": 1
     },
     {
       "id": "Tech_ZEON_0079_NewGroundTypeMSDevelopmentPlan",
@@ -804,7 +825,8 @@
         "action": "hiddenAction_Tech_ZEON_0079_NewGroundTypeMSDevelopmentPlan_Awake"
       },
       "page": 0,
-      "era": "0079T1"
+      "era": "UC_0079_T1",
+      "technologyWeight": 1
     },
     {
       "id": "Tech_ZEON_0079_ZakuIILateTypeDevelopmentPlan",
@@ -838,7 +860,8 @@
         "action": "hiddenAction_Tech_ZEON_0079_ZakuIILateTypeDevelopmentPlan_Awake"
       },
       "page": 0,
-      "era": "0079T1"
+      "era": "UC_0079_T1",
+      "technologyWeight": 1
     },
     {
       "id": "Tech_ZEON_0079_603TestTeam",
@@ -869,7 +892,8 @@
         "action": "hiddenAction_Tech_ZEON_0079_603TestTeam_Awake"
       },
       "page": 0,
-      "era": "0079T1"
+      "era": "UC_0079_T1",
+      "technologyWeight": 1
     },
     {
       "id": "Tech_ZEON_0079_PezunProject",
@@ -899,7 +923,8 @@
         "action": "hiddenAction_Tech_ZEON_0079_PezunProject_Awake"
       },
       "page": 0,
-      "era": "0079T1"
+      "era": "UC_0079_T1",
+      "technologyWeight": 1
     },
     {
       "id": "Tech_ZEON_0079_GoufFlightTypeDevelopmentPlan",
@@ -929,7 +954,8 @@
         "action": "hiddenAction_Tech_ZEON_0079_GoufFlightTypeDevelopmentPlan_Awake"
       },
       "page": 0,
-      "era": "0079T1"
+      "era": "UC_0079_T1",
+      "technologyWeight": 1
     },
     {
       "id": "Tech_ZEON_0079_ApsarasDevelopmentPlan",
@@ -959,7 +985,8 @@
         "action": "hiddenAction_Tech_ZEON_0079_ApsarasDevelopmentPlan_Awake"
       },
       "page": 0,
-      "era": "0079T1"
+      "era": "UC_0079_T1",
+      "technologyWeight": 1
     },
     {
       "id": "Tech_ZEON_0079_T2_NewTypeUnderwaterMSDevelopmentPlan",
@@ -998,7 +1025,8 @@
         "Academy_Common_T2"
       ],
       "page": 1,
-      "era": "0079T2"
+      "era": "UC_0079_T2",
+      "technologyWeight": 2
     },
     {
       "id": "Tech_ZEON_0079_T2_NextGenerationMainstayMSBiddingPlan",
@@ -1032,7 +1060,8 @@
         "ChivvayClassKai"
       ],
       "page": 1,
-      "era": "0079T2"
+      "era": "UC_0079_T2",
+      "technologyWeight": 2
     },
     {
       "id": "Tech_ZEON_0079_T2_UnitedMaintenancePlan",
@@ -1065,7 +1094,8 @@
         "ZanzibarClassKai"
       ],
       "page": 1,
-      "era": "0079T2"
+      "era": "UC_0079_T2",
+      "technologyWeight": 2
     },
     {
       "id": "Tech_ZEON_0079_T2_BaseDefenseMADevelopmentPlan",
@@ -1096,7 +1126,8 @@
         "Pilot_ZEON_0079_N_ACE_DZL"
       ],
       "page": 1,
-      "era": "0079T2"
+      "era": "UC_0079_T2",
+      "technologyWeight": 2
     },
     {
       "id": "Tech_ZEON_0079_T2_ZeongDevelopmentPlan",
@@ -1128,7 +1159,8 @@
         "MSN_01"
       ],
       "page": 1,
-      "era": "0079T2"
+      "era": "UC_0079_T2",
+      "technologyWeight": 2
     },
     {
       "id": "Tech_ZEON_0079_T2_OperationStardust",
@@ -1169,7 +1201,8 @@
         "MusaiClassLateType_0083"
       ],
       "page": 1,
-      "era": "0083"
+      "era": "UC_0079_T2",
+      "technologyWeight": 2
     },
     {
       "id": "Tech_ZEON_0079_T2_DomPowerfulPlan",
@@ -1202,7 +1235,8 @@
         "Pilot_ZEON_0079_N_ACE_MSG"
       ],
       "page": 1,
-      "era": "0079T2"
+      "era": "UC_0079_T2",
+      "technologyWeight": 2
     },
     {
       "id": "Tech_ZEON_0079_T2_GyanPowerfulPlan",
@@ -1232,7 +1266,8 @@
         "MS_15C"
       ],
       "page": 1,
-      "era": "0079T2"
+      "era": "UC_0079_T2",
+      "technologyWeight": 2
     },
     {
       "id": "Tech_ZEON_0079_T2_UnderwaterMADevelopmentPlan",
@@ -1263,7 +1298,8 @@
         "MSM_08"
       ],
       "page": 1,
-      "era": "0079T2"
+      "era": "UC_0079_T2",
+      "technologyWeight": 2
     },
     {
       "id": "Tech_ZEON_0079_T2_HygoggDevelopmentPlan",
@@ -1294,7 +1330,8 @@
         "Pilot_ZEON_0079_N_ACE_HRD"
       ],
       "page": 1,
-      "era": "0079T2"
+      "era": "UC_0079_T2",
+      "technologyWeight": 2
     }
   ],
   "AEUG": [
@@ -1359,7 +1396,8 @@
         "Wall_T2_B"
       ],
       "page": 0,
-      "era": "0087T1"
+      "era": "UC_0087_T1",
+      "technologyWeight": 3
     },
     {
       "id": "Tech_AEUG_0087_RickDiasDevelopmentPlan",
@@ -1387,7 +1425,8 @@
         "RGM_79N_FB_AEUG"
       ],
       "page": 0,
-      "era": "0087T1"
+      "era": "UC_0087_T1",
+      "technologyWeight": 3
     },
     {
       "id": "Tech_AEUG_0087_GundamSeizurePlan",
@@ -1417,7 +1456,8 @@
         "Ballute"
       ],
       "page": 0,
-      "era": "0087T1"
+      "era": "UC_0087_T1",
+      "technologyWeight": 3
     },
     {
       "id": "Tech_AEUG_0087_HyakuShikiDevelopmentPlan",
@@ -1446,7 +1486,8 @@
         "GarudaClass_AEUG"
       ],
       "page": 0,
-      "era": "0087T1"
+      "era": "UC_0087_T1",
+      "technologyWeight": 3
     },
     {
       "id": "Tech_AEUG_0087_MethussDevelopmentPlan",
@@ -1473,7 +1514,8 @@
         "ArgamaClass"
       ],
       "page": 0,
-      "era": "0087T1"
+      "era": "UC_0087_T1",
+      "technologyWeight": 3
     },
     {
       "id": "Tech_AEUG_0087_ZeroShikiDevelopmentPlan",
@@ -1501,7 +1543,8 @@
         "MSA_003_Cannon"
       ],
       "page": 0,
-      "era": "0087T1"
+      "era": "UC_0087_T1",
+      "technologyWeight": 3
     },
     {
       "id": "Tech_AEUG_0087_HyakuShikiKaiDevelopmentPlan",
@@ -1527,7 +1570,8 @@
         "MSA_003_HM"
       ],
       "page": 0,
-      "era": "0087T1"
+      "era": "UC_0087_T1",
+      "technologyWeight": 3
     },
     {
       "id": "Tech_AEUG_0087_T2_ZetaGundamDevelopmentPlan",
@@ -1556,7 +1600,8 @@
         "Refinery_Common_T4"
       ],
       "page": 1,
-      "era": "0087T2"
+      "era": "UC_0087_T2",
+      "technologyWeight": 4
     },
     {
       "id": "Tech_AEUG_0087_T2_ZPlusDevelopmentPlan",
@@ -1582,7 +1627,8 @@
         "MSZ_006C1"
       ],
       "page": 1,
-      "era": "0087T2"
+      "era": "UC_0087_T2",
+      "technologyWeight": 4
     },
     {
       "id": "Tech_AEUG_0087_T2_ZZGundamDevelopmentPlan",
@@ -1609,7 +1655,8 @@
         "MSA_099_2"
       ],
       "page": 1,
-      "era": "0087T2"
+      "era": "UC_0087_T2",
+      "technologyWeight": 4
     },
     {
       "id": "Tech_AEUG_0087_T2_GMIIIDevelopmentPlan",
@@ -1635,7 +1682,8 @@
         "RGM_86R_FXA_05D"
       ],
       "page": 1,
-      "era": "0087T2"
+      "era": "UC_0087_T2",
+      "technologyWeight": 4
     },
     {
       "id": "Tech_AEUG_0087_T2_NouvelGMIIIDevelopmentPlan",
@@ -1661,7 +1709,8 @@
         "MSZ_010S"
       ],
       "page": 1,
-      "era": "0087T2"
+      "era": "UC_0087_T2",
+      "technologyWeight": 4
     },
     {
       "id": "Tech_AEUG_0087_T2_ZZFADevelopmentPlan",
@@ -1687,7 +1736,8 @@
         "FA_010A"
       ],
       "page": 1,
-      "era": "0087T2"
+      "era": "UC_0087_T2",
+      "technologyWeight": 4
     },
     {
       "id": "Tech_AEUG_0087_T2_FullArmorHyakuShikiKaiDevelopmentPlan",
@@ -1713,7 +1763,8 @@
         "MSR_00100S_M"
       ],
       "page": 1,
-      "era": "0087T2"
+      "era": "UC_0087_T2",
+      "technologyWeight": 4
     },
     {
       "id": "Tech_AEUG_0087_T2_MethussKaiDevelopmentPlan",
@@ -1740,7 +1791,8 @@
         "MSN_001"
       ],
       "page": 1,
-      "era": "0087T2"
+      "era": "UC_0087_T2",
+      "technologyWeight": 4
     },
     {
       "id": "Tech_AEUG_0087_T2_SGundamDevelopmentPlan",
@@ -1767,7 +1819,8 @@
         "MSA_007T"
       ],
       "page": 1,
-      "era": "0087T2"
+      "era": "UC_0087_T2",
+      "technologyWeight": 4
     },
     {
       "id": "Tech_AEUG_0087_T2_EXSGundamDevelopmentPlan",
@@ -1793,7 +1846,8 @@
         "MSA_007E"
       ],
       "page": 1,
-      "era": "0087T2"
+      "era": "UC_0087_T2",
+      "technologyWeight": 4
     }
   ],
   "TITANS": [
@@ -1858,7 +1912,8 @@
         "Wall_T2_B"
       ],
       "page": 0,
-      "era": "0087T1"
+      "era": "UC_0087_T1",
+      "technologyWeight": 3
     },
     {
       "id": "Tech_TITANS_0087_MovableFrameDevelopmentPlan",
@@ -1887,7 +1942,8 @@
         "Gator"
       ],
       "page": 0,
-      "era": "0087T1"
+      "era": "UC_0087_T1",
+      "technologyWeight": 3
     },
     {
       "id": "Tech_TITANS_0087_MarasaiDevelopmentPlan",
@@ -1915,7 +1971,8 @@
         "Ballute"
       ],
       "page": 0,
-      "era": "0087T1"
+      "era": "UC_0087_T1",
+      "technologyWeight": 3
     },
     {
       "id": "Tech_TITANS_0087_ByarlantDevelopmentPlan",
@@ -1943,7 +2000,8 @@
         "GarudaClass_TITANS"
       ],
       "page": 0,
-      "era": "0087T1"
+      "era": "UC_0087_T1",
+      "technologyWeight": 3
     },
     {
       "id": "Tech_TITANS_0087_AsshimarDevelopmentPlan",
@@ -1971,7 +2029,8 @@
         "DogosseGiarClass"
       ],
       "page": 0,
-      "era": "0087T1"
+      "era": "UC_0087_T1",
+      "technologyWeight": 3
     },
     {
       "id": "Tech_TITANS_0087_HazelDevelopmentPlan",
@@ -1999,7 +2058,8 @@
         "RX_121_TripleBooster"
       ],
       "page": 0,
-      "era": "0087T1"
+      "era": "UC_0087_T1",
+      "technologyWeight": 3
     },
     {
       "id": "Tech_TITANS_0087_HIZakuCustomDevelopmentPlan",
@@ -2026,7 +2086,8 @@
         "RX_121_1_FF_X29A"
       ],
       "page": 0,
-      "era": "0087T1"
+      "era": "UC_0087_T1",
+      "technologyWeight": 3
     },
     {
       "id": "Tech_TITANS_0087_PsycoGundamDevelopmentPlan",
@@ -2053,7 +2114,8 @@
         "RX_121_2A_M"
       ],
       "page": 0,
-      "era": "0087T1"
+      "era": "UC_0087_T1",
+      "technologyWeight": 3
     },
     {
       "id": "Tech_TITANS_0087_T2_SpaceTypeTMSDevelopmentPlan",
@@ -2081,7 +2143,8 @@
         "Refinery_Common_T4"
       ],
       "page": 1,
-      "era": "0087T2"
+      "era": "UC_0087_T2",
+      "technologyWeight": 4
     },
     {
       "id": "Tech_TITANS_0087_T2_TheODevelopmentPlan",
@@ -2109,7 +2172,8 @@
         "RMS_154_Kai"
       ],
       "page": 1,
-      "era": "0087T2"
+      "era": "UC_0087_T2",
+      "technologyWeight": 4
     },
     {
       "id": "Tech_TITANS_0087_T2_WoundwortDevelopmentPlan",
@@ -2136,7 +2200,8 @@
         "ORX_005_TR_5"
       ],
       "page": 1,
-      "era": "0087T2"
+      "era": "UC_0087_T2",
+      "technologyWeight": 4
     },
     {
       "id": "Tech_TITANS_0087_T2_GMIIIDevelopmentPlan",
@@ -2163,7 +2228,8 @@
         "ORX_005_TR_5_FF_X39A"
       ],
       "page": 1,
-      "era": "0087T2"
+      "era": "UC_0087_T2",
+      "technologyWeight": 4
     },
     {
       "id": "Tech_TITANS_0087_T2_Kehaar2DevelopmentPlan",
@@ -2189,7 +2255,8 @@
         "RX_124_Kehaar2_M"
       ],
       "page": 1,
-      "era": "0087T2"
+      "era": "UC_0087_T2",
+      "technologyWeight": 4
     },
     {
       "id": "Tech_TITANS_0087_T2_PsycoGundamMK2DevelopmentPlan",
@@ -2215,7 +2282,8 @@
         "NRX_055"
       ],
       "page": 1,
-      "era": "0087T2"
+      "era": "UC_0087_T2",
+      "technologyWeight": 4
     }
   ],
   "NEO_ZEON": [
@@ -2279,7 +2347,8 @@
         "Wall_T2_B"
       ],
       "page": 0,
-      "era": "0087T1"
+      "era": "UC_0087_T1",
+      "technologyWeight": 3
     },
     {
       "id": "Tech_NEO_ZEON_0087_GelgoogStutzerDevelopmentPlan",
@@ -2306,7 +2375,8 @@
         "Gator"
       ],
       "page": 0,
-      "era": "0087T1"
+      "era": "UC_0087_T1",
+      "technologyWeight": 3
     },
     {
       "id": "Tech_NEO_ZEON_0087_GyanKaiDevelopmentPlan",
@@ -2334,7 +2404,8 @@
         "Ballute"
       ],
       "page": 0,
-      "era": "0087T1"
+      "era": "UC_0087_T1",
+      "technologyWeight": 3
     },
     {
       "id": "Tech_NEO_ZEON_0087_EnemyMSBlueprintAcquisitionPlan",
@@ -2361,7 +2432,8 @@
         "GarudaClass_NEO_ZEON"
       ],
       "page": 0,
-      "era": "0087T1"
+      "era": "UC_0087_T1",
+      "technologyWeight": 3
     },
     {
       "id": "Tech_NEO_ZEON_0087_GazaCDevelopmentPlan",
@@ -2388,7 +2460,8 @@
         "GwadanClass"
       ],
       "page": 0,
-      "era": "0087T1"
+      "era": "UC_0087_T1",
+      "technologyWeight": 3
     },
     {
       "id": "Tech_NEO_ZEON_0087_ReGelgDevelopmentPlan",
@@ -2414,7 +2487,8 @@
         "AMX_002"
       ],
       "page": 0,
-      "era": "0087T1"
+      "era": "UC_0087_T1",
+      "technologyWeight": 3
     },
     {
       "id": "Tech_NEO_ZEON_0087_T2_QubeleyDevelopmentPlan",
@@ -2443,7 +2517,8 @@
         "Refinery_Common_T4"
       ],
       "page": 1,
-      "era": "0087T2"
+      "era": "UC_0087_T2",
+      "technologyWeight": 4
     },
     {
       "id": "Tech_NEO_ZEON_0087_T2_GallussJDevelopmentPlan",
@@ -2471,7 +2546,8 @@
         "MRX_010"
       ],
       "page": 1,
-      "era": "0087T2"
+      "era": "UC_0087_T2",
+      "technologyWeight": 4
     },
     {
       "id": "Tech_NEO_ZEON_0087_T2_HammaHammaDevelopmentPlan",
@@ -2499,7 +2575,8 @@
         "AMX_004G"
       ],
       "page": 1,
-      "era": "0087T2"
+      "era": "UC_0087_T2",
+      "technologyWeight": 4
     },
     {
       "id": "Tech_NEO_ZEON_0087_T2_JamruFinDevelopmentPlan",
@@ -2526,7 +2603,8 @@
         "AMX_014"
       ],
       "page": 1,
-      "era": "0087T2"
+      "era": "UC_0087_T2",
+      "technologyWeight": 4
     },
     {
       "id": "Tech_NEO_ZEON_0087_T2_BawooDevelopmentPlan",
@@ -2552,7 +2630,772 @@
         "AMX_107M"
       ],
       "page": 1,
-      "era": "0087T2"
+      "era": "UC_0087_T2",
+      "technologyWeight": 4
+    }
+  ],
+  "OMNI": [
+    {
+      "id": "Tech_OMNI_CE71_BaseTech",
+      "name": "基础科技",
+      "description": "解锁联合基础单位",
+      "icon": "assets/tech-icons/Tech_OMNI_CE71_BaseTech.png",
+      "row": "mid",
+      "column": 1,
+      "money": 0,
+      "supplies": 0,
+      "sourceCosts": {
+        "money": 0,
+        "supplies": 0,
+        "points": 0,
+        "researchSeconds": 0
+      },
+      "points": 0,
+      "requires": [],
+      "unlocks": [
+        "Army_Squad_OMNI_CE71_N_G_A",
+        "LinearGunTank",
+        "PowerCar",
+        "ACV",
+        "VTOLFighter",
+        "F_7D",
+        "TS_MA2",
+        "VTOLTransport",
+        "DrakeClass",
+        "NelsonClass",
+        "MarseilleIIIClass",
+        "Factory_OMNI_CE71_Land",
+        "Factory_OMNI_CE71_Air",
+        "Factory_OMNI_CE71_Aqua",
+        "Factory_OMNI_CE71_Mega",
+        "Factory_OMNI_CE71_Space",
+        "Factory_OMNI_CE71_Space_Mega",
+        "Refinery_Common_T1",
+        "Institute_Common_T1",
+        "SupplyDepot_Common_T1",
+        "Academy_Common_T1",
+        "Beacon_ACE_CE71",
+        "HLV_CE71_Build",
+        "Turret_AA_A",
+        "Turret_MG_A",
+        "Turret_CN_A",
+        "Turret_Radar_A",
+        "Turret_Space_MS_A",
+        "Turret_Space_MG_A",
+        "Turret_Space_CN_A",
+        "Wall_T1_A",
+        "Wall_T1_B"
+      ],
+      "page": 0,
+      "era": "CE_0071_T1",
+      "technologyWeight": 1
+    },
+    {
+      "id": "Tech_OMNI_CE71_MilitaryReconstructionPlan",
+      "name": "军队重建计划",
+      "description": "解锁对MS单位",
+      "icon": "assets/tech-icons/Tech_OMNI_CE71_MilitaryReconstructionPlan.png",
+      "row": "mid",
+      "column": 2,
+      "money": 6000,
+      "supplies": 2000,
+      "sourceCosts": {
+        "money": 3000,
+        "supplies": 1000,
+        "points": 1200,
+        "researchSeconds": 30
+      },
+      "points": 1200,
+      "requires": [
+        "Tech_OMNI_CE71_BaseTech"
+      ],
+      "unlocks": [
+        "OMNI_MinigunAPC",
+        "MissileCar_CE",
+        "LinearArtillery",
+        "GAT_01D",
+        "PatrolAircraft",
+        "TS_MA2_H",
+        "AgamemnonClass"
+      ],
+      "page": 0,
+      "era": "CE_0071_T1",
+      "technologyWeight": 1
+    },
+    {
+      "id": "Tech_OMNI_CE71_MSDevelopmentPlan",
+      "name": "MS开发计划",
+      "description": "解锁MS",
+      "icon": "assets/tech-icons/Tech_OMNI_CE71_MSDevelopmentPlan.png",
+      "row": "mid",
+      "column": 3,
+      "money": 12000,
+      "supplies": 4000,
+      "sourceCosts": {
+        "money": 6000,
+        "supplies": 2000,
+        "points": 3600,
+        "researchSeconds": 30
+      },
+      "points": 3600,
+      "requires": [
+        "Tech_OMNI_CE71_MilitaryReconstructionPlan"
+      ],
+      "unlocks": [
+        "GAT_X102",
+        "GAT_X103",
+        "GAT_X207",
+        "GAT_01D_AS"
+      ],
+      "page": 0,
+      "era": "CE_0071_T1",
+      "technologyWeight": 1
+    },
+    {
+      "id": "Tech_OMNI_CE71_MassProductionMSDevelopmentPlan",
+      "name": "量产型MS开发计划",
+      "description": "解锁量产型MS",
+      "icon": "assets/tech-icons/Tech_OMNI_CE71_MassProductionMSDevelopmentPlan.png",
+      "row": "mid",
+      "column": 4,
+      "money": 18000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 9000,
+        "supplies": 3000,
+        "points": 6000,
+        "researchSeconds": 30
+      },
+      "points": 6000,
+      "requires": [
+        "Tech_OMNI_CE71_MSDevelopmentPlan"
+      ],
+      "unlocks": [
+        "GAT_01",
+        "GAT_X303",
+        "GAT_X105",
+        "GAT_X105_A",
+        "GAT_X105_L",
+        "GAT_X105_S",
+        "ArchangelClass",
+        "Turret_BM_A_Green"
+      ],
+      "page": 0,
+      "era": "CE_0071_T1",
+      "technologyWeight": 1
+    },
+    {
+      "id": "Tech_OMNI_CE71_DuelDaggerDevelopmentPlan",
+      "name": "决斗短剑开发计划",
+      "description": "解锁决斗短剑",
+      "icon": "assets/tech-icons/Tech_OMNI_CE71_DuelDaggerDevelopmentPlan.png",
+      "row": "mid",
+      "column": 5,
+      "money": 18000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 9000,
+        "supplies": 3000,
+        "points": 8400,
+        "researchSeconds": 30
+      },
+      "points": 8400,
+      "requires": [
+        "Tech_OMNI_CE71_MassProductionMSDevelopmentPlan"
+      ],
+      "unlocks": [
+        "GAT_01D1_AS",
+        "GAT_01D1"
+      ],
+      "page": 0,
+      "era": "CE_0071_T1",
+      "technologyWeight": 1
+    },
+    {
+      "id": "Tech_OMNI_CE71_SkyGrasperDevelopmentPlan",
+      "name": "空中霸王开发计划",
+      "description": "解锁空中霸王",
+      "icon": "assets/tech-icons/Tech_OMNI_CE71_SkyGrasperDevelopmentPlan.png",
+      "row": "top",
+      "column": 4,
+      "money": 12000,
+      "supplies": 4000,
+      "sourceCosts": {
+        "money": 6000,
+        "supplies": 2000,
+        "points": 7000,
+        "researchSeconds": 30
+      },
+      "points": 7000,
+      "requires": [
+        "Tech_OMNI_CE71_MassProductionMSDevelopmentPlan"
+      ],
+      "unlocks": [
+        "FX_550"
+      ],
+      "page": 0,
+      "era": "CE_0071_T1",
+      "technologyWeight": 1
+    }
+  ],
+  "ZAFT": [
+    {
+      "id": "Tech_ZAFT_CE71_BaseTech",
+      "name": "基础科技",
+      "description": "解锁扎夫特基础单位",
+      "icon": "assets/tech-icons/Tech_ZAFT_CE71_BaseTech.png",
+      "row": "mid",
+      "column": 1,
+      "money": 0,
+      "supplies": 0,
+      "sourceCosts": {
+        "money": 0,
+        "supplies": 0,
+        "points": 0,
+        "researchSeconds": 0
+      },
+      "points": 0,
+      "requires": [],
+      "unlocks": [
+        "Army_Squad_ZAFT_CE71_N_G_A",
+        "ConnectedArmoredVehicle",
+        "SupplyTruck",
+        "Agile",
+        "Infestus",
+        "VoLPHAU",
+        "ZGMT_01",
+        "ZGMF_1017",
+        "NazcaClass",
+        "MarseilleIIIClass",
+        "Factory_ZAFT_CE71_Land",
+        "Factory_ZAFT_CE71_Air",
+        "Factory_ZAFT_CE71_Aqua",
+        "Factory_ZAFT_CE71_Mega",
+        "Factory_ZAFT_CE71_Space",
+        "Factory_ZAFT_CE71_Space_Mega",
+        "Refinery_Common_T1",
+        "Institute_Common_T1",
+        "SupplyDepot_Common_T1",
+        "Academy_Common_T1",
+        "Beacon_ACE_CE71",
+        "HLV_CE71_Build",
+        "Turret_AA_A",
+        "Turret_MG_A",
+        "Turret_CN_A",
+        "Turret_Radar_A",
+        "Turret_Space_MS_A",
+        "Turret_Space_MG_A",
+        "Turret_Space_CN_A",
+        "Wall_T1_A",
+        "Wall_T1_B"
+      ],
+      "page": 0,
+      "era": "CE_0071_T1",
+      "technologyWeight": 1
+    },
+    {
+      "id": "Tech_ZAFT_CE71_HeavyarmsGINNDevelopmentPlan",
+      "name": "重装规格金恩开发计划",
+      "description": "解锁对重装规格金恩",
+      "icon": "assets/tech-icons/Tech_ZAFT_CE71_HeavyarmsGINNDevelopmentPlan.png",
+      "row": "mid",
+      "column": 2,
+      "money": 6000,
+      "supplies": 2000,
+      "sourceCosts": {
+        "money": 3000,
+        "supplies": 1000,
+        "points": 1200,
+        "researchSeconds": 30
+      },
+      "points": 1200,
+      "requires": [
+        "Tech_ZAFT_CE71_BaseTech"
+      ],
+      "unlocks": [
+        "ZGMF_1017_H",
+        "ZGMF_1017_D",
+        "ZGMF_515",
+        "LaurasiaClass"
+      ],
+      "page": 0,
+      "era": "CE_0071_T1",
+      "technologyWeight": 1
+    },
+    {
+      "id": "Tech_ZAFT_CE71_GroundTypeMSDevelopmentPlan",
+      "name": "地面战用MS开发计划",
+      "description": "解锁地面战用MS",
+      "icon": "assets/tech-icons/Tech_ZAFT_CE71_GroundTypeMSDevelopmentPlan.png",
+      "row": "mid",
+      "column": 3,
+      "money": 12000,
+      "supplies": 4000,
+      "sourceCosts": {
+        "money": 6000,
+        "supplies": 2000,
+        "points": 3600,
+        "researchSeconds": 30
+      },
+      "points": 3600,
+      "requires": [
+        "Tech_ZAFT_CE71_HeavyarmsGINNDevelopmentPlan"
+      ],
+      "unlocks": [
+        "ZGMF_1017M",
+        "ZGMF_LRR704B",
+        "TFA_2",
+        "TMF_A_802",
+        "UWMF_S_1"
+      ],
+      "page": 0,
+      "era": "CE_0071_T1",
+      "technologyWeight": 1
+    },
+    {
+      "id": "Tech_ZAFT_CE71_GundamSeizurePlan",
+      "name": "高达夺取计划",
+      "description": "解锁高达",
+      "icon": "assets/tech-icons/Tech_ZAFT_CE71_GundamSeizurePlan.png",
+      "row": "mid",
+      "column": 4,
+      "money": 18000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 9000,
+        "supplies": 3000,
+        "points": 6000,
+        "researchSeconds": 30
+      },
+      "points": 6000,
+      "requires": [
+        "Tech_ZAFT_CE71_GroundTypeMSDevelopmentPlan"
+      ],
+      "unlocks": [
+        "GAT_X102",
+        "GAT_X103",
+        "GAT_X207",
+        "GAT_X303",
+        "Turret_BM_A_Green"
+      ],
+      "page": 0,
+      "era": "CE_0071_T1",
+      "technologyWeight": 1
+    },
+    {
+      "id": "Tech_ZAFT_CE71_DuelGundamEnhancementPlan",
+      "name": "决斗高达强化计划",
+      "description": "解锁决斗高达[AS]",
+      "icon": "assets/tech-icons/Tech_ZAFT_CE71_DuelGundamEnhancementPlan.png",
+      "row": "mid",
+      "column": 5,
+      "money": 18000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 9000,
+        "supplies": 3000,
+        "points": 8400,
+        "researchSeconds": 30
+      },
+      "points": 8400,
+      "requires": [
+        "Tech_ZAFT_CE71_GundamSeizurePlan"
+      ],
+      "unlocks": [
+        "GAT_X102_AS",
+        "ZGMF_600"
+      ],
+      "page": 0,
+      "era": "CE_0071_T1",
+      "technologyWeight": 1
+    },
+    {
+      "id": "Tech_ZAFT_CE71_DINNDevelopmentPlan",
+      "name": "迪恩开发计划",
+      "description": "解锁迪恩",
+      "icon": "assets/tech-icons/Tech_ZAFT_CE71_DINNDevelopmentPlan.png",
+      "row": "top",
+      "column": 2,
+      "money": 12000,
+      "supplies": 4000,
+      "sourceCosts": {
+        "money": 6000,
+        "supplies": 2000,
+        "points": 2400,
+        "researchSeconds": 30
+      },
+      "points": 2400,
+      "requires": [
+        "Tech_ZAFT_CE71_HeavyarmsGINNDevelopmentPlan"
+      ],
+      "unlocks": [
+        "AMF_101",
+        "AMF_101C",
+        "Guul"
+      ],
+      "page": 0,
+      "era": "CE_0071_T1",
+      "technologyWeight": 1
+    },
+    {
+      "id": "Tech_ZAFT_CE71_AquaMSDevelopmentPlan",
+      "name": "水中MS开发计划",
+      "description": "解锁水中MS",
+      "icon": "assets/tech-icons/Tech_ZAFT_CE71_AquaMSDevelopmentPlan.png",
+      "row": "bot",
+      "column": 3,
+      "money": 12000,
+      "supplies": 4000,
+      "sourceCosts": {
+        "money": 6000,
+        "supplies": 2000,
+        "points": 4800,
+        "researchSeconds": 30
+      },
+      "points": 4800,
+      "requires": [
+        "Tech_ZAFT_CE71_GroundTypeMSDevelopmentPlan"
+      ],
+      "unlocks": [
+        "UMF_4A",
+        "UMF_5"
+      ],
+      "page": 0,
+      "era": "CE_0071_T1",
+      "technologyWeight": 1
+    }
+  ],
+  "EFSF_0093": [
+    {
+      "id": "Tech_0093_EFSF_BaseTech",
+      "name": "基础科技[地球联邦][0093]",
+      "description": "解锁地球联邦基础建筑、工厂与两种基础单位。",
+      "icon": "assets/tech-icons/Tech_0093_EFSF_BaseTech.png",
+      "row": "mid",
+      "column": 1,
+      "money": 0,
+      "supplies": 0,
+      "sourceCosts": {
+        "money": 0,
+        "supplies": 0,
+        "points": 0,
+        "researchSeconds": 0
+      },
+      "points": 0,
+      "requires": [],
+      "unlocks": [
+        "RGM_86R_0093_EFSF",
+        "SalamisClassKai_0093_EFSF"
+      ],
+      "page": 0,
+      "era": "UC_0093_T1",
+      "technologyWeight": 5,
+      "sourceUnlocks": [
+        "RGM_86R_0093_EFSF",
+        "SalamisClassKai_0093_EFSF",
+        "Factory_0093_EFSF_Land",
+        "Factory_0093_EFSF_Mega",
+        "Factory_0093_EFSF_Space",
+        "Factory_0093_EFSF_Space_Mega",
+        "Refinery_Common_T3",
+        "Institute_Common_T2",
+        "SupplyDepot_Common_T2",
+        "Academy_Common_T2",
+        "Turret_MG_B",
+        "Turret_AA_B",
+        "Turret_CN_B",
+        "Turret_BM_B_Yellow",
+        "Turret_Radar_B",
+        "Turret_Space_MG_B",
+        "Turret_Space_MS_B",
+        "Turret_Space_CN_B",
+        "Wall_T2_A",
+        "Wall_T2_B",
+        "HLV_0093_Build"
+      ],
+      "source": {
+        "root": "GW_BattleUniverse_DLC_0093",
+        "file": "Units/TechTree/Tech/Faction/0093_EFSF/Common/Tech_0093_EFSF_BaseTech.ini"
+      },
+      "placeholder": false,
+      "pointsMultiplier": 2
+    },
+    {
+      "id": "Tech_0093_EFSF_Mid02",
+      "name": "杰刚开发计划",
+      "description": "解锁杰刚生产，本方完成研究时赠送1台杰刚。",
+      "icon": "assets/tech-icons/Tech_0093_EFSF_Mid02.png",
+      "row": "mid",
+      "column": 2,
+      "money": 8000,
+      "supplies": 2000,
+      "sourceCosts": {
+        "money": 4000,
+        "supplies": 1000,
+        "points": 1200,
+        "researchSeconds": 30
+      },
+      "points": 2400,
+      "requires": [
+        "Tech_0093_EFSF_BaseTech"
+      ],
+      "unlocks": [
+        "RGM_89"
+      ],
+      "page": 0,
+      "era": "UC_0093_T1",
+      "technologyWeight": 5,
+      "sourceUnlocks": [
+        "RGM_89"
+      ],
+      "source": {
+        "root": "GW_BattleUniverse_DLC_0093",
+        "file": "Units/TechTree/Tech/Faction/0093_EFSF/Common/Tech_0093_EFSF_Mid02.ini"
+      },
+      "placeholder": false,
+      "pointsMultiplier": 2
+    },
+    {
+      "id": "Tech_0093_EFSF_Recovery",
+      "name": "奥古科技回收计划",
+      "description": "解锁回收技术机体生产，本方完成研究时每种赠送1台。",
+      "icon": "assets/tech-icons/Tech_0093_EFSF_Recovery.png",
+      "row": "mid",
+      "column": 3,
+      "money": 16000,
+      "supplies": 4000,
+      "sourceCosts": {
+        "money": 8000,
+        "supplies": 2000,
+        "points": 3600,
+        "researchSeconds": 30
+      },
+      "points": 7200,
+      "requires": [
+        "Tech_0093_EFSF_Mid02"
+      ],
+      "unlocks": [
+        "RGZ_91",
+        "MSZ_006A1_0093_EFSF",
+        "MSZ_006C1_0093_EFSF",
+        "RGZ_91_MA"
+      ],
+      "page": 0,
+      "era": "UC_0093_T1",
+      "technologyWeight": 5,
+      "sourceUnlocks": [
+        "RGZ_91",
+        "MSZ_006A1_0093_EFSF",
+        "MSZ_006C1_0093_EFSF"
+      ],
+      "source": {
+        "root": "GW_BattleUniverse_DLC_0093",
+        "file": "Units/TechTree/Tech/Faction/0093_EFSF/Common/Tech_0093_EFSF_Recovery.ini"
+      },
+      "placeholder": false,
+      "pointsMultiplier": 2
+    },
+    {
+      "id": "Tech_0093_EFSF_Mid03",
+      "name": "新高达开发计划",
+      "description": "解锁牛高达测试型与牛高达生产，本方完成研究时赠送1台牛高达；TEST不赠送。",
+      "icon": "assets/tech-icons/Tech_0093_EFSF_Mid03.png",
+      "row": "mid",
+      "column": 4,
+      "money": 20000,
+      "supplies": 5000,
+      "sourceCosts": {
+        "money": 10000,
+        "supplies": 2500,
+        "points": 6000,
+        "researchSeconds": 30
+      },
+      "points": 12000,
+      "requires": [
+        "Tech_0093_EFSF_Recovery"
+      ],
+      "unlocks": [
+        "RX_93",
+        "RX_93_Test"
+      ],
+      "page": 0,
+      "era": "UC_0093_T1",
+      "technologyWeight": 5,
+      "sourceUnlocks": [
+        "RX_93",
+        "RX_93_Test"
+      ],
+      "source": {
+        "root": "GW_BattleUniverse_DLC_0093",
+        "file": "Units/TechTree/Tech/Faction/0093_EFSF/Common/Tech_0093_EFSF_Mid03.ini"
+      },
+      "placeholder": false,
+      "pointsMultiplier": 2
+    }
+  ],
+  "NEO_ZEON_0093": [
+    {
+      "id": "Tech_0093_NZN_BaseTech",
+      "name": "基础科技[新吉翁][0093]",
+      "description": "解锁新吉翁基础建筑、工厂与两种基础单位。",
+      "icon": "assets/tech-icons/Tech_0093_NZN_BaseTech.png",
+      "row": "mid",
+      "column": 1,
+      "money": 0,
+      "supplies": 0,
+      "sourceCosts": {
+        "money": 0,
+        "supplies": 0,
+        "points": 0,
+        "researchSeconds": 0
+      },
+      "points": 0,
+      "requires": [],
+      "unlocks": [
+        "AMX_101_0093_NZN",
+        "MusaiClassFinalType_0093_NZN"
+      ],
+      "page": 0,
+      "era": "UC_0093_T1",
+      "technologyWeight": 5,
+      "sourceUnlocks": [
+        "AMX_101_0093_NZN",
+        "MusaiClassFinalType_0093_NZN",
+        "Factory_0093_NZN_Land",
+        "Factory_0093_NZN_Mega",
+        "Factory_0093_NZN_Space",
+        "Factory_0093_NZN_Space_Mega",
+        "Refinery_Common_T3",
+        "Institute_Common_T2",
+        "SupplyDepot_Common_T2",
+        "Academy_Common_T2",
+        "Turret_MG_B",
+        "Turret_AA_B",
+        "Turret_CN_B",
+        "Turret_BM_B_Yellow",
+        "Turret_Radar_B",
+        "Turret_Space_MG_B",
+        "Turret_Space_MS_B",
+        "Turret_Space_CN_B",
+        "Wall_T2_A",
+        "Wall_T2_B",
+        "HLV_0093_Build"
+      ],
+      "source": {
+        "root": "GW_BattleUniverse_DLC_0093",
+        "file": "Units/TechTree/Tech/Faction/0093_NZN/Common/Tech_0093_NZN_BaseTech.ini"
+      },
+      "placeholder": false,
+      "pointsMultiplier": 2
+    },
+    {
+      "id": "Tech_0093_NZN_Mid02",
+      "name": "基拉德卡开发计划",
+      "description": "解锁基拉德卡生产，本方完成研究时赠送1台基拉德卡。",
+      "icon": "assets/tech-icons/Tech_0093_NZN_Mid02.png",
+      "row": "mid",
+      "column": 2,
+      "money": 8000,
+      "supplies": 2000,
+      "sourceCosts": {
+        "money": 4000,
+        "supplies": 1000,
+        "points": 1200,
+        "researchSeconds": 30
+      },
+      "points": 2400,
+      "requires": [
+        "Tech_0093_NZN_BaseTech"
+      ],
+      "unlocks": [
+        "AMS_119"
+      ],
+      "page": 0,
+      "era": "UC_0093_T1",
+      "technologyWeight": 5,
+      "sourceUnlocks": [
+        "AMS_119"
+      ],
+      "source": {
+        "root": "GW_BattleUniverse_DLC_0093",
+        "file": "Units/TechTree/Tech/Faction/0093_NZN/Common/Tech_0093_NZN_Mid02.ini"
+      },
+      "placeholder": false,
+      "pointsMultiplier": 2
+    },
+    {
+      "id": "Tech_0093_NZN_Recovery",
+      "name": "阿克西斯科技回收计划",
+      "description": "解锁回收技术机体生产，本方完成研究时每种赠送1台。",
+      "icon": "assets/tech-icons/Tech_0093_NZN_Recovery.png",
+      "row": "mid",
+      "column": 3,
+      "money": 16000,
+      "supplies": 4000,
+      "sourceCosts": {
+        "money": 8000,
+        "supplies": 2000,
+        "points": 3600,
+        "researchSeconds": 30
+      },
+      "points": 7200,
+      "requires": [
+        "Tech_0093_NZN_Mid02"
+      ],
+      "unlocks": [
+        "MSN_03",
+        "AMX_107_0093_NZN",
+        "AMX_006_0093_NZN"
+      ],
+      "page": 0,
+      "era": "UC_0093_T1",
+      "technologyWeight": 5,
+      "sourceUnlocks": [
+        "MSN_03",
+        "AMX_107_0093_NZN",
+        "AMX_006_0093_NZN"
+      ],
+      "source": {
+        "root": "GW_BattleUniverse_DLC_0093",
+        "file": "Units/TechTree/Tech/Faction/0093_NZN/Common/Tech_0093_NZN_Recovery.ini"
+      },
+      "placeholder": false,
+      "pointsMultiplier": 2
+    },
+    {
+      "id": "Tech_0093_NZN_Mid03",
+      "name": "沙扎比开发计划",
+      "description": "解锁沙扎比生产，本方完成研究时赠送1台沙扎比。",
+      "icon": "assets/tech-icons/Tech_0093_NZN_Mid03.png",
+      "row": "mid",
+      "column": 4,
+      "money": 20000,
+      "supplies": 5000,
+      "sourceCosts": {
+        "money": 10000,
+        "supplies": 2500,
+        "points": 6000,
+        "researchSeconds": 30
+      },
+      "points": 12000,
+      "requires": [
+        "Tech_0093_NZN_Recovery"
+      ],
+      "unlocks": [
+        "MSN_04"
+      ],
+      "page": 0,
+      "era": "UC_0093_T1",
+      "technologyWeight": 5,
+      "sourceUnlocks": [
+        "MSN_04"
+      ],
+      "source": {
+        "root": "GW_BattleUniverse_DLC_0093",
+        "file": "Units/TechTree/Tech/Faction/0093_NZN/Common/Tech_0093_NZN_Mid03.ini"
+      },
+      "placeholder": false,
+      "pointsMultiplier": 2
     }
   ]
 }

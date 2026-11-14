@@ -2,10 +2,12 @@
 const MissionMode = (() => {
   "use strict";
   const defaultMapId = "mission_white_base";
-  const eras = ["0079T1", "0079T2", "0083", "0087T1", "0087T2", "0093T1"];
+  const eraData = typeof TechnologyEras !== "undefined" ? TechnologyEras : require("./technology-eras.js");
+  const eras = eraData.eras;
   const text = (v, max = 2000) => typeof v === "string" && v.length > 0 && v.length <= max;
   const id = (v) => typeof v === "string" && /^[a-z][a-z0-9_-]{0,63}$/.test(v);
   function validate(m, map, G = null) {
+    if (m && typeof m === "object") m.era = eraData.normalize(m.era);
     let location = "关卡设置";
     const fail = () => {
       throw Error("任务脚本配置无效：" + location + "，请检查必填对象、数值和引用");

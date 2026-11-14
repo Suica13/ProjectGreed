@@ -1763,45 +1763,6 @@ body[data-page="campaign"] #openClientSettings {
 .campaign-log-line + .campaign-log-line {
   margin-top: 3px;
 }
-.campaign-music-slot {
-  display: flex;
-  flex: 0 1 auto;
-  max-width: 300px;
-  justify-content: flex-end;
-  min-width: 0;
-}
-#campaignMusicSlot #musicPlayer {
-  position: static;
-  display: flex;
-  flex-wrap: nowrap;
-  gap: 4px;
-  min-width: 0;
-  max-width: 100%;
-  padding: 0;
-  margin: 0;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-  z-index: auto;
-}
-#campaignMusicSlot #musicTitle {
-  min-width: 0;
-  max-width: 150px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 10px;
-  color: #a7bdcf;
-}
-#campaignMusicSlot #musicPlayer button {
-  padding: 3px 6px;
-  min-height: 24px;
-  font-size: 10px;
-}
-#campaignMusicSlot #musicStatus {
-  display: none;
-}
 @media (max-width: 1100px) {
   .campaign-header-state,
   .campaign-header-actions {
@@ -1886,19 +1847,6 @@ body[data-page="campaign"] #openClientSettings {
   }
   .campaign-console-navigation {
     gap: 2px;
-  }
-  .campaign-music-slot {
-    max-width: 190px;
-  }
-  #campaignMusicSlot #musicTitle {
-    max-width: 65px;
-  }
-  #campaignMusicSlot #musicPlayer {
-    gap: 2px;
-  }
-  #campaignMusicSlot #musicPlayer button {
-    padding-inline: 3px;
-    font-size: 9px;
   }
   #campaignChatPanel {
     padding: 6px 8px;

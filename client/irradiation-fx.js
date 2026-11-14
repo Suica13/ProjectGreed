@@ -181,10 +181,10 @@ const IrradiationFX = (() => {
       ctx.restore();
     }
   }
-  function fieldImpact(id, now) {
+  function fieldImpact(id, now, kind = "iFieldDamage") {
     let age = Infinity;
     for (const beam of active.values())
-      if (beam.start !== null && beam.hitsById.get(id)?.iFieldDamage > 0) {
+      if (beam.start !== null && (beam.hitsById.get(id)?.[kind] || 0) > 0) {
         const time =
           ((now - beam.start) / 1000) * MovementTiming.presentationSpeed - beam.chargeSeconds;
         if (time >= 0) age = Math.min(age, time);
@@ -194,6 +194,7 @@ const IrradiationFX = (() => {
   return {
     start,
     fieldImpact,
+    coatingImpact: (id, now) => fieldImpact(id, now, "abcDamage"),
     reset,
     pose,
     units,

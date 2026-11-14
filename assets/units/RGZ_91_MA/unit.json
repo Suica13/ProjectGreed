@@ -322,7 +322,22 @@
     "unitLevel": 6500.0,
     "tacticalMoveBeforeBonus": 9,
     "v17BaseHp": 62500.0,
-    "technologyEra": "0093T1"
+    "technologyEra": "0093T1",
+    "nativeProductionQuantity": 1,
+    "nativeProductionSource": {
+      "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_EFSF/Units/Land/RGZ_91.gw",
+      "action": "action_Produce_RGZ_91_StandardSquad",
+      "buildSeconds": 55.0,
+      "queueSeconds": 0.0,
+      "outputs": [
+        {
+          "unitId": "RGZ_91_MA",
+          "quantity": 1,
+          "equipmentIndex": 0,
+          "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+        }
+      ]
+    }
   },
   "presentation": {
     "shield": true,
@@ -338,10 +353,10 @@
     "moveSoundKey": "moveSound"
   },
   "name": "灵格斯［BWS］",
-  "faction": "EFSF",
+  "faction": "EFSF_0093",
   "tags": [
-    "EFSF",
-    "0093T1"
+    "EFSF_0093",
+    "UC_0093_T1"
   ],
   "localization": {
     "zh": {
@@ -962,7 +977,7 @@
   ],
   "refits": [],
   "production": {
-    "enabled": false
+    "enabled": true
   },
   "formOnly": false,
   "formOf": "RGZ_91"

@@ -2157,7 +2157,7 @@ function drawMapFrame(now) {
     const environmentPose = EnvironmentVisuals.pose(u, groundCell);
     const spriteTile = (tile * 64) / Rules.mapCellPixels;
     // Animated silhouettes are rendered by SpriteRenderer when enabled.
-    ctx.globalAlpha = environmentPose.alpha;
+    ctx.globalAlpha = environmentPose.alpha * (Rules.opticalCamouflageActive(u) ? 0.5 : 1);
     if (
       !immersive &&
       (u.id === selected ||
@@ -2237,6 +2237,7 @@ function drawMapFrame(now) {
         !!(u.overBoost || u.fullBoost || u.overdrive || u.boostSkillActive),
         combatPose?.hiddenLayers || [],
         reducedUnitDetail && !combatPose && !skillPose ? 2048 : 0,
+        Rules.phaseShiftActive(u),
       );
       const fieldImpact = Math.min(
         MapCombat.fieldImpact(u.id),
@@ -2254,6 +2255,11 @@ function drawMapFrame(now) {
             formationOffset.scale,
           fieldImpact,
         );
+      if (frameModelOf(u).abc && ART.effects.ABC_1) {
+        const age = Math.min(MapCombat.coatingImpact(u.id), IrradiationFX.coatingImpact(u.id, now));
+        if (age < ART.effects.ABC_1.duration) SpriteEffects.draw(ctx, "ABC_1", pos.x, pos.y,
+          (tile / Rules.mapCellPixels) * ART.presentation.unitMapScale * frameModelOf(u).presentation.mapScale * formationOffset.scale, age);
+      }
       if (u.burning && u.hp > 0) {
         const effect = ART.effects.Burned_Hit_1;
         if (effect)

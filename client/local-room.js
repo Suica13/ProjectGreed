@@ -46,6 +46,7 @@ const LocalRoom = (() => {
     });
     Net.beginLocal(socket);
     byId("skirmishSetup").hidden = true;
+    byId("offlineModeSetup").hidden = true;
     engine.join(socket, {
       mode: "create",
       room: "OFFLINE",
@@ -72,7 +73,7 @@ const LocalRoom = (() => {
   }
   byId("openSkirmish").onclick = () => {
     byId("skirmishSetup").hidden = false;
-    byId("createOfflineRoom").focus();
+    byId("openRooms").focus();
   };
   byId("closeSkirmish").onclick = closeSetup;
   byId("skirmishSetup").addEventListener("keydown", (event) => {
@@ -81,6 +82,32 @@ const LocalRoom = (() => {
       closeSetup();
     }
   });
-  byId("createOfflineRoom").onclick = open;
+  byId("createOfflineRoom").onclick = () => {
+    byId("skirmishSetup").hidden = true;
+    byId("offlineModeSetup").hidden = false;
+    byId("offlineRoomMode").focus();
+  };
+  function cancelModeSelection() {
+    byId("offlineModeSetup").hidden = true;
+    byId("skirmishSetup").hidden = false;
+    byId("createOfflineRoom").focus();
+  }
+  byId("confirmOfflineMode").onclick = open;
+  byId("cancelOfflineMode").onclick = cancelModeSelection;
+  byId("offlineModeSetup").addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      event.stopPropagation();
+      cancelModeSelection();
+    } else if (event.key === "Tab") {
+      const controls = [...byId("offlineModeSetup").querySelectorAll("button,select")];
+      const first = controls[0], last = controls.at(-1);
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault(); last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault(); first.focus();
+      }
+    }
+  });
   return { open };
 })();

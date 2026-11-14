@@ -18,11 +18,12 @@ def apply(prefab,native=None):
     if any(m['id']=='I_Field' for m in prefab.get('mechanics',[])):
         values=globals_for(MOD/prefab['source'])
         prefab['stats']['iField']=dict(capacity=float(values['I_FieldHpMax']),reduction=float(values['I_FieldLevel']),
-            piercingReduction=.5,recoveryPercent=10,nativeRecoverySpeed=float(values['I_FieldRecoverSpeed']),
+            piercingReduction=.5,recoveryPercent=5,nativeRecoverySpeed=float(values['I_FieldRecoverSpeed']),
             minimumRatio=-.25,effect='I_Field_2')
         for mechanic in prefab['mechanics']:
-            if mechanic['id']=='I_Field':mechanic.update(status='adapted',name='I立场：独立耐久吸收远程光束，普通光束吸收95%、贯穿光束50%；耗尽失效，每个己方回合恢复10%最大立场耐久。')
-    return prefab
+            if mechanic['id']=='I_Field':mechanic.update(status='adapted',name='I立场：独立耐久吸收远程光束，普通光束吸收95%、贯穿光束50%；耗尽失效，每个己方回合恢复5%最大立场耐久。')
+    from native_armor import apply as apply_armor
+    return apply_armor(prefab,native)
 
 if __name__=='__main__':
     for name,source in [('Smoke_1.ogg','Resource/Sound/SE/Weapon/Fire/Smoke_1.ogg')]:

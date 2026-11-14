@@ -47,7 +47,7 @@ const RewardNotifications = (() => {
     if (entry.money) labels.push(I18n.text("资金") + " +" + entry.money);
     if (entry.supplies) labels.push(I18n.text("物资") + " +" + entry.supplies);
     for (const [faction, points] of Object.entries(entry.points))
-      labels.push(I18n.text(factionNames[faction] || faction) + " " + I18n.text("科技点") + " +" + points);
+      labels.push(I18n.text(Rules.factionInfo[faction]?.name || factionNames[faction] || faction) + " " + I18n.text("科技点") + " +" + points);
     entry.node.textContent = I18n.text("获得") + " " + labels.join(" · ");
     clearTimeout(entry.timer);
     entry.timer = setTimeout(() => {

@@ -102,7 +102,7 @@ const Net = (() => {
   const key = (url, room) => "slg-seat:" + url + ":" + room;
   const lastKey = () => "slg-last";
   const legacyToken = (url, room) =>
-    ["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"]
+    ["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON", "EFSF_0093", "NEO_ZEON_0093", "OMNI", "ZAFT"]
       .map((faction) => storage.get("slg-seat:" + faction + ":" + url + ":" + room))
       .find(Boolean);
   const canControl = (unit) =>

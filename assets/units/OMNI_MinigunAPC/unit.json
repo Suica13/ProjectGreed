@@ -1,0 +1,403 @@
+{
+  "schemaVersion": 2,
+  "id": "OMNI_MinigunAPC",
+  "code": "OMNI-MinigunAPC",
+  "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/OMNI_MinigunAPC/OMNI_MinigunAPC.ini",
+  "materials": {
+    "textures": {
+      "OMNI_MinigunAPC_Body_1.png": "textures/OMNI_MinigunAPC_Body_1.png",
+      "OMNI_MinigunAPC.png": "textures/OMNI_MinigunAPC.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png",
+      "OMNI_MinigunAPC_Turret_1.png": "textures/OMNI_MinigunAPC_Turret_1.png"
+    },
+    "icon": "OMNI_MinigunAPC.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "Turret_EF_MinigunAPC_MG": {
+      "x": 0.0,
+      "y": -4.0,
+      "endDirOffset": 0
+    }
+  },
+  "layers": [
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "scaleX": 1.0,
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "frames": 3,
+      "frame": 0,
+      "frameFps": 12,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Body",
+      "texture": "OMNI_MinigunAPC_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Turret",
+      "bone": "Turret_EF_MinigunAPC_MG",
+      "texture": "OMNI_MinigunAPC_Turret_1.png",
+      "order": 5.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "rotation": 0,
+      "visibleWhen": {}
+    }
+  ],
+  "animations": {
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Idle": "../../animations/Common_Idle__AntiZakuTank.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 5000,
+    "en": 350.0,
+    "move": 5,
+    "mobility": 65.0,
+    "cost": 50,
+    "counterLimit": 1,
+    "accuracy": 100.0,
+    "partStructuralStrength": 100.0,
+    "partsBreakable": false,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 100,
+      "space": 50,
+      "water": 50.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 100.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "visualTurrets": [
+      {
+        "id": "EF_MinigunAPC_MG",
+        "bone": "Turret_EF_MinigunAPC_MG",
+        "idleDir": 0,
+        "arc": 180
+      }
+    ],
+    "speed": 90,
+    "actionPoints": 10,
+    "sensors": {
+      "sight": 7,
+      "radar": 9.0,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
+  },
+  "attackBonuses": {
+    "melee": 0.0,
+    "shooting": 10.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 5.0,
+      "flat": 0.0
+    },
+    "shell": {
+      "percent": 5.0,
+      "flat": 15.0
+    },
+    "melee": {
+      "percent": 5.0,
+      "flat": 0.0
+    },
+    "dp": {
+      "percent": 5.0,
+      "flat": 0.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 4000.0,
+    "walkSpeed": 0.5,
+    "boostSpeed": 1.25,
+    "turnSpeed": 1.0,
+    "reaction": 65.0,
+    "shooting": 110.0,
+    "melee": 100.0,
+    "nativeTags": [
+      "OMNI_MinigunAPC",
+      "Unit",
+      "Tank",
+      "OMNI",
+      "CE71",
+      "SEED"
+    ],
+    "nativeSkills": [],
+    "balanceStatus": "native-level",
+    "accuracy": 100.0,
+    "unitLevel": 200.0,
+    "enBeforeReduction": 350.0,
+    "enCapacityMultiplier": 1,
+    "tacticalMoveBeforeBonus": 4,
+    "actionTurnSpeed": 1.0,
+    "mobilityMoveTarget": 5,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 10.0,
+      "water": 50.0,
+      "air": 10.0,
+      "mountain": 100.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 18.0,
+      "radar": 324.0,
+      "antiDetection": 0.0
+    },
+    "v17BaseHp": 4000.0,
+    "technologyEra": "CE_0071_T1"
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "ImportedIdle",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "walk",
+    "moveSoundKey": null
+  },
+  "name": "加特林装甲车[CE]",
+  "faction": "OMNI",
+  "tags": [
+    "OMNI",
+    "CE_0071_T1"
+  ],
+  "localization": {
+    "zh": {
+      "name": "加特林装甲车[CE]",
+      "description": "联合军改装战斗车辆,用于对付轻装甲单位"
+    },
+    "en": {
+      "name": "MinigunAPC[CE]",
+      "description": "OMNI Army's modified combat vehicle, designed to counter lightly armored units"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "EF_MinigunAPC_MG": {
+      "ref": "EF_MinigunAPC_MG__lv1",
+      "overrides": {
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Shell/EF_MinigunAPC_MG.gw",
+          "barrel": "EF_MinigunAPC_MG",
+          "entry": "automatic_turret",
+          "cooldown": 3.0,
+          "duration": 0.825,
+          "firstShot": 0.0,
+          "lastShot": 0.825,
+          "firingEvents": 12,
+          "projectiles": 12,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perShot",
+          "energyPerEmission": 0.0,
+          "energy": 0.0,
+          "actions": []
+        },
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/EF_MinigunAPC_MG.gw",
+          "barrels": [
+            {
+              "id": "EF_MinigunAPC_MG",
+              "x": 0.5,
+              "y": 8.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_EF_MinigunAPC_MG",
+              "offset": {
+                "x": 0.5,
+                "y": 12.0
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": [
+        "EF_MinigunAPC_MG"
+      ]
+    }
+  ],
+  "description": "联合军改装战斗车辆,用于对付轻装甲单位",
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 200.0,
+    "levelMultiplier": 0.25,
+    "published": 50
+  },
+  "skills": [],
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "Vehicle"
+  ],
+  "transport": {
+    "slotCost": 1,
+    "loadTags": [
+      "CanLoadInto"
+    ]
+  },
+  "hangars": [],
+  "refits": []
+}

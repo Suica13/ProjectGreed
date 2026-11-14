@@ -134,9 +134,9 @@ function planAudit(root, changes, metadata) {
         name: after.name,
         factions:
           after.availableFactions ||
-          after.tags.filter((tag) => ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(tag)),
+          after.tags.filter((tag) => Object.keys(require("../shared/factions.json")).includes(tag)),
         faction:
-          after.tags.find((tag) => ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(tag)) ||
+          after.tags.find((tag) => Object.keys(require("../shared/factions.json")).includes(tag)) ||
           "OTHER",
         previousName: before.name,
         file,

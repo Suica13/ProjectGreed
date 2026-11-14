@@ -991,6 +991,10 @@
         "attack": {
           "steps": [
             {
+              "weaponDisplayIndex": 1,
+              "delay": 0
+            },
+            {
               "animation": "Common_Melee_A",
               "delay": 0
             },

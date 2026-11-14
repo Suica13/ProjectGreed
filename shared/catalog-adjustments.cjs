@@ -48,6 +48,8 @@ function capture(source, current, candidate, existing = {}, skip = () => false) 
   const deltas = structuredClone(existing);
   const visit = (raw, old, next, pointer = "") => {
     if (skip(pointer)) return structuredClone(next);
+    // Unedited runtime metadata must not be baked into source overrides.
+    if (require("node:util").isDeepStrictEqual(old, next)) return structuredClone(raw);
     if (typeof next === "number") {
       const before = typeof old === "number" ? old : fallback(pointer);
       if (next !== before) {

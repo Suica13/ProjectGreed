@@ -567,7 +567,16 @@
         "name": "通信指挥",
         "source": "Template/Unit/Skill/CmdCom.gw"
       }
-    ]
+    ],
+    "abc": {
+      "capacity": 30000.0,
+      "reductions": {
+        "beam": 0.6,
+        "beamAP": 0.15,
+        "meleeBeam": 0.3,
+        "meleeBeamAP": 0.15
+      }
+    }
   },
   "attackBonuses": {
     "melee": 65.0,
@@ -1156,8 +1165,8 @@
     {
       "id": "ABC",
       "source": "Template/Unit/Skill/ABC.gw",
-      "status": "review",
-      "name": "ABC"
+      "status": "adapted",
+      "name": "ABC finite coating; native channel reductions and resource costs"
     }
   ],
   "weaponKits": [

@@ -6,10 +6,7 @@ const BattleHUD = (() => {
     commands = byId("hudUnitCommands"),
     legend = scene.querySelector(".legend"),
     settings = byId("openClientSettings"),
-    settingsHome = document.createComment("settings-button-home"),
-    music = byId("musicPlayer"),
-    musicHome = document.createComment("music-player-home");
-  music.before(musicHome);
+    settingsHome = document.createComment("settings-button-home");
   settings.before(settingsHome);
   const terrainInfo = element("div", "hud-terrain-strip");
   terrainInfo.id = "hudTerrainInfo";
@@ -421,13 +418,6 @@ const BattleHUD = (() => {
     const headerButtons = scene.querySelector(".header-buttons");
     if (active && settings.parentElement !== headerButtons) headerButtons.append(settings);
     else if (!active && settings.previousSibling !== settingsHome) settingsHome.after(settings);
-    const musicSlot = active
-      ? byId("hudMusicSlot")
-      : pageView === "campaign"
-        ? byId("campaignMusicSlot")
-        : null;
-    if (musicSlot && music.parentElement !== musicSlot) musicSlot.append(music);
-    else if (!musicSlot && music.previousSibling !== musicHome) musicHome.after(music);
     if (lastSelection !== selected) {
       tab = "overview";
       byId("unitPanel").scrollTop = 0;

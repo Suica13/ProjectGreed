@@ -2105,5 +2105,79 @@
       }
     ],
     "source": "MOD native melee action: Beam_Hit_2_Green"
+  },
+  "Beam_Fire_1_Green": {
+    "texture": "textures/Beam_Fire_1_Green.png",
+    "frames": 5,
+    "startFrame": 0,
+    "endFrame": 4,
+    "fps": 12.0,
+    "scaleFrom": 0.6,
+    "scaleTo": 0.6,
+    "alpha": 0.85,
+    "rotation": -90.0,
+    "offset": {
+      "x": 0.0,
+      "y": 25.0
+    },
+    "drift": 0.0,
+    "attached": true,
+    "sounds": [],
+    "source": "MOD native turret shoot_flame: Beam_Fire_1_Green"
+  },
+  "Beam_Fire_1_Red": {
+    "texture": "textures/Beam_Fire_1_Red.png",
+    "frames": 5,
+    "startFrame": 0,
+    "endFrame": 4,
+    "fps": 12.0,
+    "scaleFrom": 0.6,
+    "scaleTo": 0.6,
+    "alpha": 0.85,
+    "rotation": -90.0,
+    "offset": {
+      "x": 0.0,
+      "y": 25.0
+    },
+    "drift": 0.0,
+    "attached": true,
+    "sounds": [],
+    "source": "MOD native turret shoot_flame: Beam_Fire_1_Red"
+  },
+  "Cqb_Fire_2_White_L": {
+    "texture": "textures/Cqb_Fire_2_White.png",
+    "frames": 6,
+    "startFrame": 0,
+    "endFrame": 5,
+    "fps": 15.0,
+    "scaleFrom": 0.45,
+    "scaleTo": 0.25,
+    "alpha": 0.85,
+    "rotation": 90.0,
+    "offset": {
+      "x": -13.5,
+      "y": 8.0
+    },
+    "drift": 21.0,
+    "sounds": [],
+    "source": "MOD native melee action: Cqb_Fire_2_White_L"
+  },
+  "ABC_1": {
+    "texture": "textures/BeamResistantCoating_1.png",
+    "frames": 5,
+    "startFrame": 0,
+    "endFrame": 4,
+    "fps": 6.0,
+    "scaleFrom": 0.75,
+    "scaleTo": 0.45,
+    "alpha": 0.5,
+    "rotation": 0.0,
+    "offset": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "drift": -24.0,
+    "sounds": [],
+    "source": "MOD native melee action: ABC_1"
   }
 }

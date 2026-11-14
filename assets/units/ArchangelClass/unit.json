@@ -1,0 +1,1537 @@
+{
+  "schemaVersion": 2,
+  "id": "ArchangelClass",
+  "code": "ArchangelClass",
+  "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/ArchangelClass/ArchangelClass.ini",
+  "materials": {
+    "textures": {
+      "ArchangelClass.png": "textures/ArchangelClass.png",
+      "ArchangelClass_Body_1.png": "textures/ArchangelClass_Body_1.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "ArchangelClass_Turret_BeamCannon_1.png": "textures/ArchangelClass_Turret_BeamCannon_1.png",
+      "ArchangelClass_Turret_Railgun_1.png": "textures/ArchangelClass_Turret_Railgun_1.png",
+      "ArchangelClass_Turret_AA_1.png": "textures/ArchangelClass_Turret_AA_1.png"
+    },
+    "icon": "ArchangelClass.png"
+  },
+  "skeleton": {
+    "Turret_ArchangelClass_Turret_BeamCannon_L1": {
+      "x": -96.0,
+      "y": -13.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_ArchangelClass_Turret_BeamCannon_R1": {
+      "x": 96.0,
+      "y": -13.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_ArchangelClass_Turret_Railgun_L1": {
+      "x": -138.0,
+      "y": -110.0,
+      "endDirOffset": -5.0
+    },
+    "Turret_ArchangelClass_Turret_Railgun_R1": {
+      "x": 138.0,
+      "y": -110.0,
+      "endDirOffset": 5.0
+    },
+    "Turret_ArchangelClass_Turret_MS_M1": {
+      "x": -125.0,
+      "y": -225.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_ArchangelClass_Turret_MS_M2": {
+      "x": -95.0,
+      "y": -225.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_ArchangelClass_Turret_MS_M3": {
+      "x": 125.0,
+      "y": -225.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_ArchangelClass_Turret_MS_M4": {
+      "x": 95.0,
+      "y": -225.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_ArchangelClass_Turret_MS_M5": {
+      "x": 50.0,
+      "y": -150.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_ArchangelClass_Turret_MS_M6": {
+      "x": -50.0,
+      "y": -150.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_ArchangelClass_Turret_AA_L1": {
+      "x": -28.0,
+      "y": -76.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_ArchangelClass_Turret_AA_R1": {
+      "x": 28.0,
+      "y": -76.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_ArchangelClass_Turret_AA_L2": {
+      "x": -27.0,
+      "y": -96.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_ArchangelClass_Turret_AA_R2": {
+      "x": 27.0,
+      "y": -96.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_ArchangelClass_Turret_AA_L3": {
+      "x": -35.0,
+      "y": -166.0,
+      "endDirOffset": -180.0
+    },
+    "Turret_ArchangelClass_Turret_AA_R3": {
+      "x": 35.0,
+      "y": -166.0,
+      "endDirOffset": 180.0
+    },
+    "Turret_ArchangelClass_Turret_AA_L4": {
+      "x": -28.0,
+      "y": -71.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_ArchangelClass_Turret_AA_R4": {
+      "x": 28.0,
+      "y": -71.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_ArchangelClass_Turret_AA_L5": {
+      "x": -27.0,
+      "y": -91.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_ArchangelClass_Turret_AA_R5": {
+      "x": 27.0,
+      "y": -91.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_ArchangelClass_Turret_AA_L6": {
+      "x": -35.0,
+      "y": -161.0,
+      "endDirOffset": -180.0
+    },
+    "Turret_ArchangelClass_Turret_AA_R6": {
+      "x": 35.0,
+      "y": -161.0,
+      "endDirOffset": 180.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    }
+  },
+  "layers": [
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 1,
+      "offset": {
+        "x": -2.5,
+        "y": -9.0
+      },
+      "scaleX": 0.75,
+      "scaleY": 1.25,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_L1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 5.0,
+      "offset": {
+        "x": -100.0,
+        "y": -245.0
+      },
+      "scaleX": -0.75,
+      "scaleY": 1.25,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_R1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 5.0,
+      "offset": {
+        "x": 100.0,
+        "y": -245.0
+      },
+      "scaleX": 0.75,
+      "scaleY": 1.25,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "ArchangelClass_Turret_AA_L4",
+      "bone": "Turret_ArchangelClass_Turret_AA_L4",
+      "moduleId": "ArchangelClass_Turret_AA_L4",
+      "texture": "ArchangelClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ArchangelClass_Turret_AA_R4",
+      "bone": "Turret_ArchangelClass_Turret_AA_R4",
+      "moduleId": "ArchangelClass_Turret_AA_R4",
+      "texture": "ArchangelClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ArchangelClass_Turret_AA_L5",
+      "bone": "Turret_ArchangelClass_Turret_AA_L5",
+      "moduleId": "ArchangelClass_Turret_AA_L5",
+      "texture": "ArchangelClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ArchangelClass_Turret_AA_R5",
+      "bone": "Turret_ArchangelClass_Turret_AA_R5",
+      "moduleId": "ArchangelClass_Turret_AA_R5",
+      "texture": "ArchangelClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ArchangelClass_Turret_AA_L6",
+      "bone": "Turret_ArchangelClass_Turret_AA_L6",
+      "moduleId": "ArchangelClass_Turret_AA_L6",
+      "texture": "ArchangelClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ArchangelClass_Turret_AA_R6",
+      "bone": "Turret_ArchangelClass_Turret_AA_R6",
+      "moduleId": "ArchangelClass_Turret_AA_R6",
+      "texture": "ArchangelClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "Body",
+      "texture": "ArchangelClass_Body_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArchangelClass_Turret_BeamCannon_L1",
+      "bone": "Turret_ArchangelClass_Turret_BeamCannon_L1",
+      "moduleId": "ArchangelClass_Turret_BeamCannon_L1",
+      "texture": "ArchangelClass_Turret_BeamCannon_1.png",
+      "order": 5.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ArchangelClass_Turret_BeamCannon_R1",
+      "bone": "Turret_ArchangelClass_Turret_BeamCannon_R1",
+      "moduleId": "ArchangelClass_Turret_BeamCannon_R1",
+      "texture": "ArchangelClass_Turret_BeamCannon_1.png",
+      "order": 5.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ArchangelClass_Turret_Railgun_L1",
+      "bone": "Turret_ArchangelClass_Turret_Railgun_L1",
+      "moduleId": "ArchangelClass_Turret_Railgun_L1",
+      "texture": "ArchangelClass_Turret_Railgun_1.png",
+      "order": 5.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ArchangelClass_Turret_Railgun_R1",
+      "bone": "Turret_ArchangelClass_Turret_Railgun_R1",
+      "moduleId": "ArchangelClass_Turret_Railgun_R1",
+      "texture": "ArchangelClass_Turret_Railgun_1.png",
+      "order": 5.001,
+      "scale": 1.25,
+      "scaleX": -1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ArchangelClass_Turret_AA_L1",
+      "bone": "Turret_ArchangelClass_Turret_AA_L1",
+      "moduleId": "ArchangelClass_Turret_AA_L1",
+      "texture": "ArchangelClass_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ArchangelClass_Turret_AA_R1",
+      "bone": "Turret_ArchangelClass_Turret_AA_R1",
+      "moduleId": "ArchangelClass_Turret_AA_R1",
+      "texture": "ArchangelClass_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ArchangelClass_Turret_AA_L2",
+      "bone": "Turret_ArchangelClass_Turret_AA_L2",
+      "moduleId": "ArchangelClass_Turret_AA_L2",
+      "texture": "ArchangelClass_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ArchangelClass_Turret_AA_R2",
+      "bone": "Turret_ArchangelClass_Turret_AA_R2",
+      "moduleId": "ArchangelClass_Turret_AA_R2",
+      "texture": "ArchangelClass_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ArchangelClass_Turret_AA_L3",
+      "bone": "Turret_ArchangelClass_Turret_AA_L3",
+      "moduleId": "ArchangelClass_Turret_AA_L3",
+      "texture": "ArchangelClass_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ArchangelClass_Turret_AA_R3",
+      "bone": "Turret_ArchangelClass_Turret_AA_R3",
+      "moduleId": "ArchangelClass_Turret_AA_R3",
+      "texture": "ArchangelClass_Turret_AA_1.png",
+      "order": 5.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    }
+  ],
+  "animations": {
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 115500,
+    "en": 37500.0,
+    "move": 7,
+    "mobility": 75.0,
+    "cost": 2250,
+    "counterLimit": 1,
+    "accuracy": 71.5,
+    "partStructuralStrength": 100.0,
+    "partsBreakable": false,
+    "movementType": "air",
+    "adaptability": {
+      "ground": 100,
+      "space": 100,
+      "water": 50.0,
+      "air": 100.0,
+      "atmosphere": 0,
+      "mountain": 10.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": true,
+    "modules": [
+      {
+        "id": "ArchangelClass_Turret_BeamCannon_L1",
+        "name": "ArchangelClass_Turret_BeamCannon_L1",
+        "hp": 25000.0,
+        "bone": "Turret_ArchangelClass_Turret_BeamCannon_L1",
+        "x": -96.0,
+        "y": -13.0,
+        "idleDir": 0.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/ArchangelClass/ArchangelClass_Turret_BeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_ArchangelClass_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "ArchangelClass_Turret_BeamCannon_R1",
+        "name": "ArchangelClass_Turret_BeamCannon_R1",
+        "hp": 25000.0,
+        "bone": "Turret_ArchangelClass_Turret_BeamCannon_R1",
+        "x": 96.0,
+        "y": -13.0,
+        "idleDir": 0.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/ArchangelClass/ArchangelClass_Turret_BeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_ArchangelClass_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "ArchangelClass_Turret_Railgun_L1",
+        "name": "ArchangelClass_Turret_Railgun_L1",
+        "hp": 15000.0,
+        "bone": "Turret_ArchangelClass_Turret_Railgun_L1",
+        "x": -138.0,
+        "y": -110.0,
+        "idleDir": -5.0,
+        "arc": 35.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/ArchangelClass/ArchangelClass_Turret_Railgun.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_ArchangelClass_Turret_Railgun"
+          ]
+        }
+      },
+      {
+        "id": "ArchangelClass_Turret_Railgun_R1",
+        "name": "ArchangelClass_Turret_Railgun_R1",
+        "hp": 15000.0,
+        "bone": "Turret_ArchangelClass_Turret_Railgun_R1",
+        "x": 138.0,
+        "y": -110.0,
+        "idleDir": 5.0,
+        "arc": 35.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/ArchangelClass/ArchangelClass_Turret_Railgun_2.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_ArchangelClass_Turret_Railgun"
+          ]
+        }
+      },
+      {
+        "id": "ArchangelClass_Turret_MS_M1",
+        "name": "ArchangelClass_Turret_MS_M1",
+        "hp": 7500.0,
+        "bone": "Turret_ArchangelClass_Turret_MS_M1",
+        "x": -125.0,
+        "y": -225.0,
+        "idleDir": 0.0,
+        "arc": 60.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/ArchangelClass/ArchangelClass_Turret_MS.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      },
+      {
+        "id": "ArchangelClass_Turret_MS_M2",
+        "name": "ArchangelClass_Turret_MS_M2",
+        "hp": 7500.0,
+        "bone": "Turret_ArchangelClass_Turret_MS_M2",
+        "x": -95.0,
+        "y": -225.0,
+        "idleDir": 0.0,
+        "arc": 60.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/ArchangelClass/ArchangelClass_Turret_MS.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      },
+      {
+        "id": "ArchangelClass_Turret_MS_M3",
+        "name": "ArchangelClass_Turret_MS_M3",
+        "hp": 7500.0,
+        "bone": "Turret_ArchangelClass_Turret_MS_M3",
+        "x": 125.0,
+        "y": -225.0,
+        "idleDir": 0.0,
+        "arc": 60.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/ArchangelClass/ArchangelClass_Turret_MS.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      },
+      {
+        "id": "ArchangelClass_Turret_MS_M4",
+        "name": "ArchangelClass_Turret_MS_M4",
+        "hp": 7500.0,
+        "bone": "Turret_ArchangelClass_Turret_MS_M4",
+        "x": 95.0,
+        "y": -225.0,
+        "idleDir": 0.0,
+        "arc": 60.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/ArchangelClass/ArchangelClass_Turret_MS.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      },
+      {
+        "id": "ArchangelClass_Turret_MS_M5",
+        "name": "ArchangelClass_Turret_MS_M5",
+        "hp": 7500.0,
+        "bone": "Turret_ArchangelClass_Turret_MS_M5",
+        "x": 50.0,
+        "y": -150.0,
+        "idleDir": 0.0,
+        "arc": 60.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/ArchangelClass/ArchangelClass_Turret_MS.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      },
+      {
+        "id": "ArchangelClass_Turret_MS_M6",
+        "name": "ArchangelClass_Turret_MS_M6",
+        "hp": 7500.0,
+        "bone": "Turret_ArchangelClass_Turret_MS_M6",
+        "x": -50.0,
+        "y": -150.0,
+        "idleDir": 0.0,
+        "arc": 60.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/ArchangelClass/ArchangelClass_Turret_MS.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      },
+      {
+        "id": "ArchangelClass_Turret_AA_L1",
+        "name": "ArchangelClass_Turret_AA_L1",
+        "hp": 7000.0,
+        "bone": "Turret_ArchangelClass_Turret_AA_L1",
+        "x": -28.0,
+        "y": -76.0,
+        "idleDir": 0.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/ArchangelClass/ArchangelClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_ArchangelClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "ArchangelClass_Turret_AA_R1",
+        "name": "ArchangelClass_Turret_AA_R1",
+        "hp": 7000.0,
+        "bone": "Turret_ArchangelClass_Turret_AA_R1",
+        "x": 28.0,
+        "y": -76.0,
+        "idleDir": 0.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/ArchangelClass/ArchangelClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_ArchangelClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "ArchangelClass_Turret_AA_L2",
+        "name": "ArchangelClass_Turret_AA_L2",
+        "hp": 7000.0,
+        "bone": "Turret_ArchangelClass_Turret_AA_L2",
+        "x": -27.0,
+        "y": -96.0,
+        "idleDir": 0.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/ArchangelClass/ArchangelClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_ArchangelClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "ArchangelClass_Turret_AA_R2",
+        "name": "ArchangelClass_Turret_AA_R2",
+        "hp": 7000.0,
+        "bone": "Turret_ArchangelClass_Turret_AA_R2",
+        "x": 27.0,
+        "y": -96.0,
+        "idleDir": 0.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/ArchangelClass/ArchangelClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_ArchangelClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "ArchangelClass_Turret_AA_L3",
+        "name": "ArchangelClass_Turret_AA_L3",
+        "hp": 7000.0,
+        "bone": "Turret_ArchangelClass_Turret_AA_L3",
+        "x": -35.0,
+        "y": -166.0,
+        "idleDir": -180.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/ArchangelClass/ArchangelClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_ArchangelClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "ArchangelClass_Turret_AA_R3",
+        "name": "ArchangelClass_Turret_AA_R3",
+        "hp": 7000.0,
+        "bone": "Turret_ArchangelClass_Turret_AA_R3",
+        "x": 35.0,
+        "y": -166.0,
+        "idleDir": 180.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/ArchangelClass/ArchangelClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_ArchangelClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "ArchangelClass_Turret_AA_L4",
+        "name": "ArchangelClass_Turret_AA_L4",
+        "hp": 7000.0,
+        "bone": "Turret_ArchangelClass_Turret_AA_L4",
+        "x": -28.0,
+        "y": -71.0,
+        "idleDir": 0.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/ArchangelClass/ArchangelClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_ArchangelClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "ArchangelClass_Turret_AA_R4",
+        "name": "ArchangelClass_Turret_AA_R4",
+        "hp": 7000.0,
+        "bone": "Turret_ArchangelClass_Turret_AA_R4",
+        "x": 28.0,
+        "y": -71.0,
+        "idleDir": 0.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/ArchangelClass/ArchangelClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_ArchangelClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "ArchangelClass_Turret_AA_L5",
+        "name": "ArchangelClass_Turret_AA_L5",
+        "hp": 7000.0,
+        "bone": "Turret_ArchangelClass_Turret_AA_L5",
+        "x": -27.0,
+        "y": -91.0,
+        "idleDir": 0.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/ArchangelClass/ArchangelClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_ArchangelClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "ArchangelClass_Turret_AA_R5",
+        "name": "ArchangelClass_Turret_AA_R5",
+        "hp": 7000.0,
+        "bone": "Turret_ArchangelClass_Turret_AA_R5",
+        "x": 27.0,
+        "y": -91.0,
+        "idleDir": 0.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/ArchangelClass/ArchangelClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_ArchangelClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "ArchangelClass_Turret_AA_L6",
+        "name": "ArchangelClass_Turret_AA_L6",
+        "hp": 7000.0,
+        "bone": "Turret_ArchangelClass_Turret_AA_L6",
+        "x": -35.0,
+        "y": -161.0,
+        "idleDir": -180.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/ArchangelClass/ArchangelClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_ArchangelClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "ArchangelClass_Turret_AA_R6",
+        "name": "ArchangelClass_Turret_AA_R6",
+        "hp": 7000.0,
+        "bone": "Turret_ArchangelClass_Turret_AA_R6",
+        "x": 35.0,
+        "y": -161.0,
+        "idleDir": 180.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/ArchangelClass/ArchangelClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_ArchangelClass_Turret_AA"
+          ]
+        }
+      }
+    ],
+    "footprint": {
+      "width": 2,
+      "height": 2
+    },
+    "commandAuras": [
+      {
+        "type": "cmdDef",
+        "name": "防御指挥",
+        "source": "Template/Unit/Skill/CmdDef.gw"
+      },
+      {
+        "type": "cmdCom",
+        "name": "通信指挥",
+        "source": "Template/Unit/Skill/CmdCom.gw"
+      }
+    ],
+    "supplyAura": {
+      "range": 2,
+      "hpPercent": 5,
+      "enPercent": 10
+    },
+    "speed": 70,
+    "actionPoints": 10,
+    "sensors": {
+      "sight": 9,
+      "radar": 16.666666666666668,
+      "antiDetection": -10.416666666666666,
+      "revealOnDetection": true,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    },
+    "accuracyMultiplier": 0.65
+  },
+  "attackBonuses": {
+    "melee": 0.0,
+    "shooting": 10.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 30.0,
+      "flat": 200.0
+    },
+    "shell": {
+      "percent": 40.0,
+      "flat": 200.0
+    },
+    "melee": {
+      "percent": 20.0,
+      "flat": 0.0
+    },
+    "dp": {
+      "percent": 100.0,
+      "flat": 10.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 10.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 165000.0,
+    "walkSpeed": 0.65,
+    "boostSpeed": 1.0,
+    "turnSpeed": 0.45,
+    "reaction": 75.0,
+    "shooting": 110.0,
+    "melee": 100.0,
+    "nativeTags": [
+      "ArchangelClass",
+      "Unit",
+      "CmdUnit",
+      "Ship",
+      "OMNI",
+      "CE71",
+      "SEED",
+      "LargeUnit",
+      "MpUpUnit_X16"
+    ],
+    "nativeSkills": [
+      "AutoRepair",
+      "LaunchAllUnits",
+      "CmdCom",
+      "CmdDef",
+      "SupplyPoint",
+      "SupplyPoint_UseEN"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 110.0,
+    "unitLevel": 9000.0,
+    "enBeforeReduction": 37500.0,
+    "enCapacityMultiplier": 1,
+    "tacticalMoveBeforeBonus": 4,
+    "actionTurnSpeed": 0.45,
+    "mobilityMoveTarget": 7,
+    "adaptability": {
+      "ground": 10.0,
+      "space": 100.0,
+      "water": 50.0,
+      "air": 100.0,
+      "mountain": 10.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 22.0,
+      "radar": 600.0,
+      "antiDetection": -300.0
+    },
+    "shipHullBeforeReduction": 165000.0,
+    "shipBalanceMultiplier": 0.7,
+    "shipFactionHullMultiplier": 1,
+    "shipFactionAccuracyMultiplier": 1,
+    "shipFactionEvasionMultiplier": 1,
+    "technologyEra": "CE_0071_T1",
+    "shipFootprintBeforeCompaction": {
+      "width": 2,
+      "height": 3
+    }
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 0.9,
+    "idle": "ImportedIdle",
+    "move": "ImportedIdle",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "boost",
+    "deathType": "large",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "大天使号",
+  "faction": "OMNI",
+  "tags": [
+    "OMNI",
+    "CE_0071_T1"
+  ],
+  "localization": {
+    "zh": {
+      "name": "大天使号",
+      "description": "联合与奥布合作建造的新型两栖战舰"
+    },
+    "en": {
+      "name": "Archangel",
+      "description": "A new amphibious warship jointly developed by the Earth Alliance and Orb"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "ArchangelClass_Turret_BeamCannon": {
+      "ref": "ArchangelClass_Turret_BeamCannon__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/ArchangelClass/ArchangelClass_Turret_BeamCannon.ini",
+          "barrels": [
+            {
+              "id": "ArchangelClass_Turret_BeamCannon",
+              "x": 8.0,
+              "y": 25.0
+            },
+            {
+              "id": "ArchangelClass_Turret_BeamCannon",
+              "x": 8.0,
+              "y": 25.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_ArchangelClass_Turret_BeamCannon_L1",
+              "offset": {
+                "x": 8.0,
+                "y": 25.0
+              },
+              "alternatingOffsetX": -16.0
+            },
+            {
+              "bone": "Turret_ArchangelClass_Turret_BeamCannon_R1",
+              "offset": {
+                "x": 8.0,
+                "y": 25.0
+              },
+              "alternatingOffsetX": -16.0
+            }
+          ]
+        }
+      }
+    },
+    "ArchangelClass_Turret_Railgun": {
+      "ref": "ArchangelClass_Turret_Railgun__lv1",
+      "overrides": {
+        "name": "磁轨炮",
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/ArchangelClass/ArchangelClass_Turret_Railgun.ini",
+          "barrels": [
+            {
+              "id": "ArchangelClass_Turret_Railgun",
+              "x": 0.0,
+              "y": 35.0
+            },
+            {
+              "id": "ArchangelClass_Turret_Railgun",
+              "x": 0.0,
+              "y": 35.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_ArchangelClass_Turret_Railgun_L1",
+              "offset": {
+                "x": 0.0,
+                "y": 35.0
+              }
+            },
+            {
+              "bone": "Turret_ArchangelClass_Turret_Railgun_R1",
+              "offset": {
+                "x": 0.0,
+                "y": 35.0
+              }
+            }
+          ]
+        },
+        "localization": {
+          "zh": {
+            "name": "磁轨炮"
+          },
+          "en": {
+            "name": "Railgun"
+          },
+          "ja": {
+            "name": "レールガン"
+          }
+        }
+      }
+    },
+    "ArchangelClass_Turret_MS": {
+      "ref": "ArchangelClass_Turret_MS__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/ArchangelClass/ArchangelClass_Turret_MS.ini",
+          "barrels": [
+            {
+              "id": "ArchangelClass_Turret_MS",
+              "x": 3.0,
+              "y": 0.0
+            },
+            {
+              "id": "ArchangelClass_Turret_MS",
+              "x": 3.0,
+              "y": 0.0
+            },
+            {
+              "id": "ArchangelClass_Turret_MS",
+              "x": 3.0,
+              "y": 0.0
+            },
+            {
+              "id": "ArchangelClass_Turret_MS",
+              "x": 3.0,
+              "y": 0.0
+            },
+            {
+              "id": "ArchangelClass_Turret_MS",
+              "x": 3.0,
+              "y": 0.0
+            },
+            {
+              "id": "ArchangelClass_Turret_MS",
+              "x": 3.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_ArchangelClass_Turret_MS_M1",
+              "offset": {
+                "x": 3.0,
+                "y": 0.0
+              },
+              "alternatingOffsetX": -6.0
+            },
+            {
+              "bone": "Turret_ArchangelClass_Turret_MS_M2",
+              "offset": {
+                "x": 3.0,
+                "y": 0.0
+              },
+              "alternatingOffsetX": -6.0
+            },
+            {
+              "bone": "Turret_ArchangelClass_Turret_MS_M3",
+              "offset": {
+                "x": 3.0,
+                "y": 0.0
+              },
+              "alternatingOffsetX": -6.0
+            },
+            {
+              "bone": "Turret_ArchangelClass_Turret_MS_M4",
+              "offset": {
+                "x": 3.0,
+                "y": 0.0
+              },
+              "alternatingOffsetX": -6.0
+            },
+            {
+              "bone": "Turret_ArchangelClass_Turret_MS_M5",
+              "offset": {
+                "x": 3.0,
+                "y": 0.0
+              },
+              "alternatingOffsetX": -6.0
+            },
+            {
+              "bone": "Turret_ArchangelClass_Turret_MS_M6",
+              "offset": {
+                "x": 3.0,
+                "y": 0.0
+              },
+              "alternatingOffsetX": -6.0
+            }
+          ]
+        }
+      }
+    },
+    "ArchangelClass_Turret_AA": {
+      "ref": "ArchangelClass_Turret_AA__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/ArchangelClass/ArchangelClass_Turret_AA.ini",
+          "barrels": [
+            {
+              "id": "ArchangelClass_Turret_AA",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "ArchangelClass_Turret_AA",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "ArchangelClass_Turret_AA",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "ArchangelClass_Turret_AA",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "ArchangelClass_Turret_AA",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "ArchangelClass_Turret_AA",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "ArchangelClass_Turret_AA",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "ArchangelClass_Turret_AA",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "ArchangelClass_Turret_AA",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "ArchangelClass_Turret_AA",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "ArchangelClass_Turret_AA",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "ArchangelClass_Turret_AA",
+              "x": 0.0,
+              "y": 6.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_ArchangelClass_Turret_AA_L1",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            },
+            {
+              "bone": "Turret_ArchangelClass_Turret_AA_R1",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            },
+            {
+              "bone": "Turret_ArchangelClass_Turret_AA_L2",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            },
+            {
+              "bone": "Turret_ArchangelClass_Turret_AA_R2",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            },
+            {
+              "bone": "Turret_ArchangelClass_Turret_AA_L3",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            },
+            {
+              "bone": "Turret_ArchangelClass_Turret_AA_R3",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            },
+            {
+              "bone": "Turret_ArchangelClass_Turret_AA_L4",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            },
+            {
+              "bone": "Turret_ArchangelClass_Turret_AA_R4",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            },
+            {
+              "bone": "Turret_ArchangelClass_Turret_AA_L5",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            },
+            {
+              "bone": "Turret_ArchangelClass_Turret_AA_R5",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            },
+            {
+              "bone": "Turret_ArchangelClass_Turret_AA_L6",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            },
+            {
+              "bone": "Turret_ArchangelClass_Turret_AA_R6",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "空中移动：可跨越山岩与水域",
+      "status": "implemented"
+    },
+    {
+      "id": "LaunchAllUnits",
+      "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+      "status": "adapted",
+      "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+    },
+    {
+      "id": "CmdCom",
+      "source": "Template/Unit/Skill/CmdCom.gw",
+      "status": "adapted",
+      "name": "通信指挥：范围与效果随驾驶员领导力变化"
+    },
+    {
+      "id": "CmdDef",
+      "source": "Template/Unit/Skill/CmdDef.gw",
+      "status": "adapted",
+      "name": "防御指挥：范围与效果随驾驶员领导力变化"
+    },
+    {
+      "id": "special_Common_ReEntry",
+      "name": "大气层突入",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry.gw",
+      "status": "review"
+    },
+    {
+      "id": "special_Common_ReEntry_FromSpace",
+      "name": "大气层突入",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_FromSpace.gw",
+      "status": "review"
+    },
+    {
+      "id": "special_Common_ReEntry_Both",
+      "name": "大气层突入",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_Both.gw",
+      "status": "review"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": [
+        "ArchangelClass_Turret_BeamCannon",
+        "ArchangelClass_Turret_Railgun",
+        "ArchangelClass_Turret_MS",
+        "ArchangelClass_Turret_AA"
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "Common_FullBoost",
+      "type": "fullboost",
+      "name": "全力推进",
+      "actionCost": 0,
+      "enCost": 250,
+      "consumeAction": false,
+      "range": 0,
+      "effect": "Flash_1_N",
+      "sound": {
+        "file": "../../sounds/Action_8.ogg",
+        "volume": 0.5
+      },
+      "duration": 2,
+      "cooldownTurns": 1,
+      "moveBonus": 2,
+      "mobilityMultiplier": 1.1,
+      "description": "消耗250 EN，在2个己方回合内移动力+2、反应系数×1.10；效果结束后冷却1个己方回合。搭载中仍会持续与计时。"
+    }
+  ],
+  "description": "联合与奥布合作建造的新型两栖战舰",
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 9000.0,
+    "levelMultiplier": 0.25,
+    "published": 2250
+  },
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "Ship",
+    "Aircraft",
+    "Support",
+    "Transport"
+  ],
+  "transport": {
+    "slotCost": 1,
+    "loadTags": []
+  },
+  "hangars": [
+    {
+      "id": "Hangar_1",
+      "name": "格纳库 1",
+      "capacity": 8,
+      "allowedTags": [
+        "CanLoadInto",
+        "CanLoadIntoSpace",
+        "CanLoadIntoAir"
+      ],
+      "launchRange": 1,
+      "emergencyRange": 3,
+      "source": "Units/CommonUnit/Hangar/Hangar_X8.ini",
+      "sourceUnit": "Hangar_X8"
+    },
+    {
+      "id": "Hangar_2",
+      "name": "格纳库 2",
+      "capacity": 8,
+      "allowedTags": [
+        "CanLoadInto",
+        "CanLoadIntoSpace",
+        "CanLoadIntoAir"
+      ],
+      "launchRange": 1,
+      "emergencyRange": 3,
+      "source": "Units/CommonUnit/Hangar/Hangar_X8.ini",
+      "sourceUnit": "Hangar_X8"
+    }
+  ],
+  "refits": []
+}

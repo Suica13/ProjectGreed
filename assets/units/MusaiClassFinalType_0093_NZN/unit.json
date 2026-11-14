@@ -1,0 +1,728 @@
+{
+  "schemaVersion": 2,
+  "id": "MusaiClassFinalType_0093_NZN",
+  "code": "MusaiClassFinalType-0093-NZN",
+  "source": "GW_BattleUniverse_DLC_0093/Units/BattleUnits/MusaiClassFinalType_0093_NZN/MusaiClassFinalType_0093_NZN.ini",
+  "materials": {
+    "textures": {
+      "MusaiClassFinalType.png": "textures/MusaiClassFinalType.png",
+      "MusaiClassFinalType_Body_1.png": "textures/MusaiClassFinalType_Body_1.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "RooketBooster.png": "textures/RooketBooster.png",
+      "MusaiClassFinalType_Turret_BeamCannon_1.png": "textures/MusaiClassFinalType_Turret_BeamCannon_1.png",
+      "MusaiClassFinalType_Turret_BeamCannon_2.png": "textures/MusaiClassFinalType_Turret_BeamCannon_2.png",
+      "MusaiClassFinalType_Turret_BeamCannon_3.png": "textures/MusaiClassFinalType_Turret_BeamCannon_3.png"
+    },
+    "icon": "MusaiClassFinalType.png"
+  },
+  "skeleton": {
+    "Turret_MusaiClassFinalType_0093_NZN_Turret_BeamCannon_M1": {
+      "x": 0.0,
+      "y": -45.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_MusaiClassFinalType_0093_NZN_Turret_BeamCannon_M2": {
+      "x": 0.0,
+      "y": -62.5,
+      "endDirOffset": 0.0
+    },
+    "Turret_MusaiClassFinalType_0093_NZN_Turret_BeamCannon_M3": {
+      "x": 0.0,
+      "y": -80.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_MusaiClassFinalType_0093_NZN_Turret_MS_M1": {
+      "x": 0.0,
+      "y": 40.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_MusaiClassFinalType_0093_NZN_Turret_MS_M2": {
+      "x": 0.0,
+      "y": 20.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_MusaiClassFinalType_0093_NZN_Turret_MS_M3": {
+      "x": 0.0,
+      "y": 0.0,
+      "endDirOffset": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    }
+  },
+  "layers": [
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 1,
+      "offset": {
+        "x": -2.5,
+        "y": -9.0
+      },
+      "scaleX": 0.65,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_L1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 4.0,
+      "offset": {
+        "x": -67.0,
+        "y": -110.0
+      },
+      "scaleX": -0.65,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_R1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 4.0,
+      "offset": {
+        "x": 67.0,
+        "y": -110.0
+      },
+      "scaleX": 0.65,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Body",
+      "texture": "MusaiClassFinalType_Body_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "MusaiClassFinalType_0093_NZN_Turret_BeamCannon_M1",
+      "bone": "Turret_MusaiClassFinalType_0093_NZN_Turret_BeamCannon_M1",
+      "moduleId": "MusaiClassFinalType_0093_NZN_Turret_BeamCannon_M1",
+      "texture": "MusaiClassFinalType_Turret_BeamCannon_1.png",
+      "order": 5.001,
+      "scale": 1.15,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "MusaiClassFinalType_0093_NZN_Turret_BeamCannon_M2",
+      "bone": "Turret_MusaiClassFinalType_0093_NZN_Turret_BeamCannon_M2",
+      "moduleId": "MusaiClassFinalType_0093_NZN_Turret_BeamCannon_M2",
+      "texture": "MusaiClassFinalType_Turret_BeamCannon_2.png",
+      "order": 5.001,
+      "scale": 1.15,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "MusaiClassFinalType_0093_NZN_Turret_BeamCannon_M3",
+      "bone": "Turret_MusaiClassFinalType_0093_NZN_Turret_BeamCannon_M3",
+      "moduleId": "MusaiClassFinalType_0093_NZN_Turret_BeamCannon_M3",
+      "texture": "MusaiClassFinalType_Turret_BeamCannon_3.png",
+      "order": 5.001,
+      "scale": 1.15,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    }
+  ],
+  "animations": {
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 115500,
+    "en": 12000.0,
+    "move": 8,
+    "mobility": 75.0,
+    "cost": 1125,
+    "counterLimit": 1,
+    "accuracy": 94.25,
+    "partStructuralStrength": 100.0,
+    "partsBreakable": false,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 0,
+      "space": 100,
+      "water": 10.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 10.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": true,
+    "modules": [
+      {
+        "id": "MusaiClassFinalType_0093_NZN_Turret_BeamCannon_M1",
+        "name": "MusaiClassFinalType_0093_NZN_Turret_BeamCannon_M1",
+        "hp": 17500.0,
+        "bone": "Turret_MusaiClassFinalType_0093_NZN_Turret_BeamCannon_M1",
+        "x": 0.0,
+        "y": -45.0,
+        "idleDir": 0.0,
+        "arc": 95.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/MusaiClassFinalType_0093_NZN/MusaiClassFinalType_0093_NZN_Turret_BeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_MusaiClassFinalType_0093_NZN_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "MusaiClassFinalType_0093_NZN_Turret_BeamCannon_M2",
+        "name": "MusaiClassFinalType_0093_NZN_Turret_BeamCannon_M2",
+        "hp": 17500.0,
+        "bone": "Turret_MusaiClassFinalType_0093_NZN_Turret_BeamCannon_M2",
+        "x": 0.0,
+        "y": -62.5,
+        "idleDir": 0.0,
+        "arc": 95.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/MusaiClassFinalType_0093_NZN/MusaiClassFinalType_0093_NZN_Turret_BeamCannon_2.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_MusaiClassFinalType_0093_NZN_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "MusaiClassFinalType_0093_NZN_Turret_BeamCannon_M3",
+        "name": "MusaiClassFinalType_0093_NZN_Turret_BeamCannon_M3",
+        "hp": 17500.0,
+        "bone": "Turret_MusaiClassFinalType_0093_NZN_Turret_BeamCannon_M3",
+        "x": 0.0,
+        "y": -80.0,
+        "idleDir": 0.0,
+        "arc": 95.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/MusaiClassFinalType_0093_NZN/MusaiClassFinalType_0093_NZN_Turret_BeamCannon_3.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_MusaiClassFinalType_0093_NZN_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "MusaiClassFinalType_0093_NZN_Turret_MS_M1",
+        "name": "MusaiClassFinalType_0093_NZN_Turret_MS_M1",
+        "hp": 18500.0,
+        "bone": "Turret_MusaiClassFinalType_0093_NZN_Turret_MS_M1",
+        "x": 0.0,
+        "y": 40.0,
+        "idleDir": 0.0,
+        "arc": 180,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/MusaiClassFinalType_0093_NZN/MusaiClassFinalType_0093_NZN_Turret_MS.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      },
+      {
+        "id": "MusaiClassFinalType_0093_NZN_Turret_MS_M2",
+        "name": "MusaiClassFinalType_0093_NZN_Turret_MS_M2",
+        "hp": 18500.0,
+        "bone": "Turret_MusaiClassFinalType_0093_NZN_Turret_MS_M2",
+        "x": 0.0,
+        "y": 20.0,
+        "idleDir": 0.0,
+        "arc": 180,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/MusaiClassFinalType_0093_NZN/MusaiClassFinalType_0093_NZN_Turret_MS.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      },
+      {
+        "id": "MusaiClassFinalType_0093_NZN_Turret_MS_M3",
+        "name": "MusaiClassFinalType_0093_NZN_Turret_MS_M3",
+        "hp": 18500.0,
+        "bone": "Turret_MusaiClassFinalType_0093_NZN_Turret_MS_M3",
+        "x": 0.0,
+        "y": 0.0,
+        "idleDir": 0.0,
+        "arc": 180,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/MusaiClassFinalType_0093_NZN/MusaiClassFinalType_0093_NZN_Turret_MS.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      }
+    ],
+    "footprint": {
+      "width": 2,
+      "height": 2
+    },
+    "supplyAura": {
+      "range": 2,
+      "hpPercent": 5,
+      "enPercent": 10
+    },
+    "speed": 105,
+    "actionPoints": 10,
+    "sensors": {
+      "sight": 10,
+      "radar": 16.666666666666668,
+      "antiDetection": -6.944444444444445,
+      "revealOnDetection": true,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    },
+    "accuracyMultiplier": 0.65
+  },
+  "attackBonuses": {
+    "melee": 0.0,
+    "shooting": 45.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 35.0,
+      "flat": 400.0
+    },
+    "shell": {
+      "percent": 35.0,
+      "flat": 500.0
+    },
+    "melee": {
+      "percent": 30.0,
+      "flat": 500.0
+    },
+    "dp": {
+      "percent": 100.0,
+      "flat": 0.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 165000.0,
+    "walkSpeed": 0.65,
+    "boostSpeed": 1.45,
+    "turnSpeed": 0.45,
+    "reaction": 75.0,
+    "shooting": 145.0,
+    "melee": 100.0,
+    "nativeTags": [
+      "MusaiClassFinalType_0093_NZN",
+      "Unit",
+      "Ship",
+      "CmdUnit",
+      "NZN",
+      "0093",
+      "UC",
+      "LargeUnit",
+      "MpUpUnit_X8",
+      "0093_NZN"
+    ],
+    "nativeSkills": [
+      "AutoRepair",
+      "LaunchAllUnits",
+      "SupplyPoint",
+      "SupplyPoint_UseEN"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 145.0,
+    "unitLevel": 4500.0,
+    "enBeforeReduction": 12000.0,
+    "enCapacityMultiplier": 1,
+    "tacticalMoveBeforeBonus": 5,
+    "actionTurnSpeed": 0.45,
+    "mobilityMoveTarget": 8,
+    "adaptability": {
+      "ground": 10.0,
+      "space": 100.0,
+      "water": 10.0,
+      "air": 10.0,
+      "mountain": 10.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 24.0,
+      "radar": 600.0,
+      "antiDetection": -200.0
+    },
+    "shipHullBeforeReduction": 165000.0,
+    "shipBalanceMultiplier": 0.7,
+    "shipFactionHullMultiplier": 1,
+    "shipFactionAccuracyMultiplier": 1,
+    "shipFactionEvasionMultiplier": 1,
+    "technologyEra": "UC_0093_T1",
+    "technologyWeight": 5,
+    "shipFootprintBeforeCompaction": {
+      "width": 2,
+      "height": 3
+    },
+    "nativeProductionQuantity": 1,
+    "nativeProductionSource": {
+      "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_NZN/Units/Space_Mega/MusaiClassFinalType_0093_NZN.gw",
+      "action": "action_Produce_MusaiClassFinalType_0093_NZN",
+      "buildSeconds": 50.0,
+      "queueSeconds": 0.0,
+      "outputs": [
+        {
+          "unitId": "MusaiClassFinalType_0093_NZN",
+          "quantity": 1,
+          "equipmentIndex": 0,
+          "resources": "addResources=PilotType:2101|EquipmentIndex:0"
+        }
+      ]
+    }
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 0.9,
+    "idle": "ImportedIdle",
+    "move": "ImportedIdle",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "boost",
+    "deathType": "large",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "姆塞级最终生产型",
+  "faction": "NEO_ZEON_0093",
+  "tags": [
+    "NEO_ZEON_0093",
+    "UC_0093_T1"
+  ],
+  "localization": {
+    "zh": {
+      "name": "姆塞级最终生产型",
+      "description": "姆塞的最终生产型"
+    },
+    "en": {
+      "name": "Musai Class FinalType",
+      "description": "Musai's final production type"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "MusaiClassFinalType_0093_NZN_Turret_BeamCannon": {
+      "ref": "MusaiClassFinalType_0093_NZN_Turret_BeamCannon__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/MusaiClassFinalType_0093_NZN/MusaiClassFinalType_0093_NZN_Turret_BeamCannon.ini",
+          "barrels": [
+            {
+              "id": "MusaiClassFinalType_0093_NZN_Turret_BeamCannon",
+              "x": 3.0,
+              "y": 12.0
+            },
+            {
+              "id": "MusaiClassFinalType_0093_NZN_Turret_BeamCannon",
+              "x": 3.0,
+              "y": 12.0
+            },
+            {
+              "id": "MusaiClassFinalType_0093_NZN_Turret_BeamCannon",
+              "x": 3.0,
+              "y": 12.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_MusaiClassFinalType_0093_NZN_Turret_BeamCannon_M1",
+              "offset": {
+                "x": 3.0,
+                "y": 12.0
+              },
+              "alternatingOffsetX": -6.0
+            },
+            {
+              "bone": "Turret_MusaiClassFinalType_0093_NZN_Turret_BeamCannon_M2",
+              "offset": {
+                "x": 3.0,
+                "y": 12.0
+              },
+              "alternatingOffsetX": -6.0
+            },
+            {
+              "bone": "Turret_MusaiClassFinalType_0093_NZN_Turret_BeamCannon_M3",
+              "offset": {
+                "x": 3.0,
+                "y": 12.0
+              },
+              "alternatingOffsetX": -6.0
+            }
+          ]
+        }
+      }
+    },
+    "MusaiClassFinalType_0093_NZN_Turret_MS": {
+      "ref": "MusaiClassFinalType_0093_NZN_Turret_MS__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/MusaiClassFinalType_0093_NZN/MusaiClassFinalType_0093_NZN_Turret_MS.ini",
+          "barrels": [
+            {
+              "id": "MusaiClassFinalType_0093_NZN_Turret_MS",
+              "x": 25.0,
+              "y": 0.0
+            },
+            {
+              "id": "MusaiClassFinalType_0093_NZN_Turret_MS",
+              "x": 25.0,
+              "y": 0.0
+            },
+            {
+              "id": "MusaiClassFinalType_0093_NZN_Turret_MS",
+              "x": 25.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_MusaiClassFinalType_0093_NZN_Turret_MS_M1",
+              "offset": {
+                "x": 25.0,
+                "y": 0.0
+              },
+              "alternatingOffsetX": -50.0
+            },
+            {
+              "bone": "Turret_MusaiClassFinalType_0093_NZN_Turret_MS_M2",
+              "offset": {
+                "x": 25.0,
+                "y": 0.0
+              },
+              "alternatingOffsetX": -50.0
+            },
+            {
+              "bone": "Turret_MusaiClassFinalType_0093_NZN_Turret_MS_M3",
+              "offset": {
+                "x": 25.0,
+                "y": 0.0
+              },
+              "alternatingOffsetX": -50.0
+            }
+          ]
+        }
+      }
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    },
+    {
+      "id": "LaunchAllUnits",
+      "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+      "status": "adapted",
+      "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+    },
+    {
+      "id": "special_Common_ReEntry_NeedBooster",
+      "name": "大气层突入",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+      "status": "review"
+    },
+    {
+      "id": "Common_MinovskyParticle_M",
+      "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
+      "status": "adapted",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": [
+        "MusaiClassFinalType_0093_NZN_Turret_BeamCannon",
+        "MusaiClassFinalType_0093_NZN_Turret_MS"
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "Common_MinovskyParticle_M",
+      "type": "minovsky",
+      "name": "米诺夫斯基粒子散布[M]",
+      "radius": 9,
+      "enCost": 450,
+      "actionCost": 2,
+      "durationRounds": 4,
+      "cooldownTurns": 3,
+      "maxUses": 99,
+      "consumeAction": false,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Detect_3.ogg",
+        "volume": 0.5
+      },
+      "localization": {
+        "zh": {
+          "name": "米诺夫斯基粒子散布[M]"
+        },
+        "en": {
+          "name": "Minovsky Particle Dispersal [M]"
+        },
+        "ja": {
+          "name": "ミノフスキー粒子散布[M]"
+        }
+      }
+    },
+    {
+      "id": "Common_FullBoost",
+      "type": "fullboost",
+      "name": "全力推进",
+      "actionCost": 0,
+      "enCost": 250,
+      "consumeAction": false,
+      "range": 0,
+      "effect": "Flash_1_N",
+      "sound": {
+        "file": "../../sounds/Action_8.ogg",
+        "volume": 0.5
+      },
+      "duration": 2,
+      "cooldownTurns": 1,
+      "moveBonus": 2,
+      "mobilityMultiplier": 1.1,
+      "description": "消耗250 EN，在2个己方回合内移动力+2、反应系数×1.10；效果结束后冷却1个己方回合。搭载中仍会持续与计时。"
+    }
+  ],
+  "description": "姆塞的最终生产型",
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 4500.0,
+    "levelMultiplier": 0.25,
+    "published": 1125
+  },
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "Ship",
+    "Support",
+    "Transport"
+  ],
+  "transport": {
+    "slotCost": 1,
+    "loadTags": []
+  },
+  "hangars": [
+    {
+      "id": "Hangar_1",
+      "name": "格纳库 1",
+      "capacity": 8,
+      "allowedTags": [
+        "CanLoadInto",
+        "CanLoadIntoSpace",
+        "CanLoadIntoAir"
+      ],
+      "launchRange": 1,
+      "emergencyRange": 3,
+      "source": "Units/CommonUnit/Hangar/Hangar_X8.ini",
+      "sourceUnit": "Hangar_X8"
+    }
+  ],
+  "refits": [],
+  "production": {
+    "enabled": true
+  }
+}

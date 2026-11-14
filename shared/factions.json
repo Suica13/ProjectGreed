@@ -1,0 +1,11 @@
+{
+  "EFSF": { "name": "地球联邦军", "color": "#7acbff" },
+  "ZEON": { "name": "吉翁公国军", "color": "#ff8c96" },
+  "AEUG": { "name": "奥古", "color": "#79d69a" },
+  "TITANS": { "name": "提坦斯", "color": "#b69aff" },
+  "NEO_ZEON": { "name": "新吉翁", "color": "#f294ca" },
+  "EFSF_0093": { "name": "地球联邦军[0093]", "color": "#7acbff" },
+  "NEO_ZEON_0093": { "name": "新吉翁[0093]", "color": "#ff8c96" },
+  "OMNI": { "name": "地球联合军", "color": "#7acbff" },
+  "ZAFT": { "name": "扎夫特军", "color": "#ff8c96" }
+}

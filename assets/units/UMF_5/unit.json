@@ -1,0 +1,782 @@
+{
+  "schemaVersion": 2,
+  "id": "UMF_5",
+  "code": "UMF-5",
+  "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/UMF_5/UMF_5.ini",
+  "materials": {
+    "textures": {
+      "UMF_5_Crotch_1.png": "textures/UMF_5_Crotch_1.png",
+      "UMF_5_Body_1.png": "textures/UMF_5_Body_1.png",
+      "UMF_5_ArmL_1.png": "textures/UMF_5_ArmL_1.png",
+      "UMF_5_ArmR_1.png": "textures/UMF_5_ArmR_1.png",
+      "UMF_5_ShoulderL_1.png": "textures/UMF_5_ShoulderL_1.png",
+      "UMF_5_ShoulderR_1.png": "textures/UMF_5_ShoulderR_1.png",
+      "UMF_5_FootL_1.png": "textures/UMF_5_FootL_1.png",
+      "UMF_5_LegL_1.png": "textures/UMF_5_LegL_1.png",
+      "UMF_5_FootR_1.png": "textures/UMF_5_FootR_1.png",
+      "UMF_5_LegR_1.png": "textures/UMF_5_LegR_1.png",
+      "UMF_5_Body_1_Close.png": "textures/UMF_5_Body_1_Close.png",
+      "UMF_5.png": "textures/UMF_5.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
+    },
+    "icon": "UMF_5.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "LeftFoot",
+      "texture": "UMF_5_FootL_1.png",
+      "bone": "LeftFoot",
+      "order": 1.0,
+      "scale": 0.75,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightFoot",
+      "texture": "UMF_5_FootR_1.png",
+      "bone": "RightFoot",
+      "order": 1.0,
+      "scale": 0.75,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "LeftLeg",
+      "texture": "UMF_5_LegL_1.png",
+      "bone": "LeftLeg",
+      "order": 2.0,
+      "scale": 0.75,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightLeg",
+      "texture": "UMF_5_LegR_1.png",
+      "bone": "RightLeg",
+      "order": 2.0,
+      "scale": 0.75,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "Crotch",
+      "texture": "UMF_5_Crotch_1.png",
+      "bone": "Pelvis",
+      "order": 4.0,
+      "scale": 0.75,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmL",
+      "texture": "UMF_5_ArmL_1.png",
+      "bone": "LeftArm",
+      "order": 4.0,
+      "scale": 0.75,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmR",
+      "texture": "UMF_5_ArmR_1.png",
+      "bone": "RightArm",
+      "order": 4.0,
+      "scale": 0.75,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "scaleX": 1.0,
+      "independentClock": true
+    },
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 4.1,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -7.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Body",
+      "texture": "UMF_5_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 0.75,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Body_Close",
+      "texture": "UMF_5_Body_1_Close.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 0.75,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ShoulderL",
+      "texture": "UMF_5_ShoulderL_1.png",
+      "bone": "LeftShoulder",
+      "order": 6.0,
+      "scale": 0.75,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ShoulderR",
+      "texture": "UMF_5_ShoulderR_1.png",
+      "bone": "RightShoulder",
+      "order": 6.0,
+      "scale": 0.75,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    }
+  ],
+  "animations": {
+    "EnterPilot": "../../animations/EnterPilot__AMX_002.json",
+    "QuitPilot": "../../animations/QuitPilot.json",
+    "NoPilotIdle": "../../animations/NoPilotIdle.json",
+    "Common_Idle": "../../animations/Common_Idle__AMX_002.json",
+    "Common_Dodge_L": "../../animations/Common_Dodge_L.json",
+    "Common_Dodge_R": "../../animations/Common_Dodge_R.json",
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "OnMovingWalk": "../../animations/OnMovingWalk.json",
+    "Guard": "../../animations/Guard__AMX_002.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Daze": "../../animations/Common_Daze__AMX_002.json",
+    "Common_Stagger": "../../animations/Common_Stagger__AMX_002.json",
+    "Common_Push_A": "../../animations/Common_Push_A__ApsarasII.json",
+    "Common_StandShoot_A": "../../animations/Common_StandShoot_A.json",
+    "Common_Shoot_A": "../../animations/Common_Shoot_A__AMX_002.json",
+    "Common_Shoot_A_FA": "../../animations/Common_Shoot_A_FA__AMX_002.json",
+    "Common_Melee_Double_A": "../../animations/Common_Melee_Double_A.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 31500,
+    "en": 650.0,
+    "move": 6,
+    "mobility": 110.0,
+    "cost": 300,
+    "counterLimit": 1,
+    "accuracy": 115.0,
+    "partStructuralStrength": 120.0,
+    "partsBreakable": true,
+    "movementType": "amphibious",
+    "adaptability": {
+      "ground": 100,
+      "space": 50,
+      "water": 100.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 75.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "speed": 95,
+    "actionPoints": 10,
+    "sensors": {
+      "sight": 8,
+      "radar": 10.0,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    },
+    "commandAuras": [
+      {
+        "type": "cmdCom",
+        "name": "通信指挥",
+        "source": "Template/Unit/Skill/CmdCom.gw"
+      }
+    ]
+  },
+  "attackBonuses": {
+    "melee": 25.0,
+    "shooting": 25.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 5.0,
+      "flat": 0.0
+    },
+    "shell": {
+      "percent": 15.0,
+      "flat": 250.0
+    },
+    "melee": {
+      "percent": 15.0,
+      "flat": 350.0
+    },
+    "dp": {
+      "percent": 15.0,
+      "flat": 25.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    },
+    "requiredParts": []
+  },
+  "sourceStats": {
+    "hp": 25000.0,
+    "walkSpeed": 0.65,
+    "boostSpeed": 1.35,
+    "turnSpeed": 1.5,
+    "reaction": 110.0,
+    "shooting": 125.0,
+    "melee": 125.0,
+    "nativeTags": [
+      "UMF_5",
+      "Unit",
+      "MS",
+      "ZAFT",
+      "CE71",
+      "SEED"
+    ],
+    "nativeSkills": [
+      "CmdCom"
+    ],
+    "accuracy": 115.0,
+    "partStructuralStrength": 120.0,
+    "actionTurnSpeed": 1.5,
+    "movementBeforeMobility": 5,
+    "mobilityMoveTarget": 6,
+    "enBeforeReduction": 650.0,
+    "enCapacityMultiplier": 1,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 25.0,
+      "water": 100.0,
+      "air": 10.0,
+      "mountain": 75.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 20.0,
+      "radar": 360.0,
+      "antiDetection": 0.0
+    },
+    "balanceStatus": "native-level",
+    "unitLevel": 1200.0,
+    "tacticalMoveBeforeBonus": 5,
+    "v17BaseHp": 25000.0,
+    "technologyEra": "CE_0071_T1"
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMoving",
+    "stagger": "Common_Stagger",
+    "dodge": "Common_Dodge_L",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "OnMovingWalk",
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "佐诺",
+  "faction": "ZAFT",
+  "tags": [
+    "ZAFT",
+    "CE_0071_T1"
+  ],
+  "localization": {
+    "zh": {
+      "name": "佐诺",
+      "description": "扎夫特军所开发的次世代水中用MS,常用作指挥官机"
+    },
+    "en": {
+      "name": "ZnO",
+      "description": "A next-generation aquatic MS developed by ZAFT, often used as a commander unit"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "Common_Push_A": {
+      "ref": "Common_Push_A__lv1",
+      "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Push_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Kick_White_R"
+              ],
+              "delay": 0.45
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Push_A"
+        },
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+          "barrel": "Common_Push_A",
+          "entry": "hiddenAction_Common_Push_A_Fire",
+          "cooldown": 3.0,
+          "duration": 1.45,
+          "firstShot": 0.45,
+          "lastShot": 0.45,
+          "firingEvents": 1,
+          "projectiles": 1,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "hiddenAction_Common_Push_A_Fire",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SendEnemyTryAttack_Cqb",
+            "hiddenAction_Common_Push_A_SetWeaponIndex",
+            "hiddenAction_Common_Push_A_Step_1",
+            "hiddenAction_Common_Push_A_Fire_Step_1",
+            "hiddenAction_Common_Push_A_Fire_Step_2",
+            "hiddenAction_Common_Push_A_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff"
+          ]
+        },
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+          "barrelX": 0,
+          "barrelY": 0,
+          "cooldownSeconds": 3,
+          "barrels": [
+            {
+              "id": "Common_Push_A",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      },
+      "remove": [
+        "swingEffects"
+      ]
+    },
+    "ZAFT_UMF_5_MS": {
+      "ref": "ZAFT_UMF_5_MS__lv1",
+      "overrides": {
+        "requiredParts": [
+          "backpack"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/ZAFT_UMF_5_MS.gw",
+          "barrels": [
+            {
+              "id": "ZAFT_UMF_5_MS",
+              "x": 0.0,
+              "y": -5.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 0.0,
+                "y": -5.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "ZAFT_UMF_5_BG": {
+      "ref": "ZAFT_UMF_5_BG__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/ZAFT_UMF_5_BG.gw",
+          "barrels": [
+            {
+              "id": "ZAFT_UMF_5_BG",
+              "x": 14.0,
+              "y": 10.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 14.0,
+                "y": 10.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Common_Cqb_Double_A": {
+      "ref": "Common_Cqb_Double_A__lv1",
+      "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Melee_Double_A",
+              "delay": 0
+            },
+            {
+              "weaponDisplayIndex": 1,
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_1_White_R"
+              ],
+              "delay": 0.6
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [
+                "leftArm"
+              ],
+              "swingEffects": [
+                "Cqb_Fire_1_White_L"
+              ],
+              "delay": 0.0
+            },
+            {
+              "delay": 1.4
+            }
+          ],
+          "startAnimation": "Common_Melee_Double_A"
+        },
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_Double_A.gw",
+          "barrel": "Common_Cqb_Double_A",
+          "entry": "hiddenAction_Common_Cqb_Double_A_Fire",
+          "cooldown": 3.0,
+          "duration": 2.0,
+          "firstShot": 0.6,
+          "lastShot": 0.6,
+          "firingEvents": 2,
+          "projectiles": 2,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "hiddenAction_Common_Cqb_Double_A_Fire",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SendEnemyTryAttack_Cqb",
+            "hiddenAction_Common_Cqb_Double_A_SetWeaponIndex",
+            "hiddenAction_Common_Cqb_Double_A_Step_1",
+            "hiddenAction_Common_Cqb_Double_A_Fire_Step_1",
+            "hiddenAction_Common_Cqb_Double_A_Fire_Step_2",
+            "hiddenAction_Common_Cqb_Double_A_Fire_Step_3",
+            "hiddenAction_Common_Cqb_Double_A_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff"
+          ]
+        },
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_Double_A.gw",
+          "barrels": [
+            {
+              "id": "Common_Cqb_Double_A",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        },
+        "anyParts": [
+          "leftArm",
+          "rightArm"
+        ]
+      },
+      "remove": [
+        "swingEffects"
+      ]
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "两栖：可穿越陆地与水域",
+      "status": "implemented"
+    },
+    {
+      "id": "CmdCom",
+      "source": "Template/Unit/Skill/CmdCom.gw",
+      "status": "adapted",
+      "name": "通信指挥：范围与效果随驾驶员领导力变化"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": [
+        "ZAFT_UMF_5_MS",
+        "ZAFT_UMF_5_BG",
+        "Common_Cqb_Double_A",
+        "Common_Push_A"
+      ]
+    }
+  ],
+  "description": "扎夫特军所开发的次世代水中用MS,常用作指挥官机",
+  "skills": [],
+  "kitAliases": {
+    "kit_0": "standard",
+    "kit_1": "standard"
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 1200.0,
+    "levelMultiplier": 0.25,
+    "published": 300
+  },
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS",
+    "Amphibious"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto",
+      "CanUseSFS"
+    ]
+  },
+  "hangars": [],
+  "refits": []
+}

@@ -27,8 +27,16 @@ const SkillControls = (() => {
   }
   function defensiveAbilities(model) {
     const field = model.iField;
-    if (!field) return [];
+    const result = [];
+    if (model.abc) result.push({name:"ABC",description:I18n.language === "en"
+      ? `Finite beam coating: ${model.abc.capacity} durability, ${Math.round(model.abc.reductions.beam*100)}% ranged beam reduction; depleted coating stops protecting.`
+      : `有限耐久 ${model.abc.capacity}，普通光束减伤${Math.round(model.abc.reductions.beam*100)}%，光束格斗及贯穿分量按原MOD弱化减伤。耐久耗尽后失效。`});
+    if (model.phaseShift) result.push({name:"PS Armor",description:I18n.language === "en"
+      ? `Finite ${model.phaseShift.capacity}-point armor. Toggle changes armor and textures. Incoming physical hits drain durability and EN; beams bypass it.`
+      : `有限耐久 ${model.phaseShift.capacity}，可开关并切换贴图。开启时减轻实弹与物理格斗伤害，受击消耗装甲耐久及EN，对光束无效。`});
+    if (!field) return result;
     return [
+      ...result,
       {
         name: I18n.text("I立场"),
         description: I18n.text(
@@ -87,6 +95,12 @@ const SkillControls = (() => {
         return `射程${skill.range}マス。${skill.actionCost} APと${skill.enCost !== undefined ? skill.enCost + " EN" : "最大ENの" + skill.enCostPercent + "%"}を消費。半径${skill.radius}マスを通るビームの威力を50%軽減。2往復ターン持続、重複不可。`;
       return `射程${skill.range}格，消耗${skill.actionCost} AP与${skill.enCost !== undefined ? skill.enCost + " EN" : skill.enCostPercent + "%最大EN"}；半径${skill.radius}格内持续2个完整回合周期，穿过区域的光束弹伤害降低50%，同类区域不叠加。`;
     }
+    if (skill.type === "optical_camouflage") return I18n.language === "en"
+      ? "Toggle optical camouflage: 200 EN per own turn, evasion ×1.25 and sensor stealth. Attacking or insufficient EN cancels it."
+      : I18n.language === "ja" ? "光学迷彩：自軍ターンごとに200 EN、回避×1.25・ステルス。攻撃またはEN不足で解除。" : "光学迷彩：每个己方回合消耗200 EN，回避系数×1.25并获得索敌隐身；攻击或EN不足时解除。";
+    if (skill.type === "phase_shift") return I18n.language === "en"
+      ? "Toggle phase-shift armor once per turn. Physical hits spend armor durability and EN; it stops protecting when either is exhausted."
+      : "每回合可切换一次PS装甲，不消耗行动。受击时按原MOD消耗装甲耐久与EN，EN或装甲耗尽时失效。";
     if (skill.description) return skill.description;
     if (skill.type === "flight")
       return I18n.text(
@@ -190,7 +204,11 @@ const SkillControls = (() => {
         element(
           "strong",
           "",
-          skill.type === "flight" && unit.flying
+          skill.type === "optical_camouflage"
+            ? (I18n.language === "en" ? (unit.opticalCamouflage ? "Disable camouflage" : "Enable camouflage") : I18n.language === "ja" ? (unit.opticalCamouflage ? "迷彩解除" : "迷彩起動") : (unit.opticalCamouflage ? "关闭光学迷彩" : "开启光学迷彩"))
+            : skill.type === "phase_shift"
+            ? I18n.text(unit.phaseShiftEnabled === false ? "开启PS装甲" : "关闭PS装甲")
+            : skill.type === "flight" && unit.flying
             ? "降落"
             : skill.owner === "pilot"
               ? I18n.localized(skill)

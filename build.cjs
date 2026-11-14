@@ -32,6 +32,7 @@ html = html.replace("__CLIMATE_EFFECT_PRESETS__", () => {
 html = html.replace("__UNIT_SENSORS__", () => inlineScript(read("shared/unit-sensors.js")));
 const project = JSON.parse(read("project.json"));
 const developmentTree = JSON.parse(read("shared/development-tree.json"));
+html = html.replace("__FACTION_DATA__", () => json(JSON.parse(read("shared/factions.json"))));
 const pilotData = require("./tools/display-localization.cjs")
   .createLocalizer()
   .pilotCatalog(JSON.parse(read("shared/pilots.json")));
@@ -130,6 +131,7 @@ for (const [key, file] of [
   ["UNIT_SKILLS", "shared/unit-skills.js"],
   ["UNIT_HANGARS", "shared/hangars.js"],
   ["PILOTS", "shared/pilots.js"],
+  ["TECHNOLOGY_ERAS", "shared/technology-eras.js"],
   ["DEVELOPMENT", "shared/development.js"],
   ["HANGAR_UI", "client/hangar-ui.js"],
   ["SFS_UI", "client/sfs-ui.js"],
@@ -143,6 +145,7 @@ for (const [key, file] of [
   ["BATTLEFIELD_UI", "client/battlefield-ui.js"],
   ["CAMPAIGN_BATTLEFIELD", "shared/campaign-battlefield.js"],
   ["AUTOMATIC_FIRE", "shared/automatic-fire.js"],
+  ["ARMOR_COATINGS", "shared/armor-coatings.js"],
   ["CORE", "shared/rules.js"],
   ["WEAPON_SEQUENCE", "shared/weapon-sequence.js"],
   ["WEAPON_CLASSES", "shared/weapon-classes.js"],

@@ -38,6 +38,51 @@
     },
     "Facility_Radar": {
       "/stats/hp": 3750
+    },
+    "Medea": {
+      "/stats/cost": -75
+    },
+    "FatUncle": {
+      "/stats/cost": -75
+    },
+    "MedeaKai": {
+      "/stats/cost": -50
+    },
+    "MedeaKai_DeployState": {
+      "/stats/cost": 25
+    },
+    "FatUncleKai": {
+      "/stats/cost": -50
+    },
+    "FatUncleKai_DeployState": {
+      "/stats/cost": 25
+    },
+    "ColumbusClassKai": {
+      "/stats/cost": -400
+    },
+    "PazockClass": {
+      "/stats/cost": -400
+    },
+    "ZGMF_1017_H": {
+      "/weapons/ZAFT_ZGMF_1017_LBR/hit": -20
+    },
+    "GAT_X103": {
+      "/weapons/OMNI_GAT_X103_BR_HyperSniper/min": 2,
+      "/weapons/OMNI_GAT_X103_BR_HyperSniper/max": 1
+    },
+    "ZGMF_515": {
+      "/weapons/ZAFT_ZGMF_515_Minigun/attackRounds": -1
+    },
+    "ZGMF_LRR704B": {
+      "/stats/cost": -25,
+      "/weapons/ZGMF_LRR704B_LBR_Sniper_Aim/min": 2,
+      "/weapons/ZGMF_LRR704B_LBR_Sniper_Aim/max": 3,
+      "/weapons/ZGMF_LRR704B_LBR_Sniper_Aim/damagePerShot": 1875,
+      "/weapons/ZGMF_LRR704B_LBR_Sniper_Aim/damageComponents/beam": 1250,
+      "/weapons/ZGMF_LRR704B_LBR_Sniper_Aim/damageComponents/beamAP": 625
+    },
+    "GAT_X207": {
+      "/stats/hp": -2500
     }
   },
   "weapons": {

@@ -48,6 +48,7 @@ window.ClientSettingsLayout = (() => {
   row("settingsUnitShadows", general);
   row("settingsHidePilotDialogue", general);
   for (const name of ["master", "music", "sfx"]) row("volume-" + name, sections.get("audio"));
+  sections.get("audio").append(byId("musicPlayer"));
   const storage = sections.get("storage"),
     profile = dialog.querySelector(".profile-save-controls");
   if (profile) storage.append(profile);

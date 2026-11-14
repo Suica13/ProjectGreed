@@ -112,7 +112,7 @@
     -webkit-line-clamp: 2;
     line-height: 18px;
   }
-  html:has(#developmentScreen:not([hidden])) :is(#openClientSettings, #musicPlayer, #openMatchRecords) {
+  html:has(#developmentScreen:not([hidden])) :is(#openClientSettings, #openMatchRecords) {
     display: none;
   }
   #start .menu-contact {
@@ -404,9 +404,7 @@
   #formationUnitDetail .formation-detail-preview {
     max-height: 160px;
   }
-  html:has(#formationScreen:not([hidden])) #openClientSettings,
-  html:has(#formationScreen:not([hidden])) #musicPlayer,
-  html:has(#roomPreparation:not([hidden])) #musicPlayer {
+  html:has(#formationScreen:not([hidden])) #openClientSettings {
     display: none;
   }
 }

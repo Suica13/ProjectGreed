@@ -401,7 +401,7 @@ const Economy = (() => {
   function available(offer, faction) {
     if (
       !offer ||
-      !["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(faction) ||
+      !["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON", "EFSF_0093", "NEO_ZEON_0093", "OMNI", "ZAFT"].includes(faction) ||
       (faction !== "PMC" && !(offer.availableFactions || [offer.faction]).includes(faction))
     )
       return false;

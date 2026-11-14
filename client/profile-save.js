@@ -1,7 +1,7 @@
 /* Personal progress controls; serialization is shared with the offline save editor. */
 (() => {
-  const factions = ["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"];
-  const { validate, exportData, encodeData, importData, fromNativeSnapshot } = ProfileSave;
+  const factions = ["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON", "EFSF_0093", "NEO_ZEON_0093", "OMNI", "ZAFT"];
+  const { validate, exportData, encodeData, importData } = ProfileSave;
   const panel = document.createElement("div"),
     actions = document.createElement("div"),
     status = document.createElement("p");
@@ -55,10 +55,10 @@
       if (!canImport()) throw Error("请先退出当前战局");
       const file = input.files[0];
       if (!file) return;
-      const limit = window.AppRuntime?.native ? 64 : 32;
+      const limit = 64;
       if (file.size > limit * 1024 * 1024) throw Error("存档超过" + limit + "MB");
-      const value = JSON.parse(await file.text());
-      importData(window.AppRuntime?.native && value?.format === "ProjectGreed-app-store" ? fromNativeSnapshot(value) : value);
+      const value = JSON.parse((await file.text()).replace(/^\uFEFF/, ""));
+      importData(value);
       location.reload();
     } catch (error) {
       status.textContent = "导入失败：" + Economy.errorMessage(error);

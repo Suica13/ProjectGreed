@@ -258,7 +258,7 @@ function createServer({
             });
             return;
           }
-          if (!["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(msg.characterFaction))
+          if (!["PMC", ...G.factions].includes(msg.characterFaction))
             throw Error("请使用最新客户端并选择角色阵营后加入房间。");
           if (msg.identity) activities.identify(ws, msg.identity, msg.name);
           ws.stateDelta = msg.stateDelta === 1 ? 1 : 0;

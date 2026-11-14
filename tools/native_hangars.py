@@ -60,6 +60,9 @@ def correct(prefab, native):
         path, source = hangar_sources()[name]
         core = source["core"]
         attachment = values.get("attachments_onlyOnSlots", key.removeprefix("hiddenAction_attachment_"))
+        declared = key.removeprefix("hiddenAction_attachment_")
+        if any(h["id"] == attachment for h in hangars) and "attachment_" + declared in native:
+            attachment = declared
         hangars.append({"id": attachment, "name": "格纳库 " + str(len(hangars)+1),
             "capacity": int(core["maxTransportingUnits"]),
             "allowedTags": [t.strip() for t in core["transportUnitsRequireTag"].split(",") if t.strip()],
@@ -73,6 +76,9 @@ def correct(prefab, native):
         attachment = values.get("attachments_onlyOnSlots", "")
         if not attachment or any(h["id"] == attachment for h in hangars): continue
         slot = section(native, "attachment_" + attachment)
+        declared = key.removeprefix("hiddenAction_attachment_")
+        if any(h["id"] == attachment for h in hangars) and "attachment_" + declared in native:
+            attachment = declared
         hangars.append({"id": attachment, "name": "SFS", "kind": "sfs",
             "capacity": 1, "allowedTags": ["CanUseSFS"],
             "launchRange": 1, "emergencyRange": 3,

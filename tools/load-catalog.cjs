@@ -516,6 +516,8 @@ function loadCatalog({
       prefab.presentation.thrusters = false;
       prefab.presentation.movement = "walk";
     }
+    prefab.tags = [...new Set(prefab.tags.map(require("../shared/technology-eras.js").normalize))];
+    if (prefab.sourceStats?.technologyEra) prefab.sourceStats.technologyEra = require("../shared/technology-eras.js").normalize(prefab.sourceStats.technologyEra);
     localize.prefab(prefab);
     require("./unit-footprint.cjs").compactShipFootprint(prefab);
     require("./weapon-balance.cjs").applyWeaponBalance(prefab, conversion);
@@ -534,7 +536,7 @@ function loadCatalog({
       (!Array.isArray(prefab.availableFactions) ||
         !prefab.availableFactions.length ||
         prefab.availableFactions.some(
-          (value) => !["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(value),
+          (value) => !Object.keys(require("../shared/factions.json")).includes(value),
         ))
     )
       throw Error("Invalid available factions: " + prefab.id);
@@ -546,11 +548,11 @@ function loadCatalog({
       throw Error("Invalid unit action points: " + prefab.id);
     if (
       !Array.isArray(prefab.tags) ||
-      prefab.tags.filter((tag) => ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(tag))
+      prefab.tags.filter((tag) => Object.keys(require("../shared/factions.json")).includes(tag))
         .length !== 1
     )
       throw Error("Unit must have exactly one primary faction tag: " + ref);
-    if (!prefab.tags.some((tag) => /^\d{4}(?:T[12])?$/.test(tag)))
+    if (!prefab.tags.some((tag) => /^(?:\d{4}(?:T[12])?|(?:UC|CE)_\d{4}_T\d+)$/.test(tag)))
       throw Error("Unit must have an era tag: " + ref);
     prefab.unitTags ??= [];
     if (prefab.unitTags.includes("MA"))
@@ -599,7 +601,7 @@ function loadCatalog({
     if (sizeTags.length > 1) throw Error("Conflicting unit size tags: " + ref);
     if (!sizeTags.length) prefab.unitTags.push(prefab.stats.ship ? "LargeUnit" : "MediumUnit");
     prefab.faction = prefab.tags.find((tag) =>
-      ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(tag),
+      Object.keys(require("../shared/factions.json")).includes(tag),
     );
     if (prefab.schemaVersion !== 2 || result.prefabs.some((p) => p.id === prefab.id))
       throw Error("Invalid prefab: " + ref);
@@ -802,6 +804,14 @@ function loadCatalog({
         f.minimumRatio !== -0.25
       )
         throw Error("Invalid I-field configuration: " + ref);
+    }
+    for (const kind of ["abc", "phaseShift"]) if (prefab.stats[kind]) {
+      const coating = prefab.stats[kind];
+      if (!Number.isFinite(coating.capacity) || coating.capacity <= 0 ||
+          !coating.reductions || typeof coating.reductions !== "object" || Array.isArray(coating.reductions) ||
+          Object.entries(coating.reductions).some(([channel,value]) => !["beam","beamAP","shell","shellAP","melee","meleeAP","meleeBeam","meleeBeamAP","meleeShell","meleeShellAP"].includes(channel) || !Number.isFinite(value) || value < 0 || value > 1) ||
+          (kind === "phaseShift" && (!Number.isFinite(coating.energyPercent) || coating.energyPercent < 0 || coating.energyPercent > 100)))
+        throw Error("Invalid armor coating configuration: " + prefab.id + "/" + kind);
     }
     prefab.stats.accuracy ??= 100;
     if (
@@ -1169,9 +1179,9 @@ function loadCatalog({
               !Array.isArray(remote.units) ||
               !remote.units.length ||
               remote.units.length > 16 ||
-              remote.shotsPerUnit !== 2 ||
-              weapon.attack.shots.length !== remote.units.reduce((sum, unit) => sum + (unit.burstShots ?? 1) * remote.shotsPerUnit, 0) ||
-              remote.units.some(unit => !Number.isInteger(unit.burstShots ?? 1) || (unit.burstShots ?? 1) < 1 || (unit.burstShots ?? 1) > 64) ||
+              (!Number.isInteger(remote.shotsPerUnit) || remote.shotsPerUnit < 1 || remote.shotsPerUnit > 32) ||
+              weapon.attack.shots.length !== remote.units.reduce((sum, unit) => sum + (unit.burstShots ?? 1) * (unit.cycles ?? remote.shotsPerUnit), 0) ||
+              remote.units.some(unit => !Number.isInteger(unit.cycles ?? remote.shotsPerUnit) || (unit.cycles ?? remote.shotsPerUnit) < 1 || (unit.cycles ?? remote.shotsPerUnit) > 32 || !Number.isInteger(unit.burstShots ?? 1) || (unit.burstShots ?? 1) < 1 || (unit.burstShots ?? 1) > 64) ||
               ![
                 "moveSeconds",
                 "settleSeconds",
@@ -1290,6 +1300,7 @@ function loadCatalog({
         faction: prefab.faction,
         availableFactions: prefab.availableFactions,
         tags: prefab.tags,
+        technologyWeight: require("../shared/technology-eras.js").weight(prefab.sourceStats?.technologyEra || prefab.tags.find(tag => /^(UC|CE)_/.test(tag))),
         unitTags: prefab.unitTags || [],
         transport: prefab.transport || { slotCost: 1, loadTags: [] },
         hangars: prefab.hangars || [],

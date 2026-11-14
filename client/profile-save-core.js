@@ -1,6 +1,6 @@
 /* Personal progress only: never copy connection credentials or an ongoing match. */
 const ProfileSave = (() => {
-  const factions = ["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"];
+  const factions = ["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON", "EFSF_0093", "NEO_ZEON_0093", "OMNI", "ZAFT"];
   const pilotKey = "projectgreed.custom-pilots.v2.",
     formationKey = "slg-formations-v1.";
   const { packClaims, unpackClaims } = SaveCodec;
@@ -25,6 +25,8 @@ const ProfileSave = (() => {
     };
   }
   function validate(value) {
+    // Detect the file format, independently of the client receiving it.
+    if (value?.format === "ProjectGreed-app-store") return fromNativeSnapshot(value);
     if (value?.format !== "ProjectGreed-profile" || ![1, 2, 3].includes(value.schemaVersion))
       throw Error("不支持的个人存档格式");
     if (value.schemaVersion >= 2)
@@ -112,7 +114,7 @@ const ProfileSave = (() => {
             units:
               Array.isArray(squad.units) && !squad.units.length
                 ? []
-                : Rules.validateFormation(squad.units, Infinity, Rules.catalog.formation.maxUnits),
+                : Rules.validateFleetFormation(squad.units, Infinity, Rules.catalog.formation.maxUnits),
           };
         }),
       };

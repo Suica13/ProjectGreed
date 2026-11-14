@@ -27,7 +27,7 @@ const BattleEconomy = (() => {
         activity,
     );
   }
-  const researchFactions = ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"];
+  const researchFactions = ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON", "EFSF_0093", "NEO_ZEON_0093", "OMNI", "ZAFT"];
   function technologyFactions(model) {
     // Common units retain their source tag and all explicit playable faction tags.
     return [...new Set([...(model.tags || []), ...(model.availableFactions || []), model.faction])]

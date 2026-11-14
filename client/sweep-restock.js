@@ -83,7 +83,7 @@ const SweepRestock = (() => {
       element(
         "p",
         "",
-        `编组COST ${plan.totalCost} / ${options().budget} · 容量点 ${plan.points} / ${options().unitLimit}`,
+        `编组COST ${plan.totalCost} / ${options().budget} · 舰船数量 ${plan.points} / 3`,
       ),
       element(
         "small",

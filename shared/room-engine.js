@@ -283,6 +283,8 @@ function createRoomEngine({
       room.seats[p.seat] = p;
     }
     room.settings.mapId = map.id;
+    room.pilotParticipants = new Set();
+    room.pilotDamage = {};
     room.pending = null;
     room.battle = null;
     room.playback = null;
@@ -2416,7 +2418,6 @@ function createRoomEngine({
   }
   function recordPilotBattle(room, actor, kind, cost, shipKill = false) {
     if (actor?.missionActor) return;
-    if (room.sweep) return;
     if (room.settings.mode === "battlefield") return;
     if ((room.startedFromSave && !room.campaign) || !actor?.pilot?.custom) return;
     const owner = room.seats[G.ownerOf(actor)];
@@ -2440,7 +2441,7 @@ function createRoomEngine({
         ? 0
         : G.pilots.combatExperience(G.modelOf(actor).cost, points, rate);
     const requiresRecruitment =
-      !!actor.pilot.ace && kind === "loss" && room.settings.mode !== "quick";
+      !!actor.pilot.ace && kind === "loss" && !["quick", "sweep"].includes(room.settings.mode);
     actor.pilot = G.pilots.battleResult(actor.pilot, kind, points, experiencePoints, {
       shipKill,
       requiresRecruitment,
@@ -2691,7 +2692,7 @@ function createRoomEngine({
       return undefined;
     if (room.started && room.phase !== "assembly" && room.aiFormationEras)
       return room.aiFormationEras;
-    return [room.settings.regularEra || "0079T1"];
+    return [room.settings.regularEra || "UC_0079_T1"];
   }
   function playerRestrictions(room, player) {
     const rules = G.armyRestrictions(
@@ -2840,7 +2841,7 @@ function createRoomEngine({
     room.settings = { ...G.defaultRoomSettings(), ...Records.clone(save.settings) };
     if (room.settings.mode === "regular" && !save.settings.regularEra) {
       const savedEras = new Set((save.game?.units || []).flatMap(unit => G.models[unit.model]?.tags || []));
-      room.settings.regularEra = [...G.eras].reverse().find(era => savedEras.has(era)) || "0079T1";
+      room.settings.regularEra = [...G.eras].reverse().find(era => savedEras.has(era)) || "UC_0079_T1";
       room.resumeSave.settings.regularEra = room.settings.regularEra;
       room.turnSave.settings.regularEra = room.settings.regularEra;
     }
@@ -4668,7 +4669,7 @@ function createRoomEngine({
             throw Error("历史战役模式每支队伍固定使用一个阵营");
           if (room.started) throw Error("对局开始后不能切换阵营。");
           if (msg.faction !== "PMC") throw Error("常规战和快速战固定使用 PMC 阵营。");
-          if (!["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(msg.faction))
+          if (!["PMC", ...G.factions].includes(msg.faction))
             throw Error("玩家阵营无效。");
           const required = forcedFaction(room, member.seat);
           if (required && required !== msg.faction) throw Error("本队已设置强制阵营。");
@@ -4704,7 +4705,7 @@ function createRoomEngine({
             ...(Object.hasOwn(msg.config, "unitCostPercent") ? { unitCostLimit: null } : {}),
           });
           const characterFaction = msg.characterFaction ?? bot.characterFaction;
-          if (!["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(characterFaction))
+          if (!["PMC", ...G.factions].includes(characterFaction))
             throw Error("AI 阵营无效。");
           if (room.settings.mode !== "campaign" && characterFaction !== "PMC")
             throw Error("常规战和快速战 AI 固定使用 PMC 阵营。");
@@ -4750,7 +4751,7 @@ function createRoomEngine({
               ws: { room: room.code, memberId: botId, seat: destination },
             };
             if (
-              !["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(bot.characterFaction)
+              !["PMC", ...G.factions].includes(bot.characterFaction)
             )
               throw Error("AI 阵营角色无效");
             if (room.resumeSave?.armies[destination])
@@ -4868,9 +4869,9 @@ function createRoomEngine({
               })
             : {
                 mode: G.validateBattleMode(msg.battleMode ?? room.settings.mode),
-                regularEra: msg.regularEra ?? room.settings.regularEra ?? "0079T1",
+                regularEra: G.normalizeEra(msg.regularEra ?? room.settings.regularEra ?? "UC_0079_T1"),
                 sweepFaction: msg.sweepFaction ?? room.settings.sweepFaction ?? "ZEON",
-                sweepEra: msg.sweepEra ?? room.settings.sweepEra ?? "0079T1",
+                sweepEra: G.normalizeEra(msg.sweepEra ?? room.settings.sweepEra ?? "UC_0079_T1"),
                 sweepEnvironment:
                   msg.sweepEnvironment ?? room.settings.sweepEnvironment ?? "ground",
                 mapId: map.id,
@@ -4942,7 +4943,7 @@ function createRoomEngine({
               msg.battlefieldTeams ?? room.settings.battlefieldTeams,
             );
             if (room.settings.mode !== "battlefield") {
-              const era = G.battlefieldMode.eras.includes(msg.battlefieldEra) ? msg.battlefieldEra : "0079T1";
+              const era = G.battlefieldMode.eras.includes(msg.battlefieldEra) ? msg.battlefieldEra : "UC_0079_T1";
               const preset = G.battlefieldMode.roomPresets.find((p) => p.era === era && p.costLimit === settings.costLimit) ||
                 G.battlefieldMode.roomPresets.find((p) => p.era === era);
               Object.assign(settings, G.battlefieldMode.presetSettings(preset.id, settings.battlefieldTeams, G.eras));
@@ -5796,7 +5797,7 @@ function createRoomEngine({
   function join(ws, msg) {
     if (ws.room) throw Error("当前连接已经加入房间");
     let characterFaction = msg.characterFaction;
-    if (!["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(characterFaction))
+    if (!["PMC", ...G.factions].includes(characterFaction))
       throw Error("角色阵营无效。");
     let code = String(msg.room || "")
       .trim()
@@ -5873,7 +5874,7 @@ function createRoomEngine({
         room.turnDone = room.seats.map(() => false);
       }
       if (room.settings.mode === "battlefield") {
-        Object.assign(room.settings, G.battlefieldMode.presetSettings("0079T1-cost-1500", null, G.eras));
+        Object.assign(room.settings, G.battlefieldMode.presetSettings("UC_0079_T1-cost-1500", null, G.eras));
         room.settings.mapId = G.battlefieldMode.defaultMapId;
         room.seats = Array(G.getMap(room.settings.mapId).spawns.length).fill(null);
         room.turnDone = room.seats.map(() => false);

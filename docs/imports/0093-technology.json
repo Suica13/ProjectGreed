@@ -1,0 +1,340 @@
+{
+  "factions": {
+    "EFSF_0093": [
+      {
+        "id": "Tech_0093_EFSF_BaseTech",
+        "name": "基础科技[地球联邦][0093]",
+        "description": "解锁地球联邦基础建筑、工厂与两种基础单位。",
+        "icon": "assets/tech-icons/Tech_0093_EFSF_BaseTech.png",
+        "row": "mid",
+        "column": 1,
+        "money": 0,
+        "supplies": 0,
+        "sourceCosts": {
+          "money": 0,
+          "supplies": 0,
+          "points": 0,
+          "researchSeconds": 0
+        },
+        "points": 0,
+        "requires": [],
+        "unlocks": [
+          "RGM_86R_0093_EFSF",
+          "SalamisClassKai_0093_EFSF"
+        ],
+        "page": 0,
+        "era": "UC_0093_T1",
+        "technologyWeight": 5,
+        "sourceUnlocks": [
+          "RGM_86R_0093_EFSF",
+          "SalamisClassKai_0093_EFSF",
+          "Factory_0093_EFSF_Land",
+          "Factory_0093_EFSF_Mega",
+          "Factory_0093_EFSF_Space",
+          "Factory_0093_EFSF_Space_Mega",
+          "Refinery_Common_T3",
+          "Institute_Common_T2",
+          "SupplyDepot_Common_T2",
+          "Academy_Common_T2",
+          "Turret_MG_B",
+          "Turret_AA_B",
+          "Turret_CN_B",
+          "Turret_BM_B_Yellow",
+          "Turret_Radar_B",
+          "Turret_Space_MG_B",
+          "Turret_Space_MS_B",
+          "Turret_Space_CN_B",
+          "Wall_T2_A",
+          "Wall_T2_B",
+          "HLV_0093_Build"
+        ],
+        "source": {
+          "root": "GW_BattleUniverse_DLC_0093",
+          "file": "Units/TechTree/Tech/Faction/0093_EFSF/Common/Tech_0093_EFSF_BaseTech.ini"
+        },
+        "placeholder": false,
+        "pointsMultiplier": 2
+      },
+      {
+        "id": "Tech_0093_EFSF_Mid02",
+        "name": "杰刚开发计划",
+        "description": "解锁杰刚生产，本方完成研究时赠送1台杰刚。",
+        "icon": "assets/tech-icons/Tech_0093_EFSF_Mid02.png",
+        "row": "mid",
+        "column": 2,
+        "money": 8000,
+        "supplies": 2000,
+        "sourceCosts": {
+          "money": 4000,
+          "supplies": 1000,
+          "points": 1200,
+          "researchSeconds": 30
+        },
+        "points": 2400,
+        "requires": [
+          "Tech_0093_EFSF_BaseTech"
+        ],
+        "unlocks": [
+          "RGM_89"
+        ],
+        "page": 0,
+        "era": "UC_0093_T1",
+        "technologyWeight": 5,
+        "sourceUnlocks": [
+          "RGM_89"
+        ],
+        "source": {
+          "root": "GW_BattleUniverse_DLC_0093",
+          "file": "Units/TechTree/Tech/Faction/0093_EFSF/Common/Tech_0093_EFSF_Mid02.ini"
+        },
+        "placeholder": false,
+        "pointsMultiplier": 2
+      },
+      {
+        "id": "Tech_0093_EFSF_Recovery",
+        "name": "奥古科技回收计划",
+        "description": "解锁回收技术机体生产，本方完成研究时每种赠送1台。",
+        "icon": "assets/tech-icons/Tech_0093_EFSF_Recovery.png",
+        "row": "mid",
+        "column": 3,
+        "money": 16000,
+        "supplies": 4000,
+        "sourceCosts": {
+          "money": 8000,
+          "supplies": 2000,
+          "points": 3600,
+          "researchSeconds": 30
+        },
+        "points": 7200,
+        "requires": [
+          "Tech_0093_EFSF_Mid02"
+        ],
+        "unlocks": [
+          "RGZ_91",
+          "MSZ_006A1_0093_EFSF",
+          "MSZ_006C1_0093_EFSF",
+          "RGZ_91_MA"
+        ],
+        "page": 0,
+        "era": "UC_0093_T1",
+        "technologyWeight": 5,
+        "sourceUnlocks": [
+          "RGZ_91",
+          "MSZ_006A1_0093_EFSF",
+          "MSZ_006C1_0093_EFSF"
+        ],
+        "source": {
+          "root": "GW_BattleUniverse_DLC_0093",
+          "file": "Units/TechTree/Tech/Faction/0093_EFSF/Common/Tech_0093_EFSF_Recovery.ini"
+        },
+        "placeholder": false,
+        "pointsMultiplier": 2
+      },
+      {
+        "id": "Tech_0093_EFSF_Mid03",
+        "name": "新高达开发计划",
+        "description": "解锁牛高达测试型与牛高达生产，本方完成研究时赠送1台牛高达；TEST不赠送。",
+        "icon": "assets/tech-icons/Tech_0093_EFSF_Mid03.png",
+        "row": "mid",
+        "column": 4,
+        "money": 20000,
+        "supplies": 5000,
+        "sourceCosts": {
+          "money": 10000,
+          "supplies": 2500,
+          "points": 6000,
+          "researchSeconds": 30
+        },
+        "points": 12000,
+        "requires": [
+          "Tech_0093_EFSF_Recovery"
+        ],
+        "unlocks": [
+          "RX_93",
+          "RX_93_Test"
+        ],
+        "page": 0,
+        "era": "UC_0093_T1",
+        "technologyWeight": 5,
+        "sourceUnlocks": [
+          "RX_93",
+          "RX_93_Test"
+        ],
+        "source": {
+          "root": "GW_BattleUniverse_DLC_0093",
+          "file": "Units/TechTree/Tech/Faction/0093_EFSF/Common/Tech_0093_EFSF_Mid03.ini"
+        },
+        "placeholder": false,
+        "pointsMultiplier": 2
+      }
+    ],
+    "NEO_ZEON_0093": [
+      {
+        "id": "Tech_0093_NZN_BaseTech",
+        "name": "基础科技[新吉翁][0093]",
+        "description": "解锁新吉翁基础建筑、工厂与两种基础单位。",
+        "icon": "assets/tech-icons/Tech_0093_NZN_BaseTech.png",
+        "row": "mid",
+        "column": 1,
+        "money": 0,
+        "supplies": 0,
+        "sourceCosts": {
+          "money": 0,
+          "supplies": 0,
+          "points": 0,
+          "researchSeconds": 0
+        },
+        "points": 0,
+        "requires": [],
+        "unlocks": [
+          "AMX_101_0093_NZN",
+          "MusaiClassFinalType_0093_NZN"
+        ],
+        "page": 0,
+        "era": "UC_0093_T1",
+        "technologyWeight": 5,
+        "sourceUnlocks": [
+          "AMX_101_0093_NZN",
+          "MusaiClassFinalType_0093_NZN",
+          "Factory_0093_NZN_Land",
+          "Factory_0093_NZN_Mega",
+          "Factory_0093_NZN_Space",
+          "Factory_0093_NZN_Space_Mega",
+          "Refinery_Common_T3",
+          "Institute_Common_T2",
+          "SupplyDepot_Common_T2",
+          "Academy_Common_T2",
+          "Turret_MG_B",
+          "Turret_AA_B",
+          "Turret_CN_B",
+          "Turret_BM_B_Yellow",
+          "Turret_Radar_B",
+          "Turret_Space_MG_B",
+          "Turret_Space_MS_B",
+          "Turret_Space_CN_B",
+          "Wall_T2_A",
+          "Wall_T2_B",
+          "HLV_0093_Build"
+        ],
+        "source": {
+          "root": "GW_BattleUniverse_DLC_0093",
+          "file": "Units/TechTree/Tech/Faction/0093_NZN/Common/Tech_0093_NZN_BaseTech.ini"
+        },
+        "placeholder": false,
+        "pointsMultiplier": 2
+      },
+      {
+        "id": "Tech_0093_NZN_Mid02",
+        "name": "基拉德卡开发计划",
+        "description": "解锁基拉德卡生产，本方完成研究时赠送1台基拉德卡。",
+        "icon": "assets/tech-icons/Tech_0093_NZN_Mid02.png",
+        "row": "mid",
+        "column": 2,
+        "money": 8000,
+        "supplies": 2000,
+        "sourceCosts": {
+          "money": 4000,
+          "supplies": 1000,
+          "points": 1200,
+          "researchSeconds": 30
+        },
+        "points": 2400,
+        "requires": [
+          "Tech_0093_NZN_BaseTech"
+        ],
+        "unlocks": [
+          "AMS_119"
+        ],
+        "page": 0,
+        "era": "UC_0093_T1",
+        "technologyWeight": 5,
+        "sourceUnlocks": [
+          "AMS_119"
+        ],
+        "source": {
+          "root": "GW_BattleUniverse_DLC_0093",
+          "file": "Units/TechTree/Tech/Faction/0093_NZN/Common/Tech_0093_NZN_Mid02.ini"
+        },
+        "placeholder": false,
+        "pointsMultiplier": 2
+      },
+      {
+        "id": "Tech_0093_NZN_Recovery",
+        "name": "阿克西斯科技回收计划",
+        "description": "解锁回收技术机体生产，本方完成研究时每种赠送1台。",
+        "icon": "assets/tech-icons/Tech_0093_NZN_Recovery.png",
+        "row": "mid",
+        "column": 3,
+        "money": 16000,
+        "supplies": 4000,
+        "sourceCosts": {
+          "money": 8000,
+          "supplies": 2000,
+          "points": 3600,
+          "researchSeconds": 30
+        },
+        "points": 7200,
+        "requires": [
+          "Tech_0093_NZN_Mid02"
+        ],
+        "unlocks": [
+          "MSN_03",
+          "AMX_107_0093_NZN",
+          "AMX_006_0093_NZN"
+        ],
+        "page": 0,
+        "era": "UC_0093_T1",
+        "technologyWeight": 5,
+        "sourceUnlocks": [
+          "MSN_03",
+          "AMX_107_0093_NZN",
+          "AMX_006_0093_NZN"
+        ],
+        "source": {
+          "root": "GW_BattleUniverse_DLC_0093",
+          "file": "Units/TechTree/Tech/Faction/0093_NZN/Common/Tech_0093_NZN_Recovery.ini"
+        },
+        "placeholder": false,
+        "pointsMultiplier": 2
+      },
+      {
+        "id": "Tech_0093_NZN_Mid03",
+        "name": "沙扎比开发计划",
+        "description": "解锁沙扎比生产，本方完成研究时赠送1台沙扎比。",
+        "icon": "assets/tech-icons/Tech_0093_NZN_Mid03.png",
+        "row": "mid",
+        "column": 4,
+        "money": 20000,
+        "supplies": 5000,
+        "sourceCosts": {
+          "money": 10000,
+          "supplies": 2500,
+          "points": 6000,
+          "researchSeconds": 30
+        },
+        "points": 12000,
+        "requires": [
+          "Tech_0093_NZN_Recovery"
+        ],
+        "unlocks": [
+          "MSN_04"
+        ],
+        "page": 0,
+        "era": "UC_0093_T1",
+        "technologyWeight": 5,
+        "sourceUnlocks": [
+          "MSN_04"
+        ],
+        "source": {
+          "root": "GW_BattleUniverse_DLC_0093",
+          "file": "Units/TechTree/Tech/Faction/0093_NZN/Common/Tech_0093_NZN_Mid03.ini"
+        },
+        "placeholder": false,
+        "pointsMultiplier": 2
+      }
+    ]
+  },
+  "addedUnits": [],
+  "missingUnits": [],
+  "factoryMissing": []
+}

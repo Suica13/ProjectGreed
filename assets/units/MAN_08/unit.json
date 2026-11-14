@@ -532,20 +532,20 @@
         "localization": {
           "zh": {
             "name": "浮游炮",
-            "description": "5个单元，各射击2轮；每轮按原MOD动作链发射1/1/1/1/1发，独立逐发判定。原始载荷与连射间隔保留；伤害应用全局换算、人工差值及现有觉醒成长。"
+            "description": "5个单元，按原MOD能量与存续时间发射8轮；每轮1/1/1/1/1发，逐发判定。完整齐射的单发伤害减半，再应用全局换算、人工差值与觉醒成长。"
           },
           "en": {
             "name": "Funnels / BITs",
-            "description": "5 remote units, 2 firing positions each. Native burst: 1/1/1/1/1 shots per position, resolved separately before global, editor and Awakening modifiers."
+            "description": "5 remote units, up to 8 native firing cycles. Native bursts: 1/1/1/1/1 shots, resolved separately. Full-volley damage per shot is halved before global, editor and Awakening modifiers."
           },
           "ja": {
             "name": "ファンネル / ビット",
-            "description": "5基が各2回射撃。各回の原作連射数は1/1/1/1/1発、1発ずつ判定。原作ダメージと間隔に全体換算・編集差分・覚醒補正を適用。"
+            "description": "5基、原作のエネルギーと存続時間に応じて最大8回射撃。各回1/1/1/1/1発を個別判定。単発ダメージは半分にしてから各補正を適用。"
           }
         },
-        "damagePerShot": 1250.0,
+        "damagePerShot": 625.0,
         "damageComponents": {
-          "beam": 1250.0
+          "beam": 625.0
         },
         "requiredParts": [],
         "attack": {
@@ -557,6 +557,216 @@
               "muzzleIndex": 0,
               "requiredParts": [],
               "delay": 0.7
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 1,
+              "requiredParts": [],
+              "delay": 0.13
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 2,
+              "requiredParts": [],
+              "delay": 0.13
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 3,
+              "requiredParts": [],
+              "delay": 0.13
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 4,
+              "requiredParts": [],
+              "delay": 0.13
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 0,
+              "requiredParts": [],
+              "delay": 0.68
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 1,
+              "requiredParts": [],
+              "delay": 0.13
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 2,
+              "requiredParts": [],
+              "delay": 0.13
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 3,
+              "requiredParts": [],
+              "delay": 0.13
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 4,
+              "requiredParts": [],
+              "delay": 0.13
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 0,
+              "requiredParts": [],
+              "delay": 0.68
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 1,
+              "requiredParts": [],
+              "delay": 0.13
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 2,
+              "requiredParts": [],
+              "delay": 0.13
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 3,
+              "requiredParts": [],
+              "delay": 0.13
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 4,
+              "requiredParts": [],
+              "delay": 0.13
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 0,
+              "requiredParts": [],
+              "delay": 0.68
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 1,
+              "requiredParts": [],
+              "delay": 0.13
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 2,
+              "requiredParts": [],
+              "delay": 0.13
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 3,
+              "requiredParts": [],
+              "delay": 0.13
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 4,
+              "requiredParts": [],
+              "delay": 0.13
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 0,
+              "requiredParts": [],
+              "delay": 0.68
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 1,
+              "requiredParts": [],
+              "delay": 0.13
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 2,
+              "requiredParts": [],
+              "delay": 0.13
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 3,
+              "requiredParts": [],
+              "delay": 0.13
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 4,
+              "requiredParts": [],
+              "delay": 0.13
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 0,
+              "requiredParts": [],
+              "delay": 0.68
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 1,
+              "requiredParts": [],
+              "delay": 0.13
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 2,
+              "requiredParts": [],
+              "delay": 0.13
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 3,
+              "requiredParts": [],
+              "delay": 0.13
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 4,
+              "requiredParts": [],
+              "delay": 0.13
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 0,
+              "requiredParts": [],
+              "delay": 0.68
             },
             {
               "shots": 1,
@@ -682,6 +892,7 @@
               "texture": "MAN_08_Funnel_1.png",
               "scale": 0.75,
               "burstShots": 1,
+              "cycles": 8,
               "trail": {
                 "texture": "../../projectiles/Beam_TrailLine_1_S_Yellow.png",
                 "alpha": 0.35,
@@ -699,6 +910,7 @@
               "texture": "MAN_08_Funnel_1.png",
               "scale": 0.75,
               "burstShots": 1,
+              "cycles": 8,
               "trail": {
                 "texture": "../../projectiles/Beam_TrailLine_1_S_Yellow.png",
                 "alpha": 0.35,
@@ -716,6 +928,7 @@
               "texture": "MAN_08_Funnel_1.png",
               "scale": 0.75,
               "burstShots": 1,
+              "cycles": 8,
               "trail": {
                 "texture": "../../projectiles/Beam_TrailLine_1_S_Yellow.png",
                 "alpha": 0.35,
@@ -733,6 +946,7 @@
               "texture": "MAN_08_Funnel_1.png",
               "scale": 0.75,
               "burstShots": 1,
+              "cycles": 8,
               "trail": {
                 "texture": "../../projectiles/Beam_TrailLine_1_S_Yellow.png",
                 "alpha": 0.35,
@@ -750,6 +964,7 @@
               "texture": "MAN_08_Funnel_1.png",
               "scale": 0.75,
               "burstShots": 1,
+              "cycles": 8,
               "trail": {
                 "texture": "../../projectiles/Beam_TrailLine_1_S_Yellow.png",
                 "alpha": 0.35,
@@ -764,7 +979,7 @@
               "scaleX": 1
             }
           ],
-          "shotsPerUnit": 2,
+          "shotsPerUnit": 8,
           "moveSeconds": 0.6,
           "settleSeconds": 0.1,
           "waitSeconds": 0.5,
@@ -777,6 +992,14 @@
           "cooldownSeconds": 15.0,
           "awakeningMinimum": 75,
           "entry": "ZN_MAN_08_Funnel_Trigger",
+          "cycles": [
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "damageScale": 0.5,
           "unitSources": [
             "MAN_08_Funnel",
             "MAN_08_Funnel",
@@ -1034,21 +1257,21 @@
             }
           ]
         },
-        "description": "5个单元，各射击2轮；每轮按原MOD动作链发射1/1/1/1/1发，独立逐发判定。原始载荷与连射间隔保留；伤害应用全局换算、人工差值及现有觉醒成长。",
+        "description": "5个单元，按原MOD能量与存续时间发射8轮；每轮1/1/1/1/1发，逐发判定。完整齐射的单发伤害减半，再应用全局换算、人工差值与觉醒成长。",
         "nativeTiming": {
           "source": "Units/BattleUnits/Weapon/Funnel/ZN_MAN_08_Funnel.gw",
           "entry": "ZN_MAN_08_Funnel_Trigger",
           "cooldown": 15.0,
-          "duration": 2.42,
+          "duration": 9.62,
           "firstShot": 0.7,
-          "lastShot": 2.42,
-          "firingEvents": 10,
-          "projectiles": 10,
+          "lastShot": 9.62,
+          "firingEvents": 40,
+          "projectiles": 40,
           "declaredEnergy": 200.0,
           "energyMode": "perVolley",
           "energyPerEmission": 0,
           "energy": 200.0,
-          "adaptation": "two_positions_with_native_bursts"
+          "adaptation": "native_energy_lifetime_and_bursts"
         }
       }
     }

@@ -337,7 +337,8 @@
         "kit": [
           "kit_1"
         ],
-        "weaponDisplayIndex": 0
+        "weaponDisplayIndex": 0,
+        "heldAttacking": true
       }
     },
     {
@@ -411,7 +412,8 @@
         "kit": [
           "kit_1"
         ],
-        "weaponDisplayIndex": 0
+        "weaponDisplayIndex": 0,
+        "heldAttacking": false
       }
     },
     {

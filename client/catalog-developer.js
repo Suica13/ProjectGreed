@@ -584,7 +584,7 @@ window.CatalogDeveloper = (() => {
     select(
       identity,
       "主要阵营标签",
-      unit.tags.find((tag) => ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(tag)),
+      unit.tags.find((tag) => ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON", "EFSF_0093", "NEO_ZEON_0093", "OMNI", "ZAFT"].includes(tag)),
       [
         ["EFSF", "EFSF"],
         ["ZEON", "ZEON"],
@@ -594,7 +594,7 @@ window.CatalogDeveloper = (() => {
       ],
       (value) => {
         unit.tags = unit.tags.filter(
-          (tag) => !["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(tag),
+          (tag) => !["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON", "EFSF_0093", "NEO_ZEON_0093", "OMNI", "ZAFT"].includes(tag),
         );
         unit.tags.unshift(value);
         unit.faction = value;
@@ -612,12 +612,12 @@ window.CatalogDeveloper = (() => {
       identity,
       "年代标签（逗号分隔）",
       unit.tags
-        .filter((tag) => !["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(tag))
+        .filter((tag) => !["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON", "EFSF_0093", "NEO_ZEON_0093", "OMNI", "ZAFT"].includes(tag))
         .join(","),
       (value) =>
         (unit.tags = [
           ...unit.tags.filter((tag) =>
-            ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(tag),
+            ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON", "EFSF_0093", "NEO_ZEON_0093", "OMNI", "ZAFT"].includes(tag),
           ),
           ...tags(value),
         ]),
@@ -1217,14 +1217,8 @@ window.CatalogDeveloper = (() => {
   const factionSelect = node("select");
   factionSelect.id = "editorFactionSwitch";
   factionSelect.setAttribute("aria-label", "切换阵营单位库");
-  for (const [id, label] of Object.entries({
-    EFSF: "地球联邦军 [0079]",
-    ZEON: "吉翁公国军 [0079]",
-    AEUG: "奥古 [0087]",
-    TITANS: "提坦斯 [0087]",
-    NEO_ZEON: "新吉翁 [0087]",
-  })) {
-    const option = node("option", label);
+  for (const [id, info] of Object.entries(Rules.factionInfo)) {
+    const option = node("option", info.name);
     option.value = id;
     factionSelect.append(option);
   }

@@ -465,10 +465,7 @@ main { grid-template-columns: 310px minmax(260px, 1fr) 245px; }
 .unit-row span { flex: 1; overflow-wrap: anywhere; }
 @media(max-width: 760px) { main { grid-template-columns: minmax(0,1fr) minmax(0,1fr); } #atlasPanel.expanded { inset: 10px; } }
 
-/* Event authoring keeps the map visible while giving the forms enough room. */
-.mission-editing main { grid-template-columns: minmax(360px, 43%) minmax(260px, 1fr); }
-.mission-editing aside.right { display: none; }
-.mission-editing .tabs { flex-wrap: wrap; }
+/* Event authoring uses the same dock as every other editing tab. */
 #missionEditorFields { overflow-wrap: anywhere; }
 #missionEditorFields fieldset { min-width: 0; margin: 12px 0; padding: 10px; border: 1px solid var(--border); border-left: 3px solid var(--accent); }
 #missionEditorFields details { margin: 10px 0; padding: 8px; border: 1px solid var(--border); }
@@ -484,9 +481,39 @@ main { grid-template-columns: 310px minmax(260px, 1fr) 245px; }
 .mission-actor-choices label { display: flex; align-items: center; gap: 6px; flex-direction: row-reverse; justify-content: flex-end; margin: 4px; }
 .mission-actor-choices input { flex: none; margin: 0; }
 #missionScriptValidation { padding: 10px; border: 1px solid var(--accent); }
+/* Navigation / canvas / tab tools. Tools never consume a side column of the map. */
+.editor-tabs { flex: none; padding: 6px 12px; margin: 0; background: #202936; overflow-x: auto; }
+.editor-tabs button { flex: 0 0 auto; min-width: 80px; }
+header nav { align-items: center; }
+header nav > label:not(.check) { display: flex; align-items: center; gap: 6px; margin: 0; }
+header nav > label:not(.check) select { width: 125px; margin: 0; }
+main { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(160px, 1fr) minmax(220px, 34%); }
+main > .workspace { grid-column: 1; grid-row: 1; overflow: hidden; }
+main > aside.left { grid-column: 1; grid-row: 2; border-right: 0; border-top: 1px solid var(--border); padding: 0; }
+.panel-handle { display: flex; align-items: center; justify-content: space-between; padding: 5px 12px; flex: none; background: #273344; }
+.panel-handle button { padding: 4px 10px; }
+.sidebar-scroll { padding: 8px 14px 16px; overscroll-behavior: contain; }
+.sidebar-scroll > section { max-width: 1400px; margin: 0 auto; }
+.sidebar-scroll > section:not([data-page="mission"]) { columns: 300px; column-gap: 24px; }
+.sidebar-scroll > section > * { break-inside: avoid; }
+#missionEditorFields { max-width: 1100px; }
+#missionEditorFields [data-actor-id] { scroll-margin: 8px; }
+#missionEditorFields .selected-actor { border-color: #ffe17b; background: #263b4c; }
+#missionEditorFields [data-actor-id] > p { color: #a9bbce; font-size: 12px; }
+.mission-map-picker { position: absolute; bottom: 8px; left: 8px; right: 8px; z-index: 2; display: flex; flex-wrap: wrap; gap: 5px; padding: 6px; max-height: 35%; overflow: auto; background: #172533ed; border: 1px solid var(--accent); }
+.mission-editing [data-tool]:not([data-tool="select"]):not([data-tool="pan"]), .mission-editing .toolbar > .check { display: none; }
+.tools-floating main { grid-template-rows: minmax(160px, 1fr); }
+main > aside.floating-panel { position: fixed; z-index: 25; left: 16px; top: 150px; width: min(620px, calc(100vw - 32px)); height: min(470px, calc(100dvh - 180px)); max-width: calc(100vw - 16px); max-height: calc(100dvh - 32px); border: 1px solid var(--accent); box-shadow: 0 8px 30px #0009; resize: both; overflow: hidden; }
+.floating-panel .panel-handle { cursor: move; touch-action: none; }
+.floating-panel .sidebar-scroll > section { columns: auto; }
 @media(max-width: 760px) {
-  .mission-editing main { grid-template-columns: minmax(0,1fr); overflow: auto; }
-  .mission-editing aside.left { min-height: 55dvh; }
-  .mission-editing .workspace { min-height: 40dvh; }
+  main { grid-template-columns: minmax(0,1fr); grid-template-rows: minmax(110px,1fr) minmax(180px,42%); }
+  .editor-tabs { padding: 4px; }
+  .editor-tabs button { min-width: 62px; }
+  #viewport { min-height: 0; }
+  .sidebar-scroll > section:not([data-page="mission"]) { columns: auto; }
   .mission-actor-choices { grid-template-columns: minmax(0,1fr); }
+  header { flex-wrap: wrap; }
+  header nav { justify-content: flex-start; }
+  header span { display: inline; margin-left: 8px; }
 }

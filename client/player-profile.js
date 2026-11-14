@@ -29,7 +29,7 @@ const PlayerProfile = (() => {
 
   function updateProgress() {
     const factions =
-      character === "PMC" ? ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"] : [character];
+      character === "PMC" ? ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON", "EFSF_0093", "NEO_ZEON_0093", "OMNI", "ZAFT"] : [character];
     const unlocked = factions.reduce(
       (sum, faction) => sum + Development.unlockedTech(faction).length,
       0,
@@ -92,7 +92,7 @@ const PlayerProfile = (() => {
     badge: (member, mode) => {
       if (mode !== "campaign") return null;
       const faction = member?.characterFaction;
-      if (!["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(faction)) return null;
+      if (!["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON", "EFSF_0093", "NEO_ZEON_0093", "OMNI", "ZAFT"].includes(faction)) return null;
       const label = displayFaction(faction);
       const badge = element("span", "faction-badge faction-" + faction.toLowerCase(), label);
       return badge;

@@ -1,0 +1,382 @@
+{
+  "schemaVersion": 2,
+  "id": "VoLPHAU",
+  "code": "VoLPHAU",
+  "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/VoLPHAU/VoLPHAU.ini",
+  "materials": {
+    "textures": {
+      "VoLPHAU_Body_1.png": "textures/VoLPHAU_Body_1.png",
+      "VoLPHAU.png": "textures/VoLPHAU.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
+    },
+    "icon": "VoLPHAU.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 4.5,
+      "offset": {
+        "x": -2.5,
+        "y": -35.0
+      },
+      "scaleX": 0.65,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "scaleX": 1.0,
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "frames": 3,
+      "frame": 0,
+      "frameFps": 12,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Body",
+      "texture": "VoLPHAU_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 0.75,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    }
+  ],
+  "animations": {
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 31500,
+    "en": 17500.0,
+    "move": 9,
+    "mobility": 130.0,
+    "cost": 250,
+    "counterLimit": 1,
+    "accuracy": 100.0,
+    "partStructuralStrength": 100.0,
+    "partsBreakable": false,
+    "movementType": "air",
+    "adaptability": {
+      "ground": 100,
+      "space": 50,
+      "water": 10.0,
+      "air": 100.0,
+      "atmosphere": 0,
+      "mountain": 10.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "speed": 180,
+    "actionPoints": 10,
+    "sensors": {
+      "sight": 9,
+      "radar": 13.88888888888889,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
+  },
+  "attackBonuses": {
+    "melee": 0.0,
+    "shooting": 0.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 10.0,
+      "flat": 0.0
+    },
+    "shell": {
+      "percent": 10.0,
+      "flat": 25.0
+    },
+    "melee": {
+      "percent": 5.0,
+      "flat": 0.0
+    },
+    "dp": {
+      "percent": 0,
+      "flat": 0.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 25000.0,
+    "walkSpeed": 1.75,
+    "boostSpeed": 2.5,
+    "turnSpeed": 1.5,
+    "reaction": 130.0,
+    "shooting": 100.0,
+    "melee": 100.0,
+    "nativeTags": [
+      "VoLPHAU",
+      "Unit",
+      "Aircraft",
+      "ZAFT",
+      "CE71",
+      "SEED"
+    ],
+    "nativeSkills": [
+      "LaunchAllUnits",
+      "CustomUnit",
+      "Deploy"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 100.0,
+    "unitLevel": 1000.0,
+    "enBeforeReduction": 17500.0,
+    "enCapacityMultiplier": 1,
+    "tacticalMoveBeforeBonus": 9,
+    "actionTurnSpeed": 1.5,
+    "mobilityMoveTarget": 10,
+    "adaptability": {
+      "ground": 10.0,
+      "space": 10.0,
+      "water": 10.0,
+      "air": 100.0,
+      "mountain": 10.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 22.0,
+      "radar": 500.0,
+      "antiDetection": 0.0
+    },
+    "v17BaseHp": 25000.0,
+    "technologyEra": "CE_0071_T1"
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "ImportedIdle",
+    "move": "ImportedIdle",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "垂直起降运输机",
+  "faction": "ZAFT",
+  "tags": [
+    "ZAFT",
+    "CE_0071_T1"
+  ],
+  "localization": {
+    "zh": {
+      "name": "垂直起降运输机",
+      "description": "扎夫特补给运输机"
+    },
+    "en": {
+      "name": "VoLPHAU",
+      "description": "ZAFT supply transport aircraft"
+    },
+    "ja": {}
+  },
+  "weapons": {},
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "空中移动：可跨越山岩与水域",
+      "status": "implemented"
+    },
+    {
+      "id": "LaunchAllUnits",
+      "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+      "status": "adapted",
+      "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+    },
+    {
+      "id": "CustomUnit",
+      "source": "Template/Unit/Skill/CustomUnit.gw",
+      "status": "review",
+      "name": "换装／改修"
+    },
+    {
+      "id": "Deploy",
+      "source": "Template/Unit/Skill/Deploy.gw",
+      "status": "review",
+      "name": "展开／收起"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": []
+    }
+  ],
+  "description": "扎夫特补给运输机",
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 1000.0,
+    "levelMultiplier": 0.25,
+    "published": 250
+  },
+  "skills": [],
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "Aircraft",
+    "Transport"
+  ],
+  "transport": {
+    "slotCost": 6,
+    "loadTags": []
+  },
+  "hangars": [
+    {
+      "id": "Hangar_1",
+      "name": "格纳库 1",
+      "capacity": 6,
+      "allowedTags": [
+        "CanLoadInto",
+        "CanLoadIntoSpace",
+        "CanLoadIntoAir"
+      ],
+      "launchRange": 1,
+      "emergencyRange": 3,
+      "source": "Units/CommonUnit/Hangar/Hangar_X6.ini",
+      "sourceUnit": "Hangar_X6"
+    }
+  ],
+  "refits": []
+}

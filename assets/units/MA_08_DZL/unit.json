@@ -240,7 +240,7 @@
       "capacity": 300000,
       "reduction": 0.95,
       "piercingReduction": 0.5,
-      "recoveryPercent": 10,
+      "recoveryPercent": 5,
       "nativeRecoverySpeed": 500,
       "minimumRatio": -0.25,
       "effect": "I_Field_2"
@@ -3770,7 +3770,7 @@
       "id": "I_Field",
       "source": "Template/Unit/Skill/I_Field.gw",
       "status": "adapted",
-      "name": "I力场"
+      "name": "I立场：每回合恢复5%最大立场耐久"
     },
     {
       "id": "CantDeconstruct",

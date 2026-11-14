@@ -43,6 +43,14 @@ const UnitSkills = (() => {
           throw Error("Invalid pilot skill: " + label);
         continue;
       }
+      if (skill?.type === "optical_camouflage") {
+        if (!skill.id || !skill.name || skill.range !== 0 || skill.enCost !== 0 || skill.consumeAction !== false || skill.upkeep !== 200 || skill.evasionMultiplier !== 1.25) throw Error("Invalid optical camouflage: " + label);
+        continue;
+      }
+      if (skill?.type === "phase_shift") {
+        if (!skill.id || !skill.name || skill.range !== 0 || skill.enCost !== 0 || skill.consumeAction !== false) throw Error("Invalid PS armor skill: " + label);
+        continue;
+      }
       if (skill?.type === "flight") {
         if (
 
@@ -325,6 +333,8 @@ const UnitSkills = (() => {
       return (
         !!skill &&
         !skill.passive &&
+        (skill.type !== "phase_shift" || unit.phaseShiftEnabled !== false || (unit.en > 0 && (unit.phaseShiftHp ?? modelOf(unit).phaseShift?.capacity ?? 0) > 0)) &&
+        (skill.type !== "optical_camouflage" || unit.opticalCamouflage || unit.en >= skill.upkeep) &&
         unit.skillTurnUses?.[turnKey(skill)] !== game.round &&
         (skill.type !== "irradiation" ||
           !G.attackRounds ||
@@ -436,6 +446,12 @@ const UnitSkills = (() => {
                 ),
               )
             : nextModel.iField.capacity;
+      for (const kind of ["abc", "phaseShift"]) if (nextModel[kind]) {
+        const before = oldModel[kind]?.capacity ?? nextModel[kind].capacity;
+        next[kind + "Hp"] = Math.max(0, Math.min(nextModel[kind].capacity,
+          Math.round((unit[kind + "Hp"] ?? before) / before * nextModel[kind].capacity)));
+      }
+      if (nextModel.phaseShift) next.phaseShiftEnabled = unit.phaseShiftEnabled !== false;
       const recover = (current, before, after, percent) =>
         Math.max(
           0,
@@ -521,6 +537,8 @@ const UnitSkills = (() => {
       if (
         [
           "pilot_buff",
+          "phase_shift",
+          "optical_camouflage",
           "overdrive",
           "overboost",
           "fullboost",
@@ -632,6 +650,16 @@ const UnitSkills = (() => {
       )
         throw Error("技能不可用，或目标不在合法范围内");
       const skill = of(unit).find((s) => s.id === skillId);
+      if (skill.type === "optical_camouflage") {
+        unit.opticalCamouflage = !unit.opticalCamouflage;
+        unit.skillTurnUses = { ...unit.skillTurnUses, [skill.id]: game.round };
+        return { type: "skill", skillId, unitId: unit.id, resultId: unit.id, from: {x:unit.x,y:unit.y}, to: {x:unit.x,y:unit.y}, opticalCamouflage: unit.opticalCamouflage };
+      }
+      if (skill.type === "phase_shift") {
+        unit.phaseShiftEnabled = unit.phaseShiftEnabled === false;
+        unit.skillTurnUses = { ...unit.skillTurnUses, [skill.id]: game.round };
+        return { type: "skill", skillId, unitId: unit.id, resultId: unit.id, from: {x:unit.x,y:unit.y}, to: {x:unit.x,y:unit.y}, phaseShiftEnabled: unit.phaseShiftEnabled };
+      }
       if (skill.type === "pilot_buff") {
         const expiresRound = game.round + skill.durationTurns * 2;
         unit.en -= skill.enCost;

@@ -1076,7 +1076,7 @@
         "projectile": {
           "texture": "../../projectiles/RailShell_1.png",
           "scale": 0.85,
-          "speed": 120,
+          "speed": 1,
           "forwardOffset": -2.5,
           "rotation": 0
         },

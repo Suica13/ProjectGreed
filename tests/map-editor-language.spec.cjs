@@ -31,6 +31,7 @@ test("switching languages preserves map data, localizes new messages and remembe
   await page.goto(editorURL);
   await page.locator("#mapName").fill("删除");
   await page.locator("#mapName").press("Tab");
+  await page.locator('[data-tab="layers"]').click();
   await page.locator("#layerName").fill("地图");
   await page.locator("#layerName").press("Tab");
   const before = await page.evaluate(() => JSON.stringify(MapEditor.document));

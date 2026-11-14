@@ -123,6 +123,8 @@ const MapEditor = (() => {
   }
   function tab(name) {
     document.body.classList.toggle("mission-editing", name === "mission");
+    if (name !== "mission") $("missionMapPicker").hidden = true;
+    if (name === "mission") chooseTool("select");
     document.querySelectorAll("[data-page]").forEach((e) => (e.hidden = e.dataset.page !== name));
     document
       .querySelectorAll("[data-tab]")
@@ -606,7 +608,14 @@ const MapEditor = (() => {
         ctx.fillText(s.team + 1 + "-" + s.position, ox + s.x * cw, oy + s.y * ch - 2);
       }
     }
+    const markers = new Map();
     for (const u of [...(doc.units || []), ...(doc.mission?.actors || [])]) {
+      const markerKey = `${u.team}:${u.x}:${u.y}:${u.initial !== false}`;
+      if (!markers.has(markerKey)) markers.set(markerKey, []);
+      markers.get(markerKey).push(u);
+    }
+    for (const occupants of markers.values()) {
+      const u = occupants.find(a => window.MissionEditor?.selectedActorId === a.id) || occupants[0];
       const x = ox + u.x * cw, y = oy + u.y * ch;
       if (x + cw < 0 || y + ch < 0 || x > viewport.clientWidth || y > viewport.clientHeight) continue;
       ctx.fillStyle = ["#439aff", "#f26868", "#6cdb91", "#edc764"][u.team % 4];
@@ -614,8 +623,12 @@ const MapEditor = (() => {
         ctx.save();ctx.strokeStyle=ctx.fillStyle;ctx.setLineDash([3,2]);
         ctx.strokeRect(x+cw*.15,y+ch*.15,cw*.7,ch*.7);ctx.restore();
       } else ctx.fillRect(x + cw * .15, y + ch * .15, cw * .7, ch * .7);
+      if (occupants.some(a => window.MissionEditor?.selectedActorId === a.id)) {
+        ctx.strokeStyle = "#ffe17b"; ctx.lineWidth = 3;
+        ctx.strokeRect(x + 1, y + 1, cw - 2, ch - 2);
+      }
       ctx.fillStyle = "#fff"; ctx.font = "12px sans-serif";
-      ctx.fillText(`${u.team + 1}: ${u.name || u.unitId}`, x, y - 3);
+      ctx.fillText(`${u.team + 1}: ${u.name || MapEditorUnits.find(a => a.id === u.unitId)?.name || u.unitId}${occupants.length > 1 ? " ×" + occupants.length : ""}`, x, y - 3);
     }
     const bounds =
       drag && ["rect", "select", "deployment"].includes(drag.tool)
@@ -677,10 +690,24 @@ const MapEditor = (() => {
       if (e.button !== 0 && e.button !== 1 && e.button !== 2) return;
       canvas.focus();
       const p = cell(e),
-        current = e.button === 1 || space ? "pan" : e.button === 2 ? "erase" : tool;
+        current = e.button === 1 || space || (tool === "pan" && e.button === 0) ? "pan" : document.body.classList.contains("mission-editing") ? "select" : e.button === 2 ? "erase" : tool;
       if (current !== "pan" && !M.inside(doc, p.x, p.y)) return;
-      if (!["pan", "spawn", "deployment"].includes(current) && activeLayer()?.type !== "tile")
-        throw Error("请先选择图块图层；整图图层可在右侧修改位置与尺寸。");
+      if (current !== "pan" && document.body.classList.contains("mission-editing")) {
+        const actors = (doc.mission?.actors || []).filter(a => a.x === p.x && a.y === p.y);
+        const picker = $("missionMapPicker");
+        picker.replaceChildren(); picker.hidden = actors.length < 2;
+        if (actors.length) {
+          actors.forEach(a => {
+            const b = node("button", (MapEditorUnits.find(u => u.id === a.unitId)?.name || a.unitId) + " · " + a.id);
+            b.onclick = () => window.MissionEditor.focusActor(a.id);
+            picker.append(b);
+          });
+          window.MissionEditor.focusActor(actors[0].id);
+          return;
+        }
+      }
+      if (!["pan", "spawn", "deployment"].includes(current) && activeLayer()?.type !== "tile" && !document.body.classList.contains("mission-editing"))
+        throw Error("请先选择图块图层；整图图层可在图层与检查页修改位置与尺寸。");
       if (current === "spawn") {
         checkpoint();
         const s = doc.spawns[Number($("spawnSeat").value)];
@@ -702,6 +729,7 @@ const MapEditor = (() => {
       }
       if (
         current === "select" &&
+        !document.body.classList.contains("mission-editing") &&
         selectedArea &&
         p.x >= selectedArea.x &&
         p.x < selectedArea.x + selectedArea.width &&
@@ -1275,6 +1303,26 @@ const MapEditor = (() => {
     if (file) run(() => importFile(file, file.type.startsWith("image/") ? "image" : "map"));
   };
   new ResizeObserver(drawSoon).observe(viewport);
+  // The same tools can dock below the map or float above it; there is only one form state.
+  const toolPanel = document.querySelector("aside.left"), panelHandle = $("panelHandle");
+  $("floatPanel").onclick = () => {
+    const floating = toolPanel.classList.toggle("floating-panel");
+    document.body.classList.toggle("tools-floating", floating);
+    MapEditorI18n.bind($("floatPanel"), floating ? "停靠下方" : "悬浮面板");
+    toolPanel.style.left = toolPanel.style.top = "";
+    if (!floating) toolPanel.style.width = toolPanel.style.height = "";
+    drawSoon();
+  };
+  panelHandle.onpointerdown = e => {
+    if (!toolPanel.classList.contains("floating-panel") || e.target.closest("button")) return;
+    const box = toolPanel.getBoundingClientRect(), start = {x: e.clientX, y: e.clientY};
+    panelHandle.setPointerCapture(e.pointerId);
+    panelHandle.onpointermove = move => {
+      toolPanel.style.left = Math.max(0, Math.min(innerWidth - box.width, box.left + move.clientX - start.x)) + "px";
+      toolPanel.style.top = Math.max(0, Math.min(innerHeight - box.height, box.top + move.clientY - start.y)) + "px";
+    };
+    panelHandle.onpointerup = panelHandle.onpointercancel = () => { panelHandle.onpointermove = null; };
+  };
   MapEditorI18n.init(() => {
     refresh();
     if ($("validation").children.length) {
@@ -1305,6 +1353,11 @@ const MapEditor = (() => {
     validate,
     draw,
     fit,
+    focusCell(x, y) {
+      camera.x = viewport.clientWidth / 2 - (x + .5) * doc.tileWidth * camera.zoom;
+      camera.y = viewport.clientHeight / 2 - (y + .5) * doc.tileHeight * camera.zoom;
+      drawSoon();
+    },
     chooseTool,
     tab,
     get activeLayer() {

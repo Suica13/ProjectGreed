@@ -25,8 +25,6 @@ window.createCampaignConsole = ({ panel, state, node, button }) => {
   expand.id = "campaignConsoleExpand";
   expand.setAttribute("aria-label", "展开信息栏");
   expand.title = I18n.text("展开信息栏");
-  const musicSlot = node("span", "", "campaign-music-slot");
-  musicSlot.id = "campaignMusicSlot";
   for (const [tab, pane] of [
     [chatTab, "campaignChatPanel"],
     [logTab, "campaignStrategicLog"],
@@ -35,7 +33,7 @@ window.createCampaignConsole = ({ panel, state, node, button }) => {
     tab.setAttribute("aria-controls", pane);
   }
   navigation.append(chatTab, logTab);
-  tabs.append(navigation, expand, musicSlot, fold);
+  tabs.append(navigation, expand, fold);
   const log = node("div", "", "campaign-console-log campaign-console-pane");
   log.id = "campaignStrategicLog";
   log.setAttribute("role", "log");

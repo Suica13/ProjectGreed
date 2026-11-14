@@ -14,7 +14,7 @@ const RoomPanel = (() => {
     if (typeof settings.shareAlliedUnits !== "boolean") throw Error("友军共享设置无效");
     return {
       formationStyle: settings.formationStyle === "free" ? "free" : "standard",
-      regularEra: Rules.eras.includes(settings.regularEra) ? settings.regularEra : "0079T1",
+      regularEra: Rules.eras.includes(settings.regularEra) ? settings.regularEra : "UC_0079_T1",
       technologyLimitMode: settings.technologyLimitMode === "custom" ? "custom" : "host",
       technologyLimitFaction: Rules.factions.includes(settings.technologyLimitFaction) ? settings.technologyLimitFaction : "EFSF",
       technologyLimit: settings.technologyLimit ?? 0,
@@ -86,6 +86,11 @@ const RoomPanel = (() => {
   }
   savedPresetOptions();
   function showFormationPreset(settings) {
+    for (const option of byId("roomFormationPreset").options) {
+      if (!/^\d+,\d+$/.test(option.value)) continue;
+      const [cost,count]=option.value.split(",");
+      option.textContent=cost+"/"+(Rules.formationStyle(settings)==="free"?count:3);
+    }
     const values = ["costLimit", "unitLimit"].map((key) =>
       Number(numericDrafts[key] ?? settings[key]),
     );
@@ -398,7 +403,7 @@ const RoomPanel = (() => {
         group,
         "battlefieldTeam" + team + "faction",
         "阵营",
-        factions.map((value) => [value, value]),
+        factions.map((value) => [value, Rules.factionInfo[value]?.name || value]),
         config[team].faction,
         (value) => {
           config[team].faction = value;
@@ -419,7 +424,7 @@ const RoomPanel = (() => {
       [
         ...presets.map((item) => [
           item.id,
-          `${item.costLimit}/${item.unitLimit}`,
+          `${item.costLimit}/${Rules.formationStyle(settings) === "free" ? item.unitLimit : 3}`,
         ]),
       ],
       preset?.id || presets[0].id,
@@ -546,7 +551,12 @@ const RoomPanel = (() => {
     mapSelect.value = settings.mapId;
     mapSelect.hidden = settings.mode === "sweep";
     byId("roomMapChoiceHint").hidden = settings.mode === "sweep";
-    byId("roomUnitLimit").value = numericDrafts.unitLimit ?? settings.unitLimit;
+    const fleetFormation = Rules.formationStyle(settings) === "standard" && settings.mode !== "campaign";
+    byId("roomUnitLimit").value = fleetFormation ? 3 : numericDrafts.unitLimit ?? settings.unitLimit;
+    byId("roomUnitLimit").readOnly = fleetFormation;
+    const limitLabel = fleetFormation ? "\u8230\u8239\u6570\u91cf\u4e0a\u9650" : "\u5355\u4f4d\u5bb9\u91cf\u70b9\u4e0a\u9650";
+    byId("roomUnitLimit").parentElement.firstChild.nodeValue = I18n.text(limitLabel);
+    byId("roomUnitLimit").setAttribute("aria-label",I18n.text(limitLabel));
     byId("roomCostLimit").value = numericDrafts.costLimit ?? settings.costLimit;
     byId("roomUnitCostLimit").value = numericDrafts.unitCostLimit ?? settings.unitCostLimit;
     const locked = snapshot.started || snapshot.you?.id !== snapshot.hostId || busy;
@@ -592,7 +602,7 @@ const RoomPanel = (() => {
         select = document.createElement("select");
       select.id = "regularEra";
       for (const era of Rules.eras) select.add(new Option(era, era));
-      select.value = settings.regularEra || "0079T1";
+      select.value = settings.regularEra || "UC_0079_T1";
       select.disabled = locked;
       select.onchange = () => sendSettings({ regularEra: select.value });
       label.append(select);
@@ -619,7 +629,7 @@ const RoomPanel = (() => {
         const label = element("label", "", name),
           select = document.createElement("select");
         select.id = key;
-        for (const value of values) select.add(new Option(value, value));
+        for (const value of values) select.add(new Option(Rules.factionInfo[value]?.name || value, value));
         select.value = settings[key];
         select.disabled = locked;
         select.onchange = () => {
@@ -803,7 +813,7 @@ const RoomPanel = (() => {
       ...(player.bot || Rules.formationStyle(snapshot.settings) === "free"
         ? [["unitCostPercent", "单位 COST 比例", config.unitCostPercent]]
         : []),
-      ["countPercent", player.bot ? "编组点数比例" : "单位容量点比例", config.countPercent],
+      ...(Rules.formationStyle(snapshot.settings) === "free" ? [["countPercent", player.bot ? "编组点数比例" : "单位容量点比例", config.countPercent]] : []),
       ["difficulty", "单位强度", Math.round(Rules.aiPerformance[config.difficulty] * 100)],
     ]) {
       const field = element("label", "", label);
@@ -826,7 +836,8 @@ const RoomPanel = (() => {
     }
     section.append(grid);
     const budget = Rules.armyBudget(snapshot.settings, player);
-    const unitLimit = Rules.armyUnitLimit(snapshot.settings, player);
+    const unitLimit = Rules.formationStyle(snapshot.settings) === "standard" && snapshot.settings.mode !== "campaign"
+      ? 3 : Rules.armyUnitLimit(snapshot.settings, player);
     const unitCost = Rules.armyRestrictions(snapshot.settings, player).unitCostLimit;
     section.append(
       element(
@@ -836,7 +847,7 @@ const RoomPanel = (() => {
           ": " +
           budget +
           " · " +
-          I18n.text("单位容量点上限") +
+          I18n.text(Rules.formationStyle(snapshot.settings) === "free" ? "单位容量点上限" : "舰船数量上限") +
           ": " +
           unitLimit,
       ),
@@ -1087,11 +1098,11 @@ const RoomPanel = (() => {
             " / " +
             (player.assignedPreset ? I18n.text("无限") : player.limit) +
             " · " +
-            I18n.text("单位容量点") +
+            I18n.text(Rules.formationStyle(snapshot.settings) === "free" ? "单位容量点" : "舰船数量") +
             ": " +
-            Rules.formationPoints(player.entries) +
+            (Rules.formationStyle(snapshot.settings) === "free" ? Rules.formationPoints(player.entries) : player.entries.filter(e=>!e.preload && Rules.isFleetCarrier(Rules.formationModel(e))).length) +
             " / " +
-            player.unitLimit,
+            (Rules.formationStyle(snapshot.settings) === "free" ? player.unitLimit : 3),
         ),
         element(
           "span",
@@ -1159,7 +1170,7 @@ const RoomPanel = (() => {
                   const next = structuredClone(player.entries);
                   next[source.index].preload = { carrierIndex: index, hangarId: hangar.id };
                   try {
-                    Rules.validateFormation(next, Infinity, Rules.catalog.formation.maxUnits);
+                    Rules.validateFleetFormation(next, Infinity, Rules.catalog.formation.maxUnits);
                     formation = next;
                     break;
                   } catch {}
@@ -1289,7 +1300,7 @@ const RoomPanel = (() => {
       valid = true;
     try {
       const units = own?.formationPreset?.units || Formation.current();
-      Rules.validateFormation(units, Infinity, Rules.armyUnitLimit(snapshot.settings, own));
+      Rules.validateFleetFormation(units, Infinity, Rules.armyUnitLimit(snapshot.settings, own));
       const plan = Rules.planFormation(
         units,
         limit,
@@ -1601,7 +1612,7 @@ const RoomPanel = (() => {
     if (snapshot.you?.seat !== null) {
       try {
         if (units.length)
-          Rules.validateFormation(
+          Rules.validateFleetFormation(
             units,
             Infinity,
             Rules.armyUnitLimit(

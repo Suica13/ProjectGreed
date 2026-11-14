@@ -84,7 +84,7 @@ const WeaponEffects = (() => {
     return config.units.map((unit, index) => {
       const launch = index * config.staggerSeconds;
       const origin = SpriteRenderer.muzzle(source.unit.model, weapon, source, null, 0, index);
-      const points = Array.from({ length: config.shotsPerUnit }, (_, cycle) => {
+      const points = Array.from({ length: unit.cycles ?? config.shotsPerUnit }, (_, cycle) => {
         const angle = (index / config.units.length + random() * 0.55 + cycle * 0.3) * Math.PI * 2;
         const distance = radius * (0.8 + random() * 0.65);
         return {

@@ -1,0 +1,732 @@
+{
+  "schemaVersion": 2,
+  "id": "DrakeClass",
+  "code": "DrakeClass",
+  "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/DrakeClass/DrakeClass.ini",
+  "materials": {
+    "textures": {
+      "DrakeClass.png": "textures/DrakeClass.png",
+      "DrakeClass_Body_1.png": "textures/DrakeClass_Body_1.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "RooketBooster.png": "textures/RooketBooster.png",
+      "DrakeClass_Turret_MG_1.png": "textures/DrakeClass_Turret_MG_1.png"
+    },
+    "icon": "DrakeClass.png"
+  },
+  "skeleton": {
+    "Turret_DrakeClass_Turret_AMS_M1": {
+      "x": 6.0,
+      "y": 6.0,
+      "endDirOffset": 5.0
+    },
+    "Turret_DrakeClass_Turret_AMS_M2": {
+      "x": -6.0,
+      "y": 6.0,
+      "endDirOffset": -5.0
+    },
+    "Turret_DrakeClass_Turret_MS_M1": {
+      "x": 45.0,
+      "y": -20.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_DrakeClass_Turret_MS_M2": {
+      "x": -45.0,
+      "y": -20.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_DrakeClass_Turret_MS_M3": {
+      "x": 45.0,
+      "y": -45.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_DrakeClass_Turret_MS_M4": {
+      "x": -45.0,
+      "y": -45.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_DrakeClass_Turret_MG_M1": {
+      "x": 0.0,
+      "y": 3.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_DrakeClass_Turret_MG_M2": {
+      "x": 0.0,
+      "y": 35.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_DrakeClass_Turret_MG_M3": {
+      "x": 0.0,
+      "y": -40.0,
+      "endDirOffset": 180.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    }
+  },
+  "layers": [
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 4.5,
+      "offset": {
+        "x": -2.5,
+        "y": -70.0
+      },
+      "scaleX": 0.65,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "DrakeClass_Turret_MG_M2",
+      "bone": "Turret_DrakeClass_Turret_MG_M2",
+      "moduleId": "DrakeClass_Turret_MG_M2",
+      "texture": "DrakeClass_Turret_MG_1.png",
+      "order": 3.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "DrakeClass_Turret_MG_M3",
+      "bone": "Turret_DrakeClass_Turret_MG_M3",
+      "moduleId": "DrakeClass_Turret_MG_M3",
+      "texture": "DrakeClass_Turret_MG_1.png",
+      "order": 3.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "Body",
+      "texture": "DrakeClass_Body_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "DrakeClass_Turret_MG_M1",
+      "bone": "Turret_DrakeClass_Turret_MG_M1",
+      "moduleId": "DrakeClass_Turret_MG_M1",
+      "texture": "DrakeClass_Turret_MG_1.png",
+      "order": 5.001,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    }
+  ],
+  "animations": {
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 24500,
+    "en": 4500.0,
+    "move": 7,
+    "mobility": 65.0,
+    "cost": 375,
+    "counterLimit": 1,
+    "accuracy": 68.25,
+    "partStructuralStrength": 100.0,
+    "partsBreakable": false,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 0,
+      "space": 100,
+      "water": 50.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 10.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": true,
+    "modules": [
+      {
+        "id": "DrakeClass_Turret_AMS_M1",
+        "name": "DrakeClass_Turret_AMS_M1",
+        "hp": 7500.0,
+        "bone": "Turret_DrakeClass_Turret_AMS_M1",
+        "x": 6.0,
+        "y": 6.0,
+        "idleDir": 5.0,
+        "arc": 180,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DrakeClass/DrakeClass_Turret_AMS.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      },
+      {
+        "id": "DrakeClass_Turret_AMS_M2",
+        "name": "DrakeClass_Turret_AMS_M2",
+        "hp": 7500.0,
+        "bone": "Turret_DrakeClass_Turret_AMS_M2",
+        "x": -6.0,
+        "y": 6.0,
+        "idleDir": -5.0,
+        "arc": 180,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DrakeClass/DrakeClass_Turret_AMS.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      },
+      {
+        "id": "DrakeClass_Turret_MS_M1",
+        "name": "DrakeClass_Turret_MS_M1",
+        "hp": 7500.0,
+        "bone": "Turret_DrakeClass_Turret_MS_M1",
+        "x": 45.0,
+        "y": -20.0,
+        "idleDir": 0.0,
+        "arc": 60.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DrakeClass/DrakeClass_Turret_MS.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      },
+      {
+        "id": "DrakeClass_Turret_MS_M2",
+        "name": "DrakeClass_Turret_MS_M2",
+        "hp": 7500.0,
+        "bone": "Turret_DrakeClass_Turret_MS_M2",
+        "x": -45.0,
+        "y": -20.0,
+        "idleDir": 0.0,
+        "arc": 60.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DrakeClass/DrakeClass_Turret_MS.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      },
+      {
+        "id": "DrakeClass_Turret_MS_M3",
+        "name": "DrakeClass_Turret_MS_M3",
+        "hp": 7500.0,
+        "bone": "Turret_DrakeClass_Turret_MS_M3",
+        "x": 45.0,
+        "y": -45.0,
+        "idleDir": 0.0,
+        "arc": 60.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DrakeClass/DrakeClass_Turret_MS.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      },
+      {
+        "id": "DrakeClass_Turret_MS_M4",
+        "name": "DrakeClass_Turret_MS_M4",
+        "hp": 7500.0,
+        "bone": "Turret_DrakeClass_Turret_MS_M4",
+        "x": -45.0,
+        "y": -45.0,
+        "idleDir": 0.0,
+        "arc": 60.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DrakeClass/DrakeClass_Turret_MS.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      },
+      {
+        "id": "DrakeClass_Turret_MG_M1",
+        "name": "DrakeClass_Turret_MG_M1",
+        "hp": 7500.0,
+        "bone": "Turret_DrakeClass_Turret_MG_M1",
+        "x": 0.0,
+        "y": 3.0,
+        "idleDir": 0.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DrakeClass/DrakeClass_Turret_MG.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_DrakeClass_Turret_MG"
+          ]
+        }
+      },
+      {
+        "id": "DrakeClass_Turret_MG_M2",
+        "name": "DrakeClass_Turret_MG_M2",
+        "hp": 7500.0,
+        "bone": "Turret_DrakeClass_Turret_MG_M2",
+        "x": 0.0,
+        "y": 35.0,
+        "idleDir": 0.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DrakeClass/DrakeClass_Turret_MG.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_DrakeClass_Turret_MG"
+          ]
+        }
+      },
+      {
+        "id": "DrakeClass_Turret_MG_M3",
+        "name": "DrakeClass_Turret_MG_M3",
+        "hp": 7500.0,
+        "bone": "Turret_DrakeClass_Turret_MG_M3",
+        "x": 0.0,
+        "y": -40.0,
+        "idleDir": 180.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/DrakeClass/DrakeClass_Turret_MG.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_DrakeClass_Turret_MG"
+          ]
+        }
+      }
+    ],
+    "footprint": {
+      "width": 2,
+      "height": 2
+    },
+    "autoRepair": {
+      "hpPercent": 10,
+      "enCost": 10
+    },
+    "speed": 90,
+    "actionPoints": 10,
+    "sensors": {
+      "sight": 8,
+      "radar": 13.88888888888889,
+      "antiDetection": -3.4722222222222223,
+      "revealOnDetection": true,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    },
+    "accuracyMultiplier": 0.65
+  },
+  "attackBonuses": {
+    "melee": 0.0,
+    "shooting": 5.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 25.0,
+      "flat": 0.0
+    },
+    "shell": {
+      "percent": 25.0,
+      "flat": 75.0
+    },
+    "melee": {
+      "percent": 20.0,
+      "flat": 0.0
+    },
+    "dp": {
+      "percent": 100.0,
+      "flat": 0.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 35000.0,
+    "walkSpeed": 0.65,
+    "boostSpeed": 1.25,
+    "turnSpeed": 0.5,
+    "reaction": 65.0,
+    "shooting": 105.0,
+    "melee": 100.0,
+    "nativeTags": [
+      "DrakeClass",
+      "Unit",
+      "CmdUnit",
+      "Ship",
+      "OMNI",
+      "CE71",
+      "SEED",
+      "LargeUnit"
+    ],
+    "nativeSkills": [
+      "AutoRepair",
+      "LaunchAllUnits"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 105.0,
+    "unitLevel": 1500.0,
+    "enBeforeReduction": 4500.0,
+    "enCapacityMultiplier": 1,
+    "tacticalMoveBeforeBonus": 4,
+    "actionTurnSpeed": 0.5,
+    "mobilityMoveTarget": 7,
+    "adaptability": {
+      "ground": 10.0,
+      "space": 100.0,
+      "water": 50.0,
+      "air": 10.0,
+      "mountain": 10.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 20.0,
+      "radar": 500.0,
+      "antiDetection": -100.0
+    },
+    "shipHullBeforeReduction": 35000.0,
+    "shipBalanceMultiplier": 0.7,
+    "shipFactionHullMultiplier": 1,
+    "shipFactionAccuracyMultiplier": 1,
+    "shipFactionEvasionMultiplier": 1,
+    "technologyEra": "CE_0071_T1",
+    "shipFootprintBeforeCompaction": {
+      "width": 2,
+      "height": 3
+    }
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 0.9,
+    "idle": "ImportedIdle",
+    "move": "ImportedIdle",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "boost",
+    "deathType": "large",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "德雷克级",
+  "faction": "OMNI",
+  "tags": [
+    "OMNI",
+    "CE_0071_T1"
+  ],
+  "localization": {
+    "zh": {
+      "name": "德雷克级",
+      "description": "地球联合军舰队主力战舰"
+    },
+    "en": {
+      "name": "Drake Class",
+      "description": "Main battleship of the OMNI fleet"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "DrakeClass_Turret_AMS": {
+      "ref": "DrakeClass_Turret_AMS__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/DrakeClass/DrakeClass_Turret_AMS.ini",
+          "barrels": [
+            {
+              "id": "DrakeClass_Turret_AMS",
+              "x": 0.0,
+              "y": 0.0
+            },
+            {
+              "id": "DrakeClass_Turret_AMS",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_DrakeClass_Turret_AMS_M1",
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            },
+            {
+              "bone": "Turret_DrakeClass_Turret_AMS_M2",
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "DrakeClass_Turret_MS": {
+      "ref": "DrakeClass_Turret_MS__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/DrakeClass/DrakeClass_Turret_MS.ini",
+          "barrels": [
+            {
+              "id": "DrakeClass_Turret_MS",
+              "x": 3.0,
+              "y": 0.0
+            },
+            {
+              "id": "DrakeClass_Turret_MS",
+              "x": 3.0,
+              "y": 0.0
+            },
+            {
+              "id": "DrakeClass_Turret_MS",
+              "x": 3.0,
+              "y": 0.0
+            },
+            {
+              "id": "DrakeClass_Turret_MS",
+              "x": 3.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_DrakeClass_Turret_MS_M1",
+              "offset": {
+                "x": 3.0,
+                "y": 0.0
+              },
+              "alternatingOffsetX": -6.0
+            },
+            {
+              "bone": "Turret_DrakeClass_Turret_MS_M2",
+              "offset": {
+                "x": 3.0,
+                "y": 0.0
+              },
+              "alternatingOffsetX": -6.0
+            },
+            {
+              "bone": "Turret_DrakeClass_Turret_MS_M3",
+              "offset": {
+                "x": 3.0,
+                "y": 0.0
+              },
+              "alternatingOffsetX": -6.0
+            },
+            {
+              "bone": "Turret_DrakeClass_Turret_MS_M4",
+              "offset": {
+                "x": 3.0,
+                "y": 0.0
+              },
+              "alternatingOffsetX": -6.0
+            }
+          ]
+        }
+      }
+    },
+    "DrakeClass_Turret_MG": {
+      "ref": "DrakeClass_Turret_MG__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/DrakeClass/DrakeClass_Turret_MG.ini",
+          "barrels": [
+            {
+              "id": "DrakeClass_Turret_MG",
+              "x": 2.0,
+              "y": 9.0
+            },
+            {
+              "id": "DrakeClass_Turret_MG",
+              "x": 2.0,
+              "y": 9.0
+            },
+            {
+              "id": "DrakeClass_Turret_MG",
+              "x": 2.0,
+              "y": 9.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_DrakeClass_Turret_MG_M1",
+              "offset": {
+                "x": 2.0,
+                "y": 9.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_DrakeClass_Turret_MG_M2",
+              "offset": {
+                "x": 2.0,
+                "y": 9.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_DrakeClass_Turret_MG_M3",
+              "offset": {
+                "x": 2.0,
+                "y": 9.0
+              },
+              "alternatingOffsetX": -4.0
+            }
+          ]
+        }
+      }
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    },
+    {
+      "id": "AutoRepair",
+      "source": "Template/Unit/Skill/AutoRepair.gw",
+      "status": "adapted",
+      "name": "自动修复：己方行动开始时消耗10 EN恢复10%HP"
+    },
+    {
+      "id": "LaunchAllUnits",
+      "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+      "status": "adapted",
+      "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+    },
+    {
+      "id": "special_Common_ReEntry_NeedBooster",
+      "name": "大气层突入",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+      "status": "review"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": [
+        "DrakeClass_Turret_AMS",
+        "DrakeClass_Turret_MS",
+        "DrakeClass_Turret_MG"
+      ]
+    }
+  ],
+  "description": "地球联合军舰队主力战舰",
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 1500.0,
+    "levelMultiplier": 0.25,
+    "published": 375
+  },
+  "skills": [
+    {
+      "id": "Common_FullBoost",
+      "type": "fullboost",
+      "name": "全力推进",
+      "actionCost": 0,
+      "enCost": 250,
+      "consumeAction": false,
+      "range": 0,
+      "effect": "Flash_1_N",
+      "sound": {
+        "file": "../../sounds/Action_8.ogg",
+        "volume": 0.5
+      },
+      "duration": 2,
+      "cooldownTurns": 1,
+      "moveBonus": 2,
+      "mobilityMultiplier": 1.1,
+      "description": "消耗250 EN，在2个己方回合内移动力+2、反应系数×1.10；效果结束后冷却1个己方回合。搭载中仍会持续与计时。"
+    }
+  ],
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "Ship"
+  ],
+  "transport": {
+    "slotCost": 1,
+    "loadTags": []
+  },
+  "hangars": [],
+  "refits": []
+}

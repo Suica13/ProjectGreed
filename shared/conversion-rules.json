@@ -5,6 +5,7 @@
     "shootingDamageOffset": -0.25,
     "shootingHitOffset": -10,
     "shipMediumAccuracyBonus": 0.15,
+    "nonCounterTargetAccuracy": 1.1,
     "accuracy": 1,
     "en": 1,
     "range": 0.5,
@@ -18,11 +19,13 @@
     "shipCannonAccuracy": 0.85
   },
   "units": {
+    "specialCost": 1.25,
     "hp": 1,
     "en": 1,
     "move": 0.5,
     "accuracy": 1,
-    "reaction": 1
+    "reaction": 1,
+    "shipAccuracy": 0.8
   },
   "weaponClasses": {
     "rifle": {

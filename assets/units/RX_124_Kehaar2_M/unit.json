@@ -485,7 +485,7 @@
       "capacity": 20000.0,
       "reduction": 0.95,
       "piercingReduction": 0.5,
-      "recoveryPercent": 10,
+      "recoveryPercent": 5,
       "nativeRecoverySpeed": 125.0,
       "minimumRatio": -0.25,
       "effect": "I_Field_2"
@@ -1033,7 +1033,7 @@
       "id": "I_Field",
       "source": "Template/Unit/Skill/I_Field.gw",
       "status": "adapted",
-      "name": "I立场：独立耐久吸收远程光束，普通光束吸收95%、贯穿光束50%；耗尽失效，每个己方回合恢复10%最大立场耐久。"
+      "name": "I立场：每回合恢复5%最大立场耐久"
     }
   ],
   "weaponKits": [

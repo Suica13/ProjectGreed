@@ -548,6 +548,15 @@
       "stealth": false,
       "stealthAqua": false,
       "antiDetectAqua": false
+    },
+    "abc": {
+      "capacity": 27500.0,
+      "reductions": {
+        "beam": 0.6,
+        "beamAP": 0.15,
+        "meleeBeam": 0.3,
+        "meleeBeamAP": 0.15
+      }
     }
   },
   "attackBonuses": {
@@ -1094,8 +1103,8 @@
     {
       "id": "ABC",
       "source": "Template/Unit/Skill/ABC.gw",
-      "status": "review",
-      "name": "ABC"
+      "status": "adapted",
+      "name": "ABC finite coating; native channel reductions and resource costs"
     }
   ],
   "weaponKits": [

@@ -1,0 +1,1716 @@
+[
+  {
+    "id": "GAT_X105",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/GAT_X105/GAT_X105.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "Common_Push_A",
+      "OMNI_GAT_X105_BR",
+      "OMNI_GAT_X105_Dagger_Double_DBDF",
+      "Common_DoubleVulcan_MS"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "PSA",
+        "source": "Template/Unit/Skill/PSA.gw",
+        "status": "adapted",
+        "name": "PS Armor finite coating; native channel reductions and resource costs"
+      },
+      {
+        "id": "CustomUnit",
+        "source": "Template/Unit/Skill/CustomUnit.gw",
+        "status": "adapted",
+        "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
+      }
+    ]
+  },
+  {
+    "id": "ACV",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/ACV/ACV.ini",
+    "faction": "OMNI",
+    "weapons": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+        "status": "implemented"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
+      }
+    ]
+  },
+  {
+    "id": "AgamemnonClass",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/AgamemnonClass/AgamemnonClass.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "AgamemnonClass_Turret_BeamCannon",
+      "AgamemnonClass_Turret_AA"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "adapted",
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
+      },
+      {
+        "id": "CmdDef",
+        "source": "Template/Unit/Skill/CmdDef.gw",
+        "status": "adapted",
+        "name": "防御指挥：范围与效果随驾驶员领导力变化"
+      },
+      {
+        "id": "special_Common_ReEntry_NeedBooster",
+        "name": "大气层突入",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "Agile",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/Agile/Agile.ini",
+    "faction": "ZAFT",
+    "weapons": [
+      "Common_DoubleMS_ZN_Heli",
+      "Common_Vulcan_ZN_Heli"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "AMF_101",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/AMF_101/AMF_101.ini",
+    "faction": "ZAFT",
+    "weapons": [
+      "Common_Push_A",
+      "ZAFT_AMF_101_MG",
+      "ZAFT_AMF_101_SG",
+      "Common_Cqb_B"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "FlyStyle",
+        "source": "Template/Unit/Skill/FlyStyle.gw",
+        "status": "adapted",
+        "name": "飞行姿态：部位完好时消耗1 AP起飞或降落，保留移动机会"
+      }
+    ]
+  },
+  {
+    "id": "AMF_101C",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/AMF_101C/AMF_101C.ini",
+    "faction": "ZAFT",
+    "weapons": [
+      "Common_Push_A",
+      "ZAFT_AMF_101_MG",
+      "ZAFT_AMF_101_SG",
+      "Common_Cqb_B"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "FlyStyle",
+        "source": "Template/Unit/Skill/FlyStyle.gw",
+        "status": "adapted",
+        "name": "飞行姿态：部位完好时消耗1 AP起飞或降落，保留移动机会"
+      }
+    ]
+  },
+  {
+    "id": "ArchangelClass",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/ArchangelClass/ArchangelClass.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "ArchangelClass_Turret_BeamCannon",
+      "ArchangelClass_Turret_Railgun",
+      "ArchangelClass_Turret_MS",
+      "ArchangelClass_Turret_AA"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "adapted",
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
+      },
+      {
+        "id": "CmdDef",
+        "source": "Template/Unit/Skill/CmdDef.gw",
+        "status": "adapted",
+        "name": "防御指挥：范围与效果随驾驶员领导力变化"
+      },
+      {
+        "id": "special_Common_ReEntry",
+        "name": "大气层突入",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry.gw",
+        "status": "review"
+      },
+      {
+        "id": "special_Common_ReEntry_FromSpace",
+        "name": "大气层突入",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_FromSpace.gw",
+        "status": "review"
+      },
+      {
+        "id": "special_Common_ReEntry_Both",
+        "name": "大气层突入",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_Both.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "ConnectedArmoredVehicle",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/ConnectedArmoredVehicle/ConnectedArmoredVehicle.ini",
+    "faction": "ZAFT",
+    "weapons": [
+      "ZN_APC_MG"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "Deploy",
+        "source": "Template/Unit/Skill/Deploy.gw",
+        "status": "adapted",
+        "name": "部署：切换原生形态，部署期间禁止移动"
+      }
+    ]
+  },
+  {
+    "id": "DrakeClass",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/DrakeClass/DrakeClass.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "DrakeClass_Turret_AMS",
+      "DrakeClass_Turret_MS",
+      "DrakeClass_Turret_MG"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "AutoRepair",
+        "source": "Template/Unit/Skill/AutoRepair.gw",
+        "status": "adapted",
+        "name": "自动修复：己方行动开始时消耗10 EN恢复10%HP"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "adapted",
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+      },
+      {
+        "id": "special_Common_ReEntry_NeedBooster",
+        "name": "大气层突入",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "F_7D",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/F_7D/F_7D.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "Common_DoubleVulcan_FF_6",
+      "Common_DoubleVulcan_FF_6_L",
+      "Common_DoubleMS_FF_6",
+      "Common_DoubleMS_FF_6_L"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "Fighter",
+        "source": "Template/Unit/Skill/Fighter.gw",
+        "status": "adapted",
+        "name": "战斗机特性"
+      },
+      {
+        "id": "DogFight_A",
+        "source": "Template/Unit/Skill/DogFight_A.gw",
+        "status": "review",
+        "name": "空中缠斗"
+      }
+    ]
+  },
+  {
+    "id": "FX_550",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/FX_550/FX_550.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "OMNI_FX_550_BR",
+      "Common_DoubleGun_FX_550",
+      "Common_DoubleGun_FX_550_L",
+      "Common_DoubleMS_FX_550",
+      "Common_DoubleMS_FX_550_L",
+      "OMNI_GAT_X105_BR",
+      "OMNI_GAT_X105_Launcher",
+      "OMNI_GAT_X105_S_RocketAnchor"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "Fighter",
+        "source": "Template/Unit/Skill/Fighter.gw",
+        "status": "adapted",
+        "name": "战斗机特性"
+      },
+      {
+        "id": "DogFight_A",
+        "source": "Template/Unit/Skill/DogFight_A.gw",
+        "status": "review",
+        "name": "空中缠斗"
+      }
+    ]
+  },
+  {
+    "id": "GAT_01",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/GAT_01/GAT_01.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "Common_Push_A",
+      "OMNI_57mmBR",
+      "OMNI_57mmBR_GL",
+      "EF_BeamSaber_A_Yellow",
+      "Common_DoubleVulcan_MS"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "GAT_01A1",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/GAT_01A1/GAT_01A1.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "Common_Push_A",
+      "OMNI_57mmBR",
+      "OMNI_57mmBR_GL",
+      "OMNI_52mmMG",
+      "EF_BeamSaber_BF_Yellow_B",
+      "Common_DoubleVulcan_MS"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "GAT_01D",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/GAT_01D/GAT_01D.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "Common_Push_A",
+      "OMNI_GAT_X102_BR",
+      "OMNI_GAT_X102_BR_GL",
+      "EF_BeamSaber_F",
+      "Common_DoubleVulcan_MS"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "CustomUnit",
+        "source": "Template/Unit/Skill/CustomUnit.gw",
+        "status": "adapted",
+        "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
+      }
+    ]
+  },
+  {
+    "id": "GAT_01D1",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/GAT_01D1/GAT_01D1.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "Common_Push_A",
+      "OMNI_GAT_X102_BR",
+      "OMNI_GAT_X102_BR_GL",
+      "EF_BeamSaber_F",
+      "Common_DoubleVulcan_MS"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "CustomUnit",
+        "source": "Template/Unit/Skill/CustomUnit.gw",
+        "status": "adapted",
+        "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
+      }
+    ]
+  },
+  {
+    "id": "GAT_02L2",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/GAT_02L2/GAT_02L2.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "Common_Push_A",
+      "OMNI_GAT_02L2_BR",
+      "OMNI_GAT_02L2_Bazooka",
+      "EF_BeamSaber_A",
+      "Common_DoubleVulcan_MS"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "GAT_X102",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/GAT_X102/GAT_X102.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "Common_Push_A",
+      "OMNI_GAT_X102_BR",
+      "OMNI_GAT_X102_RailBazooka",
+      "EF_BeamSaber_AF_Fast_A",
+      "Common_DoubleVulcan_MS"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
+      },
+      {
+        "id": "PSA",
+        "source": "Template/Unit/Skill/PSA.gw",
+        "status": "adapted",
+        "name": "PS Armor finite coating; native channel reductions and resource costs"
+      },
+      {
+        "id": "CustomUnit",
+        "source": "Template/Unit/Skill/CustomUnit.gw",
+        "status": "adapted",
+        "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
+      }
+    ]
+  },
+  {
+    "id": "GAT_X102_AS",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/GAT_X102_AS/GAT_X102_AS.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "Common_Push_A",
+      "Common_Railgun",
+      "OMNI_GAT_X102_AS_MS",
+      "OMNI_GAT_X102_BR",
+      "EF_BeamSaber_A",
+      "Common_DoubleVulcan_MS"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
+      },
+      {
+        "id": "PSA",
+        "source": "Template/Unit/Skill/PSA.gw",
+        "status": "adapted",
+        "name": "PS Armor finite coating; native channel reductions and resource costs"
+      },
+      {
+        "id": "ExitUnit",
+        "source": "Template/Unit/Skill/ExitUnit.gw",
+        "status": "adapted",
+        "name": "爆甲：原生形态转换，资源与部位规则使用显式配置"
+      }
+    ]
+  },
+  {
+    "id": "GAT_X103",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/GAT_X103/GAT_X103.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "Common_Push_A",
+      "OMNI_GAT_X103_BR_HyperSniper",
+      "OMNI_GAT_X103_AntiArmorShotgun",
+      "OMNI_GAT_X103_MS",
+      "OMNI_GAT_X103_MS_L",
+      "OMNI_GAT_X103_BR",
+      "OMNI_GAT_X103_Railgun",
+      "Common_DoubleVulcan_MS",
+      "Common_Cqb_A"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "PSA",
+        "source": "Template/Unit/Skill/PSA.gw",
+        "status": "adapted",
+        "name": "PS Armor finite coating; native channel reductions and resource costs"
+      }
+    ]
+  },
+  {
+    "id": "GAT_X207",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/GAT_X207/GAT_X207.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "Common_Push_A",
+      "OMNI_GAT_X207_BR",
+      "OMNI_GAT_X207_MS",
+      "OMNI_GAT_X207_RocketAnchor",
+      "Common_ArmBeamSaber_BF_B",
+      "Common_DoubleVulcan_MS"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "PSA",
+        "source": "Template/Unit/Skill/PSA.gw",
+        "status": "adapted",
+        "name": "PS Armor finite coating; native channel reductions and resource costs"
+      },
+      {
+        "id": "OpticalCamouflage",
+        "source": "Template/Unit/Skill/OpticalCamouflage.gw",
+        "status": "adapted",
+        "name": "光学迷彩：开关、每己方回合200 EN、攻击解除、回避×1.25及索敌隐身"
+      }
+    ]
+  },
+  {
+    "id": "GAT_X303",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/GAT_X303/GAT_X303.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "Common_Push_A",
+      "OMNI_GAT_X303_BR",
+      "EF_BeamSaber_Double_DBDF_Yellow",
+      "Common_DoubleVulcan_MS"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "Transform_LandFly",
+        "source": "Template/Unit/Skill/Transform_LandFly.gw",
+        "status": "review",
+        "name": "Transform_LandFly"
+      },
+      {
+        "id": "PSA",
+        "source": "Template/Unit/Skill/PSA.gw",
+        "status": "adapted",
+        "name": "PS Armor finite coating; native channel reductions and resource costs"
+      }
+    ]
+  },
+  {
+    "id": "Guul",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/Guul/Guul.ini",
+    "faction": "ZAFT",
+    "weapons": [
+      "Common_DoubleMS_DodaiYS",
+      "Common_DoubleMS_DodaiYS_L"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "DogFight_A",
+        "source": "Template/Unit/Skill/DogFight_A.gw",
+        "status": "review",
+        "name": "空中缠斗"
+      },
+      {
+        "id": "SFS",
+        "source": "Template/Unit/Skill/SFS.gw",
+        "status": "adapted",
+        "name": "SFS：可见MS搭载槽，平台与乘员独立攻击和受击，移动离机"
+      }
+    ]
+  },
+  {
+    "id": "Infestus",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/Infestus/Infestus.ini",
+    "faction": "ZAFT",
+    "weapons": [
+      "Common_DoubleVulcan_Dopp",
+      "Common_DoubleVulcan_Dopp_L",
+      "Common_DoubleMS_Dopp",
+      "Common_DoubleMS_Dopp_L"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "Fighter",
+        "source": "Template/Unit/Skill/Fighter.gw",
+        "status": "adapted",
+        "name": "战斗机特性"
+      },
+      {
+        "id": "DogFight_A",
+        "source": "Template/Unit/Skill/DogFight_A.gw",
+        "status": "review",
+        "name": "空中缠斗"
+      }
+    ]
+  },
+  {
+    "id": "LaurasiaClass",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/LaurasiaClass/LaurasiaClass.ini",
+    "faction": "ZAFT",
+    "weapons": [
+      "LaurasiaClass_Turret_Cannon",
+      "LaurasiaClass_Turret_Cannon_L",
+      "LaurasiaClass_Turret_Cannon_R",
+      "LaurasiaClass_Turret_BeamCannon",
+      "LaurasiaClass_Turret_Railgun_1",
+      "LaurasiaClass_Turret_Railgun_2",
+      "LaurasiaClass_Turret_AA"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "adapted",
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
+      },
+      {
+        "id": "CmdDef",
+        "source": "Template/Unit/Skill/CmdDef.gw",
+        "status": "adapted",
+        "name": "防御指挥：范围与效果随驾驶员领导力变化"
+      },
+      {
+        "id": "special_Common_ReEntry_NeedBooster",
+        "name": "大气层突入",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "LinearArtillery",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/LinearArtillery/LinearArtillery.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "EF_Type61_SPG_Cannon"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "Deploy",
+        "source": "Template/Unit/Skill/Deploy.gw",
+        "status": "adapted",
+        "name": "部署：切换原生形态，部署期间禁止移动"
+      }
+    ]
+  },
+  {
+    "id": "LinearGunTank",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/LinearGunTank/LinearGunTank.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "OMNI_LinearGunTank_Cannon"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "MarseilleIIIClass",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/MarseilleIIIClass/MarseilleIIIClass.ini",
+    "faction": "OMNI",
+    "weapons": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "adapted",
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+      },
+      {
+        "id": "special_Common_ReEntry_NeedBooster",
+        "name": "大气层突入",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "MBF_M1",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/MBF_M1/MBF_M1.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "Common_Push_A",
+      "ORB_MBF_M1_BR",
+      "ORB_MBF_P03_Bazooka",
+      "EF_BeamSaber_A",
+      "Common_DoubleVulcan_MS"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "MissileCar_CE",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/MissileCar_CE/MissileCar_CE.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "Common_DoubleMS_MissileCar"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "NazcaClass",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/NazcaClass/NazcaClass.ini",
+    "faction": "ZAFT",
+    "weapons": [
+      "NazcaClass_Turret_Railgun_1",
+      "NazcaClass_Turret_BeamCannon",
+      "NazcaClass_Turret_AA",
+      "NazcaClass_Turret_MS"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "adapted",
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+      },
+      {
+        "id": "special_Common_ReEntry_NeedBooster",
+        "name": "大气层突入",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "NelsonClass",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/NelsonClass/NelsonClass.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "NelsonClass_Turret_BeamCannon",
+      "NelsonClass_Turret_AA",
+      "NelsonClass_Turret_MS"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "adapted",
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+      },
+      {
+        "id": "special_Common_ReEntry_NeedBooster",
+        "name": "大气层突入",
+        "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+        "status": "review"
+      }
+    ]
+  },
+  {
+    "id": "OMNI_MinigunAPC",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/OMNI_MinigunAPC/OMNI_MinigunAPC.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "EF_MinigunAPC_MG"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "PatrolAircraft",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/PatrolAircraft/PatrolAircraft.ini",
+    "faction": "OMNI",
+    "weapons": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "Fighter",
+        "source": "Template/Unit/Skill/Fighter.gw",
+        "status": "adapted",
+        "name": "战斗机特性"
+      },
+      {
+        "id": "DogFight_A",
+        "source": "Template/Unit/Skill/DogFight_A.gw",
+        "status": "review",
+        "name": "空中缠斗"
+      }
+    ]
+  },
+  {
+    "id": "PowerCar",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/PowerCar/PowerCar.ini",
+    "faction": "OMNI",
+    "weapons": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "SupplyTruck",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/SupplyTruck/SupplyTruck.ini",
+    "faction": "ZAFT",
+    "weapons": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "TFA_2",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/TFA_2/TFA_2.ini",
+    "faction": "ZAFT",
+    "weapons": [
+      "Common_MortarDouble",
+      "Common_MortarDouble_L",
+      "Common_Push_A",
+      "Common_DoubleCannon_TFA_2",
+      "Common_DoubleCannon_TFA_2_L",
+      "ZAFT_TFA_2_MG",
+      "ZAFT_TFA_2_DMG_L",
+      "Common_DoubleVulcan_MS_TFA_2"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "Transform_LandLand_Tank",
+        "source": "Template/Unit/Skill/Transform_LandLand_Tank.gw",
+        "status": "adapted",
+        "name": "变形：原生形态转换，资源与部位规则使用显式配置"
+      }
+    ]
+  },
+  {
+    "id": "TMF_A_802",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/TMF_A_802/TMF_A_802.ini",
+    "faction": "ZAFT",
+    "weapons": [
+      "Common_Push_A",
+      "EF_BeamSaber_BF_B",
+      "TMF_A_802_Turret_Railgun",
+      "TMF_A_802_Turret_MS"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "TS_MA2",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/TS_MA2/TS_MA2.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "OMNI_TS_MA2_LinearGun",
+      "Common_DoubleVulcan_FF_6",
+      "Common_DoubleVulcan_FF_6_L",
+      "Common_DoubleMS_TS_MA2",
+      "Common_DoubleMS_TS_MA2_L"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "Fighter",
+        "source": "Template/Unit/Skill/Fighter.gw",
+        "status": "adapted",
+        "name": "战斗机特性"
+      },
+      {
+        "id": "DogFight_A",
+        "source": "Template/Unit/Skill/DogFight_A.gw",
+        "status": "review",
+        "name": "空中缠斗"
+      }
+    ]
+  },
+  {
+    "id": "UMF_4A",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/UMF_4A/UMF_4A.ini",
+    "faction": "ZAFT",
+    "weapons": [
+      "Common_Push_A",
+      "ZAFT_UMF_4A_MG",
+      "ZAFT_UMF_4A_ChestBeam",
+      "ZAFT_UMF_4A_ChestBeam_L",
+      "ZAFT_UMF_4A_MS",
+      "ZAFT_UMF_4A_MS_L",
+      "ZAFT_UMF_4A_CMS"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "两栖：可穿越陆地与水域",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "UMF_5",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/UMF_5/UMF_5.ini",
+    "faction": "ZAFT",
+    "weapons": [
+      "Common_Push_A",
+      "ZAFT_UMF_5_MS",
+      "ZAFT_UMF_5_BG",
+      "Common_Cqb_Double_A"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "两栖：可穿越陆地与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
+      }
+    ]
+  },
+  {
+    "id": "UWMF_S_1",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/UWMF_S_1/UWMF_S_1.ini",
+    "faction": "ZAFT",
+    "weapons": [
+      "Common_Push_A",
+      "ZAFT_UWMF_S_1_MSL",
+      "Common_Cqb_B"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "两栖：可穿越陆地与水域",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "VoLPHAU",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/VoLPHAU/VoLPHAU.ini",
+    "faction": "ZAFT",
+    "weapons": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "adapted",
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+      },
+      {
+        "id": "CustomUnit",
+        "source": "Template/Unit/Skill/CustomUnit.gw",
+        "status": "review",
+        "name": "换装／改修"
+      },
+      {
+        "id": "Deploy",
+        "source": "Template/Unit/Skill/Deploy.gw",
+        "status": "review",
+        "name": "展开／收起"
+      }
+    ]
+  },
+  {
+    "id": "VTOLFighter",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/VTOLFighter/VTOLFighter.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "Common_DoubleMS_EF_Heli",
+      "Common_Vulcan_EF_Heli"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "VTOLTransport",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/VTOLTransport/VTOLTransport.ini",
+    "faction": "OMNI",
+    "weapons": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "adapted",
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+      },
+      {
+        "id": "CustomUnit",
+        "source": "Template/Unit/Skill/CustomUnit.gw",
+        "status": "review",
+        "name": "换装／改修"
+      },
+      {
+        "id": "Deploy",
+        "source": "Template/Unit/Skill/Deploy.gw",
+        "status": "adapted",
+        "name": "部署：切换原生形态，部署期间禁止移动"
+      }
+    ]
+  },
+  {
+    "id": "ZGMF_1017",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/ZGMF_1017/ZGMF_1017.ini",
+    "faction": "ZAFT",
+    "weapons": [
+      "Common_Push_A",
+      "ZAFT_ZGMF_1017_LegMS",
+      "ZAFT_ZGMF_1017_LegMS_L",
+      "ZAFT_ZGMF_1017_MG",
+      "ZAFT_ZGMF_1017_BZ",
+      "ZAFT_ZGMF_1017_SB_A"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "ZGMF_1017M",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/ZGMF_1017M/ZGMF_1017M.ini",
+    "faction": "ZAFT",
+    "weapons": [
+      "Common_Push_A",
+      "ZAFT_ZGMF_1017M_MG",
+      "ZAFT_ZGMF_1017_BZ",
+      "ZAFT_ZGMF_1017_SB_BF_B"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "ZGMF_515",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/ZGMF_515/ZGMF_515.ini",
+    "faction": "ZAFT",
+    "weapons": [
+      "Common_Push_A",
+      "ZAFT_ZGMF_515_Minigun",
+      "ZAFT_ZGMF_1017_MG",
+      "ZAFT_ZGMF_1017_SB_BF_B"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "CmdCom",
+        "source": "Template/Unit/Skill/CmdCom.gw",
+        "status": "adapted",
+        "name": "通信指挥：范围与效果随驾驶员领导力变化"
+      }
+    ]
+  },
+  {
+    "id": "ZGMF_600",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/ZGMF_600/ZGMF_600.ini",
+    "faction": "ZAFT",
+    "weapons": [
+      "Common_Push_A",
+      "ZAFT_ZGMF_600_BR",
+      "EF_BeamSaber_AL"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "ZGMF_LRR704B",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/ZGMF_LRR704B/ZGMF_LRR704B.ini",
+    "faction": "ZAFT",
+    "weapons": [
+      "Common_Push_A",
+      "ZGMF_LRR704B_LBR",
+      "ZGMF_LRR704B_LBR_Sniper_Aim",
+      "Common_Cqb_A"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "ZGMT_01",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/ZGMT_01/ZGMT_01.ini",
+    "faction": "ZAFT",
+    "weapons": [
+      "Common_Push_A",
+      "ZAFT_ZGMF_1017_MG",
+      "ZAFT_ZGMF_1017_SB_A"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "ConnectedArmoredVehicle_DeployState",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/ConnectedArmoredVehicle/ConnectedArmoredVehicle_DeployState.ini",
+    "faction": "ZAFT",
+    "weapons": [
+      "ZN_APC_MG",
+      "Common_Mortar_Type61_SPG",
+      "EF_Type61_SPG_Cannon"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "Deploy",
+        "source": "Template/Unit/Skill/Deploy.gw",
+        "status": "adapted",
+        "name": "部署：切换原生形态，部署期间禁止移动"
+      },
+      {
+        "id": "CantDeconstruct",
+        "source": "Template/Unit/Skill/CantDeconstruct.gw",
+        "status": "not_applicable",
+        "name": "CantDeconstruct"
+      }
+    ]
+  },
+  {
+    "id": "GAT_01D_AS",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/GAT_01D/GAT_01D_AS.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "Common_Push_A",
+      "Common_Railgun",
+      "OMNI_GAT_01D_AS_MS",
+      "OMNI_GAT_X102_BR",
+      "OMNI_GAT_X102_BR_GL",
+      "EF_BeamSaber_A",
+      "Common_DoubleVulcan_MS"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "CustomUnit",
+        "source": "Template/Unit/Skill/CustomUnit.gw",
+        "status": "adapted",
+        "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
+      },
+      {
+        "id": "ExitUnit",
+        "source": "Template/Unit/Skill/ExitUnit.gw",
+        "status": "adapted",
+        "name": "爆甲：原生形态转换，资源与部位规则使用显式配置"
+      }
+    ]
+  },
+  {
+    "id": "GAT_01D1_AS",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/GAT_01D1/GAT_01D1_AS.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "Common_Push_A",
+      "Common_Railgun",
+      "OMNI_GAT_01D_AS_MS",
+      "OMNI_GAT_X102_BR",
+      "OMNI_GAT_X102_BR_GL",
+      "EF_BeamSaber_A",
+      "Common_DoubleVulcan_MS"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "ExitUnit",
+        "source": "Template/Unit/Skill/ExitUnit.gw",
+        "status": "adapted",
+        "name": "爆甲：原生形态转换，资源与部位规则使用显式配置"
+      }
+    ]
+  },
+  {
+    "id": "GAT_X105_A",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/GAT_X105/GAT_X105_A.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "Common_Push_A",
+      "OMNI_GAT_X105_BR",
+      "ORB_MBF_P03_Bazooka",
+      "EF_BeamSaber_AF_Fast_A",
+      "Common_DoubleVulcan_MS"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "FlyStyle",
+        "source": "Template/Unit/Skill/FlyStyle.gw",
+        "status": "adapted",
+        "name": "飞行姿态：部位完好时消耗1 AP起飞或降落，保留移动机会"
+      },
+      {
+        "id": "PSA",
+        "source": "Template/Unit/Skill/PSA.gw",
+        "status": "adapted",
+        "name": "PS Armor finite coating; native channel reductions and resource costs"
+      },
+      {
+        "id": "CustomUnit",
+        "source": "Template/Unit/Skill/CustomUnit.gw",
+        "status": "adapted",
+        "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
+      }
+    ]
+  },
+  {
+    "id": "GAT_X105_L",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/GAT_X105/GAT_X105_L.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "Common_Push_A",
+      "OMNI_GAT_X105_Launcher",
+      "OMNI_GAT_X105_L_MS",
+      "OMNI_GAT_X105_L_MG",
+      "OMNI_GAT_X105_Dagger_Double_DBDF",
+      "Common_DoubleVulcan_MS"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "PSA",
+        "source": "Template/Unit/Skill/PSA.gw",
+        "status": "adapted",
+        "name": "PS Armor finite coating; native channel reductions and resource costs"
+      },
+      {
+        "id": "CustomUnit",
+        "source": "Template/Unit/Skill/CustomUnit.gw",
+        "status": "adapted",
+        "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
+      }
+    ]
+  },
+  {
+    "id": "GAT_X105_S",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/GAT_X105/GAT_X105_S.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "Common_Push_A",
+      "OMNI_GAT_X105_S_ThrowBoomerang",
+      "OMNI_GAT_X105_S_RocketAnchor",
+      "OMNI_GAT_X105_AntiShipSword_BF_B",
+      "Common_DoubleVulcan_MS"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "PSA",
+        "source": "Template/Unit/Skill/PSA.gw",
+        "status": "adapted",
+        "name": "PS Armor finite coating; native channel reductions and resource costs"
+      },
+      {
+        "id": "CustomUnit",
+        "source": "Template/Unit/Skill/CustomUnit.gw",
+        "status": "adapted",
+        "name": "特殊变换：配属对应ACE时自动转换为专用机，普通改装费用保留为许可报价来源"
+      }
+    ]
+  },
+  {
+    "id": "GAT_X303_MA",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/GAT_X303/GAT_X303_MA.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "OMNI_GAT_X303_MA_BeamCannon",
+      "Common_Cqb_Double_B",
+      "Common_Push_A"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "PSA",
+        "source": "Template/Unit/Skill/PSA.gw",
+        "status": "adapted",
+        "name": "PS Armor finite coating; native channel reductions and resource costs"
+      },
+      {
+        "id": "Transform_LandFly",
+        "source": "Template/Unit/Skill/Transform_LandFly.gw",
+        "status": "review",
+        "name": "Transform_LandFly"
+      },
+      {
+        "id": "FlyUnit_Fighter",
+        "source": "Template/Unit/Skill/FlyUnit_Fighter.gw",
+        "status": "review",
+        "name": "FlyUnit_Fighter"
+      },
+      {
+        "id": "CantDeconstruct",
+        "source": "Template/Unit/Skill/CantDeconstruct.gw",
+        "status": "not_applicable",
+        "name": "CantDeconstruct"
+      },
+      {
+        "id": "DogFight_A",
+        "source": "Template/Unit/Skill/DogFight_A.gw",
+        "status": "review",
+        "name": "空中缠斗"
+      }
+    ]
+  },
+  {
+    "id": "LinearArtillery_DeployState",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/LinearArtillery/LinearArtillery_DeployState.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "EF_Type61_SPG_Cannon",
+      "Common_Mortar_Type61_SPG"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "Deploy",
+        "source": "Template/Unit/Skill/Deploy.gw",
+        "status": "adapted",
+        "name": "部署：切换原生形态，部署期间禁止移动"
+      },
+      {
+        "id": "CantDeconstruct",
+        "source": "Template/Unit/Skill/CantDeconstruct.gw",
+        "status": "not_applicable",
+        "name": "CantDeconstruct"
+      }
+    ]
+  },
+  {
+    "id": "TS_MA2_H",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/TS_MA2/TS_MA2_H.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "OMNI_TS_MA2_H_AntiShipMS",
+      "OMNI_TS_MA2_H_NukeMS",
+      "OMNI_TS_MA2_H_BeamCannon",
+      "Common_DoubleVulcan_FF_6",
+      "Common_DoubleVulcan_FF_6_L",
+      "Common_DoubleMS_TS_MA2",
+      "Common_DoubleMS_TS_MA2_L"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "Fighter",
+        "source": "Template/Unit/Skill/Fighter.gw",
+        "status": "adapted",
+        "name": "战斗机特性"
+      },
+      {
+        "id": "DogFight_A",
+        "source": "Template/Unit/Skill/DogFight_A.gw",
+        "status": "review",
+        "name": "空中缠斗"
+      }
+    ]
+  },
+  {
+    "id": "VTOLTransport_DeployState",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/VTOLTransport/VTOLTransport_DeployState.ini",
+    "faction": "OMNI",
+    "weapons": [],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "空中移动：可跨越山岩与水域",
+        "status": "implemented"
+      },
+      {
+        "id": "LaunchAllUnits",
+        "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+        "status": "adapted",
+        "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+      },
+      {
+        "id": "CustomUnit",
+        "source": "Template/Unit/Skill/CustomUnit.gw",
+        "status": "review",
+        "name": "换装／改修"
+      },
+      {
+        "id": "Deploy",
+        "source": "Template/Unit/Skill/Deploy.gw",
+        "status": "adapted",
+        "name": "部署：切换原生形态，部署期间禁止移动"
+      },
+      {
+        "id": "CantDeconstruct",
+        "source": "Template/Unit/Skill/CantDeconstruct.gw",
+        "status": "not_applicable",
+        "name": "CantDeconstruct"
+      }
+    ]
+  },
+  {
+    "id": "ZGMF_1017_D",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/ZGMF_1017/ZGMF_1017_D.ini",
+    "faction": "ZAFT",
+    "weapons": [
+      "Common_Push_A",
+      "ZAFT_ZGMF_1017_D_MS",
+      "ZAFT_ZGMF_1017_D_MS_L",
+      "ZAFT_ZGMF_1017_D_LMS",
+      "ZAFT_ZGMF_1017_D_LMS_L",
+      "Common_Cqb_A"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "ZGMF_1017_H",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/ZGMF_1017/ZGMF_1017_H.ini",
+    "faction": "ZAFT",
+    "weapons": [
+      "Common_Push_A",
+      "ZAFT_ZGMF_1017_LBR",
+      "ZAFT_ZGMF_1017_SB_A"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      }
+    ]
+  },
+  {
+    "id": "Army_Squad_OMNI_CE71_N_G_A",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/Army_Squad/Squad/Army_Squad_OMNI_CE71_N_G_A.ini",
+    "faction": "OMNI",
+    "weapons": [
+      "Squad_Combined_Weapons"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "CantDeconstruct",
+        "source": "Template/Unit/Skill/CantDeconstruct.gw",
+        "status": "not_applicable",
+        "name": "CantDeconstruct"
+      },
+      {
+        "id": "Stealth",
+        "source": "Template/Unit/Skill/Stealth.gw",
+        "status": "adapted",
+        "name": "隐蔽：降低敌方雷达的有效侦测距离"
+      }
+    ]
+  },
+  {
+    "id": "Army_Squad_ZAFT_CE71_N_G_A",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/Army_Squad/Squad/Army_Squad_ZAFT_CE71_N_G_A.ini",
+    "faction": "ZAFT",
+    "weapons": [
+      "Squad_Combined_Weapons"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "CantDeconstruct",
+        "source": "Template/Unit/Skill/CantDeconstruct.gw",
+        "status": "not_applicable",
+        "name": "CantDeconstruct"
+      },
+      {
+        "id": "Stealth",
+        "source": "Template/Unit/Skill/Stealth.gw",
+        "status": "adapted",
+        "name": "隐蔽：降低敌方雷达的有效侦测距离"
+      }
+    ]
+  },
+  {
+    "id": "TFA_2_ModeB",
+    "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/TFA_2/TFA_2_ModeB.ini",
+    "faction": "ZAFT",
+    "weapons": [
+      "Common_MortarDouble",
+      "Common_MortarDouble_L",
+      "Common_Push_A",
+      "Common_DoubleCannon_TFA_2",
+      "Common_DoubleCannon_TFA_2_L",
+      "ZAFT_TFA_2_MG",
+      "ZAFT_TFA_2_DMG_L",
+      "Common_DoubleVulcan_MS_TFA_2"
+    ],
+    "mechanics": [
+      {
+        "id": "movement",
+        "name": "地面移动",
+        "status": "implemented"
+      },
+      {
+        "id": "Transform_LandLand_Tank",
+        "source": "Template/Unit/Skill/Transform_LandLand_Tank.gw",
+        "status": "adapted",
+        "name": "变形：原生形态转换，资源与部位规则使用显式配置"
+      },
+      {
+        "id": "CantDeconstruct",
+        "source": "Template/Unit/Skill/CantDeconstruct.gw",
+        "status": "not_applicable",
+        "name": "CantDeconstruct"
+      }
+    ]
+  }
+]

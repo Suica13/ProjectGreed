@@ -726,21 +726,21 @@
         "localization": {
           "zh": {
             "name": "有线浮游炮",
-            "description": "4个单元，各射击2轮；每轮按原MOD动作链发射2/2/1/1发，独立逐发判定。原始载荷与连射间隔保留；伤害应用全局换算、人工差值及现有觉醒成长。"
+            "description": "4个单元，按原MOD能量与存续时间发射5轮；每轮2/2/1/1发，逐发判定。完整齐射的单发伤害减半，再应用全局换算、人工差值与觉醒成长。"
           },
           "en": {
             "name": "Wired Remote Cannons",
-            "description": "4 remote units, 2 firing positions each. Native burst: 2/2/1/1 shots per position, resolved separately before global, editor and Awakening modifiers."
+            "description": "4 remote units, up to 5 native firing cycles. Native bursts: 2/2/1/1 shots, resolved separately. Full-volley damage per shot is halved before global, editor and Awakening modifiers."
           },
           "ja": {
             "name": "有線サイコミュ砲",
-            "description": "4基が各2回射撃。各回の原作連射数は2/2/1/1発、1発ずつ判定。原作ダメージと間隔に全体換算・編集差分・覚醒補正を適用。"
+            "description": "4基、原作のエネルギーと存続時間に応じて最大5回射撃。各回2/2/1/1発を個別判定。単発ダメージは半分にしてから各補正を適用。"
           }
         },
-        "damagePerShot": 2500.0,
+        "damagePerShot": 1250.0,
         "damageComponents": {
-          "beam": 2000.0,
-          "beamAP": 500.0
+          "beam": 1000.0,
+          "beamAP": 250.0
         },
         "requiredParts": [],
         "attack": {
@@ -780,8 +780,8 @@
               "muzzleIndex": 2,
               "requiredParts": [],
               "damageComponents": {
-                "beam": 3000.0,
-                "beamAP": 1000.0
+                "beam": 1500.0,
+                "beamAP": 500.0
               },
               "delay": 0.11
             },
@@ -791,8 +791,8 @@
               "muzzleIndex": 3,
               "requiredParts": [],
               "damageComponents": {
-                "beam": 3000.0,
-                "beamAP": 1000.0
+                "beam": 1500.0,
+                "beamAP": 500.0
               },
               "delay": 0.13
             },
@@ -830,8 +830,8 @@
               "muzzleIndex": 2,
               "requiredParts": [],
               "damageComponents": {
-                "beam": 3000.0,
-                "beamAP": 1000.0
+                "beam": 1500.0,
+                "beamAP": 500.0
               },
               "delay": 0.11
             },
@@ -841,8 +841,158 @@
               "muzzleIndex": 3,
               "requiredParts": [],
               "damageComponents": {
-                "beam": 3000.0,
-                "beamAP": 1000.0
+                "beam": 1500.0,
+                "beamAP": 500.0
+              },
+              "delay": 0.13
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 0,
+              "requiredParts": [],
+              "delay": 0.81
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 0,
+              "requiredParts": [],
+              "delay": 0.02
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 1,
+              "requiredParts": [],
+              "delay": 0.11
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 1,
+              "requiredParts": [],
+              "delay": 0.02
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 2,
+              "requiredParts": [],
+              "damageComponents": {
+                "beam": 1500.0,
+                "beamAP": 500.0
+              },
+              "delay": 0.11
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 3,
+              "requiredParts": [],
+              "damageComponents": {
+                "beam": 1500.0,
+                "beamAP": 500.0
+              },
+              "delay": 0.13
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 0,
+              "requiredParts": [],
+              "delay": 0.81
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 0,
+              "requiredParts": [],
+              "delay": 0.02
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 1,
+              "requiredParts": [],
+              "delay": 0.11
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 1,
+              "requiredParts": [],
+              "delay": 0.02
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 2,
+              "requiredParts": [],
+              "damageComponents": {
+                "beam": 1500.0,
+                "beamAP": 500.0
+              },
+              "delay": 0.11
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 3,
+              "requiredParts": [],
+              "damageComponents": {
+                "beam": 1500.0,
+                "beamAP": 500.0
+              },
+              "delay": 0.13
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 0,
+              "requiredParts": [],
+              "delay": 0.81
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 0,
+              "requiredParts": [],
+              "delay": 0.02
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 1,
+              "requiredParts": [],
+              "delay": 0.11
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 1,
+              "requiredParts": [],
+              "delay": 0.02
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 2,
+              "requiredParts": [],
+              "damageComponents": {
+                "beam": 1500.0,
+                "beamAP": 500.0
+              },
+              "delay": 0.11
+            },
+            {
+              "shots": 1,
+              "partBreakModifier": 1.0,
+              "muzzleIndex": 3,
+              "requiredParts": [],
+              "damageComponents": {
+                "beam": 1500.0,
+                "beamAP": 500.0
               },
               "delay": 0.13
             }
@@ -891,6 +1041,7 @@
               "texture": "MAN_03_Funnel_1.png",
               "scale": 1.0,
               "burstShots": 2,
+              "cycles": 5,
               "trail": {
                 "texture": "../../projectiles/Beam_TrailLine_1_Yellow.png",
                 "alpha": 0.35,
@@ -910,6 +1061,7 @@
               "texture": "MAN_03_Funnel_1.png",
               "scale": 1.0,
               "burstShots": 2,
+              "cycles": 5,
               "trail": {
                 "texture": "../../projectiles/Beam_TrailLine_1_Yellow.png",
                 "alpha": 0.35,
@@ -929,6 +1081,7 @@
               "texture": "MAN_03_Funnel_3.png",
               "scale": 1.0,
               "burstShots": 1,
+              "cycles": 5,
               "trail": {
                 "texture": "../../projectiles/Beam_TrailLine_1_Yellow.png",
                 "alpha": 0.35,
@@ -948,6 +1101,7 @@
               "texture": "MAN_03_Funnel_3.png",
               "scale": 1.0,
               "burstShots": 1,
+              "cycles": 5,
               "trail": {
                 "texture": "../../projectiles/Beam_TrailLine_1_Yellow.png",
                 "alpha": 0.35,
@@ -964,7 +1118,7 @@
               "scaleX": -1
             }
           ],
-          "shotsPerUnit": 2,
+          "shotsPerUnit": 5,
           "moveSeconds": 0.6,
           "settleSeconds": 0.1,
           "waitSeconds": 0.5,
@@ -977,6 +1131,13 @@
           "cooldownSeconds": 24.0,
           "awakeningMinimum": 75,
           "entry": "ZN_MAN_03_Funnel_Trigger",
+          "cycles": [
+            5,
+            5,
+            5,
+            5
+          ],
+          "damageScale": 0.5,
           "unitSources": [
             "MAN_03_Funnel_1",
             "MAN_03_Funnel_2",
@@ -1190,21 +1351,21 @@
             }
           ]
         },
-        "description": "4个单元，各射击2轮；每轮按原MOD动作链发射2/2/1/1发，独立逐发判定。原始载荷与连射间隔保留；伤害应用全局换算、人工差值及现有觉醒成长。",
+        "description": "4个单元，按原MOD能量与存续时间发射5轮；每轮2/2/1/1发，逐发判定。完整齐射的单发伤害减半，再应用全局换算、人工差值与觉醒成长。",
         "nativeTiming": {
           "source": "Units/BattleUnits/Weapon/Funnel/ZN_MAN_03_Funnel.gw",
           "entry": "ZN_MAN_03_Funnel_Trigger",
           "cooldown": 24.0,
-          "duration": 2.29,
+          "duration": 5.89,
           "firstShot": 0.7,
-          "lastShot": 2.29,
-          "firingEvents": 12,
-          "projectiles": 12,
+          "lastShot": 5.89,
+          "firingEvents": 30,
+          "projectiles": 30,
           "declaredEnergy": 250.0,
           "energyMode": "perVolley",
           "energyPerEmission": 0,
           "energy": 250.0,
-          "adaptation": "two_positions_with_native_bursts"
+          "adaptation": "native_energy_lifetime_and_bursts"
         }
       }
     }

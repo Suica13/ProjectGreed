@@ -1,0 +1,955 @@
+{
+  "schemaVersion": 2,
+  "id": "TMF_A_802",
+  "code": "TMF-A-802",
+  "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/TMF_A_802/TMF_A_802.ini",
+  "materials": {
+    "textures": {
+      "TMF_A_802_Crotch_1.png": "textures/TMF_A_802_Crotch_1.png",
+      "TMF_A_802_Head_1.png": "textures/TMF_A_802_Head_1.png",
+      "TMF_A_802_Eye_1.png": "textures/TMF_A_802_Eye_1.png",
+      "TMF_A_802_FootL_1.png": "textures/TMF_A_802_FootL_1.png",
+      "TMF_A_802_LegL_1.png": "textures/TMF_A_802_LegL_1.png",
+      "TMF_A_802_FootR_1.png": "textures/TMF_A_802_FootR_1.png",
+      "TMF_A_802_LegR_1.png": "textures/TMF_A_802_LegR_1.png",
+      "EF_BeamSaber.png": "textures/EF_BeamSaber.png",
+      "TMF_A_802_Crotch_Wing_1.png": "textures/TMF_A_802_Crotch_Wing_1.png",
+      "TMF_A_802_Head_2.png": "textures/TMF_A_802_Head_2.png",
+      "TMF_A_802_FootL_1_B.png": "textures/TMF_A_802_FootL_1_B.png",
+      "TMF_A_802_LegL_1_B.png": "textures/TMF_A_802_LegL_1_B.png",
+      "TMF_A_802_FootR_1_B.png": "textures/TMF_A_802_FootR_1_B.png",
+      "TMF_A_802_LegR_1_B.png": "textures/TMF_A_802_LegR_1_B.png",
+      "TMF_A_802.png": "textures/TMF_A_802.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png",
+      "HoverMove_1.png": "textures/HoverMove_1.png",
+      "TMF_A_802_Railgun_1.png": "textures/TMF_A_802_Railgun_1.png",
+      "TMF_A_802_MS_1.png": "textures/TMF_A_802_MS_1.png"
+    },
+    "icon": "TMF_A_802.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "BackTurret0": {
+      "x": 0.0,
+      "y": -18.0,
+      "endDirOffset": 0
+    },
+    "BackTurret1": {
+      "x": 0.0,
+      "y": -18.0,
+      "endDirOffset": 0
+    }
+  },
+  "layers": [
+    {
+      "name": "Hover",
+      "texture": "HoverMove_1.png",
+      "bone": "Pelvis",
+      "order": 0.0,
+      "scale": 0.35,
+      "offset": {
+        "x": 0.0,
+        "y": -5.0
+      },
+      "alpha": 0.5,
+      "frames": 6,
+      "frameFps": 10,
+      "frame": 0,
+      "visibleWhen": {
+        "moving": true,
+        "onLand": true
+      }
+    },
+    {
+      "name": "LeftFoot",
+      "texture": "TMF_A_802_FootL_1.png",
+      "bone": "LeftFoot",
+      "order": 1.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightFoot",
+      "texture": "TMF_A_802_FootR_1.png",
+      "bone": "RightFoot",
+      "order": 1.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "LeftFoot_B",
+      "texture": "TMF_A_802_FootL_1_B.png",
+      "bone": "LeftFoot",
+      "order": 1.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "LeftLeg_B",
+      "texture": "TMF_A_802_LegL_1_B.png",
+      "bone": "LeftLeg",
+      "order": 1.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightFoot_B",
+      "texture": "TMF_A_802_FootR_1_B.png",
+      "bone": "RightFoot",
+      "order": 1.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightLeg_B",
+      "texture": "TMF_A_802_LegR_1_B.png",
+      "bone": "RightLeg",
+      "order": 1.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "LeftLeg",
+      "texture": "TMF_A_802_LegL_1.png",
+      "bone": "LeftLeg",
+      "order": 2.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightLeg",
+      "texture": "TMF_A_802_LegR_1.png",
+      "bone": "RightLeg",
+      "order": 2.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "Crotch",
+      "texture": "TMF_A_802_Crotch_1.png",
+      "bone": "Pelvis",
+      "order": 4.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Crotch_Wing",
+      "texture": "TMF_A_802_Crotch_Wing_1.png",
+      "bone": "Pelvis",
+      "order": 4.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Pelvis",
+      "order": 4.0,
+      "scale": 0.85,
+      "offset": {
+        "x": -21.0,
+        "y": -6.5
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "scaleX": 1.0,
+      "independentClock": true
+    },
+    {
+      "name": "BoostReversing_R",
+      "texture": "BoostReversing_1.png",
+      "bone": "Pelvis",
+      "order": 4.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 21.0,
+        "y": -6.5
+      },
+      "scaleX": -0.85,
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Pelvis",
+      "order": 4.1,
+      "scale": 0.85,
+      "offset": {
+        "x": -22.0,
+        "y": -4.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_R",
+      "texture": "Boost_1.png",
+      "bone": "Pelvis",
+      "order": 4.1,
+      "scale": 0.85,
+      "offset": {
+        "x": 22.0,
+        "y": -4.0
+      },
+      "scaleX": -0.85,
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Head",
+      "texture": "TMF_A_802_Head_1.png",
+      "bone": "Head",
+      "order": 7.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 15.0
+      },
+      "visibleWhen": {
+        "visorClosed": false,
+        "heldWeapon": {
+          "not": "EF_BeamSaber_BF_B"
+        }
+      },
+      "requiredParts": [
+        "head"
+      ]
+    },
+    {
+      "name": "Head_Close",
+      "texture": "TMF_A_802_Head_1.png",
+      "bone": "Head",
+      "order": 7.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 15.0
+      },
+      "visibleWhen": {
+        "visorClosed": true
+      },
+      "requiredParts": [
+        "head"
+      ]
+    },
+    {
+      "name": "Head_1",
+      "texture": "TMF_A_802_Head_2.png",
+      "bone": "Head",
+      "order": 7.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 15.0
+      },
+      "requiredParts": [
+        "head"
+      ],
+      "visibleWhen": {
+        "heldWeapon": "EF_BeamSaber_BF_B"
+      }
+    },
+    {
+      "name": "Eye",
+      "texture": "TMF_A_802_Eye_1.png",
+      "bone": "Eye",
+      "order": 7.5,
+      "scale": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 22.0
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      },
+      "requiredParts": [
+        "head"
+      ]
+    },
+    {
+      "name": "TMF_A_802_Turret_Railgun",
+      "bone": "BackTurret0",
+      "texture": "TMF_A_802_Railgun_1.png",
+      "order": 5,
+      "scale": 0.85,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "visibleWhen": {
+        "kit": "standard"
+      }
+    },
+    {
+      "name": "TMF_A_802_Turret_MS",
+      "bone": "BackTurret1",
+      "texture": "TMF_A_802_MS_1.png",
+      "order": 5,
+      "scale": 0.85,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "visibleWhen": {
+        "kit": "missile"
+      }
+    }
+  ],
+  "animations": {
+    "EnterPilot": "../../animations/EnterPilot__AMX_002.json",
+    "QuitPilot": "../../animations/QuitPilot.json",
+    "NoPilotIdle": "../../animations/NoPilotIdle.json",
+    "Common_Idle": "../../animations/Common_Idle__MAX_03.json",
+    "Common_Dodge_L": "../../animations/Common_Dodge_L.json",
+    "Common_Dodge_R": "../../animations/Common_Dodge_R.json",
+    "OnMoving": "../../animations/OnMoving__TMF_A_802.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing__TMF_A_802.json",
+    "OnMovingWalk": "../../animations/OnMovingWalk__TMF_A_802.json",
+    "Guard": "../../animations/Guard__AMX_002.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Daze": "../../animations/Common_Daze__AMX_002.json",
+    "Common_Stagger": "../../animations/Common_Stagger__AMX_002.json",
+    "Common_Push_A": "../../animations/Common_Push_A__ApsarasII.json",
+    "Common_Melee_B": "../../animations/Common_Melee_B__MSM_04.json",
+    "Common_Melee_F": "../../animations/Common_Melee_F__EMS_10.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 20000,
+    "en": 750.0,
+    "move": 7,
+    "mobility": 105.0,
+    "cost": 200,
+    "counterLimit": 1,
+    "accuracy": 115.0,
+    "partStructuralStrength": 110.0,
+    "partsBreakable": true,
+    "movementType": "hover",
+    "adaptability": {
+      "ground": 100,
+      "space": 50,
+      "water": 50.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 100.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "speed": 130,
+    "actionPoints": 10,
+    "sensors": {
+      "sight": 8,
+      "radar": 10.0,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    },
+    "visualTurrets": [
+      {
+        "id": "TMF_A_802_Turret_Railgun",
+        "bone": "BackTurret0",
+        "idleDir": 0,
+        "arc": 90
+      },
+      {
+        "id": "TMF_A_802_Turret_MS",
+        "bone": "BackTurret1",
+        "idleDir": 0,
+        "arc": 90
+      }
+    ]
+  },
+  "attackBonuses": {
+    "melee": 20.0,
+    "shooting": 20.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 10.0,
+      "flat": 50.0
+    },
+    "shell": {
+      "percent": 10.0,
+      "flat": 75.0
+    },
+    "melee": {
+      "percent": 10.0,
+      "flat": 50.0
+    },
+    "dp": {
+      "percent": 10.0,
+      "flat": 15.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    },
+    "requiredParts": []
+  },
+  "sourceStats": {
+    "hp": 16000.0,
+    "walkSpeed": 0.8,
+    "boostSpeed": 1.8,
+    "turnSpeed": 1.25,
+    "reaction": 105.0,
+    "shooting": 120.0,
+    "melee": 120.0,
+    "nativeTags": [
+      "TMF_A_802",
+      "Unit",
+      "MS",
+      "ZAFT",
+      "CE71",
+      "SEED"
+    ],
+    "nativeSkills": [
+      "Hover"
+    ],
+    "accuracy": 115.0,
+    "partStructuralStrength": 110.0,
+    "actionTurnSpeed": 1.25,
+    "movementBeforeMobility": 6,
+    "mobilityMoveTarget": 7,
+    "enBeforeReduction": 750.0,
+    "enCapacityMultiplier": 1,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 10.0,
+      "water": 50.0,
+      "air": 10.0,
+      "mountain": 100.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 20.0,
+      "radar": 360.0,
+      "antiDetection": 0.0
+    },
+    "balanceStatus": "native-level",
+    "unitLevel": 800.0,
+    "tacticalMoveBeforeBonus": 6,
+    "v17BaseHp": 16000.0,
+    "technologyEra": "CE_0071_T1"
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMoving",
+    "stagger": "Common_Stagger",
+    "dodge": "Common_Dodge_L",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "OnMovingWalk",
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "巴库",
+  "faction": "ZAFT",
+  "tags": [
+    "ZAFT",
+    "CE_0071_T1"
+  ],
+  "localization": {
+    "zh": {
+      "name": "巴库",
+      "description": "扎夫特军所开发的地面战用突击MS"
+    },
+    "en": {
+      "name": "BuCUE",
+      "description": "An assault-type MS developed by ZAFT for ground combat"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "Common_Push_A": {
+      "ref": "Common_Push_A__lv1",
+      "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Push_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Kick_White_R"
+              ],
+              "delay": 0.45
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Push_A"
+        },
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+          "barrel": "Common_Push_A",
+          "entry": "hiddenAction_Common_Push_A_Fire",
+          "cooldown": 3.0,
+          "duration": 1.45,
+          "firstShot": 0.45,
+          "lastShot": 0.45,
+          "firingEvents": 1,
+          "projectiles": 1,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "hiddenAction_Common_Push_A_Fire",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SendEnemyTryAttack_Cqb",
+            "hiddenAction_Common_Push_A_SetWeaponIndex",
+            "hiddenAction_Common_Push_A_Step_1",
+            "hiddenAction_Common_Push_A_Fire_Step_1",
+            "hiddenAction_Common_Push_A_Fire_Step_2",
+            "hiddenAction_Common_Push_A_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff"
+          ]
+        },
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+          "barrelX": 0,
+          "barrelY": 0,
+          "cooldownSeconds": 3,
+          "barrels": [
+            {
+              "id": "Common_Push_A",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      },
+      "remove": [
+        "swingEffects"
+      ]
+    },
+    "EF_BeamSaber_BF_B": {
+      "ref": "EF_BeamSaber_BF_B__lv1",
+      "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Melee_B",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Pink_R"
+              ],
+              "delay": 0.4
+            },
+            {
+              "animation": "Common_Melee_F",
+              "delay": 0.6
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_1_Pink_L"
+              ],
+              "delay": 0.3
+            },
+            {
+              "delay": 1.4
+            }
+          ],
+          "startAnimation": "Common_Melee_B"
+        },
+        "changeHeldWeapon": false,
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_BF.gw",
+          "barrel": "EF_BeamSaber_BF_B",
+          "entry": "hiddenAction_EF_BeamSaber_BF_Fire",
+          "cooldown": 3.5,
+          "duration": 2.7,
+          "firstShot": 0.4,
+          "lastShot": 1.3,
+          "firingEvents": 2,
+          "projectiles": 2,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "hiddenAction_EF_BeamSaber_BF_Fire",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SendEnemyTryAttack_Cqb",
+            "hiddenAction_EF_BeamSaber_BF_B_SetWeaponIndex",
+            "hiddenAction_EF_BeamSaber_BF_Step_1",
+            "hiddenAction_EF_BeamSaber_BF_Fire_Step_1",
+            "hiddenAction_EF_BeamSaber_BF_Fire_Step_2",
+            "hiddenAction_EF_BeamSaber_BF_Fire_Step_3",
+            "hiddenAction_EF_BeamSaber_BF_F_SetWeaponIndex",
+            "hiddenAction_EF_BeamSaber_BF_Fire_Step_4",
+            "hiddenAction_EF_BeamSaber_BF_Fire_Step_5",
+            "hiddenAction_EF_BeamSaber_BF_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff"
+          ]
+        },
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_BF.gw",
+          "barrels": [
+            {
+              "id": "EF_BeamSaber_BF_B",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      },
+      "remove": [
+        "swingEffects",
+        "displayIndex"
+      ]
+    },
+    "TMF_A_802_Turret_Railgun": {
+      "ref": "TMF_A_802_Turret_Railgun__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/TMF_A_802/TMF_A_802_Turret_Railgun.ini",
+          "barrels": [
+            {
+              "id": "TMF_A_802_Turret_Railgun",
+              "x": 8.0,
+              "y": 11.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "BackTurret0",
+              "offset": {
+                "x": 8.0,
+                "y": 11.0
+              },
+              "alternatingOffsetX": -16.0
+            }
+          ]
+        },
+        "level": 1,
+        "levelSource": "Units/BattleUnits/TMF_A_802/TMF_A_802_Turret_Railgun.ini"
+      }
+    },
+    "TMF_A_802_Turret_MS": {
+      "ref": "TMF_A_802_Turret_MS__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/TMF_A_802/TMF_A_802_Turret_MS.ini",
+          "barrels": [
+            {
+              "id": "TMF_A_802_Turret_MS",
+              "x": 5.0,
+              "y": 5.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "BackTurret1",
+              "offset": {
+                "x": 5.0,
+                "y": 5.0
+              },
+              "alternatingOffsetX": -10.0
+            }
+          ]
+        },
+        "level": 1,
+        "levelSource": "Units/BattleUnits/TMF_A_802/TMF_A_802_Turret_MS.ini"
+      }
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "气垫移动：可横越水域；仅在地面移动时循环气垫特效",
+      "status": "implemented"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "nativeEquipmentIndex": 0,
+      "name": "磁轨炮套件",
+      "cost": 0,
+      "weapons": [
+        "TMF_A_802_Turret_Railgun",
+        "Common_Push_A",
+        "EF_BeamSaber_BF_B"
+      ]
+    },
+    {
+      "id": "missile",
+      "nativeEquipmentIndex": 1,
+      "name": "导弹发射器套件",
+      "cost": 0,
+      "weapons": [
+        "TMF_A_802_Turret_MS",
+        "Common_Push_A",
+        "EF_BeamSaber_BF_B"
+      ]
+    }
+  ],
+  "description": "扎夫特军所开发的地面战用突击MS",
+  "skills": [],
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 800.0,
+    "levelMultiplier": 0.25,
+    "published": 200
+  },
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS",
+    "Hover"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto",
+      "CanUseSFS"
+    ]
+  },
+  "hangars": [],
+  "refits": []
+}

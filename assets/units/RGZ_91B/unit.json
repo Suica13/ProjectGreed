@@ -648,10 +648,10 @@
     "moveSoundKey": "moveSound"
   },
   "name": "灵格斯特装型",
-  "faction": "EFSF",
+  "faction": "EFSF_0093",
   "tags": [
-    "EFSF",
-    "0093T1"
+    "EFSF_0093",
+    "UC_0093_T1"
   ],
   "localization": {
     "zh": {

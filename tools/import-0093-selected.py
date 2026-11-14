@@ -1,4 +1,4 @@
-﻿"""Import the selected 0093 roster; source MOD is read-only and permits stay disabled."""
+﻿"""Import the selected 0093 roster; source MOD is read-only; research bindings are refreshed when connected."""
 import os
 os.environ['PROJECTGREED_MOD_DLC'] = 'GW_BattleUniverse_DLC_0093'
 import importlib.util, json, subprocess, sys
@@ -44,13 +44,13 @@ def main():
         path = ASSETS/f'units/{ident}/unit.json'
         prefab = bulk.read(path) if path.exists() and '--refresh' not in sys.argv else bulk.build(row, effects)
         introductions = prefab.get('localization', {})
-        prefab.update(name=zh, faction=faction, tags=[faction,'0093T1'], production=dict(enabled=False),
+        prefab.update(name=zh, faction=faction, tags=[faction,'UC_0093_T1'], production=dict(enabled=False),
             localization={lang:dict(name=name) for lang,name in [('zh',zh),('en',en),('ja',ja)]})
         for language in ('zh','en','ja'):
             description = introductions.get(language, {}).get('description') or introductions.get('en', {}).get('description')
             if description: prefab['localization'][language]['description'] = description
         # Native text is kept by the introduction importer. Names use the requested roster labels.
-        prefab['sourceStats']['technologyEra'] = '0093T1'
+        prefab['sourceStats']['technologyEra'] = 'UC_0093_T1'
         if ident.endswith('_MA'):
             prefab.update(formOnly=False, formOf=ident.removesuffix('_MA'))
         write(path,prefab)
@@ -66,7 +66,7 @@ def main():
         attach(prefab,native)
         for weapon in prefab["weapons"].values(): apply_beam_projectile(prefab,weapon,native)
         write(ASSETS/f"units/{prefab['id']}/unit.json",prefab)
-        report.append(dict(id=prefab['id'],source=prefab['source'],era='0093T1',faction=prefab['faction'],
+        report.append(dict(id=prefab['id'],source=prefab['source'],era='UC_0093_T1',faction=prefab['faction'],
             weapons=list(prefab['weapons']),mechanics=prefab.get('mechanics',[]),
             beams=[k for k,w in prefab['weapons'].items() if w.get('projectile',{}).get('sequence')],
             forms=[s['source']['unitId'] for s in prefab.get('skills',[]) if s.get('source',{}).get('mode')=='transform']))
@@ -92,6 +92,10 @@ def main():
     for prefab in prefabs:
         for path in animations.glob(prefab['id']+'__*.json'):
             if path.resolve() not in referenced: path.unlink()
+    # Once the native tree is connected, refresh its faction/production bindings.
+    tree=json.loads((ASSETS.parent/'shared/development-tree.json').read_text(encoding='utf8'))
+    if 'EFSF_0093' in tree:
+        subprocess.run([sys.executable,str(Path(__file__).with_name('import-0093-tech.py')),'--skip-units'],check=True)
     print('Validated selected 0093 roster:',len(prefabs))
 
 if __name__=='__main__': main()

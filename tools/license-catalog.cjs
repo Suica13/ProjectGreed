@@ -39,7 +39,7 @@ function compile(catalog, units) {
       const offer = {
         unitId: target.id,
         faction: target.tags.find((tag) =>
-          ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(tag),
+          Object.keys(require("../shared/factions.json")).includes(tag),
         ),
         ...(target.availableFactions ? { availableFactions: target.availableFactions } : {}),
         money: roundPrice(route.money),

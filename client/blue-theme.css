@@ -532,6 +532,9 @@ body .release-warning-text {
 body .disabled-panel {
   background: #031320a8;
 }
+body .technology-limited > .disabled-panel {
+  background: rgba(0, 0, 0, 0.72);
+}
 body #musicPlayer {
   background: #202936;
   border-color: #315c76;

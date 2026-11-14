@@ -126,5 +126,38 @@ test("native snapshots read compact receipts and exported entries keep small rec
     values: Object.fromEntries(Object.entries(writes).filter(([, value]) => value !== null)),
   };
   assert.deepEqual(plain(save.fromNativeSnapshot(snapshot)), plain(input));
+  assert.deepEqual(plain(save.validate(snapshot)), plain(input));
+  assert.deepEqual(
+    plain([...save.storageEntries(snapshot)]),
+    plain([...save.storageEntries(input)]),
+  );
   assert.equal(codec.stringify({ claimed: {}, money: 10 }), '{"claimed":{},"money":10}');
+});
+
+test("portable and native imports preserve a carrier formation exceeding the former point cap", () => {
+  const save = api(),
+    input = fixture();
+  const carrier = Object.values(G.models).find((m) => m.prefabId === "DogosseGiarClass");
+  const units = [];
+  for (let ship = 0; ship < 3; ship++) {
+    const carrierIndex = units.length;
+    units.push({ unitId: carrier.prefabId, kitId: carrier.kitId });
+    for (const hangar of carrier.hangars)
+      for (let i = 0; i < 3; i++)
+        units.push({
+          unitId: "RGM_79",
+          kitId: "machine_gun",
+          preload: { carrierIndex, hangarId: hangar.id },
+        });
+  }
+  // The total point weight exceeds 72, but every physical hangar stays legal.
+  assert(G.formationPoints(units) > G.catalog.formation.maxUnits);
+  input.formations.PMC = { version: 3, index: 0, squads: [{ name: "Full Fleet", units }] };
+  const portable = save.encodeData(input);
+  assert.equal(save.validate(portable).formations.PMC.squads[0].units.length, units.length);
+  const values = Object.fromEntries(
+    [...save.storageEntries(portable)].filter(([, value]) => value !== null),
+  );
+  const native = { format: "ProjectGreed-app-store", version: 1, revision: 3, values };
+  assert.equal(save.validate(native).formations.PMC.squads[0].units.length, units.length);
 });

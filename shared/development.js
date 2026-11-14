@@ -5,12 +5,24 @@ const Development = (() => {
   const economy = typeof Economy !== "undefined" ? Economy : require("./economy.js");
   const tree =
     typeof DEVELOPMENT_TREE !== "undefined" ? DEVELOPMENT_TREE : require("./development-tree.json");
-  const factions = ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"];
+  const factions = Object.keys(tree);
   const laterFactions = ["AEUG", "TITANS", "NEO_ZEON"];
+  // Alternatives are OR; each required tree must have its whole middle branch complete.
+  const treePrerequisites = {
+    AEUG: ["EFSF"],
+    TITANS: ["EFSF"],
+    NEO_ZEON: ["ZEON"],
+    EFSF_0093: ["AEUG", "TITANS"],
+    NEO_ZEON_0093: ["NEO_ZEON"],
+  };
   const starterTech = {
     // 原 MOD 的起始科技；61式和飞鳐都由联邦基础科技解锁。
     EFSF: ["Tech_EFSF_0079_BaseTech"],
     ZEON: ["Tech_ZEON_0079_BaseTech"],
+    OMNI: ["Tech_OMNI_CE71_BaseTech"],
+    ZAFT: ["Tech_ZAFT_CE71_BaseTech"],
+    EFSF_0093: ["Tech_0093_EFSF_BaseTech"],
+    NEO_ZEON_0093: ["Tech_0093_NZN_BaseTech"],
   };
   const unitCache = new Map();
   const aces =
@@ -62,22 +74,19 @@ const Development = (() => {
   function unlockedTech(faction) {
     return [...(currentResearch()[faction] || [])];
   }
-  function normalizeResearch(value = {}) {
+  function completedMainline(faction, value) {
+    const mainline = nodes(faction).filter(node => node.row === "mid" && !node.placeholder);
+    const active = new Set(value?.[faction] || []);
+    return mainline.length > 0 && mainline.every(node => active.has(node.id));
+  }
+  function treeAccessible(faction, value) {
+    return !treePrerequisites[faction] ||
+      treePrerequisites[faction].some(required => completedMainline(required, value));
+  }
+  function normalizeResearch(value = {}, { includeLocked = false } = {}) {
     const result = { units: {} };
     for (const faction of factions) {
-      const requested = new Set(Array.isArray(value?.[faction]) ? value[faction] : []);
-      const gated = laterFactions.includes(faction) && !hasCompleted0079(result);
-      const active = new Set(
-        starterTech[faction] || (gated ? [] : ["Tech_" + faction + "_0087_BaseTech"]),
-      );
-      for (let pass = 0; pass < nodes(faction).length && !gated; pass++) {
-        const before = active.size;
-        for (const node of nodes(faction))
-          if (requested.has(node.id) && node.requires.every((id) => active.has(id)))
-            active.add(node.id);
-        if (active.size === before) break;
-      }
-      result[faction] = [...active];
+      result[faction] = [];
       const knownUnits = new Set([
         ...nodes(faction).flatMap((node) => node.unlocks),
         ...aces.filter((p) => p.faction === faction).map((p) => p.id),
@@ -86,20 +95,37 @@ const Development = (() => {
         ...new Set(Array.isArray(value?.units?.[faction]) ? value.units[faction] : []),
       ].filter((id) => knownUnits.has(id));
     }
+    // Resolve the dependency graph independently of the order of factions in the JSON.
+    for (let stage = 0; stage < factions.length; stage++) {
+      let changed = false;
+      for (const faction of factions) {
+        if (!includeLocked && !treeAccessible(faction, result)) continue;
+        const requested = new Set(Array.isArray(value?.[faction]) ? value[faction] : []);
+        const active = new Set(result[faction]);
+        const start = starterTech[faction] || ["Tech_" + faction + "_0087_BaseTech"];
+        for (const id of start) if (nodes(faction).some(node => node.id === id)) active.add(id);
+        for (let pass = 0; pass < nodes(faction).length; pass++) {
+          const before = active.size;
+          for (const node of nodes(faction))
+            if (requested.has(node.id) && node.requires.every(id => active.has(id))) active.add(node.id);
+          if (active.size === before) break;
+        }
+        if (active.size !== result[faction].length) changed = true;
+        result[faction] = [...active];
+      }
+      if (!changed) break;
+    }
     return result;
   }
-  // Complete either whole legacy faction, including the 0083 nodes.
+  function mainlineComplete(faction, value) {
+    return completedMainline(faction, value === undefined ? currentResearch() : normalizeResearch(value));
+  }
   function hasCompleted0079(value = progress.researched) {
-    return ["EFSF", "ZEON"].some((faction) => {
-      const active = new Set(value?.[faction] || []);
-      return nodes(faction).length > 0 && nodes(faction).every((node) => active.has(node.id));
-    });
+    const active = normalizeResearch(value);
+    return ["EFSF", "ZEON"].some(faction => completedMainline(faction, active));
   }
   function eraLocked(faction, value) {
-    return (
-      laterFactions.includes(faction) &&
-      !hasCompleted0079(value === undefined ? currentResearch() : normalizeResearch(value))
-    );
+    return !treeAccessible(faction, value === undefined ? currentResearch() : normalizeResearch(value));
   }
   // Room-only AI progression: union each participant's active-faction research, then mirror the furthest
   // main-line column (page first) across both factions and all three lanes.
@@ -133,7 +159,7 @@ const Development = (() => {
         // without treating its columns as 0087 progression.
         if (laterFactions.includes(character))
           for (const legacy of ["EFSF", "ZEON"])
-            if (nodes(legacy).every((node) => clean[legacy].includes(node.id)))
+            if (completedMainline(legacy, clean))
               for (const id of clean[legacy]) union[legacy].add(id);
       }
       for (const faction of group)
@@ -164,7 +190,7 @@ const Development = (() => {
     const next = {
       ...progress,
       points: { ...progress.points },
-      researched: { ...normalizeResearch(progress.researched), [faction]: [...active, id] },
+      researched: { ...normalizeResearch(progress.researched, { includeLocked: true }), [faction]: [...active, id] },
     };
     if (!economy.transact({}, {}, [[progressKey, saveCodec.stringify(next)]])) return false;
     progress = next;
@@ -173,7 +199,7 @@ const Development = (() => {
   }
   // Rewards/scripts may grant a specific unit; there is deliberately no individual research UI.
   function grantUnit(faction, unitId) {
-    const researched = normalizeResearch(progress.researched);
+    const researched = normalizeResearch(progress.researched, { includeLocked: true });
     if (
       !researched.units[faction] ||
       !(
@@ -234,8 +260,7 @@ const Development = (() => {
       const active = normalizeResearch(researched);
       return (faction === "PMC" ? factions : [faction]).some(
         (side) =>
-          (!laterFactions.includes(side) ||
-            active[side]?.includes("Tech_" + side + "_0087_BaseTech")) &&
+          treeAccessible(side, active) &&
           (active.units[side]?.includes(prefabId) ||
             nodes(side).some(
               (node) => active[side]?.includes(node.id) && node.unlocks.includes(prefabId),
@@ -288,7 +313,7 @@ const Development = (() => {
     const points = {},
       claimed = {};
     for (const faction of factions) {
-      const balance = value.points[faction] ?? (laterFactions.includes(faction) ? 0 : NaN);
+      const balance = value.points[faction] ?? 0;
       if (!Number.isSafeInteger(balance) || balance < 0) throw Error("科技点余额无效");
       points[faction] = balance;
     }
@@ -297,7 +322,7 @@ const Development = (() => {
         throw Error("科技奖励记录无效");
       Object.defineProperty(claimed, id, { value: match, enumerable: true });
     }
-    return { points, claimed, researched: normalizeResearch(value.researched) };
+    return { points, claimed, researched: normalizeResearch(value.researched, { includeLocked: true }) };
   }
   function exportProgress() {
     return validateProgress(progress);
@@ -306,6 +331,8 @@ const Development = (() => {
     factions,
     allowsPointCaps,
     hasCompleted0079,
+    mainlineComplete,
+    treePrerequisites,
     eraLocked,
     exportProgress,
     validateProgress,

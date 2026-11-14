@@ -487,7 +487,16 @@
         "name": "攻击指挥",
         "source": "Template/Unit/Skill/CmdAtk.gw"
       }
-    ]
+    ],
+    "abc": {
+      "capacity": 20000.0,
+      "reductions": {
+        "beam": 0.6,
+        "beamAP": 0.15,
+        "meleeBeam": 0.3,
+        "meleeBeamAP": 0.15
+      }
+    }
   },
   "attackBonuses": {
     "melee": 85.0,
@@ -874,8 +883,8 @@
     {
       "id": "ABC",
       "source": "Template/Unit/Skill/ABC.gw",
-      "status": "review",
-      "name": "ABC"
+      "status": "adapted",
+      "name": "ABC finite coating; native channel reductions and resource costs"
     },
     {
       "id": "Transform_LandFly_SFS_OFF",

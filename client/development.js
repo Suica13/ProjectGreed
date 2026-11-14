@@ -77,6 +77,7 @@ const DevelopmentUI = (() => {
     const unlocked = new Set(Development.unlockedTech(faction));
     const available = node.requires.every((id) => unlocked.has(id));
     const researched = unlocked.has(node.id);
+    const treeLocked = Development.eraLocked(faction);
     const points = Development.pointBalance(faction);
     details.replaceChildren(
       element("h3", "", node.name),
@@ -90,7 +91,9 @@ const DevelopmentUI = (() => {
       element(
         "p",
         "development-research-status muted",
-        researched
+        treeLocked
+          ? "科技树未解锁"
+          : researched
           ? "已开发"
           : !available
             ? "前置科技未完成"
@@ -106,7 +109,7 @@ const DevelopmentUI = (() => {
     details.append(units);
     const action = element("button", researched ? "" : "primary", researched ? "已开发" : "开发");
     action.type = "button";
-    action.disabled = researched || !available || points < node.points;
+    action.disabled = treeLocked || researched || !available || points < node.points;
     action.title = researched ? "已开发" : "达到 " + node.points + " 科技点，不消耗科技点或货币";
     action.onclick = () => {
       try {
@@ -130,6 +133,14 @@ const DevelopmentUI = (() => {
     const faction = byId("developmentFactionSelect").value;
     screen.dataset.faction = faction;
     byId("developmentMain").dataset.faction = faction;
+    const factionColor = Rules.factionInfo[faction]?.color || "#7acbff";
+    for (const key of ["--dev-accent", "--dev-node-accent", "--dev-faction-mark"])
+      byId("developmentMain").style.setProperty(key, factionColor);
+    const channels = factionColor.match(/[a-f0-9]{2}/gi).map(value => parseInt(value, 16));
+    const tint = amount => "#" + channels.map((value, i) =>
+      Math.round(value * amount + [23, 36, 48][i] * (1 - amount)).toString(16).padStart(2, "0")).join("");
+    byId("developmentMain").style.setProperty("--dev-action", tint(.45));
+    byId("developmentMain").style.setProperty("--dev-selected", tint(.18));
     const locked = Development.eraLocked(faction);
     byId("developmentMain").classList.toggle("development-era-locked", locked);
     for (const host of [treeScroll, details, treeScroll.parentElement]) {
@@ -168,11 +179,11 @@ const DevelopmentUI = (() => {
     const divider = element(
       "div",
       "development-era-divider",
-      ["AEUG", "TITANS", "NEO_ZEON"].includes(faction) ? "0087T2" : "0079T2",
+      ["AEUG", "TITANS", "NEO_ZEON"].includes(faction) ? "UC_0087_T2" : "UC_0079_T2",
     );
     divider.style.gridColumn = "1 / -1";
     divider.style.gridRow = String(lateStart - 1);
-    graph.append(divider);
+    if (nodes.some(node => node.page)) graph.append(divider);
     const cards = new Map();
     for (const node of nodes) {
       const card = element("button", "development-node");
@@ -235,8 +246,15 @@ const DevelopmentUI = (() => {
     if (locked)
       for (const host of [treeScroll.parentElement]) {
         const overlay = element("div", "development-era-lock");
-        overlay.append(element("strong", "", "请先完成任何0079科技树"));
-        overlay.title = "完成联邦或吉翁任一阵营的全部0079及0083科技后开放";
+        const hints = {
+          AEUG: "请先完成地球联邦军科技树主线",
+          TITANS: "请先完成地球联邦军科技树主线",
+          NEO_ZEON: "请先完成吉翁公国军科技树主线",
+          EFSF_0093: "请先完成奥古或提坦斯任一科技树主线",
+          NEO_ZEON_0093: "请先完成新吉翁科技树主线",
+        };
+        overlay.append(element("strong", "", hints[faction]));
+        overlay.title = I18n.text("只需完成中间主线，顶部和底部支线不影响解锁");
         host.append(overlay);
       }
   }

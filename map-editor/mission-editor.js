@@ -2,6 +2,46 @@
 window.MissionEditor = (() => {
   const panel = document.getElementById("missionEditorFields");
   let eventId = null;
+  let selectedActorId = null;
+  function references(value, id) {
+    if (!value || typeof value !== "object") return false;
+    return Object.entries(value).some(([key, item]) =>
+      key === "actor" ? item === id : key === "actors" || key === "protect"
+        ? Array.isArray(item) && item.includes(id) : references(item, id));
+  }
+  function renameActor(id, next) {
+    next = next.trim();
+    const mission = MapEditor.document.mission;
+    if (!/^[a-z][a-z0-9_-]{0,63}$/.test(next)) throw Error("脚本单位 ID 须以小写字母开头，限64位小写字母、数字、下划线或连字符。");
+    if (mission.actors.some(a => a.id === next && a.id !== id)) throw Error("脚本单位 ID 已存在。");
+    if (!mission.actors.some(a => a.id === id)) throw Error("脚本单位不存在。");
+    const replace = value => {
+      if (!value || typeof value !== "object") return;
+      for (const [key, item] of Object.entries(value)) {
+        if (key === "actor" && item === id) value[key] = next;
+        else if (["actors", "protect"].includes(key) && Array.isArray(item) && item.every(v => typeof v === "string"))
+          value[key] = item.map(v => v === id ? next : v);
+        else replace(item);
+      }
+    };
+    selectedActorId = next;
+    change(m => {
+      m.actors.find(a => a.id === id).id = next;
+      replace(m);
+    });
+  }
+  function focusActor(id) {
+    if (!MapEditor.document.mission?.actors.some(a => a.id === id)) return;
+    selectedActorId = id;
+    MapEditor.tab("mission");
+    refresh();
+    const card = [...panel.querySelectorAll("[data-actor-id]")].find(e => e.dataset.actorId === id);
+    if (!card) return;
+    for (let p = card; p && p !== panel; p = p.parentElement) if (p.tagName === "DETAILS") p.open = true;
+    const scroll = panel.closest(".sidebar-scroll");
+    scroll.scrollTop += card.getBoundingClientRect().top - scroll.getBoundingClientRect().top - 8;
+    MapEditor.draw();
+  }
   const node = (tag, text) => {
     const e = document.createElement(tag);
     if (text !== undefined) e.textContent = text;
@@ -130,7 +170,7 @@ window.MissionEditor = (() => {
     if (!m) return;
     const guide = node(
       "p",
-      "① 设置部队 → ② 选择事件模板 → ③ 调整条件与动作。事件只触发一次；动作从上到下执行，对话结束后再继续后续动作。地图可直接框选触发区域。",
+      "① 点击地图单位编辑部队 → ② 选择事件模板 → ③ 调整条件与动作。事件只触发一次；动作从上到下执行。地图可框选触发区域；重叠单位可在下方选择。",
     );
     guide.className = "mission-guide";
     panel.append(guide);
@@ -142,7 +182,7 @@ window.MissionEditor = (() => {
       basics,
       "关卡年代",
       m.era,
-      ["0079T1", "0079T2", "0083", "0087T1", "0087T2", "0093T1"],
+      TechnologyEras.eras,
       (v) => change((m) => (m.era = v)),
     );
     input(
@@ -233,11 +273,24 @@ window.MissionEditor = (() => {
     m.actors.forEach((a, index) => {
       const card = node("details");
       card.dataset.missionDetail = a.id;
+      card.dataset.actorId = a.id;
+      card.classList.toggle("selected-actor", a.id === selectedActorId);
       card.append(
         node("summary", unitName(a) + " · " + a.id + (a.initial ? " · 开场" : " · 事件增援")),
       );
       roster.append(card);
       const edit = (k, v) => change((m) => (m.actors[index][k] = v));
+      input(card, "脚本单位 ID", a.id, v => {
+        try { renameActor(a.id, v); }
+        catch (error) { alert(error.message); refresh(); }
+      });
+      card.append(node("p", "独立于机体类型；改名会同步更新事件、镜头和保护目标的引用。"));
+      card.append(button("定位地图单位", () => { selectedActorId = a.id; MapEditor.focusCell(a.x, a.y); }));
+      for (const event of m.events.filter(e => references(e, a.id)))
+        card.append(button("关联事件：" + event.name, () => {
+          eventId = event.id; refresh();
+          panel.querySelector(".mission-trigger")?.scrollIntoView({block: "nearest"});
+        }));
       const search = input(card, "搜索单位编号", a.unitId, (v) =>
         change((m) => {
           const u = MapEditorUnits.find((u) => u.id === v);
@@ -574,7 +627,7 @@ window.MissionEditor = (() => {
       parent.append(
         button("使用地图选区作为触发区域", () => {
           const r = MapEditor.selection;
-          if (!r) return alert("请先在右侧地图拖拽框选一个区域。");
+          if (!r) return alert("请先在中间地图拖拽框选一个区域。");
           put((w) => ({ ...w, ...r }));
         }),
       );
@@ -881,7 +934,7 @@ window.MissionEditor = (() => {
       d.supportedModes = ["mission"];
       d.mission = {
         version: 1,
-        era: "0079T1",
+        era: "UC_0079_T1",
         technologyLimit: 5000,
         costLimit: 5000,
         unitLimit: 18,
@@ -899,5 +952,5 @@ window.MissionEditor = (() => {
     }
   };
   refresh();
-  return { refresh, issues };
+  return { refresh, issues, focusActor, renameActor, get selectedActorId() { return selectedActorId; } };
 })();

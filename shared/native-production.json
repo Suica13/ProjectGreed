@@ -1,0 +1,2407 @@
+{
+  "RGM_79": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RGM_79.gw",
+    "action": "action_Produce_RGM_79_StandardSquad"
+  },
+  "RGC_80": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RGC_80.gw",
+    "action": "action_Produce_RGC_80_StandardSquad"
+  },
+  "RGM_79L": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RGM_79L.gw",
+    "action": "action_Produce_RGM_79L_StandardSquad"
+  },
+  "MS_06F": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_06F.gw",
+    "action": "action_Produce_MS_06F_StandardSquad"
+  },
+  "MS_09": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_09.gw",
+    "action": "action_Produce_MS_09_StandardSquad"
+  },
+  "RGM_79_G": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RGM_79_G.gw",
+    "action": "action_Produce_RGM_79_G_StandardSquad"
+  },
+  "MS_06J": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_06J.gw",
+    "action": "action_Produce_MS_06J_StandardSquad"
+  },
+  "MS_06K": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_06K.gw",
+    "action": "action_Produce_MS_06K_StandardSquad"
+  },
+  "MS_14A": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_14A.gw",
+    "action": "action_Produce_MS_14A_StandardSquad"
+  },
+  "RX_79_G": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_79_G.gw",
+    "action": "action_Produce_RX_79_G_StandardSquad"
+  },
+  "MS_06F2": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_06F2.gw",
+    "action": "action_Produce_MS_06F2_StandardSquad"
+  },
+  "MS_09R": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space/MS_09R.gw",
+    "action": "action_Produce_MS_09R_StandardSquad"
+  },
+  "SalamisClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Space_Mega/SalamisClass.gw",
+    "action": "action_Produce_SalamisClass"
+  },
+  "RX_78_1": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_78_1.gw",
+    "action": "action_Produce_RX_78_1_StandardSquad"
+  },
+  "FF_X7": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Air/FF_X7.gw",
+    "action": "action_Produce_FF_X7_StandardSquad"
+  },
+  "Army_Squad_EFSF_0079_N_G_A": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/Army_Squad_EFSF_0079_N_G_A.gw",
+    "action": "action_Produce_Army_Squad_EFSF_0079_N_G_A_StandardSquad"
+  },
+  "Type61": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/Type61.gw",
+    "action": "action_Produce_Type61_StandardSquad"
+  },
+  "Type74": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/Type74.gw",
+    "action": "action_Produce_Type74_StandardSquad"
+  },
+  "AntiZakuTank": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/AntiZakuTank.gw",
+    "action": "action_Produce_AntiZakuTank_StandardSquad"
+  },
+  "FanFan": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Air/FanFan.gw",
+    "action": "action_Produce_FanFan_StandardSquad"
+  },
+  "EF_Heli": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Air/EF_Heli.gw",
+    "action": "action_Produce_EF_Heli_StandardSquad"
+  },
+  "FF_4": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Air/FF_4.gw",
+    "action": "action_Produce_FF_4_StandardSquad"
+  },
+  "FF_B2": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Air/FF_B2.gw",
+    "action": "action_Produce_FF_B2_StandardSquad"
+  },
+  "FF_6": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Air/FF_6.gw",
+    "action": "action_Produce_FF_6_StandardSquad"
+  },
+  "FF_S3": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Air/FF_S3.gw",
+    "action": "action_Produce_FF_S3_StandardSquad"
+  },
+  "RFF_06": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RFF_06.gw",
+    "action": "action_Produce_RFF_06_StandardSquad"
+  },
+  "Medea": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Air/Medea.gw",
+    "action": "action_Produce_Medea_StandardSquad"
+  },
+  "EF_TorpedoBoat": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Auqa/EF_TorpedoBoat.gw",
+    "action": "action_Produce_EF_TorpedoBoat_StandardSquad"
+  },
+  "BurkeClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Auqa/BurkeClass.gw",
+    "action": "action_Produce_BurkeClass"
+  },
+  "U_Type_Submarine": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Auqa/U_Type_Submarine.gw",
+    "action": "action_Produce_U_Type_Submarine"
+  },
+  "HimalayaClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Auqa/HimalayaClass.gw",
+    "action": "action_Produce_HimalayaClass"
+  },
+  "ColumbusClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Space_Mega/ColumbusClass.gw",
+    "action": "action_Produce_ColumbusClass_StandardSquad"
+  },
+  "RGM_79_E": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Space/RGM_79_E.gw",
+    "action": "action_Produce_RGM_79_E_StandardSquad"
+  },
+  "Type61A5": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/Type61A5.gw",
+    "action": "action_Produce_Type61A5_StandardSquad"
+  },
+  "Type74Kai": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/Type74Kai.gw",
+    "action": "action_Produce_Type74Kai_StandardSquad"
+  },
+  "Type61_SPG": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/Type61_SPG.gw",
+    "action": "action_Produce_Type61_SPG_StandardSquad"
+  },
+  "MissileCar": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/MissileCar.gw",
+    "action": "action_Produce_MissileCar_StandardSquad"
+  },
+  "EF_MinigunAPC": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/EF_MinigunAPC.gw",
+    "action": "action_Produce_EF_MinigunAPC_StandardSquad"
+  },
+  "Dash": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Air/Dash.gw",
+    "action": "action_Produce_Dash_StandardSquad"
+  },
+  "DEPP_ROG": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Air/DEPP_ROG.gw",
+    "action": "action_Produce_DEPP_ROG_StandardSquad"
+  },
+  "DonEscargot": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Air/DonEscargot.gw",
+    "action": "action_Produce_DonEscargot_StandardSquad"
+  },
+  "RB_79K": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Space/RB_79K.gw",
+    "action": "action_Produce_RB_79K_StandardSquad"
+  },
+  "RB_79": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Space/RB_79.gw",
+    "action": "action_Produce_RB_79_StandardSquad"
+  },
+  "M_Type_Submarine": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Auqa/M_Type_Submarine.gw",
+    "action": "action_Produce_M_Type_Submarine"
+  },
+  "MiniTrayClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Mega/MiniTrayClass.gw",
+    "action": "action_Produce_MiniTrayClass"
+  },
+  "RX_79_G_WithBackpack": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_79_G_WithBackpack.gw",
+    "action": "action_Produce_RX_79_G_WithBackpack_StandardSquad"
+  },
+  "RGM_79_G_WithBackpack": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RGM_79_G_WithBackpack.gw",
+    "action": "action_Produce_RGM_79_G_WithBackpack_StandardSquad"
+  },
+  "RGM_79_G_SPACE": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Space/RGM_79_G_SPACE.gw",
+    "action": "action_Produce_RGM_79_G_SPACE_StandardSquad"
+  },
+  "RGM_79_G_SP": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RGM_79_G_SP.gw",
+    "action": "action_Produce_RGM_79_G_SP_StandardSquad"
+  },
+  "RX_75R": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_75R.gw",
+    "action": "action_Produce_RX_75R_StandardSquad"
+  },
+  "RB_79N": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Auqa/RB_79N.gw",
+    "action": "action_Produce_RB_79N_StandardSquad"
+  },
+  "RB_79M": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Space/RB_79M.gw",
+    "action": "action_Produce_RB_79M_StandardSquad"
+  },
+  "BigTrayClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Mega/BigTrayClass.gw",
+    "action": "action_Produce_BigTrayClass"
+  },
+  "MagellanClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Space_Mega/MagellanClass.gw",
+    "action": "action_Produce_MagellanClass"
+  },
+  "RX_78_2": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_78_2.gw",
+    "action": "action_Produce_RX_78_2_StandardSquad"
+  },
+  "RX_77_2": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_77_2.gw",
+    "action": "action_Produce_RX_77_2_StandardSquad"
+  },
+  "RX_75": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_75.gw",
+    "action": "action_Produce_RX_75_StandardSquad"
+  },
+  "FF_X7Bst": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Air/FF_X7Bst.gw",
+    "action": "action_Produce_FF_X7Bst_StandardSquad"
+  },
+  "FFB_7Bst": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Air/FFB_7Bst.gw",
+    "action": "action_Produce_FFB_7Bst_StandardSquad"
+  },
+  "Gunperry": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Air/Gunperry.gw",
+    "action": "action_Produce_Gunperry_StandardSquad"
+  },
+  "PegasusClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Space_Mega/PegasusClass.gw",
+    "action": "action_Produce_PegasusClass"
+  },
+  "MagellanClass_Green": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Space_Mega/MagellanClass_Green.gw",
+    "action": "action_Produce_MagellanClass_Green"
+  },
+  "RGM_79_Commander": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RGM_79_Commander.gw",
+    "action": "action_Produce_RGM_79_Commander_StandardSquad"
+  },
+  "MedeaKai": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Air/MedeaKai.gw",
+    "action": "action_Produce_MedeaKai_StandardSquad"
+  },
+  "RX_79_BD_1": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_79_BD_1.gw",
+    "action": "action_Produce_RX_79_BD_1_StandardSquad"
+  },
+  "RX_80PR": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_80PR.gw",
+    "action": "action_Produce_RX_80PR_StandardSquad"
+  },
+  "HeavyForkClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Mega/HeavyForkClass.gw",
+    "action": "action_Produce_HeavyForkClass"
+  },
+  "RX_80PR_GroundType": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_80PR_GroundType.gw",
+    "action": "action_Produce_RX_80PR_GroundType_StandardSquad"
+  },
+  "RX_80PR_2": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_80PR_2.gw",
+    "action": "action_Produce_RX_80PR_2_StandardSquad"
+  },
+  "RX_79_BD_2": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_79_BD_2.gw",
+    "action": "action_Produce_RX_79_BD_2_StandardSquad"
+  },
+  "RGM_79DO": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RGM_79DO.gw",
+    "action": "action_Produce_RGM_79DO_StandardSquad"
+  },
+  "RX_77_3": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_77_3.gw",
+    "action": "action_Produce_RX_77_3_StandardSquad"
+  },
+  "RX_77_3D": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_77_3D.gw",
+    "action": "action_Produce_RX_77_3D_StandardSquad"
+  },
+  "RX_78XX": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_78XX.gw",
+    "action": "action_Produce_RX_78XX_StandardSquad"
+  },
+  "RTX_440": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RTX_440.gw",
+    "action": "action_Produce_RTX_440_StandardSquad"
+  },
+  "RMV_1": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RMV_1.gw",
+    "action": "action_Produce_RMV_1_StandardSquad"
+  },
+  "Army_Squad_ZEON_0079_N_G_A": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/Army_Squad_ZEON_0079_N_G_A.gw",
+    "action": "action_Produce_Army_Squad_ZEON_0079_N_G_A_StandardSquad"
+  },
+  "MTank": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MTank.gw",
+    "action": "action_Produce_MTank_StandardSquad"
+  },
+  "SamsonGroundTransportTruck": {
+    "quantity": 2,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/SamsonGroundTransportTruck.gw",
+    "action": "action_Produce_SamsonGroundTransportTruck_StandardSquad"
+  },
+  "ZN_APC": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/ZN_APC.gw",
+    "action": "action_Produce_ZN_APC_StandardSquad"
+  },
+  "Wappa": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/Wappa.gw",
+    "action": "action_Produce_Wappa_StandardSquad"
+  },
+  "ZN_Heli": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Air/ZN_Heli.gw",
+    "action": "action_Produce_ZN_Heli_StandardSquad"
+  },
+  "FatUncle": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Air/FatUncle.gw",
+    "action": "action_Produce_FatUncle_StandardSquad"
+  },
+  "Dopp": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Air/Dopp.gw",
+    "action": "action_Produce_Dopp_StandardSquad"
+  },
+  "DodaiYS": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Air/DodaiYS.gw",
+    "action": "action_Produce_DodaiYS_StandardSquad"
+  },
+  "MS_05": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_05.gw",
+    "action": "action_Produce_MS_05_StandardSquad"
+  },
+  "MS_06C": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_06C.gw",
+    "action": "action_Produce_MS_06C_StandardSquad"
+  },
+  "MS_06S": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_06S.gw",
+    "action": "action_Produce_MS_06S_StandardSquad"
+  },
+  "Gattle": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space/Gattle.gw",
+    "action": "action_Produce_Gattle_StandardSquad"
+  },
+  "JiccoClass": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space/JiccoClass.gw",
+    "action": "action_Produce_JiccoClass_StandardSquad"
+  },
+  "U_Type_Submarine_ZEON": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Auqa/U_Type_Submarine_ZEON.gw",
+    "action": "action_Produce_U_Type_Submarine_ZEON"
+  },
+  "MusaiClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space_Mega/MusaiClass.gw",
+    "action": "action_Produce_MusaiClass"
+  },
+  "PapuaClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space_Mega/PapuaClass.gw",
+    "action": "action_Produce_PapuaClass_StandardSquad"
+  },
+  "MS_07B": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_07B.gw",
+    "action": "action_Produce_MS_07B_StandardSquad"
+  },
+  "MS_06M": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_06M.gw",
+    "action": "action_Produce_MS_06M_StandardSquad"
+  },
+  "MS_06R_1": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space/MS_06R_1.gw",
+    "action": "action_Produce_MS_06R_1_StandardSquad"
+  },
+  "MS_06F_MineLayer": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space/MS_06F_MineLayer.gw",
+    "action": "action_Produce_MS_06F_MineLayer_StandardSquad"
+  },
+  "MSM_03": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MSM_03.gw",
+    "action": "action_Produce_MSM_03_StandardSquad"
+  },
+  "Cui": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/Cui.gw",
+    "action": "action_Produce_Cui_StandardSquad"
+  },
+  "Luggun": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Air/Luggun.gw",
+    "action": "action_Produce_Luggun_StandardSquad"
+  },
+  "ZN_APC_WithMS": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/ZN_APC_WithMS.gw",
+    "action": "action_Produce_ZN_APC_WithMS_StandardSquad"
+  },
+  "M_Type_Submarine_ZEON": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Auqa/M_Type_Submarine_ZEON.gw",
+    "action": "action_Produce_M_Type_Submarine_ZEON"
+  },
+  "FalmerClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space_Mega/FalmerClass.gw",
+    "action": "action_Produce_FalmerClass"
+  },
+  "MS_07B3": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_07B3.gw",
+    "action": "action_Produce_MS_07B3"
+  },
+  "MS_06G": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_06G.gw",
+    "action": "action_Produce_MS_06G_StandardSquad"
+  },
+  "MS_06E": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_06E.gw",
+    "action": "action_Produce_MS_06E"
+  },
+  "MS_06R_1A": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space/MS_06R_1A.gw",
+    "action": "action_Produce_MS_06R_1A_StandardSquad"
+  },
+  "MS_06D": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_06D.gw",
+    "action": "action_Produce_MS_06D_StandardSquad"
+  },
+  "MS_06V": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_06V.gw",
+    "action": "action_Produce_MS_06V_StandardSquad"
+  },
+  "MTank_Eins": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MTank_Eins.gw",
+    "action": "action_Produce_MTank_Eins_StandardSquad"
+  },
+  "MSM_04": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MSM_04.gw",
+    "action": "action_Produce_MSM_04_StandardSquad"
+  },
+  "DabudeClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Mega/DabudeClass.gw",
+    "action": "action_Produce_DabudeClass"
+  },
+  "ChivvayClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space_Mega/ChivvayClass.gw",
+    "action": "action_Produce_ChivvayClass"
+  },
+  "MS_07A": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_07A.gw",
+    "action": "action_Produce_MS_07A_StandardSquad"
+  },
+  "MAX_03": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Mega/MAX_03.gw",
+    "action": "action_Produce_MAX_03"
+  },
+  "GawClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Mega/GawClass.gw",
+    "action": "action_Produce_GawClass"
+  },
+  "GallopClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Mega/GallopClass.gw",
+    "action": "action_Produce_GallopClass"
+  },
+  "ZanzibarClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space_Mega/ZanzibarClass.gw",
+    "action": "action_Produce_ZanzibarClass"
+  },
+  "GwazineClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space_Mega/GwazineClass.gw",
+    "action": "action_Produce_GwazineClass"
+  },
+  "MS_06F2_Commander": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_06F2_Commander.gw",
+    "action": "action_Produce_MS_06F2_Commander_StandardSquad"
+  },
+  "MS_05SP": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_05SP.gw",
+    "action": "action_Produce_MS_05SP_StandardSquad"
+  },
+  "MS_06JK": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_06JK.gw",
+    "action": "action_Produce_MS_06JK_StandardSquad"
+  },
+  "MS_09D": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_09D.gw",
+    "action": "action_Produce_MS_09D_StandardSquad"
+  },
+  "FatUncleKai": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Air/FatUncleKai.gw",
+    "action": "action_Produce_FatUncleKai_StandardSquad"
+  },
+  "EMS_10": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space/EMS_10.gw",
+    "action": "action_Produce_EMS_10_StandardSquad"
+  },
+  "EMS_10_1": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space/EMS_10_1.gw",
+    "action": "action_Produce_EMS_10_1_StandardSquad"
+  },
+  "MP_02A": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space/MP_02A.gw",
+    "action": "action_Produce_MP_02A_StandardSquad"
+  },
+  "YMT_05": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/YMT_05.gw",
+    "action": "action_Produce_YMT_05_StandardSquad"
+  },
+  "JotunheimClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space_Mega/JotunheimClass.gw",
+    "action": "action_Produce_JotunheimClass"
+  },
+  "MS_10": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space/MS_10.gw",
+    "action": "action_Produce_MS_10_StandardSquad"
+  },
+  "MS_11": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space/MS_11.gw",
+    "action": "action_Produce_MS_11_StandardSquad"
+  },
+  "MS_11S": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space/MS_11S.gw",
+    "action": "action_Produce_MS_11S_StandardSquad"
+  },
+  "MS_12": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_12.gw",
+    "action": "action_Produce_MS_12_StandardSquad"
+  },
+  "MS_08TX": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_08TX.gw",
+    "action": "action_Produce_MS_08TX_StandardSquad"
+  },
+  "MS_07H": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_07H.gw",
+    "action": "action_Produce_MS_07H_StandardSquad"
+  },
+  "MS_08TX_Kai": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_08TX_Kai.gw",
+    "action": "action_Produce_MS_08TX_Kai_StandardSquad"
+  },
+  "ApsarasII": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Mega/ApsarasII.gw",
+    "action": "action_Produce_ApsarasII"
+  },
+  "MS_07H8": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_07H8.gw",
+    "action": "action_Produce_MS_07H8"
+  },
+  "RX_78NT_1": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_78NT_1.gw",
+    "action": "action_Produce_RX_78NT_1_StandardSquad"
+  },
+  "RX_78NT_1_FA": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_78NT_1_FA.gw",
+    "action": "action_Produce_RX_78NT_1_FA_StandardSquad"
+  },
+  "FA_78_1": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/FA_78_1.gw",
+    "action": "action_Produce_FA_78_1_StandardSquad"
+  },
+  "RGC_80S": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Space/RGC_80S.gw",
+    "action": "action_Produce_RGC_80S_StandardSquad"
+  },
+  "RGM_79SC": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RGM_79SC.gw",
+    "action": "action_Produce_RGM_79SC_StandardSquad"
+  },
+  "RGM_79HC": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RGM_79HC.gw",
+    "action": "action_Produce_RGM_79HC_StandardSquad"
+  },
+  "RAG_79": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RAG_79.gw",
+    "action": "action_Produce_RAG_79_StandardSquad"
+  },
+  "RGM_79V": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RGM_79V.gw",
+    "action": "action_Produce_RGM_79V_StandardSquad"
+  },
+  "RX_78_3": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_78_3.gw",
+    "action": "action_Produce_RX_78_3_StandardSquad"
+  },
+  "PublicClass": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Space/PublicClass.gw",
+    "action": "action_Produce_PublicClass_StandardSquad"
+  },
+  "SalamisClassLateType": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Space_Mega/SalamisClassLateType.gw",
+    "action": "action_Produce_SalamisClassLateType"
+  },
+  "ColumbusClassKai": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Space_Mega/ColumbusClassKai.gw",
+    "action": "action_Produce_ColumbusClassKai_StandardSquad"
+  },
+  "RGM_79G": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RGM_79G.gw",
+    "action": "action_Produce_RGM_79G_StandardSquad"
+  },
+  "RGM_79G_Space": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Space/RGM_79G_Space.gw",
+    "action": "action_Produce_RGM_79G_Space_StandardSquad"
+  },
+  "RGM_79D": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RGM_79D.gw",
+    "action": "action_Produce_RGM_79D_StandardSquad"
+  },
+  "RAG_79_G1": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RAG_79_G1.gw",
+    "action": "action_Produce_RAG_79_G1_StandardSquad"
+  },
+  "MagellanClassLateType": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Space_Mega/MagellanClassLateType.gw",
+    "action": "action_Produce_MagellanClassLateType"
+  },
+  "RGM_79SP2": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RGM_79SP2.gw",
+    "action": "action_Produce_RGM_79SP2_StandardSquad"
+  },
+  "RX_77D": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_77D.gw",
+    "action": "action_Produce_RX_77D_StandardSquad"
+  },
+  "RGM_79LV": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RGM_79LV.gw",
+    "action": "action_Produce_RGM_79LV_StandardSquad"
+  },
+  "GrayPhantomClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Space_Mega/GrayPhantomClass.gw",
+    "action": "action_Produce_GrayPhantomClass"
+  },
+  "RGM_79C": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RGM_79C.gw",
+    "action": "action_Produce_RGM_79C_StandardSquad"
+  },
+  "RGM_79C_Space": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Space/RGM_79C_Space.gw",
+    "action": "action_Produce_RGM_79C_Space_StandardSquad"
+  },
+  "RB_79_LateType": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Space/RB_79_LateType.gw",
+    "action": "action_Produce_RB_79_LateType_StandardSquad"
+  },
+  "RX_77_4": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_77_4.gw",
+    "action": "action_Produce_RX_77_4_StandardSquad"
+  },
+  "RX_81ST": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_81.gw",
+    "action": "action_Produce_RX_81_STSquad"
+  },
+  "RX_81LA": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_81.gw",
+    "action": "action_Produce_RX_81_LASquad"
+  },
+  "RX_81AS": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_81.gw",
+    "action": "action_Produce_RX_81_ASSquad"
+  },
+  "RX_81": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_81.gw",
+    "action": "action_Produce_RX_81_NSquad"
+  },
+  "RX_78GP01": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_78GP01.gw",
+    "action": "action_Produce_RX_78GP01_StandardSquad"
+  },
+  "RX_78GP01_FB": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_78GP01_FB.gw",
+    "action": "action_Produce_RX_78GP01_FB_StandardSquad"
+  },
+  "RX_78GP02A": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_78GP02A.gw",
+    "action": "action_Produce_RX_78GP02A_StandardSquad"
+  },
+  "RX_78GP03S": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_78GP03S.gw",
+    "action": "action_Produce_RX_78GP03S_StandardSquad"
+  },
+  "RGM_79N": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RGM_79N.gw",
+    "action": "action_Produce_RGM_79N_StandardSquad"
+  },
+  "RGC_83": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RGC_83.gw",
+    "action": "action_Produce_RGC_83_StandardSquad"
+  },
+  "RX_81FC": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_81.gw",
+    "action": "action_Produce_RX_81_FCSquad"
+  },
+  "RX_78GP03D": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Space_Mega/RX_78GP03D.gw",
+    "action": "action_Produce_RX_78GP03D"
+  },
+  "AlbionClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Space_Mega/AlbionClass.gw",
+    "action": "action_Produce_AlbionClass"
+  },
+  "BirminghamClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Space_Mega/BirminghamClass.gw",
+    "action": "action_Produce_BirminghamClass"
+  },
+  "MagellanClassKai": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Space_Mega/MagellanClassKai.gw",
+    "action": "action_Produce_MagellanClassKai"
+  },
+  "SalamisClassKai": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Space_Mega/SalamisClassKai.gw",
+    "action": "action_Produce_SalamisClassKai"
+  },
+  "FF_X_II": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Air/FF_X_II.gw",
+    "action": "action_Produce_FF_X_II_StandardSquad"
+  },
+  "FF_X_II_FB": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Air/FF_X_II_FB.gw",
+    "action": "action_Produce_FF_X_II_FB_StandardSquad"
+  },
+  "RX_78_4_Bst": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_78_4_Bst.gw",
+    "action": "action_Produce_RX_78_4_Bst_StandardSquad"
+  },
+  "RX_78_5_Bst": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_78_5_Bst.gw",
+    "action": "action_Produce_RX_78_5_Bst_StandardSquad"
+  },
+  "RX_80PR_SpaceType": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Space/RX_80PR_SpaceType.gw",
+    "action": "action_Produce_RX_80PR_SpaceType_StandardSquad"
+  },
+  "RGM_79GL": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RGM_79GL.gw",
+    "action": "action_Produce_RGM_79GL_StandardSquad"
+  },
+  "RGM_79FP": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RGM_79FP.gw",
+    "action": "action_Produce_RGM_79FP_StandardSquad"
+  },
+  "RGM_79FD": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RGM_79FD.gw",
+    "action": "action_Produce_RGM_79FD_StandardSquad"
+  },
+  "RGM_79S": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RGM_79S.gw",
+    "action": "action_Produce_RGM_79S_StandardSquad"
+  },
+  "RX_78SP": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_78SP.gw",
+    "action": "action_Produce_RX_78SP_StandardSquad"
+  },
+  "RX_78_6": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_78_6.gw",
+    "action": "action_Produce_RX_78_6_StandardSquad"
+  },
+  "RGM_79_D": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RGM_79_D.gw",
+    "action": "action_Produce_RGM_79_D_StandardSquad"
+  },
+  "Burstliner": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Space/Burstliner.gw",
+    "action": "action_Produce_Burstliner_StandardSquad"
+  },
+  "RX_78_7": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_78_7.gw",
+    "action": "action_Produce_RX_78_7_StandardSquad"
+  },
+  "FA_78_3": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/FA_78_3.gw",
+    "action": "action_Produce_FA_78_3_StandardSquad"
+  },
+  "FA_78_2": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/FA_78_2.gw",
+    "action": "action_Produce_FA_78_2_StandardSquad"
+  },
+  "FA_78_G": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/FA_78_G.gw",
+    "action": "action_Produce_FA_78_G_StandardSquad"
+  },
+  "MSM_07": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MSM_07.gw",
+    "action": "action_Produce_MSM_07_StandardSquad"
+  },
+  "MSM_07S": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MSM_07S.gw",
+    "action": "action_Produce_MSM_07S_StandardSquad"
+  },
+  "MS_06R_2": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space/MS_06R_2.gw",
+    "action": "action_Produce_MS_06R_2_StandardSquad"
+  },
+  "MS_06F_Sniper": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_06F_Sniper.gw",
+    "action": "action_Produce_MS_06F_Sniper_StandardSquad"
+  },
+  "MS_09_K_1": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_09_K_1.gw",
+    "action": "action_Produce_MS_09_K_1_StandardSquad"
+  },
+  "MA_05": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space_Mega/MA_05.gw",
+    "action": "action_Produce_MA_05"
+  },
+  "YMS_09J": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/YMS_09J.gw",
+    "action": "action_Produce_YMS_09J_StandardSquad"
+  },
+  "MusaiClassLateType": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space_Mega/MusaiClassLateType.gw",
+    "action": "action_Produce_MusaiClassLateType"
+  },
+  "PazockClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space_Mega/PazockClass.gw",
+    "action": "action_Produce_PazockClass_StandardSquad"
+  },
+  "MS_14S": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_14S.gw",
+    "action": "action_Produce_MS_14S_StandardSquad"
+  },
+  "MS_15A": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_15A.gw",
+    "action": "action_Produce_MS_15A_StandardSquad"
+  },
+  "YMS_15": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/YMS_15.gw",
+    "action": "action_Produce_YMS_15_StandardSquad"
+  },
+  "MAN_03": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space_Mega/MAN_03.gw",
+    "action": "action_Produce_MAN_03"
+  },
+  "ChivvayClassKai": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space_Mega/ChivvayClassKai.gw",
+    "action": "action_Produce_ChivvayClassKai"
+  },
+  "MS_06FZ": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_06FZ.gw",
+    "action": "action_Produce_MS_06FZ_StandardSquad"
+  },
+  "MS_06FZ_Commander": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_06FZ_Commander.gw",
+    "action": "action_Produce_MS_06FZ_Commander_StandardSquad"
+  },
+  "MS_09R2": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space/MS_09R2.gw",
+    "action": "action_Produce_MS_09R2_StandardSquad"
+  },
+  "MS_18E": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_18E.gw",
+    "action": "action_Produce_MS_18E_StandardSquad"
+  },
+  "ZanzibarClassKai": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space_Mega/ZanzibarClassKai.gw",
+    "action": "action_Produce_ZanzibarClassKai"
+  },
+  "MA_08": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space_Mega/MA_08.gw",
+    "action": "action_Produce_MA_08"
+  },
+  "MAN_08": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space_Mega/MAN_08.gw",
+    "action": "action_Produce_MAN_08"
+  },
+  "MS_09F": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_09F.gw",
+    "action": "action_Produce_MS_09F_StandardSquad"
+  },
+  "MSN_02": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space/MSN_02.gw",
+    "action": "action_Produce_MSN_02_StandardSquad"
+  },
+  "MS_14B": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_14B.gw",
+    "action": "action_Produce_MS_14B_StandardSquad"
+  },
+  "MS_14C": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_14C.gw",
+    "action": "action_Produce_MS_14C_StandardSquad"
+  },
+  "MS_14JG": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_14JG.gw",
+    "action": "action_Produce_MS_14JG_StandardSquad"
+  },
+  "MS_21C": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space/MS_21C.gw",
+    "action": "action_Produce_MS_21C_StandardSquad"
+  },
+  "MS_09F_TROP_0083": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_09F_TROP_0083.gw",
+    "action": "action_Produce_MS_09F_TROP_0083_StandardSquad"
+  },
+  "MS_09S": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space/MS_09S.gw",
+    "action": "action_Produce_MS_09S_StandardSquad"
+  },
+  "MS_14F": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_14F.gw",
+    "action": "action_Produce_MS_14F_StandardSquad"
+  },
+  "MS_14FS": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_14FS.gw",
+    "action": "action_Produce_MS_14FS_StandardSquad"
+  },
+  "MS_15F": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_15F.gw",
+    "action": "action_Produce_MS_15F_StandardSquad"
+  },
+  "MS_15FS": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_15FS.gw",
+    "action": "action_Produce_MS_15FS_StandardSquad"
+  },
+  "YMS_16M": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/YMS_16M.gw",
+    "action": "action_Produce_YMS_16M_StandardSquad"
+  },
+  "MA_06": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space_Mega/MA_06.gw",
+    "action": "action_Produce_MA_06"
+  },
+  "AMX_002": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space_Mega/AMX_002.gw",
+    "action": "action_Produce_AMX_002"
+  },
+  "GwanzanClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space_Mega/GwanzanClass.gw",
+    "action": "action_Produce_GwanzanClass"
+  },
+  "ZanzibarClassKai_0083": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space_Mega/ZanzibarClassKai_0083.gw",
+    "action": "action_Produce_ZanzibarClassKai_0083"
+  },
+  "MusaiClassLateType_0083": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space_Mega/MusaiClassLateType_0083.gw",
+    "action": "action_Produce_MusaiClassLateType_0083"
+  },
+  "MS_09G": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_09G.gw",
+    "action": "action_Produce_MS_09G_StandardSquad"
+  },
+  "MS_09F_TROP": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_09F_TROP.gw",
+    "action": "action_Produce_MS_09F_TROP_StandardSquad"
+  },
+  "MS_09_K_2": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_09_K_2.gw",
+    "action": "action_Produce_MS_09_K_2_StandardSquad"
+  },
+  "MS_17": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_17.gw",
+    "action": "action_Produce_MS_17_StandardSquad"
+  },
+  "Skiure": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space/Skiure.gw",
+    "action": "action_Produce_Skiure_StandardSquad"
+  },
+  "YMS_15E": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/YMS_15E.gw",
+    "action": "action_Produce_YMS_15E_StandardSquad"
+  },
+  "MS_15Kg": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_15Kg.gw",
+    "action": "action_Produce_MS_15Kg_StandardSquad"
+  },
+  "MS_15B": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_15B.gw",
+    "action": "action_Produce_MS_15B_StandardSquad"
+  },
+  "MS_15C": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_15C.gw",
+    "action": "action_Produce_MS_15C_StandardSquad"
+  },
+  "MSM_10": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MSM_10.gw",
+    "action": "action_Produce_MSM_10_StandardSquad"
+  },
+  "MAM_07": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Auqa/MAM_07.gw",
+    "action": "action_Produce_MAM_07"
+  },
+  "MSM_04G": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MSM_04G.gw",
+    "action": "action_Produce_MSM_04G_StandardSquad"
+  },
+  "MSM_04N": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MSM_04N.gw",
+    "action": "action_Produce_MSM_04N_StandardSquad"
+  },
+  "MSM_08": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MSM_08.gw",
+    "action": "action_Produce_MSM_08_StandardSquad"
+  },
+  "MSM_03C": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MSM_03C.gw",
+    "action": "action_Produce_MSM_03C_StandardSquad"
+  },
+  "MSM_07E": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MSM_07E.gw",
+    "action": "action_Produce_MSM_07E_StandardSquad"
+  },
+  "YMS_18": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/YMS_18.gw",
+    "action": "action_Produce_YMS_18_StandardSquad"
+  },
+  "EMS_10F": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space/EMS_10F.gw",
+    "action": "action_Produce_EMS_10F_StandardSquad"
+  },
+  "MS_06Z": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space/MS_06Z.gw",
+    "action": "action_Produce_MS_06Z_StandardSquad"
+  },
+  "MSN_01": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space/MSN_01.gw",
+    "action": "action_Produce_MSN_01_StandardSquad"
+  },
+  "AMS_Squad": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/AMS_Squad.gw",
+    "action": "action_Produce_AMS_Squad_StandardSquad"
+  },
+  "Apsaras": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Mega/Apsaras.gw",
+    "action": "action_Produce_Apsaras"
+  },
+  "ApsarasIII": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Mega/ApsarasIII.gw",
+    "action": "action_Produce_ApsarasIII"
+  },
+  "Dodai2": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Air/Dodai2.gw",
+    "action": "action_Produce_Dodai2_StandardSquad"
+  },
+  "EMS_05M": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/EMS_05M.gw",
+    "action": "action_Produce_EMS_05M_StandardSquad"
+  },
+  "G_Fighter": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Air/G_Fighter.gw",
+    "action": "action_Produce_G_Fighter_StandardSquad"
+  },
+  "MA_04X": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space_Mega/MA_04X.gw",
+    "action": "action_Produce_MA_04X"
+  },
+  "MS_06E3": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_06E3.gw",
+    "action": "action_Produce_MS_06E3"
+  },
+  "MS_06R_3S": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_06R_3S.gw",
+    "action": "action_Produce_MS_06R_3S_StandardSquad"
+  },
+  "MS_06RD_4": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Space/MS_06RD_4.gw",
+    "action": "action_Produce_MS_06RD_4_StandardSquad"
+  },
+  "MS_14G": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_14G.gw",
+    "action": "action_Produce_MS_14G_StandardSquad"
+  },
+  "MS_17R": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/MS_17R.gw",
+    "action": "action_Produce_MS_17R_StandardSquad"
+  },
+  "RGM_79U": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RGM_79U.gw",
+    "action": "action_Produce_RGM_79U_StandardSquad"
+  },
+  "RX_78_4": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_78_4.gw",
+    "action": "action_Produce_RX_78_4_StandardSquad"
+  },
+  "RX_78_5": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_78_5.gw",
+    "action": "action_Produce_RX_78_5_StandardSquad"
+  },
+  "RX_78_6_WIP": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_78_6_WIP.gw",
+    "action": "action_Produce_RX_78_6_WIP_StandardSquad"
+  },
+  "RX_79_G_Ez8": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_79_G_Ez8.gw",
+    "action": "action_Produce_RX_79_G_Ez8_StandardSquad"
+  },
+  "RX_79_G_Ez8_WithBackpack": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Land/RX_79_G_Ez8_WithBackpack.gw",
+    "action": "action_Produce_RX_79_G_Ez8_WithBackpack_StandardSquad"
+  },
+  "SFU_X79": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Air/SFU_X79.gw",
+    "action": "action_Produce_SFU_X79_StandardSquad"
+  },
+  "YMS_09": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Land/YMS_09.gw",
+    "action": "action_Produce_YMS_09_StandardSquad"
+  },
+  "RMS_179_AEUG": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/RMS_179_AEUG.gw",
+    "action": "action_Produce_RMS_179_AEUG_StandardSquad"
+  },
+  "RGC_83_AEUG": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/RGC_83_AEUG.gw",
+    "action": "action_Produce_RGC_83_AEUG_StandardSquad"
+  },
+  "RGM_79N_AEUG": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/RGM_79N_AEUG.gw",
+    "action": "action_Produce_RGM_79N_AEUG_StandardSquad"
+  },
+  "RGM_79C_KS": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/RGM_79C_KS.gw",
+    "action": "action_Produce_RGM_79C_KS_StandardSquad"
+  },
+  "MS_06M_0087": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/MS_06M_0087.gw",
+    "action": "action_Produce_MS_06M_0087_StandardSquad"
+  },
+  "MS_07H_0087": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/MS_07H_0087.gw",
+    "action": "action_Produce_MS_07H_0087_StandardSquad"
+  },
+  "GrayPhantomClass_0087": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Space_Mega/GrayPhantomClass_0087.gw",
+    "action": "action_Produce_GrayPhantomClass_0087"
+  },
+  "SalamisClassKai_0087_AEUG": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Space_Mega/SalamisClassKai_0087_AEUG.gw",
+    "action": "action_Produce_SalamisClassKai_0087_AEUG"
+  },
+  "RX_098": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/RX_098.gw",
+    "action": "action_Produce_RX_098_StandardSquad"
+  },
+  "DodaiKai": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/DodaiKai.gw",
+    "action": "action_Produce_DodaiKai_StandardSquad"
+  },
+  "RX_77D_4": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/RX_77D_4.gw",
+    "action": "action_Produce_RX_77D_4_StandardSquad"
+  },
+  "RGM_79N_FB_AEUG": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/RGM_79N_FB_AEUG.gw",
+    "action": "action_Produce_RGM_79N_FB_AEUG_StandardSquad"
+  },
+  "RMS_099": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/RMS_099.gw",
+    "action": "action_Produce_RMS_099_StandardSquad"
+  },
+  "RX_178_AEUG": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/RX_178_AEUG.gw",
+    "action": "action_Produce_RX_178_AEUG_StandardSquad"
+  },
+  "MSA_003": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/MSA_003.gw",
+    "action": "action_Produce_MSA_003_StandardSquad"
+  },
+  "RMS_179_Nemo": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/RMS_179_Nemo.gw",
+    "action": "action_Produce_RMS_179_Nemo_StandardSquad"
+  },
+  "IrishClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Space_Mega/IrishClass.gw",
+    "action": "action_Produce_IrishClass"
+  },
+  "MSN_100": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/MSN_100.gw",
+    "action": "action_Produce_MSN_100_StandardSquad"
+  },
+  "MSK_008": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/MSK_008.gw",
+    "action": "action_Produce_MSK_008_StandardSquad"
+  },
+  "RX_178_AEUG_FlyingArmor": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/RX_178_AEUG_FlyingArmor.gw",
+    "action": "action_Produce_RX_178_AEUG_FlyingArmor_StandardSquad"
+  },
+  "RX_178_AEUG_FXA_05D": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/RX_178_AEUG_FXA_05D.gw",
+    "action": "action_Produce_RX_178_AEUG_FXA_05D_StandardSquad"
+  },
+  "GarudaClass_AEUG": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Mega/GarudaClass_AEUG.gw",
+    "action": "action_Produce_GarudaClass_AEUG"
+  },
+  "MSA_005": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/MSA_005.gw",
+    "action": "action_Produce_MSA_005_StandardSquad"
+  },
+  "MSA_004": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/MSA_004.gw",
+    "action": "action_Produce_MSA_004_StandardSquad"
+  },
+  "ArgamaClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Space_Mega/ArgamaClass.gw",
+    "action": "action_Produce_ArgamaClass"
+  },
+  "MSZ_000": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/MSZ_000.gw",
+    "action": "action_Produce_MSZ_000_StandardSquad"
+  },
+  "MSA_003_FXA_05D": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/MSA_003_FXA_05D.gw",
+    "action": "action_Produce_MSA_003_FXA_05D_StandardSquad"
+  },
+  "MSA_003_FXA_05D_EWAC": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/MSA_003_FXA_05D_EWAC.gw",
+    "action": "action_Produce_MSA_003_FXA_05D_EWAC_StandardSquad"
+  },
+  "MSA_003_Cannon": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/MSA_003_Cannon.gw",
+    "action": "action_Produce_MSA_003_Cannon_StandardSquad"
+  },
+  "MSR_00100S": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/MSR_00100S.gw",
+    "action": "action_Produce_MSR_00100S_StandardSquad"
+  },
+  "MSA_003_HM": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/MSA_003_HM.gw",
+    "action": "action_Produce_MSA_003_HM_StandardSquad"
+  },
+  "MSZ_006": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/MSZ_006.gw",
+    "action": "action_Produce_MSZ_006_StandardSquad"
+  },
+  "MSF_007": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/MSF_007.gw",
+    "action": "action_Produce_MSF_007_StandardSquad"
+  },
+  "MSA_004K": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/MSA_004K.gw",
+    "action": "action_Produce_MSA_004K_StandardSquad"
+  },
+  "RMS_099B_Red": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/RMS_099B_Red.gw",
+    "action": "action_Produce_RMS_099B_Red_StandardSquad"
+  },
+  "MSZ_006A1": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/MSZ_006A1.gw",
+    "action": "action_Produce_MSZ_006A1_StandardSquad"
+  },
+  "MSZ_006C1": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Space/MSZ_006C1.gw",
+    "action": "action_Produce_MSZ_006C1_StandardSquad"
+  },
+  "MSZ_010": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/MSZ_010.gw",
+    "action": "action_Produce_MSZ_010_StandardSquad"
+  },
+  "MSZ_008": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/MSZ_008.gw",
+    "action": "action_Produce_MSZ_008_StandardSquad"
+  },
+  "MSA_099_2": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/MSA_099_2.gw",
+    "action": "action_Produce_MSA_099_2_StandardSquad"
+  },
+  "RGM_86R": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/RGM_86R.gw",
+    "action": "action_Produce_RGM_86R_StandardSquad"
+  },
+  "RGM_86R_FXA_05D": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/RGM_86R_FXA_05D.gw",
+    "action": "action_Produce_RGM_86R_FXA_05D_StandardSquad"
+  },
+  "RGM_86R_Nouvel": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/RGM_86R_Nouvel.gw",
+    "action": "action_Produce_RGM_86R_Nouvel_StandardSquad"
+  },
+  "MSZ_010S": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/MSZ_010S.gw",
+    "action": "action_Produce_MSZ_010S_StandardSquad"
+  },
+  "FA_010S": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/FA_010S.gw",
+    "action": "action_Produce_FA_010S_StandardSquad"
+  },
+  "FA_010A": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/FA_010A.gw",
+    "action": "action_Produce_FA_010A_StandardSquad"
+  },
+  "FA_00100S": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/FA_00100S.gw",
+    "action": "action_Produce_FA_00100S_StandardSquad"
+  },
+  "MSR_00100S_M": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/MSR_00100S_M.gw",
+    "action": "action_Produce_MSR_00100S_M_StandardSquad"
+  },
+  "MSA_005S": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/MSA_005S.gw",
+    "action": "action_Produce_MSA_005S_StandardSquad"
+  },
+  "MSA_005K": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/MSA_005K.gw",
+    "action": "action_Produce_MSA_005K_StandardSquad"
+  },
+  "MSN_001": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/MSN_001.gw",
+    "action": "action_Produce_MSN_001_StandardSquad"
+  },
+  "MSA_0011": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/MSA_0011.gw",
+    "action": "action_Produce_MSA_0011_StandardSquad"
+  },
+  "MSA_007": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/MSA_007.gw",
+    "action": "action_Produce_MSA_007_StandardSquad"
+  },
+  "MSA_007T": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/MSA_007T.gw",
+    "action": "action_Produce_MSA_007T_StandardSquad"
+  },
+  "MSA_0011_Ext": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/MSA_0011_Ext.gw",
+    "action": "action_Produce_MSA_0011_Ext_StandardSquad"
+  },
+  "MSA_007E": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Land/MSA_007E.gw",
+    "action": "action_Produce_MSA_007E_StandardSquad"
+  },
+  "RMS_106": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/RMS_106.gw",
+    "action": "action_Produce_RMS_106_StandardSquad"
+  },
+  "RMS_179_TITANS": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/RMS_179_TITANS.gw",
+    "action": "action_Produce_RMS_179_TITANS_StandardSquad"
+  },
+  "RGC_83_TITANS": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/RGC_83_TITANS.gw",
+    "action": "action_Produce_RGC_83_TITANS_StandardSquad"
+  },
+  "RGM_79Q": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/RGM_79Q.gw",
+    "action": "action_Produce_RGM_79Q_StandardSquad"
+  },
+  "SalamisClassKai_0087_TITANS": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Space_Mega/SalamisClassKai_0087_TITANS.gw",
+    "action": "action_Produce_SalamisClassKai_0087_TITANS"
+  },
+  "RX_178": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/RX_178.gw",
+    "action": "action_Produce_RX_178_StandardSquad"
+  },
+  "RMS_117": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/RMS_117.gw",
+    "action": "action_Produce_RMS_117_StandardSquad"
+  },
+  "RGM_79Q_ChobamArmor": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/RGM_79Q_ChobamArmor.gw",
+    "action": "action_Produce_RGM_79Q_ChobamArmor_StandardSquad"
+  },
+  "BaseJabber": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/BaseJabber.gw",
+    "action": "action_Produce_BaseJabber_StandardSquad"
+  },
+  "Gator": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/Gator.gw",
+    "action": "action_Produce_Gator_StandardSquad"
+  },
+  "RMS_108": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/RMS_108.gw",
+    "action": "action_Produce_RMS_108_StandardSquad"
+  },
+  "RMS_179_FedayeenRifle": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/RMS_179_FedayeenRifle.gw",
+    "action": "action_Produce_RMS_179_FedayeenRifle_StandardSquad"
+  },
+  "AlexandriaClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Space_Mega/AlexandriaClass.gw",
+    "action": "action_Produce_AlexandriaClass"
+  },
+  "RX_160": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/RX_160.gw",
+    "action": "action_Produce_RX_160_StandardSquad"
+  },
+  "NRX_044_TR_3": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/NRX_044_TR_3.gw",
+    "action": "action_Produce_NRX_044_TR_3_StandardSquad"
+  },
+  "RX_178_Unit4": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/RX_178_Unit4.gw",
+    "action": "action_Produce_RX_178_Unit4_StandardSquad"
+  },
+  "GarudaClass_TITANS": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Mega/GarudaClass_TITANS.gw",
+    "action": "action_Produce_GarudaClass_TITANS"
+  },
+  "NRX_044": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/NRX_044.gw",
+    "action": "action_Produce_NRX_044_StandardSquad"
+  },
+  "RX_110": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Space/RX_110.gw",
+    "action": "action_Produce_RX_110_StandardSquad"
+  },
+  "RMS_154": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/RMS_154.gw",
+    "action": "action_Produce_RMS_154_StandardSquad"
+  },
+  "DogosseGiarClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Space_Mega/DogosseGiarClass.gw",
+    "action": "action_Produce_DogosseGiarClass"
+  },
+  "RX_121": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/RX_121.gw",
+    "action": "action_Produce_RX_121_StandardSquad"
+  },
+  "RX_121_1": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/RX_121_1.gw",
+    "action": "action_Produce_RX_121_1_StandardSquad"
+  },
+  "RX_121_HighMobilityForm": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Space/RX_121_HighMobilityForm.gw",
+    "action": "action_Produce_RX_121_HighMobilityForm_StandardSquad"
+  },
+  "RX_121_TripleBooster": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Space/RX_121_TripleBooster.gw",
+    "action": "action_Produce_RX_121_TripleBooster_StandardSquad"
+  },
+  "RMS_106CS": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/RMS_106CS.gw",
+    "action": "action_Produce_RMS_106CS_StandardSquad"
+  },
+  "RMS_119": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/RMS_119.gw",
+    "action": "action_Produce_RMS_119_StandardSquad"
+  },
+  "RX_121_1_FF_X29A": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Space/RX_121_1_FF_X29A.gw",
+    "action": "action_Produce_RX_121_1_FF_X29A_StandardSquad"
+  },
+  "MRX_009": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Mega/MRX_009.gw",
+    "action": "action_Produce_MRX_009"
+  },
+  "RX_121_2A": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/RX_121_2A.gw",
+    "action": "action_Produce_RX_121_2A_StandardSquad"
+  },
+  "RX_121_2A_M": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/RX_121_2A_M.gw",
+    "action": "action_Produce_RX_121_2A_M_StandardSquad"
+  },
+  "RX_139": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Space/RX_139.gw",
+    "action": "action_Produce_RX_139_StandardSquad"
+  },
+  "ORX_005": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/ORX_005.gw",
+    "action": "action_Produce_ORX_005_StandardSquad"
+  },
+  "PMX_000": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/PMX_000.gw",
+    "action": "action_Produce_PMX_000_StandardSquad"
+  },
+  "PMX_003": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/PMX_003.gw",
+    "action": "action_Produce_PMX_003_StandardSquad"
+  },
+  "PMX_002": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/PMX_002.gw",
+    "action": "action_Produce_PMX_002_StandardSquad"
+  },
+  "PMX_001": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/PMX_001.gw",
+    "action": "action_Produce_PMX_001_StandardSquad"
+  },
+  "RMS_154_Kai": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/RMS_154_Kai.gw",
+    "action": "action_Produce_RMS_154_Kai_StandardSquad"
+  },
+  "RX_124": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/RX_124.gw",
+    "action": "action_Produce_RX_124_StandardSquad"
+  },
+  "RX_121_3C": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/RX_121_3C.gw",
+    "action": "action_Produce_RX_121_3C_StandardSquad"
+  },
+  "ORX_005_TR_5": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/ORX_005_TR_5.gw",
+    "action": "action_Produce_ORX_005_TR_5_StandardSquad"
+  },
+  "RGM_86R_EFSF": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/RGM_86R_EFSF.gw",
+    "action": "action_Produce_RGM_86R_EFSF_StandardSquad"
+  },
+  "RX_124_FF_X39A": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/RX_124_FF_X39A.gw",
+    "action": "action_Produce_RX_124_FF_X39A_StandardSquad"
+  },
+  "ORX_005_TR_5_FF_X39A": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/ORX_005_TR_5_FF_X39A.gw",
+    "action": "action_Produce_ORX_005_TR_5_FF_X39A_StandardSquad"
+  },
+  "RX_124_Kehaar2": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/RX_124_Kehaar2.gw",
+    "action": "action_Produce_RX_124_Kehaar2_StandardSquad"
+  },
+  "RX_124_Kehaar2_M": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/RX_124_Kehaar2_M.gw",
+    "action": "action_Produce_RX_124_Kehaar2_M_StandardSquad"
+  },
+  "MRX_010": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Mega/MRX_010.gw",
+    "action": "action_Produce_MRX_010"
+  },
+  "NRX_055": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/NRX_055.gw",
+    "action": "action_Produce_NRX_055_StandardSquad"
+  },
+  "MS_09R_Stutzer": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Land/MS_09R_Stutzer.gw",
+    "action": "action_Produce_MS_09R_Stutzer_StandardSquad"
+  },
+  "MS_06F_Stutzer": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Land/MS_06F_Stutzer.gw",
+    "action": "action_Produce_MS_06F_Stutzer_StandardSquad"
+  },
+  "ZanzibarClassKai_0087": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Space_Mega/ZanzibarClassKai_0087.gw",
+    "action": "action_Produce_ZanzibarClassKai_0087"
+  },
+  "MusaiClassFinalType": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Space_Mega/MusaiClassFinalType.gw",
+    "action": "action_Produce_MusaiClassFinalType"
+  },
+  "MS_14A_Stutzer": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Land/MS_14A_Stutzer.gw",
+    "action": "action_Produce_MS_14A_Stutzer_StandardSquad"
+  },
+  "MS_09SS": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Land/MS_09SS.gw",
+    "action": "action_Produce_MS_09SS_StandardSquad"
+  },
+  "MS_15K": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Land/MS_15K.gw",
+    "action": "action_Produce_MS_15K_StandardSquad"
+  },
+  "AGX_04A1": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Land/AGX_04A1.gw",
+    "action": "action_Produce_AGX_04A1_StandardSquad"
+  },
+  "GwanbanClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Space_Mega/GwanbanClass.gw",
+    "action": "action_Produce_GwanbanClass"
+  },
+  "RMS_099_NEO_ZEON": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Land/RMS_099_NEO_ZEON.gw",
+    "action": "action_Produce_RMS_099_NEO_ZEON_StandardSquad"
+  },
+  "RMS_106_NEO_ZEON": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Land/RMS_106_NEO_ZEON.gw",
+    "action": "action_Produce_RMS_106_NEO_ZEON_StandardSquad"
+  },
+  "GarudaClass_NEO_ZEON": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Mega/GarudaClass_NEO_ZEON.gw",
+    "action": "action_Produce_GarudaClass_NEO_ZEON"
+  },
+  "AMX_003": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Land/AMX_003.gw",
+    "action": "action_Produce_AMX_003_StandardSquad"
+  },
+  "RMS_119_NEO_ZEON": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Land/RMS_119_NEO_ZEON.gw",
+    "action": "action_Produce_RMS_119_NEO_ZEON_StandardSquad"
+  },
+  "GwadanClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Space_Mega/GwadanClass.gw",
+    "action": "action_Produce_GwadanClass"
+  },
+  "MS_14J": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Land/MS_14J.gw",
+    "action": "action_Produce_MS_14J_StandardSquad"
+  },
+  "AMX_004_1": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Land/AMX_004_1.gw",
+    "action": "action_Produce_AMX_004_1_StandardSquad"
+  },
+  "AMX_006": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Land/AMX_006.gw",
+    "action": "action_Produce_AMX_006_StandardSquad"
+  },
+  "AMX_009": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Land/AMX_009.gw",
+    "action": "action_Produce_AMX_009_StandardSquad"
+  },
+  "RMS_099B_NEO_ZEON": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Land/RMS_099B_NEO_ZEON.gw",
+    "action": "action_Produce_RMS_099B_NEO_ZEON_StandardSquad"
+  },
+  "AMX_101": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Land/AMX_101.gw",
+    "action": "action_Produce_AMX_101_StandardSquad"
+  },
+  "AMX_101K": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Land/AMX_101K.gw",
+    "action": "action_Produce_AMX_101K_StandardSquad"
+  },
+  "AMX_102": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Land/AMX_102.gw",
+    "action": "action_Produce_AMX_102_StandardSquad"
+  },
+  "AMX_103": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Land/AMX_103.gw",
+    "action": "action_Produce_AMX_103_StandardSquad"
+  },
+  "AMX_109": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Land/AMX_109.gw",
+    "action": "action_Produce_AMX_109_StandardSquad"
+  },
+  "AMX_008": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Land/AMX_008.gw",
+    "action": "action_Produce_AMX_008_StandardSquad"
+  },
+  "AMX_004G": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Land/AMX_004G.gw",
+    "action": "action_Produce_AMX_004G_StandardSquad"
+  },
+  "AMA_01X": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Land/AMA_01X.gw",
+    "action": "action_Produce_AMA_01X_StandardSquad"
+  },
+  "AMX_011": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Land/AMX_011.gw",
+    "action": "action_Produce_AMX_011_StandardSquad"
+  },
+  "AMX_014": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Land/AMX_014.gw",
+    "action": "action_Produce_AMX_014_StandardSquad"
+  },
+  "AMX_107": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Land/AMX_107.gw",
+    "action": "action_Produce_AMX_107_StandardSquad"
+  },
+  "AMX_107M": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Land/AMX_107M.gw",
+    "action": "action_Produce_AMX_107M_StandardSquad"
+  },
+  "RGM_89": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_EFSF/Units/Land/RGM_89.gw",
+    "action": "action_Produce_RGM_89_StandardSquad"
+  },
+  "AMS_119": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_NZN/Units/Land/AMS_119.gw",
+    "action": "action_Produce_AMS_119_StandardSquad"
+  },
+  "MSN_03": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_NZN/Units/Land/MSN_03.gw",
+    "action": "action_Produce_MSN_03_StandardSquad"
+  },
+  "MSN_04": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_NZN/Units/Land/MSN_04.gw",
+    "action": "action_Produce_MSN_04_StandardSquad"
+  },
+  "RX_93": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_EFSF/Units/Land/RX_93.gw",
+    "action": "action_Produce_RX_93_StandardSquad"
+  },
+  "RX_93_Test": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_EFSF/Units/Land/RX_93_Test.gw",
+    "action": "action_Produce_RX_93_Test_StandardSquad"
+  },
+  "RGZ_91_MA": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_EFSF/Units/Land/RGZ_91.gw",
+    "action": "action_Produce_RGZ_91_StandardSquad"
+  },
+  "GAT_X105": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_X105.gw",
+    "action": "action_Produce_GAT_X105_NSquad"
+  },
+  "ACV": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/ACV.gw",
+    "action": "action_Produce_ACV_StandardSquad"
+  },
+  "AgamemnonClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Space_Mega/AgamemnonClass.gw",
+    "action": "action_Produce_AgamemnonClass"
+  },
+  "Agile": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Air/Agile.gw",
+    "action": "action_Produce_Agile_StandardSquad"
+  },
+  "AMF_101": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/AMF_101.gw",
+    "action": "action_Produce_AMF_101_StandardSquad"
+  },
+  "AMF_101C": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/AMF_101C.gw",
+    "action": "action_Produce_AMF_101C"
+  },
+  "ArchangelClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Space_Mega/ArchangelClass.gw",
+    "action": "action_Produce_ArchangelClass"
+  },
+  "ConnectedArmoredVehicle": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/ConnectedArmoredVehicle.gw",
+    "action": "action_Produce_ConnectedArmoredVehicle_StandardSquad"
+  },
+  "DrakeClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Space_Mega/DrakeClass.gw",
+    "action": "action_Produce_DrakeClass"
+  },
+  "F_7D": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Air/F_7D.gw",
+    "action": "action_Produce_F_7D_StandardSquad"
+  },
+  "FX_550": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Air/FX_550.gw",
+    "action": "action_Produce_FX_550_NSquad"
+  },
+  "GAT_01": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_01.gw",
+    "action": "action_Produce_GAT_01_StandardSquad"
+  },
+  "GAT_01D": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_01D.gw",
+    "action": "action_Produce_GAT_01D_StandardSquad"
+  },
+  "GAT_01D1": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_01D1.gw",
+    "action": "action_Produce_GAT_01D1_StandardSquad"
+  },
+  "GAT_X102": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_X102.gw",
+    "action": "action_Produce_GAT_X102_StandardSquad"
+  },
+  "GAT_X102_AS": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_X102_AS.gw",
+    "action": "action_Produce_GAT_X102_AS_StandardSquad"
+  },
+  "GAT_X103": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_X103.gw",
+    "action": "action_Produce_GAT_X103_StandardSquad"
+  },
+  "GAT_X207": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_X207.gw",
+    "action": "action_Produce_GAT_X207_StandardSquad"
+  },
+  "GAT_X303": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_X303.gw",
+    "action": "action_Produce_GAT_X303_StandardSquad"
+  },
+  "Guul": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Air/Guul.gw",
+    "action": "action_Produce_Guul_StandardSquad"
+  },
+  "Infestus": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Air/Infestus.gw",
+    "action": "action_Produce_Infestus_StandardSquad"
+  },
+  "LaurasiaClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Space_Mega/LaurasiaClass.gw",
+    "action": "action_Produce_LaurasiaClass"
+  },
+  "LinearArtillery": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/LinearArtillery.gw",
+    "action": "action_Produce_LinearArtillery_StandardSquad"
+  },
+  "LinearGunTank": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/LinearGunTank.gw",
+    "action": "action_Produce_LinearGunTank_StandardSquad"
+  },
+  "MarseilleIIIClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Space_Mega/MarseilleIIIClass.gw",
+    "action": "action_Produce_MarseilleIIIClass"
+  },
+  "MissileCar_CE": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/MissileCar_CE.gw",
+    "action": "action_Produce_MissileCar_CE_StandardSquad"
+  },
+  "NazcaClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Space_Mega/NazcaClass.gw",
+    "action": "action_Produce_NazcaClass"
+  },
+  "NelsonClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Space_Mega/NelsonClass.gw",
+    "action": "action_Produce_NelsonClass"
+  },
+  "OMNI_MinigunAPC": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/OMNI_MinigunAPC.gw",
+    "action": "action_Produce_OMNI_MinigunAPC_StandardSquad"
+  },
+  "PatrolAircraft": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Air/PatrolAircraft.gw",
+    "action": "action_Produce_PatrolAircraft_StandardSquad"
+  },
+  "PowerCar": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/PowerCar.gw",
+    "action": "action_Produce_PowerCar_StandardSquad"
+  },
+  "SupplyTruck": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/SupplyTruck.gw",
+    "action": "action_Produce_SupplyTruck_StandardSquad"
+  },
+  "TFA_2": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/TFA_2.gw",
+    "action": "action_Produce_TFA_2_StandardSquad"
+  },
+  "TMF_A_802": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/TMF_A_802.gw",
+    "action": "action_Produce_TMF_A_802_StandardSquad"
+  },
+  "TS_MA2": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Space/TS_MA2.gw",
+    "action": "action_Produce_TS_MA2_StandardSquad"
+  },
+  "UMF_4A": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/UMF_4A.gw",
+    "action": "action_Produce_UMF_4A_StandardSquad"
+  },
+  "UMF_5": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/UMF_5.gw",
+    "action": "action_Produce_UMF_5_StandardSquad"
+  },
+  "UWMF_S_1": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/UWMF_S_1.gw",
+    "action": "action_Produce_UWMF_S_1_StandardSquad"
+  },
+  "VoLPHAU": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Air/VoLPHAU.gw",
+    "action": "action_Produce_VoLPHAU_StandardSquad"
+  },
+  "VTOLFighter": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Air/VTOLFighter.gw",
+    "action": "action_Produce_VTOLFighter_StandardSquad"
+  },
+  "VTOLTransport": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Air/VTOLTransport.gw",
+    "action": "action_Produce_VTOLTransport_StandardSquad"
+  },
+  "ZGMF_1017": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/ZGMF_1017.gw",
+    "action": "action_Produce_ZGMF_1017_StandardSquad"
+  },
+  "ZGMF_1017M": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/ZGMF_1017M.gw",
+    "action": "action_Produce_ZGMF_1017M"
+  },
+  "ZGMF_515": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/ZGMF_515.gw",
+    "action": "action_Produce_ZGMF_515"
+  },
+  "ZGMF_600": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/ZGMF_600.gw",
+    "action": "action_Produce_ZGMF_600"
+  },
+  "ZGMF_LRR704B": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/ZGMF_LRR704B.gw",
+    "action": "action_Produce_ZGMF_LRR704B"
+  },
+  "ZGMT_01": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/ZGMT_01.gw",
+    "action": "action_Produce_ZGMT_01"
+  },
+  "GAT_01D_AS": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_01D_AS.gw",
+    "action": "action_Produce_GAT_01D_AS_StandardSquad"
+  },
+  "GAT_01D1_AS": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_01D1_AS.gw",
+    "action": "action_Produce_GAT_01D1_AS_StandardSquad"
+  },
+  "GAT_X105_A": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_X105.gw",
+    "action": "action_Produce_GAT_X105_ASquad"
+  },
+  "GAT_X105_L": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_X105.gw",
+    "action": "action_Produce_GAT_X105_LSquad"
+  },
+  "GAT_X105_S": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Land/GAT_X105.gw",
+    "action": "action_Produce_GAT_X105_SSquad"
+  },
+  "TS_MA2_H": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Space/TS_MA2_H.gw",
+    "action": "action_Produce_TS_MA2_H_StandardSquad"
+  },
+  "ZGMF_1017_D": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/ZGMF_1017_D.gw",
+    "action": "action_Produce_ZGMF_1017_D"
+  },
+  "ZGMF_1017_H": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/ZAFT_CE71/Units/Land/ZGMF_1017_H.gw",
+    "action": "action_Produce_ZGMF_1017_H"
+  },
+  "RGM_86R_0093_EFSF": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_EFSF/Units/Land/RGM_86R_0093_EFSF.gw",
+    "action": "action_Produce_RGM_86R_0093_EFSF_StandardSquad"
+  },
+  "SalamisClassKai_0093_EFSF": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_EFSF/Units/Space_Mega/SalamisClassKai_0093_EFSF.gw",
+    "action": "action_Produce_SalamisClassKai_0093_EFSF"
+  },
+  "MSZ_006A1_0093_EFSF": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_EFSF/Units/Land/MSZ_006A1_0093_EFSF.gw",
+    "action": "action_Produce_MSZ_006A1_0093_EFSF_StandardSquad"
+  },
+  "MSZ_006C1_0093_EFSF": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_EFSF/Units/Land/MSZ_006C1_0093_EFSF.gw",
+    "action": "action_Produce_MSZ_006C1_0093_EFSF_StandardSquad"
+  },
+  "AMX_101_0093_NZN": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_NZN/Units/Land/AMX_101_0093_NZN.gw",
+    "action": "action_Produce_AMX_101_0093_NZN_StandardSquad"
+  },
+  "MusaiClassFinalType_0093_NZN": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_NZN/Units/Space_Mega/MusaiClassFinalType_0093_NZN.gw",
+    "action": "action_Produce_MusaiClassFinalType_0093_NZN"
+  },
+  "AMX_107_0093_NZN": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_NZN/Units/Land/AMX_107_0093_NZN.gw",
+    "action": "action_Produce_AMX_107_0093_NZN_StandardSquad"
+  },
+  "AMX_006_0093_NZN": {
+    "quantity": 3,
+    "source": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_NZN/Units/Land/AMX_006_0093_NZN.gw",
+    "action": "action_Produce_AMX_006_0093_NZN_StandardSquad"
+  }
+}

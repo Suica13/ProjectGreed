@@ -160,6 +160,7 @@ const AutomaticFire = (() => {
       jobs = timeline(),
       battles = [],
       stances = new Map(),
+      counterTargets = new Map(),
       reactionUsed = new Set(),
       meleeAvailability = new Map();
     const add = (from, to, ids, stance, counter, intent = {}) => {
@@ -245,6 +246,7 @@ const AutomaticFire = (() => {
       if (choice.response === "counter") {
         const from = find(choice.intent.target),
           to = find(choice.counterTargetId || choice.intent.attacker);
+        if (from && to) counterTargets.set(from.id, to.id);
         add(
           from,
           to,
@@ -622,7 +624,12 @@ const AutomaticFire = (() => {
               game,
               job.source,
               victim,
-              job.weapon,
+              counterTargets.has(victim.id) && counterTargets.get(victim.id) !== job.source.id
+                ? {
+                    ...job.weapon,
+                    counterExposureMultiplier: G.catalog.conversionRules.weapons.nonCounterTargetAccuracy,
+                  }
+                : job.weapon,
               run.counter ? "counter" : stances.get(victim.id) || run.stance,
               run.counter,
             );

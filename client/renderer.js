@@ -169,6 +169,7 @@ const SpriteRenderer = (() => {
     weaponDisplayIndex = null,
     flying = false,
     boostSkillActive = false,
+    phaseShiftActive = true,
   ) {
     const animation = models[model].animations[clip];
     const at = animation
@@ -195,6 +196,7 @@ const SpriteRenderer = (() => {
           weaponDisplayIndex,
           flying,
           boostSkillActive,
+          phaseShiftActive,
         ])
       : null;
     const cached = key && frameLayerLists.get(key);
@@ -203,6 +205,7 @@ const SpriteRenderer = (() => {
     variables.shieldVisible = variables.shieldVisible && shieldVisible;
     variables.moving = moving;
     variables.boostSkillActive = boostSkillActive;
+    variables.phaseShiftActive = phaseShiftActive;
     variables.onLand = onLand;
     variables.attacking = attacking ?? (!!clip && /Shoot|Fire|Attack/.test(clip));
     variables.heldAttacking =
@@ -613,6 +616,7 @@ const SpriteRenderer = (() => {
     boostSkillActive = false,
     hiddenLayers = [],
     idleRasterSize = 0,
+    phaseShiftActive = true,
   ) {
     const isFiring = attacking ?? (!!clip && /Shoot|Fire|Attack/.test(clip));
     // Cache the body independently of camera labels and world position. Moving
@@ -646,6 +650,7 @@ const SpriteRenderer = (() => {
         weaponDisplayIndex,
         flying,
         boostSkillActive,
+        phaseShiftActive,
       );
       const effects = layers
         .filter(
@@ -715,6 +720,8 @@ const SpriteRenderer = (() => {
           effectsOnly,
           boostSkillActive,
           hiddenLayers,
+          0,
+          phaseShiftActive,
         );
       const key = JSON.stringify([
         model,
@@ -730,6 +737,7 @@ const SpriteRenderer = (() => {
         environment,
         weaponDisplayIndex,
         boostSkillActive,
+        phaseShiftActive,
         hiddenLayers,
         brokenParts,
         lighting,
@@ -831,6 +839,8 @@ const SpriteRenderer = (() => {
               false,
               boostSkillActive,
               [...hiddenLayers, ...effects],
+              0,
+              phaseShiftActive,
             );
             if (idleUpdateKeys[idleUpdateCursor] === key) idleUpdateCursor++;
             entry.bucket = entry.desiredBucket = bucket;
@@ -880,6 +890,8 @@ const SpriteRenderer = (() => {
               ...hiddenLayers,
               ...layers.filter((layer) => !names.includes(layer.name)).map((layer) => layer.name),
             ],
+            0,
+            phaseShiftActive,
           );
         };
         drawEffects(prefixEffects);
@@ -928,6 +940,7 @@ const SpriteRenderer = (() => {
       weaponDisplayIndex,
       flying,
       boostSkillActive,
+      phaseShiftActive,
     );
     if (
       !effectsOnly &&

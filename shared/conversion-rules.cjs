@@ -6,6 +6,7 @@ const file = "shared/conversion-rules.json";
 const Classes = require("./weapon-classes.js");
 const fields = {
   weapons: {
+    nonCounterTargetAccuracy: ["反击时非反击对象的命中倍率",1,5,false,"选择反击后，来自其他单位的最终命中率乘此倍率，最高100%。"],
     shootingDamageOffset: ["射击全局伤害系数增减", -0.99, 10, false, "加到全部武装伤害倍率上，仅射击武器及伤害型射击技能生效；不影响近战与冲撞。"],
     shootingHitOffset: ["射击基础命中增减", -100, 100, false, "分类基础命中直接增减百分点，再应用命中倍率；包含分段射击及照射。"],
     shipMediumAccuracyBonus: ["战舰对中型命中补偿", 0, 1, false, "只减轻已有对中型命中惩罚，最高恢复到1；不影响非战舰。"],
@@ -35,6 +36,8 @@ const fields = {
     range: ["武器射程倍率", 0.01, 10, false, "最小和最大射程同时换算为整数。"],
   },
   units: {
+    shipAccuracy: ["战舰原MOD命中系数倍率", 0.01, 10, false, "以sourceStats记录的原MOD命中系数为基准，保留既有阵营加成；再应用单位命中倍率和人工差值。"],
+    specialCost: ["特装机基础COST倍率",1,5,false,"原MOD工厂单次生产一台的非战舰单位，基础COST乘倍率并按25取整；套件差价及人工差值随后应用。"],
     hp: ["单位耐久倍率", 0.01, 10, false, "以现有单位基础值换算，向上取整。"],
     en: ["单位EN上限倍率", 0.01, 10, false, "以现有基础值换算，向上取整。"],
     move: ["单位基础移动距离倍率", 0.01, 10, false, "基础距离乘倍率后四舍五入，再加原移植战术加成（普通单位+1、战舰+3）；不修改动画速度。"],
@@ -54,6 +57,9 @@ const classFields = {
   rangeBonus: ["分类最大射程增减", -100, 100, true],
 };
 function validate(value) {
+  if (value?.units) value.units.shipAccuracy ??= 0.8;
+  if (value?.units) value.units.specialCost ??= 1.25;
+  if (value?.weapons) value.weapons.nonCounterTargetAccuracy ??= 1.1;
   if (value?.weapons) for (const key of ["shootingDamageOffset", "shootingHitOffset", "shipMediumAccuracyBonus"])
     value.weapons[key] ??= 0;
   if (value?.weapons && value.weapons.shipCannonAccuracy === undefined) value.weapons.shipCannonAccuracy = 0.85;
@@ -276,6 +282,11 @@ function globals(prefab, rules) {
       if (Number.isFinite(baseHit)) skill.baseHit = Math.max(0, baseHit + (shooting ? w.shootingHitOffset || 0 : 0));
       skill.conversionMultipliers = { damageScale, ...(Number.isFinite(baseHit) ? {baseHit} : {}) };
     }
+  if (prefab.sourceStats?.nativeProductionQuantity === 1 && !prefab.stats.ship) {
+    const base = prefab.conversionSpecialCostBase ?? prefab.stats.cost;
+    prefab.stats.cost = base === 0 ? 0 : Math.max(25, Math.round(base * rules.units.specialCost / 25) * 25);
+    prefab.conversionSpecialCostBase = base;
+  }
   const fields = {
     hp: "hp",
     en: "en",
@@ -295,6 +306,12 @@ function globals(prefab, rules) {
       );
     for (const [key, field] of Object.entries(fields)) {
       let n = base[field] * rules.units[key];
+      if (key === "accuracy" && prefab.stats.ship && Number.isFinite(prefab.sourceStats?.accuracy)) {
+        // Read native accuracy, rather than stacking 80% onto the legacy 65% import.
+        const factor = rules.units.shipAccuracy ?? 0.8;
+        n = prefab.sourceStats.accuracy * (prefab.sourceStats.shipFactionAccuracyMultiplier ?? 1) * factor * rules.units.accuracy;
+        prefab.stats.accuracyMultiplier = factor;
+      }
       if (["hp", "en"].includes(key)) n = Math.ceil(n);
       if (key === "move") {
         // Source stats offset movement by native mobility; the compiler restores

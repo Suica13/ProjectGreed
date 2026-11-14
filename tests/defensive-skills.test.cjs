@@ -122,7 +122,7 @@ test("I-field depletes per actual hit, protects its final intercepted projectile
     field = G.modelOf(b).iField;
   assert.ok(depleted < 0);
   G.end(g);
-  assert.equal(G.iFieldHP(b), Math.min(field.capacity, depleted + field.capacity * 0.1));
+  assert.equal(G.iFieldHP(b), Math.min(field.capacity, depleted + field.capacity * 0.05));
   const recovered = G.iFieldHP(b);
   G.end(g);
   assert.equal(G.iFieldHP(b), recovered);

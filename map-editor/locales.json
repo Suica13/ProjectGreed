@@ -1,5 +1,9 @@
 {
   "en": {
+    "图层与检查": "Layers & validation",
+    "工具面板": "Tools",
+    "悬浮面板": "Float panel",
+    "停靠下方": "Dock below",
     "语言": "Language",
     "跟随系统": "System default",
     "ProjectGreed 地图编辑器": "ProjectGreed Map Editor",
@@ -170,7 +174,7 @@
     "先在“规则”页新建或选择随机规则。": "Create or select a random rule in the Rules tab first.",
     "已添加随机候选": "Random candidate added",
     "多格画笔：{n}×{n}": "Multi-tile brush: {n}×{n}",
-    "请先选择图块图层；整图图层可在右侧修改位置与尺寸。": "Select a tile layer first. Image layer position and size can be edited on the right.",
+    "请先选择图块图层；整图图层可在图层与检查页修改位置与尺寸。": "Select a tile layer first. Edit image position and size in Layers & validation.",
     "已设置出生地": "Spawn placed",
     "已粘贴选区": "Selection pasted",
     "操作完成": "Done",
@@ -260,6 +264,10 @@
     "队伍{n}": "Team {n}"
   },
   "ja": {
+    "图层与检查": "レイヤーと検証",
+    "工具面板": "ツール",
+    "悬浮面板": "フローティング表示",
+    "停靠下方": "下部に固定",
     "语言": "言語",
     "跟随系统": "システムに従う",
     "ProjectGreed 地图编辑器": "ProjectGreed マップエディター",
@@ -430,7 +438,7 @@
     "先在“规则”页新建或选择随机规则。": "先に「ルール」でランダムルールを作成または選択してください。",
     "已添加随机候选": "ランダム候補を追加しました",
     "多格画笔：{n}×{n}": "複数タイルブラシ：{n}×{n}",
-    "请先选择图块图层；整图图层可在右侧修改位置与尺寸。": "先にタイルレイヤーを選択してください。画像レイヤーの位置とサイズは右側で変更できます。",
+    "请先选择图块图层；整图图层可在图层与检查页修改位置与尺寸。": "先にタイルレイヤーを選択してください。画像の位置とサイズは「レイヤーと検証」で変更できます。",
     "已设置出生地": "出撃地点を設定しました",
     "已粘贴选区": "選択範囲を貼り付けました",
     "操作完成": "操作完了",

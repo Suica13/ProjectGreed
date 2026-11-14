@@ -1,10 +1,22 @@
 """原生持枪／射击显示、炮管排序、套件和主手优先顺序。"""
 import math
 import re
-from mod_source import ROOT, load, section
+from mod_source import ROOT, MOD, load, section
 
 
 def correct_shared_weapon_layers(prefab, native):
+    # Native display switches live beside the weapon trigger, not necessarily
+    # inside the animation chain (GM III's saber is one such case).
+    for key, weapon in prefab.get("weapons", {}).items():
+        for prefix in (key, re.sub(r"_[A-Z]$", "", key)):
+            name = "hiddenAction_" + prefix + "_SetWeaponIndex"
+            action = section(native, name) if name in native else {}
+            match = re.search(r"nowWeaponIndex\s*=\s*(\d+)", action.get("setUnitMemory", ""))
+            if match:
+                steps = weapon.get("attack", {}).get("steps", [])
+                if steps and not any("weaponDisplayIndex" in step for step in steps):
+                    steps.insert(0, {"weaponDisplayIndex": int(match[1]), "delay": 0})
+                break
     if prefab["id"] == "MS_10":
         # Native cooldown selects equipment state, not a time-driven sprite loop.
         layer = next(l for l in prefab["layers"] if l["name"] == "ZN_MS_10_MS_MS")
@@ -77,6 +89,13 @@ def correct(prefab, native):
         source_key = "decal_" + name
         if source_key in native:
             condition = section(native, source_key).get("isVisible", "")
+            equipment = re.search(r"\bEquipmentIndex\s*==\s*(\d+)", condition)
+            if equipment:
+                from native_weapon_layout import conditions
+                index = int(equipment[1])
+                kits = [kit['id'] for kit in prefab['weaponKits'] if kit.get('nativeEquipmentIndex') == index or any(any(re.search(r'\bEquipmentIndex\s*==\s*'+str(index)+r'\b', c) for c in conditions(native,prefab['weapons'][w])) for w in kit['weapons'])]
+                layer.setdefault('visibleWhen',{})['kit'] = kits
+
             match = re.search(r"memory\.nowWeaponIndex\s*(==|!=)\s*(-?\d+)", condition)
             if match and any("displayIndex" in weapon for weapon in prefab["weapons"].values()):
                 matches = re.findall(r"memory\.nowWeaponIndex\s*(==|!=)\s*(-?\d+)", condition)
@@ -99,7 +118,7 @@ def correct(prefab, native):
                 visibility.pop("heldWeapon", None)
                 if re.search(r"self\.shield\s*>\s*0", condition):
                     visibility["shieldVisible"] = True
-        if "Sniper" in name and name.endswith(("_Idle", "_Attack")):
+        if name.endswith(("_Idle", "_Attack")) and ("Sniper" in name or "${onAttacking}" in condition):
             visibility = layer.setdefault("visibleWhen", {})
             visibility.pop("attacking", None)
             visibility["heldAttacking"] = name.endswith("_Attack")
@@ -129,7 +148,7 @@ def correct(prefab, native):
     for key, weapon in prefab["weapons"].items():
         if weapon.get("moduleIds") or weapon.get("remote"):
             continue
-        own = load(ROOT / weapon["source"]["file"])
+        own = load(MOD / prefab["source"].split("/",1)[0] / weapon["source"]["file"])
         source = {name:{**own.get(name,{}),**native.get(name,{})} for name in own.keys() | native.keys()}
         mounts = weapon.get("muzzle",{}).get("mounts",[weapon.get("muzzle",{})])
         barrels = weapon["source"]["barrels"]

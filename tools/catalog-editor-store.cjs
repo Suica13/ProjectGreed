@@ -344,7 +344,7 @@ function createEditorStore(root = path.resolve(__dirname, ".."), validate = null
     )
       throw Error("预览倍率必须大于0且不超过10");
     next.faction = next.tags.find((tag) =>
-      ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(tag),
+      Object.keys(require("../shared/factions.json")).includes(tag),
     );
     if (!candidate.name?.trim() || !candidate.code?.trim()) throw Error("单位名称和型号不能为空");
     if (
@@ -443,7 +443,7 @@ function createEditorStore(root = path.resolve(__dirname, ".."), validate = null
       else delete registry.prices[original.id];
     }
     const localization = read("assets/localization/units.json");
-    localization[original.id] = {
+    if (!equal(original.localization, next.localization)) localization[original.id] = {
       ...localization[original.id],
       en: next.localization?.en || {},
       ja: next.localization?.ja || {},

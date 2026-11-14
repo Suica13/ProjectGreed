@@ -725,6 +725,7 @@
     "EF_RailBazooka": {
       "ref": "EF_RailBazooka__lv1",
       "overrides": {
+        "name": "磁轨炮火箭筒",
         "requiredParts": [
           "rightArm"
         ],
@@ -748,6 +749,17 @@
               }
             }
           ]
+        },
+        "localization": {
+          "zh": {
+            "name": "磁轨炮火箭筒"
+          },
+          "en": {
+            "name": "Rail Bazooka"
+          },
+          "ja": {
+            "name": "レールバズーカ"
+          }
         }
       }
     },

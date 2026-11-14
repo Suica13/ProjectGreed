@@ -126,14 +126,28 @@ const MatchResults = (() => {
       if (team !== undefined) section.dataset.team = String(team);
       section.append(element("h4", "", label));
       const list = element("div", "result-unit-icons");
+      const grouped = new Map();
       for (const record of records) {
         if (!UnitModels[record.model]) continue;
+        const id = UnitModels[record.model].prefabId || record.unitId || record.model;
+        if (!grouped.has(id)) grouped.set(id,{...record,count:0});
+        grouped.get(id).count++;
+      }
+      for (const record of grouped.values()) {
+        const item = element("span", "result-unit-stack");
+        item.style.cssText = "position:relative;display:inline-flex";
         const img = element("img");
         img.src = unitIcon(record.model);
         img.alt = UnitModels[record.model].name;
-        img.title = img.alt;
+        img.title = img.alt + " ×" + record.count;
         img.dataset.unitId = record.id || "";
-        list.append(img);
+        item.append(img);
+        if (record.count > 1) {
+          const count = element("span", "result-unit-count", "×"+record.count);
+          count.style.cssText = "position:absolute;right:0;bottom:0;background:#102535ec;color:#fff;font-weight:bold;font-size:12px;padding:1px 4px;line-height:16px;border:1px solid #6394ae";
+          item.append(count);
+        }
+        list.append(item);
       }
       if (!list.children.length) list.append(element("span", "muted", I18n.text("无")));
       section.append(list);

@@ -227,19 +227,13 @@ const Tactics = (() => {
     if (cost > maxCost) throw Error("编组 COST 超出上限");
     return clean;
   }
-  const factions = ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"];
-  const eras = [
-    ...new Set(
-      catalog.prefabs.flatMap((prefab) =>
-        prefab.tags.filter((tag) => /^\d{4}(?:T[12])?$/.test(tag)),
-      ),
-    ),
-  ].sort();
+  const factionInfo = typeof FACTION_DATA !== "undefined" ? FACTION_DATA : require("./factions.json");
+  const factions = Object.keys(factionInfo);
+  const technologyEras = typeof TechnologyEras !== "undefined" ? TechnologyEras : require("./technology-eras.js");
+  const eras = [...technologyEras.eras];
   function expandEraTag(tag) {
-    if (tag === "0079E") return ["0079T1"];
-    if (tag === "0079L") return ["0079T2"];
-    if (tag === "0079" || tag === "0087") return eras.filter((era) => era.startsWith(tag));
-    return [tag];
+    if (tag === "0079" || tag === "0087") return eras.filter(era => era.startsWith("UC_" + tag));
+    return [technologyEras.normalize(tag)];
   }
   const unitTags = [...new Set(catalog.prefabs.flatMap((p) => p.unitTags || []))].sort();
   function validateUnitCostLimit(value) {
@@ -286,7 +280,7 @@ const Tactics = (() => {
       value.some(
         (faction) =>
           faction !== null &&
-          !["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(faction),
+          !["PMC", ...factions].includes(faction),
       )
     )
       throw Error("队伍强制阵营无效。");
@@ -313,12 +307,12 @@ const Tactics = (() => {
     return {
       mode: "regular",
       formationStyle: "standard",
-      regularEra: "0079T1",
+      regularEra: "UC_0079_T1",
       technologyLimitMode: "host",
       technologyLimitFaction: "EFSF",
       technologyLimit: 0,
       sweepFaction: "ZEON",
-      sweepEra: "0079T1",
+      sweepEra: "UC_0079_T1",
       sweepEnvironment: "ground",
       fogMode: "full",
       mapId: catalog.defaultMap,
@@ -404,17 +398,17 @@ const Tactics = (() => {
     if (restrictions.aiBannedUnits?.includes(model.prefabId)) return "not_allowed";
     if (
       restrictions.aiAllowedEras &&
-      !model.tags.some((tag) => restrictions.aiAllowedEras.includes(tag)) &&
+      !model.tags.some((tag) => restrictions.aiAllowedEras.some(era => technologyEras.normalize(era) === tag)) &&
       !(restrictions.aiEarlierCarriers && isFleetCarrier(model))
     )
       return "not_allowed";
     if (
-      ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(restrictions.characterFaction) &&
+      factions.includes(restrictions.characterFaction) &&
       !(model.availableFactions || [model.faction]).includes(restrictions.characterFaction)
     )
       return "faction_mismatch";
     if (
-      ["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(
+      ["PMC", ...factions].includes(
         restrictions.characterFaction,
       ) &&
       !restrictions.ignoreDevelopment &&
@@ -425,7 +419,7 @@ const Tactics = (() => {
       return "not_developed";
     if (restrictions.environment && (model.adaptability?.[restrictions.environment] ?? 100) <= 0)
       return "not_allowed";
-    if (restrictions.allowedEras?.length && !model.tags.some((tag) => restrictions.allowedEras.includes(tag)))
+    if (restrictions.allowedEras?.length && !model.tags.some((tag) => restrictions.allowedEras.some(era => technologyEras.normalize(era) === tag)))
       return "not_allowed";
     if (
       model.movementType === "naval" &&
@@ -549,8 +543,10 @@ const Tactics = (() => {
     clean.forEach((entry, index) => {
       if (reasons[index]) return;
       const weight = formationWeight(formationModel(entry));
-      if (occupied + weight > unitLimit) reasons[index] = "count";
-      else occupied += weight;
+      const limitWeight = restrictions.requiresCarriers ? Number(fleet[index] && !entry.preload) : weight;
+      const limit = restrictions.requiresCarriers ? (restrictions.fleetLimit ?? 3) : unitLimit;
+      if (occupied + limitWeight > limit) reasons[index] = "count";
+      else occupied += limitWeight;
     });
     let deployCost = costs.reduce((sum, value, index) => sum + (reasons[index] ? 0 : value), 0);
     for (let index = clean.length - 1; index >= 0 && deployCost > maxCost; index--) {
@@ -667,6 +663,8 @@ const Tactics = (() => {
     );
   }
   function armyUnitLimit(settings, player) {
+    if (settings.mode !== "campaign" && formationStyle(settings) === "standard" && !player?.battlefieldAI && !player?.sweepEnemy)
+      return player?.bot ? catalog.formation.maxUnits : 3;
     if (
       player?.formationPreset &&
       (player.bot || settings.mode === "campaign" || formationStyle(settings) === "free")
@@ -693,15 +691,15 @@ const Tactics = (() => {
       rules.technologyCaps = settings.technologyCaps;
     if (!player?.battlefieldAI && ["regular", "battlefield", "sweep", "mission"].includes(settings.mode)) {
       const era = settings.mode === "mission" ? settings.missionEra :
-        settings.mode === "regular" ? settings.regularEra || "0079T1" :
+        settings.mode === "regular" ? settings.regularEra || "UC_0079_T1" :
         settings.mode === "sweep" ? settings.sweepEra :
         battlefieldMode.eras.includes(settings.battlefieldEra) ? settings.battlefieldEra :
-        settings.battlefieldTeams?.[(player?.seat ?? 0) % 2]?.era || "0079T1";
+        settings.battlefieldTeams?.[(player?.seat ?? 0) % 2]?.era || "UC_0079_T1";
       // An era is the upper bound. Earlier carriers remain usable in later eras,
       // including stages that do not introduce any new carrier models.
-      rules.allowedEras = eras.slice(0, Math.max(0, eras.indexOf(era)) + 1);
+      rules.allowedEras = technologyEras.through(era);
     }
-    rules.characterFaction = ["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].includes(
+    rules.characterFaction = ["PMC", ...factions].includes(
       player?.characterFaction,
     )
       ? player.characterFaction
@@ -726,8 +724,8 @@ const Tactics = (() => {
         Object.assign(rules, economy.normalizeStock(player));
     }
     if (settings.mode !== "campaign" && !player?.battlefieldAI && !player?.sweepEnemy && formationStyle(settings) !== "free")
-      rules.requiresCarriers = true;
-    // Standard formations share total COST/capacity rules. Quick free formations
+      Object.assign(rules,{requiresCarriers:true,fleetLimit:3});
+    // Standard formations share the total COST and three-carrier rules. Quick free formations
     // retain the legacy single-unit limits.
     if (player?.bot && formationStyle(settings) !== "free") {
       rules.unitCostLimit = Infinity;
@@ -809,7 +807,7 @@ const Tactics = (() => {
       entries = [];
     if (!choices.length) return entries;
     const mainlineUnits = new Set(
-      ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"].flatMap((faction) =>
+      factions.flatMap((faction) =>
         development
           .nodes(faction)
           .filter((node) => node.row === "mid")
@@ -819,9 +817,9 @@ const Tactics = (() => {
     // Use the earliest unlocking node, not COST or a weapon's level, as the
     // platform's technology tier. Later duplicate unlocks do not upgrade it.
     const technologyRanks = new Map();
-    for (const faction of ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"])
+    for (const faction of factions)
       for (const node of development.nodes(faction)) {
-        const era = Number(String(node.era || "0079").slice(0, 4));
+        const era = technologyEras.weight(node.era || "UC_0079_T1");
         const rank = era * 10000 + (node.page || 0) * 100 + (node.column || 0);
         for (const id of node.unlocks)
           technologyRanks.set(id, Math.min(technologyRanks.get(id) ?? Infinity, rank));
@@ -896,6 +894,7 @@ const Tactics = (() => {
       const combatCount = entries.length - supportCount;
       const ships = entries.filter((entry) => formationModel(entry).ship).length;
       const transports = entries.filter((entry) => transport(formationModel(entry))).length;
+      const fleetCount = entries.filter(entry => !entry.preload && isFleetCarrier(formationModel(entry))).length;
       const aircraftPoints = entries.reduce((sum, entry) => {
         const model = formationModel(entry);
         return sum + (lightAircraft(model) ? formationWeight(model) : 0);
@@ -903,6 +902,7 @@ const Tactics = (() => {
       const hasFrontline = choices.some(frontlineMS);
       const legal = choices.filter((model) => {
         const firstCarrier = fleetMode && entries.length === 0;
+        if (fleetMode && isFleetCarrier(model) && fleetCount >= (restrictions.fleetLimit ?? 3)) return false;
         if (firstCarrier && (!isFleetCarrier(model) || !model.hangars?.length)) return false;
         if (fleetMode && !isFleetCarrier(model) && !passengerSlot(model)) return false;
         if (hasFrontline && lightAircraft(model) && aircraftPoints >= aircraftPointLimit)
@@ -1399,6 +1399,9 @@ const Tactics = (() => {
     } finally {
       modelQuery = previous;
     }
+  }
+  function opticalCamouflageActive(unit) {
+    return !!unit?.opticalCamouflage && unit.en > 0 && !!modelOf(unit).skills?.some(skill => skill.type === "optical_camouflage");
   }
   function modelOf(unit, g = null) {
     if (!modelQuery) return deriveModel(unit, g);
@@ -3326,6 +3329,7 @@ const Tactics = (() => {
       ? 0.5
       : 1;
   }
+  const coatings = typeof ArmorCoatings !== "undefined" ? ArmorCoatings : require("./armor-coatings.js");
   function estimate(g, a, b, w, response = "counter", isCounter = false) {
     w = weaponStats(w, a);
     const attacker = modelOf(a, g),
@@ -3382,14 +3386,14 @@ const Tactics = (() => {
         (attacker.pilotModifiers?.accuracy ?? 1) *
         (1 + attackCommand.communication),
       pilotEvasionHit =
-        rawHit / ((defender.pilotModifiers?.reaction ?? 1) * (1 + defenseCommand.communication)),
+        rawHit / ((defender.pilotModifiers?.reaction ?? 1) * (1 + defenseCommand.communication) * (opticalCamouflageActive(b) ? 1.25 : 1)),
       particleDefense = minovskyAt(g, b),
       // Preserve Minovsky's extra miss chance, without turning a negative miss
       // chance into an accuracy bonus when the uncapped result exceeds 100%.
       particleEvasionHit = particleDefense
         ? pilotEvasionHit - Math.max(0, 100 - pilotEvasionHit) * 0.25
         : pilotEvasionHit,
-      hit = Math.max(
+      resolvedHit = Math.max(
         0,
         Math.min(
           100,
@@ -3404,6 +3408,7 @@ const Tactics = (() => {
           (defender.pilotModifiers?.awakeningEvasion ?? 0) -
           squadEvasion(g, b),
       ),
+      hit = Math.min(100, resolvedHit * (w.counterExposureMultiplier ?? 1)),
       defenseMultiplier = response === "defend" ? 1.25 : 1,
       finalDamageMultiplier =
         (weakPoint(b, w.aimCell ?? b.aimCell) ? 1.5 : 1) *
@@ -3422,6 +3427,8 @@ const Tactics = (() => {
     let components = w.damageComponents;
     const field = defender.iField,
       fieldInitial = iFieldHP(b);
+    const normalCoatings = coatings.snapshot(defender, b), blockedCoatings = coatings.snapshot(defender, b);
+    let currentCoatings = normalCoatings;
     let fieldLeft = fieldInitial,
       blockedFieldLeft = fieldInitial;
     function protectedDamage(
@@ -3474,7 +3481,7 @@ const Tactics = (() => {
               : field.reduction
             : 0;
         if (tracker) tracker.absorbed += amount * reduction;
-        return sum + amount * (1 - reduction);
+        return sum + coatings.protect(amount * (1 - reduction), channel, ap, defender, currentCoatings, tracker);
       }, 0);
     }
     let damage = 0,
@@ -3488,9 +3495,12 @@ const Tactics = (() => {
       const multiplier = strike.damageMultiplier ?? 1,
         normal = { absorbed: 0 },
         blocked = { absorbed: 0 };
+      currentCoatings = normalCoatings;
       damage += roundDamage(
         protectedDamage(defender.defenses, multiplier, 1, fieldLeft > 0, normal),
       );
+      coatings.advance(normalCoatings, normal);
+      currentCoatings = blockedCoatings;
       fieldLeft = Math.max(floor, fieldLeft - roundDamage(normal.absorbed));
       const active = blockedFieldLeft > 0,
         coverage = shieldLeft > 0 ? defender.shield.coverage : 0;
@@ -3505,7 +3515,8 @@ const Tactics = (() => {
       blockedDamage += roundDamage(
         protectedDamage(defender.defenses, multiplier, 1 - absorbedShare, active),
       );
-      if (active) protectedDamage(defender.defenses, multiplier, 1, active, blocked);
+      protectedDamage(defender.defenses, multiplier, 1, active, blocked);
+      coatings.advance(blockedCoatings, blocked);
       blockedFieldLeft = Math.max(floor, blockedFieldLeft - roundDamage(blocked.absorbed));
     }
     return {
@@ -3513,6 +3524,8 @@ const Tactics = (() => {
       damage,
       shieldDamage,
       blockedDamage,
+      coatingDamage: normalCoatings,
+      coatingBlockedDamage: blockedCoatings,
       iFieldDamage: fieldInitial - fieldLeft,
       iFieldBlockedDamage: fieldInitial - blockedFieldLeft,
       blockChance:
@@ -3522,6 +3535,7 @@ const Tactics = (() => {
     };
   }
   function spend(u, w) {
+    u.opticalCamouflage = false;
     if (w.en) u.en -= w.en;
     recordPilotWeaponUse(u, w);
     if (Number.isInteger(w.maxUsesPerTurn) && !w.turnUseContinuation)
@@ -3583,6 +3597,7 @@ const Tactics = (() => {
       return dodgeSeed < 0x80000000 ? -1 : 1;
     }
     function fire(from, to, weapon, stance, isCounter = false) {
+      from.opticalCamouflage = false;
       dodgeSlots[from.id] ??= 0;
       dodgeSlots[to.id] ??= 0;
       faceTarget(from, to);
@@ -3621,6 +3636,8 @@ const Tactics = (() => {
         const iFieldDamage = hit
           ? consumeIField(to, blocked ? e.iFieldBlockedDamage : e.iFieldDamage)
           : 0;
+        const abcDamage = hit ? ((blocked ? e.coatingBlockedDamage : e.coatingDamage)?.abc?.loss || 0) : 0;
+        if (hit) coatings.consume(modelOf(to), to, blocked ? e.coatingBlockedDamage : e.coatingDamage);
         to.hp -= damage;
         to.shield -= shieldDamage;
         const brokenPart = hit
@@ -3658,6 +3675,7 @@ const Tactics = (() => {
           shieldDamage: shieldBeforeStrike - to.shield,
           before: hpBefore,
           after: to.hp,
+          ...(abcDamage > 0 ? {abcDamage} : {}),
           shieldBefore: shieldBeforeStrike,
           shieldAfter: to.shield,
           ...(modelOf(to).iField ? { iFieldBefore, iFieldAfter: iFieldHP(to), iFieldDamage } : {}),
@@ -3892,6 +3910,8 @@ const Tactics = (() => {
       const damage = hit
         ? Math.min(target.hp, blocked ? estimateHit.blockedDamage : estimateHit.damage)
         : 0;
+      const abcDamage = hit ? ((blocked ? estimateHit.coatingBlockedDamage : estimateHit.coatingDamage)?.abc?.loss || 0) : 0;
+      if (hit) coatings.consume(modelOf(target), target, blocked ? estimateHit.coatingBlockedDamage : estimateHit.coatingDamage);
       const iFieldBefore = iFieldHP(target),
         iFieldDamage = hit
           ? consumeIField(
@@ -3913,6 +3933,7 @@ const Tactics = (() => {
       }
       hits.push({
         unitId: target.id,
+        ...(abcDamage > 0 ? {abcDamage} : {}),
         ...(modelOf(target).iField
           ? { iFieldBefore, iFieldAfter: iFieldHP(target), iFieldDamage }
           : {}),
@@ -4168,6 +4189,15 @@ const Tactics = (() => {
       if (!battlefieldMode.unrepairable(g, u))
         u.hp = Math.min(m.hp, u.hp + Math.round((m.hp * aura.aura.hpPercent) / 100));
       u.en = Math.min(m.en, u.en + (m.en * aura.aura.enPercent) / 100);
+    }
+    // Charge once per incoming own turn, after all regeneration sources.
+    for (const u of g.units.filter(u => u.team === g.team && u.hp > 0 && u.opticalCamouflage)) {
+      const camouflage = modelOf(u).skills?.find(skill => skill.type === "optical_camouflage");
+      if (!camouflage || u.en < camouflage.upkeep) u.opticalCamouflage = false;
+      else {
+        u.en -= camouflage.upkeep;
+        if (u.en <= 0) u.opticalCamouflage = false;
+      }
     }
     for (const u of g.units.filter((u) => u.team === g.team && u.snipeOrder)) {
       const order = u.snipeOrder;
@@ -4765,7 +4795,11 @@ const Tactics = (() => {
     stockPlan: economy.stockPlan,
     licensePlan,
     factions,
+    factionInfo,
     eras,
+    technologyWeights: technologyEras.weights,
+    technologyWeight: technologyEras.weight,
+    normalizeEra: technologyEras.normalize,
     unitTags,
     maxCostLimit,
     movementCost,
@@ -4924,6 +4958,8 @@ const Tactics = (() => {
     estimate,
     beamDiffusionFactor,
     smokeAt,
+    opticalCamouflageActive,
+    phaseShiftActive: unit => coatings.active(modelOf(unit), unit, "phaseShift"),
     iFieldHP,
     fight,
     counter,

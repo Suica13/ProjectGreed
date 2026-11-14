@@ -68,7 +68,7 @@ def apply(prefab, weapon, data=None):
         if not turret:
             continue
         raw = data.get('projectile_' + section(data, 'turret_' + barrel['id']).get('projectile', ''), {}).get('spawnUnit', '')
-        match = re.search(r'\b(Projectile_HighBeamCannon_(\w+)_Effect)\b', raw)
+        match = re.search(r'\b(Projectile_(?:HighBeamCannon|BeamSniper)_(\w+)_Effect)\b', raw)
         if match:
             helper, color = match[1], match[2]
             carrier = payload(damage_spawn(raw))

@@ -647,10 +647,80 @@
         "projectile": {
           "texture": "../../projectiles/Beam_2_Blue.png",
           "scale": 1.0,
-          "speed": 0.75,
+          "speed": 150.0,
           "forwardOffset": -7.5,
           "rotation": 0.0,
-          "presentationSpeed": 125
+          "presentationSpeed": 125,
+          "sequence": {
+            "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/Sniper/Projectile_BeamSniper_Blue_Effect.ini",
+            "color": "Blue",
+            "length": 1063.125,
+            "segments": [
+              {
+                "texture": "../../projectiles/BeamSniper_1_Start_Blue.png",
+                "frames": 9,
+                "width": 285,
+                "height": 116,
+                "scaleX": 1.25,
+                "scaleY": 1.25,
+                "forward": 185.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              },
+              {
+                "texture": "../../projectiles/BeamSniper_1_Mid_Blue.png",
+                "frames": 9,
+                "width": 285,
+                "height": 116,
+                "scaleX": 1.25,
+                "scaleY": 1.25,
+                "forward": 530.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              },
+              {
+                "texture": "../../projectiles/BeamSniper_1_End_Blue.png",
+                "frames": 9,
+                "width": 285,
+                "height": 116,
+                "scaleX": 1.25,
+                "scaleY": 1.25,
+                "forward": 885.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              }
+            ],
+            "clock": "flight"
+          },
+          "nativeSpeed": 150.0
+        },
+        "nativePayload": {
+          "BeamDamage": 10000,
+          "BeamAPDamage": 5000,
+          "DpDamage": 350,
+          "WeaponAccuracy": 85,
+          "PartBreakModifier": 1,
+          "CockpitBreakModifier": 1,
+          "PilotDamageModifier": 1,
+          "PilotTrueDamage": 0,
+          "AntiSizeLargeDamage": 1,
+          "AntiSizeSmallDamage": 0.75,
+          "AntiSizeLargeAccuracy": 1,
+          "AntiSizeSmallAccuracy": 0.75,
+          "AntiBuilding": 1,
+          "AntiAqua": 0.75,
+          "AntiAir": 0.75,
+          "AntiLand": 1,
+          "AntiSpace": 1,
+          "HeightChangeSpeed": 3,
+          "HeightHitRange": 25,
+          "ProjectileSpeed": 150.0,
+          "ProjectileSpread": 1,
+          "ProjectileLife": 25,
+          "ProjectileAttackTimes": 3,
+          "ProjectileAttackTimesDamageModifier": 0.75,
+          "EquipmentIndex": 2,
+          "EquipmentIndex2": 1000
         },
         "requiredParts": [
           "rightArm"
@@ -803,10 +873,89 @@
         "projectile": {
           "texture": "../../projectiles/Beam_2_Blue.png",
           "scale": 1.0,
-          "speed": 0.75,
+          "speed": 1.0,
           "forwardOffset": -7.5,
           "rotation": 0.0,
-          "presentationSpeed": 125
+          "presentationSpeed": 125,
+          "sequence": {
+            "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/Sniper/Projectile_BeamSniper_Blue_Effect.ini",
+            "color": "Blue",
+            "length": 1063.125,
+            "segments": [
+              {
+                "texture": "../../projectiles/BeamSniper_1_Start_Blue.png",
+                "frames": 9,
+                "width": 285,
+                "height": 116,
+                "scaleX": 1.25,
+                "scaleY": 1.25,
+                "forward": 185.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              },
+              {
+                "texture": "../../projectiles/BeamSniper_1_Mid_Blue.png",
+                "frames": 9,
+                "width": 285,
+                "height": 116,
+                "scaleX": 1.25,
+                "scaleY": 1.25,
+                "forward": 530.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              },
+              {
+                "texture": "../../projectiles/BeamSniper_1_End_Blue.png",
+                "frames": 9,
+                "width": 285,
+                "height": 116,
+                "scaleX": 1.25,
+                "scaleY": 1.25,
+                "forward": 885.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              }
+            ],
+            "clock": "flight"
+          },
+          "nativeSpeed": 1.0
+        },
+        "nativePayload": {
+          "BeamDamage": 25000,
+          "BeamAPDamage": 10000,
+          "DpDamage": 300,
+          "WeaponAccuracy": 100,
+          "PartBreakModifier": 1,
+          "CockpitBreakModifier": 1,
+          "PilotDamageModifier": 0.5,
+          "PilotTrueDamage": 0,
+          "AntiSizeLargeDamage": 1,
+          "AntiSizeSmallDamage": 0.75,
+          "AntiSizeLargeAccuracy": 1,
+          "AntiSizeSmallAccuracy": 0.75,
+          "AntiBuilding": 0.25,
+          "AntiAqua": 0.5,
+          "AntiAir": 1,
+          "AntiLand": 1,
+          "AntiSpace": 1,
+          "CantDodge": 1,
+          "HeightChangeSpeed": 0,
+          "HeightHitRange": 20,
+          "ProjectileSpeed": 1.0,
+          "ProjectileSpread": 0,
+          "ProjectileLife": 0,
+          "SubEquipmentIndex": 1
+        },
+        "localization": {
+          "zh": {
+            "name": "狙击蓄力"
+          },
+          "en": {
+            "name": "Charged Sniper Shot"
+          },
+          "ja": {
+            "name": "チャージ狙撃"
+          }
         },
         "requiredParts": [
           "rightArm"
@@ -858,17 +1007,6 @@
           "damageComponents": {
             "beam": 25000.0,
             "beamAP": 10000.0
-          }
-        },
-        "localization": {
-          "zh": {
-            "name": "狙击蓄力"
-          },
-          "en": {
-            "name": "Charged Sniper Shot"
-          },
-          "ja": {
-            "name": "チャージ狙撃"
           }
         }
       }

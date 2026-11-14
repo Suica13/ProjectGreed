@@ -1,0 +1,851 @@
+{
+  "schemaVersion": 2,
+  "id": "NazcaClass",
+  "code": "NazcaClass",
+  "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/NazcaClass/NazcaClass.ini",
+  "materials": {
+    "textures": {
+      "NazcaClass.png": "textures/NazcaClass.png",
+      "NazcaClass_Body_1.png": "textures/NazcaClass_Body_1.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "RooketBoosterX2.png": "textures/RooketBoosterX2.png",
+      "NazcaClass_Turret_Railgun_1.png": "textures/NazcaClass_Turret_Railgun_1.png"
+    },
+    "icon": "NazcaClass.png"
+  },
+  "skeleton": {
+    "Turret_NazcaClass_Turret_Railgun_1_M1": {
+      "x": 28.0,
+      "y": -50.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_NazcaClass_Turret_Railgun_1_M2": {
+      "x": -28.0,
+      "y": -50.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_NazcaClass_Turret_BeamCannon_M1": {
+      "x": 20.0,
+      "y": 48.0,
+      "endDirOffset": 5.0
+    },
+    "Turret_NazcaClass_Turret_BeamCannon_M2": {
+      "x": -20.0,
+      "y": 48.0,
+      "endDirOffset": -5.0
+    },
+    "Turret_NazcaClass_Turret_AA_L1": {
+      "x": -5.0,
+      "y": 35.0,
+      "endDirOffset": -35.0
+    },
+    "Turret_NazcaClass_Turret_AA_R1": {
+      "x": 5.0,
+      "y": 35.0,
+      "endDirOffset": 35.0
+    },
+    "Turret_NazcaClass_Turret_AA_L2": {
+      "x": -25.0,
+      "y": -35.0,
+      "endDirOffset": -90.0
+    },
+    "Turret_NazcaClass_Turret_AA_R2": {
+      "x": 25.0,
+      "y": -35.0,
+      "endDirOffset": 90.0
+    },
+    "Turret_NazcaClass_Turret_AA_L3": {
+      "x": -25.0,
+      "y": -70.0,
+      "endDirOffset": -15.0
+    },
+    "Turret_NazcaClass_Turret_AA_R3": {
+      "x": 25.0,
+      "y": -70.0,
+      "endDirOffset": 15.0
+    },
+    "Turret_NazcaClass_Turret_MS_M1": {
+      "x": 70.0,
+      "y": -35.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_NazcaClass_Turret_MS_M2": {
+      "x": -70.0,
+      "y": -35.0,
+      "endDirOffset": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    }
+  },
+  "layers": [
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 4.5,
+      "offset": {
+        "x": -2.5,
+        "y": -110.0
+      },
+      "scaleX": 0.65,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Body",
+      "texture": "NazcaClass_Body_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "NazcaClass_Turret_Railgun_1_M1",
+      "bone": "Turret_NazcaClass_Turret_Railgun_1_M1",
+      "moduleId": "NazcaClass_Turret_Railgun_1_M1",
+      "texture": "NazcaClass_Turret_Railgun_1.png",
+      "order": 5.005,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "NazcaClass_Turret_Railgun_1_M2",
+      "bone": "Turret_NazcaClass_Turret_Railgun_1_M2",
+      "moduleId": "NazcaClass_Turret_Railgun_1_M2",
+      "texture": "NazcaClass_Turret_Railgun_1.png",
+      "order": 5.005,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    }
+  ],
+  "animations": {
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 38500,
+    "en": 6500.0,
+    "move": 7,
+    "mobility": 50.0,
+    "cost": 500,
+    "counterLimit": 1,
+    "accuracy": 68.25,
+    "partStructuralStrength": 100.0,
+    "partsBreakable": false,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 0,
+      "space": 100,
+      "water": 50.0,
+      "air": 10.0,
+      "atmosphere": 0,
+      "mountain": 10.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": true,
+    "modules": [
+      {
+        "id": "NazcaClass_Turret_Railgun_1_M1",
+        "name": "NazcaClass_Turret_Railgun_1_M1",
+        "hp": 7500.0,
+        "bone": "Turret_NazcaClass_Turret_Railgun_1_M1",
+        "x": 28.0,
+        "y": -50.0,
+        "idleDir": 0.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NazcaClass/NazcaClass_Turret_Railgun_1.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_NazcaClass_Turret_Railgun_1"
+          ]
+        }
+      },
+      {
+        "id": "NazcaClass_Turret_Railgun_1_M2",
+        "name": "NazcaClass_Turret_Railgun_1_M2",
+        "hp": 7500.0,
+        "bone": "Turret_NazcaClass_Turret_Railgun_1_M2",
+        "x": -28.0,
+        "y": -50.0,
+        "idleDir": 0.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NazcaClass/NazcaClass_Turret_Railgun_1.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_NazcaClass_Turret_Railgun_1"
+          ]
+        }
+      },
+      {
+        "id": "NazcaClass_Turret_BeamCannon_M1",
+        "name": "NazcaClass_Turret_BeamCannon_M1",
+        "hp": 9000.0,
+        "bone": "Turret_NazcaClass_Turret_BeamCannon_M1",
+        "x": 20.0,
+        "y": 48.0,
+        "idleDir": 5.0,
+        "arc": 45.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NazcaClass/NazcaClass_Turret_BeamCannon_2.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      },
+      {
+        "id": "NazcaClass_Turret_BeamCannon_M2",
+        "name": "NazcaClass_Turret_BeamCannon_M2",
+        "hp": 9000.0,
+        "bone": "Turret_NazcaClass_Turret_BeamCannon_M2",
+        "x": -20.0,
+        "y": 48.0,
+        "idleDir": -5.0,
+        "arc": 45.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NazcaClass/NazcaClass_Turret_BeamCannon_3.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      },
+      {
+        "id": "NazcaClass_Turret_AA_L1",
+        "name": "NazcaClass_Turret_AA_L1",
+        "hp": 5000.0,
+        "bone": "Turret_NazcaClass_Turret_AA_L1",
+        "x": -5.0,
+        "y": 35.0,
+        "idleDir": -35.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NazcaClass/NazcaClass_Turret_AA.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      },
+      {
+        "id": "NazcaClass_Turret_AA_R1",
+        "name": "NazcaClass_Turret_AA_R1",
+        "hp": 5000.0,
+        "bone": "Turret_NazcaClass_Turret_AA_R1",
+        "x": 5.0,
+        "y": 35.0,
+        "idleDir": 35.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NazcaClass/NazcaClass_Turret_AA.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      },
+      {
+        "id": "NazcaClass_Turret_AA_L2",
+        "name": "NazcaClass_Turret_AA_L2",
+        "hp": 5000.0,
+        "bone": "Turret_NazcaClass_Turret_AA_L2",
+        "x": -25.0,
+        "y": -35.0,
+        "idleDir": -90.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NazcaClass/NazcaClass_Turret_AA.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      },
+      {
+        "id": "NazcaClass_Turret_AA_R2",
+        "name": "NazcaClass_Turret_AA_R2",
+        "hp": 5000.0,
+        "bone": "Turret_NazcaClass_Turret_AA_R2",
+        "x": 25.0,
+        "y": -35.0,
+        "idleDir": 90.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NazcaClass/NazcaClass_Turret_AA.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      },
+      {
+        "id": "NazcaClass_Turret_AA_L3",
+        "name": "NazcaClass_Turret_AA_L3",
+        "hp": 5000.0,
+        "bone": "Turret_NazcaClass_Turret_AA_L3",
+        "x": -25.0,
+        "y": -70.0,
+        "idleDir": -15.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NazcaClass/NazcaClass_Turret_AA.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      },
+      {
+        "id": "NazcaClass_Turret_AA_R3",
+        "name": "NazcaClass_Turret_AA_R3",
+        "hp": 5000.0,
+        "bone": "Turret_NazcaClass_Turret_AA_R3",
+        "x": 25.0,
+        "y": -70.0,
+        "idleDir": 15.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NazcaClass/NazcaClass_Turret_AA.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      },
+      {
+        "id": "NazcaClass_Turret_MS_M1",
+        "name": "NazcaClass_Turret_MS_M1",
+        "hp": 7500.0,
+        "bone": "Turret_NazcaClass_Turret_MS_M1",
+        "x": 70.0,
+        "y": -35.0,
+        "idleDir": 0.0,
+        "arc": 60.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NazcaClass/NazcaClass_Turret_MS.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      },
+      {
+        "id": "NazcaClass_Turret_MS_M2",
+        "name": "NazcaClass_Turret_MS_M2",
+        "hp": 7500.0,
+        "bone": "Turret_NazcaClass_Turret_MS_M2",
+        "x": -70.0,
+        "y": -35.0,
+        "idleDir": 0.0,
+        "arc": 60.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NazcaClass/NazcaClass_Turret_MS.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      }
+    ],
+    "footprint": {
+      "width": 2,
+      "height": 2
+    },
+    "supplyAura": {
+      "range": 2,
+      "hpPercent": 5,
+      "enPercent": 10
+    },
+    "speed": 80,
+    "actionPoints": 10,
+    "sensors": {
+      "sight": 8,
+      "radar": 13.88888888888889,
+      "antiDetection": -5.208333333333333,
+      "revealOnDetection": true,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    },
+    "accuracyMultiplier": 0.65
+  },
+  "attackBonuses": {
+    "melee": 0.0,
+    "shooting": 10.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 25.0,
+      "flat": 0.0
+    },
+    "shell": {
+      "percent": 30.0,
+      "flat": 100.0
+    },
+    "melee": {
+      "percent": 20.0,
+      "flat": 0.0
+    },
+    "dp": {
+      "percent": 100.0,
+      "flat": 0.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 55000.0,
+    "walkSpeed": 0.6,
+    "boostSpeed": 1.15,
+    "turnSpeed": 0.45,
+    "reaction": 50.0,
+    "shooting": 110.0,
+    "melee": 100.0,
+    "nativeTags": [
+      "NazcaClass",
+      "Unit",
+      "CmdUnit",
+      "Ship",
+      "ZAFT",
+      "CE71",
+      "SEED",
+      "LargeUnit",
+      "MpUpUnit_X12"
+    ],
+    "nativeSkills": [
+      "AutoRepair",
+      "LaunchAllUnits",
+      "SupplyPoint",
+      "SupplyPoint_UseEN"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 105.0,
+    "unitLevel": 2000.0,
+    "enBeforeReduction": 6500.0,
+    "enCapacityMultiplier": 1,
+    "tacticalMoveBeforeBonus": 4,
+    "actionTurnSpeed": 0.45,
+    "mobilityMoveTarget": 7,
+    "adaptability": {
+      "ground": 10.0,
+      "space": 100.0,
+      "water": 50.0,
+      "air": 10.0,
+      "mountain": 10.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 20.0,
+      "radar": 500.0,
+      "antiDetection": -150.0
+    },
+    "shipHullBeforeReduction": 55000.0,
+    "shipBalanceMultiplier": 0.7,
+    "shipFactionHullMultiplier": 1,
+    "shipFactionAccuracyMultiplier": 1,
+    "shipFactionEvasionMultiplier": 1,
+    "technologyEra": "CE_0071_T1",
+    "shipFootprintBeforeCompaction": {
+      "width": 2,
+      "height": 3
+    }
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 0.9,
+    "idle": "ImportedIdle",
+    "move": "ImportedIdle",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "boost",
+    "deathType": "large",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "纳斯卡级",
+  "faction": "ZAFT",
+  "tags": [
+    "ZAFT",
+    "CE_0071_T1"
+  ],
+  "localization": {
+    "zh": {
+      "name": "纳斯卡级",
+      "description": "扎夫特舰队主力战舰"
+    },
+    "en": {
+      "name": "Nazca Class",
+      "description": "Main battleship of the ZAFT fleet"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "NazcaClass_Turret_Railgun_1": {
+      "ref": "NazcaClass_Turret_Railgun_1__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/NazcaClass/NazcaClass_Turret_Railgun_1.ini",
+          "barrels": [
+            {
+              "id": "NazcaClass_Turret_Railgun_1",
+              "x": 2.0,
+              "y": 4.0
+            },
+            {
+              "id": "NazcaClass_Turret_Railgun_1",
+              "x": 2.0,
+              "y": 4.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_NazcaClass_Turret_Railgun_1_M1",
+              "offset": {
+                "x": 2.0,
+                "y": 4.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_NazcaClass_Turret_Railgun_1_M2",
+              "offset": {
+                "x": 2.0,
+                "y": 4.0
+              },
+              "alternatingOffsetX": -4.0
+            }
+          ]
+        }
+      }
+    },
+    "NazcaClass_Turret_BeamCannon": {
+      "ref": "NazcaClass_Turret_BeamCannon__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/NazcaClass/NazcaClass_Turret_BeamCannon_2.ini",
+          "barrels": [
+            {
+              "id": "NazcaClass_Turret_BeamCannon",
+              "x": 0.0,
+              "y": 6.0
+            },
+            {
+              "id": "NazcaClass_Turret_BeamCannon",
+              "x": 0.0,
+              "y": 6.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_NazcaClass_Turret_BeamCannon_M1",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            },
+            {
+              "bone": "Turret_NazcaClass_Turret_BeamCannon_M2",
+              "offset": {
+                "x": 0.0,
+                "y": 6.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "NazcaClass_Turret_AA": {
+      "ref": "NazcaClass_Turret_AA__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/NazcaClass/NazcaClass_Turret_AA.ini",
+          "barrels": [
+            {
+              "id": "NazcaClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "NazcaClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "NazcaClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "NazcaClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "NazcaClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "NazcaClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_NazcaClass_Turret_AA_L1",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_NazcaClass_Turret_AA_R1",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_NazcaClass_Turret_AA_L2",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_NazcaClass_Turret_AA_R2",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_NazcaClass_Turret_AA_L3",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_NazcaClass_Turret_AA_R3",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            }
+          ]
+        }
+      }
+    },
+    "NazcaClass_Turret_MS": {
+      "ref": "NazcaClass_Turret_MS__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/NazcaClass/NazcaClass_Turret_MS.ini",
+          "barrels": [
+            {
+              "id": "NazcaClass_Turret_MS",
+              "x": 3.0,
+              "y": 0.0
+            },
+            {
+              "id": "NazcaClass_Turret_MS",
+              "x": 3.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_NazcaClass_Turret_MS_M1",
+              "offset": {
+                "x": 3.0,
+                "y": 0.0
+              },
+              "alternatingOffsetX": -6.0
+            },
+            {
+              "bone": "Turret_NazcaClass_Turret_MS_M2",
+              "offset": {
+                "x": 3.0,
+                "y": 0.0
+              },
+              "alternatingOffsetX": -6.0
+            }
+          ]
+        }
+      }
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    },
+    {
+      "id": "LaunchAllUnits",
+      "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+      "status": "adapted",
+      "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+    },
+    {
+      "id": "special_Common_ReEntry_NeedBooster",
+      "name": "大气层突入",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+      "status": "review"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": [
+        "NazcaClass_Turret_Railgun_1",
+        "NazcaClass_Turret_BeamCannon",
+        "NazcaClass_Turret_AA",
+        "NazcaClass_Turret_MS"
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "Common_FullBoost",
+      "type": "fullboost",
+      "name": "全力推进",
+      "actionCost": 0,
+      "enCost": 250,
+      "consumeAction": false,
+      "range": 0,
+      "effect": "Flash_1_N",
+      "sound": {
+        "file": "../../sounds/Action_8.ogg",
+        "volume": 0.5
+      },
+      "duration": 2,
+      "cooldownTurns": 1,
+      "moveBonus": 2,
+      "mobilityMultiplier": 1.1,
+      "description": "消耗250 EN，在2个己方回合内移动力+2、反应系数×1.10；效果结束后冷却1个己方回合。搭载中仍会持续与计时。"
+    }
+  ],
+  "description": "扎夫特舰队主力战舰",
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 2000.0,
+    "levelMultiplier": 0.25,
+    "published": 500
+  },
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "Ship",
+    "Support",
+    "Transport"
+  ],
+  "transport": {
+    "slotCost": 1,
+    "loadTags": []
+  },
+  "hangars": [
+    {
+      "id": "Hangar_1",
+      "name": "格纳库 1",
+      "capacity": 12,
+      "allowedTags": [
+        "CanLoadInto",
+        "CanLoadIntoSpace",
+        "CanLoadIntoAir"
+      ],
+      "launchRange": 1,
+      "emergencyRange": 3,
+      "source": "Units/CommonUnit/Hangar/Hangar_X12.ini",
+      "sourceUnit": "Hangar_X12"
+    }
+  ],
+  "refits": []
+}

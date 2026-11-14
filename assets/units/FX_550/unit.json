@@ -1,0 +1,946 @@
+{
+  "schemaVersion": 2,
+  "id": "FX_550",
+  "code": "FX-550",
+  "source": "GW_BattleUniverse_DLC_SEED/Units/BattleUnits/FX_550/FX_550.ini",
+  "materials": {
+    "textures": {
+      "FX_550_Body_1.png": "textures/FX_550_Body_1.png",
+      "OMNI_GAT_X105_BR.png": "textures/OMNI_GAT_X105_BR.png",
+      "OMNI_GAT_X105_Launcher.png": "textures/OMNI_GAT_X105_Launcher.png",
+      "GAT_X105_BackPack_AILE.png": "textures/GAT_X105_BackPack_AILE.png",
+      "OMNI_GAT-X105_Shield.png": "textures/OMNI_GAT-X105_Shield.png",
+      "GAT_X105_BackPack_Launcher.png": "textures/GAT_X105_BackPack_Launcher.png",
+      "GAT_X105_ShoulderR_Launcher_1.png": "textures/GAT_X105_ShoulderR_Launcher_1.png",
+      "GAT_X105_BackPack_Sword.png": "textures/GAT_X105_BackPack_Sword.png",
+      "GAT_X105_Sword_Shield_1.png": "textures/GAT_X105_Sword_Shield_1.png",
+      "GAT_X105_Sword_Shield_2.png": "textures/GAT_X105_Sword_Shield_2.png",
+      "GAT_X105_ShoulderL_Sword_1.png": "textures/GAT_X105_ShoulderL_Sword_1.png",
+      "GAT_X105_ShoulderL_Boomerang_1.png": "textures/GAT_X105_ShoulderL_Boomerang_1.png",
+      "OMNI_GAT_X105_AntiShipSword_1.png": "textures/OMNI_GAT_X105_AntiShipSword_1.png",
+      "FX_550.png": "textures/FX_550.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
+    },
+    "icon": "FX_550.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "Shield_Sword",
+      "texture": "GAT_X105_Sword_Shield_1.png",
+      "bone": "Body",
+      "order": 3.1,
+      "scale": 0.75,
+      "rotation": 0.0,
+      "offset": {
+        "x": 2.0,
+        "y": -2.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "main_3"
+        ]
+      }
+    },
+    {
+      "name": "RocketAnchor",
+      "texture": "GAT_X105_Sword_Shield_2.png",
+      "bone": "Body",
+      "order": 3.1,
+      "scale": 0.75,
+      "rotation": 0.0,
+      "offset": {
+        "x": 2.0,
+        "y": -2.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "main_3"
+        ]
+      }
+    },
+    {
+      "name": "OMNI_GAT_X105_Launcher",
+      "texture": "OMNI_GAT_X105_Launcher.png",
+      "bone": "Body",
+      "order": 3.5,
+      "scale": 0.65,
+      "rotation": 0.0,
+      "offset": {
+        "x": -18.0,
+        "y": 15.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "main_2"
+        ]
+      }
+    },
+    {
+      "name": "Backpack_Launcher",
+      "texture": "GAT_X105_BackPack_Launcher.png",
+      "bone": "Body",
+      "order": 3.5,
+      "scale": 0.75,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "main_2"
+        ]
+      }
+    },
+    {
+      "name": "Backpack_Sword",
+      "texture": "GAT_X105_BackPack_Sword.png",
+      "bone": "Body",
+      "order": 3.5,
+      "scale": 0.75,
+      "offset": {
+        "x": -2.0,
+        "y": -2.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "main_3"
+        ]
+      }
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "scaleX": 1.0,
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "frames": 3,
+      "frame": 0,
+      "frameFps": 12,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 4.1,
+      "scale": 1.35,
+      "offset": {
+        "x": -1.0,
+        "y": -12.5
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Body",
+      "texture": "FX_550_Body_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Shield",
+      "texture": "OMNI_GAT-X105_Shield.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 0.75,
+      "rotation": 0.0,
+      "offset": {
+        "x": -19.0,
+        "y": -12.0
+      },
+      "visibleWhen": {
+        "shieldVisible": true,
+        "kit": [
+          "main_1"
+        ]
+      }
+    },
+    {
+      "name": "ShoulderR_Launcher",
+      "texture": "GAT_X105_ShoulderR_Launcher_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 0.75,
+      "rotation": 90.0,
+      "offset": {
+        "x": 18.0,
+        "y": -6.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "main_2"
+        ]
+      }
+    },
+    {
+      "name": "ShoulderL_Sword",
+      "texture": "GAT_X105_ShoulderL_Sword_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 0.75,
+      "rotation": -90.0,
+      "offset": {
+        "x": -17.0,
+        "y": -8.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "main_3"
+        ]
+      }
+    },
+    {
+      "name": "ShoulderL_Sword_Boomerang",
+      "texture": "GAT_X105_ShoulderL_Boomerang_1.png",
+      "bone": "Body",
+      "order": 5.0,
+      "scale": 0.75,
+      "rotation": -90.0,
+      "offset": {
+        "x": -17.0,
+        "y": -8.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "main_3"
+        ]
+      }
+    },
+    {
+      "name": "OMNI_GAT_X105_BR",
+      "texture": "OMNI_GAT_X105_BR.png",
+      "bone": "Body",
+      "order": 5.5,
+      "scale": 0.65,
+      "rotation": 0.0,
+      "offset": {
+        "x": 19.0,
+        "y": -12.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "main_1"
+        ]
+      }
+    },
+    {
+      "name": "Backpack_AILE",
+      "texture": "GAT_X105_BackPack_AILE.png",
+      "bone": "Body",
+      "order": 5.5,
+      "scale": 0.75,
+      "offset": {
+        "x": 0.0,
+        "y": -5.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "main_1"
+        ]
+      }
+    },
+    {
+      "name": "OMNI_GAT_X105_AntiShipSword_BF",
+      "texture": "OMNI_GAT_X105_AntiShipSword_1.png",
+      "bone": "Body",
+      "order": 5.5,
+      "scale": 0.65,
+      "scaleX": -1.0,
+      "scaleY": -1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 7.0,
+        "y": -12.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "main_3"
+        ]
+      }
+    }
+  ],
+  "animations": {
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Idle": "../../animations/Common_Idle__AntiZakuTank.json",
+    "Common_Shoot_A": "../../animations/Common_Shoot_A__AMX_002.json",
+    "Common_Shoot_A_FA": "../../animations/Common_Shoot_A_FA__AMX_002.json",
+    "Common_Shoot_Two_Handed_A_L": "../../animations/Common_Shoot_Two_Handed_A_L.json",
+    "Common_Melee_B_L": "../../animations/Common_Melee_B_L.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 9000,
+    "en": 600.0,
+    "move": 9,
+    "mobility": 120.0,
+    "cost": 150,
+    "counterLimit": 1,
+    "accuracy": 115.0,
+    "partStructuralStrength": 100.0,
+    "partsBreakable": false,
+    "movementType": "air",
+    "adaptability": {
+      "ground": 100,
+      "space": 50,
+      "water": 10.0,
+      "air": 100.0,
+      "atmosphere": 0,
+      "mountain": 10.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "speed": 190,
+    "actionPoints": 11,
+    "sensors": {
+      "sight": 9,
+      "radar": 13.88888888888889,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
+  },
+  "attackBonuses": {
+    "melee": 0.0,
+    "shooting": 15.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 5.0,
+      "flat": 0.0
+    },
+    "shell": {
+      "percent": 10.0,
+      "flat": 50.0
+    },
+    "melee": {
+      "percent": 10.0,
+      "flat": 0.0
+    },
+    "dp": {
+      "percent": 10.0,
+      "flat": 20.0
+    },
+    "sp": {
+      "percent": 0.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 7000.0,
+    "walkSpeed": 1.5,
+    "boostSpeed": 2.65,
+    "turnSpeed": 2.25,
+    "reaction": 120.0,
+    "shooting": 115.0,
+    "melee": 100.0,
+    "nativeTags": [
+      "FX_550",
+      "Unit",
+      "Aircraft",
+      "OMNI",
+      "CE71",
+      "SEED"
+    ],
+    "nativeSkills": [
+      "Fighter",
+      "DogFight_A"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 115.0,
+    "unitLevel": 550.0,
+    "enBeforeReduction": 600.0,
+    "enCapacityMultiplier": 1,
+    "tacticalMoveBeforeBonus": 9,
+    "actionTurnSpeed": 2.25,
+    "mobilityMoveTarget": 10,
+    "adaptability": {
+      "ground": 10.0,
+      "space": 10.0,
+      "water": 10.0,
+      "air": 100.0,
+      "mountain": 10.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 22.0,
+      "radar": 500.0,
+      "antiDetection": 0.0
+    },
+    "v17BaseHp": 7000.0,
+    "technologyEra": "CE_0071_T1"
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMoving",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "空中霸王",
+  "faction": "OMNI",
+  "tags": [
+    "OMNI",
+    "CE_0071_T1"
+  ],
+  "localization": {
+    "zh": {
+      "name": "空中霸王",
+      "description": "PMP公司以在大气圈内运用而制造的支援用战斗机"
+    },
+    "en": {
+      "name": "Sky Grasper",
+      "description": "A support fighter aircraft manufactured by PMP for atmospheric operations"
+    },
+    "ja": {}
+  },
+  "weapons": {
+    "OMNI_FX_550_BR": {
+      "ref": "OMNI_FX_550_BR__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/OMNI_FX_550_BR.gw",
+          "barrels": [
+            {
+              "id": "OMNI_FX_550_BR",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Common_DoubleGun_FX_550": {
+      "ref": "Common_DoubleGun_FX_550__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/Common_DoubleGun_FX_550.gw",
+          "barrels": [
+            {
+              "id": "Common_DoubleGun_FX_550",
+              "x": 3.0,
+              "y": -2.0
+            },
+            {
+              "id": "Common_DoubleGun_FX_550_L",
+              "x": -3.0,
+              "y": -2.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 3.0,
+                "y": -2.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -3.0,
+                "y": -2.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Common_DoubleGun_FX_550_L": {
+      "ref": "Common_DoubleGun_FX_550_L__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/Common_DoubleGun_FX_550.gw",
+          "barrels": [
+            {
+              "id": "Common_DoubleGun_FX_550",
+              "x": 3.0,
+              "y": -2.0
+            },
+            {
+              "id": "Common_DoubleGun_FX_550_L",
+              "x": -3.0,
+              "y": -2.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 3.0,
+                "y": -2.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -3.0,
+                "y": -2.0
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "Common_DoubleGun_FX_550"
+        }
+      }
+    },
+    "Common_DoubleMS_FX_550": {
+      "ref": "Common_DoubleMS_FX_550__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_FX_550.gw",
+          "barrels": [
+            {
+              "id": "Common_DoubleMS_FX_550",
+              "x": 5.0,
+              "y": -2.0
+            },
+            {
+              "id": "Common_DoubleMS_FX_550_L",
+              "x": -5.0,
+              "y": -2.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 5.0,
+                "y": -2.0
+              },
+              "alternatingOffsetX": 0.0
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -5.0,
+                "y": -2.0
+              },
+              "alternatingOffsetX": 0.0
+            }
+          ]
+        }
+      }
+    },
+    "Common_DoubleMS_FX_550_L": {
+      "ref": "Common_DoubleMS_FX_550_L__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/Common_DoubleMS_FX_550.gw",
+          "barrels": [
+            {
+              "id": "Common_DoubleMS_FX_550",
+              "x": 5.0,
+              "y": -2.0
+            },
+            {
+              "id": "Common_DoubleMS_FX_550_L",
+              "x": -5.0,
+              "y": -2.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 5.0,
+                "y": -2.0
+              },
+              "alternatingOffsetX": 0.0
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -5.0,
+                "y": -2.0
+              },
+              "alternatingOffsetX": 0.0
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "merged_position"
+          ],
+          "mergedInto": "Common_DoubleMS_FX_550"
+        }
+      }
+    },
+    "OMNI_GAT_X105_BR": {
+      "ref": "OMNI_GAT_X105_BR__lv1",
+      "overrides": {
+        "clip": null,
+        "attack": {
+          "steps": [
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.25
+            },
+            {
+              "delay": 0.25
+            }
+          ],
+          "startAnimation": null
+        },
+        "changeHeldWeapon": false,
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/OMNI_GAT_X105_BR.gw",
+          "barrels": [
+            {
+              "id": "OMNI_GAT_X105_BR",
+              "x": 11.0,
+              "y": 15.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "OMNI_GAT_X105_BR",
+              "point": {
+                "x": -12.307692307692305,
+                "y": -41.53846153846154
+              }
+            }
+          ]
+        }
+      },
+      "remove": [
+        "displayIndex"
+      ]
+    },
+    "OMNI_GAT_X105_Launcher": {
+      "ref": "OMNI_GAT_X105_Launcher__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/OMNI_GAT_X105_Launcher.gw",
+          "barrels": [
+            {
+              "id": "OMNI_GAT_X105_Launcher",
+              "x": -10.5,
+              "y": 38.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "OMNI_GAT_X105_Launcher",
+              "point": {
+                "x": 11.53846153846154,
+                "y": -35.38461538461539
+              }
+            }
+          ]
+        }
+      }
+    },
+    "OMNI_GAT_X105_S_RocketAnchor": {
+      "ref": "OMNI_GAT_X105_S_RocketAnchor__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/OMNI_GAT_X105_S_RocketAnchor.gw",
+          "barrels": [
+            {
+              "id": "OMNI_GAT_X105_S_RocketAnchor",
+              "x": 2.0,
+              "y": -2.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 2.0,
+            "y": -2.0
+          }
+        }
+      }
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "空中移动：可跨越山岩与水域",
+      "status": "implemented"
+    },
+    {
+      "id": "Fighter",
+      "source": "Template/Unit/Skill/Fighter.gw",
+      "status": "adapted",
+      "name": "战斗机特性"
+    },
+    {
+      "id": "DogFight_A",
+      "source": "Template/Unit/Skill/DogFight_A.gw",
+      "status": "review",
+      "name": "空中缠斗"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "main_1",
+      "name": "光束步枪套件",
+      "cost": 75,
+      "weapons": [
+        "OMNI_GAT_X105_BR",
+        "OMNI_FX_550_BR",
+        "Common_DoubleGun_FX_550",
+        "Common_DoubleMS_FX_550"
+      ],
+      "localization": {
+        "zh": {
+          "name": "光束步枪套件"
+        },
+        "en": {
+          "name": "Beam Rifle Kit"
+        },
+        "ja": {
+          "name": "ビーム・ライフル装備"
+        }
+      }
+    },
+    {
+      "id": "main_2",
+      "name": "光束炮套件",
+      "cost": 50,
+      "weapons": [
+        "OMNI_GAT_X105_Launcher",
+        "OMNI_FX_550_BR",
+        "Common_DoubleGun_FX_550",
+        "Common_DoubleMS_FX_550"
+      ]
+    },
+    {
+      "id": "main_3",
+      "name": "近身格斗套件",
+      "cost": 0,
+      "weapons": [
+        "OMNI_FX_550_BR",
+        "OMNI_GAT_X105_S_RocketAnchor",
+        "Common_DoubleGun_FX_550",
+        "Common_DoubleMS_FX_550"
+      ]
+    }
+  ],
+  "description": "PMP公司以在大气圈内运用而制造的支援用战斗机",
+  "kitAliases": {
+    "standard": "main_1"
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 550.0,
+    "levelMultiplier": 0.25,
+    "published": 150
+  },
+  "skills": [],
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "Aircraft"
+  ],
+  "transport": {
+    "slotCost": 1,
+    "loadTags": [
+      "CanLoadIntoAir"
+    ]
+  },
+  "hangars": [],
+  "pairedWeapons": [
+    {
+      "id": "Common_DoubleGun_FX_550",
+      "channels": [
+        {
+          "id": "Common_DoubleGun_FX_550",
+          "weaponId": "Common_DoubleGun_FX_550",
+          "muzzleIndex": 0,
+          "requiredParts": [],
+          "limb": null
+        },
+        {
+          "id": "Common_DoubleGun_FX_550_L",
+          "weaponId": "Common_DoubleGun_FX_550_L",
+          "muzzleIndex": 1,
+          "requiredParts": [],
+          "limb": null
+        }
+      ]
+    }
+  ],
+  "refits": []
+}

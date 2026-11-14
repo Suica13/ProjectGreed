@@ -181,7 +181,7 @@ test("bottom dock keeps chat, logs, roster and turn actions accessible", async (
   assert.equal(await page.evaluate(() => byId("hudRosterPanel").hidden), true);
   assert.equal(await page.evaluate(() => byId("endTurn").parentElement.id), "hudTurnActions");
   await page.evaluate(() => setPageView("room"));
-  assert.equal(await page.evaluate(() => byId("musicPlayer").parentElement.id), "");
+  assert.equal(await page.evaluate(() => byId("musicPlayer").parentElement.id), "settings-page-audio");
   assert.equal(
     await page.evaluate(() => document.body.classList.contains("battle-hud-active")),
     false,

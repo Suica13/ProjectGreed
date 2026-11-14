@@ -23,7 +23,7 @@ const UnitSensors = {
         sight: Math.round(base.sight * head * sightFactor),
         radar: base.radar * head * radarFactor,
         antiDetection: (base.antiDetection || 0) + (game && minovskyAt(game, unit) ? 5 : 0),
-        stealth: !!base.stealth || (water && !!base.stealthAqua),
+        stealth: !!base.stealth || (water && !!base.stealthAqua) || (!!unit.opticalCamouflage && unit.en > 0 && modelOf(unit).skills?.some(skill => skill.type === "optical_camouflage")),
         antiDetect: !!base.antiDetect || (water && !!base.antiDetectAqua),
       };
     }

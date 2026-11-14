@@ -79,9 +79,9 @@ test("accuracy applies once to AI, survives snapshots and does not inherit defen
   assert.equal(G.models.MS_14A__machine_gun.accuracy, 125);
 });
 
-test("all ship accuracy coefficients use 65 percent of native values", () => {
+test("all ship accuracy coefficients use 80 percent of native values", () => {
   for (const p of G.catalog.prefabs.filter((p) => p.stats.ship)) {
-    assert.ok(Math.abs(p.stats.accuracy - p.sourceStats.accuracy * 0.65 * (p.tags.includes("EFSF") ? 1.1 : 1)) < 1e-8, p.id);
-    assert.equal(p.stats.accuracyMultiplier, 0.65);
+    assert.equal(p.stats.accuracy,Math.round(p.sourceStats.accuracy * 0.8 * (p.sourceStats.shipFactionAccuracyMultiplier ?? 1)), p.id);
+    assert.equal(p.stats.accuracyMultiplier, 0.8);
   }
 });

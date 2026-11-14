@@ -281,16 +281,12 @@ for (const viewport of [
       expect(operationBounds.x + operationBounds.width).toBeLessThanOrEqual(mapBounds.x);
     }
     const consolePanel = page.locator("#campaignConsole");
-    await expect(page.locator("#campaignMusicSlot #musicPlayer")).toBeVisible();
+    await expect(page.locator("#musicPlayer")).toBeHidden();
     expect(await page.locator("#musicPlayer").evaluate((el) => getComputedStyle(el).position)).toBe(
       "static",
     );
     const dockBounds = await consolePanel.boundingBox();
     expect(Math.abs(dockBounds.y + dockBounds.height - viewport.height)).toBeLessThan(2);
-    const musicBounds = await page.locator("#musicPlayer").boundingBox();
-    const foldBounds = await page.locator("#campaignConsoleFold").boundingBox();
-    expect(musicBounds.x + musicBounds.width).toBeLessThanOrEqual(foldBounds.x + 1);
-    expect(Math.abs(musicBounds.y - foldBounds.y)).toBeLessThan(8);
     expect(
       await page
         .locator(".campaign-header-utilities button")
@@ -674,7 +670,7 @@ for (const viewport of [
       await page.locator("#restoreCampaignBackup").click();
       await expect(page.locator("#campaignScreen")).toBeVisible();
       expect(await page.locator("#musicPlayer").evaluate((el) => el.parentElement.id)).toBe(
-        "campaignMusicSlot",
+        "settings-page-audio",
       );
       await expect.poll(() => page.evaluate(() => Net.awaiting)).toBe(null);
     }
@@ -787,10 +783,10 @@ for (const viewport of [
       await expect.poll(() => page.evaluate(() => Net.snapshot.phase)).toBe("idle");
     }
     expect(await page.locator("#musicPlayer").evaluate((el) => el.parentElement.id)).toBe(
-      "hudMusicSlot",
+      "settings-page-audio",
     );
     if (viewport.width === 1440)
-      await expect(page.locator("#hudMusicSlot #musicPlayer")).toBeVisible();
+      await expect(page.locator("#musicPlayer")).toBeHidden();
     expect(await page.evaluate(() => Net.snapshot.campaign.activeRegion)).toBeTruthy();
     expect(await page.evaluate(() => Rules.seatTeam(Net.seat))).toBe(viewport.team);
     if (viewport.width === 390) {

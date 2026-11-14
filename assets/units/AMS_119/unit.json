@@ -595,7 +595,34 @@
     "unitLevel": 4500.0,
     "tacticalMoveBeforeBonus": 7,
     "v17BaseHp": 50000.0,
-    "technologyEra": "0093T1"
+    "technologyEra": "UC_0093_T1",
+    "nativeProductionQuantity": 3,
+    "nativeProductionSource": {
+      "file": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_NZN/Units/Land/AMS_119.gw",
+      "action": "action_Produce_AMS_119_StandardSquad",
+      "buildSeconds": 55.0,
+      "queueSeconds": 2.0,
+      "outputs": [
+        {
+          "unitId": "AMS_119",
+          "quantity": 1,
+          "equipmentIndex": 0,
+          "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+        },
+        {
+          "unitId": "AMS_119",
+          "quantity": 1,
+          "equipmentIndex": 0,
+          "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+        },
+        {
+          "unitId": "AMS_119",
+          "quantity": 1,
+          "equipmentIndex": 0,
+          "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+        }
+      ]
+    }
   },
   "presentation": {
     "shield": true,
@@ -611,10 +638,10 @@
     "moveSoundKey": "moveSound"
   },
   "name": "基拉德卡",
-  "faction": "NEO_ZEON",
+  "faction": "NEO_ZEON_0093",
   "tags": [
-    "NEO_ZEON",
-    "0093T1"
+    "NEO_ZEON_0093",
+    "UC_0093_T1"
   ],
   "localization": {
     "zh": {
@@ -909,6 +936,6 @@
   "hangars": [],
   "refits": [],
   "production": {
-    "enabled": false
+    "enabled": true
   }
 }
