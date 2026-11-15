@@ -101,8 +101,8 @@ for (const presetId of [null,"0079T1-cost-1500","0079T2-cost-10000","0087T1-cost
     const patch = G.battlefieldMode.presetSettings(presetId,host.state.settings.battlefieldTeams,G.eras);
     const configured = await host.act("configure_room",{...host.state.settings,...patch});
     assert.equal(configured.type,"state");
-    assert.equal(G.battlefieldMode.roomPreset(configured.settings).id,presetId);
-    assert.equal(configured.settings.battlefieldEra, patch.battlefieldEra);
+    assert.equal(G.battlefieldMode.roomPreset(configured.settings).id,G.normalizeEra(patch.battlefieldEra)+"-cost-"+patch.costLimit);
+    assert.equal(configured.settings.battlefieldEra, G.normalizeEra(patch.battlefieldEra));
     assert.equal((await host.act("configure_room",{...configured.settings,costLimit:patch.costLimit+25})).type,"error");
     const custom = await host.act("configure_room",{...configured.settings,battlefieldEra:"custom",costLimit:patch.costLimit+25});
     assert.equal(custom.type,"error");

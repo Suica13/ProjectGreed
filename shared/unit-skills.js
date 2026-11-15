@@ -132,7 +132,7 @@ const UnitSkills = (() => {
           !Number.isFinite(skill.minRange) ||
           skill.minRange < 0 ||
           skill.minRange > skill.range ||
-          skill.cooldownTurns !== 3 ||
+          skill.cooldownTurns !== (skill.radial ? 0 : 3) ||
           !Number.isFinite(skill.baseHit) ||
           skill.baseHit < 0 ||
           !skill.damageComponents ||
@@ -487,6 +487,12 @@ const UnitSkills = (() => {
         [usageKey(unit, skill)]: (unit.skillUses?.[usageKey(unit, skill)] || 0) + 1,
       };
       const oldModel = modelOf(unit);
+      // Several source kits share one MA loadout. Remember the original kit
+      // rather than choosing a different one when converting back to MS.
+      const returnModel = skill.type === "transform" && models[unit.defaultFormModel];
+      const sourceConfig = returnModel && returnModel.prefabId === skill.source.unitId
+        ? { ...skill.source, kitMap: { [oldModel.kitId]: returnModel.kitId } }
+        : skill.source;
       if (
         skill.source.mode === "keep" &&
         (skill.source.unitId !== oldModel.prefabId || skill.source.kitId !== oldModel.kitId)
@@ -498,7 +504,7 @@ const UnitSkills = (() => {
           : resultUnit(
               unit,
               oldModel,
-              skill.source,
+              sourceConfig,
               unit.id,
               unit.x,
               unit.y,
@@ -550,6 +556,7 @@ const UnitSkills = (() => {
       )
         return [{ x: unit.x, y: unit.y }];
       if (["beam_diffusion", "irradiation", "recon"].includes(skill.type)) {
+        if (skill.radial) return [{ x: unit.x, y: unit.y }];
         if (
           ["beam_diffusion", "irradiation"].includes(skill.type) ||
           skill.reconMode === "camera"

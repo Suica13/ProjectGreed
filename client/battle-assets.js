@@ -18,12 +18,13 @@ window.BattleAssets = (() => {
     }
   }
   function guard(snapshot, resume) {
+    WeaponAudio.prepareBattle?.(snapshot);
     if (["waiting", "assembly"].includes(snapshot.phase)) {
       release();
       return false;
     }
     const keys = SpriteRenderer.battleKeys(snapshot);
-    const nextKey = JSON.stringify([snapshot.room, snapshot.matchId, snapshot.game?.mapId, snapshot.game?.campaignBattlefield?.regionId]);
+    const nextKey = JSON.stringify([snapshot.room, snapshot.matchId, snapshot.game?.mapId, snapshot.game?.campaignBattlefield?.regionId, snapshot.sweep?.battleIndex]);
     if (sceneKey !== nextKey) {
       cancel();
       sceneKey = nextKey;

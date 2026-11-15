@@ -36,8 +36,9 @@ for (const width of [1440, 390])
       };
     });
     await page.locator("#openSkirmish").click();
-    await page.locator("#offlineRoomMode").selectOption("mission");
     await page.locator("#createOfflineRoom").click();
+    await page.locator("#offlineRoomMode").selectOption("mission");
+    await page.locator("#confirmOfflineMode").click();
     await expect.poll(() => page.evaluate(() => Net.snapshot?.settings.mode)).toBe("mission");
     await page.evaluate(() =>
       Net.request("start_game", { formation: [{ unitId: "ColumbusClass", kitId: "standard" }] }),

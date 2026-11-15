@@ -71,7 +71,9 @@ const ProfileSave = (() => {
       economy: Economy.validate(ProfileMigrations.economy(value.economy)),
     };
     for (const faction of factions) {
-      const addedFaction = ["AEUG", "TITANS", "NEO_ZEON"].includes(faction);
+      // Older exports predate later UC and CE factions. Missing new stores are
+      // empty, while the original PMC/EFSF/ZEON stores remain required.
+      const addedFaction = !["PMC", "EFSF", "ZEON"].includes(faction);
       const store =
         value.pilots?.[faction] ?? (addedFaction ? { pilots: [], awards: [] } : undefined);
       if (

@@ -482,6 +482,14 @@ function loadCatalog({
   const defaultEquipment =
     read(path.resolve(__dirname, "../shared/production-catalog.json")).defaultKits || {};
   const changed = changedUnits && new Set(changedUnits);
+  if (changed) {
+    const families=read(path.resolve(__dirname,"../shared/production-catalog.json")).unitFamilies || {};
+    for(const base of new Set(Object.values(families).map(entry=>entry.unitId))) {
+      const group=[base,...Object.keys(families).filter(id=>families[id].unitId===base)];
+      if(group.some(id=>changed.has(id))) for(const id of group) changed.add(id);
+    }
+  }
+
   const retained = new Map(), retainedModels = new Map(), retainedArt = new Map();
   if (reuseCatalog && changed && !embedAssets) {
     for (const prefab of reuseCatalog.prefabs) retained.set(prefab.id, prefab);
@@ -510,6 +518,14 @@ function loadCatalog({
     }
     const prefab = WeaponStore.expandPrefab(raw, weaponDefinitionsOverride || undefined);
     if (prefab.enabled === false) continue;
+    // A body tackle is ordinary fallback melee, never a manually invoked skill.
+    for (const [key, weapon] of Object.entries(prefab.weapons))
+      if (WeaponClasses.classify(weapon, key) === "ram") {
+        weapon.slot = "primary";
+        delete weapon.noCounter;
+        delete weapon.special;
+      }
+
     prefab.skills = (prefab.skills || []).filter(skill => skill.type !== "emp");
     if (prefab.stats.deployed && prefab.stats.movementType === "air") {
       prefab.stats.movementType = "ground";
@@ -1417,6 +1433,9 @@ function loadCatalog({
         }
       }
   }
+  require("../shared/ship-aa-volley.cjs").apply(result);
+  require("./unit-kit-families.cjs").apply(result,
+    read(path.resolve(__dirname,"../shared/production-catalog.json")).unitFamilies);
   if (!result.prefabs.length) throw Error("No enabled units in catalog");
   return result;
 }

@@ -16,6 +16,7 @@ const MissionMode = (() => {
       !m ||
       m.version !== 1 ||
       !eras.includes(m.era) ||
+      (m.technologyLimitEnabled !== undefined && typeof m.technologyLimitEnabled !== "boolean") ||
       !Number.isSafeInteger(m.technologyLimit) ||
       m.technologyLimit < 0 ||
       m.technologyLimit > 1e9 ||
@@ -255,11 +256,16 @@ const MissionMode = (() => {
       mapId: map.id,
       mode: "mission",
       missionEra: m.era,
+      missionTechnologyLimitEnabled: m.technologyLimitEnabled !== false,
       technologyLimitMode: "custom",
       technologyLimit: m.technologyLimit,
       costLimit: m.costLimit,
       unitLimit: m.unitLimit,
       formationStyle: "standard",
+      bannedFactions: [],
+      bannedEras: [],
+      bannedTypes: [],
+      teamRestrictions: [{ bannedFactions: [], bannedEras: [], bannedTypes: [] }, { bannedFactions: [], bannedEras: [], bannedTypes: [] }],
     };
   }
   function commander(room) {
@@ -528,10 +534,10 @@ const MissionMode = (() => {
       ...(rewards.bonuses || []).filter((r) => room.game.mission.fired.includes(r.event)),
     ]) {
       result.money += r.money;
-      result.supplies += r.supplies;
       for (const [id, count] of Object.entries(r.inventory))
         result.inventory[id] = (result.inventory[id] || 0) + count;
     }
+    result.supplies = result.money * 1.5;
     return result;
   }
   return {

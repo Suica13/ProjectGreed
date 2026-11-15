@@ -694,8 +694,8 @@ const AutomaticFire = (() => {
         const unit = find(intent.attacker);
         if (unit) {
           delete unit.plan;
-          unit.acted = true;
-          unit.origin = null;
+          unit.acted = !intent.charged;
+          if (!intent.charged) unit.origin = null;
         }
       }
     for (const run of runs)

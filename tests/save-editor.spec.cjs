@@ -62,6 +62,22 @@ async function downloaded(page, button) {
   await page.locator(button).click();
   return JSON.parse(await fs.readFile(await (await pending).path(), "utf8"));
 }
+test("standalone editor initializes with all shared rule dependencies and isolates browser saves", async ({ page }) => {
+  const errors = [];
+  page.on("pageerror", error => errors.push(error.message));
+  await page.addInitScript(() => localStorage.setItem("projectgreed.economy.v1", "preserve-player-save"));
+  await page.goto(pathToFileURL(path.resolve("admin/save-editor.html")).href);
+  expect(errors).toEqual([]);
+  expect(await page.locator("#openSave").evaluate(input => typeof input.onchange)).toBe("function");
+  await expect(page.locator("#researchFaction option")).toHaveCount(Object.keys(require("../shared/development-tree.json")).length);
+  await page.locator("#openSave").setInputFiles(file(fixture()));
+  await expect(page.locator("#status")).toContainText("已读取");
+  await page.getByRole("spinbutton", { name: "资金", exact: true }).fill("12345");
+  const save = await downloaded(page, "#downloadSave");
+  expect(save.economy.money).toBe(12345);
+  expect(await page.evaluate(() => localStorage.getItem("projectgreed.economy.v1"))).toBe("preserve-player-save");
+  expect(errors).toEqual([]);
+});
 for (const width of [1440, 390])
   test(`offline save editor edits and validates a portable save at ${width}px`, async ({
     page,

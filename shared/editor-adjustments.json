@@ -40,19 +40,13 @@
       "/stats/hp": 3750
     },
     "Medea": {
-      "/stats/cost": -75
+      "/stats/cost": -25
     },
     "FatUncle": {
-      "/stats/cost": -75
-    },
-    "MedeaKai": {
-      "/stats/cost": -50
+      "/stats/cost": -25
     },
     "MedeaKai_DeployState": {
       "/stats/cost": 25
-    },
-    "FatUncleKai": {
-      "/stats/cost": -50
     },
     "FatUncleKai_DeployState": {
       "/stats/cost": 25
@@ -71,10 +65,11 @@
       "/weapons/OMNI_GAT_X103_BR_HyperSniper/max": 1
     },
     "ZGMF_515": {
-      "/weapons/ZAFT_ZGMF_515_Minigun/attackRounds": -1
+      "/weapons/ZAFT_ZGMF_515_Minigun/attackRounds": -1,
+      "/stats/cost": 50
     },
     "ZGMF_LRR704B": {
-      "/stats/cost": -25,
+      "/stats/cost": 25,
       "/weapons/ZGMF_LRR704B_LBR_Sniper_Aim/min": 2,
       "/weapons/ZGMF_LRR704B_LBR_Sniper_Aim/max": 3,
       "/weapons/ZGMF_LRR704B_LBR_Sniper_Aim/damagePerShot": 1875,
@@ -83,6 +78,15 @@
     },
     "GAT_X207": {
       "/stats/hp": -2500
+    },
+    "MarseilleIIIClass": {
+      "/stats/cost": -250
+    },
+    "VTOLTransport": {
+      "/stats/cost": -25
+    },
+    "VTOLTransport_DeployState": {
+      "/stats/cost": -25
     }
   },
   "weapons": {

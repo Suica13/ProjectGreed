@@ -179,3 +179,38 @@ test("EXAM returns to base art exactly when head destruction is presented", asyn
     { model: result.base, red: false },
   ]);
 });
+
+for (const id of ["NRX_044", "MRX_009"]) test(`${id} native transformation button loads complete MA artwork`, async ({page})=>{
+  const errors=[];page.on("pageerror",error=>errors.push(error.message));
+  await setup(page,id);
+  await page.keyboard.press("e");
+  const button=page.locator('[data-unit-skill="Transform"]');
+  await expect(button).toBeEnabled();await button.click();
+  await expect.poll(()=>page.evaluate(()=>Rules.modelOf(game.units[0]).prefabId)).toBe(id+"_MA");
+  const result=await page.evaluate(async()=>{
+    await SpriteRenderer.ensureAssets(SpriteRenderer.battleKeys(game));
+    drawMap(performance.now());
+    const u=game.units[0],m=SpriteRenderer.models[u.model];
+    return {layers:m.decals.length,complete:m.decals.every(layer=>!!SpriteRenderer.images[layer.asset]),count:game.units.length};
+  });
+  expect(result.layers).toBeGreaterThan(0);expect(result.complete).toBe(true);expect(result.count).toBe(2);
+  await page.screenshot({path:`tmp/verification/screenshots/transform-${id}.png`});
+  expect(errors).toEqual([]);
+});
+
+test("building misses never generate client-side dodge motion, including legacy events",async({page})=>{
+ await setup(page,"RGM_79");
+ const result=await page.evaluate(async()=>{
+  const [a,b]=game.units;b.model=Object.keys(UnitModels).find(id=>id.startsWith("Facility_Beam__"));b.hp=Rules.modelOf(b).hp;
+  const native=Rules.modelOf(a).weapons.find(w=>w.type!=="melee"),weapon={...native,hitScale:1e-10};
+  const event=Rules.resolveProjectile(game,a,b,weapon,"evade")[0];
+  const source={unit:a,x:100,y:100,scale:1,angle:90,arenaWidth:2000,arenaHeight:2000};
+  const target={unit:b,x:300,y:100,scale:1,angle:270,arenaWidth:2000,arenaHeight:2000};
+  const plan=WeaponEffects.plan(native,source,target,event);
+  const legacy={...event};delete legacy.targetCanEvade;
+  const oldPlan=WeaponEffects.plan(native,source,target,legacy);
+  const mobile=WeaponEffects.plan(native,source,{...target,unit:{...b,model:a.model}},legacy);
+  return {misses:event.strikes.some(s=>s.executed&&!s.hit),moves:plan.moves.length,oldMoves:oldPlan.moves.length,mobileMoves:mobile.moves.length};
+ });
+ expect(result.misses).toBe(true);expect(result.moves).toBe(0);expect(result.oldMoves).toBe(0);expect(result.mobileMoves).toBeGreaterThan(0);
+});

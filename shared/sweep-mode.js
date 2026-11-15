@@ -198,6 +198,7 @@ const SweepMode = (() => {
     if (!s) return null;
     return {
       depth: s.depth,
+      battleIndex: s.battleIndex,
       lane: s.lane,
       selected: s.selected,
       nodes: s.nodes,
@@ -283,7 +284,7 @@ const SweepMode = (() => {
         typeof BattleEconomy !== "undefined" ? BattleEconomy : require("./battle-economy.js");
       const pending = s.pending[p.id];
       pending.money += economy.roundReward(1000 * scale * multiplier * (bonus.money ?? 1));
-      pending.supplies += economy.roundReward(2000 * scale * multiplier * (bonus.supplies ?? 1));
+      pending.supplies += economy.roundReward(1500 * scale * multiplier * (bonus.supplies ?? 1));
       pending.technology += economy.roundReward(
         250 * scale * multiplier * technologyOutcome * (bonus.technology ?? 1),
       );
@@ -447,20 +448,28 @@ const SweepMode = (() => {
     room.returnCountdown = null;
   }
   function enemyRestrictions(room, G) {
+    const faction = room.settings.sweepFaction;
+    const carrierFactions = faction === "EFSF_0093" ? [faction, "EFSF"] :
+      faction === "NEO_ZEON_0093" ? [faction, "NEO_ZEON", "ZEON"] : [faction];
     return {
       ...G.validateTagRestrictions({
-        bannedFactions: [...new Set([...(room.settings.bannedFactions || []), ...G.factions.filter(f => f !== room.settings.sweepFaction)])],
+        bannedFactions: [...new Set([...(room.settings.bannedFactions || []), ...G.factions.filter(f => !carrierFactions.includes(f))])],
         bannedEras: room.settings.bannedEras,
         bannedTypes: room.settings.bannedTypes,
       }),
       characterFaction: null,
       aiAllowedEras: [room.settings.sweepEra],
+      aiEarlierCarriers: true,
+      requiresCarriers: true,
+      fleetLimit: 3,
+      aiDiverseFleet: true,
       environment: G.getMap(room.settings.mapId).environment,
       mapId: room.settings.mapId,
       deploymentSeat: 1,
     };
   }
   const enemyPools = new WeakMap();
+  const enemyMinimums = new WeakMap();
   function enemyPool(room, G) {
     const map = G.getMap(room.settings.mapId), restrictions = enemyRestrictions(room, G);
     let cache = enemyPools.get(map);
@@ -482,7 +491,24 @@ const SweepMode = (() => {
     const pool = G ? rewardPool(room, G) : [],
       maximum = pool.length ? Math.min(99999, Math.max(...pool.map((u) => u.cost)) * 2) : 99999;
     const candidates = G ? enemyPool(room, G) : [];
-    const minimum = candidates.length ? Math.max(1, Math.min(...candidates.map(u => u.cost))) : 1;
+    // Reserve enough for a carrier and an armed passenger even in small rooms.
+    let floors = enemyMinimums.get(candidates);
+    if (!floors) {
+      let cost = Infinity, unitCost = Infinity;
+      for (const carrier of candidates.filter(G.isFleetCarrier))
+        for (const unit of candidates) {
+          if (G.isFleetCarrier(unit) || !unit.weapons.length || !carrier.hangars?.some(h =>
+            h.capacity >= (unit.transport?.slotCost || 1) &&
+            h.allowedTags.some(tag => unit.transport?.loadTags.includes(tag)))) continue;
+          cost = Math.min(cost, carrier.cost + unit.cost);
+          unitCost = Math.min(unitCost, Math.max(carrier.cost, unit.cost));
+        }
+      const fallback = candidates.length ? Math.max(1, Math.min(...candidates.map(u => u.cost))) : 1;
+      floors = { cost: Number.isFinite(cost) ? cost : fallback,
+        unitCost: Number.isFinite(unitCost) ? unitCost : fallback };
+      enemyMinimums.set(candidates, floors);
+    }
+    const minimum = floors.cost, minimumUnit = floors.unitCost;
     return {
       costLimit: Math.max(minimum, Math.min(
         99999,
@@ -493,11 +519,13 @@ const SweepMode = (() => {
         ),
       )),
       unitCostLimit: Math.max(
-        minimum,
+        minimumUnit,
         Math.min(
           maximum,
           Math.floor(
-            room.settings.unitCostLimit *
+            // Sweep has no single-unit room control. Its old hidden 250 COST
+            // default otherwise reduces whole eras to one cheap chassis.
+            Math.max(room.settings.unitCostLimit || 0, room.settings.costLimit / 4) *
               (room.sweep?.boss ? 1.5 : room.sweep?.elite ? 1.25 : 0.75) *
               growth(room),
           ),
@@ -632,6 +660,7 @@ const SweepMode = (() => {
     finish,
     checkpoint,
     enemyLimits,
+    enemyRestrictions,
     enemies,
     save,
     reward,

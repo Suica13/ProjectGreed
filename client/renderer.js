@@ -619,11 +619,15 @@ const SpriteRenderer = (() => {
     phaseShiftActive = true,
   ) {
     const isFiring = attacking ?? (!!clip && /Shoot|Fire|Attack/.test(clip));
+    // -1 caches only constant body poses at native resolution. Animated bones
+    // and changing body frames keep the exact live path at normal zoom.
+    const exactStaticRaster = idleRasterSize === -1;
     // Cache the body independently of camera labels and world position. Moving
     // actors with static bones reuse it across frames. Matching walking poses
     // share only the exact current sample, with a live fallback under load.
     if (
-      idleRasterSize > 0 &&
+      (idleRasterSize > 0 || exactStaticRaster) &&
+      (!exactStaticRaster || staticPose(models[model].animations[clip])) &&
       !effectsOnly &&
       (!moving || staticPose(models[model].animations[clip]) || frameLayersActive) &&
       !isFiring &&
@@ -672,6 +676,12 @@ const SpriteRenderer = (() => {
         ClientSettings.unitShadows()
           ? MapShadowLighting.normalize(globalThis.ProjectGreedMapLighting || {})
           : null;
+      if (exactStaticRaster && layers.some(layer => !effects.includes(layer.name) &&
+          layer.frameFps && (!layer.onlyAnimateWhenMoving || moving)))
+        return draw(ctx, model, x, y, scale, angle, clip, time, heldWeapon, loop,
+          shieldVisible, moving, brokenParts, aimAngle, attacking, onLand, environment,
+          attackWeapon, weaponDisplayIndex, flying, turretStatus, effectsOnly,
+          boostSkillActive, hiddenLayers, 0, phaseShiftActive);
       const firstBody = layers.findIndex((layer) => !effects.includes(layer.name));
       let lastBody = layers.length - 1;
       while (lastBody >= 0 && effects.includes(layers[lastBody].name)) lastBody--;
@@ -776,7 +786,7 @@ const SpriteRenderer = (() => {
           extent = extent * 2 + Math.hypot(projection.x, projection.y) * 64;
         }
         if (Number.isFinite(extent) && extent > 0) {
-          const resolution = Math.min(1, idleRasterSize / (extent * 2));
+          const resolution = exactStaticRaster ? 1 : Math.min(1, idleRasterSize / (extent * 2));
           const side = Math.ceil(extent * 2 * resolution);
           nextSurface = { extent, resolution, side };
           // Capacity misses must not block resident animation updates, even
@@ -1208,6 +1218,12 @@ const SpriteRenderer = (() => {
   const modelsReady = (ids) => keysForModels(ids).every((key) => images[key]);
   const ensureModels = (ids) => ensureAssets(keysForModels(ids));
   const readyAssets = (keys) => keys.every((key) => images[key]);
+  const battleAssetSets = new Map();
+  const prefabModels = new Map();
+  for (const [id, model] of Object.entries(ART.models)) {
+    if (!prefabModels.has(model.prefabId)) prefabModels.set(model.prefabId, []);
+    prefabModels.get(model.prefabId).push(id);
+  }
   function battleKeys(snapshot) {
     const ids = new Set(),
       visited = new Set();
@@ -1216,10 +1232,16 @@ const SpriteRenderer = (() => {
       visited.add(value);
       if (typeof value.model === "string" && models[value.model]) ids.add(value.model);
       for (const [key, child] of Object.entries(value))
-        if (!["tiles", "log", "chat", "researched"].includes(key)) visit(child);
+        if (!["pilot", "customPilot", "stats"].includes(key)) visit(child);
     }
-    visit(snapshot);
+    // Only actor/effect references can add battle art. Player inventories,
+    // portrait data, logs and the complete tile grid do not affect this set.
+    for (const value of [snapshot.game?.units, snapshot.game?.battlefield?.reserves,
+      snapshot.combatActors, snapshot.effectActors, snapshot.combats, snapshot.effectCombats,
+      snapshot.battle, snapshot.playback?.skillEffect, snapshot.lastEvent, snapshot.effectEvent]) visit(value);
     if(snapshot.game?.campaignBattlefield)ids.add("Facility_HQ__standard");
+    const cacheKey = [...ids].sort().join("|");
+    if (battleAssetSets.has(cacheKey)) return battleAssetSets.get(cacheKey);
     const prefabs = new Set([...ids].map((id) => ART.models[id].prefabId));
     // Preload explicit conversion/ejection destinations, including every mapped kit.
     for (const id of prefabs) {
@@ -1228,12 +1250,13 @@ const SpriteRenderer = (() => {
         for (const target of [skill.formUnitId, skill.source?.unitId, skill.spawn?.unitId])
           if (target) prefabs.add(target);
     }
-    for (const [id, model] of Object.entries(ART.models))
-      if (prefabs.has(model.prefabId)) ids.add(id);
-    return [
+    for (const prefab of prefabs) for (const id of prefabModels.get(prefab) || []) ids.add(id);
+    const keys = [
       ...new Set(
         [
           ...keysForModels([...ids]),
+          ...[...ids].flatMap(id => ART.models[id].skills.flatMap(skill =>
+            (skill.barrageProjectiles || []).map(projectile => projectile?.asset))),
           ...Object.values(ART.effects).map((effect) => effect.asset),
           ...[...ids].flatMap((id) =>
             ART.models[id].weapons.flatMap((weapon) => [
@@ -1249,6 +1272,9 @@ const SpriteRenderer = (() => {
         ].filter(Boolean),
       ),
     ];
+    if (battleAssetSets.size >= 64) battleAssetSets.delete(battleAssetSets.keys().next().value);
+    battleAssetSets.set(cacheKey, keys);
+    return keys;
   }
   function loadMenu(onProgress) {
     const owned = new Set(Object.keys(Economy.snapshot().licenses).slice(0, 12));

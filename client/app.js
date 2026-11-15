@@ -362,10 +362,24 @@ function htmlWeapon(w, u, target = null, response = "counter", isCounter = false
   return WeaponInfo.summary(w, { unit: u, target, response, isCounter }).outerHTML;
 }
 // Rebuilt panel contents retain their local view state without affecting game state.
+const scrolledPanelNodes = new Set();
+document.addEventListener("scroll", event => {
+  const node = event.target;
+  if (node instanceof Element && node.closest("#hudUnitPanel,#hudAttackPlanner")) scrolledPanelNodes.add(node);
+}, true);
 function capturePanelView(root) {
-  if (!root) return null;
+  if (!root || root.closest("[hidden]")) return null;
   const entries = [];
-  function visit(node, path) {
+  const candidates = new Set([root, ...root.querySelectorAll("details,#unitPanel,.weapon-list,.weapon,.hud-attack-queue")]);
+  for (const node of scrolledPanelNodes) {
+    if (!node.isConnected) scrolledPanelNodes.delete(node);
+    else if (root.contains(node)) candidates.add(node);
+  }
+  for (const node of candidates) {
+    if (node.closest("[hidden]")) continue;
+    const path = [];
+    for (let child = node; child !== root; child = child.parentElement)
+      path.unshift(Array.prototype.indexOf.call(child.parentElement.children, child));
     if (node === root || node.scrollTop || node.scrollLeft || node.tagName === "DETAILS")
       entries.push({
         id: node.id,
@@ -374,9 +388,7 @@ function capturePanelView(root) {
         left: node.scrollLeft,
         open: node.tagName === "DETAILS" ? node.open : undefined,
       });
-    [...node.children].forEach((child, index) => visit(child, [...path, index]));
   }
-  visit(root, []);
   return { root, entries };
 }
 function restorePanelView(state) {
@@ -417,7 +429,7 @@ function update() {
 let actionAvailabilityCache = null;
 function playerHasActions() {
   const seat = Net.active ? Net.seat : null;
-  const key = JSON.stringify([
+  const key = Net.active ? `${session}:${Net.revision}:${Net.seat}` : JSON.stringify([
     session,
     seat,
     Net.snapshot?.revision,
@@ -627,6 +639,11 @@ function refreshRosterRows(busy) {
     button.classList.toggle("selected", id === selected);
     button.classList.toggle("dead", unit.hp <= 0);
     button.disabled = unit.hp <= 0 || (busy && phase !== "deployment");
+    const healthColor = UnitIdentity.healthColor(unit);
+    if (entry.healthColor !== healthColor) {
+      button.querySelector(".hp-fill").style.background = healthColor;
+      entry.healthColor = healthColor;
+    }
     const state = rosterState(unit);
     if (entry.state === state) continue;
     entry.state = state;
@@ -771,6 +788,7 @@ function renderRoster(busy) {
           "div",
           kind === "hp" ? "hp-fill" + (unit.team ? " red" : "") : "en-fill",
         );
+        if (kind === "hp") fill.style.background = UnitIdentity.healthColor(unit);
         fill.style.width =
           Math.max(0, Math.min(100, (current / maximum) * 100)) + "%";
         track.append(fill);
@@ -1316,7 +1334,7 @@ function mapRanges(chosen, canMove, deploymentSeat, showAttack = false) {
     game.campaignBattlefield?.deploymentControllers,
     chosen?.campaignEntry,
     chosen?.campaignDeploying,
-    game.units.map((u) => [
+    Net.active ? Net.revision : game.units.map((u) => [
       u.id,
       u.model,
       u.x,
@@ -1992,6 +2010,8 @@ function drawMapFrame(now) {
   }
   const fade = Math.min(1,Math.max(0,(now-globalThis.ProjectGreedLightTransition.at)/1800));
   const from = globalThis.ProjectGreedLightTransition.from;
+  const lightChanging = fade < 1 && ["distance", "horizontalAngle", "intensity"]
+    .some(key => (from[key] ?? targetLighting[key]) !== targetLighting[key]);
   const blendLight = key => {
     const start = from[key] ?? targetLighting[key], end = targetLighting[key];
     return start === end ? end : start * (1 - fade) + end * fade;
@@ -2236,7 +2256,7 @@ function drawMapFrame(now) {
         false,
         !!(u.overBoost || u.fullBoost || u.overdrive || u.boostSkillActive),
         combatPose?.hiddenLayers || [],
-        reducedUnitDetail && !combatPose && !skillPose ? 2048 : 0,
+        !combatPose && !skillPose && !lightChanging ? (reducedUnitDetail ? 2048 : -1) : 0,
         Rules.phaseShiftActive(u),
       );
       const fieldImpact = Math.min(
@@ -2297,7 +2317,7 @@ function drawMapFrame(now) {
     }
     ctx.fillStyle = "#07141c";
     ctx.fillRect(barx, bary, hpw, 4);
-    ctx.fillStyle = u.team ? "#ed9685" : "#83d6ee";
+    ctx.fillStyle = UnitIdentity.healthColor(u);
     ctx.fillRect(barx, bary, hpw * Math.max(0, Math.min(1, u.hp / frameModelOf(u).hp)), 4);
     ctx.fillStyle = "#07141c";
     ctx.fillRect(barx, bary + 6, hpw, 3);
@@ -3124,6 +3144,7 @@ function renderReaction() {
   byId("responseCounter").disabled = !targetOptions.some(
     (entry) => !entry.noCounter && available(entry).length,
   );
+  byId("responseEvade").disabled = scope.some(member => !Rules.canEvade(member));
   const choices = counterChoices();
   byId("counterAutomaticInfo").textContent = I18n.text("按类型轮数自动使用可用武器；射击结束后进行格斗。");
   byId("counterList").replaceChildren();

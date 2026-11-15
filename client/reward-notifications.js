@@ -12,16 +12,16 @@ const RewardNotifications = (() => {
       clear();
       matchId = snapshot.matchId;
     }
-    if (snapshot.replay || snapshot.phase === "replay" || snapshot.startedFromSave) {
+    if (snapshot.replay || snapshot.phase === "replay") {
       pending.length = 0;
       return;
     }
     if (!CombatPlayback.waitingFor(snapshot))
       for (const show of pending.splice(0)) show();
   }
-  function defer(show, snapshot) {
+  function defer(show, snapshot, { allowFromSave = false } = {}) {
     sync(snapshot);
-    if (snapshot.replay || snapshot.phase === "replay" || snapshot.startedFromSave) return;
+    if (snapshot.replay || snapshot.phase === "replay" || (snapshot.startedFromSave && !allowFromSave)) return;
     if (CombatPlayback.waitingFor(snapshot)) pending.push(show);
     else show();
   }

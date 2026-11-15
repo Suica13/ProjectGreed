@@ -1364,6 +1364,11 @@
 .hangar-unit button {
   flex-shrink: 0;
 }
+.hangar-unit select {
+  flex: 1 1 180px;
+  min-width: 0;
+  max-width: 100%;
+}
 
 /* Plan editors have one vertical scroll surface, never nested lists or cards. */
 #gameScene #hudUnitPanel .hud-attack-planner {

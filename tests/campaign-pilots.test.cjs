@@ -219,7 +219,7 @@ test("escaping crews bind to the live successor and dead crews become available 
   assert.equal(entry.profile.record.losses, 1);
 });
 
-test("authoritative campaign combat earns crew XP while ordinary saved battles still earn nothing", (t) => {
+test("campaign and resumed combat award XP in the turn while campaign crews stay outside the personal ledger", (t) => {
   const { createRoomEngine } = require("../shared/room-engine.js");
   let serial = 0;
   const engine = createRoomEngine({
@@ -264,6 +264,16 @@ test("authoritative campaign combat earns crew XP while ordinary saved battles s
       room.campaignBattle = { region: "canada", stopRound: 11, startRound: 1, delegatedSeats: [] };
     }
     const [attacker, target] = room.game.units;
+    let army;
+    if (strategic) {
+      room.campaign.pilots.push({ ownerSeat: 0, team: 0, profile: structuredClone(p) });
+      army = room.campaign.units.find(unit => unit.team === 0);
+      assert(army);
+      army.pilotId = p.id;
+      army.state = structuredClone(attacker);
+      attacker.campaignId = army.id;
+    }
+
     Object.assign(attacker, { x: 5, y: 5, actionPoints: 100, en: 10000 });
     Object.assign(target, { x: 7, y: 5, hp: 1, shield: 0 });
     // Deterministic accuracy fixture; no client is allowed to author either crew's attributes.
@@ -294,13 +304,19 @@ test("authoritative campaign combat earns crew XP while ordinary saved battles s
     if (room.phase === "reaction" && room.reactionReviewId)
       act(guest, "confirm_responses", { reviewId: room.reactionReviewId });
     assert.equal(target.hp, 0);
-    assert.equal(attacker.pilot.record.kills, strategic ? 1 : 0);
-    assert.equal(attacker.pilot.experience, strategic ? G.pilots.combatExperience(G.modelOf(attacker).cost,G.modelOf(target).cost) : 0);
-    assert.equal(
-      (room.pilotAwards || []).length,
-      0,
-      "campaign crews must never credit personal profile awards",
-    );
+    assert.equal(attacker.pilot.record.kills, 1);
+    const rate = strategic ? 1 : require("../shared/battle-economy").rates("PMC", room.settings.mode).experience;
+    assert.equal(attacker.pilot.experience, G.pilots.combatExperience(G.modelOf(attacker).cost, G.modelOf(target).cost, rate));
+    const award = room.pilotAwards.find(award => award.pilotId === p.id && award.kind === "kill");
+    assert(award && award.experiencePoints > 0);
+    assert.equal(award.persistent, !strategic);
+    if (strategic) {
+      assert.deepEqual(room.campaign.pilots.find(entry => entry.profile.id === p.id).profile, attacker.pilot);
+      assert.deepEqual(army.state.pilot, attacker.pilot);
+      const personal = { pilots: [p], awards: [] };
+      assert.equal(P.creditAwards(personal, room.pilotAwards, { settled: false }), false);
+      assert.equal(personal.pilots[0].experience, 0);
+    }
     assert.equal((room.economyAwards || []).length, 0);
   }
 });

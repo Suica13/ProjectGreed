@@ -325,7 +325,7 @@ const BattleHUD = (() => {
     byId("hudCancelAction").disabled = !!unit && (!!animating || isBusy(true));
   }
   function refresh() {
-    const active = pageView === "game",
+    const active = pageView === "game" && scene.dataset.sweepMission !== "true",
       unit = getUnit(selected),
       inCombat = ["battle", "reaction", "reaction_wait", "playback_wait", "moving"].includes(phase);
     const reacting = phase === "reaction" && pending,

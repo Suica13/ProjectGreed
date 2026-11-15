@@ -42,6 +42,11 @@ test('a charged sniper returns to the same action phase and other units can move
  assert.equal(room.phase,'playback');assert.equal(room.playback.resumeTurn,true);
  assert(Math.max(...room.combatBatch.flatMap(b=>b.events.map(e=>e.impactAt)))<10);
  ack();assert.equal(room.phase,'idle');assert.equal(room.game.round,3);assert.equal(room.turnDone[0],false);
+ assert.equal(a.acted,false);assert.notEqual(a.attackSkillRound,room.game.round);
+ assert(G.reachable(room.game,a).size>1);
+ act(0,'attack',{unitId:a.id,targetId:b.id,single:true});assert(a.plan);
+ act(0,'cancel_attack',{unitId:a.id,single:true});assert(!a.plan);assert.equal(a.acted,false);
+
  assert.equal(friend.acted,false);assert.equal(friend.moved,false);
  const cell=[...G.reachable(room.game,friend).values()].find(p=>p.path.length&&p.x===8&&p.y===5);assert(cell);
  act(0,'move',{unitId:friend.id,x:cell.x,y:cell.y,single:true});

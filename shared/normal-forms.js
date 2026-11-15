@@ -14,7 +14,7 @@ const NormalForms = (() => {
     // Workshop reattachment is allowed between explicitly paired base/BWS forms.
     for (const target of catalog.prefabs)
       if (
-        target.formOf === id &&
+        target.id !== id &&
         !target.id.match(/EXAM|HADES|ALICE/) &&
         target.skills?.some(
           (s) =>
@@ -32,6 +32,17 @@ const NormalForms = (() => {
       ).values(),
     ];
   }
-  return { options };
+  function family(catalog, id) {
+    const found = new Set([id]),
+      queue = [id];
+    while (queue.length)
+      for (const option of options(catalog, queue.shift()))
+        if (!found.has(option.unitId)) {
+          found.add(option.unitId);
+          queue.push(option.unitId);
+        }
+    return [...found];
+  }
+  return { options, family };
 })();
 if (typeof module !== "undefined") module.exports = NormalForms;

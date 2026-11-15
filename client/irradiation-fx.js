@@ -12,6 +12,35 @@ const IrradiationFX = (() => {
   function start(event, done = () => {}) {
     const id = event.id || "local-beam-" + performance.now();
     if (active.has(id)) return;
+    if (event.radial) {
+      const mounts = event.muzzle?.mounts || [];
+      let remaining = mounts.length;
+      let visiblePorts = 0;
+      for (const [index, mount] of mounts.entries()) {
+        if (event.barrageModules?.[index] && (event.moduleHp?.[event.barrageModules[index]] ?? 1) <= 0) {
+          remaining--;
+          continue;
+        }
+        const direction = event.radialDirections?.[index];
+        const dx = Number.isFinite(direction) ? Math.sin(direction * Math.PI / 180) : mount.offset?.x || 0;
+        const dy = Number.isFinite(direction) ? -Math.cos(direction * Math.PI / 180) : -(mount.offset?.y || 0);
+        const length = Math.hypot(dx, dy) || 1, angle = (event.angle || 0) * Math.PI / 180;
+        const x = (dx * Math.cos(angle) - dy * Math.sin(angle)) / length;
+        const y = (dx * Math.sin(angle) + dy * Math.cos(angle)) / length;
+        const range = (event.radialRange || 2) + 2;
+        const firstPort = visiblePorts++ === 0;
+        start({...event,id:id+":"+index,radial:false,
+          to:{x:event.from.x+x*range,y:event.from.y+y*range},
+          areaWidth:.12,fixedActorAngle:event.angle || 0,muzzle:{mounts:[mount]},chargeMuzzle:{mounts:[mount]},
+          hits:firstPort ? event.hits : [], actors:firstPort ? event.actors : [],
+          visualOnly:!firstPort,
+          barrageProjectile:event.barrageProjectiles?.[index],
+          sound:firstPort ? event.sound : null,fireSound:firstPort ? event.fireSound : null,
+        },()=>{if (--remaining===0) done();});
+      }
+      if (!remaining) done();
+      return;
+    }
     active.set(id, {
       ...event,
       id,
@@ -25,7 +54,7 @@ const IrradiationFX = (() => {
     const beam = [...active.values()].find((e) => e.unitId === unit.id);
     if (!beam) return null;
     return {
-      angle: (Math.atan2(beam.to.x - beam.from.x, -(beam.to.y - beam.from.y)) * 180) / Math.PI,
+      angle: beam.fixedActorAngle ?? (Math.atan2(beam.to.x - beam.from.x, -(beam.to.y - beam.from.y)) * 180) / Math.PI,
       clip: beam.clip,
       time:
         beam.start === null
@@ -73,7 +102,7 @@ const IrradiationFX = (() => {
   function draw(ctx, now, position, tile, actorPose = null) {
     for (const beam of active.values()) {
       const key = (part) => "Irradiation_" + part + "_" + beam.color;
-      if (
+      if (!beam.barrageProjectile &&
         !["Charge", "Start", "Mid", "End"].every(
           (part) => SpriteRenderer.images[ART.effects[key(part)]?.asset],
         )
@@ -96,12 +125,12 @@ const IrradiationFX = (() => {
             model.presentation.mapScale
           : tile / Rules.mapCellPixels);
       const aimAngle = (Math.atan2(beam.to.x - beam.from.x, -(beam.to.y - beam.from.y)) * 180) / Math.PI;
-      const actor = sampledActor ? { ...sampledActor, aimAngle } : {
+      const actor = sampledActor ? { ...sampledActor, angle:beam.fixedActorAngle ?? sampledActor.angle, aimAngle:beam.fixedActorAngle ?? aimAngle } : {
         x: origin.x,
         y: origin.y,
         scale,
-        angle: aimAngle,
-        aimAngle,
+        angle: beam.fixedActorAngle ?? aimAngle,
+        aimAngle: beam.fixedActorAngle ?? aimAngle,
         clip: beam.clip,
         time: Math.min(time, beam.chargeSeconds),
       };
@@ -139,11 +168,35 @@ const IrradiationFX = (() => {
       if (!beam.impacted) {
         beam.impacted = true;
         if (beam.fireSound) GameAudio.playSound(beam.fireSound);
-        MapEffects.capture({
+        if (!beam.visualOnly) MapEffects.capture({
           networkId: beam.id,
           actors: beam.actors,
           events: (beam.hits || []).map((h) => ({ ...h, to: h.unitId })),
         });
+      }
+      if (beam.barrageProjectile) {
+        const projectile = beam.barrageProjectile;
+        const image = SpriteRenderer.images[projectile.asset];
+        if (image) {
+          // Each gun emits a short fan of native rounds. This is presentation
+          // only; the server applies a single area hit per victim.
+          const dx = to.x - from.x, dy = to.y - from.y;
+          const age = (time - beam.chargeSeconds) / beam.fireSeconds;
+          for (let round = 0; round < 6; round++) {
+            const progress = (age * 2 + round / 6) % 1;
+            const spread = (round % 3 - 1) * .12;
+            const x = from.x + (dx - dy * spread) * progress;
+            const y = from.y + (dy + dx * spread) * progress;
+            const size = Math.max(2, image.height * (projectile.scale || 1) * scale);
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(Math.atan2(dy, dx) + Math.PI / 2);
+            ctx.drawImage(image, -size * image.width / image.height / 2, -size / 2,
+              size * image.width / image.height, size);
+            ctx.restore();
+          }
+        }
+        continue;
       }
       const // Native sheet height 168 × imageScale 1.25 × imageScaleY 1.5.
         height = beam.areaWidth ? beam.areaWidth * tile : (beam.beamWidth ?? 315) * scale,

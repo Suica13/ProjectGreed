@@ -1,10 +1,13 @@
 /* 开火音效按 Step 时刻调度；跳过、离开、暂停会取消尚未播放的声音。 */
 const WeaponAudio = (() => {
   let context = null,
-    loading = null,
     current = null,
     battleMuted = false;
   const decoding = new Map();
+  const channelGeneration = new Map();
+  let battleSoundsKey = null;
+  const decodeQueue = [];
+  let activeDecodes = 0;
   const buffers = new Map(),
     nodes = new Map(),
     volumeGains = new Map(),
@@ -17,6 +20,8 @@ const WeaponAudio = (() => {
   }
   window.addEventListener("audio-settings-change", updateVolume);
   function stopNodes(channel = null) {
+    for (const kind of channel ? [channel] : ["ui", "map", "battle", "tail"])
+      channelGeneration.set(kind, (channelGeneration.get(kind) || 0) + 1);
     for (const [node, kind] of nodes) {
       if (channel && kind !== channel) continue;
       try {
@@ -64,51 +69,64 @@ const WeaponAudio = (() => {
     }
   }
   function decodeSound(source) {
-    if (!decoding.has(source)) decoding.set(source, (async () => {
-      const response = await fetch(source);
-      return context.decodeAudioData(await response.arrayBuffer());
-    })());
+    if (!decoding.has(source)) decoding.set(source, new Promise((resolve, reject) => {
+      decodeQueue.push({ source, resolve, reject });
+      pumpDecodes();
+    }));
     return decoding.get(source);
   }
-  async function loadSounds() {
-    // 不同单位复用了同一份 OGG；按素材内容解码一次，所有逻辑 ID 共用缓冲。
-    const groups = new Map();
-    for (const [key, source] of Object.entries(ART.sounds)) {
-      if (!groups.has(source)) groups.set(source, []);
-      groups.get(source).push(key);
+  function pumpDecodes() {
+    while (activeDecodes < 2 && decodeQueue.length) {
+      const job = decodeQueue.shift();
+      activeDecodes++;
+      fetch(job.source).then(response => response.arrayBuffer())
+        .then(bytes => context.decodeAudioData(bytes)).then(job.resolve, job.reject)
+        .finally(() => { activeDecodes--; setTimeout(pumpDecodes, 0); });
     }
-    const entries = [...groups];
-    // 控制解码并发，并在批次间交还主线程，避免首次点击阻塞网络消息。
-    for (let i = 0; i < entries.length; i += 2) {
-      await Promise.all(
-        entries.slice(i, i + 2).map(async ([source, keys]) => {
-          try {
-            // data URL 在浏览器内部读取，不访问服务器，也不在 JS 中逐字节转换。
-            const buffer = await decodeSound(source);
-            for (const key of keys) buffers.set(key, buffer);
-          } catch {
-            // 单份损坏素材不妨碍其余音效初始化。
-          }
-        }),
-      );
-      await new Promise((resolve) => setTimeout(resolve, 0));
-    }
+  }
+  function prepare(sounds) {
+    if (!context) return Promise.resolve();
+    return Promise.all(sounds.filter(sound => sound?.asset && !buffers.has(sound.asset))
+      .map(async sound => {
+        try { buffers.set(sound.asset, await decodeSound(ART.sounds[sound.asset])); } catch {}
+      }));
+  }
+  function prepareBattle(snapshot) {
+    const models = [...new Set(snapshot.game?.units?.map(unit => unit.model) || [])].sort();
+    const key = models.join("|");
+    if (!context || key === battleSoundsKey) return;
+    battleSoundsKey = key;
+    const sounds = models.flatMap(id => {
+      const model = ART.models[id];
+      return [...(model?.weapons || []).flatMap(weapon => [weapon.sound,
+        ...(weapon.attack?.strikes || []).map(strike => strike.sound)]),
+        ...(model?.skills || []).map(skill => skill.sound)];
+    });
+    prepare(sounds);
   }
   function unlock() {
     try {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       if (!AudioContext) return Promise.resolve();
       context ||= new AudioContext();
-      if (context.state === "suspended") context.resume().catch(() => {});
-      loading ||= loadSounds().catch(() => {});
-      return loading;
+      if (context.state === "suspended") return context.resume().catch(() => {});
+      return Promise.resolve();
     } catch {
       return Promise.resolve();
     }
   }
-  function play(sound, at = context?.currentTime, rate = 1, channel = "map") {
+  function play(sound, at = null, rate = 1, channel = "map") {
     if (channel === "battle" && battleMuted) return;
-    if (!context || context.state !== "running" || !buffers.has(sound?.asset)) return;
+    if (!context || context.state !== "running" || !sound?.asset) return;
+    if (!buffers.has(sound.asset)) {
+      const stamp = channelGeneration.get(channel) || 0;
+      prepare([sound]).then(() => {
+        if (buffers.has(sound.asset) && stamp === (channelGeneration.get(channel) || 0) &&
+            !document.hidden && (at === null || at >= context.currentTime - 0.12))
+          play(sound, at, rate, channel);
+      });
+      return;
+    }
     const source = context.createBufferSource(),
       gain = context.createGain();
     source.buffer = buffers.get(sound.asset);
@@ -128,7 +146,7 @@ const WeaponAudio = (() => {
       gain.disconnect();
     };
     nodes.set(source, channel);
-    const startsAt = Math.max(context.currentTime, at);
+    const startsAt = Math.max(context.currentTime, at ?? context.currentTime);
     startTimes.set(source, startsAt);
     source.start(startsAt);
   }
@@ -139,8 +157,7 @@ const WeaponAudio = (() => {
       const sound = ART.presentation.buttonSound;
       if (!context || !sound || volumeMultiplier() === 0) return;
       if (buffers.has(sound.asset)) return play(sound, undefined, 1, "ui");
-      decodeSound(ART.sounds[sound.asset]).then((buffer) => {
-        buffers.set(sound.asset, buffer);
+      prepare([sound]).then(() => {
         if (!document.hidden) play(sound, undefined, 1, "ui");
       }).catch(() => {});
     } catch {
@@ -155,6 +172,7 @@ const WeaponAudio = (() => {
     const sequence =
       cues || [...new Set(weapon.attack.shots)].map((at) => ({ at, sound: weapon.sound }));
     if (!context || context.state !== "running") return;
+    if (sequence.some(c => c.sound && !buffers.has(c.sound.asset))) prepare(sequence.map(c => c.sound));
     if (!sequence.some((c) => buffers.has(c.sound?.asset))) return;
     const cueKey = sequence
       .map((c) => c.at + ":" + c.sound?.asset + ":" + buffers.has(c.sound?.asset))
@@ -189,5 +207,5 @@ const WeaponAudio = (() => {
     if (document.hidden) stop(true);
   });
   window.addEventListener("pagehide", () => stop(true));
-  return { unlock, sync, stop, stopBattle, setBattleMuted, play, releaseBattle };
+  return { unlock, prepare, prepareBattle, sync, stop, stopBattle, setBattleMuted, play, releaseBattle };
 })();

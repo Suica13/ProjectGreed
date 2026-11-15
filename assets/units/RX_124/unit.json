@@ -880,8 +880,8 @@
     {
       "id": "Transform_LandFly",
       "source": "Template/Unit/Skill/Transform_LandFly.gw",
-      "status": "review",
-      "name": "Transform_LandFly"
+      "status": "adapted",
+      "name": "变形：原生形态转换，资源与部位规则使用显式配置"
     },
     {
       "id": "I_Field",
@@ -906,7 +906,47 @@
     }
   ],
   "description": "TR系列机体的集大成之作",
-  "skills": [],
+  "skills": [
+    {
+      "id": "Transform",
+      "type": "transform",
+      "name": "变形",
+      "localization": {
+        "zh": {
+          "name": "变形"
+        },
+        "en": {
+          "name": "Transform"
+        },
+        "ja": {
+          "name": "変形"
+        }
+      },
+      "range": 0,
+      "minRange": 0,
+      "maxUses": 99,
+      "consumeAction": true,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Transform_4.ogg",
+        "volume": 0.6
+      },
+      "nativeAction": "action_Transform_LandFlyB",
+      "source": {
+        "mode": "transform",
+        "unitId": "RX_124_MA",
+        "kitId": "standard",
+        "kitMap": {
+          "standard": "standard"
+        },
+        "inheritResources": true,
+        "hpRecoveryPercent": 0,
+        "enRecoveryPercent": 0,
+        "shieldRecoveryPercent": 0,
+        "repairAllParts": false
+      }
+    }
+  ],
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
   "costBalance": {

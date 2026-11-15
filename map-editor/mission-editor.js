@@ -185,6 +185,8 @@ window.MissionEditor = (() => {
       TechnologyEras.eras,
       (v) => change((m) => (m.era = v)),
     );
+    select(basics,"科技点限制",m.technologyLimitEnabled === false ? "禁用" : "启用",
+      ["启用","禁用"],v=>change(m=>{m.technologyLimitEnabled=v === "启用";}));
     input(
       basics,
       "科技点上限",

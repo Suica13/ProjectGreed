@@ -16,7 +16,7 @@ def apply_body_tackle(prefab):
             "ja": {"name": "体当たり"},
             "en": {"name": "Body Tackle"},
         },
-        slot="skill",
+        slot="primary",
         type="melee",
         min=1, max=1,
         hit=95,

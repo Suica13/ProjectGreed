@@ -43,6 +43,24 @@ async function fixture(page, deployment = false) {
     drawMap(performance.now());
   }, deployment);
 }
+for (const width of [1440, 390])
+test(`hangar AI entry switch defaults on and toggles without blocking manual boarding at ${width}px`, async ({ page }) => {
+  await page.setViewportSize({ width, height: 900 });
+  await fixture(page);
+  await page.evaluate(() => HangarUI.open(getUnit("0-0")));
+  const toggle = page.locator('#hangarDialog [data-hangar-ai-access="0-0"]');
+  assert.equal(await toggle.getAttribute("aria-pressed"), "true");
+  await toggle.click();
+  assert.equal(await toggle.getAttribute("aria-pressed"), "false");
+  assert.equal(await page.evaluate(() => getUnit("0-0").allowAIBoarding), true);
+  await toggle.click();
+  assert.equal(await toggle.getAttribute("aria-pressed"), "true");
+  assert(await page.evaluate(() => {
+    const carrier = getUnit("0-0"), passenger = getUnit("0-1");
+    return Rules.hangars.canEmbark(game, passenger, carrier, Rules.hangars.of(carrier)[0].id);
+  }));
+});
+
 test("hangar preview boards and launches existing units through visible controls", async ({
   page,
 }) => {
@@ -229,4 +247,32 @@ for (const width of [390,1280]) test(`loaded APC boards through its own hangar a
   const text=await page.locator('[data-cargo-id="0-1"] .hangar-unit-info small').textContent();
   assert.match(text,/EN.*格纳库 1 \/ 1 容量点/);
   assert.equal(await page.evaluate(()=>game.units[2].embarked.carrierId),"0-1");
+});
+
+for (const width of [1440, 390]) test(`cargo transfer to nested SFS and back at ${width}px`, async ({page}) => {
+  await page.setViewportSize({width,height:900});
+  await fixture(page);
+  const errors=[];page.on("pageerror",error=>errors.push(error.message));
+  await page.evaluate(()=>{
+    const [ship,ms,sfs]=game.units;
+    sfs.model=Object.keys(UnitModels).find(id=>id.startsWith("DodaiYS__"));
+    Object.assign(sfs,{hp:Rules.modelOf(sfs).hp,en:Rules.modelOf(sfs).en});
+    const h=Rules.hangars.of(ship)[0];
+    for (const u of [ms,sfs]) u.embarked={carrierId:ship.id,hangarId:h.id,boardRound:0};
+    Rules.hangars.sync(game);HangarUI.open(ship);
+  });
+  const destination=page.locator('[data-transfer-cargo="0-1"]');
+  const sfsOption=await destination.locator('option').filter({hasText:"SFS"}).getAttribute("value");
+  await destination.selectOption(sfsOption);
+  assert.equal(await page.evaluate(()=>getUnit("0-1").embarked.carrierId),"0-2");
+  await page.locator('[data-open-cargo-hangar="0-2"]').click();
+  assert(await page.locator('[data-cargo-id="0-1"]').isVisible());
+  const transfer=page.locator('[data-transfer-cargo="0-1"]');
+  const rect=await transfer.boundingBox();assert(rect.x>=0&&rect.x+rect.width<=width);
+  await page.screenshot({path:`tmp/verification/screenshots/hangar-transfer-${width}.png`});
+  await transfer.selectOption("0");
+  assert.equal(await page.evaluate(()=>getUnit("0-1").embarked.carrierId),"0-0");
+  await page.getByRole("button",{name:"返回上层格纳库",exact:true}).click();
+  assert(await page.locator('[data-cargo-id="0-1"]').isVisible());
+  assert.deepEqual(errors,[]);
 });

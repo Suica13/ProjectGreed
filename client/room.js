@@ -222,7 +222,7 @@ const RoomPanel = (() => {
     ctx.fillText("PVE · PMC", 25, 136);
     canvas.setAttribute("aria-label", I18n.text("战场扫荡"));
     byId("roomMapTitle").textContent = I18n.text("战场扫荡");
-    byId("roomMapInfo").textContent = I18n.text("合约模式") + " · " + I18n.text("战场扫荡");
+    byId("roomMapInfo").textContent = I18n.text("合作模式") + " · " + I18n.text("战场扫荡");
   }
   function drawMap(map) {
     const canvas = byId("roomMapPreview"),
@@ -584,7 +584,7 @@ const RoomPanel = (() => {
       missionOptions.append(element("summary","","任务模式设置"));
       const map=Rules.getMap(settings.mapId);
       missionOptions.append(element("p","helper",map.description));
-      missionOptions.append(element("p","helper","年代："+settings.missionEra+" · 科技点上限："+formatNumber(settings.technologyLimit)+" · 地图固定编组规则"));
+      missionOptions.append(element("p","helper","年代："+settings.missionEra+(settings.missionTechnologyLimitEnabled === false ? "" : " · 科技点上限："+formatNumber(settings.technologyLimit))+" · 地图固定编组规则"));
     }
     let regularOptions = byId("regularRoomOptions");
     if (!regularOptions) {
@@ -750,7 +750,7 @@ const RoomPanel = (() => {
       for(const id of ["roomCostLimit","roomUnitLimit","roomFormationPreset","saveRoomPreset","deleteRoomPreset"])
         byId(id).disabled=true;
     }
-    byId("roomTagRestrictions").closest("details").hidden = strategic;
+    byId("roomTagRestrictions").closest("details").hidden = strategic || settings.mode === "mission";
     teamRulesPanel.closest("details").hidden = settings.mode !== "quick";
     for (const id of ["roomFogMode", "roomShareAlliedUnits"])
       byId(id).closest("label").hidden = strategic;

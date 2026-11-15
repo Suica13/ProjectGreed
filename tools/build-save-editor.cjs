@@ -28,6 +28,7 @@ function buildSaveEditor(root = path.resolve(__dirname, "..")) {
   };
   const headers = {
     ART: art,
+    FACTION_DATA: JSON.parse(read("shared/factions.json")),
     PILOT_DATA: JSON.parse(read("shared/pilots.json")),
     DEVELOPMENT_TREE: JSON.parse(read("shared/development-tree.json")),
     STARTER_PROFILE: JSON.parse(read("shared/starter-profile.json")),
@@ -36,6 +37,9 @@ function buildSaveEditor(root = path.resolve(__dirname, "..")) {
   };
   const modules = [
     "shared/save-codec.js",
+    "shared/technology-eras.js",
+    "shared/normal-forms.js",
+    "shared/armor-coatings.js",
     "client/profile-storage.js",
     "client/profile-identity.js",
     "shared/profile-migrations.js",

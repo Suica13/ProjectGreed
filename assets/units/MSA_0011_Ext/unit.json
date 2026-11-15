@@ -1324,9 +1324,6 @@
         "damageComponents": {
           "beam": 3000.0
         },
-        "requiredParts": [
-          "head"
-        ],
         "attack": {
           "startAnimation": null,
           "steps": [
@@ -1388,17 +1385,6 @@
             }
           ]
         },
-        "muzzle": {
-          "mounts": [
-            {
-              "bone": "Body",
-              "offset": {
-                "x": 0,
-                "y": 0
-              }
-            }
-          ]
-        },
         "projectile": {
           "texture": "../../projectiles/Beam_1_Blue.png",
           "scale": 0.65,
@@ -1408,10 +1394,6 @@
           "visibleInFog": false
         },
         "hitEffect": "Beam_Hit_1_Blue",
-        "source": {
-          "file": "Units/BattleUnits/Weapon/Funnel/AEUG_MSA_0011_Incom.gw",
-          "root": "GW_BattleUniverse_DLC_0087"
-        },
         "remote": {
           "kind": "incom",
           "units": [
@@ -1523,6 +1505,24 @@
           "energyPerEmission": 0,
           "energy": 100.0,
           "adaptation": "native_energy_lifetime_and_bursts"
+        },
+        "requiredParts": [
+          "head"
+        ],
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          ]
+        },
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Funnel/AEUG_MSA_0011_Incom.gw",
+          "root": "GW_BattleUniverse_DLC_0087"
         }
       }
     }
@@ -1536,8 +1536,8 @@
     {
       "id": "Transform_LandFly",
       "source": "Template/Unit/Skill/Transform_LandFly.gw",
-      "status": "review",
-      "name": "Transform_LandFly"
+      "status": "adapted",
+      "name": "变形：原生形态转换，资源与部位规则使用显式配置"
     },
     {
       "id": "CmdDef",
@@ -1635,7 +1635,47 @@
     }
   ],
   "description": "S高达的强化装备型态,加装了各类装甲与推进器",
-  "skills": [],
+  "skills": [
+    {
+      "id": "Transform",
+      "type": "transform",
+      "name": "变形",
+      "localization": {
+        "zh": {
+          "name": "变形"
+        },
+        "en": {
+          "name": "Transform"
+        },
+        "ja": {
+          "name": "変形"
+        }
+      },
+      "range": 0,
+      "minRange": 0,
+      "maxUses": 99,
+      "consumeAction": true,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Transform_4.ogg",
+        "volume": 0.6
+      },
+      "nativeAction": "action_Transform_LandFlyB",
+      "source": {
+        "mode": "transform",
+        "unitId": "MSA_0011_Ext_MA",
+        "kitId": "standard",
+        "kitMap": {
+          "standard": "standard"
+        },
+        "inheritResources": true,
+        "hpRecoveryPercent": 0,
+        "enRecoveryPercent": 0,
+        "shieldRecoveryPercent": 0,
+        "repairAllParts": false
+      }
+    }
+  ],
   "kitAliases": {
     "kit_0": "standard",
     "kit_1": "standard",

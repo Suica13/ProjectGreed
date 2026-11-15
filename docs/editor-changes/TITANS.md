@@ -11,6 +11,7 @@
 
 | 时间（日本时间） | 来源IP | 单位 | 修改对象 | 修改内容 | 详细日志 |
 |---|---|---|---|---|---|
+| 2026-11-15 03:38:57 | local | 米迪亚改（MedeaKai） | 单位特例 | /stats/cost：250 → 300 | [JSON](../../server-data/editor-changes/2026-11-15/2026-11-14T18-38-57-850Z-02d45a5d-e853-4c55-9e66-6e5472e92d64.json) |
 | 2026-11-14 11:30:28 | local | 哥伦布级改（ColumbusClassKai） | 单位特例 | /displayLocalization/en：（无） → {"name":"Columbus Class Kai","description":"Main Supply Ship of the Earth Federation Fleet, capable …<br>/localization/ja/description：（无） → "地球連邦軍艦隊の主力補給艦。"<br>/localization/ja/name：（无） → "コロンブス改級"<br>/stats/cost：750 → 350<br>/weapons/ColumbusClassKai_Turret_AA/hit：85 → 125<br>/weapons/ColumbusClassKai_Turret_AA/max：2 → 1 | [JSON](../../server-data/editor-changes/2026-11-14/2026-11-14T02-30-28-382Z-ceb1f99d-4163-400d-b82d-c93fa6978143.json) |
 | 2026-11-14 11:30:24 | local | 米迪亚改（MedeaKai） | 单位特例 | /displayLocalization/en/description：（无） → "Improved Medea, with enhanced mobility"<br>/localization/en/name："MedeaKai" → "Medea Kai"<br>/localization/ja/description：（无） → "ミデアの改良型。機動性が向上している。"<br>/localization/ja/name：（无） → "ミデア改"<br>/stats/cost：350 → 300 | [JSON](../../server-data/editor-changes/2026-11-14/2026-11-14T02-30-24-240Z-9ef74963-56af-4105-b3d8-8d270938f115.json) |
 | 2026-11-09 08:19:41 | 126.33.232.180 | 铁奥（PMX_003） | 共用武器 TITANS_PMX_003_BR__lv1 | /weapons/TITANS_PMX_003_BR/attackRounds：2 → 3<br>/weapons/TITANS_PMX_003_BR/max：2 → 4 | [JSON](../../server-data/editor-changes/2026-11-09/2026-11-08T23-19-41-581Z-32deb18a-5bcb-4119-9aef-b828290e2a60.json) |

@@ -59,6 +59,11 @@ const weapon = (id) =>
   Object.values(ART.models)
     .flatMap((m) => m.weapons)
     .find((w) => w.id === id);
+async function ready(r) {
+  await r.audio.unlock();
+  await r.audio.prepare(["EF_90mmMG","Common_DoubleVulcan_MS","EF_HypeBazooka"]
+    .map(id=>weapon(id).sound).concat(Object.values(ART.presentation).filter(item=>item?.asset)));
+}
 test("original OGG references, volumes and original weapon identifiers are embedded offline", () => {
   assert.equal(Object.keys(ART.sounds).filter((key) => key.startsWith("RGM_79/")).length, 6);
   assert.equal(ART.presentation.sfxVolume, 0.5);
@@ -81,7 +86,7 @@ test("original OGG references, volumes and original weapon identifiers are embed
 });
 test("sound clock schedules every MG Step once, uses original volume, and cancels on skip/seek", async () => {
   const r = runtime();
-  await r.audio.unlock();
+  await ready(r);
   const owner = {};
   r.audio.sync(owner, 0, weapon("EF_90mmMG"), 0);
   assert.equal(r.starts.length, 9);
@@ -103,7 +108,7 @@ test("sound clock schedules every MG Step once, uses original volume, and cancel
 });
 test("quick playback and counter attacks get distinct sound schedules without replaying snapshots", async () => {
   const r = runtime();
-  await r.audio.unlock();
+  await ready(r);
   const owner = {};
   r.audio.sync(owner, 0, weapon("EF_90mmMG"), 0, 2);
   assert.equal(r.starts[0].at, 10.15);
@@ -119,7 +124,7 @@ test("quick playback and counter attacks get distinct sound schedules without re
 test("a battle can start while sounds decode without losing its sound schedule", async () => {
   const r = runtime(),
     owner = {},
-    loading = r.audio.unlock();
+    loading = r.audio.unlock().then(()=>r.audio.prepare([weapon("EF_90mmMG").sound]));
   r.audio.sync(owner, 0, weapon("EF_90mmMG"), 0);
   await loading;
   r.audio.sync(owner, 0, weapon("EF_90mmMG"), 0);
@@ -128,7 +133,7 @@ test("a battle can start while sounds decode without losing its sound schedule",
 
 test("quick battle muting cancels queued cues and keeps map sounds independent", async () => {
   const r = runtime();
-  await r.audio.unlock();
+  await ready(r);
   const owner = {};
   r.audio.sync(owner, 0, weapon("EF_90mmMG"), 0);
   assert.equal(r.starts.length, 9);
@@ -152,7 +157,7 @@ test("quick battle muting cancels queued cues and keeps map sounds independent",
 
 test("natural counter completion preserves the playing last shot, cancels future cues and keeps skip/mute effective", async () => {
   const r = runtime();
-  await r.audio.unlock();
+  await ready(r);
   r.audio.sync({}, 1, weapon("EF_HypeBazooka"), 0);
   const first = r.starts[0],
     last = r.starts.at(-1);
@@ -164,7 +169,7 @@ test("natural counter completion preserves the playing last shot, cancels future
   r.audio.setBattleMuted(true);
   assert.ok(r.stops.includes(last.node));
   const q = runtime();
-  await q.audio.unlock();
+  await ready(q);
   q.audio.sync({}, 1, weapon("EF_HypeBazooka"), 0);
   q.clock().currentTime = q.starts[0].at;
   q.audio.releaseBattle();
@@ -176,7 +181,7 @@ test("natural counter completion preserves the playing last shot, cancels future
 
 test("battle effects are halved again while map and interface audio keep their current level", async () => {
   const r = runtime();
-  await r.audio.unlock();
+  await ready(r);
   const sound = weapon("EF_90mmMG").sound;
   r.audio.play(sound, undefined, 1, "battle");
   r.audio.play(sound, undefined, 1, "map");
@@ -185,7 +190,7 @@ test("battle effects are halved again while map and interface audio keep their c
 
 test("scene changes preserve UI feedback and full stop still silences it", async () => {
   const r = runtime();
-  await r.audio.unlock();
+  await ready(r);
   r.audio.play(ART.presentation.buttonSound, undefined, 1, "ui");
   const button = r.starts.at(-1).node;
   r.audio.play(ART.presentation.moveSound);

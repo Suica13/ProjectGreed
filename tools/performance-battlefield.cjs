@@ -65,7 +65,7 @@ async function main() {
         const setup = await page.evaluate(
           async ({ count, fixture }) => {
             Net.leave();
-            const armies = Array(10).fill(null);
+            const armies = Array(12).fill(null);
             armies[2] = [{ unitId: "Type61", kitId: "standard" }];
             let g = Rules.create(false, 7319, armies, false, {
               mode: "battlefield",

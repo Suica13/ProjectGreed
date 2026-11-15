@@ -429,8 +429,10 @@ const WeaponEffects = (() => {
       })
       .filter((contact) => contact.executed !== false)
       .sort((a, b) => a.at - b.at);
-    const moves =
-        event?.empty || nuclear ? [] : dodgeMoves(contacts, initialSlot, event, dodgeSchedule),
+    const fixedTarget = event?.targetCanEvade === false ||
+        (target.unit && Rules.canEvade?.(target.unit) === false),
+      moves =
+        event?.empty || nuclear || fixedTarget ? [] : dodgeMoves(contacts, initialSlot, event, dodgeSchedule),
       motion = { moves, initialSlot, timeOffset };
     // Aim at the defender's current lane, without adding artificial Miss deviation.
     for (const shot of shots) {

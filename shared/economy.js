@@ -7,17 +7,21 @@ const Economy = (() => {
     typeof PRODUCTION_CATALOG !== "undefined"
       ? PRODUCTION_CATALOG
       : require("./production-data.cjs");
-  let kitModels;
+  let kitModels, unitCatalog;
+  function catalogForUnits() {
+    return (unitCatalog ||= typeof ART !== "undefined" ? ART :
+      require("../tools/load-catalog.cjs").loadCatalog({embedAssets:false}));
+  }
   function modelsForUnits() {
     return (kitModels ||=
-      typeof ART !== "undefined"
-        ? ART.models
-        : require("../tools/load-catalog.cjs").loadCatalog().models);
+      catalogForUnits().models);
   }
   const starter =
     typeof STARTER_PROFILE !== "undefined" ? STARTER_PROFILE : require("./starter-profile.json");
   const tree =
     typeof DEVELOPMENT_TREE !== "undefined" ? DEVELOPMENT_TREE : require("./development-tree.json");
+  const licenseUnit = id => catalog.unitFamilies?.[id]?.unitId || (id === "RGZ_91" ? "RGZ_91_MA" : id);
+  const ownsLicense = id => !!state.licenses[licenseUnit(id)];
   const defaultPermits = [
     ...new Set([
       ...starter.units.map((unit) => unit.unitId),
@@ -60,7 +64,7 @@ const Economy = (() => {
     const licenses = defaultLicenses();
     for (const [id, amount] of Object.entries(owned)) {
       if (typeof amount !== "boolean") throw Error("部署许可无效: " + id);
-      const unitId = id;
+      const unitId = licenseUnit(id);
       if (
         !Object.hasOwn(catalog.baseModels, unitId) &&
         !Object.values(modelsForUnits()).some((model) => model.prefabId === unitId)
@@ -243,11 +247,12 @@ const Economy = (() => {
           throw Error("库存数量无效：" + id);
         const known =
           kind === "inventory"
-            ? Object.hasOwn(catalog.baseModels, id)
+            ? Object.hasOwn(catalog.baseModels, id) || Object.values(modelsForUnits()).some(m => m.prefabId === id)
             : Object.hasOwn(modelsForUnits(), id);
         if (!known || ["__proto__", "constructor", "prototype"].includes(id))
           throw Error("库存物品无效：" + id);
-        if (count) result[kind][id] = count;
+        const target = catalog.unitFamilies?.[id]?.unitId || id;
+        if (count) result[kind][target] = (result[kind][target] || 0) + count;
       }
     }
     return result;
@@ -268,7 +273,7 @@ const Economy = (() => {
     return { missing, reasons };
   }
   function quantity(unitId) {
-    return state.inventory[unitId] || 0;
+    return state.inventory[catalog.unitFamilies?.[unitId]?.unitId || unitId] || 0;
   }
   function unitOffer(unitId, production = catalog) {
     const permit = production.licenseOffers[unitId];
@@ -306,7 +311,7 @@ const Economy = (() => {
     };
   }
   function mayProduce(unitId, faction) {
-    return !!state.licenses[unitId] && available(licenseOffer(unitId), faction);
+    return ownsLicense(unitId) && available(licenseOffer(unitId), faction);
   }
   function produce(unitId, kitId, faction) {
     const offer = productionOffer(unitId, kitId);
@@ -441,16 +446,15 @@ const Economy = (() => {
     return { ok: transact(plan, licenses), reason: "funds", plan };
   }
   function transformStock(from, to) {
-    const catalog =
-      typeof ART !== "undefined"
-        ? ART
-        : require("../tools/load-catalog.cjs").loadCatalog({ embedAssets: false });
+    const catalog = catalogForUnits();
     const forms = typeof NormalForms !== "undefined" ? NormalForms : require("./normal-forms.js");
-    if (!forms.options(catalog, from).some((o) => o.unitId === to) || quantity(from) < 1)
+    const stockId = forms.family(catalog, from).find(id => quantity(id) > 0);
+    if (!forms.options(catalog, from).some((o) => o.unitId === to) || !stockId)
       throw Error("没有可变形的机体库存");
     const next = snapshot();
-    next.inventory[from]--;
+    next.inventory[stockId]--;
     next.inventory[to] = (next.inventory[to] || 0) + 1;
+    if (forms.family(catalog, from).some(id => next.licenses[id])) next.licenses[to] = true;
     normalizeStock(next);
     return commit(next);
   }
@@ -487,7 +491,7 @@ const Economy = (() => {
     baseModel,
     defaultKit,
     defaultModel: (unitId) => unitId + "__" + defaultKit(unitId),
-    hasLicense: (unitId) => !!state.licenses[unitId],
+    hasLicense: ownsLicense,
   };
 })();
 if (typeof module !== "undefined") module.exports = Economy;

@@ -158,6 +158,8 @@ const Net = (() => {
     "cancel_attack",
     "end_turn",
     "embark",
+    "set_hangar_ai_access",
+    "hangar_transfer",
     "launch",
     "deploy",
     "confirm_deployment",
@@ -649,7 +651,7 @@ const Net = (() => {
     // They must never restore a superseded room phase or reopen its modal.
     if (!n.active || !s || s !== n.snapshot) return;
     if (!s.started) BattleAssets.release();
-    else if (s.returnCountdown) BattleAssets.cancel();
+    else if (s.returnCountdown || ["sweep_map", "sweep_event", "sweep_resupply"].includes(s.phase)) BattleAssets.cancel();
     else if (BattleAssets.guard(s, () => applySnapshot(s))) {
       phase = "loading";
       return;
@@ -799,7 +801,15 @@ const Net = (() => {
     byId("reaction").hidden = true;
     const ownResponse =
       s.phase === "reaction" && s.pending && canControl(getUnit(s.pending.target));
-    if (CombatPlayback.active() && !ownResponse) {
+    if (["sweep_map", "sweep_event", "sweep_resupply"].includes(s.phase)) {
+      phase = s.phase;
+      battleView = moving = selected = weaponId = null;
+      mode = "select";
+      PlanningUI.reset();
+      AttackControls.reset();
+      TurnFlow.reset();
+      byId("battle").hidden = true;
+    } else if (CombatPlayback.active() && !ownResponse) {
       phase = "battle";
       MapCombat.resume(battleView);
     } else if (!online && s.phase !== "finished") {

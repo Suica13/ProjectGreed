@@ -991,5 +991,6 @@
   "refits": [],
   "production": {
     "enabled": true
-  }
+  },
+  "formOnly": true
 }

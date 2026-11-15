@@ -545,7 +545,42 @@
     "AMX_101_0093_NZN": "standard",
     "MusaiClassFinalType_0093_NZN": "standard",
     "AMX_107_0093_NZN": "standard",
-    "AMX_006_0093_NZN": "standard"
+    "AMX_006_0093_NZN": "standard",
+    "RTX_440_ModeB": "standard",
+    "MSA_005_MA": "standard",
+    "MSZ_006_MA": "kit_0",
+    "MSZ_006A1_MA": "kit_0",
+    "MSZ_006C1_MA": "standard",
+    "MSZ_010_MA": "standard",
+    "MSZ_008_MA": "standard",
+    "MSA_005S_MA": "standard",
+    "MSN_001_MA": "standard",
+    "MSA_0011_Ext_MA": "standard",
+    "NRX_044_TR_3_MA": "standard",
+    "NRX_044_MA": "standard",
+    "RX_110_MA": "standard",
+    "MRX_009_MA": "standard",
+    "RX_139_MA": "standard",
+    "ORX_005_MA": "standard",
+    "PMX_000_MA": "standard",
+    "RX_124_MA": "standard",
+    "ORX_005_TR_5_MA": "standard",
+    "ORX_005_TR_5_FF_X39A_MA": "standard",
+    "RX_124_Kehaar2_MA": "standard",
+    "RX_124_Kehaar2_M_MA": "standard",
+    "MRX_010_MA": "standard",
+    "NRX_055_MA": "standard",
+    "AMX_003_MA": "kit_0",
+    "AMX_006_MA": "standard",
+    "AMX_102_MA": "standard",
+    "AMX_008_MA": "standard",
+    "AMA_01X_MA": "standard",
+    "AMX_107_MA": "standard",
+    "AMX_107M_MA": "standard",
+    "MSZ_006A1_0093_EFSF_MA": "kit_0",
+    "MSZ_006C1_0093_EFSF_MA": "standard",
+    "AMX_107_0093_NZN_MA": "standard",
+    "AMX_006_0093_NZN_MA": "standard"
   },
   "baseModels": {
     "RGM_79": "RGM_79__machine_gun",
@@ -1089,7 +1124,42 @@
     "AMX_101_0093_NZN": "AMX_101_0093_NZN__standard",
     "MusaiClassFinalType_0093_NZN": "MusaiClassFinalType_0093_NZN__standard",
     "AMX_107_0093_NZN": "AMX_107_0093_NZN__standard",
-    "AMX_006_0093_NZN": "AMX_006_0093_NZN__standard"
+    "AMX_006_0093_NZN": "AMX_006_0093_NZN__standard",
+    "RTX_440_ModeB": "RTX_440_ModeB__standard",
+    "MSA_005_MA": "MSA_005_MA__standard",
+    "MSZ_006_MA": "MSZ_006_MA__kit_0",
+    "MSZ_006A1_MA": "MSZ_006A1_MA__kit_0",
+    "MSZ_006C1_MA": "MSZ_006C1_MA__standard",
+    "MSZ_010_MA": "MSZ_010_MA__standard",
+    "MSZ_008_MA": "MSZ_008_MA__standard",
+    "MSA_005S_MA": "MSA_005S_MA__standard",
+    "MSN_001_MA": "MSN_001_MA__standard",
+    "MSA_0011_Ext_MA": "MSA_0011_Ext_MA__standard",
+    "NRX_044_TR_3_MA": "NRX_044_TR_3_MA__standard",
+    "NRX_044_MA": "NRX_044_MA__standard",
+    "RX_110_MA": "RX_110_MA__standard",
+    "MRX_009_MA": "MRX_009_MA__standard",
+    "RX_139_MA": "RX_139_MA__standard",
+    "ORX_005_MA": "ORX_005_MA__standard",
+    "PMX_000_MA": "PMX_000_MA__standard",
+    "RX_124_MA": "RX_124_MA__standard",
+    "ORX_005_TR_5_MA": "ORX_005_TR_5_MA__standard",
+    "ORX_005_TR_5_FF_X39A_MA": "ORX_005_TR_5_FF_X39A_MA__standard",
+    "RX_124_Kehaar2_MA": "RX_124_Kehaar2_MA__standard",
+    "RX_124_Kehaar2_M_MA": "RX_124_Kehaar2_M_MA__standard",
+    "MRX_010_MA": "MRX_010_MA__standard",
+    "NRX_055_MA": "NRX_055_MA__standard",
+    "AMX_003_MA": "AMX_003_MA__kit_0",
+    "AMX_006_MA": "AMX_006_MA__standard",
+    "AMX_102_MA": "AMX_102_MA__standard",
+    "AMX_008_MA": "AMX_008_MA__standard",
+    "AMA_01X_MA": "AMA_01X_MA__standard",
+    "AMX_107_MA": "AMX_107_MA__standard",
+    "AMX_107M_MA": "AMX_107M_MA__standard",
+    "MSZ_006A1_0093_EFSF_MA": "MSZ_006A1_0093_EFSF_MA__kit_0",
+    "MSZ_006C1_0093_EFSF_MA": "MSZ_006C1_0093_EFSF_MA__standard",
+    "AMX_107_0093_NZN_MA": "AMX_107_0093_NZN_MA__standard",
+    "AMX_006_0093_NZN_MA": "AMX_006_0093_NZN_MA__standard"
   },
   "offers": {
     "RGM_79__beam_spray": {
@@ -78231,6 +78301,40 @@
           "seconds": 3.0
         }
       ]
+    }
+  },
+  "unitFamilies": {
+    "RX_81ST": {
+      "unitId": "RX_81",
+      "kitId": "variant_RX_81ST"
+    },
+    "RX_81LA": {
+      "unitId": "RX_81",
+      "kitId": "variant_RX_81LA"
+    },
+    "RX_81AS": {
+      "unitId": "RX_81",
+      "kitId": "variant_RX_81AS"
+    },
+    "RX_81FC": {
+      "unitId": "RX_81",
+      "kitId": "variant_RX_81FC"
+    },
+    "RX_81LA_IMBA": {
+      "unitId": "RX_81",
+      "kitId": "variant_RX_81LA_IMBA"
+    },
+    "GAT_X105_A": {
+      "unitId": "GAT_X105",
+      "kitId": "variant_GAT_X105_A"
+    },
+    "GAT_X105_L": {
+      "unitId": "GAT_X105",
+      "kitId": "variant_GAT_X105_L"
+    },
+    "GAT_X105_S": {
+      "unitId": "GAT_X105",
+      "kitId": "variant_GAT_X105_S"
     }
   }
 }

@@ -54,7 +54,13 @@ const HangarUI = (() => {
     if (Net.active) return Net.request(action, fields);
     try {
       const u = getUnit(fields.unitId);
-      if (action === "embark")
+      if (action === "set_hangar_ai_access") {
+        Rules.hangars.setAIEntry(u, fields.allowed);
+        render(); update(); return;
+      } else if (action === "hangar_transfer") {
+        Rules.hangars.transfer(game, u, getUnit(fields.carrierId), fields.hangarId);
+        render(); update(); return;
+      } else if (action === "embark")
         Rules.hangars.embarkSquad(game, u, getUnit(fields.carrierId), fields.hangarId, fields.single === true, fields.deploymentDrop === true);
       else PlanningUI.move(Rules.hangars.previewLaunchSquad(game, (fields.unitIds || [u.id]).map(getUnit), fields.x, fields.y));
       addLog(`${logUnit(u)} ${action === "embark" ? "搭载" : "出击"}。`);
@@ -130,6 +136,15 @@ const HangarUI = (() => {
       return;
     }
     const carrierMode = Rules.hangars.of(selectedUnit).length > 0 && !boardingCarrier;
+    if (carrierMode) {
+      const blocked = selectedUnit.allowAIBoarding !== true;
+      const toggle = button(I18n.text(blocked ? "禁止AI进入：开启" : "禁止AI进入：关闭"),
+        () => request("set_hangar_ai_access", { unitId: selectedUnit.id, allowed: blocked }),
+        !allowed(selectedUnit) || (Net.active && Rules.controllerOf(game, selectedUnit) !== Net.seat));
+      toggle.dataset.hangarAiAccess = selectedUnit.id;
+      toggle.setAttribute("aria-pressed", String(blocked));
+      content.append(toggle);
+    }
     if (carrierMode && allowed(selectedUnit) && boardingTargets(selectedUnit).length) {
       const embarkButton = button("搭载", () => startBoarding(selectedUnit));
       embarkButton.dataset.boardCarrier = selectedUnit.id;
@@ -170,7 +185,31 @@ const HangarUI = (() => {
           const inspect = button("查看状态", () => { statusUnit = u.id; render(); });
           inspect.dataset.inspectCargo = u.id;
           item.append(inspect);
-          const ready = allowed(u) && !u.acted && (phase === "deployment" || u.embarked?.boardRound !== game.round);
+          if (Rules.hangars.of(u).length) {
+            const nested = button("打开格纳库", () => { inspected = u.id; statusUnit = null; render(); });
+            nested.dataset.openCargoHangar = u.id;
+            item.append(nested);
+          }
+          if (carrierMode && allowed(u)) {
+            const destinations = game.units.flatMap(target => Rules.hangars.of(target)
+              .filter(slot => Rules.hangars.canTransfer(game, u, target, slot.id))
+              .map(slot => ({ target, slot })));
+            if (destinations.length) {
+              const select = element("select");
+              select.dataset.transferCargo = u.id;
+              select.setAttribute("aria-label", I18n.text("转移到格纳库"));
+              select.append(new Option(I18n.text("转移到格纳库"), ""));
+              destinations.forEach(({ target, slot }, index) => select.append(new Option(
+                unitName(target) + " · " + (slot.kind === "sfs" ? "SFS" : I18n.text("格纳库") + " " + (Rules.hangars.of(target).indexOf(slot) + 1)), String(index))));
+              select.onchange = () => {
+                if (select.value === "") return;
+                const { target, slot } = destinations[Number(select.value)];
+                request("hangar_transfer", { unitId: u.id, carrierId: target.id, hangarId: slot.id });
+              };
+              item.append(select);
+            }
+          }
+          const ready = !carrier.embarked && allowed(u) && !u.acted && (phase === "deployment" || u.embarked?.boardRound !== game.round);
           if (carrierMode && ready) {
             const icon = item.querySelector("img");
             icon.setAttribute("role","button"); icon.tabIndex = 0;
@@ -213,6 +252,8 @@ const HangarUI = (() => {
       }
     }
     if (carrierMode) {
+      const parent = getUnit(selectedUnit.embarked?.carrierId);
+      if (parent) content.prepend(button("返回上层格纳库", () => { inspected = parent.id; statusUnit = null; render(); }));
       const valid = new Set(Rules.hangars.cargo(game,selectedUnit).filter(u => allowed(u) && !u.acted).map(u => u.id));
       for (const id of launchSelection) if (!valid.has(id)) launchSelection.delete(id);
       const actions = element("div","hangar-launch-selection");
@@ -249,7 +290,7 @@ const HangarUI = (() => {
     const help = element("div", "hangar-help helper");
     for (const text of [
       "搭载结束本次行动，下次己方回合可出击；出击范围使用载员自身移动力。",
-      "出击视为已移动，仍可攻击或使用技能；剩余行动点×75%并向上取整，所属舰船不能撤回移动。",
+      "出击视为已移动，仍可攻击或使用技能；主动出击不减少攻击轮数，所属舰船不能撤回移动。",
       "搭载中每次己方回合恢复25%最大耐久、50%最大EN，并随机修复最多两个受损零件。",
       "舰毁紧急退出损失25%最大耐久和最大盾牌；无合法落点或耐久归零则损失载员。",
     ]) help.append(element("p", "", I18n.text(text)));

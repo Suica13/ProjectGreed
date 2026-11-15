@@ -1,0 +1,3300 @@
+{
+  "schemaVersion": 2,
+  "id": "MRX_009_MA",
+  "code": "MRX-009-MA",
+  "source": "GW_BattleUniverse_DLC_0087/Units/BattleUnits/MRX_009/MRX_009_MA.ini",
+  "materials": {
+    "textures": {
+      "MRX_009_Crotch_1.png": "textures/MRX_009_Crotch_1.png",
+      "MRX_009_Body_1.png": "textures/MRX_009_Body_1.png",
+      "MRX_009_ArmL_1.png": "textures/MRX_009_ArmL_1.png",
+      "MRX_009_ArmR_1.png": "textures/MRX_009_ArmR_1.png",
+      "MRX_009_ShoulderL_1.png": "textures/MRX_009_ShoulderL_1.png",
+      "MRX_009_ShoulderR_1.png": "textures/MRX_009_ShoulderR_1.png",
+      "MRX_009_Head_1.png": "textures/MRX_009_Head_1.png",
+      "MRX_009_FootL_1.png": "textures/MRX_009_FootL_1.png",
+      "MRX_009_LegL_1.png": "textures/MRX_009_LegL_1.png",
+      "MRX_009_FootR_1.png": "textures/MRX_009_FootR_1.png",
+      "MRX_009_LegR_1.png": "textures/MRX_009_LegR_1.png",
+      "MRX_009_MA_1.png": "textures/MRX_009_MA_1.png",
+      "MRX_009.png": "textures/MRX_009.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
+    },
+    "icon": "MRX_009.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -18.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "scaleX": 1.0,
+      "independentClock": true
+    },
+    {
+      "name": "Boost_MA",
+      "texture": "Boost_1.png",
+      "bone": "Attachment15",
+      "order": 1.0,
+      "scale": 1.5,
+      "offset": {
+        "x": -2.0,
+        "y": -15.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Attachment15",
+      "order": 1.5,
+      "scale": 2.5,
+      "offset": {
+        "x": -2.5,
+        "y": -15.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "MA",
+      "texture": "MRX_009_MA_1.png",
+      "bone": "Attachment15",
+      "order": 2.0,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    }
+  ],
+  "animations": {
+    "EnterPilot": "../../animations/EnterPilot__AMX_002.json",
+    "QuitPilot": "../../animations/QuitPilot.json",
+    "NoPilotIdle": "../../animations/NoPilotIdle.json",
+    "Common_Idle": "../../animations/Common_Idle__EMS_10.json",
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "OnMovingWalk": "../../animations/OnMovingWalk__MA_08.json",
+    "Guard": "../../animations/Guard__AMX_002.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Daze": "../../animations/Common_Daze__AMX_002.json",
+    "Common_Stagger": "../../animations/Common_Stagger__AMX_002.json",
+    "Common_Shoot_A": "../../animations/Common_Shoot_A__AMX_002.json",
+    "Common_Shoot_A_FA": "../../animations/Common_Shoot_A_FA__AMX_002.json",
+    "Common_Shoot_A_L": "../../animations/Common_Shoot_A_L.json",
+    "Common_Cannon_Shoot_A": "../../animations/Common_Cannon_Shoot_A__AMX_002.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 312500,
+    "en": 3000.0,
+    "move": 8,
+    "mobility": 100.0,
+    "cost": 3000,
+    "counterLimit": 1,
+    "accuracy": 135.0,
+    "partStructuralStrength": 155.0,
+    "partsBreakable": false,
+    "movementType": "air",
+    "adaptability": {
+      "ground": 25.0,
+      "space": 100,
+      "water": 25.0,
+      "air": 100.0,
+      "atmosphere": 0,
+      "mountain": 25.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "commandAuras": [
+      {
+        "type": "cmdDef",
+        "name": "防御指挥",
+        "source": "Template/Unit/Skill/CmdDef.gw"
+      }
+    ],
+    "speed": 145,
+    "actionPoints": 10,
+    "sensors": {
+      "sight": 10,
+      "radar": 13.0,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    },
+    "iField": {
+      "capacity": 600000.0,
+      "reduction": 0.95,
+      "piercingReduction": 0.5,
+      "recoveryPercent": 5,
+      "nativeRecoverySpeed": 500.0,
+      "minimumRatio": -0.25,
+      "effect": "I_Field_2"
+    }
+  },
+  "attackBonuses": {
+    "melee": 100.0,
+    "shooting": 100.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 35.0,
+      "flat": 1000.0
+    },
+    "shell": {
+      "percent": 45.0,
+      "flat": 1000.0
+    },
+    "melee": {
+      "percent": 35.0,
+      "flat": 1000.0
+    },
+    "dp": {
+      "percent": 45.0,
+      "flat": 90.0
+    },
+    "sp": {
+      "percent": 35.0,
+      "flat": 0.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 250000.0,
+    "walkSpeed": 0.95,
+    "boostSpeed": 2.0,
+    "turnSpeed": 0.75,
+    "reaction": 100.0,
+    "shooting": 200.0,
+    "melee": 200.0,
+    "nativeTags": [
+      "MRX_009_MA",
+      "Unit",
+      "MA",
+      "TITANS",
+      "0087",
+      "UC",
+      "LargeUnit",
+      "ManualControlCapable"
+    ],
+    "nativeSkills": [
+      "PlayerControl_Entry",
+      "CantDeconstruct",
+      "CmdDef",
+      "Transform_LandFly",
+      "FlyUnit_Fighter",
+      "I_Field",
+      "PlayerControl_Marker",
+      "PlayerControl",
+      "MRX_009_MA"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 135.0,
+    "unitLevel": 12000.0,
+    "enBeforeReduction": 3000.0,
+    "enCapacityMultiplier": 1,
+    "tacticalMoveBeforeBonus": 7,
+    "actionTurnSpeed": 0.75,
+    "mobilityMoveTarget": 8,
+    "adaptability": {
+      "ground": 25.0,
+      "space": 100.0,
+      "water": 25.0,
+      "air": 100.0,
+      "mountain": 25.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 26.0,
+      "radar": 468.0,
+      "antiDetection": 0.0
+    },
+    "v17BaseHp": 250000.0,
+    "technologyEra": "UC_0087_T1",
+    "technologyWeight": 3
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMoving",
+    "stagger": "Common_Stagger",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "OnMovingWalk",
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "精神感应高达 [MA]",
+  "faction": "TITANS",
+  "tags": [
+    "TITANS",
+    "0087T1"
+  ],
+  "localization": {
+    "zh": {
+      "name": "精神感应高达 [变形]",
+      "description": "提坦斯所开发的塞克谬系统试作机,具备强大的火力"
+    },
+    "en": {
+      "name": "Psyco Gundam [Transformed]",
+      "description": "A prototype Psycommu-system unit developed by the Titans, equipped with overwhelming firepower"
+    },
+    "ja": {
+      "name": "精神感应高达 [変形]"
+    }
+  },
+  "weapons": {
+    "TITANS_MRX_009_ArmBR": {
+      "ref": "TITANS_MRX_009_ArmBR__lv1",
+      "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Shoot_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.35
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 1,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.075
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 2,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.075
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 4,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.075
+            },
+            {
+              "delay": 0.75
+            }
+          ],
+          "startAnimation": null
+        },
+        "requiredParts": [],
+        "changeHeldWeapon": false,
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ArmBR.gw",
+          "barrels": [
+            {
+              "id": "TITANS_MRX_009_ArmBR",
+              "x": 29.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_2",
+              "x": 30.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_3",
+              "x": 31.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_4",
+              "x": 32.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_5",
+              "x": 33.0,
+              "y": 52.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 29.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 30.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 31.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 32.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 33.0,
+                "y": 52.0
+              }
+            }
+          ]
+        },
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ArmBR.gw",
+          "barrel": "TITANS_MRX_009_ArmBR",
+          "entry": "hiddenAction_TITANS_MRX_009_ArmBR_Fire",
+          "cooldown": 4.5,
+          "duration": 1.325,
+          "firstShot": 0.35,
+          "lastShot": 0.575,
+          "firingEvents": 4,
+          "projectiles": 4,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 60.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 60.0,
+          "actions": [
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SendEnemyTryAttack_Shoot",
+            "hiddenAction_TITANS_MRX_009_ArmBR_SetWeaponIndex",
+            "hiddenAction_TITANS_MRX_009_ArmBR_B5_Step_1",
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire_Step_1",
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire_Step_2",
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire_Step_3",
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire_Step_4",
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire_Step_5",
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff"
+          ]
+        }
+      },
+      "remove": [
+        "displayIndex"
+      ]
+    },
+    "TITANS_MRX_009_ArmBR_2": {
+      "ref": "TITANS_MRX_009_ArmBR_2__lv1",
+      "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Shoot_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.35
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 1,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.075
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 2,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.075
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 4,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.075
+            },
+            {
+              "delay": 0.75
+            }
+          ],
+          "startAnimation": null
+        },
+        "requiredParts": [],
+        "changeHeldWeapon": false,
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ArmBR.gw",
+          "barrels": [
+            {
+              "id": "TITANS_MRX_009_ArmBR",
+              "x": 29.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_2",
+              "x": 30.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_3",
+              "x": 31.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_4",
+              "x": 32.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_5",
+              "x": 33.0,
+              "y": 52.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 29.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 30.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 31.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 32.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 33.0,
+                "y": 52.0
+              }
+            }
+          ]
+        },
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ArmBR.gw",
+          "barrel": "TITANS_MRX_009_ArmBR",
+          "entry": "hiddenAction_TITANS_MRX_009_ArmBR_Fire",
+          "cooldown": 4.5,
+          "duration": 1.325,
+          "firstShot": 0.35,
+          "lastShot": 0.575,
+          "firingEvents": 4,
+          "projectiles": 4,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 60.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 60.0,
+          "actions": [
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SendEnemyTryAttack_Shoot",
+            "hiddenAction_TITANS_MRX_009_ArmBR_SetWeaponIndex",
+            "hiddenAction_TITANS_MRX_009_ArmBR_B5_Step_1",
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire_Step_1",
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire_Step_2",
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire_Step_3",
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire_Step_4",
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire_Step_5",
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff"
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "TITANS_MRX_009_ArmBR"
+        }
+      },
+      "remove": [
+        "displayIndex"
+      ]
+    },
+    "TITANS_MRX_009_ArmBR_3": {
+      "ref": "TITANS_MRX_009_ArmBR_3__lv1",
+      "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Shoot_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.35
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 1,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.075
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 2,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.075
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 4,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.075
+            },
+            {
+              "delay": 0.75
+            }
+          ],
+          "startAnimation": null
+        },
+        "requiredParts": [],
+        "changeHeldWeapon": false,
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ArmBR.gw",
+          "barrels": [
+            {
+              "id": "TITANS_MRX_009_ArmBR",
+              "x": 29.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_2",
+              "x": 30.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_3",
+              "x": 31.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_4",
+              "x": 32.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_5",
+              "x": 33.0,
+              "y": 52.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 29.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 30.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 31.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 32.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 33.0,
+                "y": 52.0
+              }
+            }
+          ]
+        },
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ArmBR.gw",
+          "barrel": "TITANS_MRX_009_ArmBR",
+          "entry": "hiddenAction_TITANS_MRX_009_ArmBR_Fire",
+          "cooldown": 4.5,
+          "duration": 1.325,
+          "firstShot": 0.35,
+          "lastShot": 0.575,
+          "firingEvents": 4,
+          "projectiles": 4,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 60.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 60.0,
+          "actions": [
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SendEnemyTryAttack_Shoot",
+            "hiddenAction_TITANS_MRX_009_ArmBR_SetWeaponIndex",
+            "hiddenAction_TITANS_MRX_009_ArmBR_B5_Step_1",
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire_Step_1",
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire_Step_2",
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire_Step_3",
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire_Step_4",
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire_Step_5",
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff"
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "TITANS_MRX_009_ArmBR"
+        }
+      },
+      "remove": [
+        "displayIndex"
+      ]
+    },
+    "TITANS_MRX_009_ArmBR_4": {
+      "ref": "TITANS_MRX_009_ArmBR_4__lv1",
+      "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Shoot_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.35
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 1,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.075
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 2,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.075
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 4,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.075
+            },
+            {
+              "delay": 0.75
+            }
+          ],
+          "startAnimation": null
+        },
+        "requiredParts": [],
+        "changeHeldWeapon": false,
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ArmBR.gw",
+          "barrels": [
+            {
+              "id": "TITANS_MRX_009_ArmBR",
+              "x": 29.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_2",
+              "x": 30.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_3",
+              "x": 31.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_4",
+              "x": 32.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_5",
+              "x": 33.0,
+              "y": 52.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 29.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 30.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 31.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 32.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 33.0,
+                "y": 52.0
+              }
+            }
+          ]
+        },
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ArmBR.gw",
+          "barrel": "TITANS_MRX_009_ArmBR",
+          "entry": "hiddenAction_TITANS_MRX_009_ArmBR_Fire",
+          "cooldown": 4.5,
+          "duration": 1.325,
+          "firstShot": 0.35,
+          "lastShot": 0.575,
+          "firingEvents": 4,
+          "projectiles": 4,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 60.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 60.0,
+          "actions": [
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SendEnemyTryAttack_Shoot",
+            "hiddenAction_TITANS_MRX_009_ArmBR_SetWeaponIndex",
+            "hiddenAction_TITANS_MRX_009_ArmBR_B5_Step_1",
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire_Step_1",
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire_Step_2",
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire_Step_3",
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire_Step_4",
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire_Step_5",
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff"
+          ]
+        }
+      },
+      "remove": [
+        "displayIndex"
+      ]
+    },
+    "TITANS_MRX_009_ArmBR_5": {
+      "ref": "TITANS_MRX_009_ArmBR_5__lv1",
+      "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Shoot_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.35
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 1,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.075
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 2,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.075
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 4,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.075
+            },
+            {
+              "delay": 0.75
+            }
+          ],
+          "startAnimation": null
+        },
+        "requiredParts": [],
+        "changeHeldWeapon": false,
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ArmBR.gw",
+          "barrels": [
+            {
+              "id": "TITANS_MRX_009_ArmBR",
+              "x": 29.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_2",
+              "x": 30.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_3",
+              "x": 31.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_4",
+              "x": 32.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_5",
+              "x": 33.0,
+              "y": 52.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 29.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 30.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 31.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 32.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 33.0,
+                "y": 52.0
+              }
+            }
+          ]
+        },
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ArmBR.gw",
+          "barrel": "TITANS_MRX_009_ArmBR",
+          "entry": "hiddenAction_TITANS_MRX_009_ArmBR_Fire",
+          "cooldown": 4.5,
+          "duration": 1.325,
+          "firstShot": 0.35,
+          "lastShot": 0.575,
+          "firingEvents": 4,
+          "projectiles": 4,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 60.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 60.0,
+          "actions": [
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SendEnemyTryAttack_Shoot",
+            "hiddenAction_TITANS_MRX_009_ArmBR_SetWeaponIndex",
+            "hiddenAction_TITANS_MRX_009_ArmBR_B5_Step_1",
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire_Step_1",
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire_Step_2",
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire_Step_3",
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire_Step_4",
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire_Step_5",
+            "hiddenAction_TITANS_MRX_009_ArmBR_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff"
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "TITANS_MRX_009_ArmBR"
+        }
+      },
+      "remove": [
+        "displayIndex"
+      ]
+    },
+    "TITANS_MRX_009_ArmBR_L": {
+      "ref": "TITANS_MRX_009_ArmBR_L__lv1",
+      "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Shoot_A_L",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.35
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 1,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.075
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 2,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.075
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 4,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.075
+            },
+            {
+              "delay": 0.75
+            }
+          ],
+          "startAnimation": null
+        },
+        "requiredParts": [],
+        "changeHeldWeapon": false,
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ArmBR_L.gw",
+          "barrels": [
+            {
+              "id": "TITANS_MRX_009_ArmBR_L",
+              "x": -29.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_2",
+              "x": -30.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_3",
+              "x": -31.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_4",
+              "x": -32.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_5",
+              "x": -33.0,
+              "y": 52.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -29.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -30.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -31.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -32.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -33.0,
+                "y": 52.0
+              }
+            }
+          ]
+        },
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ArmBR_L.gw",
+          "barrel": "TITANS_MRX_009_ArmBR_L",
+          "entry": "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire",
+          "cooldown": 4.5,
+          "duration": 1.325,
+          "firstShot": 0.35,
+          "lastShot": 0.575,
+          "firingEvents": 4,
+          "projectiles": 4,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 60.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 60.0,
+          "actions": [
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SendEnemyTryAttack_Shoot",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_SetWeaponIndex",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_B5_Step_1",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire_Step_1",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire_Step_2",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire_Step_3",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire_Step_4",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire_Step_5",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff"
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "TITANS_MRX_009_ArmBR"
+        }
+      },
+      "remove": [
+        "displayIndex"
+      ]
+    },
+    "TITANS_MRX_009_ArmBR_L_2": {
+      "ref": "TITANS_MRX_009_ArmBR_L_2__lv1",
+      "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Shoot_A_L",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.35
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 1,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.075
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 2,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.075
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 4,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.075
+            },
+            {
+              "delay": 0.75
+            }
+          ],
+          "startAnimation": null
+        },
+        "requiredParts": [],
+        "changeHeldWeapon": false,
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ArmBR_L.gw",
+          "barrels": [
+            {
+              "id": "TITANS_MRX_009_ArmBR_L",
+              "x": -29.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_2",
+              "x": -30.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_3",
+              "x": -31.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_4",
+              "x": -32.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_5",
+              "x": -33.0,
+              "y": 52.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -29.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -30.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -31.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -32.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -33.0,
+                "y": 52.0
+              }
+            }
+          ]
+        },
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ArmBR_L.gw",
+          "barrel": "TITANS_MRX_009_ArmBR_L",
+          "entry": "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire",
+          "cooldown": 4.5,
+          "duration": 1.325,
+          "firstShot": 0.35,
+          "lastShot": 0.575,
+          "firingEvents": 4,
+          "projectiles": 4,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 60.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 60.0,
+          "actions": [
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SendEnemyTryAttack_Shoot",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_SetWeaponIndex",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_B5_Step_1",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire_Step_1",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire_Step_2",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire_Step_3",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire_Step_4",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire_Step_5",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff"
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "TITANS_MRX_009_ArmBR"
+        }
+      },
+      "remove": [
+        "displayIndex"
+      ]
+    },
+    "TITANS_MRX_009_ArmBR_L_3": {
+      "ref": "TITANS_MRX_009_ArmBR_L_3__lv1",
+      "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Shoot_A_L",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.35
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 1,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.075
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 2,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.075
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 4,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.075
+            },
+            {
+              "delay": 0.75
+            }
+          ],
+          "startAnimation": null
+        },
+        "requiredParts": [],
+        "changeHeldWeapon": false,
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ArmBR_L.gw",
+          "barrels": [
+            {
+              "id": "TITANS_MRX_009_ArmBR_L",
+              "x": -29.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_2",
+              "x": -30.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_3",
+              "x": -31.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_4",
+              "x": -32.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_5",
+              "x": -33.0,
+              "y": 52.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -29.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -30.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -31.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -32.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -33.0,
+                "y": 52.0
+              }
+            }
+          ]
+        },
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ArmBR_L.gw",
+          "barrel": "TITANS_MRX_009_ArmBR_L",
+          "entry": "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire",
+          "cooldown": 4.5,
+          "duration": 1.325,
+          "firstShot": 0.35,
+          "lastShot": 0.575,
+          "firingEvents": 4,
+          "projectiles": 4,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 60.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 60.0,
+          "actions": [
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SendEnemyTryAttack_Shoot",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_SetWeaponIndex",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_B5_Step_1",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire_Step_1",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire_Step_2",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire_Step_3",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire_Step_4",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire_Step_5",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff"
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "TITANS_MRX_009_ArmBR"
+        }
+      },
+      "remove": [
+        "displayIndex"
+      ]
+    },
+    "TITANS_MRX_009_ArmBR_L_4": {
+      "ref": "TITANS_MRX_009_ArmBR_L_4__lv1",
+      "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Shoot_A_L",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.35
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 1,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.075
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 2,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.075
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 4,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.075
+            },
+            {
+              "delay": 0.75
+            }
+          ],
+          "startAnimation": null
+        },
+        "requiredParts": [],
+        "changeHeldWeapon": false,
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ArmBR_L.gw",
+          "barrels": [
+            {
+              "id": "TITANS_MRX_009_ArmBR_L",
+              "x": -29.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_2",
+              "x": -30.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_3",
+              "x": -31.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_4",
+              "x": -32.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_5",
+              "x": -33.0,
+              "y": 52.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -29.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -30.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -31.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -32.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -33.0,
+                "y": 52.0
+              }
+            }
+          ]
+        },
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ArmBR_L.gw",
+          "barrel": "TITANS_MRX_009_ArmBR_L",
+          "entry": "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire",
+          "cooldown": 4.5,
+          "duration": 1.325,
+          "firstShot": 0.35,
+          "lastShot": 0.575,
+          "firingEvents": 4,
+          "projectiles": 4,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 60.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 60.0,
+          "actions": [
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SendEnemyTryAttack_Shoot",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_SetWeaponIndex",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_B5_Step_1",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire_Step_1",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire_Step_2",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire_Step_3",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire_Step_4",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire_Step_5",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff"
+          ]
+        }
+      },
+      "remove": [
+        "displayIndex"
+      ]
+    },
+    "TITANS_MRX_009_ArmBR_L_5": {
+      "ref": "TITANS_MRX_009_ArmBR_L_5__lv1",
+      "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Shoot_A_L",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.35
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 1,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.075
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 2,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.075
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 4,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "delay": 0.075
+            },
+            {
+              "delay": 0.75
+            }
+          ],
+          "startAnimation": null
+        },
+        "requiredParts": [],
+        "changeHeldWeapon": false,
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ArmBR_L.gw",
+          "barrels": [
+            {
+              "id": "TITANS_MRX_009_ArmBR_L",
+              "x": -29.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_2",
+              "x": -30.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_3",
+              "x": -31.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_4",
+              "x": -32.0,
+              "y": 52.0
+            },
+            {
+              "id": "TITANS_MRX_009_ArmBR_L_5",
+              "x": -33.0,
+              "y": 52.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -29.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -30.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -31.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -32.0,
+                "y": 52.0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -33.0,
+                "y": 52.0
+              }
+            }
+          ]
+        },
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ArmBR_L.gw",
+          "barrel": "TITANS_MRX_009_ArmBR_L",
+          "entry": "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire",
+          "cooldown": 4.5,
+          "duration": 1.325,
+          "firstShot": 0.35,
+          "lastShot": 0.575,
+          "firingEvents": 4,
+          "projectiles": 4,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 60.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 60.0,
+          "actions": [
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SendEnemyTryAttack_Shoot",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_SetWeaponIndex",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_B5_Step_1",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire_Step_1",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire_Step_2",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire_Step_3",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire_Step_4",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire_Step_5",
+            "hiddenAction_TITANS_MRX_009_ArmBR_L_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff"
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "paired_weapon"
+          ],
+          "mergedInto": "TITANS_MRX_009_ArmBR"
+        }
+      },
+      "remove": [
+        "displayIndex"
+      ]
+    },
+    "TITANS_MRX_009_ChestBeam": {
+      "ref": "TITANS_MRX_009_ChestBeam__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ChestBeam.gw",
+          "barrels": [
+            {
+              "id": "TITANS_MRX_009_ChestBeam",
+              "x": 0.0,
+              "y": 20.0
+            }
+          ]
+        },
+        "projectile": {
+          "texture": "../../projectiles/Beam_2_Yellow.png",
+          "scale": 1.0,
+          "speed": 60.0,
+          "forwardOffset": -7.5,
+          "rotation": 0.0,
+          "spreadDegrees": 30.0
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 0.0,
+                "y": 20.0
+              }
+            }
+          ]
+        },
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ChestBeam.gw",
+          "barrel": "TITANS_MRX_009_ChestBeam",
+          "entry": "hiddenAction_TITANS_MRX_009_ChestBeam_Fire",
+          "cooldown": 6.0,
+          "duration": 0.75,
+          "firstShot": 0.25,
+          "lastShot": 0.25,
+          "firingEvents": 1,
+          "projectiles": 12,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 90.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 90.0,
+          "actions": [
+            "hiddenAction_TITANS_MRX_009_ChestBeam_Fire",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SendEnemyTryAttack_Shoot",
+            "hiddenAction_TITANS_MRX_009_ChestBeam_SetWeaponIndex",
+            "hiddenAction_TITANS_MRX_009_ChestBeam_B1_Step_1",
+            "hiddenAction_TITANS_MRX_009_ChestBeam_Fire_Step_1",
+            "hiddenAction_TITANS_MRX_009_ChestBeam_Fire_Step_2",
+            "hiddenAction_TITANS_MRX_009_ChestBeam_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff"
+          ]
+        }
+      }
+    },
+    "TITANS_MRX_009_BeamCannon": {
+      "ref": "TITANS_MRX_009_BeamCannon__lv1",
+      "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Cannon_Shoot_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [],
+              "penetrationCount": 7.0,
+              "delay": 0.75
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [],
+              "penetrationCount": 7.0,
+              "delay": 0.45
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [],
+              "penetrationCount": 7.0,
+              "delay": 0.45
+            },
+            {
+              "delay": 1.5
+            }
+          ],
+          "startAnimation": null
+        },
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_BeamCannon.gw",
+          "barrels": [
+            {
+              "id": "TITANS_MRX_009_BeamCannon",
+              "x": 0.0,
+              "y": 20.0
+            }
+          ]
+        },
+        "projectile": {
+          "texture": "../../projectiles/Beam_2_Yellow.png",
+          "scale": 1.0,
+          "speed": 55.0,
+          "forwardOffset": -10.0,
+          "rotation": 0.0,
+          "sequence": {
+            "source": "GW_BattleUniverse_Main/Resource/Image/Fx/Weapon/Beam/HighBeamCannon/Projectile_HighBeamCannon_Yellow_Effect.ini",
+            "color": "Yellow",
+            "length": 800.0,
+            "segments": [
+              {
+                "texture": "../../projectiles/HighBeamCannon_1_Yellow_Start.png",
+                "frames": 16,
+                "width": 664,
+                "height": 150,
+                "scaleX": 0.5,
+                "scaleY": 0.5,
+                "forward": 130.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              },
+              {
+                "texture": "../../projectiles/HighBeamCannon_1_Yellow_Mid.png",
+                "frames": 16,
+                "width": 545,
+                "height": 150,
+                "scaleX": 0.5,
+                "scaleY": 0.5,
+                "forward": 432.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              },
+              {
+                "texture": "../../projectiles/HighBeamCannon_1_Yellow_End.png",
+                "frames": 16,
+                "width": 464,
+                "height": 150,
+                "scaleX": 0.5,
+                "scaleY": 0.5,
+                "forward": 684.0,
+                "lateral": 0.0,
+                "rotation": 0.0
+              }
+            ],
+            "clock": "flight"
+          },
+          "nativeSpeed": 55.0
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 0.0,
+                "y": 20.0
+              }
+            }
+          ]
+        },
+        "nativePayload": {
+          "BeamDamage": 12000.0,
+          "BeamAPDamage": 6000.0,
+          "DpDamage": 600.0,
+          "WeaponAccuracy": 75.0,
+          "PartBreakModifier": 1.25,
+          "CockpitBreakModifier": 0.75,
+          "PilotDamageModifier": 1.0,
+          "PilotTrueDamage": 0.0,
+          "AntiAqua": 0.75,
+          "AntiAir": 0.75,
+          "AntiLand": 1.0,
+          "AntiSpace": 1.0,
+          "AntiSizeLargeDamage": 1.25,
+          "AntiSizeSmallDamage": 0.75,
+          "AntiSizeLargeAccuracy": 1.25,
+          "AntiSizeSmallAccuracy": 0.75,
+          "AntiBuilding": 1.5,
+          "HeightChangeSpeed": 2.0,
+          "HeightHitRange": 20.0,
+          "ProjectileSpeed": 55.0,
+          "ProjectileSpread": 1.0,
+          "ProjectileExplosionRange": 45.0,
+          "ProjectileLife": 25.0,
+          "ProjectileAttackTimes": 7.0,
+          "ProjectileAttackTimesDamageModifier": 0.75,
+          "EquipmentIndex": 2.0,
+          "EquipmentIndex2": 750.0
+        },
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_BeamCannon.gw",
+          "barrel": "TITANS_MRX_009_BeamCannon",
+          "entry": "hiddenAction_TITANS_MRX_009_BeamCannon_Fire",
+          "cooldown": 15.0,
+          "duration": 3.15,
+          "firstShot": 0.75,
+          "lastShot": 1.65,
+          "firingEvents": 3,
+          "projectiles": 3,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 200.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 200.0,
+          "actions": [
+            "hiddenAction_TITANS_MRX_009_BeamCannon_Fire",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SendEnemyTryAttack_Shoot",
+            "hiddenAction_TITANS_MRX_009_BeamCannon_SetWeaponIndex",
+            "hiddenAction_TITANS_MRX_009_BeamCannon_B3_Step_1",
+            "hiddenAction_TITANS_MRX_009_BeamCannon_Fire_Step_1",
+            "hiddenAction_TITANS_MRX_009_BeamCannon_Fire_Step_2",
+            "hiddenAction_TITANS_MRX_009_BeamCannon_Fire_Step_3",
+            "hiddenAction_TITANS_MRX_009_BeamCannon_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff"
+          ]
+        }
+      }
+    },
+    "TITANS_MRX_009_MegaBeamCannon": {
+      "ref": "TITANS_MRX_009_MegaBeamCannon__lv1",
+      "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 1.6
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.1
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 9.0,
+              "delay": 0.0
+            },
+            {
+              "delay": 3.0
+            }
+          ],
+          "startAnimation": null
+        },
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_MegaBeamCannon.gw",
+          "barrels": [
+            {
+              "id": "TITANS_MRX_009_MegaBeamCannon",
+              "x": 0.0,
+              "y": 15.0
+            }
+          ],
+          "muzzleNote": "Native weapon has no standalone muzzle flash"
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 0.0,
+                "y": 15.0
+              }
+            }
+          ]
+        },
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_MegaBeamCannon.gw",
+          "barrel": "TITANS_MRX_009_MegaBeamCannon",
+          "entry": "action_TITANS_MRX_009_MegaBeamCannon_Trigger",
+          "cooldown": 180.0,
+          "duration": 9.899999999999991,
+          "firstShot": 1.6,
+          "lastShot": 6.8999999999999915,
+          "firingEvents": 108,
+          "projectiles": 108,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 150.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 150.0,
+          "actions": [
+            "action_TITANS_MRX_009_MegaBeamCannon_Trigger",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SetOnSkillOn_TITANS_MRX_009_MegaBeamCannon",
+            "hiddenAction_TITANS_MRX_009_MegaBeamCannon_SetWeaponIndex",
+            "hiddenAction_TITANS_MRX_009_MegaBeamCannon_B1_Step_1",
+            "hiddenAction_SetAttackingCantAimOn",
+            "hiddenAction_TITANS_MRX_009_MegaBeamCannon_Fire_Step_ChargeEffect_1",
+            "hiddenAction_TITANS_MRX_009_MegaBeamCannon_Fire_Step_1",
+            "hiddenAction_TITANS_MRX_009_MegaBeamCannon_Fire_Step_BulletEffect_1",
+            "hiddenAction_TITANS_MRX_009_MegaBeamCannon_Fire_Step_2",
+            "hiddenAction_TITANS_MRX_009_MegaBeamCannon_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff",
+            "hiddenAction_SetOnSkillOff",
+            "hiddenAction_SetAttackingCantAimOff",
+            "hiddenAction_SetAttackingCantTurnOff",
+            "hiddenAction_TITANS_MRX_009_MegaBeamCannon_BulletEffect_1_StopPlay",
+            "hiddenAction_TITANS_MRX_009_MegaBeamCannon_B1_Step_1_AI",
+            "hiddenAction_SetAttackingCantTurnOn",
+            "hiddenAction_TITANS_MRX_009_MegaBeamCannon_Fire_Step_1_AI"
+          ]
+        }
+      }
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "空中移动：可跨越山岩与水域",
+      "status": "implemented"
+    },
+    {
+      "id": "PlayerControl_Entry",
+      "source": "Template/Unit/Skill/PlayerControl_Entry.gw",
+      "status": "review",
+      "name": "PlayerControl_Entry"
+    },
+    {
+      "id": "CantDeconstruct",
+      "source": "Template/Unit/Skill/CantDeconstruct.gw",
+      "status": "not_applicable",
+      "name": "CantDeconstruct"
+    },
+    {
+      "id": "CmdDef",
+      "source": "Template/Unit/Skill/CmdDef.gw",
+      "status": "adapted",
+      "name": "防御指挥：范围与效果随驾驶员领导力变化"
+    },
+    {
+      "id": "Transform_LandFly",
+      "source": "Template/Unit/Skill/Transform_LandFly.gw",
+      "status": "adapted",
+      "name": "变形：原生形态转换，资源与部位规则使用显式配置"
+    },
+    {
+      "id": "FlyUnit_Fighter",
+      "source": "Template/Unit/Skill/FlyUnit_Fighter.gw",
+      "status": "review",
+      "name": "FlyUnit_Fighter"
+    },
+    {
+      "id": "I_Field",
+      "source": "Template/Unit/Skill/I_Field.gw",
+      "status": "adapted",
+      "name": "I立场：每回合恢复5%最大立场耐久"
+    },
+    {
+      "id": "PlayerControl_Marker",
+      "source": "Template/Unit/Skill/PlayerControl_Marker.gw",
+      "status": "review",
+      "name": "PlayerControl_Marker"
+    },
+    {
+      "id": "PlayerControl",
+      "source": "Template/Unit/Skill/PlayerControl.gw",
+      "status": "review",
+      "name": "PlayerControl"
+    },
+    {
+      "id": "MRX_009_MA",
+      "source": "Template/Unit/Skill/PlayerControl/MRX_009_MA.gw",
+      "status": "review",
+      "name": "MRX_009_MA"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": [
+        "TITANS_MRX_009_ChestBeam",
+        "TITANS_MRX_009_ArmBR",
+        "TITANS_MRX_009_ArmBR_4",
+        "TITANS_MRX_009_ArmBR_L_4",
+        "TITANS_MRX_009_BeamCannon",
+        "TITANS_MRX_009_MegaBeamCannon"
+      ]
+    }
+  ],
+  "description": "提坦斯所开发的塞克谬系统试作机,具备强大的火力",
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 12000.0,
+    "levelMultiplier": 0.25,
+    "published": 3000
+  },
+  "skills": [
+    {
+      "id": "Transform",
+      "type": "transform",
+      "name": "变形",
+      "localization": {
+        "zh": {
+          "name": "变形"
+        },
+        "en": {
+          "name": "Transform"
+        },
+        "ja": {
+          "name": "変形"
+        }
+      },
+      "range": 0,
+      "minRange": 0,
+      "maxUses": 99,
+      "consumeAction": true,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Transform_4.ogg",
+        "volume": 0.6
+      },
+      "nativeAction": "action_Transform_LandFlyA",
+      "source": {
+        "mode": "transform",
+        "unitId": "MRX_009",
+        "kitId": "standard",
+        "kitMap": {
+          "standard": "standard"
+        },
+        "inheritResources": true,
+        "hpRecoveryPercent": 0,
+        "enRecoveryPercent": 0,
+        "shieldRecoveryPercent": 0,
+        "repairAllParts": false
+      }
+    }
+  ],
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "MA",
+    "LargeUnit"
+  ],
+  "transport": {
+    "slotCost": 3,
+    "loadTags": [
+      "CanLoadInto"
+    ]
+  },
+  "hangars": [],
+  "pairedWeapons": [
+    {
+      "id": "TITANS_MRX_009_ArmBR",
+      "channels": [
+        {
+          "id": "TITANS_MRX_009_ArmBR",
+          "weaponId": "TITANS_MRX_009_ArmBR",
+          "muzzleIndex": 0,
+          "requiredParts": [],
+          "limb": null
+        },
+        {
+          "id": "TITANS_MRX_009_ArmBR_2",
+          "weaponId": "TITANS_MRX_009_ArmBR",
+          "muzzleIndex": 1,
+          "requiredParts": [],
+          "limb": null
+        },
+        {
+          "id": "TITANS_MRX_009_ArmBR_3",
+          "weaponId": "TITANS_MRX_009_ArmBR",
+          "muzzleIndex": 2,
+          "requiredParts": [],
+          "limb": null
+        },
+        {
+          "id": "TITANS_MRX_009_ArmBR_5",
+          "weaponId": "TITANS_MRX_009_ArmBR",
+          "muzzleIndex": 4,
+          "requiredParts": [],
+          "limb": null
+        },
+        {
+          "id": "TITANS_MRX_009_ArmBR_L",
+          "weaponId": "TITANS_MRX_009_ArmBR_L",
+          "muzzleIndex": 0,
+          "requiredParts": [],
+          "limb": null
+        },
+        {
+          "id": "TITANS_MRX_009_ArmBR_L_2",
+          "weaponId": "TITANS_MRX_009_ArmBR_L",
+          "muzzleIndex": 1,
+          "requiredParts": [],
+          "limb": null
+        },
+        {
+          "id": "TITANS_MRX_009_ArmBR_L_3",
+          "weaponId": "TITANS_MRX_009_ArmBR_L",
+          "muzzleIndex": 2,
+          "requiredParts": [],
+          "limb": null
+        },
+        {
+          "id": "TITANS_MRX_009_ArmBR_L_5",
+          "weaponId": "TITANS_MRX_009_ArmBR_L",
+          "muzzleIndex": 4,
+          "requiredParts": [],
+          "limb": null
+        }
+      ],
+      "name": "腕部光束枪"
+    }
+  ],
+  "refits": [],
+  "formOnly": true,
+  "formOf": "MRX_009"
+}

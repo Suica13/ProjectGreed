@@ -21,6 +21,12 @@ const UnitIdentity = (() => {
         : Rules.seatTeam(seat);
     return unit.team === team ? "ally" : "enemy";
   }
+  function healthColor(unit) {
+    const controlled = Net.active
+      ? Net.canControl(unit)
+      : !globalThis.ReplayPlayer?.active && Rules.ownerOf(unit) === viewerSeat();
+    return controlled ? colors.own.color : unit.team ? "#ed9685" : "#83d6ee";
+  }
   function owner(unit) {
     const seat = Rules.ownerOf(unit);
     const member = Net.active ? Net.snapshot?.members.find((player) => player.seat === seat) : null;
@@ -196,6 +202,7 @@ const UnitIdentity = (() => {
     colors,
     viewerSeat,
     relation,
+    healthColor,
     owner,
     drawRing,
     drawCommandAura,

@@ -23,14 +23,14 @@ test("requested transport and deployed-form final COSTs match every kit",()=>{
   }
 });
 
-test("all ships use native accuracy times 80 percent, before existing faction/global/editor modifiers",()=>{
+test("all ships use native accuracy times 90 percent, before existing faction/global/editor modifiers",()=>{
   const deltas=Adjust.read();let checked=0;
   for(const p of G.catalog.prefabs.filter(p=>p.stats.ship)){
     const native=p.sourceStats.accuracy;
     const faction=p.sourceStats.shipFactionAccuracyMultiplier??1;
-    const expected=Math.round(Math.round(native*0.8*faction*Conversion.read().units.accuracy)+(deltas.units[p.id]?.["/stats/accuracy"]??0));
+    const expected=Math.round(Math.round(native*0.9*faction*Conversion.read().units.accuracy)+(deltas.units[p.id]?.["/stats/accuracy"]??0));
     assert.equal(p.stats.accuracy,expected,p.id);
-    assert.equal(p.stats.accuracyMultiplier,0.8,p.id);
+    assert.equal(p.stats.accuracyMultiplier,0.9,p.id);
     for(const kit of p.weaponKits)assert.equal(G.models[p.id+"__"+kit.id].accuracy,expected,p.id);
     checked++;
   }

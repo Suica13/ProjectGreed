@@ -58,7 +58,7 @@ doc.mission = {
   version: 1,
   era: "0079T2",
   technologyLimit: 10000,
-  costLimit: 1200,
+  costLimit: 2000,
   unitLimit: 12,
   enemyResourcePerPlayer: 0.25,
   rewards: {

@@ -78,4 +78,27 @@ def apply(prefab, native):
         prefab["pairedWeapons"] = groups
     else:
         prefab.pop("pairedWeapons", None)
+    return configure_volley(prefab)
+
+def configure_volley(prefab):
+    if prefab['id'] not in ('MA_08','MA_08_DZL'):return prefab
+    keys=[key for key in prefab['weapons'] if key.startswith(ROOT_WEAPON)]
+    if not keys:return prefab
+    base=prefab['weapons'][ROOT_WEAPON]
+    ordinary=next((s for s in prefab.get('skills',[]) if s['id']=='Irradiation'),None)
+    if ordinary is None:return prefab
+    skill=copy.deepcopy(ordinary)
+    directions=[None]*len(base['muzzle']['mounts'])
+    for step in base['attack']['steps']:
+        if step.get('shots') and 'firingArc' in step:
+            directions[step.get('muzzleIndex',0)]=step['firingArc']['idleDir']
+    skill.update(id='AllRoundBeam',name='全周光束齐射',sourceWeapon=ROOT_WEAPON,radial=True,
+        range=2,minRange=0,enCost=base['en'],enCostPercent=0,cooldownTurns=0,
+        chargeSeconds=.25,fireSeconds=.7,beamWidth=18,damageComponents={'beam':3500/.75},
+        baseHit=85,muzzle=copy.deepcopy(base['muzzle']),chargeMuzzle=copy.deepcopy(base['muzzle']),
+        radialDirections=directions,description='全炮门同时射击，攻击周身两格内所有单位，每回合一次。',
+        localization={'zh':{'name':'全周光束齐射'},'en':{'name':'All-round Beam Volley'},'ja':{'name':'全周ビーム一斉射撃'}})
+    prefab['skills']=[s for s in prefab['skills'] if s['id']!='AllRoundBeam']+[skill]
+    for key in keys:prefab['weapons'][key]['availability']={'hidden':True,'convertedSkill':'AllRoundBeam'}
+    for kit in prefab['weaponKits']:kit['weapons']=[key for key in kit['weapons'] if key not in keys]
     return prefab

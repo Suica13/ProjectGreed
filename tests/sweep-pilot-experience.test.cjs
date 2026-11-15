@@ -3,7 +3,7 @@ const test = require("node:test"),
 const G = require("../shared/rules"),
   { createRoomEngine } = require("../shared/room-engine");
 
-test("sweep kill XP persists between nodes and is credited only on extraction", async (t) => {
+test("sweep kill XP is credited in its combat turn and stays deduplicated across nodes and extraction", async (t) => {
   let serial = 0;
   const frames = [];
   const engine = createRoomEngine({
@@ -95,6 +95,9 @@ test("sweep kill XP persists between nodes and is credited only on extraction", 
   assert.equal(target.hp, 0, JSON.stringify(frames.filter((m) => m.type === "error")));
   const award = room.pilotAwards.find((a) => a.kind === "kill" && a.pilotId === pilot.id);
   assert(award && award.experiencePoints > 0);
+  const store = { pilots: [pilot], awards: [] };
+  G.pilots.creditAwards(store, room.pilotAwards, { settled: false });
+  assert.equal(store.pilots[0].experience, actor.pilot.experience);
   const xp = actor.pilot.experience;
   assert(xp > 0);
   if (room.playback) act("playback_ready", { batchId: room.playback.id });
@@ -124,7 +127,6 @@ test("sweep kill XP persists between nodes and is credited only on extraction", 
   engine.broadcast(room);
   act("sweep_extract");
   assert.equal(frames.filter((m) => m.type === "state").at(-1).rewardsSettled, true);
-  const store = { pilots: [pilot], awards: [] };
   G.pilots.creditAwards(store, room.pilotAwards);
   assert.equal(store.pilots[0].experience, xp);
 });

@@ -889,8 +889,8 @@
     {
       "id": "Transform_LandFly_SFS_OFF",
       "source": "Template/Unit/Skill/Transform_LandFly_SFS_OFF.gw",
-      "status": "review",
-      "name": "Transform_LandFly_SFS_OFF"
+      "status": "adapted",
+      "name": "变形：原生形态转换，资源与部位规则使用显式配置"
     }
   ],
   "weaponKits": [
@@ -908,7 +908,47 @@
     }
   ],
   "description": "百式的原型机,由于技术原因没能制造出来",
-  "skills": [],
+  "skills": [
+    {
+      "id": "Transform",
+      "type": "transform",
+      "name": "变形",
+      "localization": {
+        "zh": {
+          "name": "变形"
+        },
+        "en": {
+          "name": "Transform"
+        },
+        "ja": {
+          "name": "変形"
+        }
+      },
+      "range": 0,
+      "minRange": 0,
+      "maxUses": 99,
+      "consumeAction": true,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Transform_4.ogg",
+        "volume": 0.6
+      },
+      "nativeAction": "action_Transform_LandFlyB",
+      "source": {
+        "mode": "transform",
+        "unitId": "MSN_001_MA",
+        "kitId": "standard",
+        "kitMap": {
+          "standard": "standard"
+        },
+        "inheritResources": true,
+        "hpRecoveryPercent": 0,
+        "enRecoveryPercent": 0,
+        "shieldRecoveryPercent": 0,
+        "repairAllParts": false
+      }
+    }
+  ],
   "kitAliases": {
     "kit_0": "standard",
     "kit_1": "standard"

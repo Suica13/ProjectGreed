@@ -86,6 +86,20 @@ test("old v1/v2 saves still validate and missing v3 pilot references reject", ()
   v3.pilots.PMC.pilots = [];
   assert.throws(() => save.validate(v3), /驾驶员/);
 });
+
+test("legacy saves acquire empty later-faction stores without dropping existing progress", () => {
+  const save = api(), input = fixture(), migrated = save.validate(input);
+  for (const faction of ["EFSF_0093", "NEO_ZEON_0093", "OMNI", "ZAFT"]) {
+    assert.deepEqual(plain(migrated.pilots[faction]), { pilots: [], awards: [] });
+    assert.equal(migrated.formations[faction], null);
+  }
+  assert.equal(migrated.pilots.PMC.pilots[0].id, input.pilots.PMC.pilots[0].id);
+  assert.equal(migrated.economy.money, input.economy.money);
+  assert.deepEqual(plain(save.validate(save.encodeData(migrated))), plain(migrated));
+  const malformed = structuredClone(input);
+  malformed.pilots.OMNI = { pilots: "invalid", awards: [] };
+  assert.throws(() => save.validate(malformed), /驾驶员存档无效/);
+});
 test("different archived pilot stats are preserved rather than replaced by a same-ID roster profile", () => {
   const save = api(),
     input = fixture();
@@ -125,8 +139,13 @@ test("native snapshots read compact receipts and exported entries keep small rec
     revision: 7,
     values: Object.fromEntries(Object.entries(writes).filter(([, value]) => value !== null)),
   };
-  assert.deepEqual(plain(save.fromNativeSnapshot(snapshot)), plain(input));
-  assert.deepEqual(plain(save.validate(snapshot)), plain(input));
+  // Native clients keep one shared roster and award history. Re-expanding it
+  // applies that same history to later factions added after the legacy export.
+  const expected = plain(input);
+  const sharedAwards = [...new Set(Object.values(input.pilots).flatMap(store => store.awards))];
+  for (const store of Object.values(expected.pilots)) store.awards = sharedAwards;
+  assert.deepEqual(plain(save.fromNativeSnapshot(snapshot)), expected);
+  assert.deepEqual(plain(save.validate(snapshot)), expected);
   assert.deepEqual(
     plain([...save.storageEntries(snapshot)]),
     plain([...save.storageEntries(input)]),

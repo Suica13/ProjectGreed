@@ -64,7 +64,7 @@ test("cooperative mission loads fixed enemy roster, host guest ship, map technol
   assert.equal(room.settings.mode, "mission");
   assert.equal(room.settings.missionEra, "UC_0079_T2");
   assert.equal(room.settings.technologyLimit, 10000);
-  assert.equal(room.settings.costLimit, 1200);
+  assert.equal(room.settings.costLimit, 2000);
   assert.equal(room.settings.unitLimit, 12);
   assert.equal(G.getMap(room.settings.mapId).name, "三分钟十二台大魔");
   assert.equal(room.game.units.filter((u) => u.team === 1).length, 15);
@@ -167,7 +167,7 @@ test("mission win grants each PMC fixed stock and resources exactly once, with c
     assert.equal(room.techAwards.length, 0);
   }
 });
-test("six dom kills through round 10 spawn Lv3 rivals once, add Amuro protection and preserve dialogue order", (t) => {
+test("six dom kills through round 10 spawn scripted rivals once, add Amuro protection and preserve dialogue order", (t) => {
   const f = fixture(t),
     { room, engine } = f;
   f.finishDialogue();
@@ -179,7 +179,7 @@ test("six dom kills through round 10 spawn Lv3 rivals once, add Amuro protection
   engine.broadcast(room);
   const actors = room.game.units.filter((u) => ["amuro", "char"].includes(u.missionActor));
   assert.equal(actors.length, 2);
-  assert(actors.every((u) => u.pilot.level === 3));
+  assert(actors.every((u) => u.pilot.level === G.getMap(room.settings.mapId).mission.actors.find(actor=>actor.id===u.missionActor).level));
   assert(room.game.mission.protect.includes("amuro"));
   assert.deepEqual(
     room.game.mission.dialogue.lines.map((l) => l.name),

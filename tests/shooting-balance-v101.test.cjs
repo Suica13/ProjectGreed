@@ -11,14 +11,14 @@ function fixture(ship = false) {
 test('additive bazooka and shooting coefficients scale every payload without changing melee',()=>{
   const p = fixture(); applyWeaponBalance(p,config);
   for (const kind of ['bazooka','beam_bazooka','panzerfaust']) {
-    assert.equal(p.weapons[kind].damagePerShot,5750);
-    assert.equal(p.weapons[kind].attack.steps[0].damagePerShot,5750);
-    assert.equal(p.weapons[kind].damageComponents.shellAP,1150);
+    assert.equal(p.weapons[kind].damagePerShot,8625);
+    assert.equal(p.weapons[kind].attack.steps[0].damagePerShot,8625);
+    assert.equal(p.weapons[kind].damageComponents.shellAP,1725);
   }
-  assert.equal(p.weapons.rifle.damagePerShot,5000);
+  assert.equal(p.weapons.rifle.damagePerShot,7500);
   assert.equal(p.weapons.melee.damagePerShot,7500);
   assert.equal(p.weapons.ram.damagePerShot,5625);
-  assert.equal(p.skills[0].damageComponents.beam,5000);
+  assert.equal(p.skills[0].damageComponents.beam,7500);
   assert.equal(p.skills[0].baseHit,50);
   const first = structuredClone(p); applyWeaponBalance(p,config); assert.deepEqual(p,first);
 });

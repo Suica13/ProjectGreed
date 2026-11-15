@@ -40,8 +40,11 @@ function createRoomEngine({
     roomBattleEconomy().rewardMultipliers(activityRewardMultipliers());
   const roundReward = (value) => roomBattleEconomy().roundReward(value);
   function roomTechnologyCaps(room) {
-    if (room.settings.mode === "mission") return Object.fromEntries(
-      roomDevelopment().factions.map(faction => [faction, G.getMap(room.settings.mapId).mission.technologyLimit]));
+    if (room.settings.mode === "mission") {
+      const mission = G.getMap(room.settings.mapId).mission;
+      return mission.technologyLimitEnabled === false ? undefined : Object.fromEntries(
+        roomDevelopment().factions.map(faction => [faction, mission.technologyLimit]));
+    }
     if (["battlefield", "sweep"].includes(room.settings.mode)) return undefined;
     if (room.started && room.technologyCapSnapshot) return room.technologyCapSnapshot;
     const dev = roomDevelopment();
@@ -73,6 +76,8 @@ function createRoomEngine({
     Number.isInteger(seat) &&
     !!(room.campaignBattle?.delegatedSeats || room.delegatedSeats)?.includes(seat);
   const aiControlled = (room, player) => !!player && (player.bot || delegated(room, player.seat));
+  const aiHangarEntryAllowed = (room, passenger, carrier) =>
+    !!carrier && G.hangars.allowsAIEntry(passenger, carrier, !!room.seats[G.ownerOf(carrier)]?.bot);
   function automate(ws, msg) {
     automatedRequests.add(msg);
     action(ws, msg);
@@ -796,16 +801,21 @@ function createRoomEngine({
     return team === null ? (member?.seat === null ? ["global"] : []) : [logPerspective(team)];
   }
   // 公开快照不包含随机 seed；席位 token 不放入广播。
-  const safeGame = (game, recipient, intel, visibleIds) => {
+  const privateReserves = (view, game, recipient) => game.battlefield?.reserves ? {
+    ...view,
+    battlefield: {...view.battlefield, reserves: game.battlefield.reserves
+      .filter(item => item.ownerSeat === recipient?.seat)
+      .map(({template, ...item}) => item)},
+  } : view;
+  const safeGame = (game, recipient, intel, visibleIds, cache) => {
+    const key = "game:" + (intel?.team ?? "global"), cached = cache?.get(key);
+    if (cached?.game === game) return privateReserves(cached.view, game, recipient);
     let { seed, partSeed, ...view } = game;
     if (game.battlefield?.reserves)
       view.battlefield = {
         ...Object.fromEntries(
-          Object.entries(game.battlefield).filter(([key]) => key !== "reinforcementQueue"),
+          Object.entries(game.battlefield).filter(([key]) => !["reinforcementQueue", "reserves"].includes(key)),
         ),
-        reserves: game.battlefield.reserves
-          .filter((item) => item.ownerSeat === recipient?.seat)
-          .map(({ template, ...item }) => item),
       };
     const ruinCells = intel && game.battlefield ? new Set(intel.visibleCells || []) : null;
     if (intel)
@@ -827,7 +837,8 @@ function createRoomEngine({
       const ids = new Set(view.units.map((u) => u.id));
       view.turnEffects = (view.turnEffects || []).filter((e) => !e.unitId || ids.has(e.unitId));
     }
-    return view;
+    cache?.set(key, {game, view});
+    return privateReserves(view, game, recipient);
   };
   // Fog presentation is separate from tactical intel and team logs. Only visual
   // state leaves the server; real HP, EN, hit probabilities and orders do not.
@@ -1036,7 +1047,7 @@ function createRoomEngine({
       type: "state",
       room: room.code,
       revision: room.revision,
-      game: safeGame(room.game, recipient, intel, visibleIds),
+      game: safeGame(room.game, recipient, intel, visibleIds, intelCache),
       combatActors,
       effectActors:
         team === null
@@ -1383,18 +1394,22 @@ function createRoomEngine({
     syncRegularStock(room);
     settleBattleEconomy(room);
     recordSettlement(room);
-    const recipients = members(room);
+    // Bot sockets are internal action adapters, not network viewers. Building
+    // and encoding private snapshots for them only repeats work for every AI.
+    const recipients = members(room).filter(member => !member.bot);
     const actor = ack && recipients.includes(actingMember) ? actingMember : null;
     if (actor?.ws?.reliableActions)
       send(actor.ws, { type: "action_receipt", id: ack, revision: room.revision });
     const intelCache = new Map();
-    captureRecord(room, intelCache);
+    G.withModelQuery(() => captureRecord(room, intelCache));
     advanceReplay(room);
     room.updated = Date.now();
     // Respond to the acting player before building unrelated recipients' views.
-    if (actor) send(actor.ws, state(room, ack, actor, intelCache));
-    for (const member of recipients)
-      if (member !== actor) send(member.ws, state(room, ack, member, intelCache));
+    G.withModelQuery(() => {
+      if (actor) send(actor.ws, state(room, ack, actor, intelCache), intelCache);
+      for (const member of recipients)
+        if (member !== actor) send(member.ws, state(room, ack, member, intelCache), intelCache);
+    });
     broadcastRooms();
     scheduleAutoEnd(room);
     scheduleCampaignAutomation(room);
@@ -1943,12 +1958,12 @@ function createRoomEngine({
       const owner = room.members.get(memberId);
       if (!owner || owner.bot || owner.seat === null || G.seatTeam(owner.seat) === to.team)
         continue;
-      const assist = owner.id !== killer?.id,
-        divisor = assist ? 4 : 2;
+      const assist = owner.id !== killer?.id;
       const facility =
         to.facility && to.facility.type !== "base"
           ? G.battlefieldMode.facilityReward(to.facility.level || 1)
           : null;
+      const reward = G.battlefieldMode.defeatReward(cost, assist, facility);
       (room.economyAwards ||= []).push({
         id: randomId(),
         matchId: room.matchId,
@@ -1956,12 +1971,8 @@ function createRoomEngine({
         kind: assist ? "assist" : "kill",
         targetId: to.id,
         model: to.model,
-        money: roundReward(
-          (facility ? facility.money / (assist ? 2 : 1) : cost / divisor) * bonus.money,
-        ),
-        supplies: roundReward(
-          (facility ? facility.supplies / (assist ? 2 : 1) : cost / divisor) * bonus.supplies,
-        ),
+        money: roundReward(reward.money * bonus.money),
+        supplies: roundReward(reward.supplies * bonus.supplies),
       });
     }
     if (room.battlefieldAttackers) delete room.battlefieldAttackers[to.id];
@@ -1989,8 +2000,6 @@ function createRoomEngine({
     }
     const killer = from && room.seats[G.ownerOf(from)];
     const price = room.battleRoster?.[to.id]?.money ?? roomBattleEconomy().price(to.model);
-    const supplyPrice =
-      room.battleRoster?.[to.id]?.supplies ?? roomBattleEconomy().price(to.model, "supplies");
     const bonus = getRewardMultipliers();
     function award(owner, faction, assist = false) {
       if (!owner || owner.bot) return;
@@ -2007,7 +2016,7 @@ function createRoomEngine({
       const supplies = Math.max(
         0,
         roundReward(
-          supplyPrice * (assist ? 0.25 : 0.5) * rates.currency * battleRate * bonus.supplies,
+          price * 1.5 * (assist ? 0.25 : 0.5) * rates.currency * battleRate * bonus.supplies,
         ),
       );
       (room.economyAwards ||= []).push({
@@ -2322,7 +2331,7 @@ function createRoomEngine({
         ? economy.calculateBattleReward(
             economy.teamAverageFormationCost(room.battleRoster, G.seatTeam(player.seat)),
           )
-        : { money: room.settings.costLimit * 1.5, supplies: destroyedCost * 3 });
+        : { money: room.settings.costLimit * 1.5, supplies: room.settings.costLimit * 2.25 });
       (room.economyAwards ||= []).push({
         id: randomId(),
         matchId: room.matchId,
@@ -2333,7 +2342,7 @@ function createRoomEngine({
         ...(missionReward ? {stockGained:{inventory:missionReward.inventory}} : {}),
         money: roundReward(missionReward ? base.money * bonus.money : (won ? base.money : destroyedCost) * rate * battleRate * bonus.money),
         supplies: roundReward(
-          missionReward ? base.supplies * bonus.supplies : (won ? base.supplies : destroyedCost * 2) * rate * battleRate * bonus.supplies,
+          missionReward ? base.supplies * bonus.supplies : (won ? base.supplies : destroyedCost * 1.5) * rate * battleRate * bonus.supplies,
         ),
         losses,
         lostUnits,
@@ -2417,9 +2426,8 @@ function createRoomEngine({
     }
   }
   function recordPilotBattle(room, actor, kind, cost, shipKill = false) {
-    if (actor?.missionActor) return;
-    if (room.settings.mode === "battlefield") return;
-    if ((room.startedFromSave && !room.campaign) || !actor?.pilot?.custom) return;
+    if (room.replay || !actor?.pilot?.custom) return;
+    if (room.startedFromSave && !room.campaign && !["kill", "assist"].includes(kind)) return;
     const owner = room.seats[G.ownerOf(actor)];
     const points = Math.max(0, Math.floor(cost));
     const beforeLevel = actor.pilot.level;
@@ -2434,19 +2442,30 @@ function createRoomEngine({
       battleRate *
       (G.modelOf(actor).pilotExperienceMultiplier ?? 1);
     const experiencePoints =
-      (room.startedFromSave && !room.campaign) ||
       kind === "loss" ||
       kind === "battle" ||
       beforeLevel >= G.pilots.maxLevel(actor.pilot)
         ? 0
         : G.pilots.combatExperience(G.modelOf(actor).cost, points, rate);
     const requiresRecruitment =
-      !!actor.pilot.ace && kind === "loss" && !["quick", "sweep"].includes(room.settings.mode);
+      !!actor.pilot.ace && kind === "loss" && !["quick", "sweep", "battlefield"].includes(room.settings.mode);
     actor.pilot = G.pilots.battleResult(actor.pilot, kind, points, experiencePoints, {
       shipKill,
       requiresRecruitment,
     });
-    if (owner && !owner.bot && !room.campaign)
+    // Respawning a mercenary roster slot must retain the pilot's current XP.
+    for (const reserve of room.game.battlefield?.reserves || [])
+      if (reserve.ownerSeat === G.ownerOf(actor) && reserve.template.pilot?.id === actor.pilot.id)
+        reserve.template.pilot = structuredClone(actor.pilot);
+    // Campaign crews belong to the campaign save, never to the PMC profile.
+    if (room.campaign && kind !== "loss") {
+      const crew = room.campaign.pilots?.find(entry => entry.team === actor.team && entry.profile.id === actor.pilot.id);
+      if (crew) crew.profile = structuredClone(actor.pilot);
+      for (const army of room.campaign.units || [])
+        if (army.team === actor.team && army.pilotId === actor.pilot.id && army.state?.pilot)
+          army.state.pilot = structuredClone(actor.pilot);
+    }
+    if (owner && !owner.bot)
       (room.pilotAwards ||= []).push({
         id: randomId(),
         memberId: owner.id,
@@ -2460,10 +2479,11 @@ function createRoomEngine({
         carrierId: actor.embarked?.carrierId,
         leveledUp: actor.pilot.level > beforeLevel,
         requiresRecruitment,
+        persistent: !room.campaign && !actor.missionActor,
       });
   }
   function recordPilotParticipation(room) {
-    if ((room.startedFromSave && !room.campaign) || room.replay || room.phase !== "idle") return;
+    if (room.replay || room.phase !== "idle") return;
     const counted = (room.pilotParticipants ||= new Set());
     for (const actor of room.game.units) {
       if (actor.hp <= 0 || !actor.pilot?.custom) continue;
@@ -2714,17 +2734,13 @@ function createRoomEngine({
       Object.assign(rules, { characterFaction: null, researched: undefined });
     if (player?.sweepEnemy)
       Object.assign(rules, {
+        ...Sweep.enemyRestrictions(room, G),
         researched: undefined,
         licenses: undefined,
         inventory: undefined,
         characterFaction: null,
-        bannedFactions: [
-          ...new Set([
-            ...rules.bannedFactions,
-            ...G.factions.filter((f) => f !== room.settings.sweepFaction),
-          ]),
-        ],
         aiAllowedEras: [room.settings.sweepEra],
+        aiEarlierCarriers: true,
         unitCostLimit: Sweep.enemyLimits(room, G).unitCostLimit,
       });
     if (player?.battlefieldAI) {
@@ -3171,7 +3187,7 @@ function createRoomEngine({
     const clock = () => (typeof performance !== "undefined" ? performance.now() : Date.now());
     while (rooms.get(room.code) === room && room.revision === revision && room.game === board) {
       const step = G.withModelQuery(() => {
-        const deadline = clock() + 8;
+        const deadline = clock() + 4;
         let result;
         do {
           result = query.next();
@@ -3262,7 +3278,7 @@ function createRoomEngine({
           reserve.stockAvailable === false
         )
           continue;
-        const sites = G.battlefieldMode.deploymentSites(G, room.game, room.game.team);
+        const sites = G.battlefieldMode.aiDeploymentSites(G, room.game, room.game.team);
         if (sites.length)
           return {
             player,
@@ -3281,7 +3297,9 @@ function createRoomEngine({
     if (pendingMover)
       return {
         player: room.seats[pendingMover.pendingMove.seat],
-        action: "confirm_move",
+        action: pendingMover.pendingMove.boarding &&
+          !aiHangarEntryAllowed(room, pendingMover, unit(room, pendingMover.pendingMove.boarding.carrierId))
+          ? "cancel_move" : "confirm_move",
         fields: { unitId: pendingMover.id },
       };
     for (const passenger of room.game.units.filter((u) => u.embarked && u.hp > 0 && available(u))) {
@@ -3313,6 +3331,7 @@ function createRoomEngine({
         room.game,
         passenger,
         (carrier) => !!room.seats[G.ownerOf(carrier)]?.bot,
+        (carrier) => aiHangarEntryAllowed(room, passenger, carrier),
       );
       if (transport) return { player: owner, ...transport };
       yield;
@@ -3354,7 +3373,7 @@ function createRoomEngine({
       const group = actor.squadId || actor.id;
       if (checkedSquads.has(group)) continue;
       checkedSquads.add(group);
-      if (room.game.battlefield || room.game.campaignBattlefield) continue;
+      if (room.game.battlefield || room.game.campaignBattlefield || room.game.mission) continue;
       const gather = G.aiSquadChoice(room.game, actor, available);
       if (gather)
         return { player, action: "move", fields: { unitId: actor.id, x: gather.x, y: gather.y } };
@@ -3488,7 +3507,7 @@ function createRoomEngine({
     // Do not drive a recovery destination away from a nearby low-energy passenger.
     const hangars = G.modelOf(u).hangars || [];
     if (
-      !u.plan &&
+      !room.game.battlefield && !room.game.mission && !u.plan &&
       hangars.length &&
       room.game.units.some((passenger) => {
         if (
@@ -3514,7 +3533,9 @@ function createRoomEngine({
       return { player, action: "wait", fields: { unitId: u.id, single: true } };
     const choice = u.plan
       ? null
-      : G.battlefieldMode.aiChoice(G, room.game, u) || G.aiChoice(room.game, u);
+      : G.aiChoiceSteps
+        ? yield* G.aiChoiceSteps(room.game, u)
+        : G.aiChoice(room.game, u);
     if (choice?.rotation)
       return { player, action: "rotate", fields: { unitId: u.id, direction: choice.rotation } };
     if (choice && !u.moved && (choice.x !== u.x || choice.y !== u.y))
@@ -3523,7 +3544,8 @@ function createRoomEngine({
     let best = null;
     for (const target of room.game.units.filter(
       (t) => G.onMap(t) && t.team !== u.team && !G.attackPlanFor(u, t),
-    ))
+    )) {
+      yield;
       for (const weapon of G.modelOf(u).weapons)
         if (G.canAttack(room.game, u, target, weapon)) {
           try {
@@ -3549,6 +3571,7 @@ function createRoomEngine({
           )
             best = { target, weapon, score, remaining, useful, assignedAttackers };
         }
+    }
     if (!best) return { player, action: "wait", fields: { unitId: u.id, single: true } };
     const weapons =
       best.weapon.slot === "skill" ? [best.weapon] : G.automaticQueue(room.game, u, best.target);
@@ -5204,6 +5227,8 @@ function createRoomEngine({
         "stage_deployment",
         "clear_deployment",
         "auto_place_deployment",
+        "set_hangar_ai_access",
+        "hangar_transfer",
         "rotate",
         "confirm_deployment",
         "embark",
@@ -5223,6 +5248,8 @@ function createRoomEngine({
         "skill",
         "capture_point",
         "battlefield_deploy",
+        "set_hangar_ai_access",
+        "hangar_transfer",
         "region_transfer",
         "undo",
         "wait",
@@ -5281,6 +5308,14 @@ function createRoomEngine({
       throw Error("请先确认或取消移动");
     let event;
     switch (msg.action) {
+      case "set_hangar_ai_access": {
+        if (room.phase !== "deployment") validateActive(room, seat);
+        const carrier = ownUnit(room, seat, msg.unitId, true, true);
+        if (G.controllerOf(room.game, carrier) !== seat) throw Error("只能设置自己的格纳库");
+        G.hangars.setAIEntry(carrier, msg.allowed);
+        event = { type: "hangar_ai_access", unitId: carrier.id, allowed: msg.allowed };
+        break;
+      }
       case "battlefield_deploy": {
         validateActive(room, seat);
         event = G.battlefieldMode.requestDeployment(G, room.game, seat, msg.reserveId, msg.siteId);
@@ -5315,6 +5350,18 @@ function createRoomEngine({
         if (room.game.winner !== null) event = interruptCampaign(room);
         break;
       }
+      case "hangar_transfer": {
+        if (room.phase !== "deployment") validateActive(room, seat);
+        const passenger = ownUnit(room, seat, msg.unitId, true);
+        if (room.campaignBattle && room.phase === "deployment" && !passenger.campaignDeploying)
+          throw Error("原战场存活部队不能重新部署");
+        const carrier = unit(room, msg.carrierId);
+        if (automatedRequests.has(msg) && !aiHangarEntryAllowed(room, passenger, carrier))
+          throw Error("该格纳库禁止AI进入");
+        event = G.hangars.transfer(room.game, passenger, carrier, msg.hangarId);
+        log(room, `${unitLabel(room, passenger)} 转移至 ${unitLabel(room, carrier)} 的格纳库。`, { units: [passenger, carrier] });
+        break;
+      }
       case "embark":
       case "launch": {
         if (room.phase !== "deployment") validateActive(room, seat);
@@ -5325,6 +5372,8 @@ function createRoomEngine({
           if (msg.deploymentDrop && room.phase !== "deployment")
             throw Error("仅部署阶段可拖拽搭载");
           const carrier = unit(room, msg.carrierId);
+          if (automatedRequests.has(msg) && !aiHangarEntryAllowed(room, passenger, carrier))
+            throw Error("该格纳库禁止AI进入");
           const visibleBefore = transportSight(room, [passenger, carrier]);
           const members = msg.single === true ? [passenger] : G.squadMembers(room.game, passenger);
           for (const actor of members) ownUnit(room, seat, actor.id);

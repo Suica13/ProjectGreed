@@ -37,7 +37,7 @@ test("different AI players stagger independently without waiting for another ani
     engine.action(clients[seat],{id:"action"+(++sequence),revision:room.revision,
       round:room.game?.round,action,...fields});
   }
-  act(0,"configure_room",{...G.defaultRoomSettings(),mapId:"crossroads_2v2",fogMode:"disabled"});
+  act(0,"configure_room",{...G.defaultRoomSettings(),mapId:"crossroads_2v2",fogMode:"disabled",battleMode:"quick",formationStyle:"free"});
   for(const ws of clients.slice(1))
     engine.join(ws,{mode:"join",room:room.code,characterFaction:"PMC",licenses:{Type61:true},inventory:{Type61:8},kits:{Type61__standard:8}});
   const formation=[{unitId:"Type61",kitId:"standard"}];
@@ -91,7 +91,7 @@ test("large AI armies launch commands on separate ticks with round-robin fairnes
   const room=engine.rooms.get("PACED");
   function act(seat,action,fields={}){engine.action(clients[seat],{id:"paced-action-"+(++serial),
     revision:room.revision,round:room.game?.round,action,...fields});}
-  act(0,"configure_room",{...G.defaultRoomSettings(),mapId:"crossroads_2v2",fogMode:"disabled"});
+  act(0,"configure_room",{...G.defaultRoomSettings(),mapId:"crossroads_2v2",fogMode:"disabled",battleMode:"quick",formationStyle:"free"});
   for(const ws of clients.slice(1))engine.join(ws,{mode:"join",room:room.code,characterFaction:"PMC",licenses:{Type61:true},inventory:{Type61:8},kits:{Type61__standard:8}});
   const formation=Array.from({length:8},()=>({unitId:"Type61",kitId:"standard"}));
   for(let seat=0;seat<4;seat++)act(seat,"set_ready",{ready:true,formation});

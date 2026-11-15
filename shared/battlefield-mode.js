@@ -24,12 +24,17 @@ const BattlefieldMode = (() => {
   }
   function facilityReward(level = 1) {
     const money = 400 + 200 * (Math.max(1, Math.min(4, level)) - 1);
-    return { money, supplies: money * 2 };
+    return { money, supplies: money * 1.5 };
+  }
+  function defeatReward(cost, assist = false, facility = null) {
+    const money = (facility ? facility.money / (assist ? 2 : 1) : cost / (assist ? 4 : 2)) *
+      (assist ? 1 : 1.5);
+    return { money, supplies: money * 1.5 };
   }
   function baseDamageReward(settings, team) {
     const level = eraData.weight(settings.battlefieldTeams?.[team]?.era) - 1;
     const money = 500 + 250 * Math.max(0, level);
-    return { money, supplies: money * 2 };
+    return { money, supplies: money * 1.5 };
   }
   function rebuildFacilities(G, game) {
     for (let i = 0; i < game.units.length; i++) {
@@ -106,7 +111,7 @@ const BattlefieldMode = (() => {
       return formationBudgets.map((cost) => {
         const progress = (cost - 1500) / 18500;
         const round = (value) => Math.round(value / 25) * 25;
-        const money = round((5000 + 10000 * progress) * factor);
+        const money = round((5000 + 10000 * progress) * factor) * 2;
         return Object.freeze({
           id: era + "-cost-" + cost,
           era,
@@ -116,7 +121,7 @@ const BattlefieldMode = (() => {
           unitCostLimit: 250,
           unitLimit: 18,
           money,
-          supplies: round((7500 + 15000 * progress) * factor),
+          supplies: round(money * 1.5),
           technology: round((1000 + 1000 * progress) * factor),
         });
       });
@@ -160,16 +165,17 @@ const BattlefieldMode = (() => {
     const factor = 1.25 ** Math.max(0, eraData.weight(era) - 1);
     const progress = Math.max(0, Math.min(1, ((Number(settings.costLimit) || 0) - 1500) / 18500));
     const round = (value) => Math.round(value / 25) * 25;
+    const money = round((5000 + 10000 * progress) * factor) * 2;
     return {
-      money: round((5000 + 10000 * progress) * factor),
-      supplies: round((7500 + 15000 * progress) * factor),
+      money,
+      supplies: round(money * 1.5),
       technology: round((1000 + 1000 * progress) * factor),
     };
   }
   function captureReward(settings, team) {
     const era = settings.battlefieldTeams?.[team]?.era || "UC_0079_T2";
     const money = { "UC_0079_T1": 500, "CE_0071_T1": 500, "UC_0079_T2": 750, "UC_0087_T1": 1000, "UC_0087_T2": 1500 }[era];
-    return { money, supplies: money * 2 };
+    return { money, supplies: money * 1.5 };
   }
   function technologyReward(settings, team, won, activity = 1) {
     return (
@@ -539,7 +545,7 @@ const BattlefieldMode = (() => {
       },
     },
   };
-  const waveStage = (round) => (round < 21 ? "early" : round < 61 ? "middle" : "late");
+  const waveStage = (round) => (round < 31 ? "early" : round < 71 ? "middle" : "late");
   function pool(G, state, team) {
     const selected = state.teams[team];
     const allowedEras = factionEras(selected.faction).filter(era => eraData.weight(era) <= eraData.weight(selected.era));
@@ -597,8 +603,9 @@ const BattlefieldMode = (() => {
     if (!state.reinforcementQueue?.length) return;
     const placement = G.placementQuery(game);
     const anchors = new Map();
+    const sitesByTeam = new Map([0, 1].map(team => [team, aiDeploymentSites(G, game, team)]));
     for (const entry of state.reinforcementQueue || []) {
-      const sites = deploymentSites(G, game, entry.team);
+      const sites = sitesByTeam.get(entry.team);
       if (!sites.length) continue;
       const actor = G.makeUnit(
         entry,
@@ -614,11 +621,15 @@ const BattlefieldMode = (() => {
       let position = join ? { x: join.x, y: join.y } : null;
       if (!position) {
         const candidates = [];
-        for (const site of sites)
+        for (const site of sites) {
           for (let y = site.y - 7; y <= site.y + 7; y++)
             for (let x = site.x - 7; x <= site.x + 7; x++)
               if (containsSite(site, x, y) && placement.fits(actor, x, y))
                 candidates.push({ x, y });
+          // Fill the preferred forward/defensive site first; only overflow to
+          // a rear base when its landing area has no legal cell for this model.
+          if (candidates.length) break;
+        }
         position = candidates[Math.floor(G.random(game) * candidates.length)];
       }
       if (!position) {
@@ -682,6 +693,18 @@ const BattlefieldMode = (() => {
           };
         }),
     ];
+  }
+  function aiDeploymentSites(G, game, team) {
+    const sites = deploymentSites(G, game, team);
+    const enemies = game.units.filter(unit => unit.team !== team && G.onMap(unit));
+    const bases = enemies.filter(unit => unit.facility?.type === "base");
+    const distance = (a, b) => Math.hypot(a.x-b.x, a.y-b.y);
+    const threatened = site => enemies.some(enemy => !enemy.facility &&
+      distance(site, enemy) <= (site.id.startsWith("point:") ? captureRadius : baseRadius) + 3);
+    const front = site => bases.length ? Math.min(...bases.map(base => distance(site, base))) : 0;
+    return sites.sort((a,b) => Number(threatened(b))-Number(threatened(a)) ||
+      Number(b.id.startsWith("point:"))-Number(a.id.startsWith("point:")) ||
+      front(a)-front(b) || a.id.localeCompare(b.id));
   }
   function requestDeployment(G, game, seat, reserveId, siteId) {
     const state = game.battlefield;
@@ -801,6 +824,7 @@ const BattlefieldMode = (() => {
     rebuildDelay,
     rebuildFacilities,
     facilityReward,
+    defeatReward,
     baseDamageReward,
     captureReward,
     technologyReward,
@@ -833,6 +857,7 @@ const BattlefieldMode = (() => {
     aiChoice,
     pool,
     deploymentSites,
+    aiDeploymentSites,
     requestDeployment,
   };
 })();

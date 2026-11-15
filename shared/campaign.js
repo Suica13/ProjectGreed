@@ -828,7 +828,7 @@ const CampaignRules = (() => {
     if (!base || !holder) return { money: 0, supplies: 0, technology: 0 };
     const amount = base.factory ? ctx.world.settings.factoryIncome : ctx.world.settings.ordinaryIncome;
     return { money: rewards.roundReward(amount.money * rewards.rewardMultiplier),
-      supplies: rewards.roundReward(amount.supplies * rewards.rewardMultiplier),
+      supplies: rewards.roundReward(amount.money * 1.5 * rewards.rewardMultiplier),
       technology: rewards.roundReward(amount.technology * (state.options?.teams[holder.owner]?.research ?? 1) * rewards.rewardMultiplier) };
   }
   function income(ctx, state, team) {

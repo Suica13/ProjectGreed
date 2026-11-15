@@ -17,6 +17,7 @@ window.MissionUI = (() => {
   objectives.innerHTML = "<summary>任务目标</summary><p></p>";
   document.body.append(objectives);
   let token = null,
+    objectiveKey = null,
     audio = null;
   const button = cover.querySelector("button");
   button.onclick = () => {
@@ -31,7 +32,9 @@ window.MissionUI = (() => {
       line = d?.lines[d.index];
     objectives.hidden =
       s.settings.mode !== "mission" || !s.started || ["assembly", "waiting"].includes(s.phase);
-    if (m) {
+    const nextObjectiveKey = m && JSON.stringify([s.settings.mapId, m.protect, m.notice, m.error, I18n.language]);
+    if (m && objectiveKey !== nextObjectiveKey) {
+      objectiveKey = nextObjectiveKey;
       const mission = Rules.getMap(s.settings.mapId).mission;
       const names = (m.protect || []).map((id) => {
         const a = mission.actors.find((a) => a.id === id);
@@ -95,6 +98,7 @@ window.MissionUI = (() => {
       cover.hidden = true;
       objectives.hidden = true;
       token = null;
+      objectiveKey = null;
       audio?.pause();
       audio = null;
     },

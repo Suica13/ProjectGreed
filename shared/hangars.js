@@ -25,6 +25,13 @@ const UnitHangars = {
     const onMap = (u) => !!u && u.hp > 0 && !u.embarked;
     const deploying = (g) => !!g.deployment && !g.deployment.every(Boolean);
     const of = (u) => modelOf(u).hangars || [];
+    const allowsAIEntry = (passenger, carrier, carrierOwnedByAI = false) =>
+      !!carrier && (ownerOf(passenger) === ownerOf(carrier) || carrierOwnedByAI || carrier.allowAIBoarding === true);
+    function setAIEntry(carrier, allowed) {
+      if (!carrier || !of(carrier).length || typeof allowed !== "boolean")
+        throw Error("格纳库AI进入设置无效");
+      carrier.allowAIBoarding = allowed;
+    }
     const cargo = (g, carrier, hangarId = null) =>
       g.units.filter(
         (u) =>
@@ -71,16 +78,9 @@ const UnitHangars = {
         ...b.map((p) => Math.min(...a.map((q) => Math.abs(p.x - q.x) + Math.abs(p.y - q.y)))),
       );
     };
-    function canEmbark(g, u, carrier, hangarId, deploymentDrop = false) {
-      if (
-        !onMap(u) ||
-        modelOf(u).deployed ||
-        !onMap(carrier) ||
-        u.id === carrier.id ||
-        u.team !== carrier.team ||
-        g.winner !== null
-      )
-        return false;
+    function canLoad(g, u, carrier, hangarId) {
+      if (!u || !carrier || u.hp <= 0 || carrier.hp <= 0 || modelOf(u).deployed ||
+          u.id === carrier.id || u.team !== carrier.team || g.winner !== null) return false;
       // A carrier with its own passengers can board; only ancestry cycles are forbidden.
       const ancestry = new Set();
       let parent = carrier;
@@ -95,7 +95,8 @@ const UnitHangars = {
         !hangar ||
         !transport ||
         !hangar.allowedTags.some((tag) => transport.loadTags.includes(tag)) ||
-        used(g, carrier, hangarId) + slotCost(u, hangar) > hangar.capacity
+        used(g, carrier, hangarId) +
+          (u.embarked?.carrierId === carrier.id && u.embarked.hangarId === hangarId ? 0 : slotCost(u, hangar)) > hangar.capacity
       )
         return false;
       if (hangar.kind === "sfs") {
@@ -109,6 +110,50 @@ const UnitHangars = {
         };
         if (!squadFits(squadMembers(projected, carrier), projected)) return false;
       }
+      return true;
+    }
+    function rootCarrier(g, unit) {
+      const visited = new Set();
+      while (unit?.embarked) {
+        if (visited.has(unit.id)) return null;
+        visited.add(unit.id);
+        unit = g.units.find(other => other.id === unit.embarked.carrierId);
+        if (!unit || unit.hp <= 0) return null;
+      }
+      return unit;
+    }
+    function canTransfer(g, u, carrier, hangarId) {
+      if (!u?.embarked || !canLoad(g, u, carrier, hangarId) || u.plan || u.pendingMove ||
+          u.snipeOrder || u.readySnipe ||
+          (u.embarked.carrierId === carrier.id && u.embarked.hangarId === hangarId)) return false;
+      const sourceRoot = rootCarrier(g, u), targetRoot = rootCarrier(g, carrier);
+      if (!sourceRoot || !targetRoot || sourceRoot.team !== u.team || targetRoot.team !== u.team) return false;
+      if (deploying(g)) {
+        if (g.deployment[ownerOf(u)]) return false;
+      } else if (u.team !== g.team) return false;
+      // Reorganize one ship's cargo without launching. Moving between ships
+      // requires adjacent hulls and follows ordinary boarding's action lock.
+      return sourceRoot.id === targetRoot.id ||
+        (edgeDistance(sourceRoot, targetRoot) === 1 &&
+          (deploying(g) || (!u.acted && u.lastLaunchRound !== g.round)));
+    }
+    function transfer(g, u, carrier, hangarId) {
+      if (!canTransfer(g, u, carrier, hangarId)) throw Error("无法转移：容量、类型、距离或搭载关系不符合条件");
+      const previous = { ...u.embarked };
+      const sameRoot = rootCarrier(g, u).id === rootCarrier(g, carrier).id;
+      u.embarked = { ...previous, carrierId: carrier.id, hangarId };
+      if (!sameRoot) {
+        u.embarked.boardRound = deploying(g) ? null : g.round;
+        if (!deploying(g)) { u.acted = true; u.moved = true; }
+      }
+      delete u.squadId;
+      delete u.squadSlot;
+      sync(g);
+      return { type: "hangar_transfer", unitId: u.id, carrierId: carrier.id, hangarId,
+        previousCarrierId: previous.carrierId, previousHangarId: previous.hangarId };
+    }
+    function canEmbark(g, u, carrier, hangarId, deploymentDrop = false) {
+      if (!onMap(u) || !onMap(carrier) || !canLoad(g, u, carrier, hangarId)) return false;
       if (deploying(g)) {
         const inDeploymentArea =
           deploymentDrop &&
@@ -483,14 +528,14 @@ const UnitHangars = {
         energyWeapons.length > 0 && energyWeapons.every((weapon) => weapon.en > u.en);
       return u.hp < m.hp * 0.25 || u.en < m.en * 0.5 || outOfAmmo || damaged;
     }
-    function recoveryOrder(g, u, allowRide = () => true) {
+    function recoveryOrder(g, u, allowRide = () => true, allowEntry = carrier => allowsAIEntry(u, carrier)) {
       if (!onMap(u) || u.acted || u.plan || u.lastLaunchRound === g.round) return null;
       const m = modelOf(u);
       if (!m.transport?.loadTags?.length) return null;
       // Check actual carriers before distance/contact searches. A normal ally is
       // never a boarding destination, regardless of its proximity to the enemy.
       const carriers = g.units.filter(
-        (c) => c.id !== u.id && onMap(c) && c.team === u.team && of(c).length,
+        (c) => c.id !== u.id && onMap(c) && c.team === u.team && of(c).length && allowEntry(c),
       );
       if (!carriers.length) return null;
       const members = squadMembers(g, u);
@@ -638,9 +683,13 @@ const UnitHangars = {
       slotCost,
       sync,
       of,
+      allowsAIEntry,
+      setAIEntry,
       cargo,
       used,
       canEmbark,
+      canTransfer,
+      transfer,
       embark,
       boardingPlan,
       embarkSquad,

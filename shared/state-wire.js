@@ -73,26 +73,79 @@ const StateWire = (() => {
       reset() {
         before = null;
       },
-      encode(state) {
-        // Freeze the baseline by serialization: engine actors keep mutating after send().
-        const serialized = JSON.stringify(state),
-          current = JSON.parse(serialized),
+      encode(state, batchCache) {
+        // Immutable JSON field strings freeze mutable engine actors without
+        // parsing a full snapshot, then serializing both sides of every field.
+        const fields = serializeFields(state, ["game"], batchCache),
+          game = serializeFields(state.game, ["units"], batchCache),
+          units = new Map(
+            state.game.units.map((unit) => {
+              const json = cachedJSON(unit, batchCache),
+                previous = before?.units.get(unit.id);
+              return [unit.id, previous?.json === json ? previous : { json, fields: null }];
+            }),
+          ),
+          order = JSON.stringify(state.game.units.map((unit) => unit.id)),
+          current = { fields, game, units, order, identity: identity(state) },
           next = ++sequence;
-        const full = serialized.slice(0, -1) + ',"wireSequence":' + next + "}";
+        const board = jsonObject([
+          ...game,
+          ["units", "[" + [...units.values()].map((unit) => unit.json).join(",") + "]"],
+        ]);
+        const full = jsonObject([...fields, ["game", board], ["wireSequence", String(next)]]);
         let encoded = full;
-        if (before && sequence % 128 !== 0 && identity(before) === identity(current)) {
-          const patch = JSON.stringify({
-            type: "state_delta",
-            sequence: next,
-            baseSequence: next - 1,
-            patch: pack(before, current),
-          });
-          if (patch.length < full.length * 0.9) encoded = patch;
+        if (before && sequence % 128 !== 0 && before.identity === current.identity) {
+          const updates = [];
+          for (const [id, unit] of units) {
+            const old = before.units.get(id);
+            if (old === unit) continue;
+            if (old && !old.fields) old.fields = serializeFields(JSON.parse(old.json));
+            if (!unit.fields) unit.fields = serializeFields(JSON.parse(unit.json));
+            const change = serializedDelta(old?.fields, unit.fields);
+            if (change) updates.push("[" + JSON.stringify(id) + "," + change + "]");
+          }
+          const patch = jsonObject([
+            ["fields", serializedDelta(before.fields, fields) || '{"set":{},"remove":[]}'],
+            ["game", serializedDelta(before.game, game) || '{"set":{},"remove":[]}'],
+            ["units", "[" + updates.join(",") + "]"],
+            ["removed", JSON.stringify([...before.units.keys()].filter((id) => !units.has(id)))],
+            ...(order !== before.order ? [["order", order]] : []),
+          ]);
+          const message = `{"type":"state_delta","sequence":${next},"baseSequence":${next - 1},"patch":${patch}}`;
+          if (message.length < full.length * 0.9) encoded = message;
         }
         before = current;
         return encoded;
       },
     };
+  }
+  function cachedJSON(value, cache) {
+    if (!cache || !value || typeof value !== "object") return JSON.stringify(value);
+    if (!cache.has(value)) cache.set(value, JSON.stringify(value));
+    return cache.get(value);
+  }
+  function serializeFields(value, omit = [], cache) {
+    const fields = new Map();
+    for (const [key, field] of Object.entries(value)) {
+      if (omit.includes(key)) continue;
+      const encoded = cachedJSON(field, cache);
+      if (encoded !== undefined) fields.set(key, encoded);
+    }
+    return fields;
+  }
+  function jsonObject(fields) {
+    return (
+      "{" + [...fields].map(([key, value]) => JSON.stringify(key) + ":" + value).join(",") + "}"
+    );
+  }
+  function serializedDelta(before = new Map(), after) {
+    const set = [],
+      remove = [];
+    for (const [key, value] of after) if (before.get(key) !== value) set.push([key, value]);
+    for (const key of before.keys()) if (!after.has(key)) remove.push(key);
+    return set.length || remove.length
+      ? `{"set":${jsonObject(set)},"remove":${JSON.stringify(remove)}}`
+      : null;
   }
   function createDecoder() {
     let before = null,

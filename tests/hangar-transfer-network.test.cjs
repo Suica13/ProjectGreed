@@ -1,0 +1,25 @@
+const test=require('node:test'),assert=require('node:assert/strict');
+const G=require('../shared/rules');
+const {createRoomEngine}=require('../shared/room-engine');
+test('hangar transfer RPC checks passenger ownership and deduplicates state changes',t=>{
+ let serial=0;const snapshots=[],clients=[{readyState:1},{readyState:1}];
+ const engine=createRoomEngine({rules:G,send:(_ws,value)=>snapshots.push(value),randomId:()=>`id-${++serial}`,randomToken:()=>`token-${++serial}`,randomSeed:()=>1});t.after(()=>engine.close());
+ const profile={characterFaction:'PMC',licenses:{Type61:true},inventory:{Type61:5}};
+ engine.join(clients[0],{...profile,mode:'create',room:'TRANSFER'});engine.join(clients[1],{...profile,mode:'join',room:'TRANSFER'});
+ const room=engine.rooms.get('TRANSFER');
+ const act=(seat,action,fields={},id=`request-${++serial}`)=>engine.action(clients[seat],{id,revision:room.revision,matchId:room.matchId,round:room.game?.round,action,...fields});
+ const formation=[{unitId:'Type61',kitId:'standard'},{unitId:'Type61',kitId:'standard'},{unitId:'Type61',kitId:'standard'}];
+ act(0,'configure_room',{...G.defaultRoomSettings(),battleMode:'quick',formationStyle:'free'});
+ act(1,'set_ready',{ready:true,formation});act(0,'start_game',{formation});act(0,'confirm_formation');act(1,'confirm_formation');
+ const [ship,passenger,sfs]=room.game.units.filter(u=>u.ownerSeat===0);
+ ship.model=Object.keys(G.models).find(id=>id.startsWith('PegasusClass__'));sfs.model=Object.keys(G.models).find(id=>id.startsWith('DodaiYS__'));
+ passenger.model=Object.keys(G.models).find(id=>id.startsWith('RGM_79__'));
+ const sh=G.hangars.of(ship)[0],sf=G.hangars.of(sfs)[0];
+ passenger.embarked={carrierId:ship.id,hangarId:sh.id,boardRound:0};sfs.embarked={carrierId:ship.id,hangarId:sh.id,boardRound:0};G.hangars.sync(room.game);
+ const args={unitId:passenger.id,carrierId:sfs.id,hangarId:sf.id};
+ assert.throws(()=>act(1,'hangar_transfer',args),/不能操作/);
+ act(0,'hangar_transfer',args,'transfer-once');assert.equal(passenger.embarked.carrierId,sfs.id);
+ act(0,'hangar_transfer',{unitId:passenger.id,carrierId:ship.id,hangarId:sh.id},'transfer-once');assert.equal(passenger.embarked.carrierId,sfs.id);
+ assert(snapshots.some(snapshot=>snapshot.game?.units.some(u=>u.id===passenger.id&&u.embarked?.carrierId===sfs.id)));
+ act(0,'hangar_transfer',{unitId:passenger.id,carrierId:ship.id,hangarId:sh.id});assert.equal(passenger.embarked.carrierId,ship.id);
+});

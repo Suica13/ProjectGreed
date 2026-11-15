@@ -1,0 +1,873 @@
+{
+  "schemaVersion": 2,
+  "id": "MSA_005S_MA",
+  "code": "MSA-005S-MA",
+  "source": "GW_BattleUniverse_DLC_0087/Units/BattleUnits/MSA_005S/MSA_005S_MA.ini",
+  "materials": {
+    "textures": {
+      "MSA_005S_Crotch_1.png": "textures/MSA_005S_Crotch_1.png",
+      "MSA_005S_Body_1.png": "textures/MSA_005S_Body_1.png",
+      "MSA_005S_ArmL_1.png": "textures/MSA_005S_ArmL_1.png",
+      "MSA_005S_ArmR_1.png": "textures/MSA_005S_ArmR_1.png",
+      "MSA_005S_ShoulderL_1.png": "textures/MSA_005S_ShoulderL_1.png",
+      "MSA_005S_ShoulderR_1.png": "textures/MSA_005S_ShoulderR_1.png",
+      "MSA_005S_Head_1.png": "textures/MSA_005S_Head_1.png",
+      "MSA_005S_Foot_1.png": "textures/MSA_005S_Foot_1.png",
+      "MSA_005S_LegL_1.png": "textures/MSA_005S_LegL_1.png",
+      "MSA_005S_LegR_1.png": "textures/MSA_005S_LegR_1.png",
+      "CameraGun.png": "textures/CameraGun.png",
+      "AEUG_MSN_100_BR_Black.png": "textures/AEUG_MSN_100_BR_Black.png",
+      "MSA_005S_MA_1.png": "textures/MSA_005S_MA_1.png",
+      "MSA_005S.png": "textures/MSA_005S.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png"
+    },
+    "icon": "MSA_005S.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "AEUG_MSN_100_BR_Black_MSA_005S",
+      "texture": "AEUG_MSN_100_BR_Black.png",
+      "bone": "Attachment15",
+      "order": 1.0,
+      "scale": 0.75,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 10.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -18.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "scaleX": 1.0,
+      "independentClock": true
+    },
+    {
+      "name": "Boost_MA",
+      "texture": "Boost_1.png",
+      "bone": "Attachment15",
+      "order": 1.0,
+      "scale": 1.5,
+      "offset": {
+        "x": -2.0,
+        "y": -15.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Attachment15",
+      "order": 1.5,
+      "scale": 2.5,
+      "offset": {
+        "x": -2.5,
+        "y": -15.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "MA",
+      "texture": "MSA_005S_MA_1.png",
+      "bone": "Attachment15",
+      "order": 2.0,
+      "scale": 0.85,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Head_Close",
+      "texture": "MSA_005S_Head_1.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": true
+      },
+      "requiredParts": [
+        "head"
+      ]
+    }
+  ],
+  "animations": {
+    "EnterPilot": "../../animations/EnterPilot.json",
+    "QuitPilot": "../../animations/QuitPilot.json",
+    "NoPilotIdle": "../../animations/NoPilotIdle.json",
+    "Common_Idle": "../../animations/Common_Idle__AMX_002.json",
+    "Common_Dodge_L": "../../animations/Common_Dodge_L.json",
+    "Common_Dodge_R": "../../animations/Common_Dodge_R.json",
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "OnMovingWalk": "../../animations/OnMovingWalk.json",
+    "Guard": "../../animations/Guard__AMX_002.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Daze": "../../animations/Common_Daze__AMX_002.json",
+    "Common_Stagger": "../../animations/Common_Stagger__AMX_002.json",
+    "Common_Shoot_A": "../../animations/Common_Shoot_A__AMX_002.json",
+    "Common_Shoot_A_FA": "../../animations/Common_Shoot_A_FA__AMX_002.json",
+    "Common_Cannon_Shoot_A": "../../animations/Common_Cannon_Shoot_A__AMX_002.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json",
+    "Common_Push_A": "../../animations/Common_Push_A.json"
+  },
+  "stats": {
+    "hp": 62500,
+    "en": 1300.0,
+    "move": 8,
+    "mobility": 170.0,
+    "cost": 1200,
+    "counterLimit": 1,
+    "accuracy": 170.0,
+    "partStructuralStrength": 155.0,
+    "partsBreakable": true,
+    "movementType": "air",
+    "adaptability": {
+      "ground": 25.0,
+      "space": 100,
+      "water": 25.0,
+      "air": 100.0,
+      "atmosphere": 0,
+      "mountain": 25.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "speed": 235,
+    "actionPoints": 11,
+    "sensors": {
+      "sight": 10,
+      "radar": 13.0,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
+  },
+  "attackBonuses": {
+    "melee": 50.0,
+    "shooting": 65.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 15.0,
+      "flat": 250.0
+    },
+    "shell": {
+      "percent": 20.0,
+      "flat": 250.0
+    },
+    "melee": {
+      "percent": 15.0,
+      "flat": 450.0
+    },
+    "dp": {
+      "percent": 20.0,
+      "flat": 25.0
+    },
+    "sp": {
+      "percent": 5.0,
+      "flat": 50.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    },
+    "requiredParts": []
+  },
+  "sourceStats": {
+    "hp": 50000.0,
+    "walkSpeed": 1.25,
+    "boostSpeed": 3.3,
+    "turnSpeed": 2.25,
+    "reaction": 170.0,
+    "shooting": 165.0,
+    "melee": 150.0,
+    "nativeTags": [
+      "MSA_005S_MA",
+      "Unit",
+      "MS",
+      "AEUG",
+      "0087",
+      "UC",
+      "ManualControlCapable"
+    ],
+    "nativeSkills": [
+      "PlayerControl_Entry",
+      "Transform_LandFly_SFS_ON",
+      "FlyUnit_Fighter",
+      "CantDeconstruct",
+      "DogFight_A",
+      "PlayerControl_Marker",
+      "PlayerControl",
+      "MSA_005S_MA"
+    ],
+    "accuracy": 170.0,
+    "partStructuralStrength": 155.0,
+    "actionTurnSpeed": 2.25,
+    "movementBeforeMobility": 9,
+    "mobilityMoveTarget": 10,
+    "enBeforeReduction": 1300.0,
+    "enCapacityMultiplier": 1,
+    "adaptability": {
+      "ground": 25.0,
+      "space": 100.0,
+      "water": 25.0,
+      "air": 100.0,
+      "mountain": 25.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 26.0,
+      "radar": 468.0,
+      "antiDetection": 0.0
+    },
+    "balanceStatus": "native-level",
+    "unitLevel": 4750.0,
+    "tacticalMoveBeforeBonus": 9,
+    "v17BaseHp": 50000.0,
+    "technologyEra": "UC_0087_T2",
+    "technologyWeight": 4
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMoving",
+    "stagger": "Common_Stagger",
+    "dodge": "Common_Dodge_L",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "OnMovingWalk",
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "麦塔斯改 [MA]",
+  "faction": "AEUG",
+  "tags": [
+    "AEUG",
+    "0087T2"
+  ],
+  "localization": {
+    "zh": {
+      "name": "麦塔斯改 [变形]",
+      "description": "麦塔斯的改良型,强化了火力投送能力"
+    },
+    "en": {
+      "name": "MethussKai [Transformed]",
+      "description": "An improved variant of the Methuss, with enhanced firepower projection capability"
+    },
+    "ja": {
+      "name": "麦塔斯改 [変形]"
+    }
+  },
+  "weapons": {
+    "AEUG_MSN_100_BR_Black_MSA_005S": {
+      "ref": "AEUG_MSN_100_BR_Black_MSA_005S__lv1",
+      "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Shoot_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 2.0,
+              "delay": 0.25
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.0,
+              "requiredParts": [],
+              "penetrationCount": 2.0,
+              "delay": 0.25
+            },
+            {
+              "delay": 0.25
+            }
+          ],
+          "startAnimation": null
+        },
+        "requiredParts": [
+          "rightArm"
+        ],
+        "changeHeldWeapon": false,
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/AEUG_MSN_100_BR_Black_MSA_005S.gw",
+          "barrels": [
+            {
+              "id": "AEUG_MSN_100_BR_Black_MSA_005S",
+              "x": 0.0,
+              "y": 15.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "AEUG_MSN_100_BR_Black_MSA_005S",
+              "point": {
+                "x": 4.082155997157844e-16,
+                "y": -6.666666666666667
+              }
+            }
+          ]
+        },
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Beam/AEUG_MSN_100_BR_Black_MSA_005S.gw",
+          "barrel": "AEUG_MSN_100_BR_Black_MSA_005S",
+          "entry": "hiddenAction_AEUG_MSN_100_BR_Black_MSA_005S_Fire",
+          "cooldown": 1.5,
+          "duration": 0.75,
+          "firstShot": 0.25,
+          "lastShot": 0.5,
+          "firingEvents": 2,
+          "projectiles": 2,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 45.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 45.0,
+          "actions": [
+            "hiddenAction_AEUG_MSN_100_BR_Black_MSA_005S_Fire",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SendEnemyTryAttack_Shoot",
+            "hiddenAction_AEUG_MSN_100_BR_Black_MSA_005S_SetWeaponIndex",
+            "hiddenAction_AEUG_MSN_100_BR_Black_MSA_005S_B2_Step_1",
+            "hiddenAction_AEUG_MSN_100_BR_Black_MSA_005S_Fire_Step_1",
+            "hiddenAction_AEUG_MSN_100_BR_Black_MSA_005S_Fire_Step_2",
+            "hiddenAction_AEUG_MSN_100_BR_Black_MSA_005S_Fire_Step_3",
+            "hiddenAction_AEUG_MSN_100_BR_Black_MSA_005S_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff"
+          ]
+        }
+      },
+      "remove": [
+        "displayIndex"
+      ]
+    },
+    "AEUG_MSA_005S_BeamCannon": {
+      "ref": "AEUG_MSA_005S_BeamCannon__lv1",
+      "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Cannon_Shoot_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1.25,
+              "requiredParts": [],
+              "delay": 0.5
+            },
+            {
+              "delay": 0.75
+            }
+          ],
+          "startAnimation": null
+        },
+        "requiredParts": [
+          "backpack"
+        ],
+        "changeHeldWeapon": false,
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/AEUG_MSA_005S_BeamCannon.gw",
+          "barrels": [
+            {
+              "id": "AEUG_MSA_005S_BeamCannon",
+              "x": 0.0,
+              "y": 40.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 0.0,
+                "y": 40.0
+              }
+            }
+          ]
+        },
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Beam/AEUG_MSA_005S_BeamCannon.gw",
+          "barrel": "AEUG_MSA_005S_BeamCannon",
+          "entry": "hiddenAction_AEUG_MSA_005S_BeamCannon_Fire",
+          "cooldown": 4.0,
+          "duration": 1.25,
+          "firstShot": 0.5,
+          "lastShot": 0.5,
+          "firingEvents": 1,
+          "projectiles": 1,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 70.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 70.0,
+          "actions": [
+            "hiddenAction_AEUG_MSA_005S_BeamCannon_Fire",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SendEnemyTryAttack_Shoot",
+            "hiddenAction_AEUG_MSA_005S_BeamCannon_SetWeaponIndex",
+            "hiddenAction_AEUG_MSA_005S_BeamCannon_B1_Step_1",
+            "hiddenAction_AEUG_MSA_005S_BeamCannon_Fire_Step_1",
+            "hiddenAction_AEUG_MSA_005S_BeamCannon_Fire_Step_2",
+            "hiddenAction_AEUG_MSA_005S_BeamCannon_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff"
+          ]
+        }
+      },
+      "remove": [
+        "displayIndex"
+      ]
+    },
+    "Common_Push_A": {
+      "ref": "Common_Push_A__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Push_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Kick_White_R"
+              ],
+              "delay": 0.45
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Push_A"
+        },
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+          "barrelX": 0,
+          "barrelY": 0,
+          "cooldownSeconds": 3,
+          "barrels": [
+            {
+              "id": "Common_Push_A",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+          "barrel": "Common_Push_A",
+          "entry": "hiddenAction_Common_Push_A_Fire",
+          "cooldown": 3.0,
+          "duration": 1.45,
+          "firstShot": 0.45,
+          "lastShot": 0.45,
+          "firingEvents": 1,
+          "projectiles": 1,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "hiddenAction_Common_Push_A_Fire",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SendEnemyTryAttack_Cqb",
+            "hiddenAction_Common_Push_A_SetWeaponIndex",
+            "hiddenAction_Common_Push_A_Step_1",
+            "hiddenAction_Common_Push_A_Fire_Step_1",
+            "hiddenAction_Common_Push_A_Fire_Step_2",
+            "hiddenAction_Common_Push_A_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff"
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      },
+      "remove": [
+        "swingEffects"
+      ]
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "空中移动：可跨越山岩与水域",
+      "status": "implemented"
+    },
+    {
+      "id": "PlayerControl_Entry",
+      "source": "Template/Unit/Skill/PlayerControl_Entry.gw",
+      "status": "review",
+      "name": "PlayerControl_Entry"
+    },
+    {
+      "id": "Transform_LandFly_SFS_ON",
+      "source": "Template/Unit/Skill/Transform_LandFly_SFS_ON.gw",
+      "status": "adapted",
+      "name": "变形：原生形态转换，资源与部位规则使用显式配置"
+    },
+    {
+      "id": "FlyUnit_Fighter",
+      "source": "Template/Unit/Skill/FlyUnit_Fighter.gw",
+      "status": "review",
+      "name": "FlyUnit_Fighter"
+    },
+    {
+      "id": "CantDeconstruct",
+      "source": "Template/Unit/Skill/CantDeconstruct.gw",
+      "status": "not_applicable",
+      "name": "CantDeconstruct"
+    },
+    {
+      "id": "DogFight_A",
+      "source": "Template/Unit/Skill/DogFight_A.gw",
+      "status": "review",
+      "name": "空中缠斗"
+    },
+    {
+      "id": "PlayerControl_Marker",
+      "source": "Template/Unit/Skill/PlayerControl_Marker.gw",
+      "status": "review",
+      "name": "PlayerControl_Marker"
+    },
+    {
+      "id": "PlayerControl",
+      "source": "Template/Unit/Skill/PlayerControl.gw",
+      "status": "review",
+      "name": "PlayerControl"
+    },
+    {
+      "id": "MSA_005S_MA",
+      "source": "Template/Unit/Skill/PlayerControl/MSA_005S_MA.gw",
+      "status": "review",
+      "name": "MSA_005S_MA"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": [
+        "AEUG_MSN_100_BR_Black_MSA_005S",
+        "AEUG_MSA_005S_BeamCannon",
+        "Common_Push_A"
+      ]
+    }
+  ],
+  "description": "麦塔斯的改良型,强化了火力投送能力",
+  "skills": [
+    {
+      "id": "Common_CameraGun",
+      "type": "recon",
+      "name": "摄像枪",
+      "reconMode": "camera",
+      "range": 15,
+      "enCost": 30,
+      "actionCost": 3,
+      "maxUses": 99,
+      "consumeAction": false,
+      "waterOnly": false,
+      "durationRounds": 2,
+      "cooldownTurns": 1,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Detect_4.ogg",
+        "volume": 0.5
+      },
+      "localization": {
+        "zh": {
+          "name": "摄像枪"
+        },
+        "en": {
+          "name": "Camera Gun"
+        },
+        "ja": {
+          "name": "カメラガン"
+        }
+      },
+      "minRange": 10,
+      "areaSight": 3,
+      "areaRadar": 3,
+      "description": "射程10～15格，消耗3 AP与30 EN；揭露目标半径3格视野并探测敌人，持续至下次己方回合。"
+    },
+    {
+      "id": "Common_DetectArea",
+      "type": "recon",
+      "name": "索敌",
+      "reconMode": "scan",
+      "range": 25.0,
+      "enCost": 100,
+      "actionCost": 1,
+      "maxUses": 99,
+      "consumeAction": false,
+      "waterOnly": false,
+      "durationRounds": 2,
+      "cooldownTurns": 1,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Detect_3.ogg",
+        "volume": 0.5
+      },
+      "localization": {
+        "zh": {
+          "name": "索敌"
+        },
+        "en": {
+          "name": "Active Scan"
+        },
+        "ja": {
+          "name": "索敵"
+        }
+      }
+    },
+    {
+      "id": "Transform",
+      "type": "transform",
+      "name": "变形",
+      "localization": {
+        "zh": {
+          "name": "变形"
+        },
+        "en": {
+          "name": "Transform"
+        },
+        "ja": {
+          "name": "変形"
+        }
+      },
+      "range": 0,
+      "minRange": 0,
+      "maxUses": 99,
+      "consumeAction": true,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Transform_4.ogg",
+        "volume": 0.6
+      },
+      "nativeAction": "action_Transform_LandFlyA",
+      "source": {
+        "mode": "transform",
+        "unitId": "MSA_005S",
+        "kitId": "standard",
+        "kitMap": {
+          "standard": "standard"
+        },
+        "inheritResources": true,
+        "hpRecoveryPercent": 0,
+        "enRecoveryPercent": 0,
+        "shieldRecoveryPercent": 0,
+        "repairAllParts": false
+      }
+    }
+  ],
+  "kitAliases": {
+    "kit_0": "standard",
+    "kit_1": "standard"
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 4750.0,
+    "levelMultiplier": 0.25,
+    "published": 1200
+  },
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS",
+    "Aircraft",
+    "Recon",
+    "Transport"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto",
+      "CanUseSFS"
+    ]
+  },
+  "hangars": [
+    {
+      "id": "SFS01",
+      "name": "SFS",
+      "kind": "sfs",
+      "capacity": 1,
+      "allowedTags": [
+        "CanUseSFS"
+      ],
+      "launchRange": 1,
+      "emergencyRange": 3,
+      "offset": {
+        "x": 0.0,
+        "y": -7.5,
+        "height": 1.0
+      },
+      "source": "Template/Unit/Transport_SFS.ini",
+      "sourceUnit": "SFS_X1"
+    }
+  ],
+  "refits": [],
+  "formOnly": true,
+  "formOf": "MSA_005S"
+}

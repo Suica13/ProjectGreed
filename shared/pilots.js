@@ -545,10 +545,12 @@ const PilotSystem = (() => {
     }
     return custom(p);
   }
-  function creditAwards(store, awards) {
+  function creditAwards(store, awards, { settled = true } = {}) {
     const received = new Set(store.awards);
     let changed = false;
     for (const award of awards) {
+      // XP is immediate; casualties still follow final match settlement.
+      if (award.persistent === false || (!settled && award.kind === "loss")) continue;
       if (received.has(award.id)) continue;
       const i = store.pilots.findIndex(
         (p) => p.id === award.pilotId && (!award.faction || p.faction === award.faction),

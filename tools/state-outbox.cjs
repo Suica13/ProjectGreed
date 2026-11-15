@@ -1,6 +1,11 @@
 "use strict";
 // Coalesce states before encoding; never discard an already encoded delta.
-function createStateOutbox({ encode, highWater = 128 * 1024, hardLimit = 8 * 1024 * 1024, pollMs = 50 }) {
+function createStateOutbox({
+  encode,
+  highWater = 128 * 1024,
+  hardLimit = 8 * 1024 * 1024,
+  pollMs = 50,
+}) {
   const pending = new Map();
   function cancel(socket) {
     const entry = pending.get(socket);
@@ -8,14 +13,25 @@ function createStateOutbox({ encode, highWater = 128 * 1024, hardLimit = 8 * 102
     pending.delete(socket);
   }
   function writable(socket) {
-    if (socket?.readyState !== 1) { cancel(socket); return false; }
-    if (socket.bufferedAmount > hardLimit) { cancel(socket); socket.terminate(); return false; }
+    if (socket?.readyState !== 1) {
+      cancel(socket);
+      return false;
+    }
+    if (socket.bufferedAmount > hardLimit) {
+      cancel(socket);
+      socket.terminate();
+      return false;
+    }
     return true;
   }
-  function transmit(socket, data) {
+  function transmit(socket, data, batchContext) {
     if (!writable(socket)) return;
-    try { socket.send(encode(socket, data)); }
-    catch { cancel(socket); socket.terminate(); }
+    try {
+      socket.send(encode(socket, data, batchContext));
+    } catch {
+      cancel(socket);
+      socket.terminate();
+    }
   }
   function flush(socket) {
     const entry = pending.get(socket);
@@ -30,7 +46,7 @@ function createStateOutbox({ encode, highWater = 128 * 1024, hardLimit = 8 * 102
     transmit(socket, entry.state);
   }
   return {
-    send(socket, data) {
+    send(socket, data, batchContext) {
       if (!writable(socket)) return;
       if (data.type === "state" && (pending.has(socket) || socket.bufferedAmount > highWater)) {
         const old = pending.get(socket);
@@ -38,10 +54,14 @@ function createStateOutbox({ encode, highWater = 128 * 1024, hardLimit = 8 * 102
         // Freeze the already privacy-filtered view before engine actors mutate.
         pending.set(socket, { state: JSON.parse(JSON.stringify(data)), timer: null });
         flush(socket);
-      } else transmit(socket, data);
+      } else transmit(socket, data, batchContext);
     },
-    close() { for (const socket of pending.keys()) cancel(socket); },
-    get pending() { return pending.size; },
+    close() {
+      for (const socket of pending.keys()) cancel(socket);
+    },
+    get pending() {
+      return pending.size;
+    },
   };
 }
 module.exports = { createStateOutbox };

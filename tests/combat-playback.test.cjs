@@ -70,6 +70,35 @@ const battle = (id) => ({
   before: { a: 100, b: 100 },
   events: [],
 });
+test("sweep route and next deployment discard active and queued combat presentations", () => {
+  for (const phase of ["sweep_map", "sweep_event", "sweep_resupply", "deployment"]) {
+    const { context, playback, calls } = runtime();
+    context.Net.snapshot = snapshot();
+    playback.receive(context.Net.snapshot, true);
+    playback.show();
+    const next = { ...snapshot(), phase, playback: null, combats: [] };
+    context.Net.snapshot = next;
+    playback.receive(next, true);
+    assert.equal(playback.active(), false, phase);
+    assert.equal(playback.queued, 0, phase);
+    assert.equal(playback.show(), false, phase);
+    assert.equal(calls.requests.length, 0, "no stale playback acknowledgement");
+  }
+});
+
+test("new sweep battle accepts its own playback even when actor and batch IDs repeat", () => {
+  const { context, playback } = runtime();
+  context.Net.snapshot = { ...snapshot(), sweep: { battleIndex: 1 } };
+  playback.receive(context.Net.snapshot, true);
+  playback.show();
+  context.Net.snapshot = { ...snapshot(), phase: "deployment", playback: null, sweep: { battleIndex: 2 } };
+  playback.receive(context.Net.snapshot, true);
+  assert.equal(playback.active(), false);
+  context.Net.snapshot = { ...snapshot(), sweep: { battleIndex: 2 } };
+  playback.receive(context.Net.snapshot, true);
+  assert.equal(playback.queued, 1);
+});
+
 function snapshot(ready = []) {
   return {
     matchId: "match",

@@ -39,6 +39,7 @@ const fields = {
     shipAccuracy: ["战舰原MOD命中系数倍率", 0.01, 10, false, "以sourceStats记录的原MOD命中系数为基准，保留既有阵营加成；再应用单位命中倍率和人工差值。"],
     specialCost: ["特装机基础COST倍率",1,5,false,"原MOD工厂单次生产一台的非战舰单位，基础COST乘倍率并按25取整；套件差价及人工差值随后应用。"],
     hp: ["单位耐久倍率", 0.01, 10, false, "以现有单位基础值换算，向上取整。"],
+    maHP: ["MA耐久倍率", 0.01, 10, false, "仅MA标签单位，在通用耐久倍率后叠乘；人工差值随后应用。"],
     en: ["单位EN上限倍率", 0.01, 10, false, "以现有基础值换算，向上取整。"],
     move: ["单位基础移动距离倍率", 0.01, 10, false, "基础距离乘倍率后四舍五入，再加原移植战术加成（普通单位+1、战舰+3）；不修改动画速度。"],
     accuracy: ["单位命中系数倍率", 0.01, 10, false, "独立于上方武器本身的命中率。"],
@@ -57,8 +58,9 @@ const classFields = {
   rangeBonus: ["分类最大射程增减", -100, 100, true],
 };
 function validate(value) {
-  if (value?.units) value.units.shipAccuracy ??= 0.8;
-  if (value?.units) value.units.specialCost ??= 1.25;
+  if (value?.units) value.units.shipAccuracy ??= 0.9;
+  if (value?.units) value.units.maHP ??= 0.75;
+  if (value?.units) value.units.specialCost ??= 1.1;
   if (value?.weapons) value.weapons.nonCounterTargetAccuracy ??= 1.1;
   if (value?.weapons) for (const key of ["shootingDamageOffset", "shootingHitOffset", "shipMediumAccuracyBonus"])
     value.weapons[key] ??= 0;
@@ -306,9 +308,10 @@ function globals(prefab, rules) {
       );
     for (const [key, field] of Object.entries(fields)) {
       let n = base[field] * rules.units[key];
+      if (key === "hp" && prefab.unitTags?.includes("MA")) n *= rules.units.maHP ?? 0.75;
       if (key === "accuracy" && prefab.stats.ship && Number.isFinite(prefab.sourceStats?.accuracy)) {
-        // Read native accuracy, rather than stacking 80% onto the legacy 65% import.
-        const factor = rules.units.shipAccuracy ?? 0.8;
+        // Read native accuracy, rather than stacking onto the legacy import.
+        const factor = rules.units.shipAccuracy ?? 0.9;
         n = prefab.sourceStats.accuracy * (prefab.sourceStats.shipFactionAccuracyMultiplier ?? 1) * factor * rules.units.accuracy;
         prefab.stats.accuracyMultiplier = factor;
       }

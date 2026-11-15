@@ -69,6 +69,12 @@ const SkillControls = (() => {
       );
     }
     if (skill.type === "irradiation") {
+      if (skill.radial) {
+        const damage = Object.values(skill.damageComponents).reduce((sum, value) => sum + value, 0);
+        return I18n.language === "en" ? `All ports fire together. Radius ${skill.range}; damage ${damage}; accuracy ${skill.baseHit}%. Includes allies. Once per turn.` :
+          I18n.language === "ja" ? `全砲門一斉射撃。周囲${skill.range}マス、ダメージ${damage}、命中${skill.baseHit}%。味方を含む。毎ターン1回。` :
+          `所有炮门同时射击：周身${skill.range}格，伤害${damage}，命中${skill.baseHit}%，包含友军，每回合一次。`;
+      }
       const damage = Object.values(skill.damageComponents)
         .reduce((sum, value) => sum + value, 0)
         .toLocaleString(undefined, { maximumFractionDigits: 2 });

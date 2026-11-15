@@ -1039,8 +1039,8 @@
     {
       "id": "Transform_LandFly_SFS_OFF",
       "source": "Template/Unit/Skill/Transform_LandFly_SFS_OFF.gw",
-      "status": "review",
-      "name": "Transform_LandFly_SFS_OFF"
+      "status": "adapted",
+      "name": "变形：原生形态转换，资源与部位规则使用显式配置"
     }
   ],
   "weaponKits": [
@@ -1081,7 +1081,48 @@
     }
   ],
   "description": "Z高达的量产型,适用于大气圈内作战",
-  "skills": [],
+  "skills": [
+    {
+      "id": "Transform",
+      "type": "transform",
+      "name": "变形",
+      "localization": {
+        "zh": {
+          "name": "变形"
+        },
+        "en": {
+          "name": "Transform"
+        },
+        "ja": {
+          "name": "変形"
+        }
+      },
+      "range": 0,
+      "minRange": 0,
+      "maxUses": 99,
+      "consumeAction": true,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Transform_4.ogg",
+        "volume": 0.6
+      },
+      "nativeAction": "action_Transform_LandFlyB",
+      "source": {
+        "mode": "transform",
+        "unitId": "MSZ_006A1_MA",
+        "kitId": "kit_0",
+        "kitMap": {
+          "kit_0": "kit_0",
+          "kit_1": "kit_1"
+        },
+        "inheritResources": true,
+        "hpRecoveryPercent": 0,
+        "enRecoveryPercent": 0,
+        "shieldRecoveryPercent": 0,
+        "repairAllParts": false
+      }
+    }
+  ],
   "kitAliases": {
     "kit_2": "kit_0",
     "kit_3": "kit_0"

@@ -1055,8 +1055,8 @@
     {
       "id": "Transform_LandFly",
       "source": "Template/Unit/Skill/Transform_LandFly.gw",
-      "status": "review",
-      "name": "Transform_LandFly"
+      "status": "adapted",
+      "name": "变形：原生形态转换，资源与部位规则使用显式配置"
     },
     {
       "id": "PSA",

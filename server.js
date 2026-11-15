@@ -123,17 +123,24 @@ function createServer({
     },
   });
   const stateEncoders = new WeakMap();
+  const batchSerializations = new WeakMap();
   const { createEncoder } = require("./shared/state-wire.js");
   const outbox = require("./tools/state-outbox.cjs").createStateOutbox({
-    encode(ws, data) {
+    encode(ws, data, batchContext) {
       if (data.type === "state" && ws.stateDelta === 1) {
         if (!stateEncoders.has(ws)) stateEncoders.set(ws, createEncoder());
-        return stateEncoders.get(ws).encode(data);
+        // Queued snapshots are frozen and never reuse a live broadcast cache.
+        let cache;
+        if (batchContext) {
+          cache = batchSerializations.get(batchContext);
+          if (!cache) batchSerializations.set(batchContext, (cache = new WeakMap()));
+        }
+        return stateEncoders.get(ws).encode(data, cache);
       }
       return JSON.stringify(data);
     },
   });
-  const send = (ws, data) => outbox.send(ws, data);
+  const send = (ws, data, batchContext) => outbox.send(ws, data, batchContext);
   const activities = require("./tools/server-activities.cjs").createActivityService({
     rules,
     send,

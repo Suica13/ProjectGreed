@@ -8,6 +8,7 @@ const root = path.resolve(__dirname, ".."),
 const option = (key, value) => (args.includes(key) ? args[args.indexOf(key) + 1] : value);
 const output = path.resolve(root, option("--output", "tmp/verification/reports/performance/live.json"));
 const html = path.resolve(root, option("--html", "public/client.html"));
+const roomMode = option("--mode", "battlefield");
 const duration = Number(option("--duration", "20000"));
 const delegate = args.includes("--delegate"),
   stopOnFinish = args.includes("--stop-on-finish");
@@ -37,6 +38,7 @@ async function main() {
       fs.writeFileSync(output.replace(/\.json$/, "-progress.json"), JSON.stringify(row, null, 2));
       console.log(JSON.stringify(row));
     });
+    await page.addInitScript(() => localStorage.setItem("projectgreed.economy.v1", JSON.stringify({schemaVersion:3,money:100000,supplies:100000,licenses:{Medea:true,ColumbusClass:true},inventory:{Medea:5,ColumbusClass:5},kits:{},claimed:{}})));
     await page.goto(pathToFileURL(html).href);
     await page.waitForFunction(() => assetsReady);
     await page.evaluate(() => {
@@ -47,32 +49,25 @@ async function main() {
           aiDelayMs: 1,
           randomAIMoveDelay: () => 0,
         }));
-      Formation.current = () => [{ unitId: "Type61", kitId: "standard" }];
+      Formation.current = () => [{ unitId: byId("offlineRoomMode").value === "mission" ? "ColumbusClass" : "Medea", kitId: "standard" }];
     });
-    await page.locator("#openSkirmish").click();
-    await page.locator("#offlineRoomMode").selectOption("battlefield");
-    await page.locator("#createOfflineRoom").click();
-    await page.evaluate(
-      (fog) =>
-        Net.request("configure_room", {
-          ...Net.snapshot.settings,
-          battleMode: "battlefield",
-          fogMode: fog,
-          battlefieldTeams: [
-            { faction: "EFSF", era: "0079T1" },
-            { faction: "ZEON", era: "0079T1" },
-          ],
-        }),
-      fog,
-    );
-    await page.waitForFunction(
-      () => !Net.awaiting && Net.snapshot.settings.battlefieldTeams[0].era === "0079T1",
-    );
+    await page.evaluate(mode => { byId("offlineRoomMode").value=mode;LocalRoom.open(); },roomMode);
+    await page.waitForFunction(() => Net.snapshot && !Net.awaiting);
+    await page.evaluate(fog => Net.request("configure_room", { ...Net.snapshot.settings, fogMode:fog }),fog);
+    await page.waitForFunction(() => !Net.awaiting);
     await page.locator("#startRoomGame").click();
     await page.locator("#confirmFinalFormation").click();
-    await page.locator("#confirmDeployment").click();
+    await page.evaluate(()=>Net.request("auto_place_deployment"));
+    await page.waitForFunction(()=>!Net.awaiting);
+    await page.evaluate(()=>Net.request("confirm_deployment"));
     await page.waitForFunction(() => !BattleAssets.loading && Net.snapshot.phase === "idle");
-    await page.evaluate(() => MapCamera.setPercent(1));
+    if (roomMode === "mission") {
+      for (let i=0;i<20 && await page.evaluate(()=>!!Net.snapshot.game.mission?.dialogue);i++) {
+        await page.evaluate(()=>{const d=Net.snapshot.game.mission.dialogue;Net.request("mission_dialogue_next",{dialogueId:d.id,lineIndex:d.index});});
+        await page.waitForFunction(()=>!Net.awaiting);
+      }
+    }
+    await page.evaluate(() => {setPageView("game");MapCamera.setPercent(25);});
     if (delegate) {
       await page.evaluate(() => Net.request("set_ai_delegate", { delegate: true }));
       await page.waitForFunction(
@@ -97,7 +92,7 @@ async function main() {
         const draw = drawMap,
           refresh = update,
           ai = Rules.battlefieldMode.aiChoice,
-          recovery = Rules.hangars.recoveryOrder;
+          recovery = Rules.hangars.recoveryOrder, search = Rules.aiChoiceSteps;
         drawMap = (...args) => {
           const at = performance.now();
           try {
@@ -121,6 +116,10 @@ async function main() {
           } finally {
             data.ai.push(performance.now() - at);
           }
+        };
+        if (search) Rules.aiChoiceSteps = function* (...args) {
+          const query=search(...args);
+          while(true){const at=performance.now(),step=query.next();data.ai.push(performance.now()-at);if(step.done)return step.value;yield step.value;}
         };
         Rules.hangars.recoveryOrder = (...args) => {
           const at = performance.now();
@@ -182,6 +181,7 @@ async function main() {
         update = refresh;
         Rules.battlefieldMode.aiChoice = ai;
         Rules.hangars.recoveryOrder = recovery;
+        if (search) Rules.aiChoiceSteps = search;
         data.elapsed = performance.now() - started;
         data.units = game.units.length;
         const authoritative = window.livePerfEngine?.rooms.get(Net.snapshot?.room)?.game;

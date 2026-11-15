@@ -2,6 +2,7 @@
 import re
 
 EXACT = {
+    "OMNI_GAT_X105_Launcher": ("高能脉冲炮", "High-Energy Impulse Cannon", "高エネルギー・インパルス砲"),
     "OMNI_GAT_X103_BR_HyperSniper": ("组合式步枪[狙击]", "Combined Rifle [Sniper]", "連結ライフル[狙撃]"),
     "EF_RGM_89_BZ": ("火箭筒", "Bazooka", "バズーカ"),
     "EF_RX_93_BZ": ("火箭筒", "Bazooka", "バズーカ"),

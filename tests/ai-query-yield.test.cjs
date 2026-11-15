@@ -66,6 +66,7 @@ for (const closeDuringQuery of [false, true])
         action,
         ...fields,
       });
+    act(0, "configure_room", { ...G.defaultRoomSettings(), battleMode: "quick", formationStyle: "free", unitLimit:36, costLimit:99999, unitCostLimit:99999 });
     act(1, "set_ready", { ready: true, formation });
     act(0, "start_game", { formation });
     act(0, "confirm_formation");

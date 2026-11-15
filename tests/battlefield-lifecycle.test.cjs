@@ -11,12 +11,12 @@ function battle() {
     mode: "battlefield",
     mapId: B.defaultMapId,
     battlefieldTeams: [
-      { faction: "EFSF", era: "0079T1" },
-      { faction: "ZEON", era: "0079T1" },
+      { faction: "EFSF", era: "UC_0079_T1" },
+      { faction: "ZEON", era: "UC_0079_T1" },
     ],
   });
 }
-function roomFixture(t, { mode = "battlefield", rules = G } = {}) {
+function roomFixture(t, { mode = "battlefield", rules = G, formation = [entry] } = {}) {
   let serial = 0;
   const messages = [],
     engine = createRoomEngine({
@@ -34,8 +34,8 @@ function roomFixture(t, { mode = "battlefield", rules = G } = {}) {
     room: "LIFECYCLE",
     roomMode: mode,
     characterFaction: "PMC",
-    licenses: { Type61: true },
-    inventory: { Type61: 5 },
+    licenses: { Type61: true, Medea: true },
+    inventory: { Type61: 5, Medea: 5 },
     kits: {},
   });
   const room = engine.rooms.get("LIFECYCLE");
@@ -55,11 +55,11 @@ function roomFixture(t, { mode = "battlefield", rules = G } = {}) {
       ...room.settings,
       battleMode: "battlefield",
       battlefieldTeams: [
-        { faction: "EFSF", era: "0079T1" },
-        { faction: "ZEON", era: "0079T1" },
+        { faction: "EFSF", era: "UC_0079_T1" },
+        { faction: "ZEON", era: "UC_0079_T1" },
       ],
     });
-  act("start_game", { formation: [entry] });
+  act("start_game", { formation });
   act("confirm_formation");
   act("confirm_deployment");
   return { engine, room, act, messages };
@@ -197,8 +197,8 @@ test("facility kills pay level rewards again after rebuilding; base HP rewards a
       };
     },
   };
-  const { engine, room, act } = roomFixture(t, { rules }),
-    source = room.game.units.find((u) => G.ownerOf(u) === 2);
+  const { engine, room, act } = roomFixture(t, { rules, formation: [{unitId:"Medea",kitId:require("../shared/economy").defaultKit("Medea")}] }),
+    source = room.game.units.find((u) => !u.facility && room.seats[G.ownerOf(u)] && !room.seats[G.ownerOf(u)].bot);
   const fire = () => {
     room.phase = "idle";
     room.playback = null;
@@ -208,7 +208,7 @@ test("facility kills pay level rewards again after rebuilding; base HP rewards a
   amount = target.hp;
   fire();
   let awards = room.economyAwards.filter((a) => a.kind === "kill");
-  assert.deepEqual([awards[0].money, awards[0].supplies], [400, 800]);
+  assert.deepEqual([awards[0].money, awards[0].supplies], [600, 900]);
   room.game.round = target.facility.rebuildRound;
   B.rebuildFacilities(G, room.game);
   target = room.game.units.find((u) => u.id === target.id);
@@ -223,7 +223,7 @@ test("facility kills pay level rewards again after rebuilding; base HP rewards a
   amount = maximum * 0.04;
   fire();
   let base = room.economyAwards.filter((a) => a.kind === "base_damage");
-  assert.deepEqual([base[0].money, base[0].supplies], [500, 1000]);
+  assert.deepEqual([base[0].money, base[0].supplies], [500, 750]);
   engine.broadcast(room);
   assert.equal(room.economyAwards.filter((a) => a.kind === "base_damage").length, 1);
   amount = maximum * 100;
@@ -240,6 +240,6 @@ test("facility kills pay level rewards again after rebuilding; base HP rewards a
   for (let i = 0; i < 4; i++)
     assert.deepEqual(B.baseDamageReward({ battlefieldTeams: [{ era: B.eras[i] }] }, 0), {
       money: 500 + 250 * i,
-      supplies: 1000 + 500 * i,
+      supplies: (500 + 250 * i) * 1.5,
     });
 });

@@ -30,7 +30,7 @@ const GameAudio = (() => {
   }
   function playSound(sound, channel = "map") {
     const stamp = generation;
-    WeaponAudio.unlock().then(() => {
+    WeaponAudio.unlock().then(() => WeaponAudio.prepare?.([sound])).then(() => {
       if (stamp === generation) WeaponAudio.play(sound, undefined, 1, channel);
     });
   }

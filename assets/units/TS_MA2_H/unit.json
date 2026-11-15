@@ -103,7 +103,9 @@
         "x": 0.0,
         "y": 5.0
       },
-      "visibleWhen": {}
+      "visibleWhen": {
+        "kit": "main_0"
+      }
     },
     {
       "name": "Nuke",
@@ -115,19 +117,9 @@
         "x": 0.0,
         "y": -6.0
       },
-      "visibleWhen": {}
-    },
-    {
-      "name": "E_BeamCannon",
-      "texture": "TS_MA2_BeamCannon.png",
-      "bone": "Body",
-      "order": 1.0,
-      "scale": 1.0,
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "visibleWhen": {}
+      "visibleWhen": {
+        "kit": "nuclear"
+      }
     },
     {
       "name": "MSLink",
@@ -151,7 +143,9 @@
         "x": 0.0,
         "y": 0.0
       },
-      "visibleWhen": {}
+      "visibleWhen": {
+        "kit": "nuclear"
+      }
     },
     {
       "name": "E_MS",
@@ -882,11 +876,37 @@
   "weaponKits": [
     {
       "id": "main_0",
-      "name": "标准套件",
-      "cost": 75,
+      "name": "普通导弹套件",
+      "nativeEquipmentIndex": 1,
+      "cost": 0,
+      "localization": {
+        "en": {
+          "name": "Missile Loadout"
+        },
+        "ja": {
+          "name": "通常ミサイル装備"
+        }
+      },
       "weapons": [
-        "OMNI_TS_MA2_H_BeamCannon",
         "OMNI_TS_MA2_H_AntiShipMS",
+        "Common_DoubleVulcan_FF_6",
+        "Common_DoubleMS_TS_MA2"
+      ]
+    },
+    {
+      "id": "nuclear",
+      "name": "核弹套件",
+      "nativeEquipmentIndex": 2,
+      "cost": 0,
+      "localization": {
+        "en": {
+          "name": "Nuclear Missile Loadout"
+        },
+        "ja": {
+          "name": "核ミサイル装備"
+        }
+      },
+      "weapons": [
         "OMNI_TS_MA2_H_NukeMS",
         "Common_DoubleVulcan_FF_6",
         "Common_DoubleMS_TS_MA2"

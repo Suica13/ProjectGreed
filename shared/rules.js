@@ -7,6 +7,9 @@ const Tactics = (() => {
   const catalog =
     typeof ART !== "undefined" ? ART : require("../tools/load-catalog.cjs").loadCatalog();
   const models = catalog.models;
+  const ordinaryFormIds = new Set(catalog.prefabs.flatMap(p => (p.skills || [])
+    .filter(s => ["transform","armor_purge"].includes(s.type) && !s.deploymentMode)
+    .flatMap(s => [p.id,s.source?.unitId]).filter(Boolean)));
   const technologyIds = new Map(catalog.prefabs.map(prefab=>[prefab.id,prefab.formOf||prefab.id]));
   const sweepMapId = "battlefield_sweep";
   const automaticFire =
@@ -131,7 +134,8 @@ const Tactics = (() => {
   // Canonical formation entries always retain the purchased hull and kit. The
   // assigned ACE selects a presentation/combat form without creating inventory.
   function formationModelId(entry) {
-    const baseId = entry.unitId + "__" + entry.kitId;
+    const requested = entry.unitId + "__" + entry.kitId;
+    const baseId = models[requested]?.canonicalModel || requested;
     const form = models[baseId]?.pilotForms?.find((f) => f.pilotId === entry.customPilot?.aceId);
     const target = form && form.unitId + "__" + form.kitMap[entry.kitId];
     return target && models[target] ? target : baseId;
@@ -142,7 +146,7 @@ const Tactics = (() => {
   function isFleetCarrier(model) {
     return (
       !!model &&
-      (model.ship ||
+      (model.ship || model.hangars?.some((h) => h.kind === "sfs") ||
         (model.hangars?.some((h) => h.kind !== "sfs") &&
           (model.movementType === "air" ||
             catalog.prefabs.find((p) => p.id === model.prefabId)?.stats.movementType === "air")))
@@ -169,8 +173,8 @@ const Tactics = (() => {
     const clean = entries.map((entry) => {
       const alias = catalog.prefabs.find((p) => p.id === entry?.unitId)?.kitAliases?.[entry?.kitId];
       const id = entry?.unitId + "__" + (alias || entry?.kitId),
-        model = models[id];
-      if (!model || (model.formOnly && !allowExistingForms))
+        model = models[models[id]?.canonicalModel || id];
+      if (!model || (model.formOnly && !allowExistingForms && !ordinaryFormIds.has(model.prefabId)))
         throw Error("编组包含不可用单位或武器套件");
       const customPilot = entry.customPilot ? pilots.custom(entry.customPilot) : null;
       if (customPilot?.needsRecruitment) throw Error("该ACE需要重新招募后才能配属");
@@ -342,13 +346,14 @@ const Tactics = (() => {
     };
   }
   function formationRestrictions(settings = {}, seat = null) {
-    if (settings.mode === "campaign")
+    if (["campaign", "mission"].includes(settings.mode))
       return {
         environment: getMap(settings.mapId).environment,
         mapId: settings.mapId,
         deploymentSeat: seat ?? 0,
         unitCostLimit: Infinity,
         ...validateTagRestrictions(),
+        ...(settings.mode === "mission" ? {pilotPolicy: validatePilotPolicy(settings.pilotPolicy)} : {}),
       };
     const teamRules =
       seat === null || settings.mode !== "quick"
@@ -379,7 +384,10 @@ const Tactics = (() => {
     for (const [id, count] of Object.entries(value)) {
       if (!catalog.prefabs.some((p) => p.id === id) || typeof count !== "boolean")
         throw Error("部署许可无效：" + id);
-      if (count) result[id] = true;
+      if (count) {
+        result[catalog.unitFamilies?.[id]?.unitId || id] = true;
+        if (id === "RGZ_91") result.RGZ_91_MA = true;
+      }
     }
     return result;
   }
@@ -399,7 +407,9 @@ const Tactics = (() => {
     if (
       restrictions.aiAllowedEras &&
       !model.tags.some((tag) => restrictions.aiAllowedEras.some(era => technologyEras.normalize(era) === tag)) &&
-      !(restrictions.aiEarlierCarriers && isFleetCarrier(model))
+      !(restrictions.aiEarlierCarriers && isFleetCarrier(model) &&
+        model.tags.some(tag => technologyEras.weight(tag) > 0 &&
+          restrictions.aiAllowedEras.some(era => technologyEras.weight(tag) <= technologyEras.weight(era))))
     )
       return "not_allowed";
     if (
@@ -687,7 +697,8 @@ const Tactics = (() => {
   }
   function armyRestrictions(settings, player) {
     const rules = formationRestrictions(settings, player?.seat ?? null);
-    if (!["battlefield", "sweep"].includes(settings.mode) && !player?.battlefieldAI)
+    if (!["battlefield", "sweep"].includes(settings.mode) && !player?.battlefieldAI &&
+        !(settings.mode === "mission" && settings.missionTechnologyLimitEnabled === false))
       rules.technologyCaps = settings.technologyCaps;
     if (!player?.battlefieldAI && ["regular", "battlefield", "sweep", "mission"].includes(settings.mode)) {
       const era = settings.mode === "mission" ? settings.missionEra :
@@ -834,7 +845,10 @@ const Tactics = (() => {
     const coreChoices = combatChoices.length ? combatChoices : choices;
     const minimum = Math.min(...coreChoices.map((model) => model.cost));
     const minimumWeight = Math.min(...coreChoices.map(formationWeight));
-    const count = Math.min(Math.floor(unitLimit / minimumWeight), Math.floor(maxCost / minimum));
+    // The first carrier is logistics, not a copy of the cheapest combat unit.
+    // A carrier + one expensive passenger must still get two selection passes.
+    const count = restrictions.requiresCarriers ? unitLimit :
+      Math.min(Math.floor(unitLimit / minimumWeight), Math.floor(maxCost / minimum));
     const bestAdaptation = Math.max(...coreChoices.map(adaptation));
     // 达到正常适应性即可进入预算竞争；不能因少数廉价机体的适应性更高，
     // 将所有正常适应性的高级机体永久排除。全员不足100%时仍优先最高适应性。
@@ -907,7 +921,7 @@ const Tactics = (() => {
         if (fleetMode && !isFleetCarrier(model) && !passengerSlot(model)) return false;
         if (hasFrontline && lightAircraft(model) && aircraftPoints >= aircraftPointLimit)
           return false;
-        if (model.ship && ships >= desiredShips && coreChoices.some((m) => !m.ship)) return false;
+        if (model.ship && ships >= desiredShips && coreChoices.some((m) => !m.ship) && !firstCarrier) return false;
         if (transport(model) && transports >= desiredTransports && !firstCarrier) return false;
         // Keep at least three combat platforms per supply unit; never spend the army on logistics.
         if (
@@ -921,8 +935,12 @@ const Tactics = (() => {
         if (infantry(model) && infantryCount >= Math.max(1, Math.ceil(unitLimit / 6))) return false;
         if (formationWeight(model) > remainingPoints) return false;
         if (model.cost > remaining) return false;
+        if (firstCarrier && !choices.some(passenger => !isFleetCarrier(passenger) &&
+          passenger.weapons.length && passenger.cost <= remaining - model.cost &&
+          model.hangars.some(h => h.capacity >= (passenger.transport?.slotCost || 1) &&
+            h.allowedTags.some(tag => passenger.transport?.loadTags.includes(tag))))) return false;
         if (
-          !model.ship &&
+          !firstCarrier && !restrictions.aiDiverseFleet && !model.ship &&
           !support(model) &&
           backbone.length &&
           ((!frontlineMS(model) && !model.unitTags?.includes("MA")) ||
@@ -930,7 +948,7 @@ const Tactics = (() => {
         )
           return false;
         if (
-          model.ship &&
+          model.ship && !firstCarrier &&
           entries.reduce(
             (sum, entry) => sum + (formationModel(entry).ship ? formationModel(entry).cost : 0),
             0,
@@ -1021,7 +1039,7 @@ const Tactics = (() => {
       const primary = preferred.filter(
         (model) => frontlineMS(model) && mainlineUnits.has(model.prefabId) && !commander(model),
       );
-      if (primary.length && combatCount % 4 !== 3) preferred = primary;
+      if (primary.length && combatCount % 4 !== 3 && !restrictions.aiDiverseFleet) preferred = primary;
       const leaders = preferred.filter(commander);
       if (leaders.length && commanderCount < commandAllowance) preferred = leaders;
       // Try the latest affordable technology first. Once every platform there
@@ -1031,7 +1049,7 @@ const Tactics = (() => {
       const diversify = latest.every((model) => copies(model.prefabId) > 0);
       preferred = preferred.filter(
         (model) =>
-          technologyRank(model) === highestTechnology ||
+          restrictions.aiDiverseFleet || technologyRank(model) === highestTechnology ||
           (diversify &&
             technologyRank(model) === highestTechnology - 1 &&
             copies(model.prefabId) === 0),
@@ -1229,6 +1247,8 @@ const Tactics = (() => {
   }
   const scaledModels = new WeakMap();
   const pilotModels = new WeakMap();
+  const pilotModelSlots = Array(4096);
+  let pilotModelCursor = 0;
   const facilityModels = new WeakMap();
   function facilityModelOf(unit) {
     const base = models[unit.model];
@@ -1301,12 +1321,21 @@ const Tactics = (() => {
     return variants.get(factor);
   }
   function pilotModelOf(unit, base) {
-    const pilot = pilots.of(unit, base);
+    const pilot = pilots.of(unit, base), stats = pilot.stats;
+    const experience = pilots.experienceMultiplier(unit);
+    const key = [stats.shooting,stats.melee,stats.defense,stats.speed,stats.accuracy,
+      stats.reaction,stats.leadership,stats.awakening,experience].join(":");
     let variants = pilotModels.get(base);
-    if (!variants) pilotModels.set(base, (variants = new WeakMap()));
-    if (!variants.has(pilot)) {
+    if (!variants) pilotModels.set(base, (variants = new Map()));
+    if (!variants.has(key)) {
       const modifiers = pilots.modifiers(unit, base);
-      variants.set(pilot, {
+      // Snapshot decoding replaces pilot objects; keep equivalent attributes
+      // reusable across frames without retaining entire matches or portraits.
+      const victim = pilotModelSlots[pilotModelCursor];
+      if (victim) victim.variants.delete(victim.key);
+      pilotModelSlots[pilotModelCursor] = { variants, key };
+      pilotModelCursor = (pilotModelCursor + 1) % pilotModelSlots.length;
+      variants.set(key, {
         ...base,
         get name() {
           return base.name;
@@ -1323,10 +1352,10 @@ const Tactics = (() => {
         accuracy: Math.round(base.accuracy * modifiers.accuracy),
         pilotModifiers: modifiers,
         pilotExperienceMultiplier:
-          (base.pilotExperienceMultiplier ?? 1) * pilots.experienceMultiplier(unit),
+          (base.pilotExperienceMultiplier ?? 1) * experience,
       });
     }
-    return variants.get(pilot);
+    return variants.get(key);
   }
   // Derive damage penalties from current parts; never modify a shared catalog or AI variant.
   function cellEnvironment(g, x, y) {
@@ -3330,7 +3359,9 @@ const Tactics = (() => {
       : 1;
   }
   const coatings = typeof ArmorCoatings !== "undefined" ? ArmorCoatings : require("./armor-coatings.js");
+  const canEvade = unit => !!unit && !unit.facility && !modelOf(unit).facilityType;
   function estimate(g, a, b, w, response = "counter", isCounter = false) {
+    if (!canEvade(b) && response === "evade") response = "defend";
     w = weaponStats(w, a);
     const attacker = modelOf(a, g),
       bonuses = attacker.attackBonuses,
@@ -3345,7 +3376,7 @@ const Tactics = (() => {
           : w.type === "melee"
             ? (ground.meleeCover ?? 0)
             : ground.cover,
-      reactionPenalty =
+      reactionPenalty = !canEvade(b) ? 0 :
         ((defender.mobility / (defender.pilotModifiers?.reaction ?? 1)) *
           (response === "evade" ? 1.25 : 1) -
           100) *
@@ -3386,7 +3417,7 @@ const Tactics = (() => {
         (attacker.pilotModifiers?.accuracy ?? 1) *
         (1 + attackCommand.communication),
       pilotEvasionHit =
-        rawHit / ((defender.pilotModifiers?.reaction ?? 1) * (1 + defenseCommand.communication) * (opticalCamouflageActive(b) ? 1.25 : 1)),
+        rawHit / (canEvade(b) ? (defender.pilotModifiers?.reaction ?? 1) * (1 + defenseCommand.communication) * (opticalCamouflageActive(b) ? 1.25 : 1) : 1),
       particleDefense = minovskyAt(g, b),
       // Preserve Minovsky's extra miss chance, without turning a negative miss
       // chance into an accuracy bonus when the uncapped result exceeds 100%.
@@ -3405,8 +3436,7 @@ const Tactics = (() => {
             (w.type !== "melee" && smokeAt(g, b) ? 0.75 : 1) +
             (attacker.pilotModifiers?.awakeningHit ?? 0),
         ) -
-          (defender.pilotModifiers?.awakeningEvasion ?? 0) -
-          squadEvasion(g, b),
+          (canEvade(b) ? (defender.pilotModifiers?.awakeningEvasion ?? 0) + squadEvasion(g, b) : 0),
       ),
       hit = Math.min(100, resolvedHit * (w.counterExposureMultiplier ?? 1)),
       defenseMultiplier = response === "defend" ? 1.25 : 1,
@@ -3571,6 +3601,7 @@ const Tactics = (() => {
     )
       throw Error("攻击条件已失效");
     if (!["counter", "defend", "evade"].includes(response)) throw Error("未知应战方式");
+    if (!canEvade(b) && response === "evade") response = "defend";
     const counterIds = Array.isArray(counterId) ? counterId : [counterId];
     if (counterOnly && counterOrders) {
       const validationUnit = counterProgress?.started
@@ -3661,7 +3692,7 @@ const Tactics = (() => {
         const formReverted = skills.revertDamaged(to);
         const overdriveEnded = wasOverdrive && !to.overdrive;
         let dodgeTo = null;
-        if (executed && !hit) {
+        if (executed && !hit && canEvade(to)) {
           dodgeTo = dodgeSlots[to.id] === 0 ? dodgeSide() : -dodgeSlots[to.id];
           dodgeSlots[to.id] = dodgeTo;
         }
@@ -3704,6 +3735,7 @@ const Tactics = (() => {
         sourceDodgeSlot,
         targetDodgeSlot,
         targetDodgeEnd: dodgeSlots[to.id],
+        targetCanEvade: canEvade(to),
         strikes,
         ...(strikes[0]?.iFieldBefore !== undefined
           ? {
@@ -3878,7 +3910,7 @@ const Tactics = (() => {
     return true;
   }
   function irradiate(g, unit, skill, x, y) {
-    const line = irradiationLine(unit, { x, y }, skill.range),
+    const line = skill.radial ? {from:center(unit),to:{x:center(unit).x,y:center(unit).y-1}} : irradiationLine(unit, { x, y }, skill.range),
       hits = [];
     const victims = g.units
       .filter(
@@ -3886,12 +3918,12 @@ const Tactics = (() => {
           other !== unit &&
           onMap(other) &&
           other.embarked?.carrierId !== unit.id &&
-          irradiationIntersectsUnit(line.from, line.to, other, skill.areaWidth),
+          (skill.radial ? dist(unit, other) <= skill.range : irradiationIntersectsUnit(line.from, line.to, other, skill.areaWidth)),
       )
       .sort((a, b) => dist(unit, a) - dist(unit, b) || a.id.localeCompare(b.id));
     const weapon = {
       id: skill.sourceWeapon,
-      type: "beam",
+      type: skill.damageType || "beam",
       min: 0,
       max: skill.range,
       hit: skill.baseHit,
@@ -3900,7 +3932,7 @@ const Tactics = (() => {
       damagePerShot: Object.values(skill.damageComponents).reduce((a, b) => a + b, 0),
       attack: { strikes: [{ at: 0, shotIndex: 0, muzzleIndex: 0, damageMultiplier: 1 }] },
     };
-    faceTarget(unit, { ...line.to, visualOnly: true });
+    if (!skill.radial) faceTarget(unit, { ...line.to, visualOnly: true });
     for (const target of victims) {
       const estimateHit = estimate(g, unit, target, weapon, "counter"),
         before = target.hp,
@@ -3958,6 +3990,13 @@ const Tactics = (() => {
       unitId: unit.id,
       resultId: unit.id,
       irradiation: true,
+      radial: skill.radial,
+      radialRange: skill.radial ? skill.range : undefined,
+      radialDirections: skill.radialDirections,
+      barrageProjectiles: skill.barrageProjectiles,
+      barrageModules: skill.barrageModules,
+      moduleHp: skill.barrageModules ? unit.moduleHp : undefined,
+      angle: unit.angle,
       ...line,
       hits,
       evacuations,
@@ -3985,6 +4024,12 @@ const Tactics = (() => {
     );
     for (const skill of skills.of(unit).filter((s) => s.type === "irradiation")) {
       if (!skills.canUse(g, unit, skill.id)) continue;
+      if (skill.radial) {
+        const nearby = g.units.filter(other => other !== unit && onMap(other) && dist(unit, other) <= skill.range);
+        if (nearby.some(other => enemies.includes(other)) && !nearby.some(other => other.team === unit.team))
+          return {skillId:skill.id,x:unit.x,y:unit.y};
+        continue;
+      }
       const legal = new Set(skills.targets(g, unit, skill.id).map((cell) => key(cell.x, cell.y)));
       let best = null;
       for (const target of enemies)
@@ -4263,8 +4308,8 @@ const Tactics = (() => {
       expected = (e) =>
         (e.hit / 100) * ((1 - e.blockChance) * e.damage + e.blockChance * e.blockedDamage);
     if (!counter || b.hp <= expected(attack))
-      return { response: expected(defense) < expected(evasion) ? "defend" : "evade" };
-    return counter ? { response: "counter", weapon: counter.id } : { response: "evade" };
+      return { response: !canEvade(b) || expected(defense) < expected(evasion) ? "defend" : "evade" };
+    return counter ? { response: "counter", weapon: counter.id } : { response: canEvade(b) ? "evade" : "defend" };
   }
   // Count both committed damage and attackers so AI spreads fire across viable targets.
   function aiTargetPressure(g, team) {
@@ -4360,7 +4405,7 @@ const Tactics = (() => {
     }
     return best;
   }
-  function aiRouteField(g, u, strategy, onlyObstructed = false) {
+  function* aiRouteField(g, u, strategy, onlyObstructed = false) {
     const goal = strategy.goal,
       members = squadMembers(g, u);
     const radius = strategy.occupation ? (g.battlefield ? 2 : 1) : 1;
@@ -4456,6 +4501,7 @@ const Tactics = (() => {
         queue.push({ x, y });
       }
     for (let index = 0; index < queue.length; index++) {
+      if (index % 16 === 0) yield;
       const point = queue[index],
         next = distances.get(key(point.x, point.y)) + 1;
       for (const [dx, dy] of [
@@ -4477,6 +4523,14 @@ const Tactics = (() => {
     return distances;
   }
   function aiChoice(g, u, destinations = null, collectCandidate = null) {
+    const search = aiChoiceSteps(g, u, destinations, collectCandidate);
+    let result;
+    do { result = search.next(); } while (!result.done);
+    return result.value;
+  }
+  // The server drains the same search incrementally. Synchronous callers keep
+  // identical decisions; local games can render between candidate evaluations.
+  function* aiChoiceSteps(g, u, destinations = null, collectCandidate = null) {
     let cells =
         destinations ??
         (u.moved ? [{ x: u.x, y: u.y, cost: 0, path: [] }] : [...reachable(g, u).values()]),
@@ -4484,7 +4538,9 @@ const Tactics = (() => {
       best = null;
     cells = cells.filter((cell) => !cell.boarding);
     const weapons = modelOf(u).weapons,
+      maximumWeaponRange = Math.max(0, ...weapons.map(weapon => weapon.max)),
       pressure = aiTargetPressure(g, u.team);
+    yield;
     let strategy = aiTactics.forUnit(Tactics, g, u, aiTactics.decide(Tactics, g, u));
     let route =
       !destinations &&
@@ -4493,7 +4549,7 @@ const Tactics = (() => {
       !u.facility &&
       modelOf(u).move > 0 &&
       strategy.goal
-        ? aiRouteField(g, u, strategy, true)
+        ? yield* aiRouteField(g, u, strategy, true)
         : null;
     if (route && !route.has(key(u.x, u.y))) {
       // A nearer post can be on another island or behind an impassable ridge.
@@ -4514,7 +4570,7 @@ const Tactics = (() => {
       );
       for (const alternative of alternatives) {
         const next = { ...strategy, ...alternative },
-          candidate = aiRouteField(g, u, next);
+          candidate = yield* aiRouteField(g, u, next);
         if (!candidate.has(key(u.x, u.y))) continue;
         strategy = next;
         route = candidate;
@@ -4548,7 +4604,7 @@ const Tactics = (() => {
     };
     // Keep each AI player's mobile force together during the approach. Once
     // any member makes contact, combat positioning takes priority over waiting.
-    if (!destinations && !strategy.strategic && enemies.length && !u.moved) {
+    if (!destinations && !strategy.strategic && !g.mission && enemies.length && !u.moved) {
       const squad = g.units.filter(
         (ally) =>
           onMap(ally) &&
@@ -4599,13 +4655,14 @@ const Tactics = (() => {
           });
         }
     for (const c of cells) {
+      yield;
       let virtual = {
           ...u,
           x: c.x,
           y: c.y,
           ...(c.rotation ? { angle: u.angle + c.rotation * 90 } : {}),
         },
-        near = enemies.length
+        near = !destinations ? 0 : enemies.length
           ? Math.min(...enemies.map((e) => dist(virtual, e)))
           : Math.hypot(c.x - (u.team === 0 ? mapWidth(g) - 3 : 2), c.y - mapHeight(g) / 2);
       const tacticalScore = positionScore(c);
@@ -4613,7 +4670,11 @@ const Tactics = (() => {
         target = null,
         weapon = null,
         assignedAttackers = Infinity;
-      for (const e of enemies)
+      for (const e of enemies) {
+        // Most enemies cannot be reached from this cell by any available gun.
+        // Avoid repeated arc/visibility/resource checks for distant formations.
+        if (dist(virtual, e) > maximumWeaponRange) continue;
+        yield;
         for (const w of weapons)
           if (
             inRange(virtual, e, w) &&
@@ -4638,6 +4699,7 @@ const Tactics = (() => {
               assignedAttackers = commitment?.attackers || 0;
             }
           }
+      }
       if (collectCandidate) collectCandidate(c, { ...c, score, target, weapon, assignedAttackers });
       if (
         !best ||
@@ -4661,7 +4723,7 @@ const Tactics = (() => {
         // Only run a full-board escape search when local scoring stalls. The
         // reverse field finds a way around walls instead of repeating the same
         // closest-to-enemy cell every turn. Actual moves still use reachable().
-        const distances = aiRouteField(g, u, strategy);
+        const distances = yield* aiRouteField(g, u, strategy);
         const current = distances.get(key(u.x, u.y)) ?? Infinity;
         const detours = cells.filter(
           (point) =>
@@ -4956,6 +5018,7 @@ const Tactics = (() => {
     hasSfsMS,
     tickBurning,
     estimate,
+    canEvade,
     beamDiffusionFactor,
     smokeAt,
     opticalCamouflageActive,
@@ -4969,6 +5032,7 @@ const Tactics = (() => {
     turnTransitionMs,
     bestResponse,
     aiChoice,
+    aiChoiceSteps,
     aiSquadChoice,
     counterTargetEntries,
     aiTargetPressure,

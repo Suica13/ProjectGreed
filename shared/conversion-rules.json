@@ -2,7 +2,7 @@
   "schemaVersion": 3,
   "weapons": {
     "damage": 0.75,
-    "shootingDamageOffset": -0.25,
+    "shootingDamageOffset": 0,
     "shootingHitOffset": -10,
     "shipMediumAccuracyBonus": 0.15,
     "nonCounterTargetAccuracy": 1.1,
@@ -12,20 +12,21 @@
     "rangeBonus": 1,
     "sniperRangeBonus": 2,
     "projectileSpeed": 0.1,
-    "sniperDamage": 1.25,
-    "chargedSniperDamage": 1.5,
+    "sniperDamage": 1.5625,
+    "chargedSniperDamage": 1.875,
     "penetrationDamagePerCount": 0.15,
     "armorPiercingIgnore": 0.5,
     "shipCannonAccuracy": 0.85
   },
   "units": {
-    "specialCost": 1.25,
+    "specialCost": 1.1,
     "hp": 1,
+    "maHP": 0.75,
     "en": 1,
     "move": 0.5,
     "accuracy": 1,
     "reaction": 1,
-    "shipAccuracy": 0.8
+    "shipAccuracy": 0.9
   },
   "weaponClasses": {
     "rifle": {

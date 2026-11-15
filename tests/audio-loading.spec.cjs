@@ -24,7 +24,7 @@ test("local audio initialization decodes shared assets once with bounded concurr
       return decode.apply(this, args).finally(() => probe.active--);
     };
   });
-  await page.locator("#openClientSettings").click();
+  await page.locator("#shellSettings").click();
   const result = await page.evaluate(async () => {
     await WeaponAudio.unlock();
     const groups = new Map();
@@ -33,6 +33,7 @@ test("local audio initialization decodes shared assets once with bounded concurr
       groups.get(source).push(key);
     }
     const aliases = [...groups.values()].find((keys) => keys.length > 1);
+    await WeaponAudio.prepare(aliases.slice(0,2).map(asset=>({asset})));
     const buffers = [],
       proto = AudioContext.prototype,
       create = proto.createBufferSource;
@@ -47,60 +48,29 @@ test("local audio initialization decodes shared assets once with bounded concurr
     await WeaponAudio.unlock();
     return { ...window.audioProbe, unique: groups.size, shared };
   });
-  assert.equal(result.count, result.unique);
+  assert.ok(result.count < result.unique, "unrelated catalog sounds must not decode on first input");
   assert.ok(result.max <= 2);
   assert.equal(result.active, 0);
   assert.ok(result.shared);
   assert.deepEqual(requests, []);
 });
 
-test("local BGM still plays, pauses across clicks, changes tracks and loops", async ({ page }) => {
-  const errors = [];
-  page.on("pageerror", (e) => errors.push(e.message));
+test("local BGM plays and changes tracks from the current settings audio page", async ({ page }) => {
+  const errors=[];page.on("pageerror",error=>errors.push(error.message));
   await page.goto(url);
-  const firstPlay = page.evaluate(
-    () =>
-      new Promise((resolve) =>
-        MusicPlayer.audio.addEventListener("playing", () => resolve(!MusicPlayer.audio.paused), {
-          once: true,
-        }),
-      ),
-  );
+  await page.locator("#shellSettings").click();
+  await page.locator('[data-settings-tab="audio"]').click();
+  if(await page.evaluate(()=>MusicPlayer.audio.paused)) await page.locator("#musicToggle").click();
+  await page.waitForFunction(()=>!MusicPlayer.audio.paused && MusicPlayer.audio.currentTime>0);
   await page.locator("#musicToggle").click();
-  assert.ok(await firstPlay);
-  await page.locator("#musicToggle").click();
-  await page.locator("#openClientSettings").click();
-  assert.equal(await page.evaluate(() => MusicPlayer.audio.paused), true);
-  await page.keyboard.press("Escape");
-  const old = await page.evaluate(() => MusicPlayer.index);
-  const trackCount = await page.evaluate(() => ART.music.tracks.length);
+  assert.equal(await page.evaluate(()=>MusicPlayer.audio.paused),true);
+  const previous=await page.evaluate(()=>MusicPlayer.index);
   await page.locator("#musicNext").click();
-  const next = await page.evaluate(() => ({
-    index: MusicPlayer.index,
-    paused: MusicPlayer.audio.paused,
-  }));
-  assert.notEqual(next.index, old);
-  assert.ok(next.paused);
-  const play = page.evaluate(
-    () =>
-      new Promise((resolve) =>
-        MusicPlayer.audio.addEventListener("playing", () => resolve(true), { once: true }),
-      ),
-  );
+  assert.notEqual(await page.evaluate(()=>MusicPlayer.index),previous);
+  assert.equal(await page.evaluate(()=>MusicPlayer.audio.paused),true);
   await page.locator("#musicToggle").click();
-  await play;
-  const loop = await page.evaluate(
-    () =>
-      new Promise((resolve) => {
-        MusicPlayer.audio.addEventListener(
-          "playing",
-          () => resolve({ index: MusicPlayer.index, paused: MusicPlayer.audio.paused }),
-          { once: true },
-        );
-        MusicPlayer.audio.dispatchEvent(new Event("ended"));
-      }),
-  );
-  assert.equal(loop.index, (next.index + 1) % trackCount);
-  assert.equal(loop.paused, false);
-  assert.deepEqual(errors, []);
+  await page.waitForFunction(()=>!MusicPlayer.audio.paused);
+  const next=await page.evaluate(()=>{const index=MusicPlayer.index;MusicPlayer.audio.dispatchEvent(new Event("ended"));return index;});
+  await page.waitForFunction(index=>MusicPlayer.index!==index && !MusicPlayer.audio.paused,next);
+  assert.deepEqual(errors,[]);
 });

@@ -121,7 +121,7 @@
       "bone": "LeftFoot",
       "order": 1.0,
       "scale": 0.85,
-      "alpha": 0,
+      "alpha": 1,
       "offset": {
         "x": 0.0,
         "y": 1.0
@@ -139,7 +139,7 @@
       "bone": "RightFoot",
       "order": 1.0,
       "scale": 0.85,
-      "alpha": 0,
+      "alpha": 1,
       "offset": {
         "x": 0.0,
         "y": 1.0
@@ -157,7 +157,7 @@
       "bone": "LeftFoot",
       "order": 1.0,
       "scale": 0.85,
-      "alpha": 0,
+      "alpha": 1,
       "offset": {
         "x": 0.0,
         "y": 1.0
@@ -175,7 +175,7 @@
       "bone": "RightFoot",
       "order": 1.0,
       "scale": 0.85,
-      "alpha": 0,
+      "alpha": 1,
       "offset": {
         "x": 0.0,
         "y": 1.0
@@ -193,7 +193,7 @@
       "bone": "LeftLeg",
       "order": 2.0,
       "scale": 0.85,
-      "alpha": 0,
+      "alpha": 1,
       "offset": {
         "x": 0.0,
         "y": 1.0
@@ -211,7 +211,7 @@
       "bone": "RightLeg",
       "order": 2.0,
       "scale": 0.85,
-      "alpha": 0,
+      "alpha": 1,
       "offset": {
         "x": 0.0,
         "y": 1.0
@@ -229,7 +229,7 @@
       "bone": "LeftLeg",
       "order": 2.0,
       "scale": 0.85,
-      "alpha": 0,
+      "alpha": 1,
       "offset": {
         "x": 0.0,
         "y": 1.0
@@ -247,7 +247,7 @@
       "bone": "RightLeg",
       "order": 2.0,
       "scale": 0.85,
-      "alpha": 0,
+      "alpha": 1,
       "offset": {
         "x": 0.0,
         "y": 1.0
@@ -288,7 +288,7 @@
       "bone": "Pelvis",
       "order": 4.0,
       "scale": 0.85,
-      "alpha": 0,
+      "alpha": 1,
       "offset": {
         "x": 0.0,
         "y": 1.0
@@ -303,7 +303,7 @@
       "bone": "LeftArm",
       "order": 4.0,
       "scale": 0.85,
-      "alpha": 0,
+      "alpha": 1,
       "offset": {
         "x": 0.0,
         "y": -1.0
@@ -321,7 +321,7 @@
       "bone": "RightArm",
       "order": 4.0,
       "scale": 0.85,
-      "alpha": 0,
+      "alpha": 1,
       "offset": {
         "x": 0.0,
         "y": -1.0
@@ -339,7 +339,7 @@
       "bone": "Pelvis",
       "order": 4.0,
       "scale": 0.85,
-      "alpha": 0,
+      "alpha": 1,
       "offset": {
         "x": 0.0,
         "y": 1.0
@@ -354,7 +354,7 @@
       "bone": "LeftArm",
       "order": 4.0,
       "scale": 0.85,
-      "alpha": 0,
+      "alpha": 1,
       "offset": {
         "x": 0.0,
         "y": -1.0
@@ -372,7 +372,7 @@
       "bone": "RightArm",
       "order": 4.0,
       "scale": 0.85,
-      "alpha": 0,
+      "alpha": 1,
       "offset": {
         "x": 0.0,
         "y": -1.0
@@ -433,7 +433,7 @@
       "bone": "Body",
       "order": 5.0,
       "scale": 0.85,
-      "alpha": 0,
+      "alpha": 1,
       "offset": {
         "x": 0.0,
         "y": 0.0
@@ -448,7 +448,7 @@
       "bone": "Body",
       "order": 5.0,
       "scale": 0.85,
-      "alpha": 0,
+      "alpha": 1,
       "offset": {
         "x": 0.0,
         "y": 0.0
@@ -464,7 +464,7 @@
       "order": 5.5,
       "scale": 0.6,
       "rotation": 0.0,
-      "alpha": 0,
+      "alpha": 1,
       "offset": {
         "x": 3.0,
         "y": 8.0
@@ -483,7 +483,7 @@
       "order": 5.5,
       "scale": 0.6,
       "rotation": 0.0,
-      "alpha": 0,
+      "alpha": 1,
       "offset": {
         "x": -3.5,
         "y": 8.0
@@ -500,7 +500,7 @@
       "order": 5.5,
       "scale": 0.6,
       "rotation": 0.0,
-      "alpha": 0,
+      "alpha": 1,
       "offset": {
         "x": -3.5,
         "y": 8.0
@@ -518,7 +518,7 @@
       "bone": "LeftShoulder",
       "order": 6.0,
       "scale": 0.85,
-      "alpha": 0,
+      "alpha": 1,
       "offset": {
         "x": 2.0,
         "y": -1.0
@@ -536,7 +536,7 @@
       "bone": "RightShoulder",
       "order": 6.0,
       "scale": 0.85,
-      "alpha": 0,
+      "alpha": 1,
       "offset": {
         "x": -2.0,
         "y": -1.0
@@ -554,7 +554,7 @@
       "bone": "LeftShoulder",
       "order": 6.0,
       "scale": 0.85,
-      "alpha": 0,
+      "alpha": 1,
       "offset": {
         "x": 2.0,
         "y": -1.0
@@ -572,7 +572,7 @@
       "bone": "RightShoulder",
       "order": 6.0,
       "scale": 0.85,
-      "alpha": 0,
+      "alpha": 1,
       "offset": {
         "x": -2.0,
         "y": -1.0
@@ -591,7 +591,7 @@
       "order": 6.5,
       "scale": 0.6,
       "rotation": 0.0,
-      "alpha": 0,
+      "alpha": 1,
       "offset": {
         "x": 3.0,
         "y": 8.0
@@ -609,7 +609,7 @@
       "bone": "Head",
       "order": 7.0,
       "scale": 0.85,
-      "alpha": 0,
+      "alpha": 1,
       "offset": {
         "x": 0.0,
         "y": 0.0
@@ -628,7 +628,7 @@
       "bone": "Head",
       "order": 7.0,
       "scale": 0.85,
-      "alpha": 0,
+      "alpha": 1,
       "offset": {
         "x": 0.0,
         "y": 0.0
@@ -647,7 +647,7 @@
       "bone": "Head",
       "order": 7.0,
       "scale": 0.85,
-      "alpha": 0,
+      "alpha": 1,
       "offset": {
         "x": 0.0,
         "y": 0.0
@@ -665,7 +665,7 @@
       "bone": "Head",
       "order": 7.0,
       "scale": 0.85,
-      "alpha": 0,
+      "alpha": 1,
       "offset": {
         "x": 0.0,
         "y": 0.0

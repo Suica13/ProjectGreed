@@ -1042,7 +1042,7 @@
       "id": "Transform_LandFly_SFS_OFF",
       "source": "Template/Unit/Skill/Transform_LandFly_SFS_OFF.gw",
       "status": "adapted",
-      "name": "变形：保留资源比例与破损部位，不恢复HP或EN"
+      "name": "变形：原生形态转换，资源与部位规则使用显式配置"
     },
     {
       "id": "DogFight_A",
@@ -1213,6 +1213,6 @@
   "production": {
     "enabled": false
   },
-  "formOnly": false,
+  "formOnly": true,
   "formOf": "RGZ_91B"
 }

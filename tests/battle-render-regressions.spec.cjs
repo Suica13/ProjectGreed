@@ -30,12 +30,12 @@ test('large armies draw each visible hull and health bar once and use bounded la
    const a=game.units[0];game.units=Array.from({length:240},(_,i)=>({...structuredClone(a),id:'many-'+i,x:2+i%20,y:2+Math.floor(i/20),acted:false}));
    game.tiles.forEach(r=>r.fill('plain'));game.deployment=null;game.winner=null;
    phase='idle';pending=moving=battleView=null;selected=null;mode='select';
-   await SpriteRenderer.ensureModels([a.model]);setPageView('game');MapCamera.fit();MapCamera.setZoom(MapCamera.zoom*1.01);update();
+   await SpriteRenderer.ensureModels([a.model]);setPageView('game');MapCamera.fit();MapCamera.setPercent(6);update();
    const canvas=byId('map'),ctx=canvas.getContext('2d'),draw=SpriteRenderer.draw,rect=canvas.getBoundingClientRect.bind(canvas),fill=ctx.fillRect.bind(ctx);
    let draws=0,reads=0,bars=0;const stamps=new Set();
    SpriteRenderer.draw=(...args)=>{draws++;stamps.add([args[1],args[2],args[3]].join(':'));return draw(...args);};
    canvas.getBoundingClientRect=()=>{reads++;return rect();};
-   ctx.fillRect=(...args)=>{if(ctx.fillStyle==='#83d6ee')bars++;return fill(...args);};
+   ctx.fillRect=(...args)=>{if(ctx.fillStyle==='#68e99a')bars++;return fill(...args);};
    const samples=[];let visible;
    try {
      for(let i=0;i<16;i++){

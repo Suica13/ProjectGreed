@@ -102,8 +102,8 @@ const Formation = (() => {
     });
   }
   function receivePilotAwards(snapshot) {
-    if (!snapshot.rewardsSettled || snapshot.replay || snapshot.phase === "replay" || snapshot.startedFromSave) return;
-    if (PilotSystem.creditAwards(pilotStore, snapshot.pilotAwards || [])) {
+    if (snapshot.replay || snapshot.phase === "replay" || snapshot.campaign) return;
+    if (PilotSystem.creditAwards(pilotStore, snapshot.pilotAwards || [], { settled: !!snapshot.rewardsSettled })) {
       savePilots();
       squads = squads.map((s) => ({ ...s, units: hydratePilots(s.units) }));
     }

@@ -38,6 +38,15 @@ def attach(prefab,native):
         kind="transform";target="RGZ_91B_MA" if ident=="RGZ_91B" else "RGZ_91B";recovery=0;repair=False
     elif ident=="FA_78_1_NA":kind="escape";target="FF_X7";recovery=100;repair=True
     elif ident=="MTank":kind="escape";target="MTank_Top";recovery=100;repair=True
+    native_transform = None
+    if not kind:
+        # The inherited template contains both directions: select the other form.
+        for action, raw in native.items():
+            candidate = raw.get('convertTo') if action.startswith('action_Transform_') else None
+            if candidate and candidate != ident and (ASSETS / 'units' / candidate / 'unit.json').exists():
+                kind, target, recovery, repair = 'transform', candidate, 0, False
+                native_transform = action
+                break
     if not kind and not any(s.get('type') in ('escape', 'armor_purge') for s in prefab.get('skills', [])):
         import re
         action = native.get('action_ExitUnit', {})
@@ -50,6 +59,8 @@ def attach(prefab,native):
             message = native.get('hiddenAction_Send_TryTransform_ExitUnit', {}).get('sendMessageWithData', '')
             match = re.search(r'RecoverHpPer=([0-9.]+)', message)
             recovery = float(match[1]) * 100 if match else 0
+    if ident in ('RGZ_91','RGZ_91_MA','RGZ_91B','RGZ_91B_MA'):
+        prefab['formOnly'] = ident in ('RGZ_91','RGZ_91B_MA')
     if not kind:return
     config=result(target,prefab,recovery,repair,kind!="escape")
     if config is None:return
@@ -61,6 +72,8 @@ def attach(prefab,native):
         **({"actionCost":1} if kind!="transform" else {}),
         effect="Light_75_NotAttached",sound={"file":"../../sounds/Transform_4.ogg","volume":.6},
         nativeAction="action_Transform_LandLand_TankB" if ident=="YMT_05" else "action_Transform_LandLand_TankA" if ident=="YMT_05_ModeB" else "action_ExitUnit")
+    if native_transform:
+        skill["nativeAction"] = native_transform
     if ident in ("RGZ_91B", "RGZ_91B_MA"):
         skill["nativeAction"] = "action_Transform_LandFlyB" if ident == "RGZ_91B" else "action_Transform_LandFlyA"
         for mechanic in prefab.get("mechanics", []):
@@ -75,7 +88,7 @@ def attach(prefab,native):
     else:skill["source"]={"mode":"transform",**config}
     prefab["skills"]=[s for s in prefab.get("skills",[]) if s["id"]!=skill["id"]]+[skill]
     for mechanic in prefab.get("mechanics",[]):
-        if "ExitUnit" in mechanic["id"] or "Transform_LandLand_Tank" in mechanic["id"]:
+        if "ExitUnit" in mechanic["id"] or mechanic["id"].startswith("Transform_"):
             mechanic.update(status="adapted",name=name+"：原生形态转换，资源与部位规则使用显式配置")
 
 

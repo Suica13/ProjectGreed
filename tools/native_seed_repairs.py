@@ -4,6 +4,21 @@ from pathlib import Path
 from mod_source import ROOT,MOD,ASSETS,load,section,resolve
 
 def apply(p,native,effects=None,bulk=None):
+ if p['id']=='TS_MA2_H':
+  # Native EquipmentIndex 1/2 are exclusive payloads; main_0 keeps saves compatible.
+  fixed=['Common_DoubleVulcan_FF_6','Common_DoubleMS_TS_MA2']
+  p['weaponKits']=[
+   {'id':'main_0','name':'普通导弹套件','nativeEquipmentIndex':1,'cost':0,
+    'localization':{'en':{'name':'Missile Loadout'},'ja':{'name':'通常ミサイル装備'}},
+    'weapons':['OMNI_TS_MA2_H_AntiShipMS',*fixed]},
+   {'id':'nuclear','name':'核弹套件','nativeEquipmentIndex':2,'cost':0,
+    'localization':{'en':{'name':'Nuclear Missile Loadout'},'ja':{'name':'核ミサイル装備'}},
+    'weapons':['OMNI_TS_MA2_H_NukeMS',*fixed]}]
+  p['layers']=[layer for layer in p['layers'] if layer['name']!='E_BeamCannon']
+  for layer in p['layers']:
+   if layer['name']=='AntiShipMS':layer['visibleWhen']={'kit':'main_0'}
+   elif layer['name'] in ('Nuke','MSLink_2'):layer['visibleWhen']={'kit':'nuclear'}
+   elif layer['name']=='MSLink':layer['visibleWhen']={}
  if p['id']=='TMF_A_802':
   if bulk is None:
    spec=importlib.util.spec_from_file_location('bucue_importer',Path(__file__).with_name('import-0079-page-one.py'));bulk=importlib.util.module_from_spec(spec);spec.loader.exec_module(bulk)
@@ -44,6 +59,8 @@ def apply(p,native,effects=None,bulk=None):
   p['weapons'].pop('OMNI_GAT_X102_BR_GL',None)
   for kit in p['weaponKits']:kit['weapons']=[k for k in kit['weapons'] if k in p['weapons']]
  if p['id']=='GAT_X207':
+  for layer in p['layers']:
+   if layer.get('alpha')==0:layer['alpha']=1
   p['skills']=[s for s in p.get('skills',[]) if s['type']!='optical_camouflage']+[{'effect':'Light_75_NotAttached','sound':{'file':'../../sounds/Transform_4.ogg','volume':.4},'id':'OpticalCamouflage','name':'光学迷彩开关','type':'optical_camouflage','range':0,'enCost':0,'upkeep':200,'evasionMultiplier':1.25,'consumeAction':False,'maxUses':99,'localization':{'en':{'name':'Optical Camouflage'},'ja':{'name':'光学迷彩'}}}]
   p['stats'].setdefault('sensors',{})['stealth']=False
   for m in p.get('mechanics',[]):

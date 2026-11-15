@@ -104,6 +104,39 @@ const AITactics = (() => {
     const campaign = game.campaignBattlefield;
     const points = campaign ? campaign.layout.nodes : game.battlefield.points;
     const hostile = (point) => (campaign ? campaign.owners[point.id] : point.owner) !== unit.team;
+    if (game.battlefield) {
+      const enemies = decision.enemies.filter(enemy => G.onMap(enemy));
+      const nearest = targets => targets.reduce((best, target) =>
+        !best || distance(unit, target) < distance(unit, best) ? target : best, null);
+      const post = nearest(points.filter(hostile));
+      const base = nearest(enemies.filter(enemy => enemy.facility?.type === "base"));
+      // Keep existing squads intact, dividing mobile formations roughly in half.
+      // Reserve occupation work for formations that can actually capture posts.
+      if (!decision.captureGroups) {
+        const groups = new Map();
+        for (const ally of decision.friends) {
+          const id = ally.squadId || ally.id;
+          if (!groups.has(id) || captureCapable(G, ally)) groups.set(id, ally);
+        }
+        const captureGroups = [...groups.entries()].filter(([, ally]) => captureCapable(G, ally));
+        captureGroups.sort((a, b) => {
+          const nearestPost = ally => Math.min(...points.filter(hostile).map(point => distance(ally, point)));
+          return nearestPost(a[1]) - nearestPost(b[1]) || String(a[0]).localeCompare(String(b[0]));
+        });
+        decision.captureGroups = new Set(captureGroups.slice(0, Math.ceil(groups.size / 2)).map(([id]) => id));
+      }
+      if (base && !decision.captureGroups.has(unit.squadId || unit.id))
+        return { ...decision, state: "advance", goal: base, occupation: false };
+      // Objectives are chosen from this formation's position, not the army's
+      // old centroid. Supporting formations must not bypass nearer posts.
+      if (base && (!post || distance(unit, base) < distance(unit, post)))
+        return { ...decision, state: "advance", goal: base, occupation: false };
+      if (post && captureCapable(G, unit) && decision.captureGroups.has(unit.squadId || unit.id))
+        return { ...decision, state: "advance", goal: post, occupation: true };
+      const defenders = post && enemies.filter(enemy => distance(enemy, post) <= 6);
+      const goal = nearest(defenders || []) || base || nearest(enemies) || unit;
+      return { ...decision, state: "advance", goal, occupation: false, avoidObjective: true };
+    }
     // One mobile squad per occupation objective. Other squads keep advancing,
     // rather than converging on the same post or waiting for reinforcements.
     if (!decision.assignments) {
@@ -148,7 +181,7 @@ const AITactics = (() => {
     let goal = decision.goal;
     const index = decision.squad.indexOf(unit.id),
       separation = distance(origin, goal),
-      flank = !decision.strategic && difficulty !== "easy" && decision.squad.length >= 4 &&
+      flank = !decision.strategic && !game.mission && difficulty !== "easy" && decision.squad.length >= 4 &&
         ["advance", "flank"].includes(state) && separation > 6;
     if (flank) {
       const side = index % 2 ? 1 : -1, width = Math.min(difficulty === "hard" ? 6 : 4, separation * 0.3);
@@ -160,7 +193,7 @@ const AITactics = (() => {
     const objectiveOffsets = decision.avoidObjective ? G.cells(unit, 0, 0) : [];
     return (cell) => {
       let score = -distance(cell, goal) * (cautious ? 0.85 : 0.45);
-      if (!decision.strategic && decision.squad.length > 1 && state !== "overrun") {
+      if (!decision.strategic && !game.mission && decision.squad.length > 1 && state !== "overrun") {
         let nearest = friends.length ? Infinity : 0;
         for (const friend of friends) nearest = Math.min(nearest, distance(cell, friend));
         score -= Math.max(0, nearest - 4) * (difficulty === "easy" ? 0.08 : 0.25);

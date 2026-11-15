@@ -910,8 +910,8 @@
     {
       "id": "Transform_LandLand_Tank",
       "source": "Template/Unit/Skill/Transform_LandLand_Tank.gw",
-      "status": "review",
-      "name": "MS／坦克变形"
+      "status": "adapted",
+      "name": "变形：原生形态转换，资源与部位规则使用显式配置"
     },
     {
       "id": "special_Common_MineLauncher_Continuous_Back_Ground_RTX_440",
@@ -952,7 +952,47 @@
   },
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
-  "skills": [],
+  "skills": [
+    {
+      "id": "Transform",
+      "type": "transform",
+      "name": "变形",
+      "localization": {
+        "zh": {
+          "name": "变形"
+        },
+        "en": {
+          "name": "Transform"
+        },
+        "ja": {
+          "name": "変形"
+        }
+      },
+      "range": 0,
+      "minRange": 0,
+      "maxUses": 99,
+      "consumeAction": true,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Transform_4.ogg",
+        "volume": 0.6
+      },
+      "nativeAction": "action_Transform_LandLand_TankB",
+      "source": {
+        "mode": "transform",
+        "unitId": "RTX_440_ModeB",
+        "kitId": "standard",
+        "kitMap": {
+          "standard": "standard"
+        },
+        "inheritResources": true,
+        "hpRecoveryPercent": 0,
+        "enRecoveryPercent": 0,
+        "shieldRecoveryPercent": 0,
+        "repairAllParts": false
+      }
+    }
+  ],
   "nativeCombatRevision": 1,
   "unitTags": [
     "MS"

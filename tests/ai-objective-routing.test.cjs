@@ -30,14 +30,15 @@ for (const mode of ["campaign", "battlefield"]) {
     assert.equal(own.occupation, true);
     assert.equal(own.goal.id, post.id);
     const other = strategy(game, units[1]);
-    assert.notEqual(other.goal.id, post.id, "two AI controllers do not duplicate a reserved mission");
+    if (mode === "campaign") assert.notEqual(other.goal.id, post.id, "campaign occupation missions remain distributed");
+    else assert.equal(other.goal.id, post.id, "battlefield reinforcements support the nearest post");
   });
 
   test(`${mode}: only capable squads receive occupation missions, others keep advancing`, () => {
     const { game, units, enemy, post } = fixture(mode, 5);
     const air = units[4]; air.model = Object.keys(G.models).find((id) => id.startsWith("FF_B2__"));
     const decisions = units.map((unit) => strategy(game, unit));
-    assert.equal(decisions.filter((d) => d.occupation && d.goal.id === post.id).length, 1);
+    assert.equal(decisions.filter((d) => d.occupation && d.goal.id === post.id).length, mode === "battlefield" ? 3 : 1);
     assert(!decisions[4].occupation);
     assert.equal(decisions[4].goal.id, enemy.id);
     assert(decisions.every((d) => d.state === "advance"));

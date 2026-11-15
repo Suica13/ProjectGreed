@@ -1,6 +1,6 @@
 const { test, expect } = require("@playwright/test");
 const { pathToFileURL } = require("node:url"), path = require("node:path");
-test("pending rewards and casualties never change the saved profile, final receipts apply once", async ({ page }) => {
+test("pilot XP saves during the turn while currency and casualties wait for final settlement", async ({ page }) => {
   await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
   await page.waitForFunction(() => assetsReady);
   await page.evaluate(() => localStorage.setItem("projectgreed.custom-pilots.v3.shared", JSON.stringify({
@@ -24,8 +24,9 @@ test("pending rewards and casualties never change the saved profile, final recei
   });
   expect(await page.evaluate(() => Economy.exportProgress())).toEqual(before.economy);
   expect(await page.evaluate(() => Development.exportProgress())).toEqual(before.tech);
-  expect(await page.evaluate(() => Formation.exportPilotStores())).toEqual(before.pilots);
-  expect(await page.evaluate(() => Formation.exportPilotStores())).toEqual(before.pilots);
+  const earned = await page.evaluate(() => Formation.exportPilotStores());
+  expect(earned.PMC.pilots[0].experience).toBe(before.pilots.PMC.pilots[0].experience + 100);
+  expect(earned.PMC.pilots[0].record.kills).toBe(before.pilots.PMC.pilots[0].record.kills + 1);
   await page.reload();
   await page.waitForFunction(() => assetsReady);
   expect(await page.evaluate(() => Economy.exportProgress())).toEqual(before.economy);

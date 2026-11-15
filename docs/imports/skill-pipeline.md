@@ -23,6 +23,7 @@
 
 - 新增一个单位：先用源 `core.name` 确认 ID，组装构造器 row（id/name/faction/tags/source），用 `build` 生成；合并 effects 和 catalog，再通过加载器后才暴露目录。不要执行整批命令替代单体导入。
 - 刷新现有武器政策：`python tools/refresh_weapon_skills.py`。覆盖全部单位的政策字段；开始前检查未提交修改，完成后审阅差异。
+- 普通变形缺失修复：`python tools/import-transform-forms.py` 按每个 DLC 的原生 `action_Transform_*`／`convertTo` 检查已有单位，仅补缺失目标形态、贴图与动画；现有基础机体不重导。目标形态继承基础机体的科技身份和年代，不开放独立购买。`native_conversions.py` 生成双向技能，保留资源比例和破损部位；已有人工数值差值继续在运行时应用。核对 `tests/facilities-transforms-hangar.test.cjs`，详细导入记录写 `tmp/verification/reports/`。
 - 衍生形态：检查 `tools/import-conversion-forms.py` 的显式清单再运行；生成后会刷新武器政策。
 - 只重新扫描已手动加入的普通 JSON：`npm run units:reload` 或项目现有 BAT。它不读取原 MOD。
 - 报告：`python tools/report-page-one.py`、`python tools/report-weapon-timing.py`。前者维护移植状态，后者是原生武器时间统计，不等于当前合并武器的 UI 清单。

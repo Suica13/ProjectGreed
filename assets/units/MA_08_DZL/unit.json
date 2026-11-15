@@ -630,6 +630,10 @@
               }
             }
           ]
+        },
+        "availability": {
+          "hidden": true,
+          "convertedSkill": "AllRoundBeam"
         }
       }
     },
@@ -854,10 +858,7 @@
         },
         "availability": {
           "hidden": true,
-          "reasons": [
-            "paired_weapon"
-          ],
-          "mergedInto": "ZN_MA_08_AA_BeamCannon"
+          "convertedSkill": "AllRoundBeam"
         }
       }
     },
@@ -1082,10 +1083,7 @@
         },
         "availability": {
           "hidden": true,
-          "reasons": [
-            "paired_weapon"
-          ],
-          "mergedInto": "ZN_MA_08_AA_BeamCannon"
+          "convertedSkill": "AllRoundBeam"
         }
       }
     },
@@ -1310,10 +1308,7 @@
         },
         "availability": {
           "hidden": true,
-          "reasons": [
-            "paired_weapon"
-          ],
-          "mergedInto": "ZN_MA_08_AA_BeamCannon"
+          "convertedSkill": "AllRoundBeam"
         }
       }
     },
@@ -1538,10 +1533,7 @@
         },
         "availability": {
           "hidden": true,
-          "reasons": [
-            "paired_weapon"
-          ],
-          "mergedInto": "ZN_MA_08_AA_BeamCannon"
+          "convertedSkill": "AllRoundBeam"
         }
       }
     },
@@ -1766,10 +1758,7 @@
         },
         "availability": {
           "hidden": true,
-          "reasons": [
-            "paired_weapon"
-          ],
-          "mergedInto": "ZN_MA_08_AA_BeamCannon"
+          "convertedSkill": "AllRoundBeam"
         }
       }
     },
@@ -1994,10 +1983,7 @@
         },
         "availability": {
           "hidden": true,
-          "reasons": [
-            "paired_weapon"
-          ],
-          "mergedInto": "ZN_MA_08_AA_BeamCannon"
+          "convertedSkill": "AllRoundBeam"
         }
       }
     },
@@ -2222,10 +2208,7 @@
         },
         "availability": {
           "hidden": true,
-          "reasons": [
-            "paired_weapon"
-          ],
-          "mergedInto": "ZN_MA_08_AA_BeamCannon"
+          "convertedSkill": "AllRoundBeam"
         }
       }
     },
@@ -2450,10 +2433,7 @@
         },
         "availability": {
           "hidden": true,
-          "reasons": [
-            "paired_weapon"
-          ],
-          "mergedInto": "ZN_MA_08_AA_BeamCannon"
+          "convertedSkill": "AllRoundBeam"
         }
       }
     },
@@ -2678,10 +2658,7 @@
         },
         "availability": {
           "hidden": true,
-          "reasons": [
-            "paired_weapon"
-          ],
-          "mergedInto": "ZN_MA_08_AA_BeamCannon"
+          "convertedSkill": "AllRoundBeam"
         }
       }
     },
@@ -2906,10 +2883,7 @@
         },
         "availability": {
           "hidden": true,
-          "reasons": [
-            "paired_weapon"
-          ],
-          "mergedInto": "ZN_MA_08_AA_BeamCannon"
+          "convertedSkill": "AllRoundBeam"
         }
       }
     },
@@ -3134,10 +3108,7 @@
         },
         "availability": {
           "hidden": true,
-          "reasons": [
-            "paired_weapon"
-          ],
-          "mergedInto": "ZN_MA_08_AA_BeamCannon"
+          "convertedSkill": "AllRoundBeam"
         }
       }
     },
@@ -3362,10 +3333,7 @@
         },
         "availability": {
           "hidden": true,
-          "reasons": [
-            "paired_weapon"
-          ],
-          "mergedInto": "ZN_MA_08_AA_BeamCannon"
+          "convertedSkill": "AllRoundBeam"
         }
       }
     },
@@ -3590,10 +3558,7 @@
         },
         "availability": {
           "hidden": true,
-          "reasons": [
-            "paired_weapon"
-          ],
-          "mergedInto": "ZN_MA_08_AA_BeamCannon"
+          "convertedSkill": "AllRoundBeam"
         }
       }
     },
@@ -3792,8 +3757,7 @@
       "weapons": [
         "ZN_MA_08_BeamCannon",
         "ZN_MA_08_Shock_A",
-        "Common_DoubleVulcan_MA_08",
-        "ZN_MA_08_AA_BeamCannon"
+        "Common_DoubleVulcan_MA_08"
       ]
     }
   ],
@@ -3832,6 +3796,232 @@
             }
           ]
         }
+      }
+    },
+    {
+      "ref": "ZN_MA_08_AA_BeamCannon__skill_irradiation__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 12,
+                "y": 5
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -12,
+                "y": 5
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 30,
+                "y": 5
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -30,
+                "y": 5
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 45,
+                "y": 0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -45,
+                "y": 0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 50,
+                "y": -10
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -50,
+                "y": -10
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 45,
+                "y": -25
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -45,
+                "y": -25
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 30,
+                "y": -30
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -30,
+                "y": -30
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 20,
+                "y": -30
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -20,
+                "y": -30
+              }
+            }
+          ]
+        },
+        "chargeMuzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 12,
+                "y": 5
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -12,
+                "y": 5
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 30,
+                "y": 5
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -30,
+                "y": 5
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 45,
+                "y": 0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -45,
+                "y": 0
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 50,
+                "y": -10
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -50,
+                "y": -10
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 45,
+                "y": -25
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -45,
+                "y": -25
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 30,
+                "y": -30
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -30,
+                "y": -30
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 20,
+                "y": -30
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -20,
+                "y": -30
+              }
+            }
+          ]
+        },
+        "radialDirections": [
+          5,
+          -5,
+          20,
+          -20,
+          45,
+          -45,
+          85,
+          -85,
+          120,
+          -120,
+          150,
+          -150,
+          175,
+          -175
+        ]
       }
     }
   ],

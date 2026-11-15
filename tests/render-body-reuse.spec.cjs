@@ -132,7 +132,25 @@ test("moving static bodies preserve thrust, walking, visibility windows and dama
     m.decals = [{ name: "body", bone: "body", asset: "walkFrames", frames: 2, frameFps: 10 }];
     SpriteRenderer.releaseBattleResources(["walkFrames"]);
     const animatedFrame = draw("Static", 0.1, true);
-    return { moving, walkingBodies, broken, stoppedJets, visible, invisible, a, b, animatedFrame };
+    const exactAnimatedA = draw("Static", 0, false, {}, -1),
+      exactAnimatedB = draw("Static", 0.1, false, {}, -1);
+    const exactWalk = draw("Walk", 0.33, true, {}, -1),
+      nativeWalk = draw("Walk", 0.33, true, {}, 0);
+    return {
+      moving,
+      walkingBodies,
+      broken,
+      stoppedJets,
+      visible,
+      invisible,
+      a,
+      b,
+      animatedFrame,
+      exactAnimatedA,
+      exactAnimatedB,
+      exactWalk,
+      nativeWalk,
+    };
   });
   expect(result.moving).toEqual({ bodies: 0, jets: 30 });
   expect(result.walkingBodies).toBe(2);
@@ -143,6 +161,9 @@ test("moving static bodies preserve thrust, walking, visibility windows and dama
   expect(result.a).toEqual(result.b);
   expect(result.b).toEqual([255, 0, 0, 255]);
   expect(result.animatedFrame).toEqual([0, 0, 255, 255]);
+  expect(result.exactAnimatedA).toEqual([255, 0, 0, 255]);
+  expect(result.exactAnimatedB).toEqual([0, 0, 255, 255]);
+  expect(result.exactWalk).toEqual(result.nativeWalk);
 });
 
 test("shared walking samples stay current across frames and fall back live when baking is over budget", async ({

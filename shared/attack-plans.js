@@ -239,7 +239,7 @@ function createAttackPlanner(rules, randomId) {
       ) {
         if (attacker) {
           delete attacker.plan;
-          attacker.acted = true;
+          attacker.acted = !intent.charged;
         }
         continue;
       }
@@ -267,7 +267,10 @@ function createAttackPlanner(rules, randomId) {
             : rules.canAttack(room.game, from, target, weapon))
         )
           attacks.push(other);
-        else if (from) delete from.plan;
+        else if (from) {
+          delete from.plan;
+          if (other.charged) from.acted = false;
+        }
         return false;
       });
       const defenders = rules.squadAttackMembers(room.game, target);
@@ -446,7 +449,7 @@ function createAttackPlanner(rules, randomId) {
       if (!unit.readySnipe) continue;
       const order = unit.readySnipe;
       delete unit.readySnipe;
-      unit.attackSkillRound = room.game.round;
+      // This shot was committed last turn; it must not spend this turn's attack.
       unit.acted = true;
       room.plans.push({
         attacker: unit.id,
@@ -510,6 +513,8 @@ function createAttackPlanner(rules, randomId) {
     if (response === "counter" && !attack) throw Error("反击目标必须是正在攻击该单位的敌人");
     const attacker = find(room, counterTargetId),
       target = find(room, pending.target);
+    if (response === "evade" && rules.canEvade && !rules.canEvade(target))
+      throw Error("建筑物不能回避");
     const counterIds = Array.isArray(counterId) ? [...counterId] : [counterId];
     if (response === "counter") {
       if (attack.noCounter) throw Error("本次不能反击");

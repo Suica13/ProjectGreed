@@ -4,7 +4,7 @@ const SweepUI = (() => {
   panel.id = "sweepMission";
   panel.hidden = true;
   panel.innerHTML =
-    '<header><h2>合约模式 · 战场扫荡</h2><button id="sweepExtract">撤离战场</button></header><div id="sweepSummary"></div><p id="sweepNotice"></p><div class="sweep-workspace"><details class="sweep-fleet-panel"><summary>作战单位</summary><div id="sweepFleet"></div></details><div class="sweep-stage"><div id="sweepRoute"></div><div id="sweepEvent"></div></div></div><footer><button id="sweepConfirm" class="primary">确认前进</button></footer>';
+    '<header><h2>合作模式 · 战场扫荡</h2><button id="sweepExtract">撤离战场</button></header><div id="sweepSummary"></div><p id="sweepNotice"></p><div class="sweep-workspace"><details class="sweep-fleet-panel"><summary>作战单位</summary><div id="sweepFleet"></div></details><div class="sweep-stage"><div id="sweepRoute"></div><div id="sweepEvent"></div></div></div><footer><button id="sweepConfirm" class="primary">确认前进</button></footer>';
   byId("mapWrap").append(panel);
   const style = document.createElement("style");
   style.textContent = `
@@ -21,7 +21,7 @@ const SweepUI = (() => {
     #sweepEvent{max-width:800px;padding:16px;margin:auto}#sweepEvent:empty{display:none}#sweepEvent button{margin:6px;padding:10px}#sweepEvent input,#sweepEvent select{max-width:100%;margin:6px 0}
     #sweepFleet article{padding:6px 0;border-bottom:1px solid var(--line)}#sweepFleet h3{font-size:13px;margin:6px 0}#sweepFleet img{width:40px;height:40px;object-fit:contain;image-rendering:pixelated;flex:none}#sweepFleet p{display:flex;align-items:center;gap:8px;font-size:12px;margin:4px 0}
     #gameScene[data-sweep-mission=true] #mapWrap>:not(#sweepMission){visibility:hidden;pointer-events:none}
-    #gameScene[data-sweep-mission=true] :is(#hudRosterPanel,#hudUnitPanel,#hudAttackPlanSummary,#hudToggleRoster,#hudToggleLegend,#hudSelectionSummary,#mapCombatControls,#battlefieldRoundHud,#battlefieldRedeployButton,#campaignDelegationToggle,#battlePresentationTools,.team-marker-controls,#turnBadge){display:none!important}
+    #gameScene[data-sweep-mission=true] :is(#hudRosterPanel,#hudUnitPanel,#hudUnitCommands,#hudActionBand,#hudAttackPlanner,#hudTurnActions,#hudAttackPlanSummary,#hudToggleRoster,#hudToggleLegend,#hudSelectionSummary,#mapCombatControls,#battlefieldRoundHud,#battlefieldRedeployButton,#campaignDelegationToggle,#battlePresentationTools,.team-marker-controls,#turnBadge){display:none!important}
     #gameScene[data-sweep-mission=true]{--hud-planner:0px!important;--hud-action:0px!important}
     @media(max-width:700px){#sweepMission{padding:8px;gap:6px}#sweepMission h2{font-size:15px}#sweepMission header{gap:8px}#sweepSummary,#sweepNotice{font-size:11px}#sweepMission .sweep-workspace{display:flex;flex-direction:column;gap:6px}#sweepMission .sweep-stage{order:0;flex:1}#sweepMission .sweep-fleet-panel{order:1;flex:none;max-height:30%;padding:4px}#sweepRoute{min-height:340px}#sweepRoute button{width:86px;min-height:38px;font-size:12px}#sweepEvent{padding:8px}}
   `;
