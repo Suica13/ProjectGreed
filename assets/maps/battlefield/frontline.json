@@ -1,6 +1,6 @@
 {
   "id": "battlefield_frontline",
-  "name": "战地 · 环峡高地",
+  "name": "雇佣兵战争 · 环峡高地",
   "description": "环形平原围绕双层中央高地，西南与东北散布丘陵，双方基地位于左右高地；从坡口出击，争夺1、2、4、5号据点。",
   "width": 72,
   "height": 48,
@@ -7286,7 +7286,7 @@
     "format": "ProjectGreedTileMap",
     "version": 1,
     "id": "battlefield_frontline",
-    "name": "战地 · 环峡高地",
+    "name": "雇佣兵战争 · 环峡高地",
     "description": "环形平原围绕双层中央高地，西南与东北散布丘陵，双方基地位于左右高地；从坡口出击，争夺1、2、4、5号据点。",
     "width": 72,
     "height": 48,

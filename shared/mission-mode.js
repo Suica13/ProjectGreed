@@ -83,9 +83,34 @@ const MissionMode = (() => {
         fail();
       actors.add(a.id);
     }
+    for (const a of m.actors) {
+      if (a.carrier !== undefined && (!actors.has(a.carrier) || a.carrier === a.id ||
+          m.actors.find(b => b.id === a.carrier).team !== a.team ||
+          m.actors.find(b => b.id === a.carrier).initial !== a.initial)) fail();
+      const chain = new Set([a.id]);
+      let parent = a;
+      while (parent.carrier) {
+        if (chain.has(parent.carrier)) fail();
+        chain.add(parent.carrier);
+        parent = m.actors.find(b => b.id === parent.carrier);
+        if (!parent) fail();
+      }
+    }
     location = "胜败条件";
     if (!Array.isArray(m.protect) || m.protect.some((a) => !actors.has(a))) fail();
-    if (!["all_enemies", "survive", "defeat_actor"].includes(m.victory?.type)) fail();
+    if (!["all_enemies", "survive", "defeat_actor", "escort"].includes(m.victory?.type)) fail();
+    if (m.victory.type === "escort") {
+      const v = m.victory;
+      if (!actors.has(v.actor) || !m.protect.includes(v.actor) ||
+          !m.actors.some(a=>a.id===v.actor && a.team===0 && a.initial && !a.carrier) ||
+          !Number.isInteger(v.holdRounds) || v.holdRounds < 1 ||
+          ![v.x,v.y,v.width,v.height].every(Number.isInteger) ||
+          v.x < 0 || v.y < 0 || v.width < 1 || v.height < 1 ||
+          v.x+v.width > map.width || v.y+v.height > map.height ||
+          !Array.isArray(v.route) || !v.route.length || v.route.length > 100 ||
+          v.route.some(p=>!Number.isInteger(p.x) || !Number.isInteger(p.y) ||
+            p.x<0 || p.y<0 || p.x>=map.width || p.y>=map.height)) fail();
+    }
     if (m.victory.type === "survive" && (!Number.isInteger(m.victory.round) || m.victory.round < 1))
       fail();
     if (m.victory.type === "defeat_actor" && !actors.has(m.victory.actor)) fail();
@@ -313,6 +338,7 @@ const MissionMode = (() => {
         missionActor: a.id,
         missionGroup: a.group,
         missionGuest: a.team === 0,
+        ...(m.victory.type === "escort" && m.victory.actor === a.id ? { missionEscort: true } : {}),
         deployed: true,
         formationIndex: -1,
         ...(a.team === 1
@@ -350,6 +376,24 @@ const MissionMode = (() => {
       Object.assign(u, cell);
       staged.units.push(u);
     }
+    // Cargo is assigned only after all carriers in this reinforcement batch exist.
+    for (const key of ids) {
+      const a = m.actors.find(a=>a.id === key);
+      if (!a.carrier) continue;
+      const u = staged.units.find(u=>u.missionActor === key);
+      if (u.embarked) continue;
+      const carrier = staged.units.find(u=>u.missionActor === a.carrier && u.hp > 0);
+      const hangar = carrier && G.hangars.of(carrier).find(h=>
+        G.hangars.canLoad(staged,u,carrier,h.id));
+      if (!hangar) throw Error("任务增援无法预先搭载：" + a.id);
+      delete u.squadId;
+      delete u.squadSlot;
+      u.embarked = { carrierId: carrier.id, hangarId: hangar.id,
+        ...(hangar.kind === "sfs" ? { exposed: true } : {}) };
+      u.moved = false;
+      u.acted = false;
+    }
+    G.hangars.sync(staged);
     room.game.units = staged.units;
   }
   function initialize(room, G) {
@@ -520,6 +564,40 @@ const MissionMode = (() => {
       if (!execute(e)) return;
     }
     s.started = true;
+    if (m.victory.type === "escort") {
+      const v = m.victory;
+      const escort = g.units.find(u=>u.missionActor === v.actor);
+      const progress = s.escort ||= { step: 0, lastRound: 0, arrivedRound: null };
+      if (escort?.hp > 0) {
+        if (progress.lastRound !== g.round) {
+          progress.lastRound = g.round;
+          const next = v.route[progress.step];
+          if (next) {
+            try {
+              escort.moved = false;
+              escort.acted = false;
+              // Round numbers count team phases. Scripted escorts advance once
+              // per displayed round, independently of which team is acting.
+              G.move({ ...g, team: escort.team }, escort, next.x, next.y, true);
+              escort.origin = null;
+              progress.step++;
+              log("[任务护送] " + G.modelOf(escort).name + "推进：" + progress.step + "/" + v.route.length);
+            } catch {
+              log("[任务护送] 护送路线受阻，请清理前方道路。");
+            }
+          }
+          const inside = escort.x >= v.x && escort.y >= v.y &&
+            escort.x < v.x+v.width && escort.y < v.y+v.height;
+          if (!inside) progress.arrivedRound = null;
+          else if (progress.arrivedRound === null) progress.arrivedRound = g.round;
+          if (inside && g.round >= progress.arrivedRound + v.holdRounds) s.requestedWinner = 0;
+        }
+        escort.moved = true;
+        escort.acted = true;
+      }
+      if (v.eliminateAll && m.actors.filter(a=>a.team === 1).every(a=>dead(a.id)))
+        s.requestedWinner = 0;
+    }
     // Explicit protection and PMC extinction take precedence over victory.
     if (s.protect.some(dead) || !pmc.some((u) => u.hp > 0)) g.winner = 1;
     else if (s.requestedWinner !== undefined) g.winner = s.requestedWinner;

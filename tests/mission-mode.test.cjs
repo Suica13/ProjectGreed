@@ -66,7 +66,7 @@ test("cooperative mission loads fixed enemy roster, host guest ship, map technol
   assert.equal(room.settings.technologyLimit, 10000);
   assert.equal(room.settings.costLimit, 2000);
   assert.equal(room.settings.unitLimit, 12);
-  assert.equal(G.getMap(room.settings.mapId).name, "[0079][EFSF]孔斯空域的遭遇");
+  assert.equal(G.getMap(room.settings.mapId).name, "[0079][EFSF]相逢在宇宙");
   assert.equal(room.game.units.filter((u) => u.team === 1).length, 15);
   assert.equal(room.game.units.filter((u) => u.missionGroup === "dom").length, 12);
   assert.equal(room.game.units.filter((u) => u.missionGroup === "ships").length, 3);
@@ -151,15 +151,15 @@ test("mission win grants each PMC fixed stock and resources exactly once, with c
     const awards = room.economyAwards.filter((a) => a.kind === "result");
     assert.equal(awards.length, 2);
     for (const award of awards) {
-      assert.equal(award.money, outcome === "defeat" ? 0 : outcome === "bonus" ? 4000 : 2000);
-      assert.equal(award.supplies, outcome === "defeat" ? 0 : outcome === "bonus" ? 6000 : 3000);
+      assert.equal(award.money, outcome === "defeat" ? 0 : outcome === "bonus" ? 5500 : 4000);
+      assert.equal(award.supplies, outcome === "defeat" ? 0 : outcome === "bonus" ? 8250 : 6000);
       assert.deepEqual(
         award.stockGained.inventory,
         outcome === "defeat"
           ? {}
           : outcome === "bonus"
-            ? { RX_77_2: 2, RX_78_2: 1 }
-            : { RX_77_2: 2 },
+            ? { RGM_79: 3, RX_77_2: 1, RX_78_3: 1, RGC_80: 2 }
+            : { RGM_79: 3, RX_77_2: 1 },
       );
     }
     engine.broadcast(room);
@@ -179,6 +179,12 @@ test("six dom kills through round 10 spawn scripted rivals once, add Amuro prote
   engine.broadcast(room);
   const actors = room.game.units.filter((u) => ["amuro", "char"].includes(u.missionActor));
   assert.equal(actors.length, 2);
+  assert(actors.find(u=>u.missionActor==="amuro").x > 20);
+  assert(actors.find(u=>u.missionActor==="char").x < 10);
+  const lalah = room.game.units.find(u=>u.missionActor==="lalah");
+  assert(lalah && lalah.x < 10 && lalah.pilot.level === 5);
+  assert(room.game.units.filter(u=>u.missionGroup==="ships").every(u=>u.hp===0));
+  assert.equal(room.game.mission.cinematic.hits.length, 3);
   assert(actors.every((u) => u.pilot.level === G.getMap(room.settings.mapId).mission.actors.find(actor=>actor.id===u.missionActor).level));
   assert(room.game.mission.protect.includes("amuro"));
   assert.deepEqual(
@@ -238,7 +244,7 @@ test("automatic combat leaves mission victory to post-playback events, including
   assert(f.room.game.units.some((u) => u.missionActor === "char" && u.hp > 0));
   f.finishDialogue();
   assert.equal(f.room.game.winner, null);
-  f.room.game.units.find((u) => u.missionActor === "char").hp = 0;
+  f.room.game.units.filter((u) => ["char", "lalah"].includes(u.missionActor)).forEach(u => u.hp = 0);
   f.engine.broadcast(f.room);
   assert.equal(f.room.game.winner, 0);
 });
@@ -269,7 +275,7 @@ test("dialogue actions suspend later actions and resume in visual editor order",
     actions: [
       { type: "dialogue", lines: [map.mission.events[0].actions[0].lines[0]] },
       { type: "spawn", actors: ["amuro"] },
-      { type: "dialogue", lines: [map.mission.events[1].actions[2].lines[0]] },
+      { type: "dialogue", lines: [map.mission.events[1].actions.find(a => a.type === "dialogue").lines[0]] },
     ],
   });
   G.catalog.maps[map.id] = map;

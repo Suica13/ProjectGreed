@@ -57,6 +57,7 @@ const LocalRoom = (() => {
       technologyLimitFaction: DevelopmentUI.selectedFaction(),
       licenses: byId("offlineRoomMode").value === "campaign" ? {} : Economy.snapshot().licenses,
       ...Economy.normalizeStock(Economy.snapshot()),
+      crewStock: Economy.snapshot().crewStock,
       roomMode: byId("offlineRoomMode").value,
     });
     if (!["battlefield", "sweep", "mission"].includes(byId("offlineRoomMode").value)) engine.action(socket, {

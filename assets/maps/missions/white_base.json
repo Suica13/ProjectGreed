@@ -1,6 +1,6 @@
 {
   "id": "mission_white_base",
-  "name": "[0079][EFSF]孔斯空域的遭遇",
+  "name": "[0079][EFSF]相逢在宇宙",
   "description": "多人合作：歼灭敌军并保护白色基地。十回合内击破六台力克大魔可触发额外增援。",
   "width": 41,
   "height": 25,
@@ -18,23 +18,27 @@
   "mission": {
     "version": 1,
     "era": "UC_0079_T2",
+    "technologyLimitEnabled": false,
+    "scenarioFaction": "EFSF",
     "technologyLimit": 10000,
     "costLimit": 2000,
     "unitLimit": 12,
     "enemyResourcePerPlayer": 0.25,
     "rewards": {
-      "money": 2000,
-      "supplies": 3000,
+      "money": 4000,
+      "supplies": 6000,
       "inventory": {
-        "RX_77_2": 2
+        "RGM_79": 3,
+        "RX_77_2": 1
       },
       "bonuses": [
         {
           "event": "red-comet",
-          "money": 2000,
-          "supplies": 3000,
+          "money": 1500,
+          "supplies": 2250,
           "inventory": {
-            "RX_78_2": 1
+            "RX_78_3": 1,
+            "RGC_80": 2
           }
         }
       ]
@@ -55,9 +59,61 @@
         "y": 11,
         "group": "guests",
         "initial": true,
+        "angle": 90,
         "pilotId": "Pilot_EFSF_0079_N_ACE_BRT",
-        "level": 0,
-        "angle": 90
+        "level": 0
+      },
+      {
+        "id": "guncannon-kai",
+        "unitId": "RX_77_2",
+        "kitId": "kit_2",
+        "team": 0,
+        "x": 12,
+        "y": 7,
+        "group": "guests",
+        "initial": true,
+        "angle": 90,
+        "pilotId": "Pilot_EFSF_0079_N_ACE_KSD",
+        "level": 3
+      },
+      {
+        "id": "guncannon-hayato",
+        "unitId": "RX_77_2",
+        "kitId": "kit_2",
+        "team": 0,
+        "x": 12,
+        "y": 16,
+        "group": "guests",
+        "initial": true,
+        "angle": 90,
+        "pilotId": "Pilot_EFSF_0079_N_ACE_HYT",
+        "level": 3
+      },
+      {
+        "id": "corebooster",
+        "unitId": "FF_X7Bst",
+        "kitId": "main_0",
+        "team": 0,
+        "x": 10,
+        "y": 12,
+        "group": "guests",
+        "initial": true,
+        "angle": 90,
+        "pilotId": "Pilot_EFSF_0079_N_ACE_SYA",
+        "level": 3
+      },
+      {
+        "id": "lalah",
+        "unitId": "MAN_08",
+        "kitId": "standard",
+        "team": 1,
+        "x": 1,
+        "y": 17,
+        "group": "reinforcements",
+        "initial": false,
+        "angle": 90,
+        "pilotId": "Pilot_ZEON_0079_N_ACE_LLS",
+        "level": 5
       },
       {
         "id": "dom-1",
@@ -216,7 +272,7 @@
       },
       {
         "id": "chivvay-2",
-        "unitId": "MusaiClassLateType",
+        "unitId": "ChivvayClass",
         "kitId": "standard",
         "team": 1,
         "x": 35,
@@ -241,10 +297,11 @@
         "unitId": "MS_14S_CharCustom",
         "kitId": "kit_0",
         "team": 1,
-        "x": 39,
+        "x": 1,
         "y": 12,
         "group": "reinforcements",
         "initial": false,
+        "angle": 90,
         "pilotId": "Pilot_ZEON_0079_N_ACE_CHA",
         "level": 5
       },
@@ -253,10 +310,11 @@
         "unitId": "RX_78_2",
         "kitId": "kit_1",
         "team": 0,
-        "x": 1,
+        "x": 39,
         "y": 12,
         "group": "guests",
         "initial": false,
+        "angle": 270,
         "pilotId": "Pilot_EFSF_0079_N_ACE_AMR",
         "level": 5
       }
@@ -302,7 +360,17 @@
             "type": "spawn",
             "actors": [
               "char",
-              "amuro"
+              "amuro",
+              "lalah"
+            ]
+          },
+          {
+            "type": "scripted_attack",
+            "actor": "amuro",
+            "actors": [
+              "chivvay-1",
+              "chivvay-2",
+              "chivvay-3"
             ]
           },
           {
@@ -336,9 +404,7 @@
           }
         ]
       }
-    ],
-    "technologyLimitEnabled": false,
-    "scenarioFaction": "EFSF"
+    ]
   },
   "spawns": [
     {
@@ -2622,7 +2688,7 @@
     "format": "ProjectGreedTileMap",
     "version": 1,
     "id": "mission_white_base",
-    "name": "[0079][EFSF]孔斯空域的遭遇",
+    "name": "[0079][EFSF]相逢在宇宙",
     "description": "多人合作：歼灭敌军并保护白色基地。十回合内击破六台力克大魔可触发额外增援。",
     "width": 41,
     "height": 25,
@@ -3249,8 +3315,8 @@
           "plain_plain_0_0_0_space",
           "plain_plain_0_0_0_space",
           "plain_plain_0_0_0_space",
-          null,
-          null,
+          "plain_plain_0_0_0_space",
+          "plain_plain_0_0_0_space",
           "plain_plain_0_0_0_space",
           "plain_plain_0_0_0_space",
           "plain_plain_0_0_0_space",
@@ -8027,23 +8093,27 @@
     "mission": {
       "version": 1,
       "era": "UC_0079_T2",
+      "technologyLimitEnabled": false,
+      "scenarioFaction": "EFSF",
       "technologyLimit": 10000,
       "costLimit": 2000,
       "unitLimit": 12,
       "enemyResourcePerPlayer": 0.25,
       "rewards": {
-        "money": 2000,
-        "supplies": 3000,
+        "money": 4000,
+        "supplies": 6000,
         "inventory": {
-          "RX_77_2": 2
+          "RGM_79": 3,
+          "RX_77_2": 1
         },
         "bonuses": [
           {
             "event": "red-comet",
-            "money": 2000,
-            "supplies": 3000,
+            "money": 1500,
+            "supplies": 2250,
             "inventory": {
-              "RX_78_2": 1
+              "RX_78_3": 1,
+              "RGC_80": 2
             }
           }
         ]
@@ -8064,9 +8134,61 @@
           "y": 11,
           "group": "guests",
           "initial": true,
+          "angle": 90,
           "pilotId": "Pilot_EFSF_0079_N_ACE_BRT",
-          "level": 0,
-          "angle": 90
+          "level": 0
+        },
+        {
+          "id": "guncannon-kai",
+          "unitId": "RX_77_2",
+          "kitId": "kit_2",
+          "team": 0,
+          "x": 12,
+          "y": 7,
+          "group": "guests",
+          "initial": true,
+          "angle": 90,
+          "pilotId": "Pilot_EFSF_0079_N_ACE_KSD",
+          "level": 3
+        },
+        {
+          "id": "guncannon-hayato",
+          "unitId": "RX_77_2",
+          "kitId": "kit_2",
+          "team": 0,
+          "x": 12,
+          "y": 16,
+          "group": "guests",
+          "initial": true,
+          "angle": 90,
+          "pilotId": "Pilot_EFSF_0079_N_ACE_HYT",
+          "level": 3
+        },
+        {
+          "id": "corebooster",
+          "unitId": "FF_X7Bst",
+          "kitId": "main_0",
+          "team": 0,
+          "x": 10,
+          "y": 12,
+          "group": "guests",
+          "initial": true,
+          "angle": 90,
+          "pilotId": "Pilot_EFSF_0079_N_ACE_SYA",
+          "level": 3
+        },
+        {
+          "id": "lalah",
+          "unitId": "MAN_08",
+          "kitId": "standard",
+          "team": 1,
+          "x": 1,
+          "y": 17,
+          "group": "reinforcements",
+          "initial": false,
+          "angle": 90,
+          "pilotId": "Pilot_ZEON_0079_N_ACE_LLS",
+          "level": 5
         },
         {
           "id": "dom-1",
@@ -8225,7 +8347,7 @@
         },
         {
           "id": "chivvay-2",
-          "unitId": "MusaiClassLateType",
+          "unitId": "ChivvayClass",
           "kitId": "standard",
           "team": 1,
           "x": 35,
@@ -8250,10 +8372,11 @@
           "unitId": "MS_14S_CharCustom",
           "kitId": "kit_0",
           "team": 1,
-          "x": 39,
+          "x": 1,
           "y": 12,
           "group": "reinforcements",
           "initial": false,
+          "angle": 90,
           "pilotId": "Pilot_ZEON_0079_N_ACE_CHA",
           "level": 5
         },
@@ -8262,10 +8385,11 @@
           "unitId": "RX_78_2",
           "kitId": "kit_1",
           "team": 0,
-          "x": 1,
+          "x": 39,
           "y": 12,
           "group": "guests",
           "initial": false,
+          "angle": 270,
           "pilotId": "Pilot_EFSF_0079_N_ACE_AMR",
           "level": 5
         }
@@ -8311,7 +8435,17 @@
               "type": "spawn",
               "actors": [
                 "char",
-                "amuro"
+                "amuro",
+                "lalah"
+              ]
+            },
+            {
+              "type": "scripted_attack",
+              "actor": "amuro",
+              "actors": [
+                "chivvay-1",
+                "chivvay-2",
+                "chivvay-3"
               ]
             },
             {
@@ -8345,9 +8479,7 @@
             }
           ]
         }
-      ],
-      "technologyLimitEnabled": false,
-      "scenarioFaction": "EFSF"
+      ]
     },
     "biomeStyle": {
       "version": 2,

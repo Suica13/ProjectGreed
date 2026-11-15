@@ -6,7 +6,7 @@ const root = path.resolve(__dirname, ".."),
   B = require("./rebuild-biome-maps.cjs");
 const doc = M.create({
   id: "mission_white_base",
-  name: "[0079][EFSF]孔斯空域的遭遇",
+  name: "[0079][EFSF]相逢在宇宙",
   width: 41,
   height: 25,
   description: "多人合作：歼灭敌军并保护白色基地。十回合内击破六台力克大魔可触发额外增援。",
@@ -47,7 +47,7 @@ const actor = (
   initial = true,
   pilotId = null,
   level = 0,
-) => ({ id, unitId, kitId, team, x, y, group, initial, ...(pilotId ? { pilotId, level } : {}) });
+) => ({ id, unitId, kitId, team, x, y, group, initial, angle: team ? 270 : 90, ...(pilotId ? { pilotId, level } : {}) });
 const line = (who, name, text, pilot) => ({
   actor: who,
   name,
@@ -64,10 +64,10 @@ doc.mission = {
   unitLimit: 12,
   enemyResourcePerPlayer: 0.25,
   rewards: {
-    money: 2000,
-    supplies: 3000,
-    inventory: { RX_77_2: 2 },
-    bonuses: [{ event: "red-comet", money: 2000, supplies: 3000, inventory: { RX_78_2: 1 } }],
+    money: 4000,
+    supplies: 6000,
+    inventory: { RGM_79: 3, RX_77_2: 1 },
+    bonuses: [{ event: "red-comet", money: 1500, supplies: 2250, inventory: { RX_78_3: 1, RGC_80: 2 } }],
   },
   victory: { type: "all_enemies" },
   protect: ["whitebase"],
@@ -76,6 +76,10 @@ doc.mission = {
       ...actor("whitebase", "WhiteBase", "standard", 0, 13, 11, "guests", true, BRT, 0),
       angle: 90,
     },
+    actor("guncannon-kai", "RX_77_2", "kit_2", 0, 12, 7, "guests", true, "Pilot_EFSF_0079_N_ACE_KSD", 3),
+    actor("guncannon-hayato", "RX_77_2", "kit_2", 0, 12, 16, "guests", true, "Pilot_EFSF_0079_N_ACE_HYT", 3),
+    actor("corebooster", "FF_X7Bst", "main_0", 0, 10, 12, "guests", true, "Pilot_EFSF_0079_N_ACE_SYA", 3),
+    actor("lalah", "MAN_08", "standard", 1, 1, 17, "reinforcements", false, "Pilot_ZEON_0079_N_ACE_LLS", 5),
     ...Array.from({ length: 12 }, (_, i) => ({
       ...actor(
         "dom-" + (i + 1),
@@ -90,11 +94,11 @@ doc.mission = {
       squad: "dom-" + (Math.floor(i / 3) + 1),
     })),
     ...[5, 12, 20].map((y, i) => ({
-      ...actor("chivvay-" + (i + 1), "ChivvayClass", "standard", 1, 35, y, "ships"),
+      ...actor("chivvay-" + (i + 1), i === 1 ? "ChivvayClass" : "MusaiClassLateType", "standard", 1, 35, y, "ships"),
       angle: 270,
     })),
-    actor("char", "MS_14S_CharCustom", "kit_0", 1, 39, 12, "reinforcements", false, CHA, 3),
-    actor("amuro", "RX_78_2", "kit_0", 0, 1, 12, "guests", false, AMR, 3),
+    actor("char", "MS_14S_CharCustom", "kit_0", 1, 1, 12, "reinforcements", false, CHA, 5),
+    actor("amuro", "RX_78_2", "kit_1", 0, 39, 12, "guests", false, AMR, 5),
   ],
   events: [
     {
@@ -116,7 +120,8 @@ doc.mission = {
       name: "红色彗星与白色流星",
       when: { type: "defeated_group", group: "dom", count: 6, byRound: 10 },
       actions: [
-        { type: "spawn", actors: ["char", "amuro"] },
+        { type: "spawn", actors: ["char", "amuro", "lalah"] },
+        { type: "scripted_attack", actor: "amuro", actors: ["chivvay-1", "chivvay-2", "chivvay-3"] },
         { type: "protect", actors: ["amuro"] },
         {
           type: "dialogue",
@@ -130,6 +135,10 @@ doc.mission = {
     },
   ],
 };
+for (const actor of doc.mission.actors) {
+  if (["char", "lalah"].includes(actor.id)) actor.angle = 90;
+  if (actor.id === "amuro") actor.angle = 270;
+}
 const map = M.compile(doc);
 for (let y = 0; y < map.height; y++)
   for (let x = 0; x < map.width; x++)

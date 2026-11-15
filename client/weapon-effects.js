@@ -496,6 +496,10 @@ const WeaponEffects = (() => {
           ? shot.impactAt +
             (weapon.projectile.tether.hold + weapon.projectile.tether.retract) / speed
           : shot.at + shot.flight * travel;
+      if (weapon.projectile?.sequence?.duration) {
+        shot.sequenceDuration = weapon.projectile.sequence.duration / effectSpeed;
+        shot.visibleUntil = Math.max(shot.visibleUntil, shot.at + shot.sequenceDuration);
+      }
       if (shot.splitAt !== undefined) shot.visibleUntil = shot.splitAt;
       if (timedProjectile && shot.miss)
         shot.visibleUntil = Math.min(shot.visibleUntil, shot.at + missTimeout);
@@ -929,11 +933,12 @@ const WeaponEffects = (() => {
     }
   }
   function drawBeamSequence(ctx, sequence, shot, age, source, size) {
-    if (age < 0 || age > shot.flight) return;
+    const duration = shot.sequenceDuration || shot.flight;
+    if (age < 0 || age > duration) return;
     const dx = shot.destination.x - shot.origin.x,
       dy = shot.destination.y - shot.origin.y,
       distance = Math.hypot(dx, dy),
-      progress = Math.min(1, age / Math.max(0.001, shot.flight)),
+      progress = Math.min(1, age / Math.max(0.001, duration)),
       lengthScale = distance / sequence.length;
     // The MOD's start/middle/end sheets form one pulse anchored at the muzzle.
     // Sample that pulse with the damage carrier's flight clock. Moving the full

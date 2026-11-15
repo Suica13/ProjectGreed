@@ -223,6 +223,7 @@ function createRoomEngine({
   function settleSweep(room) {
     if (!room.sweep.ended || room.economySettled) return;
     room.economySettled = true;
+    settleCrewLosses(room);
     const bonus = getRewardMultipliers();
     for (const p of room.seats.filter((p) => p && !p.bot && G.seatTeam(p.seat) === 0)) {
       const loot = room.sweep.pending[p.id],
@@ -1493,6 +1494,7 @@ function createRoomEngine({
     room.techParticipation = {};
     room.technologyStartPoints = {};
     room.stockReservations = {};
+    room.hiredCasualties = {};
     room.game = G.create(false, randomSeed());
     delete room.aiFormationSeed;
     delete room.aiFormationEras;
@@ -1948,7 +1950,7 @@ function createRoomEngine({
     const killer = from && room.seats[G.ownerOf(from)];
     const participants = new Set(room.battlefieldAttackers?.[to.id] || []);
     if (killer) participants.add(killer.id);
-    const cost = defeatedModel.cost + (to.pilot?.custom ? G.pilots.cost(to.pilot) : 0);
+    const cost = defeatedModel.cost + ((to.pilot?.custom || to.pilot?.hired) ? G.pilots.cost(to.pilot) : 0);
     if (from && from.team !== to.team) {
       room.teamDestroyedCost ||= [0, 0];
       room.teamDestroyedCost[from.team] += cost;
@@ -2275,6 +2277,7 @@ function createRoomEngine({
     )
       return;
     room.economySettled = true;
+    settleCrewLosses(room);
     const bonus = getRewardMultipliers();
     if (room.settings.mode === "battlefield") {
       syncBattlefieldStock(room);
@@ -2425,7 +2428,45 @@ function createRoomEngine({
       console.error("Settlement log:", error.message);
     }
   }
+  function remainingCrew(room, member) {
+    const stock = G.pilots.normalizeCrewStock(member.crewStock);
+    for (const loss of Object.values(room.hiredCasualties || {}))
+      if (loss.memberId === member.id) stock[loss.grade] = Math.max(0, stock[loss.grade] - 1);
+    return stock;
+  }
+  function settleCrewLosses(room) {
+    if (room.campaign || room.replay || room.startedFromSave) return;
+    for (const member of room.seats.filter(p => p && !p.bot)) {
+      const lost = G.pilots.normalizeCrewStock();
+      for (const loss of Object.values(room.hiredCasualties || {}))
+        if (loss.memberId === member.id && !loss.settled) { lost[loss.grade]++; loss.settled = true; }
+      if (!Object.values(lost).some(Boolean)) continue;
+      member.crewStock = G.pilots.normalizeCrewStock(member.crewStock);
+      for (const grade of Object.keys(lost)) member.crewStock[grade] = Math.max(0, member.crewStock[grade] - lost[grade]);
+      room.economyAwards.push({ id: randomId(), matchId: room.matchId, memberId: member.id,
+        kind: "crew_loss", money: 0, supplies: 0, crewLost: lost });
+    }
+  }
   function recordPilotBattle(room, actor, kind, cost, shipKill = false) {
+    if (!room.replay && actor?.pilot?.hired && kind === "loss" && !room.campaign && !room.startedFromSave) {
+      const member = room.seats[G.ownerOf(actor)];
+      if (member && !member.bot) {
+        const losses = (room.hiredCasualties ||= {});
+        losses[room.matchId + ":" + actor.id] ||= { memberId: member.id, grade: actor.pilot.grade };
+        const available = remainingCrew(room, member);
+        const reserves = (room.game.battlefield?.reserves || []).filter(r => r.ownerSeat === member.seat)
+          .sort((a, b) => Number(a.readyRound !== null || a.formationIndex === actor.formationIndex) -
+            Number(b.readyRound !== null || b.formationIndex === actor.formationIndex));
+        for (const reserve of reserves) {
+          const pilot = reserve.template.pilot;
+          if (!pilot?.hired) continue;
+          if (available[pilot.grade] > 0) available[pilot.grade]--;
+          else if (reserve.readyRound !== null || reserve.formationIndex === actor.formationIndex)
+            reserve.template.pilot = G.pilots.roll(null, G.pilots.hash(actor.id), member.seat, 0,
+              G.models[reserve.unitId + "__" + reserve.kitId]);
+        }
+      }
+    }
     if (room.replay || !actor?.pilot?.custom) return;
     if (room.startedFromSave && !room.campaign && !["kill", "assist"].includes(kind)) return;
     const owner = room.seats[G.ownerOf(actor)];
@@ -2822,12 +2863,12 @@ function createRoomEngine({
       return {
         unitId: model.prefabId,
         kitId: model.kitId,
-        ...(unit.pilot?.custom ? { customPilot: G.pilots.custom(unit.pilot) } : {}),
+        ...((unit.pilot?.custom || unit.pilot?.hired) ? { customPilot: G.pilots.custom(unit.pilot) } : {}),
       };
     });
     const cost = units.reduce(
       (sum, unit) =>
-        sum + G.models[unit.model].cost + G.pilots.cost(unit.pilot?.custom ? unit.pilot : null),
+        sum + G.models[unit.model].cost + G.pilots.cost(unit.pilot?.custom || unit.pilot?.hired ? unit.pilot : null),
       0,
     );
     const restrictions = G.armyRestrictions(room.settings, room.seats[seat]);
@@ -2990,6 +3031,11 @@ function createRoomEngine({
             (player.bot ? randomArmy(room, player) : player.formation)
         : null,
     );
+    if (!room.resumeSave) armies.forEach((army, seat) => {
+      const player = room.seats[seat];
+      if (army && player && !player.bot)
+        armies[seat] = G.pilots.normalizeCrewFormation(army, remainingCrew(room, player), G.formationModel);
+    });
     if (!room.resumeSave)
       armies.forEach((army, seat) => {
         if (!room.seats[seat]) return;
@@ -3120,7 +3166,7 @@ function createRoomEngine({
           unitId: actor.deploymentUnitId || G.models[actor.model].prefabId,
           model: actor.model,
           stockModel: actor.deploymentModel || actor.model,
-          cost: G.modelOf(actor).cost + (actor.pilot?.custom ? G.pilots.cost(actor.pilot) : 0),
+          cost: G.modelOf(actor).cost + ((actor.pilot?.custom || actor.pilot?.hired) ? G.pilots.cost(actor.pilot) : 0),
           technologyFactions: roomBattleEconomy().technologyFactions(
             G.models[actor.deploymentModel || actor.model],
           ),
@@ -4506,8 +4552,12 @@ function createRoomEngine({
       }
       const previousLicenses = member.licenses;
       const previousStock = G.normalizeStock(member);
+      const previousCrewStock = member.crewStock;
       const previousTechnologyPoints = member.technologyPoints;
       try {
+        if ((!room.started || room.phase === "assembly") && msg.crewStock !== undefined &&
+            ["set_ready", "start_game", "update_formation", "confirm_formation"].includes(msg.action))
+          member.crewStock = G.pilots.normalizeCrewStock(msg.crewStock);
         if (
           (!room.started || room.phase === "assembly") &&
           msg.technologyPoints !== undefined &&
@@ -4534,6 +4584,8 @@ function createRoomEngine({
           ["set_ready", "start_game", "update_formation", "confirm_formation"].includes(msg.action)
         )
           Object.assign(member, G.normalizeStock(msg));
+        if (Array.isArray(msg.formation) && !room.campaign && !room.startedFromSave)
+          msg = { ...msg, formation: G.pilots.normalizeCrewFormation(msg.formation, remainingCrew(room, member), G.formationModel) };
         if (msg.action === "rename_unit") {
           throw Error("单位不支持改名");
         } else if (msg.action === "share_units") {
@@ -5208,6 +5260,7 @@ function createRoomEngine({
         return;
       } catch (error) {
         member.licenses = previousLicenses;
+        member.crewStock = previousCrewStock;
         Object.assign(member, previousStock);
         member.technologyPoints = previousTechnologyPoints;
         throw error;
@@ -5975,6 +6028,7 @@ function createRoomEngine({
         researched: roomDevelopment().normalizeResearch(msg.researched),
         technologyPoints: roomDevelopment().normalizeTechnologyPoints(msg.technologyPoints),
         licenses: G.normalizeLicenses(msg.licenses),
+        crewStock: G.pilots.normalizeCrewStock(msg.crewStock),
         ...G.normalizeStock(msg),
         seat,
         ready: false,

@@ -735,6 +735,9 @@ const WeaponClasses = (() => {
     beam_spray: "光束喷枪",
     beam_gun: "光束枪",
     beam_cannon: "光束炮",
+    beam_smart_gun: "精灵光束炮",
+    shell_shotgun: "实弹霰弹枪",
+    beam_shotgun: "光束霰弹枪",
     beam_bazooka: "光束火箭筒",
     beam: "其他光束武器",
     close_defense: "近防武器",
@@ -770,6 +773,12 @@ const WeaponClasses = (() => {
     ["cannon", "beam_cannon", "mortar"].includes(classify(weapon)) &&
     weapon.rangeRole !== "ship_anti_air";
   function classify(weapon, id = "") {
+    const native = weapon.sourceName || weapon.sourceWeapon || id || weapon.id || "";
+    if (!/Sniper|_Aim(?:_|$)/i.test(native) && weapon.special?.type !== "snipe") {
+      if (/BeamSmartGun/i.test(native)) return "beam_smart_gun";
+      if (/ShotGun|Shotgun/i.test(native) && !/Bazooka|(?:^|_)BZ(?:_|$)/i.test(native))
+        return weapon.type === "beam" || /BeamShot/i.test(native) ? "beam_shotgun" : "shell_shotgun";
+    }
     if (weapon.weaponClass !== undefined) {
       if (!valid(weapon.weaponClass))
         throw Error("Invalid weapon classification: " + weapon.weaponClass);
@@ -3062,6 +3071,7 @@ const UnitHangars = {
       setAIEntry,
       cargo,
       used,
+      canLoad,
       canEmbark,
       canTransfer,
       transfer,
@@ -3156,6 +3166,7 @@ const PilotSystem = (() => {
     );
   }
   function allowed(value, restrictions = {}) {
+    if (value?.hired) return restrictions.pilotPolicy !== "none";
     if (!value?.custom && !value?.aceId) return true;
     const ace = !!aceProfile(value),
       policy = restrictions.pilotPolicy || "allow";
@@ -3402,6 +3413,7 @@ const PilotSystem = (() => {
     return normalizeDialogue(value.dialogue);
   }
   function custom(value) {
+    if (value?.hired) return hired(value);
     if (value?.aceId || value?.ace) return ace(value);
     if (!value || typeof value !== "object" || !/^custom-[a-zA-Z0-9-]{1,80}$/.test(value.id || ""))
       throw Error("PMC驾驶员无效");
@@ -3666,6 +3678,7 @@ const PilotSystem = (() => {
     defaultPortrait(value?.faction)?.icon;
   const cost = (value) => {
     if (!value) return 0;
+    if (value.hired) return crewGrades[hired(value).grade].cost;
     const pilot = custom(value);
     return pilot.ace && pilot.needsRecruitment
       ? 0
@@ -3678,10 +3691,70 @@ const PilotSystem = (() => {
       model?.unitTags?.includes("CmdUnit") || model?.sourceStats?.nativeTags?.includes("CmdUnit")
     );
   }
-  function defaultName(model) {
+  const factionNames = { EFSF: "联邦", ZEON: "吉翁", AEUG: "奥古", TITANS: "提坦斯",
+    NEO_ZEON: "新吉翁", EFSF_0093: "联邦", NEO_ZEON_0093: "新吉翁",
+    OMNI: "地球联合军", ZAFT: "扎夫特军", PMC: "PMC" };
+  const crewGrades = Object.freeze({
+    veteran: { name: "老兵", multiplier: 1.2, cost: 50, price: 250 },
+    elite: { name: "精英", multiplier: 1.4, cost: 150, price: 750 },
+    ace: { name: "ACE", multiplier: 1.6, cost: 0, selectable: false },
+    enhanced: { name: "强化人", multiplier: 1.5, cost: 250, price: 1250 },
+  });
+  function normalizeCrewStock(value = {}) {
+    if (!value || typeof value !== "object" || Array.isArray(value)) throw Error("驾驶员库存无效");
+    const result = {};
+    for (const grade of ["veteran", "elite", "enhanced"]) {
+      const count = value[grade] ?? 0;
+      if (!Number.isSafeInteger(count) || count < 0 || count > 1000000) throw Error("驾驶员库存无效");
+      result[grade] = count;
+    }
+    return result;
+  }
+  function hired(value) {
+    const grade = Object.hasOwn(crewGrades, value.grade) ? crewGrades[value.grade] : null;
+    if (!grade || grade.selectable === false || !/^crew-[a-zA-Z0-9-]{1,80}$/.test(value.id || "") ||
+        !Object.hasOwn(factionNames, value.faction) ||
+        (value.commander !== undefined && typeof value.commander !== "boolean") ||
+        (value.grade === "enhanced" && value.commander)) throw Error("招募驾驶员无效");
+    const model = { faction: value.faction, unitTags: value.commander ? ["CmdUnit"] : [] };
+    return { id: value.id, hired: true, custom: false, grade: value.grade, faction: value.faction,
+      commander: !!value.commander, level: 0,
+      ...rollGrade(value.grade, hash(value.id), model) };
+  }
+  function rollGrade(gradeId, seed, model) {
+    const grade = Object.hasOwn(crewGrades, gradeId) ? crewGrades[gradeId] : null;
+    if (!grade || (gradeId === "enhanced" && commandUnit(model))) throw Error("驾驶员类型无效");
+    const pilot = roll(null, seed, 0, 0, model);
+    for (const key of Object.keys(labels))
+      if (key !== "awakening" || gradeId === "ace") pilot.stats[key] = Math.round(pilot.stats[key] * grade.multiplier);
+    if (gradeId === "enhanced") pilot.stats.awakening = 75 + hash(seed + ":awakening") % 36;
+    return { name: defaultName(model, gradeId), stats: pilot.stats };
+  }
+  function normalizeCrewFormation(entries, stock, modelFor = null) {
+    const available = normalizeCrewStock(stock);
+    const assigned = new Set();
+    return entries.map(entry => {
+      if (!entry.customPilot?.hired) return entry;
+      const copy = { ...entry };
+      try {
+        const pilot = hired(entry.customPilot);
+        if (assigned.has(pilot.id)) throw Error("驾驶员重复配属");
+        const model = modelFor?.(entry);
+        if (model && (pilot.faction !== model.faction || pilot.commander !== commandUnit(model)))
+          throw Error("驾驶员与单位不匹配");
+        if (!(available[pilot.grade] > 0)) throw Error("驾驶员库存不足");
+        available[pilot.grade]--;
+        assigned.add(pilot.id);
+        copy.customPilot = pilot;
+      } catch { delete copy.customPilot; }
+      return copy;
+    });
+  }
+  function defaultName(model, grade = null) {
     return (
-      (model?.faction === "EFSF" ? "联邦" : model?.faction === "ZEON" ? "吉翁" : "") +
-      (commandUnit(model) ? "默认指挥官" : "默认驾驶员")
+      (factionNames[model?.faction] || "") +
+      (grade ? crewGrades[grade].name : "一般") +
+      (commandUnit(model) ? "指挥官" : "驾驶员")
     );
   }
   function validate(id, model) {
@@ -3700,6 +3773,11 @@ const PilotSystem = (() => {
     return result >>> 0;
   }
   function roll(id, seed, seat = 0, index = 0, model = null) {
+    // Script-only generic grades are never accepted by formation validation.
+    if (typeof id === "string" && id.startsWith("generic:")) {
+      const grade = id.slice("generic:".length);
+      return { id: null, genericGrade: grade, ...rollGrade(grade, seed ^ hash(seat + ":" + index), model) };
+    }
     const named = profile(id);
     const command = commandUnit(model);
     let state =
@@ -3729,7 +3807,7 @@ const PilotSystem = (() => {
   const legacyPilots = new WeakMap();
   const neutralPilot = {
     id: null,
-    name: "默认驾驶员",
+    name: "一般驾驶员",
     stats: Object.fromEntries(Object.keys(labels).map((key) => [key, 100])),
   };
   const buffPilotCache = new WeakMap();
@@ -3819,6 +3897,11 @@ const PilotSystem = (() => {
     recruitmentPrice,
     commandUnit,
     defaultName,
+    crewGrades,
+    normalizeCrewStock,
+    normalizeCrewFormation,
+    hired,
+    rollGrade,
     validate,
     hash,
     roll,
@@ -3862,6 +3945,7 @@ if (typeof module !== "undefined") module.exports = PilotSystem;
 /* Permanent permits and counted chassis; equipment selection is free. */
 "use strict";
 const Economy = (() => {
+  const pilots = typeof PilotSystem !== "undefined" ? PilotSystem : require("./pilots.js");
   const saveCodec = typeof SaveCodec !== "undefined" ? SaveCodec : require("./save-codec.js");
   const key = "projectgreed.economy.v1";
   const catalog =
@@ -3907,6 +3991,7 @@ const Economy = (() => {
       money: starter.money,
       supplies: starter.supplies,
       licenses: defaultLicenses(),
+      crewStock: pilots.normalizeCrewStock(),
     };
   }
   function validate(value) {
@@ -3949,6 +4034,7 @@ const Economy = (() => {
       schemaVersion: 3,
       licenses,
       ...stock,
+      crewStock: pilots.normalizeCrewStock(value.crewStock),
       ...(Object.keys(claimed).length ? { claimed } : {}),
     };
   }
@@ -4053,6 +4139,10 @@ const Economy = (() => {
     const next = snapshot();
     next.money += award.money;
     next.supplies += award.supplies;
+    if (award.crewLost) {
+      const lost = pilots.normalizeCrewStock(award.crewLost);
+      for (const grade of Object.keys(lost)) next.crewStock[grade] = Math.max(0, next.crewStock[grade] - lost[grade]);
+    }
     // New matches deduct only actual losses at settlement. Keep legacy deployment/return
     // receipts readable for already-running older servers; all changes share one receipt.
     for (const [field, direction] of [
@@ -4135,6 +4225,15 @@ const Economy = (() => {
   }
   function quantity(unitId) {
     return state.inventory[catalog.unitFamilies?.[unitId]?.unitId || unitId] || 0;
+  }
+  function recruitCrew(grade) {
+    const offer = pilots.crewGrades[grade];
+    if (!offer?.price || !affordable({ money: offer.price })) return false;
+    const next = snapshot();
+    if (next.crewStock[grade] >= 1000000) return false;
+    next.money -= offer.price;
+    next.crewStock[grade]++;
+    return commit(next);
   }
   function unitOffer(unitId, production = catalog) {
     const permit = production.licenseOffers[unitId];
@@ -4255,7 +4354,7 @@ const Economy = (() => {
     const base = catalog.licenseOffers[unitId];
     const production = productionOffer(unitId, defaultKit(unitId));
     return base && production
-      ? { ...base, money: production.money * 3, supplies: production.supplies * 3 }
+      ? { ...base, money: production.money, supplies: production.supplies * 3 }
       : null;
   }
   function grantPurchasedLicense(next, unitId) {
@@ -4324,6 +4423,7 @@ const Economy = (() => {
     key,
     catalog,
     normalizeStock,
+    recruitCrew,
     stockPlan,
     quantity,
     unitOffer,
@@ -5754,7 +5854,7 @@ const BattlefieldMode = (() => {
           unit.facility.rebuildRound = game.round + rebuildDelay;
         if (unit.facility?.type !== "base")
           state.losses[unit.team] +=
-            G.modelOf(unit).cost + (unit.pilot?.custom ? G.pilots.cost(unit.pilot) : 0);
+            G.modelOf(unit).cost + ((unit.pilot?.custom || unit.pilot?.hired) ? G.pilots.cost(unit.pilot) : 0);
       }
     }
     for (const reserve of state.reserves || []) {
@@ -7408,6 +7508,7 @@ const Tactics = (() => {
   const ownerOf = (unit) => unit.ownerSeat ?? unit.team;
   const controllerOf = (game, unit) => game.campaignControllers?.[ownerOf(unit)] ?? ownerOf(unit);
   function canControlUnit(settings, members, seat, unit) {
+    if (unit?.missionEscort) return false;
     if (!unit || !Number.isInteger(seat) || seat < 0 || !members?.some((m) => m.seat === seat))
       return false;
     if (ownerOf(unit) === seat) return true;
@@ -7530,7 +7631,11 @@ const Tactics = (() => {
         model = models[models[id]?.canonicalModel || id];
       if (!model || (model.formOnly && !allowExistingForms && !ordinaryFormIds.has(model.prefabId)))
         throw Error("编组包含不可用单位或武器套件");
-      const customPilot = entry.customPilot ? pilots.custom(entry.customPilot) : null;
+      let customPilot = null;
+      try { customPilot = entry.customPilot ? pilots.custom(entry.customPilot) : null; }
+      catch (error) { if (!entry.customPilot?.hired) throw error; }
+      if (customPilot?.hired && (customPilot.faction !== model.faction ||
+          customPilot.commander !== pilots.commandUnit(model))) customPilot = null;
       if (customPilot?.needsRecruitment) throw Error("该ACE需要重新招募后才能配属");
       if (!customPilot && pilots.aceProfile(entry.pilotId)) throw Error("请先招募并配属ACE驾驶员");
       cost += formationModel({ ...entry, customPilot }).cost + pilots.cost(customPilot);
@@ -8513,7 +8618,7 @@ const Tactics = (() => {
     const remoteMultiplier =
       weapon.remote && weapon.remote.kind !== "incom"
         ? awakening < 100
-          ? Math.max(0, awakening / 100)
+          ? Math.max(0.75, awakening / 100)
           : 1 + (awakening - 100) * weapon.remote.awakeningScale
         : 1;
     const previousRemote = weapon.remoteDamageMultiplier ?? 1;
@@ -9024,7 +9129,7 @@ const Tactics = (() => {
   }
   function formDeploymentSquads(g, seat) {
     const controlled = g.units.filter((u) =>
-      onMap(u) && !u.embarked && !u.deploymentStaged &&
+      onMap(u) && !u.missionActor && !u.facility && !u.embarked && !u.deploymentStaged &&
       (g.campaignBattlefield
         ? u.campaignDeploying && campaignBattlefield.deploymentSeat(g, u) === seat
         : ownerOf(u) === seat));
@@ -10753,7 +10858,7 @@ const Tactics = (() => {
           Math.min(
             100,
             (w.attack.strikes.length === 1 && w.attack.strikes[0].accuracy !== undefined
-              ? (w.attack.strikes[0].accuracy * w.hit) / (w.sourceHit || w.hit || 1)
+              ? w.attack.strikes[0].accuracy
               : w.hit) *
               (attacker.accuracy / (attacker.pilotModifiers?.accuracy ?? 1) / 100) *
               sizeModifier.accuracy *

@@ -22,6 +22,7 @@ const quick = [
 test("ten new maps use editable connected shared deployment and correct biome/mode art", () => {
   for (const id of [...battlefield, ...quick]) {
     const map = G.getMap(id);
+    if (quick.includes(id)) assert(map.name.endsWith(" · 3v3"));
     D.validate(map.tileMap);
     assert.deepEqual(map.supportedModes, [battlefield.includes(id) ? "battlefield" : "quick"]);
     assert(map.tileMap.layers.length >= 4);
@@ -168,54 +169,9 @@ function fixture(t, map) {
   return { room, engine, act, dialogue };
 }
 const missions = Object.values(G.catalog.maps).filter((m) => m.mission);
-test("0079 has six playable missions per side; new scenarios carry no inventory or currency reward", () => {
-  assert.equal(missions.length, 12);
-  for (const f of ["EFSF", "ZEON"])
-    assert.equal(missions.filter((m) => m.mission.scenarioFaction === f).length, 6);
-  for (const map of missions) {
-    M.validate(map.mission, map, G);
-    if (map.id !== "mission_white_base") assert.equal(map.mission.rewards, undefined);
-  }
-  assert.equal(G.getMap("mission_white_base").name, "[0079][EFSF]孔斯空域的遭遇");
+test("the space encounter and ground escort missions remain selectable", () => {
+  assert.deepEqual(missions.map(m=>m.id).sort(), ["mission_no_fool", "mission_white_base"]);
+  assert.equal(missions[0].name, "[0079][EFSF]相逢在宇宙");
+  for (const map of missions) M.validate(map.mission, map, G);
+  assert(G.getMap("battlefield_frontline").name.startsWith("雇佣兵战争 · "));
 });
-for (const map of missions.filter((m) => m.id !== "mission_white_base"))
-  test("mission lifecycle: " + map.id, (t) => {
-    const { room, engine, dialogue } = fixture(t, map);
-    assert.equal(room.phase, "idle");
-    assert(room.game.units.some((u) => u.missionActor === "anchor" && G.ownerOf(u) === 0));
-    room.game.round = 3;
-    engine.broadcast(room);
-    dialogue();
-    assert(room.game.units.some((u) => u.missionActor === "reinforcement"));
-    const cinematic = room.game.mission.cinematic;
-    if (cinematic) {
-      assert.equal(cinematic.hits.length, 2);
-      assert(
-        room.game.units
-          .filter((u) => ["enemy-0", "enemy-1"].includes(u.missionActor))
-          .every((u) => u.hp === 0),
-      );
-      const serial = cinematic.id;
-      engine.broadcast(room);
-      assert.equal(room.game.mission.cinematic.id, serial);
-    }
-    if (map.mission.victory.type === "survive") room.game.round = map.mission.victory.round;
-    else if (map.mission.victory.type === "defeat_actor")
-      room.game.units.find((u) => u.missionActor === "target").hp = 0;
-    else
-      for (let i = 0; i < 4 && room.game.winner === null; i++) {
-        room.game.units.filter((u) => u.team === 1).forEach((u) => (u.hp = 0));
-        engine.broadcast(room);
-        dialogue();
-      }
-    engine.broadcast(room);
-    assert.equal(room.game.mission.error, null);
-    assert.equal(room.game.winner, 0);
-  });
-for (const id of ["mission_efsf_side7", "mission_zeon_solomon"])
-  test("protected actor loss fails " + id, (t) => {
-    const { room, engine } = fixture(t, G.getMap(id));
-    room.game.units.find((u) => u.missionActor === "anchor").hp = 0;
-    engine.broadcast(room);
-    assert.equal(room.game.winner, 1);
-  });

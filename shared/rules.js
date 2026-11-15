@@ -54,6 +54,7 @@ const Tactics = (() => {
   const ownerOf = (unit) => unit.ownerSeat ?? unit.team;
   const controllerOf = (game, unit) => game.campaignControllers?.[ownerOf(unit)] ?? ownerOf(unit);
   function canControlUnit(settings, members, seat, unit) {
+    if (unit?.missionEscort) return false;
     if (!unit || !Number.isInteger(seat) || seat < 0 || !members?.some((m) => m.seat === seat))
       return false;
     if (ownerOf(unit) === seat) return true;
@@ -176,7 +177,11 @@ const Tactics = (() => {
         model = models[models[id]?.canonicalModel || id];
       if (!model || (model.formOnly && !allowExistingForms && !ordinaryFormIds.has(model.prefabId)))
         throw Error("编组包含不可用单位或武器套件");
-      const customPilot = entry.customPilot ? pilots.custom(entry.customPilot) : null;
+      let customPilot = null;
+      try { customPilot = entry.customPilot ? pilots.custom(entry.customPilot) : null; }
+      catch (error) { if (!entry.customPilot?.hired) throw error; }
+      if (customPilot?.hired && (customPilot.faction !== model.faction ||
+          customPilot.commander !== pilots.commandUnit(model))) customPilot = null;
       if (customPilot?.needsRecruitment) throw Error("该ACE需要重新招募后才能配属");
       if (!customPilot && pilots.aceProfile(entry.pilotId)) throw Error("请先招募并配属ACE驾驶员");
       cost += formationModel({ ...entry, customPilot }).cost + pilots.cost(customPilot);
@@ -1159,7 +1164,7 @@ const Tactics = (() => {
     const remoteMultiplier =
       weapon.remote && weapon.remote.kind !== "incom"
         ? awakening < 100
-          ? Math.max(0, awakening / 100)
+          ? Math.max(0.75, awakening / 100)
           : 1 + (awakening - 100) * weapon.remote.awakeningScale
         : 1;
     const previousRemote = weapon.remoteDamageMultiplier ?? 1;
@@ -1670,7 +1675,7 @@ const Tactics = (() => {
   }
   function formDeploymentSquads(g, seat) {
     const controlled = g.units.filter((u) =>
-      onMap(u) && !u.embarked && !u.deploymentStaged &&
+      onMap(u) && !u.missionActor && !u.facility && !u.embarked && !u.deploymentStaged &&
       (g.campaignBattlefield
         ? u.campaignDeploying && campaignBattlefield.deploymentSeat(g, u) === seat
         : ownerOf(u) === seat));
@@ -3399,7 +3404,7 @@ const Tactics = (() => {
           Math.min(
             100,
             (w.attack.strikes.length === 1 && w.attack.strikes[0].accuracy !== undefined
-              ? (w.attack.strikes[0].accuracy * w.hit) / (w.sourceHit || w.hit || 1)
+              ? w.attack.strikes[0].accuracy
               : w.hit) *
               (attacker.accuracy / (attacker.pilotModifiers?.accuracy ?? 1) / 100) *
               sizeModifier.accuracy *

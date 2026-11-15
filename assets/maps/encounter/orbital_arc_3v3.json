@@ -1,6 +1,6 @@
 {
   "id": "orbital_arc_3v3",
-  "name": "轨道残环",
+  "name": "轨道残环 · 3v3",
   "description": "共享部署区，多个交战通道及侧翼掩护。",
   "width": 48,
   "height": 34,
@@ -3523,7 +3523,7 @@
     "format": "ProjectGreedTileMap",
     "version": 1,
     "id": "orbital_arc_3v3",
-    "name": "轨道残环",
+    "name": "轨道残环 · 3v3",
     "description": "共享部署区，多个交战通道及侧翼掩护。",
     "width": 48,
     "height": 34,

@@ -314,6 +314,39 @@
       "baseHit": 65,
       "minRange": -1,
       "maxRange": -1
+    },
+    "beam_smart_gun": {
+      "damage": 1,
+      "accuracy": 1,
+      "en": 1,
+      "range": 1,
+      "rangeBonus": 0,
+      "baseEN": -1,
+      "baseHit": -1,
+      "minRange": -1,
+      "maxRange": -1
+    },
+    "shell_shotgun": {
+      "damage": 1,
+      "accuracy": 1,
+      "en": 1,
+      "range": 1,
+      "rangeBonus": 0,
+      "baseEN": -1,
+      "baseHit": -1,
+      "minRange": -1,
+      "maxRange": -1
+    },
+    "beam_shotgun": {
+      "damage": 1,
+      "accuracy": 1,
+      "en": 1,
+      "range": 1,
+      "rangeBonus": 0,
+      "baseEN": -1,
+      "baseHit": -1,
+      "minRange": -1,
+      "maxRange": -1
     }
   }
 }

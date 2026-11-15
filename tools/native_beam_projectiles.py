@@ -84,7 +84,7 @@ def apply(prefab, weapon, data=None):
                 tag = data.get('hiddenAction_' + slot + '_SetColor', {}).get('sendMessageWithTags', '')
                 color = tag.removeprefix('SetColor_') or color
                 break
-    if not helper and prefab['id'] == 'MSN_04' and weapon.get('sourceName') == 'NZN_MSN_04_HighBeamCannon':
+    if prefab['id'] == 'MSN_04' and weapon.get('sourceName') == 'NZN_MSN_04_HighBeamCannon':
         # User-approved interim projectile: Re-GZ Custom's HighBeamCannon, in green.
         helper, color = 'Projectile_HighBeamCannon_Green_Effect', 'Green'
         reference = MOD / 'GW_BattleUniverse_DLC_0093/Units/BattleUnits/Weapon/Beam/EF_RGZ_91B_HighBeamCannon.gw'
@@ -121,6 +121,17 @@ def apply(prefab, weapon, data=None):
     length = max(s['forward'] + s['width'] * s['scaleX'] / 2 for s in segments)
     sequence = dict(source=path.relative_to(MOD).as_posix(), color=color, length=length,
         segments=segments, clock='flight')
+    if 'BeamSmartGun' in weapon.get('sourceName', ''):
+        # The visual helper has its own ProjectileSpeed; never use the damage carrier's speed.
+        visual = payload(raw.split(helper, 1)[1].split(')', 1)[0])
+        helper_data = load(path)
+        interval = float(helper_data['core']['autoTriggerCooldownTime'].removesuffix('s'))
+        update = helper_data['hiddenAction_UpdateFrame']['setUnitMemory']
+        step = float(re.search(r'highBeamCannonFrame\s*\+\s*([\d.]+)', update).group(1))
+        visual_speed = visual.get('ProjectileSpeed', 0.75)
+        sequence['duration'] = round(max(s['frames'] for s in segments) * interval / (step * visual_speed), 6)
+        sequence['clock'] = 'native'
+
     before = copy.deepcopy((weapon['projectile'], weapon.get('nativePayload')))
     weapon['projectile']['sequence'] = sequence
     if carrier and carrier.get('ProjectileSpeed', 0) > 0:

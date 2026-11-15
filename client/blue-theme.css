@@ -2444,6 +2444,9 @@ body #formationScreen .pilot-list-skills .pilot-list-skill > img { width:20px; h
 .pilot-record-cell strong { font-size:11px; }
 .campaign-pilot-card:not(:has(.campaign-pilot-details)) { height:152px; box-sizing:border-box; padding:8px; }
 .formation-pilot-card { height:168px; min-height:168px; box-sizing:border-box; padding:8px; }
+.crew-actions { display:flex; flex-direction:column; gap:6px; }
+.crew-recruitment { display:flex; flex-wrap:wrap; gap:6px; padding:4px 0; flex-shrink:0; }
+.crew-recruitment button { min-width:0; font-size:12px; }
 #aceRecruitList > .ace-recruit-candidate { height:144px; min-height:144px; box-sizing:border-box; padding:8px; }
 @media(max-width:1100px) {
   body.menu-shell-active #formationScreen #formationUnits > .formation-row {

@@ -1841,6 +1841,21 @@ function drawMapFrame(now) {
     lastY = Math.min(Rules.mapHeight(game), Math.ceil((h - oy) / tile));
   drawCachedMapTerrain(ctx, w, h, dpr, tile, ox, oy, immersive, deploymentArea);
   TileMapRenderer.draw(ctx, Rules.getMap(game.mapId), "below", mapGeo, w, h);
+  const escortGoal = game.mission && Rules.getMap(game.mapId).mission?.victory;
+  if (escortGoal?.type === "escort") {
+    ctx.save();
+    ctx.fillStyle = "#72d69a22";
+    ctx.strokeStyle = "#72e8a4";
+    ctx.lineWidth = 2;
+    ctx.fillRect(ox+escortGoal.x*tile,oy+escortGoal.y*tile,escortGoal.width*tile,escortGoal.height*tile);
+    ctx.setLineDash([8,4]);
+    ctx.strokeRect(ox+escortGoal.x*tile,oy+escortGoal.y*tile,escortGoal.width*tile,escortGoal.height*tile);
+    ctx.fillStyle = "#b9ffd6";
+    ctx.font = "bold 13px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(I18n.text("护送目标区"),ox+(escortGoal.x+escortGoal.width/2)*tile,oy+escortGoal.y*tile-5);
+    ctx.restore();
+  }
   if (Rules.getMap(game.mapId).tileMap && !immersive) {
     // Authored art can be opaque, so tactical guides belong above the image layers.
     ctx.strokeStyle = "#49616b66";

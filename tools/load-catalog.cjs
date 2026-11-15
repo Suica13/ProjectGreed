@@ -1092,7 +1092,8 @@ function loadCatalog({
             }
             if (weapon.projectile.sequence) {
               const sequence = weapon.projectile.sequence;
-              if (sequence.clock !== "flight" || !Number.isFinite(sequence.length) || sequence.length <= 0 ||
+              if (!["flight", "native"].includes(sequence.clock) ||
+                  (sequence.clock === "native" && (!Number.isFinite(sequence.duration) || sequence.duration <= 0 || sequence.duration > 10)) || !Number.isFinite(sequence.length) || sequence.length <= 0 ||
                   !Array.isArray(sequence.segments) || sequence.segments.length < 1 || sequence.segments.length > 3)
                 throw Error("Invalid beam sequence: " + key);
               for (const segment of sequence.segments) {

@@ -263,6 +263,7 @@ const Net = (() => {
     };
     if (profileActions.has(intent.action) && n.snapshot?.settings.mode !== "campaign") {
       message.licenses = Economy.snapshot().licenses;
+      message.crewStock = Economy.snapshot().crewStock;
       Object.assign(message, Economy.normalizeStock(Economy.snapshot()));
       message.technologyPoints = Development.pointSnapshot();
       if (!n.snapshot?.started) message.researched = Development.researchSnapshot();
@@ -589,6 +590,7 @@ const Net = (() => {
           technologyPoints: Development.pointSnapshot(),
           technologyLimitFaction: DevelopmentUI.selectedFaction(),
           licenses: Economy.snapshot().licenses,
+          crewStock: Economy.snapshot().crewStock,
           ...Economy.normalizeStock(Economy.snapshot()),
           roomMode: mode === "create" ? byId("newRoomMode").value : undefined,
           mode,
@@ -720,6 +722,7 @@ const Net = (() => {
       return;
     }
     if (s.started && s.phase === "assembly") {
+      n.assemblyPending = true;
       phase = "assembly";
       battleView = null;
       if (
@@ -781,7 +784,8 @@ const Net = (() => {
       update();
       return;
     }
-    if (!wasStarted || pageView === "menu" || byId("finalAssemblyPanel").hidden === false) {
+    if (!wasStarted || n.assemblyPending || pageView === "menu" || byId("finalAssemblyPanel").hidden === false) {
+      n.assemblyPending = false;
       byId("finalAssemblyPanel").hidden = true;
       byId("roomLobbyContent").hidden = false;
       byId("roomActions").hidden = false;

@@ -6,7 +6,7 @@ window.MissionEditor = (() => {
   function references(value, id) {
     if (!value || typeof value !== "object") return false;
     return Object.entries(value).some(([key, item]) =>
-      key === "actor" ? item === id : key === "actors" || key === "protect"
+      key === "actor" || key === "carrier" ? item === id : key === "actors" || key === "protect"
         ? Array.isArray(item) && item.includes(id) : references(item, id));
   }
   function renameActor(id, next) {
@@ -18,7 +18,7 @@ window.MissionEditor = (() => {
     const replace = value => {
       if (!value || typeof value !== "object") return;
       for (const [key, item] of Object.entries(value)) {
-        if (key === "actor" && item === id) value[key] = next;
+        if ((key === "actor" || key === "carrier") && item === id) value[key] = next;
         else if (["actors", "protect"].includes(key) && Array.isArray(item) && item.every(v => typeof v === "string"))
           value[key] = item.map(v => v === id ? next : v);
         else replace(item);
@@ -253,8 +253,16 @@ window.MissionEditor = (() => {
         ["all_enemies", "消灭全部敌人"],
         ["survive", "坚持指定回合"],
         ["defeat_actor", "击破指定单位"],
+        ["escort", "护送目标并坚守"],
       ],
-      (v) => change((m) => (m.victory = { type: v, round: 10, actor: m.actors[0]?.id })),
+      (v) => change((m) => {
+        const actor=m.actors.find(a=>a.team===0 && a.initial && !a.carrier);
+        m.victory = v === "escort"
+          ? {type:v,actor:actor?.id,x:actor?.x || 0,y:actor?.y || 0,width:3,height:3,
+            holdRounds:2,route:[{x:actor?.x || 0,y:actor?.y || 0}],eliminateAll:false}
+          : {type:v,round:10,actor:m.actors[0]?.id};
+        if(v === "escort" && actor && !m.protect.includes(actor.id))m.protect.push(actor.id);
+      }),
     );
     if (m.victory.type === "survive")
       input(
@@ -268,6 +276,23 @@ window.MissionEditor = (() => {
       select(basics, "目标单位", m.victory.actor, actors(m), (v) =>
         change((m) => (m.victory.actor = v)),
       );
+    if (m.victory.type === "escort") {
+      select(basics,"护送单位",m.victory.actor,actors(m).filter(([id])=>
+        m.actors.some(a=>a.id===id && a.team===0 && a.initial && !a.carrier)),v=>change(m=>{
+          m.victory.actor=v;if(!m.protect.includes(v))m.protect.push(v);
+        }));
+      for(const [key,label] of [["x","目标区X"],["y","目标区Y"],["width","目标区宽"],["height","目标区高"],["holdRounds","抵达后坚守回合"]])
+        input(basics,label,m.victory[key],v=>change(m=>m.victory[key]=v),"number");
+      input(basics,"允许全歼所有波次敌军提前胜利",m.victory.eliminateAll,v=>change(m=>m.victory.eliminateAll=v),"checkbox");
+      const route=node("details");route.append(node("summary","每回合护送路径（每个坐标为一回合终点）"));
+      m.victory.route.forEach((p,i)=>{
+        const row=node("div");row.append(node("strong","第"+(i+1)+"段"));
+        for(const key of ["x","y"])input(row,key.toUpperCase(),p[key],v=>change(m=>m.victory.route[i][key]=v),"number");
+        row.append(button("删除路径点",()=>change(m=>m.victory.route.splice(i,1))));route.append(row);
+      });
+      route.append(button("＋使用地图选区添加路径点",()=>{const r=MapEditor.selection;
+        if(r)change(m=>m.victory.route.push({x:r.x,y:r.y}));}));basics.append(route);
+    }
     basics.append(node("p", "失败条件：玩家PMC单位全灭，或任意受保护单位被击坠。"));
     const roster = node("details");
     roster.dataset.missionDetail = "actors";
@@ -321,6 +346,8 @@ window.MissionEditor = (() => {
         (v) => edit("team", Number(v)),
       );
       input(card, "分组标记", a.group, (v) => edit("group", v));
+      select(card,"预先搭载于",a.carrier || "",[["","无"],...actors(m).filter(([id])=>
+        id!==a.id && m.actors.some(b=>b.id===id && b.team===a.team && b.initial===a.initial))],v=>edit("carrier",v || undefined));
       input(card, "X", a.x, (v) => edit("x", v), "number");
       input(card, "Y", a.y, (v) => edit("y", v), "number");
       select(

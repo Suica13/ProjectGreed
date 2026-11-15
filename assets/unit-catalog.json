@@ -635,7 +635,6 @@
     "maps/battlefield/twin_ridges.json",
     "maps/battlefield/ruined_basin.json",
     "maps/contracts/battlefield_sweep.json",
-    "maps/missions/white_base.json",
     "maps/battlefield/battlefield_asteroid_corridor.json",
     "maps/battlefield/battlefield_ship_graveyard.json",
     "maps/battlefield/battlefield_lunar_orbit.json",
@@ -646,17 +645,8 @@
     "maps/encounter/desert_relay_3v3.json",
     "maps/encounter/urban_floodplain_3v3.json",
     "maps/encounter/orbital_arc_3v3.json",
-    "maps/missions/efsf_side7.json",
-    "maps/missions/efsf_reentry.json",
-    "maps/missions/efsf_garma.json",
-    "maps/missions/efsf_ral.json",
-    "maps/missions/efsf_jaburo.json",
-    "maps/missions/zeon_side7.json",
-    "maps/missions/zeon_reentry.json",
-    "maps/missions/zeon_garma.json",
-    "maps/missions/zeon_ral.json",
-    "maps/missions/zeon_jaburo.json",
-    "maps/missions/zeon_solomon.json"
+    "maps/missions/white_base.json",
+    "maps/missions/no_fool.json"
   ],
   "defaultMap": "frontier_1v1",
   "scenarioIndex": "maps/strategy/index.json"

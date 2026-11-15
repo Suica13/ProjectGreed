@@ -322,7 +322,7 @@ const MatchRecords = (() => {
     for (const u of g.units) {
       if (u.campaignDurability !== undefined && ![0.75, 1, 1.25].includes(u.campaignDurability))
         throw Error("战役耐久倍率无效");
-      if (u.pilot?.custom) u.pilot = G.pilots.custom(u.pilot);
+      if (u.pilot?.custom || u.pilot?.hired) u.pilot = G.pilots.custom(u.pilot);
       if (
         typeof u.id !== "string" ||
         ids.has(u.id) ||

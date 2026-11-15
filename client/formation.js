@@ -88,11 +88,12 @@ const Formation = (() => {
     }
   }
   function hydratePilots(entries) {
-    return entries.map((entry) => {
+    return PilotSystem.normalizeCrewFormation(entries, Economy.snapshot().crewStock, Rules.formationModel).map((entry) => {
       const copy = { ...entry };
       // Named ACEs remain in the catalog for future technology unlocks.
       delete copy.pilotId;
       if (copy.customPilot) {
+        if (copy.customPilot.hired) return copy;
         const saved = pilotStore.pilots.find((p) => p.id === copy.customPilot.id);
         if (saved && !saved.needsRecruitment && PilotSystem.canAssign(saved, group))
           copy.customPilot = structuredClone(saved);
@@ -932,10 +933,12 @@ const Formation = (() => {
     dialog.showModal();
   }
   function pilotButtonText(button, prefix, entry, model) {
-    const name = entry.customPilot?.name || PilotSystem.defaultName(model);
+    const name = entry.customPilot?.hired ? I18n.pilotName(entry.customPilot) :
+      entry.customPilot?.name || PilotSystem.defaultName(model);
     button.classList.add("formation-pilot-button");
     button.textContent = prefix + " · " + name;
-    if (entry.customPilot) button.setAttribute("data-i18n-ignore", "");
+    if (entry.customPilot && !entry.customPilot.hired) button.setAttribute("data-i18n-ignore", "");
+    else button.removeAttribute("data-i18n-ignore");
     button.title = prefix + " · " + name;
   }
   function renderDetail() {
@@ -1677,7 +1680,8 @@ const Formation = (() => {
         !p.needsRecruitment &&
         PilotSystem.canAssign(p, group) &&
         PilotSystem.allowed(p, restrictions()),
-    );
+    ).sort((a, b) => Number(!!a.ace) - Number(!!b.ace));
+    const personalPilots = document.createDocumentFragment();
     for (const profile of [null, ...available]) {
       const id = profile?.id || null,
         selected = (entry.customPilot?.id || null) === id,
@@ -1686,6 +1690,7 @@ const Formation = (() => {
         details = element("div"),
         choose = element("button", "", selected ? "已配属" : occupied ? "已配属其他单位" : "配属");
       card.dataset.selected = String(selected);
+      card.dataset.pilotKind = profile ? (profile.ace ? "ace" : "custom") : "general";
       const portrait = profile
         ? element("img")
         : element("span", "formation-pilot-default", "默认");
@@ -1736,8 +1741,53 @@ const Formation = (() => {
         closePilot();
       };
       card.append(portrait, details, choose);
+      if (profile) personalPilots.append(card);
+      else list.append(card);
+    }
+    for (const [grade, offer] of Object.entries(PilotSystem.crewGrades)) {
+      if (offer.selectable === false || (grade === "enhanced" && command)) continue;
+      const owned = Economy.snapshot().crewStock[grade],
+        occupied = draft.filter((other, i) => i !== index && other.customPilot?.hired && other.customPilot.grade === grade).length,
+        card = element("div", "formation-pilot-card"),
+        details = element("div"),
+        choose = element("button", "", entry.customPilot?.grade === grade ? "已配属" : "配属"),
+        recruit = element("button", "", "招募 · 资金 " + offer.price),
+        actions = element("div", "crew-actions");
+      card.dataset.pilotKind = "crew";
+      card.dataset.crewGrade = grade;
+      const ranges = command ? PilotSystem.catalog.commanderRanges : PilotSystem.catalog.defaultRanges;
+      const stats = Object.fromEntries(Object.entries(ranges).map(([key, range]) => {
+        const values = key === "awakening"
+          ? (grade === "enhanced" ? [75, 110] : range)
+          : range.map((value) => Math.round(value * offer.multiplier));
+        return [key, values[0] + "–" + values[1]];
+      }));
+      details.append(element("strong", "", PilotSystem.defaultName(model, grade)));
+      for (const keys of [
+        ["shooting", "melee", "defense", "speed"],
+        ["accuracy", "reaction", "leadership", "awakening"],
+      ]) details.append(element("small", "",
+        keys.map((key) => PilotSystem.labels[key] + " " + stats[key]).join(" · ")));
+      choose.disabled = owned <= occupied || entry.customPilot?.grade === grade ||
+        restrictions().pilotPolicy === "none";
+      choose.onclick = () => {
+        entry.customPilot = PilotSystem.hired({ id: "crew-" + crypto.randomUUID(), hired: true,
+          grade, faction: model.faction, commander: command });
+        delete entry.pilotId;
+        render();
+        if (detailIndex !== null) renderDetail();
+        closePilot();
+      };
+      recruit.disabled = !Economy.affordable({ money: offer.price });
+      recruit.onclick = () => {
+        try { if (Economy.recruitCrew(grade)) openPilot(index, fromPreload); }
+        catch (error) { note(error.message); }
+      };
+      actions.append(choose, recruit);
+      card.append(element("span", "formation-pilot-default", offer.name), details, actions);
       list.append(card);
     }
+    list.append(personalPilots);
     byId("formationUnitDetail").inert = !byId("formationUnitDetail").hidden;
     byId("formationMain").inert = true;
     byId("formationPilotPanel").hidden = false;
@@ -2705,6 +2755,8 @@ const Formation = (() => {
   });
   window.addEventListener("economy-changed", () => {
     catalogRevision++;
+    draft = hydratePilots(draft);
+    squads = squads.map(s => ({ ...s, units: hydratePilots(s.units) }));
     if (aceRecruit.open) renderAceRecruitment();
   });
   function pilotCostTag(pilot) {
@@ -2733,6 +2785,23 @@ const Formation = (() => {
   window.addEventListener("language-change", populatePilotFilters);
   function renderPilotRoster() {
     const list = byId("customPilotList");
+    let shop = byId("crewRecruitment");
+    if (!shop) {
+      shop = element("div", "crew-recruitment");
+      shop.id = "crewRecruitment";
+      list.before(shop);
+    }
+    shop.replaceChildren();
+    for (const [grade, offer] of Object.entries(PilotSystem.crewGrades)) {
+      if (offer.selectable === false) continue;
+      const button = element("button", "", `${offer.name} · 库存 ${Economy.snapshot().crewStock[grade]} · 招募 ${offer.price}资金`);
+      button.disabled = !Economy.affordable({ money: offer.price });
+      button.onclick = () => {
+        try { if (Economy.recruitCrew(grade)) renderPilotRoster(); }
+        catch (error) { note(error.message); }
+      };
+      shop.append(button);
+    }
     const scrollTop = list.scrollTop;
     list.replaceChildren();
     byId("formationPilotBudget").textContent =

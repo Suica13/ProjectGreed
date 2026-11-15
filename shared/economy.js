@@ -1,6 +1,7 @@
 /* Permanent permits and counted chassis; equipment selection is free. */
 "use strict";
 const Economy = (() => {
+  const pilots = typeof PilotSystem !== "undefined" ? PilotSystem : require("./pilots.js");
   const saveCodec = typeof SaveCodec !== "undefined" ? SaveCodec : require("./save-codec.js");
   const key = "projectgreed.economy.v1";
   const catalog =
@@ -46,6 +47,7 @@ const Economy = (() => {
       money: starter.money,
       supplies: starter.supplies,
       licenses: defaultLicenses(),
+      crewStock: pilots.normalizeCrewStock(),
     };
   }
   function validate(value) {
@@ -88,6 +90,7 @@ const Economy = (() => {
       schemaVersion: 3,
       licenses,
       ...stock,
+      crewStock: pilots.normalizeCrewStock(value.crewStock),
       ...(Object.keys(claimed).length ? { claimed } : {}),
     };
   }
@@ -192,6 +195,10 @@ const Economy = (() => {
     const next = snapshot();
     next.money += award.money;
     next.supplies += award.supplies;
+    if (award.crewLost) {
+      const lost = pilots.normalizeCrewStock(award.crewLost);
+      for (const grade of Object.keys(lost)) next.crewStock[grade] = Math.max(0, next.crewStock[grade] - lost[grade]);
+    }
     // New matches deduct only actual losses at settlement. Keep legacy deployment/return
     // receipts readable for already-running older servers; all changes share one receipt.
     for (const [field, direction] of [
@@ -274,6 +281,15 @@ const Economy = (() => {
   }
   function quantity(unitId) {
     return state.inventory[catalog.unitFamilies?.[unitId]?.unitId || unitId] || 0;
+  }
+  function recruitCrew(grade) {
+    const offer = pilots.crewGrades[grade];
+    if (!offer?.price || !affordable({ money: offer.price })) return false;
+    const next = snapshot();
+    if (next.crewStock[grade] >= 1000000) return false;
+    next.money -= offer.price;
+    next.crewStock[grade]++;
+    return commit(next);
   }
   function unitOffer(unitId, production = catalog) {
     const permit = production.licenseOffers[unitId];
@@ -394,7 +410,7 @@ const Economy = (() => {
     const base = catalog.licenseOffers[unitId];
     const production = productionOffer(unitId, defaultKit(unitId));
     return base && production
-      ? { ...base, money: production.money * 3, supplies: production.supplies * 3 }
+      ? { ...base, money: production.money, supplies: production.supplies * 3 }
       : null;
   }
   function grantPurchasedLicense(next, unitId) {
@@ -463,6 +479,7 @@ const Economy = (() => {
     key,
     catalog,
     normalizeStock,
+    recruitCrew,
     stockPlan,
     quantity,
     unitOffer,

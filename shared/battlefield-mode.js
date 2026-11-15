@@ -399,7 +399,7 @@ const BattlefieldMode = (() => {
           unit.facility.rebuildRound = game.round + rebuildDelay;
         if (unit.facility?.type !== "base")
           state.losses[unit.team] +=
-            G.modelOf(unit).cost + (unit.pilot?.custom ? G.pilots.cost(unit.pilot) : 0);
+            G.modelOf(unit).cost + ((unit.pilot?.custom || unit.pilot?.hired) ? G.pilots.cost(unit.pilot) : 0);
       }
     }
     for (const reserve of state.reserves || []) {

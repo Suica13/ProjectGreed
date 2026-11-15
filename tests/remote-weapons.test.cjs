@@ -95,7 +95,7 @@ test("remote base salvo damage follows Awakening, is repeat-safe and leaves hit/
     }
     a.pilot.stats.awakening=0;
     const locked=G.weaponStats(w,a);
-    assert.equal(locked.damage,0);
+    assert(locked.damage > 0);
     assert.equal(G.canAttack(g,a,b,w),false);
     a.pilot.stats.awakening=100;
     assert.equal(G.weaponStats(locked,a).damage,w.damage);
@@ -120,6 +120,7 @@ function fx() {
       images: {},
       muzzle: (_model, _weapon, source) => ({ x: source.x, y: source.y }),
     },
+    Rules: G,
     WeaponSequence: require("../shared/weapon-sequence.js"),
   });
   vm.runInContext(

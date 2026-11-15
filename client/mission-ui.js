@@ -51,7 +51,7 @@ window.MissionUI = (() => {
     objectives.hidden =
       s.settings.mode !== "mission" || !s.started || ["assembly", "waiting"].includes(s.phase);
     const nextObjectiveKey =
-      m && JSON.stringify([s.settings.mapId, m.protect, m.notice, m.error, I18n.language]);
+      m && JSON.stringify([s.settings.mapId, m.protect, m.notice, m.error, m.escort, s.game.round, I18n.language]);
     if (m && objectiveKey !== nextObjectiveKey) {
       objectiveKey = nextObjectiveKey;
       const mission = Rules.getMap(s.settings.mapId).mission;
@@ -60,7 +60,11 @@ window.MissionUI = (() => {
         return a ? Rules.models[a.unitId + "__" + a.kitId].name : id;
       });
       const victory =
-        mission.victory.type === "survive"
+        mission.victory.type === "escort"
+          ? I18n.text("胜利：护送目标抵达指定地点并坚守") + " " + mission.victory.holdRounds + " " + I18n.text("回合") +
+            "\n" + I18n.text("护送进度") + " " + (m.escort?.step || 0) + "/" + mission.victory.route.length +
+            (m.escort?.arrivedRound != null ? " · " + I18n.text("坚守") + " " + Math.min(mission.victory.holdRounds, s.game.round-m.escort.arrivedRound) + "/" + mission.victory.holdRounds : "")
+          : mission.victory.type === "survive"
           ? I18n.text("胜利：坚持至指定回合") + " " + mission.victory.round
           : mission.victory.type === "defeat_actor"
             ? I18n.text("胜利：击破目标单位") + " " + mission.victory.actor

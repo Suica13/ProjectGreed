@@ -94,7 +94,10 @@ function rebuild(input) {
         [1, 1],
       ].every(([dx, dy]) => !["rock", "water"].includes(at(x + dx, y + dy)));
   // Two-cell roads follow navigable terrain, avoiding cliffs/water instead of cutting a straight corridor through them.
-  const anchors = map.battlefield
+  const escort = map.mission?.victory?.type === "escort" ? map.mission.victory : null;
+  const anchors = escort
+    ? [map.mission.actors.find(a=>a.id === escort.actor), escort.route.at(-1)]
+    : map.battlefield
     ? [...map.battlefield.facilities.filter((f) => f.type === "base"), ...map.battlefield.points]
     : [map.spawns[0], map.spawns[1]];
   for (let k = 1; k < anchors.length; k++) {

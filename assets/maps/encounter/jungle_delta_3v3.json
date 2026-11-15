@@ -1,6 +1,6 @@
 {
   "id": "jungle_delta_3v3",
-  "name": "雨林河口",
+  "name": "雨林河口 · 3v3",
   "description": "共享部署区，多个交战通道及侧翼掩护。",
   "width": 48,
   "height": 34,
@@ -3536,7 +3536,7 @@
     "format": "ProjectGreedTileMap",
     "version": 1,
     "id": "jungle_delta_3v3",
-    "name": "雨林河口",
+    "name": "雨林河口 · 3v3",
     "description": "共享部署区，多个交战通道及侧翼掩护。",
     "width": 48,
     "height": 34,

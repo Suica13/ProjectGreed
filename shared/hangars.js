@@ -687,6 +687,7 @@ const UnitHangars = {
       setAIEntry,
       cargo,
       used,
+      canLoad,
       canEmbark,
       canTransfer,
       transfer,

@@ -6,6 +6,9 @@ const WeaponClasses = (() => {
     beam_spray: "光束喷枪",
     beam_gun: "光束枪",
     beam_cannon: "光束炮",
+    beam_smart_gun: "精灵光束炮",
+    shell_shotgun: "实弹霰弹枪",
+    beam_shotgun: "光束霰弹枪",
     beam_bazooka: "光束火箭筒",
     beam: "其他光束武器",
     close_defense: "近防武器",
@@ -41,6 +44,12 @@ const WeaponClasses = (() => {
     ["cannon", "beam_cannon", "mortar"].includes(classify(weapon)) &&
     weapon.rangeRole !== "ship_anti_air";
   function classify(weapon, id = "") {
+    const native = weapon.sourceName || weapon.sourceWeapon || id || weapon.id || "";
+    if (!/Sniper|_Aim(?:_|$)/i.test(native) && weapon.special?.type !== "snipe") {
+      if (/BeamSmartGun/i.test(native)) return "beam_smart_gun";
+      if (/ShotGun|Shotgun/i.test(native) && !/Bazooka|(?:^|_)BZ(?:_|$)/i.test(native))
+        return weapon.type === "beam" || /BeamShot/i.test(native) ? "beam_shotgun" : "shell_shotgun";
+    }
     if (weapon.weaponClass !== undefined) {
       if (!valid(weapon.weaponClass))
         throw Error("Invalid weapon classification: " + weapon.weaponClass);

@@ -69,6 +69,7 @@ const PilotSystem = (() => {
     );
   }
   function allowed(value, restrictions = {}) {
+    if (value?.hired) return restrictions.pilotPolicy !== "none";
     if (!value?.custom && !value?.aceId) return true;
     const ace = !!aceProfile(value),
       policy = restrictions.pilotPolicy || "allow";
@@ -315,6 +316,7 @@ const PilotSystem = (() => {
     return normalizeDialogue(value.dialogue);
   }
   function custom(value) {
+    if (value?.hired) return hired(value);
     if (value?.aceId || value?.ace) return ace(value);
     if (!value || typeof value !== "object" || !/^custom-[a-zA-Z0-9-]{1,80}$/.test(value.id || ""))
       throw Error("PMC驾驶员无效");
@@ -579,6 +581,7 @@ const PilotSystem = (() => {
     defaultPortrait(value?.faction)?.icon;
   const cost = (value) => {
     if (!value) return 0;
+    if (value.hired) return crewGrades[hired(value).grade].cost;
     const pilot = custom(value);
     return pilot.ace && pilot.needsRecruitment
       ? 0
@@ -591,10 +594,70 @@ const PilotSystem = (() => {
       model?.unitTags?.includes("CmdUnit") || model?.sourceStats?.nativeTags?.includes("CmdUnit")
     );
   }
-  function defaultName(model) {
+  const factionNames = { EFSF: "联邦", ZEON: "吉翁", AEUG: "奥古", TITANS: "提坦斯",
+    NEO_ZEON: "新吉翁", EFSF_0093: "联邦", NEO_ZEON_0093: "新吉翁",
+    OMNI: "地球联合军", ZAFT: "扎夫特军", PMC: "PMC" };
+  const crewGrades = Object.freeze({
+    veteran: { name: "老兵", multiplier: 1.2, cost: 50, price: 250 },
+    elite: { name: "精英", multiplier: 1.4, cost: 150, price: 750 },
+    ace: { name: "ACE", multiplier: 1.6, cost: 0, selectable: false },
+    enhanced: { name: "强化人", multiplier: 1.5, cost: 250, price: 1250 },
+  });
+  function normalizeCrewStock(value = {}) {
+    if (!value || typeof value !== "object" || Array.isArray(value)) throw Error("驾驶员库存无效");
+    const result = {};
+    for (const grade of ["veteran", "elite", "enhanced"]) {
+      const count = value[grade] ?? 0;
+      if (!Number.isSafeInteger(count) || count < 0 || count > 1000000) throw Error("驾驶员库存无效");
+      result[grade] = count;
+    }
+    return result;
+  }
+  function hired(value) {
+    const grade = Object.hasOwn(crewGrades, value.grade) ? crewGrades[value.grade] : null;
+    if (!grade || grade.selectable === false || !/^crew-[a-zA-Z0-9-]{1,80}$/.test(value.id || "") ||
+        !Object.hasOwn(factionNames, value.faction) ||
+        (value.commander !== undefined && typeof value.commander !== "boolean") ||
+        (value.grade === "enhanced" && value.commander)) throw Error("招募驾驶员无效");
+    const model = { faction: value.faction, unitTags: value.commander ? ["CmdUnit"] : [] };
+    return { id: value.id, hired: true, custom: false, grade: value.grade, faction: value.faction,
+      commander: !!value.commander, level: 0,
+      ...rollGrade(value.grade, hash(value.id), model) };
+  }
+  function rollGrade(gradeId, seed, model) {
+    const grade = Object.hasOwn(crewGrades, gradeId) ? crewGrades[gradeId] : null;
+    if (!grade || (gradeId === "enhanced" && commandUnit(model))) throw Error("驾驶员类型无效");
+    const pilot = roll(null, seed, 0, 0, model);
+    for (const key of Object.keys(labels))
+      if (key !== "awakening" || gradeId === "ace") pilot.stats[key] = Math.round(pilot.stats[key] * grade.multiplier);
+    if (gradeId === "enhanced") pilot.stats.awakening = 75 + hash(seed + ":awakening") % 36;
+    return { name: defaultName(model, gradeId), stats: pilot.stats };
+  }
+  function normalizeCrewFormation(entries, stock, modelFor = null) {
+    const available = normalizeCrewStock(stock);
+    const assigned = new Set();
+    return entries.map(entry => {
+      if (!entry.customPilot?.hired) return entry;
+      const copy = { ...entry };
+      try {
+        const pilot = hired(entry.customPilot);
+        if (assigned.has(pilot.id)) throw Error("驾驶员重复配属");
+        const model = modelFor?.(entry);
+        if (model && (pilot.faction !== model.faction || pilot.commander !== commandUnit(model)))
+          throw Error("驾驶员与单位不匹配");
+        if (!(available[pilot.grade] > 0)) throw Error("驾驶员库存不足");
+        available[pilot.grade]--;
+        assigned.add(pilot.id);
+        copy.customPilot = pilot;
+      } catch { delete copy.customPilot; }
+      return copy;
+    });
+  }
+  function defaultName(model, grade = null) {
     return (
-      (model?.faction === "EFSF" ? "联邦" : model?.faction === "ZEON" ? "吉翁" : "") +
-      (commandUnit(model) ? "默认指挥官" : "默认驾驶员")
+      (factionNames[model?.faction] || "") +
+      (grade ? crewGrades[grade].name : "一般") +
+      (commandUnit(model) ? "指挥官" : "驾驶员")
     );
   }
   function validate(id, model) {
@@ -613,6 +676,11 @@ const PilotSystem = (() => {
     return result >>> 0;
   }
   function roll(id, seed, seat = 0, index = 0, model = null) {
+    // Script-only generic grades are never accepted by formation validation.
+    if (typeof id === "string" && id.startsWith("generic:")) {
+      const grade = id.slice("generic:".length);
+      return { id: null, genericGrade: grade, ...rollGrade(grade, seed ^ hash(seat + ":" + index), model) };
+    }
     const named = profile(id);
     const command = commandUnit(model);
     let state =
@@ -642,7 +710,7 @@ const PilotSystem = (() => {
   const legacyPilots = new WeakMap();
   const neutralPilot = {
     id: null,
-    name: "默认驾驶员",
+    name: "一般驾驶员",
     stats: Object.fromEntries(Object.keys(labels).map((key) => [key, 100])),
   };
   const buffPilotCache = new WeakMap();
@@ -732,6 +800,11 @@ const PilotSystem = (() => {
     recruitmentPrice,
     commandUnit,
     defaultName,
+    crewGrades,
+    normalizeCrewStock,
+    normalizeCrewFormation,
+    hired,
+    rollGrade,
     validate,
     hash,
     roll,

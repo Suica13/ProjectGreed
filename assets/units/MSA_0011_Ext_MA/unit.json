@@ -507,7 +507,8 @@
                 "rotation": 0.0
               }
             ],
-            "clock": "flight"
+            "clock": "native",
+            "duration": 1.2
           },
           "nativeSpeed": 150.0
         },

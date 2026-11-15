@@ -12,6 +12,7 @@ const rocket = clusterModel.weapons.find((w) => w.projectile?.cluster);
 function runtime() {
   const ctx = {
     ART,
+    Rules: G,
     WeaponSequence,
     SpriteRenderer: { muzzle: () => ({ x: 100, y: 100 }), images: {} },
     SpriteEffects: { sound: () => null },
@@ -37,12 +38,12 @@ const target = { unit: { id: "b", model: "RGM_79__machine_gun" }, x: 600, y: 100
 test("cluster bazookas retain one carrier and twelve native independently adjudicated fragments", () => {
   for (const m of Object.values(G.models))
     for (const w of m.weapons)
-      if (w.projectile?.cluster) assert(w.name.includes("火箭筒[霰弹]"), w.id);
+      if (w.projectile?.cluster && require("../shared/weapon-classes").classify(w) === "bazooka") assert(w.name.includes("火箭筒[霰弹]"), w.id);
   assert.equal(rocket.shotCount, 13);
   assert.equal(rocket.attack.strikes.filter((s) => s.clusterRole === "carrier").length, 1);
   const fragments = rocket.attack.strikes.filter((s) => s.clusterRole === "fragment");
   assert.equal(fragments.length, 12);
-  assert(fragments.every((s) => s.accuracy === require('../shared/conversion-rules.json').weaponClasses.bazooka.baseHit));
+  assert(fragments.every((s) => s.accuracy === require('../shared/conversion-rules.json').weaponClasses.bazooka.baseHit + require('../shared/conversion-rules.json').weapons.shootingHitOffset));
   assert(fragments.every((s) => s.partBreakModifier === 1.5 && s.targetModifiers.air === 1.25));
   assert.equal(rocket.nativeTiming.projectiles, 1);
   assert.equal(rocket.nativeTiming.secondaryProjectiles, 12);
