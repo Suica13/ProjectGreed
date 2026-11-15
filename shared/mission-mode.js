@@ -26,6 +26,7 @@ const MissionMode = (() => {
       !Number.isInteger(m.unitLimit) ||
       m.unitLimit < 1 ||
       m.unitLimit > 72 ||
+      (m.fleetLimit !== undefined && (!Number.isInteger(m.fleetLimit) || m.fleetLimit < 1 || m.fleetLimit > 6)) ||
       !Array.isArray(m.actors) ||
       m.actors.length > 256 ||
       !Array.isArray(m.events) ||
@@ -64,6 +65,8 @@ const MissionMode = (() => {
         fail();
       if (
         (a.angle !== undefined && ![0, 90, 180, 270].includes(a.angle)) ||
+        (a.facilityLevel !== undefined && (!Number.isInteger(a.facilityLevel) || a.facilityLevel<1 || a.facilityLevel>4)) ||
+        (a.autonomous !== undefined && typeof a.autonomous !== "boolean") ||
         (a.squad && !id(a.squad))
       )
         fail();
@@ -98,7 +101,15 @@ const MissionMode = (() => {
     }
     location = "胜败条件";
     if (!Array.isArray(m.protect) || m.protect.some((a) => !actors.has(a))) fail();
-    if (!["all_enemies", "survive", "defeat_actor", "escort"].includes(m.victory?.type)) fail();
+    if (!["all_enemies", "survive", "defeat_actor", "escort", "scripted", "eliminate_group"].includes(m.victory?.type)) fail();
+    if (m.victory.type === "eliminate_group" &&
+        (!m.actors.some(a=>a.team===1 && a.group===m.victory.group) ||
+         (m.victory.label !== undefined && !text(m.victory.label,100)))) fail();
+    if (m.fixedNight !== undefined && typeof m.fixedNight!=="boolean") fail();
+    if (m.fixedTime !== undefined && !["dawn","morning","noon","afternoon","dusk","evening","late_night","pre_dawn"].includes(m.fixedTime)) fail();
+    if (m.cover !== undefined && !/^assets\/maps\/covers\/[A-Za-z0-9_-]+\.(png|jpg|webp)$/.test(m.cover)) fail();
+    if (m.victory.type === "scripted" &&
+        (!m.actors.some(a=>a.group===m.victory.group) || !id(m.victory.choiceEvent) || !id(m.victory.continueOption))) fail();
     if (m.victory.type === "escort") {
       const v = m.victory;
       if (!actors.has(v.actor) || !m.protect.includes(v.actor) ||
@@ -136,7 +147,10 @@ const MissionMode = (() => {
             "enter_region",
             "actor_destroyed",
             "group_destroyed",
+            "group_escaped",
             "event_completed",
+            "choice_selected",
+            "all_enemies_destroyed",
             "all",
             "any",
           ].includes(w.type)
@@ -153,7 +167,9 @@ const MissionMode = (() => {
           w.conditions.forEach((c) => checkCondition(c, depth + 1));
         }
         if (w.type === "actor_destroyed" && !actors.has(w.actor)) fail();
-        if (w.type === "group_destroyed" && !m.actors.some((a) => a.group === w.group)) fail();
+        if (w.type === "choice_selected" && !m.events.some(e=>e.id===w.event &&
+            e.actions.some(a=>a.type==="choice" && a.options?.some(o=>o.id===w.option)))) fail();
+        if (["group_destroyed","group_escaped"].includes(w.type) && !m.actors.some((a) => a.group === w.group)) fail();
         if (
           w.type === "event_completed" &&
           (!m.events.some((other) => other.id === w.event) || w.event === e.id)
@@ -196,9 +212,11 @@ const MissionMode = (() => {
           ![
             "spawn",
             "dialogue",
+            "choice",
             "protect",
             "unprotect",
             "recover",
+            "withdraw",
             "scripted_attack",
             "message",
             "victory",
@@ -207,7 +225,7 @@ const MissionMode = (() => {
         )
           fail();
         if (
-          ["spawn", "protect", "unprotect", "recover", "scripted_attack"].includes(a.type) &&
+          ["spawn", "protect", "unprotect", "recover", "scripted_attack", "withdraw"].includes(a.type) &&
           (!Array.isArray(a.actors) || a.actors.some((v) => !actors.has(v)))
         )
           fail();
@@ -219,7 +237,14 @@ const MissionMode = (() => {
           ![a.hpPercent, a.enPercent].every((v) => Number.isFinite(v) && v >= 0 && v <= 100)
         )
           fail();
+        if (a.type === "withdraw" && (a.edge !== "right" || !a.actors.length ||
+            a.actors.some(key=>m.actors.find(actor=>actor.id===key).team!==1))) fail();
         if (a.type === "message" && !text(a.text)) fail();
+        if (a.type === "choice" && (!text(a.name,100) || !text(a.text) ||
+            !Array.isArray(a.options) || a.options.length<2 || a.options.length>4 ||
+            a.options.some(o=>!id(o.id) || !text(o.text,200)) ||
+            new Set(a.options.map(o=>o.id)).size!==a.options.length ||
+            e.actions.filter(other=>other.type==="choice").length!==1)) fail();
         if (a.type === "dialogue") {
           if (!Array.isArray(a.lines) || !a.lines.length || a.lines.length > 50) fail();
           for (const l of a.lines) {
@@ -243,6 +268,11 @@ const MissionMode = (() => {
         }
       }
     }
+    if (m.victory.type === "scripted" && !m.events.some(e=>e.id===m.victory.choiceEvent &&
+        e.actions.some(a=>a.type==="choice" && a.options.some(o=>o.id===m.victory.continueOption)))) fail();
+    if (m.landmarks !== undefined && (!Array.isArray(m.landmarks) || m.landmarks.length>10 ||
+        m.landmarks.some(l=>l.type!=="mass_driver" || ![l.x,l.y,l.width,l.height].every(Number.isInteger) ||
+          l.x<0 || l.y<0 || l.width<2 || l.height<2 || l.x+l.width>map.width || l.y+l.height>map.height))) fail();
     if (m.rewards) {
       function checkReward(r) {
         if (
@@ -270,7 +300,8 @@ const MissionMode = (() => {
         (!Array.isArray(m.rewards.bonuses) || m.rewards.bonuses.length > 100)
       )
         fail();
-      for (const r of m.rewards.bonuses || []) {
+      if (m.rewards.outcomes !== undefined && (!Array.isArray(m.rewards.outcomes) || m.rewards.outcomes.length>100)) fail();
+      for (const r of [...(m.rewards.bonuses || []),...(m.rewards.outcomes || [])]) {
         location = "额外奖励「" + r.event + "」";
         if (!events.has(r.event)) fail();
         checkReward(r);
@@ -290,7 +321,9 @@ const MissionMode = (() => {
       technologyLimit: m.technologyLimit,
       costLimit: m.costLimit,
       unitLimit: m.unitLimit,
+      missionFleetLimit: m.fleetLimit ?? 3,
       formationStyle: "standard",
+      ...(m.fixedTime || m.fixedNight ? {dayNight:m.fixedTime || "late_night",timeCycle:false,weather:"clear",weatherCycle:false} : {}),
       bannedFactions: [],
       bannedEras: [],
       bannedTypes: [],
@@ -322,7 +355,7 @@ const MissionMode = (() => {
       if (staged.units.some((u) => u.missionActor === key)) continue;
       const a = m.actors.find((a) => a.id === key);
       const host = commander(room),
-        owner = a.team === 1 ? 1 : host.seat;
+        owner = a.team === 1 ? 1 : a.autonomous ? room.missionAllySeat : host.seat;
       const u = G.makeUnit(
         { unitId: a.unitId, kitId: a.kitId, customPilot: pilot(G, a) },
         owner,
@@ -338,6 +371,7 @@ const MissionMode = (() => {
         missionActor: a.id,
         missionGroup: a.group,
         missionGuest: a.team === 0,
+        ...(a.autonomous ? {missionAutonomous:true} : {}),
         ...(m.victory.type === "escort" && m.victory.actor === a.id ? { missionEscort: true } : {}),
         deployed: true,
         formationIndex: -1,
@@ -353,8 +387,9 @@ const MissionMode = (() => {
           : {}),
       });
       const model = G.modelOf(u);
-      u.hp = model.hp;
-      u.en = model.en;
+      if (model.facilityType) u.facility = {id:a.id,type:model.facilityType,level:a.facilityLevel || 1,cycle:0};
+      u.hp = G.modelOf(u).hp;
+      u.en = G.modelOf(u).en;
       if (a.squad) {
         const members = [...staged.units.filter((other) => other.squadId === u.squadId), u];
         if (
@@ -424,6 +459,9 @@ const MissionMode = (() => {
       s = g.mission,
       actor = g.units.find((u) => u.missionActor === w.actor);
     if (w.type === "start") return !s.started;
+    if (w.type === "choice_selected") return s.choices?.[w.event] === w.option;
+    if (w.type === "all_enemies_destroyed") return !g.units.some(u=>u.team===1 && u.hp>0 && !u.missionEscaped);
+    if (w.type === "group_escaped") return g.units.some(u=>u.missionGroup===w.group && u.missionEscaped);
     if (w.type === "round") return g.round >= w.round;
     if (w.type === "all") return w.conditions.every((c) => condition(room, G, c));
     if (w.type === "any") return w.conditions.some((c) => condition(room, G, c));
@@ -479,6 +517,7 @@ const MissionMode = (() => {
       !s ||
       s.error ||
       s.dialogue ||
+      s.choice ||
       room.playback ||
       room.phase !== "idle" ||
       g.winner !== null
@@ -500,6 +539,11 @@ const MissionMode = (() => {
         for (let i = from; i < e.actions.length; i++) {
           const a = e.actions[i];
           if (a.type === "spawn") spawn(room, G, a.actors);
+          if (a.type === "withdraw") for (const u of g.units) {
+            if (!a.actors.includes(u.missionActor) || u.hp<=0 || u.missionEscaped) continue;
+            u.missionWithdrawal={edge:a.edge};
+            delete u.plan; delete u.pendingMove;
+          }
           if (a.type === "scripted_attack") {
             const source = g.units.find(u=>u.missionActor===a.actor && u.hp>0);
             if (!source) throw Error("剧情攻击单位尚未出现或已被击坠：" + a.actor);
@@ -530,6 +574,12 @@ const MissionMode = (() => {
             }
           if (a.type === "victory") s.requestedWinner = 0;
           if (a.type === "defeat") s.requestedWinner = 1;
+          if (a.type === "choice") {
+            s.continuation = {eventId:e.id,nextAction:i+1};
+            s.choice = {id:++s.serial,eventId:e.id,name:a.name,text:a.text,options:a.options};
+            log("[任务选择] " + a.name + "：" + a.text);
+            return false;
+          }
           if (a.type === "dialogue") {
             s.continuation = { eventId: e.id, nextAction: i + 1 };
             s.dialogue = {
@@ -552,6 +602,20 @@ const MissionMode = (() => {
         log("[任务错误] " + error.message);
         return false;
       }
+    }
+    // Retreat is an actual AI move. Reaching the edge starts a one-round grace
+    // period: the target remains attackable until the following displayed round.
+    for (const u of g.units) {
+      if (!u.missionWithdrawal || u.hp<=0 || u.missionEscaped || !G.onMap(u)) continue;
+      const edge=G.cells(u).some(p=>p.x===g.tiles[0].length-1);
+      if (!edge) { delete u.missionWithdrawal.edgeRound; continue; }
+      u.missionWithdrawal.edgeRound ??= g.round;
+      if (g.round<=u.missionWithdrawal.edgeRound) continue;
+      u.missionEscaped=true;
+      u.deploymentStaged=true;
+      u.acted=u.moved=true;
+      delete u.plan; delete u.pendingMove;
+      log("[任务撤离] "+G.unitLogName(u)+"离开了战场。");
     }
     if (s.continuation) {
       const e = m.events.find((e) => e.id === s.continuation.eventId);
@@ -603,6 +667,9 @@ const MissionMode = (() => {
     else if (s.requestedWinner !== undefined) g.winner = s.requestedWinner;
     else if (m.victory.type === "all_enemies" && !g.units.some((u) => u.team === 1 && u.hp > 0))
       g.winner = 0;
+    else if (m.victory.type === "eliminate_group" &&
+        g.units.some(u=>u.missionGroup===m.victory.group && u.missionEscaped) &&
+        !g.units.some(u=>u.team===1 && u.hp>0 && !u.missionEscaped)) g.winner=0;
     else if (m.victory.type === "survive" && g.round >= m.victory.round) g.winner = 0;
     else if (m.victory.type === "defeat_actor" && dead(m.victory.actor)) g.winner = 0;
     if (g.winner !== null) room.phase = "finished";
@@ -626,16 +693,63 @@ const MissionMode = (() => {
     if (!rewards) return null;
     const result = { money: 0, supplies: 0, inventory: {} };
     if (room.game.winner !== 0) return result;
+    const selected = [...(rewards.outcomes || [])].reverse().find(r=>room.game.mission.fired.includes(r.event)) || rewards;
     for (const r of [
-      rewards,
+      selected,
       ...(rewards.bonuses || []).filter((r) => room.game.mission.fired.includes(r.event)),
     ]) {
       result.money += r.money;
+      result.supplies += r.supplies;
       for (const [id, count] of Object.entries(r.inventory))
         result.inventory[id] = (result.inventory[id] || 0) + count;
     }
-    result.supplies = result.money * 1.5;
     return result;
+  }
+  function choose(room, G, choiceId, optionId, log) {
+    const state=room.game.mission, choice=state?.choice;
+    const option=choice?.options.find(o=>o.id===optionId);
+    if (!choice || choice.id!==choiceId || !option) throw Error("任务选择已更新或选项无效");
+    state.choices={...state.choices,[choice.eventId]:option.id};
+    state.choice=null;
+    log("[任务选择] " + choice.name + "：" + option.text);
+  }
+  function objectives(game, G) {
+    const mission = G.getMap(game.mapId).mission;
+    const state = game.mission;
+    if (!mission || !state?.protect) return null;
+    const actor = key => game.units.find(u=>u.missionActor === key);
+    const row = (kind, current, total, unitId) => ({kind,current,total,...(unitId?{unitId}:{})});
+    const target = mission.victory, victory = [];
+    if (target.type === "eliminate_group") {
+      const escaped=game.units.some(u=>u.missionGroup===target.group && u.missionEscaped);
+      const targets=escaped?game.units.filter(u=>u.team===1 && !u.missionEscaped):
+        mission.actors.filter(a=>a.group===target.group).map(a=>actor(a.id));
+      victory.push({...row(escaped?"all_enemies":"group_targets",targets.filter(u=>u && u.hp<=0).length,targets.length),
+        ...(!escaped?{label:target.label || "消灭目标单位"}:{})});
+    } else if (target.type === "scripted" && state.choices?.[target.choiceEvent] !== target.continueOption) {
+      const main=mission.actors.filter(a=>a.group===target.group);
+      victory.push(row("main_force",main.filter(a=>actor(a.id)?.hp<=0).length,main.length));
+    } else if (["all_enemies","scripted"].includes(target.type)) {
+      const enemies = game.units.filter(u=>u.team===1);
+      victory.push(row("all_enemies",enemies.filter(u=>u.hp<=0).length,enemies.length));
+    } else if (target.type === "escort") {
+      const source = mission.actors.find(a=>a.id===target.actor);
+      victory.push(row("escort",Math.min(target.route.length,state.escort?.step || 0),target.route.length,source.unitId));
+      const held = state.escort?.arrivedRound == null ? 0 : Math.max(0,game.round-state.escort.arrivedRound);
+      victory.push(row("hold",Math.min(target.holdRounds,held),target.holdRounds));
+    } else if (target.type === "survive") {
+      victory.push(row("survive",Math.min(game.round,target.round),target.round));
+    } else {
+      victory.push(row("defeat_actor",actor(target.actor)?.hp<=0?1:0,1,
+        mission.actors.find(a=>a.id===target.actor).unitId));
+    }
+    const pmc = game.units.filter(u=>u.team===0 && !u.missionActor);
+    const failure = [row("pmc_destroyed",pmc.filter(u=>u.hp<=0).length,pmc.length)];
+    for (const key of state.protect) {
+      const source = mission.actors.find(a=>a.id===key);
+      failure.push(row("protected_destroyed",actor(key)?.hp<=0?1:0,1,source.unitId));
+    }
+    return {victory,failure};
   }
   return {
     defaultMapId,
@@ -646,8 +760,10 @@ const MissionMode = (() => {
     observe,
     poll,
     advance,
+    choose,
     spawn,
     reward,
+    objectives,
   };
 })();
 if (typeof module !== "undefined") module.exports = MissionMode;

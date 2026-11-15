@@ -167,7 +167,8 @@ const MatchRecords = (() => {
       createdAt: new Date().toISOString(),
       settings: clone(room.settings),
       game: clone(room.game),
-      armies: room.seats.map((player) => (player ? G.armySettings(player) : null)),
+      armies: (room.settings.mode==="mission" ? room.seats.slice(0,G.getMap(room.settings.mapId).spawns.length) : room.seats)
+        .map((player) => (player ? G.armySettings(player) : null)),
       log: clone(room.log || []),
       teamLogs: clone(room.teamLogs || {}),
       logNames: clone(room.logNames || []),
@@ -275,7 +276,8 @@ const MatchRecords = (() => {
       if (
         !Number.isInteger(owner) ||
         owner < 0 ||
-        owner >= seats ||
+        (owner >= seats && !(settings.mode==="mission" && owner===seats && u.team===0 &&
+          u.missionAutonomous===true && G.getMap(g.mapId).mission?.actors.some(a=>a.id===u.missionActor && a.team===0 && a.autonomous))) ||
         u.team !== G.seatTeam(owner) ||
         u.pendingMove ||
         u.plan ||

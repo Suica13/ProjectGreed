@@ -2443,7 +2443,8 @@ body #formationScreen .pilot-list-skills .pilot-list-skill > img { width:20px; h
 .pilot-record-cell { gap:1px 4px; line-height:16px; }
 .pilot-record-cell strong { font-size:11px; }
 .campaign-pilot-card:not(:has(.campaign-pilot-details)) { height:152px; box-sizing:border-box; padding:8px; }
-.formation-pilot-card { height:168px; min-height:168px; box-sizing:border-box; padding:8px; }
+.formation-pilot-card { height:148px; min-height:148px; box-sizing:border-box; padding:8px; }
+.formation-pilot-card strong .pilot-cost-tag { display:inline-flex; vertical-align:middle; margin-left:6px; font-weight:normal; }
 .crew-actions { display:flex; flex-direction:column; gap:6px; }
 .crew-recruitment { display:flex; flex-wrap:wrap; gap:6px; padding:4px 0; flex-shrink:0; }
 .crew-recruitment button { min-width:0; font-size:12px; }
@@ -2477,7 +2478,7 @@ body #formationScreen .pilot-list-skills .pilot-list-skill > img { width:20px; h
   #customPilotList .ace-recruit-status { font-size:10px; }
   body.menu-shell-active #formationScreen #customPilotList .formation-row-actions { display:flex; justify-content:flex-end; grid-row:2; }
   #customPilotList .formation-row-actions button { flex:1; max-width:130px; min-height:30px; padding:4px; margin:0; }
-  .formation-pilot-card { height:232px; min-height:232px; }
+  .formation-pilot-card { height:212px; min-height:212px; }
 }
 
 @media(min-width:1101px) {

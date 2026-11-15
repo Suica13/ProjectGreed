@@ -87,9 +87,11 @@ window.MissionEditor = (() => {
     protect: "追加保护目标",
     unprotect: "解除保护目标",
     recover: "恢复耐久与EN",
+    withdraw: "目标向右侧撤离（到达后下一回合离场）",
     scripted_attack: "剧情攻击（击破指定敌人）",
     message: "任务提示",
     dialogue: "剧情对话",
+    choice: "同步剧情选择",
     victory: "任务胜利",
     defeat: "任务失败",
   };
@@ -100,13 +102,17 @@ window.MissionEditor = (() => {
     ["actor_hp", "单位耐久低于百分比"],
     ["actor_destroyed", "指定单位被击坠"],
     ["group_destroyed", "指定部队全部被击坠"],
+    ["group_escaped", "指定部队任一单位撤离"],
     ["enter_region", "单位进入地图区域"],
     ["event_completed", "另一事件完成后"],
+    ["choice_selected", "玩家选择指定选项后"],
+    ["all_enemies_destroyed", "当前全部敌军被击破"],
     ["all", "同时满足以下条件"],
     ["any", "满足其中任一条件"],
   ];
   const defaults = (type, m, event) => ({
     type,
+    ...(type==="withdraw"?{edge:"right"}:{}),
     round: 3,
     byRound: 10,
     count: 1,
@@ -118,6 +124,7 @@ window.MissionEditor = (() => {
     width: 3,
     height: 3,
     event: m.events.find((e) => e.id !== event.id)?.id,
+    option: "accept",
     ...(["all", "any"].includes(type) ? { conditions: [{ type: "round", round: 3 }] } : {}),
   });
   function describe(w, m) {
@@ -135,8 +142,11 @@ window.MissionEditor = (() => {
         actor_hp: `${name} 耐久 ≤ ${w.percent}%`,
         actor_destroyed: `${name} 被击坠`,
         group_destroyed: `${w.group} 部队全灭`,
+        group_escaped: `${w.group} 部队有单位撤离`,
         enter_region: `${name} 进入区域 (${w.x},${w.y}) ${w.width}×${w.height}`,
         event_completed: `「${m.events.find((e) => e.id === w.event)?.name || "未选择事件"}」完成`,
+        choice_selected: `「${m.events.find(e=>e.id===w.event)?.name || w.event}」选择 ${w.option}`,
+        all_enemies_destroyed: "当前全部敌军被击破",
       }[w.type] || "未设置条件"
     );
   }
@@ -197,6 +207,7 @@ window.MissionEditor = (() => {
     );
     input(basics, "编组COST上限", m.costLimit, (v) => change((m) => (m.costLimit = v)), "number");
     input(basics, "单位容量点", m.unitLimit, (v) => change((m) => (m.unitLimit = v)), "number");
+    input(basics, "舰船数量上限", m.fleetLimit ?? 3, v=>change(m=>m.fleetLimit=v), "number");
     input(
       basics,
       "每多一名玩家敌军耐久/EN加成（%）",
@@ -216,6 +227,16 @@ window.MissionEditor = (() => {
       );
     else {
       renderReward(rewards, m.rewards, (fn) => change((m) => fn(m.rewards)));
+      (m.rewards.outcomes || []).forEach((r,i)=>{
+        const box=node("fieldset");box.append(node("legend","分支结局奖励（替换基础奖励） "+(i+1)));rewards.append(box);
+        const edit=fn=>change(m=>fn(m.rewards.outcomes[i]));
+        select(box,"触发结局的事件",r.event,m.events.map(e=>[e.id,e.name]),v=>edit(r=>r.event=v));
+        renderReward(box,r,edit);
+        box.append(button("删除结局奖励",()=>change(m=>m.rewards.outcomes.splice(i,1))));
+      });
+      rewards.append(button("＋分支结局奖励",()=>change(m=>{
+        m.rewards.outcomes ||= [];m.rewards.outcomes.push({event:m.events[0]?.id,money:0,supplies:0,inventory:{}});
+      })));
       (m.rewards.bonuses || []).forEach((r, i) => {
         const box = node("fieldset");
         box.append(node("legend", "事件额外奖励 " + (i + 1)));
@@ -254,16 +275,30 @@ window.MissionEditor = (() => {
         ["survive", "坚持指定回合"],
         ["defeat_actor", "击破指定单位"],
         ["escort", "护送目标并坚守"],
+        ["scripted", "由剧情分支决定胜利"],
+        ["eliminate_group", "歼灭目标分组（目标撤离后改为全歼）"],
       ],
       (v) => change((m) => {
         const actor=m.actors.find(a=>a.team===0 && a.initial && !a.carrier);
         m.victory = v === "escort"
           ? {type:v,actor:actor?.id,x:actor?.x || 0,y:actor?.y || 0,width:3,height:3,
             holdRounds:2,route:[{x:actor?.x || 0,y:actor?.y || 0}],eliminateAll:false}
-          : {type:v,round:10,actor:m.actors[0]?.id};
+          : v === "scripted"
+            ? {type:v,group:m.actors.find(a=>a.team===1)?.group,choiceEvent:m.events.find(e=>e.actions.some(a=>a.type==="choice"))?.id || "decision",continueOption:"refuse"}
+            : v === "eliminate_group" ? {type:v,group:m.actors.find(a=>a.team===1)?.group,label:"消灭目标单位"}
+            : {type:v,round:10,actor:m.actors[0]?.id};
         if(v === "escort" && actor && !m.protect.includes(actor.id))m.protect.push(actor.id);
       }),
     );
+    if(m.victory.type === "eliminate_group") {
+      select(basics,"目标单位分组",m.victory.group,[...new Set(m.actors.filter(a=>a.team===1).map(a=>a.group))],v=>change(m=>m.victory.group=v));
+      input(basics,"目标显示文字",m.victory.label || "消灭目标单位",v=>change(m=>m.victory.label=v));
+    }
+    if(m.victory.type === "scripted") {
+      select(basics,"首阶段目标分组",m.victory.group,[...new Set(m.actors.map(a=>a.group))],v=>change(m=>m.victory.group=v));
+      select(basics,"分支选择事件",m.victory.choiceEvent,m.events.filter(e=>e.actions.some(a=>a.type==="choice")).map(e=>[e.id,e.name]),v=>change(m=>m.victory.choiceEvent=v));
+      input(basics,"继续全歼的选项ID",m.victory.continueOption,v=>change(m=>m.victory.continueOption=v));
+    }
     if (m.victory.type === "survive")
       input(
         basics,
@@ -372,6 +407,7 @@ window.MissionEditor = (() => {
         }),
       );
       input(card, "开场登场", a.initial, (v) => edit("initial", v), "checkbox");
+      if(a.team===0)input(card,"独立AI友军（玩家不可控制／黄色标记）",a.autonomous===true,v=>edit("autonomous",v),"checkbox");
       input(
         card,
         "被击坠则失败",
@@ -393,6 +429,7 @@ window.MissionEditor = (() => {
         (v) => edit("pilotId", v || null),
       );
       input(card, "驾驶员等级（0～5）", a.level || 0, (v) => edit("level", v), "number");
+      if (a.unitId.startsWith("Facility_"))input(card,"设施等级（1～4）",a.facilityLevel || 1,v=>edit("facilityLevel",v),"number");
       card.append(
         button("删除单位", () =>
           change((m) => {
@@ -615,7 +652,7 @@ window.MissionEditor = (() => {
     }
     if (["actor_hp", "actor_destroyed", "enter_region"].includes(w.type))
       select(parent, "条件单位", w.actor, actors(m), (v) => set("actor", v));
-    if (["defeated_group", "group_destroyed"].includes(w.type))
+    if (["defeated_group", "group_destroyed", "group_escaped"].includes(w.type))
       select(
         parent,
         "敌军分组",
@@ -626,6 +663,11 @@ window.MissionEditor = (() => {
         ]),
         (v) => set("group", v),
       );
+    if (w.type === "choice_selected") {
+      select(parent,"选择事件",w.event,m.events.filter(e=>e.actions.some(a=>a.type==="choice")).map(e=>[e.id,e.name]),v=>set("event",v));
+      const choice=m.events.find(e=>e.id===w.event)?.actions.find(a=>a.type==="choice");
+      select(parent,"选项",w.option,(choice?.options || []).map(o=>[o.id,o.text]),v=>set("option",v));
+    }
     if (w.type === "event_completed")
       select(
         parent,
@@ -696,7 +738,7 @@ window.MissionEditor = (() => {
       box.append(node("legend", index + 1 + ". " + actionNames[action.type]));
       panel.append(box);
       const update = (fn) => edit((e) => fn(e.actions[index]));
-      if (["spawn", "protect", "unprotect", "recover", "scripted_attack"].includes(action.type)) {
+      if (["spawn", "protect", "unprotect", "recover", "scripted_attack", "withdraw"].includes(action.type)) {
         const choices = node("div");
         choices.className = "mission-actor-choices";
         input(
@@ -748,6 +790,17 @@ window.MissionEditor = (() => {
       }
       if (action.type === "message")
         input(box, "任务提示文本", action.text, (v) => update((a) => (a.text = v)));
+      if(action.type === "choice") {
+        input(box,"选择标题",action.name,v=>update(a=>a.name=v));
+        input(box,"选择提示",action.text,v=>update(a=>a.text=v));
+        action.options.forEach((option,i)=>{
+          const row=node("fieldset");row.append(node("legend","选项 "+(i+1)));box.append(row);
+          input(row,"选项ID",option.id,v=>update(a=>a.options[i].id=v));
+          input(row,"选项文本",option.text,v=>update(a=>a.options[i].text=v));
+          if(action.options.length>2)row.append(button("删除选项",()=>update(a=>a.options.splice(i,1))));
+        });
+        if(action.options.length<4)box.append(button("＋选项",()=>update(a=>a.options.push({id:"option-"+(a.options.length+1),text:"新选项"}))));
+      }
       if (action.type === "dialogue") {
         action.lines.forEach((line, i) => {
           const row = node("details");
@@ -831,8 +884,10 @@ window.MissionEditor = (() => {
       ["protect", "＋保护目标"],
       ["unprotect", "＋解除保护"],
       ["recover", "＋恢复状态"],
+      ["withdraw", "＋向右侧撤离"],
       ["scripted_attack", "＋剧情攻击"],
       ["message", "＋任务提示"],
+      ["choice", "＋同步剧情选择"],
       ["victory", "＋胜利"],
       ["defeat", "＋失败"],
     ])
@@ -844,8 +899,11 @@ window.MissionEditor = (() => {
                 ? { type, lines: [{ actor: m.actors[0]?.id, name: "角色", text: "请输入台词" }] }
                 : type === "scripted_attack"
                   ? {type,actor:m.actors[0]?.id,actors:[]}
+                  : type === "withdraw" ? {type,edge:"right",actors:[]}
                   : type === "recover"
                   ? { type, actors: [], hpPercent: 50, enPercent: 50 }
+                  : type === "choice"
+                    ? {type,name:"任务选择",text:"请选择后续行动。",options:[{id:"accept",text:"A：接受"},{id:"refuse",text:"B：继续作战"}]}
                   : type === "message"
                     ? { type, text: "任务目标已更新。" }
                     : ["spawn", "protect", "unprotect"].includes(type)

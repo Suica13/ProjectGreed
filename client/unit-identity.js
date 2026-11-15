@@ -33,7 +33,7 @@ const UnitIdentity = (() => {
     return {
       seat,
       member,
-      name: Net.active
+      name: unit.missionAutonomous ? "奥古任务友军" : Net.active
         ? member?.name || "空席位"
         : game.ai && seat === 1
           ? "AI"
@@ -183,7 +183,7 @@ const UnitIdentity = (() => {
     ctx.restore();
   }
   function drawRing(ctx, unit, position, tile) {
-    const palette = colors[relation(unit)];
+    const palette = unit.missionAutonomous ? {color:"#f5d66f",fill:"#f5d66f2c"} : colors[relation(unit)];
     ctx.fillStyle = palette.fill;
     ctx.strokeStyle = palette.color;
     ctx.lineWidth = 1.8;

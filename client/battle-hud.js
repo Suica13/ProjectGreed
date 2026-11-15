@@ -299,7 +299,7 @@ const BattleHUD = (() => {
       ": " +
       players +
       "/" +
-      (snapshot?.settings?.mode === "mission" ? (snapshot.connected?.length || 0) / 2 : (snapshot?.connected?.length || 0) - (snapshot?.settings?.mode === "battlefield" ? 2 : 0)) +
+      (snapshot?.settings?.mode === "mission" ? Rules.getMap(snapshot.settings.mapId).playersPerTeam : (snapshot?.connected?.length || 0) - (snapshot?.settings?.mode === "battlefield" ? 2 : 0)) +
       (spectators ? " · " + I18n.text("观战玩家") + ": " + spectators : "");
     byId("hudPlayerCount").title = byId("hudPlayerCount").textContent;
   }

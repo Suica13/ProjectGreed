@@ -113,7 +113,7 @@ const Net = (() => {
     ) &&
     Rules.canControlUnit(n.snapshot?.settings, n.snapshot?.members, n.seat, unit);
   function canAct() {
-    if(n.snapshot?.game.mission?.dialogue || n.snapshot?.game.mission?.error) return false;
+    if(n.snapshot?.game.mission?.dialogue || n.snapshot?.game.mission?.choice || n.snapshot?.game.mission?.error) return false;
     if (
       BattleAssets.loading ||
       (n.snapshot?.delegatedSeats || n.snapshot?.campaign?.delegatedSeats)?.includes(n.seat)

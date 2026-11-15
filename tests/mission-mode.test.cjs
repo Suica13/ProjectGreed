@@ -391,3 +391,19 @@ test("event validation rejects unsafe recovery, broken references and excessive 
   };
   assert.throws(() => M.validate(m, map), /触发条件/);
 });
+
+test("objective counters use authoritative units through fog and reflect additional protected guests", t=>{
+  const f=fixture(t,true);f.finishDialogue();
+  let snapshot=f.frames.get(f.host);
+  assert.deepEqual(snapshot.game.mission.objectives.victory,[{kind:"all_enemies",current:0,total:15}]);
+  f.room.game.units.filter(u=>u.missionGroup==="dom").slice(0,3).forEach(u=>u.hp=0);
+  f.room.game.units.find(u=>!u.missionActor && u.team===0).hp=0;
+  f.engine.broadcast(f.room);snapshot=f.frames.get(f.host);
+  assert.deepEqual(snapshot.game.mission.objectives.victory,[{kind:"all_enemies",current:3,total:15}]);
+  assert.deepEqual(snapshot.game.mission.objectives.failure[0],{kind:"pmc_destroyed",current:1,total:2});
+  assert.deepEqual(snapshot.game.mission.objectives,f.frames.get(f.guest).game.mission.objectives);
+  f.room.game.units.filter(u=>u.missionGroup==="dom").slice(0,6).forEach(u=>u.hp=0);
+  f.engine.broadcast(f.room);snapshot=f.frames.get(f.host);
+  assert(snapshot.game.mission.objectives.failure.some(row=>row.unitId==="RX_78_2" && row.current===0 && row.total===1));
+  assert.equal(snapshot.game.mission.objectives.victory[0].total,17);
+});

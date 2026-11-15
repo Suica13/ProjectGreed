@@ -6,7 +6,7 @@ const doc = M.create({
   id: "mission_no_fool", name: "[0079][EFSF][原创]绝不上当",
   width: 47, height: 23, environment: "ground", playersPerTeam: 5,
   supportedModes: ["mission"],
-  description: "护送大托盘沿公路前进15段，抵达东侧目标区后存活2回合。大托盘被击毁或PMC全灭则失败。",
+  description: "如果不能护送黄色高级船抵达目的地话...",
 });
 for (const s of doc.spawns) {
   s.x = s.team ? 41 : 4 + ((s.position-1)%3)*3;

@@ -646,7 +646,9 @@
     "maps/encounter/urban_floodplain_3v3.json",
     "maps/encounter/orbital_arc_3v3.json",
     "maps/missions/white_base.json",
-    "maps/missions/no_fool.json"
+    "maps/missions/no_fool.json",
+    "maps/missions/bunker.json",
+    "maps/missions/burning_city.json"
   ],
   "defaultMap": "frontier_1v1",
   "scenarioIndex": "maps/strategy/index.json"

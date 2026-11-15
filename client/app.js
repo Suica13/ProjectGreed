@@ -1841,6 +1841,24 @@ function drawMapFrame(now) {
     lastY = Math.min(Rules.mapHeight(game), Math.ceil((h - oy) / tile));
   drawCachedMapTerrain(ctx, w, h, dpr, tile, ox, oy, immersive, deploymentArea);
   TileMapRenderer.draw(ctx, Rules.getMap(game.mapId), "below", mapGeo, w, h);
+  for (const site of Rules.getMap(game.mapId).mission?.landmarks || []) {
+    if (site.type!=="mass_driver") continue;
+    ctx.save();ctx.translate(ox+site.x*tile,oy+site.y*tile);ctx.scale(tile,tile);
+    ctx.fillStyle="#0005";ctx.fillRect(.25,.8,site.width,site.height-.6);
+    ctx.fillStyle="#424b50";ctx.fillRect(0,.5,site.width,site.height-1);
+    ctx.strokeStyle="#adb4a5";ctx.lineWidth=.12;
+    ctx.strokeRect(.1,.6,site.width-.2,site.height-1.2);
+    for(const y of [1.25,site.height-1.25]) {
+      ctx.fillStyle="#1c252b";ctx.fillRect(.4,y-.22,site.width-.8,.44);
+      ctx.fillStyle="#87988c";ctx.fillRect(.4,y-.06,site.width-.8,.12);
+      for(let x=1;x<site.width-1;x+=1) {ctx.fillStyle="#566661";ctx.fillRect(x,y-.3,.12,.6);}
+    }
+    for(let x=1;x<site.width-1;x+=2) {ctx.fillStyle="#d3c895";ctx.fillRect(x,site.height/2-.04,.8,.08);}
+    ctx.fillStyle="#253038";ctx.fillRect(.8,-.5,2.8,1.8);
+    ctx.fillStyle="#758779";ctx.fillRect(.6,-.7,2.8,1.6);
+    ctx.fillStyle="#acd7cc";ctx.fillRect(1,-.3,1.7,.3);
+    ctx.restore();
+  }
   const escortGoal = game.mission && Rules.getMap(game.mapId).mission?.victory;
   if (escortGoal?.type === "escort") {
     ctx.save();

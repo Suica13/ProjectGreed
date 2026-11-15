@@ -1417,6 +1417,8 @@ function loadCatalog({
       throw Error("Unknown WIP unit or series: " + pattern);
   const missionPilots = new Set(require("../shared/pilots.json").aces.map(p => p.id));
   for (const map of Object.values(result.maps)) if (map.mission) {
+    if(map.mission.cover && embedAssets)
+      result.assets[map.mission.cover]="data:image/png;base64,"+fs.readFileSync(file(root,map.mission.cover.slice(7))).toString("base64");
     require("../shared/mission-mode.js").validate(map.mission, map, {
       models: result.models, pilots: { aceProfile: id => missionPilots.has(id) },
     });

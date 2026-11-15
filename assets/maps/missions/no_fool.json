@@ -1,7 +1,7 @@
 {
   "id": "mission_no_fool",
   "name": "[0079][EFSF][原创]绝不上当",
-  "description": "护送大托盘沿公路前进15段，抵达东侧目标区后存活2回合。大托盘被击毁或PMC全灭则失败。",
+  "description": "如果不能护送黄色高级船抵达目的地话...",
   "width": 47,
   "height": 23,
   "environment": "ground",
@@ -3028,7 +3028,7 @@
     "version": 1,
     "id": "mission_no_fool",
     "name": "[0079][EFSF][原创]绝不上当",
-    "description": "护送大托盘沿公路前进15段，抵达东侧目标区后存活2回合。大托盘被击毁或PMC全灭则失败。",
+    "description": "如果不能护送黄色高级船抵达目的地话...",
     "width": 47,
     "height": 23,
     "tileWidth": 32,

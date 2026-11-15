@@ -225,7 +225,7 @@ const Formation = (() => {
     !!model && !exceedsTechnology(model) && [null, "not_developed"].includes(PlayerProfile.restriction(model));
   const displayLimit = (value) => (Number.isFinite(value) ? value : I18n.text("无限"));
   const unitLimit = () =>
-    !freeFormation() ? 3 : Net.active && Net.snapshot?.settings
+    !freeFormation() ? Rules.fleetLimit(Net.active ? Net.snapshot?.settings : {}) : Net.active && Net.snapshot?.settings
       ? Rules.armyUnitLimit(Net.snapshot.settings, ownPlayer())
       : Rules.catalog.formation.maxUnits;
   const points = (entries) => freeFormation() ? Rules.formationPoints(entries) : entries.filter(e => !e.preload && Rules.isFleetCarrier(Rules.formationModel(e))).length;
@@ -1711,6 +1711,7 @@ const Formation = (() => {
           : element("strong", "", profile?.name || PilotSystem.defaultName(model)),
       );
       if (profile?.ace) details.append(aceTags(PilotSystem.aceProfile(profile)));
+      if (!profile) details.querySelector("strong").append(pilotCostTag(null));
       for (const keys of [
         ["shooting", "melee", "defense", "speed"],
         ["accuracy", "reaction", "leadership", "awakening"],
@@ -1763,6 +1764,7 @@ const Formation = (() => {
         return [key, values[0] + "–" + values[1]];
       }));
       details.append(element("strong", "", PilotSystem.defaultName(model, grade)));
+      details.querySelector("strong").append(pilotCostTag(null, offer.cost));
       for (const keys of [
         ["shooting", "melee", "defense", "speed"],
         ["accuracy", "reaction", "leadership", "awakening"],
@@ -2759,11 +2761,11 @@ const Formation = (() => {
     squads = squads.map(s => ({ ...s, units: hydratePilots(s.units) }));
     if (aceRecruit.open) renderAceRecruitment();
   });
-  function pilotCostTag(pilot) {
+  function pilotCostTag(pilot, cost = PilotSystem.cost(pilot)) {
     return element(
       "span",
       "unit-summary-tag cost pilot-cost-tag",
-      "COST " + PilotSystem.cost(pilot),
+      "COST " + cost,
     );
   }
   function pilotExperienceText(pilot) {

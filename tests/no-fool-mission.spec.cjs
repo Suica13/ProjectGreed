@@ -29,8 +29,21 @@ for(const width of [1440,390])test(`escort mission selection, deployment and sup
   await page.evaluate(()=>Net.request('confirm_deployment'));
   await expect.poll(()=>page.evaluate(()=>Net.snapshot.game.mission.escort?.step)).toBe(1);
   await expect(page.locator('#missionObjectives')).toBeVisible();
-  await page.locator('#missionObjectives summary').click();
-  await expect(page.locator('#missionObjectives p')).toContainText('1/15');
+  await page.locator('#missionObjectives').click();
+  const panel=page.locator('#missionObjectivesPanel');
+  await expect(panel).toBeVisible();
+  await expect(panel.locator('h2')).toHaveText('任务目标');
+  await expect(panel.locator('h3')).toHaveText(['胜利条件','失败条件']);
+  await expect(panel.locator('[data-objectives="victory"]')).toContainText('(1/15)');
+  await expect(panel.locator('[data-objectives="failure"]')).toContainText('(0/1)');
+  const bounds=await panel.evaluate(el=>{const r=el.getBoundingClientRect();return {
+    x:Math.abs(r.x+r.width/2-innerWidth/2),y:Math.abs(r.y+r.height/2-innerHeight/2),
+    left:r.left,right:r.right,width:innerWidth};});
+  expect(bounds.x).toBeLessThan(2);expect(bounds.y).toBeLessThan(2);
+  expect(bounds.left).toBeGreaterThanOrEqual(0);expect(bounds.right).toBeLessThanOrEqual(bounds.width);
+  await panel.getByRole('button',{name:'关闭',exact:true}).click();
+  await expect(panel).toBeHidden();
+  await page.locator('#missionObjectives').click();
   await expect(page.locator('#missionDialogue')).toBeHidden();
   await page.evaluate(()=>{
     const room=[...escortEngine.rooms.values()][0];
@@ -44,6 +57,8 @@ for(const width of [1440,390])test(`escort mission selection, deployment and sup
     MapCamera.focus(convoy.x,convoy.y);
   });
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+  await expect(panel.locator('[data-objectives="victory"]')).toContainText('(2/15)');
   await page.screenshot({path:`tmp/verification/screenshots/no-fool-mission-${width}.png`});
+  await page.keyboard.press('Escape');await expect(panel).toBeHidden();
   expect(errors).toEqual([]);
 });

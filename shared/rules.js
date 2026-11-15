@@ -54,7 +54,8 @@ const Tactics = (() => {
   const ownerOf = (unit) => unit.ownerSeat ?? unit.team;
   const controllerOf = (game, unit) => game.campaignControllers?.[ownerOf(unit)] ?? ownerOf(unit);
   function canControlUnit(settings, members, seat, unit) {
-    if (unit?.missionEscort) return false;
+    if (unit?.missionEscort || unit?.missionEscaped) return false;
+    if (unit?.missionAutonomous && ownerOf(unit)!==seat) return false;
     if (!unit || !Number.isInteger(seat) || seat < 0 || !members?.some((m) => m.seat === seat))
       return false;
     if (ownerOf(unit) === seat) return true;
@@ -677,9 +678,10 @@ const Tactics = (() => {
         (player?.bot ? (player.formationVariation?.budget ?? 1) : 1),
     );
   }
+  const fleetLimit = settings => settings?.mode === "mission" ? settings.missionFleetLimit ?? 3 : 3;
   function armyUnitLimit(settings, player) {
     if (settings.mode !== "campaign" && formationStyle(settings) === "standard" && !player?.battlefieldAI && !player?.sweepEnemy)
-      return player?.bot ? catalog.formation.maxUnits : 3;
+      return player?.bot ? catalog.formation.maxUnits : fleetLimit(settings);
     if (
       player?.formationPreset &&
       (player.bot || settings.mode === "campaign" || formationStyle(settings) === "free")
@@ -740,7 +742,7 @@ const Tactics = (() => {
         Object.assign(rules, economy.normalizeStock(player));
     }
     if (settings.mode !== "campaign" && !player?.battlefieldAI && !player?.sweepEnemy && formationStyle(settings) !== "free")
-      Object.assign(rules,{requiresCarriers:true,fleetLimit:3});
+      Object.assign(rules,{requiresCarriers:true,fleetLimit:fleetLimit(settings)});
     // Standard formations share the total COST and three-carrier rules. Quick free formations
     // retain the legacy single-unit limits.
     if (player?.bot && formationStyle(settings) !== "free") {
@@ -4908,6 +4910,7 @@ const Tactics = (() => {
     aiFormationVariation,
     armyBudget,
     armyUnitLimit,
+    fleetLimit,
     armyRestrictions,
     aiDefaults,
     aiCountPercentages,

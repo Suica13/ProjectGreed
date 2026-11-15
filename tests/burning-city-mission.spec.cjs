@@ -1,0 +1,56 @@
+const {test,expect}=require('@playwright/test');
+const {pathToFileURL}=require('node:url'),path=require('node:path');
+for(const width of [1440,390])test(`burning city cover, dusk, autonomous allies and changing objectives at ${width}px`,async({page})=>{
+  test.setTimeout(120000);const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  await page.setViewportSize({width,height:950});
+  await page.addInitScript(()=>localStorage.setItem('projectgreed.economy.v1',JSON.stringify({schemaVersion:3,money:100000,supplies:100000,licenses:{Medea:true},inventory:{Medea:5},kits:{},claimed:{}})));
+  await page.goto(pathToFileURL(path.resolve('public/client.html')).href);await expect(page.locator('#openSkirmish')).toBeEnabled();
+  await page.evaluate(()=>{I18n.setLanguage('zh');const factory=createRoomEngine;createRoomEngine=options=>(window.cityEngine=factory({...options,aiDelayMs:999999}));});
+  await page.locator('#openSkirmish').click();await page.locator('#createOfflineRoom').click();
+  await page.locator('#offlineRoomMode').selectOption('mission');await page.locator('#confirmOfflineMode').click();
+  await expect.poll(()=>page.evaluate(()=>Net.snapshot?.settings.mode)).toBe('mission');
+  await page.evaluate(()=>Net.request('configure_room',{mapId:'mission_burning_city',costLimit:5000,unitLimit:18}));
+  await expect.poll(()=>page.evaluate(()=>Net.snapshot?.settings.mapId)).toBe('mission_burning_city');
+  await expect(page.locator('#roomMapTitle')).toContainText('[0087][SDGO]燃烧的新都市');
+  expect(await page.evaluate(()=>ART.assets[Rules.getMap('mission_burning_city').mission.cover].startsWith('data:image/png;base64,'))).toBe(true);
+  await page.screenshot({path:`tmp/verification/screenshots/burning-city-room-${width}.png`});
+  await expect.poll(()=>page.evaluate(()=>!!Net.awaiting)).toBe(false);
+  await page.evaluate(()=>Net.request('start_game',{formation:[{unitId:'Medea',kitId:'standard'}]}));
+  await expect(page.locator('#confirmFinalFormation')).toBeVisible();await page.locator('#confirmFinalFormation').click();
+  await expect.poll(()=>page.evaluate(()=>Net.snapshot.phase)).toBe('deployment');
+  await page.evaluate(()=>Net.request('auto_place_deployment'));await expect.poll(()=>page.evaluate(()=>!!Net.awaiting)).toBe(false);
+  await page.evaluate(()=>Net.request('confirm_deployment'));
+  const cover=page.locator('#missionDialogue');await expect(cover).toBeVisible();
+  await expect(cover.locator('strong')).toHaveText('奥古一般指挥官:');
+  await expect(cover.locator('p')).toHaveText('距离目标到达还有一段时间，请先进行部署，不用管我们。');
+  await expect.poll(()=>cover.locator('img').evaluate(el=>el.complete&&el.naturalWidth>0)).toBe(true);
+  const playable=await page.evaluate(()=>{const units=Net.snapshot.game.units.filter(u=>u.missionAutonomous);return {count:units.length,controlled:units.some(u=>Net.canControl(u)),night:Net.snapshot.settings.dayNight};});
+  expect(playable).toEqual({count:9,controlled:false,night:'dusk'});
+  await page.screenshot({path:`tmp/verification/screenshots/burning-city-opening-${width}.png`});
+  await cover.getByRole('button',{name:'继续',exact:true}).click();await expect(cover).toBeHidden();
+  await page.locator('#missionObjectives').click();const panel=page.locator('#missionObjectivesPanel');
+  await expect(panel.locator('[data-objectives="victory"]')).toHaveText('消灭敌方三台精神感应高达(0/3)');
+  await panel.getByRole('button',{name:'关闭',exact:true}).click();
+  await page.evaluate(()=>{const room=[...cityEngine.rooms.values()][0];room.game.round=15;cityEngine.broadcast(room);});
+  for(let i=0;i<5;i++){await expect(cover).toBeVisible();await cover.getByRole('button',{name:'继续',exact:true}).click();}
+  await expect(cover).toBeHidden();
+  await page.evaluate(()=>{const room=[...cityEngine.rooms.values()][0],target=room.game.units.find(u=>u.missionActor==='psycho-0');target.x=44;target.y=9;cityEngine.broadcast(room);room.game.round=16;cityEngine.broadcast(room);});
+  await expect(cover).toBeVisible();await expect(cover.locator('p')).toContainText('有目标撤离了');
+  await cover.getByRole('button',{name:'继续',exact:true}).click();await expect(cover).toBeHidden();
+  await page.locator('#missionObjectives').click();await expect(panel.locator('[data-objectives="victory"]')).toContainText('消灭所有敌人');
+  await page.screenshot({path:`tmp/verification/screenshots/burning-city-objectives-${width}.png`});
+  expect(errors).toEqual([]);
+});
+
+test('burning city scripts remain editable with AI control and retreat tools',async({page})=>{
+  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  const map=JSON.parse(require('node:fs').readFileSync('assets/maps/missions/burning_city.json','utf8'));
+  await page.goto(pathToFileURL(path.resolve('public/map-editor.html')).href);
+  await page.evaluate(map=>{MapEditor.importMap(map.tileMap);MapEditor.tab('mission');},map);
+  await expect(page.locator('#missionScriptValidation')).toHaveText('✓ 脚本结构检查通过');
+  await page.evaluate(()=>MissionEditor.focusActor('aeug-line-0-0'));
+  await expect(page.locator('[data-actor-id="aeug-line-0-0"]').getByLabel('独立AI友军（玩家不可控制／黄色标记）',{exact:true})).toBeChecked();
+  await expect(page.getByRole('button',{name:'＋向右侧撤离',exact:true})).toBeVisible();
+  expect(await page.evaluate(()=>MissionEditor.issues())).toEqual([]);
+  expect(errors).toEqual([]);
+});

@@ -178,6 +178,7 @@ async function stop() {
   await page.evaluate((url) => {
     Net.serverURL = url;
     Net.room = "APPTEST2";
+    byId("newRoomMode").value = "quick";
     Net.connect("create", true);
   }, `ws://127.0.0.1:${address.port}/ws`);
   await page.waitForFunction(() => Net.active && !Net.local && Net.snapshot);

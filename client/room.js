@@ -224,6 +224,7 @@ const RoomPanel = (() => {
     byId("roomMapTitle").textContent = I18n.text("战场扫荡");
     byId("roomMapInfo").textContent = I18n.text("合作模式") + " · " + I18n.text("战场扫荡");
   }
+  const mapCoverImages=new Map();
   function drawMap(map) {
     const canvas = byId("roomMapPreview"),
       ctx = canvas.getContext("2d");
@@ -273,6 +274,20 @@ const RoomPanel = (() => {
     ctx.textAlign = "left";
     ctx.fillText(I18n.text(map.environment === "space" ? "宇宙" : "地面"), 11, 22);
     canvas.setAttribute("aria-label", map.name + " · " + map.width + "×" + map.height);
+    if(map.mission?.cover && ART.assets[map.mission.cover]) {
+      let cover=mapCoverImages.get(map.mission.cover);
+      if(!cover) {
+        cover=new Image();mapCoverImages.set(map.mission.cover,cover);
+        cover.onload=()=>{if(Net.snapshot?.settings.mapId===map.id)drawMap(map);};
+        cover.src=ART.assets[map.mission.cover];
+      }
+      if(cover.complete && cover.naturalWidth) {
+        ctx.fillStyle="#101722";ctx.fillRect(0,0,canvas.width,canvas.height);
+        const scale=Math.min(canvas.width/cover.naturalWidth,canvas.height/cover.naturalHeight);
+        const width=cover.naturalWidth*scale,height=cover.naturalHeight*scale;
+        ctx.drawImage(cover,(canvas.width-width)/2,(canvas.height-height)/2,width,height);
+      }
+    }
     const playerPositions = map.spawns.filter((spawn) => !spawn.fixedAlly && (!map.mission || spawn.team===0)).length;
     byId("roomMapTitle").textContent = "[" + playerPositions + "P]" + map.name;
     byId("roomMapInfo").textContent =
@@ -552,7 +567,7 @@ const RoomPanel = (() => {
     mapSelect.hidden = settings.mode === "sweep";
     byId("roomMapChoiceHint").hidden = settings.mode === "sweep";
     const fleetFormation = Rules.formationStyle(settings) === "standard" && settings.mode !== "campaign";
-    byId("roomUnitLimit").value = fleetFormation ? 3 : numericDrafts.unitLimit ?? settings.unitLimit;
+    byId("roomUnitLimit").value = fleetFormation ? Rules.fleetLimit(settings) : numericDrafts.unitLimit ?? settings.unitLimit;
     byId("roomUnitLimit").readOnly = fleetFormation;
     const limitLabel = fleetFormation ? "\u8230\u8239\u6570\u91cf\u4e0a\u9650" : "\u5355\u4f4d\u5bb9\u91cf\u70b9\u4e0a\u9650";
     byId("roomUnitLimit").parentElement.firstChild.nodeValue = I18n.text(limitLabel);
@@ -837,7 +852,7 @@ const RoomPanel = (() => {
     section.append(grid);
     const budget = Rules.armyBudget(snapshot.settings, player);
     const unitLimit = Rules.formationStyle(snapshot.settings) === "standard" && snapshot.settings.mode !== "campaign"
-      ? 3 : Rules.armyUnitLimit(snapshot.settings, player);
+      ? Rules.fleetLimit(snapshot.settings) : Rules.armyUnitLimit(snapshot.settings, player);
     const unitCost = Rules.armyRestrictions(snapshot.settings, player).unitCostLimit;
     section.append(
       element(
@@ -1102,7 +1117,7 @@ const RoomPanel = (() => {
             ": " +
             (Rules.formationStyle(snapshot.settings) === "free" ? Rules.formationPoints(player.entries) : player.entries.filter(e=>!e.preload && Rules.isFleetCarrier(Rules.formationModel(e))).length) +
             " / " +
-            (Rules.formationStyle(snapshot.settings) === "free" ? player.unitLimit : 3),
+            (Rules.formationStyle(snapshot.settings) === "free" ? player.unitLimit : Rules.fleetLimit(snapshot.settings)),
         ),
         element(
           "span",

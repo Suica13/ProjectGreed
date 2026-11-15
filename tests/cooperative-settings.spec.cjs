@@ -13,9 +13,9 @@ for(const width of [1440,390])test(`cooperative menu and fixed mission rules at 
  expect(await page.locator('#roomTagRestrictions').evaluate(el=>el.closest('details').hidden)).toBe(true);
  const reused=await page.evaluate(()=>{
   const s={...Net.snapshot,started:true,phase:'idle',game:{...Net.snapshot.game,mission:{protect:['whitebase'],dialogue:null}}};
-  MissionUI.receive(s);const node=document.querySelector('#missionObjectives p').firstChild;
+  MissionUI.receive(s);const node=document.querySelector('#missionObjectivesPanel [data-objectives="victory"]').firstChild;
   for(let i=0;i<20;i++)MissionUI.receive(s);
-  const same=node===document.querySelector('#missionObjectives p').firstChild;
+  const same=node===document.querySelector('#missionObjectivesPanel [data-objectives="victory"]').firstChild;
   MissionUI.clear();return same;
  });
  expect(reused).toBe(true);expect(errors).toEqual([]);

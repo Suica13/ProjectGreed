@@ -9,7 +9,7 @@ const doc = M.create({
   name: "[0079][EFSF]相逢在宇宙",
   width: 41,
   height: 25,
-  description: "多人合作：歼灭敌军并保护白色基地。十回合内击破六台力克大魔可触发额外增援。",
+  description: "重返宇宙后等待阿姆罗一行人的是...",
   environment: "space",
   supportedModes: ["mission"],
   playersPerTeam: 5,

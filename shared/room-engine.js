@@ -146,7 +146,26 @@ function createRoomEngine({
       bot.ready = bot.finalReady = true;
     }
   }
+  function clearMissionAllies(room) {
+    for (const p of members(room).filter(p=>p.missionAlly)) {
+      room.members.delete(p.id);
+      if(room.seats[p.seat]===p)room.seats[p.seat]=null;
+    }
+    if(room.missionAllySeat!==undefined)room.seats.length=G.getMap(room.settings.mapId).spawns.length;
+    delete room.missionAllySeat;
+  }
+  function ensureMissionAllies(room) {
+    const map=G.getMap(room.settings.mapId);
+    if(!map.mission?.actors.some(a=>a.autonomous))return;
+    const seat=map.spawns.length,id=randomId();
+    const ally={id,name:"奥古任务友军",bot:true,missionAlly:true,seat,characterFaction:"PMC",
+      ready:true,finalReady:true,requests:new Map(),aiSettings:G.validateAISettings(),
+      ws:{room:room.code,memberId:id,seat}};
+    room.members.set(id,ally);room.seats[seat]=ally;room.missionAllySeat=seat;
+    (room.activeSeats ||= [])[seat]=true;room.game.deployment[seat]=true;
+  }
   function ensureMissionSeats(room) {
+    if(!room.started || room.settings.mode!=="mission")clearMissionAllies(room);
     if (room.settings.mode !== "mission") {
       for (const p of members(room).filter(p=>p.missionEnemy)) {
         if(room.seats[p.seat]===p) room.seats[p.seat]=null;
@@ -710,9 +729,9 @@ function createRoomEngine({
           code: room.code,
           locked: !!room.passwordMatches,
           players: room.seats.filter(
-            (player) => !player?.battlefieldAI && !player?.missionEnemy && (player?.bot || onlineMember(player)),
+            (player) => !player?.battlefieldAI && !player?.missionEnemy && !player?.missionAlly && (player?.bot || onlineMember(player)),
           ).length,
-          capacity: room.settings.mode === "mission" ? room.seats.length / 2 : room.seats.length - (room.settings.mode === "battlefield" ? 2 : 0),
+          capacity: room.settings.mode === "mission" ? G.getMap(room.settings.mapId).playersPerTeam : room.seats.length - (room.settings.mode === "battlefield" ? 2 : 0),
           mapId: room.settings.mapId,
           mode: room.settings.mode || "regular",
           costLimit: room.settings.costLimit,
@@ -812,6 +831,8 @@ function createRoomEngine({
     const key = "game:" + (intel?.team ?? "global"), cached = cache?.get(key);
     if (cached?.game === game) return privateReserves(cached.view, game, recipient);
     let { seed, partSeed, ...view } = game;
+    if (game.mission?.protect)
+      view.mission = { ...game.mission, objectives: Mission.objectives(game, G) };
     if (game.battlefield?.reserves)
       view.battlefield = {
         ...Object.fromEntries(
@@ -1188,7 +1209,7 @@ function createRoomEngine({
         .filter((m) => reconnectTimers.has(m) && m.seat !== null)
         .map((m) => ({ memberId: m.id, seat: m.seat, until: m.disconnectedUntil })),
       members: members(room)
-        .filter((m) => m.bot || onlineMember(m))
+        .filter((m) => !m.missionAlly && (m.bot || onlineMember(m)))
         .map((member) => ({
           id: member.id,
           name: member.name,
@@ -1356,7 +1377,7 @@ function createRoomEngine({
       const host = Mission.commander(room);
       room.game.mission.commanderId=host?.id ?? null;
       if (host?.seat !== null && host?.seat !== undefined)
-        for (const actor of room.game.units.filter(u=>u.missionGuest)) actor.ownerSeat=host.seat;
+        for (const actor of room.game.units.filter(u=>u.missionGuest && !u.missionAutonomous)) actor.ownerSeat=host.seat;
       Mission.poll(room, G, text=>log(room,text));
     }
     if (["sweep", "mission"].includes(room.settings.mode) && (!room.started || room.phase === "assembly"))
@@ -1526,7 +1547,7 @@ function createRoomEngine({
   const autoEndTimers = new Map();
   function canAutoEnd(room) {
     return (
-      !room.game.mission?.dialogue && !room.game.mission?.error &&
+      !room.game.mission?.dialogue && !room.game.mission?.choice && !room.game.mission?.error &&
       rooms.get(room.code) === room &&
       room.started &&
       !room.returnCountdown &&
@@ -2932,6 +2953,7 @@ function createRoomEngine({
   function resumeSavedGame(room) {
     const save = room.resumeSave;
     room.game = Records.clone(save.game);
+    if(room.settings.mode==="mission")ensureMissionAllies(room);
     room.game.fogMode = room.settings.fogMode;
     room.game.costLimit = room.settings.costLimit;
     room.game.unitLimit = room.settings.unitLimit;
@@ -3152,7 +3174,10 @@ function createRoomEngine({
         formationIndices: plans.map((plan) => plan?.indices ?? []),
       },
     );
-    if (room.settings.mode === "mission") Mission.initialize(room, G);
+    if (room.settings.mode === "mission") {
+      ensureMissionAllies(room);
+      Mission.initialize(room, G);
+    }
     room.battleRoster = Object.fromEntries(
       room.game.units.filter(actor=>!actor.missionGuest).map((actor) => [
         actor.id,
@@ -3190,7 +3215,7 @@ function createRoomEngine({
     planner.reset(room);
     room.turnDone = Array(room.seats.length).fill(false);
     for (const player of room.seats)
-      if (player?.bot && !player.missionEnemy) {
+      if (player?.bot && !player.missionEnemy && !player.missionAlly) {
         G.aiDeployment(room.game, player.seat);
         if (G.confirmDeployment(room.game, player.seat)) room.phase = "idle";
       }
@@ -3264,7 +3289,7 @@ function createRoomEngine({
       availability.set(unit.id, value);
       return value;
     };
-    if (!room.started || room.game.mission?.dialogue || room.game.mission?.error || !connected(room).every(Boolean)) return null;
+    if (!room.started || room.game.mission?.dialogue || room.game.mission?.choice || room.game.mission?.error || !connected(room).every(Boolean)) return null;
     if (room.phase === "battle")
       return room.battle.ready.every(Boolean) ? { finishBattle: true } : null;
     if (room.game.winner !== null) return null;
@@ -3427,6 +3452,15 @@ function createRoomEngine({
     const u = room.game.units.find(
       (u) => G.controllerOf(room.game, u) === player.seat && G.onMap(u) && canPlanMore(u),
     );
+    if (u.missionWithdrawal) {
+      if(!u.moved) {
+        const destinations=[...G.reachable(room.game,u).values()].filter(p=>!p.boarding);
+        destinations.sort((a,b)=>b.x-a.x || Math.abs(a.y-u.y)-Math.abs(b.y-u.y) || a.cost-b.cost);
+        const target=destinations[0];
+        if(target && target.x>u.x)return {player,action:"move",fields:{unitId:u.id,x:target.x,y:target.y}};
+      }
+      return {player,action:"wait",fields:{unitId:u.id}};
+    }
     if (room.campaignBattle && G.campaignBattlefield.canCapture(G, room.game, u))
       return { player, action: "capture_point", fields: { unitId: u.id } };
     const objective = room.game.battlefield
@@ -3654,7 +3688,7 @@ function createRoomEngine({
       rooms.get(room.code) !== room ||
       !room.started ||
       room.returnCountdown ||
-      room.game.mission?.dialogue || room.game.mission?.error ||
+      room.game.mission?.dialogue || room.game.mission?.choice || room.game.mission?.error ||
       !connected(room).every(Boolean) ||
       !["idle", "reaction", "battle"].includes(room.phase)
     ) {
@@ -4108,6 +4142,13 @@ function createRoomEngine({
       } else send(ws, state(room, id, member));
       return;
     }
+    if (msg.action === "mission_choose") {
+      if (room.settings.mode!=="mission" || member.id!==Mission.commander(room)?.id || member.seat===null)
+        throw Error("任务选择由当前指挥玩家（默认房主）决定");
+      if(msg.matchId!==room.matchId || msg.revision!==room.revision) throw Error("对局状态已更新");
+      Mission.choose(room,G,msg.choiceId,msg.optionId,text=>log(room,text));
+      cache.set(id,true);room.revision++;broadcast(room,id,member);return;
+    }
     if (msg.action === "mission_dialogue_next") {
       if (room.settings.mode!=="mission" || member.id!==Mission.commander(room)?.id || member.seat===null)
         throw Error("剧情由当前指挥玩家（默认房主）推进");
@@ -4115,7 +4156,7 @@ function createRoomEngine({
       Mission.advance(room,G,msg.dialogueId,msg.lineIndex,text=>log(room,text));
       cache.set(id,true);room.revision++;broadcast(room,id,member);return;
     }
-    if ((room.game.mission?.dialogue || room.game.mission?.error) &&
+    if ((room.game.mission?.dialogue || room.game.mission?.choice || room.game.mission?.error) &&
       !["sync","chat","return_room","playback_ready","download_log"].includes(msg.action))
       throw Error("剧情演出中，请等待对话结束");
     if (room.settings.mode === "mission" &&
