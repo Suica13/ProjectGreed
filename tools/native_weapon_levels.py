@@ -4,7 +4,7 @@ import functools
 import json
 import re
 from pathlib import Path
-from mod_source import ASSETS, MOD, load, parse, resolve, section
+from mod_source import package_root, ASSETS, MOD, load, parse, resolve, section
 
 
 def file_level(path):
@@ -29,7 +29,7 @@ def section_levels(path, root):
 
 def apply(prefab):
     package, reference = prefab["source"].split("/", 1)
-    root = MOD / package
+    root = package_root(package)
     path = root / reference
     native = load(path, root=root)
     levels = section_levels(path, root)

@@ -1,12 +1,13 @@
 """Native continuous beam payloads become one directional skill hit per hull."""
 from weapon_store import loads as load_source_json, dumps as dump_source_json
 import copy,json,re,shutil,struct,math
-from mod_source import ASSETS,ROOT,MAIN,MOD,load
+from mod_source import package_root, ASSETS,ROOT,MAIN,MOD,load
 BEAMS={'ApsarasIII':'ZN_ApsarasIII_MegaBeamCannon','MA_08_DZL':'ZN_MA_08_MegaBeamCannon','ApsarasII':'ZN_ApsarasII_MegaBeamCannon','RX_78_4_Bst':'EF_RX_78_4_HighMegaLauncher',
        'Burstliner':'EF_Burstliner_BeamCannon','MA_08':'ZN_MA_08_MegaBeamCannon','AMX_002':'ZN_AMX_002_MegaBeamCannon','Skiure':'ZN_Skiure_BeamCannon'}
 
 # Only native continuous MEGA guns, never ordinary large beam projectiles.
 MEGA_BEAMS = {
+    'NahelArgamaClass':'NahelArgamaClass_HighMegaCannon',
     'MSZ_010':'AEUG_MSZ_010_HighMegaCannon',
     'MSZ_010S':'AEUG_MSZ_010_HighMegaCannon',
     'FA_010S':'AEUG_MSZ_010_HighMegaCannon',
@@ -23,7 +24,7 @@ def apply(prefab,native=None):
     mega=prefab['id'] in MEGA_BEAMS
     if not key:return prefab
     weapon=prefab['weapons'][key]
-    root=MOD/prefab['source'].split('/')[0]
+    root=package_root(prefab['source'].split('/')[0])
     data=load(root/weapon['source']['file'],root)
     color=next((s.get('sendMessageWithTags','')[9:] for s in data.values() if s.get('sendMessageWithTags','').startswith('SetColor_')),'Pink')
     charge_attachment=data.get('attachment_'+key+'_ChargeEffect_1')
@@ -93,7 +94,7 @@ def apply(prefab,native=None):
         clip=next((step['animation'] for step in weapon['attack']['steps'] if step.get('animation')),None),
         effect='Irradiation_Charge_'+color,sound={'file':'../../sounds/BeamCharge_4.ogg','volume':.7},
         localization={'zh':{'name':title},'en':{'name':'MEGA Irradiation Beam' if mega else 'Irradiation Beam'},'ja':{'name':'MEGA照射ビーム' if mega else '照射ビーム'}},
-        description=f'基础伤害 {rounded_damage:,} × 1 = {rounded_damage:,}；射程 10 格，宽度 {3 if mega else 1} 格，命中 {50 if mega else 60}%；消耗 5 AP、50%最大EN，冷却 3 个己方回合。对沿途每台单位（含友军）判定一次。')
+        description=f'基础伤害 {rounded_damage:,} × 1 = {rounded_damage:,}；射程 10 格，宽度 {3 if mega else 1} 格，命中 {50 if mega else 60}%；消耗50%最大EN，冷却 3 个己方回合。对沿途每台单位（含友军）判定一次。')
     if 'BeamCharge_4.ogg' not in [p.name for p in (ASSETS/'sounds').glob('*.ogg')]:raise ValueError('Missing charge audio')
     skills=prefab.setdefault('skills',[]);skills[:]=[s for s in skills if s['id']!='Irradiation'];skills.append(skill)
     weapon['availability']={'hidden':True,'reasons':['converted_skill'],'convertedSkill':'Irradiation'}

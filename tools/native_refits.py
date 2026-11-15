@@ -2,7 +2,7 @@
 from weapon_store import loads as load_source_json, dumps as dump_source_json
 import functools, json, re
 from pathlib import Path
-from mod_source import ASSETS, MOD, ROOT, parse, resolve, section, number
+from mod_source import source_path, ASSETS, MOD, ROOT, parse, resolve, section, number
 
 @functools.lru_cache(None)
 def definitions(file):
@@ -26,7 +26,7 @@ def definitions(file):
     return result
 
 def apply(prefab, native=None):
-    data = definitions(MOD / prefab['source'])
+    data = definitions(source_path(prefab['source']))
     options = []
     for key in data:
         if not key.startswith('action_CustomUnit'):
@@ -60,7 +60,7 @@ if __name__ == '__main__':
     for ref in load_source_json((ASSETS / 'unit-catalog.json').read_text(encoding='utf-8'))['units']:
         path = ASSETS / ref
         p = load_source_json(path.read_text(encoding='utf-8'))
-        if not any(k.startswith('action_CustomUnit') for k in load(MOD / p['source'])):
+        if not any(k.startswith('action_CustomUnit') for k in load(source_path(p['source']))):
             continue
         apply(p)
         path.write_text(dump_source_json(p, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')

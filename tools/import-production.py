@@ -41,7 +41,7 @@ def factory_offers(root=ROOT):
             pairs={(o['unitId'],o['equipmentIndex']) for o in outputs}
             if not pairs:raise ValueError('Missing outputs: '+name)
             unit_id,index=outputs[0]['unitId'],outputs[0]['equipmentIndex']
-            offers[(unit_id,index)].append({'money':int(d['define.Money']),'supplies':int(d['define.Resource']),'quantity':sum(o['quantity'] for o in outputs),'equipmentIndex':index,'source':{'file':str(file.relative_to(MOD)).replace('\\','/'),'action':name,'buildSeconds':delays[0],'queueSeconds':sum(delays[1:]),'outputs':outputs}})
+            offers[(unit_id,index)].append({'money':int(d['define.Money']),'supplies':int(d['define.Resource']),'quantity':sum(o['quantity'] for o in outputs),'equipmentIndex':index,'source':{'file':root.name + '/' + file.relative_to(root).as_posix(),'action':name,'buildSeconds':delays[0],'queueSeconds':sum(delays[1:]),'outputs':outputs}})
     return offers
 
 def tech_costs():
@@ -51,7 +51,7 @@ def tech_costs():
         for key,value in parse(file).items():
             if not key.startswith('hiddenAction_') or not key.endswith('_Awake'):continue
             values=dict(re.findall(r'\b\S*?_(Time|Money|Resource|TechPoint)\s*=\s*(\d+)',value.get('setUnitMemory','')))
-            if values:result[key[13:-6]]={'money':int(values['Money'])*2,'supplies':int(values['Resource'])*2,'sourceCosts':{'money':int(values['Money']),'supplies':int(values['Resource']),'points':int(values['TechPoint']),'researchSeconds':int(values['Time']),'file':str(file.relative_to(MOD)).replace('\\','/'),'action':key}}
+            if values:result[key[13:-6]]={'money':int(values['Money'])*2,'supplies':int(values['Resource'])*2,'sourceCosts':{'money':int(values['Money']),'supplies':int(values['Resource']),'points':int(values['TechPoint']),'researchSeconds':int(values['Time']),'file':root.name + '/' + file.relative_to(root).as_posix(),'action':key}}
     return result
 
 def main():

@@ -5,9 +5,30 @@ import re
 from pathlib import Path
 
 MOD = Path(r"E:/RustedWarfare_Reunion/mods/units")
-ROOT = MOD / os.environ.get("PROJECTGREED_MOD_DLC", "GW_BattleUniverse_DLC_0079")
+PACKAGE = os.environ.get("PROJECTGREED_MOD_DLC", "GW_BattleUniverse_DLC_0079")
+# Some checkouts keep a DLC alongside mods/units instead of inside it.
+_default_root = MOD / PACKAGE
+ROOT = Path(os.environ.get("PROJECTGREED_MOD_DLC_ROOT", str(
+    _default_root if _default_root.exists() else MOD.parent / PACKAGE
+)))
 MAIN = MOD / "GW_BattleUniverse_Main"
 ASSETS = Path(__file__).resolve().parents[1] / "assets"
+
+def package_root(name):
+    """Resolve a read-only package without assuming every DLC lives in mods/units."""
+    if not re.fullmatch(r"[A-Za-z0-9_.-]+", name) or name in (".", ".."):
+        raise ValueError("Invalid MOD package: " + name)
+    if name == ROOT.name:
+        return ROOT
+    original = MOD / name
+    sibling = MOD.parent / name
+    return original if original.exists() or not sibling.exists() else sibling
+
+def source_path(reference):
+    relative = Path(reference)
+    if relative.is_absolute() or ".." in relative.parts or len(relative.parts) < 2:
+        raise ValueError("Invalid MOD source reference: " + str(reference))
+    return package_root(relative.parts[0]).joinpath(*relative.parts[1:])
 
 def parse(file):
     sections, current = {}, None
@@ -30,6 +51,8 @@ def parse(file):
 
 def source_root(path):
     path = Path(path).resolve()
+    if path.is_relative_to(ROOT.resolve()):
+        return ROOT
     relative = path.relative_to(MOD.resolve())
     return MOD / relative.parts[0]
 
@@ -38,7 +61,7 @@ def resolve(reference, base=ROOT, root=None):
     reference = reference.strip().replace("\\", "/")
     path = root / reference[5:].lstrip("/") if reference.startswith("ROOT:") else base / reference
     path = path.resolve()
-    if not path.is_relative_to(MOD.resolve()):
+    if not any(path.is_relative_to(base.resolve()) for base in (MOD, ROOT)):
         raise ValueError("Source outside MOD checkout: " + str(path))
     return path
 

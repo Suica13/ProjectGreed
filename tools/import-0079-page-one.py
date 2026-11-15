@@ -156,7 +156,7 @@ def weapon(p,path,effects,attach=None):
  return result
 
 def build(row,effects):
- path=ROOT/row['source'];data=load(path);files=graph(path);refs=[f for f in files if '/Units/BattleUnits/Weapon/' in f.as_posix()]
+ path=ROOT/row['source'];data=load(path);files=graph(path);refs=[f for f in files if '/Units/BattleUnits/' in f.as_posix() and '/Weapon/' in f.as_posix()]
  p=visual(row,data);tags=[t.strip() for t in row['tags'].split(',')];ship='Ship' in tags;modular=ship or row['id'] in ('Medea','FatUncle');air='Aircraft' in tags;amphib='Amphibious' in tags or stat(data,'waterAdaptability')>=100 and 'MS' in tags
  skillfiles=[f for f in files if '/Template/Unit/Skill/' in f.as_posix()];skillnames=[f.stem for f in skillfiles]
  moveType='air' if air else 'naval' if 'NavyUnit' in tags else 'amphibious' if amphib else 'hover' if 'Hover' in skillnames else 'ground'

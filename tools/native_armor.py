@@ -1,7 +1,7 @@
 """Native ABC/PS coating rules and their visual state; MOD is read-only."""
 import re
 import functools
-from mod_source import MOD,MAIN,ASSETS,load,section
+from mod_source import source_path, MOD,MAIN,ASSETS,load,section
 from native_combat import globals_for
 
 @functools.lru_cache(None)
@@ -13,8 +13,8 @@ def ensure_abc_assets():
  path.write_text(dumps(effects,ensure_ascii=False,indent=2)+'\n',encoding='utf8')
 
 def apply(prefab,native=None):
- native=native or load(MOD/prefab['source'])
- values=globals_for(MOD/prefab['source'])
+ native=native or load(source_path(prefab['source']))
+ values=globals_for(source_path(prefab['source']))
  skills=set(prefab.get('sourceStats',{}).get('nativeSkills',[]))
  mechanics=prefab.setdefault('mechanics',[])
  skills.update(m.get('id') for m in mechanics)

@@ -45,6 +45,7 @@
 - [imports/0079-late.md](imports/0079-late.md)
 - [imports/0087-gaps.md](imports/0087-gaps.md)
 - [imports/0087-units.md](imports/0087-units.md)
+- [imports/0087-selected.md](imports/0087-selected.md)
 - [imports/ace-pilots.md](imports/ace-pilots.md)
 - [imports/migration-audit.md](imports/migration-audit.md)
 - [imports/other-beam-weapons.md](imports/other-beam-weapons.md)

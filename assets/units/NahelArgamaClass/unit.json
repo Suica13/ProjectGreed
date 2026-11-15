@@ -1,0 +1,2204 @@
+{
+  "schemaVersion": 2,
+  "id": "NahelArgamaClass",
+  "code": "NahelArgamaClass",
+  "source": "GW_BattleUniverse_DLC_0087/Units/BattleUnits/NahelArgamaClass/NahelArgamaClass.ini",
+  "materials": {
+    "textures": {
+      "NahelArgamaClass.png": "textures/NahelArgamaClass.png",
+      "NahelArgamaClass_Body_1.png": "textures/NahelArgamaClass_Body_1.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "NahelArgamaClass_Turret_BeamCannon_1.png": "textures/NahelArgamaClass_Turret_BeamCannon_1.png",
+      "NahelArgamaClass_Turret_MegaBeamCannon_1.png": "textures/NahelArgamaClass_Turret_MegaBeamCannon_1.png",
+      "NahelArgamaClass_Turret_SubBeamCannon_1.png": "textures/NahelArgamaClass_Turret_SubBeamCannon_1.png",
+      "NahelArgamaClass_Turret_AA_1.png": "textures/NahelArgamaClass_Turret_AA_1.png"
+    },
+    "icon": "NahelArgamaClass.png"
+  },
+  "skeleton": {
+    "Turret_NahelArgamaClass_Turret_BeamCannon_M1": {
+      "x": 0.0,
+      "y": 5.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_NahelArgamaClass_Turret_BeamCannon_M2": {
+      "x": 0.0,
+      "y": -105.0,
+      "endDirOffset": -180.0
+    },
+    "Turret_NahelArgamaClass_Turret_BeamCannon_M3": {
+      "x": 0.0,
+      "y": 0.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_NahelArgamaClass_Turret_BeamCannon_M4": {
+      "x": 0.0,
+      "y": -100.0,
+      "endDirOffset": -180.0
+    },
+    "Turret_NahelArgamaClass_Turret_MegaBeamCannon_L1": {
+      "x": -80.0,
+      "y": -7.0,
+      "endDirOffset": -8.0
+    },
+    "Turret_NahelArgamaClass_Turret_MegaBeamCannon_R1": {
+      "x": 80.0,
+      "y": -7.0,
+      "endDirOffset": 8.0
+    },
+    "Turret_NahelArgamaClass_Turret_SubBeamCannon_L1": {
+      "x": -65.0,
+      "y": 135.0,
+      "endDirOffset": -5.0
+    },
+    "Turret_NahelArgamaClass_Turret_SubBeamCannon_R1": {
+      "x": 65.0,
+      "y": 135.0,
+      "endDirOffset": 5.0
+    },
+    "Turret_NahelArgamaClass_Turret_AA_L1": {
+      "x": -16.0,
+      "y": 8.0,
+      "endDirOffset": -90.0
+    },
+    "Turret_NahelArgamaClass_Turret_AA_L2": {
+      "x": -62.0,
+      "y": 10.0,
+      "endDirOffset": -90.0
+    },
+    "Turret_NahelArgamaClass_Turret_AA_L3": {
+      "x": -62.0,
+      "y": 20.0,
+      "endDirOffset": -90.0
+    },
+    "Turret_NahelArgamaClass_Turret_AA_L4": {
+      "x": -62.0,
+      "y": -20.0,
+      "endDirOffset": -90.0
+    },
+    "Turret_NahelArgamaClass_Turret_AA_L5": {
+      "x": -62.0,
+      "y": -30.0,
+      "endDirOffset": -90.0
+    },
+    "Turret_NahelArgamaClass_Turret_AA_L6": {
+      "x": -28.0,
+      "y": 0.0,
+      "endDirOffset": -90.0
+    },
+    "Turret_NahelArgamaClass_Turret_AA_L7": {
+      "x": -28.0,
+      "y": -10.0,
+      "endDirOffset": -90.0
+    },
+    "Turret_NahelArgamaClass_Turret_AA_L8": {
+      "x": -60.0,
+      "y": -80.0,
+      "endDirOffset": -90.0
+    },
+    "Turret_NahelArgamaClass_Turret_AA_L9": {
+      "x": -60.0,
+      "y": -90.0,
+      "endDirOffset": -90.0
+    },
+    "Turret_NahelArgamaClass_Turret_AA_L10": {
+      "x": -60.0,
+      "y": -100.0,
+      "endDirOffset": -90.0
+    },
+    "Turret_NahelArgamaClass_Turret_AA_L11": {
+      "x": -60.0,
+      "y": -110.0,
+      "endDirOffset": -90.0
+    },
+    "Turret_NahelArgamaClass_Turret_AA_R1": {
+      "x": 16.0,
+      "y": 8.0,
+      "endDirOffset": 90.0
+    },
+    "Turret_NahelArgamaClass_Turret_AA_R2": {
+      "x": 62.0,
+      "y": 10.0,
+      "endDirOffset": 90.0
+    },
+    "Turret_NahelArgamaClass_Turret_AA_R3": {
+      "x": 62.0,
+      "y": 20.0,
+      "endDirOffset": 90.0
+    },
+    "Turret_NahelArgamaClass_Turret_AA_R4": {
+      "x": 62.0,
+      "y": -20.0,
+      "endDirOffset": 90.0
+    },
+    "Turret_NahelArgamaClass_Turret_AA_R5": {
+      "x": 62.0,
+      "y": -30.0,
+      "endDirOffset": 90.0
+    },
+    "Turret_NahelArgamaClass_Turret_AA_R6": {
+      "x": 28.0,
+      "y": 0.0,
+      "endDirOffset": 90.0
+    },
+    "Turret_NahelArgamaClass_Turret_AA_R7": {
+      "x": 28.0,
+      "y": -10.0,
+      "endDirOffset": 90.0
+    },
+    "Turret_NahelArgamaClass_Turret_AA_R8": {
+      "x": 60.0,
+      "y": -80.0,
+      "endDirOffset": 90.0
+    },
+    "Turret_NahelArgamaClass_Turret_AA_R9": {
+      "x": 60.0,
+      "y": -90.0,
+      "endDirOffset": 90.0
+    },
+    "Turret_NahelArgamaClass_Turret_AA_R10": {
+      "x": 60.0,
+      "y": -100.0,
+      "endDirOffset": 90.0
+    },
+    "Turret_NahelArgamaClass_Turret_AA_R11": {
+      "x": 60.0,
+      "y": -110.0,
+      "endDirOffset": 90.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    }
+  },
+  "layers": [
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 1,
+      "offset": {
+        "x": -2.5,
+        "y": -9.0
+      },
+      "scaleX": 0.85,
+      "scaleY": 1.2,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_M1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": -125.0
+      },
+      "scaleX": 0.85,
+      "scaleY": 1.2,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_L1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 4.0,
+      "offset": {
+        "x": -35.0,
+        "y": -145.0
+      },
+      "scaleX": -0.85,
+      "scaleY": 1.2,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_R1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 4.0,
+      "offset": {
+        "x": 35.0,
+        "y": -145.0
+      },
+      "scaleX": 0.85,
+      "scaleY": 1.2,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "NahelArgamaClass_Turret_MegaBeamCannon_L1",
+      "bone": "Turret_NahelArgamaClass_Turret_MegaBeamCannon_L1",
+      "moduleId": "NahelArgamaClass_Turret_MegaBeamCannon_L1",
+      "texture": "NahelArgamaClass_Turret_MegaBeamCannon_1.png",
+      "order": 3.001,
+      "scale": 1.0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "NahelArgamaClass_Turret_MegaBeamCannon_R1",
+      "bone": "Turret_NahelArgamaClass_Turret_MegaBeamCannon_R1",
+      "moduleId": "NahelArgamaClass_Turret_MegaBeamCannon_R1",
+      "texture": "NahelArgamaClass_Turret_MegaBeamCannon_1.png",
+      "order": 3.001,
+      "scale": 1.0,
+      "scaleX": -1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "NahelArgamaClass_Turret_AA_L1",
+      "bone": "Turret_NahelArgamaClass_Turret_AA_L1",
+      "moduleId": "NahelArgamaClass_Turret_AA_L1",
+      "texture": "NahelArgamaClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "NahelArgamaClass_Turret_AA_L2",
+      "bone": "Turret_NahelArgamaClass_Turret_AA_L2",
+      "moduleId": "NahelArgamaClass_Turret_AA_L2",
+      "texture": "NahelArgamaClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "NahelArgamaClass_Turret_AA_L3",
+      "bone": "Turret_NahelArgamaClass_Turret_AA_L3",
+      "moduleId": "NahelArgamaClass_Turret_AA_L3",
+      "texture": "NahelArgamaClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "NahelArgamaClass_Turret_AA_L4",
+      "bone": "Turret_NahelArgamaClass_Turret_AA_L4",
+      "moduleId": "NahelArgamaClass_Turret_AA_L4",
+      "texture": "NahelArgamaClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "NahelArgamaClass_Turret_AA_L5",
+      "bone": "Turret_NahelArgamaClass_Turret_AA_L5",
+      "moduleId": "NahelArgamaClass_Turret_AA_L5",
+      "texture": "NahelArgamaClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "NahelArgamaClass_Turret_AA_L6",
+      "bone": "Turret_NahelArgamaClass_Turret_AA_L6",
+      "moduleId": "NahelArgamaClass_Turret_AA_L6",
+      "texture": "NahelArgamaClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "NahelArgamaClass_Turret_AA_L7",
+      "bone": "Turret_NahelArgamaClass_Turret_AA_L7",
+      "moduleId": "NahelArgamaClass_Turret_AA_L7",
+      "texture": "NahelArgamaClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "NahelArgamaClass_Turret_AA_L8",
+      "bone": "Turret_NahelArgamaClass_Turret_AA_L8",
+      "moduleId": "NahelArgamaClass_Turret_AA_L8",
+      "texture": "NahelArgamaClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "NahelArgamaClass_Turret_AA_L9",
+      "bone": "Turret_NahelArgamaClass_Turret_AA_L9",
+      "moduleId": "NahelArgamaClass_Turret_AA_L9",
+      "texture": "NahelArgamaClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "NahelArgamaClass_Turret_AA_L10",
+      "bone": "Turret_NahelArgamaClass_Turret_AA_L10",
+      "moduleId": "NahelArgamaClass_Turret_AA_L10",
+      "texture": "NahelArgamaClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "NahelArgamaClass_Turret_AA_L11",
+      "bone": "Turret_NahelArgamaClass_Turret_AA_L11",
+      "moduleId": "NahelArgamaClass_Turret_AA_L11",
+      "texture": "NahelArgamaClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "NahelArgamaClass_Turret_AA_R1",
+      "bone": "Turret_NahelArgamaClass_Turret_AA_R1",
+      "moduleId": "NahelArgamaClass_Turret_AA_R1",
+      "texture": "NahelArgamaClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "NahelArgamaClass_Turret_AA_R2",
+      "bone": "Turret_NahelArgamaClass_Turret_AA_R2",
+      "moduleId": "NahelArgamaClass_Turret_AA_R2",
+      "texture": "NahelArgamaClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "NahelArgamaClass_Turret_AA_R3",
+      "bone": "Turret_NahelArgamaClass_Turret_AA_R3",
+      "moduleId": "NahelArgamaClass_Turret_AA_R3",
+      "texture": "NahelArgamaClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "NahelArgamaClass_Turret_AA_R4",
+      "bone": "Turret_NahelArgamaClass_Turret_AA_R4",
+      "moduleId": "NahelArgamaClass_Turret_AA_R4",
+      "texture": "NahelArgamaClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "NahelArgamaClass_Turret_AA_R5",
+      "bone": "Turret_NahelArgamaClass_Turret_AA_R5",
+      "moduleId": "NahelArgamaClass_Turret_AA_R5",
+      "texture": "NahelArgamaClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "NahelArgamaClass_Turret_AA_R6",
+      "bone": "Turret_NahelArgamaClass_Turret_AA_R6",
+      "moduleId": "NahelArgamaClass_Turret_AA_R6",
+      "texture": "NahelArgamaClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "NahelArgamaClass_Turret_AA_R7",
+      "bone": "Turret_NahelArgamaClass_Turret_AA_R7",
+      "moduleId": "NahelArgamaClass_Turret_AA_R7",
+      "texture": "NahelArgamaClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "NahelArgamaClass_Turret_AA_R8",
+      "bone": "Turret_NahelArgamaClass_Turret_AA_R8",
+      "moduleId": "NahelArgamaClass_Turret_AA_R8",
+      "texture": "NahelArgamaClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "NahelArgamaClass_Turret_AA_R9",
+      "bone": "Turret_NahelArgamaClass_Turret_AA_R9",
+      "moduleId": "NahelArgamaClass_Turret_AA_R9",
+      "texture": "NahelArgamaClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "NahelArgamaClass_Turret_AA_R10",
+      "bone": "Turret_NahelArgamaClass_Turret_AA_R10",
+      "moduleId": "NahelArgamaClass_Turret_AA_R10",
+      "texture": "NahelArgamaClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "NahelArgamaClass_Turret_AA_R11",
+      "bone": "Turret_NahelArgamaClass_Turret_AA_R11",
+      "moduleId": "NahelArgamaClass_Turret_AA_R11",
+      "texture": "NahelArgamaClass_Turret_AA_1.png",
+      "order": 3.001,
+      "scale": 0.85,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "NahelArgamaClass_Turret_BeamCannon_M3",
+      "bone": "Turret_NahelArgamaClass_Turret_BeamCannon_M3",
+      "moduleId": "NahelArgamaClass_Turret_BeamCannon_M3",
+      "texture": "NahelArgamaClass_Turret_BeamCannon_1.png",
+      "order": 3.005,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "NahelArgamaClass_Turret_BeamCannon_M4",
+      "bone": "Turret_NahelArgamaClass_Turret_BeamCannon_M4",
+      "moduleId": "NahelArgamaClass_Turret_BeamCannon_M4",
+      "texture": "NahelArgamaClass_Turret_BeamCannon_1.png",
+      "order": 3.005,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "NahelArgamaClass_Turret_SubBeamCannon_L1",
+      "bone": "Turret_NahelArgamaClass_Turret_SubBeamCannon_L1",
+      "moduleId": "NahelArgamaClass_Turret_SubBeamCannon_L1",
+      "texture": "NahelArgamaClass_Turret_SubBeamCannon_1.png",
+      "order": 3.005,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "NahelArgamaClass_Turret_SubBeamCannon_R1",
+      "bone": "Turret_NahelArgamaClass_Turret_SubBeamCannon_R1",
+      "moduleId": "NahelArgamaClass_Turret_SubBeamCannon_R1",
+      "texture": "NahelArgamaClass_Turret_SubBeamCannon_1.png",
+      "order": 3.005,
+      "scale": 1.25,
+      "scaleX": -1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "Body",
+      "texture": "NahelArgamaClass_Body_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "NahelArgamaClass_Turret_BeamCannon_M1",
+      "bone": "Turret_NahelArgamaClass_Turret_BeamCannon_M1",
+      "moduleId": "NahelArgamaClass_Turret_BeamCannon_M1",
+      "texture": "NahelArgamaClass_Turret_BeamCannon_1.png",
+      "order": 5.005,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "NahelArgamaClass_Turret_BeamCannon_M2",
+      "bone": "Turret_NahelArgamaClass_Turret_BeamCannon_M2",
+      "moduleId": "NahelArgamaClass_Turret_BeamCannon_M2",
+      "texture": "NahelArgamaClass_Turret_BeamCannon_1.png",
+      "order": 5.005,
+      "scale": 1.25,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    }
+  ],
+  "animations": {
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 385000,
+    "en": 45000.0,
+    "move": 10,
+    "mobility": 143.75,
+    "cost": 4500,
+    "counterLimit": 1,
+    "accuracy": 125.125,
+    "partStructuralStrength": 125.0,
+    "partsBreakable": false,
+    "movementType": "air",
+    "adaptability": {
+      "ground": 100,
+      "space": 100,
+      "water": 50.0,
+      "air": 100.0,
+      "atmosphere": 0,
+      "mountain": 10.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": true,
+    "modules": [
+      {
+        "id": "NahelArgamaClass_Turret_BeamCannon_M1",
+        "name": "NahelArgamaClass_Turret_BeamCannon_M1",
+        "hp": 45000.0,
+        "bone": "Turret_NahelArgamaClass_Turret_BeamCannon_M1",
+        "x": 0.0,
+        "y": 5.0,
+        "idleDir": 0.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_BeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_NahelArgamaClass_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "NahelArgamaClass_Turret_BeamCannon_M2",
+        "name": "NahelArgamaClass_Turret_BeamCannon_M2",
+        "hp": 45000.0,
+        "bone": "Turret_NahelArgamaClass_Turret_BeamCannon_M2",
+        "x": 0.0,
+        "y": -105.0,
+        "idleDir": -180.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_BeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_NahelArgamaClass_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "NahelArgamaClass_Turret_BeamCannon_M3",
+        "name": "NahelArgamaClass_Turret_BeamCannon_M3",
+        "hp": 45000.0,
+        "bone": "Turret_NahelArgamaClass_Turret_BeamCannon_M3",
+        "x": 0.0,
+        "y": 0.0,
+        "idleDir": 0.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_BeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_NahelArgamaClass_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "NahelArgamaClass_Turret_BeamCannon_M4",
+        "name": "NahelArgamaClass_Turret_BeamCannon_M4",
+        "hp": 45000.0,
+        "bone": "Turret_NahelArgamaClass_Turret_BeamCannon_M4",
+        "x": 0.0,
+        "y": -100.0,
+        "idleDir": -180.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_BeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_NahelArgamaClass_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "NahelArgamaClass_Turret_MegaBeamCannon_L1",
+        "name": "NahelArgamaClass_Turret_MegaBeamCannon_L1",
+        "hp": 45000.0,
+        "bone": "Turret_NahelArgamaClass_Turret_MegaBeamCannon_L1",
+        "x": -80.0,
+        "y": -7.0,
+        "idleDir": -8.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_MegaBeamCannon_L.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_NahelArgamaClass_Turret_MegaBeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "NahelArgamaClass_Turret_MegaBeamCannon_R1",
+        "name": "NahelArgamaClass_Turret_MegaBeamCannon_R1",
+        "hp": 45000.0,
+        "bone": "Turret_NahelArgamaClass_Turret_MegaBeamCannon_R1",
+        "x": 80.0,
+        "y": -7.0,
+        "idleDir": 8.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_MegaBeamCannon_R.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_NahelArgamaClass_Turret_MegaBeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "NahelArgamaClass_Turret_SubBeamCannon_L1",
+        "name": "NahelArgamaClass_Turret_SubBeamCannon_L1",
+        "hp": 45000.0,
+        "bone": "Turret_NahelArgamaClass_Turret_SubBeamCannon_L1",
+        "x": -65.0,
+        "y": 135.0,
+        "idleDir": -5.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_SubBeamCannon_L.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_NahelArgamaClass_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "NahelArgamaClass_Turret_SubBeamCannon_R1",
+        "name": "NahelArgamaClass_Turret_SubBeamCannon_R1",
+        "hp": 45000.0,
+        "bone": "Turret_NahelArgamaClass_Turret_SubBeamCannon_R1",
+        "x": 65.0,
+        "y": 135.0,
+        "idleDir": 5.0,
+        "arc": 120.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_SubBeamCannon_R.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_NahelArgamaClass_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "NahelArgamaClass_Turret_AA_L1",
+        "name": "NahelArgamaClass_Turret_AA_L1",
+        "hp": 6500.0,
+        "bone": "Turret_NahelArgamaClass_Turret_AA_L1",
+        "x": -16.0,
+        "y": 8.0,
+        "idleDir": -90.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_NahelArgamaClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "NahelArgamaClass_Turret_AA_L2",
+        "name": "NahelArgamaClass_Turret_AA_L2",
+        "hp": 6500.0,
+        "bone": "Turret_NahelArgamaClass_Turret_AA_L2",
+        "x": -62.0,
+        "y": 10.0,
+        "idleDir": -90.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_NahelArgamaClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "NahelArgamaClass_Turret_AA_L3",
+        "name": "NahelArgamaClass_Turret_AA_L3",
+        "hp": 6500.0,
+        "bone": "Turret_NahelArgamaClass_Turret_AA_L3",
+        "x": -62.0,
+        "y": 20.0,
+        "idleDir": -90.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_NahelArgamaClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "NahelArgamaClass_Turret_AA_L4",
+        "name": "NahelArgamaClass_Turret_AA_L4",
+        "hp": 6500.0,
+        "bone": "Turret_NahelArgamaClass_Turret_AA_L4",
+        "x": -62.0,
+        "y": -20.0,
+        "idleDir": -90.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_NahelArgamaClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "NahelArgamaClass_Turret_AA_L5",
+        "name": "NahelArgamaClass_Turret_AA_L5",
+        "hp": 6500.0,
+        "bone": "Turret_NahelArgamaClass_Turret_AA_L5",
+        "x": -62.0,
+        "y": -30.0,
+        "idleDir": -90.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_NahelArgamaClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "NahelArgamaClass_Turret_AA_L6",
+        "name": "NahelArgamaClass_Turret_AA_L6",
+        "hp": 6500.0,
+        "bone": "Turret_NahelArgamaClass_Turret_AA_L6",
+        "x": -28.0,
+        "y": 0.0,
+        "idleDir": -90.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_NahelArgamaClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "NahelArgamaClass_Turret_AA_L7",
+        "name": "NahelArgamaClass_Turret_AA_L7",
+        "hp": 6500.0,
+        "bone": "Turret_NahelArgamaClass_Turret_AA_L7",
+        "x": -28.0,
+        "y": -10.0,
+        "idleDir": -90.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_NahelArgamaClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "NahelArgamaClass_Turret_AA_L8",
+        "name": "NahelArgamaClass_Turret_AA_L8",
+        "hp": 6500.0,
+        "bone": "Turret_NahelArgamaClass_Turret_AA_L8",
+        "x": -60.0,
+        "y": -80.0,
+        "idleDir": -90.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_NahelArgamaClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "NahelArgamaClass_Turret_AA_L9",
+        "name": "NahelArgamaClass_Turret_AA_L9",
+        "hp": 6500.0,
+        "bone": "Turret_NahelArgamaClass_Turret_AA_L9",
+        "x": -60.0,
+        "y": -90.0,
+        "idleDir": -90.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_NahelArgamaClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "NahelArgamaClass_Turret_AA_L10",
+        "name": "NahelArgamaClass_Turret_AA_L10",
+        "hp": 6500.0,
+        "bone": "Turret_NahelArgamaClass_Turret_AA_L10",
+        "x": -60.0,
+        "y": -100.0,
+        "idleDir": -90.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_NahelArgamaClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "NahelArgamaClass_Turret_AA_L11",
+        "name": "NahelArgamaClass_Turret_AA_L11",
+        "hp": 6500.0,
+        "bone": "Turret_NahelArgamaClass_Turret_AA_L11",
+        "x": -60.0,
+        "y": -110.0,
+        "idleDir": -90.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_NahelArgamaClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "NahelArgamaClass_Turret_AA_R1",
+        "name": "NahelArgamaClass_Turret_AA_R1",
+        "hp": 6500.0,
+        "bone": "Turret_NahelArgamaClass_Turret_AA_R1",
+        "x": 16.0,
+        "y": 8.0,
+        "idleDir": 90.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_NahelArgamaClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "NahelArgamaClass_Turret_AA_R2",
+        "name": "NahelArgamaClass_Turret_AA_R2",
+        "hp": 6500.0,
+        "bone": "Turret_NahelArgamaClass_Turret_AA_R2",
+        "x": 62.0,
+        "y": 10.0,
+        "idleDir": 90.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_NahelArgamaClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "NahelArgamaClass_Turret_AA_R3",
+        "name": "NahelArgamaClass_Turret_AA_R3",
+        "hp": 6500.0,
+        "bone": "Turret_NahelArgamaClass_Turret_AA_R3",
+        "x": 62.0,
+        "y": 20.0,
+        "idleDir": 90.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_NahelArgamaClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "NahelArgamaClass_Turret_AA_R4",
+        "name": "NahelArgamaClass_Turret_AA_R4",
+        "hp": 6500.0,
+        "bone": "Turret_NahelArgamaClass_Turret_AA_R4",
+        "x": 62.0,
+        "y": -20.0,
+        "idleDir": 90.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_NahelArgamaClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "NahelArgamaClass_Turret_AA_R5",
+        "name": "NahelArgamaClass_Turret_AA_R5",
+        "hp": 6500.0,
+        "bone": "Turret_NahelArgamaClass_Turret_AA_R5",
+        "x": 62.0,
+        "y": -30.0,
+        "idleDir": 90.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_NahelArgamaClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "NahelArgamaClass_Turret_AA_R6",
+        "name": "NahelArgamaClass_Turret_AA_R6",
+        "hp": 6500.0,
+        "bone": "Turret_NahelArgamaClass_Turret_AA_R6",
+        "x": 28.0,
+        "y": 0.0,
+        "idleDir": 90.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_NahelArgamaClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "NahelArgamaClass_Turret_AA_R7",
+        "name": "NahelArgamaClass_Turret_AA_R7",
+        "hp": 6500.0,
+        "bone": "Turret_NahelArgamaClass_Turret_AA_R7",
+        "x": 28.0,
+        "y": -10.0,
+        "idleDir": 90.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_NahelArgamaClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "NahelArgamaClass_Turret_AA_R8",
+        "name": "NahelArgamaClass_Turret_AA_R8",
+        "hp": 6500.0,
+        "bone": "Turret_NahelArgamaClass_Turret_AA_R8",
+        "x": 60.0,
+        "y": -80.0,
+        "idleDir": 90.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_NahelArgamaClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "NahelArgamaClass_Turret_AA_R9",
+        "name": "NahelArgamaClass_Turret_AA_R9",
+        "hp": 6500.0,
+        "bone": "Turret_NahelArgamaClass_Turret_AA_R9",
+        "x": 60.0,
+        "y": -90.0,
+        "idleDir": 90.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_NahelArgamaClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "NahelArgamaClass_Turret_AA_R10",
+        "name": "NahelArgamaClass_Turret_AA_R10",
+        "hp": 6500.0,
+        "bone": "Turret_NahelArgamaClass_Turret_AA_R10",
+        "x": 60.0,
+        "y": -100.0,
+        "idleDir": 90.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_NahelArgamaClass_Turret_AA"
+          ]
+        }
+      },
+      {
+        "id": "NahelArgamaClass_Turret_AA_R11",
+        "name": "NahelArgamaClass_Turret_AA_R11",
+        "hp": 6500.0,
+        "bone": "Turret_NahelArgamaClass_Turret_AA_R11",
+        "x": 60.0,
+        "y": -110.0,
+        "idleDir": 90.0,
+        "arc": 90.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_AA.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_NahelArgamaClass_Turret_AA"
+          ]
+        }
+      }
+    ],
+    "footprint": {
+      "width": 2,
+      "height": 2
+    },
+    "commandAuras": [
+      {
+        "type": "cmdDef",
+        "name": "防御指挥",
+        "source": "Template/Unit/Skill/CmdDef.gw"
+      },
+      {
+        "type": "cmdCom",
+        "name": "通信指挥",
+        "source": "Template/Unit/Skill/CmdCom.gw"
+      }
+    ],
+    "supplyAura": {
+      "range": 2,
+      "hpPercent": 5,
+      "enPercent": 10
+    },
+    "speed": 130,
+    "actionPoints": 10,
+    "sensors": {
+      "sight": 10,
+      "radar": 20.833333333333332,
+      "antiDetection": -8.680555555555555,
+      "revealOnDetection": true,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    },
+    "accuracyMultiplier": 0.65
+  },
+  "attackBonuses": {
+    "melee": 0.0,
+    "shooting": 85.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 50.0,
+      "flat": 850.0
+    },
+    "shell": {
+      "percent": 50.0,
+      "flat": 850.0
+    },
+    "melee": {
+      "percent": 50.0,
+      "flat": 850.0
+    },
+    "dp": {
+      "percent": 100.0,
+      "flat": 15.0
+    },
+    "sp": {
+      "percent": 50.0,
+      "flat": 15.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 500000.0,
+    "walkSpeed": 1.0,
+    "boostSpeed": 1.85,
+    "turnSpeed": 0.5,
+    "reaction": 125.0,
+    "shooting": 185.0,
+    "melee": 100.0,
+    "nativeTags": [
+      "NahelArgamaClass",
+      "Unit",
+      "CmdUnit",
+      "Ship",
+      "AEUG",
+      "0087",
+      "UC",
+      "LargeUnit",
+      "MpUpUnit_X24",
+      "ManualControlCapable"
+    ],
+    "nativeSkills": [
+      "PlayerControl_Entry",
+      "AutoRepair",
+      "LaunchAllUnits",
+      "CmdCom",
+      "CmdDef",
+      "SupplyPoint",
+      "SupplyPoint_UseEN",
+      "PlayerControl_Marker",
+      "PlayerControl"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 175.0,
+    "unitLevel": 18000.0,
+    "enBeforeReduction": 45000.0,
+    "enCapacityMultiplier": 1,
+    "tacticalMoveBeforeBonus": 7,
+    "actionTurnSpeed": 0.5,
+    "mobilityMoveTarget": 10,
+    "adaptability": {
+      "ground": 10.0,
+      "space": 100.0,
+      "water": 50.0,
+      "air": 100.0,
+      "mountain": 10.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 26.0,
+      "radar": 750.0,
+      "antiDetection": -250.0
+    },
+    "shipHullBeforeReduction": 500000.0,
+    "shipBalanceMultiplier": 0.7,
+    "shipFactionHullMultiplier": 1.1,
+    "shipFactionAccuracyMultiplier": 1.1,
+    "shipFactionEvasionMultiplier": 1.15,
+    "technologyEra": "UC_0087_T2",
+    "technologyWeight": 4,
+    "shipFootprintBeforeCompaction": {
+      "width": 2,
+      "height": 3
+    },
+    "nativeProductionQuantity": 1
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 0.9,
+    "idle": "ImportedIdle",
+    "move": "ImportedIdle",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "boost",
+    "deathType": "large",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "拟阿卡玛级",
+  "faction": "AEUG",
+  "tags": [
+    "AEUG",
+    "UC_0087_T2"
+  ],
+  "localization": {
+    "zh": {
+      "name": "拟阿卡玛级",
+      "description": "第一次新吉翁战争中接替阿卡玛的强袭登陆舰，也是高达小队的活动母舰"
+    },
+    "en": {
+      "name": "Nahel Argama Class",
+      "description": "An assault landing ship that succeeded Argama during the First Neo Zeon War and served as the Gundam Team's mothership"
+    },
+    "ja": {
+      "name": "ネェル・アーガマ級"
+    }
+  },
+  "weapons": {
+    "NahelArgamaClass_HighMegaCannon": {
+      "ref": "NahelArgamaClass_HighMegaCannon__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/NahelArgamaClass/Weapon/NahelArgamaClass_HighMegaCannon.gw",
+          "barrels": [
+            {
+              "id": "NahelArgamaClass_HighMegaCannon",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ],
+          "muzzleNote": "Native weapon has no standalone muzzle flash"
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 0.0,
+                "y": 0.0
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "converted_skill"
+          ],
+          "convertedSkill": "Irradiation"
+        }
+      }
+    },
+    "NahelArgamaClass_Turret_BeamCannon": {
+      "ref": "NahelArgamaClass_Turret_BeamCannon__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_BeamCannon.ini",
+          "barrels": [
+            {
+              "id": "NahelArgamaClass_Turret_BeamCannon",
+              "x": 3.0,
+              "y": 18.0
+            },
+            {
+              "id": "NahelArgamaClass_Turret_BeamCannon",
+              "x": 3.0,
+              "y": 18.0
+            },
+            {
+              "id": "NahelArgamaClass_Turret_BeamCannon",
+              "x": 3.0,
+              "y": 18.0
+            },
+            {
+              "id": "NahelArgamaClass_Turret_BeamCannon",
+              "x": 3.0,
+              "y": 18.0
+            },
+            {
+              "id": "NahelArgamaClass_Turret_BeamCannon",
+              "x": 3.0,
+              "y": 18.0
+            },
+            {
+              "id": "NahelArgamaClass_Turret_BeamCannon",
+              "x": 3.0,
+              "y": 18.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_NahelArgamaClass_Turret_BeamCannon_M1",
+              "offset": {
+                "x": 3.0,
+                "y": 18.0
+              },
+              "alternatingOffsetX": -6.0
+            },
+            {
+              "bone": "Turret_NahelArgamaClass_Turret_BeamCannon_M2",
+              "offset": {
+                "x": 3.0,
+                "y": 18.0
+              },
+              "alternatingOffsetX": -6.0
+            },
+            {
+              "bone": "Turret_NahelArgamaClass_Turret_BeamCannon_M3",
+              "offset": {
+                "x": 3.0,
+                "y": 18.0
+              },
+              "alternatingOffsetX": -6.0
+            },
+            {
+              "bone": "Turret_NahelArgamaClass_Turret_BeamCannon_M4",
+              "offset": {
+                "x": 3.0,
+                "y": 18.0
+              },
+              "alternatingOffsetX": -6.0
+            },
+            {
+              "bone": "Turret_NahelArgamaClass_Turret_SubBeamCannon_L1",
+              "offset": {
+                "x": 0.0,
+                "y": 18.0
+              },
+              "alternatingOffsetX": -6.0
+            },
+            {
+              "bone": "Turret_NahelArgamaClass_Turret_SubBeamCannon_R1",
+              "offset": {
+                "x": 0.0,
+                "y": 18.0
+              },
+              "alternatingOffsetX": -6.0
+            }
+          ]
+        }
+      }
+    },
+    "NahelArgamaClass_Turret_MegaBeamCannon": {
+      "ref": "NahelArgamaClass_Turret_MegaBeamCannon__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_MegaBeamCannon_L.ini",
+          "barrels": [
+            {
+              "id": "NahelArgamaClass_Turret_MegaBeamCannon",
+              "x": 0.0,
+              "y": 25.0
+            },
+            {
+              "id": "NahelArgamaClass_Turret_MegaBeamCannon",
+              "x": 0.0,
+              "y": 25.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_NahelArgamaClass_Turret_MegaBeamCannon_L1",
+              "offset": {
+                "x": 0.0,
+                "y": 25.0
+              }
+            },
+            {
+              "bone": "Turret_NahelArgamaClass_Turret_MegaBeamCannon_R1",
+              "offset": {
+                "x": 0.0,
+                "y": 25.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "NahelArgamaClass_Turret_AA": {
+      "ref": "NahelArgamaClass_Turret_AA__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/NahelArgamaClass/NahelArgamaClass_Turret_AA.ini",
+          "barrels": [
+            {
+              "id": "NahelArgamaClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "NahelArgamaClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "NahelArgamaClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "NahelArgamaClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "NahelArgamaClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "NahelArgamaClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "NahelArgamaClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "NahelArgamaClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "NahelArgamaClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "NahelArgamaClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "NahelArgamaClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "NahelArgamaClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "NahelArgamaClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "NahelArgamaClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "NahelArgamaClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "NahelArgamaClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "NahelArgamaClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "NahelArgamaClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "NahelArgamaClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "NahelArgamaClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "NahelArgamaClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            },
+            {
+              "id": "NahelArgamaClass_Turret_AA",
+              "x": 2.0,
+              "y": 6.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_NahelArgamaClass_Turret_AA_L1",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_NahelArgamaClass_Turret_AA_L2",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_NahelArgamaClass_Turret_AA_L3",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_NahelArgamaClass_Turret_AA_L4",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_NahelArgamaClass_Turret_AA_L5",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_NahelArgamaClass_Turret_AA_L6",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_NahelArgamaClass_Turret_AA_L7",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_NahelArgamaClass_Turret_AA_L8",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_NahelArgamaClass_Turret_AA_L9",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_NahelArgamaClass_Turret_AA_L10",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_NahelArgamaClass_Turret_AA_L11",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_NahelArgamaClass_Turret_AA_R1",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_NahelArgamaClass_Turret_AA_R2",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_NahelArgamaClass_Turret_AA_R3",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_NahelArgamaClass_Turret_AA_R4",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_NahelArgamaClass_Turret_AA_R5",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_NahelArgamaClass_Turret_AA_R6",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_NahelArgamaClass_Turret_AA_R7",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_NahelArgamaClass_Turret_AA_R8",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_NahelArgamaClass_Turret_AA_R9",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_NahelArgamaClass_Turret_AA_R10",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            },
+            {
+              "bone": "Turret_NahelArgamaClass_Turret_AA_R11",
+              "offset": {
+                "x": 2.0,
+                "y": 6.0
+              },
+              "alternatingOffsetX": -4.0
+            }
+          ]
+        }
+      }
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "空中移动：可跨越山岩与水域",
+      "status": "implemented"
+    },
+    {
+      "id": "PlayerControl_Entry",
+      "source": "Template/Unit/Skill/PlayerControl_Entry.gw",
+      "status": "review",
+      "name": "PlayerControl_Entry"
+    },
+    {
+      "id": "LaunchAllUnits",
+      "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+      "status": "adapted",
+      "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+    },
+    {
+      "id": "CmdCom",
+      "source": "Template/Unit/Skill/CmdCom.gw",
+      "status": "adapted",
+      "name": "通信指挥：范围与效果随驾驶员领导力变化"
+    },
+    {
+      "id": "CmdDef",
+      "source": "Template/Unit/Skill/CmdDef.gw",
+      "status": "adapted",
+      "name": "防御指挥：范围与效果随驾驶员领导力变化"
+    },
+    {
+      "id": "PlayerControl_Marker",
+      "source": "Template/Unit/Skill/PlayerControl_Marker.gw",
+      "status": "review",
+      "name": "PlayerControl_Marker"
+    },
+    {
+      "id": "PlayerControl",
+      "source": "Template/Unit/Skill/PlayerControl.gw",
+      "status": "review",
+      "name": "PlayerControl"
+    },
+    {
+      "id": "special_Common_ReEntry",
+      "name": "大气层突入",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry.gw",
+      "status": "review"
+    },
+    {
+      "id": "special_Common_ReEntry_FromSpace",
+      "name": "大气层突入",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_FromSpace.gw",
+      "status": "review"
+    },
+    {
+      "id": "special_Common_ReEntry_Both",
+      "name": "大气层突入",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_Both.gw",
+      "status": "review"
+    },
+    {
+      "id": "Common_MinovskyParticle_M",
+      "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
+      "status": "adapted",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
+    },
+    {
+      "id": "Irradiation",
+      "status": "adapted",
+      "name": "MEGA光束照射：方向照射、蓄力、逐机命中；原版固定演出与判定射程独立"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": [
+        "NahelArgamaClass_Turret_BeamCannon",
+        "NahelArgamaClass_Turret_MegaBeamCannon",
+        "NahelArgamaClass_Turret_AA"
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "Common_MinovskyParticle_M",
+      "type": "minovsky",
+      "name": "米诺夫斯基粒子散布[M]",
+      "radius": 9,
+      "enCost": 450,
+      "actionCost": 2,
+      "durationRounds": 4,
+      "cooldownTurns": 3,
+      "maxUses": 99,
+      "consumeAction": false,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Detect_3.ogg",
+        "volume": 0.5
+      },
+      "localization": {
+        "zh": {
+          "name": "米诺夫斯基粒子散布[M]"
+        },
+        "en": {
+          "name": "Minovsky Particle Dispersal [M]"
+        },
+        "ja": {
+          "name": "ミノフスキー粒子散布[M]"
+        }
+      }
+    },
+    {
+      "id": "Common_FullBoost",
+      "type": "fullboost",
+      "name": "全力推进",
+      "actionCost": 0,
+      "enCost": 250,
+      "consumeAction": false,
+      "range": 0,
+      "effect": "Flash_1_N",
+      "sound": {
+        "file": "../../sounds/Action_8.ogg",
+        "volume": 0.5
+      },
+      "duration": 2,
+      "cooldownTurns": 1,
+      "moveBonus": 2,
+      "mobilityMultiplier": 1.1,
+      "description": "消耗250 EN，在2个己方回合内移动力+2、反应系数×1.10；效果结束后冷却1个己方回合。搭载中仍会持续与计时。"
+    },
+    {
+      "ref": "NahelArgamaClass_HighMegaCannon__skill_irradiation__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "muzzle": {
+          "mounts": [
+            {
+              "root": true,
+              "offset": {
+                "x": 0.0,
+                "y": 80.0
+              }
+            }
+          ]
+        },
+        "chargeMuzzle": {
+          "mounts": [
+            {
+              "root": true,
+              "offset": {
+                "x": 0.0,
+                "y": 100.0
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "description": "第一次新吉翁战争中接替阿卡玛的强袭登陆舰，也是高达小队的活动母舰",
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 18000.0,
+    "levelMultiplier": 0.25,
+    "published": 4500
+  },
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "Ship",
+    "Aircraft",
+    "Support",
+    "Transport"
+  ],
+  "transport": {
+    "slotCost": 1,
+    "loadTags": []
+  },
+  "hangars": [
+    {
+      "id": "Hangar_1",
+      "name": "格纳库 1",
+      "capacity": 12,
+      "allowedTags": [
+        "CanLoadInto",
+        "CanLoadIntoSpace",
+        "CanLoadIntoAir"
+      ],
+      "launchRange": 1,
+      "emergencyRange": 3,
+      "source": "Units/CommonUnit/Hangar/Hangar_X12.ini",
+      "sourceUnit": "Hangar_X12"
+    },
+    {
+      "id": "Hangar_2",
+      "name": "格纳库 2",
+      "capacity": 12,
+      "allowedTags": [
+        "CanLoadInto",
+        "CanLoadIntoSpace",
+        "CanLoadIntoAir"
+      ],
+      "launchRange": 1,
+      "emergencyRange": 3,
+      "source": "Units/CommonUnit/Hangar/Hangar_X12.ini",
+      "sourceUnit": "Hangar_X12"
+    },
+    {
+      "id": "Hangar_3",
+      "name": "格纳库 3",
+      "capacity": 12,
+      "allowedTags": [
+        "CanLoadInto",
+        "CanLoadIntoSpace",
+        "CanLoadIntoAir"
+      ],
+      "launchRange": 1,
+      "emergencyRange": 3,
+      "source": "Units/CommonUnit/Hangar/Hangar_X12.ini",
+      "sourceUnit": "Hangar_X12"
+    }
+  ],
+  "refits": []
+}

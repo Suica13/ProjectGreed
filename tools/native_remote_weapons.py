@@ -6,7 +6,7 @@ import json
 import re
 import math
 import shutil
-from mod_source import ASSETS, MOD, ROOT, load, parse, section, resolve, source_root, stat
+from mod_source import package_root, source_path, ASSETS, MOD, ROOT, load, parse, section, resolve, source_root, stat
 
 CARRIERS = ('AMX_004G', 'AMX_004_1', 'AMX_014', 'MAN_03', 'MAN_08', 'MSA_0011', 'MSA_0011_Ext', 'MSN_01', 'MSN_02', 'MS_06Z', 'MSN_03', 'MSN_04', 'RX_93')
 
@@ -23,7 +23,9 @@ def launches(data, entry):
         if action.get('fireTurretXAtGround'):
             turret = section(data, 'turret_' + action['fireTurretXAtGround'])
             projectile = section(data, 'projectile_' + turret['projectile'])
-            yield projectile['spawnUnit'].split('*')[0].strip()
+            for spawn in re.finditer(r'(?:^|,)\s*(\w+)\s*(?:\*(\d+))?\s*(?:\(([^)]*)\))?', projectile['spawnUnit']):
+                for _ in range(int(spawn[2] or 1)):
+                    yield spawn[1]
         for queue in ('alsoTriggerAction', 'alsoQueueAction'):
             for child in action.get(queue, '').split(','):
                 if child.strip():
@@ -199,11 +201,11 @@ def compile_launcher(prefab, path, root=ROOT, copy_assets=True):
     return key,weapon
 
 def apply(prefab, native=None):
-    native = native or load(MOD / prefab['source'])
-    root = MOD / prefab['source'].split('/')[0]
+    native = native or load(source_path(prefab['source']))
+    root = package_root(prefab['source'].split('/')[0])
     refs = [m['source'] for m in prefab.get('mechanics',[]) if m.get('id','').startswith('remote_weapon_')]
     refs += [r.strip().removeprefix('ROOT:') for r in native.get('core',{}).get('copyFrom','').split(',')
-             if '/Weapon/Funnel/' in r and '/Mod/' not in r]
+             if '/Mod/' not in r and ('/Weapon/Funnel/' in r or re.search(r'/Weapon/[^/]*Incom(?:_Lv\d+)?\.gw$', r, re.I))]
     for reference in dict.fromkeys(refs):
         path=root/reference
         try:

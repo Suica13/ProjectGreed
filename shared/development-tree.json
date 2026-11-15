@@ -1659,7 +1659,8 @@
       "unlocks": [
         "MSZ_010",
         "MSZ_008",
-        "MSA_099_2"
+        "MSA_099_2",
+        "NahelArgamaClass"
       ],
       "page": 1,
       "era": "UC_0087_T2",
@@ -2298,6 +2299,33 @@
       "page": 1,
       "era": "UC_0087_T2",
       "technologyWeight": 4
+    },
+    {
+      "id": "Tech_TITANS_0087_T2_GundamMkIVVDevelopmentPlan",
+      "name": "高达Mk-IV／Mk-V开发计划",
+      "description": "解锁高达Mk-IV与高达Mk-V",
+      "icon": "assets/tech-icons/Tech_TITANS_0087_T2_GundamMkIVVDevelopmentPlan.png",
+      "row": "bot",
+      "column": 3,
+      "money": 24000,
+      "supplies": 6000,
+      "sourceCosts": {
+        "money": 12000,
+        "supplies": 3000,
+        "points": 16800,
+        "researchSeconds": 30
+      },
+      "points": 16800,
+      "requires": [
+        "Tech_TITANS_0087_T2_WoundwortDevelopmentPlan"
+      ],
+      "unlocks": [
+        "ORX_012",
+        "ORX_013"
+      ],
+      "page": 1,
+      "era": "UC_0087_T2",
+      "technologyWeight": 4
     }
   ],
   "NEO_ZEON": [
@@ -2528,7 +2556,8 @@
         "AMX_006",
         "AMX_009",
         "RMS_099B_NEO_ZEON",
-        "Refinery_Common_T4"
+        "Refinery_Common_T4",
+        "EndraClass"
       ],
       "page": 1,
       "era": "UC_0087_T2",

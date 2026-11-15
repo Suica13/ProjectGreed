@@ -584,7 +584,11 @@
     "units/MSZ_006C1_0093_EFSF_MA/unit.json",
     "units/AMX_107_0093_NZN_MA/unit.json",
     "units/AMX_006_0093_NZN_MA/unit.json",
-    "units/Mission_SpaceShuttle/unit.json"
+    "units/Mission_SpaceShuttle/unit.json",
+    "units/EndraClass/unit.json",
+    "units/NahelArgamaClass/unit.json",
+    "units/ORX_012/unit.json",
+    "units/ORX_013/unit.json"
   ],
   "effects": "effects/effects.json",
   "presentation": "presentation.json",

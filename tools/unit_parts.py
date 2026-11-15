@@ -43,7 +43,7 @@ def apply_parts(prefab, data=None):
             reference = "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw"
         source = load(ROOT / reference)
         text = " ".join(str(v) for values in source.values() for v in values.values())
-        coefficients = list(dict.fromkeys(float(v) for v in re.findall(r"PartBreakModifier\s*=\s*([\d.]+)", text)))
+        coefficients = list(dict.fromkeys(float(v) for v in re.findall(r"PartBreakModifier\s*[:=]\s*([\d.]+)", text)))
         if not coefficients:
             raise ValueError("No native PartBreakModifier for " + prefab["id"] + "/" + key)
         weapon["partBreakModifier"] = coefficients[0]

@@ -1,0 +1,366 @@
+[
+  {
+    "id": "EndraClass",
+    "source": "GW_BattleUniverse_DLC_0087/Units/BattleUnits/EndraClass/EndraClass.ini",
+    "era": "UC_0087_T2",
+    "faction": "NEO_ZEON",
+    "weapons": [
+      "EndraClass_Turret_BeamCannon",
+      "EndraClass_Turret_MS"
+    ],
+    "hangars": [
+      {
+        "id": "Hangar_1",
+        "name": "格纳库 1",
+        "capacity": 8,
+        "allowedTags": [
+          "CanLoadInto",
+          "CanLoadIntoSpace",
+          "CanLoadIntoAir"
+        ],
+        "launchRange": 1,
+        "emergencyRange": 3,
+        "source": "Units/CommonUnit/Hangar/Hangar_X8.ini",
+        "sourceUnit": "Hangar_X8"
+      }
+    ],
+    "modules": 6,
+    "defaultKit": "standard",
+    "remoteWeapons": {},
+    "sourceStats": {
+      "hp": 300000.0,
+      "walkSpeed": 0.85,
+      "boostSpeed": 1.45,
+      "turnSpeed": 0.5,
+      "reaction": 105.0,
+      "shooting": 140.0,
+      "melee": 100.0,
+      "nativeTags": [
+        "EndraClass",
+        "Unit",
+        "Ship",
+        "CmdUnit",
+        "NEO_ZEON",
+        "0087",
+        "UC",
+        "LargeUnit",
+        "MpUpUnit_X8",
+        "ManualControlCapable"
+      ],
+      "nativeSkills": [
+        "PlayerControl_Entry",
+        "AutoRepair",
+        "LaunchAllUnits",
+        "SupplyPoint",
+        "SupplyPoint_UseEN",
+        "PlayerControl_Marker",
+        "PlayerControl"
+      ],
+      "balanceStatus": "native-level",
+      "accuracy": 140.0,
+      "unitLevel": 9000.0,
+      "enBeforeReduction": 22500.0,
+      "enCapacityMultiplier": 1,
+      "tacticalMoveBeforeBonus": 5,
+      "actionTurnSpeed": 0.5,
+      "mobilityMoveTarget": 8,
+      "adaptability": {
+        "ground": 10.0,
+        "space": 100.0,
+        "water": 25.0,
+        "air": 25.0,
+        "mountain": 10.0,
+        "atmosphere": 0
+      },
+      "sensors": {
+        "sight": 24.0,
+        "radar": 700.0,
+        "antiDetection": -250.0
+      },
+      "shipHullBeforeReduction": 300000.0,
+      "shipBalanceMultiplier": 0.7,
+      "shipFactionHullMultiplier": 1,
+      "shipFactionAccuracyMultiplier": 1,
+      "shipFactionEvasionMultiplier": 1,
+      "technologyEra": "UC_0087_T2",
+      "technologyWeight": 4,
+      "shipFootprintBeforeCompaction": {
+        "width": 2,
+        "height": 3
+      },
+      "nativeProductionQuantity": 1
+    }
+  },
+  {
+    "id": "NahelArgamaClass",
+    "source": "GW_BattleUniverse_DLC_0087/Units/BattleUnits/NahelArgamaClass/NahelArgamaClass.ini",
+    "era": "UC_0087_T2",
+    "faction": "AEUG",
+    "weapons": [
+      "NahelArgamaClass_HighMegaCannon",
+      "NahelArgamaClass_Turret_BeamCannon",
+      "NahelArgamaClass_Turret_MegaBeamCannon",
+      "NahelArgamaClass_Turret_AA"
+    ],
+    "hangars": [
+      {
+        "id": "Hangar_1",
+        "name": "格纳库 1",
+        "capacity": 12,
+        "allowedTags": [
+          "CanLoadInto",
+          "CanLoadIntoSpace",
+          "CanLoadIntoAir"
+        ],
+        "launchRange": 1,
+        "emergencyRange": 3,
+        "source": "Units/CommonUnit/Hangar/Hangar_X12.ini",
+        "sourceUnit": "Hangar_X12"
+      },
+      {
+        "id": "Hangar_2",
+        "name": "格纳库 2",
+        "capacity": 12,
+        "allowedTags": [
+          "CanLoadInto",
+          "CanLoadIntoSpace",
+          "CanLoadIntoAir"
+        ],
+        "launchRange": 1,
+        "emergencyRange": 3,
+        "source": "Units/CommonUnit/Hangar/Hangar_X12.ini",
+        "sourceUnit": "Hangar_X12"
+      },
+      {
+        "id": "Hangar_3",
+        "name": "格纳库 3",
+        "capacity": 12,
+        "allowedTags": [
+          "CanLoadInto",
+          "CanLoadIntoSpace",
+          "CanLoadIntoAir"
+        ],
+        "launchRange": 1,
+        "emergencyRange": 3,
+        "source": "Units/CommonUnit/Hangar/Hangar_X12.ini",
+        "sourceUnit": "Hangar_X12"
+      }
+    ],
+    "modules": 30,
+    "defaultKit": "standard",
+    "remoteWeapons": {},
+    "sourceStats": {
+      "hp": 500000.0,
+      "walkSpeed": 1.0,
+      "boostSpeed": 1.85,
+      "turnSpeed": 0.5,
+      "reaction": 125.0,
+      "shooting": 185.0,
+      "melee": 100.0,
+      "nativeTags": [
+        "NahelArgamaClass",
+        "Unit",
+        "CmdUnit",
+        "Ship",
+        "AEUG",
+        "0087",
+        "UC",
+        "LargeUnit",
+        "MpUpUnit_X24",
+        "ManualControlCapable"
+      ],
+      "nativeSkills": [
+        "PlayerControl_Entry",
+        "AutoRepair",
+        "LaunchAllUnits",
+        "CmdCom",
+        "CmdDef",
+        "SupplyPoint",
+        "SupplyPoint_UseEN",
+        "PlayerControl_Marker",
+        "PlayerControl"
+      ],
+      "balanceStatus": "native-level",
+      "accuracy": 175.0,
+      "unitLevel": 18000.0,
+      "enBeforeReduction": 45000.0,
+      "enCapacityMultiplier": 1,
+      "tacticalMoveBeforeBonus": 7,
+      "actionTurnSpeed": 0.5,
+      "mobilityMoveTarget": 10,
+      "adaptability": {
+        "ground": 10.0,
+        "space": 100.0,
+        "water": 50.0,
+        "air": 100.0,
+        "mountain": 10.0,
+        "atmosphere": 0
+      },
+      "sensors": {
+        "sight": 26.0,
+        "radar": 750.0,
+        "antiDetection": -250.0
+      },
+      "shipHullBeforeReduction": 500000.0,
+      "shipBalanceMultiplier": 0.7,
+      "shipFactionHullMultiplier": 1.1,
+      "shipFactionAccuracyMultiplier": 1.1,
+      "shipFactionEvasionMultiplier": 1.15,
+      "technologyEra": "UC_0087_T2",
+      "technologyWeight": 4,
+      "shipFootprintBeforeCompaction": {
+        "width": 2,
+        "height": 3
+      },
+      "nativeProductionQuantity": 1
+    }
+  },
+  {
+    "id": "ORX_012",
+    "source": "GW_BattleUniverse_DLC_0087/Units/BattleUnits/ORX_012/ORX_012.ini",
+    "era": "UC_0087_T2",
+    "faction": "TITANS",
+    "weapons": [
+      "Common_Push_A",
+      "TITANS_ORX_012_BR",
+      "TITANS_ORX_012_BeamCannon",
+      "TITANS_ORX_012_BeamSaber_B",
+      "TITANS_ORX_012_BeamSaber_Thrust",
+      "TITANS_ORX_012_Incom"
+    ],
+    "hangars": [],
+    "modules": 0,
+    "defaultKit": "standard",
+    "remoteWeapons": {
+      "TITANS_ORX_012_Incom": {
+        "units": 1,
+        "projectiles": 8
+      }
+    },
+    "sourceStats": {
+      "hp": 80000.0,
+      "walkSpeed": 0.85,
+      "boostSpeed": 2.4,
+      "turnSpeed": 3.5,
+      "reaction": 205.0,
+      "shooting": 185.0,
+      "melee": 205.0,
+      "nativeTags": [
+        "ORX_012",
+        "Unit",
+        "MS",
+        "TITANS",
+        "0087",
+        "UC",
+        "ManualControlCapable"
+      ],
+      "nativeSkills": [
+        "PlayerControl_Entry",
+        "PlayerControl_Marker",
+        "PlayerControl"
+      ],
+      "accuracy": 195.0,
+      "partStructuralStrength": 155.0,
+      "actionTurnSpeed": 3.5,
+      "movementBeforeMobility": 9,
+      "mobilityMoveTarget": 10,
+      "enBeforeReduction": 1300.0,
+      "enCapacityMultiplier": 1,
+      "adaptability": {
+        "ground": 100.0,
+        "space": 115.0,
+        "water": 85.0,
+        "air": 85.0,
+        "mountain": 100.0,
+        "atmosphere": 0
+      },
+      "sensors": {
+        "sight": 26.0,
+        "radar": 468.0,
+        "antiDetection": 0.0
+      },
+      "balanceStatus": "native-level",
+      "unitLevel": 8500.0,
+      "tacticalMoveBeforeBonus": 9,
+      "v17BaseHp": 80000.0,
+      "technologyEra": "UC_0087_T2",
+      "technologyWeight": 4,
+      "nativeProductionQuantity": 1
+    }
+  },
+  {
+    "id": "ORX_013",
+    "source": "GW_BattleUniverse_DLC_0087/Units/BattleUnits/ORX_013/ORX_013.ini",
+    "era": "UC_0087_T2",
+    "faction": "TITANS",
+    "weapons": [
+      "Common_Push_A",
+      "TITANS_ORX_013_BR",
+      "TITANS_ORX_013_CrotchBeamCannon",
+      "TITANS_ORX_013_CrotchBeamCannon_L",
+      "TITANS_ORX_013_MS",
+      "TITANS_ORX_013_MS_L",
+      "TITANS_ORX_013_BeamSaber",
+      "TITANS_ORX_013_Incom"
+    ],
+    "hangars": [],
+    "modules": 0,
+    "defaultKit": "standard",
+    "remoteWeapons": {
+      "TITANS_ORX_013_Incom": {
+        "units": 2,
+        "projectiles": 16
+      }
+    },
+    "sourceStats": {
+      "hp": 85000.0,
+      "walkSpeed": 0.9,
+      "boostSpeed": 2.5,
+      "turnSpeed": 3.5,
+      "reaction": 210.0,
+      "shooting": 205.0,
+      "melee": 200.0,
+      "nativeTags": [
+        "ORX_013",
+        "Unit",
+        "MS",
+        "TITANS",
+        "0087",
+        "UC",
+        "ManualControlCapable"
+      ],
+      "nativeSkills": [
+        "PlayerControl_Entry",
+        "PlayerControl_Marker",
+        "PlayerControl"
+      ],
+      "accuracy": 205.0,
+      "partStructuralStrength": 155.0,
+      "actionTurnSpeed": 3.5,
+      "movementBeforeMobility": 9,
+      "mobilityMoveTarget": 10,
+      "enBeforeReduction": 1500.0,
+      "enCapacityMultiplier": 1,
+      "adaptability": {
+        "ground": 100.0,
+        "space": 115.0,
+        "water": 85.0,
+        "air": 85.0,
+        "mountain": 100.0,
+        "atmosphere": 0
+      },
+      "sensors": {
+        "sight": 26.0,
+        "radar": 468.0,
+        "antiDetection": 0.0
+      },
+      "balanceStatus": "native-level",
+      "unitLevel": 9500.0,
+      "tacticalMoveBeforeBonus": 9,
+      "v17BaseHp": 85000.0,
+      "technologyEra": "UC_0087_T2",
+      "technologyWeight": 4,
+      "nativeProductionQuantity": 1
+    }
+  }
+]

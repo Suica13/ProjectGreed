@@ -359,13 +359,13 @@
     "ImportedIdle": "../../animations/ImportedIdle.json"
   },
   "stats": {
-    "hp": 37500,
+    "hp": 34500,
     "en": 700.0,
     "move": 7,
     "mobility": 125.0,
     "cost": 625,
     "counterLimit": 1,
-    "accuracy": 145.0,
+    "accuracy": 135.0,
     "partStructuralStrength": 125.0,
     "partsBreakable": true,
     "movementType": "ground",
@@ -382,7 +382,7 @@
       "rubble": 75
     },
     "ship": false,
-    "speed": 120,
+    "speed": 115,
     "actionPoints": 10,
     "sensors": {
       "sight": 10,
@@ -397,7 +397,7 @@
   },
   "attackBonuses": {
     "melee": 20.0,
-    "shooting": 55.0,
+    "shooting": 45.0,
     "beam": 0,
     "shell": 0
   },
@@ -448,12 +448,12 @@
     "requiredParts": []
   },
   "sourceStats": {
-    "hp": 30000.0,
+    "hp": 27500.0,
     "walkSpeed": 0.6,
-    "boostSpeed": 1.65,
+    "boostSpeed": 1.6,
     "turnSpeed": 2.0,
     "reaction": 125.0,
-    "shooting": 155.0,
+    "shooting": 145.0,
     "melee": 120.0,
     "nativeTags": [
       "RX_77D_4",
@@ -464,7 +464,7 @@
       "UC"
     ],
     "nativeSkills": [],
-    "accuracy": 145.0,
+    "accuracy": 135.0,
     "partStructuralStrength": 125.0,
     "actionTurnSpeed": 2.0,
     "movementBeforeMobility": 6,
@@ -487,7 +487,7 @@
     "balanceStatus": "native-level",
     "unitLevel": 2500.0,
     "tacticalMoveBeforeBonus": 6,
-    "v17BaseHp": 30000.0,
+    "v17BaseHp": 27500.0,
     "technologyEra": "0087T1"
   },
   "presentation": {

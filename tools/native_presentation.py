@@ -1,7 +1,7 @@
 """原生持枪／射击显示、炮管排序、套件和主手优先顺序。"""
 import math
 import re
-from mod_source import ROOT, MOD, load, section
+from mod_source import package_root, ROOT, MOD, load, section
 
 
 def correct_shared_weapon_layers(prefab, native):
@@ -148,7 +148,7 @@ def correct(prefab, native):
     for key, weapon in prefab["weapons"].items():
         if weapon.get("moduleIds") or weapon.get("remote"):
             continue
-        own = load(MOD / prefab["source"].split("/",1)[0] / weapon["source"]["file"])
+        own = load(package_root(prefab["source"].split("/",1)[0]) / weapon["source"]["file"])
         source = {name:{**own.get(name,{}),**native.get(name,{})} for name in own.keys() | native.keys()}
         mounts = weapon.get("muzzle",{}).get("mounts",[weapon.get("muzzle",{})])
         barrels = weapon["source"]["barrels"]

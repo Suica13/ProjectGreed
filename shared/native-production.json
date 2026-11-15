@@ -2403,5 +2403,25 @@
     "quantity": 3,
     "source": "GW_BattleUniverse_DLC_0093/Units/Buildings/Factory/UnitList/0093_NZN/Units/Land/AMX_006_0093_NZN.gw",
     "action": "action_Produce_AMX_006_0093_NZN_StandardSquad"
+  },
+  "EndraClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/NEO_ZEON_0087/Units/Space_Mega/EndraClass.gw",
+    "action": "action_Produce_EndraClass"
+  },
+  "NahelArgamaClass": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/AEUG_0087/Units/Space_Mega/NahelArgamaClass.gw",
+    "action": "action_Produce_NahelArgamaClass"
+  },
+  "ORX_012": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/ORX_012.gw",
+    "action": "action_Produce_ORX_012_StandardSquad"
+  },
+  "ORX_013": {
+    "quantity": 1,
+    "source": "GW_BattleUniverse_DLC_0087/Units/Buildings/Factory/UnitList/TITANS_0087/Units/Land/ORX_013.gw",
+    "action": "action_Produce_ORX_013_StandardSquad"
   }
 }

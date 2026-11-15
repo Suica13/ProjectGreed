@@ -1,11 +1,11 @@
 """Native smoke equipment and I-field provenance, adapted to authoritative turns."""
 from weapon_store import loads as load_source_json, dumps as dump_source_json
 import json,shutil
-from mod_source import ASSETS,MOD,MAIN,load
+from mod_source import source_path, ASSETS,MOD,MAIN,load
 from native_combat import globals_for
 
 def apply(prefab,native=None):
-    native=native or load(MOD/prefab['source'])
+    native=native or load(source_path(prefab['source']))
     if any(key.startswith('action_Common_SmokingLauncher') for key in native):
         skills=prefab.setdefault('skills',[]);skills[:]=[s for s in skills if s['id']!='SmokeGrenade']
         skills.append(dict(id='SmokeGrenade',type='smoke',name='烟雾弹',range=0,radius=2,
@@ -16,7 +16,7 @@ def apply(prefab,native=None):
         for mechanic in prefab.get('mechanics',[]):
             if 'SmokingLauncher' in mechanic['id']:mechanic.update(status='adapted',name='烟雾弹：半径2格远程命中率×75%，2 AP、100 EN，冷却3回合')
     if any(m['id']=='I_Field' for m in prefab.get('mechanics',[])):
-        values=globals_for(MOD/prefab['source'])
+        values=globals_for(source_path(prefab['source']))
         prefab['stats']['iField']=dict(capacity=float(values['I_FieldHpMax']),reduction=float(values['I_FieldLevel']),
             piercingReduction=.5,recoveryPercent=5,nativeRecoverySpeed=float(values['I_FieldRecoverSpeed']),
             minimumRatio=-.25,effect='I_Field_2')

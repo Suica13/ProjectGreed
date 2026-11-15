@@ -4,7 +4,7 @@ import functools
 import re
 import shutil
 import struct
-from mod_source import ASSETS, MAIN, MOD, load, section, resolve
+from mod_source import package_root, ASSETS, MAIN, MOD, load, section, resolve
 
 
 @functools.lru_cache(None)
@@ -51,7 +51,7 @@ def apply(prefab, weapon, data=None):
     source = weapon.get('source', {}).get('file')
     if not source:
         return False
-    root = MOD / prefab['source'].split('/')[0]
+    root = package_root(prefab['source'].split('/')[0])
     source_path = root / source
     if not source_path.is_file():
         source_path = MOD / source

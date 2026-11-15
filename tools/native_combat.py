@@ -5,7 +5,7 @@ import functools
 import math
 import re
 from pathlib import Path
-from mod_source import ROOT, MAIN, MOD, source_root, parse, load, section, resolve, stat
+from mod_source import package_root, ROOT, MAIN, MOD, source_root, parse, load, section, resolve, stat
 
 CHANNELS = {"BeamDamage": "beam", "ShellDamage": "shell", "CqbDamage": "melee", "CqbBeamDamage": "meleeBeam", "CqbShellDamage": "meleeShell", "BeamAPDamage": "beamAP", "ShellAPDamage": "shellAP", "CqbAPDamage": "meleeAP", "CqbBeamAPDamage": "meleeBeamAP", "CqbShellAPDamage": "meleeShellAP"}
 PARTS = {"head": "head", "backpack": "backpack", "armL": "leftArm", "armR": "rightArm", "legL": "leftLeg", "legR": "rightLeg"}
@@ -60,7 +60,7 @@ def damage_spawn(text):
 
 
 def source_for(weapon, prefab=None):
-    root = MOD / prefab["source"].split("/")[0] if prefab else ROOT
+    root = package_root(prefab["source"].split("/")[0]) if prefab else ROOT
     return root / weapon["source"]["file"]
 
 
@@ -68,7 +68,7 @@ def native_weapon(prefab, weapon, unit_data):
     if weapon.get('remote'):
         from native_remote_weapons import compile_launcher
         from mod_source import MOD
-        root = MOD / prefab['source'].split('/')[0]
+        root = package_root(prefab['source'].split('/')[0])
         return compile_launcher(prefab, root / weapon['source']['file'], root, False)[1]
     path = source_for(weapon, prefab)
     weapon_data = load(path)

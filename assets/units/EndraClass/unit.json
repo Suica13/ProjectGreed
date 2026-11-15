@@ -1,0 +1,729 @@
+{
+  "schemaVersion": 2,
+  "id": "EndraClass",
+  "code": "EndraClass",
+  "source": "GW_BattleUniverse_DLC_0087/Units/BattleUnits/EndraClass/EndraClass.ini",
+  "materials": {
+    "textures": {
+      "EndraClass.png": "textures/EndraClass.png",
+      "EndraClass_Body_1.png": "textures/EndraClass_Body_1.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "RooketBooster.png": "textures/RooketBooster.png",
+      "EndraClass_Turret_BeamCannon_1.png": "textures/EndraClass_Turret_BeamCannon_1.png"
+    },
+    "icon": "EndraClass.png"
+  },
+  "skeleton": {
+    "Turret_EndraClass_Turret_BeamCannon_M1": {
+      "x": 0.0,
+      "y": -45.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_EndraClass_Turret_BeamCannon_M2": {
+      "x": 0.0,
+      "y": 110.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_EndraClass_Turret_BeamCannon_M3": {
+      "x": 0.0,
+      "y": -200.0,
+      "endDirOffset": -180.0
+    },
+    "Turret_EndraClass_Turret_MS_M1": {
+      "x": 0.0,
+      "y": 40.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_EndraClass_Turret_MS_M2": {
+      "x": 0.0,
+      "y": 20.0,
+      "endDirOffset": 0.0
+    },
+    "Turret_EndraClass_Turret_MS_M3": {
+      "x": 0.0,
+      "y": 0.0,
+      "endDirOffset": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    }
+  },
+  "layers": [
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 1,
+      "offset": {
+        "x": -2.5,
+        "y": -9.0
+      },
+      "scaleX": 0.65,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_L1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 4.0,
+      "offset": {
+        "x": -67.0,
+        "y": -110.0
+      },
+      "scaleX": -0.65,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "Boost_R1",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 4.0,
+      "offset": {
+        "x": 67.0,
+        "y": -110.0
+      },
+      "scaleX": 0.65,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "EndraClass_Turret_BeamCannon_M3",
+      "bone": "Turret_EndraClass_Turret_BeamCannon_M3",
+      "moduleId": "EndraClass_Turret_BeamCannon_M3",
+      "texture": "EndraClass_Turret_BeamCannon_1.png",
+      "order": 3.001,
+      "scale": 1.15,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "Body",
+      "texture": "EndraClass_Body_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 1.25,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "EndraClass_Turret_BeamCannon_M1",
+      "bone": "Turret_EndraClass_Turret_BeamCannon_M1",
+      "moduleId": "EndraClass_Turret_BeamCannon_M1",
+      "texture": "EndraClass_Turret_BeamCannon_1.png",
+      "order": 5.001,
+      "scale": 1.15,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "EndraClass_Turret_BeamCannon_M2",
+      "bone": "Turret_EndraClass_Turret_BeamCannon_M2",
+      "moduleId": "EndraClass_Turret_BeamCannon_M2",
+      "texture": "EndraClass_Turret_BeamCannon_1.png",
+      "order": 5.001,
+      "scale": 1.15,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    }
+  ],
+  "animations": {
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 210000,
+    "en": 22500.0,
+    "move": 8,
+    "mobility": 105.0,
+    "cost": 2250,
+    "counterLimit": 1,
+    "accuracy": 91.0,
+    "partStructuralStrength": 125.0,
+    "partsBreakable": false,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 0,
+      "space": 100,
+      "water": 25.0,
+      "air": 25.0,
+      "atmosphere": 0,
+      "mountain": 10.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": true,
+    "modules": [
+      {
+        "id": "EndraClass_Turret_BeamCannon_M1",
+        "name": "EndraClass_Turret_BeamCannon_M1",
+        "hp": 45000.0,
+        "bone": "Turret_EndraClass_Turret_BeamCannon_M1",
+        "x": 0.0,
+        "y": -45.0,
+        "idleDir": 0.0,
+        "arc": 95.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/EndraClass/EndraClass_Turret_BeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_EndraClass_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "EndraClass_Turret_BeamCannon_M2",
+        "name": "EndraClass_Turret_BeamCannon_M2",
+        "hp": 45000.0,
+        "bone": "Turret_EndraClass_Turret_BeamCannon_M2",
+        "x": 0.0,
+        "y": 110.0,
+        "idleDir": 0.0,
+        "arc": 95.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/EndraClass/EndraClass_Turret_BeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": false,
+          "decals": [
+            "decal_EndraClass_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "EndraClass_Turret_BeamCannon_M3",
+        "name": "EndraClass_Turret_BeamCannon_M3",
+        "hp": 45000.0,
+        "bone": "Turret_EndraClass_Turret_BeamCannon_M3",
+        "x": 0.0,
+        "y": -200.0,
+        "idleDir": -180.0,
+        "arc": 95.0,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/EndraClass/EndraClass_Turret_BeamCannon.ini",
+          "separateSprite": true,
+          "belowHull": true,
+          "decals": [
+            "decal_EndraClass_Turret_BeamCannon"
+          ]
+        }
+      },
+      {
+        "id": "EndraClass_Turret_MS_M1",
+        "name": "EndraClass_Turret_MS_M1",
+        "hp": 20000.0,
+        "bone": "Turret_EndraClass_Turret_MS_M1",
+        "x": 0.0,
+        "y": 40.0,
+        "idleDir": 0.0,
+        "arc": 180,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/EndraClass/EndraClass_Turret_MS.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      },
+      {
+        "id": "EndraClass_Turret_MS_M2",
+        "name": "EndraClass_Turret_MS_M2",
+        "hp": 20000.0,
+        "bone": "Turret_EndraClass_Turret_MS_M2",
+        "x": 0.0,
+        "y": 20.0,
+        "idleDir": 0.0,
+        "arc": 180,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/EndraClass/EndraClass_Turret_MS.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      },
+      {
+        "id": "EndraClass_Turret_MS_M3",
+        "name": "EndraClass_Turret_MS_M3",
+        "hp": 20000.0,
+        "bone": "Turret_EndraClass_Turret_MS_M3",
+        "x": 0.0,
+        "y": 0.0,
+        "idleDir": 0.0,
+        "arc": 180,
+        "damageToHull": 1,
+        "visual": {
+          "source": "Units/BattleUnits/EndraClass/EndraClass_Turret_MS.ini",
+          "separateSprite": false,
+          "belowHull": false,
+          "decals": []
+        }
+      }
+    ],
+    "footprint": {
+      "width": 2,
+      "height": 2
+    },
+    "supplyAura": {
+      "range": 2,
+      "hpPercent": 5,
+      "enPercent": 10
+    },
+    "speed": 105,
+    "actionPoints": 10,
+    "sensors": {
+      "sight": 10,
+      "radar": 19.444444444444443,
+      "antiDetection": -8.680555555555555,
+      "revealOnDetection": true,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    },
+    "accuracyMultiplier": 0.65
+  },
+  "attackBonuses": {
+    "melee": 0.0,
+    "shooting": 40.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 45.0,
+      "flat": 700.0
+    },
+    "shell": {
+      "percent": 45.0,
+      "flat": 700.0
+    },
+    "melee": {
+      "percent": 45.0,
+      "flat": 700.0
+    },
+    "dp": {
+      "percent": 100.0,
+      "flat": 15.0
+    },
+    "sp": {
+      "percent": 45.0,
+      "flat": 15.0
+    }
+  },
+  "shield": {
+    "hp": 0.0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    }
+  },
+  "sourceStats": {
+    "hp": 300000.0,
+    "walkSpeed": 0.85,
+    "boostSpeed": 1.45,
+    "turnSpeed": 0.5,
+    "reaction": 105.0,
+    "shooting": 140.0,
+    "melee": 100.0,
+    "nativeTags": [
+      "EndraClass",
+      "Unit",
+      "Ship",
+      "CmdUnit",
+      "NEO_ZEON",
+      "0087",
+      "UC",
+      "LargeUnit",
+      "MpUpUnit_X8",
+      "ManualControlCapable"
+    ],
+    "nativeSkills": [
+      "PlayerControl_Entry",
+      "AutoRepair",
+      "LaunchAllUnits",
+      "SupplyPoint",
+      "SupplyPoint_UseEN",
+      "PlayerControl_Marker",
+      "PlayerControl"
+    ],
+    "balanceStatus": "native-level",
+    "accuracy": 140.0,
+    "unitLevel": 9000.0,
+    "enBeforeReduction": 22500.0,
+    "enCapacityMultiplier": 1,
+    "tacticalMoveBeforeBonus": 5,
+    "actionTurnSpeed": 0.5,
+    "mobilityMoveTarget": 8,
+    "adaptability": {
+      "ground": 10.0,
+      "space": 100.0,
+      "water": 25.0,
+      "air": 25.0,
+      "mountain": 10.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 24.0,
+      "radar": 700.0,
+      "antiDetection": -250.0
+    },
+    "shipHullBeforeReduction": 300000.0,
+    "shipBalanceMultiplier": 0.7,
+    "shipFactionHullMultiplier": 1,
+    "shipFactionAccuracyMultiplier": 1,
+    "shipFactionEvasionMultiplier": 1,
+    "technologyEra": "UC_0087_T2",
+    "technologyWeight": 4,
+    "shipFootprintBeforeCompaction": {
+      "width": 2,
+      "height": 3
+    },
+    "nativeProductionQuantity": 1
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 0.9,
+    "idle": "ImportedIdle",
+    "move": "ImportedIdle",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "boost",
+    "deathType": "large",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "恩多拉级",
+  "faction": "NEO_ZEON",
+  "tags": [
+    "NEO_ZEON",
+    "UC_0087_T2"
+  ],
+  "localization": {
+    "zh": {
+      "name": "恩多拉级",
+      "description": "由姆塞级发展而来的新吉翁主力轻巡洋舰，兼顾舰炮作战与MS部队运用"
+    },
+    "en": {
+      "name": "Endra Class",
+      "description": "Neo Zeon's main light cruiser, developed from the Musai class for naval combat and mobile-suit operations"
+    },
+    "ja": {
+      "name": "エンドラ級"
+    }
+  },
+  "weapons": {
+    "EndraClass_Turret_BeamCannon": {
+      "ref": "EndraClass_Turret_BeamCannon__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/EndraClass/EndraClass_Turret_BeamCannon.ini",
+          "barrels": [
+            {
+              "id": "EndraClass_Turret_BeamCannon",
+              "x": 0.0,
+              "y": 16.0
+            },
+            {
+              "id": "EndraClass_Turret_BeamCannon",
+              "x": 0.0,
+              "y": 16.0
+            },
+            {
+              "id": "EndraClass_Turret_BeamCannon",
+              "x": 0.0,
+              "y": 16.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_EndraClass_Turret_BeamCannon_M1",
+              "offset": {
+                "x": 0.0,
+                "y": 16.0
+              }
+            },
+            {
+              "bone": "Turret_EndraClass_Turret_BeamCannon_M2",
+              "offset": {
+                "x": 0.0,
+                "y": 16.0
+              }
+            },
+            {
+              "bone": "Turret_EndraClass_Turret_BeamCannon_M3",
+              "offset": {
+                "x": 0.0,
+                "y": 16.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "EndraClass_Turret_MS": {
+      "ref": "EndraClass_Turret_MS__lv1",
+      "overrides": {
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/EndraClass/EndraClass_Turret_MS.ini",
+          "barrels": [
+            {
+              "id": "EndraClass_Turret_MS",
+              "x": 25.0,
+              "y": 0.0
+            },
+            {
+              "id": "EndraClass_Turret_MS",
+              "x": 25.0,
+              "y": 0.0
+            },
+            {
+              "id": "EndraClass_Turret_MS",
+              "x": 25.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Turret_EndraClass_Turret_MS_M1",
+              "offset": {
+                "x": 25.0,
+                "y": 0.0
+              },
+              "alternatingOffsetX": -50.0
+            },
+            {
+              "bone": "Turret_EndraClass_Turret_MS_M2",
+              "offset": {
+                "x": 25.0,
+                "y": 0.0
+              },
+              "alternatingOffsetX": -50.0
+            },
+            {
+              "bone": "Turret_EndraClass_Turret_MS_M3",
+              "offset": {
+                "x": 25.0,
+                "y": 0.0
+              },
+              "alternatingOffsetX": -50.0
+            }
+          ]
+        }
+      }
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    },
+    {
+      "id": "PlayerControl_Entry",
+      "source": "Template/Unit/Skill/PlayerControl_Entry.gw",
+      "status": "review",
+      "name": "PlayerControl_Entry"
+    },
+    {
+      "id": "LaunchAllUnits",
+      "source": "Template/Unit/Skill/LaunchAllUnits.gw",
+      "status": "adapted",
+      "name": "格纳库：搭载、逐台出击、舰毁紧急退出；搭载中每回合恢复25%耐久、50% EN并修复两个随机受损部位"
+    },
+    {
+      "id": "PlayerControl_Marker",
+      "source": "Template/Unit/Skill/PlayerControl_Marker.gw",
+      "status": "review",
+      "name": "PlayerControl_Marker"
+    },
+    {
+      "id": "PlayerControl",
+      "source": "Template/Unit/Skill/PlayerControl.gw",
+      "status": "review",
+      "name": "PlayerControl"
+    },
+    {
+      "id": "special_Common_ReEntry_NeedBooster",
+      "name": "大气层突入",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_ReEntry_NeedBooster.gw",
+      "status": "review"
+    },
+    {
+      "id": "Common_MinovskyParticle_M",
+      "name": "米诺夫斯基粒子散布：格子区域内防守回避、反侦测与制导干扰",
+      "status": "adapted",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_MinovskyParticle_M.gw"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": [
+        "EndraClass_Turret_BeamCannon",
+        "EndraClass_Turret_MS"
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "Common_MinovskyParticle_M",
+      "type": "minovsky",
+      "name": "米诺夫斯基粒子散布[M]",
+      "radius": 9,
+      "enCost": 450,
+      "actionCost": 2,
+      "durationRounds": 4,
+      "cooldownTurns": 3,
+      "maxUses": 99,
+      "consumeAction": false,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Detect_3.ogg",
+        "volume": 0.5
+      },
+      "localization": {
+        "zh": {
+          "name": "米诺夫斯基粒子散布[M]"
+        },
+        "en": {
+          "name": "Minovsky Particle Dispersal [M]"
+        },
+        "ja": {
+          "name": "ミノフスキー粒子散布[M]"
+        }
+      }
+    },
+    {
+      "id": "Common_FullBoost",
+      "type": "fullboost",
+      "name": "全力推进",
+      "actionCost": 0,
+      "enCost": 250,
+      "consumeAction": false,
+      "range": 0,
+      "effect": "Flash_1_N",
+      "sound": {
+        "file": "../../sounds/Action_8.ogg",
+        "volume": 0.5
+      },
+      "duration": 2,
+      "cooldownTurns": 1,
+      "moveBonus": 2,
+      "mobilityMultiplier": 1.1,
+      "description": "消耗250 EN，在2个己方回合内移动力+2、反应系数×1.10；效果结束后冷却1个己方回合。搭载中仍会持续与计时。"
+    }
+  ],
+  "description": "由姆塞级发展而来的新吉翁主力轻巡洋舰，兼顾舰炮作战与MS部队运用",
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 9000.0,
+    "levelMultiplier": 0.25,
+    "published": 2250
+  },
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "Ship",
+    "Support",
+    "Transport"
+  ],
+  "transport": {
+    "slotCost": 1,
+    "loadTags": []
+  },
+  "hangars": [
+    {
+      "id": "Hangar_1",
+      "name": "格纳库 1",
+      "capacity": 8,
+      "allowedTags": [
+        "CanLoadInto",
+        "CanLoadIntoSpace",
+        "CanLoadIntoAir"
+      ],
+      "launchRange": 1,
+      "emergencyRange": 3,
+      "source": "Units/CommonUnit/Hangar/Hangar_X8.ini",
+      "sourceUnit": "Hangar_X8"
+    }
+  ],
+  "refits": []
+}

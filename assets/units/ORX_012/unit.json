@@ -1,0 +1,960 @@
+{
+  "schemaVersion": 2,
+  "id": "ORX_012",
+  "code": "ORX-012",
+  "source": "GW_BattleUniverse_DLC_0087/Units/BattleUnits/ORX_012/ORX_012.ini",
+  "materials": {
+    "textures": {
+      "ORX_012_Crotch_1.png": "textures/ORX_012_Crotch_1.png",
+      "ORX_012_Body_1.png": "textures/ORX_012_Body_1.png",
+      "ORX_012_ArmL_1.png": "textures/ORX_012_ArmL_1.png",
+      "ORX_012_ArmR_1.png": "textures/ORX_012_ArmR_1.png",
+      "ORX_012_ShoulderL_1.png": "textures/ORX_012_ShoulderL_1.png",
+      "ORX_012_ShoulderR_1.png": "textures/ORX_012_ShoulderR_1.png",
+      "ORX_012_Head_1.png": "textures/ORX_012_Head_1.png",
+      "ORX_012_FootL_1.png": "textures/ORX_012_FootL_1.png",
+      "ORX_012_LegL_1.png": "textures/ORX_012_LegL_1.png",
+      "ORX_012_FootR_1.png": "textures/ORX_012_FootR_1.png",
+      "ORX_012_LegR_1.png": "textures/ORX_012_LegR_1.png",
+      "TITANS_ORX_012_BR.png": "textures/TITANS_ORX_012_BR.png",
+      "EF_BeamSaber.png": "textures/EF_BeamSaber.png",
+      "ORX_012_Body_IncomL_1.png": "textures/ORX_012_Body_IncomL_1.png",
+      "ORX_012_Body_BeamSaberR_1.png": "textures/ORX_012_Body_BeamSaberR_1.png",
+      "ORX_012_Body_BeamSaberR_2.png": "textures/ORX_012_Body_BeamSaberR_2.png",
+      "TITANS_ORX_012_Shield_B.png": "textures/TITANS_ORX_012_Shield_B.png",
+      "ORX_012.png": "textures/ORX_012.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png",
+      "Incom_ORX_012.png": "textures/Incom_ORX_012.png"
+    },
+    "icon": "ORX_012.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment15": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "LeftFoot",
+      "texture": "ORX_012_FootL_1.png",
+      "bone": "LeftFoot",
+      "order": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightFoot",
+      "texture": "ORX_012_FootR_1.png",
+      "bone": "RightFoot",
+      "order": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "LeftLeg",
+      "texture": "ORX_012_LegL_1.png",
+      "bone": "LeftLeg",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "RightLeg",
+      "texture": "ORX_012_LegR_1.png",
+      "bone": "RightLeg",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightLeg"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "Crotch",
+      "texture": "ORX_012_Crotch_1.png",
+      "bone": "Pelvis",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmL",
+      "texture": "ORX_012_ArmL_1.png",
+      "bone": "LeftArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmR",
+      "texture": "ORX_012_ArmR_1.png",
+      "bone": "RightArm",
+      "order": 4.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -12.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "scaleX": 1.0,
+      "independentClock": true
+    },
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 4.1,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -7.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "TITANS_ORX_012_BR",
+      "texture": "TITANS_ORX_012_BR.png",
+      "bone": "RightArm",
+      "order": 5.5,
+      "scale": 0.9,
+      "rotation": 0.0,
+      "offset": {
+        "x": 4.0,
+        "y": 27.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "standard"
+        ],
+        "weaponDisplayIndex": 0
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "TITANS_ORX_012_BeamSaber",
+      "texture": "EF_BeamSaber.png",
+      "bone": "RightWeapon",
+      "order": 5.5,
+      "scale": 1.0,
+      "scaleY": 1.35,
+      "rotation": -16.0,
+      "frames": 5.0,
+      "frame": 1.0,
+      "offset": {
+        "x": 10.0,
+        "y": 34.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {
+        "kit": [
+          "standard"
+        ],
+        "weaponDisplayIndex": 1
+      }
+    },
+    {
+      "name": "TITANS_ORX_012_BeamSaber_Thrust",
+      "texture": "EF_BeamSaber.png",
+      "bone": "RightWeapon",
+      "order": 5.5,
+      "scale": 1.0,
+      "scaleY": 1.35,
+      "rotation": -16.0,
+      "frames": 5.0,
+      "frame": 1.0,
+      "offset": {
+        "x": 9.0,
+        "y": 30.0
+      },
+      "visibleWhen": {
+        "kit": [
+          "standard"
+        ],
+        "weaponDisplayIndex": 3
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "Body",
+      "texture": "ORX_012_Body_1.png",
+      "bone": "Body",
+      "order": 5.6,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Body_IncomL_1",
+      "texture": "ORX_012_Body_IncomL_1.png",
+      "bone": "Body",
+      "order": 5.6,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Body_BeamSaberR_1",
+      "texture": "ORX_012_Body_BeamSaberR_1.png",
+      "bone": "Body",
+      "order": 5.6,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": {
+          "not": [
+            1,
+            3
+          ]
+        }
+      }
+    },
+    {
+      "name": "ShoulderL",
+      "texture": "ORX_012_ShoulderL_1.png",
+      "bone": "LeftShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "leftArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "ShoulderR",
+      "texture": "ORX_012_ShoulderR_1.png",
+      "bone": "RightShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "requiredParts": [
+        "rightArm"
+      ],
+      "visibleWhen": {}
+    },
+    {
+      "name": "Body_BeamSaberR_2",
+      "texture": "ORX_012_Body_BeamSaberR_2.png",
+      "bone": "Body",
+      "order": 6.5,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "Shield",
+      "texture": "TITANS_ORX_012_Shield_B.png",
+      "bone": "LeftArm",
+      "order": 6.5,
+      "scale": 1.0,
+      "rotation": 2.5,
+      "offset": {
+        "x": -13.0,
+        "y": 12.0
+      },
+      "visibleWhen": {
+        "shieldVisible": true
+      },
+      "requiredParts": [
+        "leftArm"
+      ]
+    },
+    {
+      "name": "Head",
+      "texture": "ORX_012_Head_1.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      },
+      "requiredParts": [
+        "head"
+      ]
+    },
+    {
+      "name": "Head_Close",
+      "texture": "ORX_012_Head_1.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": true
+      },
+      "requiredParts": [
+        "head"
+      ]
+    }
+  ],
+  "animations": {
+    "EnterPilot": "../../animations/EnterPilot.json",
+    "QuitPilot": "../../animations/QuitPilot.json",
+    "NoPilotIdle": "../../animations/NoPilotIdle.json",
+    "Common_Idle": "../../animations/Common_Idle__EMS_10.json",
+    "Common_Dodge_L": "../../animations/Common_Dodge_L.json",
+    "Common_Dodge_R": "../../animations/Common_Dodge_R.json",
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "OnMovingWalk": "../../animations/OnMovingWalk.json",
+    "Guard": "../../animations/Guard__AMX_002.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Daze": "../../animations/Common_Daze__AMX_002.json",
+    "Common_Stagger": "../../animations/Common_Stagger__AMX_002.json",
+    "Common_Push_A": "../../animations/Common_Push_A__ApsarasII.json",
+    "Common_Shoot_A": "../../animations/Common_Shoot_A__AMX_002.json",
+    "Common_Shoot_A_FA": "../../animations/Common_Shoot_A_FA__AMX_002.json",
+    "Common_Cannon_Shoot_A": "../../animations/Common_Cannon_Shoot_A__AMX_002.json",
+    "Common_Melee_B": "../../animations/Common_Melee_B__MSM_04.json",
+    "Common_Melee_F": "../../animations/Common_Melee_F__EMS_10.json",
+    "Common_Melee_I_A": "../../animations/Common_Melee_I_A.json",
+    "Common_Melee_I_B": "../../animations/Common_Melee_I_B.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 100000,
+    "en": 1300.0,
+    "move": 9,
+    "mobility": 205.0,
+    "cost": 2125,
+    "counterLimit": 1,
+    "accuracy": 195.0,
+    "partStructuralStrength": 155.0,
+    "partsBreakable": true,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 100,
+      "space": 100,
+      "water": 85.0,
+      "air": 85.0,
+      "atmosphere": 0,
+      "mountain": 100.0,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "speed": 170,
+    "actionPoints": 12,
+    "sensors": {
+      "sight": 10,
+      "radar": 13.0,
+      "antiDetection": 0.0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    }
+  },
+  "attackBonuses": {
+    "melee": 105.0,
+    "shooting": 85.0,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 25.0,
+      "flat": 450.0
+    },
+    "shell": {
+      "percent": 25.0,
+      "flat": 450.0
+    },
+    "melee": {
+      "percent": 35.0,
+      "flat": 850.0
+    },
+    "dp": {
+      "percent": 25.0,
+      "flat": 40.0
+    },
+    "sp": {
+      "percent": 10.0,
+      "flat": 50.0
+    }
+  },
+  "shield": {
+    "hp": 15000.0,
+    "blockChance": 0.4,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "shell": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "melee": {
+        "percent": 1.0,
+        "flat": 0.0
+      },
+      "dp": {
+        "percent": 1.0,
+        "flat": 0.0
+      }
+    },
+    "requiredParts": [
+      "leftArm"
+    ]
+  },
+  "sourceStats": {
+    "hp": 80000.0,
+    "walkSpeed": 0.85,
+    "boostSpeed": 2.4,
+    "turnSpeed": 3.5,
+    "reaction": 205.0,
+    "shooting": 185.0,
+    "melee": 205.0,
+    "nativeTags": [
+      "ORX_012",
+      "Unit",
+      "MS",
+      "TITANS",
+      "0087",
+      "UC",
+      "ManualControlCapable"
+    ],
+    "nativeSkills": [
+      "PlayerControl_Entry",
+      "PlayerControl_Marker",
+      "PlayerControl"
+    ],
+    "accuracy": 195.0,
+    "partStructuralStrength": 155.0,
+    "actionTurnSpeed": 3.5,
+    "movementBeforeMobility": 9,
+    "mobilityMoveTarget": 10,
+    "enBeforeReduction": 1300.0,
+    "enCapacityMultiplier": 1,
+    "adaptability": {
+      "ground": 100.0,
+      "space": 115.0,
+      "water": 85.0,
+      "air": 85.0,
+      "mountain": 100.0,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 26.0,
+      "radar": 468.0,
+      "antiDetection": 0.0
+    },
+    "balanceStatus": "native-level",
+    "unitLevel": 8500.0,
+    "tacticalMoveBeforeBonus": 9,
+    "v17BaseHp": 80000.0,
+    "technologyEra": "UC_0087_T2",
+    "technologyWeight": 4,
+    "nativeProductionQuantity": 1
+  },
+  "presentation": {
+    "shield": true,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "OnMoving",
+    "stagger": "Common_Stagger",
+    "dodge": "Common_Dodge_L",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "OnMovingWalk",
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "高达Mk-IV",
+  "faction": "TITANS",
+  "tags": [
+    "TITANS",
+    "UC_0087_T2"
+  ],
+  "localization": {
+    "zh": {
+      "name": "高达Mk-IV",
+      "description": "搭载有线炮的试作型高达，兼顾近距离格斗与肩炮火力支援。"
+    },
+    "en": {
+      "name": "Gundam Mk-IV",
+      "description": "Prototype mobile suit equipped with wire-guided Incom weapons."
+    },
+    "ja": {
+      "name": "ガンダムMk-IV"
+    }
+  },
+  "weapons": {
+    "Common_Push_A": {
+      "ref": "Common_Push_A__lv3",
+      "overrides": {
+        "slot": "primary",
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_Push_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 0.75,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_2_Kick_White_R"
+              ],
+              "delay": 0.45
+            },
+            {
+              "delay": 1.0
+            }
+          ],
+          "startAnimation": "Common_Push_A"
+        },
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+          "barrel": "Common_Push_A",
+          "entry": "hiddenAction_Common_Push_A_Fire",
+          "cooldown": 3.0,
+          "duration": 1.45,
+          "firstShot": 0.45,
+          "lastShot": 0.45,
+          "firingEvents": 1,
+          "projectiles": 1,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "hiddenAction_Common_Push_A_Fire",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SendEnemyTryAttack_Cqb",
+            "hiddenAction_Common_Push_A_SetWeaponIndex",
+            "hiddenAction_Common_Push_A_Step_1",
+            "hiddenAction_Common_Push_A_Fire_Step_1",
+            "hiddenAction_Common_Push_A_Fire_Step_2",
+            "hiddenAction_Common_Push_A_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff"
+          ]
+        },
+        "actionCost": 2,
+        "requiredParts": [],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
+          "barrelX": 0,
+          "barrelY": 0,
+          "cooldownSeconds": 3,
+          "barrels": [
+            {
+              "id": "Common_Push_A",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      },
+      "remove": [
+        "swingEffects"
+      ]
+    },
+    "TITANS_ORX_012_BR": {
+      "ref": "TITANS_ORX_012_BR__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/ORX_012/Weapon/TITANS_ORX_012_BR.gw",
+          "barrels": [
+            {
+              "id": "TITANS_ORX_012_BR",
+              "x": 13.0,
+              "y": 40.0
+            }
+          ]
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "TITANS_ORX_012_BR",
+              "point": {
+                "x": 8.844671327175328e-16,
+                "y": -14.444444444444445
+              }
+            }
+          ]
+        }
+      }
+    },
+    "TITANS_ORX_012_BeamCannon": {
+      "ref": "TITANS_ORX_012_BeamCannon__lv1",
+      "overrides": {
+        "requiredParts": [
+          "head"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/ORX_012/Weapon/TITANS_ORX_012_BeamCannon.gw",
+          "barrels": [
+            {
+              "id": "TITANS_ORX_012_BeamCannon",
+              "x": 11.0,
+              "y": -8.0
+            }
+          ],
+          "muzzleNote": "Native weapon has no standalone muzzle flash"
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 11.0,
+                "y": -8.0
+              }
+            }
+          ]
+        }
+      }
+    },
+    "TITANS_ORX_012_BeamSaber_B": {
+      "ref": "TITANS_ORX_012_BeamSaber_B__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/ORX_012/Weapon/TITANS_ORX_012_BeamSaber.gw",
+          "barrels": [
+            {
+              "id": "TITANS_ORX_012_BeamSaber_B",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      }
+    },
+    "TITANS_ORX_012_BeamSaber_Thrust": {
+      "ref": "TITANS_ORX_012_BeamSaber_Thrust__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/ORX_012/Weapon/TITANS_ORX_012_BeamSaber_Thrust.gw",
+          "barrels": [
+            {
+              "id": "TITANS_ORX_012_BeamSaber_Thrust",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ]
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0.0,
+            "y": 0.0
+          }
+        }
+      }
+    },
+    "TITANS_ORX_012_Incom": {
+      "ref": "TITANS_ORX_012_Incom__lv1",
+      "overrides": {
+        "requiredParts": [
+          "head"
+        ],
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          ]
+        },
+        "source": {
+          "file": "Units/BattleUnits/ORX_012/Weapon/TITANS_ORX_012_Incom.gw",
+          "root": "GW_BattleUniverse_DLC_0087"
+        }
+      }
+    }
+  },
+  "mechanics": [
+    {
+      "id": "movement",
+      "name": "地面移动",
+      "status": "implemented"
+    },
+    {
+      "id": "PlayerControl_Entry",
+      "source": "Template/Unit/Skill/PlayerControl_Entry.gw",
+      "status": "review",
+      "name": "PlayerControl_Entry"
+    },
+    {
+      "id": "PlayerControl_Marker",
+      "source": "Template/Unit/Skill/PlayerControl_Marker.gw",
+      "status": "review",
+      "name": "PlayerControl_Marker"
+    },
+    {
+      "id": "PlayerControl",
+      "source": "Template/Unit/Skill/PlayerControl.gw",
+      "status": "review",
+      "name": "PlayerControl"
+    },
+    {
+      "id": "special_Common_DetectArea_Lv2",
+      "name": "special_Common_DetectArea_Lv2",
+      "source": "Units/BattleUnits/Weapon/Sp/Common_DetectArea_Lv2.gw",
+      "status": "review"
+    }
+  ],
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": [
+        "TITANS_ORX_012_BR",
+        "TITANS_ORX_012_BeamCannon",
+        "TITANS_ORX_012_BeamSaber_B",
+        "TITANS_ORX_012_BeamSaber_Thrust",
+        "TITANS_ORX_012_Incom",
+        "Common_Push_A"
+      ]
+    }
+  ],
+  "description": "搭载有线炮的试作型高达，兼顾近距离格斗与肩炮火力支援。",
+  "skills": [
+    {
+      "id": "Common_DetectArea",
+      "type": "recon",
+      "name": "索敌",
+      "reconMode": "scan",
+      "range": 25.0,
+      "enCost": 100,
+      "actionCost": 1,
+      "maxUses": 99,
+      "consumeAction": false,
+      "waterOnly": false,
+      "durationRounds": 2,
+      "cooldownTurns": 1,
+      "effect": "Light_75_NotAttached",
+      "sound": {
+        "file": "../../sounds/Detect_3.ogg",
+        "volume": 0.5
+      },
+      "localization": {
+        "zh": {
+          "name": "索敌"
+        },
+        "en": {
+          "name": "Active Scan"
+        },
+        "ja": {
+          "name": "索敵"
+        }
+      }
+    }
+  ],
+  "kitAliases": {
+    "kit_0": "standard",
+    "kit_1": "standard"
+  },
+  "nativeLayoutRevision": 1,
+  "deferredWeapons": [],
+  "costBalance": {
+    "nativeLevel": 8500.0,
+    "levelMultiplier": 0.25,
+    "published": 2125
+  },
+  "nativeCombatRevision": 1,
+  "unitTags": [
+    "MS",
+    "Recon"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto",
+      "CanUseSFS"
+    ]
+  },
+  "hangars": [],
+  "refits": []
+}
