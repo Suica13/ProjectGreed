@@ -229,7 +229,9 @@ function createServer({
         const formationAction =
           msg?.type === "action" &&
           ["set_ready", "start_game", "update_formation", "confirm_formation"].includes(msg.action);
-        const payloadLimit = formationAction
+        // Joining/resuming carries the same complete license and inventory
+        // profile as formation updates; a fully unlocked account exceeds 16 KiB.
+        const payloadLimit = msg?.type === "hello" || formationAction
           ? 4 * 1024 * 1024
           : [
                 "record_upload_chunk",

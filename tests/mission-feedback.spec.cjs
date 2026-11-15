@@ -1,0 +1,41 @@
+const {test,expect}=require('@playwright/test');
+const {pathToFileURL}=require('node:url'),path=require('node:path');
+for(const width of [1440,390])test(`night raid objectives and extraction at ${width}px`,async({page})=>{
+ test.setTimeout(120000);const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.setViewportSize({width,height:950});
+ await page.addInitScript(()=>localStorage.setItem('projectgreed.economy.v1',JSON.stringify({schemaVersion:3,money:100000,supplies:100000,licenses:{FatUncle:true},inventory:{FatUncle:5},kits:{},claimed:{}})));
+ await page.goto(pathToFileURL(path.resolve('public/client.html')).href);await expect(page.locator('#openSkirmish')).toBeEnabled();
+ await page.evaluate(()=>{I18n.setLanguage('zh');const factory=createRoomEngine;createRoomEngine=options=>(window.raidEngine=factory({...options,aiDelayMs:999999}));});
+ await page.locator('#openSkirmish').click();await page.locator('#createOfflineRoom').click();
+ await page.locator('#offlineRoomMode').selectOption('mission');await page.locator('#confirmOfflineMode').click();
+ await expect.poll(()=>page.evaluate(()=>Net.snapshot?.settings.mode)).toBe('mission');
+ await page.evaluate(()=>Net.request('configure_room',{mapId:'mission_sleepless_raid',costLimit:5000,unitLimit:18}));
+ await expect.poll(()=>page.evaluate(()=>Net.snapshot?.settings.mapId)).toBe('mission_sleepless_raid');
+ await expect(page.locator('#roomMapTitle')).toContainText('彻夜难眠');
+ await expect.poll(()=>page.evaluate(()=>!!Net.awaiting)).toBe(false);
+ await page.evaluate(()=>Net.request('start_game',{formation:[{unitId:'FatUncle',kitId:'standard'}]}));
+ await expect(page.locator('#confirmFinalFormation')).toBeVisible();await page.locator('#confirmFinalFormation').click();
+ await expect.poll(()=>page.evaluate(()=>Net.snapshot.phase)).toBe('deployment');
+ await page.evaluate(()=>Net.request('auto_place_deployment'));await expect.poll(()=>page.evaluate(()=>!!Net.awaiting)).toBe(false);
+ await page.evaluate(()=>Net.request('confirm_deployment'));
+ await expect.poll(()=>page.evaluate(()=>Net.snapshot.phase)).toBe('idle');
+ await page.locator('#missionObjectives').click();const panel=page.locator('#missionObjectivesPanel');
+ await expect(panel.locator('[data-objectives="victory"]')).toContainText('摧毁目标米迪亚(0/3)');
+ await expect(panel.locator('[data-objectives="victory"]')).toContainText('全部存活单位撤离');
+ await page.screenshot({path:`tmp/verification/screenshots/night-raid-objectives-${width}.png`});
+ await panel.getByRole('button',{name:'关闭',exact:true}).click();
+ await page.evaluate(()=>{const room=[...raidEngine.rooms.values()][0];room.game.units.filter(u=>u.missionGroup==='targets').forEach(u=>u.hp=0);raidEngine.broadcast(room);});
+ await expect.poll(()=>page.evaluate(()=>Net.snapshot.game.mission.extractionOpen)).toBe(true);
+ await page.screenshot({path:`tmp/verification/screenshots/night-raid-map-${width}.png`});
+ expect(errors).toEqual([]);
+});
+
+test('night raid export preserves random targets, clock, extraction and technology in editor',async({page})=>{
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ const map=JSON.parse(require('node:fs').readFileSync('assets/maps/missions/sleepless_raid.json','utf8'));
+ await page.goto(pathToFileURL(path.resolve('public/map-editor.html')).href);
+ await page.evaluate(map=>{MapEditor.importMap(map.tileMap);MapEditor.tab('mission');},map);
+ await expect(page.locator('#missionScriptValidation')).toHaveText('✓ 脚本结构检查通过');
+ expect(await page.evaluate(()=>MissionEditor.issues())).toEqual([]);
+ expect(errors).toEqual([]);
+});

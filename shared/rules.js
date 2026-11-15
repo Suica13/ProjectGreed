@@ -847,6 +847,25 @@ const Tactics = (() => {
       .filter(Number.isFinite);
     const initialTechnology = knownRanks.length ? Math.min(...knownRanks) : 0;
     const technologyRank = (model) => technologyRanks.get(model.prefabId) ?? initialTechnology;
+    const encounterProgress = Number.isFinite(restrictions.aiEncounterProgress)
+      ? Math.max(0, Math.min(1, restrictions.aiEncounterProgress)) : null;
+    const encounterTiers = [...new Set(choices.filter(model => !isFleetCarrier(model)).map(technologyRank))]
+      .sort((a, b) => a - b);
+    let encounterTier = encounterProgress === null ? Infinity :
+      encounterTiers[Math.max(0, Math.ceil(encounterTiers.length * encounterProgress) - 1)] ?? Infinity;
+    if (encounterProgress !== null && restrictions.requiresCarriers) {
+      const canFieldPassenger = tier => choices.some(carrier => isFleetCarrier(carrier) &&
+        choices.some(passenger => !isFleetCarrier(passenger) && passenger.weapons.length &&
+          technologyRank(passenger) <= tier && carrier.cost + passenger.cost <= maxCost &&
+          carrier.hangars?.some(h => h.capacity >= (passenger.transport?.slotCost || 1) &&
+            h.allowedTags.some(tag => passenger.transport?.loadTags.includes(tag)))));
+      // Some eras begin with infantry or a unit incompatible with the available
+      // transports. Open only enough additional tiers to form a viable fleet.
+      for (const tier of encounterTiers) {
+        if (canFieldPassenger(encounterTier)) break;
+        if (tier > encounterTier) encounterTier = tier;
+      }
+    }
     const costPerPoint = (model) => model.cost / formationWeight(model);
     const combatChoices = choices.filter((model) => !support(model));
     const coreChoices = combatChoices.length ? combatChoices : choices;
@@ -923,6 +942,7 @@ const Tactics = (() => {
       const hasFrontline = choices.some(frontlineMS);
       const legal = choices.filter((model) => {
         const firstCarrier = fleetMode && entries.length === 0;
+        if (encounterProgress !== null && !isFleetCarrier(model) && technologyRank(model) > encounterTier) return false;
         if (fleetMode && isFleetCarrier(model) && fleetCount >= (restrictions.fleetLimit ?? 3)) return false;
         if (firstCarrier && (!isFleetCarrier(model) || !model.hangars?.length)) return false;
         if (fleetMode && !isFleetCarrier(model) && !passengerSlot(model)) return false;
@@ -943,6 +963,7 @@ const Tactics = (() => {
         if (formationWeight(model) > remainingPoints) return false;
         if (model.cost > remaining) return false;
         if (firstCarrier && !choices.some(passenger => !isFleetCarrier(passenger) &&
+          technologyRank(passenger) <= encounterTier &&
           passenger.weapons.length && passenger.cost <= remaining - model.cost &&
           model.hangars.some(h => h.capacity >= (passenger.transport?.slotCost || 1) &&
             h.allowedTags.some(tag => passenger.transport?.loadTags.includes(tag))))) return false;
@@ -1007,6 +1028,12 @@ const Tactics = (() => {
       let preferred = legal.filter(
         (model) => adaptation(model) >= Math.min(100, bestLegalAdaptation),
       );
+      if (encounterProgress !== null && fleetMode && entries.length === 0) {
+        // Leave room for several passengers instead of one costly carrier and
+        // a single repeated cheap unit. Fall back when no cheaper carrier fits.
+        const logisticsBudget = preferred.filter(model => model.cost <= maxCost * 0.3);
+        if (logisticsBudget.length) preferred = logisticsBudget;
+      }
       // Choose a role before its technology tier: a newly unlocked fighter must
       // not displace the MS backbone or every older logistics aircraft.
       const fleet = ships < desiredShips ? preferred.filter((model) => model.ship) : [];
@@ -1040,7 +1067,12 @@ const Tactics = (() => {
         return sum + (frontlineMS(model) ? formationWeight(model) : 0);
       }, 0);
       const frontline = preferred.filter(frontlineMS);
-      if (frontline.length && frontlinePoints < frontlineTarget) preferred = frontline;
+      const mixedEncounterSlot = encounterProgress !== null && encounterProgress >= 0.45 && combatCount % 3 === 2;
+      if (mixedEncounterSlot) {
+        const specialists = preferred.filter(model => !frontlineMS(model) ||
+          !mainlineUnits.has(model.prefabId));
+        if (specialists.length) preferred = specialists;
+      } else if (frontline.length && frontlinePoints < frontlineTarget) preferred = frontline;
       // Three backbone selections for each elite selection. BASE-tech aircraft
       // and branch prototypes cannot replace the main-line MS core.
       const primary = preferred.filter(
@@ -1066,7 +1098,8 @@ const Tactics = (() => {
       const highestCost = Math.max(...preferred.map(costPerPoint));
       // Spend on useful platforms, not a target average dictated by empty slots.
       // Role quotas and the quality floor stop luxury units or leftovers taking over.
-      let affordableTier = preferred.filter((model) => costPerPoint(model) >= highestCost * 0.65);
+      let affordableTier = preferred.filter((model) => costPerPoint(model) >= highestCost *
+        (encounterProgress === null ? 0.65 : 0.35));
       // Narrow price bands must not force another copy while comparable unused platforms exist.
       if (affordableTier.every((model) => copies(model.prefabId) > 0)) {
         const tierPrice = Math.max(...affordableTier.map(costPerPoint));
@@ -4565,7 +4598,7 @@ const Tactics = (() => {
       const points = aiTactics.captureCapable(Tactics, u)
         ? field
           ? field.layout.nodes.filter((point) => field.owners[point.id] !== u.team)
-          : g.battlefield.points.filter((point) => point.owner !== u.team)
+          : (g.battlefield?.points || []).filter((point) => point.owner !== u.team)
         : [];
       const alternatives = [
         ...points.map((goal) => ({ goal, occupation: true })),

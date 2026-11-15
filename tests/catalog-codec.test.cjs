@@ -33,3 +33,10 @@ test("corrupt or oversized catalog containers are rejected", () => {
   assert.throws(() => decode({ ...pack(source), uncompressedBytes: 1024 ** 3 }));
   assert.throws(() => decode({ ...pack(source), payload: "invalid" }));
 });
+
+test("standalone HTML stays below the repository host single-file limit", () => {
+  const fs = require("node:fs");
+  const path = require("node:path");
+  const bytes = fs.statSync(path.join(__dirname, "../public/client.html")).size;
+  assert(bytes < 100 * 1024 * 1024, "Generated client exceeds GitHub's 100 MiB file limit");
+});

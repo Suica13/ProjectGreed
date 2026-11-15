@@ -88,6 +88,8 @@ window.MissionEditor = (() => {
     unprotect: "解除保护目标",
     recover: "恢复耐久与EN",
     withdraw: "目标向右侧撤离（到达后下一回合离场）",
+    extend_time:"延长任务时限",
+    open_extraction:"开放撤离区",
     scripted_attack: "剧情攻击（击破指定敌人）",
     message: "任务提示",
     dialogue: "剧情对话",
@@ -103,6 +105,7 @@ window.MissionEditor = (() => {
     ["actor_destroyed", "指定单位被击坠"],
     ["group_destroyed", "指定部队全部被击坠"],
     ["group_escaped", "指定部队任一单位撤离"],
+    ["group_alive", "分组至少存活指定数量"],
     ["enter_region", "单位进入地图区域"],
     ["event_completed", "另一事件完成后"],
     ["choice_selected", "玩家选择指定选项后"],
@@ -119,6 +122,7 @@ window.MissionEditor = (() => {
     group: m.actors.find((a) => a.team === 1)?.group || m.actors[0]?.group || "enemies",
     actor: m.actors[0]?.id,
     percent: 50,
+    count: 1,
     x: 0,
     y: 0,
     width: 3,
@@ -143,6 +147,7 @@ window.MissionEditor = (() => {
         actor_destroyed: `${name} 被击坠`,
         group_destroyed: `${w.group} 部队全灭`,
         group_escaped: `${w.group} 部队有单位撤离`,
+        group_alive: `${w.group} 部队至少存活 ${w.count} 台`,
         enter_region: `${name} 进入区域 (${w.x},${w.y}) ${w.width}×${w.height}`,
         event_completed: `「${m.events.find((e) => e.id === w.event)?.name || "未选择事件"}」完成`,
         choice_selected: `「${m.events.find(e=>e.id===w.event)?.name || w.event}」选择 ${w.option}`,
@@ -273,10 +278,12 @@ window.MissionEditor = (() => {
       [
         ["all_enemies", "消灭全部敌人"],
         ["survive", "坚持指定回合"],
+        ["defend_group", "保护分组至少一台存活至指定回合"],
         ["defeat_actor", "击破指定单位"],
         ["escort", "护送目标并坚守"],
         ["scripted", "由剧情分支决定胜利"],
         ["eliminate_group", "歼灭目标分组（目标撤离后改为全歼）"],
+        ["extract","摧毁目标并全员撤离"],
       ],
       (v) => change((m) => {
         const actor=m.actors.find(a=>a.team===0 && a.initial && !a.carrier);
@@ -285,11 +292,23 @@ window.MissionEditor = (() => {
             holdRounds:2,route:[{x:actor?.x || 0,y:actor?.y || 0}],eliminateAll:false}
           : v === "scripted"
             ? {type:v,group:m.actors.find(a=>a.team===1)?.group,choiceEvent:m.events.find(e=>e.actions.some(a=>a.type==="choice"))?.id || "decision",continueOption:"refuse"}
+            : v === "defend_group" ? {type:v,group:m.actors.find(a=>a.team===0 && a.initial)?.group,round:35}
+            : v === "extract" ? {type:v,group:m.actors.find(a=>a.team===1)?.group,region:{x:0,y:0,width:6,height:6},deadlineRound:30}
             : v === "eliminate_group" ? {type:v,group:m.actors.find(a=>a.team===1)?.group,label:"消灭目标单位"}
             : {type:v,round:10,actor:m.actors[0]?.id};
         if(v === "escort" && actor && !m.protect.includes(actor.id))m.protect.push(actor.id);
       }),
     );
+    if(m.victory.type==="defend_group"){
+      select(basics,"保护部队分组",m.victory.group,[...new Set(m.actors.filter(a=>a.team===0 && a.initial).map(a=>a.group))],v=>change(m=>m.victory.group=v));
+      input(basics,"坚持至第几回合",m.victory.round,v=>change(m=>m.victory.round=v),"number");
+    }
+    if(m.victory.type==="extract"){
+      select(basics,"目标分组",m.victory.group,[...new Set(m.actors.filter(a=>a.team===1).map(a=>a.group))],v=>change(m=>m.victory.group=v));
+      input(basics,"任务时限（回合）",m.victory.deadlineRound,v=>change(m=>m.victory.deadlineRound=v),"number");
+      for(const [key,label] of [["x","撤离区X"],["y","撤离区Y"],["width","撤离区宽度"],["height","撤离区高度"]])
+        input(basics,label,m.victory.region[key],v=>change(m=>m.victory.region[key]=v),"number");
+    }
     if(m.victory.type === "eliminate_group") {
       select(basics,"目标单位分组",m.victory.group,[...new Set(m.actors.filter(a=>a.team===1).map(a=>a.group))],v=>change(m=>m.victory.group=v));
       input(basics,"目标显示文字",m.victory.label || "消灭目标单位",v=>change(m=>m.victory.label=v));
@@ -342,6 +361,12 @@ window.MissionEditor = (() => {
         node("summary", unitName(a) + " · " + a.id + (a.initial ? " · 开场" : " · 事件增援")),
       );
       roster.append(card);
+      // Hundreds of scheduled reinforcements need only a summary until opened.
+      // Avoid constructing every carrier/pilot selector for every closed actor.
+      let populated=false;
+      const populate=()=>{
+        if(populated)return;
+        populated=true;
       const edit = (k, v) => change((m) => (m.actors[index][k] = v));
       input(card, "脚本单位 ID", a.id, v => {
         try { renameActor(a.id, v); }
@@ -407,6 +432,7 @@ window.MissionEditor = (() => {
         }),
       );
       input(card, "开场登场", a.initial, (v) => edit("initial", v), "checkbox");
+      input(card,"固定位置（可攻击与应战）",a.stationary===true,v=>edit("stationary",v),"checkbox");
       if(a.team===0)input(card,"独立AI友军（玩家不可控制／黄色标记）",a.autonomous===true,v=>edit("autonomous",v),"checkbox");
       input(
         card,
@@ -426,8 +452,9 @@ window.MissionEditor = (() => {
         "ACE驾驶员",
         a.pilotId || "",
         [["", "无"], ...MissionEditorData.pilots.map((p) => [p.id, p.name])],
-        (v) => edit("pilotId", v || null),
+        (v) => change(m=>{const actor=m.actors[index];actor.pilotId=v || null;if(v)delete actor.genericPilot;}),
       );
+      select(card,"剧本默认驾驶员类型",a.genericPilot || "",[["","一般"],["veteran","老兵"],["elite","精英"],["ace","默认ACE"],["enhanced","强化人"]],v=>change(m=>{const actor=m.actors[index];if(v){actor.genericPilot=v;delete actor.pilotId;}else delete actor.genericPilot;}));
       input(card, "驾驶员等级（0～5）", a.level || 0, (v) => edit("level", v), "number");
       if (a.unitId.startsWith("Facility_"))input(card,"设施等级（1～4）",a.facilityLevel || 1,v=>edit("facilityLevel",v),"number");
       card.append(
@@ -438,6 +465,9 @@ window.MissionEditor = (() => {
           }),
         ),
       );
+      };
+      card.addEventListener("toggle",()=>{if(card.open)populate();});
+      if(a.id===selectedActorId || open.has(a.id))populate();
     });
     roster.append(
       button("＋添加剧情单位", () =>
@@ -531,6 +561,7 @@ window.MissionEditor = (() => {
         detail.open = true;
   }
   function renderReward(parent, reward, edit) {
+    input(parent, "科技点奖励", reward.technology || 0, (v) => edit((r) => (r.technology = v)), "number");
     input(parent, "资金奖励", reward.money, (v) => edit((r) => (r.money = v)), "number");
     input(parent, "物资奖励", reward.supplies, (v) => edit((r) => (r.supplies = v)), "number");
     for (const [id, count] of Object.entries(reward.inventory)) {
@@ -652,7 +683,7 @@ window.MissionEditor = (() => {
     }
     if (["actor_hp", "actor_destroyed", "enter_region"].includes(w.type))
       select(parent, "条件单位", w.actor, actors(m), (v) => set("actor", v));
-    if (["defeated_group", "group_destroyed", "group_escaped"].includes(w.type))
+    if (["defeated_group", "group_destroyed", "group_escaped", "group_alive"].includes(w.type))
       select(
         parent,
         "敌军分组",
@@ -678,6 +709,7 @@ window.MissionEditor = (() => {
       );
     for (const [k, label] of w.type === "round"
       ? [["round", "第几回合"]]
+      : w.type === "group_alive" ? [["count","至少存活数量"]]
       : w.type === "defeated_group"
         ? [
             ["count", "击破数量"],
@@ -771,6 +803,7 @@ window.MissionEditor = (() => {
         select(box, "攻击单位", action.actor, actors(m), v => update(a => {a.actor=v;a.actors=[];}));
         box.append(node("p", "剧情直接击破所选敌人，并在地图播放攻击演出；不会重复计算普通武器伤害。"));
       }
+      if(action.type==="extend_time")input(box,"延长回合数",action.rounds,v=>update(a=>a.rounds=v),"number");
       if (action.type === "recover") {
         input(
           box,
@@ -885,6 +918,8 @@ window.MissionEditor = (() => {
       ["unprotect", "＋解除保护"],
       ["recover", "＋恢复状态"],
       ["withdraw", "＋向右侧撤离"],
+      ["extend_time","＋延长任务时限"],
+      ["open_extraction","＋开放撤离区"],
       ["scripted_attack", "＋剧情攻击"],
       ["message", "＋任务提示"],
       ["choice", "＋同步剧情选择"],
@@ -899,6 +934,7 @@ window.MissionEditor = (() => {
                 ? { type, lines: [{ actor: m.actors[0]?.id, name: "角色", text: "请输入台词" }] }
                 : type === "scripted_attack"
                   ? {type,actor:m.actors[0]?.id,actors:[]}
+                  : type === "extend_time" ? {type,rounds:20}
                   : type === "withdraw" ? {type,edge:"right",actors:[]}
                   : type === "recover"
                   ? { type, actors: [], hpPercent: 50, enPercent: 50 }

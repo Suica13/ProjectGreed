@@ -40,7 +40,7 @@ test("manual language selection persists offline and covers formation, deploymen
     if (!localStorage.getItem("localization-test-seeded")) {
       localStorage.setItem(
         "projectgreed.economy.v1",
-        JSON.stringify({ money: 5000, supplies: 10000, inventory: { RGM_79: 4 }, kits: {} }),
+        JSON.stringify({ money: 5000, supplies: 10000, inventory: { Medea: 4 }, kits: {} }),
       );
       localStorage.setItem("localization-test-seeded", "1");
     }
@@ -52,7 +52,7 @@ test("manual language selection persists offline and covers formation, deploymen
     page.setDefaultTimeout(10000);
     await page.goto(url);
     await page.waitForFunction(() => assetsReady);
-    await page.evaluate(() => Development.grantUnit("EFSF", "RGM_79"));
+    await page.evaluate(() => Development.grantUnit("EFSF", "Medea"));
     await chooseLanguage(page, "ja");
     await expect(page.locator("#openSkirmish")).toHaveText("戦闘開始");
     await page.reload();
@@ -62,7 +62,7 @@ test("manual language selection persists offline and covers formation, deploymen
     await page.locator("#closeClientSettings").click();
     await page.locator("#shellHangar").click();
     await page.locator("#openFormationPicker").click();
-    await expect(page.locator('[data-unit-id="RGM_79"]')).toContainText("ジム");
+    await expect(page.locator('[data-unit-id="Medea"]')).toContainText("ミデア");
     await page.locator("#closeFormationPicker").click();
     await page.locator("#formationName").fill("主菜单 回避");
     await page.locator("#shellLobby").click();
@@ -71,7 +71,7 @@ test("manual language selection persists offline and covers formation, deploymen
     await expect(page.locator("#formationName")).toHaveValue("主菜单 回避");
     await expect(page.locator("#formationSelect option").first()).toHaveText("主菜单 回避");
     await page.locator("#openFormationPicker").click();
-    await expect(page.locator('[data-unit-id="RGM_79"]')).toContainText("GM");
+    await expect(page.locator('[data-unit-id="Medea"]')).toContainText("Medea");
     await page.locator("#closeFormationPicker").click();
     await expect(page.locator("#saveFormation")).toHaveText("Back");
     await page.screenshot({ path: testInfo.outputPath("formation-en.png") });

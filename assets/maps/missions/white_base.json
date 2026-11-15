@@ -1,6 +1,6 @@
 {
   "id": "mission_white_base",
-  "name": "[0079][EFSF]相逢在宇宙",
+  "name": "[0079][剧情]相逢在宇宙-EFSF",
   "description": "重返宇宙后等待阿姆罗一行人的是...",
   "width": 41,
   "height": 25,
@@ -21,10 +21,11 @@
     "technologyLimitEnabled": false,
     "scenarioFaction": "EFSF",
     "technologyLimit": 10000,
-    "costLimit": 2000,
+    "costLimit": 3000,
     "unitLimit": 12,
     "enemyResourcePerPlayer": 0.25,
     "rewards": {
+      "technology": 1000,
       "money": 4000,
       "supplies": 6000,
       "inventory": {
@@ -34,6 +35,7 @@
       "bonuses": [
         {
           "event": "red-comet",
+          "technology": 500,
           "money": 1500,
           "supplies": 2250,
           "inventory": {
@@ -293,6 +295,114 @@
         "angle": 270
       },
       {
+        "id": "red-escort-0",
+        "unitId": "MS_06F2",
+        "kitId": "machine_gun",
+        "team": 1,
+        "x": 3,
+        "y": 5,
+        "group": "red-escorts",
+        "initial": false,
+        "angle": 270,
+        "squad": "red-escort-0"
+      },
+      {
+        "id": "red-escort-1",
+        "unitId": "MS_06F2",
+        "kitId": "machine_gun",
+        "team": 1,
+        "x": 3,
+        "y": 5,
+        "group": "red-escorts",
+        "initial": false,
+        "angle": 270,
+        "squad": "red-escort-0"
+      },
+      {
+        "id": "red-escort-2",
+        "unitId": "MS_06F2",
+        "kitId": "machine_gun",
+        "team": 1,
+        "x": 3,
+        "y": 5,
+        "group": "red-escorts",
+        "initial": false,
+        "angle": 270,
+        "squad": "red-escort-0"
+      },
+      {
+        "id": "red-escort-3",
+        "unitId": "MS_06F2",
+        "kitId": "machine_gun",
+        "team": 1,
+        "x": 3,
+        "y": 21,
+        "group": "red-escorts",
+        "initial": false,
+        "angle": 270,
+        "squad": "red-escort-1"
+      },
+      {
+        "id": "red-escort-4",
+        "unitId": "MS_06F2",
+        "kitId": "machine_gun",
+        "team": 1,
+        "x": 3,
+        "y": 21,
+        "group": "red-escorts",
+        "initial": false,
+        "angle": 270,
+        "squad": "red-escort-1"
+      },
+      {
+        "id": "red-escort-5",
+        "unitId": "MS_06F2",
+        "kitId": "machine_gun",
+        "team": 1,
+        "x": 3,
+        "y": 21,
+        "group": "red-escorts",
+        "initial": false,
+        "angle": 270,
+        "squad": "red-escort-1"
+      },
+      {
+        "id": "red-escort-6",
+        "unitId": "MS_09R",
+        "kitId": "bazooka",
+        "team": 1,
+        "x": 5,
+        "y": 13,
+        "group": "red-escorts",
+        "initial": false,
+        "angle": 270,
+        "squad": "red-escort-2"
+      },
+      {
+        "id": "red-escort-7",
+        "unitId": "MS_09R",
+        "kitId": "bazooka",
+        "team": 1,
+        "x": 5,
+        "y": 13,
+        "group": "red-escorts",
+        "initial": false,
+        "angle": 270,
+        "squad": "red-escort-2"
+      },
+      {
+        "id": "red-escort-8",
+        "unitId": "MS_09R",
+        "kitId": "bazooka",
+        "team": 1,
+        "x": 5,
+        "y": 13,
+        "group": "red-escorts",
+        "initial": false,
+        "angle": 270,
+        "squad": "red-escort-2"
+      },
+      {
         "id": "char",
         "unitId": "MS_14S_CharCustom",
         "kitId": "kit_0",
@@ -361,7 +471,16 @@
             "actors": [
               "char",
               "amuro",
-              "lalah"
+              "lalah",
+              "red-escort-0",
+              "red-escort-1",
+              "red-escort-2",
+              "red-escort-3",
+              "red-escort-4",
+              "red-escort-5",
+              "red-escort-6",
+              "red-escort-7",
+              "red-escort-8"
             ]
           },
           {
@@ -2688,7 +2807,7 @@
     "format": "ProjectGreedTileMap",
     "version": 1,
     "id": "mission_white_base",
-    "name": "[0079][EFSF]相逢在宇宙",
+    "name": "[0079][剧情]相逢在宇宙-EFSF",
     "description": "重返宇宙后等待阿姆罗一行人的是...",
     "width": 41,
     "height": 25,
@@ -8096,10 +8215,11 @@
       "technologyLimitEnabled": false,
       "scenarioFaction": "EFSF",
       "technologyLimit": 10000,
-      "costLimit": 2000,
+      "costLimit": 3000,
       "unitLimit": 12,
       "enemyResourcePerPlayer": 0.25,
       "rewards": {
+        "technology": 1000,
         "money": 4000,
         "supplies": 6000,
         "inventory": {
@@ -8109,6 +8229,7 @@
         "bonuses": [
           {
             "event": "red-comet",
+            "technology": 500,
             "money": 1500,
             "supplies": 2250,
             "inventory": {
@@ -8368,6 +8489,114 @@
           "angle": 270
         },
         {
+          "id": "red-escort-0",
+          "unitId": "MS_06F2",
+          "kitId": "machine_gun",
+          "team": 1,
+          "x": 3,
+          "y": 5,
+          "group": "red-escorts",
+          "initial": false,
+          "angle": 270,
+          "squad": "red-escort-0"
+        },
+        {
+          "id": "red-escort-1",
+          "unitId": "MS_06F2",
+          "kitId": "machine_gun",
+          "team": 1,
+          "x": 3,
+          "y": 5,
+          "group": "red-escorts",
+          "initial": false,
+          "angle": 270,
+          "squad": "red-escort-0"
+        },
+        {
+          "id": "red-escort-2",
+          "unitId": "MS_06F2",
+          "kitId": "machine_gun",
+          "team": 1,
+          "x": 3,
+          "y": 5,
+          "group": "red-escorts",
+          "initial": false,
+          "angle": 270,
+          "squad": "red-escort-0"
+        },
+        {
+          "id": "red-escort-3",
+          "unitId": "MS_06F2",
+          "kitId": "machine_gun",
+          "team": 1,
+          "x": 3,
+          "y": 21,
+          "group": "red-escorts",
+          "initial": false,
+          "angle": 270,
+          "squad": "red-escort-1"
+        },
+        {
+          "id": "red-escort-4",
+          "unitId": "MS_06F2",
+          "kitId": "machine_gun",
+          "team": 1,
+          "x": 3,
+          "y": 21,
+          "group": "red-escorts",
+          "initial": false,
+          "angle": 270,
+          "squad": "red-escort-1"
+        },
+        {
+          "id": "red-escort-5",
+          "unitId": "MS_06F2",
+          "kitId": "machine_gun",
+          "team": 1,
+          "x": 3,
+          "y": 21,
+          "group": "red-escorts",
+          "initial": false,
+          "angle": 270,
+          "squad": "red-escort-1"
+        },
+        {
+          "id": "red-escort-6",
+          "unitId": "MS_09R",
+          "kitId": "bazooka",
+          "team": 1,
+          "x": 5,
+          "y": 13,
+          "group": "red-escorts",
+          "initial": false,
+          "angle": 270,
+          "squad": "red-escort-2"
+        },
+        {
+          "id": "red-escort-7",
+          "unitId": "MS_09R",
+          "kitId": "bazooka",
+          "team": 1,
+          "x": 5,
+          "y": 13,
+          "group": "red-escorts",
+          "initial": false,
+          "angle": 270,
+          "squad": "red-escort-2"
+        },
+        {
+          "id": "red-escort-8",
+          "unitId": "MS_09R",
+          "kitId": "bazooka",
+          "team": 1,
+          "x": 5,
+          "y": 13,
+          "group": "red-escorts",
+          "initial": false,
+          "angle": 270,
+          "squad": "red-escort-2"
+        },
+        {
           "id": "char",
           "unitId": "MS_14S_CharCustom",
           "kitId": "kit_0",
@@ -8436,7 +8665,16 @@
               "actors": [
                 "char",
                 "amuro",
-                "lalah"
+                "lalah",
+                "red-escort-0",
+                "red-escort-1",
+                "red-escort-2",
+                "red-escort-3",
+                "red-escort-4",
+                "red-escort-5",
+                "red-escort-6",
+                "red-escort-7",
+                "red-escort-8"
               ]
             },
             {

@@ -49,26 +49,26 @@ def skill_runtime(ident):
         effect="Flash_1_N",sound={"file":"assets/sounds/Action_8.ogg","asset":"pilot/activation","volume":0.5})
 
 def write_report(aces):
-    lines = ["# ACE驾驶员接入", "", "共40名。当前从0级升至5级，五次升级按几何曲线分配原版满级成长，每项满级上限保持原MOD三次悟性成长的结果。基础COST按满级八项属性总和在全体ACE之间线性映射至200～300并按最近的25取整，每级增加25 COST；累计升级经验依次为1500、3000、5000、10000、20000，超出经验保留。旧版档案按总成长进度迁移，旧满级保留完整属性上限、战绩及重新招募状态。技能已接入，招募不生成信标或附送单位。普通战中所驾机体被击毁后进入待回归，重新招募时保留等级、累计经验与战绩；快速战无损，存档对局不产生损失。名称和头像固定。", "", "价格取同ACE招募方案中资金+物资合计最低者；同价依次比较资金、物资。保留来源方案与原时间。", "", "| ACE | 阵营 | 悟性 | 初始升级经验 | 资金 | 物资 | 技能 |", "| --- | --- | ---: | ---: | ---: | ---: | --- |"]
+    lines = ["# ACE驾驶员接入", "", f"共{len(aces)}名。当前从0级升至5级，五次升级按几何曲线分配原版满级成长，每项满级上限保持原MOD三次悟性成长的结果。基础COST按满级八项属性总和在全体ACE之间线性映射至200～300并按最近的25取整，每级增加25 COST；累计升级经验依次为1500、3000、5000、10000、20000，超出经验保留。旧版档案按总成长进度迁移，旧满级保留完整属性上限、战绩及重新招募状态。技能已接入，招募不生成信标或附送单位。普通战中所驾机体被击毁后进入待回归，重新招募时保留等级、累计经验与战绩；快速战无损，存档对局不产生损失。名称和头像固定。", "", "价格取同ACE招募方案中资金+物资合计最低者；同价依次比较资金、物资。保留来源方案与原时间。", "", "| ACE | 阵营 | 悟性 | 初始升级经验 | 资金 | 物资 | 技能 |", "| --- | --- | ---: | ---: | ---: | ---: | --- |"]
     for p in aces:
         lines.append(f"| {p['name']} | {p['faction']} | {p['comprehension']} | {p['experienceBase']} | {p['price']['money'] if p['price'] else '—'} | {p['price']['supplies'] if p['price'] else '—'} | {'、'.join(s['name'] for s in p['skills'])} |")
-    lines += ["", "没有独立招募报价的5名ACE保留资料，暂不可招募；招募须开发对应科技或通过活动独立解锁；西玛可通过全服累计击坠活动解锁；同一ACE只能持有一份档案，待回归时按资金与物资各半价重新招募，保留等级、累计经验和战绩后恢复配属资格；普通菜单与常规／快速战统一PMC名册，可以配属任意ACE；战略模式保留本阵营限制；西玛具有EFSF副阵营，也可供联邦编组使用。招募入口始终可打开，未开放候选显示未解锁，阵营与0079年代标识常驻。活动奖励可以独立解锁已有报价但无科技节点的ACE（例如西玛）。", "", "维护入口：`tools/import-ace-pilots.py`；原生等级与成长依据：`Template/Unit/BattleUnit_Framework_Pilot.ini`的`hiddenAction_TryLevelUp`和`hiddenAction_CheckLevelUp`。"]
+    lines += ["", "没有独立招募报价的5名ACE保留资料，暂不可招募；招募须开发对应科技或通过活动独立解锁；西玛可通过全服累计击坠活动解锁；同一ACE只能持有一份档案，待回归时按资金与物资各半价重新招募，保留等级、累计经验和战绩后恢复配属资格；普通菜单与常规／快速战统一PMC名册，可以配属任意ACE；战略模式保留本阵营限制；西玛具有EFSF副阵营，也可供联邦编组使用。招募入口始终可打开，未开放候选显示未解锁，阵营与对应年代标识常驻。活动奖励可以独立解锁已有报价但无科技节点的ACE（例如西玛）。", "", "维护入口：`tools/import-ace-pilots.py`；原生等级与成长依据：`Template/Unit/BattleUnit_Framework_Pilot.ini`的`hiddenAction_TryLevelUp`和`hiddenAction_CheckLevelUp`。"]
     lines += ["", "ACE限时技能：持续1回合，效果结束后冷却5个己方回合（15秒=1回合）；两次开启最短间隔6回合。EXAM驾驶员为常驻被动。原秒数保存在技能nativeTiming中，技能机制已启用。主动技能消耗100 EN、0 AP，属性与经验增益统一1.35倍；持有经验值上升时额外持有攻击力上升，效果覆盖敌方回合；EXAM驾驶员免除EXAM耐久自损，EN与系统持续时间仍正常结算。"]
     (PROJECT / "docs/imports/ace-pilots.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"Wrote report for {len(aces)} ACE profiles.")
 
 
-def main():
+def main(era="0079"):
     aces = []
     tree = json.loads((PROJECT / "shared/development-tree.json").read_text(encoding="utf-8"))
     framework = load(ROOT / "Template/Unit/BattleUnit_Framework_Pilot.ini")
     level_action = section(framework, "hiddenAction_TryLevelUp")
     max_level = int(re.search(r"pilotLevelCount<(\d+)", level_action["autoTrigger"])[1])
-    for file in sorted((ROOT / "Units/BattleUnits/Pilot/0079/ACE").glob("**/Pilot_*_N_ACE_*.ini")):
+    for file in sorted((ROOT / f"Units/BattleUnits/Pilot/{era}/ACE").glob("**/Pilot_*_N_ACE_*.ini")):
         data = load(file)
         core = data["core"]
         ident = core["name"]
-        faction = next(tag for tag in core["tags"].split(",") if tag in ("EFSF", "ZEON"))
+        faction = next(tag for tag in core["tags"].split(",") if tag.strip() in ("EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON"))
         init = section(data, "hiddenAction_InitializeStats_PilotSkills")["setUnitMemory"]
         def number(name, default=None):
             match = re.search(r"\b" + name + r"\s*=\s*([\d.]+)", init)
@@ -104,7 +104,7 @@ def main():
                 localization={"en":{"name":text(skill.get("text", name)).split("%{")[0].strip(),"description":text(skill.get("description", ""))}}))
         base = {key: number(native, 0) for key, native in STATS.items()}
         comprehension = number("pilotComprehensionSkill")
-        aces.append(dict(id=ident, name=re.sub(r"\[[^]]+\]", "", core.get("displayText_zh", core["displayText"])).strip(), faction=faction, era="0079",
+        aces.append(dict(id=ident, name=re.sub(r"\[[^]]+\]", "", core.get("displayText_zh", core["displayText"])).strip(), faction=faction, era=era,
             source=file.relative_to(ROOT).as_posix(), icon="assets/pilots/" + ident + ".png",
             description=text(core.get("displayDescription_zh", "")), localization={"en":{"name":re.sub(r"\[[^]]+\]", "", core["displayText"]).strip(),"description":text(core.get("displayDescription", ""))}}, baseStats=base, comprehension=comprehension,
             initialLevel=0, maxLevel=5, growthVersion=2, costBase=250, costPerLevel=25, experienceBase=1500, experienceThresholds=[1500,3000,5000,10000,20000],
@@ -116,6 +116,8 @@ def main():
     catalog = json.loads(path.read_text(encoding="utf-8"))
     for ace in aces:
         if ace["id"] == "Pilot_ZEON_0079_N_ACE_CIA": ace["availableFactions"] = ["ZEON", "EFSF"]
+    imported_ids = {ace["id"] for ace in aces}
+    aces = [ace for ace in catalog.get("aces", []) if ace["id"] not in imported_ids] + aces
     totals = [sum(math.floor(value + 0.5) for value in ace["maxStats"].values()) for ace in aces]
     low, high = min(totals), max(totals)
     for ace, total in zip(aces, totals):

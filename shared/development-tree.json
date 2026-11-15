@@ -1453,7 +1453,9 @@
         "MSA_003",
         "RMS_179_Nemo",
         "IrishClass",
-        "Ballute"
+        "Ballute",
+        "Pilot_AEUG_0087_N_ACE_KMBD",
+        "Pilot_AEUG_0087_N_ACE_QWTR"
       ],
       "page": 0,
       "era": "UC_0087_T1",
@@ -1483,7 +1485,8 @@
         "MSK_008",
         "RX_178_AEUG_FlyingArmor",
         "RX_178_AEUG_FXA_05D",
-        "GarudaClass_AEUG"
+        "GarudaClass_AEUG",
+        "Pilot_AEUG_0087_N_ACE_AMR"
       ],
       "page": 0,
       "era": "UC_0087_T1",
@@ -1511,7 +1514,9 @@
       "unlocks": [
         "MSA_005",
         "MSA_004",
-        "ArgamaClass"
+        "ArgamaClass",
+        "Pilot_AEUG_0087_N_ACE_BRTNA",
+        "Pilot_AEUG_0087_N_ACE_HKBKN"
       ],
       "page": 0,
       "era": "UC_0087_T1",
@@ -1597,7 +1602,9 @@
         "MSF_007",
         "MSA_004K",
         "RMS_099B_Red",
-        "Refinery_Common_T4"
+        "Refinery_Common_T4",
+        "Pilot_AEUG_0087_N_ACE_EMSN",
+        "Pilot_AEUG_0087_N_ACE_FAUR"
       ],
       "page": 1,
       "era": "UC_0087_T2",
@@ -1939,7 +1946,8 @@
         "RMS_117",
         "RGM_79Q_ChobamArmor",
         "BaseJabber",
-        "Gator"
+        "Gator",
+        "Pilot_TITANS_0087_N_ACE_JRDMS"
       ],
       "page": 0,
       "era": "UC_0087_T1",
@@ -1968,7 +1976,8 @@
         "RMS_108",
         "RMS_179_FedayeenRifle",
         "AlexandriaClass",
-        "Ballute"
+        "Ballute",
+        "Pilot_TITANS_0087_N_ACE_Basque"
       ],
       "page": 0,
       "era": "UC_0087_T1",
@@ -2026,7 +2035,8 @@
         "NRX_044",
         "RX_110",
         "RMS_154",
-        "DogosseGiarClass"
+        "DogosseGiarClass",
+        "Pilot_TITANS_0087_N_ACE_Brown"
       ],
       "page": 0,
       "era": "UC_0087_T1",
@@ -2111,7 +2121,8 @@
       "unlocks": [
         "MRX_009",
         "RX_121_2A",
-        "RX_121_2A_M"
+        "RX_121_2A_M",
+        "Pilot_TITANS_0087_N_ACE_FOUR"
       ],
       "page": 0,
       "era": "UC_0087_T1",
@@ -2140,7 +2151,10 @@
         "RX_139",
         "ORX_005",
         "PMX_000",
-        "Refinery_Common_T4"
+        "Refinery_Common_T4",
+        "Pilot_TITANS_0087_N_ACE_Scirocco",
+        "Pilot_TITANS_0087_N_ACE_Yazan",
+        "Pilot_TITANS_0087_N_ACE_Rosamia"
       ],
       "page": 1,
       "era": "UC_0087_T2",

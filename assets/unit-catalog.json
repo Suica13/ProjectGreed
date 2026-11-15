@@ -583,7 +583,8 @@
     "units/MSZ_006A1_0093_EFSF_MA/unit.json",
     "units/MSZ_006C1_0093_EFSF_MA/unit.json",
     "units/AMX_107_0093_NZN_MA/unit.json",
-    "units/AMX_006_0093_NZN_MA/unit.json"
+    "units/AMX_006_0093_NZN_MA/unit.json",
+    "units/Mission_SpaceShuttle/unit.json"
   ],
   "effects": "effects/effects.json",
   "presentation": "presentation.json",
@@ -648,7 +649,9 @@
     "maps/missions/white_base.json",
     "maps/missions/no_fool.json",
     "maps/missions/bunker.json",
-    "maps/missions/burning_city.json"
+    "maps/missions/burning_city.json",
+    "maps/missions/sleepless_raid.json",
+    "maps/missions/shuttle_defense.json"
   ],
   "defaultMap": "frontier_1v1",
   "scenarioIndex": "maps/strategy/index.json"

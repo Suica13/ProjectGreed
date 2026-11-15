@@ -1,0 +1,340 @@
+{
+  "schemaVersion": 2,
+  "stats": {
+    "hp": 300000,
+    "en": 1,
+    "move": 0,
+    "mobility": 1,
+    "cost": 25,
+    "counterLimit": 1,
+    "accuracy": 115,
+    "partStructuralStrength": 100,
+    "partsBreakable": false,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 100,
+      "space": 50,
+      "water": 50,
+      "air": 10,
+      "atmosphere": 0,
+      "mountain": 100,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "visualTurrets": [],
+    "actionPoints": 10,
+    "sensors": {
+      "sight": 12,
+      "radar": 24,
+      "antiDetection": 0,
+      "revealOnDetection": true,
+      "antiDetect": true,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    },
+    "speed": 1,
+    "deployed": true,
+    "facilityType": "objective",
+    "footprint": {
+      "width": 5,
+      "height": 5
+    },
+    "commandAuras": []
+  },
+  "shield": {
+    "hp": 0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1,
+        "flat": 0
+      },
+      "shell": {
+        "percent": 1,
+        "flat": 0
+      },
+      "melee": {
+        "percent": 1,
+        "flat": 0
+      },
+      "dp": {
+        "percent": 1,
+        "flat": 0
+      }
+    }
+  },
+  "defenses": {
+    "beam": {
+      "percent": 25,
+      "flat": 0
+    },
+    "shell": {
+      "percent": 25,
+      "flat": 0
+    },
+    "melee": {
+      "percent": 0,
+      "flat": 0
+    },
+    "dp": {
+      "percent": 5,
+      "flat": 0
+    },
+    "sp": {
+      "percent": 0,
+      "flat": 0
+    }
+  },
+  "attackBonuses": {
+    "melee": 0,
+    "shooting": 15,
+    "beam": 0,
+    "shell": 0
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 2.7906976744186047,
+    "battleScale": 1,
+    "idle": "ImportedIdle",
+    "move": "ImportedIdle",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "walk",
+    "moveSoundKey": "tankMoveSound",
+    "fixedFacing": 0
+  },
+  "id": "Mission_SpaceShuttle",
+  "code": "SpaceShuttle",
+  "name": "穿梭机",
+  "description": "奥古撤离穿梭机，完成发射准备前必须坚守。",
+  "source": "GundamWars_BattleOperation2_V5/Units/Buildings/Event/Story/Stage1/Story_Stage1_SpaceShuttle.ini",
+  "tags": [
+    "AEUG",
+    "UC_0087_T1"
+  ],
+  "availableFactions": [
+    "AEUG"
+  ],
+  "unitTags": [
+    "Building",
+    "LargeUnit"
+  ],
+  "formOnly": true,
+  "facility": {
+    "type": "objective"
+  },
+  "production": {
+    "enabled": false
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0,
+      "y": 0
+    },
+    "Body": {
+      "x": 0,
+      "y": 0
+    },
+    "LeftArm": {
+      "x": -9,
+      "y": 0
+    },
+    "RightArm": {
+      "x": 9,
+      "y": 0
+    },
+    "LeftShoulder": {
+      "x": -9,
+      "y": 0
+    },
+    "RightShoulder": {
+      "x": 9,
+      "y": 0
+    },
+    "LeftWeapon": {
+      "x": 0,
+      "y": 0
+    },
+    "RightWeapon": {
+      "x": 0,
+      "y": 0
+    },
+    "Attachment12": {
+      "x": 0,
+      "y": 0
+    },
+    "Attachment13": {
+      "x": 0,
+      "y": 0
+    },
+    "Attachment15": {
+      "x": 0,
+      "y": 0
+    },
+    "Head": {
+      "x": 0,
+      "y": 0
+    },
+    "Eye": {
+      "x": 0,
+      "y": 0
+    },
+    "LeftFoot": {
+      "x": -6,
+      "y": 0,
+      "endDirOffset": -8
+    },
+    "LeftLeg": {
+      "x": -6,
+      "y": 0,
+      "endDirOffset": -8
+    },
+    "RightFoot": {
+      "x": 6,
+      "y": 0,
+      "endDirOffset": 8
+    },
+    "RightLeg": {
+      "x": 6,
+      "y": 0,
+      "endDirOffset": 8
+    },
+    "Turret_EF_Type61_Cannon": {
+      "x": 0,
+      "y": 0,
+      "endDirOffset": 0
+    },
+    "Turret": {
+      "x": 0,
+      "y": 3
+    }
+  },
+  "materials": {
+    "textures": {
+      "shuttle_1.png": "textures/shuttle_1.png",
+      "shuttle_2.png": "textures/shuttle_2.png",
+      "shuttle_3.png": "textures/shuttle_3.png"
+    },
+    "icon": "shuttle_2.png"
+  },
+  "layers": [
+    {
+      "name": "Body_1",
+      "texture": "shuttle_1.png",
+      "bone": "Body",
+      "order": 2,
+      "scale": 1.0,
+      "rotation": 0,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "worldOffset": {
+        "x": -1.0,
+        "y": 8.5
+      },
+      "source": "GundamWars_BattleOperation2_V5/Units/Buildings/Event/Story/Stage1/Story_Stage1_SpaceShuttle_1.png"
+    },
+    {
+      "name": "Body_2",
+      "texture": "shuttle_2.png",
+      "bone": "Body",
+      "order": 3,
+      "scale": 1.0,
+      "rotation": 0,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "worldOffset": {
+        "x": -1.0,
+        "y": 8.5
+      },
+      "source": "GundamWars_BattleOperation2_V5/Units/Buildings/Event/Story/Stage1/Story_Stage1_SpaceShuttle_2.png"
+    },
+    {
+      "name": "Body_3",
+      "texture": "shuttle_3.png",
+      "bone": "Body",
+      "order": 2,
+      "scale": 1.0,
+      "rotation": 0,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "worldOffset": {
+        "x": -1.0,
+        "y": 8.5
+      },
+      "source": "GundamWars_BattleOperation2_V5/Units/Buildings/Event/Story/Stage1/Story_Stage1_SpaceShuttle_3.png"
+    }
+  ],
+  "weapons": {},
+  "animations": {
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Idle": "../../animations/Common_Idle__AntiZakuTank.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "skills": [],
+  "transport": {
+    "slotCost": 1,
+    "loadTags": []
+  },
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": []
+    }
+  ],
+  "mechanics": [],
+  "sourceStats": {
+    "nativeHP": 300000,
+    "conversion": "Original 300000 HP, 25% beam and shell resistance, three native decal layers fitted to five cells.",
+    "visual": {
+      "nativeBounds": [
+        -104.0,
+        -146.0,
+        66.0,
+        69.0
+      ],
+      "targetCells": 5,
+      "mapScale": 2.7906976744186047,
+      "layers": [
+        {
+          "name": "Body_1",
+          "source": "GundamWars_BattleOperation2_V5/Units/Buildings/Event/Story/Stage1/Story_Stage1_SpaceShuttle_1.png"
+        },
+        {
+          "name": "Body_2",
+          "source": "GundamWars_BattleOperation2_V5/Units/Buildings/Event/Story/Stage1/Story_Stage1_SpaceShuttle_2.png"
+        },
+        {
+          "name": "Body_3",
+          "source": "GundamWars_BattleOperation2_V5/Units/Buildings/Event/Story/Stage1/Story_Stage1_SpaceShuttle_3.png"
+        }
+      ]
+    }
+  },
+  "faction": "AEUG",
+  "localization": {
+    "en": {
+      "name": "Space Shuttle"
+    },
+    "ja": {
+      "name": "スペースシャトル"
+    }
+  }
+}

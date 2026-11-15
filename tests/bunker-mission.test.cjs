@@ -46,11 +46,11 @@ test('bunker rules, fortress, beach and mass driver compile with a two-ship flee
   assert.equal(plan.reasons[2],'count');assert.equal(plan.indices.length,2);
   const units=f.room.game.units;
   assert.equal(units.filter(u=>u.model==='DabudeClass__standard').length,3);
-  assert.equal(units.filter(u=>u.facility).length,8);
+  assert.equal(units.filter(u=>u.facility).length,12);
   assert(units.filter(u=>u.facility).every(u=>u.facility.level===2 && u.hp===G.modelOf(u).hp));
-  assert.equal(units.filter(u=>u.team===1 && u.missionGroup==='main-force').length,21);
-  assert(map.tiles[15].slice(68).every(t=>t==='water'));
-  assert(map.tiles.flat().includes('desert'));assert.equal(map.mission.landmarks[0].type,'mass_driver');
+  assert.equal(units.filter(u=>u.team===1 && u.missionGroup==='main-force').length,30);
+  assert(map.tiles[15].slice(52).every(t=>t==='water'));
+  assert.equal(map.width,57);assert(!map.tiles.flat().includes('rubble'));assert(map.tiles.flat().includes('desert'));assert.equal(map.mission.landmarks[0].type,'mass_driver');
 });
 test('bunker timed support and waves preserve all requested counts and real transport cargo',t=>{
   const f=fixture(t);f.waves();const units=f.room.game.units;

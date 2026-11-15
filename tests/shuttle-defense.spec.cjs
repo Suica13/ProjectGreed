@@ -1,0 +1,56 @@
+const {test,expect}=require('@playwright/test');
+const {pathToFileURL}=require('node:url'),path=require('node:path');
+for(const width of [1440,390])test(`shuttle defense art, dialogue and objective UI at ${width}px`,async({page})=>{
+ test.setTimeout(120000);const errors=[];page.on('pageerror',error=>errors.push(error.message));
+ await page.setViewportSize({width,height:950});
+ await page.addInitScript(()=>localStorage.setItem('projectgreed.economy.v1',JSON.stringify({schemaVersion:3,money:100000,supplies:100000,licenses:{Medea:true},inventory:{Medea:5},kits:{},claimed:{}})));
+ await page.goto(pathToFileURL(path.resolve('public/client.html')).href);await expect(page.locator('#openSkirmish')).toBeEnabled();
+ await page.evaluate(()=>{I18n.setLanguage('zh');const factory=createRoomEngine;createRoomEngine=options=>(window.shuttleEngine=factory({...options,aiDelayMs:999999}));});
+ await page.locator('#openSkirmish').click();await page.locator('#createOfflineRoom').click();
+ await page.locator('#offlineRoomMode').selectOption('mission');await page.locator('#confirmOfflineMode').click();
+ await expect.poll(()=>page.evaluate(()=>Net.snapshot?.settings.mode)).toBe('mission');
+ await page.evaluate(()=>Net.request('configure_room',{mapId:'mission_shuttle_defense',costLimit:6000,unitLimit:18,fogMode:'disabled'}));
+ await expect.poll(()=>page.evaluate(()=>Net.snapshot?.settings.mapId)).toBe('mission_shuttle_defense');
+ await expect(page.locator('#roomMapTitle')).toContainText('[0087][原创]危机的时间限制-AEUG');
+ await expect.poll(()=>page.evaluate(()=>!!Net.awaiting)).toBe(false);
+ await page.evaluate(()=>Net.request('start_game',{formation:[{unitId:'Medea',kitId:'standard'}]}));
+ await expect(page.locator('#confirmFinalFormation')).toBeVisible();await page.locator('#confirmFinalFormation').click();
+ await expect.poll(()=>page.evaluate(()=>Net.snapshot.phase)).toBe('deployment');
+ await page.evaluate(()=>Net.request('auto_place_deployment'));await expect.poll(()=>page.evaluate(()=>!!Net.awaiting)).toBe(false);
+ await page.evaluate(()=>Net.request('confirm_deployment'));
+ const dialogue=page.locator('#missionDialogue');await expect(dialogue).toBeVisible();
+ await expect(dialogue.locator('strong')).toHaveText('奥古通信员:');
+ await expect.poll(()=>dialogue.locator('img').evaluate(img=>img.complete&&img.naturalWidth>0)).toBe(true);
+ await page.screenshot({path:`tmp/verification/screenshots/shuttle-opening-${width}.png`});
+ for(let n=0;n<3;n++){await dialogue.getByRole('button',{name:'继续',exact:true}).click();}
+ await expect(dialogue).toBeHidden();
+ await page.evaluate(()=>{MapCamera.setPercent(25);MapCamera.focus(20,16);});
+ await page.screenshot({path:`tmp/verification/screenshots/shuttle-art-${width}.png`});
+ await page.locator('#missionObjectives').click();const panel=page.locator('#missionObjectivesPanel');
+ await expect(panel.locator('[data-objectives="victory"]')).toContainText('剩余穿梭机(3/3)');
+ await expect(panel.locator('[data-objectives="victory"]')).toContainText('坚持至发射准备完成(1/35)');
+ await expect(panel.locator('[data-objectives="failure"]')).toContainText('穿梭机全部被击毁(0/3)');
+ await page.screenshot({path:`tmp/verification/screenshots/shuttle-objectives-${width}.png`});
+ expect(errors).toEqual([]);
+});
+test('shuttle defense group survival and scripted pilot options remain editable',async({page})=>{
+ test.setTimeout(60000);const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ const map=JSON.parse(require('node:fs').readFileSync('assets/maps/missions/shuttle_defense.json','utf8'));
+ await page.goto(pathToFileURL(path.resolve('public/map-editor.html')).href);
+ await page.evaluate(map=>{MapEditor.importMap(map.tileMap);MapEditor.tab('mission');},map);
+ await expect(page.locator('#missionScriptValidation')).toHaveText('✓ 脚本结构检查通过');
+ await expect(page.getByLabel('胜利条件',{exact:true})).toHaveValue('defend_group');
+ await page.evaluate(()=>MissionEditor.focusActor('enhanced-gaplant'));
+ await expect(page.locator('[data-actor-id="enhanced-gaplant"]').getByLabel('剧本默认驾驶员类型',{exact:true})).toHaveValue('enhanced');
+ expect(await page.evaluate(()=>MissionEditor.issues())).toEqual([]);expect(errors).toEqual([]);
+});
+for(const width of [1440,390])test(`0087 ACE recruitment portraits and era labels at ${width}px`,async({page})=>{
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.setViewportSize({width,height:950});
+ await page.goto(pathToFileURL(path.resolve('public/client.html')).href);await page.waitForFunction(()=>assetsReady);
+ await page.evaluate(()=>{I18n.setLanguage('zh');Formation.openAceRecruitment('Pilot_AEUG_0087_N_ACE_KMBD');});
+ const dialog=page.locator('#aceRecruitDialog');await expect(dialog).toBeVisible();
+ const card=page.locator('#aceRecruitList [data-ace-id="Pilot_AEUG_0087_N_ACE_KMBD"]');
+ await expect(card).toContainText('卡缪');await expect(card).toContainText('0087');
+ await expect.poll(()=>card.locator('img').evaluate(img=>img.complete&&img.naturalWidth>0)).toBe(true);
+ await page.screenshot({path:`tmp/verification/screenshots/0087-ace-${width}.png`});expect(errors).toEqual([]);
+});

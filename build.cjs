@@ -6,7 +6,14 @@ const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
 const zlib = require("node:zlib");
 const json = (value) => JSON.stringify(value).replace(/</g, "\\u003c");
 // HTML 解析器会把字符串里的 </script> 也当作脚本结束符。
-const inlineScript = (source) => source.replace(/<\/script/gi, "<\\/script");
+// Only remove whitespace/comments: retain global names shared by separate script tags.
+const inlineScript = (source) => require("esbuild").transformSync(source, {
+  loader: "js",
+  target: "esnext",
+  minifyWhitespace: true,
+  charset: "utf8",
+  legalComments: "inline",
+}).code.replace(/<\/script/gi, "<\\/script");
 if (process.argv.includes("--developer")) {
   require("./tools/build-developer.cjs").buildDeveloper(root);
   process.exit(0);
@@ -95,7 +102,7 @@ function clientCatalogData() {
   const catalog = require("./tools/load-catalog.cjs").loadCatalog({ embedMusic: true });
   require("./tools/export-combat-rules.cjs").writeReport(catalog);
   const data=Buffer.from(JSON.stringify(require("./shared/asset-pool.js").pack(catalog)));
-  return JSON.stringify({catalogEncoding:"gzip-base64",uncompressedBytes:data.length,payload:zlib.gzipSync(data,{level:6}).toString("base64")});
+  return JSON.stringify({catalogEncoding:"gzip-base64",uncompressedBytes:data.length,payload:zlib.gzipSync(data,{level:9}).toString("base64")});
 }
 require("./tools/build-save-editor.cjs").buildSaveEditor(root);
 for (const [key, file] of [

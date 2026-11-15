@@ -51,7 +51,11 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--portraits-only", action="store_true", help="Update only ordinary portrait candidates.")
     options = parser.parse_args()
+    previous_path = PROJECT / "shared/pilots.json"
+    previous = json.loads(previous_path.read_text(encoding="utf-8")) if previous_path.exists() else {}
     portraits = import_common_portraits()
+    portrait_ids = {portrait["id"] for portrait in portraits}
+    portraits += [portrait for portrait in previous.get("portraits", []) if portrait["id"] not in portrait_ids]
     if options.portraits_only:
         target = PROJECT / "shared/pilots.json"
         data = json.loads(target.read_text(encoding="utf-8"))
@@ -109,6 +113,8 @@ def main():
         "named": pilots,
         "portraits": portraits,
     }
+    if previous.get("aces"):
+        data["aces"] = previous["aces"]
     (PROJECT / "shared/pilots.json").write_text(
         json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )

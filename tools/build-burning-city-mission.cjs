@@ -3,7 +3,7 @@ const fs=require('node:fs'),path=require('node:path');
 const M=require('../shared/map-document'),B=require('./rebuild-biome-maps.cjs');
 const {cityArt}=require('./build-burning-city-art.cjs');
 const root=path.resolve(__dirname,'..'),size=45;
-const doc=M.create({id:'mission_burning_city',name:'[0087][SDGO]燃烧的新都市',
+const doc=M.create({id:'mission_burning_city',name:'[0087][原创]燃烧的新都市-AEUG',
   description:'在燃烧的九龙街区消灭三台精神感应高达。目标若撤离，改为歼灭剩余敌军。',
   width:size,height:size,playersPerTeam:5,environment:'ground',supportedModes:['mission']});
 doc.appearance={biome:'urban'};
@@ -37,18 +37,18 @@ for(let i=0;i<8;i++)endingIds.push(...support('relief-'+i,3+(i%2)*3,7+Math.floor
 const portrait='assets/pilots/Pilot_EFSF_0079_Officer_2.png';
 const dialogue=(text,actor='aeug-line-0-0',name='奥古指挥官')=>({type:'dialogue',lines:[{actor,name,text,portrait}]});
 doc.mission={version:1,era:'UC_0087_T1',scenarioFaction:'AEUG',technologyLimitEnabled:false,technologyLimit:0,
-  costLimit:5000,unitLimit:18,fleetLimit:2,enemyResourcePerPlayer:0,protect:[],actors,fixedTime:'dusk',
+  costLimit:6000,unitLimit:18,fleetLimit:2,enemyResourcePerPlayer:0,protect:[],actors,fixedTime:'dusk',
   cover:'assets/maps/covers/burning-city.png',
   victory:{type:'eliminate_group',group:'psycho',label:'消灭敌方三台精神感应高达'},
-  rewards:{money:12000,supplies:18000,inventory:{MSN_100:1,MSA_003:6,RMS_179_AEUG:6},
-    outcomes:[{event:'target-escaped',money:10000,supplies:15000,inventory:{RMS_108:3,MSA_003:3,RMS_179_AEUG:6}}]},
+  rewards:{technology:1500,money:12000,supplies:18000,inventory:{MSN_100:1,MSA_003:6,RMS_179_AEUG:6},
+    outcomes:[{event:'target-escaped',technology:1000,money:10000,supplies:15000,inventory:{RMS_108:3,MSA_003:3,RMS_179_AEUG:6}}]},
   events:[
     {id:'opening',name:'奥古前线通信',when:{type:'start'},actions:[dialogue('距离目标到达还有一段时间，请先进行部署，不用管我们。','aeug-line-0-0','奥古一般指挥官')]},
-    ...waves.map((ids,i)=>({id:'psycho-arrival-'+i,name:'精神感应高达第'+(i+1)+'波',when:{type:'round',round:(i+1)*3},
+    ...waves.map((ids,i)=>({id:'psycho-arrival-'+i,name:'精神感应高达第'+(i+1)+'波',when:{type:'round',round:3+i*5},
       actions:[{type:'spawn',actors:ids},dialogue(['第一台出现了！','第二台出现了！','第三台出现了！'][i],'psycho-'+i)]})),
-    {id:'aeug-reinforcements',name:'奥古上下两路援军',when:{type:'round',round:12},actions:[
+    {id:'aeug-reinforcements',name:'奥古上下两路援军',when:{type:'round',round:16},actions:[
       {type:'spawn',actors:supportIds},dialogue('援军来了，一定要在损伤扩大之前击毁目标！','support-17-1')]},
-    {id:'withdrawal',name:'目标开始撤退',when:{type:'round',round:15},actions:[
+    {id:'withdrawal',name:'目标开始撤退',when:{type:'round',round:21},actions:[
       dialogue('接到通讯目标准备离开，请尽可能消灭所有目标！'),
       {type:'withdraw',edge:'right',actors:['psycho-0','psycho-1','psycho-2']}]},
     {id:'targets-destroyed',name:'三台目标全部击毁',when:{type:'group_destroyed',group:'psycho'},actions:[

@@ -3,7 +3,7 @@ const fs = require("node:fs"), path = require("node:path");
 const M = require("../shared/map-document"), B = require("./rebuild-biome-maps.cjs");
 const root = path.resolve(__dirname, "..");
 const doc = M.create({
-  id: "mission_no_fool", name: "[0079][EFSF][原创]绝不上当",
+  id: "mission_no_fool", name: "[0079][原创]绝不上当-EFSF",
   width: 47, height: 23, environment: "ground", playersPerTeam: 5,
   supportedModes: ["mission"],
   description: "如果不能护送黄色高级船抵达目的地话...",
@@ -46,8 +46,8 @@ doc.mission = {
   version:1,era:"UC_0079_T1",scenarioFaction:"EFSF",technologyLimitEnabled:false,
   technologyLimit:0,costLimit:2000,unitLimit:18,enemyResourcePerPlayer:0,
   protect:["bigtray"],actors,
-  rewards:{money:4000,supplies:6000,inventory:{RGM_79_G:3},
-    bonuses:[{event:"all-enemies-cleared",money:1500,supplies:2250,inventory:{RX_79_G:1,MS_07H:2}}]},
+  rewards:{technology:1000,money:4000,supplies:6000,inventory:{RGM_79_G:3},
+    bonuses:[{event:"all-enemies-cleared",technology:500,money:1500,supplies:2250,inventory:{RX_79_G:1,MS_07H:2}}]},
   victory:{type:"escort",actor:"bigtray",x:34,y:9,width:7,height:5,holdRounds:2,
     eliminateAll:true,route:Array.from({length:15},(_,i)=>({x:6+i*2,y:11}))},
   events:[

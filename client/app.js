@@ -1842,6 +1842,24 @@ function drawMapFrame(now) {
   drawCachedMapTerrain(ctx, w, h, dpr, tile, ox, oy, immersive, deploymentArea);
   TileMapRenderer.draw(ctx, Rules.getMap(game.mapId), "below", mapGeo, w, h);
   for (const site of Rules.getMap(game.mapId).mission?.landmarks || []) {
+    if(site.type==="base_compound"){
+      ctx.save();ctx.translate(ox+site.x*tile,oy+site.y*tile);ctx.scale(tile,tile);
+      ctx.strokeStyle="#9aadb0";ctx.lineWidth=.14;
+      // Open gates coincide with the authored collision gaps in the perimeter.
+      for(const y of [0,site.height])for(const [x,length] of [[0,8],[12,site.width-12]]){
+        ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+length,y);ctx.stroke();
+      }
+      for(const x of [0,site.width])for(const [y,length] of [[0,8],[12,site.height-12]]){
+        ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x,y+length);ctx.stroke();
+      }
+      for(const [x,y] of [[2,2],[14,2],[2,14],[14,14],[9,9]]){
+        ctx.fillStyle="#26323c";ctx.fillRect(x-.3,y-.3,3.6,2.6);
+        ctx.fillStyle="#758083";ctx.fillRect(x,y,3,2);
+        ctx.fillStyle="#bfc6b6";for(let i=0;i<3;i++)ctx.fillRect(x+.3+i*.9,y+.3,.12,1.3);
+        ctx.fillStyle="#f2db94";ctx.fillRect(x+.2,y+1.8,2.6,.12);
+      }
+      ctx.restore();continue;
+    }
     if (site.type!=="mass_driver") continue;
     ctx.save();ctx.translate(ox+site.x*tile,oy+site.y*tile);ctx.scale(tile,tile);
     ctx.fillStyle="#0005";ctx.fillRect(.25,.8,site.width,site.height-.6);
@@ -1860,6 +1878,16 @@ function drawMapFrame(now) {
     ctx.restore();
   }
   const escortGoal = game.mission && Rules.getMap(game.mapId).mission?.victory;
+  if(escortGoal?.type==="extract"){
+    const r=escortGoal.region;
+    ctx.save();ctx.fillStyle=game.mission.extractionOpen?"#60d8a044":"#8196a822";
+    ctx.strokeStyle=game.mission.extractionOpen?"#7cf1b2":"#8fa2b4";ctx.lineWidth=2;ctx.setLineDash([8,4]);
+    ctx.fillRect(ox+r.x*tile,oy+r.y*tile,r.width*tile,r.height*tile);
+    ctx.strokeRect(ox+r.x*tile,oy+r.y*tile,r.width*tile,r.height*tile);
+    ctx.fillStyle="#cce9dc";ctx.font="bold 13px sans-serif";ctx.textAlign="center";
+    ctx.fillText(I18n.text(game.mission.extractionOpen?"撤离区":"撤离区（未开放）"),ox+(r.x+r.width/2)*tile,oy+r.y*tile-5);
+    ctx.restore();
+  }
   if (escortGoal?.type === "escort") {
     ctx.save();
     ctx.fillStyle = "#72d69a22";

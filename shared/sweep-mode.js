@@ -283,10 +283,10 @@ const SweepMode = (() => {
       const economy =
         typeof BattleEconomy !== "undefined" ? BattleEconomy : require("./battle-economy.js");
       const pending = s.pending[p.id];
-      pending.money += economy.roundReward(1000 * scale * multiplier * (bonus.money ?? 1));
-      pending.supplies += economy.roundReward(1500 * scale * multiplier * (bonus.supplies ?? 1));
+      pending.money += economy.roundReward(500 * scale * multiplier * (bonus.money ?? 1));
+      pending.supplies += economy.roundReward(750 * scale * multiplier * (bonus.supplies ?? 1));
       pending.technology += economy.roundReward(
-        250 * scale * multiplier * technologyOutcome * (bonus.technology ?? 1),
+        62.5 * scale * multiplier * technologyOutcome * (bonus.technology ?? 1),
       );
       if (unitCount) {
         const limit = enemyLimits(room, G).unitCostLimit;
@@ -377,7 +377,7 @@ const SweepMode = (() => {
       if ((e.id === "intel" && choice === 0) || (e.id === "storm" && choice === 1))
         for (const p of Object.values(s.pending))
           p.technology +=
-            Math.round((150 * growth(room) * (s.rewardMultipliers?.technology ?? 1)) / 25) * 25;
+            Math.round((37.5 * growth(room) * (s.rewardMultipliers?.technology ?? 1)) / 25) * 25;
     }
     for (const [id, roster] of Object.entries(s.rosters)) {
       for (const r of roster.filter((r) => r.state.hp <= 0)) {
@@ -619,6 +619,10 @@ const SweepMode = (() => {
       {
         ...enemyRestrictions(room, G),
         unitCostLimit: limits.unitCostLimit,
+        // Unlock more of the selected era as the expedition advances. Elites
+        // and bosses bring later platforms forward without changing the era.
+        aiEncounterProgress: Math.min(1, 0.3 + Math.max(0, room.sweep?.depth || 0) * 0.035 +
+          (room.sweep?.boss ? 0.3 : room.sweep?.elite ? 0.15 : 0)),
       },
       G.catalog.formation.maxUnits,
     );

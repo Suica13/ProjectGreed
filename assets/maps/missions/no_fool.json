@@ -1,6 +1,6 @@
 {
   "id": "mission_no_fool",
-  "name": "[0079][EFSF][原创]绝不上当",
+  "name": "[0079][原创]绝不上当-EFSF",
   "description": "如果不能护送黄色高级船抵达目的地话...",
   "width": 47,
   "height": 23,
@@ -417,6 +417,7 @@
       }
     ],
     "rewards": {
+      "technology": 1000,
       "money": 4000,
       "supplies": 6000,
       "inventory": {
@@ -425,6 +426,7 @@
       "bonuses": [
         {
           "event": "all-enemies-cleared",
+          "technology": 500,
           "money": 1500,
           "supplies": 2250,
           "inventory": {
@@ -3027,7 +3029,7 @@
     "format": "ProjectGreedTileMap",
     "version": 1,
     "id": "mission_no_fool",
-    "name": "[0079][EFSF][原创]绝不上当",
+    "name": "[0079][原创]绝不上当-EFSF",
     "description": "如果不能护送黄色高级船抵达目的地话...",
     "width": 47,
     "height": 23,
@@ -9335,6 +9337,7 @@
         }
       ],
       "rewards": {
+        "technology": 1000,
         "money": 4000,
         "supplies": 6000,
         "inventory": {
@@ -9343,6 +9346,7 @@
         "bonuses": [
           {
             "event": "all-enemies-cleared",
+            "technology": 500,
             "money": 1500,
             "supplies": 2250,
             "inventory": {

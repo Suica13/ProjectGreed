@@ -1,6 +1,6 @@
 {
   "id": "mission_burning_city",
-  "name": "[0087][SDGO]燃烧的新都市",
+  "name": "[0087][原创]燃烧的新都市-AEUG",
   "description": "在燃烧的九龙街区消灭三台精神感应高达。目标若撤离，改为歼灭剩余敌军。",
   "width": 45,
   "height": 45,
@@ -37,7 +37,7 @@
     "scenarioFaction": "AEUG",
     "technologyLimitEnabled": false,
     "technologyLimit": 0,
-    "costLimit": 5000,
+    "costLimit": 6000,
     "unitLimit": 18,
     "fleetLimit": 2,
     "enemyResourcePerPlayer": 0,
@@ -1202,6 +1202,7 @@
       "label": "消灭敌方三台精神感应高达"
     },
     "rewards": {
+      "technology": 1500,
       "money": 12000,
       "supplies": 18000,
       "inventory": {
@@ -1212,6 +1213,7 @@
       "outcomes": [
         {
           "event": "target-escaped",
+          "technology": 1000,
           "money": 10000,
           "supplies": 15000,
           "inventory": {
@@ -1281,7 +1283,7 @@
         "name": "精神感应高达第2波",
         "when": {
           "type": "round",
-          "round": 6
+          "round": 8
         },
         "actions": [
           {
@@ -1314,7 +1316,7 @@
         "name": "精神感应高达第3波",
         "when": {
           "type": "round",
-          "round": 9
+          "round": 13
         },
         "actions": [
           {
@@ -1347,7 +1349,7 @@
         "name": "奥古上下两路援军",
         "when": {
           "type": "round",
-          "round": 12
+          "round": 16
         },
         "actions": [
           {
@@ -1391,7 +1393,7 @@
         "name": "目标开始撤退",
         "when": {
           "type": "round",
-          "round": 15
+          "round": 21
         },
         "actions": [
           {
@@ -5854,7 +5856,7 @@
     "format": "ProjectGreedTileMap",
     "version": 1,
     "id": "mission_burning_city",
-    "name": "[0087][SDGO]燃烧的新都市",
+    "name": "[0087][原创]燃烧的新都市-AEUG",
     "description": "在燃烧的九龙街区消灭三台精神感应高达。目标若撤离，改为歼灭剩余敌军。",
     "width": 45,
     "height": 45,
@@ -16526,7 +16528,7 @@
       "scenarioFaction": "AEUG",
       "technologyLimitEnabled": false,
       "technologyLimit": 0,
-      "costLimit": 5000,
+      "costLimit": 6000,
       "unitLimit": 18,
       "fleetLimit": 2,
       "enemyResourcePerPlayer": 0,
@@ -17691,6 +17693,7 @@
         "label": "消灭敌方三台精神感应高达"
       },
       "rewards": {
+        "technology": 1500,
         "money": 12000,
         "supplies": 18000,
         "inventory": {
@@ -17701,6 +17704,7 @@
         "outcomes": [
           {
             "event": "target-escaped",
+            "technology": 1000,
             "money": 10000,
             "supplies": 15000,
             "inventory": {
@@ -17770,7 +17774,7 @@
           "name": "精神感应高达第2波",
           "when": {
             "type": "round",
-            "round": 6
+            "round": 8
           },
           "actions": [
             {
@@ -17803,7 +17807,7 @@
           "name": "精神感应高达第3波",
           "when": {
             "type": "round",
-            "round": 9
+            "round": 13
           },
           "actions": [
             {
@@ -17836,7 +17840,7 @@
           "name": "奥古上下两路援军",
           "when": {
             "type": "round",
-            "round": 12
+            "round": 16
           },
           "actions": [
             {
@@ -17880,7 +17884,7 @@
           "name": "目标开始撤退",
           "when": {
             "type": "round",
-            "round": 15
+            "round": 21
           },
           "actions": [
             {

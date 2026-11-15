@@ -85,10 +85,14 @@ async function main() {
     const rules = require(path.join(serverDir,"shared/rules.js"));
     const mission = rules.getMap("mission_white_base");
     assert.equal(mission.playersPerTeam,5);
-    assert.equal(mission.mission.costLimit,1200);
+    assert.equal(mission.mission.costLimit,3000);
     assert.equal(mission.mission.unitLimit,12);
-    assert.equal(mission.mission.rewards.inventory.RX_77_2,2);
+    assert.equal(mission.mission.rewards.inventory.RX_77_2,1);
     require(path.join(serverDir,"shared/mission-mode.js")).validate(mission.mission,mission,rules);
+    const shuttle = rules.getMap("mission_shuttle_defense");
+    assert.equal(shuttle.mission.costLimit,6000);
+    require(path.join(serverDir,"shared/mission-mode.js")).validate(shuttle.mission,shuttle,rules);
+    assert.equal(require(path.join(serverDir,"shared/pilots.json")).aces.filter(p=>p.id.includes("_0087_")).length,14);
     console.log(
       "server: hashes, HTTP asset expansion, /health and real WebSocket battlefield room passed",
     );

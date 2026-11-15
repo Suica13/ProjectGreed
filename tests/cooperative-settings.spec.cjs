@@ -9,7 +9,7 @@ for(const width of [1440,390])test(`cooperative menu and fixed mission rules at 
  expect(await page.locator('optgroup[label="合约模式"]').count()).toBe(0);
  await page.evaluate(()=>{byId('offlineRoomMode').value='mission';LocalRoom.open();});
  await page.waitForFunction(()=>Net.snapshot?.settings.mode==='mission');
- expect(await page.evaluate(()=>Net.snapshot.settings.costLimit)).toBe(2000);
+ expect(await page.evaluate(()=>Net.snapshot.settings.costLimit)).toBe(3000);
  expect(await page.locator('#roomTagRestrictions').evaluate(el=>el.closest('details').hidden)).toBe(true);
  const reused=await page.evaluate(()=>{
   const s={...Net.snapshot,started:true,phase:'idle',game:{...Net.snapshot.game,mission:{protect:['whitebase'],dialogue:null}}};

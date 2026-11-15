@@ -100,6 +100,12 @@ const AITactics = (() => {
     return targets.sort((a,b) => distance(origin,a)-distance(origin,b))[0] || null;
   }
   function forUnit(G, game, unit, decision) {
+    const mission = game.mission && G.getMap(game.mapId).mission;
+    if (mission?.victory.type === "defend_group") {
+      const targets=game.units.filter(target=>target.missionGroup===mission.victory.group && target.hp>0);
+      const goal=targets.reduce((best,target)=>!best || distance(unit,target)<distance(unit,best)?target:best,null);
+      if(goal)return {...decision,state:"advance",goal,strategic:true,occupation:false};
+    }
     if (!game.campaignBattlefield && !game.battlefield) return decision;
     const campaign = game.campaignBattlefield;
     const points = campaign ? campaign.layout.nodes : game.battlefield.points;

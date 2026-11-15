@@ -170,8 +170,8 @@ function fixture(t, map) {
 }
 const missions = Object.values(G.catalog.maps).filter((m) => m.mission);
 test("the revised cooperative missions remain selectable", () => {
-  assert.deepEqual(missions.map(m=>m.id).sort(), ["mission_bunker_coastal", "mission_burning_city", "mission_no_fool", "mission_white_base"]);
-  assert.equal(missions[0].name, "[0079][EFSF]相逢在宇宙");
+  assert.deepEqual(missions.map(m=>m.id).sort(), ["mission_bunker_coastal", "mission_burning_city", "mission_no_fool", "mission_shuttle_defense", "mission_sleepless_raid", "mission_white_base"]);
+  assert.equal(missions[0].name, "[0079][剧情]相逢在宇宙-EFSF");
   for (const map of missions) M.validate(map.mission, map, G);
   assert(G.getMap("battlefield_frontline").name.startsWith("雇佣兵战争 · "));
 });

@@ -414,6 +414,54 @@
       "source": "Resource/Image/Units/Icon/Pilot_ZEON_0079_Officer_2.png",
       "sourceSha256": "67bd59532f18aa21de72302d99805a005ff78c810aad295f9cd0d66b83bbcf7a",
       "icon": "assets/pilots/Pilot_ZEON_0079_Officer_2.png"
+    },
+    {
+      "id": "Pilot_AEUG_0087_Common_1",
+      "name": "奥古一般兵",
+      "faction": "AEUG",
+      "source": "Resource/Image/Units/Icon/Pilot_AEUG_0087_Common_1.png",
+      "sourceSha256": "0875411eccf61b1f20ee3b092e80cfe9c5973e07264efd920a49832531ea51ae",
+      "icon": "assets/pilots/Pilot_AEUG_0087_Common_1.png"
+    },
+    {
+      "id": "Pilot_AEUG_0087_Officer_1",
+      "name": "奥古指挥官",
+      "faction": "AEUG",
+      "source": "Resource/Image/Units/Icon/Pilot_AEUG_0087_Officer_1.png",
+      "sourceSha256": "ecb9b2d36e70c469b7d46646719cc55bd02c4fdc5fff22e3c67bdd1002eb4733",
+      "icon": "assets/pilots/Pilot_AEUG_0087_Officer_1.png"
+    },
+    {
+      "id": "Pilot_TITANS_0087_Common_1",
+      "name": "提坦斯一般兵",
+      "faction": "TITANS",
+      "source": "Resource/Image/Units/Icon/Pilot_TITANS_0087_Common_1.png",
+      "sourceSha256": "a6ada2fd1fd13b8fdaef8449692cfe580c1ebae496fda6610a7c3fb8cf56bbf2",
+      "icon": "assets/pilots/Pilot_TITANS_0087_Common_1.png"
+    },
+    {
+      "id": "Pilot_TITANS_0087_Officer_1",
+      "name": "提坦斯指挥官",
+      "faction": "TITANS",
+      "source": "Resource/Image/Units/Icon/Pilot_TITANS_0087_Officer_1.png",
+      "sourceSha256": "c96c1fae916e489c71a830d8199135152250cc4eb08e278a5c588cdace95097b",
+      "icon": "assets/pilots/Pilot_TITANS_0087_Officer_1.png"
+    },
+    {
+      "id": "Pilot_NEO_ZEON_0087_Common_1",
+      "name": "新吉翁一般兵",
+      "faction": "NEO_ZEON",
+      "source": "Resource/Image/Units/Icon/Pilot_NEO_ZEON_0087_Common_1.png",
+      "sourceSha256": "4c16bb348d505e112062a56eded1d9eca02e62bb124f8fee130730d8ffa52fa8",
+      "icon": "assets/pilots/Pilot_NEO_ZEON_0087_Common_1.png"
+    },
+    {
+      "id": "Pilot_NEO_ZEON_0087_Officer_1",
+      "name": "新吉翁指挥官",
+      "faction": "NEO_ZEON",
+      "source": "Resource/Image/Units/Icon/Pilot_NEO_ZEON_0087_Officer_1.png",
+      "sourceSha256": "34dfeb5883b0f00794086d44693a533b197b1c279b6a892ce3e731085f07a033",
+      "icon": "assets/pilots/Pilot_NEO_ZEON_0087_Officer_1.png"
     }
   ],
   "aces": [
@@ -445,7 +493,7 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 300,
+      "costBase": 275,
       "costPerLevel": 25,
       "experienceBase": 1500,
       "experienceThresholds": [
@@ -663,7 +711,7 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 225,
+      "costBase": 250,
       "costPerLevel": 25,
       "experienceBase": 1500,
       "experienceThresholds": [
@@ -790,7 +838,7 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 200,
+      "costBase": 225,
       "costPerLevel": 25,
       "experienceBase": 1500,
       "experienceThresholds": [
@@ -1151,7 +1199,7 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 200,
+      "costBase": 225,
       "costPerLevel": 25,
       "experienceBase": 1500,
       "experienceThresholds": [
@@ -1857,7 +1905,7 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 275,
+      "costBase": 250,
       "costPerLevel": 25,
       "experienceBase": 1500,
       "experienceThresholds": [
@@ -1984,7 +2032,7 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 200,
+      "costBase": 225,
       "costPerLevel": 25,
       "experienceBase": 1500,
       "experienceThresholds": [
@@ -3429,7 +3477,7 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 200,
+      "costBase": 225,
       "costPerLevel": 25,
       "experienceBase": 1500,
       "experienceThresholds": [
@@ -3557,7 +3605,7 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 300,
+      "costBase": 275,
       "costPerLevel": 25,
       "experienceBase": 1500,
       "experienceThresholds": [
@@ -3730,7 +3778,7 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 225,
+      "costBase": 250,
       "costPerLevel": 25,
       "experienceBase": 1500,
       "experienceThresholds": [
@@ -4333,7 +4381,7 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 275,
+      "costBase": 250,
       "costPerLevel": 25,
       "experienceBase": 1500,
       "experienceThresholds": [
@@ -4460,7 +4508,7 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 225,
+      "costBase": 250,
       "costPerLevel": 25,
       "experienceBase": 1500,
       "experienceThresholds": [
@@ -4676,7 +4724,7 @@
       "initialLevel": 0,
       "maxLevel": 5,
       "growthVersion": 2,
-      "costBase": 225,
+      "costBase": 250,
       "costPerLevel": 25,
       "experienceBase": 1500,
       "experienceThresholds": [
@@ -5862,6 +5910,1098 @@
       ],
       "personality": "calm",
       "originFaction": "ZEON"
+    },
+    {
+      "id": "Pilot_AEUG_0087_N_ACE_AMR",
+      "name": "阿姆罗·雷",
+      "faction": "AEUG",
+      "era": "0087",
+      "source": "Units/BattleUnits/Pilot/0087/ACE/AEUG_0087/Pilot_AEUG_0087_N_ACE_AMR.ini",
+      "icon": "assets/pilots/Pilot_AEUG_0087_N_ACE_AMR.png",
+      "description": "一年战争的传奇“白色流星”,现隶属于卡拉巴MS队的队长 \n优势 \n= 初始属性极高 = \n= 初始觉醒很高 = \n劣势 \n= 造价昂贵 = \n= 成长属性低 = \n \n“人类总是在重蹈覆辙，真的是……”",
+      "localization": {
+        "en": {
+          "name": "Amuro Ray",
+          "description": "The legendary \"White Meteor\" of the One Year War, now captain of the Karaba MS Team \nAdvantages \n= IExtremely high initial attributes = \n= High initial awakening = \nDisadvantages \n= Costly to build = \n= Low growth attributes = \n \n\"Humans always repeat the same mistakes. It really is...\""
+        }
+      },
+      "baseStats": {
+        "shooting": 220.0,
+        "melee": 220.0,
+        "defense": 200.0,
+        "speed": 222.0,
+        "accuracy": 205.0,
+        "reaction": 200.0,
+        "leadership": 125.0,
+        "awakening": 125.0
+      },
+      "comprehension": 102.5,
+      "initialLevel": 0,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 300,
+      "costPerLevel": 25,
+      "experienceBase": 1500,
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
+      "maxStats": {
+        "shooting": 236.91593749999993,
+        "melee": 236.91593749999993,
+        "defense": 215.37812499999993,
+        "speed": 239.06971874999994,
+        "accuracy": 220.76257812499992,
+        "reaction": 215.37812499999993,
+        "leadership": 134.61132812499994,
+        "awakening": 134.61132812499994
+      },
+      "price": {
+        "money": 8000,
+        "supplies": 4000
+      },
+      "sourceOffers": [
+        {
+          "money": 8000,
+          "supplies": 4000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/AEUG_0087/Units/ACE/Pilot_AEUG_0087_N_ACE_AMR.gw",
+          "action": "action_Pilot_AEUG_0087_N_ACE_AMR_Produce_Switch_G"
+        },
+        {
+          "money": 8000,
+          "supplies": 4000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/AEUG_0087/Units/ACE/Pilot_AEUG_0087_N_ACE_AMR.gw",
+          "action": "action_Pilot_AEUG_0087_N_ACE_AMR_Produce_Switch_S"
+        }
+      ],
+      "skills": [],
+      "unlockTech": [
+        "Tech_AEUG_0087_HyakuShikiDevelopmentPlan"
+      ]
+    },
+    {
+      "id": "Pilot_AEUG_0087_N_ACE_BRTNA",
+      "name": "布莱特·诺亚",
+      "faction": "AEUG",
+      "era": "0087",
+      "source": "Units/BattleUnits/Pilot/0087/ACE/AEUG_0087/Pilot_AEUG_0087_N_ACE_BRTNA.ini",
+      "icon": "assets/pilots/Pilot_AEUG_0087_N_ACE_BRTNA.png",
+      "description": "一年战争中传奇战舰\"白色木马\"的舰长，现奥古组织的指挥官 \n优势 \n= 指挥能力高 = \n劣势 \n= 成长较慢 = \n= 属性较低 = \n \n“准备对MS战斗，就第一战斗位置，快！”",
+      "localization": {
+        "en": {
+          "name": "Bright Noa",
+          "description": "Captain of the legendary battleship White Base during the One Year War, and commander of the AEUG. \nAdvantages \n= Fast growth rate = \n= High max-level stats = \n= High awakening ability = \nDisadvantages \n= Expensive to build = \n= Low initial stats = \n \n\"Prepare for MS combat! Take your first combat positions, move!\""
+        }
+      },
+      "baseStats": {
+        "shooting": 130.0,
+        "melee": 135.0,
+        "defense": 145.0,
+        "speed": 145.0,
+        "accuracy": 135.0,
+        "reaction": 165.0,
+        "leadership": 200.0,
+        "awakening": 45.0
+      },
+      "comprehension": 102.5,
+      "initialLevel": 0,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 225,
+      "costPerLevel": 25,
+      "experienceBase": 1500,
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
+      "maxStats": {
+        "shooting": 139.99578124999996,
+        "melee": 145.38023437499996,
+        "defense": 156.14914062499994,
+        "speed": 156.14914062499994,
+        "accuracy": 145.38023437499996,
+        "reaction": 177.68695312499995,
+        "leadership": 215.37812499999993,
+        "awakening": 48.46007812499998
+      },
+      "price": {
+        "money": 10000,
+        "supplies": 5000
+      },
+      "sourceOffers": [
+        {
+          "money": 10000,
+          "supplies": 5000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/AEUG_0087/Units/ACE/Pilot_AEUG_0087_N_ACE_BRTNA.gw",
+          "action": "action_Pilot_AEUG_0087_N_ACE_BRTNA_Produce_Switch_G"
+        },
+        {
+          "money": 10000,
+          "supplies": 5000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/AEUG_0087/Units/ACE/Pilot_AEUG_0087_N_ACE_BRTNA.gw",
+          "action": "action_Pilot_AEUG_0087_N_ACE_BRTNA_Produce_Switch_S"
+        }
+      ],
+      "skills": [],
+      "unlockTech": [
+        "Tech_AEUG_0087_MethussDevelopmentPlan"
+      ]
+    },
+    {
+      "id": "Pilot_AEUG_0087_N_ACE_EMSN",
+      "name": "艾玛·幸",
+      "faction": "AEUG",
+      "era": "0087",
+      "source": "Units/BattleUnits/Pilot/0087/ACE/AEUG_0087/Pilot_AEUG_0087_N_ACE_EMSN.ini",
+      "icon": "assets/pilots/Pilot_AEUG_0087_N_ACE_EMSN.png",
+      "description": "奥古的MS队员，原提坦斯的成员，是卡缪等人的精神支柱 \n优势 \n= 属性优秀 = \n劣势 \n= 成长较低 = \n= 上限较低 = \n \n“怎么能让他们为所欲为！”",
+      "localization": {
+        "en": {
+          "name": "Emma Sheen",
+          "description": "An AEUG MS pilot and former member of the Titans, she serves as a spiritual pillar for Kamille and the others.. \nAdvantages \n= Excellent attributes = \nDisadvantages \n= Low growth potential = \n= Low upper limit = \n \n\"How can we let them have their own way!\""
+        }
+      },
+      "baseStats": {
+        "shooting": 150.0,
+        "melee": 145.0,
+        "defense": 148.0,
+        "speed": 147.0,
+        "accuracy": 149.0,
+        "reaction": 146.0,
+        "leadership": 100.0,
+        "awakening": 65.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 225,
+      "costPerLevel": 25,
+      "experienceBase": 1500,
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
+      "maxStats": {
+        "shooting": 173.64375,
+        "melee": 167.85562500000003,
+        "defense": 171.32850000000002,
+        "speed": 170.17087500000002,
+        "accuracy": 172.48612500000002,
+        "reaction": 169.01325000000003,
+        "leadership": 115.76250000000002,
+        "awakening": 75.245625
+      },
+      "price": {
+        "money": 6000,
+        "supplies": 3000
+      },
+      "sourceOffers": [
+        {
+          "money": 6000,
+          "supplies": 3000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/AEUG_0087/Units/ACE/Pilot_AEUG_0087_N_ACE_EMSN.gw",
+          "action": "action_Pilot_AEUG_0087_N_ACE_EMSN_Produce_Switch_G"
+        },
+        {
+          "money": 6000,
+          "supplies": 3000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/AEUG_0087/Units/ACE/Pilot_AEUG_0087_N_ACE_EMSN.gw",
+          "action": "action_Pilot_AEUG_0087_N_ACE_EMSN_Produce_Switch_S"
+        }
+      ],
+      "skills": [],
+      "unlockTech": [
+        "Tech_AEUG_0087_T2_ZetaGundamDevelopmentPlan"
+      ]
+    },
+    {
+      "id": "Pilot_AEUG_0087_N_ACE_FAUR",
+      "name": "花・园丽",
+      "faction": "AEUG",
+      "era": "0087",
+      "source": "Units/BattleUnits/Pilot/0087/ACE/AEUG_0087/Pilot_AEUG_0087_N_ACE_FAUR.ini",
+      "icon": "assets/pilots/Pilot_AEUG_0087_N_ACE_FAUR.png",
+      "description": "卡缪·维丹的青梅竹马，后成为奥古的MS驾驶员，少有的青梅竹马熬死天降系列 \n优势 \n= 属性平庸 = \n劣势 \n= 属性平庸 = \n \n“我…我…我不会变成绊脚石的！ ”",
+      "localization": {
+        "en": {
+          "name": "Fa Yuiry",
+          "description": "Kamille Bidan's childhood friend, who later became an MS pilot for the AEUG \nAdvantages \n= Average attributes = \nDisadvantages \n= Average attributes = \n \n\"I... I won't become a stumbling block!\""
+        }
+      },
+      "baseStats": {
+        "shooting": 125.0,
+        "melee": 126.0,
+        "defense": 130.0,
+        "speed": 120.0,
+        "accuracy": 123.0,
+        "reaction": 124.0,
+        "leadership": 65.0,
+        "awakening": 87.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 200,
+      "costPerLevel": 25,
+      "experienceBase": 1500,
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
+      "maxStats": {
+        "shooting": 144.70312500000003,
+        "melee": 145.86075000000002,
+        "defense": 150.49125,
+        "speed": 138.91500000000002,
+        "accuracy": 142.387875,
+        "reaction": 143.5455,
+        "leadership": 75.245625,
+        "awakening": 100.71337500000001
+      },
+      "price": {
+        "money": 4000,
+        "supplies": 2000
+      },
+      "sourceOffers": [
+        {
+          "money": 4000,
+          "supplies": 2000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/AEUG_0087/Units/ACE/Pilot_AEUG_0087_N_ACE_FAUR.gw",
+          "action": "action_Pilot_AEUG_0087_N_ACE_FAUR_Produce_Switch_G"
+        },
+        {
+          "money": 4000,
+          "supplies": 2000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/AEUG_0087/Units/ACE/Pilot_AEUG_0087_N_ACE_FAUR.gw",
+          "action": "action_Pilot_AEUG_0087_N_ACE_FAUR_Produce_Switch_S"
+        }
+      ],
+      "skills": [],
+      "unlockTech": [
+        "Tech_AEUG_0087_T2_ZetaGundamDevelopmentPlan"
+      ]
+    },
+    {
+      "id": "Pilot_AEUG_0087_N_ACE_HKBKN",
+      "name": "汉肯·贝肯纳",
+      "faction": "AEUG",
+      "era": "0087",
+      "source": "Units/BattleUnits/Pilot/0087/ACE/AEUG_0087/Pilot_AEUG_0087_N_ACE_HKBKN.ini",
+      "icon": "assets/pilots/Pilot_AEUG_0087_N_ACE_HKBKN.png",
+      "description": "奥古的拉迪修战舰舰长，曾是奥古阿卡玛战舰的第一代舰长 \n优势 \n= 指挥优秀 = \n劣势 \n= 属性较低 = \n \n“在棘手的时候又来了棘手的家伙啊！”",
+      "localization": {
+        "en": {
+          "name": "Henken Bekkener",
+          "description": "Captain of the AEUG's Radish battleship, and once the first captain of the AEUG's Argama \nAdvantages \n= Excellent command skills = \nDisadvantages \n= Low attributes = \n \n\"Troublesome folks show up right when things are already tough!\""
+        }
+      },
+      "baseStats": {
+        "shooting": 110.0,
+        "melee": 109.0,
+        "defense": 115.0,
+        "speed": 115.0,
+        "accuracy": 116.0,
+        "reaction": 125.0,
+        "leadership": 150.0,
+        "awakening": 40.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 200,
+      "costPerLevel": 25,
+      "experienceBase": 1500,
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
+      "maxStats": {
+        "shooting": 127.33875000000002,
+        "melee": 126.18112500000001,
+        "defense": 133.126875,
+        "speed": 133.126875,
+        "accuracy": 134.2845,
+        "reaction": 144.70312500000003,
+        "leadership": 173.64375,
+        "awakening": 46.30500000000001
+      },
+      "price": {
+        "money": 10000,
+        "supplies": 5000
+      },
+      "sourceOffers": [
+        {
+          "money": 10000,
+          "supplies": 5000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/AEUG_0087/Units/ACE/Pilot_AEUG_0087_N_ACE_HKBKN.gw",
+          "action": "action_Pilot_AEUG_0087_N_ACE_HKBKN_Produce_Switch_G"
+        },
+        {
+          "money": 10000,
+          "supplies": 5000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/AEUG_0087/Units/ACE/Pilot_AEUG_0087_N_ACE_HKBKN.gw",
+          "action": "action_Pilot_AEUG_0087_N_ACE_HKBKN_Produce_Switch_S"
+        }
+      ],
+      "skills": [],
+      "unlockTech": [
+        "Tech_AEUG_0087_MethussDevelopmentPlan"
+      ]
+    },
+    {
+      "id": "Pilot_AEUG_0087_N_ACE_KMBD",
+      "name": "卡缪·维丹",
+      "faction": "AEUG",
+      "era": "0087",
+      "source": "Units/BattleUnits/Pilot/0087/ACE/AEUG_0087/Pilot_AEUG_0087_N_ACE_KMBD.ini",
+      "icon": "assets/pilots/Pilot_AEUG_0087_N_ACE_KMBD.png",
+      "description": "奥古的王牌驾驶员，有着女人名字的男子汉 \n优势 \n= 成长速度快 = \n= 满级属性高 = \n= 觉醒能力高 = \n劣势 \n= 造价昂贵 = \n= 初始属性低 = \n \n“就是因为有你这样的人，战争才不会结束！”",
+      "localization": {
+        "en": {
+          "name": "Kamille Bidan",
+          "description": "Ace pilot of the AEUG, a man with a woman's name \nAdvantages \n= Fast growth rate = \n= High max-level stats = \n= High awakening ability = \nDisadvantages \n= Expensive to build = \n= Low initial stats = \n \n\"It's because of people like you that the war will never end!\""
+        }
+      },
+      "baseStats": {
+        "shooting": 145.0,
+        "melee": 155.0,
+        "defense": 141.0,
+        "speed": 156.0,
+        "accuracy": 142.0,
+        "reaction": 142.0,
+        "leadership": 65.0,
+        "awakening": 100.0
+      },
+      "comprehension": 115.0,
+      "initialLevel": 0,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 275,
+      "costPerLevel": 25,
+      "experienceBase": 1500,
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 6000.0,
+        "experienceMultiplier": 1.5
+      },
+      "maxStats": {
+        "shooting": 220.52687499999996,
+        "melee": 235.73562499999997,
+        "defense": 214.44337499999997,
+        "speed": 237.25649999999996,
+        "accuracy": 215.96424999999996,
+        "reaction": 215.96424999999996,
+        "leadership": 98.85687499999999,
+        "awakening": 152.08749999999998
+      },
+      "price": {
+        "money": 8000,
+        "supplies": 4000
+      },
+      "sourceOffers": [
+        {
+          "money": 8000,
+          "supplies": 4000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/AEUG_0087/Units/ACE/Pilot_AEUG_0087_N_ACE_KMBD.gw",
+          "action": "action_Pilot_AEUG_0087_N_ACE_KMBD_Produce_Switch_G"
+        },
+        {
+          "money": 8000,
+          "supplies": 4000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/AEUG_0087/Units/ACE/Pilot_AEUG_0087_N_ACE_KMBD.gw",
+          "action": "action_Pilot_AEUG_0087_N_ACE_KMBD_Produce_Switch_S"
+        }
+      ],
+      "skills": [],
+      "unlockTech": [
+        "Tech_AEUG_0087_GundamSeizurePlan"
+      ]
+    },
+    {
+      "id": "Pilot_AEUG_0087_N_ACE_QWTR",
+      "name": "科瓦特罗·巴吉纳",
+      "faction": "AEUG",
+      "era": "0087",
+      "source": "Units/BattleUnits/Pilot/0087/ACE/AEUG_0087/Pilot_AEUG_0087_N_ACE_QWTR.ini",
+      "icon": "assets/pilots/Pilot_AEUG_0087_N_ACE_QWTR.png",
+      "description": "一年战争的传奇“红色彗星”,奥古组织的核心人物兼领袖 \n优势 \n= 初始属性极高 = \n= 初始觉醒很高 = \n= 指挥能力优秀 = \n劣势 \n= 造价昂贵 = \n= 成长属性低 = \n \n“创造新时代的不会是老人！”",
+      "localization": {
+        "en": {
+          "name": "Quattro Bajeena",
+          "description": "The legendary \"Red Comet\" of the One Year War, the core figure and leader of the AEUG \nAdvantages \n= Extremely high initial stats = \n= High initial awakening = \n= Excellent command ability = \nDisadvantages \n= Costly to manufacture = \n= Low growth stats = \n \n\"Those who create a new era will never be the old!\""
+        }
+      },
+      "baseStats": {
+        "shooting": 210.0,
+        "melee": 225.0,
+        "defense": 205.0,
+        "speed": 225.0,
+        "accuracy": 200.0,
+        "reaction": 205.0,
+        "leadership": 135.0,
+        "awakening": 120.0
+      },
+      "comprehension": 102.5,
+      "initialLevel": 0,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 300,
+      "costPerLevel": 25,
+      "experienceBase": 1500,
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
+      "maxStats": {
+        "shooting": 226.14703124999994,
+        "melee": 242.30039062499992,
+        "defense": 220.76257812499992,
+        "speed": 242.30039062499992,
+        "accuracy": 215.37812499999993,
+        "reaction": 220.76257812499992,
+        "leadership": 145.38023437499996,
+        "awakening": 129.22687499999995
+      },
+      "price": {
+        "money": 7500,
+        "supplies": 4000
+      },
+      "sourceOffers": [
+        {
+          "money": 7500,
+          "supplies": 4000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/AEUG_0087/Units/ACE/Pilot_AEUG_0087_N_ACE_QWTR.gw",
+          "action": "action_Pilot_AEUG_0087_N_ACE_QWTR_Produce_Switch_G"
+        },
+        {
+          "money": 7500,
+          "supplies": 4000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/AEUG_0087/Units/ACE/Pilot_AEUG_0087_N_ACE_QWTR.gw",
+          "action": "action_Pilot_AEUG_0087_N_ACE_QWTR_Produce_Switch_S"
+        }
+      ],
+      "skills": [],
+      "unlockTech": [
+        "Tech_AEUG_0087_GundamSeizurePlan"
+      ]
+    },
+    {
+      "id": "Pilot_TITANS_0087_N_ACE_Basque",
+      "name": "巴斯克·奥姆",
+      "faction": "TITANS",
+      "era": "0087",
+      "source": "Units/BattleUnits/Pilot/0087/ACE/TITANS_0087/Pilot_TITANS_0087_N_ACE_Basque.ini",
+      "icon": "assets/pilots/Pilot_TITANS_0087_N_ACE_Basque.png",
+      "description": "提坦斯的总司令，是贾米托夫的心腹，高贵的地球至上主义 \n优势 \n= 指挥能力优秀 = \n劣势 \n= 除指挥能力皆弱 = \n \n“为了取回地球真正的力量，我们提坦斯成立了！”",
+      "localization": {
+        "en": {
+          "name": "Basque Ohm",
+          "description": "The supreme commander of the Titans, Jamitov's right-hand man, a noble advocate of Earth supremacism. \nAdvantages \n= Excellent command ability = \nDisadvantages \n= Weak in all aspects except command ability = \n \n\"In order to reclaim the true power of Earth, we Titans have been established!\""
+        }
+      },
+      "baseStats": {
+        "shooting": 130.0,
+        "melee": 110.0,
+        "defense": 115.0,
+        "speed": 120.0,
+        "accuracy": 125.0,
+        "reaction": 130.0,
+        "leadership": 150.0,
+        "awakening": 30.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 200,
+      "costPerLevel": 25,
+      "experienceBase": 1500,
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
+      "maxStats": {
+        "shooting": 150.49125,
+        "melee": 127.33875000000002,
+        "defense": 133.126875,
+        "speed": 138.91500000000002,
+        "accuracy": 144.70312500000003,
+        "reaction": 150.49125,
+        "leadership": 173.64375,
+        "awakening": 34.728750000000005
+      },
+      "price": {
+        "money": 10000,
+        "supplies": 5000
+      },
+      "sourceOffers": [
+        {
+          "money": 10000,
+          "supplies": 5000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/TITANS_0087/Units/ACE/Pilot_TITANS_0087_N_ACE_Basque.gw",
+          "action": "action_Pilot_TITANS_0087_N_ACE_Basque_Produce_Switch_G"
+        },
+        {
+          "money": 10000,
+          "supplies": 5000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/TITANS_0087/Units/ACE/Pilot_TITANS_0087_N_ACE_Basque.gw",
+          "action": "action_Pilot_TITANS_0087_N_ACE_Basque_Produce_Switch_S"
+        }
+      ],
+      "skills": [],
+      "unlockTech": [
+        "Tech_TITANS_0087_MarasaiDevelopmentPlan"
+      ]
+    },
+    {
+      "id": "Pilot_TITANS_0087_N_ACE_Brown",
+      "name": "布朗·布尔达克",
+      "faction": "TITANS",
+      "era": "0087",
+      "source": "Units/BattleUnits/Pilot/0087/ACE/TITANS_0087/Pilot_TITANS_0087_N_ACE_Brown.ini",
+      "icon": "assets/pilots/Pilot_TITANS_0087_N_ACE_Brown.png",
+      "description": "纯粹的联邦军人，对自己的技术相当自信，因个人思想讨厌着提坦斯 \n优势 \n= 属性较为优秀 = \n劣势 \n= 无觉醒能力 = \n \n“被我盯上，可就跑不掉咯”",
+      "localization": {
+        "en": {
+          "name": "Brown Burdak",
+          "description": "A genuine Federation soldier, highly confident in his own skills. \nAdvantages \n= Fairly good attributes = \nDisadvantages \n= No awakening ability = \n \n\"Once I've got you in my sights, there's no escaping\""
+        }
+      },
+      "baseStats": {
+        "shooting": 165.0,
+        "melee": 164.0,
+        "defense": 165.0,
+        "speed": 157.0,
+        "accuracy": 160.0,
+        "reaction": 145.0,
+        "leadership": 110.0,
+        "awakening": 30.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 225,
+      "costPerLevel": 25,
+      "experienceBase": 1500,
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
+      "maxStats": {
+        "shooting": 191.008125,
+        "melee": 189.8505,
+        "defense": 191.008125,
+        "speed": 181.747125,
+        "accuracy": 185.22000000000003,
+        "reaction": 167.85562500000003,
+        "leadership": 127.33875000000002,
+        "awakening": 34.728750000000005
+      },
+      "price": {
+        "money": 6500,
+        "supplies": 3500
+      },
+      "sourceOffers": [
+        {
+          "money": 6500,
+          "supplies": 3500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/TITANS_0087/Units/ACE/Pilot_TITANS_0087_N_ACE_Brown.gw",
+          "action": "action_Pilot_TITANS_0087_N_ACE_Brown_Produce_Switch_G"
+        },
+        {
+          "money": 6500,
+          "supplies": 3500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/TITANS_0087/Units/ACE/Pilot_TITANS_0087_N_ACE_Brown.gw",
+          "action": "action_Pilot_TITANS_0087_N_ACE_Brown_Produce_Switch_S"
+        }
+      ],
+      "skills": [],
+      "unlockTech": [
+        "Tech_TITANS_0087_AsshimarDevelopmentPlan"
+      ]
+    },
+    {
+      "id": "Pilot_TITANS_0087_N_ACE_FOUR",
+      "name": "村雨·凤",
+      "faction": "TITANS",
+      "era": "0087",
+      "source": "Units/BattleUnits/Pilot/0087/ACE/TITANS_0087/Pilot_TITANS_0087_N_ACE_FOUR.ini",
+      "icon": "assets/pilots/Pilot_TITANS_0087_N_ACE_FOUR.png",
+      "description": "村雨研究所的第四号实验人员，记忆和精神都极其不稳定 \n优势 \n= 觉醒能力强 = \n劣势 \n= 复归时间较长 = \n \n“我想要记忆，我想更了解我的事情！”",
+      "localization": {
+        "en": {
+          "name": "Four Murasame",
+          "description": "The fourth test subject at the Murasame Institute, with extremely unstable memories and psyche. \nAdvantages \n= Strong awakening ability = \nDisadvantages \n= Long recovery time = \n \n\"I want my memories. I want to know more about myself!\""
+        }
+      },
+      "baseStats": {
+        "shooting": 157.0,
+        "melee": 135.0,
+        "defense": 130.0,
+        "speed": 155.0,
+        "accuracy": 150.0,
+        "reaction": 140.0,
+        "leadership": 30.0,
+        "awakening": 125.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 225,
+      "costPerLevel": 25,
+      "experienceBase": 1500,
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
+      "maxStats": {
+        "shooting": 181.747125,
+        "melee": 156.27937500000002,
+        "defense": 150.49125,
+        "speed": 179.43187500000002,
+        "accuracy": 173.64375,
+        "reaction": 162.06750000000002,
+        "leadership": 34.728750000000005,
+        "awakening": 144.70312500000003
+      },
+      "price": {
+        "money": 8500,
+        "supplies": 4500
+      },
+      "sourceOffers": [
+        {
+          "money": 8500,
+          "supplies": 4500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/TITANS_0087/Units/ACE/Pilot_TITANS_0087_N_ACE_FOUR.gw",
+          "action": "action_Pilot_TITANS_0087_N_ACE_FOUR_Produce_Switch_G"
+        },
+        {
+          "money": 8500,
+          "supplies": 4500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/TITANS_0087/Units/ACE/Pilot_TITANS_0087_N_ACE_FOUR.gw",
+          "action": "action_Pilot_TITANS_0087_N_ACE_FOUR_Produce_Switch_S"
+        }
+      ],
+      "skills": [],
+      "unlockTech": [
+        "Tech_TITANS_0087_PsycoGundamDevelopmentPlan"
+      ]
+    },
+    {
+      "id": "Pilot_TITANS_0087_N_ACE_JRDMS",
+      "name": "杰利特·梅萨",
+      "faction": "TITANS",
+      "era": "0087",
+      "source": "Units/BattleUnits/Pilot/0087/ACE/TITANS_0087/Pilot_TITANS_0087_N_ACE_JRDMS.ini",
+      "icon": "assets/pilots/Pilot_TITANS_0087_N_ACE_JRDMS.png",
+      "description": "提坦斯的MS驾驶员，有着幻之坠机王和挽尊哥的名号 \n优势 \n= 复归时间快 = \n= 成长速度较快 = \n劣势 \n= 初期较为平庸 = \n \n“我会用这双手掌握一切！”",
+      "localization": {
+        "en": {
+          "name": "Jerid Messa",
+          "description": "He is a Titans MS pilot, known by the nicknames \"The Phantom Crash King\" and \"Mr. Dignity Savior\" \nAdvantages \n= Quick return time = \n= Grows relatively quickly = \nDisadvantages \n= Average initial attributes = \n \n\"I will seize everything with these hands!\""
+        }
+      },
+      "baseStats": {
+        "shooting": 145.0,
+        "melee": 140.0,
+        "defense": 150.0,
+        "speed": 143.0,
+        "accuracy": 142.0,
+        "reaction": 135.0,
+        "leadership": 90.0,
+        "awakening": 50.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 225,
+      "costPerLevel": 25,
+      "experienceBase": 1500,
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
+      "maxStats": {
+        "shooting": 167.85562500000003,
+        "melee": 162.06750000000002,
+        "defense": 173.64375,
+        "speed": 165.540375,
+        "accuracy": 164.38275000000002,
+        "reaction": 156.27937500000002,
+        "leadership": 104.18625000000002,
+        "awakening": 57.88125000000001
+      },
+      "price": {
+        "money": 6000,
+        "supplies": 3000
+      },
+      "sourceOffers": [
+        {
+          "money": 6000,
+          "supplies": 3000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/TITANS_0087/Units/ACE/Pilot_TITANS_0087_N_ACE_JRDMS.gw",
+          "action": "action_Pilot_TITANS_0087_N_ACE_JRDMS_Produce_Switch_G"
+        },
+        {
+          "money": 6000,
+          "supplies": 3000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/TITANS_0087/Units/ACE/Pilot_TITANS_0087_N_ACE_JRDMS.gw",
+          "action": "action_Pilot_TITANS_0087_N_ACE_JRDMS_Produce_Switch_S"
+        }
+      ],
+      "skills": [],
+      "unlockTech": [
+        "Tech_TITANS_0087_MovableFrameDevelopmentPlan"
+      ]
+    },
+    {
+      "id": "Pilot_TITANS_0087_N_ACE_Rosamia",
+      "name": "罗莎米亚·巴达姆",
+      "faction": "TITANS",
+      "era": "0087",
+      "source": "Units/BattleUnits/Pilot/0087/ACE/TITANS_0087/Pilot_TITANS_0087_N_ACE_Rosamia.ini",
+      "icon": "assets/pilots/Pilot_TITANS_0087_N_ACE_Rosamia.png",
+      "description": "奥古斯塔研究所的强化人，被植入的虚假的记忆导致精神状况不稳定 \n优势 \n= 觉醒能力高 = \n劣势 \n= 复归时间长 = \n \n“殖民卫星坠落的场景，就仿佛宇宙掉下来一样”",
+      "localization": {
+        "en": {
+          "name": "Rosamia Badam",
+          "description": "An enhanced human from the Augusta Institute, whose false memories have led to an unstable mental state \nAdvantages \n= High awakening ability = \nDisadvantages \n= Long recovery time = \n \n\"The scene of the colonial satellite falling is as if the cosmos itself has come crashing down\""
+        }
+      },
+      "baseStats": {
+        "shooting": 157.0,
+        "melee": 138.0,
+        "defense": 135.0,
+        "speed": 157.0,
+        "accuracy": 150.0,
+        "reaction": 142.0,
+        "leadership": 30.0,
+        "awakening": 125.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 225,
+      "costPerLevel": 25,
+      "experienceBase": 1500,
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
+      "maxStats": {
+        "shooting": 181.747125,
+        "melee": 159.75225,
+        "defense": 156.27937500000002,
+        "speed": 181.747125,
+        "accuracy": 173.64375,
+        "reaction": 164.38275000000002,
+        "leadership": 34.728750000000005,
+        "awakening": 144.70312500000003
+      },
+      "price": {
+        "money": 8500,
+        "supplies": 4500
+      },
+      "sourceOffers": [
+        {
+          "money": 8500,
+          "supplies": 4500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/TITANS_0087/Units/ACE/Pilot_TITANS_0087_N_ACE_Rosamia.gw",
+          "action": "action_Pilot_TITANS_0087_N_ACE_Rosamia_Produce_Switch_G"
+        },
+        {
+          "money": 8500,
+          "supplies": 4500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/TITANS_0087/Units/ACE/Pilot_TITANS_0087_N_ACE_Rosamia.gw",
+          "action": "action_Pilot_TITANS_0087_N_ACE_Rosamia_Produce_Switch_S"
+        }
+      ],
+      "skills": [],
+      "unlockTech": [
+        "Tech_TITANS_0087_T2_SpaceTypeTMSDevelopmentPlan"
+      ]
+    },
+    {
+      "id": "Pilot_TITANS_0087_N_ACE_Scirocco",
+      "name": "帕普提玛斯·西洛克",
+      "faction": "TITANS",
+      "era": "0087",
+      "source": "Units/BattleUnits/Pilot/0087/ACE/TITANS_0087/Pilot_TITANS_0087_N_ACE_Scirocco.ini",
+      "icon": "assets/pilots/Pilot_TITANS_0087_N_ACE_Scirocco.png",
+      "description": "木星归来的男子，有着新人类的出色能力和优秀的领袖才能 \n优势 \n= 初始属性极高 = \n= 觉醒能力强 = \n= 指挥能力强 = \n劣势 \n= 造价昂贵 = \n \n“除了拖累天才以外，无法成事的庸才能做什么！”",
+      "localization": {
+        "en": {
+          "name": "Paptimus Scirocco",
+          "description": "A man returned from Jupiter, possessing outstanding Newtype abilities and excellent leadership talent \nAdvantages \n= Extremely high initial attributes = \n= Strong awakening ability = \n= Strong command ability = \nDisadvantages \n= Expensive to manufacture = \n \n\"What can a mediocrity accomplish, apart from holding back a genius!\""
+        }
+      },
+      "baseStats": {
+        "shooting": 195.0,
+        "melee": 210.0,
+        "defense": 205.0,
+        "speed": 195.0,
+        "accuracy": 180.0,
+        "reaction": 190.0,
+        "leadership": 170.0,
+        "awakening": 120.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 300,
+      "costPerLevel": 25,
+      "experienceBase": 1500,
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
+      "maxStats": {
+        "shooting": 225.73687500000003,
+        "melee": 243.10125000000002,
+        "defense": 237.313125,
+        "speed": 225.73687500000003,
+        "accuracy": 208.37250000000003,
+        "reaction": 219.94875000000002,
+        "leadership": 196.79625000000001,
+        "awakening": 138.91500000000002
+      },
+      "price": {
+        "money": 10000,
+        "supplies": 5000
+      },
+      "sourceOffers": [
+        {
+          "money": 10000,
+          "supplies": 5000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/TITANS_0087/Units/ACE/Pilot_TITANS_0087_N_ACE_Scirocco.gw",
+          "action": "action_Pilot_TITANS_0087_N_ACE_Scirocco_Produce_Switch_G"
+        },
+        {
+          "money": 10000,
+          "supplies": 5000,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/TITANS_0087/Units/ACE/Pilot_TITANS_0087_N_ACE_Scirocco.gw",
+          "action": "action_Pilot_TITANS_0087_N_ACE_Scirocco_Produce_Switch_S"
+        }
+      ],
+      "skills": [],
+      "unlockTech": [
+        "Tech_TITANS_0087_T2_SpaceTypeTMSDevelopmentPlan"
+      ]
+    },
+    {
+      "id": "Pilot_TITANS_0087_N_ACE_Yazan",
+      "name": "亚赞·盖博",
+      "faction": "TITANS",
+      "era": "0087",
+      "source": "Units/BattleUnits/Pilot/0087/ACE/TITANS_0087/Pilot_TITANS_0087_N_ACE_Yazan.ini",
+      "icon": "assets/pilots/Pilot_TITANS_0087_N_ACE_Yazan.png",
+      "description": "提坦斯的王牌驾驶员，技术能力和新人类不分上下，有着“野兽”的称号 \n优势 \n= 属性极强 = \n劣势 \n= 缺乏觉醒能力 = \n \n“你开都不会开，还谈什么性能”",
+      "localization": {
+        "en": {
+          "name": "Yazan Gable",
+          "description": "He is an ace pilot of the Titans, possessing great strength and earning the title of \"The Beast\" \nAdvantages \n= Extremely strong attributes = \nDisadvantages \n= Lack of awakening ability \n \n\"If you can't even operate it properly, what right do you have to talk about its performance?\""
+        }
+      },
+      "baseStats": {
+        "shooting": 195.0,
+        "melee": 200.0,
+        "defense": 205.0,
+        "speed": 190.0,
+        "accuracy": 175.0,
+        "reaction": 180.0,
+        "leadership": 100.0,
+        "awakening": 30.0
+      },
+      "comprehension": 105.0,
+      "initialLevel": 0,
+      "maxLevel": 5,
+      "growthVersion": 2,
+      "costBase": 275,
+      "costPerLevel": 25,
+      "experienceBase": 1500,
+      "experienceThresholds": [
+        1500,
+        3000,
+        5000,
+        10000,
+        20000
+      ],
+      "nativeGrowth": {
+        "maxLevel": 3,
+        "experienceBase": 7500.0,
+        "experienceMultiplier": 1.5
+      },
+      "maxStats": {
+        "shooting": 225.73687500000003,
+        "melee": 231.52500000000003,
+        "defense": 237.313125,
+        "speed": 219.94875000000002,
+        "accuracy": 202.58437500000002,
+        "reaction": 208.37250000000003,
+        "leadership": 115.76250000000002,
+        "awakening": 34.728750000000005
+      },
+      "price": {
+        "money": 9000,
+        "supplies": 4500
+      },
+      "sourceOffers": [
+        {
+          "money": 9000,
+          "supplies": 4500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/TITANS_0087/Units/ACE/Pilot_TITANS_0087_N_ACE_Yazan.gw",
+          "action": "action_Pilot_TITANS_0087_N_ACE_Yazan_Produce_Switch_G"
+        },
+        {
+          "money": 9000,
+          "supplies": 4500,
+          "seconds": 30.0,
+          "source": "Units/Buildings/Beacon_ACE/UnitList/TITANS_0087/Units/ACE/Pilot_TITANS_0087_N_ACE_Yazan.gw",
+          "action": "action_Pilot_TITANS_0087_N_ACE_Yazan_Produce_Switch_S"
+        }
+      ],
+      "skills": [],
+      "unlockTech": [
+        "Tech_TITANS_0087_T2_SpaceTypeTMSDevelopmentPlan"
+      ]
     }
   ],
   "customSkills": [

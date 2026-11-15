@@ -2,9 +2,9 @@
 const fs=require("node:fs"),path=require("node:path");
 const M=require("../shared/map-document"),B=require("./rebuild-biome-maps.cjs");
 const root=path.resolve(__dirname,"..");
-const doc=M.create({id:"mission_bunker_coastal",name:"[0079][EFSF][原创]人口过剩",
+const doc=M.create({id:"mission_bunker_coastal",name:"[0079][原创]人口过剩-EFSF",
   description:"将地图中的敌军全数歼灭，没有人可以侵略联邦",
-  width:76,height:31,playersPerTeam:5,environment:"ground",supportedModes:["mission"]});
+  width:57,height:31,playersPerTeam:5,environment:"ground",supportedModes:["mission"]});
 for(const s of doc.spawns){s.x=s.team?54:4+((s.position-1)%3)*4;s.y=s.team?5+s.position*4:(s.position<=3?9:21);}
 doc.deploymentAreas=doc.spawns.map(s=>s.team?{x:46,y:2,width:16,height:27}:{x:1,y:3,width:15,height:25});
 const actors=[];
@@ -15,11 +15,11 @@ function squad(prefix,unitId,kitId,count,team,x,y,group,initial=false){
   for(let i=0;i<count;i++)add(prefix+"-"+i,unitId,kitId,team,x,y,group,initial,{squad:prefix});
 }
 for(const [i,y] of [7,15,24].entries())add("dabude-"+i,"DabudeClass","standard",1,45,y,"main-force",true);
-for(let i=0;i<6;i++)squad("garrison-"+i,i<2?"MS_06J":i<4?"MS_06F":"MS_09",i<4?"machine_gun":"bazooka",3,1,
-  [24,24,34,34,52,52][i],[7,23,5,26,7,24][i],"main-force",true);
-const towerKinds=["MG","Cannon","Beam","Missile","MG","Beam","Cannon","Missile"];
-for(let i=0;i<8;i++)add("turret-"+i,"Facility_"+towerKinds[i],"standard",1,
-  [24,24,34,34,44,44,56,56][i],[10,20,8,22,11,19,8,23][i],"defenses",true,{facilityLevel:2});
+for(let i=0;i<9;i++)squad("garrison-"+i,i<3?"MS_06J":i<6?"MS_06F":"MS_09",i<6?"machine_gun":"bazooka",3,1,
+  [24,24,34,34,43,43,52,52,52][i],[7,23,5,26,9,22,5,16,26][i],"main-force",true);
+const towerKinds=["MG","Cannon","Beam","Missile","MG","Beam","Cannon","Missile","MG","Beam","Cannon","Missile"];
+for(let i=0;i<12;i++)add("turret-"+i,"Facility_"+towerKinds[i],"standard",1,
+  [24,24,34,34,44,44,56,56,28,38,48,54][i],[10,20,8,22,11,19,8,23,15,15,4,27][i],"defenses",true,{facilityLevel:2});
 for(let i=0;i<3;i++)squad("jim-support-"+i,"RGM_79","machine_gun",3,0,11,6+i*9,"jim-support");
 for(let i=0;i<2;i++)squad("guntank-support-"+i,"RX_75R","standard",3,0,13,8+i*15,"guntank-support");
 function transported(prefix,unitId,kitId,count,x,y){
@@ -47,7 +47,7 @@ const wave=(id,name,round,ids)=>({id,name,when:{type:"round",round},actions:[{ty
 const speakers={
   zeon:{actor:"dabude-0",name:"吉翁军前线指挥官",portrait:"assets/pilots/Pilot_ZEON_0079_Officer_1.png"},
   federation:{actor:"jim-support-0-0",name:"联邦前线指挥官",portrait:"assets/pilots/Pilot_EFSF_0079_Officer_1.png"},
-  communications:{actor:"jim-support-1-0",name:"联邦通信员",portrait:"assets/pilots/Pilot_EFSF_0079_Officer_2.png"}
+  communications:{actor:"jim-support-1-0",name:"联邦通信员",portrait:"assets/pilots/Pilot_EFSF_0079_Common_1.png"}
 };
 const line=(speaker,text)=>({...speakers[speaker],text});
 const ceasefireDialogue={type:"dialogue",lines:[
@@ -86,8 +86,8 @@ doc.mission={version:1,era:"UC_0079_T2",scenarioFaction:"EFSF",technologyLimitEn
   costLimit:4500,unitLimit:18,fleetLimit:2,enemyResourcePerPlayer:0,protect:[],actors,
   victory:{type:"scripted",group:"main-force",choiceEvent:"ceasefire",continueOption:"refuse"},
   landmarks:[{type:"mass_driver",x:53,y:13,width:18,height:5}],
-  rewards:{money:5000,supplies:7500,inventory:{RGM_79SC:6,RGM_79HC:6},
-    outcomes:[{event:"refuse-ceasefire",money:7500,supplies:10000,inventory:{RX_81:3,RGM_79C:9}}]},
+  rewards:{technology:1000,money:5000,supplies:7500,inventory:{RGM_79SC:6,RGM_79HC:6},
+    outcomes:[{event:"refuse-ceasefire",technology:1500,money:7500,supplies:10000,inventory:{RX_81:3,RGM_79C:9}}]},
   events:[
     {id:"opening",name:"人口过剩攻略作战",when:{type:"start"},actions:[{type:"message",text:"歼灭地图中的敌军。没有人可以侵略联邦。"}]},
     wave("jim-arrival","三队吉姆支援",2,actors.filter(a=>a.group==="jim-support").map(a=>a.id)),
@@ -105,11 +105,17 @@ doc.mission={version:1,era:"UC_0079_T2",scenarioFaction:"EFSF",technologyLimitEn
     {id:"final-victory",name:"彻底歼灭敌军",when:{type:"all",conditions:[
       {type:"choice_selected",event:"ceasefire",option:"refuse"},{type:"all_enemies_destroyed"}]},actions:[{type:"victory"}]},
   ]};
+// Shorten the east-west front by one quarter, including all authored geometry.
+const xScale=56/75;
+for(const actor of actors)actor.x=Math.round(actor.x*xScale);
+for(const spawn of doc.spawns)spawn.x=Math.round(spawn.x*xScale);
+for(const area of doc.deploymentAreas){area.x=Math.round(area.x*xScale);area.width=Math.max(1,Math.round(area.width*xScale));}
+for(const landmark of doc.mission.landmarks){landmark.x=Math.round(landmark.x*xScale);landmark.width=Math.round(landmark.width*xScale);}
 const map=M.compile(doc);
 for(let y=0;y<map.height;y++)for(let x=0;x<map.width;x++){
-  const shore=64+Math.floor(Math.sin(y/4)*2);
+  const shore=48+Math.floor(Math.sin(y/4)*2);
   map.tiles[y][x]=x>=shore+2?"water":x>=shore-2?"desert":
-    y>=12&&y<=18?"plain":(y<4||y>26)&&x<46?"forest":x>=24&&x<=57&&y>=4&&y<=26?"rubble":"plain";
+    y>=12&&y<=18?"plain":(y<4||y>26)&&x<46?"forest":"plain";
 }
 const result=B.rebuild(map);result.mission=doc.mission;result.tileMap.mission=doc.mission;
 const ref="maps/missions/bunker.json";fs.writeFileSync(path.join(root,"assets",ref),JSON.stringify(result,null,2)+"\n");

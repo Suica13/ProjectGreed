@@ -2897,5 +2897,629 @@
   "Facility_Radar": {
     "en": {},
     "ja": {}
-  }
+  },
+  "RGM_89": {},
+  "AMS_119": {},
+  "RGZ_91": {},
+  "RGZ_91B": {},
+  "MSN_03": {},
+  "MSN_04": {},
+  "RX_93": {},
+  "RX_93_Test": {},
+  "RGZ_91_MA": {},
+  "RGZ_91B_MA": {},
+  "GAT_X105": {
+    "ja": {
+      "name": "ストライクガンダム",
+      "description": "地球連合とモルゲンレーテ社が共同開発した機体。戦況に応じてバックパックを換装できる。"
+    }
+  },
+  "ACV": {
+    "ja": {
+      "description": "地球連合軍の輸送船。",
+      "name": "輸送船ACV"
+    }
+  },
+  "AgamemnonClass": {
+    "ja": {
+      "name": "アガメムノン級",
+      "description": "地球連合軍艦隊の航空母艦。"
+    }
+  },
+  "Agile": {
+    "ja": {
+      "name": "アジャイル",
+      "description": "ザフトの対地攻撃ヘリコプター。"
+    }
+  },
+  "AMF_101": {
+    "ja": {
+      "name": "ディン",
+      "description": "ザフト軍が地球での運用を目的に開発した空戦用量産型MS。"
+    }
+  },
+  "AMF_101C": {
+    "ja": {
+      "name": "早期警戒・空中指揮型ディン",
+      "description": "ディンの早期警戒・偵察仕様。"
+    }
+  },
+  "ArchangelClass": {
+    "ja": {
+      "name": "アークエンジェル",
+      "description": "地球連合とオーブが共同建造した新型両用戦艦。"
+    }
+  },
+  "ConnectedArmoredVehicle": {
+    "ja": {
+      "name": "連結装甲車",
+      "description": "ザフトが使用する陸戦装甲車。砲台としても運用できる。"
+    }
+  },
+  "DrakeClass": {
+    "ja": {
+      "name": "ドレイク級",
+      "description": "地球連合軍艦隊の主力戦艦。"
+    }
+  },
+  "F_7D": {
+    "ja": {
+      "name": "スピアヘッド",
+      "description": "地球連合軍の主力迎撃機。"
+    }
+  },
+  "FX_550": {
+    "ja": {
+      "name": "スカイグラスパー",
+      "description": "PMP社が大気圏内での運用を目的に製造した支援戦闘機。"
+    }
+  },
+  "GAT_01": {
+    "ja": {
+      "name": "ストライクダガー",
+      "description": "ストライクガンダムの量産型。汎用バックパック接続機構は省略されている。"
+    }
+  },
+  "GAT_01A1": {
+    "ja": {
+      "name": "105ダガー",
+      "description": "ストライクガンダムの量産型。ストライクとバックパックを共用できる。"
+    }
+  },
+  "GAT_01D": {
+    "ja": {
+      "name": "ロングダガー",
+      "description": "初期に開発された連合製機体。OSが未完成で性能は低い。"
+    }
+  },
+  "GAT_01D1": {
+    "ja": {
+      "name": "デュエルダガー",
+      "description": "ロングダガーの改良型。OSと機体構造が改善されている。"
+    }
+  },
+  "GAT_02L2": {
+    "ja": {
+      "name": "ダガーL",
+      "description": "105ダガーの発展型。装甲を再設計し、製造費の削減に成功した。"
+    }
+  },
+  "GAT_X102": {
+    "ja": {
+      "name": "デュエルガンダム",
+      "description": "地球連合とモルゲンレーテ社が共同開発した、最初のGATシリーズ機。"
+    }
+  },
+  "GAT_X102_AS": {
+    "ja": {
+      "name": "デュエルガンダム アサルトシュラウド",
+      "description": "デュエルガンダムに追加装甲を装着した改良型。"
+    }
+  },
+  "GAT_X103": {
+    "ja": {
+      "name": "バスターガンダム",
+      "description": "地球連合とモルゲンレーテ社が共同開発した機体。砲撃戦に優れる。"
+    }
+  },
+  "GAT_X207": {
+    "ja": {
+      "name": "ブリッツガンダム",
+      "description": "地球連合とモルゲンレーテ社が共同開発した、電撃戦用MS。"
+    }
+  },
+  "GAT_X303": {
+    "ja": {
+      "name": "イージスガンダム",
+      "description": "地球連合とモルゲンレーテ社が共同開発した、可変機構の試験機。"
+    }
+  },
+  "Guul": {
+    "ja": {
+      "name": "グゥル",
+      "description": "ザフト軍が開発した補助飛行装置。"
+    }
+  },
+  "Infestus": {
+    "ja": {
+      "name": "インフェストゥス",
+      "description": "ザフトの主力戦闘機。"
+    }
+  },
+  "LaurasiaClass": {
+    "ja": {
+      "name": "ローラシア級",
+      "description": "ザフト軍の量産型MS搭載戦艦。"
+    }
+  },
+  "LinearArtillery": {
+    "ja": {
+      "name": "リニア自走砲",
+      "description": "地球連合とオーブの双方が使用する自走砲。"
+    }
+  },
+  "LinearGunTank": {
+    "ja": {
+      "name": "リニアガンタンク",
+      "description": "アクタイオン社が開発した主力戦車。MS普及以前は地球連合とオーブで広く配備されていた。"
+    }
+  },
+  "MarseilleIIIClass": {
+    "ja": {
+      "name": "マルセイユIII世級",
+      "description": "地球連合軍の補給艦。"
+    }
+  },
+  "MBF_M1": {
+    "ja": {
+      "name": "M1アストレイ",
+      "description": "オーブ軍が開発した主力MS。"
+    }
+  },
+  "MissileCar_CE": {
+    "ja": {
+      "name": "ミサイル車両[CE]",
+      "description": "ミサイル発射機を装備した戦闘車両。"
+    }
+  },
+  "NazcaClass": {
+    "ja": {
+      "name": "ナスカ級",
+      "description": "ザフト艦隊の主力戦艦。"
+    }
+  },
+  "NelsonClass": {
+    "ja": {
+      "name": "ネルソン級",
+      "description": "地球連合軍艦隊の主力艦種。"
+    }
+  },
+  "OMNI_MinigunAPC": {
+    "ja": {
+      "name": "ガトリング装甲車[CE]",
+      "description": "軽装甲ユニットへの対処用に改造された連合軍の戦闘車両。"
+    }
+  },
+  "PatrolAircraft": {
+    "ja": {
+      "name": "哨戒機",
+      "description": "地球連合軍の高高度偵察機。"
+    }
+  },
+  "PowerCar": {
+    "ja": {
+      "name": "動力車",
+      "description": "地球連合の輸送トラック。"
+    }
+  },
+  "SupplyTruck": {
+    "ja": {
+      "name": "補給トラック",
+      "description": "ザフトの輸送トラック。"
+    }
+  },
+  "TFA_2": {
+    "ja": {
+      "name": "ザウート",
+      "description": "ザフト軍が開発した地上戦用砲撃型MS。"
+    }
+  },
+  "TMF_A_802": {
+    "ja": {
+      "name": "バクゥ",
+      "description": "ザフト軍が開発した地上戦用突撃MS。"
+    }
+  },
+  "TS_MA2": {
+    "ja": {
+      "name": "メビウス",
+      "description": "地球連合軍が開発した宇宙用MA。戦争初期に活躍した。"
+    }
+  },
+  "UMF_4A": {
+    "ja": {
+      "name": "グーン",
+      "description": "ザフト軍が最初に実用化した水中用MS。"
+    }
+  },
+  "UMF_5": {
+    "ja": {
+      "name": "ゾノ",
+      "description": "ザフト軍が開発した次世代水中用MS。指揮官機としても使用される。"
+    }
+  },
+  "UWMF_S_1": {
+    "ja": {
+      "name": "ジンワスプ",
+      "description": "水中戦闘能力を備えたジンの水中仕様。"
+    }
+  },
+  "VoLPHAU": {
+    "ja": {
+      "name": "垂直離着陸輸送機",
+      "description": "ザフトの補給輸送機。"
+    }
+  },
+  "VTOLFighter": {
+    "ja": {
+      "name": "垂直離着陸戦闘機",
+      "description": "地球連合軍の対地攻撃ヘリコプター。"
+    }
+  },
+  "VTOLTransport": {
+    "ja": {
+      "name": "垂直離着陸輸送機",
+      "description": "地球連合軍の補給輸送機。"
+    }
+  },
+  "ZGMF_1017": {
+    "ja": {
+      "name": "ジン",
+      "description": "ザフト軍が開発した第一世代の汎用量産型MS。"
+    }
+  },
+  "ZGMF_1017M": {
+    "ja": {
+      "name": "ジンハイマニューバ",
+      "description": "ゲイツ配備までの戦力を補うために開発されたジンの強化型。"
+    }
+  },
+  "ZGMF_515": {
+    "ja": {
+      "name": "シグー",
+      "description": "ZGMF-1017ジンに代わる次期主力MSとしてザフト軍が開発した機体。"
+    }
+  },
+  "ZGMF_600": {
+    "ja": {
+      "name": "ゲイツ",
+      "description": "ザフトが開発した新型主力量産機。ビーム兵器を装備する。"
+    }
+  },
+  "ZGMF_LRR704B": {
+    "ja": {
+      "name": "ジン長距離強行偵察複座型",
+      "description": "ジンの強行偵察仕様。"
+    }
+  },
+  "ZGMT_01": {
+    "ja": {
+      "name": "ジントレーナー",
+      "description": "訓練にも使用されるジンの試作型。"
+    }
+  },
+  "ConnectedArmoredVehicle_DeployState": {
+    "ja": {
+      "name": "連結装甲車",
+      "description": "ザフトが使用する陸戦装甲車。砲台としても運用できる。"
+    }
+  },
+  "GAT_01D_AS": {
+    "ja": {
+      "name": "ロングダガー フォルテストラ",
+      "description": "砲戦装備を追加し、射撃戦能力を強化したロングダガー。"
+    }
+  },
+  "GAT_01D1_AS": {
+    "ja": {
+      "name": "デュエルダガー フォルテストラ",
+      "description": "砲戦装備を追加し、射撃戦能力を強化したデュエルダガー。"
+    }
+  },
+  "GAT_X105_A": {
+    "ja": {
+      "name": "エールストライクガンダム",
+      "description": "地球連合とモルゲンレーテ社が共同開発した機体。戦況に応じてバックパックを換装できる。"
+    }
+  },
+  "GAT_X105_L": {
+    "ja": {
+      "name": "ランチャーストライクガンダム",
+      "description": "地球連合とモルゲンレーテ社が共同開発した機体。戦況に応じてバックパックを換装できる。"
+    }
+  },
+  "GAT_X105_S": {
+    "ja": {
+      "name": "ソードストライクガンダム",
+      "description": "地球連合とモルゲンレーテ社が共同開発した機体。戦況に応じてバックパックを換装できる。"
+    }
+  },
+  "GAT_X303_MA": {
+    "ja": {
+      "name": "イージスガンダム",
+      "description": "地球連合とモルゲンレーテ社が共同開発した、最初のGATシリーズ機。"
+    }
+  },
+  "LinearArtillery_DeployState": {
+    "ja": {
+      "name": "リニア自走砲",
+      "description": "地球連合とオーブの双方が使用する自走砲。"
+    }
+  },
+  "TS_MA2_H": {
+    "ja": {
+      "name": "メビウス[重装備]",
+      "description": "重装備を追加したメビウス。"
+    }
+  },
+  "VTOLTransport_DeployState": {
+    "ja": {
+      "name": "垂直離着陸輸送機",
+      "description": "地球連合軍の補給輸送機。"
+    }
+  },
+  "ZGMF_1017_D": {
+    "ja": {
+      "name": "ジン[D装備]",
+      "description": "大型ミサイルを装備したジン。"
+    }
+  },
+  "ZGMF_1017_H": {
+    "ja": {
+      "name": "ジン[H装備]",
+      "description": "ビーム砲を装備したジン。"
+    }
+  },
+  "Army_Squad_OMNI_CE71_N_G_A": {
+    "ja": {
+      "name": "歩兵分隊[地球連合軍][CE71]",
+      "description": "地球連合軍の一般歩兵分隊。"
+    }
+  },
+  "Army_Squad_ZAFT_CE71_N_G_A": {
+    "ja": {
+      "name": "歩兵分隊[ザフト軍][CE71]",
+      "description": "ザフト軍の一般歩兵分隊。"
+    }
+  },
+  "TFA_2_ModeB": {
+    "ja": {
+      "name": "ザウート",
+      "description": "ザフト軍が開発した地上戦用砲撃型MS。"
+    }
+  },
+  "RGM_86R_0093_EFSF": {
+    "ja": {
+      "name": "ジムIII[地球連邦軍]",
+      "description": "連邦軍で高く評価されたジムの最終発展型。"
+    }
+  },
+  "SalamisClassKai_0093_EFSF": {
+    "ja": {
+      "name": "サラミス改級[0093]",
+      "description": "サラミスの戦後改修型。多数の武装を装備する。"
+    }
+  },
+  "MSZ_006A1_0093_EFSF": {
+    "ja": {
+      "name": "ゼータプラスA1",
+      "description": "大気圏内戦闘に適したZガンダムの量産型。"
+    }
+  },
+  "MSZ_006C1_0093_EFSF": {
+    "ja": {
+      "name": "ゼータプラスC1",
+      "description": "宇宙戦闘に適したZガンダムの量産型。"
+    }
+  },
+  "AMX_101_0093_NZN": {
+    "ja": {
+      "name": "ガルスJ",
+      "description": "アクシズが開発した生産性の高い地上侵攻用MS。"
+    }
+  },
+  "MusaiClassFinalType_0093_NZN": {
+    "ja": {
+      "name": "ムサイ級最終生産型",
+      "description": "ムサイの最終生産型。"
+    }
+  },
+  "AMX_107_0093_NZN": {
+    "ja": {
+      "name": "バウ",
+      "description": "ネオ・ジオンが開発した可変MS。Zガンダムの設計を参考にしたといわれる。"
+    }
+  },
+  "AMX_006_0093_NZN": {
+    "ja": {
+      "name": "ガザD",
+      "description": "アクシズが開発した砲撃用MS。集団戦闘を得意とする。"
+    }
+  },
+  "RTX_440_ModeB": {
+    "ja": {
+      "description": "局地戦に特化したガンタンク。高い強襲能力を持つ。"
+    }
+  },
+  "MSA_005_MA": {
+    "ja": {
+      "description": "エゥーゴが開発した試作TMS。支援作戦に使用される。"
+    }
+  },
+  "MSZ_006_MA": {
+    "ja": {
+      "description": "Z計画の到達点となるエゥーゴの主力機。極めて高い性能を備える。"
+    }
+  },
+  "MSZ_006A1_MA": {
+    "ja": {
+      "description": "大気圏内戦闘に適したZガンダムの量産型。"
+    }
+  },
+  "MSZ_006C1_MA": {
+    "ja": {
+      "description": "宇宙戦闘に適したZガンダムの量産型。"
+    }
+  },
+  "MSZ_010_MA": {
+    "ja": {
+      "description": "Zを超える第四世代MSの代表機。極めて高い火力と防御力を備える。"
+    }
+  },
+  "MSZ_008_MA": {
+    "ja": {
+      "description": "Zガンダムの発展型。宇宙戦用の高性能簡易量産機として提案された。"
+    }
+  },
+  "MSA_005S_MA": {
+    "ja": {
+      "description": "火力投射能力を強化したメタスの改良型。"
+    }
+  },
+  "MSN_001_MA": {
+    "ja": {
+      "description": "百式の原型機。技術的な問題により実機の製造には至らなかった。"
+    }
+  },
+  "MSA_0011_Ext_MA": {
+    "ja": {
+      "description": "各種装甲とスラスターを追加したSガンダムの強化装備形態。"
+    }
+  },
+  "NRX_044_TR_3_MA": {
+    "ja": {
+      "description": "大気圏内で自力飛行できるアッシマーの試作機。"
+    }
+  },
+  "NRX_044_MA": {
+    "ja": {
+      "description": "連邦軍が開発した大気圏用TMS。高速巡航が可能。"
+    }
+  },
+  "RX_110_MA": {
+    "ja": {
+      "description": "連邦軍が開発した宇宙用TMS。構造が複雑なため量産には至らなかった。"
+    }
+  },
+  "MRX_009_MA": {
+    "ja": {
+      "description": "ティターンズが開発したサイコミュ試験機。強力な火力を備える。"
+    }
+  },
+  "RX_139_MA": {
+    "ja": {
+      "description": "パプテマス・シロッコが開発に参加したティターンズの試作MS。"
+    }
+  },
+  "ORX_005_MA": {
+    "ja": {
+      "description": "地球圏内での迅速な攻撃を目的に連邦軍が開発したTMS。"
+    }
+  },
+  "PMX_000_MA": {
+    "ja": {
+      "description": "シロッコが設計した一撃離脱用TMS。奇襲作戦を得意とする。"
+    }
+  },
+  "RX_124_MA": {
+    "ja": {
+      "description": "TRシリーズの技術を集約した機体。"
+    }
+  },
+  "ORX_005_TR_5_MA": {
+    "ja": {
+      "description": "T3部隊が強化人間用可変MAギャプランを一般兵でも使用できるよう改修した機体。"
+    }
+  },
+  "ORX_005_TR_5_FF_X39A_MA": {
+    "ja": {
+      "description": "ギャプランTR-5系に支援パーツ「フルドドII」を装備した機体。"
+    }
+  },
+  "RX_124_Kehaar2_MA": {
+    "ja": {
+      "description": "アッシマーの形態を模したTR-6。あらゆる領域での戦闘能力を持つ。"
+    }
+  },
+  "RX_124_Kehaar2_M_MA": {
+    "ja": {
+      "description": "キハールIIの量産型。"
+    }
+  },
+  "MRX_010_MA": {
+    "ja": {
+      "description": "ティターンズが開発したサイコミュ試験機。強力な火力を備える。"
+    }
+  },
+  "NRX_055_MA": {
+    "ja": {
+      "description": "連邦軍オーガスタ研究所が開発したNT専用試作可変MS。"
+    }
+  },
+  "AMX_003_MA": {
+    "ja": {
+      "description": "アクシズが開発した砲撃用MS。集団戦闘を得意とする。"
+    }
+  },
+  "AMX_006_MA": {
+    "ja": {
+      "description": "アクシズが開発した砲撃用MS。集団戦闘を得意とする。"
+    }
+  },
+  "AMX_102_MA": {
+    "ja": {
+      "description": "アクシズが開発した砲撃用MS。集団戦闘を得意とする。"
+    }
+  },
+  "AMX_008_MA": {
+    "ja": {
+      "description": "ガザ系MSの改良型。シリーズの集大成となる機体。"
+    }
+  },
+  "AMA_01X_MA": {
+    "ja": {
+      "description": "高火力と高機動性を備えたネオ・ジオンの可変機。"
+    }
+  },
+  "AMX_107_MA": {
+    "ja": {
+      "description": "ネオ・ジオンが開発した可変MS。Zガンダムの設計を参考にしたといわれる。"
+    }
+  },
+  "AMX_107M_MA": {
+    "ja": {
+      "description": "バウの量産型。性能差はほとんどない。"
+    }
+  },
+  "MSZ_006A1_0093_EFSF_MA": {
+    "ja": {
+      "description": "大気圏内戦闘に適したZガンダムの量産型。"
+    }
+  },
+  "MSZ_006C1_0093_EFSF_MA": {
+    "ja": {
+      "description": "宇宙戦闘に適したZガンダムの量産型。"
+    }
+  },
+  "AMX_107_0093_NZN_MA": {
+    "ja": {
+      "description": "ネオ・ジオンが開発した可変MS。Zガンダムの設計を参考にしたといわれる。"
+    }
+  },
+  "AMX_006_0093_NZN_MA": {
+    "ja": {
+      "description": "アクシズが開発した砲撃用MS。集団戦闘を得意とする。"
+    }
+  },
+  "Mission_SpaceShuttle": {}
 }

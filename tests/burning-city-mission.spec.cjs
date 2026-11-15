@@ -9,9 +9,9 @@ for(const width of [1440,390])test(`burning city cover, dusk, autonomous allies 
   await page.locator('#openSkirmish').click();await page.locator('#createOfflineRoom').click();
   await page.locator('#offlineRoomMode').selectOption('mission');await page.locator('#confirmOfflineMode').click();
   await expect.poll(()=>page.evaluate(()=>Net.snapshot?.settings.mode)).toBe('mission');
-  await page.evaluate(()=>Net.request('configure_room',{mapId:'mission_burning_city',costLimit:5000,unitLimit:18}));
+  await page.evaluate(()=>Net.request('configure_room',{mapId:'mission_burning_city',costLimit:6000,unitLimit:18}));
   await expect.poll(()=>page.evaluate(()=>Net.snapshot?.settings.mapId)).toBe('mission_burning_city');
-  await expect(page.locator('#roomMapTitle')).toContainText('[0087][SDGO]燃烧的新都市');
+  await expect(page.locator('#roomMapTitle')).toContainText('[0087][原创]燃烧的新都市-AEUG');
   expect(await page.evaluate(()=>ART.assets[Rules.getMap('mission_burning_city').mission.cover].startsWith('data:image/png;base64,'))).toBe(true);
   await page.screenshot({path:`tmp/verification/screenshots/burning-city-room-${width}.png`});
   await expect.poll(()=>page.evaluate(()=>!!Net.awaiting)).toBe(false);
@@ -31,10 +31,10 @@ for(const width of [1440,390])test(`burning city cover, dusk, autonomous allies 
   await page.locator('#missionObjectives').click();const panel=page.locator('#missionObjectivesPanel');
   await expect(panel.locator('[data-objectives="victory"]')).toHaveText('消灭敌方三台精神感应高达(0/3)');
   await panel.getByRole('button',{name:'关闭',exact:true}).click();
-  await page.evaluate(()=>{const room=[...cityEngine.rooms.values()][0];room.game.round=15;cityEngine.broadcast(room);});
+  await page.evaluate(()=>{const room=[...cityEngine.rooms.values()][0];room.game.round=21;cityEngine.broadcast(room);});
   for(let i=0;i<5;i++){await expect(cover).toBeVisible();await cover.getByRole('button',{name:'继续',exact:true}).click();}
   await expect(cover).toBeHidden();
-  await page.evaluate(()=>{const room=[...cityEngine.rooms.values()][0],target=room.game.units.find(u=>u.missionActor==='psycho-0');target.x=44;target.y=9;cityEngine.broadcast(room);room.game.round=16;cityEngine.broadcast(room);});
+  await page.evaluate(()=>{const room=[...cityEngine.rooms.values()][0],target=room.game.units.find(u=>u.missionActor==='psycho-0');target.x=44;target.y=9;cityEngine.broadcast(room);room.game.round=22;cityEngine.broadcast(room);});
   await expect(cover).toBeVisible();await expect(cover.locator('p')).toContainText('有目标撤离了');
   await cover.getByRole('button',{name:'继续',exact:true}).click();await expect(cover).toBeHidden();
   await page.locator('#missionObjectives').click();await expect(panel.locator('[data-objectives="victory"]')).toContainText('消灭所有敌人');

@@ -28,7 +28,7 @@ const MissionMode = (() => {
       m.unitLimit > 72 ||
       (m.fleetLimit !== undefined && (!Number.isInteger(m.fleetLimit) || m.fleetLimit < 1 || m.fleetLimit > 6)) ||
       !Array.isArray(m.actors) ||
-      m.actors.length > 256 ||
+      m.actors.length > 768 ||
       !Array.isArray(m.events) ||
       m.events.length > 100
     )
@@ -67,6 +67,9 @@ const MissionMode = (() => {
         (a.angle !== undefined && ![0, 90, 180, 270].includes(a.angle)) ||
         (a.facilityLevel !== undefined && (!Number.isInteger(a.facilityLevel) || a.facilityLevel<1 || a.facilityLevel>4)) ||
         (a.autonomous !== undefined && typeof a.autonomous !== "boolean") ||
+        (a.stationary !== undefined && typeof a.stationary !== "boolean") ||
+        (a.genericPilot !== undefined && !["veteran", "elite", "ace", "enhanced"].includes(a.genericPilot)) ||
+        (a.genericPilot && a.pilotId) ||
         (a.squad && !id(a.squad))
       )
         fail();
@@ -101,10 +104,25 @@ const MissionMode = (() => {
     }
     location = "胜败条件";
     if (!Array.isArray(m.protect) || m.protect.some((a) => !actors.has(a))) fail();
-    if (!["all_enemies", "survive", "defeat_actor", "escort", "scripted", "eliminate_group"].includes(m.victory?.type)) fail();
+    if (!["all_enemies", "survive", "defeat_actor", "escort", "scripted", "eliminate_group", "extract", "defend_group"].includes(m.victory?.type)) fail();
+    if (m.victory.type === "defend_group" &&
+        (!Number.isInteger(m.victory.round) || m.victory.round<1 ||
+         !m.actors.some(a=>a.team===0 && a.initial && a.group===m.victory.group))) fail();
     if (m.victory.type === "eliminate_group" &&
         (!m.actors.some(a=>a.team===1 && a.group===m.victory.group) ||
          (m.victory.label !== undefined && !text(m.victory.label,100)))) fail();
+    if(m.initialChoices!==undefined && (!Array.isArray(m.initialChoices) || m.initialChoices.length>8 ||
+        new Set(m.initialChoices.map(c=>c.group)).size!==m.initialChoices.length ||
+        m.initialChoices.some(c=>!id(c.group) || !Number.isInteger(c.count) || c.count<1 ||
+          c.count>m.actors.filter(a=>a.group===c.group && !a.initial && !a.carrier).length ||
+          m.actors.some(a=>a.group===c.group && (a.initial || a.carrier))))) fail();
+    if(m.clock!==undefined && (!Number.isInteger(m.clock.dawnRound) || m.clock.dawnRound<2 || m.clock.dawnRound>999))fail();
+    if(m.victory.type==="extract"){
+      const v=m.victory,r=v.region;
+      if(!m.actors.some(a=>a.team===1 && a.group===v.group) || !Number.isInteger(v.deadlineRound) || v.deadlineRound<1 ||
+          !r || ![r.x,r.y,r.width,r.height].every(Number.isInteger) || r.x<0 || r.y<0 || r.width<1 || r.height<1 ||
+          r.x+r.width>map.width || r.y+r.height>map.height)fail();
+    }
     if (m.fixedNight !== undefined && typeof m.fixedNight!=="boolean") fail();
     if (m.fixedTime !== undefined && !["dawn","morning","noon","afternoon","dusk","evening","late_night","pre_dawn"].includes(m.fixedTime)) fail();
     if (m.cover !== undefined && !/^assets\/maps\/covers\/[A-Za-z0-9_-]+\.(png|jpg|webp)$/.test(m.cover)) fail();
@@ -148,6 +166,7 @@ const MissionMode = (() => {
             "actor_destroyed",
             "group_destroyed",
             "group_escaped",
+            "group_alive",
             "event_completed",
             "choice_selected",
             "all_enemies_destroyed",
@@ -170,6 +189,8 @@ const MissionMode = (() => {
         if (w.type === "choice_selected" && !m.events.some(e=>e.id===w.event &&
             e.actions.some(a=>a.type==="choice" && a.options?.some(o=>o.id===w.option)))) fail();
         if (["group_destroyed","group_escaped"].includes(w.type) && !m.actors.some((a) => a.group === w.group)) fail();
+        if (w.type === "group_alive" && (!m.actors.some(a=>a.group===w.group) ||
+            !Number.isInteger(w.count) || w.count<1 || w.count>m.actors.filter(a=>a.group===w.group).length)) fail();
         if (
           w.type === "event_completed" &&
           (!m.events.some((other) => other.id === w.event) || w.event === e.id)
@@ -217,6 +238,8 @@ const MissionMode = (() => {
             "unprotect",
             "recover",
             "withdraw",
+            "extend_time",
+            "open_extraction",
             "scripted_attack",
             "message",
             "victory",
@@ -237,6 +260,8 @@ const MissionMode = (() => {
           ![a.hpPercent, a.enPercent].every((v) => Number.isFinite(v) && v >= 0 && v <= 100)
         )
           fail();
+        if (a.type === "extend_time" && (!Number.isInteger(a.rounds) || a.rounds<1 || a.rounds>100 || m.victory.type!=="extract"))fail();
+        if (a.type === "open_extraction" && m.victory.type!=="extract")fail();
         if (a.type === "withdraw" && (a.edge !== "right" || !a.actors.length ||
             a.actors.some(key=>m.actors.find(actor=>actor.id===key).team!==1))) fail();
         if (a.type === "message" && !text(a.text)) fail();
@@ -271,12 +296,13 @@ const MissionMode = (() => {
     if (m.victory.type === "scripted" && !m.events.some(e=>e.id===m.victory.choiceEvent &&
         e.actions.some(a=>a.type==="choice" && a.options.some(o=>o.id===m.victory.continueOption)))) fail();
     if (m.landmarks !== undefined && (!Array.isArray(m.landmarks) || m.landmarks.length>10 ||
-        m.landmarks.some(l=>l.type!=="mass_driver" || ![l.x,l.y,l.width,l.height].every(Number.isInteger) ||
+        m.landmarks.some(l=>!["mass_driver","base_compound"].includes(l.type) || ![l.x,l.y,l.width,l.height].every(Number.isInteger) ||
           l.x<0 || l.y<0 || l.width<2 || l.height<2 || l.x+l.width>map.width || l.y+l.height>map.height))) fail();
     if (m.rewards) {
       function checkReward(r) {
         if (
           ![r.money, r.supplies].every((v) => Number.isSafeInteger(v) && v >= 0 && v <= 1e9) ||
+          (r.technology!==undefined && (!Number.isSafeInteger(r.technology) || r.technology<0 || r.technology>1e9)) ||
           !r.inventory ||
           typeof r.inventory !== "object" ||
           Array.isArray(r.inventory) ||
@@ -323,7 +349,7 @@ const MissionMode = (() => {
       unitLimit: m.unitLimit,
       missionFleetLimit: m.fleetLimit ?? 3,
       formationStyle: "standard",
-      ...(m.fixedTime || m.fixedNight ? {dayNight:m.fixedTime || "late_night",timeCycle:false,weather:"clear",weatherCycle:false} : {}),
+      ...(m.fixedTime || m.fixedNight || m.clock ? {dayNight:m.clock?"map":m.fixedTime || "late_night",timeCycle:false,weather:"clear",weatherCycle:false} : {}),
       bannedFactions: [],
       bannedEras: [],
       bannedTypes: [],
@@ -357,7 +383,8 @@ const MissionMode = (() => {
       const host = commander(room),
         owner = a.team === 1 ? 1 : a.autonomous ? room.missionAllySeat : host.seat;
       const u = G.makeUnit(
-        { unitId: a.unitId, kitId: a.kitId, customPilot: pilot(G, a) },
+        { unitId: a.unitId, kitId: a.kitId, customPilot: pilot(G, a),
+          ...(a.genericPilot ? {pilotId:"generic:"+a.genericPilot} : {}) },
         owner,
         "mission-" + a.id,
         { x: a.x, y: a.y },
@@ -372,6 +399,7 @@ const MissionMode = (() => {
         missionGroup: a.group,
         missionGuest: a.team === 0,
         ...(a.autonomous ? {missionAutonomous:true} : {}),
+        ...(a.stationary ? {missionStationary:true,moved:true} : {}),
         ...(m.victory.type === "escort" && m.victory.actor === a.id ? { missionEscort: true } : {}),
         deployed: true,
         formationIndex: -1,
@@ -448,11 +476,16 @@ const MissionMode = (() => {
     room.game.mission.enemyResourceScale =
       1 + Math.max(0, room.game.mission.playerCount - 1) * (m.enemyResourcePerPlayer || 0);
     if (room.game.deployment) room.game.deployment[1] = true;
-    spawn(
-      room,
-      G,
-      m.actors.filter((a) => a.initial).map((a) => a.id),
-    );
+    const chosen=[];
+    let random=room.game.seed>>>0;
+    for(const choice of m.initialChoices || []){
+      const pool=m.actors.filter(a=>a.group===choice.group).map(a=>a.id);
+      for(let i=pool.length-1;i>0;i--){random=(Math.imul(random,1664525)+1013904223)>>>0;const j=random%(i+1);[pool[i],pool[j]]=[pool[j],pool[i]];}
+      chosen.push(...pool.slice(0,choice.count));
+    }
+    room.game.mission.selectedActors=chosen;
+    if(m.victory.type==="extract")room.game.mission.deadlineRound=m.victory.deadlineRound;
+    spawn(room,G,[...m.actors.filter(a=>a.initial).map(a=>a.id),...chosen]);
   }
   function condition(room, G, w) {
     const g = room.game,
@@ -462,6 +495,7 @@ const MissionMode = (() => {
     if (w.type === "choice_selected") return s.choices?.[w.event] === w.option;
     if (w.type === "all_enemies_destroyed") return !g.units.some(u=>u.team===1 && u.hp>0 && !u.missionEscaped);
     if (w.type === "group_escaped") return g.units.some(u=>u.missionGroup===w.group && u.missionEscaped);
+    if (w.type === "group_alive") return g.units.filter(u=>u.missionGroup===w.group && u.hp>0).length>=w.count;
     if (w.type === "round") return g.round >= w.round;
     if (w.type === "all") return w.conditions.every((c) => condition(room, G, c));
     if (w.type === "any") return w.conditions.some((c) => condition(room, G, c));
@@ -469,7 +503,7 @@ const MissionMode = (() => {
     if (w.type === "event_completed")
       return s.fired.includes(w.event) && s.continuation?.eventId !== w.event;
     if (w.type === "group_destroyed") {
-      const group = mActors(room, G).filter((a) => a.group === w.group);
+      const group = expectedActors(room,G,w.group);
       return (
         group.length > 0 &&
         group.every((a) => g.units.some((u) => u.missionActor === a.id && u.hp <= 0))
@@ -496,6 +530,20 @@ const MissionMode = (() => {
         actor.y < w.y + w.height
       );
     return false;
+  }
+  function expectedActors(room,G,group){
+    const m=G.getMap(room.settings.mapId).mission;
+    return m.actors.filter(a=>a.group===group &&
+      (!m.initialChoices?.some(c=>c.group===group) || room.game.mission.selectedActors.includes(a.id)));
+  }
+  function extractionProgress(g,region,G){
+    const units=g.units.filter(u=>u.team===0 && u.hp>0),byId=new Map(g.units.map(u=>[u.id,u]));
+    const inside=u=>{
+      const visited=new Set();
+      while(u?.embarked){if(visited.has(u.id))return false;visited.add(u.id);u=byId.get(u.embarked.carrierId);}
+      return !!u && G.onMap(u) && G.cells(u).every(p=>p.x>=region.x && p.y>=region.y && p.x<region.x+region.width && p.y<region.y+region.height);
+    };
+    return {current:units.filter(inside).length,total:units.length};
   }
   function mActors(room, G) {
     return G.getMap(room.settings.mapId).mission.actors;
@@ -524,9 +572,16 @@ const MissionMode = (() => {
     )
       return;
     const m = G.getMap(room.settings.mapId).mission;
+    if(m.clock){
+      g.climateSettings.dayNight=g.round>=m.clock.dawnRound?"dawn":"late_night";
+      g.climateSettings.timeCycle=false;
+    }
+    for(const actor of g.units)if(actor.missionStationary)actor.moved=true;
     const dead = (key) => g.units.some((u) => u.missionActor === key && u.hp <= 0);
     const pmc = g.units.filter((u) => u.team === 0 && !u.missionActor);
-    if (s.protect.some(dead) || !pmc.some((u) => u.hp > 0)) {
+    const defendedGroupLost = m.victory.type === "defend_group" &&
+      !g.units.some(u=>u.missionGroup===m.victory.group && u.hp>0);
+    if (s.protect.some(dead) || defendedGroupLost || !pmc.some((u) => u.hp > 0)) {
       g.winner = 1;
       room.phase = "finished";
       return;
@@ -539,6 +594,8 @@ const MissionMode = (() => {
         for (let i = from; i < e.actions.length; i++) {
           const a = e.actions[i];
           if (a.type === "spawn") spawn(room, G, a.actors);
+          if (a.type === "extend_time")s.deadlineRound+=a.rounds;
+          if (a.type === "open_extraction")s.extractionOpen=true;
           if (a.type === "withdraw") for (const u of g.units) {
             if (!a.actors.includes(u.missionActor) || u.hp<=0 || u.missionEscaped) continue;
             u.missionWithdrawal={edge:a.edge};
@@ -662,8 +719,16 @@ const MissionMode = (() => {
       if (v.eliminateAll && m.actors.filter(a=>a.team === 1).every(a=>dead(a.id)))
         s.requestedWinner = 0;
     }
+    if(m.victory.type==="extract"){
+      if(g.round>s.deadlineRound)s.requestedWinner=1;
+      else if(s.extractionOpen){
+        const progress=extractionProgress(g,m.victory.region,G);
+        if(progress.total>0 && progress.current===progress.total)s.requestedWinner=0;
+      }
+    }
     // Explicit protection and PMC extinction take precedence over victory.
-    if (s.protect.some(dead) || !pmc.some((u) => u.hp > 0)) g.winner = 1;
+    if (s.protect.some(dead) || (m.victory.type === "defend_group" &&
+        !g.units.some(u=>u.missionGroup===m.victory.group && u.hp>0)) || !pmc.some((u) => u.hp > 0)) g.winner = 1;
     else if (s.requestedWinner !== undefined) g.winner = s.requestedWinner;
     else if (m.victory.type === "all_enemies" && !g.units.some((u) => u.team === 1 && u.hp > 0))
       g.winner = 0;
@@ -671,6 +736,7 @@ const MissionMode = (() => {
         g.units.some(u=>u.missionGroup===m.victory.group && u.missionEscaped) &&
         !g.units.some(u=>u.team===1 && u.hp>0 && !u.missionEscaped)) g.winner=0;
     else if (m.victory.type === "survive" && g.round >= m.victory.round) g.winner = 0;
+    else if (m.victory.type === "defend_group" && g.round >= m.victory.round) g.winner = 0;
     else if (m.victory.type === "defeat_actor" && dead(m.victory.actor)) g.winner = 0;
     if (g.winner !== null) room.phase = "finished";
   }
@@ -705,6 +771,13 @@ const MissionMode = (() => {
     }
     return result;
   }
+  function technologyReward(room,G){
+    if(room.game.winner!==0)return 0;
+    const rewards=G.getMap(room.settings.mapId).mission.rewards;
+    if(!rewards)return 0;
+    const selected=[...(rewards.outcomes || [])].reverse().find(r=>room.game.mission.fired.includes(r.event)) || rewards;
+    return (selected.technology || 0)+(rewards.bonuses || []).filter(r=>room.game.mission.fired.includes(r.event)).reduce((sum,r)=>sum+(r.technology || 0),0);
+  }
   function choose(room, G, choiceId, optionId, log) {
     const state=room.game.mission, choice=state?.choice;
     const option=choice?.options.find(o=>o.id===optionId);
@@ -720,7 +793,13 @@ const MissionMode = (() => {
     const actor = key => game.units.find(u=>u.missionActor === key);
     const row = (kind, current, total, unitId) => ({kind,current,total,...(unitId?{unitId}:{})});
     const target = mission.victory, victory = [];
-    if (target.type === "eliminate_group") {
+    if(target.type==="extract"){
+      const group=expectedActors({game,settings:{mapId:game.mapId}},G,target.group);
+      victory.push({...row("group_targets",group.filter(a=>actor(a.id)?.hp<=0).length,group.length),label:"摧毁目标米迪亚"});
+      const progress=extractionProgress(game,target.region,G);
+      victory.push({...row("extraction",state.extractionOpen?progress.current:0,progress.total),label:"全部存活单位撤离"});
+      victory.push({...row("survive",Math.min(game.round,state.deadlineRound),state.deadlineRound),label:"任务时限"});
+    } else if (target.type === "eliminate_group") {
       const escaped=game.units.some(u=>u.missionGroup===target.group && u.missionEscaped);
       const targets=escaped?game.units.filter(u=>u.team===1 && !u.missionEscaped):
         mission.actors.filter(a=>a.group===target.group).map(a=>actor(a.id));
@@ -737,6 +816,10 @@ const MissionMode = (() => {
       victory.push(row("escort",Math.min(target.route.length,state.escort?.step || 0),target.route.length,source.unitId));
       const held = state.escort?.arrivedRound == null ? 0 : Math.max(0,game.round-state.escort.arrivedRound);
       victory.push(row("hold",Math.min(target.holdRounds,held),target.holdRounds));
+    } else if (target.type === "defend_group") {
+      victory.push({...row("survive",Math.min(game.round,target.round),target.round),label:"坚持至发射准备完成"});
+      const defended=game.units.filter(u=>u.missionGroup===target.group);
+      victory.push({...row("defended",defended.filter(u=>u.hp>0).length,defended.length),label:"剩余穿梭机"});
     } else if (target.type === "survive") {
       victory.push(row("survive",Math.min(game.round,target.round),target.round));
     } else {
@@ -745,6 +828,10 @@ const MissionMode = (() => {
     }
     const pmc = game.units.filter(u=>u.team===0 && !u.missionActor);
     const failure = [row("pmc_destroyed",pmc.filter(u=>u.hp<=0).length,pmc.length)];
+    if(target.type==="defend_group"){
+      const defended=game.units.filter(u=>u.missionGroup===target.group);
+      failure.push({...row("protected_destroyed",defended.filter(u=>u.hp<=0).length,defended.length),label:"穿梭机全部被击毁"});
+    }
     for (const key of state.protect) {
       const source = mission.actors.find(a=>a.id===key);
       failure.push(row("protected_destroyed",actor(key)?.hp<=0?1:0,1,source.unitId));
@@ -763,6 +850,7 @@ const MissionMode = (() => {
     choose,
     spawn,
     reward,
+    technologyReward,
     objectives,
   };
 })();

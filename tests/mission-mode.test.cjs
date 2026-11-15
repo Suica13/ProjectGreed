@@ -64,9 +64,9 @@ test("cooperative mission loads fixed enemy roster, host guest ship, map technol
   assert.equal(room.settings.mode, "mission");
   assert.equal(room.settings.missionEra, "UC_0079_T2");
   assert.equal(room.settings.technologyLimit, 10000);
-  assert.equal(room.settings.costLimit, 2000);
+  assert.equal(room.settings.costLimit, 3000);
   assert.equal(room.settings.unitLimit, 12);
-  assert.equal(G.getMap(room.settings.mapId).name, "[0079][EFSF]相逢在宇宙");
+  assert.equal(G.getMap(room.settings.mapId).name, "[0079][剧情]相逢在宇宙-EFSF");
   assert.equal(room.game.units.filter((u) => u.team === 1).length, 15);
   assert.equal(room.game.units.filter((u) => u.missionGroup === "dom").length, 12);
   assert.equal(room.game.units.filter((u) => u.missionGroup === "ships").length, 3);
@@ -164,7 +164,8 @@ test("mission win grants each PMC fixed stock and resources exactly once, with c
     }
     engine.broadcast(room);
     assert.equal(room.economyAwards.filter((a) => a.kind === "result").length, 2);
-    assert.equal(room.techAwards.length, 0);
+    assert.equal(room.techAwards.length, outcome === "defeat" ? 0 : 2);
+    for (const award of room.techAwards) assert.equal(award.points, outcome === "bonus" ? 1500 : 1000);
   }
 });
 test("six dom kills through round 10 spawn scripted rivals once, add Amuro protection and preserve dialogue order", (t) => {
@@ -244,7 +245,7 @@ test("automatic combat leaves mission victory to post-playback events, including
   assert(f.room.game.units.some((u) => u.missionActor === "char" && u.hp > 0));
   f.finishDialogue();
   assert.equal(f.room.game.winner, null);
-  f.room.game.units.filter((u) => ["char", "lalah"].includes(u.missionActor)).forEach(u => u.hp = 0);
+  f.room.game.units.filter((u) => (["char", "lalah"].includes(u.missionActor) || u.missionGroup==="red-escorts")).forEach(u => u.hp = 0);
   f.engine.broadcast(f.room);
   assert.equal(f.room.game.winner, 0);
 });
@@ -405,5 +406,31 @@ test("objective counters use authoritative units through fog and reflect additio
   f.room.game.units.filter(u=>u.missionGroup==="dom").slice(0,6).forEach(u=>u.hp=0);
   f.engine.broadcast(f.room);snapshot=f.frames.get(f.host);
   assert(snapshot.game.mission.objectives.failure.some(row=>row.unitId==="RX_78_2" && row.current===0 && row.total===1));
-  assert.equal(snapshot.game.mission.objectives.victory[0].total,17);
+  assert.equal(snapshot.game.mission.objectives.victory[0].total,26);
+});
+
+
+test("mission kills use ten percent and qualifying assists five percent exactly once",t=>{
+  const f=fixture(t,true),{room,engine}=f;f.finishDialogue();
+  const guest=room.members.get(f.guest.memberId),target=room.game.units.find(u=>u.missionGroup==="dom");
+  const attacker=room.game.units.find(u=>u.missionActor==="whitebase");
+  const economy=require('../shared/battle-economy'),price=economy.price(target.model),round=economy.roundReward;
+  room.playerDamage={[target.id]:{[guest.id]:{seat:guest.seat,damage:G.modelOf(target).hp*.25,factions:{EFSF:G.modelOf(target).hp*.25}}}};
+  const ratio=economy.rewardRatio(room.battleRoster,0,'mission');
+  Object.assign(attacker,{x:10,y:10,angle:90,moved:false,acted:false});
+  Object.assign(target,{x:15,y:11,hp:1,shield:0,angle:270});
+  for(const u of room.game.units)if(u!==attacker&&u.team===0)u.acted=true;
+  for(const u of room.game.units)if(u!==target&&u.team===1){u.x=35;u.y=25;}
+  f.act('attack',{unitId:attacker.id,targetId:target.id,combatMode:'shooting'});
+  f.act('end_turn');f.act('end_turn',{},f.guest);
+  while(room.phase==='reaction'&&room.pending){
+    f.act('respond',{reactionId:room.pending.id,response:'defend'},room.seats[1].ws);
+  }
+  assert.equal(room.game.units.find(u=>u.id===target.id).hp,0, JSON.stringify({phase:room.phase,event:room.lastEvent,plans:room.plans,pending:room.pending}));
+  const awards=room.economyAwards.filter(a=>a.targetId===target.id);
+  const kill=awards.find(a=>a.kind==='kill'),assist=awards.find(a=>a.kind==='assist');
+  assert(kill);assert(assist);
+  assert.equal(kill.money,round(price*.1*ratio));assert.equal(kill.supplies,round(price*.1*1.5*ratio));
+  assert.equal(assist.money,round(price*.05*ratio));assert.equal(assist.supplies,round(price*.05*1.5*ratio));
+  engine.broadcast(room);assert.equal(room.economyAwards.filter(a=>a.targetId===target.id).length,awards.length);
 });

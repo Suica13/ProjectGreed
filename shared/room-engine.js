@@ -1576,7 +1576,7 @@ function createRoomEngine({
       (room.reactions || []).find((request) => {
         const owner = G.controllerOf(room.game, unit(room, request.target));
         return (
-          aiControlled(room, room.seats[owner]) && reactionForSeat(room, owner)?.id === request.id
+          (aiControlled(room, room.seats[owner]) || unit(room,request.target)?.missionEscort) && reactionForSeat(room, owner)?.id === request.id
         );
       }) || null
     );
@@ -2032,14 +2032,17 @@ function createRoomEngine({
         G.seatTeam(owner.seat),
         room.settings.mode,
       );
+      const rewardShare = room.settings.mode === "mission"
+        ? (assist ? 0.05 : 0.1)
+        : (assist ? 0.25 : 0.5);
       const money = Math.max(
         0,
-        roundReward(price * (assist ? 0.25 : 0.5) * rates.currency * battleRate * bonus.money),
+        roundReward(price * rewardShare * rates.currency * battleRate * bonus.money),
       );
       const supplies = Math.max(
         0,
         roundReward(
-          price * 1.5 * (assist ? 0.25 : 0.5) * rates.currency * battleRate * bonus.supplies,
+          price * 1.5 * rewardShare * rates.currency * battleRate * bonus.supplies,
         ),
       );
       (room.economyAwards ||= []).push({
@@ -2238,7 +2241,7 @@ function createRoomEngine({
   function awardMatchTechnology(room, player, won, bonus) {
     if (room.game.winner === -1) won = null;
     const participated = room.techParticipation?.[player.id];
-    if (!participated?.length) return;
+    if (!participated?.length && room.settings.mode!=="mission") return;
     const economy = roomBattleEconomy(),
       development = roomDevelopment();
     const weights = economy.technologyWeights(
@@ -2253,7 +2256,7 @@ function createRoomEngine({
       development.factions.map((faction) => [faction, development.maximumPoints(faction)]),
     );
     const total =
-      room.settings.mode === "battlefield"
+      room.settings.mode === "mission" ? roundReward(Mission.technologyReward(room,G)*bonus.technology) : room.settings.mode === "battlefield"
         ? G.battlefieldMode.technologyReward(
             room.settings,
             G.seatTeam(player.seat),
@@ -2341,7 +2344,7 @@ function createRoomEngine({
       }
       const won = G.seatTeam(player.seat) === room.game.winner;
       const missionReward = room.settings.mode === "mission" ? Mission.reward(room,G) : null;
-      if (!missionReward) awardMatchTechnology(room, player, won, bonus);
+      if (!missionReward || won) awardMatchTechnology(room, player, won, bonus);
       const stockLost = settleBattleStock(room, player);
       const battleRate = roomBattleEconomy().rewardRatio(
         room.battleRoster,
@@ -3298,7 +3301,7 @@ function createRoomEngine({
       if (!pending) return null;
       const target = unit(room, pending.target);
       const player = room.seats[G.controllerOf(room.game, target)];
-      if (!aiControlled(room, player)) return null;
+      if (!aiControlled(room, player) && !target.missionEscort) return null;
       const attacker = unit(room, pending.attacker);
       const weapon = G.modelOf(attacker).weapons.find((w) => w.id === pending.weapon);
       let response = G.bestResponse(room.game, attacker, target, weapon),
@@ -3324,6 +3327,7 @@ function createRoomEngine({
           : [];
       return {
         player,
+        scriptedResponse:target.missionEscort===true,
         action: "respond",
         fields: {
           reactionId: pending.id,
@@ -3753,7 +3757,7 @@ function createRoomEngine({
           const board = room.game, revision = room.revision;
           intent = await nextAIAction(room, onlySeat, excluded);
           if (!intent || room.game !== board || room.revision !== revision ||
-              (intent.player && !aiControlled(room, intent.player))) return;
+              (intent.player && !aiControlled(room, intent.player) && !intent.scriptedResponse)) return;
           // The read-only query is complete. Broadcasts from applying its intent
           // keep the existing animation/pacing scheduler and may queue the next turn.
           aiQueries.delete(room);
@@ -4067,7 +4071,8 @@ function createRoomEngine({
     (!u ||
       !delegated(room, G.controllerOf(room.game, u)) ||
       G.controllerOf(room.game, u) === seat) &&
-    G.canControlUnit(room.settings, members(room), seat, u);
+    (G.canControlUnit(room.settings, members(room), seat, u) ||
+      (room.phase==="reaction" && u?.missionEscort && G.ownerOf(u)===seat));
   function ownUnit(room, seat, id, allowCargo = false, allowPending = false) {
     let u = unit(room, id);
     if (!u || !canControl(room, seat, u) || u.hp <= 0 || (!allowCargo && u.embarked && !G.onMap(u)))
