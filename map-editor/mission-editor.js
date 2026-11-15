@@ -87,6 +87,7 @@ window.MissionEditor = (() => {
     protect: "追加保护目标",
     unprotect: "解除保护目标",
     recover: "恢复耐久与EN",
+    scripted_attack: "剧情攻击（击破指定敌人）",
     message: "任务提示",
     dialogue: "剧情对话",
     victory: "任务胜利",
@@ -668,7 +669,7 @@ window.MissionEditor = (() => {
       box.append(node("legend", index + 1 + ". " + actionNames[action.type]));
       panel.append(box);
       const update = (fn) => edit((e) => fn(e.actions[index]));
-      if (["spawn", "protect", "unprotect", "recover"].includes(action.type)) {
+      if (["spawn", "protect", "unprotect", "recover", "scripted_attack"].includes(action.type)) {
         const choices = node("div");
         choices.className = "mission-actor-choices";
         input(
@@ -682,7 +683,7 @@ window.MissionEditor = (() => {
           "search",
         );
         box.append(choices);
-        for (const a of m.actors)
+        for (const a of m.actors.filter(a => action.type !== "scripted_attack" || a.team !== m.actors.find(u=>u.id===action.actor)?.team))
           input(
             choices,
             unitName(a) + " · " + a.id + (a.initial ? "（开场）" : "（增援）"),
@@ -696,6 +697,10 @@ window.MissionEditor = (() => {
               ),
             "checkbox",
           );
+      }
+      if (action.type === "scripted_attack") {
+        select(box, "攻击单位", action.actor, actors(m), v => update(a => {a.actor=v;a.actors=[];}));
+        box.append(node("p", "剧情直接击破所选敌人，并在地图播放攻击演出；不会重复计算普通武器伤害。"));
       }
       if (action.type === "recover") {
         input(
@@ -799,6 +804,7 @@ window.MissionEditor = (() => {
       ["protect", "＋保护目标"],
       ["unprotect", "＋解除保护"],
       ["recover", "＋恢复状态"],
+      ["scripted_attack", "＋剧情攻击"],
       ["message", "＋任务提示"],
       ["victory", "＋胜利"],
       ["defeat", "＋失败"],
@@ -809,7 +815,9 @@ window.MissionEditor = (() => {
             e.actions.push(
               type === "dialogue"
                 ? { type, lines: [{ actor: m.actors[0]?.id, name: "角色", text: "请输入台词" }] }
-                : type === "recover"
+                : type === "scripted_attack"
+                  ? {type,actor:m.actors[0]?.id,actors:[]}
+                  : type === "recover"
                   ? { type, actors: [], hpPercent: 50, enPercent: 50 }
                   : type === "message"
                     ? { type, text: "任务目标已更新。" }

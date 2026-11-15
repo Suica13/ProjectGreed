@@ -13,12 +13,15 @@ window.MissionUI = (() => {
   objectives.id = "missionObjectives";
   objectives.hidden = true;
   objectives.style.cssText =
-    "position:fixed;right:12px;top:96px;z-index:80;max-width:min(330px,85vw);background:#172936eb;border:1px solid #64b9e5;padding:8px;color:#eef6fa;font-size:13px";
+    "position:absolute;left:50%;transform:translateX(-50%);top:8px;z-index:80;width:max-content;max-width:min(520px,calc(100% - 240px));box-sizing:border-box;background:#172936eb;border:1px solid #64b9e5;padding:8px;color:#eef6fa;font-size:13px";
   objectives.innerHTML = "<summary>任务目标</summary><p></p>";
-  document.body.append(objectives);
+  byId("mapWrap").append(objectives);
+  style.textContent +=
+    "@media(max-width:700px){#missionObjectives{top:52px!important;max-width:calc(100% - 130px)!important;font-size:11px!important;padding:5px!important}}";
   let token = null,
     objectiveKey = null,
-    audio = null;
+    audio = null,
+    cinematicToken = null;
   const button = cover.querySelector("button");
   button.onclick = () => {
     const s = Net.snapshot,
@@ -30,9 +33,25 @@ window.MissionUI = (() => {
     const m = s.game?.mission,
       d = m?.dialogue,
       line = d?.lines[d.index];
+    const cinematic = m?.cinematic;
+    if (cinematic && cinematicToken !== s.matchId + ":" + cinematic.id) {
+      cinematicToken = s.matchId + ":" + cinematic.id;
+      cinematic.targets.forEach((target, index) =>
+        SkillEffects.start({
+          ...cinematic,
+          id: cinematicToken + ":" + index,
+          scripted: true,
+          to: target,
+          actors: index === 0 ? cinematic.actors : [],
+          hits: index === 0 ? cinematic.hits : [],
+          sound: index === 0 ? cinematic.sound : null,
+        }),
+      );
+    }
     objectives.hidden =
       s.settings.mode !== "mission" || !s.started || ["assembly", "waiting"].includes(s.phase);
-    const nextObjectiveKey = m && JSON.stringify([s.settings.mapId, m.protect, m.notice, m.error, I18n.language]);
+    const nextObjectiveKey =
+      m && JSON.stringify([s.settings.mapId, m.protect, m.notice, m.error, I18n.language]);
     if (m && objectiveKey !== nextObjectiveKey) {
       objectiveKey = nextObjectiveKey;
       const mission = Rules.getMap(s.settings.mapId).mission;
@@ -99,6 +118,7 @@ window.MissionUI = (() => {
       objectives.hidden = true;
       token = null;
       objectiveKey = null;
+      cinematicToken = null;
       audio?.pause();
       audio = null;
     },

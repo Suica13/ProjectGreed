@@ -6,7 +6,7 @@ const root = path.resolve(__dirname, ".."),
   B = require("./rebuild-biome-maps.cjs");
 const doc = M.create({
   id: "mission_white_base",
-  name: "三分钟十二台大魔",
+  name: "[0079][EFSF]孔斯空域的遭遇",
   width: 41,
   height: 25,
   description: "多人合作：歼灭敌军并保护白色基地。十回合内击破六台力克大魔可触发额外增援。",
@@ -56,7 +56,9 @@ const line = (who, name, text, pilot) => ({
 });
 doc.mission = {
   version: 1,
-  era: "0079T2",
+  era: "UC_0079_T2",
+  technologyLimitEnabled: false,
+  scenarioFaction: "EFSF",
   technologyLimit: 10000,
   costLimit: 2000,
   unitLimit: 12,

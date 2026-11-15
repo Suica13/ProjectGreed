@@ -4054,5 +4054,8 @@
   "转移到格纳库": "Transfer to hangar",
   "建筑物不能回避": "Buildings cannot evade",
   "无法转移：容量、类型、距离或搭载关系不符合条件": "Cannot transfer: incompatible capacity, type, distance, or carrier relationship",
-  "出击视为已移动，仍可攻击或使用技能；主动出击不减少攻击轮数，所属舰船不能撤回移动。": "Launching counts as movement; attacks and skills remain available. Voluntary launching does not reduce attack rounds. The carrier cannot undo its movement."
+  "出击视为已移动，仍可攻击或使用技能；主动出击不减少攻击轮数，所属舰船不能撤回移动。": "Launching counts as movement; attacks and skills remain available. Voluntary launching does not reduce attack rounds. The carrier cannot undo its movement.",
+  "战斗于第{round}回合结束": "Battle ended on turn {round}",
+  "失败": "Defeat",
+  "平局": "Draw"
 }

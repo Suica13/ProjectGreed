@@ -66,7 +66,7 @@ test("cooperative mission loads fixed enemy roster, host guest ship, map technol
   assert.equal(room.settings.technologyLimit, 10000);
   assert.equal(room.settings.costLimit, 2000);
   assert.equal(room.settings.unitLimit, 12);
-  assert.equal(G.getMap(room.settings.mapId).name, "三分钟十二台大魔");
+  assert.equal(G.getMap(room.settings.mapId).name, "[0079][EFSF]孔斯空域的遭遇");
   assert.equal(room.game.units.filter((u) => u.team === 1).length, 15);
   assert.equal(room.game.units.filter((u) => u.missionGroup === "dom").length, 12);
   assert.equal(room.game.units.filter((u) => u.missionGroup === "ships").length, 3);

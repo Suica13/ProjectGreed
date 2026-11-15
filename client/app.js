@@ -3543,9 +3543,10 @@ function showVictory() {
   }
   phase = "victory";
   byId("victoryTitle").textContent =
-    game.winner === -1 ? I18n.text(game.battlefield ? "战力相同，平局" : "双方全灭，平局") : teamName(game.winner) + "胜利";
+    game.winner === -1 ? I18n.text("平局") :
+      I18n.text(game.winner === Rules.seatTeam(Net.seat ?? 0) ? "胜利" : "失败");
   byId("victoryNote").textContent =
-    `第${game.round}回合，全歼敌方小队。存活单位 ${game.units.filter((u) => u.team === game.winner && u.hp > 0).length} 台。`;
+    I18n.text(`战斗于第${game.round}回合结束`);
   byId("victory").hidden = false;
   MatchResults.show();
   update();

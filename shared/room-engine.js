@@ -4079,6 +4079,7 @@ function createRoomEngine({
       throw Error("任务模式仅允许玩家加入我方，敌军由关卡控制");
     if (
       room.started &&
+      ["idle", "deployment", "reaction", "playback", "battle"].includes(room.phase) &&
       !automatedRequests.has(msg) &&
       (delegated(room, seat) ||
         (msg.unitId && delegated(room, G.controllerOf(room.game, unit(room, msg.unitId) || {})))) &&
@@ -4218,15 +4219,16 @@ function createRoomEngine({
     }
     if (msg.action === "set_ai_delegate") {
       if (
-        !room.started ||
-        room.game.winner !== null ||
         room.replay ||
-        !["idle", "deployment", "reaction", "playback", "battle"].includes(room.phase)
+        (msg.delegate === true && (!room.started || room.game.winner !== null ||
+          !["idle", "deployment", "reaction", "playback", "battle"].includes(room.phase)))
       )
         throw Error("当前没有进行中的战斗");
       if (!Number.isInteger(seat) || room.seats[seat] !== member || member.bot)
         throw Error("只有参战玩家可切换自己的AI委任");
       if (typeof msg.delegate !== "boolean") throw Error("AI委任状态无效");
+      if (msg.delegate && !room.game.units.some(u => u.hp > 0 && G.controllerOf(room.game, u) === seat))
+        throw Error("没有可委任的存活单位");
       if (
         msg.matchId !== room.matchId ||
         msg.round !== room.game.round ||
@@ -4235,9 +4237,11 @@ function createRoomEngine({
       )
         throw Error("战局已更新，请重新操作");
       cancelSeatMoves(room, seat);
-      if (room.campaignBattle)
+      if (room.campaignBattle && ["idle", "deployment", "reaction", "playback", "battle"].includes(room.phase))
         campaign().handle(room, member, { ...msg, action: "campaign_delegate" });
       else {
+        if (!msg.delegate && room.campaignBattle)
+          room.campaignBattle.delegatedSeats = (room.campaignBattle.delegatedSeats || []).filter(s => s !== seat);
         const seats = new Set(room.delegatedSeats || []);
         if (msg.delegate) seats.add(seat);
         else seats.delete(seat);

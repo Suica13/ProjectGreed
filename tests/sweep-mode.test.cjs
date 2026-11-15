@@ -43,7 +43,7 @@ function fixture(t, options = {}) {
       battleMode: "sweep",
       sweepEnvironment: options.environment,
     });
-  if (options.formation) Object.assign(room.settings, { costLimit: 99999, unitCostLimit: 99999 });
+  if (options.formation) Object.assign(room.settings, { costLimit: options.costLimit || 99999, unitCostLimit: 99999 });
   act("start_game", {
     formation: options.formation || [
       { unitId: "Type61", kitId: "standard" },
@@ -65,7 +65,7 @@ test("sweep initializes a shared map with a locked enemy AI and private pending 
 });
 
 test("AI delegation is reversible after finishing one sweep battle and entering the next", t => {
-  const {room,act,engine} = fixture(t,{formation:[{unitId:"PegasusClass",kitId:"standard"}],inventory:{PegasusClass:5}});
+  const {room,act,engine} = fixture(t,{formation:[{unitId:"PegasusClass",kitId:"standard"}],inventory:{PegasusClass:5},costLimit:1500});
   act("sweep_select",{nodeId:"0:1"}); act("sweep_confirm");
   room.turnNotBefore = Date.now()+60000;
   act("set_ai_delegate",{delegate:true});
@@ -367,4 +367,21 @@ test("deployment ordinary transformation is authoritative and never enables temp
   assert.equal(room.game.deployment, deployment);
   assert(!u.acted);
   assert.throws(() => act("deployment_transform", { unitId: u.id, skillId: "EXAM" }));
+});
+
+test("sweep route cannot enable delegation and residual delegation cannot lock route controls", t => {
+  const {room,act} = fixture(t,{formation:[{unitId:"PegasusClass",kitId:"standard"}],inventory:{PegasusClass:5},costLimit:1500});
+  assert.equal(room.phase,"sweep_map");
+  assert.throws(()=>act("set_ai_delegate",{delegate:true}),/没有进行中的战斗/);
+  room.delegatedSeats=[0];
+  act("sweep_select",{nodeId:"0:1"});
+  assert.deepEqual(room.delegatedSeats,[0]);
+  act("set_ai_delegate",{delegate:false});
+  assert.deepEqual(room.delegatedSeats,[]);
+  assert.equal(room.phase,"sweep_map");
+  act("sweep_confirm");
+  assert.equal(room.phase,"deployment");
+  for(const u of room.game.units.filter(u=>G.controllerOf(room.game,u)===0))u.hp=0;
+  assert.throws(()=>act("set_ai_delegate",{delegate:true}),/没有可委任的存活单位/);
+  assert.deepEqual(room.delegatedSeats,[]);
 });

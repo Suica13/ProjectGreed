@@ -2430,6 +2430,10 @@ window.CampaignUI = (() => {
   backup.hidden = true;
   byId("startRoomGame").parentElement.append(backup);
   const delegationToggle = button("AI委任", () => {
+    // A stale button can remain clickable while a sweep node is loading.
+    // Never start delegation from the route/event screen or before battle art is ready.
+    refreshBattleControls();
+    if (delegationToggle.disabled || delegationToggle.hidden) return;
     command("set_ai_delegate", {
       delegate: !(Net.snapshot?.delegatedSeats || state()?.delegatedSeats)?.includes(Net.seat),
     });
@@ -2466,7 +2470,8 @@ window.CampaignUI = (() => {
   battleSave.hidden = true;
   document.querySelector("#matchRecordsDialog .record-actions").prepend(battleSave);
   function refreshBattleControls(snapshot = Net.snapshot) {
-    const inBattle = snapshot?.started && !window.ReplayPlayer?.active;
+    const inBattle = snapshot?.started && !window.ReplayPlayer?.active &&
+      ["idle", "deployment", "reaction", "playback", "battle"].includes(snapshot.phase);
     const delegated = (snapshot?.delegatedSeats || snapshot?.campaign?.delegatedSeats)?.includes(
       Net.seat,
     );
@@ -2474,9 +2479,12 @@ window.CampaignUI = (() => {
     delegationToggle.textContent = I18n.text("AI委任");
     delegationToggle.setAttribute("aria-pressed", String(!!delegated));
     delegationToggle.disabled =
+      !inBattle ||
       !Number.isInteger(Net.seat) ||
       !!Net.awaiting ||
       !!snapshot?.returnCountdown ||
+      (!delegated && (window.BattleAssets?.loading ||
+        !snapshot?.game?.units?.some(u => u.hp > 0 && Rules.controllerOf(snapshot.game, u) === Net.seat))) ||
       snapshot?.game?.winner !== null;
     presentationSpeed.hidden = !snapshot?.started;
     presentationSpeed.textContent =

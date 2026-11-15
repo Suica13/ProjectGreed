@@ -174,6 +174,7 @@ const MissionMode = (() => {
             "protect",
             "unprotect",
             "recover",
+            "scripted_attack",
             "message",
             "victory",
             "defeat",
@@ -181,10 +182,13 @@ const MissionMode = (() => {
         )
           fail();
         if (
-          ["spawn", "protect", "unprotect", "recover"].includes(a.type) &&
+          ["spawn", "protect", "unprotect", "recover", "scripted_attack"].includes(a.type) &&
           (!Array.isArray(a.actors) || a.actors.some((v) => !actors.has(v)))
         )
           fail();
+        if (a.type === "scripted_attack" &&
+          (!actors.has(a.actor) || !a.actors.length || a.actors.includes(a.actor) ||
+            a.actors.some(key => m.actors.find(v=>v.id===key).team === m.actors.find(v=>v.id===a.actor).team))) fail();
         if (
           a.type === "recover" &&
           ![a.hpPercent, a.enPercent].every((v) => Number.isFinite(v) && v >= 0 && v <= 100)
@@ -452,6 +456,21 @@ const MissionMode = (() => {
         for (let i = from; i < e.actions.length; i++) {
           const a = e.actions[i];
           if (a.type === "spawn") spawn(room, G, a.actors);
+          if (a.type === "scripted_attack") {
+            const source = g.units.find(u=>u.missionActor===a.actor && u.hp>0);
+            if (!source) throw Error("剧情攻击单位尚未出现或已被击坠：" + a.actor);
+            const victims = g.units.filter(u=>a.actors.includes(u.missionActor) && u.hp>0);
+            const weapon = G.modelOf(source).weapons.find(w=>w.projectile) || G.modelOf(source).weapons[0];
+            const actors = JSON.parse(JSON.stringify([source,...victims]));
+            const hits = victims.map(u=>({to:u.id,unitId:u.id,before:u.hp,after:0,damage:u.hp,hit:true}));
+            for (const u of victims) u.hp=0;
+            G.hangars?.evacuate(g);
+            s.cinematic = {id:++s.serial,unitId:source.id,model:source.model,from:G.center(source),
+              targets:victims.map(G.center),actors,hits,projectile:weapon?.projectile,
+              sound:weapon?.sound,weaponDisplayIndex:weapon?.attack?.steps?.[0]?.weaponDisplayIndex,
+              clip:weapon?.clip || "Common_Shoot_A"};
+            log("[任务演出] " + G.unitLogName(source) + "击破" + victims.length + "台敌机。");
+          }
           if (a.type === "protect") s.protect = [...new Set([...s.protect, ...a.actors])];
           if (a.type === "unprotect") s.protect = s.protect.filter((id) => !a.actors.includes(id));
           if (a.type === "message") {

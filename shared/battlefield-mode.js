@@ -546,7 +546,7 @@ const BattlefieldMode = (() => {
     },
   };
   const waveStage = (round) => (round < 31 ? "early" : round < 71 ? "middle" : "late");
-  function pool(G, state, team) {
+  function pool(G, state, team, environment = "ground") {
     const selected = state.teams[team];
     const allowedEras = factionEras(selected.faction).filter(era => eraData.weight(era) <= eraData.weight(selected.era));
     const choices = G.catalog.prefabs.flatMap((prefab) => {
@@ -556,12 +556,13 @@ const BattlefieldMode = (() => {
         !model.disabled &&
         !model.wip &&
         !model.formOnly &&
+        !model.ship &&
         !prefab.facility &&
         !model.requiredPilotId &&
         affiliated(model, selected.faction) &&
         allowedEras.some((era) => model.tags.includes(era)) &&
         model.movementType !== "naval" &&
-        (model.adaptability?.ground ?? 100) > 0 &&
+        (model.adaptability?.[environment] ?? 100) > 0 &&
         model.move > 0 &&
         !(G.aiUnitBans?.regular || []).includes(prefab.id)
         ? [{ unitId: prefab.id, kitId: kit.id }]
@@ -571,20 +572,29 @@ const BattlefieldMode = (() => {
     return {
       choices,
       era: selected.era,
-      ms: choices.filter((entry) => modelOf(entry).unitTags.includes("MS")),
-      ships: choices.filter((entry) => modelOf(entry).ship),
+      ms: choices.filter((entry) => !modelOf(entry).ship && modelOf(entry).unitTags.includes("MS")),
     };
   }
-  function wavePlan(G, selected, round, baseCount, random) {
+  function wavePlan(G, selected, round, baseCount, random, environment = "ground") {
     const stage = waveStage(round),
       row = (fixedWaves[selected.era] || { early:{OMNI:{GAT_01:9},ZAFT:{ZGMF_1017:9},randomMS:2}, middle:{OMNI:{GAT_01:9},ZAFT:{ZGMF_1017:9},randomMS:3}, late:{OMNI:{GAT_01:12},ZAFT:{ZGMF_1017:12},randomMS:4} })[stage];
     const effective =
       selected.era === "UC_0087_T2" && stage === "early" ? { ...selected, era: "UC_0087_T1" } : selected;
-    const available = pool(G, { teams: [effective, effective] }, 0),
+    const available = pool(G, { teams: [effective, effective] }, 0, environment),
       entries = [];
     const choose = (list) => list[Math.min(list.length - 1, Math.floor(random() * list.length))];
     for (let base = 0; base < baseCount; base++) {
-      for (const [unitId, count] of Object.entries(row[selected.faction])) {
+      for (const [sourceId, count] of Object.entries(row[selected.faction])) {
+        // Fixed early-war ground forces have role-equivalent space variants.
+        const replacements = {Type61:"RB_79",FF_B2:"FF_S3",MTank:"Gattle"};
+        let unitId = environment === "space" ? replacements[sourceId] || sourceId : sourceId;
+        const sourceModel = Object.values(G.models).find(m => m.prefabId === unitId && !m.formOnly);
+        if ((sourceModel?.adaptability?.[environment] ?? 0) <= 0) {
+          const candidates = available.ms.map(e => ({entry:e,model:G.models[e.unitId+"__"+e.kitId]}))
+            .sort((a,b)=>Math.abs(a.model.cost-(sourceModel?.cost || 0))-Math.abs(b.model.cost-(sourceModel?.cost || 0)) || a.entry.unitId.localeCompare(b.entry.unitId));
+          if (!candidates.length) throw Error("该环境没有可用的增援单位：" + sourceId);
+          unitId = candidates[0].entry.unitId;
+        }
         const prefab = G.catalog.prefabs.find((item) => item.id === unitId);
         if (!prefab) throw Error("增援单位不存在：" + unitId);
         for (let i = 0; i < count; i++)
@@ -592,8 +602,15 @@ const BattlefieldMode = (() => {
       }
       for (let i = 0; i < row.randomMS && available.ms.length; i++)
         entries.push({ ...choose(available.ms), group: base + ":random-ms" });
-      if (available.ships.length && random() < (stage === "late" ? 0.25 : 0.15))
-        entries.push({ ...choose(available.ships), group: base + ":ship" });
+      if (selected.era.startsWith("UC_")) {
+        const zeon = ["ZEON","NEO_ZEON","NEO_ZEON_0093"].includes(selected.faction);
+        const early = selected.era === "UC_0079_T1";
+        const transport = environment === "space" ?
+          (zeon ? (early ? "PapuaClass" : "PazockClass") : (early ? "ColumbusClass" : "ColumbusClassKai")) :
+          (zeon ? (early ? "FatUncle" : "FatUncleKai") : (early ? "Medea" : "MedeaKai"));
+        const prefab = G.catalog.prefabs.find(p=>p.id===transport);
+        entries.push({unitId:transport,kitId:prefab.weaponKits[0].id,group:base+":transport"});
+      }
     }
     return entries;
   }
@@ -614,6 +631,8 @@ const BattlefieldMode = (() => {
         { x: 0, y: 0 },
         0,
         game.seed,
+        1,
+        G.getMap(game.mapId).environment,
       );
       const groupKey = entry.team + ":" + entry.wave + ":" + entry.group;
       const anchor = anchors.get(groupKey);
@@ -664,7 +683,7 @@ const BattlefieldMode = (() => {
         (unit) => unit.team === team && unit.facility?.type === "base" && unit.hp > 0,
       ).length;
       state.reinforcementQueue.push(
-        ...wavePlan(G, state.teams[team], game.round, bases, () => G.random(game)).map((entry) => ({
+        ...wavePlan(G, state.teams[team], game.round, bases, () => G.random(game), G.getMap(game.mapId).environment).map((entry) => ({
           ...entry,
           team,
           wave: state.wave,

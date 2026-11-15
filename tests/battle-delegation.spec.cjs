@@ -13,9 +13,11 @@ for(const width of [1440,390]) test(`encounter AI toggle and presentation rates 
   });
   await page.locator('#openSkirmish').click();
   await page.locator('#createOfflineRoom').click();
+  await page.locator('#confirmOfflineMode').click();
   await expect.poll(()=>page.evaluate(()=>Net.awaiting)).toBe(null);
   await page.evaluate(()=>{
     const room=[...testEngine.rooms.values()][0];
+    room.settings={...Rules.defaultRoomSettings(),mode:'quick',mapId:'frontier_1v1',fogMode:'disabled'};
     const entry={unitId:'Type61',kitId:'standard'};
     room.game=Rules.create(false,1,[[entry],[entry]],false,room.settings);
     room.started=true;room.phase='idle';room.matchId='presentation-test';

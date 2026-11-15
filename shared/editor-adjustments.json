@@ -87,6 +87,12 @@
     },
     "VTOLTransport_DeployState": {
       "/stats/cost": -25
+    },
+    "FF_X7Bst": {
+      "/weapons/EF_FF_X7Bst_BR/damagePerShot": -1387.5,
+      "/weapons/EF_FF_X7Bst_BR/damageComponents/beam": -1387.5,
+      "/weapons/EF_FF_X7Bst_BR_R/damagePerShot": -1387.5,
+      "/weapons/EF_FF_X7Bst_BR_R/damageComponents/beam": -1387.5
     }
   },
   "weapons": {

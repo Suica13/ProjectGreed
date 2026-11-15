@@ -17,8 +17,8 @@ function biomeFor(map) {
   if (/twin_ridges|dunes/.test(map.id)) return "desert";
   if (/ruined_basin|colony_interior|mass_driver|military_base|crossroads/.test(map.id))
     return "urban";
-  if (/coastal|rainforest/.test(map.id)) return "tropical";
-  return { arctic: "snow", desert: "desert", urban: "urban" }[map.appearance?.biome] || "temperate";
+  if (/coastal|rainforest|jungle|mangrove/.test(map.id)) return "tropical";
+  return { arctic: "snow", desert: "desert", urban: "urban", wetland: "tropical" }[map.appearance?.biome] || "temperate";
 }
 function rebuild(input) {
   const map = structuredClone(input),

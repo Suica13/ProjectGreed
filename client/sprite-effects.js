@@ -122,7 +122,7 @@ const SpriteEffects = (() => {
 const SkillEffects = (() => {
   const active = [];
   function start(event) {
-    if (!ART.effects[event.effect]) return;
+    if (!event.scripted && !ART.effects[event.effect]) return;
     active.push({ ...event, start: performance.now() });
     GameAudio.playSound(event.sound);
   }
@@ -137,11 +137,32 @@ const SkillEffects = (() => {
       if (
         time >=
         Math.max(
-          ART.effects[item.effect].duration + (item.targetEffect ? 0.5 : 0),
+          (item.scripted ? 1 : ART.effects[item.effect].duration) + (item.targetEffect ? 0.5 : 0),
           item.reconMode === "camera" ? 0.75 : 0,
         )
       ) {
         active.splice(i, 1);
+        continue;
+      }
+      if (item.scripted) {
+        const from=position(item.from.x,item.from.y),to=position(item.to.x,item.to.y);
+        const t=Math.min(1,time/.55);
+        const image=SpriteRenderer.images[item.projectile?.asset];
+        ctx.save();
+        ctx.translate(from.x+(to.x-from.x)*t,from.y+(to.y-from.y)*t);
+        ctx.rotate(Math.atan2(to.y-from.y,to.x-from.x)+Math.PI/2);
+        if (image) {
+          const height=Math.max(5,image.height*(item.projectile.scale||1)*tile/Rules.mapCellPixels);
+          const width=height*image.width/image.height;
+          ctx.drawImage(image,-width/2,-height/2,width,height);
+        } else {
+          ctx.fillStyle="#f6e1a0";ctx.fillRect(-2,-8,4,16);
+        }
+        ctx.restore();
+        if (time>=.55 && !item.impacted) {
+          item.impacted=true;
+          if (item.hits.length) MapEffects.capture({networkId:item.id,actors:item.actors,events:item.hits});
+        }
         continue;
       }
       if (item.targetEffect && time < 0.5) {
@@ -178,13 +199,13 @@ const SkillEffects = (() => {
     if (irradiation) return irradiation;
     const item = active.find(
       (event) =>
-        event.unitId === unit.id && event.reconMode === "camera" && now - event.start < 750,
+        event.unitId === unit.id && (event.reconMode === "camera" || event.scripted) && now - event.start < 750,
     );
     if (!item) return null;
     const point = Rules.center(unit);
     return {
       weaponDisplayIndex: item.weaponDisplayIndex,
-      clip: "Common_Shoot_A",
+      clip: item.clip || "Common_Shoot_A",
       time: (now - item.start) / 1000,
       angle: (Math.atan2(item.to.x - point.x, -(item.to.y - point.y)) * 180) / Math.PI,
     };

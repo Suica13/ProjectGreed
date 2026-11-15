@@ -11,6 +11,7 @@
 
 | 时间（日本时间） | 来源IP | 单位 | 修改对象 | 修改内容 | 详细日志 |
 |---|---|---|---|---|---|
+| 2026-11-15 12:45:19 | local | 核心推进器（FF_X7Bst） | 单位特例 | /weapons/EF_FF_X7Bst_BR/damageComponents/beam：2812.5 → 1425<br>/weapons/EF_FF_X7Bst_BR/damagePerShot：2812.5 → 1425<br>/weapons/EF_FF_X7Bst_BR_R/damageComponents/beam：2812.5 → 1425<br>/weapons/EF_FF_X7Bst_BR_R/damagePerShot：2812.5 → 1425 | [JSON](../../server-data/editor-changes/2026-11-15/2026-11-15T03-45-19-103Z-d59609d3-ad39-437f-984d-b58d20fb5a7c.json) |
 | 2026-11-15 03:38:57 | local | 米迪亚改（MedeaKai） | 单位特例 | /stats/cost：250 → 300 | [JSON](../../server-data/editor-changes/2026-11-15/2026-11-14T18-38-57-850Z-02d45a5d-e853-4c55-9e66-6e5472e92d64.json) |
 | 2026-11-15 03:38:52 | local | 米迪亚（Medea） | 单位特例 | /stats/cost：200 → 250 | [JSON](../../server-data/editor-changes/2026-11-15/2026-11-14T18-38-52-019Z-f0dbaefb-946a-4aec-adbd-828277ecb955.json) |
 | 2026-11-14 11:30:28 | local | 哥伦布级改（ColumbusClassKai） | 单位特例 | /displayLocalization/en：（无） → {"name":"Columbus Class Kai","description":"Main Supply Ship of the Earth Federation Fleet, capable …<br>/localization/ja/description：（无） → "地球連邦軍艦隊の主力補給艦。"<br>/localization/ja/name：（无） → "コロンブス改級"<br>/stats/cost：750 → 350<br>/weapons/ColumbusClassKai_Turret_AA/hit：85 → 125<br>/weapons/ColumbusClassKai_Turret_AA/max：2 → 1 | [JSON](../../server-data/editor-changes/2026-11-14/2026-11-14T02-30-28-382Z-ceb1f99d-4163-400d-b82d-c93fa6978143.json) |

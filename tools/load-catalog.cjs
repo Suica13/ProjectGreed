@@ -1433,7 +1433,6 @@ function loadCatalog({
         }
       }
   }
-  require("../shared/ship-aa-volley.cjs").apply(result);
   require("./unit-kit-families.cjs").apply(result,
     read(path.resolve(__dirname,"../shared/production-catalog.json")).unitFamilies);
   if (!result.prefabs.length) throw Error("No enabled units in catalog");
