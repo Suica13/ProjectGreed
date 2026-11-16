@@ -95,12 +95,15 @@ const events = [
 for (let round = 3; round <= 33; round += 3) {
   const ids = [];
   for (const side of ["coast", "plain"]) {
-    const x = side === "coast" ? 2 : 48,
+    const edgeX = side === "coast" ? 2 : 48,
       count = round >= 9 ? 7 : 6;
     for (let i = 0; i < count; i++) {
-      const y = 5 + i * 5,
+      const groupIndex = Math.floor(i / 3), slot = i % 3,
+        attackGroup = `wave-${round}-${side}-group-${groupIndex}`,
+        x = edgeX + (side === "coast" ? 1 : -1) * (slot === 1 ? 2 : 0),
+        y = 6 + groupIndex * 12 + (slot === 2 ? 3 : 0),
         prefix = `wave-${round}-${side}-${i}`;
-      const carrier = add(prefix, "DodaiKai", "standard", 1, x, y, "raiders");
+      const carrier = add(prefix, "BaseJabber", "standard", 1, x, y, "raiders", false, { attackGroup });
       ids.push(carrier);
       for (let n = 0; n < 2; n++) {
         const index = i * 2 + n + round / 3;
@@ -114,21 +117,21 @@ for (let round = 3; round <= 33; round += 3) {
               : ["kit_0", "kit_1", "kit_2"];
         ids.push(
           add(prefix + "-ms-" + n, model, kits[index % kits.length], 1, x, y, "raiders", false, {
-            carrier,
+            carrier, attackGroup,
           }),
         );
       }
     }
     if (round >= 9)
-      ids.push(add(`asshimar-${round}-${side}`, "NRX_044_MA", "standard", 1, x, 40, "raiders"));
+      ids.push(add(`asshimar-${round}-${side}`, "NRX_044_MA", "standard", 1, edgeX, 40, "raiders"));
     if ([12, 24, 33].includes(round))
-      ids.push(add(`byarlant-${round}-${side}`, "RX_160", "standard", 1, x, 43, "raiders"));
+      ids.push(add(`byarlant-${round}-${side}`, "RX_160", "standard", 1, edgeX, 43, "raiders"));
   }
   const actions = [{ type: "spawn", actors: ids }];
   if (round === 3)
     actions.push(
       dialogue(
-        line("敌军从两侧同时来袭，德戴改上搭载了MS！", true),
+        line("敌军从两侧同时来袭，航空踏板上搭载了MS！", true),
         line("优先拦截接近穿梭机的敌人，保持交叉掩护。"),
       ),
     );

@@ -70,7 +70,8 @@ const MissionMode = (() => {
         (a.stationary !== undefined && typeof a.stationary !== "boolean") ||
         (a.genericPilot !== undefined && !["veteran", "elite", "ace", "enhanced"].includes(a.genericPilot)) ||
         (a.genericPilot && a.pilotId) ||
-        (a.squad && !id(a.squad))
+        (a.squad && !id(a.squad)) ||
+        (a.attackGroup !== undefined && !id(a.attackGroup))
       )
         fail();
       if (
@@ -82,6 +83,9 @@ const MissionMode = (() => {
         )
       )
         fail();
+      if (
+        a.attackGroup && m.actors.some(b => b.attackGroup === a.attackGroup && b.team !== a.team)
+      ) fail();
       if (
         G &&
         (!G.models[a.unitId + "__" + a.kitId] || (a.pilotId && !G.pilots.aceProfile(a.pilotId)))
@@ -397,6 +401,7 @@ const MissionMode = (() => {
         team: a.team,
         missionActor: a.id,
         missionGroup: a.group,
+        ...(a.attackGroup ? { missionAttackGroup: a.attackGroup } : {}),
         missionGuest: a.team === 0,
         ...(a.autonomous ? {missionAutonomous:true} : {}),
         ...(a.stationary ? {missionStationary:true,moved:true} : {}),

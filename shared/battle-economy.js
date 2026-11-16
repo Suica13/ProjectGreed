@@ -2,6 +2,7 @@
 // Prices are per deployed unit, including its selected kit, never tactical COST.
 const BattleEconomy = (() => {
   const rewardMultiplier = 1;
+  const completionRewardMultiplier = 1.25;
   const roundReward = (value) => Math.max(0, Math.round(value / 25) * 25);
   // Current mode bases are final values; only live event multipliers apply.
   // Pilot experience keeps its existing event and quick-mode multipliers.
@@ -12,6 +13,15 @@ const BattleEconomy = (() => {
         (key === "experience" ? 1 : rewardMultiplier) * (activity[key] ?? 1),
       ]),
     );
+  }
+  // Apply only to final non-sweep awards. Process rewards and pilot XP use
+  // rewardMultipliers directly; sweep funding is increased at each node instead.
+  function settlementMultipliers(activity = {}) {
+    return {
+      ...activity,
+      ...Object.fromEntries(["money", "supplies", "technology"].map(key =>
+        [key, (activity[key] ?? 1) * completionRewardMultiplier])),
+    };
   }
   const catalog =
     typeof PRODUCTION_CATALOG !== "undefined"
@@ -199,6 +209,8 @@ const BattleEconomy = (() => {
   }
   return {
     rewardMultiplier,
+    completionRewardMultiplier,
+    settlementMultipliers,
     roundReward,
     rewardMultipliers,
     price,

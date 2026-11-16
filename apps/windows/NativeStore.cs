@@ -59,6 +59,7 @@ namespace ProjectGreed.Client {
         }
         public string Commit(string text) {
             lock (gate) {
+                string stage = "校验存档", target = "profile.json";
                 try {
                     if (readError != null) throw new IOException(readError);
                     var request = json.Deserialize<Snapshot>(text);
@@ -69,17 +70,32 @@ namespace ProjectGreed.Client {
                     var bytes = new UTF8Encoding(false).GetBytes(json.Serialize(next));
                     if (bytes.Length > MaxBytes) throw new IOException("应用存档超过64 MiB，请导出并整理大型备份");
                     var temp = file + ".tmp";
+                    // Imported/restored application snapshots can retain a read-only flag.
+                    // Only change that flag on our three own files; never alter directory ACLs.
+                    stage = "解除存档只读属性";
+                    foreach (var ownFile in new[] { temp, file + ".bak", file }) {
+                        target = Path.GetFileName(ownFile);
+                        if (File.Exists(ownFile)) {
+                            var attributes = File.GetAttributes(ownFile);
+                            if ((attributes & FileAttributes.ReadOnly) != 0)
+                                File.SetAttributes(ownFile, attributes & ~FileAttributes.ReadOnly);
+                        }
+                    }
+                    stage = "写入临时存档"; target = "profile.json.tmp";
                     using (var stream = new FileStream(temp, FileMode.Create, FileAccess.Write, FileShare.None)) {
                         stream.Write(bytes, 0, bytes.Length);
                         stream.Flush(true);
                     }
+                    stage = "原子替换存档及备份"; target = "profile.json / profile.json.bak";
                     if (File.Exists(file)) File.Replace(temp, file, file + ".bak", true);
                     else File.Move(temp, file);
                     current = next;
                     return json.Serialize(new { ok = true, revision = next.revision });
                 } catch (Exception error) {
                     try { File.Delete(file + ".tmp"); } catch { }
-                    return json.Serialize(new { ok = false, error = "本地文件保存失败，未确认本次更改：" + error.Message });
+                    return json.Serialize(new { ok = false, errorName = "NativeStorageError",
+                        storageStage = stage, storageFile = target, storageErrorCode = error.HResult.ToString("X8"),
+                        error = "本地文件保存失败，未确认本次更改（" + stage + "；" + target + "）：" + error.Message });
                 }
             }
         }

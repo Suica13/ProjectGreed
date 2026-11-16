@@ -536,7 +536,7 @@ function loadCatalog({
     if (prefab.sourceStats?.technologyEra) prefab.sourceStats.technologyEra = require("../shared/technology-eras.js").normalize(prefab.sourceStats.technologyEra);
     localize.prefab(prefab);
     require("./unit-footprint.cjs").compactShipFootprint(prefab);
-    require("./weapon-balance.cjs").applyWeaponBalance(prefab, conversion);
+    require("./weapon-balance.cjs").applyWeaponBalance(prefab, conversion, weaponDefinitionsOverride || undefined);
     Adjust.unit(prefab, adjustments, raw.weapons);
     require("../shared/conversion-rules.cjs").roundValues(prefab);
     require("./weapon-level-labels.cjs").applyWeaponLevelLabels(prefab);

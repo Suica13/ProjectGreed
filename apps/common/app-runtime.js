@@ -5,7 +5,13 @@
   function createStorage(bridge) {
     const read = (value) => {
       const result = typeof value === "string" ? JSON.parse(value) : value;
-      if (!result?.ok) throw Error(result?.error || "无法读取应用存档");
+      if (!result?.ok) {
+        const error = Error(result?.error || "无法读取应用存档");
+        for (const key of ["storageStage", "storageFile", "storageErrorCode"])
+          if (typeof result?.[key] === "string") error[key] = result[key];
+        if (result?.errorName === "NativeStorageError") error.name = result.errorName;
+        throw error;
+      }
       return result;
     };
     const initial = read(bridge.read());

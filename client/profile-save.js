@@ -137,6 +137,8 @@
     message += (native ? " 当前应用存档估算占用 " : " 当前页面存储估算占用 ") + kib(lastDiagnostic.estimatedBytes) + "。";
     if (!lastDiagnostic.writable)
       message += native ? "请检查磁盘空间与应用数据目录权限，并导出存储诊断以便排查。" : "新建个人存档不会清除历史战役备份或其他页面数据，也不能解除浏览器存储限制。请导出存储诊断以便排查。";
+    if (native && !lastDiagnostic.writable && lastDiagnostic.errorMessage)
+      message += " " + lastDiagnostic.errorMessage;
     message += lastDiagnostic.groups.map(group => group.name + " " + kib(group.bytes)).join("；");
     diagnosticText.textContent = message;
     diagnosticText.hidden = false;

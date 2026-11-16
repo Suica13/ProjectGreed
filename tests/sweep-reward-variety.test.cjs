@@ -23,7 +23,7 @@ function room(era = "UC_0079_T2", faction = "ZEON", environment = "ground") {
   room.settings.mapId = S.mapPool(room, G)[0].id;
   return room;
 }
-test("sweep halves money, supplies and technology before final rounding", () => {
+test("sweep node funding increases 25 percent while technology keeps its prior baseline", () => {
   for (const depth of [0, 1, 5, 20])
     for (const multiplier of [1, 2, 3]) {
       const r = room();
@@ -33,8 +33,8 @@ test("sweep halves money, supplies and technology before final rounding", () => 
       const scale = 1 + depth * 0.05,
         p = r.sweep.pending.p;
       assert.equal(p.technology, E.roundReward(62.5 * scale * multiplier * 1.1 * 2));
-      assert.equal(p.money, E.roundReward(500 * scale * multiplier * 1.25));
-      assert.equal(p.supplies, E.roundReward(750 * scale * multiplier * 1.5));
+      assert.equal(p.money, E.roundReward(500 * 1.25 * scale * multiplier * 1.25));
+      assert.equal(p.supplies, E.roundReward(750 * 1.25 * scale * multiplier * 1.5));
     }
 });
 test("sweep technology progression opens more tiers and advances elites and bosses", () => {

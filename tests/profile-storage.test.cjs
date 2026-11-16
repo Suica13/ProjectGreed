@@ -89,3 +89,18 @@ test("diagnostics report size categories without exposing keys or save secrets",
   assert.ok(!JSON.stringify(report).includes("foreign-key"));
   assert.equal(data.length, 2);
 });
+
+test("native diagnostics retain the failing operation and original error without save values", () => {
+  const store = storage({"projectgreed.economy.v1":"private-wallet"}, 1000);
+  store.setItem = () => { throw Object.assign(Error("Access denied"), {
+    name: "NativeStorageError", storageStage: "replace", storageFile: "profile.json", storageErrorCode: "80070005"
+  }); };
+  const report=inspect(store);
+  assert.equal(report.readable,true);
+  assert.equal(report.writable,false);
+  assert.equal(report.errorMessage,"Access denied");
+  assert.equal(report.storageStage,"replace");
+  assert.equal(report.storageFile,"profile.json");
+  assert.equal(report.storageErrorCode,"80070005");
+  assert(!JSON.stringify(report).includes("private-wallet"));
+});

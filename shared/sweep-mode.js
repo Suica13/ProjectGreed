@@ -283,8 +283,8 @@ const SweepMode = (() => {
       const economy =
         typeof BattleEconomy !== "undefined" ? BattleEconomy : require("./battle-economy.js");
       const pending = s.pending[p.id];
-      pending.money += economy.roundReward(500 * scale * multiplier * (bonus.money ?? 1));
-      pending.supplies += economy.roundReward(750 * scale * multiplier * (bonus.supplies ?? 1));
+      pending.money += economy.roundReward(500 * economy.completionRewardMultiplier * scale * multiplier * (bonus.money ?? 1));
+      pending.supplies += economy.roundReward(750 * economy.completionRewardMultiplier * scale * multiplier * (bonus.supplies ?? 1));
       pending.technology += economy.roundReward(
         62.5 * scale * multiplier * technologyOutcome * (bonus.technology ?? 1),
       );

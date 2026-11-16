@@ -282,8 +282,10 @@ const Formation = (() => {
       localStorage.removeItem(legacyStorageKey + "-active");
       localStorage.setItem(storageKey + "-active", String(index));
       return true;
-    } catch {
-      note("浏览器无法保存编组，本次会话仍可使用。");
+    } catch (error) {
+      note(typeof AppRuntime !== "undefined" && AppRuntime.native
+        ? Economy.errorMessage(error)
+        : "浏览器无法保存编组，本次会话仍可使用。");
       return false;
     }
   }

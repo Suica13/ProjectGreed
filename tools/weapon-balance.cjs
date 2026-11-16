@@ -1,9 +1,58 @@
 const Classes = require("../shared/weapon-classes.js");
+// Enhanced ZZ's identically equipped rifle uses the standard ZZ firing profile.
+// Keep the imported values separately, so future imports and audits retain provenance.
+function synchronizeZZRifle(prefab, definitions) {
+  for (const weapon of Object.values(prefab.weapons || {})) {
+    if (!/^AEUG_MSZ_010S_BR(?:_R)?$/.test(weapon.sourceName || "")) continue;
+    const sourceName = weapon.sourceName.replace("MSZ_010S", "MSZ_010");
+    const base = require("./weapon-store.cjs").expandPrefab(
+      { id: prefab.id, weapons: { base: { ref: sourceName + "__lv1" } } },
+      definitions,
+    ).weapons.base;
+    if (!base) throw Error("Missing standard ZZ rifle: " + sourceName);
+    weapon.nativeSourceData ||= structuredClone({
+      payload: weapon.nativePayload,
+      timing: weapon.nativeTiming,
+      projectile: weapon.projectile,
+    });
+    for (const field of [
+      "type",
+      "min",
+      "max",
+      "hit",
+      "en",
+      "sourceHit",
+      "hitMultiplier",
+      "hitBonus",
+      "damagePerShot",
+      "damageComponents",
+      "hitsPerShot",
+      "attack",
+      "partBreakModifier",
+      "targetModifiers",
+      "sizeDamageModifiers",
+      "sizeAccuracyModifiers",
+      "projectile",
+      "nativePayload",
+      "nativeTiming",
+      "attackRounds",
+    ])
+      if (Object.hasOwn(base, field)) weapon[field] = structuredClone(base[field]);
+    weapon.balanceSource = sourceName;
+  }
+  return prefab;
+}
 // Applied before timeline/paired-weapon compilation in both server and client builds.
 // Raw MOD payloads stay intact for auditing and future imports.
-function applyWeaponBalance(prefab, rules = require("../shared/conversion-rules.cjs").read()) {
+function applyWeaponBalance(
+  prefab,
+  rules = require("../shared/conversion-rules.cjs").read(),
+  definitions,
+) {
+  synchronizeZZRifle(prefab, definitions);
   const production = require("../shared/native-production.json")[prefab.id];
-  if (production) prefab.sourceStats = { ...prefab.sourceStats, nativeProductionQuantity: production.quantity };
+  if (production)
+    prefab.sourceStats = { ...prefab.sourceStats, nativeProductionQuantity: production.quantity };
   // The native Unit 4 Lv2 left wrist file disagrees with its same-grade right copy.
   // Keep nativePayload intact while normalizing this explicit source-data exception.
   if (["RX_78_4", "RX_78_4_Bst"].includes(prefab.id)) {
@@ -44,4 +93,4 @@ function applyWeaponBalance(prefab, rules = require("../shared/conversion-rules.
   }
   return Conversion.globals(prefab, rules);
 }
-module.exports = { applyWeaponBalance };
+module.exports = { applyWeaponBalance, synchronizeZZRifle };

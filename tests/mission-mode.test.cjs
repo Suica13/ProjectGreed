@@ -151,8 +151,8 @@ test("mission win grants each PMC fixed stock and resources exactly once, with c
     const awards = room.economyAwards.filter((a) => a.kind === "result");
     assert.equal(awards.length, 2);
     for (const award of awards) {
-      assert.equal(award.money, outcome === "defeat" ? 0 : outcome === "bonus" ? 5500 : 4000);
-      assert.equal(award.supplies, outcome === "defeat" ? 0 : outcome === "bonus" ? 8250 : 6000);
+      assert.equal(award.money, outcome === "defeat" ? 0 : outcome === "bonus" ? 6875 : 5000);
+      assert.equal(award.supplies, outcome === "defeat" ? 0 : outcome === "bonus" ? 10325 : 7500);
       assert.deepEqual(
         award.stockGained.inventory,
         outcome === "defeat"
@@ -165,7 +165,7 @@ test("mission win grants each PMC fixed stock and resources exactly once, with c
     engine.broadcast(room);
     assert.equal(room.economyAwards.filter((a) => a.kind === "result").length, 2);
     assert.equal(room.techAwards.length, outcome === "defeat" ? 0 : 2);
-    for (const award of room.techAwards) assert.equal(award.points, outcome === "bonus" ? 1500 : 1000);
+    for (const award of room.techAwards) assert.equal(award.points, outcome === "bonus" ? 1875 : 1250);
   }
 });
 test("six dom kills through round 10 spawn scripted rivals once, add Amuro protection and preserve dialogue order", (t) => {

@@ -2302,7 +2302,7 @@ function createRoomEngine({
       return;
     room.economySettled = true;
     settleCrewLosses(room);
-    const bonus = getRewardMultipliers();
+    const bonus = roomBattleEconomy().settlementMultipliers(getRewardMultipliers());
     if (room.settings.mode === "battlefield") {
       syncBattlefieldStock(room);
       for (const player of room.seats) {

@@ -95,3 +95,14 @@ test("a page from a previous save folder cannot overwrite the newly selected fol
   newPage.storage.setItem("wallet", "8000");
   assert.equal(values.wallet, "8000");
 });
+
+test("native commit failures preserve structured filesystem diagnostics and the old storage", () => {
+  const disk=host(), a=createStorage(disk);
+  a.storage.setItem("wallet","1000");
+  disk.commit=()=>JSON.stringify({ok:false,error:"Access denied",errorName:"NativeStorageError",
+    storageStage:"replace",storageFile:"profile.json",storageErrorCode:"80070005"});
+  assert.throws(()=>a.storage.setItem("wallet","0"),{
+    name:"NativeStorageError",message:"Access denied",storageStage:"replace",storageFile:"profile.json",storageErrorCode:"80070005"
+  });
+  assert.equal(a.storage.getItem("wallet"),"1000");
+});

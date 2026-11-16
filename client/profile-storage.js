@@ -9,6 +9,7 @@ const ProfileStorage = (() => {
       groups: [],
       largestRecords: [],
       errorName: null,
+      errorMessage: null,
     };
     const category = (key) => {
       if (key.startsWith("projectgreed.custom-pilots.")) return "驾驶员名册";
@@ -44,7 +45,11 @@ const ProfileStorage = (() => {
       result.writable = storage.getItem(key) === "1";
       storage.removeItem(key);
     } catch (error) {
+      result.writable = false;
       result.errorName = error.name || "Error";
+      result.errorMessage = error.message || String(error);
+      for (const key of ["storageStage", "storageFile", "storageErrorCode"])
+        if (typeof error[key] === "string") result[key] = error[key];
     }
     result.groups = [...groups.values()].sort((a, b) => b.bytes - a.bytes);
     // Export only key names and sizes, never stored values.

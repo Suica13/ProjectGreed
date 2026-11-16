@@ -103,7 +103,20 @@ const AITactics = (() => {
     const mission = game.mission && G.getMap(game.mapId).mission;
     if (mission?.victory.type === "defend_group") {
       const targets=game.units.filter(target=>target.missionGroup===mission.victory.group && target.hp>0);
-      const goal=targets.reduce((best,target)=>!best || distance(unit,target)<distance(unit,best)?target:best,null);
+      let origin=unit, sharedGoals;
+      if (unit.missionAttackGroup) {
+        // A scripted attack formation shares a target, without waiting for late units.
+        sharedGoals=decision.missionAttackGoals ||= new Map();
+        const key=unit.team+":"+unit.missionAttackGroup;
+        const previous=sharedGoals.get(key);
+        if (previous?.hp>0 && targets.includes(previous))
+          return {...decision,state:"advance",goal:previous,strategic:true,occupation:false};
+        const members=game.units.filter(member=>member.hp>0 && !member.embarked &&
+          member.team===unit.team && member.missionAttackGroup===unit.missionAttackGroup);
+        origin=members.length ? center(members) : unit;
+      }
+      const goal=targets.reduce((best,target)=>!best || distance(origin,target)<distance(origin,best)?target:best,null);
+      if (goal && sharedGoals) sharedGoals.set(unit.team+":"+unit.missionAttackGroup,goal);
       if(goal)return {...decision,state:"advance",goal,strategic:true,occupation:false};
     }
     if (!game.campaignBattlefield && !game.battlefield) return decision;
