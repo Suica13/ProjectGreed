@@ -61,7 +61,7 @@ test("shuttle defense imports three native layers, original hull and 0087T1 scen
   const f = fixture();
   f.poll();
   const shuttles = f.room.game.units.filter((u) => u.missionGroup === "shuttles");
-  assert.equal(f.room.settings.costLimit, 6000);
+  assert.equal(f.room.settings.costLimit, 9000);
   assert.equal(f.room.settings.missionEra, "UC_0087_T1");
   assert.equal(shuttles.length, 3);
   assert(
@@ -73,25 +73,25 @@ test("shuttle defense imports three native layers, original hull and 0087T1 scen
   assert(map.tiles.some((row) => row.includes("water")));
   assert.equal(M.objectives(f.room.game, G).failure.at(-1).total, 3);
 });
-test("two-front waves fill SFS slots, evolve on turn nine, and bring full Garuda plus scripted elite pilots", () => {
+test("six-turn two-front waves fill SFS slots and bring Garuda, allied relief and final elites", () => {
   const f = fixture();
   f.poll();
-  for (const round of [3, 6, 9, 12, 15, 18, 20, 21, 24, 27, 30, 33]) {
+  for (const round of [6, 12, 18, 24, 30]) {
     const before = f.room.game.units.length;
     f.round(round);
     for (const u of f.room.game.units.filter(
       (u) => u.team === 1 && u.model === "BaseJabber__standard" && u.hp > 0,
     ))
       assert.equal(G.hangars.cargo(f.room.game, u).length, 2);
-    if (round === 3) {
+    if (round === 6) {
       assert.equal(f.room.game.units.filter((u) => u.missionGroup === "raiders").length, 36);
       assert.equal(f.room.game.units.filter((u) => u.model.startsWith("RMS_108__")).length, 0);
     }
-    if (round === 9) {
+    if (round === 12) {
       assert(f.room.game.units.some((u) => u.model.startsWith("RMS_108__")));
       assert(f.room.game.units.some((u) => u.model === "NRX_044_MA__standard"));
     }
-    if (round === 15) {
+    if (round === 18) {
       const carrier = f.room.game.units.find((u) => u.missionActor === "garuda");
       assert.equal(G.hangars.cargo(f.room.game, carrier).length, 12);
       assert(
@@ -100,7 +100,7 @@ test("two-front waves fill SFS slots, evolve on turn nine, and bring full Garuda
           .every((h) => G.hangars.used(f.room.game, carrier, h.id) === h.capacity),
       );
     }
-    if (round === 20) {
+    if (round === 24) {
       const elites = f.room.game.units.filter((u) => u.missionGroup === "ace-force");
       assert.equal(elites.length, 3);
       assert.equal(
@@ -120,7 +120,7 @@ test("two-front waves fill SFS slots, evolve on turn nine, and bring full Garuda
   const kits = new Set(
     f.room.game.units.filter((u) => u.model.startsWith("RMS_106__")).map((u) => u.model),
   );
-  assert(kits.size >= 3);
+  assert.deepEqual([...kits], ["RMS_106__main_0"]);
   assert.equal(f.room.game.units.length, map.mission.actors.length + 1);
 });
 for (const survivors of [0, 1, 2, 3])
@@ -167,10 +167,10 @@ test("all 0087 ACEs have native art, skills, prices and matching technology unlo
 });
 test("enemy flight groups advance toward surviving shuttles instead of unrelated deployment areas", () => {
   const f = fixture();
-  f.round(3);
+  f.round(6);
   f.room.game.team = 1;
   const AI = require("../shared/ai-tactics");
-  const left = f.room.game.units.find((u) => u.missionActor === "wave-3-coast-0");
+  const left = f.room.game.units.find((u) => u.missionActor === "wave-6-coast-0");
   const decision = AI.forUnit(G, f.room.game, left, AI.decide(G, f.room.game, left));
   assert.equal(decision.goal.missionGroup, "shuttles");
   const choice = G.aiChoice(f.room.game, left);
@@ -223,7 +223,7 @@ test("cooperative defense grants each player the surviving shuttle tier once aft
       action,
       ...fields,
     });
-  act("configure_room", { mapId: compact.id, costLimit: 6000, unitLimit: 18 });
+  act("configure_room", { mapId: compact.id, costLimit: 9000, unitLimit: 18 });
   engine.join(guest, { mode: "join", room: "SHUTTLE", ...profile });
   const formation = [{ unitId: "Medea", kitId: "standard" }];
   act("set_ready", { ready: true, formation }, guest);
@@ -266,7 +266,7 @@ test("cooperative defense grants each player the surviving shuttle tier once aft
 test("shuttle raiders advance in three-platform formations with shared goals and full cargo", () => {
   const f = fixture();
   f.poll();
-  f.round(3);
+  f.round(6);
   const game = f.room.game;
   assert(!game.units.some((u) => u.model === "DodaiKai__standard"));
   const platforms = game.units.filter((u) => u.model === "BaseJabber__standard");
@@ -294,7 +294,7 @@ test("shuttle raiders advance in three-platform formations with shared goals and
     goals[0].goal.hp = G.modelOf(goals[0].goal).hp;
   }
   const byId = new Map(map.mission.actors.map((a) => [a.id, a]));
-  for (let round = 3; round <= 33; round += 3)
+  for (let round = 6; round <= 30; round += 6)
     for (const side of ["coast", "plain"]) {
       const count = round >= 9 ? 7 : 6;
       const sizes = new Map();
@@ -305,4 +305,39 @@ test("shuttle raiders advance in three-platform formations with shared goals and
       }
       assert.deepEqual([...sizes.values()], count === 6 ? [3, 3] : [3, 3, 1]);
     }
+});
+
+test("scripted SFS passengers stay aboard until carrier destruction; turn 18 relief has level 5 Amuro", () => {
+  const f = fixture();
+  f.round(6);
+  const game = f.room.game;
+  const carrier = game.units.find(u=>u.missionActor === "wave-6-plain-0");
+  const cargo = G.hangars.cargo(game, carrier);
+  assert.equal(cargo.length, 2);
+  for (const passenger of cargo) {
+    assert.equal(passenger.missionStayOnSfs, true);
+    assert.equal(G.hangars.shouldLaunch(game, passenger), false);
+    assert.equal(G.aiLaunchChoice(game, passenger), null);
+  }
+  const jim = game.units.filter(u=>u.model.startsWith("RMS_179_TITANS__"));
+  assert(jim.length && jim.every(u=>u.model === "RMS_179_TITANS__kit_0"));
+  carrier.hp = 0;
+  const exits = G.hangars.evacuate(game);
+  for (const passenger of cargo) {
+    assert(!passenger.embarked);
+    assert(exits.some(e=>e.unitId === passenger.id));
+    assert.equal(passenger.forcedExitRound, game.round);
+  }
+  game.units.filter(u=>u.team === 1).forEach(u=>u.hp=0);
+  f.round(18);
+  const amuro = game.units.find(u=>u.missionActor === "amuro-dijeh");
+  assert.equal(amuro.model, "MSK_008__kit_2");
+  assert.equal(amuro.pilot.aceId, "Pilot_AEUG_0087_N_ACE_AMR");
+  assert.equal(amuro.pilot.level, 5);
+  assert.equal(game.units.find(u=>u.id === amuro.embarked.carrierId).model,"DodaiKai__standard");
+  const nemo = game.units.filter(u=>u.missionActor?.startsWith("relief-nemo-"));
+  assert.equal(nemo.length,6);
+  assert.equal(new Set(nemo.map(u=>u.squadId)).size,2);
+  assert(nemo.every(u=>G.canControlUnit(f.room.settings,[{seat:0}],0,u)));
+  assert(!game.units.some(u=>u.missionGroup === "ace-force"));
 });

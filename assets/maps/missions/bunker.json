@@ -538,7 +538,8 @@
         "group": "jim-support",
         "initial": false,
         "angle": 90,
-        "squad": "jim-support-0"
+        "squad": "jim-support-0",
+        "autonomous": true
       },
       {
         "id": "jim-support-0-1",
@@ -550,7 +551,8 @@
         "group": "jim-support",
         "initial": false,
         "angle": 90,
-        "squad": "jim-support-0"
+        "squad": "jim-support-0",
+        "autonomous": true
       },
       {
         "id": "jim-support-0-2",
@@ -562,7 +564,8 @@
         "group": "jim-support",
         "initial": false,
         "angle": 90,
-        "squad": "jim-support-0"
+        "squad": "jim-support-0",
+        "autonomous": true
       },
       {
         "id": "jim-support-1-0",
@@ -574,7 +577,8 @@
         "group": "jim-support",
         "initial": false,
         "angle": 90,
-        "squad": "jim-support-1"
+        "squad": "jim-support-1",
+        "autonomous": true
       },
       {
         "id": "jim-support-1-1",
@@ -586,7 +590,8 @@
         "group": "jim-support",
         "initial": false,
         "angle": 90,
-        "squad": "jim-support-1"
+        "squad": "jim-support-1",
+        "autonomous": true
       },
       {
         "id": "jim-support-1-2",
@@ -598,7 +603,8 @@
         "group": "jim-support",
         "initial": false,
         "angle": 90,
-        "squad": "jim-support-1"
+        "squad": "jim-support-1",
+        "autonomous": true
       },
       {
         "id": "jim-support-2-0",
@@ -610,7 +616,8 @@
         "group": "jim-support",
         "initial": false,
         "angle": 90,
-        "squad": "jim-support-2"
+        "squad": "jim-support-2",
+        "autonomous": true
       },
       {
         "id": "jim-support-2-1",
@@ -622,7 +629,8 @@
         "group": "jim-support",
         "initial": false,
         "angle": 90,
-        "squad": "jim-support-2"
+        "squad": "jim-support-2",
+        "autonomous": true
       },
       {
         "id": "jim-support-2-2",
@@ -634,7 +642,8 @@
         "group": "jim-support",
         "initial": false,
         "angle": 90,
-        "squad": "jim-support-2"
+        "squad": "jim-support-2",
+        "autonomous": true
       },
       {
         "id": "guntank-support-0-0",
@@ -646,7 +655,8 @@
         "group": "guntank-support",
         "initial": false,
         "angle": 90,
-        "squad": "guntank-support-0"
+        "squad": "guntank-support-0",
+        "autonomous": true
       },
       {
         "id": "guntank-support-0-1",
@@ -658,7 +668,8 @@
         "group": "guntank-support",
         "initial": false,
         "angle": 90,
-        "squad": "guntank-support-0"
+        "squad": "guntank-support-0",
+        "autonomous": true
       },
       {
         "id": "guntank-support-0-2",
@@ -670,7 +681,8 @@
         "group": "guntank-support",
         "initial": false,
         "angle": 90,
-        "squad": "guntank-support-0"
+        "squad": "guntank-support-0",
+        "autonomous": true
       },
       {
         "id": "guntank-support-1-0",
@@ -682,7 +694,8 @@
         "group": "guntank-support",
         "initial": false,
         "angle": 90,
-        "squad": "guntank-support-1"
+        "squad": "guntank-support-1",
+        "autonomous": true
       },
       {
         "id": "guntank-support-1-1",
@@ -694,7 +707,8 @@
         "group": "guntank-support",
         "initial": false,
         "angle": 90,
-        "squad": "guntank-support-1"
+        "squad": "guntank-support-1",
+        "autonomous": true
       },
       {
         "id": "guntank-support-1-2",
@@ -706,7 +720,8 @@
         "group": "guntank-support",
         "initial": false,
         "angle": 90,
-        "squad": "guntank-support-1"
+        "squad": "guntank-support-1",
+        "autonomous": true
       },
       {
         "id": "wave-one-f-carrier-0",
@@ -15578,7 +15593,8 @@
           "group": "jim-support",
           "initial": false,
           "angle": 90,
-          "squad": "jim-support-0"
+          "squad": "jim-support-0",
+          "autonomous": true
         },
         {
           "id": "jim-support-0-1",
@@ -15590,7 +15606,8 @@
           "group": "jim-support",
           "initial": false,
           "angle": 90,
-          "squad": "jim-support-0"
+          "squad": "jim-support-0",
+          "autonomous": true
         },
         {
           "id": "jim-support-0-2",
@@ -15602,7 +15619,8 @@
           "group": "jim-support",
           "initial": false,
           "angle": 90,
-          "squad": "jim-support-0"
+          "squad": "jim-support-0",
+          "autonomous": true
         },
         {
           "id": "jim-support-1-0",
@@ -15614,7 +15632,8 @@
           "group": "jim-support",
           "initial": false,
           "angle": 90,
-          "squad": "jim-support-1"
+          "squad": "jim-support-1",
+          "autonomous": true
         },
         {
           "id": "jim-support-1-1",
@@ -15626,7 +15645,8 @@
           "group": "jim-support",
           "initial": false,
           "angle": 90,
-          "squad": "jim-support-1"
+          "squad": "jim-support-1",
+          "autonomous": true
         },
         {
           "id": "jim-support-1-2",
@@ -15638,7 +15658,8 @@
           "group": "jim-support",
           "initial": false,
           "angle": 90,
-          "squad": "jim-support-1"
+          "squad": "jim-support-1",
+          "autonomous": true
         },
         {
           "id": "jim-support-2-0",
@@ -15650,7 +15671,8 @@
           "group": "jim-support",
           "initial": false,
           "angle": 90,
-          "squad": "jim-support-2"
+          "squad": "jim-support-2",
+          "autonomous": true
         },
         {
           "id": "jim-support-2-1",
@@ -15662,7 +15684,8 @@
           "group": "jim-support",
           "initial": false,
           "angle": 90,
-          "squad": "jim-support-2"
+          "squad": "jim-support-2",
+          "autonomous": true
         },
         {
           "id": "jim-support-2-2",
@@ -15674,7 +15697,8 @@
           "group": "jim-support",
           "initial": false,
           "angle": 90,
-          "squad": "jim-support-2"
+          "squad": "jim-support-2",
+          "autonomous": true
         },
         {
           "id": "guntank-support-0-0",
@@ -15686,7 +15710,8 @@
           "group": "guntank-support",
           "initial": false,
           "angle": 90,
-          "squad": "guntank-support-0"
+          "squad": "guntank-support-0",
+          "autonomous": true
         },
         {
           "id": "guntank-support-0-1",
@@ -15698,7 +15723,8 @@
           "group": "guntank-support",
           "initial": false,
           "angle": 90,
-          "squad": "guntank-support-0"
+          "squad": "guntank-support-0",
+          "autonomous": true
         },
         {
           "id": "guntank-support-0-2",
@@ -15710,7 +15736,8 @@
           "group": "guntank-support",
           "initial": false,
           "angle": 90,
-          "squad": "guntank-support-0"
+          "squad": "guntank-support-0",
+          "autonomous": true
         },
         {
           "id": "guntank-support-1-0",
@@ -15722,7 +15749,8 @@
           "group": "guntank-support",
           "initial": false,
           "angle": 90,
-          "squad": "guntank-support-1"
+          "squad": "guntank-support-1",
+          "autonomous": true
         },
         {
           "id": "guntank-support-1-1",
@@ -15734,7 +15762,8 @@
           "group": "guntank-support",
           "initial": false,
           "angle": 90,
-          "squad": "guntank-support-1"
+          "squad": "guntank-support-1",
+          "autonomous": true
         },
         {
           "id": "guntank-support-1-2",
@@ -15746,7 +15775,8 @@
           "group": "guntank-support",
           "initial": false,
           "angle": 90,
-          "squad": "guntank-support-1"
+          "squad": "guntank-support-1",
+          "autonomous": true
         },
         {
           "id": "wave-one-f-carrier-0",

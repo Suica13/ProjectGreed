@@ -1,0 +1,33 @@
+const {test,expect}=require('@playwright/test');
+const {pathToFileURL}=require('node:url'),path=require('node:path');
+for(const width of [390,430,960])test(`deployment hangar commands and cargo scroll stay clear at ${width}px`,async({page})=>{
+ test.setTimeout(60000);
+ await page.setViewportSize({width,height:960});
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto(pathToFileURL(path.resolve('public/client.html')).href);
+ await expect(page.locator('#openSkirmish')).toBeEnabled();
+ await page.evaluate(()=>{
+  I18n.setLanguage('zh');Net.leave();
+  const map=Rules.getMap('asteroid_crossing_1v1');
+  const formation=[{unitId:'WhiteBase',kitId:'standard'},...Array.from({length:6},(_,i)=>({unitId:'RGM_79',kitId:'machine_gun',preload:{carrierIndex:0,hangarId:'Hangar_'+(i<3?1:2)}}))];
+  const armies=map.spawns.map(()=>null);armies[0]=formation;
+  game=Rules.create(false,7319,armies,true,{mapId:map.id,costLimit:99999,unitLimit:72,unitCostLimit:99999});
+  Deployment.reset();phase='deployment';selected=game.units[0].id;mode='select';weaponId=null;
+  setPageView('game');for(const id of ['start','reaction','battle','victory','help'])byId(id).hidden=true;
+  Rules.clearDeployment(game,0);update();
+ });
+ await expect(page.locator('#hudDeploymentHangar')).toBeVisible();
+ await expect(page.locator('#hudUnitCommands [data-unit-command="hangar"]')).toBeHidden();
+ const hangar=await page.locator('#hudSquad').boundingBox(),commands=await page.locator('#hudUnitCommands').boundingBox();
+ expect(hangar.x+hangar.width).toBeLessThanOrEqual(commands.x);
+ await expect(page.locator('#mapClimateStatus')).toBeHidden();
+ const group=page.locator('.deployment-transport-group');
+ expect(await group.evaluate(el=>getComputedStyle(el).scrollbarWidth)).toBe('thin');
+ await group.evaluate(el=>{el.scrollLeft=el.scrollWidth});
+ await expect(group.locator('button').last()).toBeInViewport();
+ await page.locator('#deploymentAuto').click();
+ expect(await page.evaluate(()=>game.units.filter(u=>!u.embarked).every(u=>!u.deploymentStaged))).toBe(true);
+ expect(await page.evaluate(()=>game.units.filter(u=>u.embarked).length)).toBe(6);
+ await page.screenshot({path:`tmp/verification/screenshots/v129-deployment-${width}.png`});
+ expect(errors).toEqual([]);
+});

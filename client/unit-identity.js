@@ -33,7 +33,7 @@ const UnitIdentity = (() => {
     return {
       seat,
       member,
-      name: unit.missionAutonomous ? "奥古任务友军" : Net.active
+      name: unit.missionAutonomous ? "任务友军" : Net.active
         ? member?.name || "空席位"
         : game.ai && seat === 1
           ? "AI"

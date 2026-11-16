@@ -92,7 +92,7 @@ const events = [
     ],
   },
 ];
-for (let round = 3; round <= 33; round += 3) {
+for (let round = 6; round <= 30; round += 6) {
   const ids = [];
   for (const side of ["coast", "plain"]) {
     const edgeX = side === "coast" ? 2 : 48,
@@ -111,31 +111,31 @@ for (let round = 3; round <= 33; round += 3) {
           round >= 9 && index % 3 === 0 ? "RMS_108" : index % 2 ? "RMS_106" : "RMS_179_TITANS";
         const kits =
           model === "RMS_106"
-            ? ["main_0", "kit_1", "kit_0"]
+            ? ["main_0"]
             : model === "RMS_108"
               ? ["main_0", "kit_1"]
-              : ["kit_0", "kit_1", "kit_2"];
+              : ["kit_0"];
         ids.push(
           add(prefix + "-ms-" + n, model, kits[index % kits.length], 1, x, y, "raiders", false, {
-            carrier, attackGroup,
+            carrier, attackGroup, stayOnSfs: true,
           }),
         );
       }
     }
     if (round >= 9)
       ids.push(add(`asshimar-${round}-${side}`, "NRX_044_MA", "standard", 1, edgeX, 40, "raiders"));
-    if ([12, 24, 33].includes(round))
+    if ([12, 24, 30].includes(round))
       ids.push(add(`byarlant-${round}-${side}`, "RX_160", "standard", 1, edgeX, 43, "raiders"));
   }
   const actions = [{ type: "spawn", actors: ids }];
-  if (round === 3)
+  if (round === 6)
     actions.push(
       dialogue(
         line("敌军从两侧同时来袭，航空踏板上搭载了MS！", true),
         line("优先拦截接近穿梭机的敌人，保持交叉掩护。"),
       ),
     );
-  if (round === 9)
+  if (round === 12)
     actions.push(
       dialogue(
         line("敌军增加了空中部队，确认玛拉塞和亚希玛！", true),
@@ -162,7 +162,7 @@ for (let i = 0; i < fullCargo; i++)
     add(
       "garuda-ms-" + i,
       "RMS_106",
-      ["main_0", "kit_1", "kit_0"][i % 3],
+      "main_0",
       1,
       46,
       20,
@@ -174,7 +174,7 @@ for (let i = 0; i < fullCargo; i++)
 events.push({
   id: "garuda-arrival",
   name: "提坦斯迦楼罗增援",
-  when: { type: "round", round: 15 },
+  when: { type: "round", round: 18 },
   actions: [
     { type: "spawn", actors: garudaIds },
     dialogue(
@@ -195,13 +195,32 @@ const elites = [
 events.push({
   id: "elite-arrival",
   name: "提坦斯精锐部队抵达",
-  when: { type: "round", round: 20 },
+  when: { type: "round", round: 24 },
   actions: [
     { type: "spawn", actors: elites },
     dialogue(
       line("检测到三台高性能机体，敌方驾驶员的反应异常迅速！", true),
-      line("继续防守。距离发射准备完成还剩15回合。"),
+      line("继续防守。距离发射准备完成还剩11回合。"),
     ),
+  ],
+});
+const relief = [
+  add("amuro-dodai", "DodaiKai", "standard", 0, 26, 24, "relief-force"),
+  add("amuro-dijeh", "MSK_008", "kit_2", 0, 26, 24, "relief-force", false, {
+    carrier: "amuro-dodai", pilotId: "Pilot_AEUG_0087_N_ACE_AMR", level: 5, stayOnSfs: true,
+  }),
+];
+for (let squad = 0; squad < 2; squad++)
+  for (let i = 0; i < 3; i++)
+    relief.push(add(`relief-nemo-${squad}-${i}`, "MSA_003", "kit_0", 0, 24 + squad * 5, 26,
+      "relief-force", false, { squad: "relief-nemo-" + squad }));
+events.push({
+  id: "amuro-arrival", name: "阿姆罗与尼莫援军抵达",
+  when: { type: "round", round: 18 },
+  actions: [
+    { type: "spawn", actors: relief },
+    dialogue({ actor: "amuro-dijeh", name: "阿姆罗·雷", text: "这里是阿姆罗，接下来由我们掩护发射场。",
+      portrait: "assets/pilots/Pilot_AEUG_0087_N_ACE_AMR.png" }),
   ],
 });
 for (let i = 0; i < 3; i++)
@@ -259,7 +278,7 @@ doc.mission = {
   scenarioFaction: "AEUG",
   technologyLimitEnabled: false,
   technologyLimit: 0,
-  costLimit: 6000,
+  costLimit: 9000,
   unitLimit: 18,
   fleetLimit: 3,
   enemyResourcePerPlayer: 0,

@@ -68,6 +68,7 @@ const MissionMode = (() => {
         (a.facilityLevel !== undefined && (!Number.isInteger(a.facilityLevel) || a.facilityLevel<1 || a.facilityLevel>4)) ||
         (a.autonomous !== undefined && typeof a.autonomous !== "boolean") ||
         (a.stationary !== undefined && typeof a.stationary !== "boolean") ||
+        (a.stayOnSfs !== undefined && typeof a.stayOnSfs !== "boolean") ||
         (a.genericPilot !== undefined && !["veteran", "elite", "ace", "enhanced"].includes(a.genericPilot)) ||
         (a.genericPilot && a.pilotId) ||
         (a.squad && !id(a.squad)) ||
@@ -404,6 +405,7 @@ const MissionMode = (() => {
         ...(a.attackGroup ? { missionAttackGroup: a.attackGroup } : {}),
         missionGuest: a.team === 0,
         ...(a.autonomous ? {missionAutonomous:true} : {}),
+        ...(a.stayOnSfs ? {missionStayOnSfs:true} : {}),
         ...(a.stationary ? {missionStationary:true,moved:true} : {}),
         ...(m.victory.type === "escort" && m.victory.actor === a.id ? { missionEscort: true } : {}),
         deployed: true,

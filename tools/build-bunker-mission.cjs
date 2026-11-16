@@ -12,7 +12,7 @@ function add(id,unitId,kitId,team,x,y,group,initial=false,extra={}){
   const a={id,unitId,kitId,team,x,y,group,initial,angle:team?270:90,...extra};actors.push(a);return a;
 }
 function squad(prefix,unitId,kitId,count,team,x,y,group,initial=false){
-  for(let i=0;i<count;i++)add(prefix+"-"+i,unitId,kitId,team,x,y,group,initial,{squad:prefix});
+  for(let i=0;i<count;i++)add(prefix+"-"+i,unitId,kitId,team,x,y,group,initial,{squad:prefix,...(team===0?{autonomous:true}:{})});
 }
 for(const [i,y] of [7,15,24].entries())add("dabude-"+i,"DabudeClass","standard",1,45,y,"main-force",true);
 for(let i=0;i<9;i++)squad("garrison-"+i,i<3?"MS_06J":i<6?"MS_06F":"MS_09",i<6?"machine_gun":"bazooka",3,1,

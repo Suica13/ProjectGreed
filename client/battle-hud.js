@@ -533,7 +533,7 @@ const BattleHUD = (() => {
       for (const button of row.children)
         button.hidden =
           button.dataset.unitCommand === "hangar"
-            ? !["idle", "deployment"].includes(phase)
+            ? phase !== "idle"
             : !canCommand;
       row.prepend(infoButton);
       infoButton.hidden = false;

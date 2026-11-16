@@ -514,6 +514,10 @@ const UnitHangars = {
     }
     function shouldLaunch(g, u) {
       const carrier = g.units.find((c) => c.id === u.embarked?.carrierId);
+      // Scripted flight formations keep fighting from their SFS. Destruction
+      // still uses the normal emergency exit path and its existing penalties.
+      if (u.missionStayOnSfs && carrier?.hp > 0 &&
+          of(carrier).some(h => h.id === u.embarked?.hangarId && h.kind === "sfs")) return false;
       return (
         !!carrier &&
         readyToLaunch(u) &&

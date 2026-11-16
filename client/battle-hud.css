@@ -2363,9 +2363,10 @@ body.replay-active #gameScene .hud-terrain-strip {
 #gameScene #deploymentRoster .deployment-transport-group {
   display:flex; flex:0 0 auto; gap:4px; padding:2px; border:2px solid #55b8fb;
   width:max-content; max-width:100%; height:var(--deployment-row); box-sizing:border-box;
-  overflow-x:auto; overflow-y:hidden; scrollbar-width:none; border-radius:4px; background:#102b40;
+  overflow-x:auto; overflow-y:hidden; scrollbar-width:thin; scrollbar-color:#75b7dc #102b40; border-radius:4px; background:#102b40;
 }
-#gameScene #deploymentRoster .deployment-transport-group::-webkit-scrollbar { display:none; }
+#gameScene #deploymentRoster .deployment-transport-group::-webkit-scrollbar { height:5px; }
+#gameScene #deploymentRoster .deployment-transport-group::-webkit-scrollbar-thumb { background:#75b7dc; border-radius:3px; }
 #gameScene #deploymentRoster .deployment-transport-group .deployment-unit-icon { height:100%; }
 #gameScene #deploymentRoster .deployment-transport-group > .deployment-unit-icon:first-child { position:sticky; left:0; z-index:1; }
 #gameScene #deploymentRoster .is-passenger { border-color:#69acd9; background:#193e57; }
@@ -2375,6 +2376,10 @@ body.replay-active #gameScene .hud-terrain-strip {
 #gameScene #deploymentAuto { position:absolute; right:0; bottom:calc(100% + 3px); height:34px; margin:0; padding:4px 12px; }
 #gameScene[data-deployment="true"] #hudSquad { bottom:var(--deployment-panel-clearance,210px); }
 #gameScene[data-deployment="true"] #hudUnitCommands { bottom:var(--deployment-command-clearance,210px); }
+#gameScene[data-deployment="true"] #hudSquad {
+  left:12px; transform:none; width:max-content; max-width:calc(100% - 140px); box-sizing:border-box;
+}
+#gameScene[data-deployment="true"] :is(#mapClimateStatus,.hud-terrain-strip) { display:none; }
 @media(max-width:650px) {
   #gameScene #deploymentBottomBar { --deployment-row:50px; --deployment-icon:38px; grid-template-columns:minmax(0,1fr) 78px; gap:6px; padding:6px; }
   #gameScene #deploymentRoster { --deployment-cell:42px; }

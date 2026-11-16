@@ -56,6 +56,9 @@ test('bunker timed support and waves preserve all requested counts and real tran
   const f=fixture(t);f.waves();const units=f.room.game.units;
   const count=prefix=>units.filter(u=>u.missionActor?.startsWith(prefix)).length;
   assert.equal(count('jim-support'),9);assert.equal(count('guntank-support'),6);
+  const support=units.filter(u=>['jim-support','guntank-support'].includes(u.missionGroup));
+  assert(support.every(u=>u.missionAutonomous && G.ownerOf(u)===f.room.missionAllySeat));
+  assert(support.every(u=>!G.canControlUnit({...f.room.settings,shareAlliedUnits:true},[{seat:0},{seat:2}],0,u) && !G.canControlUnit({...f.room.settings,shareAlliedUnits:true},[{seat:0},{seat:2}],2,u)));
   assert.equal(new Set(units.filter(u=>u.missionGroup==='jim-support').map(u=>u.squadId)).size,3);
   assert.equal(new Set(units.filter(u=>u.missionGroup==='guntank-support').map(u=>u.squadId)).size,2);
   assert.equal(units.filter(u=>u.missionActor?.startsWith('wave-one-') && u.embarked).length,12);
@@ -103,7 +106,7 @@ for(const option of ['accept','refuse'])test(`synchronized ${option} branch auth
   }
   assert.equal(room.game.winner,0);
   const awards=room.economyAwards.filter(a=>a.kind==='result');assert.equal(awards.length,2);
-  for(const a of awards){assert.equal(a.money,option==='accept'?5000:7500);assert.equal(a.supplies,option==='accept'?7500:10000);
+  for(const a of awards){assert.equal(a.money,option==='accept'?6250:9375);assert.equal(a.supplies,option==='accept'?9375:12500);
     assert.deepEqual(a.stockGained.inventory,option==='accept'?{RGM_79SC:6,RGM_79HC:6}:{RX_81:3,RGM_79C:9});}
   f.engine.action(f.host,request);f.engine.broadcast(room);assert.equal(room.economyAwards.filter(a=>a.kind==='result').length,2);
   assert.equal(room.game.units.filter(u=>u.missionGroup==='last-stand').length,option==='accept'?0:22);
