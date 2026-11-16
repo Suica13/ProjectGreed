@@ -317,7 +317,7 @@ const Chat = (() => {
       selectTab(Net.local ? "log" : "chat");
     }
     if (typeof globalThis.receiveBattleDialogue === "function")
-      globalThis.receiveBattleDialogue(snapshot.dialogueEvents || [], snapshot.matchId || "");
+      globalThis.receiveBattleDialogue(snapshot.dialogueEvents || [], snapshot.matchId || "", snapshot.game.round);
     setLog(snapshot.log || [], [
       ...(snapshot.logNames || []),
       ...snapshot.game.units.map((unit) => Rules.unitLogName(unit)).filter(Boolean),

@@ -940,12 +940,15 @@ const Tactics = (() => {
         return sum + (lightAircraft(model) ? formationWeight(model) : 0);
       }, 0);
       const hasFrontline = choices.some(frontlineMS);
+      const needsPassenger = fleetMode && encounterProgress !== null && entries.length === 1;
       const legal = choices.filter((model) => {
+        if (needsPassenger && (isFleetCarrier(model) || !model.weapons.length)) return false;
         const firstCarrier = fleetMode && entries.length === 0;
         if (encounterProgress !== null && !isFleetCarrier(model) && technologyRank(model) > encounterTier) return false;
         if (fleetMode && isFleetCarrier(model) && fleetCount >= (restrictions.fleetLimit ?? 3)) return false;
         if (firstCarrier && (!isFleetCarrier(model) || !model.hangars?.length)) return false;
         if (fleetMode && !isFleetCarrier(model) && !passengerSlot(model)) return false;
+        if (needsPassenger) return model.cost <= remaining && formationWeight(model) <= remainingPoints;
         if (hasFrontline && lightAircraft(model) && aircraftPoints >= aircraftPointLimit)
           return false;
         if (model.ship && ships >= desiredShips && coreChoices.some((m) => !m.ship) && !firstCarrier) return false;
@@ -1138,6 +1141,8 @@ const Tactics = (() => {
       remaining -= model.cost;
       remainingPoints -= formationWeight(model);
     }
+    // Fleet generation already assigned passengers. Keep its carriers deployed independently.
+    if (fleetMode) return entries;
     // Assign existing squad entries to compatible hangars; never create free passengers.
     const hangars = entries.flatMap((entry, carrierIndex) =>
       (formationModel(entry).hangars || []).map((h) => ({

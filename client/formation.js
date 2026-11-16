@@ -1682,7 +1682,9 @@ const Formation = (() => {
         !p.needsRecruitment &&
         PilotSystem.canAssign(p, group) &&
         PilotSystem.allowed(p, restrictions()),
-    ).sort((a, b) => Number(!!a.ace) - Number(!!b.ace));
+    ).sort((a, b) => Number(!!a.ace) - Number(!!b.ace) ||
+      (byId("formationPilotSort").value === "level" ? b.level - a.level : 0) ||
+      I18n.pilotName(a).localeCompare(I18n.pilotName(b), I18n.language));
     const personalPilots = document.createDocumentFragment();
     for (const profile of [null, ...available]) {
       const id = profile?.id || null,
@@ -1747,7 +1749,9 @@ const Formation = (() => {
       if (profile) personalPilots.append(card);
       else list.append(card);
     }
-    for (const [grade, offer] of Object.entries(PilotSystem.crewGrades)) {
+    const grades = Object.entries(PilotSystem.crewGrades).sort(([a], [b]) =>
+      I18n.text(PilotSystem.defaultName(model, a)).localeCompare(I18n.text(PilotSystem.defaultName(model, b)), I18n.language));
+    for (const [grade, offer] of grades) {
       if (offer.selectable === false || (grade === "enhanced" && command)) continue;
       const owned = Economy.snapshot().crewStock[grade],
         occupied = draft.filter((other, i) => i !== index && other.customPilot?.hired && other.customPilot.grade === grade).length,
@@ -1797,6 +1801,10 @@ const Formation = (() => {
     byId("formationPilotPanel").hidden = false;
     byId("closeFormationPilot").focus();
   }
+  byId("formationPilotSort").onchange = () => {
+    openPilot(pilotIndex, pilotFromPreload);
+    byId("formationPilotSort").focus();
+  };
   byId("formationDetailPilot").onclick = () => openPilot(detailIndex);
   byId("closeFormationPilot").onclick = closePilot;
   byId("formationPilotPanel").addEventListener("keydown", (event) => {

@@ -210,11 +210,16 @@ function addLog(text) {
 let nextDialogueStart = 0;
 function queueDialogueBubble(record) {
   const pos = record.position;
+  const now = performance.now();
+  const round = record.round ?? game.round;
+  for (const [id, bubble] of dialogueBubbles) {
+    if (bubble.round !== round || bubble.until <= now) dialogueBubbles.delete(id);
+  }
   for (const bubble of dialogueBubbles.values()) {
     if (pos && bubble.position?.x === pos.x && bubble.position?.y === pos.y) return;
   }
   if (!dialogueBubbles.has(record.speakerId))
-    dialogueBubbles.set(record.speakerId, { ...record, until: 0 });
+    dialogueBubbles.set(record.speakerId, { ...record, round, until: now + 4500, started: false });
 }
 function recordBattleDialogue(event, speaker, target) {
   if (typeof BattleDialogue === "undefined" || Net.active) return;
@@ -235,8 +240,8 @@ function recordBattleDialogue(event, speaker, target) {
   addLog(line);
 }
 let lastNetworkDialogueId = null, lastNetworkDialogueMatch = null;
-globalThis.receiveBattleDialogue = function (events = [], matchId = "") {
-  if (lastNetworkDialogueMatch !== matchId) { dialogueBubbles.clear(); lastNetworkDialogueMatch = matchId; }
+globalThis.receiveBattleDialogue = function (events = [], matchId = "", round = game.round) {
+  if (lastNetworkDialogueMatch !== matchId) { dialogueBubbles.clear(); lastNetworkDialogueId = null; lastNetworkDialogueMatch = matchId; }
   const recent = events.at(-1);
   if (!recent) { lastNetworkDialogueId = matchId + ":empty"; return; }
   const identity = matchId + ":" + recent.id;
@@ -246,10 +251,10 @@ globalThis.receiveBattleDialogue = function (events = [], matchId = "") {
   }
   if (lastNetworkDialogueId === identity) return;
   const previousIndex = events.findIndex((entry) => matchId + ":" + entry.id === lastNetworkDialogueId);
-  const added = previousIndex < 0 ? events : events.slice(previousIndex + 1);
+  const added = previousIndex < 0 && lastNetworkDialogueId !== matchId + ":empty" ? [] : events.slice(previousIndex + 1);
   lastNetworkDialogueId = identity;
   for (const record of added) {
-    if (ClientSettings.hidePilotDialogue()) continue;
+    if (record.round !== round || ClientSettings.hidePilotDialogue()) continue;
     queueDialogueBubble(record);
   }
 };
@@ -2583,6 +2588,10 @@ function drawMapFrame(now) {
   drawDialogueBubbles(ctx, mapPosesById, intel, w, h, now, pilotLabels);
 }
 function drawDialogueBubbles(ctx, poses, intel, width, height, now, labelsVisible = MapCamera.pilotLabels) {
+  const clock = performance.now();
+  for (const [id, bubble] of dialogueBubbles) {
+    if (bubble.round !== game.round || bubble.until <= clock) dialogueBubbles.delete(id);
+  }
   if (!dialogueBubbles.size || ClientSettings.hidePilotDialogue() || !labelsVisible) return;
   const occupied = [];
   ctx.save();
@@ -2593,16 +2602,13 @@ function drawDialogueBubbles(ctx, poses, intel, width, height, now, labelsVisibl
     if (bubble.defeatUnitId && Net.snapshot?.phase === "playback") {
       if (!battleView || battleView.networkId !== Net.snapshot.playback?.id || MapCombat.health(bubble.defeatUnitId) > 0) continue;
     }
-    if (!bubble.until) {
-      if (now < nextDialogueStart) continue;
-      nextDialogueStart = now + 350 + Math.random() * 350;
-      bubble.until = now + 4500;
+    if (!bubble.started) {
+      if (clock < nextDialogueStart) continue;
+      nextDialogueStart = clock + 350 + Math.random() * 350;
+      bubble.started = true;
       if (typeof DialogueAudio !== "undefined") DialogueAudio.play(bubble);
     }
-    if (bubble.until <= now) {
-      dialogueBubbles.delete(id);
-      continue;
-    }
+
     const pose = poses.get(id),
       actor = pose?.u || getUnit(id);
     // Server-provided anchors have already passed the recipient's visibility filter.
