@@ -92,6 +92,10 @@ const MissionMode = (() => {
         (!G.models[a.unitId + "__" + a.kitId] || (a.pilotId && !G.pilots.aceProfile(a.pilotId)))
       )
         fail();
+      if (a.kitChoices !== undefined &&
+          (!Array.isArray(a.kitChoices) || !a.kitChoices.length || a.kitChoices.length > 16 ||
+            new Set(a.kitChoices).size !== a.kitChoices.length ||
+            a.kitChoices.some(kit => !text(kit,100) || (G && !G.models[a.unitId + "__" + kit])))) fail();
       actors.add(a.id);
     }
     for (const a of m.actors) {
@@ -382,13 +386,31 @@ const MissionMode = (() => {
   function spawn(room, G, ids) {
     const m = G.getMap(room.settings.mapId).mission;
     const staged = { ...room.game, units: room.game.units.slice() };
+    // Shared facility prefabs have a catalog faction, but their crews belong to
+    // the scripted army using them. Infer that army from its authored units.
+    const armyFactions = [0, 1].map(team => {
+      const counts = new Map();
+      for (const actor of m.actors) {
+        const model = G.models[actor.unitId + "__" + actor.kitId];
+        if (actor.team !== team || model.facilityType) continue;
+        counts.set(model.faction, (counts.get(model.faction) || 0) + 1);
+      }
+      return [...counts].sort((a, b) => b[1] - a[1])[0]?.[0];
+    });
     for (const key of ids) {
       if (staged.units.some((u) => u.missionActor === key)) continue;
       const a = m.actors.find((a) => a.id === key);
       const host = commander(room),
         owner = a.team === 1 ? 1 : a.autonomous ? room.missionAllySeat : host.seat;
+      let kitId = a.kitId;
+      if (a.kitChoices?.length) {
+        // One authoritative, repeatable selection per actor and battle seed.
+        let hash = room.game.seed >>> 0;
+        for (const character of a.id) hash = Math.imul(hash ^ character.charCodeAt(0), 16777619);
+        kitId = a.kitChoices[(hash >>> 0) % a.kitChoices.length];
+      }
       const u = G.makeUnit(
-        { unitId: a.unitId, kitId: a.kitId, customPilot: pilot(G, a),
+        { unitId: a.unitId, kitId, customPilot: pilot(G, a),
           ...(a.genericPilot ? {pilotId:"generic:"+a.genericPilot} : {}) },
         owner,
         "mission-" + a.id,
@@ -422,6 +444,9 @@ const MissionMode = (() => {
           : {}),
       });
       const model = G.modelOf(u);
+      if (model.facilityType && !a.pilotId && armyFactions[a.team])
+        u.pilot = G.pilots.roll(a.genericPilot ? "generic:" + a.genericPilot : null,
+          room.game.seed, owner, 0, { ...model, faction: armyFactions[a.team] });
       if (model.facilityType) u.facility = {id:a.id,type:model.facilityType,level:a.facilityLevel || 1,cycle:0};
       u.hp = G.modelOf(u).hp;
       u.en = G.modelOf(u).en;

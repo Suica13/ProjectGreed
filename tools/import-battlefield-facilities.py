@@ -48,7 +48,7 @@ def fit_facility(u,dest,kind):
   offset=layer.setdefault('worldOffset',{'x':0,'y':0})
   offset['x']-=center[0]; offset['y']-=center[1]
  presentation=json.loads((ASSETS/'presentation.json').read_text(encoding='utf-8'))
- cells=3 if kind=='base' else 1 if kind=='radar' else .5
+ cells=1 if kind in ('base','radar','factory','refinery','research') else .5
  u['presentation']['mapScale']=cells*160*presentation['mapCellScale']/(presentation['unitMapScale']*max(bounds[2]-bounds[0],bounds[3]-bounds[1]))
  u['presentation']['idle']='ImportedIdle'
  u['presentation']['fixedFacing']=0
@@ -74,7 +74,7 @@ def build(suffix,name,source,kind):
  u={k:copy.deepcopy(template[k]) for k in ['schemaVersion','stats','shield','defenses','attackBonuses','presentation'] if k in template}
  u.update(id=uid,code=uid,name=name,description='通用战场设施',source=source.relative_to(MOD).as_posix(),tags=['EFSF','0079T1'],availableFactions=['EFSF','ZEON','AEUG','TITANS','NEO_ZEON'],unitTags=['Building','LargeUnit' if kind=='base' else 'MediumUnit'],formOnly=True,facility={'type':kind},production={'enabled':False},skeleton={**copy.deepcopy(template['skeleton']),'Turret':{'x':0,'y':3}},materials={'textures':{},'icon':''},layers=[],weapons={},animations=copy.deepcopy(template['animations']),skills=[],transport={'slotCost':1,'loadTags':[]},weaponKits=[{'id':'standard','name':'标准套件','cost':0,'weapons':[]}],mechanics=[{'id':'facility','name':'通用战场设施','status':'implemented'}])
  hp=int(d['core']['maxHp']);u['stats'].update(hp=hp//2,en=1000,move=0,speed=100,mobility=25,deployed=True,cost={'base':2000,'machineGun':250,'beam':500,'missile':350,'cannon':400,'radar':250}[kind],facilityType=kind,partsBreakable=False,visualTurrets=[],sensors={'sight':12 if kind=='radar' else 8,'radar':24 if kind=='radar' else 8,'antiDetection':0,'revealOnDetection':kind=='radar','antiDetect':kind=='radar','stealth':False,'stealthAqua':False,'antiDetectAqua':False})
- if kind=='base':u['stats']['footprint']={'width':3,'height':3}
+ u['stats']['footprint']={'width':1,'height':1}
  u['sourceStats']={'nativeHP':hp,'facilitySource':u['source'],'conversion':'HP and projectile payload / 2, followed by global conversion; turn volleys MG8 / Beam2 / Missile4 / Cannon1'}
  dest=ASSETS/'units'/uid/'textures';dest.mkdir(parents=True,exist_ok=True)
  selected=['decal_Body','decal_Light'] if kind=='base' else [key for key in d if re.fullmatch(r'decal_[A-Z]',key)]

@@ -65,6 +65,7 @@ function setPageView(view) {
   window.SFSUI?.refresh();
   window.BattleHUD?.refresh();
   window.BattlefieldUI?.refresh();
+  window.DominionUI?.refresh();
   if (view === "game") startRendering();
   else if (!window.isLayoutPreview) {
     cancelAnimationFrame(animationFrameId);
@@ -504,7 +505,7 @@ function updateContents() {
   );
   byId("modeLabel").textContent = Net.active
     ? (Net.local ? "离线" : "联机") +
-      ({ mission: "任务模式", sweep: "战场扫荡", battlefield: "雇佣兵战争模式", campaign: "历史战役模式", quick: "快速战", regular: "常规战" }[Net.snapshot?.settings?.mode] || "常规战") +
+      ({ dominion: "占山为王模式", mission: "任务模式", sweep: "战场扫荡", battlefield: "雇佣兵战争模式", campaign: "历史战役模式", quick: "快速战", regular: "常规战" }[Net.snapshot?.settings?.mode] || "常规战") +
       " · " +
       Net.roleName()
     : "常规战";
@@ -551,6 +552,7 @@ function updateContents() {
   window.SFSUI?.refresh();
   window.BattleHUD?.refresh();
   window.BattlefieldUI?.refresh();
+  window.DominionUI?.refresh();
   TurnFlow.refreshAutoEnd();
 }
 // 左侧只按当前视角显示我军；观战者可查看两队，每名所有者单独成组。
@@ -2043,6 +2045,7 @@ function drawMapFrame(now) {
   EnvironmentVisuals.fog(ctx, intel, ox, oy, tile);
   drawCampaignSupply(ctx, ox, oy, tile);
   window.BattlefieldUI?.draw(ctx, ox, oy, tile);
+  window.DominionUI?.draw(ctx, ox, oy, tile);
   // The clip remains available for individual effects opting out of fog visibility.
   const visibilityClip = EnvironmentVisuals.visibilityClip(intel, ox, oy, tile);
   const drawVisibleEffects = (draw) => {
@@ -2734,6 +2737,7 @@ byId("map").onclick = async (e) => {
   let cell = cellAt(e);
   if (!cell) return;
   if (mode === "move" || mode === "select") {
+    if (window.DominionUI?.click(cell)) return;
     if (window.BattlefieldUI?.click(cell)) return;
   }
   let target = Rules.at(game, cell.x, cell.y),

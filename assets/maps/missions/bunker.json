@@ -534,12 +534,12 @@
         "kitId": "machine_gun",
         "team": 0,
         "x": 8,
-        "y": 6,
+        "y": 5,
         "group": "jim-support",
         "initial": false,
         "angle": 90,
-        "squad": "jim-support-0",
-        "autonomous": true
+        "autonomous": true,
+        "squad": "jim-support-0"
       },
       {
         "id": "jim-support-0-1",
@@ -547,12 +547,12 @@
         "kitId": "machine_gun",
         "team": 0,
         "x": 8,
-        "y": 6,
+        "y": 5,
         "group": "jim-support",
         "initial": false,
         "angle": 90,
-        "squad": "jim-support-0",
-        "autonomous": true
+        "autonomous": true,
+        "squad": "jim-support-0"
       },
       {
         "id": "jim-support-0-2",
@@ -560,12 +560,12 @@
         "kitId": "machine_gun",
         "team": 0,
         "x": 8,
-        "y": 6,
+        "y": 5,
         "group": "jim-support",
         "initial": false,
         "angle": 90,
-        "squad": "jim-support-0",
-        "autonomous": true
+        "autonomous": true,
+        "squad": "jim-support-0"
       },
       {
         "id": "jim-support-1-0",
@@ -573,12 +573,12 @@
         "kitId": "machine_gun",
         "team": 0,
         "x": 8,
-        "y": 15,
+        "y": 10,
         "group": "jim-support",
         "initial": false,
         "angle": 90,
-        "squad": "jim-support-1",
-        "autonomous": true
+        "autonomous": true,
+        "squad": "jim-support-1"
       },
       {
         "id": "jim-support-1-1",
@@ -586,12 +586,12 @@
         "kitId": "machine_gun",
         "team": 0,
         "x": 8,
-        "y": 15,
+        "y": 10,
         "group": "jim-support",
         "initial": false,
         "angle": 90,
-        "squad": "jim-support-1",
-        "autonomous": true
+        "autonomous": true,
+        "squad": "jim-support-1"
       },
       {
         "id": "jim-support-1-2",
@@ -599,12 +599,12 @@
         "kitId": "machine_gun",
         "team": 0,
         "x": 8,
-        "y": 15,
+        "y": 10,
         "group": "jim-support",
         "initial": false,
         "angle": 90,
-        "squad": "jim-support-1",
-        "autonomous": true
+        "autonomous": true,
+        "squad": "jim-support-1"
       },
       {
         "id": "jim-support-2-0",
@@ -612,12 +612,12 @@
         "kitId": "machine_gun",
         "team": 0,
         "x": 8,
-        "y": 24,
+        "y": 15,
         "group": "jim-support",
         "initial": false,
         "angle": 90,
-        "squad": "jim-support-2",
-        "autonomous": true
+        "autonomous": true,
+        "squad": "jim-support-2"
       },
       {
         "id": "jim-support-2-1",
@@ -625,12 +625,12 @@
         "kitId": "machine_gun",
         "team": 0,
         "x": 8,
-        "y": 24,
+        "y": 15,
         "group": "jim-support",
         "initial": false,
         "angle": 90,
-        "squad": "jim-support-2",
-        "autonomous": true
+        "autonomous": true,
+        "squad": "jim-support-2"
       },
       {
         "id": "jim-support-2-2",
@@ -638,12 +638,90 @@
         "kitId": "machine_gun",
         "team": 0,
         "x": 8,
-        "y": 24,
+        "y": 15,
         "group": "jim-support",
         "initial": false,
         "angle": 90,
-        "squad": "jim-support-2",
-        "autonomous": true
+        "autonomous": true,
+        "squad": "jim-support-2"
+      },
+      {
+        "id": "jim-support-3-0",
+        "unitId": "RGM_79",
+        "kitId": "machine_gun",
+        "team": 0,
+        "x": 8,
+        "y": 20,
+        "group": "jim-support",
+        "initial": false,
+        "angle": 90,
+        "autonomous": true,
+        "squad": "jim-support-3"
+      },
+      {
+        "id": "jim-support-3-1",
+        "unitId": "RGM_79",
+        "kitId": "machine_gun",
+        "team": 0,
+        "x": 8,
+        "y": 20,
+        "group": "jim-support",
+        "initial": false,
+        "angle": 90,
+        "autonomous": true,
+        "squad": "jim-support-3"
+      },
+      {
+        "id": "jim-support-3-2",
+        "unitId": "RGM_79",
+        "kitId": "machine_gun",
+        "team": 0,
+        "x": 8,
+        "y": 20,
+        "group": "jim-support",
+        "initial": false,
+        "angle": 90,
+        "autonomous": true,
+        "squad": "jim-support-3"
+      },
+      {
+        "id": "jim-support-4-0",
+        "unitId": "RGM_79",
+        "kitId": "machine_gun",
+        "team": 0,
+        "x": 8,
+        "y": 25,
+        "group": "jim-support",
+        "initial": false,
+        "angle": 90,
+        "autonomous": true,
+        "squad": "jim-support-4"
+      },
+      {
+        "id": "jim-support-4-1",
+        "unitId": "RGM_79",
+        "kitId": "machine_gun",
+        "team": 0,
+        "x": 8,
+        "y": 25,
+        "group": "jim-support",
+        "initial": false,
+        "angle": 90,
+        "autonomous": true,
+        "squad": "jim-support-4"
+      },
+      {
+        "id": "jim-support-4-2",
+        "unitId": "RGM_79",
+        "kitId": "machine_gun",
+        "team": 0,
+        "x": 8,
+        "y": 25,
+        "group": "jim-support",
+        "initial": false,
+        "angle": 90,
+        "autonomous": true,
+        "squad": "jim-support-4"
       },
       {
         "id": "guntank-support-0-0",
@@ -655,8 +733,8 @@
         "group": "guntank-support",
         "initial": false,
         "angle": 90,
-        "squad": "guntank-support-0",
-        "autonomous": true
+        "autonomous": true,
+        "squad": "guntank-support-0"
       },
       {
         "id": "guntank-support-0-1",
@@ -668,8 +746,8 @@
         "group": "guntank-support",
         "initial": false,
         "angle": 90,
-        "squad": "guntank-support-0",
-        "autonomous": true
+        "autonomous": true,
+        "squad": "guntank-support-0"
       },
       {
         "id": "guntank-support-0-2",
@@ -681,8 +759,8 @@
         "group": "guntank-support",
         "initial": false,
         "angle": 90,
-        "squad": "guntank-support-0",
-        "autonomous": true
+        "autonomous": true,
+        "squad": "guntank-support-0"
       },
       {
         "id": "guntank-support-1-0",
@@ -694,8 +772,8 @@
         "group": "guntank-support",
         "initial": false,
         "angle": 90,
-        "squad": "guntank-support-1",
-        "autonomous": true
+        "autonomous": true,
+        "squad": "guntank-support-1"
       },
       {
         "id": "guntank-support-1-1",
@@ -707,8 +785,8 @@
         "group": "guntank-support",
         "initial": false,
         "angle": 90,
-        "squad": "guntank-support-1",
-        "autonomous": true
+        "autonomous": true,
+        "squad": "guntank-support-1"
       },
       {
         "id": "guntank-support-1-2",
@@ -720,8 +798,8 @@
         "group": "guntank-support",
         "initial": false,
         "angle": 90,
-        "squad": "guntank-support-1",
-        "autonomous": true
+        "autonomous": true,
+        "squad": "guntank-support-1"
       },
       {
         "id": "wave-one-f-carrier-0",
@@ -1410,6 +1488,597 @@
         "initial": false,
         "angle": 270,
         "squad": "last-flying-gouf"
+      },
+      {
+        "id": "last-gelgoog-j-0",
+        "unitId": "MS_14JG",
+        "kitId": "standard",
+        "team": 1,
+        "x": 40,
+        "y": 5,
+        "group": "last-stand",
+        "initial": false,
+        "angle": 270,
+        "squad": "last-gelgoog-j",
+        "genericPilot": "elite"
+      },
+      {
+        "id": "last-gelgoog-j-1",
+        "unitId": "MS_14JG",
+        "kitId": "standard",
+        "team": 1,
+        "x": 40,
+        "y": 5,
+        "group": "last-stand",
+        "initial": false,
+        "angle": 270,
+        "squad": "last-gelgoog-j",
+        "genericPilot": "elite"
+      },
+      {
+        "id": "last-gelgoog-j-2",
+        "unitId": "MS_14JG",
+        "kitId": "standard",
+        "team": 1,
+        "x": 40,
+        "y": 5,
+        "group": "last-stand",
+        "initial": false,
+        "angle": 270,
+        "squad": "last-gelgoog-j",
+        "genericPilot": "elite"
+      },
+      {
+        "id": "last-extra-dom-0-0",
+        "unitId": "MS_09",
+        "kitId": "bazooka",
+        "team": 1,
+        "x": 39,
+        "y": 9,
+        "group": "last-stand",
+        "initial": false,
+        "angle": 270,
+        "squad": "last-extra-dom-0",
+        "genericPilot": "veteran"
+      },
+      {
+        "id": "last-extra-dom-0-1",
+        "unitId": "MS_09",
+        "kitId": "bazooka",
+        "team": 1,
+        "x": 39,
+        "y": 9,
+        "group": "last-stand",
+        "initial": false,
+        "angle": 270,
+        "squad": "last-extra-dom-0",
+        "genericPilot": "veteran"
+      },
+      {
+        "id": "last-extra-dom-0-2",
+        "unitId": "MS_09",
+        "kitId": "bazooka",
+        "team": 1,
+        "x": 39,
+        "y": 9,
+        "group": "last-stand",
+        "initial": false,
+        "angle": 270,
+        "squad": "last-extra-dom-0",
+        "genericPilot": "veteran"
+      },
+      {
+        "id": "last-hygogg-0-0",
+        "unitId": "MSM_03C",
+        "kitId": "standard",
+        "team": 1,
+        "x": 41,
+        "y": 10,
+        "group": "last-stand",
+        "initial": false,
+        "angle": 270,
+        "squad": "last-hygogg-0",
+        "genericPilot": "veteran"
+      },
+      {
+        "id": "last-hygogg-0-1",
+        "unitId": "MSM_03C",
+        "kitId": "standard",
+        "team": 1,
+        "x": 41,
+        "y": 10,
+        "group": "last-stand",
+        "initial": false,
+        "angle": 270,
+        "squad": "last-hygogg-0",
+        "genericPilot": "veteran"
+      },
+      {
+        "id": "last-hygogg-0-2",
+        "unitId": "MSM_03C",
+        "kitId": "standard",
+        "team": 1,
+        "x": 41,
+        "y": 10,
+        "group": "last-stand",
+        "initial": false,
+        "angle": 270,
+        "squad": "last-hygogg-0",
+        "genericPilot": "veteran"
+      },
+      {
+        "id": "last-extra-dom-1-0",
+        "unitId": "MS_09",
+        "kitId": "bazooka",
+        "team": 1,
+        "x": 39,
+        "y": 19,
+        "group": "last-stand",
+        "initial": false,
+        "angle": 270,
+        "squad": "last-extra-dom-1",
+        "genericPilot": "veteran"
+      },
+      {
+        "id": "last-extra-dom-1-1",
+        "unitId": "MS_09",
+        "kitId": "bazooka",
+        "team": 1,
+        "x": 39,
+        "y": 19,
+        "group": "last-stand",
+        "initial": false,
+        "angle": 270,
+        "squad": "last-extra-dom-1",
+        "genericPilot": "veteran"
+      },
+      {
+        "id": "last-extra-dom-1-2",
+        "unitId": "MS_09",
+        "kitId": "bazooka",
+        "team": 1,
+        "x": 39,
+        "y": 19,
+        "group": "last-stand",
+        "initial": false,
+        "angle": 270,
+        "squad": "last-extra-dom-1",
+        "genericPilot": "veteran"
+      },
+      {
+        "id": "last-hygogg-1-0",
+        "unitId": "MSM_03C",
+        "kitId": "standard",
+        "team": 1,
+        "x": 41,
+        "y": 20,
+        "group": "last-stand",
+        "initial": false,
+        "angle": 270,
+        "squad": "last-hygogg-1",
+        "genericPilot": "veteran"
+      },
+      {
+        "id": "last-hygogg-1-1",
+        "unitId": "MSM_03C",
+        "kitId": "standard",
+        "team": 1,
+        "x": 41,
+        "y": 20,
+        "group": "last-stand",
+        "initial": false,
+        "angle": 270,
+        "squad": "last-hygogg-1",
+        "genericPilot": "veteran"
+      },
+      {
+        "id": "last-hygogg-1-2",
+        "unitId": "MSM_03C",
+        "kitId": "standard",
+        "team": 1,
+        "x": 41,
+        "y": 20,
+        "group": "last-stand",
+        "initial": false,
+        "angle": 270,
+        "squad": "last-hygogg-1",
+        "genericPilot": "veteran"
+      },
+      {
+        "id": "last-high-mobility-zaku-0-0",
+        "unitId": "MS_06G",
+        "kitId": "kit_0",
+        "team": 1,
+        "x": 41,
+        "y": 5,
+        "group": "last-stand",
+        "initial": false,
+        "angle": 270,
+        "squad": "last-high-mobility-zaku-0",
+        "genericPilot": "veteran",
+        "kitChoices": [
+          "kit_0",
+          "kit_1",
+          "kit_2"
+        ]
+      },
+      {
+        "id": "last-high-mobility-zaku-0-1",
+        "unitId": "MS_06G",
+        "kitId": "kit_0",
+        "team": 1,
+        "x": 41,
+        "y": 5,
+        "group": "last-stand",
+        "initial": false,
+        "angle": 270,
+        "squad": "last-high-mobility-zaku-0",
+        "genericPilot": "veteran",
+        "kitChoices": [
+          "kit_0",
+          "kit_1",
+          "kit_2"
+        ]
+      },
+      {
+        "id": "last-high-mobility-zaku-0-2",
+        "unitId": "MS_06G",
+        "kitId": "kit_0",
+        "team": 1,
+        "x": 41,
+        "y": 5,
+        "group": "last-stand",
+        "initial": false,
+        "angle": 270,
+        "squad": "last-high-mobility-zaku-0",
+        "genericPilot": "veteran",
+        "kitChoices": [
+          "kit_0",
+          "kit_1",
+          "kit_2"
+        ]
+      },
+      {
+        "id": "last-high-mobility-zaku-1-0",
+        "unitId": "MS_06G",
+        "kitId": "kit_0",
+        "team": 1,
+        "x": 41,
+        "y": 14,
+        "group": "last-stand",
+        "initial": false,
+        "angle": 270,
+        "squad": "last-high-mobility-zaku-1",
+        "genericPilot": "veteran",
+        "kitChoices": [
+          "kit_0",
+          "kit_1",
+          "kit_2"
+        ]
+      },
+      {
+        "id": "last-high-mobility-zaku-1-1",
+        "unitId": "MS_06G",
+        "kitId": "kit_0",
+        "team": 1,
+        "x": 41,
+        "y": 14,
+        "group": "last-stand",
+        "initial": false,
+        "angle": 270,
+        "squad": "last-high-mobility-zaku-1",
+        "genericPilot": "veteran",
+        "kitChoices": [
+          "kit_0",
+          "kit_1",
+          "kit_2"
+        ]
+      },
+      {
+        "id": "last-high-mobility-zaku-1-2",
+        "unitId": "MS_06G",
+        "kitId": "kit_0",
+        "team": 1,
+        "x": 41,
+        "y": 14,
+        "group": "last-stand",
+        "initial": false,
+        "angle": 270,
+        "squad": "last-high-mobility-zaku-1",
+        "genericPilot": "veteran",
+        "kitChoices": [
+          "kit_0",
+          "kit_1",
+          "kit_2"
+        ]
+      },
+      {
+        "id": "last-high-mobility-zaku-2-0",
+        "unitId": "MS_06G",
+        "kitId": "kit_0",
+        "team": 1,
+        "x": 41,
+        "y": 23,
+        "group": "last-stand",
+        "initial": false,
+        "angle": 270,
+        "squad": "last-high-mobility-zaku-2",
+        "genericPilot": "veteran",
+        "kitChoices": [
+          "kit_0",
+          "kit_1",
+          "kit_2"
+        ]
+      },
+      {
+        "id": "last-high-mobility-zaku-2-1",
+        "unitId": "MS_06G",
+        "kitId": "kit_0",
+        "team": 1,
+        "x": 41,
+        "y": 23,
+        "group": "last-stand",
+        "initial": false,
+        "angle": 270,
+        "squad": "last-high-mobility-zaku-2",
+        "genericPilot": "veteran",
+        "kitChoices": [
+          "kit_0",
+          "kit_1",
+          "kit_2"
+        ]
+      },
+      {
+        "id": "last-high-mobility-zaku-2-2",
+        "unitId": "MS_06G",
+        "kitId": "kit_0",
+        "team": 1,
+        "x": 41,
+        "y": 23,
+        "group": "last-stand",
+        "initial": false,
+        "angle": 270,
+        "squad": "last-high-mobility-zaku-2",
+        "genericPilot": "veteran",
+        "kitChoices": [
+          "kit_0",
+          "kit_1",
+          "kit_2"
+        ]
+      },
+      {
+        "id": "relief-medea-0",
+        "unitId": "Medea",
+        "kitId": "standard",
+        "team": 0,
+        "x": 4,
+        "y": 5,
+        "group": "phase-two-support",
+        "initial": false,
+        "angle": 90,
+        "autonomous": true
+      },
+      {
+        "id": "relief-ground-gundam-0-0",
+        "unitId": "RX_79_G",
+        "kitId": "machine_gun",
+        "team": 0,
+        "x": 4,
+        "y": 5,
+        "group": "phase-two-support",
+        "initial": false,
+        "angle": 90,
+        "autonomous": true,
+        "carrier": "relief-medea-0",
+        "squad": "relief-ground-gundam-0",
+        "genericPilot": "veteran",
+        "kitChoices": [
+          "machine_gun",
+          "bazooka",
+          "beam_rifle",
+          "cannon",
+          "missile_launcher"
+        ]
+      },
+      {
+        "id": "relief-ground-gundam-0-1",
+        "unitId": "RX_79_G",
+        "kitId": "machine_gun",
+        "team": 0,
+        "x": 4,
+        "y": 5,
+        "group": "phase-two-support",
+        "initial": false,
+        "angle": 90,
+        "autonomous": true,
+        "carrier": "relief-medea-0",
+        "squad": "relief-ground-gundam-0",
+        "genericPilot": "veteran",
+        "kitChoices": [
+          "machine_gun",
+          "bazooka",
+          "beam_rifle",
+          "cannon",
+          "missile_launcher"
+        ]
+      },
+      {
+        "id": "relief-ground-gundam-0-2",
+        "unitId": "RX_79_G",
+        "kitId": "machine_gun",
+        "team": 0,
+        "x": 4,
+        "y": 5,
+        "group": "phase-two-support",
+        "initial": false,
+        "angle": 90,
+        "autonomous": true,
+        "carrier": "relief-medea-0",
+        "squad": "relief-ground-gundam-0",
+        "genericPilot": "veteran",
+        "kitChoices": [
+          "machine_gun",
+          "bazooka",
+          "beam_rifle",
+          "cannon",
+          "missile_launcher"
+        ]
+      },
+      {
+        "id": "relief-medea-1",
+        "unitId": "Medea",
+        "kitId": "standard",
+        "team": 0,
+        "x": 4,
+        "y": 14,
+        "group": "phase-two-support",
+        "initial": false,
+        "angle": 90,
+        "autonomous": true
+      },
+      {
+        "id": "relief-ground-gundam-1-0",
+        "unitId": "RX_79_G",
+        "kitId": "machine_gun",
+        "team": 0,
+        "x": 4,
+        "y": 14,
+        "group": "phase-two-support",
+        "initial": false,
+        "angle": 90,
+        "autonomous": true,
+        "carrier": "relief-medea-1",
+        "squad": "relief-ground-gundam-1",
+        "genericPilot": "veteran",
+        "kitChoices": [
+          "machine_gun",
+          "bazooka",
+          "beam_rifle",
+          "cannon",
+          "missile_launcher"
+        ]
+      },
+      {
+        "id": "relief-ground-gundam-1-1",
+        "unitId": "RX_79_G",
+        "kitId": "machine_gun",
+        "team": 0,
+        "x": 4,
+        "y": 14,
+        "group": "phase-two-support",
+        "initial": false,
+        "angle": 90,
+        "autonomous": true,
+        "carrier": "relief-medea-1",
+        "squad": "relief-ground-gundam-1",
+        "genericPilot": "veteran",
+        "kitChoices": [
+          "machine_gun",
+          "bazooka",
+          "beam_rifle",
+          "cannon",
+          "missile_launcher"
+        ]
+      },
+      {
+        "id": "relief-ground-gundam-1-2",
+        "unitId": "RX_79_G",
+        "kitId": "machine_gun",
+        "team": 0,
+        "x": 4,
+        "y": 14,
+        "group": "phase-two-support",
+        "initial": false,
+        "angle": 90,
+        "autonomous": true,
+        "carrier": "relief-medea-1",
+        "squad": "relief-ground-gundam-1",
+        "genericPilot": "veteran",
+        "kitChoices": [
+          "machine_gun",
+          "bazooka",
+          "beam_rifle",
+          "cannon",
+          "missile_launcher"
+        ]
+      },
+      {
+        "id": "relief-medea-2",
+        "unitId": "Medea",
+        "kitId": "standard",
+        "team": 0,
+        "x": 4,
+        "y": 23,
+        "group": "phase-two-support",
+        "initial": false,
+        "angle": 90,
+        "autonomous": true
+      },
+      {
+        "id": "relief-ground-gundam-2-0",
+        "unitId": "RX_79_G",
+        "kitId": "machine_gun",
+        "team": 0,
+        "x": 4,
+        "y": 23,
+        "group": "phase-two-support",
+        "initial": false,
+        "angle": 90,
+        "autonomous": true,
+        "carrier": "relief-medea-2",
+        "squad": "relief-ground-gundam-2",
+        "genericPilot": "veteran",
+        "kitChoices": [
+          "machine_gun",
+          "bazooka",
+          "beam_rifle",
+          "cannon",
+          "missile_launcher"
+        ]
+      },
+      {
+        "id": "relief-ground-gundam-2-1",
+        "unitId": "RX_79_G",
+        "kitId": "machine_gun",
+        "team": 0,
+        "x": 4,
+        "y": 23,
+        "group": "phase-two-support",
+        "initial": false,
+        "angle": 90,
+        "autonomous": true,
+        "carrier": "relief-medea-2",
+        "squad": "relief-ground-gundam-2",
+        "genericPilot": "veteran",
+        "kitChoices": [
+          "machine_gun",
+          "bazooka",
+          "beam_rifle",
+          "cannon",
+          "missile_launcher"
+        ]
+      },
+      {
+        "id": "relief-ground-gundam-2-2",
+        "unitId": "RX_79_G",
+        "kitId": "machine_gun",
+        "team": 0,
+        "x": 4,
+        "y": 23,
+        "group": "phase-two-support",
+        "initial": false,
+        "angle": 90,
+        "autonomous": true,
+        "carrier": "relief-medea-2",
+        "squad": "relief-ground-gundam-2",
+        "genericPilot": "veteran",
+        "kitChoices": [
+          "machine_gun",
+          "bazooka",
+          "beam_rifle",
+          "cannon",
+          "missile_launcher"
+        ]
       }
     ],
     "victory": {
@@ -1457,14 +2126,45 @@
         },
         "actions": [
           {
-            "type": "message",
-            "text": "歼灭地图中的敌军。没有人可以侵略联邦。"
+            "type": "dialogue",
+            "lines": [
+              {
+                "actor": "dabude-0",
+                "name": "联邦通信员",
+                "portrait": "assets/pilots/Pilot_EFSF_0079_Common_1.png",
+                "text": "吉翁军在地球已经要完蛋了。"
+              },
+              {
+                "actor": "dabude-0",
+                "name": "联邦通信员",
+                "portrait": "assets/pilots/Pilot_EFSF_0079_Common_1.png",
+                "text": "他们打算通过HLV返回宇宙，保留有生力量。"
+              },
+              {
+                "actor": "dabude-0",
+                "name": "联邦通信员",
+                "portrait": "assets/pilots/Pilot_EFSF_0079_Common_1.png",
+                "text": "但我们的情报部门已经提前打探到风声。"
+              },
+              {
+                "actor": "dabude-0",
+                "name": "联邦通信员",
+                "portrait": "assets/pilots/Pilot_EFSF_0079_Common_1.png",
+                "text": "这是一次突袭任务，不要手下留情。"
+              },
+              {
+                "actor": "dabude-0",
+                "name": "联邦通信员",
+                "portrait": "assets/pilots/Pilot_EFSF_0079_Common_1.png",
+                "text": "交战规则无限制，杀光他们。"
+              }
+            ]
           }
         ]
       },
       {
         "id": "jim-arrival",
-        "name": "三队吉姆支援",
+        "name": "五队吉姆支援",
         "when": {
           "type": "round",
           "round": 2
@@ -1481,7 +2181,13 @@
               "jim-support-1-2",
               "jim-support-2-0",
               "jim-support-2-1",
-              "jim-support-2-2"
+              "jim-support-2-2",
+              "jim-support-3-0",
+              "jim-support-3-1",
+              "jim-support-3-2",
+              "jim-support-4-0",
+              "jim-support-4-1",
+              "jim-support-4-2"
             ]
           }
         ]
@@ -1831,7 +2537,43 @@
               "last-tropical-dom",
               "last-efreet",
               "last-flying-gouf-0",
-              "last-flying-gouf-1"
+              "last-flying-gouf-1",
+              "last-gelgoog-j-0",
+              "last-gelgoog-j-1",
+              "last-gelgoog-j-2",
+              "last-extra-dom-0-0",
+              "last-extra-dom-0-1",
+              "last-extra-dom-0-2",
+              "last-hygogg-0-0",
+              "last-hygogg-0-1",
+              "last-hygogg-0-2",
+              "last-extra-dom-1-0",
+              "last-extra-dom-1-1",
+              "last-extra-dom-1-2",
+              "last-hygogg-1-0",
+              "last-hygogg-1-1",
+              "last-hygogg-1-2",
+              "last-high-mobility-zaku-0-0",
+              "last-high-mobility-zaku-0-1",
+              "last-high-mobility-zaku-0-2",
+              "last-high-mobility-zaku-1-0",
+              "last-high-mobility-zaku-1-1",
+              "last-high-mobility-zaku-1-2",
+              "last-high-mobility-zaku-2-0",
+              "last-high-mobility-zaku-2-1",
+              "last-high-mobility-zaku-2-2",
+              "relief-medea-0",
+              "relief-ground-gundam-0-0",
+              "relief-ground-gundam-0-1",
+              "relief-ground-gundam-0-2",
+              "relief-medea-1",
+              "relief-ground-gundam-1-0",
+              "relief-ground-gundam-1-1",
+              "relief-ground-gundam-1-2",
+              "relief-medea-2",
+              "relief-ground-gundam-2-0",
+              "relief-ground-gundam-2-1",
+              "relief-ground-gundam-2-2"
             ]
           },
           {
@@ -15589,12 +16331,12 @@
           "kitId": "machine_gun",
           "team": 0,
           "x": 8,
-          "y": 6,
+          "y": 5,
           "group": "jim-support",
           "initial": false,
           "angle": 90,
-          "squad": "jim-support-0",
-          "autonomous": true
+          "autonomous": true,
+          "squad": "jim-support-0"
         },
         {
           "id": "jim-support-0-1",
@@ -15602,12 +16344,12 @@
           "kitId": "machine_gun",
           "team": 0,
           "x": 8,
-          "y": 6,
+          "y": 5,
           "group": "jim-support",
           "initial": false,
           "angle": 90,
-          "squad": "jim-support-0",
-          "autonomous": true
+          "autonomous": true,
+          "squad": "jim-support-0"
         },
         {
           "id": "jim-support-0-2",
@@ -15615,12 +16357,12 @@
           "kitId": "machine_gun",
           "team": 0,
           "x": 8,
-          "y": 6,
+          "y": 5,
           "group": "jim-support",
           "initial": false,
           "angle": 90,
-          "squad": "jim-support-0",
-          "autonomous": true
+          "autonomous": true,
+          "squad": "jim-support-0"
         },
         {
           "id": "jim-support-1-0",
@@ -15628,12 +16370,12 @@
           "kitId": "machine_gun",
           "team": 0,
           "x": 8,
-          "y": 15,
+          "y": 10,
           "group": "jim-support",
           "initial": false,
           "angle": 90,
-          "squad": "jim-support-1",
-          "autonomous": true
+          "autonomous": true,
+          "squad": "jim-support-1"
         },
         {
           "id": "jim-support-1-1",
@@ -15641,12 +16383,12 @@
           "kitId": "machine_gun",
           "team": 0,
           "x": 8,
-          "y": 15,
+          "y": 10,
           "group": "jim-support",
           "initial": false,
           "angle": 90,
-          "squad": "jim-support-1",
-          "autonomous": true
+          "autonomous": true,
+          "squad": "jim-support-1"
         },
         {
           "id": "jim-support-1-2",
@@ -15654,12 +16396,12 @@
           "kitId": "machine_gun",
           "team": 0,
           "x": 8,
-          "y": 15,
+          "y": 10,
           "group": "jim-support",
           "initial": false,
           "angle": 90,
-          "squad": "jim-support-1",
-          "autonomous": true
+          "autonomous": true,
+          "squad": "jim-support-1"
         },
         {
           "id": "jim-support-2-0",
@@ -15667,12 +16409,12 @@
           "kitId": "machine_gun",
           "team": 0,
           "x": 8,
-          "y": 24,
+          "y": 15,
           "group": "jim-support",
           "initial": false,
           "angle": 90,
-          "squad": "jim-support-2",
-          "autonomous": true
+          "autonomous": true,
+          "squad": "jim-support-2"
         },
         {
           "id": "jim-support-2-1",
@@ -15680,12 +16422,12 @@
           "kitId": "machine_gun",
           "team": 0,
           "x": 8,
-          "y": 24,
+          "y": 15,
           "group": "jim-support",
           "initial": false,
           "angle": 90,
-          "squad": "jim-support-2",
-          "autonomous": true
+          "autonomous": true,
+          "squad": "jim-support-2"
         },
         {
           "id": "jim-support-2-2",
@@ -15693,12 +16435,90 @@
           "kitId": "machine_gun",
           "team": 0,
           "x": 8,
-          "y": 24,
+          "y": 15,
           "group": "jim-support",
           "initial": false,
           "angle": 90,
-          "squad": "jim-support-2",
-          "autonomous": true
+          "autonomous": true,
+          "squad": "jim-support-2"
+        },
+        {
+          "id": "jim-support-3-0",
+          "unitId": "RGM_79",
+          "kitId": "machine_gun",
+          "team": 0,
+          "x": 8,
+          "y": 20,
+          "group": "jim-support",
+          "initial": false,
+          "angle": 90,
+          "autonomous": true,
+          "squad": "jim-support-3"
+        },
+        {
+          "id": "jim-support-3-1",
+          "unitId": "RGM_79",
+          "kitId": "machine_gun",
+          "team": 0,
+          "x": 8,
+          "y": 20,
+          "group": "jim-support",
+          "initial": false,
+          "angle": 90,
+          "autonomous": true,
+          "squad": "jim-support-3"
+        },
+        {
+          "id": "jim-support-3-2",
+          "unitId": "RGM_79",
+          "kitId": "machine_gun",
+          "team": 0,
+          "x": 8,
+          "y": 20,
+          "group": "jim-support",
+          "initial": false,
+          "angle": 90,
+          "autonomous": true,
+          "squad": "jim-support-3"
+        },
+        {
+          "id": "jim-support-4-0",
+          "unitId": "RGM_79",
+          "kitId": "machine_gun",
+          "team": 0,
+          "x": 8,
+          "y": 25,
+          "group": "jim-support",
+          "initial": false,
+          "angle": 90,
+          "autonomous": true,
+          "squad": "jim-support-4"
+        },
+        {
+          "id": "jim-support-4-1",
+          "unitId": "RGM_79",
+          "kitId": "machine_gun",
+          "team": 0,
+          "x": 8,
+          "y": 25,
+          "group": "jim-support",
+          "initial": false,
+          "angle": 90,
+          "autonomous": true,
+          "squad": "jim-support-4"
+        },
+        {
+          "id": "jim-support-4-2",
+          "unitId": "RGM_79",
+          "kitId": "machine_gun",
+          "team": 0,
+          "x": 8,
+          "y": 25,
+          "group": "jim-support",
+          "initial": false,
+          "angle": 90,
+          "autonomous": true,
+          "squad": "jim-support-4"
         },
         {
           "id": "guntank-support-0-0",
@@ -15710,8 +16530,8 @@
           "group": "guntank-support",
           "initial": false,
           "angle": 90,
-          "squad": "guntank-support-0",
-          "autonomous": true
+          "autonomous": true,
+          "squad": "guntank-support-0"
         },
         {
           "id": "guntank-support-0-1",
@@ -15723,8 +16543,8 @@
           "group": "guntank-support",
           "initial": false,
           "angle": 90,
-          "squad": "guntank-support-0",
-          "autonomous": true
+          "autonomous": true,
+          "squad": "guntank-support-0"
         },
         {
           "id": "guntank-support-0-2",
@@ -15736,8 +16556,8 @@
           "group": "guntank-support",
           "initial": false,
           "angle": 90,
-          "squad": "guntank-support-0",
-          "autonomous": true
+          "autonomous": true,
+          "squad": "guntank-support-0"
         },
         {
           "id": "guntank-support-1-0",
@@ -15749,8 +16569,8 @@
           "group": "guntank-support",
           "initial": false,
           "angle": 90,
-          "squad": "guntank-support-1",
-          "autonomous": true
+          "autonomous": true,
+          "squad": "guntank-support-1"
         },
         {
           "id": "guntank-support-1-1",
@@ -15762,8 +16582,8 @@
           "group": "guntank-support",
           "initial": false,
           "angle": 90,
-          "squad": "guntank-support-1",
-          "autonomous": true
+          "autonomous": true,
+          "squad": "guntank-support-1"
         },
         {
           "id": "guntank-support-1-2",
@@ -15775,8 +16595,8 @@
           "group": "guntank-support",
           "initial": false,
           "angle": 90,
-          "squad": "guntank-support-1",
-          "autonomous": true
+          "autonomous": true,
+          "squad": "guntank-support-1"
         },
         {
           "id": "wave-one-f-carrier-0",
@@ -16465,6 +17285,597 @@
           "initial": false,
           "angle": 270,
           "squad": "last-flying-gouf"
+        },
+        {
+          "id": "last-gelgoog-j-0",
+          "unitId": "MS_14JG",
+          "kitId": "standard",
+          "team": 1,
+          "x": 40,
+          "y": 5,
+          "group": "last-stand",
+          "initial": false,
+          "angle": 270,
+          "squad": "last-gelgoog-j",
+          "genericPilot": "elite"
+        },
+        {
+          "id": "last-gelgoog-j-1",
+          "unitId": "MS_14JG",
+          "kitId": "standard",
+          "team": 1,
+          "x": 40,
+          "y": 5,
+          "group": "last-stand",
+          "initial": false,
+          "angle": 270,
+          "squad": "last-gelgoog-j",
+          "genericPilot": "elite"
+        },
+        {
+          "id": "last-gelgoog-j-2",
+          "unitId": "MS_14JG",
+          "kitId": "standard",
+          "team": 1,
+          "x": 40,
+          "y": 5,
+          "group": "last-stand",
+          "initial": false,
+          "angle": 270,
+          "squad": "last-gelgoog-j",
+          "genericPilot": "elite"
+        },
+        {
+          "id": "last-extra-dom-0-0",
+          "unitId": "MS_09",
+          "kitId": "bazooka",
+          "team": 1,
+          "x": 39,
+          "y": 9,
+          "group": "last-stand",
+          "initial": false,
+          "angle": 270,
+          "squad": "last-extra-dom-0",
+          "genericPilot": "veteran"
+        },
+        {
+          "id": "last-extra-dom-0-1",
+          "unitId": "MS_09",
+          "kitId": "bazooka",
+          "team": 1,
+          "x": 39,
+          "y": 9,
+          "group": "last-stand",
+          "initial": false,
+          "angle": 270,
+          "squad": "last-extra-dom-0",
+          "genericPilot": "veteran"
+        },
+        {
+          "id": "last-extra-dom-0-2",
+          "unitId": "MS_09",
+          "kitId": "bazooka",
+          "team": 1,
+          "x": 39,
+          "y": 9,
+          "group": "last-stand",
+          "initial": false,
+          "angle": 270,
+          "squad": "last-extra-dom-0",
+          "genericPilot": "veteran"
+        },
+        {
+          "id": "last-hygogg-0-0",
+          "unitId": "MSM_03C",
+          "kitId": "standard",
+          "team": 1,
+          "x": 41,
+          "y": 10,
+          "group": "last-stand",
+          "initial": false,
+          "angle": 270,
+          "squad": "last-hygogg-0",
+          "genericPilot": "veteran"
+        },
+        {
+          "id": "last-hygogg-0-1",
+          "unitId": "MSM_03C",
+          "kitId": "standard",
+          "team": 1,
+          "x": 41,
+          "y": 10,
+          "group": "last-stand",
+          "initial": false,
+          "angle": 270,
+          "squad": "last-hygogg-0",
+          "genericPilot": "veteran"
+        },
+        {
+          "id": "last-hygogg-0-2",
+          "unitId": "MSM_03C",
+          "kitId": "standard",
+          "team": 1,
+          "x": 41,
+          "y": 10,
+          "group": "last-stand",
+          "initial": false,
+          "angle": 270,
+          "squad": "last-hygogg-0",
+          "genericPilot": "veteran"
+        },
+        {
+          "id": "last-extra-dom-1-0",
+          "unitId": "MS_09",
+          "kitId": "bazooka",
+          "team": 1,
+          "x": 39,
+          "y": 19,
+          "group": "last-stand",
+          "initial": false,
+          "angle": 270,
+          "squad": "last-extra-dom-1",
+          "genericPilot": "veteran"
+        },
+        {
+          "id": "last-extra-dom-1-1",
+          "unitId": "MS_09",
+          "kitId": "bazooka",
+          "team": 1,
+          "x": 39,
+          "y": 19,
+          "group": "last-stand",
+          "initial": false,
+          "angle": 270,
+          "squad": "last-extra-dom-1",
+          "genericPilot": "veteran"
+        },
+        {
+          "id": "last-extra-dom-1-2",
+          "unitId": "MS_09",
+          "kitId": "bazooka",
+          "team": 1,
+          "x": 39,
+          "y": 19,
+          "group": "last-stand",
+          "initial": false,
+          "angle": 270,
+          "squad": "last-extra-dom-1",
+          "genericPilot": "veteran"
+        },
+        {
+          "id": "last-hygogg-1-0",
+          "unitId": "MSM_03C",
+          "kitId": "standard",
+          "team": 1,
+          "x": 41,
+          "y": 20,
+          "group": "last-stand",
+          "initial": false,
+          "angle": 270,
+          "squad": "last-hygogg-1",
+          "genericPilot": "veteran"
+        },
+        {
+          "id": "last-hygogg-1-1",
+          "unitId": "MSM_03C",
+          "kitId": "standard",
+          "team": 1,
+          "x": 41,
+          "y": 20,
+          "group": "last-stand",
+          "initial": false,
+          "angle": 270,
+          "squad": "last-hygogg-1",
+          "genericPilot": "veteran"
+        },
+        {
+          "id": "last-hygogg-1-2",
+          "unitId": "MSM_03C",
+          "kitId": "standard",
+          "team": 1,
+          "x": 41,
+          "y": 20,
+          "group": "last-stand",
+          "initial": false,
+          "angle": 270,
+          "squad": "last-hygogg-1",
+          "genericPilot": "veteran"
+        },
+        {
+          "id": "last-high-mobility-zaku-0-0",
+          "unitId": "MS_06G",
+          "kitId": "kit_0",
+          "team": 1,
+          "x": 41,
+          "y": 5,
+          "group": "last-stand",
+          "initial": false,
+          "angle": 270,
+          "squad": "last-high-mobility-zaku-0",
+          "genericPilot": "veteran",
+          "kitChoices": [
+            "kit_0",
+            "kit_1",
+            "kit_2"
+          ]
+        },
+        {
+          "id": "last-high-mobility-zaku-0-1",
+          "unitId": "MS_06G",
+          "kitId": "kit_0",
+          "team": 1,
+          "x": 41,
+          "y": 5,
+          "group": "last-stand",
+          "initial": false,
+          "angle": 270,
+          "squad": "last-high-mobility-zaku-0",
+          "genericPilot": "veteran",
+          "kitChoices": [
+            "kit_0",
+            "kit_1",
+            "kit_2"
+          ]
+        },
+        {
+          "id": "last-high-mobility-zaku-0-2",
+          "unitId": "MS_06G",
+          "kitId": "kit_0",
+          "team": 1,
+          "x": 41,
+          "y": 5,
+          "group": "last-stand",
+          "initial": false,
+          "angle": 270,
+          "squad": "last-high-mobility-zaku-0",
+          "genericPilot": "veteran",
+          "kitChoices": [
+            "kit_0",
+            "kit_1",
+            "kit_2"
+          ]
+        },
+        {
+          "id": "last-high-mobility-zaku-1-0",
+          "unitId": "MS_06G",
+          "kitId": "kit_0",
+          "team": 1,
+          "x": 41,
+          "y": 14,
+          "group": "last-stand",
+          "initial": false,
+          "angle": 270,
+          "squad": "last-high-mobility-zaku-1",
+          "genericPilot": "veteran",
+          "kitChoices": [
+            "kit_0",
+            "kit_1",
+            "kit_2"
+          ]
+        },
+        {
+          "id": "last-high-mobility-zaku-1-1",
+          "unitId": "MS_06G",
+          "kitId": "kit_0",
+          "team": 1,
+          "x": 41,
+          "y": 14,
+          "group": "last-stand",
+          "initial": false,
+          "angle": 270,
+          "squad": "last-high-mobility-zaku-1",
+          "genericPilot": "veteran",
+          "kitChoices": [
+            "kit_0",
+            "kit_1",
+            "kit_2"
+          ]
+        },
+        {
+          "id": "last-high-mobility-zaku-1-2",
+          "unitId": "MS_06G",
+          "kitId": "kit_0",
+          "team": 1,
+          "x": 41,
+          "y": 14,
+          "group": "last-stand",
+          "initial": false,
+          "angle": 270,
+          "squad": "last-high-mobility-zaku-1",
+          "genericPilot": "veteran",
+          "kitChoices": [
+            "kit_0",
+            "kit_1",
+            "kit_2"
+          ]
+        },
+        {
+          "id": "last-high-mobility-zaku-2-0",
+          "unitId": "MS_06G",
+          "kitId": "kit_0",
+          "team": 1,
+          "x": 41,
+          "y": 23,
+          "group": "last-stand",
+          "initial": false,
+          "angle": 270,
+          "squad": "last-high-mobility-zaku-2",
+          "genericPilot": "veteran",
+          "kitChoices": [
+            "kit_0",
+            "kit_1",
+            "kit_2"
+          ]
+        },
+        {
+          "id": "last-high-mobility-zaku-2-1",
+          "unitId": "MS_06G",
+          "kitId": "kit_0",
+          "team": 1,
+          "x": 41,
+          "y": 23,
+          "group": "last-stand",
+          "initial": false,
+          "angle": 270,
+          "squad": "last-high-mobility-zaku-2",
+          "genericPilot": "veteran",
+          "kitChoices": [
+            "kit_0",
+            "kit_1",
+            "kit_2"
+          ]
+        },
+        {
+          "id": "last-high-mobility-zaku-2-2",
+          "unitId": "MS_06G",
+          "kitId": "kit_0",
+          "team": 1,
+          "x": 41,
+          "y": 23,
+          "group": "last-stand",
+          "initial": false,
+          "angle": 270,
+          "squad": "last-high-mobility-zaku-2",
+          "genericPilot": "veteran",
+          "kitChoices": [
+            "kit_0",
+            "kit_1",
+            "kit_2"
+          ]
+        },
+        {
+          "id": "relief-medea-0",
+          "unitId": "Medea",
+          "kitId": "standard",
+          "team": 0,
+          "x": 4,
+          "y": 5,
+          "group": "phase-two-support",
+          "initial": false,
+          "angle": 90,
+          "autonomous": true
+        },
+        {
+          "id": "relief-ground-gundam-0-0",
+          "unitId": "RX_79_G",
+          "kitId": "machine_gun",
+          "team": 0,
+          "x": 4,
+          "y": 5,
+          "group": "phase-two-support",
+          "initial": false,
+          "angle": 90,
+          "autonomous": true,
+          "carrier": "relief-medea-0",
+          "squad": "relief-ground-gundam-0",
+          "genericPilot": "veteran",
+          "kitChoices": [
+            "machine_gun",
+            "bazooka",
+            "beam_rifle",
+            "cannon",
+            "missile_launcher"
+          ]
+        },
+        {
+          "id": "relief-ground-gundam-0-1",
+          "unitId": "RX_79_G",
+          "kitId": "machine_gun",
+          "team": 0,
+          "x": 4,
+          "y": 5,
+          "group": "phase-two-support",
+          "initial": false,
+          "angle": 90,
+          "autonomous": true,
+          "carrier": "relief-medea-0",
+          "squad": "relief-ground-gundam-0",
+          "genericPilot": "veteran",
+          "kitChoices": [
+            "machine_gun",
+            "bazooka",
+            "beam_rifle",
+            "cannon",
+            "missile_launcher"
+          ]
+        },
+        {
+          "id": "relief-ground-gundam-0-2",
+          "unitId": "RX_79_G",
+          "kitId": "machine_gun",
+          "team": 0,
+          "x": 4,
+          "y": 5,
+          "group": "phase-two-support",
+          "initial": false,
+          "angle": 90,
+          "autonomous": true,
+          "carrier": "relief-medea-0",
+          "squad": "relief-ground-gundam-0",
+          "genericPilot": "veteran",
+          "kitChoices": [
+            "machine_gun",
+            "bazooka",
+            "beam_rifle",
+            "cannon",
+            "missile_launcher"
+          ]
+        },
+        {
+          "id": "relief-medea-1",
+          "unitId": "Medea",
+          "kitId": "standard",
+          "team": 0,
+          "x": 4,
+          "y": 14,
+          "group": "phase-two-support",
+          "initial": false,
+          "angle": 90,
+          "autonomous": true
+        },
+        {
+          "id": "relief-ground-gundam-1-0",
+          "unitId": "RX_79_G",
+          "kitId": "machine_gun",
+          "team": 0,
+          "x": 4,
+          "y": 14,
+          "group": "phase-two-support",
+          "initial": false,
+          "angle": 90,
+          "autonomous": true,
+          "carrier": "relief-medea-1",
+          "squad": "relief-ground-gundam-1",
+          "genericPilot": "veteran",
+          "kitChoices": [
+            "machine_gun",
+            "bazooka",
+            "beam_rifle",
+            "cannon",
+            "missile_launcher"
+          ]
+        },
+        {
+          "id": "relief-ground-gundam-1-1",
+          "unitId": "RX_79_G",
+          "kitId": "machine_gun",
+          "team": 0,
+          "x": 4,
+          "y": 14,
+          "group": "phase-two-support",
+          "initial": false,
+          "angle": 90,
+          "autonomous": true,
+          "carrier": "relief-medea-1",
+          "squad": "relief-ground-gundam-1",
+          "genericPilot": "veteran",
+          "kitChoices": [
+            "machine_gun",
+            "bazooka",
+            "beam_rifle",
+            "cannon",
+            "missile_launcher"
+          ]
+        },
+        {
+          "id": "relief-ground-gundam-1-2",
+          "unitId": "RX_79_G",
+          "kitId": "machine_gun",
+          "team": 0,
+          "x": 4,
+          "y": 14,
+          "group": "phase-two-support",
+          "initial": false,
+          "angle": 90,
+          "autonomous": true,
+          "carrier": "relief-medea-1",
+          "squad": "relief-ground-gundam-1",
+          "genericPilot": "veteran",
+          "kitChoices": [
+            "machine_gun",
+            "bazooka",
+            "beam_rifle",
+            "cannon",
+            "missile_launcher"
+          ]
+        },
+        {
+          "id": "relief-medea-2",
+          "unitId": "Medea",
+          "kitId": "standard",
+          "team": 0,
+          "x": 4,
+          "y": 23,
+          "group": "phase-two-support",
+          "initial": false,
+          "angle": 90,
+          "autonomous": true
+        },
+        {
+          "id": "relief-ground-gundam-2-0",
+          "unitId": "RX_79_G",
+          "kitId": "machine_gun",
+          "team": 0,
+          "x": 4,
+          "y": 23,
+          "group": "phase-two-support",
+          "initial": false,
+          "angle": 90,
+          "autonomous": true,
+          "carrier": "relief-medea-2",
+          "squad": "relief-ground-gundam-2",
+          "genericPilot": "veteran",
+          "kitChoices": [
+            "machine_gun",
+            "bazooka",
+            "beam_rifle",
+            "cannon",
+            "missile_launcher"
+          ]
+        },
+        {
+          "id": "relief-ground-gundam-2-1",
+          "unitId": "RX_79_G",
+          "kitId": "machine_gun",
+          "team": 0,
+          "x": 4,
+          "y": 23,
+          "group": "phase-two-support",
+          "initial": false,
+          "angle": 90,
+          "autonomous": true,
+          "carrier": "relief-medea-2",
+          "squad": "relief-ground-gundam-2",
+          "genericPilot": "veteran",
+          "kitChoices": [
+            "machine_gun",
+            "bazooka",
+            "beam_rifle",
+            "cannon",
+            "missile_launcher"
+          ]
+        },
+        {
+          "id": "relief-ground-gundam-2-2",
+          "unitId": "RX_79_G",
+          "kitId": "machine_gun",
+          "team": 0,
+          "x": 4,
+          "y": 23,
+          "group": "phase-two-support",
+          "initial": false,
+          "angle": 90,
+          "autonomous": true,
+          "carrier": "relief-medea-2",
+          "squad": "relief-ground-gundam-2",
+          "genericPilot": "veteran",
+          "kitChoices": [
+            "machine_gun",
+            "bazooka",
+            "beam_rifle",
+            "cannon",
+            "missile_launcher"
+          ]
         }
       ],
       "victory": {
@@ -16512,14 +17923,45 @@
           },
           "actions": [
             {
-              "type": "message",
-              "text": "歼灭地图中的敌军。没有人可以侵略联邦。"
+              "type": "dialogue",
+              "lines": [
+                {
+                  "actor": "dabude-0",
+                  "name": "联邦通信员",
+                  "portrait": "assets/pilots/Pilot_EFSF_0079_Common_1.png",
+                  "text": "吉翁军在地球已经要完蛋了。"
+                },
+                {
+                  "actor": "dabude-0",
+                  "name": "联邦通信员",
+                  "portrait": "assets/pilots/Pilot_EFSF_0079_Common_1.png",
+                  "text": "他们打算通过HLV返回宇宙，保留有生力量。"
+                },
+                {
+                  "actor": "dabude-0",
+                  "name": "联邦通信员",
+                  "portrait": "assets/pilots/Pilot_EFSF_0079_Common_1.png",
+                  "text": "但我们的情报部门已经提前打探到风声。"
+                },
+                {
+                  "actor": "dabude-0",
+                  "name": "联邦通信员",
+                  "portrait": "assets/pilots/Pilot_EFSF_0079_Common_1.png",
+                  "text": "这是一次突袭任务，不要手下留情。"
+                },
+                {
+                  "actor": "dabude-0",
+                  "name": "联邦通信员",
+                  "portrait": "assets/pilots/Pilot_EFSF_0079_Common_1.png",
+                  "text": "交战规则无限制，杀光他们。"
+                }
+              ]
             }
           ]
         },
         {
           "id": "jim-arrival",
-          "name": "三队吉姆支援",
+          "name": "五队吉姆支援",
           "when": {
             "type": "round",
             "round": 2
@@ -16536,7 +17978,13 @@
                 "jim-support-1-2",
                 "jim-support-2-0",
                 "jim-support-2-1",
-                "jim-support-2-2"
+                "jim-support-2-2",
+                "jim-support-3-0",
+                "jim-support-3-1",
+                "jim-support-3-2",
+                "jim-support-4-0",
+                "jim-support-4-1",
+                "jim-support-4-2"
               ]
             }
           ]
@@ -16886,7 +18334,43 @@
                 "last-tropical-dom",
                 "last-efreet",
                 "last-flying-gouf-0",
-                "last-flying-gouf-1"
+                "last-flying-gouf-1",
+                "last-gelgoog-j-0",
+                "last-gelgoog-j-1",
+                "last-gelgoog-j-2",
+                "last-extra-dom-0-0",
+                "last-extra-dom-0-1",
+                "last-extra-dom-0-2",
+                "last-hygogg-0-0",
+                "last-hygogg-0-1",
+                "last-hygogg-0-2",
+                "last-extra-dom-1-0",
+                "last-extra-dom-1-1",
+                "last-extra-dom-1-2",
+                "last-hygogg-1-0",
+                "last-hygogg-1-1",
+                "last-hygogg-1-2",
+                "last-high-mobility-zaku-0-0",
+                "last-high-mobility-zaku-0-1",
+                "last-high-mobility-zaku-0-2",
+                "last-high-mobility-zaku-1-0",
+                "last-high-mobility-zaku-1-1",
+                "last-high-mobility-zaku-1-2",
+                "last-high-mobility-zaku-2-0",
+                "last-high-mobility-zaku-2-1",
+                "last-high-mobility-zaku-2-2",
+                "relief-medea-0",
+                "relief-ground-gundam-0-0",
+                "relief-ground-gundam-0-1",
+                "relief-ground-gundam-0-2",
+                "relief-medea-1",
+                "relief-ground-gundam-1-0",
+                "relief-ground-gundam-1-1",
+                "relief-ground-gundam-1-2",
+                "relief-medea-2",
+                "relief-ground-gundam-2-0",
+                "relief-ground-gundam-2-1",
+                "relief-ground-gundam-2-2"
               ]
             },
             {

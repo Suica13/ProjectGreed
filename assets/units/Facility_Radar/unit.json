@@ -38,7 +38,11 @@
     },
     "speed": 100,
     "deployed": true,
-    "facilityType": "radar"
+    "facilityType": "radar",
+    "footprint": {
+      "width": 1,
+      "height": 1
+    }
   },
   "shield": {
     "hp": 0,

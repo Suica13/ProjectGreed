@@ -1261,7 +1261,7 @@
   "记录不包含这个视角。": "This perspective is not included in the recording.",
   "选择自己的阵营": "Choose your faction",
   "队伍强制阵营": "Team faction lock",
-  "强制阵营": "Faction lock",
+  "强制阵营": "Forced Faction",
   "COST 与强度设置": "COST and strength settings",
   "编组 COST 比例": "Formation COST ratio",
   "单位 COST 比例": "Unit COST ratio",
@@ -5474,5 +5474,18 @@
   "解锁高达Mk-IV与高达Mk-V": "Unlock Gundam Mk-IV and Gundam Mk-V.",
   "解锁ZZ高达、Z II、量产型百式改与拟阿卡玛级": "Unlock ZZ Gundam, Z II, Mass Production Hyaku Shiki Kai and Nahel Argama Class.",
   "解锁卡碧尼等机体与恩多拉级": "Unlock Qubeley and related units, plus Endra Class.",
-  "敌军从两侧同时来袭，航空踏板上搭载了MS！": "Enemy forces are approaching from both sides with mobile suits riding Base Jabbers!"
+  "敌军从两侧同时来袭，航空踏板上搭载了MS！": "Enemy forces are approaching from both sides with mobile suits riding Base Jabbers!",
+  "占山为王模式": "King of the Hill",
+  "占山为王": "King of the Hill",
+  "占山为王规则": "King of the Hill Rules",
+  "玩家阵营": "Player Faction",
+  "工厂": "Factory",
+  "精炼厂": "Refinery",
+  "研究所": "Research Institute",
+  "工厂生产": "Factory Production",
+  "局内科技": "Match Research",
+  "局内剩余资源（不带出对局）": "Remaining Match Resources (not retained)",
+  "没有符合当前阵营、科技和环境的单位": "No units match this faction, research and environment.",
+  "局内累计科技点达到需求后开发，不消耗科技点；个人科技进度不影响本局。": "Develop when cumulative match technology meets the requirement. Points are not spent; personal research does not apply.",
+  "每次生产一台，完成后从工厂附近出厂；落点被占用时等待空位。": "Produce one unit per order. Completed units appear near the factory; blocked exits wait for space."
 }

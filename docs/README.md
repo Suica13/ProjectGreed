@@ -18,6 +18,7 @@
 - [小队](rules/squads.md)
 - [舰队与搭载编组](rules/formation.md)
 - [战略模式](rules/campaign.md)
+- [战场模式：占山为王](rules/dominion.md)
 - [收益](rules/economy.md)
 - [合作模式：战场扫荡](rules/sweep.md)
 - [合作模式：任务模式](rules/missions.md)

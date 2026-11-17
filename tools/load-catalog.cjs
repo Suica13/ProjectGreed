@@ -232,7 +232,7 @@ function loadCatalog({
       map.supportedModes !== undefined &&
       (!Array.isArray(map.supportedModes) ||
         !map.supportedModes.length ||
-        map.supportedModes.some((mode) => !["regular", "quick", "battlefield", "sweep", "mission"].includes(mode)))
+        map.supportedModes.some((mode) => !["regular", "quick", "battlefield", "sweep", "mission", "dominion"].includes(mode)))
     )
       throw Error("Invalid map modes: " + map.id);
     if (map.mission) require("../shared/mission-mode.js").validate(map.mission, map);
@@ -258,6 +258,7 @@ function loadCatalog({
       )
         throw Error("TileMap dimensions/ID mismatch: " + map.id);
     }
+    if (map.dominion) require("../shared/dominion-mode.js").validateMap(map);
     if (map.battlefield) require("../shared/battlefield-mode.js").validateMap(map);
     const areas = map.deploymentAreas;
     const expansion = map.deploymentExpansion;

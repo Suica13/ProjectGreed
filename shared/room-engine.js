@@ -45,7 +45,7 @@ function createRoomEngine({
       return mission.technologyLimitEnabled === false ? undefined : Object.fromEntries(
         roomDevelopment().factions.map(faction => [faction, mission.technologyLimit]));
     }
-    if (["battlefield", "sweep"].includes(room.settings.mode)) return undefined;
+    if (["dominion", "battlefield", "sweep"].includes(room.settings.mode)) return undefined;
     if (room.started && room.technologyCapSnapshot) return room.technologyCapSnapshot;
     const dev = roomDevelopment();
     if (room.settings.technologyLimitMode === "custom")
@@ -704,6 +704,7 @@ function createRoomEngine({
     for (const member of members(room)) member.ready = !!member.bot;
   }
   function forcedFaction(room, seat) {
+    if (room.settings.mode === "dominion") return seat === null ? null : room.settings.teamFactions?.[G.seatTeam(seat)] || null;
     if (room.settings.mode === "battlefield" && seat !== null && seat < 2)
       return room.settings.battlefieldTeams?.[seat]?.faction || ["EFSF", "ZEON"][seat];
     if (room.settings.mode !== "campaign") return "PMC";
@@ -712,6 +713,11 @@ function createRoomEngine({
     return seat === null ? null : room.settings.teamFactions?.[G.seatTeam(seat)] || null;
   }
   function applyForcedFaction(room, member) {
+    if (room.settings.mode === "dominion" && member.seat !== null) {
+      const chosen=G.dominionMode.faction(G,room.settings,member.seat,member.characterFaction);
+      if(member.characterFaction!==chosen){member.characterFaction=chosen;member.ready=!!member.bot;}
+      member.formation=[];return false;
+    }
     const faction = forcedFaction(room, member.seat);
     if (!faction || member.characterFaction === faction) return false;
     member.characterFaction = faction;
@@ -821,7 +827,10 @@ function createRoomEngine({
     return team === null ? (member?.seat === null ? ["global"] : []) : [logPerspective(team)];
   }
   // 公开快照不包含随机 seed；席位 token 不放入广播。
-  const privateReserves = (view, game, recipient) => game.battlefield?.reserves ? {
+  const privateReserves = (view, game, recipient) => game.dominion ? {
+    ...view,dominion:{...view.dominion,players:Object.fromEntries(Object.entries(game.dominion.players)
+      .filter(([seat])=>Number(seat)===recipient?.seat))},
+  } : game.battlefield?.reserves ? {
     ...view,
     battlefield: {...view.battlefield, reserves: game.battlefield.reserves
       .filter(item => item.ownerSeat === recipient?.seat)
@@ -1382,6 +1391,10 @@ function createRoomEngine({
     }
     if (["sweep", "mission"].includes(room.settings.mode) && (!room.started || room.phase === "assembly"))
       ensureSweepSeats(room);
+    if (room.started && room.game.dominion) {
+      G.dominionMode.sync(G,room.game);
+      if(room.game.winner!==null && room.phase==="idle")room.phase="finished";
+    }
     if (room.started && room.game.battlefield) {
       G.battlefieldMode.captureNearby(G, room.game);
       awardBattlefieldCaptures(room);
@@ -2002,7 +2015,7 @@ function createRoomEngine({
   }
   function awardDefeat(room, from, to, defeatedModel, visibleBefore = {}) {
     recordDefeatDialogue(room, from, to, visibleBefore);
-    if (room.sweep) return;
+    if (room.sweep || room.settings.mode === "dominion") return;
     if (room.settings.mode === "battlefield") {
       awardBattlefieldDefeat(room, from, to, defeatedModel);
       return;
@@ -2089,6 +2102,7 @@ function createRoomEngine({
     }
   }
   function reserveBattleStock(room) {
+    if (room.settings.mode === "dominion") return;
     if (room.startedFromSave || room.campaign) return;
     room.technologyStartPoints = Object.fromEntries(
       room.seats
@@ -2286,6 +2300,7 @@ function createRoomEngine({
     }
   }
   function settleBattleEconomy(room) {
+    if (room.settings.mode === "dominion") {if(room.started && room.phase==="finished")room.economySettled=true;return;}
     if (room.sweep) {
       settleSweep(room);
       return;
@@ -2472,6 +2487,7 @@ function createRoomEngine({
     }
   }
   function recordPilotBattle(room, actor, kind, cost, shipKill = false) {
+    if (room.settings.mode === "dominion") return;
     if (!room.replay && actor?.pilot?.hired && kind === "loss" && !room.campaign && !room.startedFromSave) {
       const member = room.seats[G.ownerOf(actor)];
       if (member && !member.bot) {
@@ -2834,6 +2850,7 @@ function createRoomEngine({
   // Cache by all effective inputs, never by mutable player/room identity.
   const previewArmies = new Map();
   function randomArmy(room, player, seed = randomSeed()) {
+    if (room.settings.mode === "dominion") return [];
     if (player.missionEnemy) {
       // The cooperative enemy seat is a controller, not a budgeted formation.
       // A legal marker satisfies room readiness; create() never deploys it.
@@ -2868,6 +2885,7 @@ function createRoomEngine({
     return army;
   }
   function checkAIArmy(room, player) {
+    if (room.settings.mode === "dominion") return;
     if (room.resumeSave || room.settings.mode === "campaign") return;
     if (
       !G.planFormation(
@@ -2982,6 +3000,7 @@ function createRoomEngine({
     log(room, "存档编组已确认，继续对局。");
   }
   function formationPlan(room, player) {
+    if (room.settings.mode === "dominion") return {entries:[],totalCost:0,deployCost:0,disabled:[],reasons:{},deployable:[],indices:[]};
     if (room.resumeSave) return savedPlan(room, player.seat);
     if (player.bot && !player.formationPreset && room.settings.mode === "regular") {
       const eraKey = JSON.stringify([roomAIEras(room), roomTechnologyCaps(room)]);
@@ -3050,7 +3069,7 @@ function createRoomEngine({
       return;
     const armies = room.seats.map((player) =>
       player
-        ? room.resumeSave
+        ? room.settings.mode === "dominion" ? [] : room.resumeSave
           ? savedPlan(room, player.seat).entries
           : player.formationPreset?.units ||
             (player.bot ? randomArmy(room, player) : player.formation)
@@ -3061,7 +3080,7 @@ function createRoomEngine({
       if (army && player && !player.bot)
         armies[seat] = G.pilots.normalizeCrewFormation(army, remainingCrew(room, player), G.formationModel);
     });
-    if (!room.resumeSave)
+    if (!room.resumeSave && room.settings.mode !== "dominion")
       armies.forEach((army, seat) => {
         if (!room.seats[seat]) return;
         if (
@@ -3127,6 +3146,14 @@ function createRoomEngine({
     room.logsUnlocked = false;
     room.logNames = [];
     log(room, "进入最终编组，确认队友配置后准备出击。");
+    if (room.settings.mode === "dominion") {
+      if(room.resumeSave){resumeSavedGame(room);for(const p of room.seats.filter(Boolean))p.characterFaction=room.game.dominion.players[p.seat]?.faction||p.characterFaction;return;}
+      room.activeSeats=room.seats.map(Boolean);
+      room.game=G.create(false,room.game.seed,room.seats.map(p=>p?[]:null),false,
+        {...room.settings,dominionPlayers:room.seats.filter(Boolean).map(p=>({seat:p.seat,characterFaction:p.characterFaction}))});
+      room.phase="idle";room.turnDone=room.seats.map(()=>false);planner.reset(room);
+      log(room,"占山为王：点击工厂生产，研究所开发科技，部队压制据点后接管附属设施。局内经济不带出对局。");
+    }
   }
   function startDeployment(room) {
     if (
@@ -3339,6 +3366,29 @@ function createRoomEngine({
       };
     }
     if (room.phase !== "idle") return null;
+    if (room.game.dominion) {
+      for (const player of room.seats.filter(p=>p && (p.bot || delegated(room,p.seat)) &&
+        G.seatTeam(p.seat)===room.game.team && (onlySeat===null || p.seat===onlySeat) && !excluded.has(p.seat))) {
+        const p=room.game.dominion.players[player.seat];if(!p)continue;
+        const buildings=room.game.units.filter(u=>u.hp>0 && u.ownerSeat===player.seat && u.facility);
+        const lab=buildings.find(u=>u.facility.type==="research");
+        const tech=roomDevelopment().nodes(p.faction).find(n=>!p.researched[p.faction].includes(n.id) &&
+          n.points<=p.points && n.requires.every(id=>p.researched[p.faction].includes(id)) &&
+          G.technologyWeight(n.era)<=G.technologyWeight(room.game.dominion.era));
+        if(lab && tech)return {player,action:"dominion_research",fields:{labId:lab.id,techId:tech.id}};
+        const factory=buildings.find(u=>u.facility.type==="factory" && !u.dominionOrder);
+        if(factory && room.game.units.filter(u=>u.hp>0 && u.ownerSeat===player.seat && (!u.facility || u.dominionOrder)).length<60) {
+          const offers=G.dominionMode.offers(G,room.game,player.seat).filter(o=>o.cost.money<=p.money && o.cost.supplies<=p.supplies);
+          const offer=offers[(room.game.round+room.game.dominion.serial)%Math.max(1,offers.length)];
+          if(offer)return {player,action:"dominion_produce",fields:{factoryId:factory.id,unitId:offer.unitId,kitId:offer.kitId}};
+        }
+        for(const unit of room.game.units.filter(u=>u.hp>0 && u.ownerSeat===player.seat && !u.acted && G.campaignBattlefield.canSuppress(G,u))) {
+          const point=room.game.dominion.points.find(p=>(p.ownerSeat===null || p.ownerSeat%2!==unit.team) && G.cells(unit).some(c=>Math.max(Math.abs(c.x-p.x),Math.abs(c.y-p.y))<=2) &&
+            !room.game.units.some(e=>e.hp>0 && !e.facility && e.team!==unit.team && e.team>=0 && G.onMap(e) && G.cells(e).some(c=>Math.max(Math.abs(c.x-p.x),Math.abs(c.y-p.y))<=2)));
+          if(point)return {player,action:"dominion_capture",fields:{unitId:unit.id,pointId:point.id}};
+        }
+      }
+    }
     if (room.game.battlefield) {
       for (const reserve of room.game.battlefield.reserves || []) {
         const player = room.seats[reserve.ownerSeat];
@@ -4675,7 +4725,8 @@ function createRoomEngine({
             oldReady = member.ready;
           try {
             if (member.seat !== null) {
-              if (!room.resumeSave)
+              if (room.settings.mode === "dominion") member.formation=[];
+              else if (!room.resumeSave)
                 member.formation = G.validateFleetFormation(
                   member.formationPreset?.units ?? msg.formation ?? member.formation,
                   Infinity,
@@ -4793,7 +4844,8 @@ function createRoomEngine({
           if (room.settings.mode === "campaign")
             throw Error("历史战役模式每支队伍固定使用一个阵营");
           if (room.started) throw Error("对局开始后不能切换阵营。");
-          if (msg.faction !== "PMC") throw Error("常规战和快速战固定使用 PMC 阵营。");
+          if (room.settings.mode === "dominion" && G.dominionMode.faction(G,room.settings,member.seat,msg.faction)!==msg.faction) throw Error("当前年代不允许该阵营");
+          if (room.settings.mode !== "dominion" && msg.faction !== "PMC") throw Error("常规战和快速战固定使用 PMC 阵营。");
           if (!["PMC", ...G.factions].includes(msg.faction))
             throw Error("玩家阵营无效。");
           const required = forcedFaction(room, member.seat);
@@ -4832,8 +4884,9 @@ function createRoomEngine({
           const characterFaction = msg.characterFaction ?? bot.characterFaction;
           if (!["PMC", ...G.factions].includes(characterFaction))
             throw Error("AI 阵营无效。");
-          if (room.settings.mode !== "campaign" && characterFaction !== "PMC")
+          if (!["campaign","dominion"].includes(room.settings.mode) && characterFaction !== "PMC")
             throw Error("常规战和快速战 AI 固定使用 PMC 阵营。");
+          if(room.settings.mode==="dominion" && G.dominionMode.faction(G,room.settings,bot.seat,characterFaction)!==characterFaction)throw Error("AI faction is not available in the selected era");
           const required = forcedFaction(room, bot.seat);
           if (required && required !== characterFaction) throw Error("本队已设置强制阵营。");
           checkAIArmy(room, {
@@ -4881,6 +4934,7 @@ function createRoomEngine({
               throw Error("AI 阵营角色无效");
             if (room.resumeSave?.armies[destination])
               bot.armySettings = Records.clone(room.resumeSave.armies[destination]);
+            if(room.settings.mode==="dominion")bot.characterFaction=G.dominionMode.faction(G,room.settings,destination,bot.characterFaction);
             checkAIArmy(room, bot);
             for (const existing of room.seats.filter((player) => player?.bot))
               checkAIArmy(room, existing);
@@ -4923,13 +4977,14 @@ function createRoomEngine({
                 ? (msg.sweepEnvironment ?? room.settings.sweepEnvironment ?? "ground") === "space"
                   ? "outer_orbit_5v5"
                   : G.sweepMapId
+                : nextMode === "dominion" ? requestedMap.dominion ? requestedMap.id : G.dominionMode.defaultMapId
                 : nextMode === "mission"
                   ? requestedMap.mission ? requestedMap.id : Mission.defaultMapId
                 : nextMode === "battlefield"
                   ? requestedMap.battlefield
                     ? requestedMap.id
                     : G.battlefieldMode.defaultMapId
-                  : requestedMap.battlefield || requestedMap.mission || requestedMap.id === G.sweepMapId
+                  : requestedMap.dominion || requestedMap.battlefield || requestedMap.mission || requestedMap.id === G.sweepMapId
                     ? G.defaultRoomSettings().mapId
                     : requestedMap.id,
           );
@@ -4994,6 +5049,7 @@ function createRoomEngine({
               })
             : {
                 mode: G.validateBattleMode(msg.battleMode ?? room.settings.mode),
+                dominionEra: G.normalizeEra(msg.dominionEra ?? room.settings.dominionEra ?? "UC_0079_T1"),
                 regularEra: G.normalizeEra(msg.regularEra ?? room.settings.regularEra ?? "UC_0079_T1"),
                 sweepFaction: msg.sweepFaction ?? room.settings.sweepFaction ?? "ZEON",
                 sweepEra: G.normalizeEra(msg.sweepEra ?? room.settings.sweepEra ?? "UC_0079_T1"),
@@ -5034,7 +5090,7 @@ function createRoomEngine({
                       )
                     : [G.validateTagRestrictions(), G.validateTagRestrictions()],
                 teamFactions:
-                  G.validateBattleMode(msg.battleMode ?? room.settings.mode) !== "campaign"
+                  !["campaign","dominion"].includes(nextMode)
                     ? [null, null]
                     : G.validateTeamFactions(
                         msg.teamFactions ?? room.settings.teamFactions ?? [null, null],
@@ -5062,6 +5118,10 @@ function createRoomEngine({
             throw Error("扫荡敌军阵营或年代无效");
           if (settings.mode === "sweep" && !["ground", "space"].includes(settings.sweepEnvironment))
             throw Error("扫荡作战环境无效");
+          if (settings.mode === "dominion") {
+            if (!G.eras.includes(settings.dominionEra)) throw Error("年代无效");
+            for (const seat of [0,1]) G.dominionMode.faction(G,settings,seat,null);
+          }
           if (settings.mode === "battlefield") {
             settings.battlefieldTeams = G.battlefieldMode.teams(
               G,
@@ -5115,6 +5175,10 @@ function createRoomEngine({
               settings.battlefieldEra !== room.settings.battlefieldEra ||
               settings.sweepFaction !== room.settings.sweepFaction;
             room.settings = settings;
+            if (settings.mode === "dominion") for(const player of members(room)) if(player.seat!==null) {
+              player.characterFaction=G.dominionMode.faction(G,settings,player.seat,player.characterFaction);
+              player.formation=[];player.ready=!!player.bot;
+            }
             if (technologyChanged || eraChanged || modeChanged || factionsChanged)
               for (const player of members(room))
                 if (player.bot && !player.battlefieldAI) {
@@ -5269,7 +5333,7 @@ function createRoomEngine({
           const oldFormation = member.formation,
             oldReady = member.ready;
           try {
-            if (msg.ready && !room.resumeSave && room.settings.mode !== "campaign") {
+            if (msg.ready && !room.resumeSave && !["campaign","dominion"].includes(room.settings.mode)) {
               const formation = G.validateFleetFormation(
                 member.formationPreset?.units || msg.formation,
                 Infinity,
@@ -5432,6 +5496,17 @@ function createRoomEngine({
         if (!room.campaignBattle) throw Error("仅战略局地战可转交控制权");
         const actor = ownUnit(room, seat, msg.unitId, true);
         event = campaign().transferControl(room, actor, msg.to, seat);
+        break;
+      }
+      case "dominion_produce":
+      case "dominion_research":
+      case "dominion_capture": {
+        validateActive(room,seat);
+        if(room.settings.mode!=="dominion")throw Error("当前不在占山为王模式");
+        event=msg.action==="dominion_produce" ? G.dominionMode.produce(G,room.game,seat,msg.factoryId,msg.unitId,msg.kitId)
+          : msg.action==="dominion_research" ? G.dominionMode.research(G,room.game,seat,msg.labId,msg.techId)
+          : G.dominionMode.capture(G,room.game,seat,msg.unitId,msg.pointId);
+        log(room,msg.action==="dominion_produce"?"工厂已接受生产订单":msg.action==="dominion_research"?"局内科技已开发":"据点及附属设施已接管");
         break;
       }
       case "capture_point": {
@@ -6009,6 +6084,11 @@ function createRoomEngine({
         updated: Date.now(),
       };
       room.settings.technologyLimitFaction = msg.technologyLimitFaction ?? "EFSF";
+      if(room.settings.mode === "dominion") {
+        room.settings.mapId=G.dominionMode.defaultMapId;
+        room.seats=Array(G.getMap(room.settings.mapId).spawns.length).fill(null);
+        room.turnDone=room.seats.map(()=>false);
+      }
       if(room.settings.mode === "mission") {
         Object.assign(room.settings,Mission.settings(G));
         room.seats=Array(G.getMap(room.settings.mapId).spawns.length).fill(null);
@@ -6054,7 +6134,7 @@ function createRoomEngine({
             );
       if (seat === -1) seat = null;
     }
-    characterFaction = forcedFaction(room, seat) || characterFaction;
+    characterFaction = room.settings.mode === "dominion" ? G.dominionMode.faction(G,room.settings,seat,characterFaction) : forcedFaction(room, seat) || characterFaction;
     let member;
     if (msg.mode === "resume") {
       if (typeof msg.token !== "string") throw Error("缺少重连凭据");
@@ -6079,7 +6159,7 @@ function createRoomEngine({
         seat,
         ready: false,
         finalReady: false,
-        formation: G.randomFormation(
+        formation: room.settings.mode === "dominion" ? [] : G.randomFormation(
           randomSeed(),
           room.settings.costLimit,
           G.armyRestrictions(room.settings, { seat, characterFaction }),

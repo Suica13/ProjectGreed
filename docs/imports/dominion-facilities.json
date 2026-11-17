@@ -1,0 +1,62 @@
+[
+  {
+    "id": "Facility_Factory",
+    "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/Faction/EFSF_0079/Factory_EFSF_0079_Land.ini",
+    "visual": {
+      "nativeBounds": [
+        -15.749999999999998,
+        -24.15,
+        15.749999999999998,
+        24.15
+      ],
+      "targetCells": 1,
+      "mapScale": 2.4844720496894412,
+      "layers": [
+        {
+          "name": "decal_Body_1",
+          "source": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/Image/Factory_1.png"
+        }
+      ]
+    }
+  },
+  {
+    "id": "Facility_Refinery",
+    "source": "GW_BattleUniverse_Main/Units/Buildings/Refinery/Common/Refinery_Common_T1.ini",
+    "visual": {
+      "nativeBounds": [
+        -34.45,
+        -31.85,
+        38.35,
+        23.400000000000002
+      ],
+      "targetCells": 1,
+      "mapScale": 1.648351648351648,
+      "layers": [
+        {
+          "name": "decal_Body_1",
+          "source": "GW_BattleUniverse_Main/Units/Buildings/Refinery/Image/Refinery_Common_T1.png"
+        }
+      ]
+    }
+  },
+  {
+    "id": "Facility_Research",
+    "source": "GW_BattleUniverse_Main/Units/Buildings/Institute/Common/Institute_Common_T1.ini",
+    "visual": {
+      "nativeBounds": [
+        -27.95,
+        -28.925,
+        29.900000000000002,
+        21.775000000000002
+      ],
+      "targetCells": 1,
+      "mapScale": 2.0743301642178045,
+      "layers": [
+        {
+          "name": "decal_Body_1",
+          "source": "GW_BattleUniverse_Main/Units/Buildings/Institute/Image/Institute_Common_T1.png"
+        }
+      ]
+    }
+  }
+]

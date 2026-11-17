@@ -1,0 +1,297 @@
+{
+  "schemaVersion": 2,
+  "stats": {
+    "hp": 45000,
+    "en": 1000,
+    "move": 0,
+    "mobility": 25,
+    "cost": 25,
+    "counterLimit": 1,
+    "accuracy": 115,
+    "partStructuralStrength": 100,
+    "partsBreakable": false,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 100,
+      "space": 50,
+      "water": 50,
+      "air": 10,
+      "atmosphere": 0,
+      "mountain": 100,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "ship": false,
+    "visualTurrets": [],
+    "actionPoints": 10,
+    "sensors": {
+      "sight": 8,
+      "radar": 8,
+      "antiDetection": 0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    },
+    "speed": 100,
+    "deployed": true,
+    "facilityType": "research",
+    "footprint": {
+      "width": 1,
+      "height": 1
+    }
+  },
+  "shield": {
+    "hp": 0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1,
+        "flat": 0
+      },
+      "shell": {
+        "percent": 1,
+        "flat": 0
+      },
+      "melee": {
+        "percent": 1,
+        "flat": 0
+      },
+      "dp": {
+        "percent": 1,
+        "flat": 0
+      }
+    }
+  },
+  "defenses": {
+    "beam": {
+      "percent": 5,
+      "flat": 0
+    },
+    "shell": {
+      "percent": 10,
+      "flat": 45
+    },
+    "melee": {
+      "percent": 5,
+      "flat": 0
+    },
+    "dp": {
+      "percent": 5,
+      "flat": 0
+    },
+    "sp": {
+      "percent": 0,
+      "flat": 0
+    }
+  },
+  "attackBonuses": {
+    "melee": 0,
+    "shooting": 15,
+    "beam": 0,
+    "shell": 0
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 2.0743301642178045,
+    "battleScale": 1,
+    "idle": "ImportedIdle",
+    "move": "ImportedIdle",
+    "stagger": "ImportedIdle",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "ImportedIdle",
+    "movement": "walk",
+    "moveSoundKey": "tankMoveSound",
+    "fixedFacing": 0
+  },
+  "id": "Facility_Research",
+  "code": "Facility_Research",
+  "name": "研究所",
+  "description": "占山为王局内经济设施",
+  "source": "GW_BattleUniverse_Main/Units/Buildings/Institute/Common/Institute_Common_T1.ini",
+  "tags": [
+    "EFSF",
+    "0079T1"
+  ],
+  "availableFactions": [
+    "EFSF",
+    "ZEON",
+    "AEUG",
+    "TITANS",
+    "NEO_ZEON"
+  ],
+  "unitTags": [
+    "Building",
+    "LargeUnit"
+  ],
+  "formOnly": true,
+  "facility": {
+    "type": "research"
+  },
+  "production": {
+    "enabled": false
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0,
+      "y": 0
+    },
+    "Body": {
+      "x": 0,
+      "y": 0
+    },
+    "LeftArm": {
+      "x": -9,
+      "y": 0
+    },
+    "RightArm": {
+      "x": 9,
+      "y": 0
+    },
+    "LeftShoulder": {
+      "x": -9,
+      "y": 0
+    },
+    "RightShoulder": {
+      "x": 9,
+      "y": 0
+    },
+    "LeftWeapon": {
+      "x": 0,
+      "y": 0
+    },
+    "RightWeapon": {
+      "x": 0,
+      "y": 0
+    },
+    "Attachment12": {
+      "x": 0,
+      "y": 0
+    },
+    "Attachment13": {
+      "x": 0,
+      "y": 0
+    },
+    "Attachment15": {
+      "x": 0,
+      "y": 0
+    },
+    "Head": {
+      "x": 0,
+      "y": 0
+    },
+    "Eye": {
+      "x": 0,
+      "y": 0
+    },
+    "LeftFoot": {
+      "x": -6,
+      "y": 0,
+      "endDirOffset": -8
+    },
+    "LeftLeg": {
+      "x": -6,
+      "y": 0,
+      "endDirOffset": -8
+    },
+    "RightFoot": {
+      "x": 6,
+      "y": 0,
+      "endDirOffset": 8
+    },
+    "RightLeg": {
+      "x": 6,
+      "y": 0,
+      "endDirOffset": 8
+    },
+    "Turret_EF_Type61_Cannon": {
+      "x": 0,
+      "y": 0,
+      "endDirOffset": 0
+    },
+    "Turret": {
+      "x": 0,
+      "y": 3
+    }
+  },
+  "materials": {
+    "textures": {
+      "Institute_Common_T1.png": "textures/Institute_Common_T1.png"
+    },
+    "icon": "Institute_Common_T1.png"
+  },
+  "layers": [
+    {
+      "name": "decal_Body_1",
+      "texture": "Institute_Common_T1.png",
+      "bone": "Body",
+      "order": 1.0,
+      "scale": 0.65,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "worldOffset": {
+        "x": -0.9750000000000014,
+        "y": 3.5749999999999993
+      },
+      "source": "GW_BattleUniverse_Main/Units/Buildings/Institute/Image/Institute_Common_T1.png"
+    }
+  ],
+  "weapons": {},
+  "animations": {
+    "OnMoving": "../../animations/OnMoving.json",
+    "OnMovingReversing": "../../animations/OnMovingReversing.json",
+    "Common_Dead": "../../animations/Common_Dead__AMX_002.json",
+    "Common_Stun": "../../animations/Common_Stun__AMX_002.json",
+    "Common_Idle": "../../animations/Common_Idle__AntiZakuTank.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "skills": [],
+  "transport": {
+    "slotCost": 1,
+    "loadTags": []
+  },
+  "weaponKits": [
+    {
+      "id": "standard",
+      "name": "标准套件",
+      "cost": 0,
+      "weapons": []
+    }
+  ],
+  "mechanics": [
+    {
+      "id": "facility",
+      "name": "通用战场设施",
+      "status": "implemented"
+    }
+  ],
+  "sourceStats": {
+    "facilitySource": "GW_BattleUniverse_Main/Units/Buildings/Institute/Common/Institute_Common_T1.ini",
+    "nativeHP": 45000,
+    "visual": {
+      "nativeBounds": [
+        -27.95,
+        -28.925,
+        29.900000000000002,
+        21.775000000000002
+      ],
+      "targetCells": 1,
+      "mapScale": 2.0743301642178045,
+      "layers": [
+        {
+          "name": "decal_Body_1",
+          "source": "GW_BattleUniverse_Main/Units/Buildings/Institute/Image/Institute_Common_T1.png"
+        }
+      ]
+    }
+  },
+  "faction": "EFSF"
+}

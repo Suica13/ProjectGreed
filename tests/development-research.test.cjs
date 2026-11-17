@@ -17,6 +17,7 @@ function load(saved = {}) {
     PRODUCTION_CATALOG: require("../shared/production-catalog.json"),
     DEVELOPMENT_TREE: tree,
     PILOT_DATA: require("../shared/pilots.json"),
+    PilotSystem: require("../shared/pilots.js"),
     ProfileMigrations: require("../shared/profile-migrations.js"),
     module: { exports: {} },
     localStorage: { getItem: (k) => storage.get(k), setItem: (k, v) => storage.set(k, v) },
@@ -88,4 +89,22 @@ test("specific unit grants are an OR alternative without unlocking technology or
   assert(restored.allows("EFSF", unit));
   assert(D.allows("PMC", unit, restored.researchSnapshot()));
   assert(!D.allows("PMC", sibling, restored.researchSnapshot()));
+});
+
+
+test("Mk-IV / Mk-V final branch persists through rewards, profile export and repeated reloads", () => {
+  const id="Tech_TITANS_0087_T2_GundamMkIVVDevelopmentPlan";
+  const researched=Object.fromEntries(Object.entries(tree).map(([f,nodes])=>[f,nodes.filter(n=>n.id!==id).map(n=>n.id)]));
+  let f=load({"projectgreed.developmentProgress.v1":JSON.stringify({points:{TITANS:100000},claimed:{},researched})});
+  assert(!f.D.unlockedTech("TITANS").includes(id));
+  assert(f.D.research("TITANS",id));
+  for(let i=0;i<3;i++){
+    assert(f.D.unlockedTech("TITANS").includes(id));
+    for(const unit of ["ORX_012","ORX_013"])assert(f.D.allows("PMC",unit));
+    f.D.creditAward({id:"persistence-"+i,matchId:"match",faction:"TITANS",points:25});
+    const exported=f.D.validateProgress(f.D.exportProgress());
+    assert(exported.researched.TITANS.includes(id));
+    f=load(Object.fromEntries(f.storage));
+    assert(f.D.unlockedTech("TITANS").includes(id));
+  }
 });

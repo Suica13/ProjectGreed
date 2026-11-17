@@ -3,6 +3,10 @@ const MatchIncome = (() => {
   let previous, economy, technology, economyLength, technologyLength, cached;
   const rendered = new WeakMap();
   function totals(snapshot = Net.snapshot) {
+    if (snapshot?.game?.dominion) {
+      const p=snapshot.game.dominion.players[snapshot.you?.seat];
+      return {money:p?.money||0,supplies:p?.supplies||0,technology:p?.points||0};
+    }
     // Sweep receipts are emitted only at extraction; its live HUD uses the run's pending balance.
     if (snapshot?.sweep && !snapshot.rewardsSettled) {
       const pending = snapshot.sweep.pending || {};
@@ -91,7 +95,7 @@ const MatchResults = (() => {
     const balance = element("span", "resource-balance");
     MatchIncome.render(balance);
     rewards.replaceChildren(
-      element("span", "", I18n.text("本局收益") + "："),
+      element("span", "", I18n.text(Net.snapshot?.game?.dominion ? "局内剩余资源（不带出对局）" : "本局收益") + "："),
       balance,
       element("span", "", " · " + I18n.text("损毁扣除") + " " + losses + " " + I18n.text("台")),
     );

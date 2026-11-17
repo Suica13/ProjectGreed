@@ -144,6 +144,8 @@ for (const [key, file] of [
   ["SFS_UI", "client/sfs-ui.js"],
   ["AI_TACTICS", "shared/ai-tactics.js"],
   ["BATTLEFIELD_MODE", "shared/battlefield-mode.js"],
+  ["DOMINION_MODE", "shared/dominion-mode.js"],
+  ["DOMINION_UI", "client/dominion-ui.js"],
   ["SWEEP_MODE", "shared/sweep-mode.js"],
   ["MISSION_MODE", "shared/mission-mode.js"],
   ["MISSION_UI", "client/mission-ui.js"],

@@ -65,7 +65,7 @@ test("shuttle defense imports three native layers, original hull and 0087T1 scen
   assert.equal(f.room.settings.missionEra, "UC_0087_T1");
   assert.equal(shuttles.length, 3);
   assert(
-    shuttles.every((u) => G.modelOf(u).hp === 300000 && G.cells(u).length === 25 && !G.canEvade(u)),
+    shuttles.every((u) => G.modelOf(u).hp === 300000 && G.cells(u).length === 1 && !G.canEvade(u)),
   );
   assert.equal(G.catalog.prefabs.find((p) => p.id === "Mission_SpaceShuttle").layers.length, 3);
   assert.equal(G.models.Mission_SpaceShuttle__standard.formOnly, true);
@@ -340,4 +340,20 @@ test("scripted SFS passengers stay aboard until carrier destruction; turn 18 rel
   assert.equal(new Set(nemo.map(u=>u.squadId)).size,2);
   assert(nemo.every(u=>G.canControlUnit(f.room.settings,[{seat:0}],0,u)));
   assert(!game.units.some(u=>u.missionGroup === "ace-force"));
+});
+
+test("native BO2 pixel atlas supplies the compact mission terrain and survives editor export", () => {
+  const doc=map.tileMap,D=require('../shared/map-document');
+  assert.equal(map.width,52);assert.equal(map.height,48);
+  assert.equal(doc.biomeStyle,undefined);
+  assert.equal(doc.nativeSource.width,181);assert.equal(doc.nativeSource.height,171);
+  assert.equal(doc.tilesets.length,1);
+  assert.equal(doc.tilesets[0].image,'data:image/png;base64,'+fs.readFileSync('assets/maps/missions/shuttle-native/tile_1.png').toString('base64'));
+  assert(doc.layers.some(l=>l.type==='tile' && !l.decorative));
+  assert(doc.tiles.some(t=>t.nativeTerrain==='road'));assert(doc.tiles.some(t=>t.nativeTerrain==='water'));
+  for(const actor of map.mission.actors.filter(a=>a.group==='shuttles'))
+    for(let y=actor.y;y<actor.y+5;y++)for(let x=actor.x;x<actor.x+5;x++)assert.notEqual(map.tiles[y][x],'water');
+  const roundtrip=D.compile(D.importMap(JSON.parse(JSON.stringify(map))));
+  assert.deepEqual(roundtrip.tiles,map.tiles);
+  assert.deepEqual(roundtrip.mission,map.mission);
 });

@@ -45,7 +45,11 @@
     },
     "speed": 100,
     "deployed": true,
-    "facilityType": "cannon"
+    "facilityType": "cannon",
+    "footprint": {
+      "width": 1,
+      "height": 1
+    }
   },
   "shield": {
     "hp": 0,

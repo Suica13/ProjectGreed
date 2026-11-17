@@ -631,7 +631,7 @@ const PilotSystem = (() => {
     for (const key of Object.keys(labels))
       if (key !== "awakening" || gradeId === "ace") pilot.stats[key] = Math.round(pilot.stats[key] * grade.multiplier);
     if (gradeId === "enhanced") pilot.stats.awakening = 75 + hash(seed + ":awakening") % 36;
-    return { name: defaultName(model, gradeId), stats: pilot.stats };
+    return { name: defaultName(model, gradeId), faction: model?.faction, stats: pilot.stats };
   }
   function normalizeCrewFormation(entries, stock, modelFor = null) {
     const available = normalizeCrewStock(stock);
@@ -705,7 +705,8 @@ const PilotSystem = (() => {
         : (command ? catalog.commanderRanges : catalog.defaultRanges)[key];
       stats[key] = low + Math.floor(random() * (high - low + 1));
     }
-    return { id: named?.id || null, name: named?.name || defaultName(model), stats };
+    return { id: named?.id || null, name: named?.name || defaultName(model),
+      faction: named?.faction || model?.faction, stats };
   }
   const legacyPilots = new WeakMap();
   const neutralPilot = {

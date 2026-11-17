@@ -1,7 +1,6 @@
 /* [0087][SDGO] A co-op hunt with autonomous AEUG allies and escaping targets. */
 const fs=require('node:fs'),path=require('node:path');
-const M=require('../shared/map-document'),B=require('./rebuild-biome-maps.cjs');
-const {cityArt}=require('./build-burning-city-art.cjs');
+const M=require('../shared/map-document'),NativeCity=require('./hong-kong-terrain.cjs');
 const root=path.resolve(__dirname,'..'),size=45;
 const doc=M.create({id:'mission_burning_city',name:'[0087][原创]燃烧的新都市-AEUG',
   description:'在燃烧的九龙街区消灭三台精神感应高达。目标若撤离，改为歼灭剩余敌军。',
@@ -63,11 +62,7 @@ for(let y=0;y<size;y++)for(let x=0;x<size;x++){
   map.tiles[y][x]=road?'plain':'rubble';
 }
 map.appearance={biome:"urban",colors:{plain:"#303a42",rubble:"#555a5e"}};
-const result=B.rebuild(map);
-// Keep authored avenues; the decorative image has no collision or event state.
-const artPath=path.join(root,'assets/maps/missions/burning-city-art.png');cityArt(artPath,size);
-result.tileMap.layers.push({id:'kowloon-buildings',name:'九龙黄昏楼宇、灯光、废墟与火点',type:'image',placement:'below',
-  opacity:1,visible:true,decorative:true,image:{src:'data:image/png;base64,'+fs.readFileSync(artPath).toString('base64'),x:0,y:0,width:size,height:size}});
+const result=NativeCity.repaint(map);
 result.mission=doc.mission;result.tileMap.mission=doc.mission;
 M.validate(result.tileMap);
 const ref='maps/missions/burning_city.json';fs.writeFileSync(path.join(root,'assets',ref),JSON.stringify(result,null,2)+'\n');

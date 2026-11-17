@@ -11,8 +11,8 @@
         50.625,
         39.375
       ],
-      "targetCells": 3,
-      "mapScale": 3.5555555555555554,
+      "targetCells": 1,
+      "mapScale": 1.1851851851851851,
       "layers": [
         {
           "name": "Body",

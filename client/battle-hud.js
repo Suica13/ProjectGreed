@@ -278,7 +278,7 @@ const BattleHUD = (() => {
     MatchIncome.render(byId("hudMatchIncome"), snapshot);
     const roomName = Net.local
       ? "离线" +
-        ({ mission: "任务模式", sweep: "战场扫荡", battlefield: "雇佣兵战争模式", quick: "快速战" }[
+        ({ dominion: "占山为王模式", mission: "任务模式", sweep: "战场扫荡", battlefield: "雇佣兵战争模式", quick: "快速战" }[
           snapshot?.settings?.mode
         ] || "常规战")
       : snapshot?.room || Net.room || "—";

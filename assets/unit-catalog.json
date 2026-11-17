@@ -588,7 +588,10 @@
     "units/EndraClass/unit.json",
     "units/NahelArgamaClass/unit.json",
     "units/ORX_012/unit.json",
-    "units/ORX_013/unit.json"
+    "units/ORX_013/unit.json",
+    "units/Facility_Factory/unit.json",
+    "units/Facility_Refinery/unit.json",
+    "units/Facility_Research/unit.json"
   ],
   "effects": "effects/effects.json",
   "presentation": "presentation.json",
@@ -655,7 +658,8 @@
     "maps/missions/bunker.json",
     "maps/missions/burning_city.json",
     "maps/missions/sleepless_raid.json",
-    "maps/missions/shuttle_defense.json"
+    "maps/missions/shuttle_defense.json",
+    "maps/dominion/highlands.json"
   ],
   "defaultMap": "frontier_1v1",
   "scenarioIndex": "maps/strategy/index.json"

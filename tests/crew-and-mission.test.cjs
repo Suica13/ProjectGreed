@@ -11,8 +11,10 @@ test('all factions have seeded general, veteran, elite, non-selectable ACE and e
     for(const commander of [false,true]){
       const m={faction,unitTags:commander?['CmdUnit']:[]}, base=P.roll(null,7319,0,0,m);
       assert(P.defaultName(m).includes('一般'));
+      assert.equal(base.faction,faction);
       for(const [grade,multiplier] of [['veteran',1.2],['elite',1.4],['ace',1.6]]){
         const p=P.rollGrade(grade,7319,m);
+        assert.equal(p.faction,faction);
         for(const key of Object.keys(P.labels)) assert.equal(p.stats[key],
           key==='awakening'&&grade!=='ace'?base.stats[key]:Math.round(base.stats[key]*multiplier));
       }

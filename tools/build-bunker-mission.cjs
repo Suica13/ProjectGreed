@@ -9,10 +9,10 @@ for(const s of doc.spawns){s.x=s.team?54:4+((s.position-1)%3)*4;s.y=s.team?5+s.p
 doc.deploymentAreas=doc.spawns.map(s=>s.team?{x:46,y:2,width:16,height:27}:{x:1,y:3,width:15,height:25});
 const actors=[];
 function add(id,unitId,kitId,team,x,y,group,initial=false,extra={}){
-  const a={id,unitId,kitId,team,x,y,group,initial,angle:team?270:90,...extra};actors.push(a);return a;
+  const a={id,unitId,kitId,team,x,y,group,initial,angle:team?270:90,...(team===0?{autonomous:true}:{}),...extra};actors.push(a);return a;
 }
-function squad(prefix,unitId,kitId,count,team,x,y,group,initial=false){
-  for(let i=0;i<count;i++)add(prefix+"-"+i,unitId,kitId,team,x,y,group,initial,{squad:prefix,...(team===0?{autonomous:true}:{})});
+function squad(prefix,unitId,kitId,count,team,x,y,group,initial=false,extra={}){
+  for(let i=0;i<count;i++)add(prefix+"-"+i,unitId,kitId,team,x,y,group,initial,{squad:prefix,...extra});
 }
 for(const [i,y] of [7,15,24].entries())add("dabude-"+i,"DabudeClass","standard",1,45,y,"main-force",true);
 for(let i=0;i<9;i++)squad("garrison-"+i,i<3?"MS_06J":i<6?"MS_06F":"MS_09",i<6?"machine_gun":"bazooka",3,1,
@@ -20,7 +20,7 @@ for(let i=0;i<9;i++)squad("garrison-"+i,i<3?"MS_06J":i<6?"MS_06F":"MS_09",i<6?"m
 const towerKinds=["MG","Cannon","Beam","Missile","MG","Beam","Cannon","Missile","MG","Beam","Cannon","Missile"];
 for(let i=0;i<12;i++)add("turret-"+i,"Facility_"+towerKinds[i],"standard",1,
   [24,24,34,34,44,44,56,56,28,38,48,54][i],[10,20,8,22,11,19,8,23,15,15,4,27][i],"defenses",true,{facilityLevel:2});
-for(let i=0;i<3;i++)squad("jim-support-"+i,"RGM_79","machine_gun",3,0,11,6+i*9,"jim-support");
+for(let i=0;i<5;i++)squad("jim-support-"+i,"RGM_79","machine_gun",3,0,11,5+i*5,"jim-support");
 for(let i=0;i<2;i++)squad("guntank-support-"+i,"RX_75R","standard",3,0,13,8+i*15,"guntank-support");
 function transported(prefix,unitId,kitId,count,x,y){
   const ids=[];
@@ -43,6 +43,21 @@ squad("last-dom","MS_09","bazooka",3,1,56,15,"last-stand");
 add("last-tropical-dom","MS_09D","kit_1",1,57,18,"last-stand");
 add("last-efreet","MS_08TX","kit_0",1,56,20,"last-stand");
 squad("last-flying-gouf","MS_07H8","kit_0",2,1,57,12,"last-stand");
+squad("last-gelgoog-j","MS_14JG","standard",3,1,54,5,"last-stand",false,{genericPilot:"elite"});
+for(let i=0;i<2;i++) {
+  squad("last-extra-dom-"+i,"MS_09","bazooka",3,1,52,9+i*10,"last-stand",false,{genericPilot:"veteran"});
+  squad("last-hygogg-"+i,"MSM_03C","standard",3,1,55,10+i*10,"last-stand",false,{genericPilot:"veteran"});
+}
+for(let i=0;i<3;i++)squad("last-high-mobility-zaku-"+i,"MS_06G","kit_0",3,1,55,5+i*9,"last-stand",false,
+  {genericPilot:"veteran",kitChoices:["kit_0","kit_1","kit_2"]});
+const relief=[];
+for(let c=0;c<3;c++) {
+  const carrier=add("relief-medea-"+c,"Medea","standard",0,6,5+c*9,"phase-two-support");
+  relief.push(carrier.id);
+  for(let i=0;i<3;i++)relief.push(add(`relief-ground-gundam-${c}-${i}`,"RX_79_G","machine_gun",0,6,5+c*9,"phase-two-support",false,
+    {carrier:carrier.id,squad:"relief-ground-gundam-"+c,genericPilot:"veteran",
+      kitChoices:["machine_gun","bazooka","beam_rifle","cannon","missile_launcher"]}).id);
+}
 const wave=(id,name,round,ids)=>({id,name,when:{type:"round",round},actions:[{type:"spawn",actors:ids}]});
 const speakers={
   zeon:{actor:"dabude-0",name:"吉翁军前线指挥官",portrait:"assets/pilots/Pilot_ZEON_0079_Officer_1.png"},
@@ -89,8 +104,14 @@ doc.mission={version:1,era:"UC_0079_T2",scenarioFaction:"EFSF",technologyLimitEn
   rewards:{technology:1000,money:5000,supplies:7500,inventory:{RGM_79SC:6,RGM_79HC:6},
     outcomes:[{event:"refuse-ceasefire",technology:1500,money:7500,supplies:10000,inventory:{RX_81:3,RGM_79C:9}}]},
   events:[
-    {id:"opening",name:"人口过剩攻略作战",when:{type:"start"},actions:[{type:"message",text:"歼灭地图中的敌军。没有人可以侵略联邦。"}]},
-    wave("jim-arrival","三队吉姆支援",2,actors.filter(a=>a.group==="jim-support").map(a=>a.id)),
+    {id:"opening",name:"人口过剩攻略作战",when:{type:"start"},actions:[{type:"dialogue",lines:[
+      "吉翁军在地球已经要完蛋了。",
+      "他们打算通过HLV返回宇宙，保留有生力量。",
+      "但我们的情报部门已经提前打探到风声。",
+      "这是一次突袭任务，不要手下留情。",
+      "交战规则无限制，杀光他们。",
+    ].map(text=>({...line("communications",text),actor:"dabude-0"}))}]},
+    wave("jim-arrival","五队吉姆支援",2,actors.filter(a=>a.group==="jim-support").map(a=>a.id)),
     wave("first-attack","第一次进攻",3,wave1),
     wave("guntank-arrival","两队量产型钢坦克支援",4,actors.filter(a=>a.group==="guntank-support").map(a=>a.id)),
     wave("second-attack","第二次进攻",6,wave2),
@@ -100,7 +121,7 @@ doc.mission={version:1,era:"UC_0079_T2",scenarioFaction:"EFSF",technologyLimitEn
         {id:"accept",text:"A：接受停火，任务结束。"},{id:"refuse",text:"B：不接受停火，继续歼灭敌军。"}]}]},
     {id:"accept-ceasefire",name:"接受停火",when:{type:"choice_selected",event:"ceasefire",option:"accept"},actions:[acceptDialogue,{type:"victory"}]},
     {id:"refuse-ceasefire",name:"吉翁军最后的抵抗",when:{type:"choice_selected",event:"ceasefire",option:"refuse"},actions:[refuseDialogue,
-      {type:"spawn",actors:actors.filter(a=>a.group==="last-stand").map(a=>a.id)},
+      {type:"spawn",actors:[...actors.filter(a=>a.group==="last-stand").map(a=>a.id),...relief]},
       {type:"message",text:"停火请求已拒绝。吉翁军最后的部队出现，必须消灭包括炮塔和运输机在内的全部敌军。"}]},
     {id:"final-victory",name:"彻底歼灭敌军",when:{type:"all",conditions:[
       {type:"choice_selected",event:"ceasefire",option:"refuse"},{type:"all_enemies_destroyed"}]},actions:[{type:"victory"}]},

@@ -2,7 +2,7 @@
 const fs = require("node:fs"),
   path = require("node:path");
 const M = require("../shared/map-document"),
-  B = require("./rebuild-biome-maps.cjs"),
+  NativeTerrain = require("./shuttle-native-terrain.cjs"),
   G = require("../shared/rules");
 const root = path.resolve(__dirname, ".."),
   width = 52,
@@ -330,14 +330,14 @@ map.appearance = {
 for (const [x, y] of pads)
   for (let dy = -2; dy <= 6; dy++)
     for (let dx = -2; dx <= 6; dx++) map.tiles[y + dy][x + dx] = "plain";
-const result = B.rebuild(map);
+const result = NativeTerrain.repaint(map, pads);
 result.mission = doc.mission;
 result.tileMap.mission = doc.mission;
 result.mission.source = {
   mod: "GundamWars_BattleOperation2_V5",
   map: "Maps/LimitTimer_PVE_01.tmx",
   script: "Units/Buildings/StoryEvent/Stage1/StoryEvent_Stage_1.ini",
-  adaptation: "Compact coastal defense; user-specified 35-turn UC0087 roster and survivor rewards.",
+  adaptation: "Native BO2 embedded pixel atlas and compact ground layout; current 35-turn script retained.",
 };
 const ref = "maps/missions/shuttle_defense.json";
 fs.writeFileSync(path.join(root, "assets", ref), JSON.stringify(result, null, 2) + "\n");

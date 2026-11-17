@@ -151,6 +151,14 @@ const RoomPanel = (() => {
     return label;
   }
   function factionControl(member, self, snapshot) {
+    if(snapshot.settings.mode==="dominion") {
+      const factions=Rules.dominionMode.factionsForEra(Rules,snapshot.settings.dominionEra||"UC_0079_T1");
+      const select=element("select");select.setAttribute("aria-label","玩家阵营");
+      for(const f of factions)select.add(new Option(Rules.factionInfo[f]?.name||f,f));select.value=member.characterFaction;
+      select.disabled=snapshot.started || !!Net.awaiting || (member.id!==self.id && !(member.bot && self.id===snapshot.hostId)) || !!snapshot.settings.teamFactions?.[Rules.seatTeam(member.seat)];
+      select.onchange=()=>member.bot?Net.request("configure_ai",{seat:member.seat,config:{difficulty:Rules.armySettings(member).difficulty},characterFaction:select.value}):Net.request("set_faction",{faction:select.value});
+      return select;
+    }
     const badge = PlayerProfile.badge(member, snapshot.settings.mode);
     if (!badge) return document.createDocumentFragment();
     return badge;
@@ -363,6 +371,25 @@ const RoomPanel = (() => {
     for (const select of parent.querySelectorAll("select[data-key]"))
       restrictions[select.dataset.key] = JSON.parse(select.dataset.bannedTags);
     return restrictions;
+  }
+  function renderDominionOptions(snapshot,busy) {
+    let panel=byId("dominionRoomOptions");
+    if(!panel){panel=element("details","room-rule-group room-mode-rules");panel.id="dominionRoomOptions";panel.open=true;byId("roomTechnologyRules").before(panel);}
+    const enabled=snapshot.settings.mode==="dominion";panel.hidden=!enabled;
+    byId("roomFormation").hidden=enabled;byId("roomResources").hidden=enabled;byId("roomSeatResources").hidden=enabled;if(!enabled)return;
+    for(const id of ["roomFormationRules","roomTechnologyRules"])byId(id).hidden=true;
+    byId("roomTagRestrictions").closest("details").hidden=true;
+    byId("roomFormation").hidden=true;
+    byId("roomResources").hidden=true;byId("roomSeatResources").hidden=true;
+    panel.replaceChildren(element("summary","","占山为王规则"));const fields=element("div","room-mode-fields");panel.append(fields);
+    const locked=busy || snapshot.started || snapshot.you?.id!==snapshot.hostId;
+    const add=(name,id,values,value,change)=>{const label=element("label","",name),select=element("select");select.id=id;
+      for(const [key,text] of values)select.add(new Option(text,key));select.value=value;select.disabled=locked;select.onchange=()=>change(select.value);label.append(select);fields.append(label);};
+    add("年代","dominionEra",Rules.eras.map(e=>[e,e]),snapshot.settings.dominionEra||"UC_0079_T1",era=>sendSettings({dominionEra:era,teamFactions:[null,null]}));
+    const factions=Rules.dominionMode.factionsForEra(Rules,snapshot.settings.dominionEra||"UC_0079_T1");
+    for(const team of [0,1])add("队伍"+(team+1)+"强制阵营","dominionTeamFaction"+team,[["","自由选择"],...factions.map(f=>[f,Rules.factionInfo[f]?.name||f])],snapshot.settings.teamFactions?.[team]||"",value=>{
+      const forced=[...(snapshot.settings.teamFactions||[null,null])];forced[team]=value||null;sendSettings({teamFactions:forced});});
+    panel.append(element("p","muted","每人一座主基地、两座工厂、两座精炼厂、一座研究所及炮塔。点击设施生产或研究，压制据点接管附属设施；资源和单位均仅限本局。"));
   }
   function renderBattlefieldOptions(snapshot, locked) {
     const settings = snapshot.settings;
@@ -1278,7 +1305,7 @@ const RoomPanel = (() => {
     renderSettings(snapshot, busy);
     const inBattle = snapshot.started && snapshot.phase !== "assembly";
     byId("roomMain").dataset.inBattle = String(inBattle);
-    byId("roomFormationControls").hidden = inBattle;
+    byId("roomFormationControls").hidden = inBattle || snapshot.settings.mode === "dominion";
     const shareButton = byId("shareUnitsToAllies");
     shareButton.hidden = !inBattle;
     shareButton.disabled =
@@ -1332,7 +1359,7 @@ const RoomPanel = (() => {
     } catch {
       valid = false;
     }
-    if (snapshot.loadedSave || snapshot.settings.mode === "campaign") {
+    if (snapshot.loadedSave || ["campaign","dominion"].includes(snapshot.settings.mode)) {
       valid = true;
       disabledCount = 0;
     }
@@ -1350,6 +1377,7 @@ const RoomPanel = (() => {
           sweep: "战场扫荡",
           mission: "任务模式",
           battlefield: "雇佣兵战争模式",
+          dominion: "占山为王模式",
           quick: "快速战模式",
           campaign: "历史战役模式",
           regular: "常规战模式",
@@ -1370,7 +1398,8 @@ const RoomPanel = (() => {
         I18n.text("编组已锁定");
     const teams = byId("teamSlots");
     teams.classList.toggle("observer-teams", self.seat === null);
-    teams.classList.toggle("pmc-room", snapshot.settings.mode !== "campaign");
+    teams.classList.toggle("dominion-room", snapshot.settings.mode === "dominion");
+    teams.classList.toggle("pmc-room", !["campaign","dominion"].includes(snapshot.settings.mode));
     for (const button of joinButtons) button.remove();
     teams.replaceChildren();
     for (const team of ["sweep","mission"].includes(snapshot.settings.mode) ? [0] : [0, 1]) {
@@ -1516,7 +1545,7 @@ const RoomPanel = (() => {
           ready.setAttribute("data-i18n-ignore", "");
         }
         slot.append(nameCell, positionCell);
-        if (snapshot.settings.mode === "campaign") slot.append(factionCell);
+        if (["campaign","dominion"].includes(snapshot.settings.mode)) slot.append(factionCell);
         slot.append(ready);
         for (const cell of slot.children) cell.setAttribute("role", "cell");
         column.append(slot);
@@ -1580,6 +1609,7 @@ const RoomPanel = (() => {
     byId("startRoomGame").textContent = snapshot.campaign ? "继续战役" : "开始游戏";
     byId("roomMainMenu").textContent =
       snapshot.started && snapshot.phase !== "assembly" ? "返回战斗" : "主菜单";
+    renderDominionOptions(snapshot,busy);
     renderFinalAssembly(snapshot, busy);
     renderDetail(snapshot);
     refreshReconnectCountdowns();
@@ -1612,7 +1642,7 @@ const RoomPanel = (() => {
   byId("returnAssemblyToRoom").onclick = () => BattlePrompts.requestReturn();
   byId("toggleReady").onclick = () => {
     const self = Net.snapshot?.members.find((member) => member.id === Net.memberId);
-    if (Net.snapshot?.settings.mode === "campaign")
+    if (["campaign","dominion"].includes(Net.snapshot?.settings.mode))
       return Net.request("set_ready", { ready: !self?.ready });
     const entries = self?.formationPreset?.units || Formation.current();
     const proceed = () => Net.request("set_ready", { ready: !self?.ready, formation: entries });
@@ -1646,6 +1676,7 @@ const RoomPanel = (() => {
     const snapshot = Net.snapshot;
     if (!snapshot || snapshot.started || snapshot.you?.id !== snapshot.hostId || Net.awaiting)
       return;
+    if(snapshot.settings.mode==="dominion")return Net.request("start_game");
     if (snapshot.settings.mode === "campaign")
       return snapshot.campaign ? Net.request("campaign_resume") : window.CampaignUI?.create();
     const own = snapshot.members.find((p) => p.id === snapshot.you?.id);

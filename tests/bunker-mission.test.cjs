@@ -1,9 +1,9 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const G=require('../shared/rules'),M=require('../shared/mission-mode'),D=require('../shared/map-document');
 const {createRoomEngine}=require('../shared/room-engine');
-function fixture(t){
+function fixture(t,seed=7319){
   let n=0;const frames=new Map();
-  const engine=createRoomEngine({rules:G,randomId:()=>"bunker-"+(++n),randomToken:()=>"tok-"+(++n),randomSeed:()=>7319,
+  const engine=createRoomEngine({rules:G,randomId:()=>"bunker-"+(++n),randomToken:()=>"tok-"+(++n),randomSeed:()=>seed,
     aiDelayMs:999999,send:(ws,s)=>frames.set(ws,s)});t.after(()=>engine.close());
   const host={readyState:1},guest={readyState:1};
   const profile={characterFaction:'PMC',inventory:{Medea:5},licenses:{Medea:true}};
@@ -33,8 +33,9 @@ function fixture(t){
     }
     return seen;
   };
+  const opening=finishDialogue();
   const ceasefire=()=>{waves();room.game.units.filter(u=>u.missionGroup==='main-force').forEach(u=>u.hp=0);engine.broadcast(room);};
-  return {engine,room,frames,host,guest,act,round,waves,ceasefire,finishDialogue};
+  return {engine,room,frames,host,guest,act,round,waves,ceasefire,finishDialogue,opening};
 }
 test('bunker rules, fortress, beach and mass driver compile with a two-ship fleet cap',t=>{
   const f=fixture(t),map=G.getMap(f.room.settings.mapId);
@@ -55,11 +56,11 @@ test('bunker rules, fortress, beach and mass driver compile with a two-ship flee
 test('bunker timed support and waves preserve all requested counts and real transport cargo',t=>{
   const f=fixture(t);f.waves();const units=f.room.game.units;
   const count=prefix=>units.filter(u=>u.missionActor?.startsWith(prefix)).length;
-  assert.equal(count('jim-support'),9);assert.equal(count('guntank-support'),6);
+  assert.equal(count('jim-support'),15);assert.equal(count('guntank-support'),6);
   const support=units.filter(u=>['jim-support','guntank-support'].includes(u.missionGroup));
   assert(support.every(u=>u.missionAutonomous && G.ownerOf(u)===f.room.missionAllySeat));
   assert(support.every(u=>!G.canControlUnit({...f.room.settings,shareAlliedUnits:true},[{seat:0},{seat:2}],0,u) && !G.canControlUnit({...f.room.settings,shareAlliedUnits:true},[{seat:0},{seat:2}],2,u)));
-  assert.equal(new Set(units.filter(u=>u.missionGroup==='jim-support').map(u=>u.squadId)).size,3);
+  assert.equal(new Set(units.filter(u=>u.missionGroup==='jim-support').map(u=>u.squadId)).size,5);
   assert.equal(new Set(units.filter(u=>u.missionGroup==='guntank-support').map(u=>u.squadId)).size,2);
   assert.equal(units.filter(u=>u.missionActor?.startsWith('wave-one-') && u.embarked).length,12);
   assert.equal(units.filter(u=>u.missionActor?.startsWith('wave-two-f2') && u.embarked).length,6);
@@ -96,7 +97,7 @@ for(const option of ['accept','refuse'])test(`synchronized ${option} branch auth
   assert.deepEqual(branchLines.slice(0,3).map(l=>l.text),['待机...','待机......','待机.........']);
   assert.equal(branchLines.at(-1).text,option==='accept'?'这场战争的结局是不会改变的。':'死也要咬下来一块肉！');
   if(option==='refuse'){
-    assert.equal(room.game.winner,null);assert.equal(room.game.units.filter(u=>u.missionGroup==='last-stand').length,22);
+    assert.equal(room.game.winner,null);assert.equal(room.game.units.filter(u=>u.missionGroup==='last-stand').length,46);
     assert.equal(room.game.units.filter(u=>u.missionActor?.startsWith('last-old-zaku')).length,9);
     assert.equal(room.game.units.filter(u=>u.missionActor?.startsWith('last-zaku-j')).length,6);
     assert.equal(room.economyAwards.filter(a=>a.kind==='result').length,0);
@@ -109,7 +110,7 @@ for(const option of ['accept','refuse'])test(`synchronized ${option} branch auth
   for(const a of awards){assert.equal(a.money,option==='accept'?6250:9375);assert.equal(a.supplies,option==='accept'?9375:12500);
     assert.deepEqual(a.stockGained.inventory,option==='accept'?{RGM_79SC:6,RGM_79HC:6}:{RX_81:3,RGM_79C:9});}
   f.engine.action(f.host,request);f.engine.broadcast(room);assert.equal(room.economyAwards.filter(a=>a.kind==='result').length,2);
-  assert.equal(room.game.units.filter(u=>u.missionGroup==='last-stand').length,option==='accept'?0:22);
+  assert.equal(room.game.units.filter(u=>u.missionGroup==='last-stand').length,option==='accept'?0:46);
 });
 test('PMC extinction loses with no branch reward',t=>{
   const f=fixture(t);f.room.game.units.filter(u=>!u.missionActor && u.team===0).forEach(u=>u.hp=0);
@@ -122,4 +123,63 @@ test('bunker branch references, fleet limits and scripted rewards validate on ma
     m=>m.rewards.outcomes[0].event='missing',m=>m.victory.continueOption='missing']){
     const map=structuredClone(original);mutate(map.mission);assert.throws(()=>M.validate(map.mission,map,G),/无效/);
   }
+});
+
+test('opening briefing preserves all five requested lines and ordinary communications portrait',t=>{
+ const f=fixture(t);
+ assert.deepEqual(f.opening.map(l=>l.text),[
+  '吉翁军在地球已经要完蛋了。','他们打算通过HLV返回宇宙，保留有生力量。',
+  '但我们的情报部门已经提前打探到风声。','这是一次突袭任务，不要手下留情。','交战规则无限制，杀光他们。']);
+ assert(f.opening.every(l=>l.name==='联邦通信员' && l.portrait.endsWith('Pilot_EFSF_0079_Common_1.png')));
+});
+test('second phase adds elite Gelgoog J, veteran squads and three autonomous Medea Gundam transports with stable random kits',t=>{
+ function enter(seed){const f=fixture(t,seed);f.ceasefire();f.finishDialogue();f.act('mission_choose',{choiceId:f.room.game.mission.choice.id,optionId:'refuse'});f.finishDialogue();return f;}
+ const f=enter(7319),game=f.room.game;
+ const group=prefix=>game.units.filter(u=>u.missionActor?.startsWith(prefix));
+ for(const [prefix,count,model,grade] of [
+  ['last-gelgoog-j',3,'MS_14JG','elite'],['last-extra-dom',6,'MS_09','veteran'],
+  ['last-hygogg',6,'MSM_03C','veteran'],['last-high-mobility-zaku',9,'MS_06G','veteran'],
+  ['relief-ground-gundam',9,'RX_79_G','veteran']]){
+   const units=group(prefix);assert.equal(units.length,count);assert(units.every(u=>G.modelOf(u).prefabId===model && u.pilot.genericGrade===grade));
+ }
+ const carriers=group('relief-medea');assert.equal(carriers.length,3);
+ for(const carrier of carriers)assert.equal(G.hangars.cargo(game,carrier).length,3);
+ const support=game.units.filter(u=>u.missionGroup==='phase-two-support');
+ assert.equal(support.length,12);
+ assert(support.every(u=>u.missionAutonomous && G.ownerOf(u)===f.room.missionAllySeat));
+ assert(support.every(u=>!G.canControlUnit({...f.room.settings,shareAlliedUnits:true},[{seat:0},{seat:2}],0,u)));
+ const random=group('last-high-mobility-zaku').concat(group('relief-ground-gundam'));
+ assert(new Set(group('last-high-mobility-zaku').map(u=>u.model)).size>1);
+ assert(new Set(group('relief-ground-gundam').map(u=>u.model)).size>1);
+ const models=g=>g.units.filter(u=>random.some(r=>r.missionActor===u.missionActor)).map(u=>u.model);
+ assert.deepEqual(models(enter(7319).room.game),models(game));
+ assert.notDeepEqual(models(enter(7320).room.game),models(game));
+ for(const choices of [[],['bad-kit'],['kit_0','kit_0']]){
+  const map=structuredClone(G.getMap('mission_bunker_coastal'));
+  map.mission.actors.find(a=>a.id.startsWith('last-high-mobility-zaku')).kitChoices=choices;
+  assert.throws(()=>M.validate(map.mission,map,G),/无效/);
+ }
+ const save=require('../shared/match-records');
+ assert.doesNotThrow(()=>save.validateSave(G,save.createSave(G,f.room)));
+});
+
+
+test('scripted defenders and shared turrets retain Zeon crew names and portraits',t=>{
+ const f=fixture(t);
+ const enemies=f.room.game.units.filter(u=>u.missionActor && u.team===1);
+ assert(enemies.some(u=>G.modelOf(u).facilityType));
+ for(const u of enemies){
+  assert.equal(u.pilot.faction,'ZEON');
+  assert.match(u.pilot.name,/^\u5409\u7fc1\u4e00\u822c/);
+  assert.equal(G.pilots.portrait(u.pilot),G.pilots.catalog.portraits.find(p=>p.faction==='ZEON').icon);
+ }
+ f.ceasefire();f.finishDialogue();
+ f.act('mission_choose',{choiceId:f.room.game.mission.choice.id,optionId:'refuse'});f.finishDialogue();
+ for(const u of f.room.game.units.filter(u=>u.missionGroup==='last-stand')){
+  assert.equal(u.pilot.faction,'ZEON');
+  assert.match(u.pilot.name,u.pilot.genericGrade==='elite'?/^\u5409\u7fc1\u7cbe\u82f1/:u.pilot.genericGrade==='veteran'?/^\u5409\u7fc1\u8001\u5175/:/^\u5409\u7fc1\u4e00\u822c/);
+ }
+ for(const u of f.room.game.units.filter(u=>u.missionGroup==='phase-two-support')){
+  assert.equal(u.pilot.faction,'EFSF');assert.match(u.pilot.name,/^\u8054\u90a6/);
+ }
 });

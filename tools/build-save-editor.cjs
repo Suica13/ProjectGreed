@@ -55,6 +55,7 @@ function buildSaveEditor(root = path.resolve(__dirname, "..")) {
     "shared/unit-sensors.js",
     "shared/ai-tactics.js",
     "shared/battlefield-mode.js",
+    "shared/dominion-mode.js",
     "shared/campaign-battlefield.js",
     "shared/automatic-fire.js",
     "shared/rules.js",

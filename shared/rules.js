@@ -21,6 +21,7 @@ const Tactics = (() => {
     typeof CampaignBattlefield !== "undefined"
       ? CampaignBattlefield
       : require("./campaign-battlefield.js");
+  const dominionMode = typeof DominionMode !== "undefined" ? DominionMode : require("./dominion-mode.js");
   const battlefieldMode =
     typeof BattlefieldMode !== "undefined" ? BattlefieldMode : require("./battlefield-mode.js");
   const damagePolicy =
@@ -305,7 +306,7 @@ const Tactics = (() => {
     return value;
   }
   function validateBattleMode(value = "regular") {
-    if (!["regular", "quick", "campaign", "battlefield", "sweep", "mission"].includes(value))
+    if (!["regular", "quick", "campaign", "battlefield", "sweep", "mission", "dominion"].includes(value))
       throw Error("对战模式无效");
     return value;
   }
@@ -318,6 +319,7 @@ const Tactics = (() => {
       mode: "regular",
       formationStyle: "standard",
       regularEra: "UC_0079_T1",
+      dominionEra: "UC_0079_T1",
       technologyLimitMode: "host",
       technologyLimitFaction: "EFSF",
       technologyLimit: 0,
@@ -2130,6 +2132,7 @@ const Tactics = (() => {
     occupancy = null,
   ) {
     const blocked =
+      g.dominion && !unit.facility ? dominionMode.blockedCells({cells},g) :
       g.battlefield && !unit.facility ? battlefieldMode.blockedCells({ cells }, g) : null;
     const footprint = cells(unit, x, y, angle),
       area =
@@ -2415,6 +2418,7 @@ const Tactics = (() => {
     for (let seat = 0; seat < formations.length; seat++) {
       // null 明确表示空出生点，不生成单位，也无需确认部署。
       if (formations[seat] === null) continue;
+      if (settings.mode === "dominion") continue;
       if (settings.mode === "battlefield" && seat < 2) continue;
       // Scripted opponents are placed by MissionMode, not player deployment.
       if (settings.mode === "mission" && seat === 1) continue;
@@ -2537,6 +2541,7 @@ const Tactics = (() => {
       winner: null,
       ...(settings.mode === "mission" ? { mission: { pending: true } } : {}),
     };
+    if (settings.mode === "dominion" && settings.dominionPlayers) dominionMode.initialize(Tactics, game, settings, settings.dominionPlayers);
     if (settings.mode === "battlefield") battlefieldMode.initialize(Tactics, game, settings);
     return game;
   }
@@ -3879,7 +3884,8 @@ const Tactics = (() => {
     let alive = [0, 1].map((t) =>
       g.units.some((u) => !u.facility?.campaignDefense && u.team === t && u.hp > 0),
     );
-    if (g.battlefield) battlefieldMode.sync(Tactics, g);
+    if (g.dominion) dominionMode.sync(Tactics, g);
+    else if (g.battlefield) battlefieldMode.sync(Tactics, g);
     else if (!g.mission && !options.deferVictory && (!alive[0] || !alive[1])) g.winner = alive[0] ? 0 : 1;
     return events;
   }
@@ -4027,7 +4033,8 @@ const Tactics = (() => {
     const alive = [0, 1].map((team) =>
       g.units.some((u) => !u.facility?.campaignDefense && u.hp > 0 && u.team === team),
     );
-    if (g.battlefield) battlefieldMode.sync(Tactics, g);
+    if (g.dominion) dominionMode.sync(Tactics, g);
+    else if (g.battlefield) battlefieldMode.sync(Tactics, g);
     else if (!g.mission && (!alive[0] || !alive[1])) g.winner = alive[0] ? 0 : 1;
     return {
       type: "skill",
@@ -4133,7 +4140,8 @@ const Tactics = (() => {
       const alive = [0, 1].map((team) =>
         g.units.some((u) => !u.facility?.campaignDefense && u.team === team && u.hp > 0),
       );
-      if (g.battlefield) battlefieldMode.sync(Tactics, g);
+      if (g.dominion) dominionMode.sync(Tactics, g);
+    else if (g.battlefield) battlefieldMode.sync(Tactics, g);
       else if (!g.mission && (!alive[0] || !alive[1])) g.winner = alive[0] ? 0 : 1;
     }
     return events;
@@ -4202,7 +4210,7 @@ const Tactics = (() => {
     const teamsAlive = [0, 1].map((team) =>
       g.units.some((unit) => !unit.facility?.campaignDefense && unit.team === team && unit.hp > 0),
     );
-    if (!g.battlefield && !g.mission && (!teamsAlive[0] || !teamsAlive[1])) g.winner = teamsAlive[0] ? 0 : 1;
+    if (!g.dominion && !g.battlefield && !g.mission && (!teamsAlive[0] || !teamsAlive[1])) g.winner = teamsAlive[0] ? 0 : 1;
     g.team = 1 - g.team;
     g.round++;
     skills.tickPilotBuffs(g);
@@ -4314,8 +4322,10 @@ const Tactics = (() => {
     const alive = [0, 1].map((team) =>
       g.units.some((u) => !u.facility?.campaignDefense && u.team === team && u.hp > 0),
     );
-    if (g.battlefield) battlefieldMode.sync(Tactics, g);
+    if (g.dominion) dominionMode.sync(Tactics, g);
+    else if (g.battlefield) battlefieldMode.sync(Tactics, g);
     else if (!g.mission && (!alive[0] || !alive[1])) g.winner = alive[0] ? 0 : 1;
+    if (g.dominion) dominionMode.advance(Tactics, g);
     if (g.battlefield) battlefieldMode.advance(Tactics, g);
   }
   // 待机不阻止自动结束；仍可使用脱出等非攻击技能时保留行动机会。
@@ -4865,6 +4875,7 @@ const Tactics = (() => {
       })[tag] || tag,
     hangars,
     campaignBattlefield,
+    dominionMode,
     aiTactics,
     W,
     getMap,

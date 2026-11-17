@@ -1,0 +1,106 @@
+{
+  "source": "GundamWars_BattleOperation2_V5/Maps/NHK[5v5]_PVP_01.tmx",
+  "sha256": "24addf57759501e0eac126a35240327f6ab08a824025649fd6bc80741d4a7b8a",
+  "width": 120,
+  "height": 149,
+  "atlas": {
+    "image": "tile_3.png",
+    "width": 200,
+    "height": 200,
+    "tileWidth": 10,
+    "tileHeight": 10,
+    "firstgid": 139
+  },
+  "fire": {
+    "image": "Burned_1.png",
+    "width": 425,
+    "height": 85,
+    "frames": 5
+  },
+  "buildings": [
+    {
+      "id": "House_HK_1",
+      "image": "House_HK_1.png",
+      "width": 40,
+      "height": 40,
+      "source": "Units/Buildings/Wall/House_HK_1.ini",
+      "sha256": "01918091a1e6a09452cc8d215d4b6142f7034c1c3fe3ea2812a494c29490d912",
+      "scale": 4.0,
+      "offsetX": -10.0,
+      "offsetY": -10.0,
+      "footprint": "-3,-3,2,4"
+    },
+    {
+      "id": "House_HK_2",
+      "image": "House_HK_2.png",
+      "width": 40,
+      "height": 40,
+      "source": "Units/Buildings/Wall/House_HK_2.ini",
+      "sha256": "f4dfd20921040b7871b01d1979a0c11a681636b7f14c313479e29b11cfc419a9",
+      "scale": 4.0,
+      "offsetX": -10.0,
+      "offsetY": -10.0,
+      "footprint": "-3,-3,2,4"
+    },
+    {
+      "id": "House_HK_3",
+      "image": "House_HK_3.png",
+      "width": 40,
+      "height": 40,
+      "source": "Units/Buildings/Wall/House_HK_3.ini",
+      "sha256": "43f6c6f6347582dcd34c1b7af4dac1a829c8d7dd8dfcf92b0d806e22510234e2",
+      "scale": 4.0,
+      "offsetX": -10.0,
+      "offsetY": -10.0,
+      "footprint": "-4,-3,3,4"
+    },
+    {
+      "id": "House_HK_4",
+      "image": "House_HK_4.png",
+      "width": 40,
+      "height": 40,
+      "source": "Units/Buildings/Wall/House_HK_4.ini",
+      "sha256": "d3f328506b0ded91dcd4ec6b97a70dabc436f197291ea828e77ff0688da26243",
+      "scale": 4.0,
+      "offsetX": -10.0,
+      "offsetY": -10.0,
+      "footprint": "-4,-3,3,4"
+    },
+    {
+      "id": "House_HK_5",
+      "image": "House_HK_5.png",
+      "width": 40,
+      "height": 50,
+      "source": "Units/Buildings/Wall/House_HK_5.ini",
+      "sha256": "9daee5aeb7bfdb9567800b02a3c5437e20acbd2b8d44f8a49d2ad693f24673b0",
+      "scale": 4.0,
+      "offsetX": -10.0,
+      "offsetY": -10.0,
+      "footprint": "-4,-4,3,5"
+    },
+    {
+      "id": "House_HK_6",
+      "image": "House_HK_6.png",
+      "width": 30,
+      "height": 30,
+      "source": "Units/Buildings/Wall/House_HK_6.ini",
+      "sha256": "c7fbc976ee720b0f9fb650ed1c4b0511a0c062afd770c396dddcaa8958ed5e22",
+      "scale": 4.0,
+      "offsetX": -10.0,
+      "offsetY": -10.0,
+      "footprint": "-3,-2,2,3"
+    },
+    {
+      "id": "House_HK_7",
+      "image": "House_HK_7.png",
+      "width": 40,
+      "height": 40,
+      "source": "Units/Buildings/Wall/House_HK_7.ini",
+      "sha256": "0d1a479a818f8b9e35810989dca5b8bac021445840158eefb1e77e0a0eac6cb5",
+      "scale": 4.0,
+      "offsetX": -10.0,
+      "offsetY": -10.0,
+      "footprint": "-3,-3,2,4"
+    }
+  ]
+}

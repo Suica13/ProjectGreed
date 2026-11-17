@@ -108,7 +108,7 @@ test("site control is square at radius two, enlarged at bases, and structures ca
     assert(!G.fits(game, actor, p.x, p.y, 0, true));
   }
   const base = game.units.find((u) => u.facility?.type === "base");
-  assert.equal(G.cells(base).length, 9);
+  assert.equal(G.cells(base).length, 1);
   for (const p of G.cells(base)) assert(!G.fits(game, actor, p.x, p.y, 0, true));
   const site = B.deploymentSites(G, game, 0).find((s) => s.id.startsWith("base:"));
   assert(B.containsSite(site, site.x + 4, site.y));

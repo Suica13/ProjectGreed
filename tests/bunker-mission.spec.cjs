@@ -19,6 +19,20 @@ for(const [width,option,length] of [[1440,'accept',8],[390,'refuse',9]])test(`bu
   await page.evaluate(()=>Net.request('auto_place_deployment'));await expect.poll(()=>page.evaluate(()=>!!Net.awaiting)).toBe(false);
   await page.evaluate(()=>Net.request('confirm_deployment'));
   await expect.poll(()=>page.evaluate(()=>Net.snapshot.phase)).not.toBe('deployment');
+  const crews=await page.evaluate(()=>[...bunkerEngine.rooms.values()][0].game.units
+    .filter(u=>u.facility).map(u=>({faction:u.pilot.faction,name:I18n.pilotName(u.pilot),
+      portrait:PilotSystem.portrait(u.pilot),expected:PilotSystem.catalog.portraits.find(p=>p.faction==='ZEON').icon})));
+  expect(crews).toHaveLength(12);
+  for(const crew of crews){expect(crew.faction).toBe('ZEON');
+    expect(crew.name).toBe('\u5409\u7fc1\u4e00\u822c\u9a7e\u9a76\u5458');expect(crew.portrait).toBe(crew.expected);}
+  const briefing=page.locator('#missionDialogue');
+  await expect(briefing).toBeVisible();
+  await expect(briefing.locator('strong')).toHaveText('联邦通信员:');
+  await expect(briefing.locator('p')).toHaveText('吉翁军在地球已经要完蛋了。');
+  await page.screenshot({path:`tmp/verification/screenshots/bunker-briefing-${width}.png`});
+  for(let i=0;i<5;i++)await briefing.getByRole('button',{name:'继续',exact:true}).click();
+  await expect(briefing).toBeHidden();
+
   await page.evaluate(()=>{const room=[...bunkerEngine.rooms.values()][0];room.game.round=10;bunkerEngine.broadcast(room);room.game.units.filter(u=>u.missionGroup==='main-force').forEach(u=>u.hp=0);bunkerEngine.broadcast(room);});
   const cover=page.locator('#missionDialogue');
   await expect(cover).toBeVisible();
@@ -42,7 +56,7 @@ for(const [width,option,length] of [[1440,'accept',8],[390,'refuse',9]])test(`bu
   }
   await expect(cover).toBeHidden();
   if(option==='refuse'){
-    await expect.poll(()=>page.evaluate(()=>[...bunkerEngine.rooms.values()][0].game.units.filter(u=>u.missionGroup==='last-stand').length)).toBe(22);
+    await expect.poll(()=>page.evaluate(()=>[...bunkerEngine.rooms.values()][0].game.units.filter(u=>u.missionGroup==='last-stand').length)).toBe(46);
     await page.evaluate(()=>{const room=[...bunkerEngine.rooms.values()][0];room.game.units.filter(u=>u.team===1).forEach(u=>u.hp=0);bunkerEngine.broadcast(room);});
   }
   await expect.poll(()=>page.evaluate(()=>Net.snapshot.game.winner)).toBe(0);

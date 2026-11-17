@@ -30,7 +30,7 @@ function fixture(t){
 }
 test('burning city square, era, two carriers, fixed dusk and independent yellow AI allies',t=>{
   const f=fixture(t),{room}=f,map=G.getMap(room.settings.mapId),allies=room.game.units.filter(u=>u.missionAutonomous);
-  assert.equal(map.width,map.height);assert.equal(map.tileMap.biomeStyle.biome,'urban');
+  assert.equal(map.width,map.height);assert.equal(map.appearance.biome,'urban');assert.equal(map.tileMap.biomeStyle,undefined);
   for(const center of [9,22,35]){
     assert.deepEqual(map.tiles.slice(center-1,center+2).map(row=>row[14]),['plain','plain','plain']);
     assert.equal(map.tiles[center-2][14],'rubble');assert.equal(map.tiles[center+2][14],'rubble');
@@ -136,4 +136,24 @@ test('mission saves keep five player slots and restore the separate allied AI co
   assert.equal(f.room.seats[f.room.missionAllySeat].missionAlly,true);
   assert(f.room.game.units.filter(u=>u.missionAutonomous).every(u=>G.ownerOf(u)===f.room.missionAllySeat));
   assert.equal(f.room.game.mission.dialogue,null);
+});
+
+test('Hong Kong native tiles and seven building decals remain decoration with unchanged street gameplay',()=>{
+  const fs=require('node:fs'),D=require('../shared/map-document'),map=G.getMap('mission_burning_city'),doc=map.tileMap;
+  assert.equal(doc.nativeSource.map,'GundamWars_BattleOperation2_V5/Maps/NHK[5v5]_PVP_01.tmx');
+  assert.equal(new Set(doc.nativeSource.buildings.map(b=>b.id)).size,7);
+  assert(doc.nativeSource.buildings.length>=30);
+  for(let i=1;i<=7;i++){
+    const set=doc.tilesets.find(t=>t.id==='House_HK_'+i);
+    assert.equal(set.image,'data:image/png;base64,'+fs.readFileSync(`assets/maps/missions/hong-kong-native/House_HK_${i}.png`).toString('base64'));
+    assert(doc.tiles.filter(t=>t.tilesetId===set.id).every(t=>t.decorative));
+  }
+  assert(doc.layers.filter(l=>l.id!=='hong-kong-ground').every(l=>l.decorative));
+  assert(!doc.layers.some(l=>l.type==='image'));
+  assert(!map.mission.actors.some(a=>a.unitId.startsWith('House_HK_')));
+  assert.deepEqual(D.compile(D.importMap(JSON.parse(JSON.stringify(map)))).tiles,map.tiles);
+  for(let y=0;y<45;y++)for(let x=0;x<45;x++) {
+    const road=[9,22,35].some(v=>Math.abs(y-v)<=1)||[9,20,31,42].some(v=>x>=v&&x<v+2)||x<9;
+    assert.equal(map.tiles[y][x],road?'plain':'rubble');
+  }
 });
