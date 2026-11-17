@@ -47,7 +47,8 @@
       .room-climate-options { box-sizing:border-box; min-width:0; grid-column:1 / -1; width:100%; border:1px solid #355e79; padding:10px; border-radius:5px; }
       .room-climate-options > summary { cursor:pointer; color:#b9dff2; }
       .room-climate-fields { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:10px; margin-top:10px; }
-    </style>
+    option:disabled { color: #888; }
+</style>
     <style>
       :root {
         color-scheme: dark;
@@ -2421,14 +2422,14 @@
             <label>离线房间模式<select id="offlineRoomMode">
               <optgroup label="合作模式">
                 <option value="mission">任务模式</option>
-                <option value="sweep">战场扫荡</option>
+                <option value="sweep" disabled>战场扫荡</option>
               </optgroup>
               <optgroup label="战场模式">
                 <option value="battlefield">雇佣兵战争模式</option>
                 <option value="quick">快速战模式</option>
               </optgroup>
               <optgroup label="策略模式">
-                <option value="campaign">历史战役模式</option>
+                <option value="campaign" disabled>历史战役模式</option>
               </optgroup>
             </select></label>
             <div class="net-buttons">
@@ -2603,14 +2604,14 @@
                     <div id="roomRulesActions"><label class="room-mode-selector"><span>对战模式</span><select id="roomBattleMode" aria-label="对战模式">
                         <optgroup label="合作模式">
                 <option value="mission">任务模式</option>
-                <option value="sweep">战场扫荡</option>
+                <option value="sweep" disabled>战场扫荡</option>
               </optgroup>
               <optgroup label="战场模式">
                 <option value="battlefield">雇佣兵战争模式</option>
                 <option value="quick">快速战模式</option>
               </optgroup>
               <optgroup label="策略模式">
-                <option value="campaign">历史战役模式</option>
+                <option value="campaign" disabled>历史战役模式</option>
               </optgroup>
                       </select></label></div>
                   </div>
@@ -5159,14 +5160,14 @@
           <label>新房间模式<select id="newRoomMode">
             <optgroup label="合作模式">
                 <option value="mission">任务模式</option>
-                <option value="sweep">战场扫荡</option>
+                <option value="sweep" disabled>战场扫荡</option>
               </optgroup>
               <optgroup label="战场模式">
                 <option value="battlefield">雇佣兵战争模式</option>
                 <option value="quick">快速战模式</option>
               </optgroup>
               <optgroup label="策略模式">
-                <option value="campaign">历史战役模式</option>
+                <option value="campaign" disabled>历史战役模式</option>
               </optgroup>
           </select></label>
         <label class="settings-toggle">密码锁<input id="newRoomLocked" type="checkbox" /></label>
