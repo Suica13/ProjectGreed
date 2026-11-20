@@ -18,7 +18,7 @@ const ProfileMigrations = (() => {
   }
   function economy(value) {
     if (!value || typeof value !== "object") return value;
-    if (value.schemaVersion === 3) return value;
+    if (value.schemaVersion >= 3) return value;
     const { inventory, kits, ...current } = value;
     if (current.licenses === undefined && inventory !== undefined)
       current.licenses = licensesFromInventory(inventory);

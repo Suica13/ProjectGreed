@@ -121,48 +121,7 @@ function loadCatalog({
   }
   result.maps = {};
   result.scenarios = {};
-  const mapReferences = [...catalog.maps];
-  const scenarioIndex = catalog.scenarioIndex ? file(root, catalog.scenarioIndex) : null;
-  const scenarioReferences = scenarioIndex
-    ? read(scenarioIndex).scenarios.map((ref) =>
-        path
-          .relative(root, file(path.dirname(scenarioIndex), ref))
-          .split(path.sep)
-          .join("/"),
-      )
-    : catalog.scenarios || [];
-  for (const reference of scenarioReferences) {
-    const filename = file(root, reference),
-      base = path.dirname(filename),
-      scenario = read(filename);
-    if (
-      !/^[a-z0-9_]+$/.test(scenario.id) ||
-      result.scenarios[scenario.id] ||
-      scenario.playersPerTeam !== 5
-    )
-      throw Error("Invalid strategic scenario: " + reference);
-    const world = read(file(base, scenario.world)),
-      regions = {};
-    for (const region of world.regions) {
-      const entry = scenario.regions[region.id];
-      if (!entry || typeof entry.map !== "string")
-        throw Error("Missing regional map: " + region.id);
-      const target = entry.map.startsWith("@encounter/")
-        ? file(root, "maps/encounter/" + entry.map.slice(11) + ".json")
-        : file(base, entry.map);
-      const ref = path.relative(root, target).split(path.sep).join("/");
-      const map = mapOverrides[ref] || read(target);
-      if (!mapReferences.includes(ref)) mapReferences.push(ref);
-      const layout = entry.layout ? read(file(base, entry.layout)) : map;
-      require("../shared/campaign-battlefield.js").validateLayout(
-        layout.strategic || layout,
-        map,
-        region,
-      );
-      regions[region.id] = { ...entry, mapId: map.id, layout: layout.strategic || layout };
-    }
-    result.scenarios[scenario.id] = { ...scenario, world, regions };
-  }
+  const mapReferences = catalog.maps.filter(ref => !ref.startsWith("maps/dominion/") && !ref.startsWith("maps/strategic/"));
   if (!Array.isArray(catalog.maps) || !catalog.maps.length) throw Error("Missing preset maps");
   for (const reference of mapReferences) {
     const map = mapOverrides[reference] || read(file(root, reference));
@@ -232,7 +191,7 @@ function loadCatalog({
       map.supportedModes !== undefined &&
       (!Array.isArray(map.supportedModes) ||
         !map.supportedModes.length ||
-        map.supportedModes.some((mode) => !["regular", "quick", "battlefield", "sweep", "mission", "dominion"].includes(mode)))
+        map.supportedModes.some((mode) => !["regular", "quick", "battlefield", "sweep", "mission"].includes(mode)))
     )
       throw Error("Invalid map modes: " + map.id);
     if (map.mission) require("../shared/mission-mode.js").validate(map.mission, map);
@@ -258,7 +217,7 @@ function loadCatalog({
       )
         throw Error("TileMap dimensions/ID mismatch: " + map.id);
     }
-    if (map.dominion) require("../shared/dominion-mode.js").validateMap(map);
+
     if (map.battlefield) require("../shared/battlefield-mode.js").validateMap(map);
     const areas = map.deploymentAreas;
     const expansion = map.deploymentExpansion;
@@ -336,10 +295,6 @@ function loadCatalog({
     }
     result.maps[map.id] = map;
   }
-  for (const scenario of Object.values(result.scenarios))
-    for (const entry of Object.values(scenario.regions))
-      if (result.maps[entry.mapId]?.playersPerTeam !== scenario.playersPerTeam)
-        throw Error("Regional map must support 5v5: " + entry.mapId);
   result.maps = Object.fromEntries(
     Object.entries(result.maps).sort(([, a], [, b]) => a.spawns.length - b.spawns.length),
   );

@@ -151,14 +151,6 @@ const RoomPanel = (() => {
     return label;
   }
   function factionControl(member, self, snapshot) {
-    if(snapshot.settings.mode==="dominion") {
-      const factions=Rules.dominionMode.factionsForEra(Rules,snapshot.settings.dominionEra||"UC_0079_T1");
-      const select=element("select");select.setAttribute("aria-label","玩家阵营");
-      for(const f of factions)select.add(new Option(Rules.factionInfo[f]?.name||f,f));select.value=member.characterFaction;
-      select.disabled=snapshot.started || !!Net.awaiting || (member.id!==self.id && !(member.bot && self.id===snapshot.hostId)) || !!snapshot.settings.teamFactions?.[Rules.seatTeam(member.seat)];
-      select.onchange=()=>member.bot?Net.request("configure_ai",{seat:member.seat,config:{difficulty:Rules.armySettings(member).difficulty},characterFaction:select.value}):Net.request("set_faction",{faction:select.value});
-      return select;
-    }
     const badge = PlayerProfile.badge(member, snapshot.settings.mode);
     if (!badge) return document.createDocumentFragment();
     return badge;
@@ -372,25 +364,6 @@ const RoomPanel = (() => {
       restrictions[select.dataset.key] = JSON.parse(select.dataset.bannedTags);
     return restrictions;
   }
-  function renderDominionOptions(snapshot,busy) {
-    let panel=byId("dominionRoomOptions");
-    if(!panel){panel=element("details","room-rule-group room-mode-rules");panel.id="dominionRoomOptions";panel.open=true;byId("roomTechnologyRules").before(panel);}
-    const enabled=snapshot.settings.mode==="dominion";panel.hidden=!enabled;
-    byId("roomFormation").hidden=enabled;byId("roomResources").hidden=enabled;byId("roomSeatResources").hidden=enabled;if(!enabled)return;
-    for(const id of ["roomFormationRules","roomTechnologyRules"])byId(id).hidden=true;
-    byId("roomTagRestrictions").closest("details").hidden=true;
-    byId("roomFormation").hidden=true;
-    byId("roomResources").hidden=true;byId("roomSeatResources").hidden=true;
-    panel.replaceChildren(element("summary","","占山为王规则"));const fields=element("div","room-mode-fields");panel.append(fields);
-    const locked=busy || snapshot.started || snapshot.you?.id!==snapshot.hostId;
-    const add=(name,id,values,value,change)=>{const label=element("label","",name),select=element("select");select.id=id;
-      for(const [key,text] of values)select.add(new Option(text,key));select.value=value;select.disabled=locked;select.onchange=()=>change(select.value);label.append(select);fields.append(label);};
-    add("年代","dominionEra",Rules.eras.map(e=>[e,e]),snapshot.settings.dominionEra||"UC_0079_T1",era=>sendSettings({dominionEra:era,teamFactions:[null,null]}));
-    const factions=Rules.dominionMode.factionsForEra(Rules,snapshot.settings.dominionEra||"UC_0079_T1");
-    for(const team of [0,1])add("队伍"+(team+1)+"强制阵营","dominionTeamFaction"+team,[["","自由选择"],...factions.map(f=>[f,Rules.factionInfo[f]?.name||f])],snapshot.settings.teamFactions?.[team]||"",value=>{
-      const forced=[...(snapshot.settings.teamFactions||[null,null])];forced[team]=value||null;sendSettings({teamFactions:forced});});
-    panel.append(element("p","muted","每人一座主基地、两座工厂、两座精炼厂、一座研究所及炮塔。点击设施生产或研究，压制据点接管附属设施；资源和单位均仅限本局。"));
-  }
   function renderBattlefieldOptions(snapshot, locked) {
     const settings = snapshot.settings;
     const battlefield = settings.mode === "battlefield";
@@ -477,95 +450,6 @@ const RoomPanel = (() => {
     reward.id = "battlefieldEntryReward";
     reward.textContent = "阵营AI每5回合空投增援 · 单位阵亡扣除库存 · 击坠与助攻给予奖励";
     panel.append(reward);
-  }
-  function renderCampaignOptions(snapshot, locked) {
-    let panel = byId("campaignRoomOptions");
-    if (!panel) {
-      panel = element("details", "room-rule-group room-mode-rules");
-      panel.id = "campaignRoomOptions";
-      panel.open = true;
-      byId("roomTechnologyRules").before(panel);
-    }
-    panel.hidden = snapshot.settings.mode !== "campaign";
-    if (panel.hidden) return;
-    panel.replaceChildren();
-    panel.append(element("summary", "", "历史战役模式设置"));
-    const fields = element("div", "room-mode-fields");
-    panel.append(fields);
-    const config = Rules.aiTactics.settings(snapshot.settings.campaignOptions);
-    const option = (parent, label, choices, value, change, id) => {
-      const row = element("label", "", label),
-        select = element("select");
-      select.id = id;
-      for (const [key, text] of choices) select.add(new Option(I18n.text(text), String(key)));
-      select.value = String(value);
-      select.disabled = locked || !!snapshot.campaign;
-      select.onchange = () => {
-        change(select.value);
-        sendSettings({ campaignOptions: config });
-      };
-      row.append(select);
-      parent.append(row);
-    };
-    const general = element("div", "campaign-room-ai-options");
-    option(
-      general,
-      "AI难度",
-      [
-        ["easy", "简单"],
-        ["normal", "标准"],
-        ["hard", "困难"],
-      ],
-      config.difficulty,
-      (v) => (config.difficulty = v),
-      "campaignAIDifficulty",
-    );
-    option(
-      general,
-      "进攻欲望",
-      [
-        ["low", "低"],
-        ["normal", "中"],
-        ["high", "高"],
-      ],
-      config.aggression,
-      (v) => (config.aggression = v),
-      "campaignAIAggression",
-    );
-    fields.append(general);
-    for (let team = 0; team < 2; team++) {
-      const group = element("fieldset", "campaign-room-team-options");
-      group.append(element("legend", "", ["地球联邦军", "吉翁公国军"][team]));
-      option(
-        group,
-        "科技速度",
-        [
-          [0.75, "慢 75%"],
-          [1, "中 100%"],
-          [1.25, "快 125%"],
-        ],
-        config.teams[team].research,
-        (v) => (config.teams[team].research = Number(v)),
-        "campaignResearch" + team,
-      );
-      option(
-        group,
-        "单位强度（耐久）",
-        [0.75, 1, 1.25].map((v) => [v, v * 100 + "%"]),
-        config.teams[team].durability,
-        (v) => (config.teams[team].durability = Number(v)),
-        "campaignDurability" + team,
-      );
-      option(
-        group,
-        "初始资源",
-        [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2].map((v) => [v, v * 100 + "%"]),
-        config.teams[team].resources,
-        (v) => (config.teams[team].resources = Number(v)),
-        "campaignResources" + team,
-      );
-      fields.append(group);
-    }
   }
   function renderSettings(snapshot, busy) {
     const settings = snapshot.settings || Rules.defaultRoomSettings();
@@ -783,43 +667,18 @@ const RoomPanel = (() => {
     byId("roomCostLimit").step = Rules.catalog.formation.costStep;
     byId("roomCostLimit").min = Math.min(...Object.values(UnitModels).map((model) => model.cost));
 
-    const strategic = settings.mode === "campaign";
-    byId("roomScenarioSelect").hidden = !strategic;
-    byId("roomScenarioSelect").disabled = locked;
-    mapSelect.hidden = strategic || settings.mode === "sweep";
-    byId("roomFormationRules").hidden = strategic || settings.mode === "battlefield";
+    mapSelect.hidden = settings.mode === "sweep";
+    byId("roomFormationRules").hidden = settings.mode === "battlefield";
     if(settings.mode==="mission") {
       for(const id of ["roomCostLimit","roomUnitLimit","roomFormationPreset","saveRoomPreset","deleteRoomPreset"])
         byId(id).disabled=true;
     }
-    byId("roomTagRestrictions").closest("details").hidden = strategic || settings.mode === "mission";
+    byId("roomTagRestrictions").closest("details").hidden = settings.mode === "mission";
     teamRulesPanel.closest("details").hidden = settings.mode !== "quick";
     for (const id of ["roomFogMode", "roomShareAlliedUnits"])
-      byId(id).closest("label").hidden = strategic;
-    let summary = byId("campaignRoomRuleSummary");
-    if (!summary) {
-      summary = element(
-        "p",
-        "muted",
-        "历史战役模式使用剧本部队与共享资源，不限制编组COST、单位点数或禁用标签。",
-      );
-      summary.id = "campaignRoomRuleSummary";
-      byId("roomGeneralBattleRules").append(summary);
-    }
-    summary.hidden = !strategic;
-    renderCampaignOptions(snapshot, locked);
+      byId(id).closest("label").hidden = false;
     renderBattlefieldOptions(snapshot, locked);
-    if (strategic) {
-      window.CampaignUI.preview(byId("roomMapPreview"), snapshot.campaign);
-      byId("roomMapTitle").textContent = CAMPAIGN_WORLD.name;
-      byId("roomMapInfo").textContent =
-        I18n.text("地球") +
-        " · " +
-        CAMPAIGN_WORLD.regions.length +
-        I18n.text("个区域") +
-        " · EFSF / ZEON";
-      byId("roomMapChoiceHint").textContent = I18n.text("战役剧本");
-    } else if (settings.mode === "sweep") drawSweepCover();
+    if (settings.mode === "sweep") drawSweepCover();
     else drawMap(Rules.getMap(mapSelect.value));
   }
   function closeDetail() {
@@ -1398,29 +1257,22 @@ const RoomPanel = (() => {
         I18n.text("编组已锁定");
     const teams = byId("teamSlots");
     teams.classList.toggle("observer-teams", self.seat === null);
-    teams.classList.toggle("dominion-room", snapshot.settings.mode === "dominion");
-    teams.classList.toggle("pmc-room", !["campaign","dominion"].includes(snapshot.settings.mode));
+    teams.classList.add("pmc-room");
     for (const button of joinButtons) button.remove();
     teams.replaceChildren();
     for (const team of ["sweep","mission"].includes(snapshot.settings.mode) ? [0] : [0, 1]) {
       const column = element("section", "team-slot");
       column.dataset.team = String(team);
       const teamHeading = element("div", "team-heading");
-      const forced =
-        snapshot.settings.mode === "campaign"
-          ? snapshot.campaign?.teams[team]?.faction || ["EFSF", "ZEON"][team]
-          : "PMC";
+      const forced = "PMC";
       const summary = element(
         "button",
         "team-ban-summary",
         snapshot.settings.mode === "quick"
           ? "队伍禁用：" + restrictionSummary(snapshot.settings.teamRestrictions?.[team])
-          : snapshot.settings.mode === "campaign"
-            ? "阵营：" + forced
-            : "房间禁用标签",
+          : "房间禁用标签",
       );
       summary.id = "teamBanSummary" + team;
-      summary.disabled = snapshot.settings.mode === "campaign";
       summary.title = summary.textContent;
       summary.setAttribute("aria-haspopup", "dialog");
       summary.onclick = () => {
@@ -1429,15 +1281,6 @@ const RoomPanel = (() => {
         byId("closeRoomDetail").focus();
       };
       teamHeading.append(element("h3", "", "队伍" + (team + 1)), summary, joinButtons[team]);
-      if (snapshot.settings.mode === "campaign") {
-        const badge = element(
-          "span",
-          "faction-badge faction-" + forced.toLowerCase() + " campaign-team-faction",
-          forced,
-        );
-        badge.title = PlayerProfile.displayFaction(forced);
-        teamHeading.append(badge);
-      }
       column.append(teamHeading);
       if (snapshot.settings.mode === "battlefield")
         column.append(

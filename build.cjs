@@ -144,15 +144,13 @@ for (const [key, file] of [
   ["SFS_UI", "client/sfs-ui.js"],
   ["AI_TACTICS", "shared/ai-tactics.js"],
   ["BATTLEFIELD_MODE", "shared/battlefield-mode.js"],
-  ["DOMINION_MODE", "shared/dominion-mode.js"],
-  ["DOMINION_UI", "client/dominion-ui.js"],
   ["SWEEP_MODE", "shared/sweep-mode.js"],
   ["MISSION_MODE", "shared/mission-mode.js"],
   ["MISSION_UI", "client/mission-ui.js"],
   ["NORMAL_FORMS", "shared/normal-forms.js"],
   ["SWEEP_UI", "client/sweep-ui.js"],
   ["BATTLEFIELD_UI", "client/battlefield-ui.js"],
-  ["CAMPAIGN_BATTLEFIELD", "shared/campaign-battlefield.js"],
+  ["SITE_CONTROL", "shared/site-control.js"],
   ["AUTOMATIC_FIRE", "shared/automatic-fire.js"],
   ["ARMOR_COATINGS", "shared/armor-coatings.js"],
   ["CORE", "shared/rules.js"],
@@ -192,9 +190,6 @@ for (const [key, file] of [
   ["LOCAL_RECORDS", "client/local-records.js"],
   ["SETTINGS_LAYOUT", "client/settings-layout.js"],
   ["MOVEMENT_TIMING", "shared/movement-timing.js"],
-  ["CAMPAIGN_PILOTS", "shared/campaign-pilots.js"],
-  ["CAMPAIGN_RULES", "shared/campaign.js"],
-  ["CAMPAIGN_ROOM", "shared/campaign-room.js"],
   ["ROOM_ENGINE", "shared/room-engine.js"],
   ["PLANNING_UI", "client/planning-ui.js"],
   ["MAP_COMBAT", "client/map-combat.js"],
@@ -212,9 +207,9 @@ for (const [key, file] of [
           stdin:{contents:'export { gunzipSync } from "fflate";',resolveDir:root},bundle:true,write:false,
           platform:"browser",format:"iife",globalName:"CatalogInflate",target:"chrome80",minify:true,legalComments:"eof"
         }).outputFiles[0].text + "\n/*! " + read("node_modules/fflate/LICENSE") + " */\n" + read(file))
-      : inlineScript((key === "PROFILE_SAVE" ? read("client/profile-save-core.js") + "\n" : key === "SWEEP_UI" ? read("client/sweep-restock.js") + "\n" : "") + read(file)),
+      : inlineScript((key === "ECONOMY" ? read("shared/warehouse.js") + "\n" : key === "PROFILE_SAVE" ? read("client/profile-save-core.js") + "\n" : key === "SWEEP_UI" ? read("client/sweep-restock.js") + "\n" : "") + read(file)),
   );
-html = html.replace("</body>", () => `<style>${read("client/campaign.css")}</style><script>const CAMPAIGN_WORLD=ART.scenarios.earth_0079_mid.world;${inlineScript(read("client/campaign-workspace.js"))}${inlineScript(read("client/campaign-pilots.js"))}${inlineScript(read("client/campaign-console.js"))}${inlineScript(read("client/campaign.js"))}</script></body>`);
+html = html.replace("</body>", () => `<style>${read("client/warehouse.css")}</style><script>${inlineScript(read("client/warehouse.js"))}</script></body>`);
 const layout = JSON.parse(read("client/ui-layout.json"));
 html = html.replace(
   "</body>",
@@ -254,6 +249,13 @@ for (const asset of ["mission-background.png", "mission-scenes.png"]) {
   const name = "assets/sweep/" + asset;
   html = html.replaceAll(name, "data:image/png;base64," + fs.readFileSync(path.join(root, name)).toString("base64"));
 }
+// Embed images after viewport-unit rewriting: base64 can coincidentally contain strings such as "91vw".
+for (const [token, file, mime] of [
+  ["__WAREHOUSE_BACKGROUND__", "assets/ui/warehouse-workshop.jpg", "jpeg"],
+  ["__WAREHOUSE_HANGAR__", "assets/ui/storage-rack.png", "png"],
+  ["__WAREHOUSE_PORT__", "assets/ui/warehouse-port.jpg", "jpeg"],
+  ["__WAREHOUSE_BERTH__", "assets/ui/storage-berth.png", "png"],
+]) html = html.replaceAll(token, () => "data:image/" + mime + ";base64," + fs.readFileSync(path.join(root,file)).toString("base64"));
 const outputs = [["client.html", html]];
 fs.mkdirSync(path.join(root, "public"), { recursive: true });
 for (const [name, content] of outputs) {

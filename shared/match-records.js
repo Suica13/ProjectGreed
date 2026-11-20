@@ -235,7 +235,7 @@ const MatchRecords = (() => {
         : require("./profile-migrations.js");
     migrations.battleGame(save.game);
     validateGame(G, save.game, save.game?.tiles);
-    if(save.settings?.mode==="dominion")G.dominionMode.validateState(G,save.game);
+    G.validateBattleMode(save.settings?.mode);
     const g = save.game,
       settings = save.settings;
     if (
@@ -274,14 +274,12 @@ const MatchRecords = (() => {
     save.armies = save.armies.map((army) => (army ? G.validateArmySettings(army) : null));
     for (const u of g.units) {
       const owner = G.ownerOf(u);
-      const neutral = settings.mode==="dominion" && u.dominionDormant===true && u.hp===0 && owner===-1 && u.team===-1 &&
-        ["factory","refinery","research"].includes(u.facility?.type) && g.dominion?.points.some(p=>p.id===u.facility.siteId && p.ownerSeat===null);
       if (
         !Number.isInteger(owner) ||
-        (owner < 0 && !neutral) ||
+        owner < 0 ||
         (owner >= seats && !(settings.mode==="mission" && owner===seats && u.team===0 &&
           u.missionAutonomous===true && G.getMap(g.mapId).mission?.actors.some(a=>a.id===u.missionActor && a.team===0 && a.autonomous))) ||
-        (!neutral && u.team !== G.seatTeam(owner)) ||
+        u.team !== G.seatTeam(owner) ||
         u.pendingMove ||
         u.plan ||
         !Number.isFinite(u.shield) ||
@@ -301,9 +299,9 @@ const MatchRecords = (() => {
   }
   function validateGame(G, g, tiles) {
     if (!g || !Object.hasOwn(G.catalog.maps, g.mapId)) throw Error("存档地图不受支持。");
-    const battlefieldMap = G.campaignBattlefield.validate(G, g);
+    if (g.campaignBattlefield || g.dominion) throw Error("该存档所属的游戏模式已移除");
     if (g.aiOptions !== undefined) g.aiOptions = G.aiTactics.settings(g.aiOptions);
-    const map = battlefieldMap || G.getMap(g.mapId);
+    const map = G.getMap(g.mapId);
     if (
       !Array.isArray(tiles) ||
       tiles.length !== map.height ||

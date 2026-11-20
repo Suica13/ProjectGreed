@@ -364,9 +364,10 @@ const ProductionUI = (() => {
     permitPrice.hidden = owned;
     resources(permitPrice, permit || {}, { compact: true });
     byId("produceUnit").dataset.licenseLocked = String(!owned);
-    byId("produceUnit").disabled = !owned || !offer || locked || busy || !Economy.affordable(offer);
+    byId("produceUnit").disabled = !owned || !offer || locked || busy || !Economy.affordable(offer) || !Economy.canStore(selectedId, kitId);
     byId("produceUnit").textContent = "生产";
-    byId("produceUnit").title = !owned ? "请先购买部署许可" : locked ? "尚未开发或阵营不匹配" : "";
+    byId("produceUnit").title = !owned ? "请先购买部署许可" : locked ? "尚未开发或阵营不匹配" :
+      !Economy.canStore(selectedId, kitId) ? "机库或船坞已满" : "";
     byId("sellProductionUnit").disabled = Net.started || salePending || !Economy.saleOffer(prefab.id) || Economy.quantity(prefab.id) < 1;
     byId("sellProductionUnit").title = saleTitle(prefab.id);
   }

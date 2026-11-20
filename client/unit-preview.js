@@ -1,21 +1,21 @@
 /* Catalog and formation share the exact portrait renderer and tag layout. */
 const UnitPreview = (() => {
-  function renderPreview(modelId, canvas = byId("formationDetailPreview")) {
+  function renderPreview(modelId, canvas = byId("formationDetailPreview"), previewAngle = 90) {
     const ctx = canvas.getContext("2d"),
       model = UnitModels[modelId];
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     canvas.setAttribute("aria-label", model.name);
     if (!assetsReady) return;
     canvas.dataset.previewModel = modelId;
+    canvas.dataset.previewAngle = String(previewAngle);
     if (!SpriteRenderer.modelsReady([modelId])) {
       SpriteRenderer.ensureModels([modelId])
         .then(() => {
-          if (canvas.dataset.previewModel === modelId) renderPreview(modelId, canvas);
+          if (canvas.dataset.previewModel === modelId && canvas.dataset.previewAngle === String(previewAngle)) renderPreview(modelId, canvas, previewAngle);
         })
         .catch((error) => note(error.message));
       return;
     }
-    const previewAngle = 90;
     const held = model.weapons[0]?.id,
       points = [];
     for (const layer of SpriteRenderer.visibleLayers(

@@ -116,7 +116,6 @@ const MapDocument = (() => {
       rules: copy(doc.rules),
       units: copy(doc.units || []),
       ...(doc.mission ? { mission: copy(doc.mission) } : {}),
-      ...(doc.dominion ? { dominion: copy(doc.dominion) } : {}),
     };
   }
   function validate(doc) {
@@ -142,7 +141,7 @@ const MapDocument = (() => {
     if (
       !Array.isArray(doc.supportedModes) ||
       !doc.supportedModes.length ||
-      doc.supportedModes.some((m) => !["regular", "quick", "battlefield", "sweep", "mission", "dominion"].includes(m))
+      doc.supportedModes.some((m) => !["regular", "quick", "battlefield", "sweep", "mission"].includes(m))
     )
       throw Error("至少启用一种有效对战模式。");
     if (!Number.isSafeInteger(doc.seed)) throw Error("随机种子必须为整数。");
@@ -483,7 +482,6 @@ const MapDocument = (() => {
       supportedModes: [...doc.supportedModes],
       deploymentRadius: 4,
       ...(doc.mission ? { mission: copy(doc.mission) } : {}),
-      ...(doc.dominion ? { dominion: copy(doc.dominion) } : {}),
       spawns: copy(doc.spawns),
       deploymentAreas: copy(doc.deploymentAreas),
       tiles,
@@ -545,7 +543,6 @@ const MapDocument = (() => {
       playersPerTeam: value.playersPerTeam || 1,
       supportedModes: value.supportedModes || ["regular", "quick"],
       ...(value.mission ? { mission: copy(value.mission) } : {}),
-      ...(value.dominion ? { dominion: copy(value.dominion) } : {}),
     });
     doc.layers[0].data = value.tiles.flat().map((t) => "terrain_" + t);
     doc.spawns = copy(value.spawns);

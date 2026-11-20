@@ -22,7 +22,7 @@ function fixture(mode = "campaign", count = 1) {
 }
 const strategy = (game, unit) => G.aiTactics.forUnit(G, game, unit, G.aiTactics.decide(G, game, unit));
 
-for (const mode of ["campaign", "battlefield"]) {
+for (const mode of ["battlefield"]) {
   test(`${mode}: another player's nearby unit does not reserve the AI's occupation mission`, () => {
     const { game, units, post } = fixture(mode, 2);
     Object.assign(units[1], { ownerSeat: 2, x: post.x - 1, y: post.y });
@@ -89,7 +89,7 @@ for (const mode of ["campaign", "battlefield"]) {
   });
 }
 
-test("battlefield combat units approach a blocked 3x3 enemy base footprint", () => {
+test("battlefield combat units approach a blocked single-cell enemy base", () => {
   const { game, unit, enemy } = fixture("battlefield");
   game.battlefield.points = [];
   // Reuse an actual facility's footprint and controller rather than a passable point.
@@ -105,31 +105,6 @@ test("battlefield combat units approach a blocked 3x3 enemy base footprint", () 
   assert(G.dist(unit, enemy) <= 1, "large blocked target must have reachable approach seeds");
 });
 
-test("campaign base and post supply stops for living hostiles and resumes after they leave", () => {
-  for (const kind of ["base", "outpost"]) {
-    const { game, unit, enemy } = fixture();
-    const node = { id: "site", kind, x: 15, y: 12 };
-    game.campaignBattlefield.layout = { nodes: [node], gates: [], links: [] };
-    game.campaignBattlefield.owners = { site: 0 };
-    // Outposts need a connected friendly source.
-    if (kind === "outpost") {
-      game.campaignBattlefield.layout.nodes.push({ id: "base", kind: "base", x: 2, y: 2 });
-      game.campaignBattlefield.owners.base = 0;
-      game.campaignBattlefield.layout.links.push({ a: "site", b: "base" });
-    }
-    Object.assign(unit, { x: 14, y: 12, hp: 1, en: 0 });
-    Object.assign(enemy, { x: 16, y: 12 });
-    G.campaignBattlefield.heal(G, game);
-    assert.equal(unit.hp, 1); assert.equal(unit.en, 0);
-    enemy.x = 20;
-    G.campaignBattlefield.heal(G, game);
-    assert(unit.hp > 1 && unit.en > 0);
-    unit.hp = 1; unit.en = 0; enemy.x = 16; enemy.hp = 0;
-    G.campaignBattlefield.heal(G, game);
-    assert(unit.hp > 1 && unit.en > 0, "dead hostiles must not interrupt supply");
-  }
-});
-
 test("battlefield supply checks each whole control zone independently, including airborne enemies", () => {
   const battle = G.create(false, 1, Array(12).fill(null), false, { mode: "battlefield", mapId: G.battlefieldMode.defaultMapId });
   const { game, unit, enemy } = fixture("battlefield");
@@ -138,7 +113,7 @@ test("battlefield supply checks each whole control zone independently, including
   const distant = { ...unit, id: "distant", x: 27, y: 12, hp: 1, en: 0 };
   game.units.push(base, distant);
   Object.assign(unit, { x: 12, y: 13, hp: 1, en: 0 });
-  Object.assign(enemy, { x: 20, y: 13, flying: true });
+  Object.assign(enemy, { x: 18, y: 13, flying: true });
   G.battlefieldMode.heal(G, game);
   assert.equal(unit.hp, 1); assert.equal(unit.en, 0);
   assert(distant.hp > 1 && distant.en > 0, "another uncontested post still supplies");

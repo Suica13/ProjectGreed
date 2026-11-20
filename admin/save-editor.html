@@ -694,7 +694,7 @@ const ProfileMigrations = (() => {
   }
   function economy(value) {
     if (!value || typeof value !== "object") return value;
-    if (value.schemaVersion === 3) return value;
+    if (value.schemaVersion >= 3) return value;
     const { inventory, kits, ...current } = value;
     if (current.licenses === undefined && inventory !== undefined)
       current.licenses = licensesFromInventory(inventory);
@@ -3952,11 +3952,135 @@ const PilotSystem = (() => {
 if (typeof module !== "undefined") module.exports = PilotSystem;
 
 ;
+/* Physical chassis storage. Counts used by battle rules are derived from the stored items. */
+"use strict";
+const Warehouse = (() => {
+  const defaults = { pages: 3, unitsPerPage: 8, shipsPerPage: 3 };
+  function category(model) {
+    return model.ship ||
+      ((model.movementType === "air" || model.tags?.includes("Aircraft")) &&
+        model.hangars?.some((h) => h.kind !== "sfs"))
+      ? "ships"
+      : "units";
+  }
+  function empty() {
+    return {
+      version: 1,
+      serial: 0,
+      pages: { units: 3, ships: 3 },
+      units: [],
+      ships: [],
+      deliveries: [],
+    };
+  }
+  function usage(storage, models, kind) {
+    return {
+      count: storage[kind].length,
+      slots:
+        storage.pages[kind] * (kind === "ships" ? defaults.shipsPerPage : defaults.unitsPerPage),
+    };
+  }
+  function fits(storage, model, models) {
+    const used = usage(storage, models, category(model));
+    return used.count < used.slots;
+  }
+  function freeSlot(storage, kind) {
+    const occupied = new Set(storage[kind].map((item) => item.slot));
+    const limit = usage(storage, null, kind).slots;
+    for (let slot = 0; slot < limit; slot++) if (!occupied.has(slot)) return slot;
+    return -1;
+  }
+  function normalize(value, models, inventory, defaultKit) {
+    const storage = value ? structuredClone(value) : empty();
+    if (storage.version !== 1 || !Number.isSafeInteger(storage.serial) || storage.serial < 0)
+      throw Error("仓储存档无效");
+    const ids = new Set();
+    for (const kind of ["units", "ships"]) {
+      if (
+        !Number.isInteger(storage.pages?.[kind]) ||
+        storage.pages[kind] !== defaults.pages ||
+        !Array.isArray(storage[kind])
+      )
+        throw Error("仓储页数或格子无效");
+      const slots = new Set();
+      for (const item of storage[kind]) {
+        const model = models[item.unitId + "__" + item.kitId];
+        if (!model || category(model) !== kind || typeof item.id !== "string" || ids.has(item.id))
+          throw Error("仓储单位或套件无效");
+        ids.add(item.id);
+        if (item.slot !== undefined) {
+          if (
+            !Number.isInteger(item.slot) ||
+            item.slot < 0 ||
+            item.slot >= usage(storage, models, kind).slots ||
+            slots.has(item.slot)
+          )
+            throw Error("仓储格子无效");
+          slots.add(item.slot);
+        }
+      }
+      // Older physical storage records were compact arrays. Assign positions once,
+      // then retain holes when units are sold or lost.
+      for (const item of storage[kind])
+        if (item.slot === undefined) {
+          let slot = 0;
+          while (slots.has(slot)) slot++;
+          item.slot = slot;
+          slots.add(slot);
+        }
+      const used = usage(storage, models, kind);
+      if (used.count > used.slots) throw Error("仓储数量超出上限");
+    }
+    storage.deliveries ??= [];
+    if (!Array.isArray(storage.deliveries) || storage.deliveries.length > 10000)
+      throw Error("待入库队列无效");
+    for (const item of storage.deliveries)
+      if (!models[item.unitId + "__" + item.kitId]) throw Error("待入库单位无效");
+    // Existing count-based operations (settlement, sale, bulk production) use this one reconciliation boundary.
+    const current = {};
+    for (const kind of ["units", "ships"])
+      for (let i = storage[kind].length - 1; i >= 0; i--) {
+        const id = storage[kind][i].unitId;
+        if ((current[id] || 0) >= (inventory[id] || 0)) storage[kind].splice(i, 1);
+        else current[id] = (current[id] || 0) + 1;
+      }
+    for (const [unitId, count] of Object.entries(inventory)) {
+      const kitId = defaultKit(unitId),
+        model = models[unitId + "__" + kitId];
+      if (!model && count) throw Error("仓储单位不可用: " + unitId);
+      for (let i = current[unitId] || 0; i < count; i++) {
+        if (fits(storage, model, models))
+          storage[category(model)].push({
+            id: "stored-" + ++storage.serial,
+            unitId,
+            kitId,
+            slot: freeSlot(storage, category(model)),
+          });
+        else {
+          if (storage.deliveries.length >= 10000) throw Error("待入库队列已满");
+          storage.deliveries.push({ unitId, kitId });
+        }
+      }
+    }
+    return storage;
+  }
+  function counts(storage) {
+    const result = {};
+    for (const item of [...storage.units, ...storage.ships])
+      result[item.unitId] = (result[item.unitId] || 0) + 1;
+    return result;
+  }
+  return { defaults, category, freeSlot, empty, normalize, usage, fits, counts };
+})();
+if (typeof module !== "undefined") module.exports = Warehouse;
+
+;
 /* Permanent permits and counted chassis; equipment selection is free. */
 "use strict";
 const Economy = (() => {
   const pilots = typeof PilotSystem !== "undefined" ? PilotSystem : require("./pilots.js");
   const saveCodec = typeof SaveCodec !== "undefined" ? SaveCodec : require("./save-codec.js");
+  const warehouse = typeof Warehouse !== "undefined" ? Warehouse : require("./warehouse.js");
   const key = "projectgreed.economy.v1";
   const catalog =
     typeof PRODUCTION_CATALOG !== "undefined"
@@ -3991,11 +4115,9 @@ const Economy = (() => {
   function initial() {
     const inventory = {},
       kits = {};
-    for (const entry of starter.units) {
-      inventory[entry.unitId] = (inventory[entry.unitId] || 0) + starter.stockSets;
-    }
     return {
-      schemaVersion: 3,
+      schemaVersion: 4,
+      storage: warehouse.empty(),
       inventory,
       kits,
       money: starter.money,
@@ -4006,6 +4128,7 @@ const Economy = (() => {
   }
   function validate(value) {
     if (value === undefined) return initial();
+    if (value?.schemaVersion > 4) throw Error("经济存档来自更新的版本，无法读取");
     if (
       !value ||
       !Number.isSafeInteger(value.money) ||
@@ -4014,7 +4137,11 @@ const Economy = (() => {
       value.supplies < 0
     )
       throw Error("资金、物资或部署许可无效");
-    const stock = normalizeStock(value);
+    // All pre-warehouse profiles start with empty physical stock, including imported backups.
+    const stock = normalizeStock(value.schemaVersion === 4 ? value : {});
+    const storage = warehouse.normalize(value.schemaVersion === 4 ? value.storage : null,
+      modelsForUnits(), stock.inventory, defaultKit);
+    stock.inventory = warehouse.counts(storage);
     const owned = value.licenses;
     if (!owned || typeof owned !== "object" || Array.isArray(owned)) throw Error("部署许可无效");
     const licenses = defaultLicenses();
@@ -4041,7 +4168,8 @@ const Economy = (() => {
     return {
       money: value.money,
       supplies: value.supplies,
-      schemaVersion: 3,
+      schemaVersion: 4,
+      storage,
       licenses,
       ...stock,
       crewStock: pilots.normalizeCrewStock(value.crewStock),
@@ -4060,7 +4188,7 @@ const Economy = (() => {
             ? ProfileMigrations
             : require("./profile-migrations.js");
         state = validate(migrations.economy(parsed));
-        if (parsed.schemaVersion !== 3 || parsed.licenses === undefined) {
+        if (parsed.schemaVersion !== 4 || parsed.licenses === undefined) {
           const backupKey = key + ".before-counted-stock";
           if (localStorage.getItem(backupKey) === null) localStorage.setItem(backupKey, saved);
           localStorage.setItem(key, saveCodec.stringify(state));
@@ -4283,13 +4411,42 @@ const Economy = (() => {
   function mayProduce(unitId, faction) {
     return ownsLicense(unitId) && available(licenseOffer(unitId), faction);
   }
-  function produce(unitId, kitId, faction) {
+  function produce(unitId, kitId, faction, slot) {
     const offer = productionOffer(unitId, kitId);
     if (!offer || !mayProduce(unitId, faction) || !affordable(offer)) return false;
+    if (!canStore(unitId, kitId)) throw Error("机库或船坞已满");
     const next = snapshot();
+    const model = modelsForUnits()[unitId + "__" + kitId], kind = warehouse.category(model);
+    if (slot === undefined) slot = warehouse.freeSlot(next.storage, kind);
+    if (!Number.isInteger(slot) || slot < 0 || slot >= storageUsage(kind).slots || next.storage[kind].some(item => item.slot === slot))
+      throw Error("该格子已被占用，请选择其他空位");
     next.money -= offer.money;
     next.supplies -= offer.supplies;
     next.inventory[unitId] = quantity(unitId) + 1;
+    next.storage[kind].push({ id: "stored-" + ++next.storage.serial, unitId, kitId, slot });
+    return commit(next);
+  }
+  function canStore(unitId, kitId = defaultKit(unitId)) {
+    const model = modelsForUnits()[unitId + "__" + kitId];
+    return !!model && warehouse.fits(state.storage, model, modelsForUnits());
+  }
+  function storageUsage(kind) { return warehouse.usage(state.storage, modelsForUnits(), kind); }
+  function changeStoredKit(id, kitId) {
+    const next = snapshot(), item = [...next.storage.units, ...next.storage.ships].find(i => i.id === id);
+    if (!item || !modelsForUnits()[item.unitId + "__" + kitId]) return false;
+    item.kitId = kitId;
+    return commit(next);
+  }
+  function receiveDeliveries() {
+    const next = snapshot(), remaining = [];
+    for (const item of next.storage.deliveries) {
+      const model = modelsForUnits()[item.unitId + "__" + item.kitId];
+      if (warehouse.fits(next.storage, model, modelsForUnits())) {
+        next.storage[warehouse.category(model)].push({ ...item, id: "stored-" + ++next.storage.serial, slot: warehouse.freeSlot(next.storage, warehouse.category(model)) });
+        next.inventory[item.unitId] = (next.inventory[item.unitId] || 0) + 1;
+      } else remaining.push(item);
+    }
+    next.storage.deliveries = remaining;
     return commit(next);
   }
   function saleOffer(unitId) {
@@ -4352,6 +4509,9 @@ const Economy = (() => {
       if (item.kind === "licenses") grantPurchasedLicense(next, item.id);
       else next[item.kind][item.id] = (next[item.kind][item.id] || 0) + item.count;
     }
+    const simulated = warehouse.normalize(next.storage, modelsForUnits(), next.inventory, defaultKit);
+    if (simulated.deliveries.length > state.storage.deliveries.length)
+      return { ok: false, reason: "storage", units: plan.items.map(item => item.unitId), plan };
     return { ok: commit(next), plan };
   }
   function baseModel(unitId) {
@@ -4429,6 +4589,7 @@ const Economy = (() => {
     return commit(next);
   }
   return {
+    canStore, storageUsage, changeStoredKit, receiveDeliveries,
     transformStock,
     key,
     catalog,
@@ -4439,13 +4600,15 @@ const Economy = (() => {
     unitOffer,
     productionOffer,
     productionTiming,
+    available,
+    mayProduce,
     produce,
     saleOffer,
     sellUnit,
     purchasePlan,
     purchaseMissingStock,
     initial,
-    starterFormation: () => structuredClone(starter.units),
+    starterFormation: () => [],
     errorMessage,
     validate,
     snapshot,
@@ -4925,11 +5088,6 @@ const UnitSensors = {
     }
     const allies = (g, team) => [
       ...g.units.filter((u) => u.team === team && onMap(u)),
-      // Occupied objectives provide persistent sight without radar marking or connection requirements.
-      ...(g.campaignBattlefield?.layout.nodes || [])
-        .filter((node) => g.campaignBattlefield.owners[node.id] === team)
-        .map((node) => ({ ...node, team, sensorArea: true,
-          sensors: { sight: 5, radar: 0, antiDetection: 0 } })),
       ...(g.visionAreas || [])
         .filter((area) => area.team === team && area.expiresRound > g.round)
         .map((area) => ({
@@ -5107,7 +5265,7 @@ const AITactics = (() => {
   function power(units, modelOf) {
     return units.reduce((total, u) => {
       const m = modelOf(u), health = Math.max(0, Math.min(1, (u.hp ?? m.hp) / Math.max(1, m.hp)));
-      return total + (Math.max(25, m.cost) + 100) * (0.25 + health * 0.75) * (u.campaignDurability ?? 1);
+      return total + (Math.max(25, m.cost) + 100) * (0.25 + health * 0.75);
     }, 0);
   }
   function decide(G, game, unit) {
@@ -5124,43 +5282,16 @@ const AITactics = (() => {
       enemies = game.units.filter((u) => G.onMap(u) && u.team !== unit.team && !u.embarked),
       origin = center(squad.length ? squad : [unit]),
       enemyCenter = enemies.length ? center(enemies) : origin,
-      ratio = power(allies, G.modelOf) / Math.max(1, power(enemies, G.modelOf)),
-      field = game.campaignBattlefield,
-      base = field?.layout.nodes.find((n) => n.kind === "base"),
-      defender = !!field && field.defender === unit.team;
+      ratio = power(allies, G.modelOf) / Math.max(1, power(enemies, G.modelOf));
     let state = "advance", goal = enemyCenter;
-    const posts = field?.layout.nodes.filter((n) => n.kind === "outpost") || [];
-    if (field && defender && ratio < 1.75) {
-      state = "defend";
-      const threatened = enemies.some((e) => distance(e, base) < 12);
-      const positions = posts.filter((p) => field.owners[p.id] === unit.team);
-      goal = threatened || !positions.length ? base : positions.reduce((best, p) =>
-        distance(p, enemyCenter) + distance(p, base) * 0.5 <
-        distance(best, enemyCenter) + distance(best, base) * 0.5 ? p : best);
-    } else if (field && ratio < 0.75) {
-      state = "gather";
-      const positions = posts.filter((p) => !enemies.some((e) => distance(e, p) < 6));
-      goal = positions.length ? positions.reduce((best, p) => {
-        const score = (node) => distance(origin, node) + distance(node, base) * 0.4 +
-          (field.owners[node.id] === unit.team ? 0 : 5);
-        return score(p) < score(best) ? p : best;
-      }) : origin;
-    } else if (field) {
-      state = ratio >= 1.75 ? "overrun" : "advance";
-      const targets = posts.filter((p) => field.owners[p.id] !== unit.team);
-      const destination = defender ? enemyCenter : base;
-      // Capture posts along the advance, rather than bypassing them for the base.
-      goal = targets.length ? targets.reduce((best, p) =>
-        distance(origin, p) + distance(p, destination) * 0.65 <
-        distance(origin, best) + distance(best, destination) * 0.65 ? p : best) : destination;
-    } else if (squad.length > 1 && ratio < 1.75) {
+    if (squad.length > 1 && ratio < 1.75) {
       // Encounter battles regroup on the move; they never wait for strategic reinforcements.
       state = config.difficulty !== "easy" && squad.length >= 4 ? "flank" : "advance";
     } else if (ratio >= 1.75) state = "overrun";
-    if (config.difficulty === "easy" && !defender && state !== "gather") state = "advance";
+    if (config.difficulty === "easy") state = "advance";
     const decision = { state, goal, origin, ratio, difficulty: config.difficulty,
       squad: squad.map((u) => u.id), friends: squad, enemies,
-      strategic: !!(field || game.battlefield), navigation: phase.navigation, missions: phase.missions };
+      strategic: !!game.battlefield, navigation: phase.navigation, missions: phase.missions };
     phase.players.set(seat, decision);
     return decision;
   }
@@ -5169,10 +5300,9 @@ const AITactics = (() => {
       (!unit.flying || G.unitSkills(unit).some((skill) => skill.type === "flight"));
   }
   function captureGoal(G, game, unit, origin = unit, nearby = true) {
-    if ((!game.campaignBattlefield && !game.battlefield) || !captureCapable(G, unit)) return null;
-    const field = game.campaignBattlefield;
-    const points = field ? field.layout.nodes : game.battlefield.points, radius = field ? 1 : 2;
-    const targets = points.filter((point) => (field ? field.owners[point.id] : point.owner) !== unit.team &&
+    if (!game.battlefield || !captureCapable(G, unit)) return null;
+    const points = game.battlefield.points, radius = 2;
+    const targets = points.filter((point) => point.owner !== unit.team &&
       (!nearby || distance(origin, point) <= Math.max(6, G.modelOf(unit).move + 2)) &&
       !game.units.some((enemy) => enemy.team !== unit.team && G.onMap(enemy) &&
         G.cells(enemy).some((cell) => Math.max(Math.abs(cell.x-point.x), Math.abs(cell.y-point.y)) <= radius)));
@@ -5198,10 +5328,9 @@ const AITactics = (() => {
       if (goal && sharedGoals) sharedGoals.set(unit.team+":"+unit.missionAttackGroup,goal);
       if(goal)return {...decision,state:"advance",goal,strategic:true,occupation:false};
     }
-    if (!game.campaignBattlefield && !game.battlefield) return decision;
-    const campaign = game.campaignBattlefield;
-    const points = campaign ? campaign.layout.nodes : game.battlefield.points;
-    const hostile = (point) => (campaign ? campaign.owners[point.id] : point.owner) !== unit.team;
+    if (!game.battlefield) return decision;
+    const points = game.battlefield.points;
+    const hostile = (point) => point.owner !== unit.team;
     if (game.battlefield) {
       const enemies = decision.enemies.filter(enemy => G.onMap(enemy));
       const nearest = targets => targets.reduce((best, target) =>
@@ -5235,44 +5364,6 @@ const AITactics = (() => {
       const goal = nearest(defenders || []) || base || nearest(enemies) || unit;
       return { ...decision, state: "advance", goal, occupation: false, avoidObjective: true };
     }
-    // One mobile squad per occupation objective. Other squads keep advancing,
-    // rather than converging on the same post or waiting for reinforcements.
-    if (!decision.assignments) {
-      const groups = new Map();
-      for (const ally of game.units) {
-        if (!G.onMap(ally) || ally.embarked || ally.team !== unit.team ||
-            G.controllerOf(game, ally) !== G.controllerOf(game, unit) ||
-            G.modelOf(ally).move <= 0 || !captureCapable(G, ally)) continue;
-        const id = ally.squadId || ally.id;
-        if (!groups.has(id)) groups.set(id, ally);
-      }
-      const pairs = [];
-      for (const [id, ally] of groups) for (const point of points.filter(hostile))
-        pairs.push({ id, point, distance: distance(ally, point) });
-      pairs.sort((a, b) => a.distance - b.distance || String(a.id).localeCompare(String(b.id)) ||
-        String(a.point.id).localeCompare(String(b.point.id)));
-      const assignments = new Map(), assignedPoints = new Set();
-      for (const pair of pairs) if (!assignments.has(pair.id) && !assignedPoints.has(pair.point.id) &&
-          !decision.missions.has(unit.team + ":" + pair.point.id)) {
-        assignments.set(pair.id, pair.point); assignedPoints.add(pair.point.id);
-        decision.missions.add(unit.team + ":" + pair.point.id);
-      }
-      decision.assignments = assignments;
-    }
-    const assigned = decision.assignments.get(unit.squadId || unit.id);
-    if (captureCapable(G, unit) && assigned && hostile(assigned))
-      return { ...decision, state: "advance", goal: assigned, occupation: true };
-    const passenger = game.units.find((u) => u.hp > 0 && u.embarked?.carrierId === unit.id &&
-      captureCapable(G,u) && G.hangars.readyToLaunch(u));
-    const target = passenger && captureGoal(G, game, passenger, unit, false);
-    // Transports deliver capturers. Aircraft without capturers continue fighting
-    // instead of inheriting the ground squad's occupation destination.
-    const enemies = decision.enemies.filter((enemy) => G.onMap(enemy));
-    const bases = game.battlefield ? enemies.filter((enemy) => enemy.facility?.type === "base") : [];
-    const targets = bases.length ? bases : enemies;
-    const nearest = targets.reduce((best, enemy) => !best || distance(unit, enemy) < distance(unit, best) ? enemy : best, null);
-    const goal = target || nearest || (campaign && points.find((point) => point.kind === "base" && hostile(point))) || unit;
-    return { ...decision, state: "advance", goal, avoidObjective: !captureCapable(G, unit) };
   }
   function positionScorer(G, game, unit, decision) {
     const { state, origin, difficulty } = decision;
@@ -5296,9 +5387,6 @@ const AITactics = (() => {
         for (const friend of friends) nearest = Math.min(nearest, distance(cell, friend));
         score -= Math.max(0, nearest - 4) * (difficulty === "easy" ? 0.08 : 0.25);
       }
-      if (decision.avoidObjective && game.campaignBattlefield?.layout.nodes.some((point) =>
-        objectiveOffsets.some((tile) => Math.max(Math.abs(tile.x+cell.x-point.x), Math.abs(tile.y+cell.y-point.y)) <= 1)))
-        score -= 12;
       score += (G.terrain[game.tiles[cell.y]?.[cell.x]]?.cover || 0) * (cautious ? 0.025 : 0.006);
       if (difficulty === "hard" && cautious) {
         const threats = decision.enemies;
@@ -5312,179 +5400,34 @@ const AITactics = (() => {
   function positionScore(G, game, unit, cell, decision) {
     return positionScorer(G, game, unit, decision)(cell);
   }
-  function firstStep(world, from, target, allowed = () => true) {
-    const queue = [{ id: from, first: null }], visited = new Set([from]);
-    for (let i = 0; i < queue.length; i++) {
-      const current = queue[i];
-      if (current.id !== from && target(current.id)) return current.first;
-      for (const id of world.regions.find((r) => r.id === current.id).links)
-        if (!visited.has(id) && allowed(id)) {
-          visited.add(id); queue.push({ id, first: current.first || id });
-        }
-    }
-    return null;
-  }
-  function strategic(ctx, state, members, helpers) {
-    const options = settings(state.options), world = ctx.world,
-      bots = members.filter((m) => m.bot && Number.isInteger(m.seat)),
-      holder = (id) => state.regions.find((r) => r.id === id),
-      alive = state.units.filter((u) => !u.destroyed && !u.pendingTransfer),
-      model = (u) => {
-        const m = ctx.G.models[u.unitId + "__" + u.kitId];
-        return m && u.campaignDurability ? { ...m, hp: Math.ceil(m.hp * u.campaignDurability) } : m;
-      },
-      unitPower = new Map(),
-      // Strategic strength uses actual COST, not the tactical per-actor bonus:
-      // ten cheap vehicles must not look stronger just because there are ten actors.
-      force = (units) => units.reduce((total, u) => {
-        if (!unitPower.has(u)) {
-          const m = model(u), health = Math.max(0, Math.min(1,
-            (u.state?.hp ?? m.hp) / Math.max(1, m.hp)));
-          unitPower.set(u, Math.max(0, m.cost) * (0.25 + health * 0.75) * (u.campaignDurability ?? 1));
-        }
-        return total + unitPower.get(u);
-      }, 0),
-      minGroup = { low: 6, normal: 4, high: 3 }[options.aggression],
-      // Low / normal / high attack on 1/6, 1/3 and 1/2 of turns respectively.
-      attackTurn = state.turn % ({ low: 6, normal: 3, high: 2 }[options.aggression]) === 0;
-    const passengers = new Map();
-    for (const unit of alive) {
-      const carrierId = unit.state?.embarked?.carrierId;
-      if (!carrierId) continue;
-      if (!passengers.has(carrierId)) passengers.set(carrierId, []);
-      passengers.get(carrierId).push(unit);
-    }
-    // Research is a team decision, not multiplied by the number of AI seats.
-    for (const team of new Set(bots.map((p) => ctx.G.seatTeam(p.seat)))) {
-      const pool = state.teams[team];
-      for (let i = 0; i < (options.difficulty === "hard" ? 2 : 1); i++) {
-        const points = (node) =>
-          helpers.researchPoints ? helpers.researchPoints(ctx, node) : node.points;
-        const nodes = ctx.development.nodes(pool.faction);
-        const compare = (a, b) => (a.page || 0) - (b.page || 0) || a.column - b.column;
-        const main = nodes
-          .filter(
-            (node) =>
-              node.row === "mid" &&
-              !pool.researched.includes(node.id) &&
-              !(pool.researchQueue || []).some((order) => order.techId === node.id),
-          )
-          .sort(compare)[0];
-        const node = nodes
-          .filter(
-            (n) =>
-              !pool.researched.includes(n.id) &&
-              !(pool.researchQueue || []).some((order) => order.techId === n.id) &&
-              n.requires.every((id) => pool.researched.includes(id)),
-          )
-          .sort((a, b) => Number(a.row !== "mid") - Number(b.row !== "mid") || compare(a, b))
-          .find(
-            (n) =>
-              points(n) <= pool.technology &&
-              (n.money || 0) <= pool.money &&
-              (n.supplies || 0) <= pool.supplies &&
-              (!main || n.row === "mid" || pool.technology >= points(main)),
-          );
-        if (!node) break;
-        helpers.startResearch(ctx, state, team, node);
-      }
-    }
-    for (const player of bots) {
-      const team = ctx.G.seatTeam(player.seat), pool = state.teams[team],
-        own = alive.filter((u) => helpers.controller(members, u) === player.seat && !helpers.busy(state, u) &&
-          !u.state?.embarked && !state.transfers.some((t) => t.ids.includes(u.id)));
-      for (const regionId of new Set(own.map((u) => u.region))) {
-        if (helpers.disputed(state, regionId)) continue;
-        const group = own.filter((u) => u.region === regionId),
-          region = world.regions.find((r) => r.id === regionId),
-          enemyNeighbors = region.links.filter((id) => holder(id).owner !== team),
-          targets = enemyNeighbors.map((id) => ({ id, units: alive.filter((u) => u.region === id && u.team !== team) }))
-            .sort((a, b) => force(a.units) - force(b.units));
-        // A carrier and its passengers are one movement group, but every passenger
-        // contributes to strength. Keep a frontier reserve instead of evacuating it.
-        const bundle = (root) => {
-          const result = [root], seen = new Set([root.id]);
-          for (let i = 0; i < result.length; i++)
-            for (const unit of passengers.get(result[i].state?.id) || [])
-              if (unit.region === regionId && unit.team === team && !seen.has(unit.id)) {
-                result.push(unit);
-                seen.add(unit.id);
-              }
-          return result;
-        };
-        const bundles = new Map(group.map((u) => [u, bundle(u)]));
-        const detachment = group.slice();
-        if (enemyNeighbors.length) {
-          const reserveTarget = force(group.flatMap((u) => bundles.get(u))) * 0.25;
-          let reserve = 0, roots = 0;
-          const weakest = group.slice().sort((a, b) => force(bundles.get(a)) - force(bundles.get(b)));
-          for (const unit of weakest) {
-            if (roots >= 2 && reserve >= reserveTarget) break;
-            reserve += force(bundles.get(unit));
-            roots++;
-            detachment.splice(detachment.indexOf(unit), 1);
-          }
-        }
-        const departing = detachment.flatMap((u) => bundles.get(u));
-        let next = null;
-        if (detachment.length >= minGroup && attackTurn) {
-          const target = targets.find((t) => force(departing) >= force(t.units) *
-            (options.difficulty === "easy" ? 1.5 : options.difficulty === "hard" ? 1.1 : 1.25));
-          if (target) next = target.id;
-        }
-        if (!enemyNeighbors.length || group.length < minGroup) {
-          const front = world.regions.filter((r) => r.id !== regionId && holder(r.id).owner === team &&
-            r.links.some((id) => holder(id).owner !== team) &&
-            (!enemyNeighbors.length || own.filter((u) => u.region === r.id).length > group.length));
-          // Join the strongest friendly frontier, instead of sending isolated units into enemy land.
-          front.sort((a, b) => force(own.filter((u) => u.region === b.id)) -
-            force(own.filter((u) => u.region === a.id)));
-          for (const target of front) {
-            next = firstStep(world, regionId, (id) => id === target.id, (id) => holder(id).owner === team);
-            if (next) break;
-          }
-        }
-        for (const unit of group) unit.moveTo = next && detachment.includes(unit) ? next : null;
-      }
-      const factories = world.regions.filter((r) => r.factory && holder(r.id).owner === team &&
-        !helpers.disputed(state, r.id));
-      const available = ctx.G.catalog.prefabs.filter((p) => helpers.available(ctx, state, team, p.id) &&
-        !p.unitTags?.includes("Ship") && !p.unitTags?.includes("Support"));
-      const population = new Map();
-      for (const unit of alive.filter((u) => u.team === team))
-        population.set(unit.unitId, (population.get(unit.unitId) || 0) + 1);
-      for (const order of state.orders.filter((o) => o.team === team))
-        population.set(order.unitId, (population.get(order.unitId) || 0) + order.quantity);
-      // Low nonzero adaptability permits emergency deployment, not sensible AI production.
-      // Use the same >=100 threshold as the UI's normal environment tags.
-      const environment = world.environment || "ground";
-      const quotes = available.map((p) => helpers.quote(ctx, p.id)).filter((quote) =>
-        quote && (model(quote)?.adaptability?.[environment] || 0) >= 100);
-      for (const factory of factories) {
-        if (state.orders.filter((o) => o.region === factory.id && o.ownerSeat === player.seat).length >= 2) continue;
-        const choices = quotes.filter((q) =>
-          q.money <= pool.money * 0.7 && q.supplies <= pool.supplies * 0.7);
-        choices.sort((a, b) => {
-          const value = (q) => (model(q)?.cost || 50) /
-            (50 + q.money + q.supplies * 0.25) / (1 + (population.get(q.unitId) || 0) * 0.2);
-          return value(b) - value(a) || a.unitId.localeCompare(b.unitId);
-        });
-        const price = choices[0];
-        if (!price || !helpers.charge(pool, price)) continue;
-        state.orders.push({ id: "order-" + state.nextId++, ownerSeat: player.seat, team,
-          region: factory.id, ...price, status: "queued", remaining: price.turns, reserved: true });
-        population.set(price.unitId, (population.get(price.unitId) || 0) + price.quantity);
-      }
-    }
-  }
-  return { settings, power, decide, forUnit, captureGoal, captureCapable, positionScore, positionScorer, strategic };
+  return { settings, power, decide, forUnit, captureGoal, captureCapable, positionScore, positionScorer };
 })();
 if (typeof module !== "undefined") module.exports = AITactics;
+
+;
+/* Suppression eligibility is shared by battlefield objectives, independent of any campaign. */
+"use strict";
+const SiteControl = {
+  canSuppress(G, unit) {
+    return (
+      !!unit &&
+      !unit.facility &&
+      G.onMap(unit) &&
+      !unit.embarked &&
+      !unit.pendingMove &&
+      !unit.plan &&
+      !unit.flying &&
+      G.modelOf(unit).movementType !== "air"
+    );
+  },
+};
+if (typeof module !== "undefined") module.exports = SiteControl;
 
 ;
 /* Reusable battlefield objectives. All mutation runs in the authoritative rules. */
 "use strict";
 const BattlefieldMode = (() => {
+  const siteControl = typeof SiteControl !== "undefined" ? SiteControl : require("./site-control.js");
   const defaultMapId = "battlefield_frontline";
   const captureRadius = 2,
     baseRadius = captureRadius + 2,
@@ -5944,7 +5887,7 @@ const BattlefieldMode = (() => {
       );
       const present = new Set(occupants.map((unit) => unit.team));
       const capturer = occupants
-        .filter((unit) => G.campaignBattlefield.canSuppress(G, unit))
+        .filter((unit) => siteControl.canSuppress(G, unit))
         .sort(
           (a, b) =>
             Math.hypot(a.x - point.x, a.y - point.y) - Math.hypot(b.x - point.x, b.y - point.y) ||
@@ -6365,734 +6308,6 @@ const BattlefieldMode = (() => {
   };
 })();
 if (typeof module !== "undefined") module.exports = BattlefieldMode;
-
-;
-/* Match-owned RTT economy. Never reads or writes personal stock or progression. */
-"use strict";
-const DominionMode = (() => {
-  const development =
-    typeof Development !== "undefined" ? Development : require("./development.js");
-  const economy = typeof Economy !== "undefined" ? Economy : require("./economy.js");
-  const defaultMapId = "dominion_highlands";
-  const buildings = {
-    base: "Facility_HQ",
-    factory: "Facility_Factory",
-    refinery: "Facility_Refinery",
-    research: "Facility_Research",
-    turret: "Facility_MG",
-  };
-  const initial = { money: 5000, supplies: 7500, points: 0 };
-  function validateMap(map) {
-    const points = map.dominion?.points,
-      ids = new Set();
-    if (!Array.isArray(points) || !points.length || points.length > 12)
-      throw Error("占山为王据点配置无效");
-    for (const p of points) {
-      if (
-        !/^[a-zA-Z0-9_-]{1,64}$/.test(p.id) ||
-        ids.has(p.id) ||
-        typeof p.name !== "string" ||
-        p.name.length > 80 ||
-        ![1, 2, 3].includes(p.size) ||
-        !Number.isInteger(p.x) ||
-        !Number.isInteger(p.y) ||
-        p.x < 6 ||
-        p.y < 6 ||
-        p.x > map.width - 8 ||
-        p.y > map.height - 6
-      )
-        throw Error("占山为王据点位置或规模无效");
-      ids.add(p.id);
-    }
-    return true;
-  }
-  function validateState(G, game) {
-    const state = game.dominion,
-      map = G.getMap(game.mapId);
-    validateMap(map);
-    if (
-      !state ||
-      !G.eras.includes(state.era) ||
-      !state.players ||
-      !Array.isArray(state.points) ||
-      state.points.length !== map.dominion.points.length ||
-      !Number.isSafeInteger(state.serial) ||
-      state.serial < 0 ||
-      !state.incomeTurns ||
-      typeof state.incomeTurns !== "object"
-    )
-      throw Error("占山为王存档状态无效");
-    for (const [seat, p] of Object.entries(state.players)) {
-      if (
-        !/^\d+$/.test(seat) ||
-        Number(seat) >= map.spawns.length ||
-        !factionsForEra(G, state.era).includes(p.faction) ||
-        [p.money, p.supplies, p.points].some((n) => !Number.isSafeInteger(n) || n < 0) ||
-        !p.researched ||
-        !Array.isArray(p.researched[p.faction])
-      )
-        throw Error("占山为王玩家资源或科技无效");
-      const clean = development.normalizeResearch(p.researched, { includeLocked: true });
-      if (p.researched[p.faction].some((id) => !clean[p.faction].includes(id)))
-        throw Error("占山为王科技前置关系无效");
-    }
-    for (const p of state.points) {
-      const source = map.dominion.points.find((s) => s.id === p.id);
-      if (
-        !source ||
-        source.x !== p.x ||
-        source.y !== p.y ||
-        source.size !== p.size ||
-        (p.ownerSeat !== null && !Object.hasOwn(state.players, p.ownerSeat))
-      )
-        throw Error("占山为王据点归属无效");
-    }
-    for (const u of game.units.filter((u) => u.dominionOrder)) {
-      const order = u.dominionOrder;
-      if (
-        !state.players[u.ownerSeat] ||
-        u.facility?.type !== "factory" ||
-        !G.models[order.unitId + "__" + order.kitId] ||
-        !Number.isInteger(order.remaining) ||
-        order.remaining < 0 ||
-        order.remaining > 5
-      )
-        throw Error("占山为王生产订单无效");
-    }
-    return true;
-  }
-  const blockedCache = new WeakMap();
-  function blockedCells(G, game) {
-    if (!blockedCache.has(game.dominion)) {
-      const blocked = new Set(
-        game.units
-          .filter((u) => u.facility)
-          .flatMap((u) => G.cells(u))
-          .map((c) => c.x + "," + c.y),
-      );
-      for (const p of game.dominion.points) {
-        blocked.add(p.x + "," + p.y);
-        const plots = [];
-        for (let i = 0; i < (p.size || 1); i++)
-          plots.push([p.x - 4 + i * 4, p.y - 4], [p.x - 4 + i * 4, p.y + 4]);
-        for (let i = 0; i < Math.ceil((p.size || 1) / 2); i++)
-          plots.push([p.x + 6, p.y - 2 + i * 4]);
-        for (const [x, y] of plots) blocked.add(x + "," + y);
-      }
-      blockedCache.set(game.dominion, blocked);
-    }
-    return blockedCache.get(game.dominion);
-  }
-  function factionsForEra(G, era) {
-    return G.factions.filter((f) => development.nodes(f).some((n) => n.era === era));
-  }
-  function faction(G, settings, seat, requested) {
-    const options = factionsForEra(G, settings.dominionEra || "UC_0079_T1");
-    const forced = settings.teamFactions?.[G.seatTeam(seat)];
-    if (forced && !options.includes(forced)) throw Error("强制阵营不属于当前年代");
-    return (
-      forced ||
-      (options.includes(requested) ? requested : options[G.seatTeam(seat) % options.length])
-    );
-  }
-  function researchAtStart(G, selected, era) {
-    const value = {};
-    for (const f of development.factions)
-      value[f] = development
-        .nodes(f)
-        .filter(
-          (n) =>
-            !n.requires.length ||
-            (f === selected && G.technologyWeight(n.era) < G.technologyWeight(era)),
-        )
-        .map((n) => n.id);
-    return value;
-  }
-  function initialize(G, game, settings, players) {
-    const map = G.getMap(game.mapId);
-    if (!map.dominion) throw Error("占山为王需要专用地图");
-    validateMap(map);
-    game.dominion = {
-      era: settings.dominionEra || "UC_0079_T1",
-      players: {},
-      points: map.dominion.points.map((p) => ({ ...p, ownerSeat: null })),
-      serial: 0,
-      incomeTurns: {},
-    };
-    const state = game.dominion;
-    const add = (type, seat, x, y, siteId = null) => {
-      const u = G.makeUnit(
-        { unitId: buildings[type], kitId: "standard" },
-        seat ?? 0,
-        "dominion-building-" + state.serial++,
-        { x, y },
-        0,
-        game.seed,
-        1,
-        map.environment,
-      );
-      u.ownerSeat = seat ?? -1;
-      u.team = seat === null ? -1 : G.seatTeam(seat);
-      u.facility = { id: u.id, type: type === "turret" ? "machineGun" : type, siteId, level: 1 };
-      if (seat === null) {
-        u.dominionDormant = true;
-        u.hp = 0;
-      }
-      u.deployed = true;
-      u.formationIndex = -1;
-      if (seat !== null)
-        u.pilot = G.pilots.roll(null, game.seed, seat, 0, {
-          ...G.modelOf(u),
-          faction: state.players[seat].faction,
-        });
-      game.units.push(u);
-      return u;
-    };
-    for (const p of players.filter(Boolean)) {
-      const selected = faction(G, settings, p.seat, p.characterFaction);
-      state.players[p.seat] = {
-        ...initial,
-        faction: selected,
-        researched: researchAtStart(G, selected, state.era),
-      };
-      const s = map.spawns[p.seat];
-      add("base", p.seat, s.x, s.y);
-      for (const [type, dx, dy] of [
-        ["factory", -4, -4],
-        ["factory", 4, -4],
-        ["refinery", -4, 4],
-        ["refinery", 4, 4],
-        ["research", 0, 6],
-        ["turret", -6, 0],
-        ["turret", 6, 0],
-        ["turret", 0, -6],
-      ])
-        add(type, p.seat, s.x + dx, s.y + dy);
-    }
-    for (const point of state.points) {
-      const count = point.size || 1;
-      for (let i = 0; i < count; i++) {
-        add("factory", null, point.x - 4 + i * 4, point.y - 4, point.id);
-        add("refinery", null, point.x - 4 + i * 4, point.y + 4, point.id);
-      }
-      for (let i = 0; i < Math.ceil(count / 2); i++)
-        add("research", null, point.x + 6, point.y - 2 + i * 4, point.id);
-    }
-    game.deployment = null;
-  }
-  function player(game, seat) {
-    const p = game.dominion?.players[seat];
-    if (!p) throw Error("观战者不能使用局内经济");
-    return p;
-  }
-  function income(game, seat) {
-    const units = game.units.filter((u) => u.hp > 0 && u.ownerSeat === seat && u.facility);
-    return {
-      money: units.filter((u) => u.facility.type === "refinery").length * 250,
-      supplies: units.filter((u) => u.facility.type === "refinery").length * 375,
-      points: units.filter((u) => u.facility.type === "research").length * 250,
-    };
-  }
-  function facility(game, seat, id, type) {
-    player(game, seat);
-    const u = game.units.find(
-      (u) => u.id === id && u.hp > 0 && u.ownerSeat === seat && u.facility?.type === type,
-    );
-    if (!u) throw Error("设施不存在、已损毁或不属于你");
-    if (game.winner !== null || game.team !== seat % 2) throw Error("只能在己方行动阶段操作设施");
-    return u;
-  }
-  function offers(G, game, seat) {
-    const p = player(game, seat),
-      researched = new Set(p.researched[p.faction]);
-    const units = new Set(
-      development
-        .nodes(p.faction)
-        .filter((n) => researched.has(n.id))
-        .flatMap((n) => n.unlocks),
-    );
-    return G.catalog.prefabs
-      .filter(
-        (u) =>
-          units.has(u.id) &&
-          !u.wip &&
-          !u.formOnly &&
-          !u.facility &&
-          G.technologyWeight(u.tags.find((t) => G.technologyWeight(t))) <=
-            G.technologyWeight(game.dominion.era),
-      )
-      .flatMap((u) =>
-        u.weaponKits.map((k) => ({
-          unitId: u.id,
-          kitId: k.id,
-          model: G.models[u.id + "__" + k.id],
-          cost: economy.productionOffer(u.id, k.id, undefined, G.models),
-          turns: economy.productionTiming(u.id, k.id)?.turns || 1,
-        })),
-      )
-      .filter(
-        (o) =>
-          o.cost &&
-          (game.environment === "space"
-            ? o.model.adaptability.space
-            : o.model.adaptability.ground) > 0 &&
-          (o.model.movementType !== "naval" || game.tiles.some((row) => row.includes("water"))),
-      );
-  }
-  function produce(G, game, seat, factoryId, unitId, kitId) {
-    const f = facility(game, seat, factoryId, "factory"),
-      p = player(game, seat);
-    if (f.dominionOrder) throw Error("该工厂正在生产");
-    const offer = offers(G, game, seat).find((o) => o.unitId === unitId && o.kitId === kitId);
-    if (!offer) throw Error("单位不符合阵营、年代、环境或局内科技");
-    if (p.money < offer.cost.money || p.supplies < offer.cost.supplies)
-      throw Error("局内资金或物资不足");
-    if (game.units.filter((u) => u.hp > 0 && u.ownerSeat === seat && (!u.facility || u.dominionOrder)).length >= 60)
-      throw Error("每名玩家最多同时拥有60台单位");
-    p.money -= offer.cost.money;
-    p.supplies -= offer.cost.supplies;
-    f.dominionOrder = { unitId, kitId, remaining: offer.turns };
-    return { type: "dominion_produce", unitId: f.id };
-  }
-  function research(G, game, seat, labId, techId) {
-    facility(game, seat, labId, "research");
-    const p = player(game, seat);
-    const node = development.nodes(p.faction).find((n) => n.id === techId);
-    const known = p.researched[p.faction];
-    if (
-      !node ||
-      known.includes(techId) ||
-      !node.requires.every((id) => known.includes(id)) ||
-      p.points < node.points ||
-      G.technologyWeight(node.era) > G.technologyWeight(game.dominion.era)
-    )
-      throw Error("科技点不足或前置科技未完成");
-    known.push(techId);
-    return { type: "dominion_research", techId };
-  }
-  function capture(G, game, seat, unitId, pointId) {
-    player(game, seat);
-    const u = game.units.find((u) => u.id === unitId),
-      point = game.dominion.points.find((p) => p.id === pointId);
-    if (
-      game.winner !== null ||
-      game.team !== seat % 2 ||
-      !u ||
-      u.ownerSeat !== seat ||
-      u.acted ||
-      !G.campaignBattlefield.canSuppress(G, u) ||
-      !point ||
-      (point.ownerSeat !== null && point.ownerSeat % 2 === u.team) ||
-      !G.cells(u).some((c) => Math.max(Math.abs(c.x - point.x), Math.abs(c.y - point.y)) <= 2)
-    )
-      throw Error("无法占领该据点");
-    if (
-      game.units.some(
-        (v) =>
-          v.hp > 0 &&
-          !v.facility &&
-          v.team !== u.team &&
-          v.team >= 0 &&
-          G.onMap(v) &&
-          G.cells(v).some((c) => Math.max(Math.abs(c.x - point.x), Math.abs(c.y - point.y)) <= 2),
-      )
-    )
-      throw Error("据点范围内存在敌军");
-    point.ownerSeat = seat;
-    u.acted = true;
-    for (const b of game.units.filter((b) => b.facility?.siteId === point.id)) {
-      b.ownerSeat = seat;
-      b.team = u.team;
-      delete b.dominionOrder;
-      b.pilot = G.pilots.roll(null, game.seed, seat, 0, {
-        ...G.modelOf(b),
-        faction: player(game, seat).faction,
-      });
-      if (b.dominionDormant) {
-        delete b.dominionDormant;
-        b.hp = G.modelOf(b).hp;
-      }
-    }
-    return { type: "dominion_capture", pointId, unitId };
-  }
-  function sync(G, game) {
-    if (!game.dominion || game.winner !== null) return;
-    const alive = [0, 1].map((team) =>
-      game.units.some((u) => u.team === team && u.facility?.type === "base" && u.hp > 0),
-    );
-    if (!alive[0] || !alive[1]) game.winner = alive[0] ? 0 : alive[1] ? 1 : -1;
-  }
-  function advance(G, game) {
-    const state = game.dominion;
-    if (!state || game.winner !== null) return;
-    const key = game.round + ":" + game.team;
-    if (state.incomeTurns[key]) return;
-    state.incomeTurns[key] = true;
-    // Both teams get the same opening budget; income begins on their second turn.
-    if (game.round <= 2) return;
-    for (const [seat, p] of Object.entries(state.players)) {
-      if (Number(seat) % 2 !== game.team) continue;
-      const earned = income(game, Number(seat));
-      for (const k of ["money", "supplies", "points"]) p[k] += earned[k];
-      for (const f of game.units.filter(
-        (u) => u.hp > 0 && u.ownerSeat === Number(seat) && u.dominionOrder,
-      )) {
-        const order = f.dominionOrder;
-        order.remaining = Math.max(0, order.remaining - 1);
-        if (order.remaining) continue;
-        const u = G.makeUnit(
-          order,
-          Number(seat),
-          "dominion-unit-" + state.serial++,
-          f,
-          0,
-          game.seed,
-          1,
-          game.environment,
-        );
-        const candidates = [];
-        for (let dy = -7; dy <= 7; dy++)
-          for (let dx = -7; dx <= 7; dx++) candidates.push({ x: f.x + dx, y: f.y + dy });
-        candidates.sort(
-          (a, b) =>
-            Math.abs(a.x - f.x) + Math.abs(a.y - f.y) - Math.abs(b.x - f.x) - Math.abs(b.y - f.y),
-        );
-        const cell = candidates.find((c) => G.fits(game, u, c.x, c.y));
-        if (!cell) continue;
-        Object.assign(u, cell, { deployed: true, moved: false, acted: false, formationIndex: -1 });
-        game.units.push(u);
-        delete f.dominionOrder;
-      }
-    }
-  }
-  return {
-    defaultMapId,
-    buildings,
-    initial,
-    validateMap,
-    validateState,
-    blockedCells,
-    factionsForEra,
-    faction,
-    initialize,
-    player,
-    income,
-    offers,
-    produce,
-    research,
-    capture,
-    sync,
-    advance,
-  };
-})();
-if (typeof module !== "undefined") module.exports = DominionMode;
-
-;
-/* Shared strategic battlefield objectives. Only room-engine may commit these operations. */
-"use strict";
-const CampaignBattlefield = (() => {
-  const cache = new WeakMap();
-  const key = (x, y) => x + "," + y;
-  const distance = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
-  const clone = (value) => JSON.parse(JSON.stringify(value));
-  function create(G, state, regionId, scenarioId = "earth_0079_mid") {
-    const scenario = G.catalog.scenarios[scenarioId];
-    const layout = scenario?.regions[regionId]?.layout;
-    if (!layout?.nodes || !layout?.gates || !layout?.links) throw Error("区块缺少据点地图配置");
-    const defender = state.regions.find((r) => r.id === regionId).owner;
-    return {
-      scenarioId,
-      regionId,
-      defender,
-      layout: clone(layout),
-      version: 0,
-      owners: Object.fromEntries(layout.nodes.map((n) => [n.id, defender])),
-      adjacentOwners: Object.fromEntries(
-        layout.gates.map((g) => [
-          g.region,
-          state.regions.find((r) => r.id === g.region)?.owner ?? null,
-        ]),
-      ),
-      capturedBaseTeam: null,
-    };
-  }
-  function ensureTurrets(G, game, state) {
-    const field=game.campaignBattlefield;
-    if (!field || field.turretsInitialized) return;
-    const team=field.defender;
-    const owner=state.units.filter(u=>!u.destroyed&&u.team===team).map(u=>u.ownerSeat)
-      .filter(Number.isInteger).sort((a,b)=>a-b)[0] ?? team;
-    const tree=typeof DEVELOPMENT_TREE!=="undefined"?DEVELOPMENT_TREE:require("./development-tree.json");
-    const researched=new Set(state.teams[team].researched||[]);
-    const faction=state.teams[team].faction;
-    const unlocked=(tree[faction]||[]).filter(node=>researched.has(node.id));
-    const era=Math.max(["EFSF","ZEON"].includes(faction)?1:3,...unlocked.map(node=>G.battlefieldMode.eras.indexOf(node.era)+1));
-    for(const base of field.layout.nodes.filter(node=>node.kind==="base")) {
-      for(const [index,type] of ["machineGun","beam","missile","cannon"].entries()) {
-        const id="campaign-turret-"+base.id+"-"+type;
-        if(game.units.some(u=>u.id===id))continue;
-        const actor=G.makeUnit({unitId:G.battlefieldMode.facilityIds[type],kitId:"standard"},owner,id,base,0,game.seed||1);
-        actor.facility={id,type,level:era,campaignDefense:true};
-        actor.campaignDurability=state.options?.teams?.[team]?.durability ?? 1;
-        actor.hp=G.modelOf(actor).hp;
-        const angle=index*Math.PI/2, target={x:base.x+Math.round(Math.cos(angle)*4),y:base.y+Math.round(Math.sin(angle)*4)};
-        const candidates=[];
-        for(let y=Math.max(0,base.y-10);y<=Math.min(game.tiles.length-1,base.y+10);y++)
-          for(let x=Math.max(0,base.x-10);x<=Math.min(game.tiles[0].length-1,base.x+10);x++) {
-            const distance=Math.hypot(x-base.x,y-base.y);
-            if(distance>=3&&G.fits(game,actor,x,y,0))candidates.push({x,y});
-          }
-        candidates.sort((a,b)=>Math.hypot(a.x-target.x,a.y-target.y)-Math.hypot(b.x-target.x,b.y-target.y)||a.y-b.y||a.x-b.x);
-        if(!candidates.length)throw Error("主基地附近没有合法炮塔位置："+field.regionId);
-        Object.assign(actor,candidates[0]);game.units.push(actor);
-      }
-    }
-    field.turretsInitialized=true;
-  }
-  function network(g) {
-    const field = g.campaignBattlefield;
-    if (!field) return null;
-    const previous = cache.get(field);
-    if (previous?.version === field.version) return previous;
-    const nodes = [...field.layout.nodes, ...field.layout.gates];
-    const lookup = new Map(nodes.map((n) => [n.id, n]));
-    const owner = (n) => (n.region ? field.adjacentOwners[n.region] : field.owners[n.id]);
-    const reached = [new Set(), new Set()];
-    for (const team of [0, 1]) {
-      const pending = nodes.filter((n) => owner(n) === team && (n.kind === "base" || n.region));
-      for (const node of pending) reached[team].add(node.id);
-      for (let i = 0; i < pending.length; i++) {
-        for (const line of field.layout.links) {
-          const id = line.a === pending[i].id ? line.b : line.b === pending[i].id ? line.a : null;
-          if (!id || reached[team].has(id) || owner(lookup.get(id)) !== team) continue;
-          reached[team].add(id);
-          pending.push(lookup.get(id));
-        }
-      }
-    }
-    const roads = [new Set(), new Set()];
-    const lines = field.layout.links.map((line) => {
-      const a = lookup.get(line.a),
-        b = lookup.get(line.b);
-      const team = [0, 1].find((t) => reached[t].has(a.id) && reached[t].has(b.id));
-      if (team !== undefined) {
-        const steps = Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y), 1);
-        for (let i = 0; i <= steps; i++) {
-          const x = Math.round(a.x + ((b.x - a.x) * i) / steps),
-            y = Math.round(a.y + ((b.y - a.y) * i) / steps);
-          for (const [dx, dy] of [
-            [0, 0],
-            [1, 0],
-            [-1, 0],
-            [0, 1],
-            [0, -1],
-          ])
-            roads[team].add(key(x + dx, y + dy));
-        }
-      }
-      return { ...line, a, b, team: team ?? null };
-    });
-    const result = { version: field.version, nodes, lookup, reached, roads, lines };
-    cache.set(field, result);
-    return result;
-  }
-  function nodeAt(G, g, u) {
-    const nodes = g.campaignBattlefield?.layout.nodes || [];
-    return nodes.find((node) => G.cells(u).some((cell) => Math.max(Math.abs(cell.x - node.x), Math.abs(cell.y - node.y)) <= 1));
-  }
-  function canSuppress(G, u) {
-    return !!u && !u.facility && G.onMap(u) && !u.embarked && !u.pendingMove && !u.plan &&
-      !u.flying && G.modelOf(u).movementType !== "air";
-  }
-  function canCapture(G, g, u) {
-    if (!g.campaignBattlefield || !canSuppress(G, u) || u.team !== g.team || u.acted)
-      return null;
-    const node = nodeAt(G, g, u);
-    const defended = node && g.units.some((enemy) => enemy.team !== u.team && G.onMap(enemy) &&
-      G.cells(enemy).some((cell) =>
-        Math.max(Math.abs(cell.x - node.x), Math.abs(cell.y - node.y)) <= 1));
-    return node && !defended && g.campaignBattlefield.owners[node.id] !== u.team ? node : null;
-  }
-  function capture(G, g, u) {
-    const node = canCapture(G, g, u);
-    if (!node) throw Error("无法占领：需地面单位位于敌方据点内、据点内没有敌军");
-    g.campaignBattlefield.owners[node.id] = u.team;
-    g.campaignBattlefield.version++;
-    if (node.kind === "base") {
-      g.campaignBattlefield.capturedBaseTeam = u.team;
-      g.winner = u.team;
-    }
-    return node;
-  }
-  function onSupply(g, u, x, y) {
-    return !!network(g)?.roads[u.team]?.has(key(x, y));
-  }
-  function heal(G, g) {
-    const net = network(g);
-    if (!net) return;
-    const contested = new Set(net.nodes.filter((node) => g.units.some((enemy) =>
-      enemy.team !== g.team && G.onMap(enemy) && G.cells(enemy).some((cell) =>
-        Math.max(Math.abs(cell.x - node.x), Math.abs(cell.y - node.y)) <= 1))).map((node) => node.id));
-    for (const u of g.units.filter((u) => G.onMap(u) && u.team === g.team && !u.embarked)) {
-      const node = nodeAt(G, g, u);
-      if (!node || contested.has(node.id) || !net.reached[u.team].has(node.id)) continue;
-      const m = G.modelOf(u),
-        base = node.kind === "base";
-      u.hp = Math.min(m.hp, u.hp + Math.round(m.hp * (base ? 0.2 : 0.15)));
-      u.en = Math.min(m.en, u.en + Math.ceil(m.en * (base ? 0.4 : 0.3)));
-    }
-  }
-  function deploymentCells(G, g, u, fromRegion = null) {
-    const f = g.campaignBattlefield;
-    if (!f) return null;
-    const net = network(g);
-    let zones;
-    if (u.team === f.defender) zones = [
-      ...f.layout.nodes.filter((n) => n.kind === "base" && f.owners[n.id] === u.team),
-      ...f.layout.gates.filter((n) => f.adjacentOwners[n.region] === u.team),
-    ];
-    else {
-      const gate =
-        f.layout.gates.find((n) => n.region === (fromRegion || u.campaignEntry)) ||
-        (!fromRegion && !u.campaignEntry
-          ? f.layout.gates.find((n) => f.adjacentOwners[n.region] === u.team)
-          : null);
-      zones = gate ? [gate] : [];
-    }
-    const cells = new Map();
-    for (const zone of zones) {
-      // Give large transports and incoming armies room to stage without
-      // altering the objective capture radius or the map's permanent terrain.
-      const radius = zone.deploymentRadius + (zone.kind === "base" ? 6 : 4);
-      for (
-        let y = Math.max(0, zone.y - radius);
-        y < Math.min(G.mapHeight(g), zone.y + radius + 1);
-        y++
-      )
-        for (
-          let x = Math.max(0, zone.x - radius);
-          x < Math.min(G.mapWidth(g), zone.x + radius + 1);
-          x++
-        )
-          if (distance({ x, y }, zone) <= radius)
-            cells.set(key(x, y), {
-              x,
-              y,
-              priority: zone.kind === "base" ? 0 : 1,
-              distance: distance({ x, y }, zone),
-            });
-    }
-    return [...cells.values()].sort(
-      (a, b) => a.priority - b.priority || a.distance - b.distance || a.y - b.y || a.x - b.x,
-    );
-  }
-  const deploymentSeat = (g, u) =>
-    g.campaignBattlefield?.deploymentControllers?.[u.ownerSeat ?? u.team] ?? u.ownerSeat ?? u.team;
-  function exits(G, g, u) {
-    if (!g.campaignBattlefield || !u || !G.onMap(u) || u.embarked || u.pendingMove || u.plan)
-      return [];
-    return g.campaignBattlefield.layout.gates.filter((gate) =>
-      G.cells(u).some((cell) => distance(cell, gate) <= gate.radius),
-    );
-  }
-  function validateLayout(layout, map, region) {
-    const fail = () => {
-      throw Error("区块据点地图配置无效：" + region.id);
-    };
-    if (
-      !layout ||
-      !Array.isArray(layout.nodes) ||
-      !Array.isArray(layout.gates) ||
-      !Array.isArray(layout.links)
-    )
-      fail();
-    const all = [...layout.nodes, ...layout.gates],
-      ids = new Set(all.map((node) => node.id));
-    if (
-      ids.size !== all.length ||
-      layout.nodes.filter((node) => node.kind === "base").length !== 1 ||
-      layout.nodes.filter((node) => node.kind === "outpost").length < 4 ||
-      layout.nodes.filter((node) => node.kind === "outpost").length > 8 ||
-      all.some(
-        (node) =>
-          typeof node.id !== "string" ||
-          !Number.isInteger(node.x) ||
-          !Number.isInteger(node.y) ||
-          node.x < 0 ||
-          node.y < 0 ||
-          node.x >= map.width ||
-          node.y >= map.height ||
-          !Number.isInteger(node.radius) ||
-          node.radius < 1 ||
-          !Number.isInteger(node.deploymentRadius) ||
-          node.deploymentRadius < node.radius,
-      )
-    )
-      fail();
-    if (
-      layout.gates.length !== region.links.length ||
-      new Set(layout.gates.map((node) => node.region)).size !== region.links.length ||
-      layout.gates.some((node) => !region.links.includes(node.region))
-    )
-      fail();
-    if (layout.links.some((line) => !ids.has(line.a) || !ids.has(line.b) || line.a === line.b))
-      fail();
-    const reached = new Set([layout.nodes.find((node) => node.kind === "base").id]);
-    for (let i = 0; i < all.length; i++)
-      for (const line of layout.links) {
-        if (reached.has(line.a)) reached.add(line.b);
-        if (reached.has(line.b)) reached.add(line.a);
-      }
-    if (reached.size !== all.length) fail();
-  }
-  function validate(G, g) {
-    const f = g.campaignBattlefield;
-    if (!f) return;
-    const entry = G.catalog.scenarios[f.scenarioId]?.regions[f.regionId];
-    const map = G.getMap(g.mapId);
-    // Accept only shipped historical layouts, never arbitrary saved geometry.
-    const legacy = (map.legacyStrategicLayouts || []).find(version =>
-      version.width === g.tiles?.[0]?.length && version.height === g.tiles?.length &&
-      JSON.stringify(version.layout) === JSON.stringify(f.layout));
-    const source = legacy?.layout || entry?.layout;
-    if (source?.nodes && f.layout?.nodes) {
-      const migrated = clone(f.layout);
-      for (const node of migrated.nodes)
-        if (node.radius === (node.kind === "base" ? 3 : 2)) node.radius = 1;
-      if (JSON.stringify(migrated) === JSON.stringify(source)) f.layout = migrated;
-    }
-    if (
-      entry?.mapId !== g.mapId ||
-      !source?.nodes ||
-      JSON.stringify(f.layout) !== JSON.stringify(source) ||
-      ![0, 1].includes(f.defender) ||
-      !Number.isSafeInteger(f.version) ||
-      f.version < 0 ||
-      (f.capturedBaseTeam !== null && ![0, 1].includes(f.capturedBaseTeam)) ||
-      source.nodes.some((n) => ![0, 1].includes(f.owners?.[n.id])) ||
-      source.gates.some((n) => ![0, 1].includes(f.adjacentOwners?.[n.region]))
-    )
-      throw Error("据点与补给线存档无效");
-    return legacy || map;
-  }
-  return {
-    create,
-    ensureTurrets,
-    network,
-    nodeAt,
-    canSuppress,
-    canCapture,
-    capture,
-    onSupply,
-    heal,
-    deploymentCells,
-    deploymentSeat,
-    exits,
-    validateLayout,
-    validate,
-  };
-})();
-if (typeof module !== "undefined") module.exports = CampaignBattlefield;
 
 ;
 ﻿/* Single-target alternating volleys and melee; combat is ruled by the server clock. */
@@ -7921,11 +7136,6 @@ const Tactics = (() => {
   const aiTactics = typeof AITactics !== "undefined" ? AITactics : require("./ai-tactics.js");
   const aiUnitBans =
     typeof AI_UNIT_BANS !== "undefined" ? AI_UNIT_BANS : require("./ai-unit-bans.json");
-  const campaignBattlefield =
-    typeof CampaignBattlefield !== "undefined"
-      ? CampaignBattlefield
-      : require("./campaign-battlefield.js");
-  const dominionMode = typeof DominionMode !== "undefined" ? DominionMode : require("./dominion-mode.js");
   const battlefieldMode =
     typeof BattlefieldMode !== "undefined" ? BattlefieldMode : require("./battlefield-mode.js");
   const damagePolicy =
@@ -7957,7 +7167,7 @@ const Tactics = (() => {
   const maxCostLimit = 99999;
   const seatTeam = (seat) => (seat === null ? null : seat % 2);
   const ownerOf = (unit) => unit.ownerSeat ?? unit.team;
-  const controllerOf = (game, unit) => game.campaignControllers?.[ownerOf(unit)] ?? ownerOf(unit);
+  const controllerOf = (game, unit) => ownerOf(unit);
   function canControlUnit(settings, members, seat, unit) {
     if (unit?.missionEscort || unit?.missionEscaped) return false;
     if (unit?.missionAutonomous && ownerOf(unit)!==seat) return false;
@@ -7966,8 +7176,7 @@ const Tactics = (() => {
     if (ownerOf(unit) === seat) return true;
     return (
       unit.team === seatTeam(seat) &&
-      (settings?.campaignCommanders?.[unit.team] === seat ||
-        settings?.shareAlliedUnits === true ||
+      (settings?.shareAlliedUnits === true ||
         members.some((m) => m.seat === ownerOf(unit) && m.shareUnits === true))
     );
   }
@@ -8017,10 +7226,6 @@ const Tactics = (() => {
   }
   const unitName = (unit) => modelOf(unit).name;
   function unitLogName(unit) {
-    // Campaign army identity survives new regional deployments, owners and equipment.
-    const campaignNumber = Number(String(unit.campaignId).match(/^army-([1-9]\d*)$/)?.[1]);
-    if (Number.isSafeInteger(campaignNumber) && campaignNumber > 0)
-      return unitName(unit) + `[No.${campaignNumber}]`;
     // Original formation position survives license filtering, embarking and form changes.
     const savedIndex =
       Number.isInteger(unit.formationIndex) && unit.formationIndex >= 0
@@ -8210,7 +7415,7 @@ const Tactics = (() => {
     return value;
   }
   function validateBattleMode(value = "regular") {
-    if (!["regular", "quick", "campaign", "battlefield", "sweep", "mission", "dominion"].includes(value))
+    if (!["regular", "quick", "battlefield", "sweep", "mission"].includes(value))
       throw Error("对战模式无效");
     return value;
   }
@@ -8223,7 +7428,6 @@ const Tactics = (() => {
       mode: "regular",
       formationStyle: "standard",
       regularEra: "UC_0079_T1",
-      dominionEra: "UC_0079_T1",
       technologyLimitMode: "host",
       technologyLimitFaction: "EFSF",
       technologyLimit: 0,
@@ -8243,22 +7447,8 @@ const Tactics = (() => {
       teamFactions: [null, null],
     };
   }
-  // Strategic rooms use scenario armies; ordinary formation and tag settings do not apply.
-  function campaignRoomSettings(settings = {}) {
-    return {
-      ...defaultRoomSettings(),
-      mapId: settings.mapId || "military_base_5v5",
-      mode: "campaign",
-      scenarioId: "earth_0079_mid",
-      fogMode: settings.fogMode ?? "disabled",
-      costLimit: maxCostLimit,
-      campaignOptions: aiTactics.settings(settings.campaignOptions),
-      unitCostLimit: maxCostLimit,
-      unitLimit: catalog.formation.maxUnits,
-    };
-  }
   function formationRestrictions(settings = {}, seat = null) {
-    if (["campaign", "mission"].includes(settings.mode))
+    if (settings.mode === "mission")
       return {
         environment: getMap(settings.mapId).environment,
         mapId: settings.mapId,
@@ -8570,7 +7760,7 @@ const Tactics = (() => {
   function armyBudget(settings, player) {
     if (
       player?.formationPreset &&
-      (player.bot || settings.mode === "campaign" || formationStyle(settings) === "free")
+      (player.bot || formationStyle(settings) === "free")
     )
       return Math.max(
         maxCostLimit,
@@ -8586,11 +7776,11 @@ const Tactics = (() => {
   }
   const fleetLimit = settings => settings?.mode === "mission" ? settings.missionFleetLimit ?? 3 : 3;
   function armyUnitLimit(settings, player) {
-    if (settings.mode !== "campaign" && formationStyle(settings) === "standard" && !player?.battlefieldAI && !player?.sweepEnemy)
+    if (formationStyle(settings) === "standard" && !player?.battlefieldAI && !player?.sweepEnemy)
       return player?.bot ? catalog.formation.maxUnits : fleetLimit(settings);
     if (
       player?.formationPreset &&
-      (player.bot || settings.mode === "campaign" || formationStyle(settings) === "free")
+      (player.bot || formationStyle(settings) === "free")
     )
       return formationPoints(player.formationPreset.units);
     const base = Math.min(
@@ -8647,7 +7837,7 @@ const Tactics = (() => {
       )
         Object.assign(rules, economy.normalizeStock(player));
     }
-    if (settings.mode !== "campaign" && !player?.battlefieldAI && !player?.sweepEnemy && formationStyle(settings) !== "free")
+    if (!player?.battlefieldAI && !player?.sweepEnemy && formationStyle(settings) !== "free")
       Object.assign(rules,{requiresCarriers:true,fleetLimit:fleetLimit(settings)});
     // Standard formations share the total COST and three-carrier rules. Quick free formations
     // retain the legacy single-unit limits.
@@ -9343,19 +8533,9 @@ const Tactics = (() => {
         : (models[unit.model].adaptability?.[environment] ?? 100)) / 100
     );
   }
-  const durabilityModels = new WeakMap();
-  function campaignModelOf(unit) {
-    const base = performanceModelOf(unit),
-      factor = unit.campaignDurability ?? 1;
-    if (factor === 1) return base;
-    let variants = durabilityModels.get(base);
-    if (!variants) durabilityModels.set(base, (variants = new Map()));
-    if (!variants.has(factor)) variants.set(factor, { ...base, hp: Math.ceil(base.hp * factor) });
-    return variants.get(factor);
-  }
   const missionResourceModels = new WeakMap();
   function missionModelOf(unit) {
-    const base = campaignModelOf(unit), factor = unit.missionResourceScale ?? 1;
+    const base = performanceModelOf(unit), factor = unit.missionResourceScale ?? 1;
     if (factor === 1) return base;
     let variants = missionResourceModels.get(base);
     if (!variants) missionResourceModels.set(base, variants = new Map());
@@ -9449,21 +8629,6 @@ const Tactics = (() => {
     };
   }
   function deploymentCells(g, seat, unit = null) {
-    if (g.campaignBattlefield) {
-      const actor =
-        unit ||
-        g.units.find(
-          (actor) =>
-            actor.campaignDeploying &&
-            !actor.embarked &&
-            campaignBattlefield.deploymentSeat(g, actor) === seat,
-        );
-      return actor
-        ? campaignBattlefield
-            .deploymentCells(Tactics, g, actor)
-            .filter((cell) => Number.isFinite(terrainCost(g, actor, cell.x, cell.y)))
-        : [];
-    }
     const map = getMap(g.mapId),
       spawn = map.spawns[seat],
       available = new Map();
@@ -9498,9 +8663,7 @@ const Tactics = (() => {
     const u = g.units.find(
       (u) =>
         u.id === id &&
-        (g.campaignBattlefield
-          ? u.campaignDeploying && campaignBattlefield.deploymentSeat(g, u) === team
-          : ownerOf(u) === team),
+        ownerOf(u) === team,
     );
     if (
       (!onMap(u) && !u.deploymentStaged && !u.embarked) ||
@@ -9542,9 +8705,7 @@ const Tactics = (() => {
     const u = g.units.find(
       (u) =>
         u.id === id &&
-        (g.campaignBattlefield
-          ? u.campaignDeploying && campaignBattlefield.deploymentSeat(g, u) === seat
-          : ownerOf(u) === seat),
+        ownerOf(u) === seat,
     );
     if (!u || u.missionActor || u.facility || u.embarked || u.hp <= 0) throw Error("该单位不能取消部署");
     u.deploymentStaged = true;
@@ -9557,9 +8718,7 @@ const Tactics = (() => {
     for (const u of g.units) {
       if (u.missionActor || u.facility || u.hp <= 0 || u.embarked) continue;
       if (
-        g.campaignBattlefield
-          ? u.campaignDeploying && campaignBattlefield.deploymentSeat(g, u) === seat
-          : ownerOf(u) === seat
+        ownerOf(u) === seat
       )
         stageDeployment(g, seat, u.id);
     }
@@ -9569,9 +8728,7 @@ const Tactics = (() => {
     const units = g.units.filter(
       (u) =>
         u.deploymentStaged &&
-        (g.campaignBattlefield
-          ? u.campaignDeploying && campaignBattlefield.deploymentSeat(g, u) === seat
-          : ownerOf(u) === seat),
+        ownerOf(u) === seat,
     );
     for (const u of units) {
       const area = new Set(deploymentCells(g, seat, u).map((cell) => key(cell.x, cell.y)));
@@ -9586,7 +8743,7 @@ const Tactics = (() => {
   function aiDeployment(g, seat) {
     if (!g.deployment || g.deployment[seat]) return;
     const controlled = g.units.filter(
-      (u) => !u.missionActor && ownerOf(u) === seat && onMap(u) && (!g.campaignBattlefield || u.campaignDeploying),
+      (u) => !u.missionActor && ownerOf(u) === seat && onMap(u),
     );
     // Load compatible troops using real deployment, adjacency and native capacity checks.
     for (const carrier of controlled.filter((u) => !u.embarked && hangars.of(u).length)) {
@@ -9622,9 +8779,7 @@ const Tactics = (() => {
   function formDeploymentSquads(g, seat) {
     const controlled = g.units.filter((u) =>
       onMap(u) && !u.missionActor && !u.facility && !u.embarked && !u.deploymentStaged &&
-      (g.campaignBattlefield
-        ? u.campaignDeploying && campaignBattlefield.deploymentSeat(g, u) === seat
-        : ownerOf(u) === seat));
+      ownerOf(u) === seat);
     for (const unit of controlled.filter((u) => squadEligible(u))) {
       if (squadMembers(g, unit).length > 1) continue;
       const target = controlled
@@ -9651,14 +8806,10 @@ const Tactics = (() => {
   function confirmDeployment(g, team) {
     if (g.units.some((u) => u.pendingMove?.seat === team)) throw Error("请先确认或取消移动");
     if (!g.deployment || g.deployment[team]) throw Error("部署已确认，不能再次确认");
-    const controlled = g.units.filter((u) =>
-      g.campaignBattlefield
-        ? campaignBattlefield.deploymentSeat(g, u) === team
-        : ownerOf(u) === team,
-    );
+    const controlled = g.units.filter((u) => ownerOf(u) === team);
     for (const u of controlled.filter(
       (u) =>
-        !u.missionActor && !u.facility && onMap(u) && !u.embarked && (!g.campaignBattlefield || u.campaignDeploying),
+        !u.missionActor && !u.facility && onMap(u) && !u.embarked,
     )) {
       if (!deploymentCells(g, team, u).some((c) => c.x === u.x && c.y === u.y))
         throw Error("单位不在有效部署区域");
@@ -9666,7 +8817,6 @@ const Tactics = (() => {
     }
     if (controlled.some((u) => u.deploymentStaged && u.hp > 0 && !u.embarked))
       throw Error("还有单位未部署，请放置或自动部署");
-    for (const unit of controlled) delete unit.campaignDeploying;
     g.deployment[team] = true;
     return g.deployment.every(Boolean);
   }
@@ -10036,7 +9186,6 @@ const Tactics = (() => {
     occupancy = null,
   ) {
     const blocked =
-      g.dominion && !unit.facility ? dominionMode.blockedCells({cells},g) :
       g.battlefield && !unit.facility ? battlefieldMode.blockedCells({ cells }, g) : null;
     const footprint = cells(unit, x, y, angle),
       area =
@@ -10287,6 +9436,7 @@ const Tactics = (() => {
     settings = {},
     restoration = null,
   ) {
+    validateBattleMode(settings.mode);
     const map = getMap(settings.mapId),
       costLimit = validateCostLimit(settings.costLimit ?? catalog.formation.maxCost),
       unitLimit = validateUnitLimit(settings.unitLimit ?? catalog.formation.maxUnits),
@@ -10302,7 +9452,7 @@ const Tactics = (() => {
     if (
       map.supportedModes &&
       !map.supportedModes.includes(
-        settings.mode === "campaign" || (settings.mode === "sweep" && map.id !== sweepMapId)
+        (settings.mode === "sweep" && map.id !== sweepMapId)
           ? "regular"
           : settings.mode || "regular",
       )
@@ -10310,7 +9460,7 @@ const Tactics = (() => {
       throw Error("此地图不支持所选对战模式");
     if (formations.length !== map.spawns.length) throw Error("编组数量必须匹配地图席位");
     const rulesForSeat = (seat) =>
-      (settings.mode !== "campaign" && settings.seatFormationRules?.[seat]) ||
+      settings.seatFormationRules?.[seat] ||
       formationRestrictions({ ...settings, mapId: map.id }, seat);
     const tiles = map.tiles.map((row) => row.slice());
     let units = [];
@@ -10322,18 +9472,17 @@ const Tactics = (() => {
     for (let seat = 0; seat < formations.length; seat++) {
       // null 明确表示空出生点，不生成单位，也无需确认部署。
       if (formations[seat] === null) continue;
-      if (settings.mode === "dominion") continue;
       if (settings.mode === "battlefield" && seat < 2) continue;
       // Scripted opponents are placed by MissionMode, not player deployment.
       if (settings.mode === "mission" && seat === 1) continue;
       const seatRules = rulesForSeat(seat);
       formations[seat] = validateFormation(
         formations[seat],
-        settings.mode === "campaign" || seatRules.requiresCarriers
+        seatRules.requiresCarriers
           ? Infinity
           : (settings.seatCostLimits?.[seat] ?? costLimit),
-        settings.mode === "campaign" ? Infinity : (settings.seatUnitLimits?.[seat] ?? unitLimit),
-        settings.mode === "campaign" && restoration?.allowExistingForms === true,
+        (settings.seatUnitLimits?.[seat] ?? unitLimit),
+        false,
         !!seatRules.requiresCarriers,
       );
       const pilotBans = (seatRules.bannedFactions || []).filter((tag) => tag.startsWith("pilot:"));
@@ -10366,7 +9515,7 @@ const Tactics = (() => {
         { tiles, units, mapId: map.id, environment: map.environment },
         formations[seat],
         seat,
-        settings.mode === "campaign" && map.scope === "strategic",
+        false,
       );
       if (!placements) throw Error("出生区没有足够位置容纳编组，请检查目录配置");
       placements.forEach(({ entry, i, position, heading }) => {
@@ -10445,7 +9594,6 @@ const Tactics = (() => {
       winner: null,
       ...(settings.mode === "mission" ? { mission: { pending: true } } : {}),
     };
-    if (settings.mode === "dominion" && settings.dominionPlayers) dominionMode.initialize(Tactics, game, settings, settings.dominionPlayers);
     if (settings.mode === "battlefield") battlefieldMode.initialize(Tactics, game, settings);
     return game;
   }
@@ -10469,7 +9617,7 @@ const Tactics = (() => {
   function movementCost(g, u, x, y, leavingEnemyControl = false) {
     const base = terrainCost(g, u, x, y);
     const cost = leavingEnemyControl ? Math.max(base, 3) : base;
-    return cost / (campaignBattlefield.onSupply(g, u, x, y) ? 1.25 : 1);
+    return cost;
   }
   // 按地形消耗搜索可达格子，同时保存各格子的移动路径。
   function reachableSingle(g, u, starts = null, occupancy = movementQuery(g)) {
@@ -11786,10 +10934,9 @@ const Tactics = (() => {
         (e) => e.carrierId === event.to && event.after <= 0 && event.before > 0,
       );
     let alive = [0, 1].map((t) =>
-      g.units.some((u) => !u.facility?.campaignDefense && u.team === t && u.hp > 0),
+      g.units.some((u) => u.team === t && u.hp > 0),
     );
-    if (g.dominion) dominionMode.sync(Tactics, g);
-    else if (g.battlefield) battlefieldMode.sync(Tactics, g);
+    if (g.battlefield) battlefieldMode.sync(Tactics, g);
     else if (!g.mission && !options.deferVictory && (!alive[0] || !alive[1])) g.winner = alive[0] ? 0 : 1;
     return events;
   }
@@ -11935,10 +11082,9 @@ const Tactics = (() => {
     }
     const evacuations = hangars.evacuate(g);
     const alive = [0, 1].map((team) =>
-      g.units.some((u) => !u.facility?.campaignDefense && u.hp > 0 && u.team === team),
+      g.units.some((u) => u.hp > 0 && u.team === team),
     );
-    if (g.dominion) dominionMode.sync(Tactics, g);
-    else if (g.battlefield) battlefieldMode.sync(Tactics, g);
+    if (g.battlefield) battlefieldMode.sync(Tactics, g);
     else if (!g.mission && (!alive[0] || !alive[1])) g.winner = alive[0] ? 0 : 1;
     return {
       type: "skill",
@@ -12042,10 +11188,9 @@ const Tactics = (() => {
     if (events.some((e) => e.after <= 0)) {
       events.push(...hangars.evacuate(g).map((e) => ({ type: "evacuation", ...e })));
       const alive = [0, 1].map((team) =>
-        g.units.some((u) => !u.facility?.campaignDefense && u.team === team && u.hp > 0),
+        g.units.some((u) => u.team === team && u.hp > 0),
       );
-      if (g.dominion) dominionMode.sync(Tactics, g);
-    else if (g.battlefield) battlefieldMode.sync(Tactics, g);
+      if (g.battlefield) battlefieldMode.sync(Tactics, g);
       else if (!g.mission && (!alive[0] || !alive[1])) g.winner = alive[0] ? 0 : 1;
     }
     return events;
@@ -12081,7 +11226,7 @@ const Tactics = (() => {
     for (const u of g.units.filter((u) => u.team === g.team && u.hp > 0 && u.overBoost)) {
       const active = u.overBoost;
       if (g.round > active.startedRound) {
-        const maximum = campaignModelOf(u).hp;
+        const maximum = performanceModelOf(u).hp;
         u.hp = Math.max(0, u.hp - roundDamage((maximum * active.hpDrainPercent) / 100));
         g.turnEffects.push({
           type: "overboost",
@@ -12112,9 +11257,9 @@ const Tactics = (() => {
       });
     }
     const teamsAlive = [0, 1].map((team) =>
-      g.units.some((unit) => !unit.facility?.campaignDefense && unit.team === team && unit.hp > 0),
+      g.units.some((unit) => unit.team === team && unit.hp > 0),
     );
-    if (!g.dominion && !g.battlefield && !g.mission && (!teamsAlive[0] || !teamsAlive[1])) g.winner = teamsAlive[0] ? 0 : 1;
+    if (!g.battlefield && !g.mission && (!teamsAlive[0] || !teamsAlive[1])) g.winner = teamsAlive[0] ? 0 : 1;
     g.team = 1 - g.team;
     g.round++;
     skills.tickPilotBuffs(g);
@@ -12178,7 +11323,6 @@ const Tactics = (() => {
       u.origin = null;
       delete u.rotated;
     }
-    campaignBattlefield.heal(Tactics, g);
     battlefieldMode.heal(Tactics, g);
     // Supply ticks once on the recipient team's turn, with no stacking from overlapping providers.
     const providers = g.units.filter((u) => onMap(u) && u.team === g.team && modelOf(u).supplyAura);
@@ -12224,12 +11368,10 @@ const Tactics = (() => {
     }
     g.turnEffects.push(...hangars.evacuate(g).map((e) => ({ type: "evacuation", ...e })));
     const alive = [0, 1].map((team) =>
-      g.units.some((u) => !u.facility?.campaignDefense && u.team === team && u.hp > 0),
+      g.units.some((u) => u.team === team && u.hp > 0),
     );
-    if (g.dominion) dominionMode.sync(Tactics, g);
-    else if (g.battlefield) battlefieldMode.sync(Tactics, g);
+    if (g.battlefield) battlefieldMode.sync(Tactics, g);
     else if (!g.mission && (!alive[0] || !alive[1])) g.winner = alive[0] ? 0 : 1;
-    if (g.dominion) dominionMode.advance(Tactics, g);
     if (g.battlefield) battlefieldMode.advance(Tactics, g);
   }
   // 待机不阻止自动结束；仍可使用脱出等非攻击技能时保留行动机会。
@@ -12513,11 +11655,8 @@ const Tactics = (() => {
     if (route && !route.has(key(u.x, u.y))) {
       // A nearer post can be on another island or behind an impassable ridge.
       // Choose a reachable mission instead of marching into that shoreline forever.
-      const field = g.campaignBattlefield;
       const points = aiTactics.captureCapable(Tactics, u)
-        ? field
-          ? field.layout.nodes.filter((point) => field.owners[point.id] !== u.team)
-          : (g.battlefield?.points || []).filter((point) => point.owner !== u.team)
+        ? (g.battlefield?.points || []).filter((point) => point.owner !== u.team)
         : [];
       const alternatives = [
         ...points.map((goal) => ({ goal, occupation: true })),
@@ -12778,8 +11917,6 @@ const Tactics = (() => {
         LargeUnit: "大型",
       })[tag] || tag,
     hangars,
-    campaignBattlefield,
-    dominionMode,
     aiTactics,
     W,
     getMap,
@@ -12805,7 +11942,6 @@ const Tactics = (() => {
     aiUnitBans,
     makeUnit,
     placementQuery,
-    campaignRoomSettings,
     defaultRoomSettings,
     formationStyle,
     sweepMapId,

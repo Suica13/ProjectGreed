@@ -1,224 +1,26 @@
-const test = require("node:test"), assert = require("node:assert/strict");
-const G = require("../shared/rules.js"), C = require("../shared/campaign.js");
-const A = G.aiTactics, ctx = { G, world: G.catalog.scenarios.earth_0079_mid.world,
-  production: require("../shared/production-data.cjs"), development: require("../shared/development.js") };
-function battle(ownCount, enemyCount, strategic = true, defender = false) {
-  const state = C.create(ctx, [{seat:0},{seat:1}]);
-  const mapId = G.catalog.scenarios.earth_0079_mid.regions.canada_east.mapId;
-  const formations = Array(10).fill(null);
-  formations[0] = [{unitId:"Type61",kitId:"standard"}];
-  formations[1] = [{unitId:"Type61",kitId:"standard"}];
-  const game = G.create(false, 1, formations, false, {...G.campaignRoomSettings(), mapId});
-  const source = game.units[0], ownTeam = defender ? 0 : 1;
-  game.units = [];
-  for (const [team,count] of [[ownTeam,ownCount],[1-ownTeam,enemyCount]])
-    for (let i=0;i<count;i++) game.units.push({...source,id:team+"-"+i,team,ownerSeat:team,
-      x:team===ownTeam?10:70,y:20+i});
-  game.team = ownTeam;
-  if (strategic) game.campaignBattlefield = G.campaignBattlefield.create(G,state,"canada_east");
-  return { game, unit:game.units[0] };
+const test=require('node:test'),assert=require('node:assert/strict');
+const G=require('../shared/rules'),A=G.aiTactics;
+function battle(ownCount,enemyCount){
+ const armies=Array(G.getMap().spawns.length).fill(null);armies[0]=armies[1]=[{unitId:'Type61',kitId:'standard'}];
+ const game=G.create(false,1,armies,false,{costLimit:99999}),source=game.units[0];game.units=[];
+ for(const [team,count]of [[0,ownCount],[1,enemyCount]])for(let i=0;i<count;i++)
+  game.units.push({...source,id:team+'-'+i,team,ownerSeat:team,x:team?40:10,y:20+i});
+ game.team=0;return {game,unit:game.units[0]};
 }
-test("tactical FSM gathers weak attackers, advances at parity and overruns with a large advantage",()=>{
-  for(const [a,b,state] of [[1,4,"gather"],[4,4,"advance"],[8,2,"overrun"]]) {
-    const {game,unit}=battle(a,b); assert.equal(A.decide(G,game,unit).state,state);
-  }
-  const {game,unit}=battle(4,4);
-  const decision=A.decide(G,game,unit);
-  assert.equal(A.decide(G,game,game.units[1]),decision,"one shared decision per AI per phase");
-  assert.equal(decision.goal.kind,"outpost","capture along the base approach instead of rushing past posts");
+test('encounter AI advances without waiting for retired strategic reinforcement rules',()=>{
+ const {game,unit}=battle(2,8);assert.equal(A.decide(G,game,unit).state,'advance');
+ const strong=battle(8,2);assert.equal(A.decide(G,strong.game,strong.unit).state,'overrun');
 });
-test("defenders are conservative and encounter AI never waits for strategic reinforcements",()=>{
-  let f=battle(4,4,true,true); assert.equal(A.decide(G,f.game,f.unit).state,"defend");
-  f=battle(8,2,true,true); assert.equal(A.decide(G,f.game,f.unit).state,"overrun");
-  f=battle(2,8,false); assert.equal(A.decide(G,f.game,f.unit).state,"advance");
+test('one tactical decision is shared per controller and phase',()=>{
+ const {game,unit}=battle(4,4),decision=A.decide(G,game,unit);
+ assert.equal(A.decide(G,game,game.units[1]),decision);game.round++;
+ assert.notEqual(A.decide(G,game,unit),decision);
 });
-test("flank groups choose opposite approach sides while easy difficulty keeps a direct approach",()=>{
-  const {game,unit}=battle(4,4,false); game.aiOptions=A.settings({difficulty:"hard"});
-  for(const actor of game.units) actor.y=20;
-  const d=A.decide(G,game,unit); assert.equal(d.state,"flank");
-  const top={x:60,y:16},bottom={x:60,y:24};
-  assert(A.positionScore(G,game,unit,top,d)>A.positionScore(G,game,unit,bottom,d));
-  assert(A.positionScore(G,game,game.units[1],bottom,d)>A.positionScore(G,game,game.units[1],top,d));
-  const easy=battle(4,4,false); easy.game.aiOptions=A.settings({difficulty:"easy"});
-  assert.equal(A.decide(G,easy.game,easy.unit).state,"advance");
-});
-test("campaign options validate allowed values, scale starting funds and technology income, and survive archives",()=>{
-  const players=[{seat:0},{seat:1}];
-  const options={difficulty:"hard",aggression:"low",teams:[{research:1.25,durability:1.25,resources:2},{research:0.75,durability:0.75,resources:0.25}]};
-  const state=C.create(ctx,players,{campaignOptions:options});
-  assert.equal(state.teams[0].money,ctx.world.settings.startingMoney*2);
-  assert.equal(state.teams[1].supplies,ctx.world.settings.startingSupplies*0.25);
-  state.units=[];
-  const tech=state.teams.map((t)=>t.technology);
-  C.advance(ctx,state,players);
-  for(const team of [0,1]) {
-    const bases=ctx.world.regions.filter((r)=>r.factory&&r.owner===team).length;
-    assert.equal(state.teams[team].technology-tech[team],bases*Math.floor(100*options.teams[team].research*1.25));
-  }
-  const imported=C.validate(ctx,JSON.parse(JSON.stringify(state)),players);
-  assert.deepEqual(imported.options,A.settings(options));
-  assert.throws(()=>A.settings({difficulty:"cheat"}));
-  assert.throws(()=>A.settings({teams:[{durability:2},{}]}));
-  assert.throws(()=>A.settings({teams:[{resources:100},{}]}));
-});
-test("durability scaling changes HP only, leaving weapons, movement and AP unchanged",()=>{
-  const {unit}=battle(1,1);
-  const base=G.modelOf(unit), adjusted=G.modelOf({...unit,campaignDurability:1.25});
-  assert.equal(adjusted.hp,Math.ceil(base.hp*1.25));
-  assert.equal(adjusted.weapons,base.weapons);
-  assert.equal(adjusted.ap,base.ap); assert.equal(adjusted.move,base.move);
-});
-test("strategic AI uses multiple factories and does not dispatch tiny groups into hostile territory",()=>{
-  const players=[{seat:0,bot:true},{seat:1,bot:false}];
-  const state=C.create(ctx,players); state.teams[0].money=100000;state.teams[0].supplies=100000;
-  for(const unit of state.units.filter((u)=>u.team===0)) unit.ownerSeat=0;
-  const units=state.units.filter((u)=>u.team===0), before=units.length;
-  C.advance(ctx,state,players);
-  assert(new Set(state.orders.filter((o)=>o.team===0).map((o)=>o.region)).size>1 ||
-    state.units.filter((u)=>u.team===0).length>before+1);
-  assert(state.teams[0].money>=0&&state.teams[0].supplies>=0);
-  for(const unit of units) {
-    const region=ctx.world.regions.find((r)=>r.id===unit.region);
-    if(region.owner!==0) assert(units.filter((u)=>u.region===region.id).length>=4);
-  }
-});
-
-for (const [label, ids, expectOrders] of [
-  ["rejects cheap space units in favor of terrestrial units", ["RB_79", "RGM_79_G_SPACE", "RX_78GP01_FB", "Type61"], true],
-  ["does not produce space units when there is no terrestrial choice", ["RB_79", "RGM_79_G_SPACE", "RX_78GP01_FB"], false],
-  ["still produces atmospheric aircraft", ["FF_B2"], true],
-]) test(`Earth campaign AI ${label}`, () => {
-  const members = [{seat:0,bot:true},{seat:1}];
-  const state = C.create(ctx,members);
-  state.units = [];
-  state.teams[0].researched = ctx.development.nodes("EFSF").map(node => node.id);
-  state.teams[0].money = state.teams[0].supplies = 1000000;
-  const rules = Object.create(G);
-  rules.catalog = {...G.catalog, prefabs:G.catalog.prefabs.filter(prefab => ids.includes(prefab.id))};
-  const local = {...ctx,G:rules};
-  const before = [state.teams[0].money,state.teams[0].supplies];
-  A.strategic(local,state,members,{
-    busy:()=>false,disputed:()=>false,available:C.available,
-    controller:(_,unit)=>unit.ownerSeat,startResearch:()=>{},
-    // Force unsuitable space designs to win the old cost/efficiency scoring.
-    quote:(context,id)=>{
-      const quote = C.quote(context,id);
-      if (!quote) return null;
-      const model = G.models[id+"__"+quote.kitId];
-      return {...quote,money:model.adaptability.ground<100?0:10000,supplies:0};
-    },
-    charge:(pool,quote)=>{pool.money-=quote.money;pool.supplies-=quote.supplies;return true;},
-  });
-  assert.equal(state.orders.length>0,expectOrders);
-  for (const order of state.orders) {
-    const model = G.models[order.unitId+"__"+order.kitId];
-    assert(model.adaptability.ground>=100,order.unitId);
-    if (ids.length===1) assert.equal(order.unitId,"FF_B2");
-  }
-  if (!expectOrders) assert.deepEqual([state.teams[0].money,state.teams[0].supplies],before);
-});
-
-test("escape and separation successors inherit the team's durability multiplier",()=>{
-  const game=G.create(false,1,[[{unitId:"MTank",kitId:"standard"}],[{unitId:"RGM_79",kitId:"beam_spray"}]],false,
-    {costLimit:99999,unitCostLimit:10000});
-  game.tiles.forEach((row)=>row.fill("plain"));
-  const unit=game.units[0];
-  Object.assign(unit,{x:10,y:10,campaignDurability:1.25});
-  G.useSkill(game,unit,"ExitUnit",11,10);
-  for(const actor of game.units.filter((u)=>u.team===0)) {
-    assert.equal(actor.campaignDurability,1.25);
-    assert.equal(actor.hp,G.modelOf(actor).hp);
-  }
-});
-
-
-test("strategic attack cadence is halved at every aggression setting", () => {
-  const members = [{seat:0,bot:true},{seat:1}];
-  const seed = C.create(ctx,members);seed.units=[];
-  for(let i=0;i<8;i++) C.addUnit(ctx,seed,0,"canada","Type61");
-  const world={...ctx.world,regions:[
-    {...ctx.world.regions.find(r=>r.id==="canada"),links:["new_york"],factory:false},
-    {...ctx.world.regions.find(r=>r.id==="new_york"),links:["canada"],factory:false},
-  ]};
-  for(const [aggression,expected] of [["low",1],["normal",2],["high",3]]) {
-    let attacks=0;
-    for(let turn=1;turn<=6;turn++) {
-      const state=structuredClone(seed);state.turn=turn;state.options=A.settings({aggression});
-      A.strategic({...ctx,world},state,members,{
-        busy:()=>false,disputed:()=>false,available:()=>false,controller:(_,u)=>u.ownerSeat,
-        startResearch:()=>{},quote:()=>null,
-      });
-      if(state.units.some(u=>u.moveTo==="new_york")) attacks++;
-    }
-    assert.equal(attacks,expected,aggression);
-  }
-});
-
-function strategicOrders(state, members, world = ctx.world) {
-  A.strategic({...ctx, world}, state, members, {
-    busy:()=>false, disputed:()=>false, available:()=>false,
-    controller:(_,u)=>u.ownerSeat, startResearch:()=>{}, quote:()=>null,
-  });
-}
-
-test("325 COST eastern Canada does not assault New York's reduced starting core garrison", () => {
-  const members=[{seat:0,bot:true},{seat:1}];
-  const state=C.create(ctx,members);state.turn=3;
-  const own=state.units.filter(u=>u.region==="canada_east");
-  const cost=units=>units.reduce((n,u)=>n+G.models[u.unitId+"__"+u.kitId].cost,0);
-  assert.equal(cost(own),325);
-  assert.equal(cost(state.units.filter(u=>u.region==="new_york")),850);
-  strategicOrders(state,members);
-  assert(own.every(u=>u.moveTo!=="new_york"));
-  assert(own.filter(u=>!u.moveTo).length>=2,"frontier keeps a garrison");
-});
-
-test("border assaults retain defenders and cheap actor count cannot substitute for COST", () => {
-  const members=[{seat:0,bot:true},{seat:1}];
-  const state=C.create(ctx,members);state.units=[];state.turn=3;
-  for(let i=0;i<10;i++) C.addUnit(ctx,state,0,"canada_east","Type61");
-  for(let i=0;i<3;i++) C.addUnit(ctx,state,1,"new_york","MS_06F");
-  const world={...ctx.world,regions:[
-    {...ctx.world.regions.find(r=>r.id==="canada_east"),links:["new_york"],factory:false},
-    {...ctx.world.regions.find(r=>r.id==="new_york"),links:["canada_east"],factory:false},
-  ]};
-  strategicOrders(state,members,world);
-  assert(state.units.filter(u=>u.team===0).every(u=>!u.moveTo),"weak vehicle swarm stays home");
-  state.units=state.units.filter(u=>u.team===0);
-  strategicOrders(state,members,world);
-  assert(state.units.some(u=>u.moveTo==="new_york"),"a viable attack is still possible");
-  assert(state.units.filter(u=>!u.moveTo).length>=2);
-  const stayingCost=state.units.filter(u=>!u.moveTo).reduce((n,u)=>n+G.models[u.unitId+"__"+u.kitId].cost,0);
-  assert(stayingCost>=125,"at least a quarter of force stays on the frontier");
-});
-
-test("Canadian local gates use current strategic ownership rather than fixed team colors", () => {
-  const state=C.create(ctx,[{seat:0},{seat:1}]);
-  assert.equal(state.regions.find(r=>r.id==="canada").owner,0);
-  assert.equal(state.regions.find(r=>r.id==="canada_east").owner,0);
-  let field=G.campaignBattlefield.create(G,state,"canada");
-  assert.equal(field.adjacentOwners.canada_east,0);
-  state.regions.find(r=>r.id==="canada_east").owner=1;
-  field=G.campaignBattlefield.create(G,state,"canada");
-  assert.equal(field.adjacentOwners.canada_east,1,"red means that adjacent region has been captured");
-});
-
-
-test("aircraft bypass occupation goals while ground units keep capturing and transports deliver cargo",()=>{
- const {game,unit}=battle(4,4);
- const aircraft={...unit,id:"air",model:Object.keys(G.models).find(id=>id.startsWith("FF_B2__"))};
- game.units.push(aircraft);
- const shared=A.decide(G,game,aircraft),air=A.forUnit(G,game,aircraft,shared);
- assert.equal(air.avoidObjective,true);assert.notEqual(air.goal.kind,"outpost");
- const post=game.campaignBattlefield.layout.nodes.find(n=>n.kind==="outpost");
- const inside={x:post.x,y:post.y},outside={x:post.x+3,y:post.y};
- assert(A.positionScore(G,game,aircraft,outside,air)>A.positionScore(G,game,aircraft,inside,air));
- assert.equal(A.captureCapable(G,unit),true);assert.equal(A.captureCapable(G,aircraft),false);
- const transport={...unit,id:"transport",model:Object.keys(G.models).find(id=>id.startsWith("Medea__"))};
- game.units.push(transport);
- const passenger={...unit,id:"passenger",embarked:{carrierId:transport.id},hp:G.modelOf(unit).hp,en:G.modelOf(unit).en};
- game.units.push(passenger);
- const delivery=A.forUnit(G,game,transport,shared);
- assert(delivery.goal.kind==="outpost"||delivery.goal.kind==="base");
- assert.equal(delivery.avoidObjective,true);
+test('flank groups choose opposite sides while easy difficulty keeps a direct approach',()=>{
+ const {game,unit}=battle(4,4);game.aiOptions=A.settings({difficulty:'hard'});for(const u of game.units)u.y=20;
+ const d=A.decide(G,game,unit);assert.equal(d.state,'flank');
+ const top={x:35,y:16},bottom={x:35,y:24};
+ assert(A.positionScore(G,game,unit,top,d)>A.positionScore(G,game,unit,bottom,d));
+ assert(A.positionScore(G,game,game.units[1],bottom,d)>A.positionScore(G,game,game.units[1],top,d));
+ const easy=battle(4,4);easy.game.aiOptions=A.settings({difficulty:'easy'});assert.equal(A.decide(G,easy.game,easy.unit).state,'advance');
 });

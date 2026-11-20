@@ -3,6 +3,7 @@
 const Economy = (() => {
   const pilots = typeof PilotSystem !== "undefined" ? PilotSystem : require("./pilots.js");
   const saveCodec = typeof SaveCodec !== "undefined" ? SaveCodec : require("./save-codec.js");
+  const warehouse = typeof Warehouse !== "undefined" ? Warehouse : require("./warehouse.js");
   const key = "projectgreed.economy.v1";
   const catalog =
     typeof PRODUCTION_CATALOG !== "undefined"
@@ -37,11 +38,9 @@ const Economy = (() => {
   function initial() {
     const inventory = {},
       kits = {};
-    for (const entry of starter.units) {
-      inventory[entry.unitId] = (inventory[entry.unitId] || 0) + starter.stockSets;
-    }
     return {
-      schemaVersion: 3,
+      schemaVersion: 4,
+      storage: warehouse.empty(),
       inventory,
       kits,
       money: starter.money,
@@ -52,6 +51,7 @@ const Economy = (() => {
   }
   function validate(value) {
     if (value === undefined) return initial();
+    if (value?.schemaVersion > 4) throw Error("经济存档来自更新的版本，无法读取");
     if (
       !value ||
       !Number.isSafeInteger(value.money) ||
@@ -60,7 +60,11 @@ const Economy = (() => {
       value.supplies < 0
     )
       throw Error("资金、物资或部署许可无效");
-    const stock = normalizeStock(value);
+    // All pre-warehouse profiles start with empty physical stock, including imported backups.
+    const stock = normalizeStock(value.schemaVersion === 4 ? value : {});
+    const storage = warehouse.normalize(value.schemaVersion === 4 ? value.storage : null,
+      modelsForUnits(), stock.inventory, defaultKit);
+    stock.inventory = warehouse.counts(storage);
     const owned = value.licenses;
     if (!owned || typeof owned !== "object" || Array.isArray(owned)) throw Error("部署许可无效");
     const licenses = defaultLicenses();
@@ -87,7 +91,8 @@ const Economy = (() => {
     return {
       money: value.money,
       supplies: value.supplies,
-      schemaVersion: 3,
+      schemaVersion: 4,
+      storage,
       licenses,
       ...stock,
       crewStock: pilots.normalizeCrewStock(value.crewStock),
@@ -106,7 +111,7 @@ const Economy = (() => {
             ? ProfileMigrations
             : require("./profile-migrations.js");
         state = validate(migrations.economy(parsed));
-        if (parsed.schemaVersion !== 3 || parsed.licenses === undefined) {
+        if (parsed.schemaVersion !== 4 || parsed.licenses === undefined) {
           const backupKey = key + ".before-counted-stock";
           if (localStorage.getItem(backupKey) === null) localStorage.setItem(backupKey, saved);
           localStorage.setItem(key, saveCodec.stringify(state));
@@ -329,13 +334,42 @@ const Economy = (() => {
   function mayProduce(unitId, faction) {
     return ownsLicense(unitId) && available(licenseOffer(unitId), faction);
   }
-  function produce(unitId, kitId, faction) {
+  function produce(unitId, kitId, faction, slot) {
     const offer = productionOffer(unitId, kitId);
     if (!offer || !mayProduce(unitId, faction) || !affordable(offer)) return false;
+    if (!canStore(unitId, kitId)) throw Error("机库或船坞已满");
     const next = snapshot();
+    const model = modelsForUnits()[unitId + "__" + kitId], kind = warehouse.category(model);
+    if (slot === undefined) slot = warehouse.freeSlot(next.storage, kind);
+    if (!Number.isInteger(slot) || slot < 0 || slot >= storageUsage(kind).slots || next.storage[kind].some(item => item.slot === slot))
+      throw Error("该格子已被占用，请选择其他空位");
     next.money -= offer.money;
     next.supplies -= offer.supplies;
     next.inventory[unitId] = quantity(unitId) + 1;
+    next.storage[kind].push({ id: "stored-" + ++next.storage.serial, unitId, kitId, slot });
+    return commit(next);
+  }
+  function canStore(unitId, kitId = defaultKit(unitId)) {
+    const model = modelsForUnits()[unitId + "__" + kitId];
+    return !!model && warehouse.fits(state.storage, model, modelsForUnits());
+  }
+  function storageUsage(kind) { return warehouse.usage(state.storage, modelsForUnits(), kind); }
+  function changeStoredKit(id, kitId) {
+    const next = snapshot(), item = [...next.storage.units, ...next.storage.ships].find(i => i.id === id);
+    if (!item || !modelsForUnits()[item.unitId + "__" + kitId]) return false;
+    item.kitId = kitId;
+    return commit(next);
+  }
+  function receiveDeliveries() {
+    const next = snapshot(), remaining = [];
+    for (const item of next.storage.deliveries) {
+      const model = modelsForUnits()[item.unitId + "__" + item.kitId];
+      if (warehouse.fits(next.storage, model, modelsForUnits())) {
+        next.storage[warehouse.category(model)].push({ ...item, id: "stored-" + ++next.storage.serial, slot: warehouse.freeSlot(next.storage, warehouse.category(model)) });
+        next.inventory[item.unitId] = (next.inventory[item.unitId] || 0) + 1;
+      } else remaining.push(item);
+    }
+    next.storage.deliveries = remaining;
     return commit(next);
   }
   function saleOffer(unitId) {
@@ -398,6 +432,9 @@ const Economy = (() => {
       if (item.kind === "licenses") grantPurchasedLicense(next, item.id);
       else next[item.kind][item.id] = (next[item.kind][item.id] || 0) + item.count;
     }
+    const simulated = warehouse.normalize(next.storage, modelsForUnits(), next.inventory, defaultKit);
+    if (simulated.deliveries.length > state.storage.deliveries.length)
+      return { ok: false, reason: "storage", units: plan.items.map(item => item.unitId), plan };
     return { ok: commit(next), plan };
   }
   function baseModel(unitId) {
@@ -475,6 +512,7 @@ const Economy = (() => {
     return commit(next);
   }
   return {
+    canStore, storageUsage, changeStoredKit, receiveDeliveries,
     transformStock,
     key,
     catalog,
@@ -485,13 +523,15 @@ const Economy = (() => {
     unitOffer,
     productionOffer,
     productionTiming,
+    available,
+    mayProduce,
     produce,
     saleOffer,
     sellUnit,
     purchasePlan,
     purchaseMissingStock,
     initial,
-    starterFormation: () => structuredClone(starter.units),
+    starterFormation: () => [],
     errorMessage,
     validate,
     snapshot,

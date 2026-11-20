@@ -5,7 +5,7 @@ const E = require('../shared/battle-economy');
 const B = G.battlefieldMode;
 const S = require('../shared/sweep-mode');
 const M = require('../shared/mission-mode');
-const Campaign = require('../shared/campaign');
+
 
 test('mercenary entry money doubles at every era/scale while technology is unchanged', () => {
   for (const preset of B.roomPresets) {
@@ -57,7 +57,7 @@ test('sweep node growth and per-resource activity multipliers use 1000/1500 and 
   }
 });
 
-test('mission bonuses and strategic region income derive supplies from money', () => {
+test('mission bonuses derive supplies from money', () => {
   const mission={rewards:{money:2000,supplies:9999,inventory:{Type61:2},bonuses:[
     {event:'extra',money:2000,supplies:1,inventory:{RB_79:1}}]}};
   const room={settings:{mapId:'test'},game:{winner:0,mission:{fired:['extra']}}};
@@ -65,7 +65,5 @@ test('mission bonuses and strategic region income derive supplies from money', (
     money:4000,supplies:6000,inventory:{Type61:2,RB_79:1}});
   room.game.winner=1;
   assert.deepEqual(M.reward(room,{getMap:()=>({mission})}),{money:0,supplies:0,inventory:{}});
-  const ctx={world:{regions:[{id:'test'}],settings:{ordinaryIncome:{money:250,supplies:9999,technology:25}}}};
-  const income=Campaign.regionIncome(ctx,{regions:[{id:'test',owner:0}],options:{teams:[{research:2}]}},'test');
-  assert.deepEqual(income,{money:250,supplies:375,technology:50});
+
 });

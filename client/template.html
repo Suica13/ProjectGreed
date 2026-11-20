@@ -2426,11 +2426,7 @@
               </optgroup>
               <optgroup label="战场模式">
                 <option value="battlefield">雇佣兵战争模式</option>
-                <option value="dominion">占山为王模式</option>
                 <option value="quick">快速战模式</option>
-              </optgroup>
-              <optgroup label="策略模式">
-                <option value="campaign" disabled>历史战役模式</option>
               </optgroup>
             </select></label>
             <div class="net-buttons">
@@ -2587,7 +2583,6 @@
                       aria-describedby="roomMapChoiceHint"
                     ></select>
                   </div>
-                  <select id="roomScenarioSelect" aria-label="选择剧本" hidden><option value="earth_0079_mid">地球攻略战[0079中期]</option></select>
                   <div class="room-map-choice">
                     <canvas
                       id="roomMapPreview"
@@ -2609,11 +2604,7 @@
               </optgroup>
               <optgroup label="战场模式">
                 <option value="battlefield">雇佣兵战争模式</option>
-                <option value="dominion">占山为王模式</option>
                 <option value="quick">快速战模式</option>
-              </optgroup>
-              <optgroup label="策略模式">
-                <option value="campaign" disabled>历史战役模式</option>
               </optgroup>
                       </select></label></div>
                   </div>
@@ -5166,11 +5157,7 @@
               </optgroup>
               <optgroup label="战场模式">
                 <option value="battlefield">雇佣兵战争模式</option>
-                <option value="dominion">占山为王模式</option>
                 <option value="quick">快速战模式</option>
-              </optgroup>
-              <optgroup label="策略模式">
-                <option value="campaign" disabled>历史战役模式</option>
               </optgroup>
           </select></label>
         <label class="settings-toggle">密码锁<input id="newRoomLocked" type="checkbox" /></label>
@@ -5303,7 +5290,7 @@
         <div class="shell-brand"><strong>PROJECT GREED</strong><small>TACTICAL OPERATIONS / __PROJECT_VERSION__</small></div>
         <nav class="shell-primary" aria-label="主分页">
           <button id="shellLobby" type="button" data-shell-section="lobby" aria-pressed="true"><span>大厅</span><small data-i18n-ignore>LOBBY</small></button>
-          <button id="shellHangar" type="button" data-shell-section="hangar" aria-pressed="false"><span>机库</span><small data-i18n-ignore>HANGAR</small></button>
+          <button id="shellHangar" type="button" data-shell-section="hangar" aria-pressed="false"><span>基地</span><small data-i18n-ignore>BASE</small></button>
           <button id="shellMissions" type="button" data-shell-section="missions" aria-pressed="false" disabled><span>任务</span><small data-i18n-ignore>MISSIONS</small></button>
           <button id="shellRecords" type="button" data-shell-section="records" aria-pressed="false"><span>回放</span><small data-i18n-ignore>RECORDS</small></button>
         </nav>
@@ -5378,11 +5365,10 @@
       __BATTLEFIELD_CLIMATE__
       __UNIT_SENSORS__;
       __AI_TACTICS__;
+      __SITE_CONTROL__;
       __BATTLEFIELD_MODE__;
-      __DOMINION_MODE__;
       __SWEEP_MODE__;
       __NORMAL_FORMS__;
-      __CAMPAIGN_BATTLEFIELD__;
       __AUTOMATIC_FIRE__
     __ARMOR_COATINGS__;
     __CORE__;
@@ -5417,9 +5403,6 @@
       __MATCH_RECORDS__;
       __BATTLE_ECONOMY__;
       __MOVEMENT_TIMING__;
-      __CAMPAIGN_PILOTS__;
-      __CAMPAIGN_RULES__;
-      __CAMPAIGN_ROOM__;
       __MISSION_MODE__;
       __ROOM_ENGINE__;
       __PLANNING_UI__;
@@ -5451,7 +5434,6 @@
       __SFS_UI__;
       __BATTLE_HUD__;
       __BATTLEFIELD_UI__;
-      __DOMINION_UI__;
       __SWEEP_UI__;
       __MISSION_UI__;
       __REPLAY_PLAYER__;

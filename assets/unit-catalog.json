@@ -658,9 +658,7 @@
     "maps/missions/bunker.json",
     "maps/missions/burning_city.json",
     "maps/missions/sleepless_raid.json",
-    "maps/missions/shuttle_defense.json",
-    "maps/dominion/highlands.json"
+    "maps/missions/shuttle_defense.json"
   ],
-  "defaultMap": "frontier_1v1",
-  "scenarioIndex": "maps/strategy/index.json"
+  "defaultMap": "frontier_1v1"
 }

@@ -5,9 +5,9 @@ window.MenuShell = (() => {
   const sectionFor = (view) =>
     ({
       menu: "lobby",
-      campaign: "lobby",
       room: "lobby",
       formation: "hangar",
+      warehouse: "hangar",
       production: "hangar",
       development: "hangar",
       encyclopedia: "hangar",
@@ -18,16 +18,6 @@ window.MenuShell = (() => {
     if (pageView === "formation") byId("saveFormation").click();
   }
   function go(view) {
-    if (
-      Net.snapshot?.campaign &&
-      !Net.started &&
-      ["formation", "pilots", "production", "development"].includes(view)
-    ) {
-      window.CampaignUI?.open(
-        view === "production" ? "production" : view === "development" ? "research" : "units",
-      );
-      return;
-    }
     if (navigating || (Net.started && Net.snapshot?.phase !== "assembly")) return;
     navigating = true;
     try {
@@ -40,7 +30,8 @@ window.MenuShell = (() => {
       } else {
         if (pageView === view) return;
         leaveEditor();
-        if (view === "production") byId("openProduction").click();
+        if (view === "warehouse") WarehouseUI.open();
+        else if (view === "production") byId("openProduction").click();
         else if (view === "development") byId("openDevelopment").click();
         else if (view === "encyclopedia") Encyclopedia.open();
         else {
@@ -63,7 +54,6 @@ window.MenuShell = (() => {
   }
   function refresh() {
     const inBattle =
-      pageView === "campaign" ||
       pageView === "game" ||
       (Net.started && Net.snapshot?.phase !== "assembly");
     shell.hidden = inBattle;
@@ -85,8 +75,6 @@ window.MenuShell = (() => {
       button.setAttribute("aria-pressed", String(button.dataset.shellSection === section));
     const tabs = [];
     if (section === "lobby") {
-      if (Net.snapshot?.campaign)
-        tabs.push(tab("战略地图", () => window.CampaignUI?.open(), pageView === "campaign"));
       tabs.push(tab("作战大厅", () => go("menu"), pageView === "menu"));
       tabs.push(tab("当前房间", () => go("room"), pageView === "room", !Net.active));
       tabs.push(
@@ -103,14 +91,18 @@ window.MenuShell = (() => {
         .classList.toggle("has-unclaimed", Number(byId("openServerActivities").dataset.unread) > 0);
     } else if (section === "hangar") {
       const pilots = pageView === "formation" && byId("formationMain").dataset.page === "pilots";
+      tabs.push(tab("格纳库", () => go("warehouse"), pageView === "warehouse"));
+      tabs.at(-1).id = "shellWarehouse";
       tabs.push(tab("编组", () => go("formation"), pageView === "formation" && !pilots));
+      tabs.at(-1).id = "shellFormation";
       tabs.push(tab("驾驶员", () => go("pilots"), pilots));
+      tabs.at(-1).id = "shellPilots";
       tabs.push(tab("生产车间", () => go("production"), pageView === "production"));
-      tabs[2].id = "shellProduction";
+      tabs.at(-1).id = "shellProduction";
       tabs.push(tab("开发", () => go("development"), pageView === "development"));
-      tabs[3].id = "shellDevelopment";
+      tabs.at(-1).id = "shellDevelopment";
       tabs.push(tab("图鉴", () => go("encyclopedia"), pageView === "encyclopedia"));
-      tabs[4].id = "shellEncyclopedia";
+      tabs.at(-1).id = "shellEncyclopedia";
     } else {
       tabs.push(tab("回放文件", () => byId("openReplayFile").click()));
     }
@@ -156,7 +148,7 @@ window.MenuShell = (() => {
   byId("start").removeAttribute("aria-modal");
   byId("start").setAttribute("role", "region");
   byId("shellLobby").onclick = () => go(Net.active ? "room" : "menu");
-  byId("shellHangar").onclick = () => go("formation");
+  byId("shellHangar").onclick = () => go("warehouse");
   byId("shellRecords").onclick = () => go("records");
   byId("shellSettings").onclick = () => byId("openClientSettings").click();
   byId("shellRoomStatus").onclick = () => go("room");

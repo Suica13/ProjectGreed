@@ -56,8 +56,10 @@ function setPageView(view) {
   byId("developmentScreen").hidden = view !== "development";
   byId("productionScreen").hidden = view !== "production";
   byId("encyclopediaScreen").hidden = view !== "encyclopedia";
+  if (byId("warehouseScreen")) byId("warehouseScreen").hidden = view !== "warehouse";
   byId("roomSettings").hidden = !Net.active;
   window.MenuShell?.refresh();
+  window.WarehouseUI?.render();
   Chat.restoreScroll();
   if (view !== "game")
     for (const id of ["reaction", "battle", "victory", "help"]) byId(id).hidden = true;
@@ -65,7 +67,6 @@ function setPageView(view) {
   window.SFSUI?.refresh();
   window.BattleHUD?.refresh();
   window.BattlefieldUI?.refresh();
-  window.DominionUI?.refresh();
   if (view === "game") startRendering();
   else if (!window.isLayoutPreview) {
     cancelAnimationFrame(animationFrameId);
@@ -460,7 +461,6 @@ function playerHasActions() {
 }
 function updateContents() {
   // Receipts/errors can clear awaiting without applying a new battle snapshot.
-  window.CampaignUI?.refreshBattleControls();
   namedTextNames = null;
   const pendingMove = pendingMovement();
   if (!pendingMove && mode === "move-confirm") mode = "select";
@@ -483,10 +483,7 @@ function updateContents() {
   Chat.refreshStatus();
   const busy = isBusy(),
     u = getUnit(selected);
-  const campaignBattle = Net.snapshot?.campaign;
-  byId("turnBadge").textContent = campaignBattle?.startRound
-    ? `局地战 ${Math.min(game.round - campaignBattle.startRound + 1, campaignBattle.stopRound - campaignBattle.startRound)} / ${campaignBattle.stopRound - campaignBattle.startRound}回合 · ${I18n.text("队伍")}${game.team + 1}`
-    : `第${game.round}回合 · ${I18n.text("队伍")}${game.team + 1}`;
+  byId("turnBadge").textContent = `第${game.round}回合 · ${I18n.text("队伍")}${game.team + 1}`;
   byId("turnBadge").style.color = game.team ? "var(--red)" : "var(--blue)";
   byId("phaseTitle").textContent = ({ deployment:"部署阶段", moving:"移动阶段", reaction:"应战阶段",
     battle:"交战阶段", victory:"战斗结束" })[phase] || "行动阶段";
@@ -505,7 +502,7 @@ function updateContents() {
   );
   byId("modeLabel").textContent = Net.active
     ? (Net.local ? "离线" : "联机") +
-      ({ dominion: "占山为王模式", mission: "任务模式", sweep: "战场扫荡", battlefield: "雇佣兵战争模式", campaign: "历史战役模式", quick: "快速战", regular: "常规战" }[Net.snapshot?.settings?.mode] || "常规战") +
+      ({ mission: "任务模式", sweep: "战场扫荡", battlefield: "雇佣兵战争模式", quick: "快速战", regular: "常规战" }[Net.snapshot?.settings?.mode] || "常规战") +
       " · " +
       Net.roleName()
     : "常规战";
@@ -552,7 +549,6 @@ function updateContents() {
   window.SFSUI?.refresh();
   window.BattleHUD?.refresh();
   window.BattlefieldUI?.refresh();
-  window.DominionUI?.refresh();
   TurnFlow.refreshAutoEnd();
 }
 // 左侧只按当前视角显示我军；观战者可查看两队，每名所有者单独成组。
@@ -1689,64 +1685,6 @@ function mapMinovskyCells() {
 }
 
 // 地图画布：先画地形与范围，再画单位、血条和名称。now 是毫秒时间。
-function drawCampaignSupply(ctx, ox, oy, tile) {
-  const field = game.campaignBattlefield,
-    net = Rules.campaignBattlefield.network(game);
-  if (!field || !net) return;
-  const color = (team) => (team === 0 ? "#68c7ff" : team === 1 ? "#ff7789" : "#ffffff");
-  const screen = (node) => ({ x: ox + (node.x + 0.5) * tile, y: oy + (node.y + 0.5) * tile });
-  ctx.save();
-  for (const line of net.lines) {
-    const a = screen(line.a),
-      b = screen(line.b);
-    ctx.strokeStyle = color(line.team);
-    ctx.lineWidth = Math.max(1, tile * 0.08);
-    ctx.beginPath();
-    ctx.moveTo(a.x, a.y);
-    ctx.lineTo(b.x, b.y);
-    ctx.stroke();
-  }
-  for (const node of net.nodes) {
-    const p = screen(node),
-      team = node.region ? field.adjacentOwners[node.region] : field.owners[node.id];
-    ctx.strokeStyle = color(team);
-    ctx.lineWidth = Math.max(1.5, tile * 0.1);
-    ctx.fillStyle = "#101923bb";
-    const areaRadius = node.region ? node.radius : 1;
-    const areaSize = tile * (areaRadius * 2 + 1);
-    ctx.strokeRect(p.x - areaSize / 2, p.y - areaSize / 2, areaSize, areaSize);
-    if (!node.region) {
-      ctx.save();
-      ctx.globalAlpha = 0.3;
-      ctx.lineWidth = Math.max(0.5, tile * 0.025);
-      for (const offset of [-0.5, 0.5]) {
-        ctx.beginPath();
-        ctx.moveTo(p.x + tile * offset, p.y - areaSize / 2);
-        ctx.lineTo(p.x + tile * offset, p.y + areaSize / 2);
-        ctx.moveTo(p.x - areaSize / 2, p.y + tile * offset);
-        ctx.lineTo(p.x + areaSize / 2, p.y + tile * offset);
-        ctx.stroke();
-      }
-      ctx.restore();
-    }
-    const radius = Math.max(6, tile * 0.45);
-    if (node.region) {
-      ctx.fillRect(p.x-radius,p.y-radius,radius*2,radius*2);
-      ctx.strokeRect(p.x-radius,p.y-radius,radius*2,radius*2);
-    } else BattlefieldUI.drawCampaignObjective(ctx,node,team,p.x,p.y,tile);
-    ctx.fillStyle = color(team);
-    ctx.font = `bold ${Math.max(9, Math.min(13, tile * 0.6))}px sans-serif`;
-    ctx.textAlign = "center";
-    const label = node.region
-      ? CAMPAIGN_WORLD.regions.find((region) => region.id === node.region)?.name || node.region
-      : node.kind === "base"
-        ? I18n.text("基地")
-        : I18n.text(node.name);
-    ctx.fillText(label, p.x, p.y - radius - 4);
-    if(node.region)ctx.fillText(team === null ? "—" : String(team + 1), p.x, p.y + 4);
-  }
-  ctx.restore();
-}
 function drawMap(now) {
   MapCamera.beginFrame?.();
   return Rules.withModelQuery(() => {
@@ -2043,9 +1981,7 @@ function drawMapFrame(now) {
   const intel =
     Net.snapshot?.phase === "playback" ? Net.snapshot.combatIntel || game.intel : game.intel;
   EnvironmentVisuals.fog(ctx, intel, ox, oy, tile);
-  drawCampaignSupply(ctx, ox, oy, tile);
   window.BattlefieldUI?.draw(ctx, ox, oy, tile);
-  window.DominionUI?.draw(ctx, ox, oy, tile);
   // The clip remains available for individual effects opting out of fog visibility.
   const visibilityClip = EnvironmentVisuals.visibilityClip(intel, ox, oy, tile);
   const drawVisibleEffects = (draw) => {
@@ -2737,7 +2673,6 @@ byId("map").onclick = async (e) => {
   let cell = cellAt(e);
   if (!cell) return;
   if (mode === "move" || mode === "select") {
-    if (window.DominionUI?.click(cell)) return;
     if (window.BattlefieldUI?.click(cell)) return;
   }
   let target = Rules.at(game, cell.x, cell.y),

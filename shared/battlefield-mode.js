@@ -1,6 +1,7 @@
 /* Reusable battlefield objectives. All mutation runs in the authoritative rules. */
 "use strict";
 const BattlefieldMode = (() => {
+  const siteControl = typeof SiteControl !== "undefined" ? SiteControl : require("./site-control.js");
   const defaultMapId = "battlefield_frontline";
   const captureRadius = 2,
     baseRadius = captureRadius + 2,
@@ -460,7 +461,7 @@ const BattlefieldMode = (() => {
       );
       const present = new Set(occupants.map((unit) => unit.team));
       const capturer = occupants
-        .filter((unit) => G.campaignBattlefield.canSuppress(G, unit))
+        .filter((unit) => siteControl.canSuppress(G, unit))
         .sort(
           (a, b) =>
             Math.hypot(a.x - point.x, a.y - point.y) - Math.hypot(b.x - point.x, b.y - point.y) ||

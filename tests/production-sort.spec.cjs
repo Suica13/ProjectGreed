@@ -75,6 +75,7 @@ test("production and formation use the same automatic developed/COST order for e
     expect(production).toEqual(sorted(production));
     await page.locator("#shellLobby").click();
     await page.locator("#shellHangar").click();
+    await page.locator("#shellFormation").click();
     await page.locator("#openFormationPicker").click();
     await page.locator("#formationStock").selectOption("all");
     await page.locator("#formationFaction").selectOption(faction);

@@ -2362,7 +2362,8 @@ const Formation = (() => {
     try {
       const result = Economy.purchaseMissingStock(entries, faction);
       if (!result.ok) {
-        note(result.reason === "funds" ? "资金或物资不足，未扣费。" : "无法补充库存，未扣费。");
+        note(result.reason === "funds" ? "资金或物资不足，未扣费。" : result.reason === "storage"
+          ? "机库或船坞容量不足，无法补充库存，未扣费。" : "无法补充库存，未扣费。");
         return false;
       }
       note("已补充机体库存。");

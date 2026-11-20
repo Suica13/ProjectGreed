@@ -1,7 +1,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const G = require("../shared/rules.js");
-const C = require("../shared/campaign.js");
+
 const entry = (unitId) => {
   const model = Object.values(G.models).find((m) => m.prefabId === unitId && !m.formOnly);
   return { unitId, kitId: model.kitId };
@@ -130,33 +130,4 @@ test("nested transport still enforces native load tags and capacity", () => {
       72,
     ),
   );
-});
-
-test("strategic nested vehicles survive import, travel with cargo and cannot unload through an embarked parent", () => {
-  const ctx = {
-    G,
-    world: G.catalog.scenarios.earth_0079_mid.world,
-    production: require("../shared/production-data.cjs"),
-    development: require("../shared/development.js"),
-  };
-  const members = [{ seat: 0 }, { seat: 1 }];
-  const state = C.create(ctx, members);
-  state.units = [];
-  const [carrier, vehicle, passenger] = ["Medea", "Type74", infantry].map((id) =>
-    C.addUnit(ctx, state, 0, "jaburo", id),
-  );
-  const act = (action, fields) =>
-    C.action(ctx, state, members, 0, { action, turn: state.turn, ...fields });
-  act("campaign_embark", { armyId: passenger.id, carrierId: vehicle.id, hangarId: "Hangar_1" });
-  assert.ok(C.embarkOptions(ctx, state, vehicle).some((o) => o.carrierId === carrier.id));
-  act("campaign_embark", { armyId: vehicle.id, carrierId: carrier.id, hangarId: "Hangar_1" });
-  C.validate(ctx, structuredClone(state), members);
-  assert.throws(() => act("campaign_disembark", { armyId: passenger.id }));
-  act("campaign_move", { ids: [carrier.id], region: "andes" });
-  C.advance(ctx, state, members);
-  assert.ok(state.units.every((u) => u.region === "andes"));
-  act("campaign_disembark", { armyId: vehicle.id });
-  act("campaign_disembark", { armyId: passenger.id });
-  assert.equal(passenger.state.embarked, undefined);
-  C.validate(ctx, structuredClone(state), members);
 });
