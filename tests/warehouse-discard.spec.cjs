@@ -1,0 +1,20 @@
+const {test,expect}=require('@playwright/test');
+const {pathToFileURL}=require('node:url'),path=require('node:path');
+for(const width of [1440,390])test('warehouse escape form can be scrapped after confirmation '+width,async({page})=>{
+ test.setTimeout(90000);await page.setViewportSize({width,height:960});
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto(pathToFileURL(path.resolve('public/client.html')).href);await page.waitForFunction(()=>assetsReady);
+ const before=await page.evaluate(()=>{I18n.setLanguage('zh');Economy.creditActivity({id:'scrap-ui',matchId:'scrap-ui',money:0,supplies:0,inventory:{MTank_Top:2,RGM_79:1}});return Economy.snapshot();});
+ await page.locator('#shellHangar').click();
+ const target=before.storage.units.find(item=>item.unitId==='MTank_Top');
+ await page.locator('#warehouseBays [data-slot="'+target.slot+'"]').click();
+ await expect(page.locator('#warehouseSellUnit')).toHaveText('销毁');await expect(page.locator('#warehouseSellUnit')).toBeEnabled();
+ await page.locator('#warehouseSellUnit').click();await expect(page.locator('#gameDialog')).toContainText('不返还资金或物资');
+ await page.locator('#gameDialog').getByRole('button',{name:'取消',exact:true}).click();
+ expect(await page.evaluate(()=>Economy.quantity('MTank_Top'))).toBe(2);
+ await page.locator('#warehouseSellUnit').click();await page.locator('#gameDialog').getByRole('button',{name:'确认',exact:true}).click();
+ await expect.poll(()=>page.evaluate(()=>Economy.quantity('MTank_Top'))).toBe(1);
+ const after=await page.evaluate(()=>Economy.snapshot());expect(after.money).toBe(before.money);expect(after.supplies).toBe(before.supplies);
+ expect(after.storage.units.map(item=>item.id)).toEqual(before.storage.units.filter(item=>item.id!==target.id).map(item=>item.id));
+ await page.reload();await page.waitForFunction(()=>assetsReady);expect(await page.evaluate(()=>Economy.quantity('MTank_Top'))).toBe(1);expect(errors).toEqual([]);
+});

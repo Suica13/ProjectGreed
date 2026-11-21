@@ -11,7 +11,7 @@ test("RGC-83 variants distinguish 90mm machine-gun and beam-rifle kits in all th
     assert.equal(mg.kitName, "90mm机枪套件");
     assert.equal(br.kitName, "光束步枪套件");
     assert.equal(mg.cost, prefab.stats.cost);
-    assert.equal(br.cost, prefab.stats.cost + 75);
+    assert.equal(br.cost, prefab.stats.cost + 50);
     const machineGun = mg.weapons.find(w => w.id === "EF_GMRifle");
     const rifle = br.weapons.find(w => w.id === "EF_RMS_179_BR");
     assert.equal(Classes.classify(machineGun), "machine_gun");
@@ -55,7 +55,7 @@ test("confirmed rifle families never display cannon names and old 100-COST class
   const prices = require("../assets/weapon-kit-costs.json");
   assert.equal(prices.beam_rifle, 75); assert.equal(prices.cannon, 75);
   // Physical long-range and sniper rifles keep their separate pricing.
-  assert.equal(G.catalog.prefabs.find(p => p.id === "RGM_79C").weaponKits.find(k => k.id === "kit_3").cost, 100);
+  assert.equal(G.catalog.prefabs.find(p => p.id === "RGM_79C").weaponKits.find(k => k.id === "kit_3").cost, 75);
 });
 
 test("native import policies prioritize source family and projectile type over polluted names", () => {

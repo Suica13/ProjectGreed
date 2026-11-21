@@ -163,6 +163,7 @@ const SweepMode = (() => {
     // commands/buffs use another battle clock and must not leak into a new node.
     for (const key of [
       "model",
+      "stockId",
       "hp",
       "en",
       "shield",

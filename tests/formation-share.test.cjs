@@ -1,4 +1,4 @@
-﻿const test = require("node:test"),
+const test = require("node:test"),
   assert = require("node:assert/strict"),
   fs = require("node:fs"),
   vm = require("node:vm");
@@ -46,14 +46,14 @@ function shareAPI() {
 const pack = (payload) => "PGF1." + Buffer.from(JSON.stringify(payload)).toString("base64url");
 test("carrier templates preserve kits and all preload indices without exporting pilot data", () => {
   const api = shareAPI(),
-    units = require("../shared/economy").starterFormation();
-  units[1].customPilot = { id: "foreign-invalid-pilot" };
+    units = structuredClone(require("../shared/starter-profile.json").units);
+  units[1].customPilot = Rules.pilots.generalPMC("pmc-general-private-pilot",false);
   const result = api.decodeShare(api.encodeShare("中文舰队 🚀", units, "standard"));
   assert.equal(result.name, "中文舰队 🚀");
   assert.equal(result.formationStyle, "standard");
   assert.equal(
     JSON.stringify(result.units),
-    JSON.stringify(require("../shared/economy").starterFormation()),
+    JSON.stringify(structuredClone(require("../shared/starter-profile.json").units)),
   );
 });
 test("old independent codes infer free formation, while modern codes retain their explicit style", () => {
@@ -61,7 +61,7 @@ test("old independent codes infer free formation, while modern codes retain thei
     units = [{ unitId: "Type61", kitId: "standard" }];
   assert.equal(api.decodeShare(pack({ version: 1, name: "old", units })).formationStyle, "free");
   assert.equal(api.decodeShare(api.encodeShare("free", units, "free")).formationStyle, "free");
-  const fleet = require("../shared/economy").starterFormation();
+  const fleet = structuredClone(require("../shared/starter-profile.json").units);
   assert.equal(
     api.decodeShare(pack({ version: 1, name: "fleet", units: fleet })).formationStyle,
     "standard",
@@ -69,7 +69,7 @@ test("old independent codes infer free formation, while modern codes retain thei
 });
 test("line-wrapped codes decode and invalid entries, preload manifests and styles are rejected", () => {
   const api = shareAPI(),
-    code = api.encodeShare("fleet", require("../shared/economy").starterFormation());
+    code = api.encodeShare("fleet", structuredClone(require("../shared/starter-profile.json").units));
   const wrapped =
     code.slice(0, 5) +
     code
@@ -92,7 +92,7 @@ test("line-wrapped codes decode and invalid entries, preload manifests and style
       pack({
         version: 1,
         name: "bad",
-        units: require("../shared/economy").starterFormation(),
+        units: structuredClone(require("../shared/starter-profile.json").units),
         formationStyle: "anything",
       }),
     ),

@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "sourceMod": "GundamWars_BattleOperation2_V5",
+  "sourceDirectory": "Resource/Image/Units/Button/Weapon",
+  "variants": {
+    "wrist": "ui/weapon-icons/ArmGun_2.png",
+    "railgun": "ui/weapon-icons/Railgun_1.png",
+    "incom": "ui/weapon-icons/Incom_1.png",
+    "shell_scatter_bazooka": "ui/weapon-icons/ShellShotGun_2.png"
+  },
+  "classes": {
+    "rifle": "ui/weapon-icons/LinearRifle_1.png",
+    "beam_rifle": "ui/weapon-icons/BeamRifle_1.png",
+    "beam_spray": "ui/weapon-icons/BeamGun_1.png",
+    "beam_gun": "ui/weapon-icons/BeamGun_1.png",
+    "beam_cannon": "ui/weapon-icons/BeamCannon_1.png",
+    "beam_smart_gun": "ui/weapon-icons/BeamSniperRifle_1.png",
+    "shell_shotgun": "ui/weapon-icons/ShellShotGun_1.png",
+    "beam_shotgun": "ui/weapon-icons/BeamShotGun_1.png",
+    "beam_bazooka": "ui/weapon-icons/Bazooka_2.png",
+    "beam": "ui/weapon-icons/BeamMachineGun_1.png",
+    "close_defense": "ui/weapon-icons/Ciws_1.png",
+    "small_vulcan": "ui/weapon-icons/Ciws_1.png",
+    "machine_gun": "ui/weapon-icons/MachineGun_1.png",
+    "bazooka": "ui/weapon-icons/Bazooka_1.png",
+    "panzerfaust": "ui/weapon-icons/Panzerfaust_1.png",
+    "cannon": "ui/weapon-icons/ShellCannon_1.png",
+    "irradiation": "ui/weapon-icons/BeamCannon_2.png",
+    "melee": "ui/weapon-icons/Cqb_1.png",
+    "missile": "ui/weapon-icons/Missile_1.png",
+    "grenade": "ui/weapon-icons/Grenade_2.png",
+    "grenade_launcher": "ui/weapon-icons/Grenade_1.png",
+    "sniper": "ui/weapon-icons/ShellSniperRifle_1.png",
+    "mortar": "ui/weapon-icons/Mortar_1.png",
+    "remote": "ui/weapon-icons/Funnel_1.png",
+    "flamethrower": "ui/weapon-icons/FlameThrower_1.png",
+    "bomb": "ui/weapon-icons/Missile_2.png",
+    "nuke": "ui/weapon-icons/Missile_3.png",
+    "ram": "ui/weapon-icons/Cqb_5.png",
+    "other": "ui/weapon-icons/AimShoot_1.png"
+  }
+}

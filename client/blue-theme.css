@@ -2394,6 +2394,24 @@ body.menu-shell-active #formationScreen #formationUnits .formation-row > .format
 #gameScene .weapon-summary-compact .weapon-damage-line,
 #gameScene .weapon-summary-compact .weapon-accuracy { display:flex; flex-wrap:wrap; align-items:center; gap:4px; margin:0; }
 #gameScene .weapon-summary-compact .weapon-attributes { flex:1 1 100%; }
+body .weapon-summary.weapon-layout { display:grid; grid-template-columns:minmax(0,1fr); gap:7px; }
+body .weapon-layout .weapon-summary-heading { justify-content:flex-start; align-items:center; gap:5px 8px; }
+body .weapon-layout .weapon-attributes { flex:0 1 auto; }
+body .weapon-layout > .weapon-visual-row { display:flex; align-items:center; gap:12px; min-width:0; }
+body .weapon-identity { display:grid; gap:5px; flex:1; min-width:0; }
+body .weapon-reference-actions { display:flex; flex-direction:column; align-items:flex-start; gap:6px; margin-top:8px; }
+body .weapon-reference-actions > * { margin:0; }
+body .weapon-type-icon { display:block; flex:none; width:48px; height:48px; object-fit:contain; image-rendering:pixelated; border:1px solid #476c89; border-radius:3px; padding:3px; box-sizing:border-box; background:#10283d; }
+body .weapon-energy { display:flex; align-items:baseline; gap:6px; color:#efce73; font-variant-numeric:tabular-nums; }
+body .weapon-layout .weapon-statistics-row { display:flex; flex-wrap:wrap; align-items:baseline; gap:5px 12px; min-width:0; }
+body .weapon-layout .weapon-damage-line { margin:0; flex:0 1 auto; }
+body .weapon-layout .weapon-damage-formula { gap:3px; line-height:1.5; }
+body .weapon-layout .weapon-accuracy { display:flex; align-items:baseline; flex-wrap:wrap; gap:4px 6px; margin:0; text-align:left; }
+body .weapon-layout .weapon-stat-label { display:inline; }
+body .weapon-layout > :is(.weapon-pilot-requirement,.weapon-unavailable) { grid-column:1; }
+body #gameScene .weapon-summary-compact.weapon-layout { display:grid; gap:5px; }
+body #gameScene .weapon-summary-compact.weapon-layout .weapon-attributes { flex:0 1 auto; }
+body #gameScene .weapon-summary-compact.weapon-layout .weapon-type-icon { width:36px; height:36px; }
 
 /* Compact, equal-size list cards. Optional metadata shares lanes instead of reserving blank rows. */
 #encyclopediaList > .encyclopedia-unit { height:152px; box-sizing:border-box; padding:8px; }
@@ -3538,15 +3556,15 @@ body.menu-shell-active #formationScreen #formationUnits .formation-row > .format
 #formationScreen #formationUnits { grid-template-columns:minmax(0,1fr) !important; }
 #formationScreen #formationUnits > .formation-preloaded-row { margin-left:18px !important; width:calc(100% - 18px) !important; }
 #formationUnits .formation-row-actions > .danger, .formation-cargo-row > .danger { background:#713747 !important; border-color:#b65e73 !important; color:#fff; }
-#formationUnits .formation-row-actions { grid-template-rows:repeat(3,minmax(0,1fr)) !important; }
-#formationUnits .formation-row-actions > .danger { grid-column:2; grid-row:3; }
+#formationUnits .formation-row-actions { grid-template-rows:repeat(2,minmax(0,1fr)) !important; }
+#formationUnits .formation-row-actions > .danger { grid-column:2 !important; grid-row:2 !important; }
 .formation-kit-dialog { max-width:min(90vw,520px); }
 .formation-kit-options { display:grid; gap:6px; max-height:60dvh; overflow:auto; margin:12px 0; }
 .formation-kit-options > button { min-height:38px; text-align:left; }
 .final-unit-icon[draggable=true] { cursor:grab; }
 
 /* Formation actions remain inside the fixed-height card, including the kit switch. */
-body.menu-shell-active #formationScreen #formationUnits .formation-row-actions { grid-auto-rows:30px !important; grid-template-rows:repeat(3,30px) !important; gap:3px !important; }
+body.menu-shell-active #formationScreen #formationUnits .formation-row-actions { grid-auto-rows:30px !important; grid-template-rows:repeat(2,30px) !important; gap:3px !important; }
 body.menu-shell-active #formationScreen #formationUnits .formation-row-actions > button { height:30px !important; min-height:30px !important; }
 .team-marker-controls { position:relative; pointer-events:auto; }
 .team-marker-choices { position:absolute; top:0; left:100%; display:grid; grid-template-columns:repeat(2,72px); gap:4px; padding:5px; background:#152430ed; border:1px solid #688ca0; z-index:5; }
@@ -3556,7 +3574,7 @@ body.menu-shell-active #formationScreen #formationUnits .formation-row-actions >
 .local-record-settings > button { margin:4px; }
 .local-record-row { display:flex; align-items:center; gap:12px; justify-content:space-between; padding:8px 0; border-bottom:1px solid #344d5e; }
 #localRecordsDialog { max-height:80vh; overflow:auto; }
-@media(max-width:720px) { body.menu-shell-active #formationScreen #formationUnits .formation-row-actions { grid-auto-rows:25px !important; grid-template-rows:repeat(3,25px) !important; gap:2px !important; } body.menu-shell-active #formationScreen #formationUnits .formation-row-actions > button { height:25px !important; min-height:25px !important; } }
+@media(max-width:720px) { body.menu-shell-active #formationScreen #formationUnits .formation-row-actions { grid-auto-rows:25px !important; grid-template-rows:repeat(2,25px) !important; gap:2px !important; } body.menu-shell-active #formationScreen #formationUnits .formation-row-actions > button { height:25px !important; min-height:25px !important; } }
 
 /* Settings use independent sections and a scrolling content area on every device. */
 #clientSettingsDialog.settings-redesigned { width:min(760px,calc(100vw - 24px)); padding:0; max-height:calc(100dvh - 24px); overflow:hidden; border-radius:8px; }
@@ -3622,7 +3640,7 @@ body #formationScreen #formationUnits.formation-carrier-view { display:block !im
 #formationUnits .formation-hangar-card { border:1px solid #395e77; background:#142330; margin:5px 0 0 12px; padding:5px; min-width:0; }
 #formationUnits .formation-hangar-title { margin:0 0 5px; padding:4px; font-size:13px; color:#a9d5ef; line-height:1.3; }
 #formationUnits .formation-unassigned { padding:5px; border:1px dashed #6b7480; margin-top:12px; }
-body.menu-shell-active #formationScreen #formationUnits.formation-carrier-view .formation-row { position:relative; display:grid; grid-template-columns:72px minmax(0,1fr) 132px !important; grid-template-rows:1fr !important; align-items:start; gap:10px; width:100% !important; height:116px !important; min-height:116px !important; max-height:116px !important; margin:0 0 5px !important; padding:6px !important; box-sizing:border-box; overflow:hidden; }
+body.menu-shell-active #formationScreen #formationUnits.formation-carrier-view .formation-row { position:relative; display:grid; grid-template-columns:72px minmax(0,1fr) 132px !important; grid-template-rows:1fr !important; align-items:start; gap:10px; width:100% !important; height:auto !important; min-height:84px !important; max-height:none !important; margin:0 0 5px !important; padding:6px !important; box-sizing:border-box; overflow:hidden; }
 body.menu-shell-active #formationScreen #formationUnits.formation-carrier-view .formation-row > .formation-row-actions { position:static !important; width:132px !important; grid-column:3 !important; grid-row:1 !important; align-self:start; }
 #formationUnits.formation-carrier-view .formation-unit-portrait { grid-column:1; grid-row:1; }
 #formationUnits.formation-carrier-view .formation-unit-name { grid-column:2; grid-row:1; min-width:0; }
@@ -3644,7 +3662,7 @@ body #formationScreen #formationUnits.formation-carrier-view .formation-icon > i
 @media(max-width:720px) {
   body #formationScreen #formationUnits.formation-carrier-view { padding:2px 4px; }
   #formationUnits .formation-hangar-card { margin-left:5px; padding:3px; }
-  body.menu-shell-active #formationScreen #formationUnits.formation-carrier-view .formation-row { grid-template-columns:48px minmax(0,1fr) 100px !important; gap:5px; padding:4px !important; }
+  body.menu-shell-active #formationScreen #formationUnits.formation-carrier-view .formation-row { grid-template-columns:48px minmax(0,1fr) 100px !important; gap:5px; padding:4px !important; min-height:66px !important; }
   body.menu-shell-active #formationScreen #formationUnits.formation-carrier-view .formation-row > .formation-row-actions { width:100px !important; }
   body #formationScreen #formationUnits.formation-carrier-view .formation-unit-portrait,
   body #formationScreen #formationUnits.formation-carrier-view .formation-icon,
@@ -3655,3 +3673,9 @@ body #formationScreen #formationUnits.formation-carrier-view .formation-icon > i
   #formationUnits .formation-empty-portrait { width:48px; height:48px; flex-basis:48px; font-size:30px; }
   #formationUnits .formation-empty-slot { min-height:78px; }
 }
+
+/* Shared map-scale preview cameras, including the developer catalog. */
+.unit-preview-camera { position:relative; min-width:0; width:100%; }
+.unit-preview-camera-controls { position:absolute; bottom:4px; right:4px; display:flex; gap:4px; z-index:2; }
+.unit-preview-camera-controls button { padding:3px 8px; font-size:12px; background:#132533e8; }
+.unit-preview-camera-controls .unit-preview-zoom-label { opacity:1; color:#c7e6fa; }

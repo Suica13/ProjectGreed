@@ -1026,7 +1026,7 @@ body.menu-shell-active #developmentScreen .development-toolbar .development-bala
 @media(max-width:720px) {
   #shellProfile .menu-profile-row { gap:5px; }
   #shellProfile #shellIdentity select { width:92px; max-width:92px; font-size:10px; }
-  #shellProfile #menuResources { flex-direction:column; align-items:flex-start; gap:1px; }
+  #shellProfile #menuResources { flex-direction:row; align-items:center; gap:7px; }
   #shellProfile #playerId { width:72px; }
 }
 @media(max-width:360px) {
@@ -1511,6 +1511,7 @@ body.menu-shell-active > .menu-screen:is(#start,#roomPreparation,#formationScree
 .encyclopedia-dialog > .shell-page-heading { display:flex; flex:none; align-items:center; height:52px; min-height:52px; max-height:52px; width:100%; margin:0; padding:0 0 10px; border-bottom:1px solid #31556c; box-sizing:border-box; }
 .encyclopedia-dialog .shell-page-title { margin:0; padding:0; font-size:22px; line-height:30px; font-weight:600; color:#b2e6ff; }
 .encyclopedia-tabs { display:flex; flex:none; align-items:center; gap:8px; }
+.encyclopedia-dialog > .shell-page-heading > .encyclopedia-tabs { margin:0; }
 .encyclopedia-tabs button { min-width:100px; }
 .encyclopedia-tabs button[aria-pressed="true"] { background:#244e72; border-color:#76ceff; }
 #encyclopediaCount { margin-left:auto; color:#b5c4d5; font-variant-numeric:tabular-nums; }
@@ -1602,3 +1603,14 @@ body .unit-tags button.unit-tags-more:focus-visible { outline:2px solid #94dcff;
 .room-preset-editor > input { flex:1 1 140px; min-width:0; }
 .room-preset-editor > button { flex:none; }
 #roomPresetStatus { flex-basis:100%; overflow-wrap:anywhere; }
+
+#shellProfile .player-id-label { flex-direction:column; align-items:flex-start; gap:2px; }
+#shellProfile .player-id-label > span { display:block; line-height:14px; white-space:nowrap; }
+#shellProfile #menuResources { display:flex; flex-direction:column; flex-wrap:nowrap; align-items:flex-start; gap:4px; }
+@media(max-width:720px) {
+  #shellProfile { grid-column:1/-1; grid-row:2; justify-self:stretch; width:100%; }
+  #shellProfile .menu-profile-row { justify-content:space-between; gap:12px; }
+  #shellProfile #playerId { width:130px; }
+  #shellProfile #menuResources { font-size:12px; gap:4px; }
+  .shell-primary { grid-row:3; }
+}

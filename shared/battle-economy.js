@@ -10,7 +10,7 @@ const BattleEconomy = (() => {
     return Object.fromEntries(
       ["money", "supplies", "technology", "experience"].map((key) => [
         key,
-        (key === "experience" ? 1 : rewardMultiplier) * (activity[key] ?? 1),
+        (key === "technology" ? 0 : key === "experience" ? 1 : rewardMultiplier) * (activity[key] ?? 1),
       ]),
     );
   }

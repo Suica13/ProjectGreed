@@ -132,6 +132,8 @@ def native_weapon(prefab, weapon, unit_data):
                 "hitEffect":"MG_Hit_1_S", "speed":child_values.get("ProjectileSpeed",65), "texture":"../../projectiles/MG_1.png", "scale":0.35,
                 "nativePayload":child_values, "source":child_path.relative_to(MAIN if child_path.is_relative_to(MAIN) else source_root(path)).as_posix()})
         elif ident.startswith(("Projectile_ShellShotGun", "Projectile_BeamShotGun")):
+            weapon["nativeProjectile"] = ident
+            weapon["weaponClass"] = "beam_shotgun" if ident.startswith("Projectile_BeamShotGun") else "shell_shotgun"
             angle = re.search(r"offsetRandomDir\s*=\s*([\d.]+)",raw)
             weapon.setdefault("projectile", {})["spreadDegrees"] = float(angle[1])*2 if angle else 18
 

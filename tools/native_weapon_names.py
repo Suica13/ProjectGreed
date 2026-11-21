@@ -35,6 +35,18 @@ def label(key, weapon, ship=False):
         return (("右腿" if right else "左腿") + family[0], ("Right Leg " if right else "Left Leg ") + family[1], ("右脚" if right else "左脚") + family[2])
     if ident in EXACT:
         return EXACT[ident]
+    if weapon.get("weaponClass") == "beam_shotgun":
+        if "Chest" in ident:
+            return ("胸部扩散光束炮", "Chest Diffusion Beam Cannon", "胸部拡散ビーム砲")
+        if "BeamCannon" in ident:
+            return ("扩散光束炮", "Diffusion Beam Cannon", "拡散ビーム砲")
+        if "Shield" in ident:
+            return ("盾牌光束霰弹枪", "Shield Beam Shotgun", "シールド・ビーム・ショットガン")
+        if "ArmBSG" in ident:
+            return ("腕部光束霰弹枪", "Wrist Beam Shotgun", "腕部ビーム・ショットガン")
+        return ("光束霰弹枪", "Beam Shotgun", "ビーム・ショットガン")
+    if weapon.get("weaponClass") == "shell_shotgun":
+        return ("实弹霰弹枪", "Ballistic Shotgun", "実弾ショットガン")
     if re.search(r"(?:Bazooka\w*|(?:^|_)BZ)_(?:SG|ShotgunMode)(?:_|$)", ident, re.I):
         return ("火箭筒[霰弹]", "Bazooka [Scatter]", "バズーカ[散弾]")
     if re.search(r"(?:BeamRifle|(?:^|_)[SHL]?BR(?:_|$))", ident, re.I) and not re.search(r"(?:Arm|Double|Hand)_?BR", ident):

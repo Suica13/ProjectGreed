@@ -4694,8 +4694,13 @@ const SpriteRenderer = (() => {
     hiddenLayers = [],
     idleRasterSize = 0,
     phaseShiftActive = true,
+    parked = false,
   ) {
     const isFiring = attacking ?? (!!clip && /Shoot|Fire|Attack/.test(clip));
+    // Stored aircraft are powered down, independent of their battle movement type.
+    if (parked) hiddenLayers = [...hiddenLayers, ...models[model].decals.filter(layer =>
+      layer.visibleWhen?.thrustActive || layer.visibleWhen?.sustainedThrust || layer.visibleWhen?.boosting
+    ).map(layer => layer.name)];
     // -1 caches only constant body poses at native resolution. Animated bones
     // and changing body frames keep the exact live path at normal zoom.
     const exactStaticRaster = idleRasterSize === -1;
@@ -4704,6 +4709,7 @@ const SpriteRenderer = (() => {
     // share only the exact current sample, with a live fallback under load.
     if (
       (idleRasterSize > 0 || exactStaticRaster) &&
+      !parked &&
       (!exactStaticRaster || staticPose(models[model].animations[clip])) &&
       !effectsOnly &&
       (!moving || staticPose(models[model].animations[clip]) || frameLayersActive) &&
@@ -5007,7 +5013,7 @@ const SpriteRenderer = (() => {
     const flightClock = globalThis.ReplayPlayer?.active
       ? globalThis.ReplayPlayer.time * 1000
       : performance.now();
-    ctx.translate(x, y + flightOffset(model, flightClock, flying, environment) * scale);
+    ctx.translate(x, y + (parked ? 0 : flightOffset(model, flightClock, flying, environment)) * scale);
     ctx.scale(scale, scale);
     ctx.imageSmoothingEnabled = false;
     const outlines = [];

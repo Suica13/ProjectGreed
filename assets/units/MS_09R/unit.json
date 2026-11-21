@@ -701,17 +701,6 @@
           "spreadDegrees": 24
         },
         "role": "shotgun",
-        "localization": {
-          "zh": {
-            "name": "胸部扩散光束炮"
-          },
-          "en": {
-            "name": "Chest Diffusion Beam"
-          },
-          "ja": {
-            "name": "胸部拡散ビーム砲"
-          }
-        },
         "source": {
           "file": "Units/BattleUnits/Weapon/Beam/ZN_MS_09_ChestBeam.gw",
           "barrelX": -6,

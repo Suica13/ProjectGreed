@@ -79,6 +79,7 @@ window.ReplayPlayer = (() => {
       if (!selected) return;
       if (selected.size > MatchRecords.maxBytes) throw Error("对局记录超过32MB限制。");
       const imported = MatchRecords.validate(Rules, JSON.parse(await selected.text()));
+      byId("clientSettingsDialog").close();
       startLocal(imported);
     } catch (error) {
       note(error.message);

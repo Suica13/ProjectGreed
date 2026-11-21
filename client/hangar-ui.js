@@ -87,6 +87,7 @@ const HangarUI = (() => {
         " " + I18n.text("容量点")
       : "";
     const name = element("strong", "", unitName(u));
+    name.append(UnitPreview.roleIcon(Rules.modelOf(u)));
     name.setAttribute("data-i18n-ignore", "");
     info.append(
       name,
@@ -291,7 +292,7 @@ const HangarUI = (() => {
     for (const text of [
       "搭载结束本次行动，下次己方回合可出击；出击范围使用载员自身移动力。",
       "出击视为已移动，仍可攻击或使用技能；主动出击不减少攻击轮数，所属舰船不能撤回移动。",
-      "搭载中每次己方回合恢复25%最大耐久、50%最大EN，并随机修复最多两个受损零件。",
+      "搭载中每次己方回合恢复25%最大耐久、50%最大EN，不修复受损零件。",
       "舰毁紧急退出损失25%最大耐久和最大盾牌；无合法落点或耐久归零则损失载员。",
     ]) help.append(element("p", "", I18n.text(text)));
     dialog.append(help);

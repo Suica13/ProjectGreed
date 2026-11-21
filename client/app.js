@@ -57,6 +57,7 @@ function setPageView(view) {
   byId("productionScreen").hidden = view !== "production";
   byId("encyclopediaScreen").hidden = view !== "encyclopedia";
   if (byId("warehouseScreen")) byId("warehouseScreen").hidden = view !== "warehouse";
+  if (byId("baseFacilitiesScreen")) byId("baseFacilitiesScreen").hidden = view !== "facilities";
   byId("roomSettings").hidden = !Net.active;
   window.MenuShell?.refresh();
   window.WarehouseUI?.render();
@@ -775,6 +776,7 @@ function renderRoster(busy) {
       image.alt = "";
       const info = element("span", "roster-unit-info");
       const name = element("strong", "roster-unit-name", unitName(unit));
+      name.append(UnitPreview.roleIcon(model));
       info.append(name);
       for (const [kind, current, maximum] of [
         ["hp", unit.hp, model.hp],
@@ -864,6 +866,7 @@ function renderPanel() {
       <strong class="${u.team ? "red" : "blue"}">${escapeHtml(unitName(u))}</strong
       ><small>${m.code} · ${m.kitName} · ${teamName(u.team)}</small>
     </div>`;
+  head.querySelector("strong").append(UnitPreview.roleIcon(m));
   panel.append(head);
   const identity = UnitIdentity.owner(u),
     ownership = element("div", "unit-ownership"),

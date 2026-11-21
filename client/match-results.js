@@ -97,7 +97,7 @@ const MatchResults = (() => {
     rewards.replaceChildren(
       element("span", "", I18n.text(Net.snapshot?.game?.dominion ? "局内剩余资源（不带出对局）" : "本局收益") + "："),
       balance,
-      element("span", "", " · " + I18n.text("损毁扣除") + " " + losses + " " + I18n.text("台")),
+      element("span", "", " · " + I18n.text("完全损毁") + " " + losses + " " + I18n.text("台")),
     );
     rewards.hidden = !Net.active || Net.snapshot?.replay;
     let icons = byId("victoryUnitIcons");

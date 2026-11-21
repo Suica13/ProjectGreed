@@ -53104,7 +53104,7 @@
       }
     },
     "EF_BeamSprayGunE2__lv1": {
-      "name": "光束炮",
+      "name": "光束霰弹枪",
       "type": "beam",
       "min": 2,
       "max": 3,
@@ -53228,10 +53228,23 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "category": "beam_gun",
+      "category": "beam_shotgun",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_BeamSprayGunE2.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_BeamSprayGunE2.gw",
+      "nativeProjectile": "Projectile_BeamShotGun_Pink",
+      "weaponClass": "beam_shotgun",
+      "localization": {
+        "zh": {
+          "name": "光束霰弹枪"
+        },
+        "en": {
+          "name": "Beam Shotgun"
+        },
+        "ja": {
+          "name": "ビーム・ショットガン"
+        }
+      }
     },
     "EF_BeamSprayGunF__lv1": {
       "name": "光束炮",
@@ -53378,7 +53391,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Beam/EF_BeamSprayGunF.gw"
     },
     "EF_BeamSprayGunFD__lv1": {
-      "name": "光束炮",
+      "name": "光束霰弹枪",
       "type": "beam",
       "min": 2,
       "max": 3,
@@ -53502,10 +53515,23 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "category": "beam_gun",
+      "category": "beam_shotgun",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_BeamSprayGunFD.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/EF_BeamSprayGunFD.gw",
+      "nativeProjectile": "Projectile_BeamShotGun_Pink",
+      "weaponClass": "beam_shotgun",
+      "localization": {
+        "zh": {
+          "name": "光束霰弹枪"
+        },
+        "en": {
+          "name": "Beam Shotgun"
+        },
+        "ja": {
+          "name": "ビーム・ショットガン"
+        }
+      }
     },
     "EF_BigTrayClass_MainCannon__lv1": {
       "name": "加农炮",
@@ -77454,7 +77480,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_81_MS.gw"
     },
     "EF_RX_81AS_Shotgun__lv1": {
-      "name": "霰弹枪",
+      "name": "实弹霰弹枪",
       "type": "shell",
       "min": 1,
       "max": 2,
@@ -77588,21 +77614,23 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "category": "other",
+      "category": "shell_shotgun",
       "actionCost": 2,
       "level": 1,
       "levelSource": "Units/BattleUnits/Weapon/Shell/EF_RX_81AS_Shotgun.gw",
       "localization": {
         "zh": {
-          "name": "霰弹枪"
+          "name": "实弹霰弹枪"
         },
         "en": {
-          "name": "Shotgun"
+          "name": "Ballistic Shotgun"
         },
         "ja": {
-          "name": "ショットガン"
+          "name": "実弾ショットガン"
         }
-      }
+      },
+      "nativeProjectile": "Projectile_ShellShotGun",
+      "weaponClass": "shell_shotgun"
     },
     "EF_SHM__lv1": {
       "name": "近身格斗",
@@ -139260,7 +139288,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_APC_MG.gw"
     },
     "ZN_ApsarasII_ChestBeam__lv1": {
-      "name": "光束炮",
+      "name": "胸部扩散光束炮",
       "type": "beam",
       "min": 1,
       "max": 2,
@@ -139319,7 +139347,7 @@
       "muzzleEffects": [
         "Beam_Fire_1_Blue"
       ],
-      "category": "other",
+      "category": "beam_shotgun",
       "nativePayload": {
         "offsetRandomDir": 9,
         "BeamDamage": 3000,
@@ -139382,7 +139410,20 @@
       },
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_ApsarasII_ChestBeam.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_ApsarasII_ChestBeam.gw",
+      "nativeProjectile": "Projectile_BeamShotGun_Long_Blue",
+      "weaponClass": "beam_shotgun",
+      "localization": {
+        "zh": {
+          "name": "胸部扩散光束炮"
+        },
+        "en": {
+          "name": "Chest Diffusion Beam Cannon"
+        },
+        "ja": {
+          "name": "胸部拡散ビーム砲"
+        }
+      }
     },
     "ZN_ApsarasII_MegaBeamCannon__lv1": {
       "name": "光束炮",
@@ -140254,7 +140295,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_ApsarasII_MegaBeamCannon.gw"
     },
     "ZN_ApsarasIII_ChestBeam__lv1": {
-      "name": "光束炮",
+      "name": "胸部扩散光束炮",
       "type": "beam",
       "min": 1,
       "max": 2,
@@ -140378,10 +140419,23 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "category": "other",
+      "category": "beam_shotgun",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_ApsarasIII_ChestBeam.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_ApsarasIII_ChestBeam.gw",
+      "nativeProjectile": "Projectile_BeamShotGun_Long_Yellow",
+      "weaponClass": "beam_shotgun",
+      "localization": {
+        "zh": {
+          "name": "胸部扩散光束炮"
+        },
+        "en": {
+          "name": "Chest Diffusion Beam Cannon"
+        },
+        "ja": {
+          "name": "胸部拡散ビーム砲"
+        }
+      }
     },
     "ZN_ApsarasIII_MegaBeamCannon__lv1": {
       "name": "光束炮",
@@ -146056,7 +146110,7 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "category": "other",
+      "category": "beam_shotgun",
       "actionCost": 2,
       "level": 1,
       "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MA_04X_BeamShotgun.gw",
@@ -146070,7 +146124,9 @@
         "ja": {
           "name": "ビーム・ショットガン"
         }
-      }
+      },
+      "nativeProjectile": "Projectile_BeamShotGun_Yellow",
+      "weaponClass": "beam_shotgun"
     },
     "ZN_MA_04X_BeamShotgun_L__lv1": {
       "name": "光束霰弹枪",
@@ -146206,7 +146262,7 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "category": "other",
+      "category": "beam_shotgun",
       "actionCost": 2,
       "level": 1,
       "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MA_04X_BeamShotgun.gw",
@@ -146220,7 +146276,9 @@
         "ja": {
           "name": "ビーム・ショットガン"
         }
-      }
+      },
+      "nativeProjectile": "Projectile_BeamShotGun_Yellow",
+      "weaponClass": "beam_shotgun"
     },
     "ZN_MA_04X_MS__lv1": {
       "name": "导弹发射器",
@@ -162697,7 +162755,7 @@
       "muzzleEffects": [
         "Beam_Fire_1_Yellow_S"
       ],
-      "category": "other",
+      "category": "beam_shotgun",
       "nativePayload": {
         "offsetRandomDir": 8,
         "BeamDamage": 400,
@@ -162766,7 +162824,20 @@
       },
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_09_ChestBeam.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_09_ChestBeam.gw",
+      "nativeProjectile": "Projectile_BeamShotGun_Yellow",
+      "weaponClass": "beam_shotgun",
+      "localization": {
+        "zh": {
+          "name": "胸部扩散光束炮"
+        },
+        "en": {
+          "name": "Chest Diffusion Beam Cannon"
+        },
+        "ja": {
+          "name": "胸部拡散ビーム砲"
+        }
+      }
     },
     "ZN_MS_09_ChestBeam__lv2": {
       "name": "胸部扩散光束炮",
@@ -162884,10 +162955,23 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "category": "other",
+      "category": "beam_shotgun",
       "actionCost": 2,
       "level": 2,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_09_ChestBeam_Lv2.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_09_ChestBeam_Lv2.gw",
+      "nativeProjectile": "Projectile_BeamShotGun_Yellow",
+      "weaponClass": "beam_shotgun",
+      "localization": {
+        "zh": {
+          "name": "胸部扩散光束炮"
+        },
+        "en": {
+          "name": "Chest Diffusion Beam Cannon"
+        },
+        "ja": {
+          "name": "胸部拡散ビーム砲"
+        }
+      }
     },
     "ZN_MS_09_ChestBeam__lv3": {
       "name": "胸部扩散光束炮",
@@ -163005,10 +163089,23 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "category": "other",
+      "category": "beam_shotgun",
       "actionCost": 2,
       "level": 3,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_09_ChestBeam_Lv3.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/ZN_MS_09_ChestBeam_Lv3.gw",
+      "nativeProjectile": "Projectile_BeamShotGun_Yellow",
+      "weaponClass": "beam_shotgun",
+      "localization": {
+        "zh": {
+          "name": "胸部扩散光束炮"
+        },
+        "en": {
+          "name": "Chest Diffusion Beam Cannon"
+        },
+        "ja": {
+          "name": "胸部拡散ビーム砲"
+        }
+      }
     },
     "ZN_MS_10_MS_AMS__lv1": {
       "name": "导弹发射器",
@@ -166343,7 +166440,7 @@
         "ZN_MSM_03_ChestBeam",
         "ZN_MSM_03_ChestBeam_L"
       ],
-      "category": "other",
+      "category": "beam_shotgun",
       "nativePayload": {
         "offsetRandomDir": 6,
         "BeamDamage": 1000,
@@ -166419,7 +166516,9 @@
         "ja": {
           "name": "胸部拡散ビーム砲"
         }
-      }
+      },
+      "nativeProjectile": "Projectile_BeamShotGun_Yellow",
+      "weaponClass": "beam_shotgun"
     },
     "ZN_MSM_03_ChestBeam_L__lv1": {
       "name": "胸部光束扩散炮",
@@ -166493,7 +166592,7 @@
         "Beam_Fire_1_Yellow",
         "Beam_Fire_1_Yellow"
       ],
-      "category": "other",
+      "category": "beam_shotgun",
       "nativePayload": {
         "offsetRandomDir": 6,
         "BeamDamage": 1000,
@@ -166569,7 +166668,9 @@
         "ja": {
           "name": "胸部拡散ビーム砲"
         }
-      }
+      },
+      "nativeProjectile": "Projectile_BeamShotGun_Yellow",
+      "weaponClass": "beam_shotgun"
     },
     "ZN_MSM_03_SMS__lv1": {
       "name": "导弹发射器",
@@ -176220,7 +176321,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_SamsonGroundTransportTruck_AA.gw"
     },
     "ZN_Shotgun__lv1": {
-      "name": "霰弹枪",
+      "name": "实弹霰弹枪",
       "type": "shell",
       "min": 1,
       "max": 2,
@@ -176288,7 +176389,7 @@
       "muzzleEffects": [
         "BZ_Fire_1_S"
       ],
-      "category": "other",
+      "category": "shell_shotgun",
       "nativePayload": {
         "offsetRandomDir": 9,
         "ShellDamage": 600,
@@ -176357,18 +176458,20 @@
       "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_Shotgun.gw",
       "localization": {
         "zh": {
-          "name": "霰弹枪"
+          "name": "实弹霰弹枪"
         },
         "en": {
-          "name": "Shotgun"
+          "name": "Ballistic Shotgun"
         },
         "ja": {
-          "name": "ショットガン"
+          "name": "実弾ショットガン"
         }
-      }
+      },
+      "nativeProjectile": "Projectile_ShellShotGun",
+      "weaponClass": "shell_shotgun"
     },
     "ZN_ShotgunKai__lv1": {
-      "name": "霰弹枪",
+      "name": "实弹霰弹枪",
       "type": "shell",
       "min": 1,
       "max": 2,
@@ -176499,21 +176602,23 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "category": "other",
+      "category": "shell_shotgun",
       "actionCost": 2,
       "level": 1,
       "levelSource": "Units/BattleUnits/Weapon/Shell/ZN_ShotgunKai.gw",
       "localization": {
         "zh": {
-          "name": "霰弹枪"
+          "name": "实弹霰弹枪"
         },
         "en": {
-          "name": "Shotgun"
+          "name": "Ballistic Shotgun"
         },
         "ja": {
-          "name": "ショットガン"
+          "name": "実弾ショットガン"
         }
-      }
+      },
+      "nativeProjectile": "Projectile_ShellShotGun",
+      "weaponClass": "shell_shotgun"
     },
     "ZN_Skiure_BeamCannon__lv1": {
       "name": "光束炮",
@@ -225539,7 +225644,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ArmBR_L.gw"
     },
     "TITANS_MRX_009_ChestBeam__lv1": {
-      "name": "光束炮",
+      "name": "胸部扩散光束炮",
       "type": "beam",
       "min": 1,
       "max": 2,
@@ -225658,10 +225763,23 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "category": "other",
+      "category": "beam_shotgun",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ChestBeam.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_MRX_009_ChestBeam.gw",
+      "nativeProjectile": "Projectile_BeamShotGun_Long_Yellow",
+      "weaponClass": "beam_shotgun",
+      "localization": {
+        "zh": {
+          "name": "胸部扩散光束炮"
+        },
+        "en": {
+          "name": "Chest Diffusion Beam Cannon"
+        },
+        "ja": {
+          "name": "胸部拡散ビーム砲"
+        }
+      }
     },
     "TITANS_MRX_009_BeamCannon__lv1": {
       "name": "光束炮",
@@ -226817,7 +226935,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Cqb/TITANS_MRX_009_Shock_A.gw"
     },
     "TITANS_RX_121_ShieldBSG__lv1": {
-      "name": "光束炮",
+      "name": "盾牌光束霰弹枪",
       "type": "beam",
       "min": 1,
       "max": 2,
@@ -227010,13 +227128,26 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "category": "other",
+      "category": "beam_shotgun",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_RX_121_ShieldBSG.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_RX_121_ShieldBSG.gw",
+      "nativeProjectile": "Projectile_BeamShotGun_Pink",
+      "weaponClass": "beam_shotgun",
+      "localization": {
+        "zh": {
+          "name": "盾牌光束霰弹枪"
+        },
+        "en": {
+          "name": "Shield Beam Shotgun"
+        },
+        "ja": {
+          "name": "シールド・ビーム・ショットガン"
+        }
+      }
     },
     "TITANS_RX_121_ShieldBSG_L__lv1": {
-      "name": "光束炮",
+      "name": "盾牌光束霰弹枪",
       "type": "beam",
       "min": 1,
       "max": 2,
@@ -227205,10 +227336,23 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "category": "other",
+      "category": "beam_shotgun",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_RX_121_ShieldBSG.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_RX_121_ShieldBSG.gw",
+      "nativeProjectile": "Projectile_BeamShotGun_Pink",
+      "weaponClass": "beam_shotgun",
+      "localization": {
+        "zh": {
+          "name": "盾牌光束霰弹枪"
+        },
+        "en": {
+          "name": "Shield Beam Shotgun"
+        },
+        "ja": {
+          "name": "シールド・ビーム・ショットガン"
+        }
+      }
     },
     "TITANS_RX_139_Backpack_BeamGun__lv1": {
       "name": "光束枪",
@@ -231144,7 +231288,7 @@
       }
     },
     "TITANS_PMX_001_BeamCannon__lv1": {
-      "name": "光束炮",
+      "name": "扩散光束炮",
       "type": "beam",
       "min": 3,
       "max": 5,
@@ -231280,13 +231424,26 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "category": "cannon",
+      "category": "beam_shotgun",
       "actionCost": 3,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_PMX_001_BeamCannon.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_PMX_001_BeamCannon.gw",
+      "nativeProjectile": "Projectile_BeamShotGun_Yellow",
+      "weaponClass": "beam_shotgun",
+      "localization": {
+        "zh": {
+          "name": "扩散光束炮"
+        },
+        "en": {
+          "name": "Diffusion Beam Cannon"
+        },
+        "ja": {
+          "name": "拡散ビーム砲"
+        }
+      }
     },
     "TITANS_PMX_001_BeamCannon_L__lv1": {
-      "name": "光束炮",
+      "name": "扩散光束炮",
       "type": "beam",
       "min": 3,
       "max": 5,
@@ -231418,10 +231575,23 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "category": "cannon",
+      "category": "beam_shotgun",
       "actionCost": 3,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_PMX_001_BeamCannon.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_PMX_001_BeamCannon.gw",
+      "nativeProjectile": "Projectile_BeamShotGun_Yellow",
+      "weaponClass": "beam_shotgun",
+      "localization": {
+        "zh": {
+          "name": "扩散光束炮"
+        },
+        "en": {
+          "name": "Diffusion Beam Cannon"
+        },
+        "ja": {
+          "name": "拡散ビーム砲"
+        }
+      }
     },
     "Common_ArmBR_Yellow_L__lv3": {
       "name": "腕部光束枪",
@@ -234493,7 +234663,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_ORX_005_TR_5_FF_X39A_BeamCannon.gw"
     },
     "TITANS_ORX_005_TR_5_FF_X39A_BSG__lv1": {
-      "name": "光束炮",
+      "name": "光束霰弹枪",
       "type": "beam",
       "min": 1,
       "max": 2,
@@ -234612,13 +234782,26 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "category": "other",
+      "category": "beam_shotgun",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_ORX_005_TR_5_FF_X39A_BSG.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_ORX_005_TR_5_FF_X39A_BSG.gw",
+      "nativeProjectile": "Projectile_BeamShotGun_Pink",
+      "weaponClass": "beam_shotgun",
+      "localization": {
+        "zh": {
+          "name": "光束霰弹枪"
+        },
+        "en": {
+          "name": "Beam Shotgun"
+        },
+        "ja": {
+          "name": "ビーム・ショットガン"
+        }
+      }
     },
     "TITANS_RX_124_Kehaar2_BeamCannon__lv1": {
-      "name": "光束炮",
+      "name": "扩散光束炮",
       "type": "beam",
       "min": 3,
       "max": 5,
@@ -234754,13 +234937,26 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "category": "cannon",
+      "category": "beam_shotgun",
       "actionCost": 3,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_RX_124_Kehaar2_BeamCannon.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_RX_124_Kehaar2_BeamCannon.gw",
+      "nativeProjectile": "Projectile_BeamShotGun_Pink",
+      "weaponClass": "beam_shotgun",
+      "localization": {
+        "zh": {
+          "name": "扩散光束炮"
+        },
+        "en": {
+          "name": "Diffusion Beam Cannon"
+        },
+        "ja": {
+          "name": "拡散ビーム砲"
+        }
+      }
     },
     "TITANS_RX_124_Kehaar2_BeamCannon_L__lv1": {
-      "name": "光束炮",
+      "name": "扩散光束炮",
       "type": "beam",
       "min": 3,
       "max": 5,
@@ -234892,10 +235088,23 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "category": "cannon",
+      "category": "beam_shotgun",
       "actionCost": 3,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_RX_124_Kehaar2_BeamCannon.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/TITANS_RX_124_Kehaar2_BeamCannon.gw",
+      "nativeProjectile": "Projectile_BeamShotGun_Pink",
+      "weaponClass": "beam_shotgun",
+      "localization": {
+        "zh": {
+          "name": "扩散光束炮"
+        },
+        "en": {
+          "name": "Diffusion Beam Cannon"
+        },
+        "ja": {
+          "name": "拡散ビーム砲"
+        }
+      }
     },
     "TITANS_ShieldBoostedRifle_Blue__lv1": {
       "name": "光束步枪",
@@ -235451,7 +235660,7 @@
       }
     },
     "Common_ArmBSG_L_Yellow_NRX_055__lv1": {
-      "name": "光束炮",
+      "name": "腕部光束霰弹枪",
       "type": "beam",
       "min": 1,
       "max": 2,
@@ -235575,10 +235784,23 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "category": "other",
+      "category": "beam_shotgun",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/Common_ArmBSG_L_Yellow_NRX_055.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/Common_ArmBSG_L_Yellow_NRX_055.gw",
+      "nativeProjectile": "Projectile_BeamShotGun_Yellow",
+      "weaponClass": "beam_shotgun",
+      "localization": {
+        "zh": {
+          "name": "腕部光束霰弹枪"
+        },
+        "en": {
+          "name": "Wrist Beam Shotgun"
+        },
+        "ja": {
+          "name": "腕部ビーム・ショットガン"
+        }
+      }
     },
     "EF_BeamSaber_Large_BLFL_Yellow_B__lv2": {
       "name": "光束军刀",
@@ -248853,7 +249075,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_AMX_103_ShieldBSG.gw"
     },
     "NZN_AMX_109_BSG__lv1": {
-      "name": "光束炮",
+      "name": "光束霰弹枪",
       "type": "beam",
       "min": 1,
       "max": 2,
@@ -248977,10 +249199,23 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "category": "other",
+      "category": "beam_shotgun",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_AMX_109_BSG.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_AMX_109_BSG.gw",
+      "nativeProjectile": "Projectile_BeamShotGun_Yellow",
+      "weaponClass": "beam_shotgun",
+      "localization": {
+        "zh": {
+          "name": "光束霰弹枪"
+        },
+        "en": {
+          "name": "Beam Shotgun"
+        },
+        "ja": {
+          "name": "ビーム・ショットガン"
+        }
+      }
     },
     "NZN_AMX_109_MS__lv1": {
       "name": "导弹发射器",
@@ -254100,7 +254335,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_AMX_014_MegaBeamCannon.gw"
     },
     "NZN_AMX_014_BSG__lv1": {
-      "name": "光束炮",
+      "name": "光束霰弹枪",
       "type": "beam",
       "min": 1,
       "max": 2,
@@ -254219,10 +254454,23 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "category": "other",
+      "category": "beam_shotgun",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_AMX_014_BSG.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_AMX_014_BSG.gw",
+      "nativeProjectile": "Projectile_BeamShotGun_Yellow",
+      "weaponClass": "beam_shotgun",
+      "localization": {
+        "zh": {
+          "name": "光束霰弹枪"
+        },
+        "en": {
+          "name": "Beam Shotgun"
+        },
+        "ja": {
+          "name": "ビーム・ショットガン"
+        }
+      }
     },
     "NZN_AMX_014_MS__lv1": {
       "name": "导弹发射器",
@@ -255192,7 +255440,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Shell/NZN_AMX_107_MS.gw"
     },
     "NZN_AMX_107_ShieldBSG__lv1": {
-      "name": "光束炮",
+      "name": "盾牌光束霰弹枪",
       "type": "beam",
       "min": 1,
       "max": 2,
@@ -255385,7 +255633,7 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "category": "other",
+      "category": "beam_shotgun",
       "actionCost": 2,
       "level": 1,
       "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_AMX_107_ShieldBSG.gw",
@@ -255402,10 +255650,23 @@
           null,
           null
         ]
+      },
+      "nativeProjectile": "Projectile_BeamShotGun_Yellow",
+      "weaponClass": "beam_shotgun",
+      "localization": {
+        "zh": {
+          "name": "盾牌光束霰弹枪"
+        },
+        "en": {
+          "name": "Shield Beam Shotgun"
+        },
+        "ja": {
+          "name": "シールド・ビーム・ショットガン"
+        }
       }
     },
     "NZN_AMX_107_ShieldBSG_L__lv1": {
-      "name": "光束炮",
+      "name": "盾牌光束霰弹枪",
       "type": "beam",
       "min": 1,
       "max": 2,
@@ -255594,10 +255855,23 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "category": "other",
+      "category": "beam_shotgun",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_AMX_107_ShieldBSG.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_AMX_107_ShieldBSG.gw",
+      "nativeProjectile": "Projectile_BeamShotGun_Yellow",
+      "weaponClass": "beam_shotgun",
+      "localization": {
+        "zh": {
+          "name": "盾牌光束霰弹枪"
+        },
+        "en": {
+          "name": "Shield Beam Shotgun"
+        },
+        "ja": {
+          "name": "シールド・ビーム・ショットガン"
+        }
+      }
     },
     "NZN_AMX_107_BR__lv1": {
       "name": "光束步枪",
@@ -262346,7 +262620,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Cqb/NZN_MSN_03_BeamSaber_AF_Green_Lv2.gw"
     },
     "NZN_MSN_03_ShieldBSG__lv1": {
-      "name": "导弹发射器",
+      "name": "盾牌光束霰弹枪",
       "type": "beam",
       "min": 3,
       "max": 4,
@@ -262546,13 +262820,26 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "category": "missile",
+      "category": "beam_shotgun",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_MSN_03_ShieldBSG.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_MSN_03_ShieldBSG.gw",
+      "nativeProjectile": "Projectile_BeamShotGun_Yellow",
+      "weaponClass": "beam_shotgun",
+      "localization": {
+        "zh": {
+          "name": "盾牌光束霰弹枪"
+        },
+        "en": {
+          "name": "Shield Beam Shotgun"
+        },
+        "ja": {
+          "name": "シールド・ビーム・ショットガン"
+        }
+      }
     },
     "NZN_MSN_03_ShieldBSG_L__lv1": {
-      "name": "导弹发射器",
+      "name": "盾牌光束霰弹枪",
       "type": "beam",
       "min": 3,
       "max": 4,
@@ -262748,10 +263035,23 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "category": "missile",
+      "category": "beam_shotgun",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_MSN_03_ShieldBSG.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_MSN_03_ShieldBSG.gw",
+      "nativeProjectile": "Projectile_BeamShotGun_Yellow",
+      "weaponClass": "beam_shotgun",
+      "localization": {
+        "zh": {
+          "name": "盾牌光束霰弹枪"
+        },
+        "en": {
+          "name": "Shield Beam Shotgun"
+        },
+        "ja": {
+          "name": "シールド・ビーム・ショットガン"
+        }
+      }
     },
     "NZN_MSN_03_Funnel__lv1": {
       "sourceName": "NZN_MSN_03_Funnel",
@@ -263364,7 +263664,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Funnel/NZN_MSN_03_Funnel.gw"
     },
     "NZN_MSN_04_BSG__lv1": {
-      "name": "导弹发射器",
+      "name": "光束霰弹枪",
       "type": "beam",
       "min": 3,
       "max": 4,
@@ -263492,10 +263792,23 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "category": "missile",
+      "category": "beam_shotgun",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_MSN_04_BSG.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Beam/NZN_MSN_04_BSG.gw",
+      "nativeProjectile": "Projectile_BeamShotGun_Yellow",
+      "weaponClass": "beam_shotgun",
+      "localization": {
+        "zh": {
+          "name": "光束霰弹枪"
+        },
+        "en": {
+          "name": "Beam Shotgun"
+        },
+        "ja": {
+          "name": "ビーム・ショットガン"
+        }
+      }
     },
     "NZN_MSN_04_BR__lv1": {
       "name": "光束步枪",
@@ -268902,7 +269215,7 @@
       "levelSource": "Units/BattleUnits/Weapon/Shell/ZAFT_AMF_101_MG.gw"
     },
     "ZAFT_AMF_101_SG__lv1": {
-      "name": "ZAFT AMF 101 SG",
+      "name": "实弹霰弹枪",
       "type": "shell",
       "min": 1,
       "max": 2,
@@ -269030,10 +269343,23 @@
           "hiddenAction_SetAttackingOff"
         ]
       },
-      "category": "other",
+      "category": "shell_shotgun",
       "actionCost": 2,
       "level": 1,
-      "levelSource": "Units/BattleUnits/Weapon/Shell/ZAFT_AMF_101_SG.gw"
+      "levelSource": "Units/BattleUnits/Weapon/Shell/ZAFT_AMF_101_SG.gw",
+      "nativeProjectile": "Projectile_ShellShotGun",
+      "weaponClass": "shell_shotgun",
+      "localization": {
+        "zh": {
+          "name": "实弹霰弹枪"
+        },
+        "en": {
+          "name": "Ballistic Shotgun"
+        },
+        "ja": {
+          "name": "実弾ショットガン"
+        }
+      }
     },
     "ArchangelClass_Turret_BeamCannon__lv1": {
       "name": "舰载光束炮",

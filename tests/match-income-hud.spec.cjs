@@ -174,13 +174,15 @@ for (const mode of ["regular", "quick", "battlefield", "campaign"])
     await expect(page.locator("#victoryEconomy")).toContainText("损毁扣除 2 台");
     expect(balance.after).toEqual(balance.before);
   });
-test("main menu replay page has only the replay file action", async ({ page }) => {
+test("settings replay page has the replay file action", async ({ page }) => {
   await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
   await page.waitForFunction(() => assetsReady);
-  await page.locator("#shellRecords").click();
-  await expect(page.locator("#shellRecordsScreen button")).toHaveCount(1);
-  await expect(page.locator("#shellOpenReplay")).toBeVisible();
+  await expect(page.locator("#shellRecords")).toHaveCount(0);
+  await page.locator("#shellSettings").click();
+  await page.locator('[data-settings-tab="replay"]').click();
+  await expect(page.locator("#settings-page-replay button")).toHaveCount(1);
+  await expect(page.locator("#openReplayFile")).toBeVisible();
   const chooser = page.waitForEvent("filechooser");
-  await page.locator("#shellOpenReplay").click();
+  await page.locator("#openReplayFile").click();
   await chooser;
 });

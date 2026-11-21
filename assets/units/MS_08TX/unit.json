@@ -1102,7 +1102,7 @@
   "weaponKits": [
     {
       "id": "kit_0",
-      "name": "霰弹枪套件",
+      "name": "实弹霰弹枪套件",
       "cost": 0,
       "weapons": [
         "ZN_Shotgun",
@@ -1113,13 +1113,13 @@
       ],
       "localization": {
         "zh": {
-          "name": "霰弹枪套件"
+          "name": "实弹霰弹枪套件"
         },
         "en": {
-          "name": "Shotgun Kit"
+          "name": "Ballistic Shotgun Kit"
         },
         "ja": {
-          "name": "ショットガン装備"
+          "name": "実弾ショットガン装備"
         }
       }
     },

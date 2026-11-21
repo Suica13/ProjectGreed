@@ -1,0 +1,159 @@
+.base-facilities-screen h2 {
+  margin: 0;
+  font-size: 22px;
+  color: #cceaff;
+}
+#facilityCards {
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+.facility-card {
+  cursor: default;
+}
+.facility-card .warehouse-icon-frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.facility-card canvas {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+.facility-level {
+  color: #ffe9a2;
+  border: 1px solid #b9a269;
+  background: #53431e;
+  padding: 3px 7px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.facility-card .bay-unit-name {
+  font-weight: 700;
+}
+.warehouse-main .facility-card-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  padding: 10px;
+}
+.warehouse-main .facility-card-actions button {
+  min-width: 0;
+  width: 100%;
+  margin: 0;
+  padding: 8px 4px;
+}
+.facility-card.is-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #67849b;
+  background: #102333;
+  border-style: dashed;
+}
+.facility-dialog {
+  width: min(520px, 94vw);
+  max-height: 85dvh;
+  padding: 0;
+  overflow: auto;
+  background: #102e49;
+  border: 1px solid #4d7e9e;
+  color: #dceef8;
+}
+.facility-dialog header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #194966;
+  padding: 12px 16px;
+}
+.facility-dialog h2 {
+  margin: 0;
+  font-size: 19px;
+}
+#facilityDialogBody {
+  padding: 16px;
+}
+.facility-cost {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0;
+}
+.facility-cost dt,
+.facility-cost dd {
+  margin: 0;
+  padding: 10px 0;
+  border-bottom: 1px solid #28516d;
+}
+.facility-cost dt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.facility-cost img,
+.facility-cost svg {
+  width: 20px;
+  height: 20px;
+}
+.facility-dialog-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding-top: 16px;
+}
+.facility-unlock {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #28516d;
+}
+.facility-unlock.is-current {
+  color: #8ee0ff;
+}
+.crew-recruit-dialog {
+  width: min(520px, 94vw);
+  background: #132b3d;
+  color: #dceefa;
+  border: 1px solid #5a8dab;
+  padding: 20px;
+}
+.crew-recruit-dialog header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.crew-recruit-dialog h2 {
+  font-size: 20px;
+}
+.crew-recruitment {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+@media (max-width: 720px) {
+  #facilityCards {
+    grid-template-rows: none;
+    grid-auto-rows: minmax(240px, 1fr);
+  }
+  .base-facilities-screen .warehouse-main > header {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .base-facilities-screen h2 {
+    font-size: 18px;
+  }
+  #facilitySummary {
+    font-size: 11px;
+  }
+  .facility-level {
+    font-size: 11px;
+    padding: 2px 4px;
+  }
+  .warehouse-main .facility-card-actions {
+    padding: 6px;
+    gap: 4px;
+  }
+}

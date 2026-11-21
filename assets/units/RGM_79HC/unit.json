@@ -1049,7 +1049,7 @@
   "weaponKits": [
     {
       "id": "kit_0",
-      "name": "光束炮套件",
+      "name": "光束霰弹枪套件",
       "cost": 75,
       "weapons": [
         "EF_BeamSprayGunE2",
@@ -1057,7 +1057,18 @@
         "EF_BeamDagger_BF_B",
         "Common_DoubleVulcan_RGM_79HC",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "光束霰弹枪套件"
+        },
+        "en": {
+          "name": "Beam Shotgun Kit"
+        },
+        "ja": {
+          "name": "ビーム・ショットガン装備"
+        }
+      }
     },
     {
       "id": "kit_2",

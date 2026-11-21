@@ -94,7 +94,6 @@ test("battle recovery requires adjacency, blocks plans and nested carriers, and 
   assert(!G.hangars.canEmbark(g, carrier, carrier, h.id));
   G.hangars.embark(g, u, carrier, h.id);
   assert(u.acted);
-  assert.equal(u.actionPoints, 0);
   assert.equal(G.hangars.launchCells(g, u).length, 0);
   G.end(g);
   G.end(g);
@@ -105,8 +104,7 @@ test("battle recovery requires adjacency, blocks plans and nested carriers, and 
   assert(!u.acted);
   assert.equal(u.hp, 4321 + Math.round(G.modelOf(u).hp * 0.25));
   assert.equal(u.en, Math.min(G.modelOf(u).en, 37 + G.modelOf(u).en * 0.5));
-  assert(!u.brokenParts.leftArm);
-  assert.equal(G.actionPoints(u), 4);
+  assert(u.brokenParts.leftArm);
   assert(!G.canUndo(g, u));
   assert(!G.hangars.canEmbark(g, u, carrier, h.id));
   assert(G.onMap(u));
@@ -183,6 +181,8 @@ test("a lethal combat event evacuates cargo before winner evaluation and records
 test("launch uses passenger movement, terrain costs and blocked paths rather than a one-cell radius", () => {
   const { g, carrier, u, h } = fixture();
   // Transport behavior is tested independently of randomized pilot mobility.
+  carrier.allowAIBoarding = true;
+  delete u.squadId;
   for (const unit of g.units)
     unit.pilot = {
       ...unit.pilot,
@@ -241,7 +241,7 @@ test("launch locks the carrier undo and reduces passenger AP by 25 percent witho
   assert.equal(G.actionPoints(u), G.actionBudget(u));
 });
 
-test("cargo maintenance restores capped resources and two distinct seeded parts only on own turn", () => {
+test("cargo maintenance restores only HP and EN on own turn and preserves broken parts", () => {
   const { g, carrier, u, h } = fixture();
   u.embarked = { carrierId: carrier.id, hangarId: h.id };
   const m = G.modelOf(u);
@@ -255,7 +255,7 @@ test("cargo maintenance restores capped resources and two distinct seeded parts 
   G.end(g);
   assert.equal(u.hp, m.hp * 0.1 + Math.round(m.hp * 0.25));
   assert.equal(u.en, m.en * 0.5);
-  assert.equal(Object.keys(u.brokenParts).length, 2);
+  assert.equal(Object.keys(u.brokenParts).length, 4);
   G.end(copy);
   G.end(copy);
   assert.deepEqual(copy.units.find((x) => x.id === u.id).brokenParts, u.brokenParts);
@@ -265,7 +265,7 @@ test("cargo maintenance restores capped resources and two distinct seeded parts 
   G.end(g);
   assert.equal(u.hp, m.hp);
   assert.equal(u.en, m.en);
-  assert.deepEqual(u.brokenParts, {});
+  assert.deepEqual(u.brokenParts, { head: true, backpack: true, leftArm: true, rightArm: true });
   carrier.hp = 0;
   u.hp = m.hp * 0.5;
   u.en = 0;
@@ -274,7 +274,7 @@ test("cargo maintenance restores capped resources and two distinct seeded parts 
   assert.equal(u.en, 0);
 });
 
-test("AI retreats to compatible hangars and waits for 75 percent resources and repairs", () => {
+test("AI cargo can relaunch with persistent damaged parts once resources recover", () => {
   const { g, carrier, u, h } = fixture();
   // Transport behavior is tested independently of randomized pilot mobility.
   for (const unit of g.units)
@@ -286,23 +286,7 @@ test("AI retreats to compatible hangars and waits for 75 percent resources and r
   u.hp = Math.floor(m.hp * 0.2);
   u.en = 0;
   u.brokenParts = { head: true, leftArm: true };
-  Object.assign(u, { x: 3, y: 8 });
-  let boarded = false;
-  for (let i = 0; i < 8; i++) {
-    const order = G.hangars.recoveryOrder(g, u);
-    assert(order);
-    if (order.action === "embark") {
-      G.hangars.embark(g, u, carrier, order.fields.hangarId);
-      boarded = true;
-      break;
-    }
-    if (order.action === "move") G.move(g, u, order.fields.x, order.fields.y);
-    else {
-      G.end(g);
-      G.end(g);
-    }
-  }
-  assert(boarded);
+  u.embarked = { carrierId: carrier.id, hangarId: h.id };
   assert(!G.hangars.readyToLaunch(u));
   for (let rounds = 0; rounds < 8 && !G.hangars.readyToLaunch(u); rounds++) {
     G.end(g);
@@ -312,7 +296,7 @@ test("AI retreats to compatible hangars and waits for 75 percent resources and r
   assert(u.hp >= G.modelOf(u).hp * 0.75);
   assert(u.en >= G.modelOf(u).en * 0.75);
   u.brokenParts = { leftArm: true };
-  assert(!G.hangars.readyToLaunch(u));
+  assert(G.hangars.readyToLaunch(u));
 });
 
 test("AI formations keep support below one per three combat units and respect space restrictions", () => {

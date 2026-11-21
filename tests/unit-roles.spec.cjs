@@ -1,0 +1,23 @@
+const {test,expect}=require('@playwright/test'),{pathToFileURL}=require('node:url'),path=require('node:path');
+for(const width of [1440,390])test('unit role badges and compact COST labels at '+width,async({page})=>{
+ test.setTimeout(90000);await page.setViewportSize({width,height:960});const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto(pathToFileURL(path.resolve('public/client.html')).href);await page.waitForFunction(()=>assetsReady);
+ await page.evaluate(()=>{I18n.setLanguage('zh');Economy.creditActivity({id:'role-ui',matchId:'role-ui',money:0,supplies:0,inventory:{RGM_79:1,MS_07B:1,RX_77_2:1,Medea:1}});});
+ await page.locator('#shellHangar').click();
+ const cards=page.locator('#warehouseBays .warehouse-bay').filter({has:page.locator('canvas')});await expect(cards).toHaveCount(3);
+ for(const role of ['general','support','raid'])await expect(page.locator('#warehouseBays .unit-role-icon[data-combat-role="'+role+'"]').first()).toBeVisible();
+ for(const [role,glyph] of [['general','✂'],['support','✋'],['raid','✊']])expect(await page.locator('#warehouseBays .unit-role-icon[data-combat-role="'+role+'"]').first().textContent()).toBe(glyph+'\uFE0E');
+ const heights=await cards.first().evaluate(card=>{const icon=card.querySelector('.unit-role-icon').getBoundingClientRect(),cost=card.querySelector('.unit-summary-tag.cost').getBoundingClientRect();return {icon:icon.height,cost:cost.height,text:card.querySelector('.unit-summary-tag.cost').textContent};});
+ expect(heights.icon).toBe(heights.cost);expect(heights.text).toMatch(/^\d+C$/);
+ await cards.first().click();await expect(page.locator('#warehouseDialogTitle .unit-role-icon')).toBeVisible();await expect(page.locator('.warehouse-preview-cost')).toHaveText(/^\d+C$/);
+ await page.locator('#warehouseOpenCatalog').click();await expect(page.locator('#formationDetailTitle .unit-role-icon')).toBeVisible();await expect(page.locator('#formationCatalogCost')).toHaveText(/^\d+C$/);await page.locator('#closeFormationDetail').click();await page.locator('#warehouseClose').click();
+ await page.locator('#warehouseShips').click();await expect(page.locator('#warehouseBays .unit-role-icon[data-combat-role="normal"]')).toBeVisible();
+ await expect(page.locator('#warehouseBays .unit-role-icon[data-combat-role="normal"]')).toHaveText('●');
+ await page.locator('#shellProduction').click();const heading=page.locator('#productionList .unit-line-heading').first();await expect(heading).toBeVisible();
+ const alignment=await heading.evaluate(node=>{const name=node.querySelector('.unit-line-title').getBoundingClientRect(),icon=node.querySelector('.unit-role-icon').getBoundingClientRect();return {center:Math.abs(name.y+name.height/2-icon.y-icon.height/2),sameRow:icon.x>=name.right,font:parseFloat(getComputedStyle(node.querySelector('.unit-role-icon')).fontSize)};});
+ expect(alignment.center).toBeLessThan(1);expect(alignment.sameRow).toBe(true);expect(alignment.font).toBeGreaterThanOrEqual(20);
+ await page.screenshot({path:`tmp/verification/screenshots/unit-roles-production-${width}.png`});
+ await heading.click();await expect(page.locator('#productionUnitName')).toBeVisible();
+ const titleAlignment=await page.locator('#productionUnitName').evaluate(node=>{const name=node.querySelector('.production-unit-title').getBoundingClientRect(),icon=node.querySelector('.unit-role-icon').getBoundingClientRect();return Math.abs(name.y+name.height/2-icon.y-icon.height/2);});expect(titleAlignment).toBeLessThan(1);
+ expect(errors).toEqual([]);
+});

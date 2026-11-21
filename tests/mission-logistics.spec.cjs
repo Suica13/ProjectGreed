@@ -116,7 +116,7 @@ for (const width of [1440, 390])
     await page.screenshot({ path: `tmp/verification/screenshots/mission-logistics-${width}.png` });
     expect(errors).toEqual([]);
   });
-test("pilot sorting keeps PMC first and sorts names or descending levels inside faction groups", async ({
+test("pilot sorting saves name or descending level order within the current dorm category", async ({
   page,
 }) => {
   await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
@@ -134,14 +134,16 @@ test("pilot sorting keeps PMC first and sorts names or descending levels inside 
   });
   await page.reload();
   await page.locator("#shellHangar").click();
-  await page.locator("#shellSubnav").getByRole("button", { name: "驾驶员", exact: true }).click();
-  await expect(page.locator("#pilotRosterSort")).toHaveValue("name");
-  await expect(page.locator("#customPilotList .custom-pilot-card").first()).toHaveAttribute(
+  await page.locator("#shellPilots").click();
+  await page.locator("#pilotRosterSortControlButton").click();
+  await page.locator('#pilotRosterSortControlOptions [data-sort-rule="name"]').click();
+  await expect(page.locator("#customPilotList .dorm-card[data-pilot-id]").first()).toHaveAttribute(
     "data-pilot-id",
     "custom-sort-b",
   );
-  await page.locator("#pilotRosterSort").selectOption("level");
-  await expect(page.locator("#customPilotList .custom-pilot-card").first()).toHaveAttribute(
+  await page.locator("#pilotRosterSortControlButton").click();
+  await page.locator('#pilotRosterSortControlOptions [data-sort-rule="level"]').click();
+  await expect(page.locator("#customPilotList .dorm-card[data-pilot-id]").first()).toHaveAttribute(
     "data-pilot-id",
     "custom-sort-a",
   );

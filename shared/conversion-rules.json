@@ -4,6 +4,8 @@
     "damage": 0.75,
     "shootingDamageOffset": 0,
     "shootingHitOffset": -10,
+    "handheldCannonHitOffset": 15,
+    "kitCostOffset": -25,
     "shipMediumAccuracyBonus": 0.15,
     "nonCounterTargetAccuracy": 1.1,
     "accuracy": 1,

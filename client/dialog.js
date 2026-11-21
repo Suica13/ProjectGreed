@@ -105,6 +105,9 @@ const GameDialog = (() => {
   }
   return {
     choose,
+    scope: (title) => choose({title,message:"请选择本页或全部",actions:[
+      {label:"取消",value:null},{label:"本页",value:"page"},{label:"全部",value:"all",primary:true}
+    ]}),
     alert: (message, options = {}) => choose({ ...options, message }),
     confirm: async (message, options = {}) =>
       (await choose({

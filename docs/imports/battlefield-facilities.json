@@ -39,8 +39,8 @@
         11.25,
         10.5
       ],
-      "targetCells": 0.5,
-      "mapScale": 2.0253164556962027,
+      "targetCells": 0.375,
+      "mapScale": 1.518987341772152,
       "layers": [
         {
           "name": "A",
@@ -67,8 +67,8 @@
         11.25,
         10.5
       ],
-      "targetCells": 0.5,
-      "mapScale": 2.0253164556962027,
+      "targetCells": 0.375,
+      "mapScale": 1.518987341772152,
       "layers": [
         {
           "name": "A",
@@ -91,12 +91,12 @@
     "visual": {
       "nativeBounds": [
         -11.25,
-        -12.0,
+        -12,
         11.25,
         10.5
       ],
-      "targetCells": 0.5,
-      "mapScale": 2.6666666666666665,
+      "targetCells": 0.375,
+      "mapScale": 2.0,
       "layers": [
         {
           "name": "A",
@@ -119,12 +119,12 @@
     "visual": {
       "nativeBounds": [
         -22.5,
-        -24.0,
+        -24,
         22.5,
         22.5
       ],
-      "targetCells": 0.5,
-      "mapScale": 1.2903225806451613,
+      "targetCells": 0.375,
+      "mapScale": 0.967741935483871,
       "layers": [
         {
           "name": "A",

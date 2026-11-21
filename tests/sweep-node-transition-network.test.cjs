@@ -40,6 +40,8 @@ test("two sweep players receive fresh deployment on successive nodes while obser
         roomMode: "sweep",
         characterFaction: "PMC",
         inventory: { Medea: 5 },
+        storedUnits: Array.from({length:5},(_,i)=>({id:"medea-"+i,unitId:"Medea",kitId:"standard",
+          hp:G.models.Medea__standard.hp*.75,en:G.models.Medea__standard.en*.5,brokenParts:{head:true}})),
         licenses: { Medea: true },
       }),
     );
@@ -76,12 +78,16 @@ test("two sweep players receive fresh deployment on successive nodes while obser
   const host = await connect("create"),
     guest = await connect("join"),
     room = app.rooms.get("SWEEPNODES");
-  const formation = [{ unitId: "Medea", kitId: "standard" }];
+  const formation = [{ unitId: "Medea", kitId: "standard", stockId: "medea-4" }];
   await guest.act("set_ready", { formation, ready: true });
   await host.act("start_game", { formation });
   await host.act("confirm_formation");
   await guest.act("confirm_formation");
   assert.equal(room.phase, "sweep_map");
+  for(const roster of Object.values(room.sweep.rosters)) {
+    assert.equal(roster[0].state.hp,G.models.Medea__standard.hp*.75);
+    assert.equal(roster[0].state.brokenParts.head,true);
+  }
   for (let node = 0; node < 2; node++) {
     const next = require("../shared/sweep-mode").view(room, room.hostId).reachable[0];
     room.sweep.nodes.find((n) => n.id === next).type = "battle";
@@ -94,6 +100,8 @@ test("two sweep players receive fresh deployment on successive nodes while obser
     assert.equal(remote.sweep.battleIndex, node + 1);
     assert.equal(room.game.deployment[0], false);
     assert.equal(room.game.deployment[2], false);
+    assert(room.game.units.filter(u=>u.team===0).every(u=>u.stockId && u.brokenParts.head));
+    assert(room.game.units.filter(u=>u.team===0).every(u=>u.stockId === "medea-4"));
     assert(room.game.units.some((u) => u.team === 1 && u.embarked));
     await host.act("confirm_deployment");
     assert.equal((await guest.act("confirm_deployment")).phase, "idle");

@@ -39,8 +39,7 @@ const DevelopmentUI = (() => {
   function unitRow(unitId) {
     const ace = PilotSystem.aceProfile(unitId);
     if (ace || unitId === "Beacon_ACE_0079") {
-      const row = element("button", "development-unit development-ace");
-      row.type = "button";
+      const row = element("div", "development-unit development-ace");
       row.dataset.aceId = ace?.id || "";
       if (ace) {
         const icon = element("img");
@@ -48,8 +47,7 @@ const DevelopmentUI = (() => {
         icon.alt = "";
         row.append(icon);
       } else row.append(element("span", "development-unit-placeholder", "ACE"));
-      row.append(element("span", "", ace ? "ACE · " + ace.name : "ACE招募"));
-      row.onclick = () => Formation.openAceRecruitment(ace?.id || null);
+      row.append(element("span", "", ace ? "ACE · " + ace.name : "ACE驾驶员"));
       return row;
     }
     const prefab = Rules.catalog.prefabs.find((unit) => unit.id === unitId);
@@ -74,59 +72,21 @@ const DevelopmentUI = (() => {
 
   function showDetails(node, faction) {
     const names = new Map(Development.nodes(faction).map((item) => [item.id, item.name]));
-    const unlocked = new Set(Development.unlockedTech(faction));
-    const available = node.requires.every((id) => unlocked.has(id));
-    const researched = unlocked.has(node.id);
-    const treeLocked = Development.eraLocked(faction);
-    const points = Development.pointBalance(faction);
     details.replaceChildren(
       element("h3", "", node.name),
       element("p", "muted", node.description),
-      element("p", "", "所需科技点：" + node.points),
+      element("p", "", "科技参考值：" + node.points),
       element(
         "p",
         "",
         "前置科技：" + (node.requires.map((id) => names.get(id) || id).join("、") || "无"),
       ),
-      element(
-        "p",
-        "development-research-status muted",
-        treeLocked
-          ? "科技树未解锁"
-          : researched
-          ? "已开发"
-          : !available
-            ? "前置科技未完成"
-            : points < node.points
-              ? "科技点不足"
-              : "可以开发",
-      ),
       element("h4", "", "解锁单位与驾驶员"),
     );
-    if (researched) details.querySelector(".development-research-status")?.remove();
     const units = element("div", "development-units");
     for (const id of node.unlocks) units.append(unitRow(id));
     details.append(units);
-    const action = element("button", researched ? "" : "primary", researched ? "已开发" : "开发");
-    action.type = "button";
-    action.disabled = treeLocked || researched || !available || points < node.points;
-    action.title = researched ? "已开发" : "达到 " + node.points + " 科技点，不消耗科技点或货币";
-    action.onclick = () => {
-      try {
-        if (Development.research(faction, node.id)) {
-          GameAudio.play("researchSound");
-          window.dispatchEvent(new Event("development-changed"));
-          render();
-        }
-      } catch {
-        note("科技进度保存失败，请检查浏览器存储空间");
-      }
-    };
-    const price = element("div", "resource-balance");
-    price.textContent = "科技点：" + points + " / " + node.points;
-    price.classList.add("development-research-price");
-    details.insertBefore(price, details.querySelector("h4"));
-    details.insertBefore(action, price);
+    details.prepend(element("p", "development-readonly-note", "科技目录 · 仅供展示"));
   }
 
   function render() {
@@ -141,7 +101,7 @@ const DevelopmentUI = (() => {
       Math.round(value * amount + [23, 36, 48][i] * (1 - amount)).toString(16).padStart(2, "0")).join("");
     byId("developmentMain").style.setProperty("--dev-action", tint(.45));
     byId("developmentMain").style.setProperty("--dev-selected", tint(.18));
-    const locked = Development.eraLocked(faction);
+    const locked = false;
     byId("developmentMain").classList.toggle("development-era-locked", locked);
     for (const host of [treeScroll, details, treeScroll.parentElement]) {
       host.querySelector(":scope > .development-era-lock")?.remove();
@@ -162,14 +122,10 @@ const DevelopmentUI = (() => {
       element(
         "span",
         "development-faction-progress",
-        "已开发" +
-          " · " +
-          allNodes.filter((node) => unlocked.has(node.id)).length +
-          " / " +
-          allNodes.length,
+        "科技目录 · " + allNodes.length + " 项",
       ),
     );
-    byId("developmentPoints").textContent = String(Development.pointBalance(faction));
+    byId("developmentPoints").textContent = "仅供展示";
     if (!nodes.some((node) => node.id === selectedId)) selectedId = nodes[0]?.id || null;
     graph.replaceChildren();
     const lines = document.createElementNS(svgNamespace, "svg");
@@ -191,10 +147,8 @@ const DevelopmentUI = (() => {
       card.style.gridColumn = String(branchColumns[node.row]);
       card.style.gridRow = String(node.column + (node.page ? lateStart - 1 : 0));
       card.dataset.techId = node.id;
-      card.dataset.state = unlocked.has(node.id) ? "unlocked" : "locked";
-      card.dataset.prerequisiteLocked = String(
-        !unlocked.has(node.id) && node.requires.some((id) => !unlocked.has(id)),
-      );
+      card.dataset.state = "unlocked";
+      card.dataset.prerequisiteLocked = "false";
       card.setAttribute("aria-pressed", String(node.id === selectedId));
       const main = element("span", "development-node-main");
       const icon = element("img", "development-node-icon");
@@ -204,7 +158,7 @@ const DevelopmentUI = (() => {
       const footer = element("span", "development-node-footer");
       footer.append(
         element("span", "development-cost", node.points + " 科技点"),
-        element("small", "development-node-state", unlocked.has(node.id) ? "已开发" : "未开发"),
+        element("small", "development-node-state", "目录"),
       );
       card.append(main, footer);
       card.onclick = () => {
@@ -267,7 +221,6 @@ const DevelopmentUI = (() => {
   window.addEventListener("resize", fitTree);
   byId("developmentFactionSelect").onchange = () => {
     render();
-    RoomPanel.selectTechnologyFaction(selectedFaction());
   };
   byId("developmentPageSelect").onchange = () => {
     selectedId = null;

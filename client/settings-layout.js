@@ -6,7 +6,7 @@ window.ClientSettingsLayout = (() => {
     body = element("div", "settings-pages"),
     sections = new Map();
   tabs.setAttribute("aria-label", "设置分类");
-  const names = { general: "显示", audio: "声音", storage: "存档", records: "记录", tools: "工具" };
+  const names = { general: "显示", audio: "声音", storage: "存档", records: "记录", replay: "回放", tools: "工具" };
   function select(id) {
     for (const [key, section] of sections) {
       section.hidden = key !== id;
@@ -49,6 +49,7 @@ window.ClientSettingsLayout = (() => {
   row("settingsHidePilotDialogue", general);
   for (const name of ["master", "music", "sfx"]) row("volume-" + name, sections.get("audio"));
   sections.get("audio").append(byId("musicPlayer"));
+  sections.get("replay").append(byId("openReplayFile"));
   const storage = sections.get("storage"),
     profile = dialog.querySelector(".profile-save-controls");
   if (profile) storage.append(profile);

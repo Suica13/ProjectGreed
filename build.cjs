@@ -198,6 +198,7 @@ for (const [key, file] of [
   ["STATE_WIRE", "shared/state-wire.js"],
   ["LOCAL_ROOM", "client/local-room.js"],
   ["LOBBY", "client/lobby.js"],
+  ["BASE_PAGE_CONTROLS", "client/base-page-controls.js"],
   ["ROOM", "client/room.js"],
 ])
   html = html.replace("__" + key + "__", () =>
@@ -207,9 +208,9 @@ for (const [key, file] of [
           stdin:{contents:'export { gunzipSync } from "fflate";',resolveDir:root},bundle:true,write:false,
           platform:"browser",format:"iife",globalName:"CatalogInflate",target:"chrome80",minify:true,legalComments:"eof"
         }).outputFiles[0].text + "\n/*! " + read("node_modules/fflate/LICENSE") + " */\n" + read(file))
-      : inlineScript((key === "ECONOMY" ? read("shared/warehouse.js") + "\n" : key === "PROFILE_SAVE" ? read("client/profile-save-core.js") + "\n" : key === "SWEEP_UI" ? read("client/sweep-restock.js") + "\n" : "") + read(file)),
+      : inlineScript((key === "ECONOMY" ? 'const BASE_FACILITY_TYPES = '+read("shared/base-facility-types.json")+';\n'+read("shared/base-facilities.js")+'\n'+read("shared/warehouse.js") + "\n" : key === "PROFILE_SAVE" ? read("client/profile-save-core.js") + "\n" : key === "SWEEP_UI" ? read("client/sweep-restock.js") + "\n" : "") + read(file)),
   );
-html = html.replace("</body>", () => `<style>${read("client/warehouse.css")}</style><script>${inlineScript(read("client/warehouse.js"))}</script></body>`);
+html = html.replace("</body>", () => `<style>${read("client/warehouse.css")}\n${read("client/unit-panels.css")}\n${read("client/base-facilities.css")}\n${read("client/base-pages.css")}</style><script>${inlineScript(read("client/warehouse.js"))}\n${inlineScript(read("client/base-facilities.js"))}</script></body>`);
 const layout = JSON.parse(read("client/ui-layout.json"));
 html = html.replace(
   "</body>",
@@ -249,13 +250,10 @@ for (const asset of ["mission-background.png", "mission-scenes.png"]) {
   const name = "assets/sweep/" + asset;
   html = html.replaceAll(name, "data:image/png;base64," + fs.readFileSync(path.join(root, name)).toString("base64"));
 }
-// Embed images after viewport-unit rewriting: base64 can coincidentally contain strings such as "91vw".
-for (const [token, file, mime] of [
-  ["__WAREHOUSE_BACKGROUND__", "assets/ui/warehouse-workshop.jpg", "jpeg"],
-  ["__WAREHOUSE_HANGAR__", "assets/ui/storage-rack.png", "png"],
-  ["__WAREHOUSE_PORT__", "assets/ui/warehouse-port.jpg", "jpeg"],
-  ["__WAREHOUSE_BERTH__", "assets/ui/storage-berth.png", "png"],
-]) html = html.replaceAll(token, () => "data:image/" + mime + ";base64," + fs.readFileSync(path.join(root,file)).toString("base64"));
+for (const asset of ["warehouse-unit-topdown.webp", "warehouse-ship-topdown.webp"]) {
+  const name = "assets/ui/" + asset;
+  html = html.replaceAll(name, "data:image/webp;base64," + fs.readFileSync(path.join(root, name)).toString("base64"));
+}
 const outputs = [["client.html", html]];
 fs.mkdirSync(path.join(root, "public"), { recursive: true });
 for (const [name, content] of outputs) {

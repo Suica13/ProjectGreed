@@ -1,4 +1,4 @@
-﻿/* Tiny standalone login shell; authenticated backend supplies all live catalog data. */
+/* Tiny standalone login shell; authenticated backend supplies all live catalog data. */
 const fs = require("node:fs"),
   path = require("node:path");
 function buildDeveloper(root) {
@@ -15,7 +15,7 @@ function buildDeveloper(root) {
     LANDSCAPE_VIEWPORT_CSS: "client/landscape-viewport.css",
   }))
     css = css.replaceAll("__" + key + "__", read(file));
-  css += "\n" + read("client/catalog-developer.css");
+  css += "\n" + read("client/unit-panels.css") + "\n" + read("client/catalog-developer.css");
   const preview = template.slice(
     template.indexOf('      <div id="formationUnitDetail"'),
     template.indexOf('      <div id="customPilotPanel"'),
@@ -39,6 +39,7 @@ function buildDeveloper(root) {
       "client/renderer.js",
       "client/skill-controls.js",
       "client/unit-catalog.js",
+      "shared/warehouse.js",
       "client/unit-preview.js",
       "client/catalog-preview.js",
       "client/encyclopedia.js",

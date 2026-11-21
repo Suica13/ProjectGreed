@@ -1,13 +1,19 @@
-/* Unit preview and permanent deployment license purchases. */
+/* Licensed chassis production; permits are granted by rewards and conditions. */
 const ProductionUI = (() => {
   let selectedId = null,
     kitId = null,
     tab = "stats";
   let returnView = "menu",
-    onReturn = null;
+    onReturn = null, storageTarget = null;
   const filters = { faction: "", era: "", type: "" };
   let salePending = false;
   const screen = byId("productionScreen");
+  const warehouseReturn = element("button", "warehouse-return-production", "返回格纳库");
+  warehouseReturn.id = "productionReturnWarehouse";
+  warehouseReturn.type = "button";
+  warehouseReturn.hidden = true;
+  warehouseReturn.onclick = () => byId("closeProduction").click();
+  screen.querySelector(".production-browser").prepend(warehouseReturn);
   const resourceIcon = (kind) => {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("viewBox", "0 0 24 24");
@@ -91,19 +97,8 @@ const ProductionUI = (() => {
       }
     }
   }
-  // Both license entry points share purchase validation and persistence.
-  function purchaseUnitLicense(unitId) {
-    if (Net.started && Net.snapshot?.phase !== "assembly") return "当前无法购买部署许可";
-    try {
-      if (!Economy.purchaseLicense(unitId, PlayerProfile.faction())) return "当前无法购买部署许可";
-      GameAudio.play("productionSound");
-      return "已获得永久部署许可，赠送机体和默认套件各1份";
-    } catch (error) {
-      return "许可购买失败：" + Economy.errorMessage(error);
-    }
-  }
   function productionNote(prefab) {
-    return I18n.text("无法直接购买许可");
+    return I18n.text("无法直接生产");
   }
   function saleTitle(unitId) {
     const offer = Economy.saleOffer(unitId);
@@ -129,52 +124,11 @@ const ProductionUI = (() => {
       salePending = false;
     }
   }
-  function renderLicensePurchase(unitId, selectedKit = Economy.defaultKit(unitId)) {
-    let panel=byId("formationInventorySale");
-    if (!panel) {
-      panel=element("div","inventory-sale");panel.id="formationInventorySale";
-      byId("formationUnitDetail").querySelector(".unit-detail-summary").after(panel);
-    }
-    panel.replaceChildren();
-    const owned=Economy.hasLicense(unitId), prefab=Rules.catalog.prefabs.find(item=>item.id===unitId);
-    const offer=owned?Economy.productionOffer(unitId,selectedKit):Economy.licenseOffer(unitId);
-    const caption=element("span","inventory-owned",owned?"机体库存 "+Economy.quantity(unitId):"未许可");
-    const price=element("span","resource-balance");if(offer)resources(price,offer,{compact:true});
-    const button=element("button","primary",owned?"生产":"购买部署许可");button.id="producePreviewUnit";
-    button.disabled=!offer||!prefab||!allows(prefab)||!Economy.affordable(offer)||
-      (Net.started&&Net.snapshot?.phase!=="assembly");
-    button.onclick=()=>{
-      try {
-        if(owned) {
-          const ok=Economy.produce(unitId,selectedKit,PlayerProfile.faction());
-          note(ok?"已生产机体 ×1":"无法生产，请检查许可、科技及资金物资");
-          if(ok)GameAudio.play("productionSound");
-        } else note(purchaseUnitLicense(unitId));
-      } catch(error){note(Economy.errorMessage(error));}
-      Formation.refresh();renderLicensePurchase(unitId,selectedKit);
-      if(pageView==="production")render();
-    };
-    const sell = element("button", "danger", "出售");
-    sell.id = "sellPreviewUnit";
-    sell.disabled = Net.started || salePending || !Economy.saleOffer(unitId) || Economy.quantity(unitId) < 1;
-    sell.title = saleTitle(unitId);
-    sell.onclick = async () => {
-      sell.disabled = true;
-      const message = await sellStock(unitId);
-      if (message) note(message);
-      Formation.refresh(); renderLicensePurchase(unitId, selectedKit);
-      if (pageView === "production") render();
-    };
-    const row = element("div", "inventory-transaction-row");
-    row.append(price, button, sell);
-    panel.append(caption, row);
-  }
   function allows(prefab) {
     const faction = PlayerProfile.faction();
     return (
       !prefab.wip &&
-      (faction === "PMC" || (prefab.availableFactions || [prefab.faction]).includes(faction)) &&
-      Development.allows(faction, prefab.id)
+      (faction === "PMC" || (prefab.availableFactions || [prefab.faction]).includes(faction))
     );
   }
   function metrics(container, rows) {
@@ -306,35 +260,25 @@ const ProductionUI = (() => {
     }
   }
   function renderDetails() {
-    const prefab = Rules.catalog.prefabs.find((p) => p.id === selectedId),
-      select = byId("productionKit");
-    select.replaceChildren();
+    const prefab = Rules.catalog.prefabs.find((p) => p.id === selectedId);
     if (!prefab) {
       byId("productionUnitName").textContent = "没有符合筛选的单位";
       byId("productionInfo").replaceChildren();
       byId("productionPrice").replaceChildren();
-      byId("productionQuantity").textContent = "";
-      byId("productionBaseKitName").textContent = "购买部署许可";
-      for (const button of ["produceUnit", "sellProductionUnit", "purchaseProductionLicense"]) byId(button).disabled = true;
-      byId("purchaseProductionLicense").hidden = true;
-      byId("productionLicensePrice").hidden = true;
+      for (const button of ["produceUnit", "sellProductionUnit"]) byId(button).disabled = true;
+      byId("productionLicenseStatus").hidden = true;
       const canvas = byId("productionPreview");
       canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
       return;
     }
-    if (!prefab.weaponKits.some((k) => k.id === kitId))
-      kitId = Economy.defaultKit(prefab.id) || prefab.weaponKits[0].id;
-    for (const kit of prefab.weaponKits) select.add(new Option(kit.name, kit.id));
-    select.value = kitId;
-    select.disabled = false;
+    kitId = Economy.defaultKit(prefab.id) || prefab.weaponKits[0].id;
     const id = prefab.id + "__" + kitId,
       model = UnitModels[id];
-    const permit = Economy.licenseOffer(prefab.id),
-      offer = Economy.productionOffer(prefab.id, kitId);
+    const offer = Economy.productionOffer(prefab.id, kitId);
     const owned = Economy.hasLicense(prefab.id),
       locked = !allows(prefab);
     const busy = Net.started && Net.snapshot?.phase !== "assembly";
-    byId("productionUnitName").textContent = prefab.name;
+    byId("productionUnitName").replaceChildren(element("span", "production-unit-title", prefab.name),UnitPreview.roleIcon(model));
     Formation.renderPreview(id, byId("productionPreview"));
     renderInfo(model);
     const prices = byId("productionPrice");
@@ -352,21 +296,11 @@ const ProductionUI = (() => {
         prices.append(row);
       }
     else prices.append(element("span", "muted", "无法直接生产"));
-    byId("productionQuantity").textContent =
-      "机体库存 " +
-      Economy.quantity(prefab.id);
-    byId("productionBaseKitName").textContent = "选择出厂套件";
-    const purchase = byId("purchaseProductionLicense");
-    purchase.hidden = owned;
-    purchase.disabled = owned || !permit || locked || busy || !Economy.affordable(permit);
-    purchase.textContent = "购买部署许可";
-    const permitPrice = byId("productionLicensePrice");
-    permitPrice.hidden = owned;
-    resources(permitPrice, permit || {}, { compact: true });
+    byId("productionLicenseStatus").hidden = owned;
     byId("produceUnit").dataset.licenseLocked = String(!owned);
     byId("produceUnit").disabled = !owned || !offer || locked || busy || !Economy.affordable(offer) || !Economy.canStore(selectedId, kitId);
     byId("produceUnit").textContent = "生产";
-    byId("produceUnit").title = !owned ? "请先购买部署许可" : locked ? "尚未开发或阵营不匹配" :
+    byId("produceUnit").title = !owned ? "未许可" : locked ? "当前无法生产" :
       !Economy.canStore(selectedId, kitId) ? "机库或船坞已满" : "";
     byId("sellProductionUnit").disabled = Net.started || salePending || !Economy.saleOffer(prefab.id) || Economy.quantity(prefab.id) < 1;
     byId("sellProductionUnit").title = saleTitle(prefab.id);
@@ -377,7 +311,7 @@ const ProductionUI = (() => {
     const list = byId("productionList"),
       scroll = list.scrollTop;
     const prefabs = UnitCatalog.select(byId("productionSearch").value, filters, allows).sort(
-      UnitCatalog.compareDevelopedCost(),
+      UnitCatalog.compareDevelopedCost(PlayerProfile.faction(), prefab => Economy.hasLicense(prefab.id)),
     );
     if (!prefabs.some((p) => p.id === selectedId)) {
       selectedId = prefabs[0]?.id || null;
@@ -389,7 +323,7 @@ const ProductionUI = (() => {
       card.dataset.buttonSound = "off";
       card.type = "button";
       card.dataset.unitId = prefab.id;
-      card.dataset.locked = String(!Economy.hasLicense(prefab.id) && !allows(prefab));
+      card.dataset.locked = String(!Economy.hasLicense(prefab.id));
       card.setAttribute("role", "option");
       card.setAttribute("aria-selected", String(selectedId === prefab.id));
       const image = element("img");
@@ -402,36 +336,25 @@ const ProductionUI = (() => {
       const defaultModel = UnitModels[Economy.defaultModel(prefab.id)];
       const tags = Formation.unitTags(defaultModel || prefab, {
         cost: defaultModel?.cost ?? prefab.stats.cost,
-        kitName: defaultModel?.kitName,
         twoRows: true,
       });
       const heading = element("span", "unit-line-heading"),
         metadata = element("span", "unit-line-meta");
       const name = element("strong", "unit-line-title", prefab.name);
       name.title = prefab.name;
-      heading.append(name);
+      heading.append(name,UnitPreview.roleIcon(defaultModel||prefab));
       metadata.append(tags);
       const price = element("span", "production-unit-price"),
         balance = element("span", "resource-balance");
       if (offer) resources(balance, offer);
       else balance.append(element("span", "muted", productionNote(prefab)));
       price.append(balance);
-      const owned = element("small", "muted production-owned");
-      owned.append(
-        element(
-          "span",
-          "",
-          "机体库存 " +
-            Economy.quantity(prefab.id) +
-            (licensed ? "" : " · 未许可"),
-        ),
-      );
       const portrait = element("span", "production-unit-portrait");
       portrait.append(image);
-      const status = !allows(prefab) ? "未开发" : !licensed ? "未许可" : null;
+      const status = !licensed ? "未许可" : null;
       if (status) portrait.append(element("small", "unit-portrait-status", status));
       const footer = element("span", "production-unit-footer");
-      footer.append(price, owned);
+      footer.append(price);
       text.append(heading, metadata, footer);
       card.append(portrait, text);
       card.onclick = () => {
@@ -487,6 +410,8 @@ const ProductionUI = (() => {
   byId("openProduction").onclick = () => {
     returnView = Net.active ? "room" : "menu";
     onReturn = null;
+    storageTarget = null;
+    warehouseReturn.hidden = true;
     byId("closeProduction").textContent = "返回主菜单";
     filters.faction = Rules.factions.includes(PlayerProfile.faction())
       ? PlayerProfile.faction()
@@ -509,11 +434,6 @@ const ProductionUI = (() => {
     byId("productionStatus").textContent = "";
     render();
   };
-  byId("productionKit").onchange = (e) => {
-    kitId = e.target.value;
-    byId("productionStatus").textContent = "";
-    renderDetails();
-  };
   for (const kind of ["stats", "weapons", "abilities"]) {
     const button = byId("production" + kind[0].toUpperCase() + kind.slice(1) + "Tab");
     button.onclick = () => {
@@ -531,13 +451,16 @@ const ProductionUI = (() => {
     }
     byId("productionStatus").textContent = message;
   }
-  byId("purchaseProductionLicense").onclick = () => finishPurchase(purchaseUnitLicense(selectedId));
   byId("produceUnit").onclick=()=>{
     if(Net.started&&Net.snapshot?.phase!=="assembly")return;
     try {
-      const ok=Economy.produce(selectedId,kitId,PlayerProfile.faction());
+      const model = UnitModels[selectedId + "__" + kitId],
+        target = storageTarget && Warehouse.category(model) === storageTarget.kind &&
+          !Economy.snapshot().storage[storageTarget.kind].some((item) => item.slot === storageTarget.slot) ? storageTarget.slot : undefined;
+      const ok=Economy.produce(selectedId,kitId,PlayerProfile.faction(),target);
+      if (ok && target !== undefined) storageTarget = null;
       if(ok)GameAudio.play("productionSound");
-      finishPurchase(ok?"已生产机体 ×1":"无法生产，请检查许可、科技及资金物资");
+      finishPurchase(ok?"已生产机体 ×1":"无法生产，请检查许可及资金物资");
     } catch(error){finishPurchase("生产失败："+Economy.errorMessage(error));}
   };
   byId("sellProductionUnit").onclick = async () => {
@@ -566,6 +489,8 @@ const ProductionUI = (() => {
     kitId = null;
     returnView = options.returnView || "menu";
     onReturn = options.onReturn || null;
+    storageTarget = options.storageTarget || null;
+    warehouseReturn.hidden = returnView !== "warehouse";
     filters.era = filters.type = "";
     // A direct unit link must remain visible even when it belongs to another faction.
     filters.faction =
@@ -573,9 +498,9 @@ const ProductionUI = (() => {
     setupFilters();
     byId("productionSearch").value = unitId || "";
     byId("closeProduction").textContent =
-      returnView === "formation" ? "返回编组" : returnView === "room" ? "返回房间" : "返回主菜单";
+      returnView === "warehouse" ? "返回格纳库" : returnView === "formation" ? "返回编组" : returnView === "room" ? "返回房间" : "返回主菜单";
     setPageView("production");
     render();
   }
-  return { render, resources, resourceIcon, openUnit, receiveAwards, renderLicensePurchase };
+  return { render, resources, resourceIcon, openUnit, receiveAwards };
 })();

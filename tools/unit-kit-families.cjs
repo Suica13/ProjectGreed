@@ -14,10 +14,13 @@ function apply(catalog, families) {
     if (!best) throw Error("Missing variant model: " + variant);
     const [sourceId, model] = best,
       id = base.id + "__" + entry.kitId;
+    const sourceKit = source.weaponKits.find(k => k.id === model.kitId);
+    const originalCost = model.cost - base.stats.cost + ((sourceKit?.conversionBaseCost ?? sourceKit?.cost ?? 0) - (sourceKit?.cost ?? 0));
     const kit = {
       id: entry.kitId,
       name: source.name,
-      cost: model.cost - base.stats.cost,
+      conversionBaseCost: originalCost,
+      cost: Math.max(0, originalCost + (catalog.conversionRules.weapons.kitCostOffset || 0)),
       weapons: model.weapons.map((w) => w.id),
       variantUnitId: variant,
       variantKitId: model.kitId,
@@ -28,6 +31,7 @@ function apply(catalog, families) {
       ...model,
       prefabId: base.id,
       kitId: kit.id,
+      cost: base.stats.cost + kit.cost,
       kitName: kit.name,
       kitLocalization: kit.localization,
       name: base.name,

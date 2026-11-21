@@ -90,7 +90,8 @@ test("turn-end burning rounds after SP defense and finishing hits never exceed r
   const model = G.modelOf(b);
   assert.equal(
     event.damage,
-    G.roundDamage(model.hp * 0.05 * (1 - (model.defenses.sp.percent || 0) / 100)),
+    // Gouf (raid) resists fire from GM (general); round once after resistance.
+    G.roundDamage(model.hp * 0.05 * (1 - (model.defenses.sp.percent || 0) / 100) * 0.9),
   );
   const again = fixture();
   again.b.hp = 7;

@@ -1,39 +1,79 @@
 # 基地仓储
 
-入口：主菜单「基地 → 格纳库」。只按台数管理库存，不使用容量点。
+机库卡片采用正交俯视背景，单位为维修机库、舰船为更开阔的船坞。素材与生成提示词见[卡片背景](warehouse-backgrounds.md)。
 
-| 库存 | 每页格子 | 默认页数 | 台数上限 |
-| --- | --- | --- | --- |
-| 单位机库 | 8 | 3 | 24 |
-| 战舰船坞 | 3 | 3 | 9 |
+机库卡片和库存单位预览采用停机展示，关闭推进器喷焰与飞行高度抖动，仍保留当前套件和受损部位的显示。
+
+基地各页使用同一套56像素标题栏及蓝色平面面板。开发页为只读科技目录，完整展示各阵营科技及机型，不提供开发动作，也不再累计新的科技点；旧存档科技记录保留。机库可配属一般PMC、自定义PMC及ACE，阵营普通士兵选项不再提供。
+
+入口：主菜单「基地 → 机库」，页签为「单位／舰船」。只按台数管理库存，不使用容量点。
+
+| 库存 | 每页卡片 | 台数上限 |
+| --- | --- | --- |
+| 单位 | 8 | 工厂一级16格，之后每级增加8格，五级48格 |
+| 舰船 | 8（按实际格数分页） | 巨型工厂每级3格，一级3格、五级15格 |
 
 每格固定保存一台机体，大型单位也只占一格。战舰和航空运输机归船坞，其余机体归单位机库。
 
-点击空位打开生产面板，可以搜索单位、选择出厂套件并生产到该空位；点击已有单位打开单位面板，可以免费切换合法套件或查看详细参数。许可、科技和资源条件沿用现行规则。没有常驻左侧详情栏。
+点击空位先选择移动已有单位或生产新单位。移动时按来源页选择同类库存单位，保留编号、驾驶员、套件和战损，仅改变格子位置；单位机库与船坞分开移动。生产直接打开生产车间，首台同类单位生产到所选空位，后续生产沿用普通入库规则，可返回格纳库。点击已有单位打开整备详情：左侧为朝下的受损贴图预览，右侧为HP、EN与不可点击的整体状态标记。普通单位零件状态每排两个，战舰模块单列滚动；武器套件下方依次为普通变形和驾驶员配属区域。电脑版底部左半显示基础属性与防护数据，右半预留零件槽位WIP框；手机上下排列。只显示已有规则中的属性，不增加强化零件系统。许可、科技和资源条件沿用现行规则。
 
-机库采用封闭车间地面与整备支架；船坞采用独立的封闭科幻泊位。均为正上方正交俯视视角，不展示底部及左右的围墙。单位按当前套件朝下绘制。
+机库与船坞均采用卡片，桌面四列两行，窄屏两列并可滚动。上方编号、名称与COST横向对齐且同字号，长名称自动往返滚动。中间为带背景框的当前套件朝下单位贴图，图片左上角按年代、势力垂直排列标签，次要标签通过省略号查看。下方左侧为HP、EN进度条与部件状态按钮：绿色状态良好、黄色需要修理、红色完全损毁；右侧为带框的驾驶员头像与名称。当前编组中同机体、同套件的配属按库存位置依次对应，完全损毁的单位除外；未编入的库存展示默认驾驶员。
+
+生产界面、单位详细预览和图鉴共用战场绘制中心及mapScale。库存卡片与整备详情使用当前套件和实际受损部件绘制，MS及普通单位默认按单元格标准尺寸的115%显示，MA默认50%，船坞内舰船（含运输单位）默认25%；不再提供缩放按钮。EN条为黄色。
+
+整备详情按机体配置显示变形、爆甲、部署／解除部署等持久形态操作，不提供脱出。EXAM、HADES等临时战斗系统不保存为库存形态。选项以单位头像和名称展示结果；切换沿用武器套件映射，逆向装回时反查映射，不恢复战损。电脑版预览区与信息区高度均固定为446px，左侧底部与调动位置按钮底部对齐；手机预览区200px、信息区446px。右侧信息区整体不滚动，舰船零件单列显示最多三行，多余模块在零件列表内部滚动，按钮数量不改变面板尺寸。武器套件占半行，形态按钮放在右侧；过长套件名称自动滚动。
+
+变形按钮始终显示，不可用时置灰，其他形态按钮仅在可用时显示。预览图右上角的图鉴按钮打开编组共用的单位详情面板，初始展示该库存单位当前的形态与套件；关闭后返回整备详情。
+
+图鉴为只读参考面板，不提供生产、出售、许可购买或预先搭载操作；仅显示格纳库容量及可搭载类型。图鉴与整备详情共用画布尺寸、类别缩放和预览框尺寸，标题背景横向铺满，均使用“关闭”按钮。基础属性、防护及适应性采用一致的标签／数值行样式。
+
+整备详情标题中，单位名称右侧展示与编组详情一致的全部标签，不折叠为省略号；手机空间不足时自动换行。COST保留在预览图左上角，与右上角图鉴按钮等高。部位状态框固定130px高，无可破坏部位的机体同样保留该尺寸；内部内容区84px高，普通单位每排两项，舰船单列最多三行。
+
+驾驶员名称右侧提供紧凑的配属按钮，过长名称自动横向滚动。下方调动位置与出售按钮各占半行。调动面板使用等尺寸卡片和带背景框的图标，底部通过上一页、页码、下一页翻页。选择有单位的目标格则原子交换两台库存单位的位置，空格则直接移入；双方编号、配属、套件、耐久和战损均保留，单位机库与船坞不互换。出售须确认，按现有半价规则只出售当前选中的库存编号，不误删同型其他单位；对局中及完全损毁状态不出售。
+
+驾驶员配属保存为逐台库存记录中的pilotId引用，重开游戏后保留，编组会读取同一台单位的配属；未设置过库存配属的旧编组继续沿用原配属。个人驾驶员不能同时配属给两台存活机体，普通招募驾驶员受既有共享库存限制。失效或未招募的驾驶员回退为一般驾驶员。变形针对选中的库存记录，保留记录ID、格位、驾驶员、剩余耐久、EN与受损部件；EXAM等临时系统不出现在普通变形选项中。
+
+单位预览与图鉴面板共用蓝色扁平配色。单位预览保留现有内容、位置和固定尺寸；图鉴面板采用同样的标题标签、左侧贴图及COST、右侧配置和下方属性分区，仍用于展示机型资料。图鉴页面打开单位继续使用图鉴面板。
+
+编组添加列表只列出格纳库中实际存在的逐台库存，使用stockId绑定；同型号不同库存分别显示，完全损毁或已编入的记录不能再次添加，仅有许可但没有库存的机型不出现在列表中。已有旧编组在能匹配库存时补齐引用，库存不足的旧模板需重新编组后才能准备，不自动生产或凭许可生成单位。编组详情打开该库存单位的预览面板，可查看实际HP、EN、部位损坏并修改套件及驾驶员，关闭后同步编组；预览中的图鉴按钮仍打开图鉴面板。分享代码不携带个人库存编号，导入模板按本地库存重新匹配。服务端校验库存编号不可重复，并按选择的编号恢复部署状态，避免同型单位互换战损。
 
 经济存档 schemaVersion 为4，storage.units 与 storage.ships 保存逐台记录和固定格位，inventory 是供编组与结算使用的数量索引，二者在经济事务中一起校验保存。旧版经济存档首次读取或导入时清空原有机体与套件库存，保留资金、物资、许可、科技、驾驶员及奖励防重记录；新档不再预发旧的五份初始编组。已使用新版仓储的存档继续保留，不再次清空。
 
-生产前检查空位，不足时不扣资源。奖励超出数量上限的单位保存到待入库队列，不算可出击库存；腾出空间后在格纳库点击「领取待入库单位」。出售或损失单位后其他格位不前移。重复结算仍按原收据规则防重。
+生产前检查空位，不足时不扣资源。奖励超出数量上限的单位保存到待入库队列，不算可出击库存；腾出空间后在格纳库点击「领取待入库单位」。出售后其他格位不前移。重复结算仍按原收据规则防重。
+
+会记录战损的模式在最终结算时保存每台存活单位的剩余HP、EN及受损部件，下次出战继承。完全损毁的单位保留固定格位和记录，不再计入可出战库存，也不会因重新加载或发放同型号奖励自动恢复。快速战继续免损耗，不修改个人机体状态。意外退出或未结算返回房间不落盘战损。旧版仓储记录缺少状态时按满HP、满EN、部件完好补齐。
+
+封闭格纳库在己方回合仅恢复25%最大HP、50%最大EN，不恢复护盾或受损部件。AI补给逻辑不再等待无法修复的部件，以免长期滞留格纳库。此版本未增加基地修理费用或修理操作。
 
 策略模式与占山为王模式已移除，不再提供创建入口，不再加载专用地图和战役界面，服务端拒绝其模式和动作请求。历史说明仅供查阅。
 
-## 美术素材与生成提示词
+## 出售与属性
 
-使用内置 imagegen 生成，原图保存在 assets/ui/source/，运行时资源为 assets/ui/warehouse-workshop.jpg、warehouse-port.jpg、storage-rack.png、storage-berth.png。背景压缩为 JPEG，槽位保留透明 PNG；构建在视口单位替换完成后才嵌入图片，避免损坏 Base64。
+机库左下角“一键修复”先选择本页或全部：本页只处理当前分类、当前筛选页内可见单位，全部覆盖单位与舰船所有页。仅恢复HP和EN免费；修复部位按该机体单机生产物资价的四分之一收取一次，包含全部破损部位及舰船模块；大破（0耐久）改按二分之一收取一次，不叠加部位费用。费用向上取整到整数，只扣物资，确认后统一修复满HP、EN和部位状态。大破单位修复后恢复可用库存，保留原编号、位置、套件及驾驶员绑定；对局中禁用修复，物资不足或保存失败时不扣费、不改变机体。大破预览显示黑底红字提示。HP、EN未满或部位损坏均显示“需要修理”，0耐久显示“完全损毁”；点击状态标记打开单台修复面板，状态良好时不提供修复操作。
 
-共用提示词：
+编组添加单位面板默认按机库的页码、格子位置排列；自由编组同时显示两类库存时先单位、后舰船。排序筛选可切换为COST升序或名称顺序，只调整候选列表，不改变库存位置。同值沿用机库顺序。点击单位头像打开该台库存的整备详情，点击卡片文字区域选择待添加单位，不再提供独立详情按钮。
 
-> Use case: stylized-concept. Pixel-art game asset. STRICT ORTHOGRAPHIC TOP DOWN PLAN VIEW looking straight vertically down, parallel lines, absolutely no perspective, no isometric, no angled front walls, no vanishing points, no left or right tilt. Dark muted charcoal steel and blue gray, moderately worn sci-fi military machinery, restrained cyan indicators and yellow safety stripes, crisp readable detailed pixel contours, not bright sterile, not photoreal or blurry. No text, no units, no robots.
+不能出售的衍生形态（包括马哲兰顶部战斗机）及完全损毁单位，在机库整备面板显示“销毁”。销毁须二次确认，不返还资金或物资，只删除选中的独立库存记录；清理已经扣过库存的残骸不会再次扣减同型号库存。对局期间不可出售或销毁。
 
-各图追加：
+库存原始形态可出售：有生产价格时返还一半资金／物资，没有价格时收入为零。变形或爆甲后的衍生形态不可出售，需切回原始形态后出售；完全损毁单位仍不可出售。共用经济模块也执行此校验，不能绕过按钮出售。
 
-- 车间：Landscape background: enclosed futuristic maintenance workshop floor. Eight EMPTY areas will receive rack sprites later. Mostly flat dark floor with panels and service lines, pipes and overhead gantries only along edges. Indoor industrial atmosphere. Do not draw racks or garages or slot dividers in center.
-- 船坞：Landscape background: gigantic enclosed SPACE NAVAL DRYDOCK floor, distinct from a robot workshop. Mostly dark flat steel floor with recessed service rails running vertically and heavy dock infrastructure around edges. No water, no vessels. Three ship berth sprites will overlay the central area later. Dense sci-fi dock machinery at outer edges only, center uncluttered.
-- 支架：Transparent isolated sprite of ONE empty ROBOT MAINTENANCE SUPPORT RACK from directly overhead. Rectangular narrow steel platform running up/down, U-shaped mechanical support rails on left and right sides, crossbrace at rear top, small maintenance arms and machinery at corners. Center entirely empty and open. Not a building, no roof or walls. Full object visible with transparent surrounding area. Symmetric straight vertical alignment.
-- 泊位：Transparent isolated sprite of ONE long empty SPACE WARSHIP DOCKING BERTH from directly overhead. Vertical orientation, much longer than wide. Two heavy segmented service piers on left and right, articulated docking clamps and cyan guide lights, connected by rear machinery across top. Dark empty central recessed docking channel open at bottom for a ship to occupy. Enclosed harbor dock infrastructure, no water and no ship. Entire object visible, transparent surrounding area. Visibly different from a robot maintenance rack, heavy naval scale.
+单位预览与图鉴共用“主要属性／次要属性／技能列表”分页：主要属性显示COST、耐久、EN、移动、命中、索敌、伤害加成及防护、盾牌、部位强度，移动方式与生产周期放在伤害加成右侧；次要属性显示地形适应性。技能列表显示当前套件的技能、支援与机制，并单独列出未开放机制，内容过多时在页内滚动。各页采用同一高度，切换不改变面板大小，数值读取当前套件的机体数据。
 
-两个背景最后执行同一编辑提示词：
+机库的单位预览另有“武装列表”分页，显示当前套件的武器图标、名称、EN、伤害、命中率、轮数及可展开的详细信息。首次打开时加载，内容在固定高度的页内滚动；切换套件后重新读取对应武装。切换套件、变形或爆甲后保留当前选中的属性、技能或武装分页。
 
-> Edit this game background. Preserve the strict top-down orthographic view, dark muted sci-fi pixel art, floor panel style and industrial materials. REMOVE ALL framing infrastructure, fences, walls, pipes and machinery along LEFT, RIGHT and BOTTOM edges. Replace those entire three edges with seamless continuation of the flat interior floor. The room extends beyond the image boundaries. At TOP edge only retain a narrow band of machinery / gantry. Mostly empty usable floor. Do not add borders or frames. No perspective, no units, no text.
+## 搜索与排序
+
+机库支持按名称／编号搜索和阵营筛选；筛选只影响显示，不改变库存位置。点击排序按钮可选择名称、年代或COST升序，重新排列当前“单位”或“舰船”分类的全部库存并保存格位；另一分类保持原顺序。机体编号、套件、战损和驾驶员配属随同一库存记录保留。
+
+## 历史美术素材
+
+用户提供的素材位于 C:/Users/jpex1/OneDrive/桌面/素材/111。原图副本保存在 assets/ui/source/；当前卡片界面不再使用这些背景和托盘，也不再嵌入客户端HTML。
+
+| 用途 | 来源文件 | 运行时文件 |
+| --- | --- | --- |
+| 机库地板 | 空置机库双轨地板-1.png | assets/ui/warehouse-workshop.jpg |
+| 船坞地板 | 三泊位战舰机库地板-2.png | assets/ui/warehouse-port.jpg |
+| 机体支撑板 | 机库俯视钢制机体支撑板.png | assets/ui/storage-rack.png |
+| 船坞双轨泊位 | 开放式双轨码头.png | assets/ui/storage-berth.png |
+
+这些历史素材仅保留源文件，不参与当前库存卡片绘制。

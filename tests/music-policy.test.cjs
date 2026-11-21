@@ -62,11 +62,18 @@ function player() {
   }
   return { context, samples };
 }
-test("PMC menus randomize all menu tracks, while strategic menus and battles respect faction music", () => {
+test("menus use Menu tracks and battles use Battle tracks", () => {
   const { context: c, samples } = player();
   const menu = samples();
   assert(menu.every((t) => t.scene === "menu"));
-  assert.deepEqual([...new Set(menu.map((t) => t.faction))].sort(), ["EFSF", "PMC", "ZEON"]);
+  assert(menu.every((t) => /^Menu_\d+\.mp3$/.test(t.file)));
+  const tracks = require("../assets/music/playlist.json").tracks;
+  assert.equal(tracks.filter((t) => t.scene === "menu").length, 5);
+  assert.equal(tracks.filter((t) => t.scene === "battle").length, 8);
+  for (const track of tracks) {
+    assert(fs.existsSync(require("node:path").join("assets/music", track.file)));
+    assert.match(track.file, track.scene === "menu" ? /^Menu_\d+\.mp3$/ : /^Battle_\d+\.mp3$/);
+  }
   c.Net.snapshot = {
     settings: { mode: "campaign" },
     you: { id: "me" },
@@ -74,7 +81,7 @@ test("PMC menus randomize all menu tracks, while strategic menus and battles res
     campaign: { teams: [{ faction: "EFSF" }, { faction: "ZEON" }] },
   };
   c.player.sync();
-  assert(samples().every((t) => t.scene === "menu" && t.faction === "ZEON"));
+  assert(samples().every((t) => t.scene === "menu"));
   c.pageView = "game";
   c.player.sync();
   assert(samples().every((t) => t.scene === "battle" && (!t.faction || t.faction === "ZEON")));

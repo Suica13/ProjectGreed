@@ -33,6 +33,7 @@ function buildSaveEditor(root = path.resolve(__dirname, "..")) {
     DEVELOPMENT_TREE: JSON.parse(read("shared/development-tree.json")),
     STARTER_PROFILE: JSON.parse(read("shared/starter-profile.json")),
     PRODUCTION_CATALOG: require("../shared/production-data.cjs"),
+    BASE_FACILITY_TYPES: JSON.parse(read("shared/base-facility-types.json")),
     AI_UNIT_BANS: JSON.parse(read("shared/ai-unit-bans.json")),
   };
   const modules = [
@@ -50,6 +51,7 @@ function buildSaveEditor(root = path.resolve(__dirname, "..")) {
     "shared/hangars.js",
     "shared/pilots.js",
     "shared/warehouse.js",
+    "shared/base-facilities.js",
     "shared/economy.js",
     "shared/development.js",
     "shared/battlefield-climate.js",

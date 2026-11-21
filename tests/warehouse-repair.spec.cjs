@@ -1,0 +1,21 @@
+const {test,expect}=require('@playwright/test'),{pathToFileURL}=require('node:url'),path=require('node:path');
+for(const width of [1440,390])test('bulk warehouse repair confirms supplies and restores persistent wrecks '+width,async({page})=>{
+ test.setTimeout(90000);await page.setViewportSize({width,height:960});const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto(pathToFileURL(path.resolve('public/client.html')).href);await page.waitForFunction(()=>assetsReady);
+ const before=await page.evaluate(()=>{I18n.setLanguage('zh');Economy.creditActivity({id:'repair-ui',matchId:'repair-ui',money:100000,supplies:100000,inventory:{RGM_79:3}});
+  const [wreck,parts,free]=Economy.snapshot().storage.units;
+  Economy.creditAward({id:'repair-ui-damage',matchId:'repair-ui-damage',money:0,supplies:0,stockLost:{inventory:{RGM_79:1}},stockLostItems:[{stockId:wreck.id,unitId:wreck.unitId}],stockStates:[{stockId:parts.id,unitId:parts.unitId,kitId:parts.kitId,hp:100,en:0,brokenParts:{head:true,leftArm:true}},{stockId:free.id,unitId:free.unitId,kitId:free.kitId,hp:100,en:0}]});
+  return {profile:Economy.snapshot(),quote:Economy.repairQuote(),wreck};});
+ await page.locator('#shellHangar').click();await expect(page.locator('#warehouseRepairAll')).toBeEnabled();
+ await page.locator('#warehouseBays [data-slot="'+before.wreck.slot+'"]').click();
+ await expect(page.locator('#warehouseDialog .warehouse-wreck-warning')).toHaveText('机体大破，需要维修（0耐久）');
+ const banner=await page.locator('#warehouseDialog .warehouse-wreck-warning').evaluate(node=>{const style=getComputedStyle(node),bounds=node.getBoundingClientRect(),frame=node.parentElement.getBoundingClientRect();return {center:Math.abs(bounds.y+bounds.height/2-frame.y-frame.height/2),color:style.color,background:style.backgroundColor};});expect(banner.center).toBeLessThan(2);expect(banner.color).toBe('rgb(255, 81, 81)');expect(banner.background).toContain('0, 0, 0');
+ await page.screenshot({path:`tmp/verification/screenshots/warehouse-wreck-${width}.png`});await page.locator('#warehouseClose').click();
+ await page.locator('#warehouseRepairAll').click();await page.locator('#gameDialog').getByRole('button',{name:'全部',exact:true}).click();await expect(page.locator('#gameDialog')).toContainText(before.quote.supplies.toLocaleString('en-US'));await page.locator('#gameDialog').getByRole('button',{name:'取消',exact:true}).click();
+ expect(await page.evaluate(()=>Economy.snapshot().supplies)).toBe(before.profile.supplies);
+ await page.locator('#warehouseRepairAll').click();await page.locator('#gameDialog').getByRole('button',{name:'全部',exact:true}).click();await page.locator('#gameDialog').getByRole('button',{name:'确认',exact:true}).click();
+ await expect(page.locator('#warehouseRepairAll')).toBeDisabled();
+ const after=await page.evaluate(()=>({profile:Economy.snapshot(),count:Economy.quantity('RGM_79'),remaining:Economy.repairQuote().items.length}));expect(after.count).toBe(3);expect(after.remaining).toBe(0);expect(after.profile.money).toBe(before.profile.money);expect(after.profile.supplies).toBe(before.profile.supplies-before.quote.supplies);
+ const layout=await page.locator('#warehouseRepairAll').evaluate(node=>{const b=node.getBoundingClientRect(),footer=node.parentElement.getBoundingClientRect();return {left:b.x-footer.x,inside:b.right<=footer.right&&b.bottom<=footer.bottom};});expect(layout.left).toBeLessThan(15);expect(layout.inside).toBe(true);
+ await page.reload();await page.waitForFunction(()=>assetsReady);expect(await page.evaluate(()=>Economy.repairQuote().items.length)).toBe(0);expect(await page.evaluate(()=>Economy.quantity('RGM_79'))).toBe(3);expect(errors).toEqual([]);
+});

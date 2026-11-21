@@ -1,0 +1,3475 @@
+{
+  "schemaVersion": 1,
+  "nativeSource": "GundamWars_BattleOperation2_V5",
+  "units": {
+    "ACV": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Tank,Vehicle,Hover,Support,Transport,MediumUnit"
+    },
+    "AgamemnonClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "Agile": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,MediumUnit"
+    },
+    "AGX_04A1": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/AGX_04A1.ini",
+      "nativeId": "AGX_04A1",
+      "nativeCategory": 2
+    },
+    "AlbionClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Aircraft,Support,Transport,LargeUnit"
+    },
+    "AlexandriaClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "AMA_01X": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "AMA_01X_MA": {
+      "role": "general",
+      "method": "base-form",
+      "source": "AMA_01X"
+    },
+    "AMF_101": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "AMF_101C": {
+      "role": "support",
+      "method": "role-inference",
+      "source": "artillery-sniper-support"
+    },
+    "AMS_119": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/AMS-119.ini",
+      "nativeId": "AMS-119",
+      "nativeCategory": 1
+    },
+    "AMS_Squad": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Tank,Vehicle,MediumUnit"
+    },
+    "AMS_Squad_Deploy": {
+      "role": "normal",
+      "method": "base-form",
+      "source": "AMS_Squad"
+    },
+    "AMX_002": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "AMX_003": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/AMX-003.ini",
+      "nativeId": "AMX-003",
+      "nativeCategory": 3
+    },
+    "AMX_003_MA": {
+      "role": "support",
+      "method": "base-form",
+      "source": "AMX_003"
+    },
+    "AMX_004_1": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/AMX-004-1.ini",
+      "nativeId": "AMX-004-1",
+      "nativeCategory": 1
+    },
+    "AMX_004G": {
+      "role": "support",
+      "method": "role-inference",
+      "source": "mass-production Qubeley remote weapons"
+    },
+    "AMX_006": {
+      "role": "support",
+      "method": "role-inference",
+      "source": "artillery-sniper-support"
+    },
+    "AMX_006_0093_NZN": {
+      "role": "support",
+      "method": "role-inference",
+      "source": "artillery-sniper-support"
+    },
+    "AMX_006_0093_NZN_MA": {
+      "role": "support",
+      "method": "base-form",
+      "source": "AMX_006_0093_NZN"
+    },
+    "AMX_006_MA": {
+      "role": "support",
+      "method": "base-form",
+      "source": "AMX_006"
+    },
+    "AMX_008": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "AMX_008_MA": {
+      "role": "general",
+      "method": "base-form",
+      "source": "AMX_008"
+    },
+    "AMX_009": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "AMX_011": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/AMX-011.ini",
+      "nativeId": "AMX-011",
+      "nativeCategory": 1
+    },
+    "AMX_014": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/AMX_014.ini",
+      "nativeId": "AMX_014",
+      "nativeCategory": 3
+    },
+    "AMX_101": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "AMX_101_0093_NZN": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "AMX_101K": {
+      "role": "support",
+      "method": "role-inference",
+      "source": "artillery-sniper-support"
+    },
+    "AMX_102": {
+      "role": "support",
+      "method": "role-inference",
+      "source": "artillery-sniper-support"
+    },
+    "AMX_102_MA": {
+      "role": "support",
+      "method": "base-form",
+      "source": "AMX_102"
+    },
+    "AMX_103": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "AMX_107": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "AMX_107_0093_NZN": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "AMX_107_0093_NZN_MA": {
+      "role": "general",
+      "method": "base-form",
+      "source": "AMX_107_0093_NZN"
+    },
+    "AMX_107_MA": {
+      "role": "general",
+      "method": "base-form",
+      "source": "AMX_107"
+    },
+    "AMX_107M": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "AMX_107M_MA": {
+      "role": "general",
+      "method": "base-form",
+      "source": "AMX_107M"
+    },
+    "AMX_109": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "AntiZakuTank": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Tank,Vehicle,MediumUnit"
+    },
+    "Apsaras": {
+      "role": "support",
+      "method": "role-inference",
+      "source": "heavy beam mobile armor"
+    },
+    "ApsarasII": {
+      "role": "support",
+      "method": "role-inference",
+      "source": "heavy beam mobile armor"
+    },
+    "ApsarasIII": {
+      "role": "support",
+      "method": "role-inference",
+      "source": "heavy beam mobile armor"
+    },
+    "ArchangelClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Aircraft,Support,Transport,LargeUnit"
+    },
+    "ArgamaClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Aircraft,Support,Transport,LargeUnit"
+    },
+    "Army_Squad_EFSF_0079_N_G_A": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Infantry,MediumUnit"
+    },
+    "Army_Squad_OMNI_CE71_N_G_A": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Infantry,MediumUnit"
+    },
+    "Army_Squad_ZAFT_CE71_N_G_A": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Infantry,MediumUnit"
+    },
+    "Army_Squad_ZEON_0079_N_G_A": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Infantry,MediumUnit"
+    },
+    "BaseJabber": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,Transport,MediumUnit"
+    },
+    "BigTrayClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Hover,Support,Transport,LargeUnit"
+    },
+    "BirminghamClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,LargeUnit"
+    },
+    "BlancRival": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Aircraft,Support,Transport,LargeUnit"
+    },
+    "BurkeClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Recon,Transport,LargeUnit"
+    },
+    "Burstliner": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,Transport,MediumUnit"
+    },
+    "ChivvayClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "ChivvayClassKai": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "ColumbusClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "ColumbusClassKai": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "ConnectedArmoredVehicle": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Tank,Vehicle,MediumUnit"
+    },
+    "ConnectedArmoredVehicle_DeployState": {
+      "role": "normal",
+      "method": "base-form",
+      "source": "ConnectedArmoredVehicle"
+    },
+    "Cui": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Vehicle,Transport,MediumUnit"
+    },
+    "DabudeClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "Dash": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,Recon,MediumUnit"
+    },
+    "DEPP_ROG": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,MediumUnit"
+    },
+    "Dodai2": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,Transport,MediumUnit"
+    },
+    "DodaiKai": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,Transport,MediumUnit"
+    },
+    "DodaiYS": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,Transport,MediumUnit"
+    },
+    "DogosseGiarClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "DonEscargot": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,Recon,MediumUnit"
+    },
+    "Dopp": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,MediumUnit"
+    },
+    "DrakeClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,LargeUnit"
+    },
+    "EF_Heli": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Helicopter,Aircraft,MediumUnit"
+    },
+    "EF_MinigunAPC": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Vehicle,MediumUnit"
+    },
+    "EF_TorpedoBoat": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Vehicle,MediumUnit"
+    },
+    "EMS_05M": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "EMS_10": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/EMS-10.ini",
+      "nativeId": "EMS-10",
+      "nativeCategory": 2
+    },
+    "EMS_10_1": {
+      "role": "raid",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/EMS-10.ini",
+      "nativeId": "EMS-10",
+      "nativeCategory": 2
+    },
+    "EMS_10F": {
+      "role": "raid",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/EMS-10.ini",
+      "nativeId": "EMS-10",
+      "nativeCategory": 2
+    },
+    "EndraClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "F_7D": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,MediumUnit"
+    },
+    "FA_00100S": {
+      "role": "support",
+      "method": "role-inference",
+      "source": "full armor heavy beam support"
+    },
+    "FA_010A": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/FA-010A.ini",
+      "nativeId": "FA-010A",
+      "nativeCategory": 3
+    },
+    "FA_010S": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/FA-010S.ini",
+      "nativeId": "FA-010S",
+      "nativeCategory": 3
+    },
+    "FA_78_1": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/FA-78-1.ini",
+      "nativeId": "FA-78-1",
+      "nativeCategory": 3
+    },
+    "FA_78_1_NA": {
+      "role": "support",
+      "method": "base-form",
+      "source": "FA_78_1"
+    },
+    "FA_78_2": {
+      "role": "support",
+      "method": "role-inference",
+      "source": "heavy ranged fire support"
+    },
+    "FA_78_3": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/FA-78-3.ini",
+      "nativeId": "FA-78-3",
+      "nativeCategory": 3
+    },
+    "FA_78_G": {
+      "role": "support",
+      "method": "role-inference",
+      "source": "full armor ranged fire support"
+    },
+    "Facility_Beam": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Building,MediumUnit"
+    },
+    "Facility_Cannon": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Building,MediumUnit"
+    },
+    "Facility_Factory": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Building,LargeUnit"
+    },
+    "Facility_HQ": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Building,LargeUnit"
+    },
+    "Facility_MG": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Building,MediumUnit"
+    },
+    "Facility_Missile": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Building,MediumUnit"
+    },
+    "Facility_Radar": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Building,MediumUnit"
+    },
+    "Facility_Refinery": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Building,LargeUnit"
+    },
+    "Facility_Research": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Building,LargeUnit"
+    },
+    "FalmerClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "FanFan": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,MediumUnit"
+    },
+    "FatUncle": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,Transport,MediumUnit"
+    },
+    "FatUncle_DeployState": {
+      "role": "normal",
+      "method": "base-form",
+      "source": "FatUncle"
+    },
+    "FatUncleKai": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,Transport,MediumUnit"
+    },
+    "FatUncleKai_DeployState": {
+      "role": "normal",
+      "method": "base-form",
+      "source": "FatUncleKai"
+    },
+    "FF_4": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,MediumUnit"
+    },
+    "FF_6": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,MediumUnit"
+    },
+    "FF_B2": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,MediumUnit"
+    },
+    "FF_S3": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,MediumUnit"
+    },
+    "FF_X_II": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,MediumUnit"
+    },
+    "FF_X_II_FB": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,MediumUnit"
+    },
+    "FF_X7": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,MediumUnit"
+    },
+    "FF_X7Bst": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,Transport,MediumUnit"
+    },
+    "FF_X7Bst_II": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,MediumUnit"
+    },
+    "FFB_7Bst": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,Transport,MediumUnit"
+    },
+    "FX_550": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,MediumUnit"
+    },
+    "G_Bull_Easy": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Tank,Vehicle,MediumUnit"
+    },
+    "G_Fighter": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,Transport,MediumUnit"
+    },
+    "GallopClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Hover,Support,Transport,LargeUnit"
+    },
+    "GarudaClass_AEUG": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Aircraft,Support,Transport,LargeUnit"
+    },
+    "GarudaClass_NEO_ZEON": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Aircraft,Support,Transport,LargeUnit"
+    },
+    "GarudaClass_TITANS": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Aircraft,Support,Transport,LargeUnit"
+    },
+    "GAT_01": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/GAT-01.ini",
+      "nativeId": "GAT-01",
+      "nativeCategory": 1
+    },
+    "GAT_01A1": {
+      "role": "normal",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/GAT-01A1.ini",
+      "nativeId": "GAT-01A1",
+      "nativeCategory": 0
+    },
+    "GAT_01D": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/GAT-01D.ini",
+      "nativeId": "GAT-01D",
+      "nativeCategory": 3
+    },
+    "GAT_01D_AS": {
+      "role": "support",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/GAT-01D.ini",
+      "nativeId": "GAT-01D",
+      "nativeCategory": 3
+    },
+    "GAT_01D1": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/GAT-01D1.ini",
+      "nativeId": "GAT-01D1",
+      "nativeCategory": 3
+    },
+    "GAT_01D1_AS": {
+      "role": "support",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/GAT-01D1.ini",
+      "nativeId": "GAT-01D1",
+      "nativeCategory": 3
+    },
+    "GAT_02L2": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/GAT_02L2.ini",
+      "nativeId": "GAT_02L2",
+      "nativeCategory": 1
+    },
+    "GAT_X102": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/GAT-X102.ini",
+      "nativeId": "GAT-X102",
+      "nativeCategory": 1
+    },
+    "GAT_X102_AS": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/GAT-X102AS.ini",
+      "nativeId": "GAT-X102AS",
+      "nativeCategory": 3
+    },
+    "GAT_X103": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/GAT-X103.ini",
+      "nativeId": "GAT-X103",
+      "nativeCategory": 3
+    },
+    "GAT_X105": {
+      "role": "normal",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/GAT-X105.ini",
+      "nativeId": "GAT-X105",
+      "nativeCategory": 0
+    },
+    "GAT_X105_A": {
+      "role": "normal",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/GAT-X105.ini",
+      "nativeId": "GAT-X105",
+      "nativeCategory": 0
+    },
+    "GAT_X105_L": {
+      "role": "normal",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/GAT-X105.ini",
+      "nativeId": "GAT-X105",
+      "nativeCategory": 0
+    },
+    "GAT_X105_S": {
+      "role": "normal",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/GAT-X105.ini",
+      "nativeId": "GAT-X105",
+      "nativeCategory": 0
+    },
+    "GAT_X207": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/GAT-X207.ini",
+      "nativeId": "GAT-X207",
+      "nativeCategory": 2
+    },
+    "GAT_X303": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/GAT-X303.ini",
+      "nativeId": "GAT-X303",
+      "nativeCategory": 1
+    },
+    "GAT_X303_MA": {
+      "role": "general",
+      "method": "base-form",
+      "source": "GAT_X303"
+    },
+    "Gator": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,Transport,MediumUnit"
+    },
+    "Gattle": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,MediumUnit"
+    },
+    "GawClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Aircraft,Support,Transport,LargeUnit"
+    },
+    "GrayPhantomClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Aircraft,Support,Transport,LargeUnit"
+    },
+    "GrayPhantomClass_0087": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Aircraft,Support,Transport,LargeUnit"
+    },
+    "Gunperry": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,Transport,MediumUnit"
+    },
+    "Gunperry_DeployState": {
+      "role": "normal",
+      "method": "base-form",
+      "source": "Gunperry"
+    },
+    "Guul": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,Transport,MediumUnit"
+    },
+    "GwadanClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "GwanbanClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "GwanzanClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "GwazineClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "HeavyForkClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Hover,Transport,LargeUnit"
+    },
+    "HimalayaClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Recon,Transport,LargeUnit"
+    },
+    "Infestus": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,MediumUnit"
+    },
+    "IrishClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "JiccoClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,MediumUnit"
+    },
+    "JotunheimClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "LaurasiaClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "LinearArtillery": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Tank,Vehicle,MediumUnit"
+    },
+    "LinearArtillery_DeployState": {
+      "role": "normal",
+      "method": "base-form",
+      "source": "LinearArtillery"
+    },
+    "LinearGunTank": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Tank,Vehicle,MediumUnit"
+    },
+    "Luggun": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,Recon,MediumUnit"
+    },
+    "M_Type_Submarine": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Recon,Transport,LargeUnit"
+    },
+    "M_Type_Submarine_ZEON": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Recon,Transport,LargeUnit"
+    },
+    "MA_04X": {
+      "role": "raid",
+      "method": "role-inference",
+      "source": "high-speed sickle assault"
+    },
+    "MA_05": {
+      "role": "raid",
+      "method": "role-inference",
+      "source": "high-speed claw assault"
+    },
+    "MA_06": {
+      "role": "raid",
+      "method": "role-inference",
+      "source": "claw and plasma-leader assault"
+    },
+    "MA_08": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MA-08.ini",
+      "nativeId": "MA-08",
+      "nativeCategory": 3
+    },
+    "MA_08_DZL": {
+      "role": "support",
+      "method": "role-inference",
+      "source": "artillery-sniper-support"
+    },
+    "MagellanClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,LargeUnit"
+    },
+    "MagellanClass_Green": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,LargeUnit"
+    },
+    "MagellanClassKai": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "MagellanClassLateType": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "MAM_07": {
+      "role": "raid",
+      "method": "role-inference",
+      "source": "underwater claw assault"
+    },
+    "MAN_03": {
+      "role": "support",
+      "method": "role-inference",
+      "source": "remote beam fire support"
+    },
+    "MAN_08": {
+      "role": "support",
+      "method": "role-inference",
+      "source": "remote bit fire support"
+    },
+    "MarseilleIIIClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "MAX_03": {
+      "role": "support",
+      "method": "role-inference",
+      "source": "stationary ranged and leader support"
+    },
+    "MBF_M1": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MBF-M1.ini",
+      "nativeId": "MBF-M1",
+      "nativeCategory": 1
+    },
+    "Medea": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,Transport,MediumUnit"
+    },
+    "Medea_DeployState": {
+      "role": "normal",
+      "method": "base-form",
+      "source": "Medea"
+    },
+    "MedeaKai": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,Transport,MediumUnit"
+    },
+    "MedeaKai_DeployState": {
+      "role": "normal",
+      "method": "base-form",
+      "source": "MedeaKai"
+    },
+    "MiniTrayClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Hover,Support,Transport,LargeUnit"
+    },
+    "MissileCar": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Vehicle,MediumUnit"
+    },
+    "MissileCar_CE": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Vehicle,MediumUnit"
+    },
+    "Mission_SpaceShuttle": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Building,LargeUnit"
+    },
+    "MP_02A": {
+      "role": "normal",
+      "method": "platform",
+      "source": "MobilePod,MediumUnit"
+    },
+    "MRX_009": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MRX_009.ini",
+      "nativeId": "MRX_009",
+      "nativeCategory": 3
+    },
+    "MRX_009_MA": {
+      "role": "support",
+      "method": "base-form",
+      "source": "MRX_009"
+    },
+    "MRX_010": {
+      "role": "support",
+      "method": "role-inference",
+      "source": "artillery-sniper-support"
+    },
+    "MRX_010_MA": {
+      "role": "support",
+      "method": "base-form",
+      "source": "MRX_010"
+    },
+    "MS_05": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-05.ini",
+      "nativeId": "MS-05",
+      "nativeCategory": 2
+    },
+    "MS_05S": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "MS_05SP": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-05SP.ini",
+      "nativeId": "MS-05SP",
+      "nativeCategory": 3
+    },
+    "MS_06C": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "MS_06D": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-06D.ini",
+      "nativeId": "MS-06D",
+      "nativeCategory": 1
+    },
+    "MS_06E": {
+      "role": "support",
+      "method": "role-inference",
+      "source": "reconnaissance and observation"
+    },
+    "MS_06E3": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-06E3.ini",
+      "nativeId": "MS-06E3",
+      "nativeCategory": 2
+    },
+    "MS_06F": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-06F.ini",
+      "nativeId": "MS-06F",
+      "nativeCategory": 1
+    },
+    "MS_06F_EFSF": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-06F.ini",
+      "nativeId": "MS-06F",
+      "nativeCategory": 1
+    },
+    "MS_06F_MineLayer": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-06F.ini",
+      "nativeId": "MS-06F",
+      "nativeCategory": 1
+    },
+    "MS_06F_Sniper": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-06F.ini",
+      "nativeId": "MS-06F",
+      "nativeCategory": 1
+    },
+    "MS_06F_Stutzer": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-06F.ini",
+      "nativeId": "MS-06F",
+      "nativeCategory": 1
+    },
+    "MS_06F2": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-06F2.ini",
+      "nativeId": "MS-06F2",
+      "nativeCategory": 1
+    },
+    "MS_06F2_Commander": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-06F2.ini",
+      "nativeId": "MS-06F2",
+      "nativeCategory": 1
+    },
+    "MS_06FZ": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-06FZ.ini",
+      "nativeId": "MS-06FZ",
+      "nativeCategory": 1
+    },
+    "MS_06FZ_Commander": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-06FZ.ini",
+      "nativeId": "MS-06FZ",
+      "nativeCategory": 1
+    },
+    "MS_06G": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-06G.ini",
+      "nativeId": "MS-06G",
+      "nativeCategory": 1
+    },
+    "MS_06J": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "MS_06JK": {
+      "role": "support",
+      "method": "role-inference",
+      "source": "artillery-sniper-support"
+    },
+    "MS_06K": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-06K.ini",
+      "nativeId": "MS-06K",
+      "nativeCategory": 3
+    },
+    "MS_06M": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "MS_06M_0087": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "MS_06R_1": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "MS_06R_1A": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "MS_06R_2": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "MS_06R_2_JonCustom": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "MS_06R_2_MsgCustom": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "MS_06R_3S": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "MS_06RD_4": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "MS_06S": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-06S.ini",
+      "nativeId": "MS-06S",
+      "nativeCategory": 1
+    },
+    "MS_06S_CharCustom": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-06S_CharCustom.ini",
+      "nativeId": "MS-06S_CharCustom",
+      "nativeCategory": 2
+    },
+    "MS_06S_DozleCustom": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-06S.ini",
+      "nativeId": "MS-06S",
+      "nativeCategory": 1
+    },
+    "MS_06V": {
+      "role": "normal",
+      "method": "role-inference",
+      "source": "tracked tank chassis"
+    },
+    "MS_06V_DeployState": {
+      "role": "normal",
+      "method": "base-form",
+      "source": "MS_06V"
+    },
+    "MS_06Z": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "MS_07A": {
+      "role": "raid",
+      "method": "role-inference",
+      "source": "close-assault"
+    },
+    "MS_07B": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-07B.ini",
+      "nativeId": "MS-07B",
+      "nativeCategory": 2
+    },
+    "MS_07B3": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-07B3.ini",
+      "nativeId": "MS-07B3",
+      "nativeCategory": 2
+    },
+    "MS_07H": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-07H.ini",
+      "nativeId": "MS-07H",
+      "nativeCategory": 1
+    },
+    "MS_07H_0087": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-07H.ini",
+      "nativeId": "MS-07H",
+      "nativeCategory": 1
+    },
+    "MS_07H8": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-07H8.ini",
+      "nativeId": "MS-07H8",
+      "nativeCategory": 2
+    },
+    "MS_08TX": {
+      "role": "raid",
+      "method": "role-inference",
+      "source": "close-assault"
+    },
+    "MS_08TX_Kai": {
+      "role": "raid",
+      "method": "role-inference",
+      "source": "close-assault"
+    },
+    "MS_08TX_Kai_EXAM": {
+      "role": "raid",
+      "method": "base-form",
+      "source": "MS_08TX_Kai"
+    },
+    "MS_09": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-09.ini",
+      "nativeId": "MS-09",
+      "nativeCategory": 3
+    },
+    "MS_09_K_1": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-09-K-1.ini",
+      "nativeId": "MS-09-K-1",
+      "nativeCategory": 3
+    },
+    "MS_09_K_2": {
+      "role": "support",
+      "method": "role-inference",
+      "source": "artillery-sniper-support"
+    },
+    "MS_09D": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "MS_09F": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "MS_09F_TROP": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "MS_09F_TROP_0083": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "MS_09G": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-09G.ini",
+      "nativeId": "MS-09G",
+      "nativeCategory": 2
+    },
+    "MS_09R": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-09R.ini",
+      "nativeId": "MS-09R",
+      "nativeCategory": 3
+    },
+    "MS_09R_CharCustom": {
+      "role": "support",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-09R.ini",
+      "nativeId": "MS-09R",
+      "nativeCategory": 3
+    },
+    "MS_09R_Stutzer": {
+      "role": "support",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-09R.ini",
+      "nativeId": "MS-09R",
+      "nativeCategory": 3
+    },
+    "MS_09R2": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-09R2.ini",
+      "nativeId": "MS-09R2",
+      "nativeCategory": 1
+    },
+    "MS_09S": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "MS_09SS": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "MS_10": {
+      "role": "raid",
+      "method": "role-inference",
+      "source": "close-assault"
+    },
+    "MS_11": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "MS_11S": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "MS_12": {
+      "role": "support",
+      "method": "role-inference",
+      "source": "artillery-sniper-support"
+    },
+    "MS_14A": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-14A.ini",
+      "nativeId": "MS-14A",
+      "nativeCategory": 1
+    },
+    "MS_14A_Stutzer": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-14A.ini",
+      "nativeId": "MS-14A",
+      "nativeCategory": 1
+    },
+    "MS_14B": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-14B.ini",
+      "nativeId": "MS-14B",
+      "nativeCategory": 1
+    },
+    "MS_14B_JonCustom": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-14B.ini",
+      "nativeId": "MS-14B",
+      "nativeCategory": 1
+    },
+    "MS_14C": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-14C.ini",
+      "nativeId": "MS-14C",
+      "nativeCategory": 3
+    },
+    "MS_14F": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-14F.ini",
+      "nativeId": "MS-14F",
+      "nativeCategory": 2
+    },
+    "MS_14FS": {
+      "role": "raid",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-14F.ini",
+      "nativeId": "MS-14F",
+      "nativeCategory": 2
+    },
+    "MS_14G": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-14G.ini",
+      "nativeId": "MS-14G",
+      "nativeCategory": 3
+    },
+    "MS_14J": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "MS_14JG": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-14JG.ini",
+      "nativeId": "MS-14JG",
+      "nativeCategory": 3
+    },
+    "MS_14JG_MsgCustom": {
+      "role": "support",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-14JG.ini",
+      "nativeId": "MS-14JG",
+      "nativeCategory": 3
+    },
+    "MS_14S": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "MS_14S_CharCustom": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-14S_CharCustom.ini",
+      "nativeId": "MS-14S_CharCustom",
+      "nativeCategory": 2
+    },
+    "MS_15A": {
+      "role": "raid",
+      "method": "role-inference",
+      "source": "Gyan melee chassis"
+    },
+    "MS_15B": {
+      "role": "raid",
+      "method": "role-inference",
+      "source": "high-mobility Gyan melee chassis"
+    },
+    "MS_15C": {
+      "role": "support",
+      "method": "role-inference",
+      "source": "artillery-sniper-support"
+    },
+    "MS_15F": {
+      "role": "raid",
+      "method": "role-inference",
+      "source": "Gyan melee chassis"
+    },
+    "MS_15FS": {
+      "role": "raid",
+      "method": "role-inference",
+      "source": "Gyan commander melee chassis"
+    },
+    "MS_15K": {
+      "role": "raid",
+      "method": "role-inference",
+      "source": "upgraded Gyan melee chassis"
+    },
+    "MS_15Kg": {
+      "role": "raid",
+      "method": "role-inference",
+      "source": "Gyan melee chassis"
+    },
+    "MS_17": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MS_17.ini",
+      "nativeId": "MS_17",
+      "nativeCategory": 1
+    },
+    "MS_17R": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MS_17R.ini",
+      "nativeId": "MS_17R",
+      "nativeCategory": 2
+    },
+    "MS_18E": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-18E.ini",
+      "nativeId": "MS-18E",
+      "nativeCategory": 2
+    },
+    "MS_21C": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MS-21C.ini",
+      "nativeId": "MS-21C",
+      "nativeCategory": 2
+    },
+    "MSA_0011": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MSA-0011.ini",
+      "nativeId": "MSA-0011",
+      "nativeCategory": 3
+    },
+    "MSA_0011_Ext": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MSA-0011_Ext.ini",
+      "nativeId": "MSA-0011_Ext",
+      "nativeCategory": 3
+    },
+    "MSA_0011_Ext_MA": {
+      "role": "support",
+      "method": "base-form",
+      "source": "MSA_0011_Ext"
+    },
+    "MSA_003": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MSA-003.ini",
+      "nativeId": "MSA-003",
+      "nativeCategory": 1
+    },
+    "MSA_003_Cannon": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MSA_003_Cannon.ini",
+      "nativeId": "MSA_003_Cannon",
+      "nativeCategory": 3
+    },
+    "MSA_003_FXA_05D": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/MSA-003.ini",
+      "nativeId": "MSA-003",
+      "nativeCategory": 1
+    },
+    "MSA_003_FXA_05D_EWAC": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/MSA-003.ini",
+      "nativeId": "MSA-003",
+      "nativeCategory": 1
+    },
+    "MSA_003_HM": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/MSA-003.ini",
+      "nativeId": "MSA-003",
+      "nativeCategory": 1
+    },
+    "MSA_004": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "MSA_004K": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "MSA_005": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MSA_005.ini",
+      "nativeId": "MSA_005",
+      "nativeCategory": 1
+    },
+    "MSA_005_MA": {
+      "role": "general",
+      "method": "base-form",
+      "source": "MSA_005"
+    },
+    "MSA_005K": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MSA_005K.ini",
+      "nativeId": "MSA_005K",
+      "nativeCategory": 3
+    },
+    "MSA_005S": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/MSA_005.ini",
+      "nativeId": "MSA_005",
+      "nativeCategory": 1
+    },
+    "MSA_005S_MA": {
+      "role": "general",
+      "method": "base-form",
+      "source": "MSA_005S"
+    },
+    "MSA_007": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "MSA_007E": {
+      "role": "support",
+      "method": "role-inference",
+      "source": "EWAC reconnaissance"
+    },
+    "MSA_007T": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "MSA_099_2": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "MSF_007": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MSF_007.ini",
+      "nativeId": "MSF_007",
+      "nativeCategory": 1
+    },
+    "MSK_008": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MSK-008.ini",
+      "nativeId": "MSK-008",
+      "nativeCategory": 1
+    },
+    "MSM_03": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MSM-03.ini",
+      "nativeId": "MSM-03",
+      "nativeCategory": 2
+    },
+    "MSM_03C": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MSM-03C.ini",
+      "nativeId": "MSM-03C",
+      "nativeCategory": 2
+    },
+    "MSM_04": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MSM-04.ini",
+      "nativeId": "MSM-04",
+      "nativeCategory": 2
+    },
+    "MSM_04G": {
+      "role": "raid",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/MSM-04.ini",
+      "nativeId": "MSM-04",
+      "nativeCategory": 2
+    },
+    "MSM_04N": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MSM-04N.ini",
+      "nativeId": "MSM-04N",
+      "nativeCategory": 2
+    },
+    "MSM_07": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MSM-07.ini",
+      "nativeId": "MSM-07",
+      "nativeCategory": 1
+    },
+    "MSM_07_CharCustom": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MSM-07_CharCustom.ini",
+      "nativeId": "MSM-07_CharCustom",
+      "nativeCategory": 2
+    },
+    "MSM_07E": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/MSM-07.ini",
+      "nativeId": "MSM-07",
+      "nativeCategory": 1
+    },
+    "MSM_07S": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/MSM-07.ini",
+      "nativeId": "MSM-07",
+      "nativeCategory": 1
+    },
+    "MSM_08": {
+      "role": "raid",
+      "method": "role-inference",
+      "source": "close-assault"
+    },
+    "MSM_10": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MSM-10.ini",
+      "nativeId": "MSM-10",
+      "nativeCategory": 3
+    },
+    "MSN_001": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MSN_001.ini",
+      "nativeId": "MSN_001",
+      "nativeCategory": 2
+    },
+    "MSN_001_MA": {
+      "role": "raid",
+      "method": "base-form",
+      "source": "MSN_001"
+    },
+    "MSN_01": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "MSN_02": {
+      "role": "normal",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MSN-02.ini",
+      "nativeId": "MSN-02",
+      "nativeCategory": 0
+    },
+    "MSN_02_Head": {
+      "role": "normal",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/MSN-02.ini",
+      "nativeId": "MSN-02",
+      "nativeCategory": 0
+    },
+    "MSN_03": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "MSN_04": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MSN-04.ini",
+      "nativeId": "MSN-04",
+      "nativeCategory": 2
+    },
+    "MSN_100": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MSN-100.ini",
+      "nativeId": "MSN-100",
+      "nativeCategory": 2
+    },
+    "MSR_00100S": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MSR_00100S.ini",
+      "nativeId": "MSR_00100S",
+      "nativeCategory": 1
+    },
+    "MSR_00100S_M": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/MSR_00100S.ini",
+      "nativeId": "MSR_00100S",
+      "nativeCategory": 1
+    },
+    "MSZ_000": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MSZ-000.ini",
+      "nativeId": "MSZ-000",
+      "nativeCategory": 1
+    },
+    "MSZ_006": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MSZ-006.ini",
+      "nativeId": "MSZ-006",
+      "nativeCategory": 1
+    },
+    "MSZ_006_MA": {
+      "role": "general",
+      "method": "base-form",
+      "source": "MSZ_006"
+    },
+    "MSZ_006A1": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MSZ-006A1.ini",
+      "nativeId": "MSZ-006A1",
+      "nativeCategory": 1
+    },
+    "MSZ_006A1_0093_EFSF": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/MSZ-006A1.ini",
+      "nativeId": "MSZ-006A1",
+      "nativeCategory": 1
+    },
+    "MSZ_006A1_0093_EFSF_MA": {
+      "role": "general",
+      "method": "base-form",
+      "source": "MSZ_006A1_0093_EFSF"
+    },
+    "MSZ_006A1_MA": {
+      "role": "general",
+      "method": "base-form",
+      "source": "MSZ_006A1"
+    },
+    "MSZ_006C1": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MSZ-006C1.ini",
+      "nativeId": "MSZ-006C1",
+      "nativeCategory": 3
+    },
+    "MSZ_006C1_0093_EFSF": {
+      "role": "support",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/MSZ-006C1.ini",
+      "nativeId": "MSZ-006C1",
+      "nativeCategory": 3
+    },
+    "MSZ_006C1_0093_EFSF_MA": {
+      "role": "support",
+      "method": "base-form",
+      "source": "MSZ_006C1_0093_EFSF"
+    },
+    "MSZ_006C1_MA": {
+      "role": "support",
+      "method": "base-form",
+      "source": "MSZ_006C1"
+    },
+    "MSZ_008": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MSZ_008.ini",
+      "nativeId": "MSZ_008",
+      "nativeCategory": 3
+    },
+    "MSZ_008_MA": {
+      "role": "support",
+      "method": "base-form",
+      "source": "MSZ_008"
+    },
+    "MSZ_010": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/MSZ-010.ini",
+      "nativeId": "MSZ-010",
+      "nativeCategory": 3
+    },
+    "MSZ_010_MA": {
+      "role": "support",
+      "method": "base-form",
+      "source": "MSZ_010"
+    },
+    "MSZ_010S": {
+      "role": "support",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/MSZ-010.ini",
+      "nativeId": "MSZ-010",
+      "nativeCategory": 3
+    },
+    "MTank": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Tank,Vehicle,MediumUnit"
+    },
+    "MTank_Chassis": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Tank,Vehicle,MediumUnit"
+    },
+    "MTank_Eins": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Tank,Vehicle,MediumUnit"
+    },
+    "MTank_Top": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,MediumUnit"
+    },
+    "MusaiClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "MusaiClassFinalType": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "MusaiClassFinalType_0093_NZN": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "MusaiClassLateType": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "MusaiClassLateType_0083": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "NahelArgamaClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Aircraft,Support,Transport,LargeUnit"
+    },
+    "NazcaClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "NelsonClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "NRX_044": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/NRX-044.ini",
+      "nativeId": "NRX-044",
+      "nativeCategory": 1
+    },
+    "NRX_044_MA": {
+      "role": "general",
+      "method": "base-form",
+      "source": "NRX_044"
+    },
+    "NRX_044_TR_3": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/NRX-044.ini",
+      "nativeId": "NRX-044",
+      "nativeCategory": 1
+    },
+    "NRX_044_TR_3_MA": {
+      "role": "general",
+      "method": "base-form",
+      "source": "NRX_044_TR_3"
+    },
+    "NRX_055": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/NRX_055.ini",
+      "nativeId": "NRX_055",
+      "nativeCategory": 2
+    },
+    "NRX_055_MA": {
+      "role": "raid",
+      "method": "base-form",
+      "source": "NRX_055"
+    },
+    "OMNI_MinigunAPC": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Vehicle,MediumUnit"
+    },
+    "ORX_005": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/ORX_005.ini",
+      "nativeId": "ORX_005",
+      "nativeCategory": 2
+    },
+    "ORX_005_MA": {
+      "role": "raid",
+      "method": "base-form",
+      "source": "ORX_005"
+    },
+    "ORX_005_TR_5": {
+      "role": "raid",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/ORX_005.ini",
+      "nativeId": "ORX_005",
+      "nativeCategory": 2
+    },
+    "ORX_005_TR_5_FF_X39A": {
+      "role": "raid",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/ORX_005.ini",
+      "nativeId": "ORX_005",
+      "nativeCategory": 2
+    },
+    "ORX_005_TR_5_FF_X39A_MA": {
+      "role": "raid",
+      "method": "base-form",
+      "source": "ORX_005_TR_5_FF_X39A"
+    },
+    "ORX_005_TR_5_MA": {
+      "role": "raid",
+      "method": "base-form",
+      "source": "ORX_005_TR_5"
+    },
+    "ORX_012": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/ORX_012.ini",
+      "nativeId": "ORX_012",
+      "nativeCategory": 2
+    },
+    "ORX_013": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/ORX_013.ini",
+      "nativeId": "ORX_013",
+      "nativeCategory": 1
+    },
+    "PapuaClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "PatrolAircraft": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,Recon,MediumUnit"
+    },
+    "PazockClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "PegasusClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Aircraft,Support,Transport,LargeUnit"
+    },
+    "PMX_000": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/PMX-000.ini",
+      "nativeId": "PMX-000",
+      "nativeCategory": 2
+    },
+    "PMX_000_MA": {
+      "role": "raid",
+      "method": "base-form",
+      "source": "PMX_000"
+    },
+    "PMX_001": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/PMX_001.ini",
+      "nativeId": "PMX_001",
+      "nativeCategory": 3
+    },
+    "PMX_002": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/PMX_002.ini",
+      "nativeId": "PMX_002",
+      "nativeCategory": 2
+    },
+    "PMX_003": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/PMX-003.ini",
+      "nativeId": "PMX-003",
+      "nativeCategory": 1
+    },
+    "PowerCar": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Tank,Vehicle,Support,MediumUnit"
+    },
+    "PublicClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,MediumUnit"
+    },
+    "RAG_79": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RAG-79.ini",
+      "nativeId": "RAG-79",
+      "nativeCategory": 1
+    },
+    "RAG_79_G1": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RAG-79-G1.ini",
+      "nativeId": "RAG-79-G1",
+      "nativeCategory": 1
+    },
+    "RB_79": {
+      "role": "normal",
+      "method": "platform",
+      "source": "MobilePod,MediumUnit"
+    },
+    "RB_79_LateType": {
+      "role": "normal",
+      "method": "platform",
+      "source": "MobilePod,MediumUnit"
+    },
+    "RB_79K": {
+      "role": "normal",
+      "method": "platform",
+      "source": "MobilePod,MediumUnit"
+    },
+    "RB_79M": {
+      "role": "normal",
+      "method": "platform",
+      "source": "MobilePod,Recon,MediumUnit"
+    },
+    "RB_79N": {
+      "role": "normal",
+      "method": "platform",
+      "source": "MobilePod,Recon,MediumUnit"
+    },
+    "RFF_06": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "RGC_80": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RGC-80.ini",
+      "nativeId": "RGC-80",
+      "nativeCategory": 3
+    },
+    "RGC_80S": {
+      "role": "support",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RGC-80.ini",
+      "nativeId": "RGC-80",
+      "nativeCategory": 3
+    },
+    "RGC_83": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RGC-83.ini",
+      "nativeId": "RGC-83",
+      "nativeCategory": 3
+    },
+    "RGC_83_AEUG": {
+      "role": "support",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RGC-83.ini",
+      "nativeId": "RGC-83",
+      "nativeCategory": 3
+    },
+    "RGC_83_TITANS": {
+      "role": "support",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RGC-83.ini",
+      "nativeId": "RGC-83",
+      "nativeCategory": 3
+    },
+    "RGM_79": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-79.ini",
+      "nativeId": "RGM-79",
+      "nativeCategory": 1
+    },
+    "RGM_79_Commander": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-79_Commander.ini",
+      "nativeId": "RGM-79_Commander",
+      "nativeCategory": 1
+    },
+    "RGM_79_D": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-79D.ini",
+      "nativeId": "RGM-79D",
+      "nativeCategory": 1
+    },
+    "RGM_79_E": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-79.ini",
+      "nativeId": "RGM-79",
+      "nativeCategory": 1
+    },
+    "RGM_79_G": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-79G.ini",
+      "nativeId": "RGM-79G",
+      "nativeCategory": 1
+    },
+    "RGM_79_G_SP": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-79[G]SP.ini",
+      "nativeId": "RGM-79[G]SP",
+      "nativeCategory": 3
+    },
+    "RGM_79_G_SPACE": {
+      "role": "support",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-79[G]SP.ini",
+      "nativeId": "RGM-79[G]SP",
+      "nativeCategory": 3
+    },
+    "RGM_79_G_WithBackpack": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-79[G].ini",
+      "nativeId": "RGM-79[G]",
+      "nativeCategory": 1
+    },
+    "RGM_79C": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-79C.ini",
+      "nativeId": "RGM-79C",
+      "nativeCategory": 1
+    },
+    "RGM_79C_KS": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-79C.ini",
+      "nativeId": "RGM-79C",
+      "nativeCategory": 1
+    },
+    "RGM_79C_Space": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-79C.ini",
+      "nativeId": "RGM-79C",
+      "nativeCategory": 1
+    },
+    "RGM_79D": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-79D.ini",
+      "nativeId": "RGM-79D",
+      "nativeCategory": 1
+    },
+    "RGM_79DO": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-79DO.ini",
+      "nativeId": "RGM-79DO",
+      "nativeCategory": 1
+    },
+    "RGM_79F": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-79F.ini",
+      "nativeId": "RGM-79F",
+      "nativeCategory": 2
+    },
+    "RGM_79FD": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM_79FD.ini",
+      "nativeId": "RGM_79FD",
+      "nativeCategory": 2
+    },
+    "RGM_79FP": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-79FP.ini",
+      "nativeId": "RGM-79FP",
+      "nativeCategory": 2
+    },
+    "RGM_79G": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-79G.ini",
+      "nativeId": "RGM-79G",
+      "nativeCategory": 1
+    },
+    "RGM_79G_EarlyDeployment": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-79[G].ini",
+      "nativeId": "RGM-79[G]",
+      "nativeCategory": 1
+    },
+    "RGM_79G_Space": {
+      "role": "support",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-79[G]SP.ini",
+      "nativeId": "RGM-79[G]SP",
+      "nativeCategory": 3
+    },
+    "RGM_79GL": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-79GL.ini",
+      "nativeId": "RGM-79GL",
+      "nativeCategory": 2
+    },
+    "RGM_79HC": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-79HC.ini",
+      "nativeId": "RGM-79HC",
+      "nativeCategory": 2
+    },
+    "RGM_79L": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-79L.ini",
+      "nativeId": "RGM-79L",
+      "nativeCategory": 2
+    },
+    "RGM_79LV": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-79LV.ini",
+      "nativeId": "RGM-79LV",
+      "nativeCategory": 2
+    },
+    "RGM_79N": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-79N.ini",
+      "nativeId": "RGM-79N",
+      "nativeCategory": 1
+    },
+    "RGM_79N_AEUG": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-79N.ini",
+      "nativeId": "RGM-79N",
+      "nativeCategory": 1
+    },
+    "RGM_79N_FB_AEUG": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-79N.ini",
+      "nativeId": "RGM-79N",
+      "nativeCategory": 1
+    },
+    "RGM_79Q": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-79Q.ini",
+      "nativeId": "RGM-79Q",
+      "nativeCategory": 2
+    },
+    "RGM_79Q_ChobamArmor": {
+      "role": "raid",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-79Q.ini",
+      "nativeId": "RGM-79Q",
+      "nativeCategory": 2
+    },
+    "RGM_79S": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-79.ini",
+      "nativeId": "RGM-79",
+      "nativeCategory": 1
+    },
+    "RGM_79SC": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-79SC.ini",
+      "nativeId": "RGM-79SC",
+      "nativeCategory": 3
+    },
+    "RGM_79SP2": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-79SP2.ini",
+      "nativeId": "RGM-79SP2",
+      "nativeCategory": 3
+    },
+    "RGM_79U": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-79.ini",
+      "nativeId": "RGM-79",
+      "nativeCategory": 1
+    },
+    "RGM_79V": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-79V.ini",
+      "nativeId": "RGM-79V",
+      "nativeCategory": 2
+    },
+    "RGM_86R": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-86R.ini",
+      "nativeId": "RGM-86R",
+      "nativeCategory": 1
+    },
+    "RGM_86R_0093_EFSF": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-86R.ini",
+      "nativeId": "RGM-86R",
+      "nativeCategory": 1
+    },
+    "RGM_86R_EFSF": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-86R.ini",
+      "nativeId": "RGM-86R",
+      "nativeCategory": 1
+    },
+    "RGM_86R_FXA_05D": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-86R.ini",
+      "nativeId": "RGM-86R",
+      "nativeCategory": 1
+    },
+    "RGM_86R_Nouvel": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-86R.ini",
+      "nativeId": "RGM-86R",
+      "nativeCategory": 1
+    },
+    "RGM_89": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RGM-89.ini",
+      "nativeId": "RGM-89",
+      "nativeCategory": 1
+    },
+    "RGZ_91": {
+      "role": "normal",
+      "method": "base-form",
+      "source": "RGZ_91_MA"
+    },
+    "RGZ_91_MA": {
+      "role": "normal",
+      "method": "platform",
+      "source": "MS,Aircraft,MediumUnit"
+    },
+    "RGZ_91B": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RGZ-91B.ini",
+      "nativeId": "RGZ-91B",
+      "nativeCategory": 1
+    },
+    "RGZ_91B_MA": {
+      "role": "general",
+      "method": "base-form",
+      "source": "RGZ_91B"
+    },
+    "RMS_099": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RMS-099.ini",
+      "nativeId": "RMS-099",
+      "nativeCategory": 1
+    },
+    "RMS_099_NEO_ZEON": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RMS-099.ini",
+      "nativeId": "RMS-099",
+      "nativeCategory": 1
+    },
+    "RMS_099B_NEO_ZEON": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RMS-099.ini",
+      "nativeId": "RMS-099",
+      "nativeCategory": 1
+    },
+    "RMS_099B_Red": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RMS-099.ini",
+      "nativeId": "RMS-099",
+      "nativeCategory": 1
+    },
+    "RMS_106": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RMS-106.ini",
+      "nativeId": "RMS-106",
+      "nativeCategory": 1
+    },
+    "RMS_106_NEO_ZEON": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RMS-106.ini",
+      "nativeId": "RMS-106",
+      "nativeCategory": 1
+    },
+    "RMS_106CS": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RMS-106.ini",
+      "nativeId": "RMS-106",
+      "nativeCategory": 1
+    },
+    "RMS_108": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RMS-108.ini",
+      "nativeId": "RMS-108",
+      "nativeCategory": 1
+    },
+    "RMS_117": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "RMS_119": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RMS-119.ini",
+      "nativeId": "RMS-119",
+      "nativeCategory": 3
+    },
+    "RMS_119_NEO_ZEON": {
+      "role": "support",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RMS-119.ini",
+      "nativeId": "RMS-119",
+      "nativeCategory": 3
+    },
+    "RMS_154": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RMS-154.ini",
+      "nativeId": "RMS-154",
+      "nativeCategory": 1
+    },
+    "RMS_154_Kai": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RMS-154_Kai.ini",
+      "nativeId": "RMS-154_Kai",
+      "nativeCategory": 1
+    },
+    "RMS_179_AEUG": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RMS-179.ini",
+      "nativeId": "RMS-179",
+      "nativeCategory": 1
+    },
+    "RMS_179_FedayeenRifle": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RMS-179.ini",
+      "nativeId": "RMS-179",
+      "nativeCategory": 1
+    },
+    "RMS_179_Nemo": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RMS-179.ini",
+      "nativeId": "RMS-179",
+      "nativeCategory": 1
+    },
+    "RMS_179_TITANS": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RMS-179.ini",
+      "nativeId": "RMS-179",
+      "nativeCategory": 1
+    },
+    "RMV_1": {
+      "role": "support",
+      "method": "role-inference",
+      "source": "artillery-sniper-support"
+    },
+    "RTX_440": {
+      "role": "support",
+      "method": "role-inference",
+      "source": "artillery-sniper-support"
+    },
+    "RTX_440_ModeB": {
+      "role": "support",
+      "method": "base-form",
+      "source": "RTX_440"
+    },
+    "RX_098": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "RX_110": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-110.ini",
+      "nativeId": "RX-110",
+      "nativeCategory": 2
+    },
+    "RX_110_MA": {
+      "role": "raid",
+      "method": "base-form",
+      "source": "RX_110"
+    },
+    "RX_121": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-121.ini",
+      "nativeId": "RX-121",
+      "nativeCategory": 2
+    },
+    "RX_121_1": {
+      "role": "raid",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-121.ini",
+      "nativeId": "RX-121",
+      "nativeCategory": 2
+    },
+    "RX_121_1_FF_X29A": {
+      "role": "raid",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-121.ini",
+      "nativeId": "RX-121",
+      "nativeCategory": 2
+    },
+    "RX_121_2A": {
+      "role": "raid",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-121.ini",
+      "nativeId": "RX-121",
+      "nativeCategory": 2
+    },
+    "RX_121_2A_M": {
+      "role": "raid",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-121.ini",
+      "nativeId": "RX-121",
+      "nativeCategory": 2
+    },
+    "RX_121_3C": {
+      "role": "raid",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-121.ini",
+      "nativeId": "RX-121",
+      "nativeCategory": 2
+    },
+    "RX_121_HighMobilityForm": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-121_HighMobilityForm.ini",
+      "nativeId": "RX-121_HighMobilityForm",
+      "nativeCategory": 2
+    },
+    "RX_121_TripleBooster": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-121_TripleBooster.ini",
+      "nativeId": "RX-121_TripleBooster",
+      "nativeCategory": 2
+    },
+    "RX_124": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-124.ini",
+      "nativeId": "RX-124",
+      "nativeCategory": 3
+    },
+    "RX_124_FF_X39A": {
+      "role": "support",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-124.ini",
+      "nativeId": "RX-124",
+      "nativeCategory": 3
+    },
+    "RX_124_Kehaar2": {
+      "role": "support",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-124.ini",
+      "nativeId": "RX-124",
+      "nativeCategory": 3
+    },
+    "RX_124_Kehaar2_M": {
+      "role": "support",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-124.ini",
+      "nativeId": "RX-124",
+      "nativeCategory": 3
+    },
+    "RX_124_Kehaar2_M_MA": {
+      "role": "support",
+      "method": "base-form",
+      "source": "RX_124_Kehaar2_M"
+    },
+    "RX_124_Kehaar2_MA": {
+      "role": "support",
+      "method": "base-form",
+      "source": "RX_124_Kehaar2"
+    },
+    "RX_124_MA": {
+      "role": "support",
+      "method": "base-form",
+      "source": "RX_124"
+    },
+    "RX_139": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-139.ini",
+      "nativeId": "RX-139",
+      "nativeCategory": 2
+    },
+    "RX_139_MA": {
+      "role": "raid",
+      "method": "base-form",
+      "source": "RX_139"
+    },
+    "RX_160": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX_160.ini",
+      "nativeId": "RX_160",
+      "nativeCategory": 2
+    },
+    "RX_178": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-178.ini",
+      "nativeId": "RX-178",
+      "nativeCategory": 1
+    },
+    "RX_178_AEUG": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-178.ini",
+      "nativeId": "RX-178",
+      "nativeCategory": 1
+    },
+    "RX_178_AEUG_FlyingArmor": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-178.ini",
+      "nativeId": "RX-178",
+      "nativeCategory": 1
+    },
+    "RX_178_AEUG_FXA_05D": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-178.ini",
+      "nativeId": "RX-178",
+      "nativeCategory": 1
+    },
+    "RX_178_Unit4": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-178.ini",
+      "nativeId": "RX-178",
+      "nativeCategory": 1
+    },
+    "RX_75": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-75.ini",
+      "nativeId": "RX-75",
+      "nativeCategory": 3
+    },
+    "RX_75R": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-75R.ini",
+      "nativeId": "RX-75R",
+      "nativeCategory": 3
+    },
+    "RX_75R_DeployState": {
+      "role": "support",
+      "method": "base-form",
+      "source": "RX_75R"
+    },
+    "RX_77_2": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-77-2.ini",
+      "nativeId": "RX-77-2",
+      "nativeCategory": 3
+    },
+    "RX_77_3": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-77-3.ini",
+      "nativeId": "RX-77-3",
+      "nativeCategory": 3
+    },
+    "RX_77_3D": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-77-3D.ini",
+      "nativeId": "RX-77-3D",
+      "nativeCategory": 1
+    },
+    "RX_77_4": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-77-4.ini",
+      "nativeId": "RX-77-4",
+      "nativeCategory": 3
+    },
+    "RX_77D": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-77D.ini",
+      "nativeId": "RX-77D",
+      "nativeCategory": 3
+    },
+    "RX_77D_4": {
+      "role": "support",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-77D.ini",
+      "nativeId": "RX-77D",
+      "nativeCategory": 3
+    },
+    "RX_78_1": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-78-1.ini",
+      "nativeId": "RX-78-1",
+      "nativeCategory": 2
+    },
+    "RX_78_2": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-78-2.ini",
+      "nativeId": "RX-78-2",
+      "nativeCategory": 1
+    },
+    "RX_78_2_ACE": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-78-2.ini",
+      "nativeId": "RX-78-2",
+      "nativeCategory": 1
+    },
+    "RX_78_2_BPart": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-78-2.ini",
+      "nativeId": "RX-78-2",
+      "nativeCategory": 1
+    },
+    "RX_78_3": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-78-3.ini",
+      "nativeId": "RX-78-3",
+      "nativeCategory": 2
+    },
+    "RX_78_4": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "RX_78_4_Bst": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-78-4_BST.ini",
+      "nativeId": "RX-78-4_BST",
+      "nativeCategory": 1
+    },
+    "RX_78_5": {
+      "role": "raid",
+      "method": "role-inference",
+      "source": "high-mobility close assault with gatling"
+    },
+    "RX_78_5_Bst": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-78-5_BST.ini",
+      "nativeId": "RX-78-5_BST",
+      "nativeCategory": 2
+    },
+    "RX_78_6": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-78-6.ini",
+      "nativeId": "RX-78-6",
+      "nativeCategory": 3
+    },
+    "RX_78_6_WIP": {
+      "role": "support",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-78-6.ini",
+      "nativeId": "RX-78-6",
+      "nativeCategory": 3
+    },
+    "RX_78_7": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-78-7.ini",
+      "nativeId": "RX-78-7",
+      "nativeCategory": 1
+    },
+    "RX_78GP01": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-78GP01.ini",
+      "nativeId": "RX-78GP01",
+      "nativeCategory": 1
+    },
+    "RX_78GP01_FB": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-78GP01_FB.ini",
+      "nativeId": "RX-78GP01_FB",
+      "nativeCategory": 1
+    },
+    "RX_78GP02A": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-78GP02A.ini",
+      "nativeId": "RX-78GP02A",
+      "nativeCategory": 2
+    },
+    "RX_78GP03D": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-78GP03D.ini",
+      "nativeId": "RX-78GP03D",
+      "nativeCategory": 3
+    },
+    "RX_78GP03S": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-78GP03S.ini",
+      "nativeId": "RX-78GP03S",
+      "nativeCategory": 1
+    },
+    "RX_78NT_1": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-78NT-1.ini",
+      "nativeId": "RX-78NT-1",
+      "nativeCategory": 1
+    },
+    "RX_78NT_1_FA": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-78NT-1FA.ini",
+      "nativeId": "RX-78NT-1FA",
+      "nativeCategory": 2
+    },
+    "RX_78SP": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-78SP.ini",
+      "nativeId": "RX-78SP",
+      "nativeCategory": 3
+    },
+    "RX_78XX": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-78XX.ini",
+      "nativeId": "RX-78XX",
+      "nativeCategory": 1
+    },
+    "RX_79_BD_1": {
+      "role": "raid",
+      "method": "role-inference",
+      "source": "close-range EXAM assault"
+    },
+    "RX_79_BD_1_EXAM": {
+      "role": "raid",
+      "method": "base-form",
+      "source": "RX_79_BD_1"
+    },
+    "RX_79_BD_2": {
+      "role": "raid",
+      "method": "role-inference",
+      "source": "close-range EXAM assault"
+    },
+    "RX_79_BD_2_EXAM": {
+      "role": "raid",
+      "method": "base-form",
+      "source": "RX_79_BD_2"
+    },
+    "RX_79_BD_2_NMBS": {
+      "role": "raid",
+      "method": "role-inference",
+      "source": "Blue Destiny 2 variant"
+    },
+    "RX_79_BD_2_NMBS_EXAM": {
+      "role": "raid",
+      "method": "base-form",
+      "source": "RX_79_BD_2_NMBS"
+    },
+    "RX_79_BD_3": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "RX_79_BD_3_EXAM": {
+      "role": "general",
+      "method": "base-form",
+      "source": "RX_79_BD_3"
+    },
+    "RX_79_G": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-79[G].ini",
+      "nativeId": "RX-79[G]",
+      "nativeCategory": 1
+    },
+    "RX_79_G_Ez8": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-79[G]Ez8.ini",
+      "nativeId": "RX-79[G]Ez8",
+      "nativeCategory": 1
+    },
+    "RX_79_G_Ez8_WithBackpack": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-79[G]Ez8.ini",
+      "nativeId": "RX-79[G]Ez8",
+      "nativeCategory": 1
+    },
+    "RX_79_G_WithBackpack": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-79[G].ini",
+      "nativeId": "RX-79[G]",
+      "nativeCategory": 1
+    },
+    "RX_80PR": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-80PR.ini",
+      "nativeId": "RX-80PR",
+      "nativeCategory": 2
+    },
+    "RX_80PR_2": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-80PR-2.ini",
+      "nativeId": "RX-80PR-2",
+      "nativeCategory": 1
+    },
+    "RX_80PR_2_HADES": {
+      "role": "general",
+      "method": "base-form",
+      "source": "RX_80PR_2"
+    },
+    "RX_80PR_GroundType": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-80PR_GroundType.ini",
+      "nativeId": "RX-80PR_GroundType",
+      "nativeCategory": 1
+    },
+    "RX_80PR_GroundType_HADES": {
+      "role": "general",
+      "method": "base-form",
+      "source": "RX_80PR_GroundType"
+    },
+    "RX_80PR_HADES": {
+      "role": "raid",
+      "method": "base-form",
+      "source": "RX_80PR"
+    },
+    "RX_80PR_SpaceType": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-80PR_SpaceType.ini",
+      "nativeId": "RX-80PR_SpaceType",
+      "nativeCategory": 1
+    },
+    "RX_80PR_SpaceType_HADES": {
+      "role": "general",
+      "method": "base-form",
+      "source": "RX_80PR_SpaceType"
+    },
+    "RX_81": {
+      "role": "normal",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-81.ini",
+      "nativeId": "RX-81",
+      "nativeCategory": 0
+    },
+    "RX_81AS": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX_81AS.ini",
+      "nativeId": "RX_81AS",
+      "nativeCategory": 2
+    },
+    "RX_81FC": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "RX_81LA": {
+      "role": "raid",
+      "method": "role-inference",
+      "source": "light assault armor"
+    },
+    "RX_81LA_IMBA": {
+      "role": "raid",
+      "method": "role-inference",
+      "source": "G-Line light armor variant"
+    },
+    "RX_81ST": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "RX_93": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/RX-93.ini",
+      "nativeId": "RX-93",
+      "nativeCategory": 1
+    },
+    "RX_93_Test": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "SalamisClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,LargeUnit"
+    },
+    "SalamisClassKai": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Transport,LargeUnit"
+    },
+    "SalamisClassKai_0087_AEUG": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "SalamisClassKai_0087_TITANS": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "SalamisClassKai_0093_EFSF": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "SalamisClassLateType": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Support,Transport,LargeUnit"
+    },
+    "SamsonGroundTransportTruck": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Vehicle,Support,Transport,MediumUnit"
+    },
+    "SFU_X79": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,Transport,MediumUnit"
+    },
+    "Skiure": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,Transport,MediumUnit"
+    },
+    "SupplyTruck": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Vehicle,Support,MediumUnit"
+    },
+    "TFA_2": {
+      "role": "support",
+      "method": "role-inference",
+      "source": "artillery-sniper-support"
+    },
+    "TFA_2_ModeB": {
+      "role": "support",
+      "method": "base-form",
+      "source": "TFA_2"
+    },
+    "Thoroughbred": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Aircraft,Support,Transport,LargeUnit"
+    },
+    "TMF_A_802": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/TM_FA-802.ini",
+      "nativeId": "TM_FA-802",
+      "nativeCategory": 2
+    },
+    "TS_MA2": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,MediumUnit"
+    },
+    "TS_MA2_H": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,MediumUnit"
+    },
+    "Type61": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Tank,Vehicle,MediumUnit"
+    },
+    "Type61_SPG": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Tank,Vehicle,MediumUnit"
+    },
+    "Type61_SPG_DeployState": {
+      "role": "normal",
+      "method": "base-form",
+      "source": "Type61_SPG"
+    },
+    "Type61A5": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Tank,Vehicle,MediumUnit"
+    },
+    "Type74": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Vehicle,Hover,Support,Transport,MediumUnit"
+    },
+    "Type74Kai": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Vehicle,Hover,Support,Recon,Transport,MediumUnit"
+    },
+    "U_Type_Submarine": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Recon,Transport,LargeUnit"
+    },
+    "U_Type_Submarine_ZEON": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Recon,Transport,LargeUnit"
+    },
+    "UMF_4A": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "UMF_5": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "UWMF_S_1": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "VoLPHAU": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,Transport,MediumUnit"
+    },
+    "VTOLFighter": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,MediumUnit"
+    },
+    "VTOLTransport": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Aircraft,Transport,MediumUnit"
+    },
+    "VTOLTransport_DeployState": {
+      "role": "normal",
+      "method": "base-form",
+      "source": "VTOLTransport"
+    },
+    "Wappa": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Vehicle,Hover,MediumUnit"
+    },
+    "WhiteBase": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Aircraft,Support,Transport,LargeUnit"
+    },
+    "YMS_09": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "YMS_09J": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/YMS-09J.ini",
+      "nativeId": "YMS-09J",
+      "nativeCategory": 2
+    },
+    "YMS_15": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/YMS-15.ini",
+      "nativeId": "YMS-15",
+      "nativeCategory": 2
+    },
+    "YMS_15_MQVCustom": {
+      "role": "raid",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/YMS-15.ini",
+      "nativeId": "YMS-15",
+      "nativeCategory": 2
+    },
+    "YMS_15E": {
+      "role": "raid",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/YMS-15.ini",
+      "nativeId": "YMS-15",
+      "nativeCategory": 2
+    },
+    "YMS_16M": {
+      "role": "support",
+      "method": "role-inference",
+      "source": "artillery-sniper-support"
+    },
+    "YMS_18": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "YMT_05": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "YMT_05_ModeB": {
+      "role": "general",
+      "method": "base-form",
+      "source": "YMT_05"
+    },
+    "ZanzibarClass": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Aircraft,Support,Transport,LargeUnit"
+    },
+    "ZanzibarClassKai": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Aircraft,Support,Transport,LargeUnit"
+    },
+    "ZanzibarClassKai_0083": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Aircraft,Support,Transport,LargeUnit"
+    },
+    "ZanzibarClassKai_0087": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Ship,Aircraft,Support,Transport,LargeUnit"
+    },
+    "ZGMF_1017": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/ZGMF-1017.ini",
+      "nativeId": "ZGMF-1017",
+      "nativeCategory": 1
+    },
+    "ZGMF_1017_D": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/ZGMF-1017_D.ini",
+      "nativeId": "ZGMF-1017_D",
+      "nativeCategory": 3
+    },
+    "ZGMF_1017_H": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/ZGMF-1017_H.ini",
+      "nativeId": "ZGMF-1017_H",
+      "nativeCategory": 3
+    },
+    "ZGMF_1017M": {
+      "role": "general",
+      "method": "native-variant",
+      "source": "Units/SystemUnits/UnitCard/Single/ZGMF-1017.ini",
+      "nativeId": "ZGMF-1017",
+      "nativeCategory": 1
+    },
+    "ZGMF_515": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "ZGMF_600": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "ZGMF_LRR704B": {
+      "role": "support",
+      "method": "role-inference",
+      "source": "artillery-sniper-support"
+    },
+    "ZGMT_01": {
+      "role": "general",
+      "method": "role-inference",
+      "source": "balanced-mobile-suit"
+    },
+    "ZN_APC": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Vehicle,Transport,MediumUnit"
+    },
+    "ZN_APC_WithMS": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Vehicle,Transport,MediumUnit"
+    },
+    "ZN_Heli": {
+      "role": "normal",
+      "method": "platform",
+      "source": "Helicopter,Aircraft,MediumUnit"
+    }
+  }
+}

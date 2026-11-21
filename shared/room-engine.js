@@ -9,6 +9,9 @@ function roomDevelopment() {
 function roomBattleEconomy() {
   return typeof BattleEconomy !== "undefined" ? BattleEconomy : require("./battle-economy.js");
 }
+function roomWarehouse() {
+  return typeof Warehouse !== "undefined" ? Warehouse : require("./warehouse.js");
+}
 function createRoomEngine({
   rules: G,
   createPasswordVerifier = (password) => (candidate) => candidate === password,
@@ -39,6 +42,55 @@ function createRoomEngine({
   const getRewardMultipliers = () =>
     roomBattleEconomy().rewardMultipliers(activityRewardMultipliers());
   const roundReward = (value) => roomBattleEconomy().roundReward(value);
+  function stockState(actor, unitId, modelId) {
+    const model = G.models[modelId || actor.model];
+    const allowed = new Set(["head", "backpack", "leftArm", "rightArm", "leftLeg", "rightLeg",
+      ...(model.modules || []).map((part) => part.id)]);
+    return { stockId: actor.stockId, unitId, kitId: model.kitId || model.id?.split("__")[1] || (modelId || actor.model).split("__")[1],
+      hp: Math.max(0, Math.min(model.hp, actor.hp)), en: Math.max(0, Math.min(model.en, actor.en)),
+      destroyed: actor.hp <= 0,
+      brokenParts: Object.fromEntries(Object.entries(actor.brokenParts || {}).filter(([key, broken]) => allowed.has(key) && broken)),
+      ...(actor.moduleHp ? { moduleHp: Object.fromEntries(Object.entries(actor.moduleHp).filter(([key]) => allowed.has(key))) } : {}) };
+  }
+  function survivingStockStates(room, player) {
+    if (room.settings.mode === "quick") return [];
+    return room.game.units.filter((actor) => actor.hp > 0 && !actor.missionGuest && G.ownerOf(actor) === player.seat)
+      .map((actor) => {
+        const record = room.battleRoster?.[actor.id];
+        return stockState({ ...actor, stockId: actor.stockId || record?.stockId }, record?.unitId || actor.deploymentUnitId || G.models[actor.model].prefabId,
+          record?.stockModel || actor.deploymentModel || actor.model);
+      });
+  }
+  function restoreStockActor(actor, item) {
+    const model = G.modelOf(actor);
+    actor.stockId = item.id;
+    actor.hp = Math.min(model.hp, item.hp);
+    actor.en = Math.min(model.en, item.en);
+    actor.brokenParts = { ...item.brokenParts };
+    if (item.moduleHp && actor.moduleHp)
+      for (const key of Object.keys(actor.moduleHp))
+        if (item.moduleHp[key] !== undefined) actor.moduleHp[key] = item.moduleHp[key];
+    if ((model.shield.requiredParts || []).some((key) => actor.brokenParts[key])) actor.shield = 0;
+  }
+  function restoreStoredFleet(room) {
+    if (room.settings.mode === "quick") return;
+    for (const player of room.seats.filter((player) => player && !player.bot && player.storedUnits)) {
+      const lostIds = new Set((room.sweep?.losses[player.id] || []).map((record) => record.state.stockId));
+      const items = player.storedUnits.filter((item) => !item.destroyed && !lostIds.has(item.id));
+      for (const actor of room.game.units.filter((actor) => !actor.missionGuest && G.ownerOf(actor) === player.seat)) {
+        const unitId = actor.deploymentUnitId || G.models[actor.model].prefabId,
+          kitId = (actor.deploymentModel || actor.model).split("__")[1];
+        const prior = room.sweep?.rosters[player.id]?.find((record) => record.battleSlot === actor.formationIndex);
+        const requestedStock = prior?.state.stockId || player.formation?.[actor.formationIndex]?.stockId;
+        let index = items.findIndex((item) => item.id === requestedStock);
+        if (requestedStock && (index < 0 || items[index].unitId !== unitId || items[index].kitId !== kitId)) throw Error("出战库存状态不足：" + unitId);
+        if (index < 0) index = items.findIndex((item) => item.unitId === unitId && item.kitId === kitId);
+        if (index < 0) index = items.findIndex((item) => item.unitId === unitId);
+        if (index < 0) throw Error("出战库存状态不足：" + unitId);
+        restoreStockActor(actor, items.splice(index, 1)[0]);
+      }
+    }
+  }
   function roomTechnologyCaps(room) {
     if (room.settings.mode === "mission") {
       const mission = G.getMap(room.settings.mapId).mission;
@@ -243,6 +295,12 @@ function createRoomEngine({
         supplies: roundReward(loot.supplies * ratio),
         stockGained: { inventory: loot.inventory },
         stockLost: { inventory: losses, kits: {} },
+        stockLostItems: (room.sweep.losses[p.id] || []).map((record) => ({ stockId: record.state.stockId,
+          unitId: record.entry.unitId, kitId: record.entry.kitId })),
+        stockStates: [...(room.sweep.rosters[p.id] || []), ...(room.sweep.returnedStock?.[p.id] || [])
+          .filter((record) => !room.sweep.losses[p.id].some((loss) => loss.state.stockId && loss.state.stockId === record.state.stockId))]
+          .map((record) => stockState(record.state, record.entry.unitId,
+          record.entry.unitId + "__" + record.entry.kitId)),
         lostUnits: records,
         losses,
       };
@@ -2062,6 +2120,20 @@ function createRoomEngine({
   function syncBattlefieldStock(room) {
     const reserves = room.game.battlefield?.reserves;
     if (!reserves) return;
+    const usedIds = new Map();
+    for (const actor of room.game.units) {
+      const seat = G.ownerOf(actor);
+      if (!usedIds.has(seat)) usedIds.set(seat, new Set());
+      if (actor.stockId) usedIds.get(seat).add(actor.stockId);
+    }
+    for (const actor of room.game.units.filter((actor) => actor.hp > 0 && !actor.stockId)) {
+      const player = room.seats[G.ownerOf(actor)];
+      if (!player || player.bot || !player.storedUnits) continue;
+      const unitId = actor.deploymentUnitId || G.models[actor.model].prefabId,
+        available = player.storedUnits.filter((item) => !item.destroyed && item.unitId === unitId && !usedIds.get(player.seat).has(item.id)),
+        item = available.find((item) => item.kitId === G.models[actor.model].kitId) || available[0];
+      if (item) { restoreStockActor(actor, item); usedIds.get(player.seat).add(item.id); }
+    }
     for (const reserve of reserves) {
       const player = room.seats[reserve.ownerSeat];
       if (!player || player.bot) {
@@ -2086,6 +2158,9 @@ function createRoomEngine({
         money: 0,
         supplies: 0,
         stockLost: lost,
+        stockLostItems: room.game.units.filter((actor) => actor.hp <= 0 && actor.stockId &&
+          G.ownerOf(actor) === reserve.ownerSeat && actor.formationIndex === reserve.formationIndex)
+          .map((actor) => ({ stockId: actor.stockId, unitId: reserve.unitId, kitId: reserve.kitId })),
       });
     }
     const occupied = new Map();
@@ -2144,6 +2219,7 @@ function createRoomEngine({
         money: 0,
         supplies: 0,
         stockLost: { inventory: { [record.unitId]: 1 }, kits: {} },
+        stockLostItems: [{ stockId: record.stockId, unitId: record.unitId, kitId: record.stockModel?.split("__")[1] }],
       });
     }
   }
@@ -2246,6 +2322,7 @@ function createRoomEngine({
           memberId: player.id,
           kind: "result",
           ...battlefieldLosses(room, player.seat),
+          stockStates: survivingStockStates(room, player),
           money: roundReward(entryReward.money * bonus.money),
           supplies: roundReward(entryReward.supplies * bonus.supplies),
         });
@@ -2296,6 +2373,7 @@ function createRoomEngine({
         memberId: player.id,
         kind: "result",
         ...(stockLost ? { stockLost } : {}),
+        stockStates: survivingStockStates(room, player),
         destroyedCost,
         ...(missionReward ? {stockGained:{inventory:missionReward.inventory}} : {}),
         money: roundReward(missionReward ? base.money * bonus.money : (won ? base.money : destroyedCost) * rate * battleRate * bonus.money),
@@ -2444,7 +2522,7 @@ function createRoomEngine({
         ? 0
         : G.pilots.combatExperience(G.modelOf(actor).cost, points, rate);
     const requiresRecruitment =
-      !!actor.pilot.ace && kind === "loss" && !["quick", "sweep", "battlefield"].includes(room.settings.mode);
+      kind === "loss";
     actor.pilot = G.pilots.battleResult(actor.pilot, kind, points, experiencePoints, {
       shipKill,
       requiresRecruitment,
@@ -2776,7 +2854,7 @@ function createRoomEngine({
       return {
         unitId: model.prefabId,
         kitId: model.kitId,
-        ...((unit.pilot?.custom || unit.pilot?.hired) ? { customPilot: G.pilots.custom(unit.pilot) } : {}),
+        ...((unit.pilot?.custom || unit.pilot?.hired || unit.pilot?.pmcGeneral) ? { customPilot: G.pilots.custom(unit.pilot) } : {}),
       };
     });
     const cost = units.reduce(
@@ -3070,6 +3148,7 @@ function createRoomEngine({
       ensureMissionAllies(room);
       Mission.initialize(room, G);
     }
+    restoreStoredFleet(room);
     room.battleRoster = Object.fromEntries(
       room.game.units.filter(actor=>!actor.missionGuest).map((actor) => [
         actor.id,
@@ -3083,6 +3162,7 @@ function createRoomEngine({
           unitId: actor.deploymentUnitId || G.models[actor.model].prefabId,
           model: actor.model,
           stockModel: actor.deploymentModel || actor.model,
+          stockId: actor.stockId,
           cost: G.modelOf(actor).cost + ((actor.pilot?.custom || actor.pilot?.hired) ? G.pilots.cost(actor.pilot) : 0),
           technologyFactions: roomBattleEconomy().technologyFactions(
             G.models[actor.deploymentModel || actor.model],
@@ -4167,6 +4247,27 @@ function createRoomEngine({
         const pending = room.sweep.pending[member.id];
         if (pending.money < plan.cost.money || pending.supplies < plan.cost.supplies)
           throw Error("本局暂存资源不足");
+        const returned = (room.sweep.rosters[member.id] || []).filter((record) =>
+          !plan.roster.some((next) => next.key === record.key));
+        if (member.storedUnits) {
+          const prior = [...(room.sweep.returnedStock?.[member.id] || []), ...returned],
+            lostIds = new Set((room.sweep.losses[member.id] || []).map((record) => record.state.stockId)),
+            activeIds = new Set(plan.roster.map((record) => record.state.stockId).filter(Boolean)),
+            items = member.storedUnits.filter((item) => !item.destroyed && !lostIds.has(item.id) && !activeIds.has(item.id));
+          for (const record of plan.roster.filter((record) => !record.state.stockId)) {
+            let index = items.findIndex((item) => item.unitId === record.entry.unitId && item.kitId === record.entry.kitId);
+            if (index < 0) index = items.findIndex((item) => item.unitId === record.entry.unitId);
+            if (index < 0) throw Error("出战库存状态不足：" + record.entry.unitId);
+            const item = items.splice(index, 1)[0], latest = prior.findLast((entry) => entry.state.stockId === item.id);
+            restoreStockActor(record.state, latest ? { ...item, ...latest.state, id: item.id } : item);
+          }
+        }
+        const history = ((room.sweep.returnedStock ||= {})[member.id] ||= []);
+        for (const record of returned.filter((record) => record.state.stockId)) {
+          const index = history.findIndex((entry) => entry.state.stockId === record.state.stockId);
+          if (index >= 0) history[index] = structuredClone(record);
+          else history.push(structuredClone(record));
+        }
         pending.money -= plan.cost.money;
         pending.supplies -= plan.cost.supplies;
         room.sweep.rosters[member.id] = plan.roster;
@@ -4430,6 +4531,7 @@ function createRoomEngine({
       }
       const previousLicenses = member.licenses;
       const previousStock = G.normalizeStock(member);
+      const previousStoredUnits = member.storedUnits;
       const previousCrewStock = member.crewStock;
       const previousTechnologyPoints = member.technologyPoints;
       try {
@@ -4462,6 +4564,9 @@ function createRoomEngine({
           ["set_ready", "start_game", "update_formation", "confirm_formation"].includes(msg.action)
         )
           Object.assign(member, G.normalizeStock(msg));
+        if ((!room.started || room.phase === "assembly") && msg.storedUnits !== undefined &&
+            ["set_ready", "start_game", "update_formation", "confirm_formation"].includes(msg.action))
+          member.storedUnits = roomWarehouse().profile(msg.storedUnits, G.models);
         if (Array.isArray(msg.formation) && !room.campaign && !room.startedFromSave)
           msg = { ...msg, formation: G.pilots.normalizeCrewFormation(msg.formation, remainingCrew(room, member), G.formationModel) };
         if (msg.action === "rename_unit") {
@@ -5090,6 +5195,7 @@ function createRoomEngine({
         member.licenses = previousLicenses;
         member.crewStock = previousCrewStock;
         Object.assign(member, previousStock);
+        member.storedUnits = previousStoredUnits;
         member.technologyPoints = previousTechnologyPoints;
         throw error;
       }
@@ -5821,6 +5927,7 @@ function createRoomEngine({
         licenses: G.normalizeLicenses(msg.licenses),
         crewStock: G.pilots.normalizeCrewStock(msg.crewStock),
         ...G.normalizeStock(msg),
+        storedUnits: roomWarehouse().profile(msg.storedUnits, G.models),
         seat,
         ready: false,
         finalReady: false,

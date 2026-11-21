@@ -494,8 +494,7 @@ const UnitHangars = {
       const m = modelOf(u);
       return (
         u.hp >= m.hp * 0.75 &&
-        u.en >= m.en * 0.75 &&
-        !Object.values(u.brokenParts || {}).some(Boolean)
+        u.en >= m.en * 0.75
       );
     }
     const attackReach = (u) =>
@@ -526,11 +525,10 @@ const UnitHangars = {
     }
     function needsRecovery(u) {
       const m = modelOf(u);
-      const damaged = Object.values(u.brokenParts || {}).some(Boolean);
       const energyWeapons = m.weapons.filter((weapon) => weapon.slot !== "skill" && weapon.en > 0);
       const outOfAmmo =
         energyWeapons.length > 0 && energyWeapons.every((weapon) => weapon.en > u.en);
-      return u.hp < m.hp * 0.25 || u.en < m.en * 0.5 || outOfAmmo || damaged;
+      return u.hp < m.hp * 0.25 || u.en < m.en * 0.5 || outOfAmmo;
     }
     function recoveryOrder(g, u, allowRide = () => true, allowEntry = carrier => allowsAIEntry(u, carrier)) {
       if (!onMap(u) || u.acted || u.plan || u.lastLaunchRound === g.round) return null;

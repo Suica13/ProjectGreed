@@ -25,6 +25,8 @@ def category(weapon_id, weapon):
     # MS-06 等型号中的 MS 不能被误认为 Missile。DoubleMS / LegMS 才是武器标识。
     short_id = re.sub(r"^(?:ef|zn)_(?:msm?|rx|rgm)_\d+[a-z0-9]*_", "", weapon_id.lower())
     text = (weapon_id + " " + weapon.get("source", {}).get("file", "") + " " + weapon.get("name", "")).lower()
+    if weapon.get("weaponClass") in ("beam_shotgun", "shell_shotgun"):
+        return weapon["weaponClass"]
     if weapon_id == "EF_GMRifle" or re.search(r"\d+mmMG", weapon_id, re.I):
         return "machine_gun"
     if weapon["type"] == "melee":

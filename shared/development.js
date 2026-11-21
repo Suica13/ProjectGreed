@@ -176,27 +176,8 @@ const Development = (() => {
     }
     return normalizeResearch(union);
   }
-  function research(faction, id) {
-    const node = nodes(faction).find((node) => node.id === id);
-    const active = new Set(unlockedTech(faction));
-    if (
-      eraLocked(faction) ||
-      !node ||
-      active.has(id) ||
-      !node.requires.every((id) => active.has(id)) ||
-      pointBalance(faction) < node.points
-    )
-      return false;
-    const next = {
-      ...progress,
-      points: { ...progress.points },
-      researched: { ...normalizeResearch(progress.researched, { includeLocked: true }), [faction]: [...active, id] },
-    };
-    if (!economy.transact({}, {}, [[progressKey, saveCodec.stringify(next)]])) return false;
-    progress = next;
-    unitCache.clear();
-    return true;
-  }
+  // Personal development is now a read-only catalog. Preserve imported history.
+  function research() { return false; }
   // Rewards/scripts may grant a specific unit; there is deliberately no individual research UI.
   function grantUnit(faction, unitId) {
     const researched = normalizeResearch(progress.researched, { includeLocked: true });
@@ -289,24 +270,7 @@ const Development = (() => {
   function pointBalance(faction) {
     return Number(progress.points[faction]) || 0;
   }
-  function creditAward(award) {
-    if (
-      !award ||
-      typeof award.id !== "string" ||
-      !award.matchId ||
-      !factions.includes(award.faction) ||
-      !Number.isInteger(award.points) ||
-      award.points < 1 ||
-      progress.claimed[award.id]
-    )
-      return false;
-    progress.points[award.faction] = pointBalance(award.faction) + award.points;
-    progress.claimed[award.id] = award.matchId;
-    try {
-      localStorage.setItem(progressKey, saveCodec.stringify(progress));
-    } catch {}
-    return true;
-  }
+  function creditAward() { return false; }
   function validateProgress(value) {
     if (!value || typeof value !== "object" || !value.points || !value.claimed)
       throw Error("科技进度无效");

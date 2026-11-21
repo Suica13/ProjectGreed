@@ -1293,7 +1293,7 @@
   "weaponKits": [
     {
       "id": "kit_1",
-      "name": "霰弹枪套件",
+      "name": "实弹霰弹枪套件",
       "cost": 0,
       "weapons": [
         "EF_RX_81AS_Shotgun",
@@ -1306,19 +1306,19 @@
       ],
       "localization": {
         "zh": {
-          "name": "霰弹枪套件"
+          "name": "实弹霰弹枪套件"
         },
         "en": {
-          "name": "Shotgun Kit"
+          "name": "Ballistic Shotgun Kit"
         },
         "ja": {
-          "name": "ショットガン装備"
+          "name": "実弾ショットガン装備"
         }
       }
     },
     {
       "id": "kit_3",
-      "name": "霰弹枪套件",
+      "name": "实弹霰弹枪套件",
       "cost": 50,
       "weapons": [
         "EF_RX_81AS_Shotgun",
@@ -1331,19 +1331,19 @@
       ],
       "localization": {
         "zh": {
-          "name": "霰弹枪套件"
+          "name": "实弹霰弹枪套件"
         },
         "en": {
-          "name": "Shotgun Kit"
+          "name": "Ballistic Shotgun Kit"
         },
         "ja": {
-          "name": "ショットガン装備"
+          "name": "実弾ショットガン装備"
         }
       }
     },
     {
       "id": "kit_0",
-      "name": "霰弹枪套件",
+      "name": "实弹霰弹枪套件",
       "cost": 100,
       "weapons": [
         "EF_RX_81AS_Shotgun",
@@ -1356,13 +1356,13 @@
       ],
       "localization": {
         "zh": {
-          "name": "霰弹枪套件"
+          "name": "实弹霰弹枪套件"
         },
         "en": {
-          "name": "Shotgun Kit"
+          "name": "Ballistic Shotgun Kit"
         },
         "ja": {
-          "name": "ショットガン装備"
+          "name": "実弾ショットガン装備"
         }
       }
     }

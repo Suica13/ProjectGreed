@@ -48,7 +48,7 @@ def fit_facility(u,dest,kind):
   offset=layer.setdefault('worldOffset',{'x':0,'y':0})
   offset['x']-=center[0]; offset['y']-=center[1]
  presentation=json.loads((ASSETS/'presentation.json').read_text(encoding='utf-8'))
- cells=1 if kind in ('base','radar','factory','refinery','research') else .5
+ cells=1 if kind in ('base','radar','factory','refinery','research') else .375
  u['presentation']['mapScale']=cells*160*presentation['mapCellScale']/(presentation['unitMapScale']*max(bounds[2]-bounds[0],bounds[3]-bounds[1]))
  u['presentation']['idle']='ImportedIdle'
  u['presentation']['fixedFacing']=0

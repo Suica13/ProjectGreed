@@ -970,13 +970,24 @@
     },
     {
       "id": "kit_2",
-      "name": "光束炮套件",
+      "name": "光束霰弹枪套件",
       "cost": 75,
       "weapons": [
         "EF_BeamSprayGunFD",
         "EF_BeamSaber_AF_A",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "光束霰弹枪套件"
+        },
+        "en": {
+          "name": "Beam Shotgun Kit"
+        },
+        "ja": {
+          "name": "ビーム・ショットガン装備"
+        }
+      }
     }
   ],
   "description": "参考沙漠型吉姆的数据开发而来的机体,兼顾了装甲与机动性",

@@ -43,6 +43,8 @@ const WeaponClasses = (() => {
   const shipCannon = (weapon, ship) => !!ship &&
     ["cannon", "beam_cannon", "mortar"].includes(classify(weapon)) &&
     weapon.rangeRole !== "ship_anti_air";
+  const handheldCannon = weapon => classify(weapon) === "cannon" &&
+    /^(?:EF_(?:180|170)mmCannon(?:_|$)|ZN_MagellaCannon(?:_|$))/i.test(weapon.sourceName || weapon.sourceWeapon || weapon.id || "");
   function classify(weapon, id = "") {
     const native = weapon.sourceName || weapon.sourceWeapon || id || weapon.id || "";
     if (!/Sniper|_Aim(?:_|$)/i.test(native) && weapon.special?.type !== "snipe") {
@@ -189,6 +191,7 @@ const WeaponClasses = (() => {
       { label: "分类伤害倍率", value: "×" + group.damage },
       { label: "通用伤害倍率", value: "×" + Math.max(0.01, global.damage + (!["melee", "ram"].includes(kind) ? global.shootingDamageOffset || 0 : 0)) },
       ...(!["melee", "ram"].includes(kind) ? [{ label: "射击基础命中增减", value: String(global.shootingHitOffset || 0) }] : []),
+      ...(handheldCannon(weapon) ? [{ label: "手持加农炮命中增减", value: String(global.handheldCannonHitOffset || 0) }] : []),
       { label: "基础命中倍率", value: "×" + global.accuracy * group.accuracy },
       ...(shipCannon(weapon, weapon.shipWeapon) ? [{ label: "舰炮命中倍率", value: "×" + (global.shipCannonAccuracy ?? 0.85) }] : []),
       {
@@ -213,6 +216,7 @@ const WeaponClasses = (() => {
     valid,
     baseHits,
     shipCannon,
+    handheldCannon,
     classify,
     tags,
     machineGun,

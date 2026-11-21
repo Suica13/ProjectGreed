@@ -264,6 +264,7 @@ const Net = (() => {
     if (profileActions.has(intent.action) && n.snapshot?.settings.mode !== "campaign") {
       message.licenses = Economy.snapshot().licenses;
       message.crewStock = Economy.snapshot().crewStock;
+      if (!n.snapshot?.started || n.snapshot?.phase === "assembly") message.storedUnits = Economy.storedUnits();
       Object.assign(message, Economy.normalizeStock(Economy.snapshot()));
       message.technologyPoints = Development.pointSnapshot();
       if (!n.snapshot?.started) message.researched = Development.researchSnapshot();
@@ -591,6 +592,7 @@ const Net = (() => {
           technologyLimitFaction: DevelopmentUI.selectedFaction(),
           licenses: Economy.snapshot().licenses,
           crewStock: Economy.snapshot().crewStock,
+          storedUnits: Economy.storedUnits(),
           ...Economy.normalizeStock(Economy.snapshot()),
           roomMode: mode === "create" ? byId("newRoomMode").value : undefined,
           mode,

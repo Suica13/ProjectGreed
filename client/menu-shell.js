@@ -8,10 +8,10 @@ window.MenuShell = (() => {
       room: "lobby",
       formation: "hangar",
       warehouse: "hangar",
+      facilities: "hangar",
       production: "hangar",
-      development: "hangar",
-      encyclopedia: "hangar",
-      records: "records",
+      development: "catalog",
+      encyclopedia: "catalog",
     })[view];
   let navigating = false;
   function leaveEditor() {
@@ -30,7 +30,8 @@ window.MenuShell = (() => {
       } else {
         if (pageView === view) return;
         leaveEditor();
-        if (view === "warehouse") WarehouseUI.open();
+        if (view === "facilities") BaseFacilitiesUI.open();
+        else if (view === "warehouse") WarehouseUI.open();
         else if (view === "production") byId("openProduction").click();
         else if (view === "development") byId("openDevelopment").click();
         else if (view === "encyclopedia") Encyclopedia.open();
@@ -60,12 +61,11 @@ window.MenuShell = (() => {
     byId("shellSidebar").hidden = inBattle;
     document.body.classList.toggle("menu-shell-active", !inBattle);
     document.body.dataset.page = pageView;
-    byId("shellRecordsScreen").hidden = pageView !== "records";
     if (inBattle) return;
     const section = sectionFor(pageView) || "lobby";
     byId("formationPageTitle").textContent = I18n.text(
       byId("formationMain").dataset.page === "pilots"
-        ? "驾驶员"
+        ? "宿舍"
         : byId("formationEditorStyle").value === "free"
           ? "自由编组"
           : "常规编组",
@@ -91,20 +91,21 @@ window.MenuShell = (() => {
         .classList.toggle("has-unclaimed", Number(byId("openServerActivities").dataset.unread) > 0);
     } else if (section === "hangar") {
       const pilots = pageView === "formation" && byId("formationMain").dataset.page === "pilots";
-      tabs.push(tab("格纳库", () => go("warehouse"), pageView === "warehouse"));
-      tabs.at(-1).id = "shellWarehouse";
+      tabs.push(tab("设施", () => go("facilities"), pageView === "facilities"));
+      tabs.at(-1).id = "shellFacilities";
       tabs.push(tab("编组", () => go("formation"), pageView === "formation" && !pilots));
       tabs.at(-1).id = "shellFormation";
-      tabs.push(tab("驾驶员", () => go("pilots"), pilots));
+      tabs.push(tab("机库", () => go("warehouse"), pageView === "warehouse"));
+      tabs.at(-1).id = "shellWarehouse";
+      tabs.push(tab("宿舍", () => go("pilots"), pilots));
       tabs.at(-1).id = "shellPilots";
-      tabs.push(tab("生产车间", () => go("production"), pageView === "production"));
+      tabs.push(tab("生产", () => go("production"), pageView === "production"));
       tabs.at(-1).id = "shellProduction";
+    } else if (section === "catalog") {
       tabs.push(tab("开发", () => go("development"), pageView === "development"));
       tabs.at(-1).id = "shellDevelopment";
       tabs.push(tab("图鉴", () => go("encyclopedia"), pageView === "encyclopedia"));
       tabs.at(-1).id = "shellEncyclopedia";
-    } else {
-      tabs.push(tab("回放文件", () => byId("openReplayFile").click()));
     }
     subnav.replaceChildren(...tabs);
     const status = byId("shellRoomStatus");
@@ -149,7 +150,7 @@ window.MenuShell = (() => {
   byId("start").setAttribute("role", "region");
   byId("shellLobby").onclick = () => go(Net.active ? "room" : "menu");
   byId("shellHangar").onclick = () => go("warehouse");
-  byId("shellRecords").onclick = () => go("records");
+  byId("shellCatalog").onclick = () => go("encyclopedia");
   byId("shellSettings").onclick = () => byId("openClientSettings").click();
   byId("shellRoomStatus").onclick = () => go("room");
   byId("shellLeaveRoom").onclick = requestMenu;
@@ -162,7 +163,6 @@ window.MenuShell = (() => {
     },
     true,
   );
-  byId("shellOpenReplay").onclick = () => byId("openReplayFile").click();
   for (const id of ["formationUnitsTab", "formationPilotsTab"])
     byId(id).addEventListener("click", refresh);
   for (const event of [
@@ -194,7 +194,7 @@ window.MenuShell = (() => {
   window.addEventListener("resize", updateShellMetrics);
   // Size equal cards from the scroll panel, rather than a viewport preset.
   // Observing the panel also covers toolbar wrapping and switching roster tabs.
-  const cardPanels = ["formationUnits", "customPilotList", "productionList", "encyclopediaList"];
+  const cardPanels = ["formationUnits", "productionList", "encyclopediaList"];
   function fitCards(list) {
     if (!list.clientHeight || !list.getClientRects().length) return;
     const style = getComputedStyle(list);
@@ -214,12 +214,11 @@ window.MenuShell = (() => {
       list.clientHeight - clipped - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
     const gap = parseFloat(style.rowGap) || 0;
     let height = Math.floor((available - gap * (rows - 1)) / rows);
-    if (["formationUnits", "customPilotList"].includes(list.id)) {
+    if (list.id === "formationUnits") {
       // Keep portrait sizing independent from the new, compact shared card slots.
-      const phone = matchMedia("(max-width:720px)").matches;
       list.style.setProperty(
         "--roster-reference-height",
-        height - (!phone && list.id === "customPilotList" ? 2 : 0) + "px",
+        height + "px",
       );
       // Minimum visible counts are a floor, not a reason to stretch every card.
       height = 116;

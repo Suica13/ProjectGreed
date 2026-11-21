@@ -20,7 +20,10 @@ test("RGC-83 kit selector and weapon cards retain their correct names across lan
     }, language);
     expect(result.kits[0]).toContain(machine); expect(result.kits[1]).toContain(rifle);
     expect(result.cards).toEqual([machine, rifle]);
-    expect(result.costs[1] - result.costs[0]).toBe(75);
+    expect(result.costs[1] - result.costs[0]).toBe(50);
   }
+  const cannons=await page.evaluate(()=>Object.values(UnitModels).flatMap(m=>m.weapons).filter(WeaponClasses.handheldCannon).map(w=>({hit:w.hit,details:WeaponInfo.card(w).textContent})));
+  expect(cannons.length).toBeGreaterThan(0);
+  expect(cannons.every(w=>w.hit===70)).toBe(true);
   expect(errors).toEqual([]);
 });

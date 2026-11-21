@@ -1,0 +1,281 @@
+/* Shared visual language for owned-unit previews and reference encyclopedia panels. */
+.unit-summary-tag.cost { display:inline-flex;align-items:center;height:24px;min-height:24px;box-sizing:border-box;white-space:nowrap; }
+.unit-role-icon { display:inline-flex;flex:none;align-items:center;justify-content:center;vertical-align:middle;box-sizing:border-box;width:24px;height:24px;min-height:24px;margin-left:5px;border:1px solid currentColor;border-radius:3px;font-family:"Segoe UI Symbol","Noto Sans Symbols 2",sans-serif;font-size:20px;line-height:1;background:#112738; }
+#productionList .unit-line-heading { display:flex;align-items:center;flex-wrap:nowrap;gap:5px;min-height:24px; }
+#productionList .unit-line-heading > .unit-line-title { display:block;flex:0 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:0; }
+#productionList .unit-line-heading > .unit-role-icon { margin-left:0;align-self:center; }
+#productionUnitName { display:flex;align-items:center;gap:5px;min-width:0; }
+#productionUnitName > .production-unit-title { min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+#productionUnitName > .unit-role-icon { margin-left:0; }
+.unit-role-icon.role-general { color:#76baff;background:#173e67; }
+.unit-role-symbol { display:inline-flex;align-items:center;justify-content:center;width:100%;height:100%;transform-origin:center; }
+.unit-role-icon.role-general > .unit-role-symbol { transform:rotate(-45deg); }
+.unit-role-icon.role-support { color:#91efb3;background:#1c503a; }
+.unit-role-icon.role-raid { color:#ff9298;background:#5d2935; }
+.unit-role-icon.role-normal { color:#c7d2dc;background:#344451; }
+.warehouse-card-heading > .unit-role-icon { margin-left:0; }
+.warehouse-card-heading > .unit-summary-tag.cost { height:24px;min-height:24px;box-sizing:border-box;display:inline-flex;align-items:center; }
+#warehouseDialog .warehouse-preview-cost { height:34px;min-height:34px; }
+.warehouse-attribute-tabs { display:flex;gap:8px;margin:0 0 12px; }
+.warehouse-attribute-tabs button { flex:1;min-width:0;padding:7px 10px;font-size:13px; }
+#warehouseDialog .warehouse-attribute-tabs button[aria-pressed="true"] { background:#2a6b92;border-color:#83d9ff;color:#fff; }
+.warehouse-detail-attributes[hidden] { display:none; }
+.warehouse-secondary-attributes { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.warehouse-secondary-attributes section { min-width:0; }
+#warehouseDialog .warehouse-secondary-attributes h4 { color:var(--unit-panel-accent);margin:0 0 8px;font-size:13px; }
+#warehouseDialog, #formationUnitDetail {
+  --unit-panel: #102e49;
+  --unit-panel-raised: #173c5b;
+  --unit-panel-border: #356887;
+  --unit-panel-accent: #72d4ff;
+  --unit-panel-text: #dceef8;
+  --unit-panel-preview-height: 446px;
+}
+#warehouseDialog {
+  background: var(--unit-panel);
+  border-color: var(--unit-panel-border);
+  border-radius: 8px;
+  color: var(--unit-panel-text);
+  box-shadow: 0 18px 60px #020e1a80;
+}
+#warehouseDialog > header {
+  background: #194966;
+  border-color: #397d9f;
+  box-shadow: inset 3px 0 var(--unit-panel-accent);
+}
+#warehouseDialog h2 { color: #ecf8ff; letter-spacing: .03em; }
+#warehouseDialog .warehouse-detail-preview { background: #123652; border-color: #3c718f; border-radius: 5px; }
+#warehouseDialog .warehouse-detail-parts,
+#warehouseDialog .warehouse-detail-basic,
+#warehouseDialog .warehouse-part-slots { background: #12334e; border-color: var(--unit-panel-border); border-radius: 5px; }
+#warehouseDialog .warehouse-detail-parts h3,
+#warehouseDialog .warehouse-detail-basic h3,
+#warehouseDialog .warehouse-part-slots h3 { color: var(--unit-panel-accent); }
+#warehouseDialog .warehouse-part,
+#warehouseDialog .warehouse-detail-metrics dt,
+#warehouseDialog .warehouse-detail-metrics dd,
+#warehouseDialog .warehouse-detail-defense td { border-color: #28516d; }
+#warehouseDialog .warehouse-kit-field { background: #0b2741; border-color: #427c9f; border-radius: 4px; }
+#warehouseDialog button { background: #205578; border-color: #467fa0; color: #e3f4ff; border-radius: 4px; box-shadow: none; }
+#warehouseDialog button:not(:disabled):hover { background: #2a6b92; border-color: #83d9ff; }
+#warehouseDialog button:disabled { background: #1a3952; border-color: #34526a; color: #7894a9; opacity: 1; }
+#warehouseDialog button.danger { background: #613747; border-color: #98677b; }
+#warehouseDialog button.danger:not(:disabled):hover { background: #7a4154; }
+#warehouseDialog .warehouse-resource { background: #092139; border-color: #3d6b87; }
+#warehouseDialog .warehouse-detail-pilot img,
+#warehouseDialog .warehouse-relocate-choice img,
+#warehouseDialog .warehouse-form-choice img { background: #10334f; border-color: #548aa6; }
+#warehouseDialog .warehouse-relocate-choice { background: #173e5c; }
+#warehouseDialog .warehouse-slots-wip { color: #6b9ab4; border-color: #346783; }
+#formationUnitDetail { background: #041323b8; }
+#formationUnitDetail .formation-detail-dialog {
+  width: min(1040px, 96vw);
+  background: var(--unit-panel);
+  color: var(--unit-panel-text);
+  border: 1px solid var(--unit-panel-border);
+  border-radius: 8px;
+  box-shadow: 0 18px 60px #020e1a80;
+}
+#formationUnitDetail .unit-detail-heading { background: #194966; border-color: #397d9f; box-shadow: inset 3px 0 var(--unit-panel-accent); }
+#formationUnitDetail .eyebrow { color: #91cfe9; }
+#formationUnitDetail .unit-detail-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; gap: 16px; }
+#formationUnitDetail .unit-detail-preview-box { position: relative; min-height: 320px; background: #123652; border-color: #3c718f; border-radius: 5px; }
+#formationCatalogCost { position: absolute; top: 10px; left: 10px; z-index: 2; padding: 6px 12px; min-height: 34px; box-sizing: border-box; display: inline-flex; align-items: center; }
+#formationUnitDetail .unit-detail-block { background: #12334e; border-color: var(--unit-panel-border); border-radius: 5px; }
+#formationUnitDetail .unit-detail-block h3 { color: var(--unit-panel-accent); }
+#formationUnitDetail .unit-detail-loadout { display: flex; flex-direction: column; gap: 12px; }
+#formationUnitDetail .unit-detail-loadout > label { margin: 0; }
+#formationUnitDetail #formationDetailForms { margin: 0; flex-wrap: wrap; }
+#formationUnitDetail .unit-detail-properties { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+#formationUnitDetail button { background: #205578; color: #e3f4ff; border-color: #467fa0; border-radius: 4px; box-shadow: none; }
+#formationUnitDetail button:not(:disabled):hover { background: #2a6b92; border-color: #83d9ff; }
+#formationUnitDetail button:disabled { background: #1a3952; color: #7894a9; border-color: #34526a; }
+#formationUnitDetail select { background: #0b2741; border-color: #427c9f; color: #e3f4ff; }
+#formationUnitDetail .unit-detail-metrics dt,
+#formationUnitDetail .unit-detail-metrics dd,
+#formationUnitDetail .unit-defense-table td { border-color: #28516d; }
+body.menu-shell-active #warehouseDialog button,
+body.menu-shell-active #formationUnitDetail button { background: #205578; border-color: #467fa0; color: #e3f4ff; box-shadow: none; }
+body.menu-shell-active #warehouseDialog button:not(:disabled):hover,
+body.menu-shell-active #formationUnitDetail button:not(:disabled):hover { background: #2a6b92; border-color: #83d9ff; }
+body.menu-shell-active #warehouseDialog button:disabled,
+body.menu-shell-active #formationUnitDetail button:disabled { background: #1a3952; border-color: #34526a; color: #7894a9; }
+body.menu-shell-active #warehouseDialog button.danger { background: #613747; border-color: #98677b; }
+body.menu-shell-active #formationUnitDetail .unit-detail-metric { background: #194363; border-color: #356887; }
+body.menu-shell-active #formationUnitDetail .unit-detail-heading { display: flex; align-items: flex-start; gap: 12px; height: auto; max-height: none; }
+#formationUnitDetail .unit-detail-heading > div { flex: 1; min-width: 0; }
+#formationUnitDetail .unit-detail-title-line { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; height: auto; }
+#formationDetailTags { flex: 1 1 180px; min-width: 0; }
+#formationDetailTags .unit-tags, #formationDetailTags .unit-tags-primary, #formationDetailTags .unit-tags-types { flex-wrap: wrap; max-height: none; }
+#formationUnitDetail .unit-detail-heading > button { flex: none; }
+@media (max-width: 720px) {
+  #formationUnitDetail .unit-detail-summary,
+  #formationUnitDetail .unit-detail-properties { grid-template-columns: minmax(0, 1fr); }
+  #formationUnitDetail .unit-detail-preview-box { min-height: 220px; max-height: 220px; }
+}
+
+/* Both panels use the same canvas, viewport and rows; optional actions cannot
+ * change the owned preview's height or leave a gap below its last action. */
+#warehouseDialog .warehouse-detail-preview,
+#formationUnitDetail .unit-detail-preview-box {
+  height: var(--unit-panel-preview-height);
+  min-height: var(--unit-panel-preview-height);
+  max-height: var(--unit-panel-preview-height);
+}
+#warehouseDialog .warehouse-detail-status {
+  height: var(--unit-panel-preview-height);
+  grid-template-rows: 88px 130px 80px 56px 44px;
+}
+#warehouseDialog .warehouse-detail-actions,
+#warehouseDialog .warehouse-detail-actions > button { height: 44px; min-height: 44px; }
+#warehouseDialog .warehouse-form-actions { max-height: 80px; overflow-y: auto; }
+#formationUnitDetail { padding: 0; }
+#warehouseDialog.is-unit-details { max-width: 96vw; }
+#formationUnitDetail .formation-detail-dialog { padding: 0 14px 14px; box-sizing: border-box; max-width: 96vw; max-height: 88dvh; flex-shrink: 0; }
+#formationUnitDetail .unit-detail-heading { margin: 0 -14px 14px; padding: 12px 16px; }
+#formationUnitDetail .unit-detail-heading h2 { font-size: 20px; }
+#formationUnitDetail .unit-detail-preview-box { display: block; overflow: hidden; }
+#formationUnitDetail .formation-detail-preview {
+  position: absolute; inset: 5%; width: 90%; height: 90%; max-height: none;
+  margin: 0; object-fit: contain; image-rendering: pixelated;
+}
+#formationUnitDetail .unit-detail-loadout { height: var(--unit-panel-preview-height); overflow-y: auto; padding: 12px; }
+#formationUnitDetail .unit-detail-loadout > * { flex-shrink: 0; }
+#formationUnitDetail .unit-detail-block { padding: 12px; }
+#formationUnitDetail .unit-detail-block h3 { font-size: 15px; margin-bottom: 8px; }
+#formationUnitDetail .unit-detail-metrics {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0; margin: 0; font-size: 13px;
+}
+#formationUnitDetail .unit-detail-metrics dt,
+#formationUnitDetail .unit-detail-metrics dd {
+  margin: 0; padding: 5px 2px; border-bottom: 1px solid #28516d; font-size: 13px; overflow-wrap: anywhere;
+}
+#formationUnitDetail .unit-detail-metrics dt { color: #a0becd; }
+#formationUnitDetail .unit-detail-metrics dd { text-align: right; color: #c7f3f4; }
+#formationUnitDetail .unit-defense-table { font-size: 13px; }
+#formationUnitDetail .unit-defense-table th,
+#formationUnitDetail .unit-defense-table td { padding: 6px 4px; border-color: #28516d; }
+#formationUnitDetail #formationInventorySale { display: none; }
+#formationUnitDetail .unit-reference-hangar + .unit-reference-hangar { margin-top: 12px; }
+#formationUnitDetail .unit-reference-hangar h4 { margin: 0 0 4px; color: #a0d9de; font-size: 13px; }
+#warehouseClose, #closeFormationDetail { white-space: nowrap; }
+.unit-attribute-pages { display:grid;min-width:0; }
+.unit-attribute-page { grid-area:1 / 1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-content:start;align-items:start;gap:16px;min-width:0; }
+.unit-attribute-page[hidden] { display:grid !important;visibility:hidden;pointer-events:none; }
+.unit-attribute-page > section { min-width:0; }
+.unit-attribute-column { display:flex;flex-direction:column;gap:16px;min-width:0; }
+.unit-skill-page { grid-template-columns:minmax(0,1fr);contain:size;overflow-y:auto;align-self:stretch; }
+.unit-weapon-page { grid-template-columns:minmax(0,1fr);contain:size;overflow-y:auto;overflow-x:hidden;align-self:stretch;min-height:0; }
+.unit-weapon-list { display:grid;gap:10px;min-width:0;padding-right:5px; }
+.unit-weapon-list > .weapon-card { min-width:0;margin:0; }
+#warehouseDialog .warehouse-attribute-tabs { display:grid;grid-template-columns:repeat(4,minmax(0,1fr)); }
+@media(max-width:720px) { #warehouseDialog .warehouse-attribute-tabs { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+.unit-skill-list { min-width:0; }
+.unit-skill-list > section + section { margin-top:16px; }
+.unit-skill-list .formation-weapon-detail { margin-bottom:8px; }
+#formationCatalog > .catalog-unit-row { grid-template-columns:minmax(0,1fr);height:100px;min-height:100px;max-height:none;contain-intrinsic-size:auto 100px; }
+#formationCatalog .catalog-unit { border:1px solid #385568;border-radius:3px;background:#152b3b;cursor:pointer;align-items:center; }
+#formationCatalog .catalog-unit[aria-selected="true"] { border-color:#79cfff;background:#21495d; }
+#formationCatalog .catalog-unit:focus-visible { outline:2px solid #79cfff;outline-offset:-2px; }
+#formationCatalog .catalog-unit-portrait { padding:0;min-height:0;border:1px solid #52768b;border-radius:3px;background:#102536;cursor:pointer; }
+#closeFormationPicker { flex:none;white-space:nowrap; }
+/* Portrait images fit inside the frame's content box, including its padding. */
+body #formationScreen #formationUnits .formation-row .formation-unit-portrait > .formation-icon > img {
+  width:100% !important;height:100% !important;max-width:100% !important;max-height:100% !important;
+}
+#formationCatalog .catalog-unit-portrait {
+  box-sizing:border-box;height:var(--unit-card-portrait);padding:2px;display:grid;
+  grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr);overflow:hidden;
+}
+#formationCatalog .catalog-unit-portrait > img {
+  width:100% !important;height:100% !important;max-width:100%;max-height:100%;min-width:0;object-fit:contain;display:block;
+}
+#customPilotPanel .custom-pilot-dialog { width:min(1050px,calc(100vw - 24px));max-height:calc(100dvh - 32px);padding:0;display:block;overflow-y:auto;background:#102e49;border:1px solid #356887;border-radius:8px;color:#dceef8; }
+#customPilotPanel .formation-pilot-heading { display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;margin:0;background:#194966;border-bottom:1px solid #397d9f; }
+#customPilotPanel > .custom-pilot-dialog > header { position:sticky;top:0;z-index:4; }
+.pilot-detail-title { display:flex;align-items:center;gap:12px;min-width:0; }
+#customPilotPanel h2 { margin:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#ecf8ff;font-size:22px; }
+.pilot-detail-summary { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:14px; }
+.pilot-detail-preview { min-height:300px;display:grid;place-items:center;background:#0b2338;border:1px solid #356887;border-radius:4px; }
+body #customPilotPanel #changeCustomPilotPortrait { display:grid;place-items:center;width:100%;height:100%;padding:20px;border:0;background:radial-gradient(ellipse,#254b68,#0b2338 75%);opacity:1; }
+body #customPilotPanel #customPilotAvatar { width:200px;height:200px;max-width:100%;object-fit:contain;border:1px solid #527e99;background:#16354b;image-rendering:pixelated; }
+.pilot-detail-status { min-width:0;min-height:300px;padding:14px;box-sizing:border-box;border:1px solid #356887;border-radius:4px;background:#173c5b;display:flex;flex-direction:column;gap:12px; }
+#customPilotPanel .pilot-detail-status > * { margin:0 !important; }
+.pilot-advancement-actions { display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:start; }
+#customPilotPanel .pilot-advancement-actions button { width:100%;margin:0;min-width:0; }
+#customPilotPanel #pilotAdvancementHint { grid-column:1 / -1;grid-row:2;margin:0;font-size:11px;line-height:1.5; }
+#customPilotPanel button.primary { background:#246b96;border-color:#5798bd;color:#e5f5ff; }
+#customPilotPanel .pilot-identity-row { display:block; }
+#customPilotPanel .pilot-name-controls { display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:8px; }
+#customPilotPanel .pilot-name-controls label { min-width:0; }
+#customPilotPanel .pilot-name-controls button { white-space:nowrap; }
+#customPilotPanel .pilot-narrative-settings { display:flex;flex-wrap:wrap;align-items:end;gap:8px; }
+#customPilotPanel .pilot-narrative-settings > label:not([hidden]) { flex:1;min-width:130px; }
+.pilot-return-row { display:flex;align-items:center;gap:8px; }
+.pilot-return-row > span { flex:1; }
+.pilot-return-row button { flex:none; }
+#customPilotPanel #customPilotProgress { margin:0;padding:10px;background:#102e49;border:1px solid #356887;line-height:1.6; }
+#customPilotPanel #customPilotRecord { margin:0;padding:8px;border:1px solid #356887;background:#102e49; }
+.pilot-detail-bottom { display:grid;grid-template-columns:1fr 1fr;align-items:start;gap:14px;padding:0 14px 14px; }
+.pilot-detail-bottom > * { min-width:0;background:#173c5b;border:1px solid #356887;border-radius:4px;padding:14px; }
+.pilot-detail-bottom .pilot-training { order:-1; }
+.pilot-detail-preview,.pilot-detail-bottom > * { box-sizing:border-box; }
+#customPilotPanel .pilot-training-heading { min-height:38px; }
+#customPilotPanel #pilotTrainingStatus { min-height:40px;line-height:20px; }
+.pilot-detail-level { white-space:nowrap;font-size:15px; }
+.pilot-mechanic-card { padding:10px;border:1px solid #356887;border-radius:3px;background:#102e49;min-width:0; }
+.pilot-mechanic-card + .pilot-mechanic-card { margin-top:8px; }
+.pilot-mechanic-card p { margin:6px 0 0;line-height:1.5; }
+.pilot-mechanic-card.has-icon { display:grid;grid-template-columns:36px minmax(0,1fr);gap:4px 8px; }
+.pilot-mechanic-card > img { grid-row:1 / 3;width:36px;height:36px;object-fit:contain; }
+.pilot-mechanic-card.has-icon > small { grid-column:2;line-height:1.5; }
+#customPilotPanel #customPilotSkills { max-height:260px;overflow-y:auto;margin-bottom:10px; }
+#customPilotPanel #acePilotDetails { margin-top:12px; }
+#customPilotPanel #customPilotSkills .pilot-list-skill { white-space:normal; }
+#customPilotPanel #createPilotConfirm { margin:0 14px 14px;width:calc(100% - 28px); }
+#dormReviveAll { grid-column:1;justify-self:start;white-space:nowrap; }
+.warehouse-condition[role="button"] { cursor:pointer; }
+.warehouse-condition[role="button"]:focus-visible { outline:2px solid #79cfff;outline-offset:1px; }
+@media(max-width:720px) {
+  .pilot-detail-summary,.pilot-detail-bottom { grid-template-columns:minmax(0,1fr);padding:10px;gap:10px; }
+  .pilot-detail-preview { height:220px;min-height:220px; }
+  body #customPilotPanel #customPilotAvatar { width:160px;height:160px; }
+  .pilot-detail-status { min-height:0; }
+  #customPilotPanel #customPilotStats { grid-template-columns:minmax(0,1fr); }
+  #customPilotPanel .formation-pilot-heading { padding:10px; }
+  #customPilotPanel h2 { font-size:18px; }
+  .pilot-detail-title { gap:8px; }
+  #dormReviveAll { grid-row:2; }
+  body.menu-shell-active .dorm-footer .base-pagination { grid-column:2;justify-self:center; }
+}
+.unit-attribute-block h4 { margin:0 0 8px;color:#72d4ff;font-size:13px; }
+#formationDetailAttributes > .unit-attribute-block { grid-column:1 / -1; }
+.unit-attribute-block .warehouse-detail-defense { margin-bottom:12px; }
+.unit-attribute-block .warehouse-attribute-tabs { margin-bottom:12px; }
+.unit-attribute-block .warehouse-attribute-tabs button { min-height:36px; }
+#formationUnitDetail .warehouse-attribute-tabs button { min-height:36px;font-size:13px; }
+#formationUnitDetail .warehouse-attribute-tabs button[aria-pressed="true"] { background:#2a6b92;border-color:#83d9ff;color:#fff; }
+#formationUnitDetail .unit-attribute-block .warehouse-detail-metrics { display:grid;grid-template-columns:minmax(0,1fr) auto; }
+.encyclopedia-unit-actions { display:flex;flex-direction:column;align-items:stretch;justify-content:center;gap:6px;min-width:0; }
+.encyclopedia-unit-actions > button { width:100%;min-height:44px;padding:8px 12px;font-size:14px;margin:0; }
+#encyclopediaList > .encyclopedia-unit { display:grid !important;grid-template-columns:76px minmax(0,1fr) 84px !important;align-items:center !important;column-gap:12px !important; }
+#encyclopediaList .encyclopedia-unit-identity { width:76px !important;min-width:76px !important;align-self:center !important;justify-self:start;margin:0;padding:0 !important; }
+#encyclopediaList .encyclopedia-portrait,#encyclopediaList .encyclopedia-portrait img { width:76px !important;height:76px !important;min-height:0 !important;object-fit:contain; }
+#encyclopediaList .encyclopedia-unit-body { align-self:center !important;min-width:0;margin:0; }
+#encyclopediaList .encyclopedia-unit-actions > button { min-height:44px;height:44px;font-size:14px;padding:8px 12px; }
+#encyclopediaList .encyclopedia-unit-status:not(:empty) { font-size:11px;line-height:16px;padding:2px 5px; }
+#encyclopediaList .encyclopedia-unit-status:empty { display:none; }
+@media(max-width:720px) {
+  #encyclopediaList { grid-template-columns:minmax(0,1fr) !important; }
+  #encyclopediaList > .encyclopedia-unit { grid-template-columns:64px minmax(0,1fr) 76px !important;column-gap:8px !important; }
+  #encyclopediaList .encyclopedia-unit-identity { width:64px !important;min-width:64px !important; }
+  #encyclopediaList .encyclopedia-portrait,#encyclopediaList .encyclopedia-portrait img { width:64px !important;height:64px !important; }
+  #encyclopediaList .encyclopedia-unit-name { font-size:14px !important;line-height:18px !important; }
+  .unit-attribute-page { gap:12px; }
+}
+@media(max-width:720px) {
+  #warehouseDialog .warehouse-detail-preview,
+  #formationUnitDetail .unit-detail-preview-box { height: 200px; min-height: 200px; max-height: 200px; }
+  #formationUnitDetail .formation-detail-dialog { padding: 0 14px 14px; }
+  #formationUnitDetail .formation-detail-preview { width: 90%; max-width: none; max-height: none; margin: 0; }
+}

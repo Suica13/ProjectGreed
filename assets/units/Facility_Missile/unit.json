@@ -104,7 +104,7 @@
   },
   "presentation": {
     "shield": false,
-    "mapScale": 2.6666666666666665,
+    "mapScale": 2.0,
     "battleScale": 1,
     "idle": "ImportedIdle",
     "move": "ImportedIdle",
@@ -345,8 +345,8 @@
         11.25,
         10.5
       ],
-      "targetCells": 0.5,
-      "mapScale": 2.6666666666666665,
+      "targetCells": 0.375,
+      "mapScale": 2.0,
       "layers": [
         {
           "name": "A",

@@ -7,6 +7,8 @@ const WeaponSequence = require("../shared/weapon-sequence.js");
 const PairedWeapons = require("./paired-weapons.cjs");
 const UnitParts = require("../shared/unit-parts.js");
 const UnitSkills = require("../shared/unit-skills.js");
+const UnitRoles = require("../shared/unit-roles.json");
+if(UnitRoles.schemaVersion!==1 || Object.values(UnitRoles.units).some(entry=>!["normal","general","support","raid"].includes(entry.role))) throw Error("Invalid combat role configuration");
 function validateParts(parts, label) {
   if (parts === undefined) return;
   if (
@@ -111,6 +113,15 @@ function loadCatalog({
     sounds: {},
     models: {},
   };
+  const weaponIcons = read(file(root, "ui/weapon-icons.json"));
+  result.weaponIcons = {};
+  const weaponIconFiles = { ...weaponIcons.classes, ...weaponIcons.variants };
+  for (const kind of [...Object.keys(WeaponClasses.labels), ...Object.keys(weaponIcons.variants || {})]) {
+    const source = file(root, weaponIconFiles[kind]), key = "weapon-icon:" + kind;
+    if (!fs.existsSync(source)) throw Error("Missing weapon icon: " + kind);
+    result.weaponIcons[kind] = key;
+    if (embedAssets) result.assets[key] = "data:image/png;base64," + fs.readFileSync(source).toString("base64");
+  }
   result.sounds["pilot/activation"] =
     "data:audio/ogg;base64," +
     fs.readFileSync(file(root, "sounds/Action_8.ogg")).toString("base64");
@@ -473,6 +484,7 @@ function loadCatalog({
       continue;
     }
     const prefab = WeaponStore.expandPrefab(raw, weaponDefinitionsOverride || undefined);
+    prefab.combatRole = UnitRoles.units[prefab.id]?.role || "normal";
     if (prefab.enabled === false) continue;
     // A body tackle is ordinary fallback melee, never a manually invoked skill.
     for (const [key, weapon] of Object.entries(prefab.weapons))
@@ -1270,6 +1282,7 @@ function loadCatalog({
         wip: prefab.wip,
         disabled: prefab.disabled,
         formOnly: prefab.formOnly === true,
+        combatRole: prefab.combatRole,
         faction: prefab.faction,
         availableFactions: prefab.availableFactions,
         tags: prefab.tags,

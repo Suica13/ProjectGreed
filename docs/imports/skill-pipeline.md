@@ -41,6 +41,10 @@
 
 `assets/weapons.json`维护共用武器，单位JSON的weapons项保存ref与overrides/remove。Node脚本通过tools/weapon-store.cjs的parse/stringify读写；Python通过tools/weapon_store.py的loads/dumps读写。生成、维护脚本在内存中操作展开对象，保存自动转换引用；不要把ref当完整武器读取。单机贴图、枪口和硬点依赖留在单位覆盖。武器名称与等级、战斗政策仍在加载编译阶段统一应用。迁移及使用说明见仓库根目录《共用武器与图鉴.md》。
 
+## 单位属性来源
+
+`node tools/import-unit-roles.cjs [战斗行动2 MOD目录]`只读原MOD单位卡片及copyFrom继承，读取unitCategory：1泛用、2突袭、3支援、0一般。输出shared/unit-roles.json，逐台记录分类、来源和推定依据；人工补充维护shared/unit-role-overrides.json。新增机体后刷新分类并运行tests/unit-roles.test.cjs。加载器向预制体和各套件模型提供combatRole；合并套件采用对应原机型属性，变形／爆甲形态继承原机。克制数值维护在生成的[战斗规则](../rules/combat.md)。
+
 ## 科技年代标签
 
 - UC 年代为 UC_0079_T1、UC_0079_T2、UC_0087_T1、UC_0087_T2、UC_0093_T1，权重依次为1～5；0083归入UC_0079_T2。

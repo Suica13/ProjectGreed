@@ -93,12 +93,12 @@ const PilotSystem = (() => {
     const source = aceProfile(value) || value;
     const total = Object.values(source.maxStats).reduce((sum, n) => sum + Math.round(n), 0);
     return maximumAceTotal === minimumAceTotal
-      ? 250
+      ? 200
       : Math.max(
-          200,
+          150,
           Math.min(
-            300,
-            200 +
+            250,
+            150 +
               25 * Math.round((4 * (total - minimumAceTotal)) / (maximumAceTotal - minimumAceTotal)),
           ),
         );
@@ -240,19 +240,28 @@ const PilotSystem = (() => {
     });
   }
   function recruitmentPrice(id, previous = null) {
+    if (previous?.aceId === id && previous.needsRecruitment) return revivalPrice(previous);
     const price = aceProfile(id)?.price;
     if (!price) return null;
-    const returning = previous?.aceId === id && previous.needsRecruitment;
     return Object.fromEntries(
-      ["money", "supplies"].map((key) => [key, Math.ceil(price[key] * (returning ? 0.5 : 1))]),
+      ["money", "supplies"].map((key) => [key, Math.ceil(price[key])]),
     );
   }
   function recruitAce(id, previous = null) {
     if (!previous) return createAce(id);
     const pilot = custom(previous);
-    if (pilot.aceId !== id || !pilot.needsRecruitment || !aceProfile(id)?.price)
+    if (pilot.aceId !== id || !pilot.needsRecruitment)
       throw Error("该ACE暂不可招募");
     return custom({ ...pilot, needsRecruitment: false });
+  }
+  function revivalPrice(value) {
+    const pilot = custom(value);
+    return { money: 0, supplies: pilot.needsRecruitment ? (pilot.ace ? 1000 : 500) * pilot.level : 0 };
+  }
+  function revive(value) {
+    const pilot = custom(value);
+    if (!pilot.needsRecruitment) throw Error("驾驶员无需复归");
+    return custom({...pilot,needsRecruitment:false});
   }
   const skillUnlockLevel = 6;
   const skillChoices = catalog.customSkills || [];
@@ -316,6 +325,7 @@ const PilotSystem = (() => {
     return normalizeDialogue(value.dialogue);
   }
   function custom(value) {
+    if (value?.pmcGeneral) return generalPMC(value.id, value.commander);
     if (value?.hired) return hired(value);
     if (value?.aceId || value?.ace) return ace(value);
     if (!value || typeof value !== "object" || !/^custom-[a-zA-Z0-9-]{1,80}$/.test(value.id || ""))
@@ -448,6 +458,7 @@ const PilotSystem = (() => {
       ...(selectedSkillId ? { selectedSkillId } : {}),
       ...(selectedSecondSkillId ? { selectedSecondSkillId } : {}),
       custom: true,
+      needsRecruitment: value.needsRecruitment === true,
     };
   }
   function createCustom(id, name, portraitId, faction = "PMC") {
@@ -543,7 +554,7 @@ const PilotSystem = (() => {
       p = gainExperience(p, experiencePoints);
     } else {
       p.record.losses++;
-      if (p.ace && details.requiresRecruitment !== false) p.needsRecruitment = true;
+      if (details.requiresRecruitment !== false) p.needsRecruitment = true;
     }
     return custom(p);
   }
@@ -581,6 +592,7 @@ const PilotSystem = (() => {
     defaultPortrait(value?.faction)?.icon;
   const cost = (value) => {
     if (!value) return 0;
+    if (value.pmcGeneral) { generalPMC(value.id, value.commander); return 0; }
     if (value.hired) return crewGrades[hired(value).grade].cost;
     const pilot = custom(value);
     return pilot.ace && pilot.needsRecruitment
@@ -659,6 +671,18 @@ const PilotSystem = (() => {
       (grade ? crewGrades[grade].name : "一般") +
       (commandUnit(model) ? "指挥官" : "驾驶员")
     );
+  }
+  // Ordinary PMC pilots use the same deterministic roll as faction defaults.
+  // Persist only their identity; supplied attributes and portraits are ignored.
+  function generalPMC(id, commander = false) {
+    if (typeof id !== "string" || !/^pmc-general-[a-zA-Z0-9-]{1,80}$/.test(id) ||
+        typeof commander !== "boolean") throw Error("一般PMC驾驶员无效");
+    const model = { faction: "PMC", unitTags: commander ? ["CmdUnit"] : [] };
+    const pilot = roll(null, hash(id), 0, 0, model);
+    const portraits = catalog.portraits;
+    return { ...pilot, name: commander ? "一般PMC指挥官" : "一般PMC驾驶员", id,
+      pmcGeneral: true, custom: false, faction: "PMC", commander,
+      level: 0, portraitId: portraits[hash(id + ":portrait") % portraits.length].id };
   }
   function validate(id, model) {
     if (id === undefined || id === null || id === "") return null;
@@ -799,8 +823,11 @@ const PilotSystem = (() => {
     createAce,
     recruitAce,
     recruitmentPrice,
+    revivalPrice,
+    revive,
     commandUnit,
     defaultName,
+    generalPMC,
     crewGrades,
     normalizeCrewStock,
     normalizeCrewFormation,

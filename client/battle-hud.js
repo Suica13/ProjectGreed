@@ -558,7 +558,7 @@ const BattleHUD = (() => {
         });
         if (Number.isInteger(to)) Net.request("unit_control_transfer", { unitId: unit.id, to });
       };
-      const point = unit && Rules.campaignBattlefield.nodeAt(Rules, game, unit);
+      const point = unit && Rules.campaignBattlefield?.nodeAt(Rules, game, unit);
       capturePoint.hidden =
         !own ||
         !point ||
@@ -568,9 +568,9 @@ const BattleHUD = (() => {
         Rules.modelOf(unit).movementType === "air" ||
         !!unit.embarked;
       capturePoint.disabled =
-        !canCommand || !Rules.campaignBattlefield.canCapture(Rules, game, unit);
+        !canCommand || !Rules.campaignBattlefield?.canCapture(Rules, game, unit);
       capturePoint.onclick = () => Net.request("capture_point", { unitId: unit.id });
-      const exits = unit ? Rules.campaignBattlefield.exits(Rules, game, unit) : [];
+      const exits = unit ? Rules.campaignBattlefield?.exits(Rules, game, unit) || [] : [];
       transferRegion.hidden = !own || phase !== "idle" || !exits.length;
       transferRegion.disabled = isBusy() || !Net.canAct() || isAI();
       transferRegion.onclick = async () => {

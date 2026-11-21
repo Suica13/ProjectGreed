@@ -4,7 +4,7 @@ const { createRoomEngine } = require("../shared/room-engine");
 const formation = [{ unitId: "Medea", kitId: "standard" }, {
   unitId: "Type61", kitId: "standard", preload: { carrierIndex: 0, hangarId: "Hangar_1" },
 }];
-function fixture(t, mode) {
+function fixture(t, mode, storedUnits) {
   let n = 0;
   const frames = new Map(), engine = createRoomEngine({ rules: G,
     randomId: () => "id-" + ++n, randomToken: () => "token-" + ++n,
@@ -15,6 +15,7 @@ function fixture(t, mode) {
   clients.slice(0, mode === "sweep" ? 1 : 2).forEach((ws, i) => engine.join(ws, {
     mode: i ? "join" : "create", room: "TIMING", roomMode: mode, characterFaction: "PMC",
     licenses: { Medea: true, Type61: true }, inventory: { Medea: 5, Type61: 5 },
+    ...(storedUnits ? { storedUnits } : {}),
   }));
   const room = engine.rooms.get("TIMING");
   const act = (i, action, fields = {}) => engine.action(clients[i], {
@@ -32,6 +33,51 @@ function fixture(t, mode) {
   const player = [...room.members.values()].find((p) => p.ws === clients[0]);
   return { engine, room, clients, frames, act, player };
 }
+test("profile resources and broken parts initialize authoritative units and final receipts retain exact stock identity", (t) => {
+  const stored = ["Medea", "Type61"].flatMap((unitId) => Array.from({ length: 5 }, (_, i) => ({
+    id: unitId + i, unitId, kitId: "standard", hp: G.models[unitId + "__standard"].hp / 2,
+    en: 0, brokenParts: { head: true } }))), f = fixture(t, "regular", stored);
+  const actors = f.room.game.units.filter((actor) => actor.ownerSeat === f.player.seat);
+  for (const actor of actors) {
+    assert(actor.stockId);
+    assert.equal(actor.hp, G.models[actor.model].hp / 2);
+    assert.equal(actor.en, 0);
+    assert.equal(actor.brokenParts.head, true);
+  }
+  const lost = actors.find((actor) => actor.formationIndex === 1);
+  lost.hp = 0;
+  f.room.game.winner = 0; f.room.phase = "finished";
+  f.engine.broadcast(f.room);
+  const loss = f.room.economyAwards.find((award) => award.stockLost);
+  assert.equal(loss.stockLostItems[0].stockId, lost.stockId);
+  const result = f.room.economyAwards.find((award) => award.memberId === f.player.id && award.kind === "result");
+  assert.equal(result.stockStates.length, 1);
+  assert.equal(result.stockStates[0].stockId, actors[0].stockId);
+  assert.equal(result.stockStates[0].brokenParts.head, true);
+});
+test("battlefield replacement claims another physical chassis and inherits its damage", (t) => {
+  const stored = ["Medea", "Type61"].flatMap((unitId) => Array.from({ length: 5 }, (_, i) => ({
+    id: unitId + i, unitId, kitId: "standard", hp: G.models[unitId + "__standard"].hp / 2,
+    en: 0, brokenParts: { head: true } }))), f = fixture(t, "battlefield", stored);
+  const actor = f.room.game.units.find((actor) => actor.ownerSeat === f.player.seat && actor.formationIndex === 1);
+  actor.hp = 0;
+  f.engine.broadcast(f.room);
+  const replacement = structuredClone(actor);
+  replacement.id += "-replacement";
+  replacement.hp = G.models[replacement.model].hp;
+  replacement.en = G.models[replacement.model].en;
+  replacement.brokenParts = {};
+  delete replacement.stockId;
+  f.room.game.units.push(replacement);
+  f.engine.broadcast(f.room);
+  assert.notEqual(replacement.stockId, actor.stockId);
+  assert.equal(replacement.hp, G.models[replacement.model].hp / 2);
+  assert.equal(replacement.brokenParts.head, true);
+  f.room.game.winner = 0; f.room.phase = "finished";
+  f.engine.broadcast(f.room);
+  const loss = f.room.economyAwards.find((award) => award.memberId === f.player.id && award.stockLost);
+  assert.equal(loss.stockLostItems[0].stockId, actor.stockId);
+});
 for (const mode of ["regular", "quick", "battlefield"]) {
   test(`${mode} casualties stay pending across disconnect and settle exactly once`, (t) => {
     const f = fixture(t, mode), { room, player } = f;

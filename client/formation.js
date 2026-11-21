@@ -82,17 +82,38 @@ const Formation = (() => {
         ["projectgreed.custom-pilots.v1", null],
       ]);
       pilotStorageReady = true;
+      return true;
     } catch {
       pilotStorageReady = false;
       note("浏览器无法保存驾驶员，本次会话仍可使用。");
+      return false;
     }
   }
   function hydratePilots(entries) {
-    return PilotSystem.normalizeCrewFormation(entries, Economy.snapshot().crewStock, Rules.formationModel).map((entry) => {
+    const items = [...Economy.snapshot().storage.units, ...Economy.snapshot().storage.ships].filter((item) => !item.destroyed);
+    const assigned = entries.map((entry) => {
+      let index = entry.stockId ? items.findIndex((item) => item.id === entry.stockId) : items.findIndex((item) => item.unitId === entry.unitId && item.kitId === entry.kitId);
+      if (index < 0 && !entry.stockId) index = items.findIndex((item) => item.unitId === entry.unitId);
+      if (index < 0) return entry;
+      const item = items.splice(index, 1)[0];
+      const copy = { ...entry, stockId: item.id, unitId: item.unitId, kitId: item.kitId }, pilot = storedPilot(item);
+      if (!Object.hasOwn(item, "pilotId")) {
+        if (!copy.customPilot || copy.customPilot.hired || copy.customPilot.pmcGeneral) copy.customPilot = pilot;
+        return copy;
+      }
+      if (pilot) copy.customPilot = pilot;
+      else delete copy.customPilot;
+      return copy;
+    });
+    return PilotSystem.normalizeCrewFormation(assigned, Economy.snapshot().crewStock, Rules.formationModel).map((entry) => {
       const copy = { ...entry };
       // Named ACEs remain in the catalog for future technology unlocks.
       delete copy.pilotId;
       if (copy.customPilot) {
+        if (copy.customPilot.pmcGeneral) {
+          copy.customPilot=PilotSystem.custom(copy.customPilot);
+          return copy;
+        }
         if (copy.customPilot.hired) return copy;
         const saved = pilotStore.pilots.find((p) => p.id === copy.customPilot.id);
         if (saved && !saved.needsRecruitment && PilotSystem.canAssign(saved, group))
@@ -101,6 +122,30 @@ const Formation = (() => {
       }
       return copy;
     });
+  }
+  function storedPilot(item) {
+    if (item.destroyed) return null;
+    const fallback = () => PilotSystem.generalPMC("pmc-general-" + item.id,
+      PilotSystem.commandUnit(UnitModels[item.unitId + "__" + item.kitId]));
+    if (!item.pilotId || item.pilotId.startsWith("crew:")) return fallback();
+    if (item.pilotId.startsWith("pmc-general-")) return PilotSystem.generalPMC(item.pilotId,
+      PilotSystem.commandUnit(UnitModels[item.unitId + "__" + item.kitId]));
+    const pilot = pilotStore.pilots.find((pilot) => pilot.id === item.pilotId && !pilot.needsRecruitment && PilotSystem.canAssign(pilot, group));
+    return pilot ? structuredClone(pilot) : fallback();
+  }
+  function saveStoredPilot(entry, profile) {
+    const entries = draft.length ? draft : current(),
+      items = [...Economy.snapshot().storage.units, ...Economy.snapshot().storage.ships].filter((item) => !item.destroyed);
+    for (const candidate of entries) {
+      let index = candidate.stockId ? items.findIndex((item) => item.id === candidate.stockId) : items.findIndex((item) => item.unitId === candidate.unitId && item.kitId === candidate.kitId);
+      if (index < 0 && !candidate.stockId) index = items.findIndex((item) => item.unitId === candidate.unitId);
+      if (index < 0) continue;
+      const item = items.splice(index, 1)[0];
+      if (candidate === entry) {
+        Economy.setStoredPilot(item.id, profile?.hired ? "crew:" + profile.grade : profile?.id || null);
+        return;
+      }
+    }
   }
   function receivePilotAwards(snapshot) {
     if (snapshot.replay || snapshot.phase === "replay" || snapshot.campaign) return;
@@ -147,8 +192,25 @@ const Formation = (() => {
     detailFromPicker = false,
     detailFromDevelopment = false,
     developmentPreviewFocus = null,
+    externalPreviewReturn = null,
     pilotIndex = null;
   const pickerKits = new Map();
+  let selectedStoredId = null;
+  function openStoredPreview(stockId) {
+    if (!stockId) return note("出战库存不足");
+    const pickerOpen = !byId("formationUnitPicker").hidden;
+    byId("formationMain").inert = true;
+    const opened = WarehouseUI.openItem(stockId, () => {
+      const available = new Set([...Economy.snapshot().storage.units, ...Economy.snapshot().storage.ships].filter((item) => !item.destroyed).map((item) => item.id));
+      for (let i = draft.length - 1; i >= 0; i--) if (draft[i].stockId && !available.has(draft[i].stockId)) removeEntry(i);
+      draft = hydratePilots(draft);
+      saveDraft();
+      render();
+      if (pickerOpen) renderCatalog();
+      byId("formationMain").inert = pickerOpen;
+    });
+    if (!opened) byId("formationMain").inert = pickerOpen;
+  }
   let catalogRevision = 0,
     catalogRenderKey = null;
   const catalogFilters = { faction: "", era: "", type: "" };
@@ -488,7 +550,10 @@ const Formation = (() => {
       byId("developmentMain").inert = false;
       detailIndex = null;
       catalogDetail = null;
-      developmentPreviewFocus?.focus();
+      const onReturn = externalPreviewReturn;
+      externalPreviewReturn = null;
+      if (onReturn) onReturn();
+      else developmentPreviewFocus?.focus();
       developmentPreviewFocus = null;
       return;
     }
@@ -578,6 +643,7 @@ const Formation = (() => {
   }
   function openPicker(context = null, fromHangarCard = false) {
     byId("formationSearch").value = "";
+    byId("formationSort").value = "storage";
     catalogFilters.type = "";
     byId("formationType").value = "";
     catalogFilters.faction = Rules.factions.includes(PlayerProfile.faction())
@@ -692,126 +758,30 @@ const Formation = (() => {
           : "可在格纳库间调整，或选择独立部署。";
   }
 
-  function renderPreloads(model) {
+  function renderHangarProperties(model) {
     const container = byId("formationDetailHangars");
     container.replaceChildren();
     byId("formationDetailHangarsBlock").hidden = !model.hangars.length;
-    for (const [number, h] of model.hangars.entries()) {
-      const passengers =
-          detailIndex === null
-            ? []
-            : draft
-                .map((entry, i) => ({ entry, i }))
-                .filter(({ entry }) => preloadMatches(entry, detailIndex, h.id)),
-        used = passengers.reduce(
-          (n, { entry }) =>
-            n + (h.kind === "sfs" ? 1 : Rules.formationModel(entry).transport.slotCost),
-          0,
-        ),
-        heading = element("div", "formation-preload-heading"),
-        add = element("button", "", "预先搭载");
-      add.dataset.preloadHangar = h.id;
-      add.disabled =
-        points(draft) + (detailIndex === null ? compositionWeight(model) : 0) > unitLimit();
-      add.onclick = () => {
-        if (!canAddUnit(model)) return note("单位禁用，或与当前阵营不匹配。");
-        if (detailIndex === null) {
-          const entry = { ...catalogDetail };
-          try {
-            Rules.validateFleetFormation([...draft, entry], Infinity, unitLimit());
-          } catch (error) {
-            note(error.message);
-            return;
-          }
-          appendUnit(entry);
-          detailIndex = draft.length - 1;
-          catalogDetail = null;
-          detailFromPicker = false;
-          render();
-        }
-        openPicker({ carrierIndex: detailIndex, hangarId: h.id });
-      };
-      heading.append(
-        element(
-          "strong",
-          "",
-          `${I18n.text("格纳库")}${number + 1} · ${used} / ${h.capacity} ${I18n.text("容量点")}`,
-        ),
-        add,
-      );
-      container.append(heading);
-      if (detailIndex === null)
-        container.append(element("p", "helper", "预先搭载会先将这艘运输单位加入编组。"));
-      for (const { entry, i } of passengers) {
-        const row = element("div", "formation-cargo-row"),
-          image = element("img"),
-          m = Rules.formationModel(entry),
-          remove = element("button", "danger", "移除");
-        image.src = unitIcon(Rules.formationModelId(entry), entry.customPilot);
-        image.alt = "";
-        const label = element("span"),
-          name = element("strong", "", m.name);
-        label.append(
-          name,
-          document.createTextNode(" · "),
-          element("small", "muted", `COST ${m.cost}`),
-        );
-        const equipment = element("label", "formation-cargo-equipment"),
-          kits = element("select"),
-          prefab = Rules.catalog.prefabs.find((p) => p.id === entry.unitId);
-        kits.dataset.preloadKit = String(i);
-        kits.setAttribute("aria-label", I18n.text("装备组") + " · " + m.name);
-        for (const kit of prefab.weaponKits)
-          kits.add(new Option(`${kit.name} · COST ${prefab.stats.cost + kit.cost}`, kit.id));
-        kits.value = entry.kitId;
-        kits.onchange = () => {
-          const kitId = kits.value;
-          try {
-            Rules.validateFleetFormation(
-              draft.map((e, index) => (index === i ? { ...e, kitId } : e)),
-              Infinity,
-              Rules.catalog.formation.maxUnits,
-            );
-          } catch (error) {
-            kits.value = entry.kitId;
-            note(error.message);
-            return;
-          }
-          GameAudio.play("changeEquipmentSound");
-          entry.kitId = kitId;
-          render();
-          renderDetail();
-          byId("formationDetailHangars").querySelector(`[data-preload-kit="${i}"]`)?.focus();
-        };
-        equipment.append(element("small", "muted", "装备组"), kits);
-        row.append(image, label, equipment);
-        row.dataset.preloadUnit = i;
-        remove.onclick = () => {
-          removeEntry(i);
-          if (detailIndex > i) detailIndex--;
-          render();
-          renderDetail();
-        };
-        const actions = element("div", "formation-cargo-actions"),
-          pilot = element("button");
-        pilot.type = "button";
-        pilotButtonText(pilot, "驾驶员", entry, m);
-        pilot.dataset.preloadPilot = String(i);
-        pilot.setAttribute("aria-haspopup", "dialog");
-        pilot.onclick = () => openPilot(i, true);
-        actions.append(pilot, remove);
-        row.append(actions);
-        container.append(row);
-      }
+    for (const [number, hangar] of model.hangars.entries()) {
+      const compatible = Rules.catalog.prefabs.filter(prefab =>
+        !prefab.formOnly && hangar.allowedTags.some(tag => prefab.transport?.loadTags.includes(tag)));
+      const kinds = [...new Set(compatible.flatMap(prefab => prefab.unitTags.slice(0, 1)))];
+      const section = element("section", "unit-reference-hangar");
+      section.append(element("h4", "", hangar.kind === "sfs" ? "SFS" : I18n.text("格纳库") + " " + (number + 1)));
+      const row = element("dl", "unit-detail-metrics");
+      detailMetrics(row, [
+        ["容量点", hangar.capacity],
+        ["可搭载类型", kinds.map(Rules.unitTagName).join(" / ")],
+      ]);
+      section.append(row);
+      container.append(section);
     }
   }
   // 按实际部件与持握武器渲染静态精灵，再以整体边界适配预览窗口。
   function detailMetrics(container, entries) {
     container.replaceChildren();
     for (const [label, value] of entries) {
-      const cell = element("div", "unit-detail-metric");
-      cell.append(element("dt", "", I18n.text(label) + " "), element("dd", "", String(value)));
-      container.append(cell);
+      container.append(element("dt", "", I18n.text(label)), element("dd", "", String(value)));
     }
   }
   const boardingPicker = element("dialog", "formation-boarding-dialog");
@@ -917,6 +887,7 @@ const Formation = (() => {
         try {
           const next = draft.map((unit, i) => (i === index ? { ...unit, kitId: kit.id } : unit));
           Rules.validateFleetFormation(next, Infinity, Rules.catalog.formation.maxUnits);
+          if (entry.stockId) Economy.changeStoredKit(entry.stockId, kit.id);
           draft[index] = next[index];
           GameAudio.play("changeEquipmentSound");
           dialog.close();
@@ -988,18 +959,19 @@ const Formation = (() => {
     const model = Rules.formationModel(entry);
     window.dispatchEvent(new CustomEvent("unit-preview", { detail: { id: entry.unitId } }));
     byId("formationDetailTitle").textContent = model.name;
+    byId("formationDetailTitle").append(UnitPreview.roleIcon(model));
+    byId("formationCatalogCost").textContent = model.cost + "C";
     byId("formationDetailTags").replaceChildren(unitTags(model, { limit: Infinity }));
-    ProductionUI.renderLicensePurchase(originalEntry.unitId, originalEntry.kitId);
+    byId("formationInventorySale")?.remove();
     const pilotButton = byId("formationDetailPilot");
-    pilotButton.hidden = detailIndex === null || !!previewModel;
+    pilotButton.hidden = true;
     pilotButtonText(pilotButton, "配属驾驶员", originalEntry, model);
-    renderPreview(entry.unitId + "__" + entry.kitId);
-    renderPreloads(model);
+    const previewCanvas = byId("formationDetailPreview");
+    previewCanvas.dataset.cardZoom = String(UnitPreview.storageScale(model));
+    renderPreview(entry.unitId + "__" + entry.kitId, previewCanvas, 180, "card");
+    renderHangarProperties(model);
     renderCarrierChoice(entry, model);
-    if (previewModel) {
-      byId("formationDetailCarrierField").hidden = true;
-      byId("formationDetailHangarsBlock").hidden = true;
-    }
+    byId("formationDetailCarrierField").hidden = true;
     byId("formationDetailIntro").textContent = model.description;
     const kits = byId("formationDetailKit");
     kits.replaceChildren();
@@ -1017,176 +989,17 @@ const Formation = (() => {
     kits.disabled = !!previewModel;
     byId("openSpecialTransforms").hidden = !!previewModel || !equipmentPrefab.pilotForms?.length;
 
-    detailMetrics(byId("formationDetailStats"), [
-      ["HP", model.hp.toLocaleString()],
-      ["EN", model.en],
-      ["COST", model.cost],
-      ...(!model.formOnly
-        ? [["生产周期", Economy.productionTiming(entry.unitId, entry.kitId).turns + "回合／台"]]
-        : []),
-      ["视野距离", formatDistance(model.sensors.sight)],
-      ["侦察距离", formatDistance(model.sensors.radar)],
-      ["机动", model.speed ?? 100],
-      ["反应系数", model.mobility],
-      ["命中系数", model.accuracy + "%"],
-      ["AP参考", model.actionPoints ?? 5],
-      ["零件强度", model.partStructuralStrength],
-      ...(model.ship
-        ? [
-            ["战舰占地", model.footprint.width + "×" + model.footprint.height],
-            ["炮塔模块", model.modules.length],
-          ]
-        : []),
-    ]);
-    const movementNames = {
-      ground: "地面移动",
-      air: "空中移动",
-      naval: "水上移动",
-      amphibious: "两栖移动",
-      hover: "气垫移动",
-    };
-    detailMetrics(byId("formationDetailMovement"), [
-      ["移动", model.move],
-      ["移动方式", I18n.text(movementNames[model.movementType || "ground"])],
-      ...[
-        ["ground", "地面适应性"],
-        ["mountain", "山地适应性"],
-        ["space", "宇宙适应性"],
-        ["water", "水中适应性"],
-        ["atmosphere", "大气层适应性"],
-        ["air", "空中适应性"],
-        ["forest", "树林适应性"],
-        ["snow", "雪地适应性"],
-        ["desert", "沙漠适应性"],
-        ["rubble", "废墟适应性"],
-      ].map(([key, label]) => [label, (model.adaptability[key] ?? 0) + "%"]),
-    ]);
-    const labels = {
-      melee: "格斗",
-      shooting: "射击",
-      beam: "光束",
-      shell: "实弹",
-      dp: "DP",
-      sp: "SP",
-    };
-    const defense = byId("formationDetailDefense"),
-      table = element("table", "unit-defense-table"),
-      head = element("thead"),
-      header = element("tr");
-    for (const text of ["防护", "抗性", "固定减伤"]) header.append(element("th", "", text));
-    head.append(header);
-    table.append(head);
-    const body = element("tbody");
-    for (const [type, value] of Object.entries(model.defenses)) {
-      const row = element("tr");
-      row.append(
-        element("td", "", I18n.text(labels[type] || type)),
-        element("td", "", value.percent + "%"),
-        element("td", "", value.flat.toLocaleString()),
-      );
-      body.append(row);
-    }
-    table.append(body);
-    defense.replaceChildren(table);
-    detailMetrics(
-      byId("formationDetailBonuses"),
-      Object.entries(model.attackBonuses).map(([type, value]) => [
-        labels[type] || type,
-        (value >= 0 ? "+" : "") + value + "%",
-      ]),
-    );
-    detailMetrics(byId("formationDetailShield"), [
-      ["盾牌HP", model.shield.hp.toLocaleString()],
-      ["格挡率", Math.round(model.shield.blockChance * 100) + "%"],
-    ]);
-    const weapons = byId("formationDetailSlots"),
-      abilities = byId("formationDetailSkills"),
-      mechanics = byId("formationDetailMechanics");
+    const skillUnit = originalEntry.customPilot ? {
+      model: entry.unitId + "__" + entry.kitId,
+      pilot: originalEntry.customPilot,
+    } : null;
+    byId("formationDetailAttributes").replaceChildren(UnitPreview.attributePages(model, "formation", skillUnit));
+    const weapons = byId("formationDetailSlots");
     weapons.replaceChildren();
-    abilities.replaceChildren();
-    mechanics.replaceChildren();
     for (const weapon of model.weapons)
       weapons.append(WeaponInfo.card(weapon, null, { encyclopediaLink: true }));
-    if (model.supplyAura) {
-      const card = element("div", "formation-weapon-detail");
-      card.append(
-        element("strong", "", "自动补给"),
-        element(
-          "p",
-          "muted",
-          `范围 ${model.supplyAura.range} · 每个己方回合范围内友军HP +5%、EN +10% · 不消耗EN，不消耗行动`,
-        ),
-      );
-      mechanics.append(card);
-    }
-    for (const skill of [
-      ...SkillControls.commandAbilities(
-        model,
-        originalEntry.customPilot
-          ? {
-              model: entry.unitId + "__" + entry.kitId,
-              pilot: originalEntry.customPilot,
-            }
-          : null,
-      ),
-      ...SkillControls.defensiveAbilities(model),
-      ...(model.skills || []),
-    ]) {
-      const card = element("div", "formation-weapon-detail");
-      card.append(
-        element("strong", "", I18n.language === "zh" ? skill.name : I18n.localized(skill)),
-        element("p", "muted", SkillControls.description(skill)),
-      );
-      if (WeaponClasses.isWeaponSkill(skill))
-        card.append(WeaponInfo.classBadge(skill), WeaponInfo.conversionRules(skill));
-      if (skill.sourceWeapon)
-        card.append(WeaponInfo.encyclopediaLink(skill), Encyclopedia.usersButton(skill));
-      mechanics.append(card);
-    }
-    for (const weapon of model.hiddenWeapons || []) {
-      const card = element("div", "formation-weapon-detail");
-      card.append(
-        element("strong", "", weapon.name + "（暂时隐藏）"),
-        element(
-          "p",
-          "muted",
-          weapon.reasons
-            .map(
-              (reason) =>
-                ({
-                  pilot_skill: "驾驶员条件待核对",
-                  source_missing: "原 MOD 缺少对应攻击流程",
-                  secondary_loadout: "可换装副武器：保留配置，暂不开放",
-                })[reason] || reason,
-            )
-            .join(" · "),
-        ),
-      );
-      mechanics.append(card);
-    }
-    for (const mechanic of model.mechanics || []) {
-      if (["CmdAtk", "CmdDef", "CmdCom"].includes(mechanic.id) && model.commandAuras?.length)
-        continue;
-      const card = element("div", "formation-weapon-detail");
-      card.append(
-        element("strong", "", mechanic.name),
-        element(
-          "p",
-          "muted",
-          {
-            implemented: "已接入",
-            adapted: "回合制改编",
-            review: "原MOD机制：待接入",
-            not_applicable: "本项目未接入对应科技／驾驶员系统",
-          }[mechanic.status] || mechanic.status,
-        ),
-      );
-      mechanics.append(card);
-    }
     if (model.movementType === "air")
       byId("formationDetailMovement").append(element("p", "helper", "空军：可跨越山岩和水域"));
-    byId("formationDetailSkillsBlock").hidden = !abilities.children.length;
-    byId("formationDetailMechanicsBlock").hidden = !mechanics.children.length;
     // Portal above fixed page containers so the preview is never clipped by a page.
     document.body.append(byId("formationUnitDetail"));
     byId("formationUnitDetail").hidden = false;
@@ -1309,10 +1122,7 @@ const Formation = (() => {
       if (entry.preload) row.dataset.carrierIndex = String(entry.preload.carrierIndex);
       const show = () => {
         GameAudio.selectUnit(model);
-        detailIndex = i;
-        catalogDetail = null;
-        renderDetail();
-        byId("formationDetailKit").focus();
+        openStoredPreview(entry.stockId);
       };
       const details = element("button", "formation-detail-button", "详情");
       details.setAttribute("aria-haspopup", "dialog");
@@ -1373,7 +1183,8 @@ const Formation = (() => {
       const metadata = element("span", "unit-line-meta");
       metadata.append(unitTags(model, { cost: model.cost, kitName: model.kitName, twoRows: true }));
       label.title = model.description || "";
-      label.append(element("strong", "", `${i + 1}. ${model.name}`), metadata);
+      const unitName=element("strong", "", `${i + 1}. ${model.name}`);
+      unitName.append(UnitPreview.roleIcon(model));label.append(unitName, metadata);
       const remove = element("button", "danger", "移除");
 
       remove.onclick = (event) => {
@@ -1384,9 +1195,6 @@ const Formation = (() => {
       };
       const actions = element("div", "formation-row-actions");
       const stockLine = element("span", "formation-stock-line");
-      stockLine.append(
-        element("small", "formation-inventory-count", "库存 " + Economy.quantity(entry.unitId)),
-      );
       const status = unitStatusBadge(entry.unitId);
       if (status) portrait.append(status);
       if (entry.preload) {
@@ -1426,14 +1234,6 @@ const Formation = (() => {
         row.querySelector(":scope > .overcost-label")?.remove();
         row.append(prompt);
       }
-      const pilot = element(
-        "button",
-        "formation-pilot-button",
-        "驾驶员 · " + (entry.customPilot?.name || PilotSystem.defaultName(model)),
-      );
-      pilotButtonText(pilot, "驾驶员", entry, model);
-      pilot.setAttribute("aria-haspopup", "dialog");
-      pilot.onclick = () => openPilot(i);
       const board = element("button", "formation-board-button", entry.preload ? "搭乘中" : "搭乘");
       board.dataset.boardFormation = String(i);
       board.setAttribute("aria-pressed", String(!!entry.preload));
@@ -1452,10 +1252,10 @@ const Formation = (() => {
             button = element("button", "", target.name);
           button.onclick = () => {
             try {
-              const next = { ...entry, unitId: target.id, kitId: Economy.defaultKit(target.id) };
+              const next = { ...entry, unitId: target.id, kitId: NormalForms.kit(ART, entry.unitId, target.id, entry.kitId, Economy.defaultKit(target.id)) };
               const preview = draft.map((e, j) => (j === i ? next : e));
               Rules.validateFleetFormation(preview, Infinity, Rules.catalog.formation.maxUnits);
-              Economy.transformStock(entry.unitId, target.id);
+              Economy.transformStock(entry.unitId, target.id, entry.stockId);
               draft[i] = next;
               saveDraft();
               render();
@@ -1476,8 +1276,8 @@ const Formation = (() => {
         document.body.append(dialog);
         dialog.showModal();
       };
-      actions.append(details, kitButton, transform, board, pilot, remove);
-      label.append(stockLine);
+      actions.append(details, kitButton, transform, board, remove);
+      if (stockLine.childNodes.length) label.append(stockLine);
       row.append(portrait, label, actions);
       list.append(row);
     });
@@ -1663,7 +1463,7 @@ const Formation = (() => {
       (target || byId("formationDetailPilot")).focus();
     } else
       byId("formationUnits")
-        .querySelector('[data-formation-index="' + index + '"] .formation-pilot-button')
+        .querySelector('[data-formation-index="' + index + '"] .formation-detail-button')
         ?.focus();
   }
   function openPilot(index, fromPreload = false) {
@@ -1686,15 +1486,17 @@ const Formation = (() => {
       (byId("formationPilotSort").value === "level" ? b.level - a.level : 0) ||
       I18n.pilotName(a).localeCompare(I18n.pilotName(b), I18n.language));
     const personalPilots = document.createDocumentFragment();
-    for (const profile of [null, ...available]) {
+    const storedPilotIds = new Set([...Economy.snapshot().storage.units, ...Economy.snapshot().storage.ships]
+      .filter((item) => !item.destroyed && item.pilotId).map((item) => item.pilotId));
+    for (const profile of [PilotSystem.generalPMC("pmc-general-" + (entry.stockId || "formation-" + index), command), ...available]) {
       const id = profile?.id || null,
         selected = (entry.customPilot?.id || null) === id,
-        occupied = id && draft.some((other, i) => i !== index && other.customPilot?.id === id),
+        occupied = id && (draft.some((other, i) => i !== index && other.customPilot?.id === id) || (!selected && storedPilotIds.has(id))),
         card = element("div", "formation-pilot-card"),
         details = element("div"),
         choose = element("button", "", selected ? "已配属" : occupied ? "已配属其他单位" : "配属");
       card.dataset.selected = String(selected);
-      card.dataset.pilotKind = profile ? (profile.ace ? "ace" : "custom") : "general";
+      card.dataset.pilotKind = profile?.pmcGeneral ? "general" : profile ? (profile.ace ? "ace" : "custom") : "general";
       const portrait = profile
         ? element("img")
         : element("span", "formation-pilot-default", "默认");
@@ -1715,7 +1517,7 @@ const Formation = (() => {
           : element("strong", "", profile?.name || PilotSystem.defaultName(model)),
       );
       if (profile?.ace) details.append(aceTags(PilotSystem.aceProfile(profile)));
-      if (!profile) details.querySelector("strong").append(pilotCostTag(null));
+      if (!profile || profile.pmcGeneral) details.querySelector("strong").append(pilotCostTag(null));
       for (const keys of [
         ["shooting", "melee", "defense", "speed"],
         ["accuracy", "reaction", "leadership", "awakening"],
@@ -1727,7 +1529,7 @@ const Formation = (() => {
             keys.map((key) => PilotSystem.labels[key] + " " + stats[key]).join(" · "),
           ),
         );
-      if (profile) {
+      if (profile && !profile.pmcGeneral) {
         const progress = element(
           "small",
           "pilot-roster-progress",
@@ -1741,6 +1543,7 @@ const Formation = (() => {
         delete entry.pilotId;
         if (profile) entry.customPilot = structuredClone(profile);
         else delete entry.customPilot;
+        saveStoredPilot(entry, profile);
         render();
         if (detailIndex !== null) renderDetail();
         closePilot();
@@ -1748,52 +1551,6 @@ const Formation = (() => {
       card.append(portrait, details, choose);
       if (profile) personalPilots.append(card);
       else list.append(card);
-    }
-    const grades = Object.entries(PilotSystem.crewGrades).sort(([a], [b]) =>
-      I18n.text(PilotSystem.defaultName(model, a)).localeCompare(I18n.text(PilotSystem.defaultName(model, b)), I18n.language));
-    for (const [grade, offer] of grades) {
-      if (offer.selectable === false || (grade === "enhanced" && command)) continue;
-      const owned = Economy.snapshot().crewStock[grade],
-        occupied = draft.filter((other, i) => i !== index && other.customPilot?.hired && other.customPilot.grade === grade).length,
-        card = element("div", "formation-pilot-card"),
-        details = element("div"),
-        choose = element("button", "", entry.customPilot?.grade === grade ? "已配属" : "配属"),
-        recruit = element("button", "", "招募 · 资金 " + offer.price),
-        actions = element("div", "crew-actions");
-      card.dataset.pilotKind = "crew";
-      card.dataset.crewGrade = grade;
-      const ranges = command ? PilotSystem.catalog.commanderRanges : PilotSystem.catalog.defaultRanges;
-      const stats = Object.fromEntries(Object.entries(ranges).map(([key, range]) => {
-        const values = key === "awakening"
-          ? (grade === "enhanced" ? [75, 110] : range)
-          : range.map((value) => Math.round(value * offer.multiplier));
-        return [key, values[0] + "–" + values[1]];
-      }));
-      details.append(element("strong", "", PilotSystem.defaultName(model, grade)));
-      details.querySelector("strong").append(pilotCostTag(null, offer.cost));
-      for (const keys of [
-        ["shooting", "melee", "defense", "speed"],
-        ["accuracy", "reaction", "leadership", "awakening"],
-      ]) details.append(element("small", "",
-        keys.map((key) => PilotSystem.labels[key] + " " + stats[key]).join(" · ")));
-      choose.disabled = owned <= occupied || entry.customPilot?.grade === grade ||
-        restrictions().pilotPolicy === "none";
-      choose.onclick = () => {
-        entry.customPilot = PilotSystem.hired({ id: "crew-" + crypto.randomUUID(), hired: true,
-          grade, faction: model.faction, commander: command });
-        delete entry.pilotId;
-        render();
-        if (detailIndex !== null) renderDetail();
-        closePilot();
-      };
-      recruit.disabled = !Economy.affordable({ money: offer.price });
-      recruit.onclick = () => {
-        try { if (Economy.recruitCrew(grade)) openPilot(index, fromPreload); }
-        catch (error) { note(error.message); }
-      };
-      actions.append(choose, recruit);
-      card.append(element("span", "formation-pilot-default", offer.name), details, actions);
-      list.append(card);
     }
     list.append(personalPilots);
     byId("formationUnitDetail").inert = !byId("formationUnitDetail").hidden;
@@ -1881,16 +1638,17 @@ const Formation = (() => {
       byId("formationDetailCarrier").focus();
     }
   };
-  function previewUnit(prefabId, trigger) {
+  function previewUnit(prefabId, trigger, options = {}) {
     const prefab = Rules.catalog.prefabs.find((item) => item.id === prefabId);
     if (!prefab) return false;
     detailFromPicker = false;
     detailFromDevelopment = true;
     developmentPreviewFocus = trigger || document.activeElement;
+    externalPreviewReturn = typeof options.onClose === "function" ? options.onClose : null;
     detailIndex = null;
     catalogDetail = {
       unitId: prefabId,
-      kitId: Economy.defaultKit(prefab.id) || prefab.weaponKits[0].id,
+      kitId: prefab.weaponKits.some((kit) => kit.id === options.kitId) ? options.kitId : Economy.defaultKit(prefab.id) || prefab.weaponKits[0].id,
     };
     previewRoot = null;
     document.body.append(byId("formationUnitDetail"));
@@ -2015,11 +1773,15 @@ const Formation = (() => {
   byId("addFormationUnit").onclick = () => {
     const prefab = Rules.catalog.prefabs.find((p) => p.id === byId("formationPrefab").value);
     if (!prefab || !pickerCompatible(prefab)) return;
+    const stored = [...Economy.snapshot().storage.units, ...Economy.snapshot().storage.ships].find((item) => item.id === selectedStoredId && !item.destroyed);
+    if (!stored || stored.unitId !== prefab.id || draft.some((entry) => entry.stockId === stored.id)) return note("出战库存不足");
     if (!canAddUnit(prefab)) return note("单位禁用，或与当前阵营不匹配。");
     if (points(draft) + pickerWeight() > unitLimit()) return note("已达到编组单位点数上限。");
     const entry = {
       unitId: prefab.id,
-      kitId: pickerKits.get(prefab.id) || Economy.defaultKit(prefab.id) || prefab.weaponKits[0].id,
+      kitId: stored.kitId,
+      stockId: stored.id,
+      ...(storedPilot(stored) ? { customPilot: storedPilot(stored) } : {}),
       ...(pickerContext ? { preload: { ...pickerContext } } : {}),
     };
     try {
@@ -2029,11 +1791,12 @@ const Formation = (() => {
       return;
     }
     appendUnit(entry);
+    saveDraft();
     render();
     byId("formationUnits").scrollTop = byId("formationUnits").scrollHeight;
     // Keep the hangar picker open and refresh its remaining capacity after each addition.
+    renderCatalog();
     if (pickerContext) {
-      renderCatalog();
       if (pickerHangarFull()) note("格纳库已满");
     }
   };
@@ -2042,6 +1805,10 @@ const Formation = (() => {
     renderCatalog();
   };
   byId("formationStock").onchange = () => renderCatalog();
+  byId("formationSort").onchange = () => {
+    byId("formationCatalog").scrollTop = 0;
+    renderCatalog();
+  };
   function selectCatalogUnit(prefab, card) {
     byId("formationPrefab").value = prefab.id;
     const previous = byId("formationCatalog").querySelector('[aria-selected="true"]');
@@ -2052,154 +1819,67 @@ const Formation = (() => {
     renderPickerCost();
   }
   function renderCatalog() {
-    const query = byId("formationSearch").value.trim().toLocaleLowerCase();
-    const list = byId("formationCatalog");
-    const renderKey = JSON.stringify([
-      catalogRevision,
-      roomTechnologyCaps(),
-      freeFormation(),
-      group,
-      PlayerProfile.faction(),
-      I18n.language,
-      matchMedia("(max-width:720px)").matches,
-      query,
-      catalogFilters,
-      byId("formationStock").value,
-      [...pickerKits],
-      pickerContext,
-      pickerContext ? draft.map((entry) => [entry.unitId, entry.kitId, entry.preload]) : null,
-    ]);
-    if (renderKey === catalogRenderKey) {
-      const selected = Rules.catalog.prefabs.find(
-        (prefab) => prefab.id === byId("formationPrefab").value,
-      );
-      const card = selected && list.querySelector(`[data-unit-id="${selected.id}"]`);
-      if (card) selectCatalogUnit(selected, card);
-      else {
-        byId("addFormationUnit").disabled = true;
-        renderPickerCost();
-      }
-      return;
-    }
-    const prefabs = UnitCatalog.select(query, catalogFilters, PlayerProfile.allows)
-      .filter(
-        (prefab) =>
-          pickerCompatible(prefab) &&
-          (byId("formationStock").value === "licensed"
-            ? Economy.hasLicense(prefab.id)
-            : byId("formationStock").value === "owned"
-              ? Economy.quantity(prefab.id) > 0
-              : true),
-      )
-      .sort(
-        UnitCatalog.compareDevelopedCost(
-          group,
-          byId("formationStock").value === "licensed" ? () => true : undefined,
-        ),
-      );
-    if (!prefabs.some((p) => p.id === byId("formationPrefab").value))
-      byId("formationPrefab").value = prefabs[0]?.id || "";
-    const scroll = list.scrollTop;
+    const list = byId("formationCatalog"), scroll = list.scrollTop,
+      allowed = new Set(UnitCatalog.select(byId("formationSearch").value, catalogFilters, PlayerProfile.allows, true).map((prefab) => prefab.id)),
+      prefabs = new Map(Rules.catalog.prefabs.map((prefab) => [prefab.id, prefab])),
+      used = new Set(draft.map((entry) => entry.stockId).filter(Boolean)),
+      storage = Economy.snapshot().storage,
+      stored = [...storage.units.slice().sort((a,b)=>a.slot-b.slot), ...storage.ships.slice().sort((a,b)=>a.slot-b.slot)],
+      order = new Map(stored.map((item,index)=>[item.id,index])), sort = byId("formationSort").value,
+      items = stored.filter((item) => allowed.has(item.unitId) && pickerCompatible(prefabs.get(item.unitId)));
+    if (sort !== "storage") items.sort((a,b)=>{
+      const left=UnitModels[a.unitId+"__"+a.kitId],right=UnitModels[b.unitId+"__"+b.kitId];
+      return (sort === "cost" ? left.cost-right.cost : left.name.localeCompare(right.name,"zh")) || order.get(a.id)-order.get(b.id);
+    });
+    byId("formationStock").closest("label").hidden = true;
+    const usable = (item) => !item.destroyed && !used.has(item.id) && canAddUnit(UnitModels[item.unitId + "__" + item.kitId]);
+    if (!items.some((item) => item.id === selectedStoredId && usable(item))) selectedStoredId = items.find(usable)?.id || null;
+    const chosen = items.find((item) => item.id === selectedStoredId);
+    byId("formationPrefab").value = chosen?.unitId || "";
+    if (chosen) pickerKits.set(chosen.unitId, chosen.kitId);
     const rows = document.createDocumentFragment();
-    for (const prefab of prefabs) {
-      const card = element("button", "catalog-unit");
-      card.dataset.buttonSound = "off";
-      card.dataset.unitId = prefab.id;
-      card.dataset.previewKit = pickerKits.get(prefab.id) || "";
-      card.disabled = !!prefab.wip;
-      if (prefab.wip) card.title = "WIP";
+    for (const item of items) {
+      const model = UnitModels[item.unitId + "__" + item.kitId], card = element("div", "catalog-unit"),
+        image = element("img"), info = element("span", "catalog-unit-info"), portrait = element("button", "catalog-unit-portrait"),
+        row = element("div", "catalog-unit-row");
+      portrait.type = "button";
+      portrait.setAttribute("aria-label",I18n.text("查看单位详情")+" · "+model.name);
+      portrait.onclick = event => { event.stopPropagation();openStoredPreview(item.id); };
+      card.dataset.unitId = item.unitId;
+      card.dataset.stockId = item.id;
+      card.dataset.previewKit = item.kitId;
       card.setAttribute("role", "option");
-      card.setAttribute("aria-selected", String(byId("formationPrefab").value === prefab.id));
-      const image = element("img");
-      image.src = unitIcon(
-        prefab.id + "__" + (Economy.defaultKit(prefab.id) || prefab.weaponKits[0].id),
-      );
-      image.alt = prefab.name;
-      image.loading = "lazy";
-      image.decoding = "async";
-      const title = element("strong", "", prefab.name);
-      const info = element("span", "catalog-unit-info");
-      const costs = prefab.weaponKits.map((k) => prefab.stats.cost + k.cost);
-      const selectedKit =
-        prefab.weaponKits.find((kit) => kit.id === pickerKits.get(prefab.id)) ||
-        prefab.weaponKits[0];
-      const costLabel =
-        Math.min(...costs) === Math.max(...costs)
-          ? Math.min(...costs)
-          : Math.min(...costs) + "～" + Math.max(...costs);
-      info.append(title, unitTags(prefab, { cost: costLabel, kitName: selectedKit.name }));
-      const stockLine = element("span", "formation-stock-line");
-      stockLine.append(
-        element(
-          "small",
-          "formation-inventory-count",
-          "机体库存 " +
-            Economy.quantity(prefab.id) +
-            (Economy.hasLicense(prefab.id) ? "" : " · 未许可"),
-        ),
-      );
-      info.append(stockLine);
-      const portrait = element("span", "catalog-unit-portrait");
+      card.setAttribute("aria-selected", String(item.id === selectedStoredId));
+      card.setAttribute("aria-disabled",String(!usable(item)));
+      card.tabIndex = usable(item) ? 0 : -1;
+      image.src = unitIcon(item.unitId + "__" + item.kitId);
+      image.alt = model.name;
       portrait.append(image);
-      const status = unitStatusBadge(prefab.id);
-      if (status) portrait.append(status);
+      const tags = unitTags(model, { cost: model.cost, kitName: model.kitName, twoRows: true });
+      for (const more of tags.querySelectorAll(".unit-tags-more")) more.remove();
+      const storedName=element("strong", "", (item.slot + 1) + ". " + model.name);
+      storedName.append(UnitPreview.roleIcon(model));
+      info.append(storedName, tags,
+        element("small", "", item.destroyed ? "完全损毁" : used.has(item.id) ? "已编入编组" : "HP " + formatNumber(item.hp) + " · EN " + formatNumber(item.en)));
       card.append(portrait, info);
-      card.onclick = () => {
-        GameAudio.selectUnit(prefab);
-        selectCatalogUnit(prefab, card);
+      card.onclick = () => { if (!usable(item)) return;selectedStoredId = item.id;renderCatalog(); };
+      card.onkeydown = event => {
+        if (event.target === card && ["Enter"," "].includes(event.key)) { event.preventDefault();card.click(); }
       };
-      const details = element("button", "catalog-detail", "详情");
-      details.dataset.detailUnitId = prefab.id;
-      details.dataset.buttonSound = "off";
-      details.setAttribute("aria-haspopup", "dialog");
-      details.setAttribute("aria-label", `${prefab.name} · ${I18n.text("详情")}`);
-      details.onclick = () => {
-        GameAudio.selectUnit(prefab);
-        selectCatalogUnit(prefab, card);
-        detailIndex = null;
-        detailFromPicker = !byId("formationUnitPicker").hidden;
-        byId("formationUnitPicker").hidden = true;
-        catalogDetail = {
-          unitId: prefab.id,
-          kitId:
-            pickerKits.get(prefab.id) || Economy.defaultKit(prefab.id) || prefab.weaponKits[0].id,
-        };
-        renderDetail();
-        byId("formationDetailKit").focus();
-      };
-      const row = element("div", "catalog-unit-row");
-      row.append(card, details);
-      const restriction = exceedsTechnology(prefab) ? "technology_limit" : PlayerProfile.restriction(prefab);
-      row.classList.toggle("technology-limited", restriction === "technology_limit");
-      if (restriction && restriction !== "not_developed") {
-        row.classList.add("unit-disabled", restriction === "wip" ? "unit-wip" : "faction-mismatch");
-        row.append(
-          element("span", "disabled-panel"),
-          element(
-            "span",
-            "overcost-label",
-            restriction === "technology_limit"
-              ? "超出科技点"
-              : restriction === "wip"
-              ? "WIP"
-              : restriction === "faction_mismatch"
-                ? "阵营不匹配"
-                : "尚未开发",
-          ),
-        );
+      row.append(card);
+      if (!usable(item)) {
+        row.classList.add("unit-disabled");
+        const reason = item.destroyed ? "完全损毁" : used.has(item.id) ? "已编入编组" : exceedsTechnology(model) ? "超出科技点" : "单位不符合房间规则";
+        row.append(element("span", "disabled-panel"), element("span", "overcost-label", reason));
       }
       rows.append(row);
     }
-    if (!prefabs.length)
-      rows.append(element("p", "empty", pickerHangarFull() ? "格纳库已满" : "没有符合筛选的单位"));
+    if (!items.length) rows.append(element("p", "empty", pickerHangarFull() ? "格纳库已满" : "没有符合筛选的库存单位"));
     list.replaceChildren(rows);
     list.scrollTop = scroll;
-    catalogRenderKey = renderKey;
-    list.dataset.revision = String(catalogRevision);
-    byId("addFormationUnit").disabled =
-      !prefabs.length ||
-      points(draft) + pickerWeight() > unitLimit() ||
-      !canAddUnit(prefabs.find((p) => p.id === byId("formationPrefab").value));
+    catalogRenderKey = null;
+    list.dataset.revision = String(++catalogRevision);
+    byId("addFormationUnit").disabled = !chosen || points(draft) + pickerWeight() > unitLimit();
     renderPickerCost();
   }
   function setupCatalogFilter(id, key, values, translate = (tag) => tag) {
@@ -2403,6 +2083,11 @@ const Formation = (() => {
     return proceed();
   }
   function checkLicenses(entries, proceed) {
+    const stock = new Map([...Economy.snapshot().storage.units, ...Economy.snapshot().storage.ships].filter((item) => !item.destroyed).map((item) => [item.id, item]));
+    if (entries.some((entry) => !entry.stockId || stock.get(entry.stockId)?.unitId !== entry.unitId || stock.get(entry.stockId)?.kitId !== entry.kitId)) {
+      GameDialog.alert("编组包含不在格纳库中的单位，请重新编组。");
+      return;
+    }
     const originalProceed = proceed;
     proceed = () => checkBattlefieldReserves(entries, originalProceed);
     const quick = Net.snapshot?.settings.mode === "quick";
@@ -2534,6 +2219,12 @@ const Formation = (() => {
         ? "未招募"
         : "未解锁";
   }
+  function pilotSkillDescription(skill) {
+    const nativeDescription=I18n.language==="zh"?skill.description:I18n.localized(skill,"description");
+    return skill.owner==="pilot"?SkillControls.description(skill):skill.durationTurns
+      ? nativeDescription.replace(/\d+(?:\.\d+)?\s*(?:sec(?:onds?)?\b|秒(?:間)?)/g,I18n.text(`${skill.durationTurns}回合`))
+      : nativeDescription;
+  }
   function renderAceInformation(container, profile) {
     container.replaceChildren();
     container.append(aceTags(profile));
@@ -2557,17 +2248,7 @@ const Formation = (() => {
     description.dataset.i18nIgnore = "";
     container.append(growth, description, element("h3", "", "ACE技能"));
     for (const skill of profile.skills) {
-      const nativeDescription =
-        I18n.language === "zh" ? skill.description : I18n.localized(skill, "description");
-      const skillDescription =
-        skill.owner === "pilot"
-          ? SkillControls.description(skill)
-          : skill.durationTurns
-            ? nativeDescription.replace(
-                /\d+(?:\.\d+)?\s*(?:sec(?:onds?)?\b|秒(?:間)?)/g,
-                I18n.text(`${skill.durationTurns}回合`),
-              )
-            : nativeDescription;
+      const skillDescription = pilotSkillDescription(skill);
       const card = element("div", "ace-skill-placeholder");
       if (skill.icon) {
         const img = element("img");
@@ -2626,8 +2307,12 @@ const Formation = (() => {
     return Development.nodes(profile.faction).filter((node) => node.unlocks.includes(profile.id));
   }
   function canRecruitAce(profile) {
+    const owned = profile && pilotStore.pilots.find(p=>p.aceId===profile.id);
+    if(owned?.needsRecruitment)return !Net.started;
     return (
       !!profile?.price &&
+      (owned || pilotStore.pilots.filter(p=>p.ace).length < Economy.acePilotLimit()) &&
+      Economy.canRecruitCrew("ace") &&
       PilotSystem.canAssign({ aceId: profile.id }, group) &&
       Development.allows(group, profile.id)
     );
@@ -2669,7 +2354,7 @@ const Formation = (() => {
         SkillControls.pilotSummary({ aceId: profile.id }),
         aceTags(profile),
       );
-      const portrait = element("span", "pilot-roster-portrait");
+      const portrait = element("span", "");
       portrait.append(img, element("small", "pilot-recruit-state", aceStatus(profile)));
       button.append(portrait, content);
       button.onclick = () => {
@@ -2714,7 +2399,7 @@ const Formation = (() => {
     acePreview.append(attributes);
     const owned = pilotStore.pilots.find((p) => p.aceId === profile.id);
     if (owned?.needsRecruitment)
-      acePreview.append(element("p", "", "半价回归，保留等级和战绩，经验清零。"));
+      acePreview.append(element("p", "", "复归保留等级、经验、属性、技能和战绩。"));
     if (!Development.allows(group, profile.id) || !aceTechnology(profile).length) {
       const technologies = aceTechnology(profile);
       acePreview.append(
@@ -2740,6 +2425,7 @@ const Formation = (() => {
     if (!canRecruitAce(profile)) return;
     try {
       const previous = pilotStore.pilots.find((p) => p.aceId === profile.id);
+      if (!previous && pilotStore.pilots.filter(p=>p.ace).length >= Economy.acePilotLimit()) return note("ACE驾驶员人数已达到士官学院上限");
       const pilot = PilotSystem.recruitAce(profile.id, previous),
         next = {
           ...pilotStore,
@@ -2796,158 +2482,173 @@ const Formation = (() => {
   }
   populatePilotFilters();
   window.addEventListener("language-change", populatePilotFilters);
+  let dormKind = "pmc", dormPage = 0, visiblePilotIds = [], revivalPending = false;
+  async function revivePilots(ids) {
+    if(Net.started || revivalPending)return;
+    const selected=pilotStore.pilots.filter(p=>ids.includes(p.id)&&p.needsRecruitment);
+    if(!selected.length)return GameDialog.alert("没有需要复归的驾驶员");
+    const signature=JSON.stringify(selected),supplies=selected.reduce((n,p)=>n+PilotSystem.revivalPrice(p).supplies,0);
+    revivalPending=true;renderPilotRoster();
+    try {
+      const confirmed=await GameDialog.confirm(I18n.text("复归驾驶员：{count}名，消耗物资 {supplies}。是否继续？").replace("{count}",selected.length).replace("{supplies}",formatNumber(supplies)),{title:I18n.text("驾驶员复归")});
+      if(!confirmed || Net.started)return;
+      if(signature!==JSON.stringify(pilotStore.pilots.filter(p=>ids.includes(p.id)&&p.needsRecruitment)))throw Error("驾驶员状态已变化，请重新确认");
+      const selectedIds=new Set(selected.map(p=>p.id)),next={...pilotStore,pilots:pilotStore.pilots.map(p=>selectedIds.has(p.id)?PilotSystem.revive(p):p)};
+      if(!Economy.transact({supplies}, {}, [[sharedPilotKey,JSON.stringify(next)]]))return note("物资不足");
+      pilotStore=next;draft=hydratePilots(draft);squads=squads.map(s=>({...s,units:hydratePilots(s.units)}));persist();
+      if(pilotEdit && selectedIds.has(pilotEdit.id)){pilotEdit=structuredClone(next.pilots.find(p=>p.id===pilotEdit.id));pilotOriginal=JSON.stringify(pilotEdit);renderPilotStats();}
+      render();if(Net.active && canEditRoom())Net.request("update_formation",{formation:current()});note("驾驶员已复归");
+    } catch(error){note(error.message);} finally{revivalPending=false;renderPilotRoster();}
+  }
+  byId("dormReviveAll").onclick=async()=>{
+    if(Net.started || revivalPending)return;
+    const scope=await GameDialog.scope("一键复归");
+    if(scope)await revivePilots(scope==="page"?visiblePilotIds:pilotStore.pilots.map(p=>p.id));
+  };
+  byId("reviveSelectedPilot").onclick=()=>pilotEdit && revivePilots([pilotEdit.id]);
+  for (const [id,kind] of [["dormPMCTab","pmc"],["dormACETab","ace"]]) byId(id).onclick=()=>{dormKind=kind;dormPage=0;renderPilotRoster();};
+  byId("dormPrevious").onclick=()=>{dormPage=Math.max(0,dormPage-1);renderPilotRoster();};
+  byId("dormNext").onclick=()=>{dormPage++;renderPilotRoster();};
   function renderPilotRoster() {
     const list = byId("customPilotList");
-    let shop = byId("crewRecruitment");
-    if (!shop) {
-      shop = element("div", "crew-recruitment");
-      shop.id = "crewRecruitment";
-      list.before(shop);
-    }
-    shop.replaceChildren();
-    for (const [grade, offer] of Object.entries(PilotSystem.crewGrades)) {
-      if (offer.selectable === false) continue;
-      const button = element("button", "", `${offer.name} · 库存 ${Economy.snapshot().crewStock[grade]} · 招募 ${offer.price}资金`);
-      button.disabled = !Economy.affordable({ money: offer.price });
-      button.onclick = () => {
-        try { if (Economy.recruitCrew(grade)) renderPilotRoster(); }
-        catch (error) { note(error.message); }
-      };
-      shop.append(button);
-    }
     const scrollTop = list.scrollTop;
     list.replaceChildren();
     byId("formationPilotBudget").textContent =
       `驾驶员 ${pilotStore.pilots.length} 名 · COST ${pilotStore.pilots.reduce((sum, p) => sum + PilotSystem.cost(p), 0)}`;
-    if (!pilotStore.pilots.length)
-      list.append(
-        element(
-          "p",
-          "muted",
-          "点击下方“新增PMC驾驶员”创建。未配属时使用单位所属阵营的默认驾驶员。",
-        ),
-      );
     const search = byId("pilotRosterSearch").value.trim().toLocaleLowerCase();
-    const visible = pilotStore.pilots.filter(
+    const matching = pilotStore.pilots.filter(
       (p) =>
-        (p.name + " " + I18n.pilotName(p)).toLocaleLowerCase().includes(search) &&
+        (dormKind === "ace" ? p.ace : !p.ace) && (p.name + " " + I18n.pilotName(p)).toLocaleLowerCase().includes(search) &&
         PilotSystem.matchesFilter(p, byId("pilotRosterFilter").value),
-    ).sort((a,b) => {
-      const factions=["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON", "EFSF_0093", "NEO_ZEON_0093", "OMNI", "ZAFT"];
-      const rank=p=>p.ace ? Math.min(...PilotSystem.pilotFactions(p).map(f=>Math.max(1,factions.indexOf(f)))) : 0;
-      return rank(a)-rank(b) || (byId("pilotRosterSort").value === "level" ? b.level-a.level : 0) || I18n.pilotName(a).localeCompare(I18n.pilotName(b),I18n.language);
-    });
-    if (pilotStore.pilots.length && !visible.length)
-      list.append(element("p", "muted", "没有符合条件的驾驶员。"));
+    );
+    const pageSize=window.matchMedia("(max-width:720px)").matches?6:8;
+    list.dataset.pageSize=String(pageSize);
+    const capacity=dormKind==="ace"?Economy.acePilotLimit():Economy.customPilotLimit(),categoryCount=pilotStore.pilots.filter(p=>!!p.ace===(dormKind==="ace")).length,
+      displayCount=search || byId("pilotRosterFilter").value!=="all"?matching.length:Math.max(capacity,categoryCount),
+      pageCount=Math.max(1,Math.ceil(displayCount/pageSize));dormPage=Math.min(dormPage,pageCount-1);
+    const visible=matching.slice(dormPage*pageSize,dormPage*pageSize+pageSize);
+    visiblePilotIds=visible.map(p=>p.id);
+    byId("formationPilotBudget").textContent=`${I18n.text(dormKind==="ace"?"ACE驾驶员":"PMC驾驶员")} ${categoryCount} / ${capacity} · COST ${pilotStore.pilots.filter(p=>!!p.ace===(dormKind==="ace")).reduce((n,p)=>n+PilotSystem.cost(p),0)}`;
+    byId("dormReviveAll").disabled=Net.started || revivalPending || !pilotStore.pilots.some(p=>p.needsRecruitment);
+    byId("dormPMCTab").setAttribute("aria-pressed",String(dormKind==="pmc"));
+    byId("dormACETab").setAttribute("aria-pressed",String(dormKind==="ace"));
+    byId("dormPage").textContent=`${dormPage+1} / ${pageCount} 页`;
+    byId("dormPrevious").disabled=dormPage===0;byId("dormNext").disabled=dormPage+1>=pageCount;
+    byId("createCustomPilot").hidden=dormKind!=="pmc";byId("recruitAcePilot").hidden=dormKind!=="ace";
     for (const p of visible) {
-      const card = element("div", "formation-row custom-pilot-card");
+      const card = element("div", "warehouse-bay dorm-card");
       card.dataset.pilotId = p.id;
-      const img = element("img");
+      card.tabIndex = 0;
+      card.setAttribute("role", "button");
+      card.setAttribute("aria-label", "驾驶员详情 " + I18n.pilotName(p));
+      const heading = element("div", "warehouse-card-heading"),
+        name = element("span", "bay-unit-name"),
+        nameText = element("strong", "", I18n.pilotName(p));
+      nameText.dataset.i18nIgnore = "";
+      name.title = nameText.textContent;
+      name.append(nameText);
+      heading.append(name, pilotCostTag(p));
+
+      const portrait = element("div", "warehouse-icon-frame dorm-card-portrait"),
+        img = element("img", "formation-icon"),
+        tags = element("span", "unit-tags dorm-card-tags"),
+        state = element("span", "dorm-card-state" + (p.needsRecruitment ? " needs-return" : ""),
+          p.needsRecruitment ? "待回归" : "待机中");
       img.src = PilotSystem.portrait(p);
       img.alt = "";
-      const text = element("span");
-      const pilotName = p.ace
-        ? aceName(PilotSystem.aceProfile(p))
-        : element("span", "", I18n.pilotName(p));
-      pilotName.dataset.i18nIgnore = "";
-      const heading = element("span", "pilot-roster-heading");
-      const state = element(
-        "small",
-        "pilot-recruit-state",
-        p.needsRecruitment ? "待回归" : "已招募",
-      );
-      state.title = I18n.text(p.needsRecruitment ? "待回归" : "已招募");
-      heading.append(pilotName, element("span", "", `Lv.${p.level}`), state);
-      const progress = element(
-        "small",
-        "pilot-roster-progress",
-      );
-      const badges = element("span", "pilot-progress-badges");
-      progress.append(element("span", "pilot-experience-value", (p.ace ? "ACE · " : "") + pilotExperienceText(p)), badges);
-      if (p.reincarnations) badges.append(element("span", "pilot-training-points pilot-reincarnation-tag", I18n.text(["", "一转", "二转", "三转", "四转"][p.reincarnations])));
-      if (PilotSystem.canUpgrade(p)) badges.append(element("span", "pilot-training-points pilot-promotion-tag", I18n.text("可升职")));
-      if (!p.ace && p.points > 0) {
-        const points = element("span", "pilot-training-points", I18n.text("强化点+"));
-        points.title = I18n.text("可用强化点") + "：" + p.points;
-        badges.append(points);
-      }
-      const skills = SkillControls.pilotSummary(p);
-      skills.prepend(pilotCostTag(p));
-      text.append(heading, progress, skills);
-      const record = element("span", "pilot-record");
-      renderPilotRecord(record, p);
-      text.append(record);
-
-      const factionTags = element("span", "unit-tags pilot-faction-tags");
       if (p.ace) {
-        const tags = aceTags(PilotSystem.aceProfile(p));
-        factionTags.append(...tags.children);
+        const source = aceTags(PilotSystem.aceProfile(p));
+        const era = source.lastElementChild;
+        era.remove();
+        tags.append(era, ...source.children);
       } else {
         const faction = element("span", "faction-tag", "PMC");
         faction.dataset.faction = "PMC";
-        factionTags.append(faction);
+        tags.append(faction);
       }
-      heading.append(factionTags);
+      portrait.append(img, tags, state);
 
-      img.className = "formation-icon";
-      const portrait = element("span", "pilot-roster-portrait");
-      portrait.append(img);
-      text.className = "custom-pilot-summary";
-      const actions = element("div", "formation-row-actions");
-      const details = element("button", "formation-detail-button", "详情");
-      details.type = "button";
-      details.setAttribute("aria-label", "管理驾驶员 " + p.name);
-      details.onclick = () => editPilot(p);
-      const remove = element("button", "danger", "删除");
-      remove.type = "button";
-      remove.setAttribute("aria-label", "删除驾驶员 " + p.name);
-      remove.onclick = async () => {
-        if (
-          await GameDialog.confirm(`删除驾驶员“${p.name}”？本地编组中的配属也会清除。`, {
-            title: "删除驾驶员",
-            confirmText: "删除",
-            danger: true,
-          })
-        )
-          deletePilot(p.id);
-      };
-      if (PilotSystem.canLearnSkill(p)) {
-        const learn = element("button", "pilot-skill-alert", "选择技能");
-        learn.type = "button";
-        learn.setAttribute("aria-label", "选择驾驶员技能 " + p.name);
-        learn.onclick = () => {
+      const progress = element("div", "dorm-card-progress"),
+        experience = element("div", "dorm-card-experience"),
+        badges = element("div", "dorm-card-badges");
+      experience.append(element("strong", "", `Lv.${p.level}`),
+        element("span", "", pilotExperienceText(p)));
+      experience.title = `Lv.${p.level} · ${pilotExperienceText(p)}`;
+      if (p.reincarnations) badges.append(element("span", "pilot-training-points pilot-reincarnation-tag",
+        I18n.text(["", "一转", "二转", "三转", "四转"][p.reincarnations])));
+      if (PilotSystem.canUpgrade(p)) badges.append(element("span", "pilot-training-points pilot-promotion-tag", "可升级"));
+      if (!p.ace && p.points > 0) badges.append(element("span", "pilot-training-points", `强化点 ${p.points}`));
+      if (PilotSystem.canLearnSkill(p)) badges.append(element("span", "pilot-training-points", "可选技能"));
+      progress.append(experience, badges);
+
+      const skills = SkillControls.pilotSummary(p);
+      skills.classList.add("dorm-card-skills");
+      const skillBadges = [...skills.querySelectorAll(".pilot-list-skill")];
+      if (skillBadges.length > 2) {
+        const more = element("span", "dorm-skill-more", "…");
+        more.title = skillBadges.slice(2).map(badge => badge.textContent).join("、");
+        more.setAttribute("aria-label", "更多技能：" + more.title);
+        for (const badge of skillBadges.slice(2)) badge.remove();
+        skills.append(more);
+      }
+      card.append(heading, portrait, progress, skills);
+      card.onclick = () => editPilot(p);
+      card.onkeydown = (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
           editPilot(p);
-          openPilotSkillPicker();
-        };
-        skills.append(learn);
-      }
-      actions.append(details);
-      if (!p.ace) actions.append(remove);
-      if (p.needsRecruitment) {
-        const recruit = element("button", "", "重新招募");
-        recruit.type = "button";
-        recruit.onclick = () => openAceRecruitment(p.aceId);
-        actions.append(recruit);
-      }
-      card.append(portrait, text, actions);
-      card.onclick = (event) => {
-        if (!event.target.closest("button")) editPilot(p);
+        }
       };
-      list.append(card);
+      const slot = element("div", "dorm-card-slot");
+      slot.append(card);
+      list.append(slot);
+      requestAnimationFrame(() => {
+        if (!name.isConnected) return;
+        const overflow = nameText.scrollWidth - name.clientWidth;
+        if (overflow > 1) {
+          name.classList.add("is-scrolling");
+          name.style.setProperty("--name-overflow", -overflow + "px");
+          name.style.setProperty("--name-duration", Math.max(5, overflow / 24 + 3) + "s");
+        }
+      });
     }
-    byId("recruitAcePilot").disabled = false;
+    for(let i=visible.length;i<Math.min(pageSize,Math.max(1,displayCount-dormPage*pageSize));i++) {
+      const empty=element("div","warehouse-bay dorm-card is-empty", "空位");
+      const slot=element("div","dorm-card-slot");
+      empty.setAttribute("aria-hidden","true");slot.append(empty);list.append(slot);
+    }
+    byId("recruitAcePilot").disabled = !Economy.canRecruitCrew("ace") || pilotStore.pilots.filter(p=>p.ace).length>=Economy.acePilotLimit();
+    byId("recruitAcePilot").title = Economy.canRecruitCrew("ace") ? "" : "需要2级信标";
+    const customCount = pilotStore.pilots.filter(p=>!p.ace).length;
+    byId("createCustomPilot").disabled = customCount >= Economy.customPilotLimit();
+    byId("createCustomPilot").title = `PMC驾驶员 ${customCount} / ${Economy.customPilotLimit()}`;
     list.scrollTop = scrollTop;
+    requestAnimationFrame(()=>BasePageControls.fitPagedCards(list));
   }
   byId("pilotRosterSearch").oninput = () => {
+    dormPage=0;
     byId("customPilotList").scrollTop = 0;
     renderPilotRoster();
   };
   byId("pilotRosterFilter").onchange = renderPilotRoster;
-  byId("pilotRosterSort").onchange = renderPilotRoster;
+  BasePageControls.sortMenu("pilotRosterSortControl", [["name","名称排序"],["level","等级排序"],["cost","COST排序"]], rule => {
+    const selected = pilotStore.pilots.filter(p => dormKind === "ace" ? p.ace : !p.ace);
+    const nameOrder = (a,b) => I18n.pilotName(a).localeCompare(I18n.pilotName(b), I18n.language);
+    selected.sort((a,b) => (rule === "level" ? b.level-a.level : rule === "cost" ? PilotSystem.cost(a)-PilotSystem.cost(b) : 0) || nameOrder(a,b) || a.id.localeCompare(b.id));
+    let index=0;
+    const previous=pilotStore.pilots;
+    pilotStore.pilots=previous.map(p => (dormKind === "ace" ? p.ace : !p.ace) ? selected[index++] : p);
+    if (!savePilots()) { pilotStore.pilots=previous; return false; }
+    dormPage=0;renderPilotRoster();
+  });
+  const dormCardsObserver=new ResizeObserver(()=>BasePageControls.fitPagedCards(byId("customPilotList")));
+  dormCardsObserver.observe(byId("customPilotList"));
+  window.matchMedia("(max-width:720px)").addEventListener("change",()=>{dormPage=0;renderPilotRoster();});
   function showFormationTab(tab) {
     finishPilotEditor();
     const pilots = tab === "pilots";
     byId("formationMain").dataset.page = tab;
+    byId("dormTabs").hidden=!pilots;
     byId("formationUnitsTab").setAttribute("aria-pressed", String(!pilots));
     byId("formationPilotsTab").setAttribute("aria-pressed", String(pilots));
     pilotPage.hidden = !pilots;
@@ -2958,27 +2659,11 @@ const Formation = (() => {
     byId("saveFormation").hidden = false;
     if (pilots) renderPilotRoster();
   }
-  function deletePilot(id) {
-    function detach(entries) {
-      return entries.map((entry) => {
-        if (entry.customPilot?.id !== id) return entry;
-        const copy = { ...entry };
-        delete copy.customPilot;
-        return copy;
-      });
-    }
-    pilotStore.pilots = pilotStore.pilots.filter((p) => p.id !== id);
-    draft = detach(draft);
-    squads = squads.map((squad) => ({ ...squad, units: detach(squad.units) }));
-    savePilots();
-    persist();
-    render();
-    renderPilotRoster();
-    byId("createCustomPilot").focus();
-  }
   function commitPilot(profile) {
     const clean = PilotSystem.custom(profile);
     const i = pilotStore.pilots.findIndex((p) => p.id === clean.id);
+    if(i<0 && !clean.ace && pilotStore.pilots.filter(p=>!p.ace).length>=Economy.customPilotLimit())throw Error("PMC驾驶员人数已达到士官学院上限");
+    if(i<0 && clean.ace && pilotStore.pilots.filter(p=>p.ace).length>=Economy.acePilotLimit())throw Error("ACE驾驶员人数已达到士官学院上限");
     if (i < 0) pilotStore.pilots.push(clean);
     else pilotStore.pilots[i] = clean;
     savePilots();
@@ -2993,6 +2678,7 @@ const Formation = (() => {
     return clean;
   }
   function editPilot(p = null) {
+    if(!p && pilotStore.pilots.filter(p=>!p.ace).length>=Economy.customPilotLimit())return note("PMC驾驶员人数已达到士官学院上限");
     pilotFocus = document.activeElement;
     pilotIsNew = !p;
     pilotEdit = structuredClone(
@@ -3116,31 +2802,44 @@ const Formation = (() => {
     }
   };
   function renderPilotStats() {
+    byId("customPilotTitle").textContent=I18n.pilotName(pilotEdit);
+    byId("pilotDetailCost").textContent=PilotSystem.cost(pilotEdit)+"C";
+    byId("pilotDetailState").textContent=I18n.text(pilotEdit.needsRecruitment?"待回归":"待机中");
+    byId("pilotDetailState").className="warehouse-condition "+(pilotEdit.needsRecruitment?"destroyed":"healthy");
+    byId("reviveSelectedPilot").disabled=pilotIsNew || !pilotEdit.needsRecruitment || Net.started || revivalPending;
+    byId("reviveSelectedPilot").textContent=I18n.text("复归")+" · "+I18n.text("物资")+" "+formatNumber(PilotSystem.revivalPrice(pilotEdit).supplies);
     byId("customPilotAvatar").src = PilotSystem.portrait(pilotEdit);
-    resetTraining.hidden = !!pilotEdit.ace;
-    byId("pilotTrainingTitle").textContent = pilotEdit.ace ? "驾驶员属性" : "属性强化";
-    byId("acePilotDetails").hidden = !pilotEdit.ace;
-    if (pilotEdit.ace)
-      renderAceInformation(byId("acePilotDetails"), PilotSystem.aceProfile(pilotEdit));
+    resetTraining.hidden = false;
+    byId("pilotTrainingTitle").textContent = I18n.text("属性强化");
+    const mechanisms=byId("acePilotDetails");mechanisms.hidden=false;mechanisms.replaceChildren();
+    const mechanism=(name,text)=>{const card=element("section","pilot-mechanic-card");card.append(element("strong","",name),element("p","muted",text));return card;};
+    mechanisms.append(mechanism("成长机制",pilotEdit.ace
+      ? I18n.text("ACE按悟性自动成长，不能手动加点或重置。")
+      : I18n.text("使用强化点提升属性，达到等级上限后可转生提高上限。")),
+      mechanism("复归费用",I18n.text(pilotEdit.ace?"每级1000物资，保留成长与战绩。":"每级500物资，保留成长与战绩。")));
     resetTraining.textContent = "重置属性点 · 资金 " + 1000 * pilotEdit.level;
-    resetTraining.disabled = pilotIsNew || !Economy.affordable({ money: 1000 * pilotEdit.level });
+    resetTraining.disabled = !!pilotEdit.ace || pilotIsNew || !Economy.affordable({ money: 1000 * pilotEdit.level });
     byId("customPilotProgress").replaceChildren(
-      document.createTextNode(`Lv.${pilotEdit.level} · `),
-      pilotCostTag(pilotEdit),
+      element("strong","pilot-detail-level",`Lv${pilotEdit.level}/${PilotSystem.maxLevel(pilotEdit)}`),
       document.createTextNode(
         ` · ${pilotExperienceText(pilotEdit)}${pilotEdit.ace ? " · ACE · " + I18n.text("悟性") + " " + PilotSystem.aceProfile(pilotEdit).comprehension : " · 强化点 " + pilotEdit.points}`,
       ),
     );
     renderPilotRecord(byId("customPilotRecord"), pilotEdit);
-    byId("customPilotSkills").replaceChildren(SkillControls.pilotSummary(pilotEdit));
-    learnPilotSkillButton.hidden = !!pilotEdit.ace;
-    learnPilotSkillButton.disabled = pilotEdit.level < PilotSystem.skillUnlockLevel;
+    const skills=PilotSystem.skillsOf({pilot:pilotEdit});
+    byId("customPilotSkills").replaceChildren(...(skills.length?skills.map(skill=>{
+      const card=mechanism(I18n.language==="zh"?skill.name:I18n.localized(skill),pilotSkillDescription(skill));
+      if(skill.durationTurns)card.append(element("small","muted",I18n.text(`持续${skill.durationTurns}回合 · 冷却${skill.cooldownTurns}回合（效果结束后开始）`)));
+      if(skill.icon){const icon=element("img");icon.src=skill.icon;icon.alt="";card.prepend(icon);card.classList.add("has-icon");}return card;
+    }):[mechanism("驾驶员技能",I18n.text(pilotEdit.level>=PilotSystem.skillUnlockLevel?"未选择技能":"6级解锁技能"))]));
+    learnPilotSkillButton.hidden = false;
+    learnPilotSkillButton.disabled = !!pilotEdit.ace || pilotEdit.level < PilotSystem.skillUnlockLevel;
     learnPilotSkillButton.classList.toggle(
       "pilot-skill-alert",
       PilotSystem.canLearnSkill(pilotEdit),
     );
     learnPilotSkillButton.textContent = I18n.text(
-      pilotEdit.selectedSkillId && !PilotSystem.canLearnSkill(pilotEdit)
+      pilotEdit.ace ? "固定技能" : pilotEdit.selectedSkillId && !PilotSystem.canLearnSkill(pilotEdit)
         ? "查看驾驶员技能"
         : pilotEdit.level >= PilotSystem.skillUnlockLevel
           ? "选择驾驶员技能"
@@ -3171,10 +2870,8 @@ const Formation = (() => {
     const blockers=[];
     if (pendingPoints !== 0) blockers.push(I18n.text("\u8bf7\u5148\u786e\u8ba4\u5f3a\u5316\u70b9\u5206\u914d"));
     if (!Economy.affordable({money:advancementCost})) blockers.push(I18n.text("\u8d44\u91d1\u4e0d\u8db3")+" "+formatNumber(advancementCost));
-    if (!rebirth && pilotEdit.level < PilotSystem.maxLevel(pilotEdit) && !readyToUpgrade)
-      blockers.push("EXP "+formatNumber(pilotEdit.experience)+" / "+formatNumber(PilotSystem.experienceRequired(pilotEdit.level,pilotEdit)));
     advancementHint.hidden=pilotIsNew || !blockers.length;
-    advancementHint.textContent=I18n.text("\u7b49\u7ea7\u4e0a\u9650")+" "+PilotSystem.maxLevel(pilotEdit)+" \u00b7 "+blockers.join(" \u00b7 ");
+    advancementHint.textContent=blockers.join(" \u00b7 ");
     upgradePilotButton.title=advancementHint.hidden ? "" : advancementHint.textContent;
     demotePilotButton.hidden = pilotIsNew || pilotEdit.level === 0;
     demotePilotButton.disabled =
@@ -3197,7 +2894,7 @@ const Formation = (() => {
     byId("createPilotConfirm").disabled = !Economy.affordable({
       money: PilotSystem.customRecruitmentCost,
     });
-    byId("pilotTrainingActions").hidden = !!pilotEdit.ace;
+    byId("pilotTrainingActions").hidden = false;
     byId("confirmPilotTraining").disabled = pendingPoints === 0;
     byId("cancelPilotTraining").disabled = pendingPoints === 0;
     byId("pilotTrainingStatus").textContent =
@@ -3214,7 +2911,7 @@ const Formation = (() => {
       plus.type = "button";
       plus.setAttribute("aria-label", "强化" + label);
       plus.disabled =
-        !pilotEdit.points || pilotEdit.stats[key] >= PilotSystem.statCap(pilotEdit.level);
+        !!pilotEdit.ace || !pilotEdit.points || pilotEdit.stats[key] >= PilotSystem.statCap(pilotEdit.level);
       plus.onclick = () => {
         pilotEdit.stats[key]++;
         pilotEdit.points--;
@@ -3224,13 +2921,13 @@ const Formation = (() => {
       plusFive.type = "button";
       plusFive.setAttribute("aria-label", "强化" + label + " +5");
       plusFive.disabled =
-        pilotEdit.points < 5 || pilotEdit.stats[key] + 5 > PilotSystem.statCap(pilotEdit.level);
+        !!pilotEdit.ace || pilotEdit.points < 5 || pilotEdit.stats[key] + 5 > PilotSystem.statCap(pilotEdit.level);
       plusFive.onclick = () => {
         pilotEdit.stats[key] += 5;
         pilotEdit.points -= 5;
         renderPilotStats();
       };
-      plus.hidden = plusFive.hidden = !!pilotEdit.ace;
+      plus.hidden = plusFive.hidden = false;
       row.append(
         element(
           "span",
@@ -3251,6 +2948,9 @@ const Formation = (() => {
   demotePilotButton.id = "demotePilot";
   demotePilotButton.type = "button";
   upgradePilotButton.after(demotePilotButton);
+  const pilotAdvancementActions=element("div","pilot-advancement-actions");
+  byId("customPilotProgress").after(pilotAdvancementActions);
+  pilotAdvancementActions.append(upgradePilotButton,demotePilotButton);
   demotePilotButton.onclick = async () => {
     if (!pilotEdit || pilotIsNew || demotePilotButton.disabled) return;
     const original = pilotOriginal;
@@ -3425,7 +3125,8 @@ const Formation = (() => {
   learnPilotSkillButton.type = "button";
   const customPilotSkills = element("div");
   customPilotSkills.id = "customPilotSkills";
-  byId("customPilotProgress").after(customPilotSkills, learnPilotSkillButton);
+  byId("pilotDetailSkills").querySelector("h3").after(customPilotSkills, learnPilotSkillButton);
+  byId("pilotDetailPreview").append(byId("changeCustomPilotPortrait"));
   const pilotSkillPicker = element("dialog", "pilot-attribute-help pilot-skill-picker");
   pilotSkillPicker.id = "pilotSkillPicker";
   pilotSkillPicker.setAttribute("aria-labelledby", "pilotSkillPickerTitle");
@@ -3568,6 +3269,7 @@ const Formation = (() => {
   return {
     renderPreview,
     availablePilots: () => structuredClone(pilotStore.pilots.filter(p=>!p.needsRecruitment)),
+    storedPilot,
     unitTags,
     unitSummaryTags,
     replenish,
@@ -3692,7 +3394,7 @@ const Deployment = (() => {
     }
     const actor = getUnit(selected),
       forms = actor
-        ? NormalForms.options(ART, Rules.modelOf(actor).prefabId).filter((f) => f.skillId)
+        ? NormalForms.options(ART, Rules.modelOf(actor).prefabId).filter((f) => f.skillId && ["transform", "armor_purge"].includes(f.type))
         : [];
     transform.hidden =
       phase !== "deployment" || !actor || actor.embarked || !Net.canControl(actor) || !forms.length;

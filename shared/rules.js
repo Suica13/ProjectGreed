@@ -7,6 +7,9 @@ const Tactics = (() => {
   const catalog =
     typeof ART !== "undefined" ? ART : require("../tools/load-catalog.cjs").loadCatalog();
   const models = catalog.models;
+  const roleTargets = { general:"support", support:"raid", raid:"general" };
+  const combatRoleAdvantage = (attacker, defender) => !!roleTargets[attacker?.combatRole] &&
+    roleTargets[attacker.combatRole] === defender?.combatRole;
   const ordinaryFormIds = new Set(catalog.prefabs.flatMap(p => (p.skills || [])
     .filter(s => ["transform","armor_purge"].includes(s.type) && !s.deploymentMode)
     .flatMap(s => [p.id,s.source?.unitId]).filter(Boolean)));
@@ -163,6 +166,7 @@ const Tactics = (() => {
       throw Error("编组无效，请检查单位点数上限");
     let cost = 0;
     const assignedPilots = new Set();
+    const assignedStock = new Set();
     const clean = entries.map((entry) => {
       const alias = catalog.prefabs.find((p) => p.id === entry?.unitId)?.kitAliases?.[entry?.kitId];
       const id = entry?.unitId + "__" + (alias || entry?.kitId),
@@ -172,18 +176,25 @@ const Tactics = (() => {
       let customPilot = null;
       try { customPilot = entry.customPilot ? pilots.custom(entry.customPilot) : null; }
       catch (error) { if (!entry.customPilot?.hired) throw error; }
+      if (customPilot?.pmcGeneral)
+        customPilot = pilots.generalPMC(customPilot.id, pilots.commandUnit(model));
       if (customPilot?.hired && (customPilot.faction !== model.faction ||
           customPilot.commander !== pilots.commandUnit(model))) customPilot = null;
-      if (customPilot?.needsRecruitment) throw Error("该ACE需要重新招募后才能配属");
+      if (customPilot?.needsRecruitment) throw Error("该驾驶员需要复归后才能配属");
       if (!customPilot && pilots.aceProfile(entry.pilotId)) throw Error("请先招募并配属ACE驾驶员");
       cost += formationModel({ ...entry, customPilot }).cost + pilots.cost(customPilot);
       normalizeUnitName(entry.customName); // Validate and discard obsolete saved display names.
       const pilotId = customPilot?.id || pilots.validate(entry.pilotId, model);
       if (pilotId && assignedPilots.has(pilotId)) throw Error("同一驾驶员不能配属多台单位");
       if (pilotId) assignedPilots.add(pilotId);
+      if (entry.stockId !== undefined) {
+        if (typeof entry.stockId !== "string" || !entry.stockId || entry.stockId.length > 100 || assignedStock.has(entry.stockId)) throw Error("库存单位重复或无效");
+        assignedStock.add(entry.stockId);
+      }
       return {
         unitId: model.prefabId,
         kitId: model.kitId,
+        ...(entry.stockId ? { stockId: entry.stockId } : {}),
         ...(customPilot ? { customPilot } : pilotId ? { pilotId } : {}),
       };
     });
@@ -2275,6 +2286,8 @@ const Tactics = (() => {
           typeof id === "number" ? id : 0,
           models[model],
         );
+    if (pilot.pmcGeneral)
+      pilot.stats = pilots.roll(null, seed, seat, typeof id === "number" ? id : 0, models[model]).stats;
     const team = seatTeam(seat),
       m = modelOf({ model, performance, environment, pilot });
     return {
@@ -3421,7 +3434,8 @@ const Tactics = (() => {
         ) -
           (canEvade(b) ? (defender.pilotModifiers?.awakeningEvasion ?? 0) + squadEvasion(g, b) : 0),
       ),
-      hit = Math.min(100, resolvedHit * (w.counterExposureMultiplier ?? 1)),
+      hit = Math.max(0, Math.min(100, resolvedHit * (w.counterExposureMultiplier ?? 1)) -
+        (canEvade(b) && combatRoleAdvantage(defender, attacker) ? 5 : 0)),
       defenseMultiplier = response === "defend" ? 1.25 : 1,
       finalDamageMultiplier =
         (weakPoint(b, w.aimCell ?? b.aimCell) ? 1.5 : 1) *
@@ -3429,7 +3443,7 @@ const Tactics = (() => {
         (defender.pilotModifiers?.defense ?? 1) *
         (1 - defenseCommand.defense) *
         (attacker.pilotModifiers?.[w.type === "melee" ? "melee" : "shooting"] ?? 1) *
-        (1 + attackCommand.attack),
+        (1 + attackCommand.attack) * (combatRoleAdvantage(defender, attacker) ? 0.9 : 1),
       strikes = availableStrikes(a, w, b);
     // MOD: subtract flat protection per projectile/component, then apply percentage protection.
     const beamScreen = beamDiffusionFactor(
@@ -4049,10 +4063,12 @@ const Tactics = (() => {
       if (u.team !== g.team || burn.lastTickRound === g.round) continue;
       burn.lastTickRound = g.round;
       const m = modelOf(u),
-        resistance = Math.max(0, Math.min(100, m.defenses.sp?.percent || 0));
+        resistance = Math.max(0, Math.min(100, m.defenses.sp?.percent || 0)),
+        source = g.units.find(other => other.id === burn.sourceId),
+        roleMultiplier = combatRoleAdvantage(m, source ? modelOf(source) : null) ? 0.9 : 1;
       const damage = Math.min(
         u.hp,
-        roundDamage(((m.hp * burn.hpPercent) / 100) * (1 - resistance / 100)),
+        roundDamage(((m.hp * burn.hpPercent) / 100) * (1 - resistance / 100) * roleMultiplier),
       );
       const before = u.hp;
       u.hp -= damage;
@@ -4171,14 +4187,6 @@ const Tactics = (() => {
         const m = modelOf(u);
         u.hp = Math.min(m.hp, u.hp + Math.round(m.hp * 0.25));
         u.en = Math.min(m.en, u.en + m.en * 0.5);
-        u.shield = Math.min(m.shield.hp, (u.shield || 0) + Math.round(m.shield.hp * 0.25));
-        const damaged = Object.keys(u.brokenParts || {}).filter((part) => u.brokenParts[part]);
-        for (let i = 0; i < 2 && damaged.length; i++) {
-          const part = damaged.splice(Math.floor(random(g) * damaged.length), 1)[0];
-          delete u.brokenParts[part];
-          const module = m.modules?.find((entry) => entry.id === part);
-          if (module && u.moduleHp) u.moduleHp[part] = module.hp;
-        }
       }
       const maintenance = modelOf(u).autoRepair;
       if (
@@ -4892,6 +4900,7 @@ const Tactics = (() => {
     validateAISettings,
     aiBudget,
     modelOf,
+    combatRoleAdvantage,
     weaponStats,
     inSupplyRange,
     commandAura,

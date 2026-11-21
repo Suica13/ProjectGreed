@@ -120,6 +120,22 @@ const WeaponInfo = (() => {
     unit && typeof game !== "undefined" && Rules.attackRounds
       ? Rules.attackRounds(game, unit, weapon)
       : WeaponClasses.rounds(weapon);
+  function icon(weapon) {
+    const kind = WeaponClasses.classify(weapon), image = node("img", "weapon-type-icon");
+    const source = weapon.sourceName || weapon.sourceWeapon || weapon.id || "",
+      effects = [...(weapon.muzzleEffects || []), weapon.projectile?.texture || "", weapon.sound?.file || ""].join(" "),
+      variant = weapon.remote?.kind === "incom" || /(?:^|_)Incom(?:_|$)/i.test(source) ? "incom" :
+        kind === "sniper" && weapon.type === "shell" ? "sniper" :
+        kind === "bazooka" && (/Shotgun|Scatter/i.test(source) || /散弹|霰弹|扩散/.test(weapon.name) || /ShotGunMode/i.test(weapon.hitEffect || "")) ? "shell_scatter_bazooka" :
+        /Railgun|RailShell/i.test(effects) || /磁轨炮|电磁炮/.test(weapon.name) ? "railgun" :
+          WeaponClasses.wristWeapon(weapon) || /(?:^|_)Arm_(?:BR|BSG|BMG|MG|GL|MS)(?:_|$)/i.test(source) ? "wrist" : kind;
+    image.src = ART.assets[ART.weaponIcons[variant]];
+    image.alt = I18n.text(WeaponClasses.labels[kind]);
+    image.dataset.weaponClass = kind;
+    image.dataset.weaponIcon = variant;
+    image.width = image.height = 48;
+    return image;
+  }
   function summary(source, options = {}) {
     const { unit, target, response = "counter", isCounter = false } = options;
     const weapon = unit ? Rules.weaponStats(source, unit) : source;
@@ -144,23 +160,27 @@ const WeaponInfo = (() => {
     }
     if (!attributes.size) attributes.add(Rules.typeNames[weapon.type] || weapon.type);
     const number = (value) => Math.round(value).toLocaleString();
-    const root = node("div", "weapon-summary");
+    const root = node("div", "weapon-summary weapon-layout");
     const heading = node("div", "weapon-summary-heading");
     heading.append(node("strong", "weapon-name", weapon.name));
     const tags = node("div", "weapon-attributes");
     for (const attribute of attributes) tags.append(node("span", "weapon-attribute", attribute));
     if (!options.compact) for (const kind of WeaponClasses.tags(weapon)) tags.prepend(classBadge(weapon, kind));
     heading.append(tags);
+    const visual = node("div", "weapon-visual-row"), energy = node("div", "weapon-energy");
+    energy.append(node("span", "weapon-stat-label", "EN"), node("strong", "weapon-en-cost", number(weapon.en || 0)));
+    const identity = node("div", "weapon-identity");
+    identity.append(heading, energy);
+    visual.append(icon(weapon), identity);
     const damageLine = node("div", "weapon-damage-line");
-    damageLine.append(node("span", "weapon-stat-label", "基础伤害"));
     const formula = node("div", "weapon-damage-formula");
     for (const [damage, count] of groups) {
       if (formula.childElementCount) formula.append(node("span", "weapon-math-symbol", "+"));
       const term = node("span", "weapon-damage-term");
       term.append(
-        node("b", "", number(damage)),
-        node("span", "weapon-math-symbol", "×"),
         node("span", "weapon-hit-count", String(count)),
+        node("span", "weapon-math-symbol", "×"),
+        node("b", "", number(damage)),
       );
       formula.append(term);
     }
@@ -174,7 +194,7 @@ const WeaponInfo = (() => {
       unit && target ? attackForecast(unit, target, weapon, response, isCounter) : null;
     const accuracy = node("div", "weapon-accuracy");
     accuracy.append(
-      node("span", "weapon-stat-label", "命中"),
+      node("span", "weapon-stat-label", "命中率"),
       node("strong", "", number(forecast?.hit ?? weapon.hit) + "%"),
     );
     accuracy.append(
@@ -186,16 +206,11 @@ const WeaponInfo = (() => {
       accuracy.dataset.damage = forecast.damage;
       accuracy.dataset.hit = forecast.hit;
     }
-    root.append(heading, damageLine, accuracy);
+    const statistics = node("div", "weapon-statistics-row");
+    statistics.append(damageLine, accuracy);
+    root.append(visual, statistics);
     if (options.compact) {
       root.classList.add("weapon-summary-compact");
-      heading.querySelector(".weapon-attributes")?.remove();
-      damageLine.querySelector(".weapon-stat-label").textContent = I18n.text("伤害");
-      const labels = accuracy.querySelectorAll(".weapon-stat-label");
-      labels[0].textContent = I18n.text("命中率");
-      labels[1].remove();
-      accuracy.querySelector(".weapon-rounds").after(node("span", "", I18n.text("轮")));
-      root.append(tags);
     }
     for (const requirement of weapon.pilotRequirements || []) {
       const label = I18n.text(PilotSystem.labels[requirement.stat] || requirement.stat);
@@ -411,8 +426,9 @@ const WeaponInfo = (() => {
     }
     wrapper.append(content || summary(weapon, options), inspector(weapon, options));
     if (options.encyclopediaLink) {
-      wrapper.querySelector(".weapon-summary-heading")?.append(encyclopediaLink(weapon));
-      wrapper.append(Encyclopedia.usersButton(weapon));
+      const references = node("div", "weapon-reference-actions");
+      references.append(encyclopediaLink(weapon), Encyclopedia.usersButton(weapon));
+      wrapper.append(references);
     }
     if (window.CatalogDeveloper)
       window.CatalogDeveloper.decorateWeapon(wrapper, weapon, !!options.encyclopediaLink);

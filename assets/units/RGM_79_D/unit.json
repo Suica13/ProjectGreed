@@ -978,14 +978,25 @@
     },
     {
       "id": "kit_2",
-      "name": "光束炮套件",
+      "name": "光束霰弹枪套件",
       "cost": 75,
       "weapons": [
         "EF_BeamSprayGunFD",
         "EF_BeamSaber_A",
         "Common_Cqb_A_L",
         "Common_Push_A"
-      ]
+      ],
+      "localization": {
+        "zh": {
+          "name": "光束霰弹枪套件"
+        },
+        "en": {
+          "name": "Beam Shotgun Kit"
+        },
+        "ja": {
+          "name": "ビーム・ショットガン装備"
+        }
+      }
     }
   ],
   "description": "沙漠战特化型吉姆,装备了实验型的电磁炮武器",

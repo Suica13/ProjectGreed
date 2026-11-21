@@ -100,7 +100,8 @@ const Encyclopedia = (() => {
     if (!window.CATALOG_DEVELOPER_MODE) portrait.append(image);
     if (prefab.wip) portrait.append(element("small", "unit-portrait-status", "WIP"));
     const body = element("div", "encyclopedia-unit-body");
-    body.append(element("strong", "encyclopedia-unit-name", prefab.name));
+    const unitName=element("strong", "encyclopedia-unit-name", prefab.name);
+    unitName.append(UnitPreview.roleIcon(UnitModels[modelId]));body.append(unitName);
     body.append(Formation.unitTags(prefab, {cost: UnitModels[modelId].cost}));
     const footer = element("div", "encyclopedia-unit-footer");
     // The standalone editor has catalog data only, never the player's economy.
@@ -115,14 +116,15 @@ const Encyclopedia = (() => {
         : !Economy.hasLicense(prefab.id) ? "未许可" : "";
     const identity = element("div", "encyclopedia-unit-identity");
     identity.append(portrait);
+    const actions=element("div","encyclopedia-unit-actions");
     if (!window.CATALOG_DEVELOPER_MODE)
-      identity.append(element("small", "muted encyclopedia-unit-status", state));
+      actions.append(element("small", "muted encyclopedia-unit-status", state));
     const detail = element("button", "", "详细");
     detail.type = "button";
     detail.onclick = () => Formation.previewUnit(prefab.id, detail);
-    footer.append(detail);
+    actions.append(detail);
     body.append(footer);
-    card.append(identity, body);
+    card.append(identity, body, actions);
     return card;
   }
   function weapons() {

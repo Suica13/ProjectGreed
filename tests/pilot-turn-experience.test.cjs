@@ -83,6 +83,7 @@ for (const mode of ["quick", "battlefield", "mission"])
   test(`XP is authoritative in the current turn before settlement: ${mode}`, async (t) => {
     const f = fixture(t, mode),
       { room, actor, target, pilot } = f;
+    target.pilot = G.pilots.createCustom("custom-round-casualty", "Casualty");
     for (let i = 0; i < room.seats.length; i++)
       if (room.seats[i]?.bot && G.seatTeam(i) === 0) room.turnDone[i] = true;
     f.act(f.host, "attack", { unitId: actor.id, targetId: target.id });
@@ -100,6 +101,9 @@ for (const mode of ["quick", "battlefield", "mission"])
     );
     const snapshot = f.frames.get(f.host),
       award = snapshot.pilotAwards.find((a) => a.kind === "kill" && a.pilotId === pilot.id);
+    assert.equal(target.pilot.needsRecruitment, true, "casualty requires recovery in " + mode);
+    for (const loss of snapshot.pilotAwards.filter(a=>a.kind==="loss"&&a.pilotId===target.pilot.id))
+      assert.equal(loss.requiresRecruitment,true);
     assert(award && award.experiencePoints > 0, JSON.stringify(snapshot.pilotAwards));
     assert.equal(
       award.experiencePoints,
