@@ -43,7 +43,7 @@ function createRoomEngine({
     roomBattleEconomy().rewardMultipliers(activityRewardMultipliers());
   const roundReward = (value) => roomBattleEconomy().roundReward(value);
   function stockState(actor, unitId, modelId) {
-    const model = G.models[modelId || actor.model];
+    const model = G.modelOf({...actor,model:modelId || actor.model});
     const allowed = new Set(["head", "backpack", "leftArm", "rightArm", "leftLeg", "rightLeg",
       ...(model.modules || []).map((part) => part.id)]);
     return { stockId: actor.stockId, unitId, kitId: model.kitId || model.id?.split("__")[1] || (modelId || actor.model).split("__")[1],
@@ -62,6 +62,7 @@ function createRoomEngine({
       });
   }
   function restoreStockActor(actor, item) {
+    actor.plugins = item.plugins;
     const model = G.modelOf(actor);
     actor.stockId = item.id;
     actor.hp = Math.min(model.hp, item.hp);
@@ -4242,6 +4243,7 @@ function createRoomEngine({
           unitLimit: playerUnitLimit(room, member),
           restrictions: playerRestrictions(room, member),
           inventory: Sweep.remainingInventory(member.inventory, room.sweep.losses[member.id]),
+          storedUnits: member.storedUnits?.filter(item=>!room.sweep.losses[member.id].some(loss=>loss.state.stockId===item.id)),
           nextKey: room.sweep.nextKey[member.id],
         });
         const pending = room.sweep.pending[member.id];
@@ -4255,11 +4257,12 @@ function createRoomEngine({
             activeIds = new Set(plan.roster.map((record) => record.state.stockId).filter(Boolean)),
             items = member.storedUnits.filter((item) => !item.destroyed && !lostIds.has(item.id) && !activeIds.has(item.id));
           for (const record of plan.roster.filter((record) => !record.state.stockId)) {
-            let index = items.findIndex((item) => item.unitId === record.entry.unitId && item.kitId === record.entry.kitId);
+            let index = items.findIndex((item) => (!record.entry.stockId||item.id===record.entry.stockId)&&item.unitId === record.entry.unitId && item.kitId === record.entry.kitId);
             if (index < 0) index = items.findIndex((item) => item.unitId === record.entry.unitId);
             if (index < 0) throw Error("出战库存状态不足：" + record.entry.unitId);
             const item = items.splice(index, 1)[0], latest = prior.findLast((entry) => entry.state.stockId === item.id);
             restoreStockActor(record.state, latest ? { ...item, ...latest.state, id: item.id } : item);
+            record.entry.plugins=record.state.plugins;
           }
         }
         const history = ((room.sweep.returnedStock ||= {})[member.id] ||= []);
@@ -4568,7 +4571,10 @@ function createRoomEngine({
             ["set_ready", "start_game", "update_formation", "confirm_formation"].includes(msg.action))
           member.storedUnits = roomWarehouse().profile(msg.storedUnits, G.models);
         if (Array.isArray(msg.formation) && !room.campaign && !room.startedFromSave)
-          msg = { ...msg, formation: G.pilots.normalizeCrewFormation(msg.formation, remainingCrew(room, member), G.formationModel) };
+          msg = { ...msg, formation: G.pilots.normalizeCrewFormation(msg.formation.map(entry=>{
+            const item=member.storedUnits?.find(item=>item.id===entry.stockId);
+            return item?{...entry,plugins:item.plugins}:entry;
+          }), remainingCrew(room, member), G.formationModel) };
         if (msg.action === "rename_unit") {
           throw Error("单位不支持改名");
         } else if (msg.action === "share_units") {

@@ -4,6 +4,7 @@ const Economy = (() => {
   const pilots = typeof PilotSystem !== "undefined" ? PilotSystem : require("./pilots.js");
   const saveCodec = typeof SaveCodec !== "undefined" ? SaveCodec : require("./save-codec.js");
   const warehouse = typeof Warehouse !== "undefined" ? Warehouse : require("./warehouse.js");
+  const plugins = typeof UnitPlugins !== "undefined" ? UnitPlugins : require("./unit-plugins.js");
   const baseFacilities = typeof BaseFacilities !== "undefined" ? BaseFacilities : require("./base-facilities.js");
   const key = "projectgreed.economy.v1";
   const catalog =
@@ -68,7 +69,7 @@ const Economy = (() => {
     const capacity = baseFacilities.capacity(facilities);
     const storageInput = value.schemaVersion === 4 && value.storage ? structuredClone(value.storage) : warehouse.empty();
     storageInput.slots = capacity;
-    storageInput.pages = { units: Math.ceil(capacity.units / 8), ships: Math.ceil(capacity.ships / 8) };
+    storageInput.pages = { units: Math.ceil(capacity.units / warehouse.defaults.unitsPerPage), ships: Math.ceil(capacity.ships / warehouse.defaults.shipsPerPage) };
     const storage = warehouse.normalize(storageInput,
       modelsForUnits(), stock.inventory, defaultKit);
     stock.inventory = warehouse.counts(storage);
@@ -231,7 +232,7 @@ const Economy = (() => {
       if (item.destroyed && result.hp > 0) continue;
       updated.add(item.id);
       const model = modelsForUnits()[item.unitId + "__" + item.kitId];
-      const condition = warehouse.condition(result, model);
+      const condition = warehouse.condition({...result, plugins:item.plugins}, model);
       if (!item.destroyed && condition.destroyed)
         next.inventory[item.unitId] = Math.max(0, (next.inventory[item.unitId] || 0) - 1);
       Object.assign(item, condition);
@@ -388,6 +389,19 @@ const Economy = (() => {
     item.kitId = kitId;
     return commit(next);
   }
+  function setStoredPlugin(id, slot, pluginId) {
+    if (!Number.isInteger(slot) || slot < 0 || slot > 3) throw Error("零件槽位无效");
+    const next = snapshot(), item = [...next.storage.units, ...next.storage.ships].find(item=>item.id===id);
+    if (!item) throw Error("库存单位不存在");
+    const base = modelsForUnits()[item.unitId+"__"+item.kitId], previous = plugins.apply(base,item.plugins);
+    const slots = plugins.normalize(item.plugins,base);slots[slot]=pluginId;
+    const installed = plugins.normalize(slots,base), updated = plugins.apply(base,installed);
+    item.plugins = installed;
+    // Preserve damage proportion when maximum resources change; fitting cannot repair damage.
+    item.hp = item.destroyed ? 0 : Math.max(1,Math.min(updated.hp,Math.round(item.hp/previous.hp*updated.hp)));
+    item.en = previous.en>0 ? Math.min(updated.en,Math.round(item.en/previous.en*updated.en)) : updated.en;
+    return commit(next);
+  }
   function moveStoredUnit(id, slot, swap = false) {
     const next = snapshot(), kind = ["units", "ships"].find((kind) => next.storage[kind].some((item) => item.id === id));
     if (!kind) throw Error("库存单位不存在");
@@ -480,7 +494,7 @@ const Economy = (() => {
     const items = [];
     for (const item of [...state.storage.units, ...state.storage.ships]) {
       if (selected && !selected.has(item.id)) continue;
-      const model = modelsForUnits()[item.unitId + "__" + item.kitId],
+      const model = plugins.apply(modelsForUnits()[item.unitId + "__" + item.kitId],item.plugins),
         destroyed = item.destroyed || item.hp === 0,
         parts = Object.values(item.brokenParts || {}).some(Boolean) ||
           (model.modules || []).some(part => (item.moduleHp?.[part.id] ?? part.hp) < part.hp);
@@ -499,7 +513,7 @@ const Economy = (() => {
     next.supplies -= quote.supplies;
     for (const item of [...next.storage.units,...next.storage.ships]) {
       if (!ids.has(item.id)) continue;
-      const model = modelsForUnits()[item.unitId + "__" + item.kitId];
+      const model = plugins.apply(modelsForUnits()[item.unitId + "__" + item.kitId],item.plugins);
       Object.assign(item,{hp:model.hp,en:model.en,destroyed:false,brokenParts:{}});
       if (model.modules?.length) item.moduleHp = Object.fromEntries(model.modules.map(part=>[part.id,part.hp]));
     }
@@ -622,7 +636,7 @@ const Economy = (() => {
     canRecruitCrew: grade => baseFacilities.canRecruit(state.baseFacilities,grade),
     customPilotLimit: () => baseFacilities.pilotLimit(state.baseFacilities),
     acePilotLimit: () => baseFacilities.pilotLimit(state.baseFacilities),
-    canStore, storageUsage, changeStoredKit, moveStoredUnit, receiveDeliveries, storedUnits, setStoredPilot, reorderStoredUnits,
+    canStore, storageUsage, changeStoredKit, setStoredPlugin, moveStoredUnit, receiveDeliveries, storedUnits, setStoredPilot, reorderStoredUnits,
     transformStock,
     key,
     catalog,

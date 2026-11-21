@@ -1452,7 +1452,6 @@ const RoomPanel = (() => {
     byId("startRoomGame").textContent = snapshot.campaign ? "继续战役" : "开始游戏";
     byId("roomMainMenu").textContent =
       snapshot.started && snapshot.phase !== "assembly" ? "返回战斗" : "主菜单";
-    renderDominionOptions(snapshot,busy);
     renderFinalAssembly(snapshot, busy);
     renderDetail(snapshot);
     refreshReconnectCountdowns();

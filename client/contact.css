@@ -1,0 +1,18 @@
+.contact-content { flex:1;min-height:0;overflow:auto;padding:16px;background:#0d1924; }
+.contact-tasks { padding:12px 16px;border:1px solid #3d5868;background:#142c3d; }
+.contact-merchants { display:flex;flex-wrap:nowrap;align-items:flex-start;gap:18px;overflow-x:auto;padding:4px 4px 16px; }
+.contact-merchants[hidden],.contact-tasks[hidden] { display:none; }
+.merchant-card { flex:0 0 240px;display:grid;gap:10px;box-sizing:border-box;padding:10px;border:1px solid #4d7790;border-radius:4px;background:#163248; }
+.merchant-portrait { height:220px;display:grid;place-items:center;border:1px solid #638aa1;background:linear-gradient(145deg,#244b65,#0b1c2b);box-shadow:inset 0 0 24px #06121d88; }
+.merchant-portrait img { display:block;width:80%;height:80%;object-fit:contain;image-rendering:pixelated; }
+.merchant-information { min-width:0;border:1px solid #456b83;background:#102638; }
+.merchant-information h3 { margin:0;padding:10px 12px;border-bottom:1px solid #456b83;color:#cceaff;font-size:16px; }
+.merchant-information dl { margin:0;padding:10px 12px;display:grid;grid-template-columns:1fr auto;gap:8px 16px;font-size:13px; }
+.merchant-information dt { color:#9bb9cc; }
+.merchant-information dd { margin:0;color:#e6f4ff;font-weight:600; }
+@media(max-width:720px) {
+  .contact-content {padding:10px;}
+  .contact-merchants {gap:12px;}
+  .merchant-card {flex-basis:210px;}
+  .merchant-portrait {height:190px;}
+}

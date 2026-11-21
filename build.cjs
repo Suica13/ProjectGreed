@@ -208,9 +208,9 @@ for (const [key, file] of [
           stdin:{contents:'export { gunzipSync } from "fflate";',resolveDir:root},bundle:true,write:false,
           platform:"browser",format:"iife",globalName:"CatalogInflate",target:"chrome80",minify:true,legalComments:"eof"
         }).outputFiles[0].text + "\n/*! " + read("node_modules/fflate/LICENSE") + " */\n" + read(file))
-      : inlineScript((key === "ECONOMY" ? 'const BASE_FACILITY_TYPES = '+read("shared/base-facility-types.json")+';\n'+read("shared/base-facilities.js")+'\n'+read("shared/warehouse.js") + "\n" : key === "PROFILE_SAVE" ? read("client/profile-save-core.js") + "\n" : key === "SWEEP_UI" ? read("client/sweep-restock.js") + "\n" : "") + read(file)),
+      : inlineScript((key === "ECONOMY" ? 'const UNIT_PLUGIN_DATA = '+read("shared/unit-plugins.json")+';\n'+read("shared/unit-plugins.js")+'\nconst BASE_FACILITY_TYPES = '+read("shared/base-facility-types.json")+';\n'+read("shared/base-facilities.js")+'\n'+read("shared/warehouse.js") + "\n" : key === "PROFILE_SAVE" ? read("client/profile-save-core.js") + "\n" : key === "SWEEP_UI" ? read("client/sweep-restock.js") + "\n" : "") + read(file)),
   );
-html = html.replace("</body>", () => `<style>${read("client/warehouse.css")}\n${read("client/unit-panels.css")}\n${read("client/base-facilities.css")}\n${read("client/base-pages.css")}</style><script>${inlineScript(read("client/warehouse.js"))}\n${inlineScript(read("client/base-facilities.js"))}</script></body>`);
+html = html.replace("</body>", () => `<style>${read("client/warehouse.css")}\n${read("client/unit-panels.css")}\n${read("client/base-facilities.css")}\n${read("client/base-pages.css")}\n${read("client/contact.css")}</style><script>${inlineScript(read("client/warehouse.js"))}\n${inlineScript(read("client/base-facilities.js"))}\n${inlineScript(read("client/contact.js"))}</script></body>`);
 const layout = JSON.parse(read("client/ui-layout.json"));
 html = html.replace(
   "</body>",

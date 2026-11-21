@@ -164,6 +164,7 @@ const SweepMode = (() => {
     for (const key of [
       "model",
       "stockId",
+      "plugins",
       "hp",
       "en",
       "shield",
@@ -223,6 +224,8 @@ const SweepMode = (() => {
           hp: r.state.hp,
           en: r.state.en,
           model: r.state.model,
+          stockId: r.state.stockId,
+          plugins: r.state.plugins,
           ...(r.entry.customPilot ? { customPilot: structuredClone(r.entry.customPilot) } : {}),
           shield: r.state.shield,
           brokenParts: r.state.brokenParts,
@@ -309,7 +312,7 @@ const SweepMode = (() => {
   function recover(room, G, hp, en = hp) {
     for (const roster of Object.values(room.sweep.rosters))
       for (const r of roster) {
-        const m = G.models[r.state.model];
+        const m = G.modelOf(r.state);
         r.state.hp = Math.max(0, Math.min(m.hp, r.state.hp + Math.round(m.hp * hp)));
         r.state.en = Math.max(0, Math.min(m.en, r.state.en + Math.round(m.en * en)));
       }
@@ -429,7 +432,7 @@ const SweepMode = (() => {
       });
       if (hasSupport)
         for (const r of roster) {
-          const m = G.models[r.state.model];
+          const m = G.modelOf(r.state);
           r.state.hp = m.hp;
           r.state.en = m.en;
         }
@@ -539,7 +542,7 @@ const SweepMode = (() => {
     G,
     source,
     operations,
-    { budget, unitLimit, restrictions, inventory, nextKey = 0 },
+    { budget, unitLimit, restrictions, inventory, storedUnits, nextKey = 0 },
   ) {
     if (!Array.isArray(operations) || operations.length > 12) throw Error("整备操作无效");
     const roster = structuredClone(source),
@@ -551,14 +554,17 @@ const SweepMode = (() => {
       if (!Object.hasOwn(used, op.type) || ++used[op.type] > 3) throw Error("每类整备操作最多3次");
       const target = roster.find((r) => r.key === op.key);
       if (op.type === "add") {
+        const occupied = new Set(roster.map(record=>record.state.stockId||record.entry.stockId).filter(Boolean));
+        const stored = storedUnits?.find(item=>!item.destroyed&&!occupied.has(item.id)&&item.unitId===op.entry?.unitId&&item.kitId===op.entry?.kitId);
         const entry = G.validateFleetFormation(
-          [{ unitId: op.entry?.unitId, kitId: op.entry?.kitId }],
+          [{ unitId: op.entry?.unitId, kitId: op.entry?.kitId, ...(stored?{stockId:stored.id,plugins:stored.plugins}:{}) }],
           Infinity,
         )[0];
         if (!op.entry.preload || !roster.some((r) => r.key === op.entry.preload.carrierIndex))
           throw Error("请选择存活母舰的格纳库");
         entry.preload = structuredClone(op.entry.preload);
         const u = G.makeUnit(entry, 0, "draft-" + key, { x: 0, y: 0 });
+        if(stored){u.hp=Math.min(u.hp,stored.hp);u.en=Math.min(u.en,stored.en);u.brokenParts={...stored.brokenParts};}
         roster.push({ key: key++, entry, state: save(u) });
         cost.supplies += Math.ceil(pricing.productionOffer(entry.unitId, entry.kitId).supplies / 4);
       } else {

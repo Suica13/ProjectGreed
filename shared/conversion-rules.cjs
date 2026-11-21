@@ -349,11 +349,12 @@ function roundValues(prefab) {
     if (Number.isFinite(prefab.stats?.[key])) prefab.stats[key] = Math.round(prefab.stats[key]);
   for (const field of ["adaptability", "attackBonuses"])
     for (const key of Object.keys(prefab[field] || {}))
-      if (Number.isFinite(prefab[field][key])) prefab[field][key] = Math.round(prefab[field][key]);
+      if (Number.isFinite(prefab[field][key])) prefab[field][key] = field === "adaptability" ? Math.max(0,Math.min(100,Math.round(prefab[field][key]))) : Math.round(prefab[field][key]);
   for (const defense of Object.values(prefab.defenses || {}))
     for (const key of ["percent", "flat"])
       if (Number.isFinite(defense[key])) defense[key] = Math.round(defense[key]);
   if (Number.isFinite(prefab.shield?.hp)) prefab.shield.hp = Math.round(prefab.shield.hp);
+  if (Number.isFinite(prefab.shield?.blockChance)) prefab.shield.blockChance = Math.max(0,Math.min(.75,prefab.shield.blockChance));
   for (const weapon of [...Object.values(prefab.weapons || {}), ...(prefab.skills || []).filter(Classes.isWeaponSkill)]) {
     for (const key of ["hit", "baseHit", "min", "max", "minRange", "range", "actionCost", "en", "enCost"])
       if (Number.isFinite(weapon[key])) weapon[key] = Math.round(weapon[key]);

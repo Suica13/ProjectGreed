@@ -6,7 +6,7 @@ window.WarehouseUI = (() => {
   screen.innerHTML = `<section class="warehouse-main"><header><div class="warehouse-tabs">
     <button id="warehouseUnits" aria-pressed="true">单位</button><button id="warehouseShips" aria-pressed="false">舰船</button></div>
     <strong id="warehouseCapacity"></strong><button id="warehouseDeliveries" hidden></button></header>
-    <div class="base-page-toolbar" id="warehouseToolbar"><label for="warehouseSearch"><span>搜索单位</span><input id="warehouseSearch" type="search" placeholder="按名称或编号搜索" /></label><label for="warehouseFaction"><span>阵营筛选</span><select id="warehouseFaction" aria-label="阵营筛选"></select></label><div id="warehouseSortControl"></div></div>
+    <div class="base-page-toolbar" id="warehouseToolbar"><label for="warehouseSearch"><span>搜索</span><input id="warehouseSearch" type="search" placeholder="搜索" /></label><label for="warehouseFaction"><span>阵营筛选</span><select id="warehouseFaction" aria-label="阵营筛选"></select></label><div id="warehouseSortControl"></div></div>
     <div class="warehouse-yard" id="warehouseYard"><div id="warehouseBays"></div></div>
     <footer><button id="warehouseRepairAll">一键修复</button><div class="warehouse-pagination"><button id="warehousePrevious">上一页</button><span id="warehousePage"></span><button id="warehouseNext">下一页</button></div></footer></section>`;
   const dialog = element("dialog", "warehouse-dialog");
@@ -15,8 +15,9 @@ window.WarehouseUI = (() => {
   dialog.innerHTML = `<header><div class="warehouse-dialog-heading"><h2 id="warehouseDialogTitle"></h2><div id="warehouseDialogTags" hidden></div></div><button id="warehouseClose" aria-label="关闭">关闭</button></header><div id="warehouseDialogBody"></div>`;
   document.body.append(screen, dialog);
   let kind = "units",
-    page = 0, externalReturn = null, attributePage = "warehousePrimaryAttributes";
+    page = 0, externalReturn = null, panelReturn = null, attributePage = "warehousePrimaryAttributes";
   const defaultScale = UnitPreview.storageScale;
+  const cardsPerPage = () => window.matchMedia("(max-width:720px)").matches ? 4 : 10;
   const storedItems = () => [...Economy.snapshot().storage.units, ...Economy.snapshot().storage.ships];
   const currentItem = (item) => storedItems().find((record) => record.id === item.id) || item;
   const statusNames = { destroyed: "完全损毁", damaged: "需要修理", healthy: "状态良好" };
@@ -47,16 +48,23 @@ window.WarehouseUI = (() => {
   for(const id of ["warehouseSearch","warehouseFaction"]) byId(id)[id==="warehouseSearch"?"oninput":"onchange"]=()=>{page=0;render();};
   BasePageControls.sortMenu("warehouseSortControl",[["name","名称排序"],["era","年代排序"],["cost","COST排序"]],rule=>{
     const records=Economy.snapshot().storage[kind];
-    const model=item=>UnitModels[item.unitId+"__"+item.kitId];
+    const model=item=>UnitPlugins.apply(UnitModels[item.unitId+"__"+item.kitId],item.plugins);
     const era=item=>Math.min(...(model(item).tags || []).filter(tag=>Rules.eras.includes(tag)).map(Rules.technologyWeight),Infinity);
     records.sort((a,b)=>(rule==="cost"?model(a).cost-model(b).cost:rule==="era"?era(a)-era(b):0) ||
       model(a).name.localeCompare(model(b).name,I18n.language) || a.slot-b.slot);
     Economy.reorderStoredUnits(kind,records.map(item=>item.id));page=0;render();
   });
   function finishExternal() { const callback = externalReturn; externalReturn = null; callback?.(); }
-  byId("warehouseClose").onclick = () => { dialog.close(); finishExternal(); };
-  dialog.addEventListener("cancel", finishExternal);
+  byId("warehouseClose").onclick = () => {
+    if (panelReturn) return panelReturn();
+    dialog.close(); finishExternal();
+  };
+  dialog.addEventListener("cancel", event => {
+    if (panelReturn) { event.preventDefault(); panelReturn(); }
+    else finishExternal();
+  });
   function openPanel(title) {
+    panelReturn = null;
     dialog.classList.remove("is-unit-details");
     byId("warehouseDialogTitle").textContent = title;
     byId("warehouseDialogTags").replaceChildren();
@@ -77,7 +85,10 @@ window.WarehouseUI = (() => {
       bar.setAttribute("aria-valuemin", "0");
       bar.setAttribute("aria-valuemax", String(model[key]));
       bar.setAttribute("aria-valuenow", String(value));
-      bar.append(fill, element("span", "warehouse-resource-label", `${label} ${formatNumber(value)} / ${formatNumber(model[key])}`));
+      const text = element("span", "warehouse-resource-label", `${label} ${formatNumber(value)} / `),
+        maximum = element("span", UnitPlugins.baseOf(model)[key] !== model[key] ? "plugin-modified-value" : "", formatNumber(model[key]));
+      text.append(maximum);
+      bar.append(fill, text);
       resources.append(bar);
     }
     const state = Warehouse.status(item, model), status = element("span", "warehouse-condition " + state, I18n.text(statusNames[state]));
@@ -117,7 +128,7 @@ window.WarehouseUI = (() => {
     const model = UnitModels[item.unitId + "__" + item.kitId], body = openPanel("配属驾驶员"),
       search = element("input"), list = element("div", "warehouse-pilot-list"), back = element("button", "", "取消");
     search.type = "search";
-    search.placeholder = I18n.text("搜索驾驶员");
+    search.placeholder = I18n.text("搜索");
     search.setAttribute("aria-label", search.placeholder);
     back.onclick = () => showUnit(item);
     body.append(search, list, back);
@@ -187,7 +198,7 @@ window.WarehouseUI = (() => {
           Economy.transformStock(item.unitId, form.unitId, item.id);
           const updated = currentItem(item);
           kind = Warehouse.category(UnitModels[updated.unitId + "__" + updated.kitId]);
-          page = Math.floor(updated.slot / 8);
+          page = Math.floor(updated.slot / cardsPerPage());
           render();
           showUnit(updated);
         } catch (error) { note(error.message); }
@@ -201,7 +212,7 @@ window.WarehouseUI = (() => {
   function showUnit(item) {
     item = currentItem(item);
     const modelId = item.unitId + "__" + item.kitId,
-      model = UnitModels[modelId];
+      model = UnitPlugins.apply(UnitModels[modelId],item.plugins);
     const body = openPanel(model.name),
       info = element("div", "warehouse-unit-details"),
       preview = element("div", "warehouse-detail-preview"),
@@ -338,18 +349,47 @@ window.WarehouseUI = (() => {
     loadout.append(label, formActions);
     stats.append(loadout, pilotRow, actions);
     info.append(stats);
-    const basic = UnitPreview.attributePages(model, "warehouse", pilot ? { model: item.unitId + "__" + item.kitId, pilot } : null, {
+    const basic = UnitPreview.attributePages(model, "warehouse", pilot ? { model: item.unitId + "__" + item.kitId, pilot, plugins:item.plugins } : null, {
       selectedPage: attributePage,
       onPageChange: id => { attributePage = id; },
     });
     const bottom = element("div", "warehouse-detail-bottom"), slots = element("section", "warehouse-part-slots");
-    slots.append(element("h3", "", "零件槽位"), element("div", "warehouse-slots-wip", "WIP"));
+    slots.append(element("h3", "", "零件槽位"));
+    const grid=element("div","warehouse-plugin-slots");
+    UnitPlugins.normalize(item.plugins,model).forEach((id,index)=>{
+      const button=element("button","warehouse-plugin-slot"),part=UnitPlugins.byId.get(id);
+      button.type="button";button.dataset.pluginSlot=index;button.disabled=busy;
+      if(part)button.append(pluginCard(part));
+      else button.append(element("span","plugin-slot-plus","+"));
+      button.onclick=()=>showPluginPicker(item,index);grid.append(button);
+    });
+    slots.append(grid);
     bottom.append(basic, slots);
     body.append(info, bottom);
     requestAnimationFrame(refreshPilotName);
   }
+  function pluginCard(part) {
+    return UnitPreview.pluginCard(part);
+  }
+  function showPluginPicker(item,slot) {
+    item=currentItem(item);
+    const body=openPanel("选择零件"),model=UnitModels[item.unitId+"__"+item.kitId],
+      list=element("div","warehouse-plugin-picker"),back=element("button","","取消"),slots=UnitPlugins.normalize(item.plugins,model);
+    panelReturn=()=>showUnit(currentItem(item));
+    function equip(id){
+      if(Net.started&&Net.snapshot?.phase!=="assembly")return;
+      try{if(Economy.setStoredPlugin(item.id,slot,id)){render();showUnit(currentItem(item));}}catch(error){note(error.message);}
+    }
+    if(slots[slot]){const remove=element("button","danger","卸下零件");remove.onclick=()=>equip(null);body.append(remove);}
+    for(const part of UnitPlugins.catalog){
+      const button=element("button","plugin-picker-choice");button.type="button";button.dataset.pluginId=part.id;
+      button.disabled=!UnitPlugins.allowed(part,model)||slots.some((id,index)=>index!==slot&&id===part.id);
+      button.append(pluginCard(part));button.onclick=()=>equip(part.id);list.append(button);
+    }
+    back.onclick=()=>showUnit(currentItem(item));body.append(list,back);dialog.scrollTop=0;
+  }
   function refreshPilotName() {
-    for (const name of dialog.querySelectorAll(".warehouse-pilot-name, .warehouse-kit-name")) {
+    for (const name of dialog.querySelectorAll(".warehouse-pilot-name, .warehouse-kit-name, .warehouse-relocate-text")) {
       const overflow = Math.max(0, name.firstElementChild.scrollWidth - name.clientWidth);
       name.classList.toggle("is-scrolling", overflow > 1);
       name.style.setProperty("--name-overflow", -overflow + "px");
@@ -359,9 +399,10 @@ window.WarehouseUI = (() => {
   function showRelocatePicker(item) {
     item = currentItem(item);
     const itemKind = Warehouse.category(UnitModels[item.unitId + "__" + item.kitId]),
-      body = openPanel("调动位置"), list = element("div", "warehouse-relocate-grid"), back = element("button", "", "取消"),
-      limit = Economy.storageUsage(itemKind).slots, pages = Math.ceil(limit / 8);
-    let targetPage = Math.floor(item.slot / 8);
+      body = openPanel("调动位置"), list = element("div", "warehouse-relocate-grid"),
+      limit = Economy.storageUsage(itemKind).slots, size = cardsPerPage(), pages = Math.ceil(limit / size);
+    panelReturn = () => showUnit(currentItem(item));
+    let targetPage = Math.floor(item.slot / size);
     const footer = element("div", "warehouse-relocate-pages"), previous = element("button", "", "上一页"),
       pageLabel = element("span"), next = element("button", "", "下一页");
     previous.id = "warehouseRelocatePrevious";
@@ -371,26 +412,49 @@ window.WarehouseUI = (() => {
     footer.append(previous, pageLabel, next);
     function draw() {
       list.replaceChildren();
-      const items = Economy.snapshot().storage[itemKind], start = targetPage * 8;
+      const items = Economy.snapshot().storage[itemKind], start = targetPage * size;
       previous.disabled = targetPage === 0;
       next.disabled = targetPage === pages - 1;
       pageLabel.textContent = (targetPage + 1) + " / " + pages + " " + I18n.text("页");
-      for (let slot = start; slot < Math.min(start + 8, limit); slot++) {
+      for (let slot = start; slot < Math.min(start + size, limit); slot++) {
         const target = items.find((entry) => entry.slot === slot), card = element("button", "warehouse-relocate-choice");
         card.type = "button";
         card.dataset.slot = slot;
         card.disabled = target?.id === item.id;
         if (target) {
-          const model = UnitModels[target.unitId + "__" + target.kitId], icon = element("img");
+          const model = UnitPlugins.apply(UnitModels[target.unitId + "__" + target.kitId], target.plugins), icon = element("img");
           icon.src = unitIcon(target.unitId + "__" + target.kitId);
           icon.alt = "";
-          card.append(icon, element("strong", "", (slot + 1) + ". " + model.name), element("small", "", model.kitName));
+          const scrollingText = (text, extra = "") => {
+            const label = element("span", "warehouse-relocate-text " + extra);
+            label.title = text;
+            label.append(element("span", "", text));
+            return label;
+          };
+          const tags = element("span", "warehouse-relocate-tags");
+          tags.append(element("span", "plugin-cost", model.cost + "C"));
+          for (const [key, label] of [["ground", "地面"], ["space", "宇宙"]]) {
+            const tag = element("span", "warehouse-environment", label);
+            tag.dataset.environment = key;
+            tag.classList.toggle("is-active", (model.adaptability?.[key] ?? 0) > 90);
+            tags.append(tag);
+          }
+          card.append(scrollingText((slot + 1) + ". " + model.name, "relocate-unit-name"), icon, tags, scrollingText(model.kitName, "relocate-kit-name"));
+          const pilot = assignedPilot(target), pilotRow = element("span", "warehouse-relocate-pilot"), portrait = element("img");
+          portrait.src = PilotSystem.portrait(pilot || { faction: model.faction });
+          portrait.alt = "";
+          const pilotName = pilot ? I18n.pilotName(pilot) : PilotSystem.defaultName(model);
+          pilotRow.title = pilotName;
+          const pilotInfo = element("span", "warehouse-relocate-pilot-info");
+          pilotInfo.append(scrollingText(pilotName), element("span", "plugin-cost", PilotSystem.cost(pilot) + "C"));
+          pilotRow.append(portrait, pilotInfo);
+          card.append(pilotRow);
         } else card.append(element("span", "bay-empty", "+"), element("strong", "", (slot + 1) + ". " + I18n.text("空格纳库")));
         card.onclick = () => {
           try {
             if (Economy.moveStoredUnit(item.id, slot, true)) {
               kind = itemKind;
-              page = Math.floor(slot / 8);
+              page = Math.floor(slot / cardsPerPage());
               render();
               showUnit(currentItem(item));
             }
@@ -398,11 +462,11 @@ window.WarehouseUI = (() => {
         };
         list.append(card);
       }
+      requestAnimationFrame(refreshPilotName);
     }
     previous.onclick = () => { targetPage--; draw(); };
     next.onclick = () => { targetPage++; draw(); };
-    back.onclick = () => showUnit(currentItem(item));
-    body.append(list, footer, back);
+    body.append(list, footer);
     draw();
   }
   function showEmptySlot(slot) {
@@ -425,15 +489,16 @@ window.WarehouseUI = (() => {
       back = element("button", "", "返回");
     selector.id = "warehouseMovePage";
     selector.setAttribute("aria-label", I18n.text("来源页"));
-    for (let i = 0; i < Math.ceil(Economy.storageUsage(kind).slots / 8); i++) {
-      const option = element("option", "", (i + 1) + " / " + Math.ceil(Economy.storageUsage(kind).slots / 8) + " " + I18n.text("页"));
+    const size = cardsPerPage();
+    for (let i = 0; i < Math.ceil(Economy.storageUsage(kind).slots / size); i++) {
+      const option = element("option", "", (i + 1) + " / " + Math.ceil(Economy.storageUsage(kind).slots / size) + " " + I18n.text("页"));
       option.value = i;
       selector.append(option);
     }
     selector.value = page;
     function draw() {
       list.replaceChildren();
-      for (const item of Economy.snapshot().storage[kind].filter((item) => Math.floor(item.slot / 8) === Number(selector.value)).sort((a, b) => a.slot - b.slot)) {
+      for (const item of Economy.snapshot().storage[kind].filter((item) => Math.floor(item.slot / size) === Number(selector.value)).sort((a, b) => a.slot - b.slot)) {
         const model = UnitModels[item.unitId + "__" + item.kitId], card = element("button", "warehouse-move-choice"), image = element("img"), text = element("span");
         card.type = "button";
         card.dataset.stockId = item.id;
@@ -477,7 +542,7 @@ window.WarehouseUI = (() => {
       return (!query || [model.name,model.code,item.unitId,model.kitName].join(" ").toLocaleLowerCase().includes(query)) &&
         (faction==="all" || [model.faction,...(model.availableFactions || []),...(model.tags || [])].includes(faction));
     }).sort((a,b)=>a.slot-b.slot);
-    const slots = 8, displayCount=filtering?matching.length:used.slots,
+    const slots = cardsPerPage(), displayCount=filtering?matching.length:used.slots,
       pageCount = Math.max(1,Math.ceil(displayCount / slots)),
       bays = byId("warehouseBays");
     bays.className = "warehouse-bays";
@@ -514,7 +579,7 @@ window.WarehouseUI = (() => {
       button.append(heading);
       if (item) {
         const modelId = item.unitId + "__" + item.kitId,
-          model = UnitModels[modelId],
+          model = UnitPlugins.apply(UnitModels[modelId],item.plugins),
           image = element("canvas", "warehouse-card-icon warehouse-sprite"),
           imageFrame = element("div", "warehouse-icon-frame"),
           footer = element("div", "warehouse-card-footer"),
@@ -571,6 +636,12 @@ window.WarehouseUI = (() => {
         button.append(frame, footer);
         button.onclick = () => showEmptySlot(slot);
       }
+      BasePageControls.dragSwap(item ? button.querySelector(".warehouse-card-icon") : null, button, {
+        group: "warehouse-" + kind, id: String(slot), canDrag: () => !Net.started,
+        onSwap: targetSlot => {
+          if (Economy.moveStoredUnit(item.id, Number(targetSlot), true)) render();
+        },
+      });
       bays.append(button);
     }
     byId("warehousePage").textContent = `${page + 1} / ${pageCount} ${I18n.text("页")}`;

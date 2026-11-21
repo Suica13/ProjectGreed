@@ -25,6 +25,7 @@ function buildDeveloper(root) {
   if (start < 0 || end < start || !preview.includes("formationDetailTitle"))
     throw Error("Missing shared catalog markup");
   const runtime =
+    "const UNIT_PLUGIN_DATA = " + read("shared/unit-plugins.json") + ";\n" +
     "const FACTION_DATA = " + read("shared/factions.json") + ";\n" +
     [
       "shared/asset-pool.js",
@@ -39,6 +40,7 @@ function buildDeveloper(root) {
       "client/renderer.js",
       "client/skill-controls.js",
       "client/unit-catalog.js",
+      "shared/unit-plugins.js",
       "shared/warehouse.js",
       "client/unit-preview.js",
       "client/catalog-preview.js",

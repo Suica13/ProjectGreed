@@ -12,6 +12,8 @@ window.MenuShell = (() => {
       production: "hangar",
       development: "catalog",
       encyclopedia: "catalog",
+      contactTasks: "contact",
+      contactMerchants: "contact",
     })[view];
   let navigating = false;
   function leaveEditor() {
@@ -35,6 +37,7 @@ window.MenuShell = (() => {
         else if (view === "production") byId("openProduction").click();
         else if (view === "development") byId("openDevelopment").click();
         else if (view === "encyclopedia") Encyclopedia.open();
+        else if (view === "contactTasks" || view === "contactMerchants") ContactUI.open(view);
         else {
           setPageView(view);
           if (view === "room" && Net.snapshot) RoomPanel.render(Net.snapshot);
@@ -101,6 +104,11 @@ window.MenuShell = (() => {
       tabs.at(-1).id = "shellPilots";
       tabs.push(tab("生产", () => go("production"), pageView === "production"));
       tabs.at(-1).id = "shellProduction";
+    } else if (section === "contact") {
+      tabs.push(tab("任务", () => go("contactTasks"), pageView === "contactTasks"));
+      tabs.at(-1).id = "shellContactTasks";
+      tabs.push(tab("商人", () => go("contactMerchants"), pageView === "contactMerchants"));
+      tabs.at(-1).id = "shellContactMerchants";
     } else if (section === "catalog") {
       tabs.push(tab("开发", () => go("development"), pageView === "development"));
       tabs.at(-1).id = "shellDevelopment";
@@ -151,6 +159,7 @@ window.MenuShell = (() => {
   byId("shellLobby").onclick = () => go(Net.active ? "room" : "menu");
   byId("shellHangar").onclick = () => go("warehouse");
   byId("shellCatalog").onclick = () => go("encyclopedia");
+  byId("shellMissions").onclick = () => go("contactTasks");
   byId("shellSettings").onclick = () => byId("openClientSettings").click();
   byId("shellRoomStatus").onclick = () => go("room");
   byId("shellLeaveRoom").onclick = requestMenu;

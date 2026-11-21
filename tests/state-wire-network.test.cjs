@@ -64,7 +64,9 @@ test("negotiated real WebSockets receive deltas, legacy peers receive full state
   const joined = await host.wait((m) => m.type === "joined");
   await host.wait((m) => m.type === "state");
   guest.send({ type: "hello", version, characterFaction: "PMC", mode: "join", room: "WIRETEST" });
-  await guest.wait((m) => m.type === "state");
+  const joinedState = await guest.wait((m) => m.type === "state");
+  // Both sockets must have observed the membership revision before submitting intents.
+  await host.wait((m) => m.type === "state" && m.revision >= joinedState.revision);
   for (let i = 0; i < 4; i++) {
     const from = host.messages.length,
       id = randomUUID(),

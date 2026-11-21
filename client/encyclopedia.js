@@ -45,7 +45,8 @@ const Encyclopedia = (() => {
       ["TITANS", "提坦斯"],
       ["NEO_ZEON", "新吉翁"],
     ]);
-    field("Faction").hidden = !!window.CATALOG_DEVELOPER_MODE;
+    field("Faction").hidden = tab === "plugins" || !!window.CATALOG_DEVELOPER_MODE;
+    field("Era").hidden = field("Type").hidden = tab === "plugins";
     options("Era", [["", "全部年代"], ...Rules.eras.map((v) => [v, v])]);
     options("Status", [
       ["", "全部"],
@@ -66,9 +67,10 @@ const Encyclopedia = (() => {
         .map((v) => [String(v), "Lv." + v]),
     ]);
     field("Level").hidden = tab !== "weapons";
-    field("Status").hidden = !!window.CATALOG_DEVELOPER_MODE;
+    field("Status").hidden = tab === "plugins" || !!window.CATALOG_DEVELOPER_MODE;
     byId("encyclopediaUnitsTab").setAttribute("aria-pressed", String(tab === "units"));
     byId("encyclopediaWeaponsTab").setAttribute("aria-pressed", String(tab === "weapons"));
+    byId("encyclopediaPluginsTab").setAttribute("aria-pressed", String(tab === "plugins"));
   }
   function stateMatches(prefab) {
     if (window.CATALOG_DEVELOPER_MODE) return true;
@@ -231,14 +233,16 @@ const Encyclopedia = (() => {
     };
     const allowed = (p) =>
       window.CATALOG_DEVELOPER_MODE || Development.allows(PlayerProfile.faction(), p.id);
-    const selected = UnitCatalog.select(
+    const selected = tab === "plugins" ? [] : UnitCatalog.select(
       tab === "units" ? query : "",
       filters,
       allowed,
       true,
     ).filter(stateMatches);
     let records;
-    if (tab === "units")
+    if (tab === "plugins") records = UnitPlugins.catalog.filter(part => !query ||
+      [part.id, part.name, part.description, I18n.text(part.name), I18n.text(part.description)].join(" ").toLocaleLowerCase().includes(query));
+    else if (tab === "units")
       records = selected.sort(
         window.CATALOG_DEVELOPER_MODE
           ? UnitCatalog.compareDevelopedCost("PMC", () => true)
@@ -283,8 +287,14 @@ const Encyclopedia = (() => {
         const record = records[cursor++];
         if (!record) break;
         if (tab === "units") fragment.append(unitCard(record));
+        else if (tab === "plugins") {
+          const card = element("article", "encyclopedia-plugin");
+          card.dataset.pluginId = record.id;
+          card.append(UnitPreview.pluginCard(record));
+          fragment.append(card);
+        }
         else {
-          const card = WeaponInfo.card(record.weapon);
+          const card = WeaponInfo.card(record.weapon, null, { users: true });
           if (record.weapon.category === "irradiation")
             card.append(
               element(
@@ -308,7 +318,6 @@ const Encyclopedia = (() => {
                 : "未接入";
             card.append(element("small", "weapon-index-status", label));
           }
-          card.append(usersButton(record.weapon));
           fragment.append(card);
         }
       } while (cursor < records.length && performance.now() - started < 6);
@@ -422,6 +431,7 @@ const Encyclopedia = (() => {
   for (const [id, value] of [
     ["encyclopediaUnitsTab", "units"],
     ["encyclopediaWeaponsTab", "weapons"],
+    ["encyclopediaPluginsTab", "plugins"],
   ])
     byId(id).onclick = () => {
       tab = value;

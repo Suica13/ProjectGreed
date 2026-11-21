@@ -9,6 +9,14 @@ const UnitPreview = (() => {
   const category = (model) =>
     typeof Warehouse !== "undefined" ? Warehouse.category(model) : model.ship ? "ships" : "units";
   const storageScale = (model) => category(model) === "ships" ? .25 : model.unitTags?.includes("MA") ? .5 : 1.15;
+  function pluginCard(part) {
+    const card=element("span","plugin-card"),image=element("img"),name=element("strong","",part.name),
+      info=element("span","plugin-card-info"),visual=element("span","plugin-card-visual"),cost=element("span","plugin-cost",part.costPercent?"COST +10%":"COST +"+part.cost);
+    image.src=ART.assets[ART.pluginIcons[part.id]];image.width=image.height=64;image.alt="";
+    visual.append(image,cost);
+    info.append(name,element("span","plugin-rarity","★".repeat(part.rarity)),element("span","plugin-effect",part.description));
+    card.append(visual,info);return card;
+  }
   function roleIcon(model) {
     const roles={general:["泛用","✂\uFE0E"],support:["支援","✋\uFE0E"],raid:["突击","✊\uFE0E"],normal:["一般","●"]},
       key=Object.hasOwn(roles,model.combatRole)?model.combatRole:"normal",[name,glyph]=roles[key],
@@ -41,6 +49,11 @@ const UnitPreview = (() => {
     return root;
   }
   function attributePages(model, prefix = "warehouse", unit = null, options = {}) {
+    const baseline = typeof UnitPlugins !== "undefined" ? UnitPlugins.baseOf(model) : model;
+    const changed = key => {
+      const read = source => key.split(".").reduce((value, name) => value?.[name], source);
+      return read(model) !== read(baseline);
+    };
     const number=value=>typeof formatNumber==="function"?formatNumber(value):String(value??0);
     const reference=prefix==="formation",block=element("section",(reference?"unit-detail-block":"warehouse-detail-basic")+" unit-attribute-block"),
       tabs=element("nav","warehouse-attribute-tabs"),pages=element("div","unit-attribute-pages"),
@@ -50,28 +63,28 @@ const UnitPreview = (() => {
       movements={ground:"地面移动",air:"空中移动",naval:"水上移动",amphibious:"两栖移动",hover:"气垫移动"};
     function group(title){const section=element("section");section.append(element("h4","",title));return section;}
     function metrics(id,rows){const list=element("dl","warehouse-detail-metrics unit-detail-metrics");list.id=id;
-      for(const [label,value] of rows)list.append(element("dt","",label),element("dd","",String(value??"—")));return list;}
+      for(const [label,value,key] of rows)list.append(element("dt","",label),element("dd",key&&changed(key)?"plugin-modified-value":"",String(value??"—")));return list;}
     const main=group("主要参数"),bonuses=group("伤害加成"),defense=group("防护与结构"),adaptation=group("适应性"),other=group("移动与生产");
     main.append(metrics(reference?"formationDetailStats":"warehouseMainStats",[
-      ["COST",model.cost],["HP",number(model.hp)],["EN",number(model.en)],
-      ["移动",model.move],
-      ["机动",model.speed??100],["反应系数",model.mobility],["命中系数",model.accuracy+"%"],
+      ["COST",model.cost],["HP",number(model.hp),"hp"],["EN",number(model.en),"en"],
+      ["移动",model.move,"move"],
+      ["机动",model.speed??100,"speed"],["反应系数",model.mobility,"mobility"],["命中系数",model.accuracy+"%","accuracy"],
       ["视野距离",formatDistance(model.sensors?.sight)],["侦察距离",formatDistance(model.sensors?.radar)],
       ...(model.ship?[["战舰占地",model.footprint.width+"×"+model.footprint.height],["炮塔模块",model.modules.length]]:[])
     ]));
-    bonuses.append(metrics(reference?"formationDetailBonuses":"warehouseAttackBonuses",Object.entries(model.attackBonuses||{}).map(([type,value])=>[names[type]||type.toUpperCase(),(value>=0?"+":"")+value+"%"])));
+    bonuses.append(metrics(reference?"formationDetailBonuses":"warehouseAttackBonuses",Object.entries(model.attackBonuses||{}).map(([type,value])=>[names[type]||type.toUpperCase(),(value>=0?"+":"")+value+"%","attackBonuses."+type])));
     const table=element("table","warehouse-detail-defense unit-defense-table"),heading=element("tr"),tableHost=element("div");
     tableHost.id=reference?"formationDetailDefense":"warehouseDefenses";
     for(const label of ["防护","抗性","固定减伤"])heading.append(element("th","",label));table.append(heading);
     for(const [type,value] of Object.entries(model.defenses||{})){const row=element("tr");row.append(element("td","",names[type]||type.toUpperCase()),element("td","",value.percent+"%"),element("td","",number(value.flat)));table.append(row);}
     tableHost.append(table);defense.append(tableHost,metrics(reference?"formationDetailShield":"warehouseSecondaryStats",[
-      ["零件强度",model.partStructuralStrength],["护盾耐久",number(model.shield.hp)],["格挡率",Math.round(model.shield.blockChance*100)+"%"],
+      ["零件强度",model.partStructuralStrength,"partStructuralStrength"],["护盾耐久",number(model.shield.hp),"shield.hp"],["格挡率",Math.round(model.shield.blockChance*100)+"%","shield.blockChance"],
       ...(reference?[["AP参考",model.actionPoints??5]]:[])
     ]));
     adaptation.append(metrics(reference?"formationDetailMovement":"warehouseAdaptability",[
       ["ground","地面"],["mountain","山地"],["space","宇宙"],["water","水中"],["atmosphere","大气层"],
       ["air","空中"],["forest","树林"],["snow","雪地"],["desert","沙漠"],["rubble","废墟"]
-    ].map(([key,label])=>[label,(model.adaptability?.[key]??0)+"%"])));
+    ].map(([key,label])=>[label,(model.adaptability?.[key]??0)+"%","adaptability."+key])));
     other.append(metrics(prefix+"SecondaryParameters",[
       ["移动方式",I18n.text(movements[model.movementType||"ground"]||model.movementType)],
       ...(!model.formOnly&&typeof Economy!=="undefined"&&typeof Economy.productionTiming==="function"?[["生产周期",Economy.productionTiming(model.prefabId,model.kitId).turns+"回合／台"]]:[])
@@ -570,5 +583,5 @@ const UnitPreview = (() => {
     }
     return tags;
   }
-  return { renderPreview, unitSummaryTags, unitTags, identityTags, zoom, fitModels, storageScale, roleIcon, attributePages };
+  return { renderPreview, unitSummaryTags, unitTags, identityTags, zoom, fitModels, storageScale, roleIcon, attributePages, pluginCard };
 })();

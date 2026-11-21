@@ -1,6 +1,27 @@
 /* Weapon inspection uses the same compiled attack steps and target modifiers as combat. */
 "use strict";
 const WeaponInfo = (() => {
+  function pluginBaseline(source, unit) {
+    if (typeof UnitPlugins === "undefined") return null;
+    let base = UnitPlugins.baseOf(source);
+    if (base === source && unit?.plugins?.some(Boolean) && typeof UnitModels !== "undefined") {
+      const model = UnitModels[unit.model];
+      if (model) {
+        const modified = UnitPlugins.apply(model, unit.plugins);
+        const weapon = [...modified.weapons, ...modified.skills].find(weapon => weapon.id === source.id);
+        if (weapon) base = UnitPlugins.baseOf(weapon);
+        if (!weapon || base === weapon) return null;
+      }
+    }
+    if (base === source) return null;
+    return unit ? Rules.weaponStats(base, unit) : base;
+  }
+  function damageSignature(weapon) {
+    return JSON.stringify((weapon.attack?.strikes || []).map(strike => {
+      const components = strike.damageComponents || weapon.damageComponents;
+      return Rules.roundDamage((components ? Object.values(components).reduce((sum, value) => sum + value, 0) : weapon.damagePerShot || 0) * (strike.damageMultiplier ?? 1));
+    }));
+  }
   const environmentLabels = {
     ground: "对地",
     air: "对空",
@@ -139,6 +160,7 @@ const WeaponInfo = (() => {
   function summary(source, options = {}) {
     const { unit, target, response = "counter", isCounter = false } = options;
     const weapon = unit ? Rules.weaponStats(source, unit) : source;
+    const baseline = pluginBaseline(source, unit);
     const strikes = unit
       ? Rules.availableStrikes(unit, weapon, target)
       : weapon.attack?.strikes || [];
@@ -169,6 +191,7 @@ const WeaponInfo = (() => {
     heading.append(tags);
     const visual = node("div", "weapon-visual-row"), energy = node("div", "weapon-energy");
     energy.append(node("span", "weapon-stat-label", "EN"), node("strong", "weapon-en-cost", number(weapon.en || 0)));
+    energy.append(node("span", "weapon-stat-label weapon-range-label", "射程"), node("strong", "weapon-range", weapon.min + "–" + weapon.max));
     const identity = node("div", "weapon-identity");
     identity.append(heading, energy);
     visual.append(icon(weapon), identity);
@@ -195,7 +218,7 @@ const WeaponInfo = (() => {
     const accuracy = node("div", "weapon-accuracy");
     accuracy.append(
       node("span", "weapon-stat-label", "命中率"),
-      node("strong", "", number(forecast?.hit ?? weapon.hit) + "%"),
+      node("strong", "weapon-hit-rate", number(forecast?.hit ?? weapon.hit) + "%"),
     );
     accuracy.append(
       node("span", "weapon-stat-label", "攻击轮数"),
@@ -209,6 +232,14 @@ const WeaponInfo = (() => {
     const statistics = node("div", "weapon-statistics-row");
     statistics.append(damageLine, accuracy);
     root.append(visual, statistics);
+    if (baseline) {
+      const mark = selector => root.querySelectorAll(selector).forEach(value => value.classList.add("plugin-modified-value"));
+      if (weapon.min !== baseline.min || weapon.max !== baseline.max) mark(".weapon-range");
+      if (weapon.en !== baseline.en) mark(".weapon-en-cost");
+      if (weapon.hit !== baseline.hit) mark(".weapon-hit-rate");
+      if (roundsFor(weapon, unit) !== roundsFor(baseline, unit)) mark(".weapon-rounds");
+      if (damageSignature(weapon) !== damageSignature(baseline)) mark(".weapon-damage-term b, .weapon-total-damage");
+    }
     if (options.compact) {
       root.classList.add("weapon-summary-compact");
     }
@@ -280,6 +311,7 @@ const WeaponInfo = (() => {
   function inspector(source, options = {}) {
     const { unit, target, response = "counter", isCounter = false } = options;
     const weapon = unit ? Rules.weaponStats(source, unit) : source;
+    const baseline = pluginBaseline(source, unit);
     const details = node("details", "weapon-inspector");
     details.append(node("summary", "", "详细"));
     const body = node("div", "weapon-inspector-body");
@@ -316,8 +348,11 @@ const WeaponInfo = (() => {
     if ([weapon, ...(weapon.attack.steps || [])].some(payload => Object.entries(payload.damageComponents || {}).some(([key,value])=>key.endsWith("AP") && value>0)))
       rows.push(["穿甲无视抗性", Math.round((weapon.armorPiercingIgnore ?? Rules.catalog.conversionRules.weapons.armorPiercingIgnore) * 100) + "%"]);
     if (weapon.nativePayload?.DpDamage) rows.push(["DP", amount(weapon.nativePayload.DpDamage)]);
-    for (const [label, value] of rows)
-      stats.append(node("dt", "", label), node("dd", "", String(value)));
+    for (const [label, value] of rows) {
+      const modified = baseline && (label === "射程" ? weapon.min !== baseline.min || weapon.max !== baseline.max :
+        label === "EN" ? weapon.en !== baseline.en : label === "攻击轮数" ? roundsFor(weapon, unit) !== roundsFor(baseline, unit) : false);
+      stats.append(node("dt", "", label), node("dd", modified ? "plugin-modified-value" : "", String(value)));
+    }
     body.append(stats);
     if (unit && target)
       body.append(
@@ -424,12 +459,16 @@ const WeaponInfo = (() => {
       );
       content.append(rounds);
     }
-    wrapper.append(content || summary(weapon, options), inspector(weapon, options));
-    if (options.encyclopediaLink) {
+    wrapper.append(content || summary(weapon, options));
+    const details = inspector(weapon, options);
+    if (options.encyclopediaLink || options.users) {
+      const footer = node("div", "weapon-card-footer");
       const references = node("div", "weapon-reference-actions");
-      references.append(encyclopediaLink(weapon), Encyclopedia.usersButton(weapon));
-      wrapper.append(references);
-    }
+      if (options.encyclopediaLink) references.append(encyclopediaLink(weapon));
+      references.append(Encyclopedia.usersButton(weapon));
+      footer.append(details, references);
+      wrapper.append(footer);
+    } else wrapper.append(details);
     if (window.CatalogDeveloper)
       window.CatalogDeveloper.decorateWeapon(wrapper, weapon, !!options.encyclopediaLink);
     return wrapper;

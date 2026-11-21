@@ -11,6 +11,10 @@ for(const width of [1440,390])test('owned-unit weapon tab scrolls the current lo
   const height=await block.evaluate(node=>node.getBoundingClientRect().height);await expect(weapons).toBeHidden();
   await block.getByRole('button',{name:'武装列表',exact:true}).click();
   await expect(weapons).toBeVisible();await expect(weapons.locator('.weapon-card')).toHaveCount(fixture.weapons.length);
+  expect(await weapons.locator('.weapon-range').allTextContents()).toEqual(await page.evaluate(()=>{
+    const item=Economy.snapshot().storage.units.find(item=>item.unitId==='RGM_79');return UnitModels[item.unitId+'__'+item.kitId].weapons.map(weapon=>weapon.min+'–'+weapon.max);
+  }));
+  expect(await weapons.locator('.weapon-energy').first().evaluate(row=>row.querySelector('.weapon-range').getBoundingClientRect().x>row.querySelector('.weapon-en-cost').getBoundingClientRect().x)).toBe(true);
   expect(await weapons.locator('.weapon-card').evaluateAll(cards=>cards.map(card=>card.dataset.weaponId))).toEqual(fixture.weapons);
   const layout=await weapons.evaluate(node=>({scroll:node.scrollHeight>node.clientHeight,overflow:node.scrollWidth>node.clientWidth+1,mode:getComputedStyle(node).overflowY}));
   expect(layout).toEqual({scroll:true,overflow:false,mode:'auto'});expect(await block.evaluate(node=>node.getBoundingClientRect().height)).toBe(height);

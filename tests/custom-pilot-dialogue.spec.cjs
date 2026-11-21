@@ -14,10 +14,10 @@ for(const width of [1440,390]) test(`PMC dialogue editing, cancellation and JSON
     await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
     await page.waitForFunction(()=>assetsReady);
     await page.locator("#shellHangar").click();
-    await page.locator("#shellSubnav").getByRole("button",{name:"驾驶员",exact:true}).click();
-    await page.getByRole("button",{name:"管理驾驶员 Dialogue UI",exact:true}).click();
+    await page.locator("#shellPilots").click();
+    await page.locator('.dorm-card[data-pilot-id="custom-dialogue-ui"]').click();
     if(await page.locator("#customPilotPersonality").inputValue() !== "custom") {
-      await expect(page.locator("#editPilotDialogue")).toBeVisible();
+      await expect(page.locator("#editPilotDialogue")).toBeHidden();
       await page.locator("#customPilotPersonality").selectOption("custom");
     }
     await page.locator("#editPilotDialogue").click();
@@ -59,6 +59,8 @@ for(const width of [1440,390]) test(`PMC dialogue editing, cancellation and JSON
   expect(await page.evaluate(()=>Formation.exportPilotStores().PMC.pilots[0].stats)).toEqual(pilot.stats);
   await page.locator("#cancelPilotDialogue").click();
   await page.locator("#customPilotPersonality").selectOption("calm");
+  await expect(page.locator("#editPilotDialogue")).toBeHidden();
+  await page.locator("#customPilotPersonality").selectOption("custom");
   await expect(page.locator("#editPilotDialogue")).toBeVisible();
   await page.locator("#editPilotDialogue").click();
   await page.locator("#pilotDialogueEvent").selectOption("passengerLaunch");

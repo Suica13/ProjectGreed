@@ -96,7 +96,7 @@ const Formation = (() => {
       if (index < 0 && !entry.stockId) index = items.findIndex((item) => item.unitId === entry.unitId);
       if (index < 0) return entry;
       const item = items.splice(index, 1)[0];
-      const copy = { ...entry, stockId: item.id, unitId: item.unitId, kitId: item.kitId }, pilot = storedPilot(item);
+      const copy = { ...entry, stockId: item.id, unitId: item.unitId, kitId: item.kitId, plugins:item.plugins }, pilot = storedPilot(item);
       if (!Object.hasOwn(item, "pilotId")) {
         if (!copy.customPilot || copy.customPilot.hired || copy.customPilot.pmcGeneral) copy.customPilot = pilot;
         return copy;
@@ -306,7 +306,8 @@ const Formation = (() => {
     const id = byId("formationPrefab").value,
       prefab = Rules.catalog.prefabs.find((p) => p.id === id);
     const kit = prefab && (pickerKits.get(id) || Economy.defaultKit(id) || prefab.weaponKits[0].id);
-    const unit = kit && UnitModels[id + "__" + kit];
+    const stored = [...Economy.snapshot().storage.units,...Economy.snapshot().storage.ships].find(item=>item.id===selectedStoredId);
+    const unit = kit && UnitPlugins.apply(UnitModels[id + "__" + kit],stored?.plugins);
     const count = element(
       "span",
       "",
@@ -1775,12 +1776,13 @@ const Formation = (() => {
     if (!prefab || !pickerCompatible(prefab)) return;
     const stored = [...Economy.snapshot().storage.units, ...Economy.snapshot().storage.ships].find((item) => item.id === selectedStoredId && !item.destroyed);
     if (!stored || stored.unitId !== prefab.id || draft.some((entry) => entry.stockId === stored.id)) return note("出战库存不足");
-    if (!canAddUnit(prefab)) return note("单位禁用，或与当前阵营不匹配。");
+    if (!canAddUnit(UnitPlugins.apply(UnitModels[stored.unitId+"__"+stored.kitId],stored.plugins))) return note("单位禁用，或与当前阵营不匹配。");
     if (points(draft) + pickerWeight() > unitLimit()) return note("已达到编组单位点数上限。");
     const entry = {
       unitId: prefab.id,
       kitId: stored.kitId,
       stockId: stored.id,
+      plugins: stored.plugins,
       ...(storedPilot(stored) ? { customPilot: storedPilot(stored) } : {}),
       ...(pickerContext ? { preload: { ...pickerContext } } : {}),
     };
@@ -1814,8 +1816,9 @@ const Formation = (() => {
     const previous = byId("formationCatalog").querySelector('[aria-selected="true"]');
     if (previous !== card) previous?.setAttribute("aria-selected", "false");
     card.setAttribute("aria-selected", "true");
+    const stored = [...Economy.snapshot().storage.units,...Economy.snapshot().storage.ships].find(item=>item.id===selectedStoredId);
     byId("addFormationUnit").disabled =
-      points(draft) + pickerWeight() > unitLimit() || !canAddUnit(prefab);
+      points(draft) + pickerWeight() > unitLimit() || !canAddUnit(stored?UnitPlugins.apply(UnitModels[stored.unitId+"__"+stored.kitId],stored.plugins):prefab);
     renderPickerCost();
   }
   function renderCatalog() {
@@ -1828,18 +1831,18 @@ const Formation = (() => {
       order = new Map(stored.map((item,index)=>[item.id,index])), sort = byId("formationSort").value,
       items = stored.filter((item) => allowed.has(item.unitId) && pickerCompatible(prefabs.get(item.unitId)));
     if (sort !== "storage") items.sort((a,b)=>{
-      const left=UnitModels[a.unitId+"__"+a.kitId],right=UnitModels[b.unitId+"__"+b.kitId];
+      const left=UnitPlugins.apply(UnitModels[a.unitId+"__"+a.kitId],a.plugins),right=UnitPlugins.apply(UnitModels[b.unitId+"__"+b.kitId],b.plugins);
       return (sort === "cost" ? left.cost-right.cost : left.name.localeCompare(right.name,"zh")) || order.get(a.id)-order.get(b.id);
     });
     byId("formationStock").closest("label").hidden = true;
-    const usable = (item) => !item.destroyed && !used.has(item.id) && canAddUnit(UnitModels[item.unitId + "__" + item.kitId]);
+    const usable = (item) => !item.destroyed && !used.has(item.id) && canAddUnit(UnitPlugins.apply(UnitModels[item.unitId + "__" + item.kitId],item.plugins));
     if (!items.some((item) => item.id === selectedStoredId && usable(item))) selectedStoredId = items.find(usable)?.id || null;
     const chosen = items.find((item) => item.id === selectedStoredId);
     byId("formationPrefab").value = chosen?.unitId || "";
     if (chosen) pickerKits.set(chosen.unitId, chosen.kitId);
     const rows = document.createDocumentFragment();
     for (const item of items) {
-      const model = UnitModels[item.unitId + "__" + item.kitId], card = element("div", "catalog-unit"),
+      const model = UnitPlugins.apply(UnitModels[item.unitId + "__" + item.kitId],item.plugins), card = element("div", "catalog-unit"),
         image = element("img"), info = element("span", "catalog-unit-info"), portrait = element("button", "catalog-unit-portrait"),
         row = element("div", "catalog-unit-row");
       portrait.type = "button";
@@ -2521,7 +2524,7 @@ const Formation = (() => {
         (dormKind === "ace" ? p.ace : !p.ace) && (p.name + " " + I18n.pilotName(p)).toLocaleLowerCase().includes(search) &&
         PilotSystem.matchesFilter(p, byId("pilotRosterFilter").value),
     );
-    const pageSize=window.matchMedia("(max-width:720px)").matches?6:8;
+    const pageSize=window.matchMedia("(max-width:720px)").matches?4:10;
     list.dataset.pageSize=String(pageSize);
     const capacity=dormKind==="ace"?Economy.acePilotLimit():Economy.customPilotLimit(),categoryCount=pilotStore.pilots.filter(p=>!!p.ace===(dormKind==="ace")).length,
       displayCount=search || byId("pilotRosterFilter").value!=="all"?matching.length:Math.max(capacity,categoryCount),
@@ -2552,8 +2555,14 @@ const Formation = (() => {
       const portrait = element("div", "warehouse-icon-frame dorm-card-portrait"),
         img = element("img", "formation-icon"),
         tags = element("span", "unit-tags dorm-card-tags"),
-        state = element("span", "dorm-card-state" + (p.needsRecruitment ? " needs-return" : ""),
+        state = element(p.needsRecruitment ? "button" : "span", "dorm-card-state" + (p.needsRecruitment ? " needs-return" : ""),
           p.needsRecruitment ? "待回归" : "待机中");
+      if (p.needsRecruitment) {
+        state.type = "button";
+        state.disabled = Net.started || revivalPending;
+        state.title = I18n.text("复归") + " · " + I18n.text("物资") + " " + formatNumber(PilotSystem.revivalPrice(p).supplies);
+        state.onclick = event => { event.stopPropagation(); revivePilots([p.id]); };
+      }
       img.src = PilotSystem.portrait(p);
       img.alt = "";
       if (p.ace) {
@@ -2566,13 +2575,13 @@ const Formation = (() => {
         faction.dataset.faction = "PMC";
         tags.append(faction);
       }
-      portrait.append(img, tags, state);
+      portrait.append(img, tags);
 
       const progress = element("div", "dorm-card-progress"),
         experience = element("div", "dorm-card-experience"),
         badges = element("div", "dorm-card-badges");
       experience.append(element("strong", "", `Lv.${p.level}`),
-        element("span", "", pilotExperienceText(p)));
+        element("span", "dorm-card-exp-value", pilotExperienceText(p)), state);
       experience.title = `Lv.${p.level} · ${pilotExperienceText(p)}`;
       if (p.reincarnations) badges.append(element("span", "pilot-training-points pilot-reincarnation-tag",
         I18n.text(["", "一转", "二转", "三转", "四转"][p.reincarnations])));
@@ -2585,6 +2594,7 @@ const Formation = (() => {
       skills.classList.add("dorm-card-skills");
       const skillBadges = [...skills.querySelectorAll(".pilot-list-skill")];
       if (skillBadges.length > 2) {
+        skills.classList.add("has-more");
         const more = element("span", "dorm-skill-more", "…");
         more.title = skillBadges.slice(2).map(badge => badge.textContent).join("、");
         more.setAttribute("aria-label", "更多技能：" + more.title);
@@ -2592,8 +2602,21 @@ const Formation = (() => {
         skills.append(more);
       }
       card.append(heading, portrait, progress, skills);
+      BasePageControls.dragSwap(img, card, {
+        group: "dorm-" + dormKind, id: p.id, canDrag: () => !Net.started,
+        onSwap: targetId => {
+          const first = pilotStore.pilots.findIndex(pilot => pilot.id === p.id), second = pilotStore.pilots.findIndex(pilot => pilot.id === targetId);
+          if (first < 0 || second < 0 || !!pilotStore.pilots[first].ace !== !!pilotStore.pilots[second].ace) return;
+          const previous = pilotStore.pilots;
+          pilotStore.pilots = previous.slice();
+          [pilotStore.pilots[first], pilotStore.pilots[second]] = [previous[second], previous[first]];
+          if (!savePilots()) { pilotStore.pilots = previous; return; }
+          renderPilotRoster();
+        },
+      });
       card.onclick = () => editPilot(p);
       card.onkeydown = (event) => {
+        if (event.target !== card) return;
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
           editPilot(p);
@@ -2678,6 +2701,7 @@ const Formation = (() => {
     return clean;
   }
   function editPilot(p = null) {
+    clearTimeout(pilotNameTimer);
     if(!p && pilotStore.pilots.filter(p=>!p.ace).length>=Economy.customPilotLimit())return note("PMC驾驶员人数已达到士官学院上限");
     pilotFocus = document.activeElement;
     pilotIsNew = !p;
@@ -2701,11 +2725,10 @@ const Formation = (() => {
     byId("customPilotOriginFaction").value = pilotEdit.originFaction || pilotEdit.faction || "PMC";
     byId("customPilotPersonality").disabled = !!pilotEdit.ace;
     byId("customPilotOriginFaction").disabled = !!pilotEdit.ace;
-    byId("customPilotName").disabled = true;
-    byId("renameCustomPilot").textContent = "修改名称";
-    byId("renameCustomPilot").hidden = !!pilotEdit.ace;
-    byId("editPilotDialogue").hidden = !!pilotEdit.ace;
+    byId("customPilotName").disabled = !!pilotEdit.ace;
+    byId("editPilotDialogue").hidden = !!pilotEdit.ace || pilotEdit.personality !== "custom";
     byId("changeCustomPilotPortrait").disabled = !!pilotEdit.ace;
+    byId("changeCustomPilotPortrait").hidden = !!pilotEdit.ace;
     byId("customPilotPortraitPicker").hidden = true;
     byId("createPilotConfirm").hidden = !pilotIsNew;
     renderPilotStats();
@@ -2715,7 +2738,7 @@ const Formation = (() => {
   }
   function savePilotIdentity(fields) {
     Object.assign(pilotEdit, fields);
-    byId("editPilotDialogue").hidden = !!pilotEdit.ace;
+    byId("editPilotDialogue").hidden = !!pilotEdit.ace || pilotEdit.personality !== "custom";
     byId("customPilotPersonality").value = pilotEdit.personality || "";
     const original = { ...JSON.parse(pilotOriginal), ...fields };
     // Identity edits never commit pending training points.
@@ -3040,6 +3063,7 @@ const Formation = (() => {
   };
   function finishPilotEditor() {
     if (!pilotEdit) return;
+    savePilotName(true);
     PilotDialogueEditor.close();
     pilotEdit = null;
     pilotEditor.hidden = true;
@@ -3048,27 +3072,32 @@ const Formation = (() => {
     renderPilotRoster();
     pilotFocus?.focus();
   }
-  byId("renameCustomPilot").onclick = () => {
+  let pilotNameTimer;
+  function savePilotName(report = false) {
+    clearTimeout(pilotNameTimer);
     if (!pilotEdit || pilotEdit.ace) return;
-    const input = byId("customPilotName"),
-      button = byId("renameCustomPilot");
-    if (input.disabled) {
-      input.disabled = false;
-      button.textContent = "保存名称";
-      input.focus();
-      input.select();
-      return;
-    }
+    const input = byId("customPilotName");
+    if (input.value === pilotEdit.name) return;
     try {
       const clean = PilotSystem.custom({ ...pilotEdit, name: input.value });
       savePilotIdentity({ name: clean.name });
-      input.value = clean.name;
-      input.disabled = true;
-      button.textContent = "修改名称";
+      if (report) input.value = clean.name;
     } catch (error) {
-      note(error.message);
+      if (report) { input.value = pilotEdit.name; note(error.message); }
     }
+  }
+  const pilotNameInput = byId("customPilotName");
+  const schedulePilotName = event => {
+    clearTimeout(pilotNameTimer);
+    if (event.isComposing || !pilotEdit) return;
+    const id = pilotEdit.id;
+    pilotNameTimer = setTimeout(() => { if (pilotEdit?.id === id) savePilotName(); }, 350);
   };
+  pilotNameInput.oninput = schedulePilotName;
+  pilotNameInput.addEventListener("compositionstart", () => clearTimeout(pilotNameTimer));
+  pilotNameInput.addEventListener("compositionend", schedulePilotName);
+  pilotNameInput.onchange = () => savePilotName(true);
+  pilotNameInput.onkeydown = event => { if (event.key === "Enter" && !event.isComposing) { event.preventDefault(); savePilotName(true); } };
   byId("confirmPilotTraining").onclick = () => {
     if (!pilotEdit) return;
     if (!pilotIsNew) commitPilot(pilotEdit);
@@ -3080,7 +3109,7 @@ const Formation = (() => {
     renderPilotStats();
   };
   byId("editPilotDialogue").onclick = () => {
-    if (!pilotEdit || pilotEdit.ace) return;
+    if (!pilotEdit || pilotEdit.ace || pilotEdit.personality !== "custom") return;
     const pilotId = pilotEdit.id;
     PilotDialogueEditor.open(pilotEdit, (dialogue) => {
       if (!pilotEdit || pilotEdit.id !== pilotId) throw Error("驾驶员已变更，请重新打开编辑面板");
@@ -3114,7 +3143,11 @@ const Formation = (() => {
       note(Economy.errorMessage(error));
     }
   };
-  byId("changeCustomPilotPortrait").onclick = openPortraitPicker;
+  const changePortraitButton = element("button", "", "修改头像");
+  changePortraitButton.id = "changeCustomPilotPortrait";
+  changePortraitButton.type = "button";
+  byId("editPilotDialogue").after(changePortraitButton);
+  changePortraitButton.onclick = openPortraitPicker;
   byId("closePilotPortraitPicker").onclick = closePortraitPicker;
   byId("formationUnitsTab").onclick = () => showFormationTab("units");
   byId("formationPilotsTab").onclick = () => showFormationTab("pilots");
@@ -3126,7 +3159,7 @@ const Formation = (() => {
   const customPilotSkills = element("div");
   customPilotSkills.id = "customPilotSkills";
   byId("pilotDetailSkills").querySelector("h3").after(customPilotSkills, learnPilotSkillButton);
-  byId("pilotDetailPreview").append(byId("changeCustomPilotPortrait"));
+  byId("pilotDetailPreview").append(byId("customPilotAvatar"));
   const pilotSkillPicker = element("dialog", "pilot-attribute-help pilot-skill-picker");
   pilotSkillPicker.id = "pilotSkillPicker";
   pilotSkillPicker.setAttribute("aria-labelledby", "pilotSkillPickerTitle");

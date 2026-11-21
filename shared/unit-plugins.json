@@ -1,0 +1,20 @@
+[
+  {"id":"frame","name":"强化骨架","rarity":1,"cost":25,"description":"耐久值+5%，零件强度+20%","effects":{"hpPercent":0.05,"partPercent":0.2}},
+  {"id":"antenna","name":"指挥官天线","rarity":1,"cost":25,"description":"指挥范围+2","effects":{"commandRange":2}},
+  {"id":"v_data","name":"V计划数据","rarity":2,"cost":50,"description":"反应系数+10","effects":{"reaction":10}},
+  {"id":"shield","name":"强化盾牌","rarity":1,"cost":25,"msOnly":true,"description":"盾牌耐久+25%，格挡率+20个百分点（最高75%）","effects":{"shieldPercent":0.25,"blockChance":0.2}},
+  {"id":"tem_ray","name":"提姆雷回路","rarity":3,"cost":75,"description":"机动系数+10，反应系数+10，命中系数+10，耐久值-15%","effects":{"speed":10,"reaction":10,"accuracy":10,"hpPercent":-0.15}},
+  {"id":"panoramic","name":"全周天驾驶舱","rarity":2,"cost":50,"description":"反应系数+10，命中系数+10%","effects":{"reaction":10,"accuracyPercent":0.1}},
+  {"id":"chobham","name":"乔巴姆装甲","rarity":2,"cost":50,"description":"耐久值+16000，爆炸反应装甲（最终实弹伤害-25%），机动系数-10，反应系数-10","effects":{"hp":16000,"reactiveArmor":1,"speed":-10,"reaction":-10}},
+  {"id":"generator","name":"外置发电机","rarity":2,"cost":50,"description":"EN上限+25%","effects":{"enPercent":0.25}},
+  {"id":"water","name":"水中适应性改造","rarity":1,"costPercent":0.1,"msOnly":true,"description":"水中适应性+100（最高100%）","effects":{"water":100}},
+  {"id":"ground","name":"陆地适应性改造","rarity":1,"costPercent":0.1,"msOnly":true,"description":"地面适应性+100（最高100%）","effects":{"ground":100}},
+  {"id":"space","name":"宇宙适应型改造","rarity":1,"costPercent":0.1,"msOnly":true,"description":"宇宙适应性+100（最高100%）","effects":{"space":100}},
+  {"id":"long_beam","name":"加长型光束收束装置","rarity":1,"cost":25,"description":"光束武器最大射程+1","effects":{"beamRange":1}},
+  {"id":"short_beam","name":"缩短型光束收束装置","rarity":1,"cost":25,"description":"光束武器命中率+20个百分点，最大射程-1","effects":{"beamHit":20,"beamRange":-1}},
+  {"id":"hover","name":"气垫悬浮装置","rarity":2,"cost":50,"msOnly":true,"description":"地面移动距离+2，机动系数+25，宇宙适应性-100，反应系数-10","effects":{"groundMove":2,"speed":25,"space":-100,"reaction":-10}},
+  {"id":"ambac","name":"增设AMBAC喷口","rarity":1,"cost":50,"description":"全地形适应性+25（最高100%）","effects":{"adaptability":25}},
+  {"id":"armor","name":"强化装甲","rarity":2,"cost":25,"description":"耐久值+10%","effects":{"hpPercent":0.1}},
+  {"id":"magnetic","name":"磁性图层","rarity":1,"cost":25,"description":"反应系数+10","effects":{"reaction":10}},
+  {"id":"limiter","name":"限制解除器","rarity":1,"cost":25,"description":"机动系数+15，移动距离+1","effects":{"speed":15,"move":1}}
+]

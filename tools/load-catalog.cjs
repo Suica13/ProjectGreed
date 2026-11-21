@@ -113,6 +113,13 @@ function loadCatalog({
     sounds: {},
     models: {},
   };
+  result.pluginIcons = {};
+  for (const part of require("../shared/unit-plugins.json")) {
+    const source = file(root, "ui/unit-plugins/" + part.id + ".svg"), key = "unit-plugin:" + part.id;
+    if (!fs.existsSync(source)) throw Error("Missing plugin icon: " + part.id);
+    result.pluginIcons[part.id] = key;
+    if (embedAssets) result.assets[key] = "data:image/svg+xml;base64," + fs.readFileSync(source).toString("base64");
+  }
   const weaponIcons = read(file(root, "ui/weapon-icons.json"));
   result.weaponIcons = {};
   const weaponIconFiles = { ...weaponIcons.classes, ...weaponIcons.variants };
@@ -1297,6 +1304,7 @@ function loadCatalog({
         kitName: kit.name,
         prefabId: prefab.id,
         kitId: kit.id,
+        chassisCost: prefab.stats.cost,
         cost: prefab.stats.cost + kit.cost,
         weapons,
         skills: prefab.skills || [],

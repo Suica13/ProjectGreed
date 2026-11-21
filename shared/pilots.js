@@ -586,6 +586,7 @@ const PilotSystem = (() => {
     return changed;
   }
   const portrait = (value) =>
+    (value?.pmcGeneral ? portraitsById.get("Pilot_EFSF_0079_Ground_1")?.icon : null) ||
     aceProfile(value)?.icon ||
     value?.uploadedPortrait ||
     portraitsById.get(value?.portraitId)?.icon ||
@@ -679,10 +680,9 @@ const PilotSystem = (() => {
         typeof commander !== "boolean") throw Error("一般PMC驾驶员无效");
     const model = { faction: "PMC", unitTags: commander ? ["CmdUnit"] : [] };
     const pilot = roll(null, hash(id), 0, 0, model);
-    const portraits = catalog.portraits;
     return { ...pilot, name: commander ? "一般PMC指挥官" : "一般PMC驾驶员", id,
       pmcGeneral: true, custom: false, faction: "PMC", commander,
-      level: 0, portraitId: portraits[hash(id + ":portrait") % portraits.length].id };
+      level: 0, portraitId: "Pilot_EFSF_0079_Ground_1" };
   }
   function validate(id, model) {
     if (id === undefined || id === null || id === "") return null;

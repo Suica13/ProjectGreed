@@ -3121,7 +3121,7 @@
               <label>年代<select id="productionEra"></select></label>
               <label>类型／环境<select id="productionType"></select></label>
             </div>
-            <input id="productionSearch" type="search" placeholder="搜索单位" aria-label="搜索单位" />
+            <input id="productionSearch" type="search" placeholder="搜索" aria-label="搜索单位" />
             <div id="productionList" class="production-list" role="listbox" aria-label="单位部署许可"></div>
           </div>
           <aside class="production-details">
@@ -3209,7 +3209,7 @@
           <button id="openFormationShare" type="button">分享编组</button>
         </div>
         <div id="formationPilotToolbar" class="formation-toolbar base-page-toolbar" hidden>
-          <label for="pilotRosterSearch"><span>搜索驾驶员</span><input id="pilotRosterSearch" type="search" placeholder="按名称搜索驾驶员" /></label>
+          <label for="pilotRosterSearch"><span>搜索</span><input id="pilotRosterSearch" type="search" placeholder="搜索" /></label>
           <label for="pilotRosterFilter"><span>驾驶员筛选</span><select id="pilotRosterFilter" aria-label="驾驶员筛选"></select></label>
           <div id="pilotRosterSortControl"></div>
         </div>
@@ -3374,8 +3374,8 @@
           <header class="formation-pilot-heading"><div class="pilot-detail-title"><h2 id="customPilotTitle">驾驶员管理</h2><span id="pilotDetailCost" class="unit-summary-tag cost"></span></div><button id="finishCustomPilot" type="button">关闭</button></header>
           <div class="pilot-detail-summary"><div class="pilot-detail-preview" id="pilotDetailPreview"></div><div class="pilot-detail-status" id="pilotDetailStatus">
           <div class="pilot-identity-row">
-            <button id="changeCustomPilotPortrait" type="button" aria-label="切换驾驶员头像"><img id="customPilotAvatar" alt="驾驶员头像" /></button>
-            <div class="pilot-name-controls"><label>驾驶员名称 <input id="customPilotName" maxlength="24" disabled /></label><button id="renameCustomPilot" type="button">修改名称</button></div>
+            <img id="customPilotAvatar" alt="驾驶员头像" />
+            <div class="pilot-name-controls"><label>驾驶员名称 <input id="customPilotName" maxlength="24" /></label></div>
           </div>
           <div id="customPilotPortraitPicker" hidden>
             <header class="formation-pilot-heading"><h3>选择头像</h3><button id="closePilotPortraitPicker" type="button">返回</button></header>
@@ -5261,7 +5261,7 @@
         <nav class="shell-primary" aria-label="主分页">
           <button id="shellLobby" type="button" data-shell-section="lobby" aria-pressed="true"><span>大厅</span><small data-i18n-ignore>LOBBY</small></button>
           <button id="shellHangar" type="button" data-shell-section="hangar" aria-pressed="false"><span>基地</span><small data-i18n-ignore>BASE</small></button>
-          <button id="shellMissions" type="button" data-shell-section="missions" aria-pressed="false" disabled><span>任务</span><small data-i18n-ignore>MISSIONS</small></button>
+          <button id="shellMissions" type="button" data-shell-section="contact" aria-pressed="false"><span>联络</span><small data-i18n-ignore>CONTACT</small></button>
           <button id="shellCatalog" type="button" data-shell-section="catalog" aria-pressed="false"><span>图鉴</span><small data-i18n-ignore>CATALOG</small></button>
         </nav>
         <div id="shellIdentity"></div>
@@ -5282,6 +5282,7 @@
         <nav class="encyclopedia-tabs" aria-label="图鉴分类">
           <button id="encyclopediaUnitsTab" type="button" aria-pressed="true">单位</button>
           <button id="encyclopediaWeaponsTab" type="button" aria-pressed="false">武器</button>
+          <button id="encyclopediaPluginsTab" type="button" aria-pressed="false">零件</button>
         </nav>
         <span id="encyclopediaCount" aria-live="polite"></span></header>
         <div class="encyclopedia-filters">

@@ -15,6 +15,8 @@ const SweepRestock = (() => {
       entry: {
         unitId: u.unitId,
         kitId: u.kitId,
+        stockId: u.stockId,
+        plugins: u.plugins,
         ...(u.preload ? { preload: u.preload } : {}),
         ...(u.customPilot ? { customPilot: u.customPilot } : {}),
       },
@@ -28,6 +30,7 @@ const SweepRestock = (() => {
       budget: Rules.armyBudget(snapshot.settings, p),
       unitLimit: Rules.armyUnitLimit(snapshot.settings, p),
       inventory: mission.inventoryRemaining || stock.inventory,
+      storedUnits: Economy.storedUnits(),
       restrictions: {
         ...Rules.armyRestrictions(snapshot.settings, p),
         ...Economy.normalizeStock(stock),

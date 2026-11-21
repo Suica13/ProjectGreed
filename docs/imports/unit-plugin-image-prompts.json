@@ -1,0 +1,81 @@
+{
+  "tool": "built-in image_gen",
+  "outputSize": [
+    64,
+    64
+  ],
+  "images": [
+    {
+      "id": "frame",
+      "prompt": "Create one square equipment item icon for a low-saturation pixel-art sci-fi tactical mecha game. Subject: reinforced internal mechanical skeleton, a compact steel torso frame with reinforced cross-braces. Close-up isolated item, no mecha character, no pilot, no text, no letters, no UI frame. Dark navy background, grey steel, restrained cyan indicator lights, clear chunky pixel-art contours, moderate detail, readable at 64 pixels. Orthographic technical illustration."
+    },
+    {
+      "id": "antenna",
+      "prompt": "Create one square equipment icon for a low-saturation pixel-art sci-fi mecha tactical game. Subject: commander communications antenna, folded angular radio mast. Single isolated hardware item filling the square with 10% margin. Dark navy background, steel grey material, restrained cyan indicator lights. Clear chunky pixel-art edges and simple readable silhouette, moderate mechanical details, designed to remain legible after downsampling to 64x64 pixels. Orthographic technical illustration. No people, no mecha body, no text, no letters, no numbers, no UI border."
+    },
+    {
+      "id": "v_data",
+      "prompt": "Create one square equipment icon for a low-saturation pixel-art sci-fi mecha tactical game. Subject: combat data cartridge with small glowing monitor. Single isolated hardware item filling the square with 10% margin. Dark navy background, steel grey material, restrained cyan indicator lights. Clear chunky pixel-art edges and simple readable silhouette, moderate mechanical details, designed to remain legible after downsampling to 64x64 pixels. Orthographic technical illustration. No people, no mecha body, no text, no letters, no numbers, no UI border."
+    },
+    {
+      "id": "shield",
+      "prompt": "Create one square equipment icon for a low-saturation pixel-art sci-fi mecha tactical game. Subject: reinforced armored shield with layered plates. Single isolated hardware item filling the square with 10% margin. Dark navy background, steel grey material, restrained cyan indicator lights. Clear chunky pixel-art edges and simple readable silhouette, moderate mechanical details, designed to remain legible after downsampling to 64x64 pixels. Orthographic technical illustration. No people, no mecha body, no text, no letters, no numbers, no UI border."
+    },
+    {
+      "id": "tem_ray",
+      "prompt": "Create one square equipment icon for a low-saturation pixel-art sci-fi mecha tactical game. Subject: experimental electronic circuit board with tangled wires. Single isolated hardware item filling the square with 10% margin. Dark navy background, steel grey material, restrained cyan indicator lights. Clear chunky pixel-art edges and simple readable silhouette, moderate mechanical details, designed to remain legible after downsampling to 64x64 pixels. Orthographic technical illustration. No people, no mecha body, no text, no letters, no numbers, no UI border."
+    },
+    {
+      "id": "panoramic",
+      "prompt": "Create one square equipment icon for a low-saturation pixel-art sci-fi mecha tactical game. Subject: panoramic cockpit control console and circular monitor. Single isolated hardware item filling the square with 10% margin. Dark navy background, steel grey material, restrained cyan indicator lights. Clear chunky pixel-art edges and simple readable silhouette, moderate mechanical details, designed to remain legible after downsampling to 64x64 pixels. Orthographic technical illustration. No people, no mecha body, no text, no letters, no numbers, no UI border."
+    },
+    {
+      "id": "chobham",
+      "prompt": "Create one square equipment icon for a low-saturation pixel-art sci-fi mecha tactical game. Subject: thick segmented reactive armor plate. Single isolated hardware item filling the square with 10% margin. Dark navy background, steel grey material, restrained cyan indicator lights. Clear chunky pixel-art edges and simple readable silhouette, moderate mechanical details, designed to remain legible after downsampling to 64x64 pixels. Orthographic technical illustration. No people, no mecha body, no text, no letters, no numbers, no UI border."
+    },
+    {
+      "id": "generator",
+      "prompt": "Create one square equipment icon for a low-saturation pixel-art sci-fi mecha tactical game. Subject: external power generator with cylindrical reactor. Single isolated hardware item filling the square with 10% margin. Dark navy background, steel grey material, restrained cyan indicator lights. Clear chunky pixel-art edges and simple readable silhouette, moderate mechanical details, designed to remain legible after downsampling to 64x64 pixels. Orthographic technical illustration. No people, no mecha body, no text, no letters, no numbers, no UI border."
+    },
+    {
+      "id": "water",
+      "prompt": "Create one square equipment icon for a low-saturation pixel-art sci-fi mecha tactical game. Subject: underwater conversion module with sealed turbine. Single isolated hardware item filling the square with 10% margin. Dark navy background, steel grey material, restrained cyan indicator lights. Clear chunky pixel-art edges and simple readable silhouette, moderate mechanical details, designed to remain legible after downsampling to 64x64 pixels. Orthographic technical illustration. No people, no mecha body, no text, no letters, no numbers, no UI border."
+    },
+    {
+      "id": "ground",
+      "prompt": "Create one square equipment icon for a low-saturation pixel-art sci-fi mecha tactical game. Subject: ground adaptation module with sturdy treaded foot stabilizer. Single isolated hardware item filling the square with 10% margin. Dark navy background, steel grey material, restrained cyan indicator lights. Clear chunky pixel-art edges and simple readable silhouette, moderate mechanical details, designed to remain legible after downsampling to 64x64 pixels. Orthographic technical illustration. No people, no mecha body, no text, no letters, no numbers, no UI border."
+    },
+    {
+      "id": "space",
+      "prompt": "Create one square equipment icon for a low-saturation pixel-art sci-fi mecha tactical game. Subject: space adaptation module with compact maneuvering thrusters. Single isolated hardware item filling the square with 10% margin. Dark navy background, steel grey material, restrained cyan indicator lights. Clear chunky pixel-art edges and simple readable silhouette, moderate mechanical details, designed to remain legible after downsampling to 64x64 pixels. Orthographic technical illustration. No people, no mecha body, no text, no letters, no numbers, no UI border."
+    },
+    {
+      "id": "long_beam",
+      "prompt": "Create one square equipment icon for a low-saturation pixel-art sci-fi mecha tactical game. Subject: elongated beam focusing lens and long barrel attachment. Single isolated hardware item filling the square with 10% margin. Dark navy background, steel grey material, restrained cyan indicator lights. Clear chunky pixel-art edges and simple readable silhouette, moderate mechanical details, designed to remain legible after downsampling to 64x64 pixels. Orthographic technical illustration. No people, no mecha body, no text, no letters, no numbers, no UI border."
+    },
+    {
+      "id": "short_beam",
+      "prompt": "Create one square equipment icon for a low-saturation pixel-art sci-fi mecha tactical game. Subject: short beam focusing lens with wide aperture. Single isolated hardware item filling the square with 10% margin. Dark navy background, steel grey material, restrained cyan indicator lights. Clear chunky pixel-art edges and simple readable silhouette, moderate mechanical details, designed to remain legible after downsampling to 64x64 pixels. Orthographic technical illustration. No people, no mecha body, no text, no letters, no numbers, no UI border."
+    },
+    {
+      "id": "hover",
+      "prompt": "Create one square equipment icon for a low-saturation pixel-art sci-fi mecha tactical game. Subject: hovercraft cushion suspension assembly. Single isolated hardware item filling the square with 10% margin. Dark navy background, steel grey material, restrained cyan indicator lights. Clear chunky pixel-art edges and simple readable silhouette, moderate mechanical details, designed to remain legible after downsampling to 64x64 pixels. Orthographic technical illustration. No people, no mecha body, no text, no letters, no numbers, no UI border."
+    },
+    {
+      "id": "ambac",
+      "prompt": "Create one square equipment icon for a low-saturation pixel-art sci-fi mecha tactical game. Subject: pair of extra articulated maneuvering nozzles. Single isolated hardware item filling the square with 10% margin. Dark navy background, steel grey material, restrained cyan indicator lights. Clear chunky pixel-art edges and simple readable silhouette, moderate mechanical details, designed to remain legible after downsampling to 64x64 pixels. Orthographic technical illustration. No people, no mecha body, no text, no letters, no numbers, no UI border."
+    },
+    {
+      "id": "armor",
+      "prompt": "Create one square equipment icon for a low-saturation pixel-art sci-fi mecha tactical game. Subject: reinforced armor plating with hexagonal support ribs. Single isolated hardware item filling the square with 10% margin. Dark navy background, steel grey material, restrained cyan indicator lights. Clear chunky pixel-art edges and simple readable silhouette, moderate mechanical details, designed to remain legible after downsampling to 64x64 pixels. Orthographic technical illustration. No people, no mecha body, no text, no letters, no numbers, no UI border."
+    },
+    {
+      "id": "magnetic",
+      "prompt": "Create one square equipment icon for a low-saturation pixel-art sci-fi mecha tactical game. Subject: magnetic joint coating applicator and glowing bearing. Single isolated hardware item filling the square with 10% margin. Dark navy background, steel grey material, restrained cyan indicator lights. Clear chunky pixel-art edges and simple readable silhouette, moderate mechanical details, designed to remain legible after downsampling to 64x64 pixels. Orthographic technical illustration. No people, no mecha body, no text, no letters, no numbers, no UI border."
+    },
+    {
+      "id": "limiter",
+      "prompt": "Create one square equipment icon for a low-saturation pixel-art sci-fi mecha tactical game. Subject: electronic limiter bypass controller with unlocked switch. Single isolated hardware item filling the square with 10% margin. Dark navy background, steel grey material, restrained cyan indicator lights. Clear chunky pixel-art edges and simple readable silhouette, moderate mechanical details, designed to remain legible after downsampling to 64x64 pixels. Orthographic technical illustration. No people, no mecha body, no text, no letters, no numbers, no UI border."
+    }
+  ]
+}

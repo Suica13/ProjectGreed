@@ -1,11 +1,13 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const P=require('../shared/pilots.js'),G=require('../shared/rules.js');
-test('ordinary PMC profiles ignore supplied stats and retain stable random portraits',()=>{
+test('ordinary PMC profiles ignore supplied stats and use the standard ground pilot portrait',()=>{
  const p=P.generalPMC('pmc-general-unit-1',false);
  assert.equal(p.name,'一般PMC驾驶员');assert.equal(p.faction,'PMC');assert.equal(P.cost(p),0);
  assert.deepEqual(P.custom({...p,stats:Object.fromEntries(Object.keys(P.labels).map(k=>[k,9999])),portraitId:'forged'}),p);
  assert.equal(P.portrait(p),P.portrait(P.generalPMC(p.id,false)));
- assert(new Set(Array.from({length:32},(_,i)=>P.generalPMC('pmc-general-unit-'+i,false).portraitId)).size>1);
+ assert.equal(new Set(Array.from({length:32},(_,i)=>P.generalPMC('pmc-general-unit-'+i,false).portraitId)).size,1);
+ assert.equal(p.portraitId,'Pilot_EFSF_0079_Ground_1');
+ assert.equal(P.portrait({...p,portraitId:'Pilot_EFSF_0079_Common_1'}),P.portrait(p));
  for(const [key,range] of Object.entries(P.catalog.defaultRanges))assert(p.stats[key]>=range[0]&&p.stats[key]<=range[1],key);
 });
 test('battle rolls PMC attributes from the authoritative seed and corrects commander role',()=>{

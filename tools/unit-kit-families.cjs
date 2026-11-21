@@ -31,6 +31,7 @@ function apply(catalog, families) {
       ...model,
       prefabId: base.id,
       kitId: kit.id,
+      chassisCost: base.stats.cost,
       cost: base.stats.cost + kit.cost,
       kitName: kit.name,
       kitLocalization: kit.localization,

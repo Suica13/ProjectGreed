@@ -1,7 +1,8 @@
 /* Physical chassis storage. Counts used by battle rules are derived from the stored items. */
 "use strict";
 const Warehouse = (() => {
-  const defaults = { pages: 1, unitsPerPage: 8, shipsPerPage: 3, maxLevel: 5 };
+  const plugins = typeof UnitPlugins !== "undefined" ? UnitPlugins : require("./unit-plugins.js");
+  const defaults = { pages: 1, unitsPerPage: 10, shipsPerPage: 10, maxLevel: 5 };
   function category(model) {
     return model.ship ||
       ((model.movementType === "air" || model.tags?.includes("Aircraft")) &&
@@ -14,7 +15,7 @@ const Warehouse = (() => {
       version: 1,
       serial: 0,
       pages: { units: 2, ships: 1 },
-      slots: { units: 16, ships: 3 },
+      slots: { units: 20, ships: 4 },
       units: [],
       ships: [],
       deliveries: [],
@@ -38,6 +39,8 @@ const Warehouse = (() => {
     return -1;
   }
   function condition(value, model) {
+    const installed = plugins.normalize(value.plugins, model);
+    model = plugins.apply(model, installed);
     const destroyed = value.destroyed === true || value.hp === 0;
     const resource = (key) => {
       const n = value[key] ?? model[key];
@@ -58,10 +61,11 @@ const Warehouse = (() => {
       moduleHp[part.id] = Math.min(part.hp, hp);
       if (!hp) brokenParts[part.id] = true;
     }
-    return { hp: resource("hp"), en: resource("en"), destroyed, brokenParts,
+    return { plugins: installed, hp: resource("hp"), en: resource("en"), destroyed, brokenParts,
       ...(Object.keys(moduleHp).length ? { moduleHp } : {}) };
   }
   function status(item, model) {
+    if (model) model = plugins.apply(model, item.plugins);
     return item.destroyed || item.hp === 0 ? "destroyed" :
       Object.values(item.brokenParts || {}).some(Boolean) || (model &&
         (item.hp < model.hp || item.en < model.en || (model.modules || []).some(part=>(item.moduleHp?.[part.id] ?? part.hp)<part.hp))) ? "damaged" : "healthy";
@@ -69,7 +73,7 @@ const Warehouse = (() => {
   // Profile import only. Match actions never accept replacement combat resources.
   function profile(items, models) {
     if (items === undefined) return undefined;
-    if (!Array.isArray(items) || items.length > 63) throw Error("库存单位状态无效");
+    if (!Array.isArray(items) || items.length > 80) throw Error("库存单位状态无效");
     const ids = new Set();
     return items.map((item) => {
       const model = models[item.unitId + "__" + item.kitId];
@@ -93,7 +97,7 @@ const Warehouse = (() => {
       )
         throw Error("仓储页数或格子无效");
       if(storage.slots && (!Number.isInteger(storage.slots[kind]) || storage.slots[kind]<1 ||
-        storage.slots[kind]>(kind==="ships"?15:48)))throw Error("仓储格子上限无效");
+        storage.slots[kind]>(kind==="ships"?20:60)))throw Error("仓储格子上限无效");
       const slots = new Set();
       for (const item of storage[kind]) {
         const model = models[item.unitId + "__" + item.kitId];

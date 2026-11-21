@@ -6,14 +6,14 @@ const BaseFacilities = (() => {
       : require("./base-facility-types.json");
   const definitions = {
     hq: { name: "HQ", maxLevel: 5, description: "HQ等级决定其他建筑的等级上限。" },
-    factory: { name: "工厂", maxLevel: 5, description: "一级提供16个单位格纳库，之后每级增加8格。" },
-    giantFactory: { name: "巨型工厂", maxLevel: 5, description: "每级提供3个舰船格纳库。" },
+    factory: { name: "工厂", maxLevel: 5, description: "一级提供20个单位格纳库，之后每级增加10格。" },
+    giantFactory: { name: "巨型工厂", maxLevel: 5, description: "每级提供4个舰船格纳库。" },
     beacon: {
       name: "信标",
       maxLevel: 3,
       description: "一级提供一般PMC驾驶员，二级解锁ACE驾驶员招募。",
     },
-    academy: { name: "士官学院", maxLevel: 5, description: "每级分别支持8名PMC驾驶员和8名ACE驾驶员。" },
+    academy: { name: "士官学院", maxLevel: 5, description: "每级分别支持10名PMC驾驶员和10名ACE驾驶员。" },
   };
   const initial = () => ({
     version: 2,
@@ -35,25 +35,25 @@ const BaseFacilities = (() => {
       // coordinates, deployed actors and decorative structures are discarded.
       const unitSlots = storage.slots?.units ?? (storage.pages?.units || 1) * 8;
       const shipSlots = storage.slots?.ships ?? (storage.pages?.ships || 1) * 3;
-      result.levels.factory = Math.min(5, Math.max(1, Math.ceil(unitSlots / 8) - 1));
-      result.levels.giantFactory = Math.min(5, Math.max(1, Math.ceil(shipSlots / 3)));
+      result.levels.factory = Math.min(5, Math.max(1, Math.ceil(unitSlots / 10) - 1));
+      result.levels.giantFactory = Math.min(5, Math.max(1, Math.ceil(shipSlots / 4)));
       result.levels.hq = Math.max(result.levels.factory, result.levels.giantFactory);
     }
     return result;
   }
   const capacity = (state) => ({
-    units: (state.levels.factory + 1) * 8,
-    ships: state.levels.giantFactory * 3,
+    units: (state.levels.factory + 1) * 10,
+    ships: state.levels.giantFactory * 4,
   });
-  const pilotLimit = (state) => state.levels.academy * 8;
+  const pilotLimit = (state) => state.levels.academy * 10;
   const crewLevel = (grade) =>
     ({ general: 1, ace: 2 })[grade] ?? Infinity;
   const canRecruit = (state, grade) => state.levels.beacon >= crewLevel(grade);
   function unlock(id, level) {
     if (id === "hq") return "其他建筑等级上限 " + level;
-    if (id === "factory") return "单位格纳库 " + (level + 1) * 8 + " 格";
-    if (id === "giantFactory") return "舰船格纳库 " + level * 3 + " 格";
-    if (id === "academy") return "PMC／ACE驾驶员各 " + level * 8 + " 名";
+    if (id === "factory") return "单位格纳库 " + (level + 1) * 10 + " 格";
+    if (id === "giantFactory") return "舰船格纳库 " + level * 4 + " 格";
+    if (id === "academy") return "PMC／ACE驾驶员各 " + level * 10 + " 名";
     return level === 1
       ? "一般PMC驾驶员（免费配属）"
       : level === 2

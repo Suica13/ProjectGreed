@@ -134,13 +134,13 @@ test("settlement preserves individual wrecks, damage and resources through reloa
 
 test("wrecks keep occupying slots and new production never silently repairs or replaces them", () => {
   const { E } = load();
-  E.creditActivity({ id: "fill", matchId: "initial", money: 0, supplies: 0, inventory: { RGM_79: 24 } });
+  E.creditActivity({ id: "fill", matchId: "initial", money: 0, supplies: 0, inventory: { RGM_79: 30 } });
   E.creditAward({ id: "all-lost", matchId: "battle", money: 0, supplies: 0,
-    stockLost: { inventory: { RGM_79: 24 } } });
+    stockLost: { inventory: { RGM_79: 30 } } });
   assert.equal(E.quantity("RGM_79"), 0);
-  assert.equal(E.storageUsage("units").count, 24);
+  assert.equal(E.storageUsage("units").count, 30);
   assert.equal(E.canStore("RGM_79"), false);
-  assert.equal(load(E.snapshot()).E.snapshot().storage.units.filter((item) => item.destroyed).length, 24);
+  assert.equal(load(E.snapshot()).E.snapshot().storage.units.filter((item) => item.destroyed).length, 30);
 });
 test("stored pilot assignments survive reload and reject duplicate personal pilots", () => {
   const { E } = load();
@@ -233,18 +233,18 @@ test("quantity limits and independent ship storage preserve excess rewards", () 
   const { E } = load();
   const next = E.initial();
   next.baseFacilities=established();
-  next.inventory = { RGM_79: 25, Medea: 10 };
+  next.inventory = { RGM_79: 31, Medea: 13 };
   const value = E.validate(next);
-  assert.equal(value.storage.units.length, 24);
-  assert.equal(value.storage.ships.length, 9);
+  assert.equal(value.storage.units.length, 30);
+  assert.equal(value.storage.ships.length, 12);
   assert.equal(value.storage.deliveries.length, 2);
-  assert.equal(value.inventory.RGM_79, 24);
-  assert.equal(value.inventory.Medea, 9);
+  assert.equal(value.inventory.RGM_79, 30);
+  assert.equal(value.inventory.Medea, 12);
   const again = E.validate(value);
   assert.equal(again.storage.deliveries.length, 2);
   const warehouse = require("../shared/warehouse");
-  assert.equal(warehouse.usage(value.storage, catalog.models, "units").slots, 24);
-  assert.equal(warehouse.usage(value.storage, catalog.models, "ships").slots, 9);
+  assert.equal(warehouse.usage(value.storage, catalog.models, "units").slots, 30);
+  assert.equal(warehouse.usage(value.storage, catalog.models, "ships").slots, 12);
 });
 test("distinct chassis preserve chosen weapon kits through normalization and storage reload", () => {
   const { E } = load();
@@ -323,7 +323,7 @@ test("moving a stored chassis across pages preserves its state and rejects occup
   assert.equal(after.supplies, before.supplies);
   assert.equal(after.inventory.RGM_79, before.inventory.RGM_79);
   assert.equal(load(after).E.snapshot().storage.units[0].slot, 18);
-  for (const target of [1, 24, -1]) assert.throws(() => E.moveStoredUnit(item.id, target));
+  for (const target of [1, 30, -1]) assert.throws(() => E.moveStoredUnit(item.id, target));
   assert.throws(() => E.moveStoredUnit("missing", 3));
   assert.equal(JSON.stringify(E.snapshot()), JSON.stringify(after));
   const other = after.storage.units[1];
@@ -376,14 +376,15 @@ test("facility slot migration preserves all legacy chassis, wallet and positions
   old.inventory={RGM_79:24,Medea:9};
   const migrated=E.validate(old);assert.equal(migrated.storage.units.length,24);assert.equal(migrated.storage.ships.length,9);
   assert.equal(migrated.money,12345);assert.equal(migrated.supplies,67890);
-  assert.deepEqual(JSON.parse(JSON.stringify(migrated.storage.slots)),{units:24,ships:9});
+  assert.deepEqual(JSON.parse(JSON.stringify(migrated.storage.slots)),{units:30,ships:12});
   const reloaded=load(migrated).E.snapshot();assert.equal(JSON.stringify(reloaded),JSON.stringify(migrated));
 });
 
-test("level five stores forty-eight units and fifteen ships and preserves overflow rewards", () => {
+test("level five stores sixty units and twenty ships and preserves overflow rewards", () => {
   const {E}=load();const next=E.initial();next.baseFacilities.levels={hq:5,factory:5,giantFactory:5,beacon:3,academy:5};
-  next.inventory={RGM_79:49,Medea:16};const value=E.validate(next);
-  assert.equal(value.storage.units.length,48);assert.equal(value.storage.ships.length,15);assert.equal(value.storage.deliveries.length,2);
+  next.inventory={RGM_79:61,Medea:21};const value=E.validate(next);
+  assert.equal(value.storage.units.length,60);assert.equal(value.storage.ships.length,20);assert.equal(value.storage.deliveries.length,2);
+  assert.equal(require('../shared/warehouse').profile([...value.storage.units,...value.storage.ships],catalog.models).length,80);
   assert.equal(JSON.stringify(load(value).E.snapshot()),JSON.stringify(value));
 });
 
@@ -391,5 +392,5 @@ test("fresh beacon recruitment rejects locked grades without charging", () => {
   const {E:seed}=load();const fresh=seed.initial();fresh.money=100000;
   const {E}=load(fresh);const before=JSON.stringify(E.snapshot());
   assert.equal(E.recruitCrew("elite"),false);assert.equal(E.recruitCrew("enhanced"),false);assert.equal(JSON.stringify(E.snapshot()),before);
-  assert.equal(E.recruitCrew("veteran"),false);assert.equal(E.customPilotLimit(),8);assert.equal(E.acePilotLimit(),8);
+  assert.equal(E.recruitCrew("veteran"),false);assert.equal(E.customPilotLimit(),10);assert.equal(E.acePilotLimit(),10);
 });

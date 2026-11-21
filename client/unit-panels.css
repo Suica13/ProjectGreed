@@ -197,7 +197,7 @@ body #formationScreen #formationUnits .formation-row .formation-unit-portrait > 
 #customPilotPanel h2 { margin:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#ecf8ff;font-size:22px; }
 .pilot-detail-summary { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:14px; }
 .pilot-detail-preview { min-height:300px;display:grid;place-items:center;background:#0b2338;border:1px solid #356887;border-radius:4px; }
-body #customPilotPanel #changeCustomPilotPortrait { display:grid;place-items:center;width:100%;height:100%;padding:20px;border:0;background:radial-gradient(ellipse,#254b68,#0b2338 75%);opacity:1; }
+body #customPilotPanel #changeCustomPilotPortrait { width:auto; height:auto; margin:0; white-space:nowrap; }
 body #customPilotPanel #customPilotAvatar { width:200px;height:200px;max-width:100%;object-fit:contain;border:1px solid #527e99;background:#16354b;image-rendering:pixelated; }
 .pilot-detail-status { min-width:0;min-height:300px;padding:14px;box-sizing:border-box;border:1px solid #356887;border-radius:4px;background:#173c5b;display:flex;flex-direction:column;gap:12px; }
 #customPilotPanel .pilot-detail-status > * { margin:0 !important; }
@@ -206,11 +206,15 @@ body #customPilotPanel #customPilotAvatar { width:200px;height:200px;max-width:1
 #customPilotPanel #pilotAdvancementHint { grid-column:1 / -1;grid-row:2;margin:0;font-size:11px;line-height:1.5; }
 #customPilotPanel button.primary { background:#246b96;border-color:#5798bd;color:#e5f5ff; }
 #customPilotPanel .pilot-identity-row { display:block; }
-#customPilotPanel .pilot-name-controls { display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:8px; }
+#customPilotPanel .pilot-name-controls { display:block; }
 #customPilotPanel .pilot-name-controls label { min-width:0; }
-#customPilotPanel .pilot-name-controls button { white-space:nowrap; }
-#customPilotPanel .pilot-narrative-settings { display:flex;flex-wrap:wrap;align-items:end;gap:8px; }
-#customPilotPanel .pilot-narrative-settings > label:not([hidden]) { flex:1;min-width:130px; }
+#customPilotPanel .pilot-name-controls input { width:100%;box-sizing:border-box; }
+#customPilotPanel .pilot-narrative-settings { display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:end;gap:8px;width:100%; }
+#customPilotPanel .pilot-narrative-settings > label:not([hidden]) { grid-column:1;min-width:0; }
+#customPilotPanel .pilot-narrative-settings select { width:100%;min-width:0;box-sizing:border-box;margin:0; }
+#customPilotPanel .pilot-narrative-settings #editPilotDialogue { grid-column:2; }
+#customPilotPanel .pilot-narrative-settings #changeCustomPilotPortrait { grid-column:3; }
+#customPilotPanel .pilot-narrative-settings button { grid-row:1;min-height:36px;padding:6px 8px;margin:0;font-size:12px;white-space:nowrap; }
 .pilot-return-row { display:flex;align-items:center;gap:8px; }
 .pilot-return-row > span { flex:1; }
 .pilot-return-row button { flex:none; }

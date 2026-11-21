@@ -18,6 +18,7 @@
 - [小队](rules/squads.md)
 - [舰队与搭载编组](rules/formation.md)
 - [基地仓储](rules/storage.md)
+- [零件图标与生成提示](imports/unit-plugin-icons.md)
 - [基地设施](rules/base-facilities.md)
 - [收益](rules/economy.md)
 - [合作模式：战场扫荡](rules/sweep.md)

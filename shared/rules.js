@@ -30,6 +30,7 @@ const Tactics = (() => {
     typeof Development !== "undefined" ? Development : require("./development.js");
   const economy = typeof Economy !== "undefined" ? Economy : require("./economy.js");
   const parts = typeof UnitParts !== "undefined" ? UnitParts : require("./unit-parts.js");
+  const plugins = typeof UnitPlugins !== "undefined" ? UnitPlugins : require("./unit-plugins.js");
   const skillModule = typeof UnitSkills !== "undefined" ? UnitSkills : require("./unit-skills.js");
   const hangarModule = typeof UnitHangars !== "undefined" ? UnitHangars : require("./hangars.js");
   const sensorModule =
@@ -137,7 +138,7 @@ const Tactics = (() => {
     return target && models[target] ? target : baseId;
   }
   function formationModel(entry) {
-    return models[formationModelId(entry)];
+    return plugins.apply(models[formationModelId(entry)], entry.plugins);
   }
   function isFleetCarrier(model) {
     return (
@@ -195,6 +196,7 @@ const Tactics = (() => {
         unitId: model.prefabId,
         kitId: model.kitId,
         ...(entry.stockId ? { stockId: entry.stockId } : {}),
+        ...(entry.plugins ? {plugins:plugins.normalize(entry.plugins,model)} : {}),
         ...(customPilot ? { customPilot } : pilotId ? { pilotId } : {}),
       };
     });
@@ -1327,7 +1329,7 @@ const Tactics = (() => {
     return levels.get(level);
   }
   function performanceModelOf(unit) {
-    const base = facilityModelOf(unit),
+    const base = plugins.apply(facilityModelOf(unit), unit.plugins),
       factor = unit.performance ?? 1;
     if (factor === 1) return base;
     let variants = scaledModels.get(base);
@@ -1422,7 +1424,7 @@ const Tactics = (() => {
     return (
       (unit.flying && environment === "air"
         ? flightAdaptability(unit)
-        : (models[unit.model].adaptability?.[environment] ?? 100)) / 100
+        : (performanceModelOf(unit).adaptability?.[environment] ?? 100)) / 100
     );
   }
   const missionResourceModels = new WeakMap();
@@ -1464,13 +1466,15 @@ const Tactics = (() => {
   }
   function deriveModel(unit, g = null) {
     const original = pilotModelOf(unit, missionModelOf(unit)),
+      grounded = environmentOf(g, unit) === "ground" && original.groundMoveBonus
+        ? {...original,move:original.deployed?0:original.move+original.groundMoveBonus} : original,
       base = unit.flying
         ? {
-            ...original,
+            ...grounded,
             movementType: "air",
             adaptability: { ...original.adaptability, air: flightAdaptability(unit) },
           }
-        : original,
+        : grounded,
       penalty = parts.penalties(base.partsBreakable === false ? {} : unit),
       environment = environmentOf(g, unit),
       adaptability = (base.adaptability?.[environment] ?? 100) / 100,
@@ -1792,7 +1796,7 @@ const Tactics = (() => {
     const leadership = pilots.of(provider, model).stats.leadership;
     const steps = Math.trunc((leadership - 100) / 25);
     return {
-      radius: Math.max(1, 3 + steps),
+      radius: Math.max(1, 3 + steps + (model.commandRangeBonus || 0)),
       effect: Math.max(0, 0.1 + steps * 0.025),
       kinds: model.commandAuras || [],
     };
@@ -2289,13 +2293,14 @@ const Tactics = (() => {
     if (pilot.pmcGeneral)
       pilot.stats = pilots.roll(null, seed, seat, typeof id === "number" ? id : 0, models[model]).stats;
     const team = seatTeam(seat),
-      m = modelOf({ model, performance, environment, pilot });
+      m = modelOf({ model, performance, environment, pilot, plugins:entry.plugins });
     return {
       id,
       ...(m.facilityType ? { facility: { id: String(id), type: m.facilityType } } : {}),
       ownerSeat: seat,
       environment,
       model,
+      ...(entry.plugins ? {plugins:plugins.normalize(entry.plugins,models[model])} : {}),
       deploymentUnitId: entry.unitId,
       deploymentModel: entry.unitId + "__" + entry.kitId,
       pilot,
@@ -2503,7 +2508,7 @@ const Tactics = (() => {
       if (movement === "naval") return tile === "water" ? 1 : Infinity;
       if (tile === "water") {
         if (movement === "hover") return 1;
-        return (models[u.model].adaptability?.water ?? 0) > 0 ? 1 : Infinity;
+        return (modelOf(u).adaptability?.water ?? 0) > 0 ? 1 : Infinity;
       }
     }
     return terrain[g.tiles[y][x]].cost;
@@ -3557,7 +3562,7 @@ const Tactics = (() => {
       iFieldBlockedDamage: fieldInitial - blockedFieldLeft,
       blockChance:
         shieldAvailable && b.shield > 0
-          ? Math.min(1, defender.shield.blockChance + (response === "defend" ? 0.25 : 0))
+          ? Math.min(.75, defender.shield.blockChance + (response === "defend" ? 0.25 : 0))
           : 0,
     };
   }
