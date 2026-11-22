@@ -1,1 +1,3 @@
-public/client.html filter=lfs diff=lfs merge=lfs -text
+# Generated public/ files are not versioned.
+# Preserve the exact bytes of archived import evidence, including CSV BOMs.
+docs/imports/reports/** -text

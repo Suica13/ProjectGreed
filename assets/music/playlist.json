@@ -1,70 +1,70 @@
 {
-    "tracks":  [
-                   {
-                       "name":  "Battle_01",
-                       "file":  "Battle_01.mp3",
-                       "scene":  "battle"
-                   },
-                   {
-                       "name":  "Battle_02",
-                       "file":  "Battle_02.mp3",
-                       "scene":  "battle"
-                   },
-                   {
-                       "name":  "Battle_03",
-                       "file":  "Battle_03.mp3",
-                       "scene":  "battle"
-                   },
-                   {
-                       "name":  "Battle_04",
-                       "file":  "Battle_04.mp3",
-                       "scene":  "battle"
-                   },
-                   {
-                       "name":  "Battle_05",
-                       "file":  "Battle_05.mp3",
-                       "scene":  "battle"
-                   },
-                   {
-                       "name":  "Battle_06",
-                       "file":  "Battle_06.mp3",
-                       "scene":  "battle"
-                   },
-                   {
-                       "name":  "Battle_07",
-                       "file":  "Battle_07.mp3",
-                       "scene":  "battle"
-                   },
-                   {
-                       "name":  "Battle_08",
-                       "file":  "Battle_08.mp3",
-                       "scene":  "battle"
-                   },
-                   {
-                       "name":  "Menu_01",
-                       "file":  "Menu_01.mp3",
-                       "scene":  "menu"
-                   },
-                   {
-                       "name":  "Menu_02",
-                       "file":  "Menu_02.mp3",
-                       "scene":  "menu"
-                   },
-                   {
-                       "name":  "Menu_03",
-                       "file":  "Menu_03.mp3",
-                       "scene":  "menu"
-                   },
-                   {
-                       "name":  "Menu_04",
-                       "file":  "Menu_04.mp3",
-                       "scene":  "menu"
-                   },
-                   {
-                       "name":  "Menu_05",
-                       "file":  "Menu_05.mp3",
-                       "scene":  "menu"
-                   }
-               ],
-    "volume":  0.25
+  "tracks": [
+    {
+      "name": "Battle_01",
+      "file": "Battle_01.mp3",
+      "scene": "battle"
+    },
+    {
+      "name": "Battle_02",
+      "file": "Battle_02.mp3",
+      "scene": "battle"
+    },
+    {
+      "name": "Battle_03",
+      "file": "Battle_03.mp3",
+      "scene": "battle"
+    },
+    {
+      "name": "Battle_04",
+      "file": "Battle_04.mp3",
+      "scene": "battle"
+    },
+    {
+      "name": "Battle_05",
+      "file": "Battle_05.mp3",
+      "scene": "battle"
+    },
+    {
+      "name": "Battle_06",
+      "file": "Battle_05.mp3",
+      "scene": "battle"
+    },
+    {
+      "name": "Battle_07",
+      "file": "Battle_07.mp3",
+      "scene": "battle"
+    },
+    {
+      "name": "Battle_08",
+      "file": "Battle_08.mp3",
+      "scene": "battle"
+    },
+    {
+      "name": "Menu_01",
+      "file": "Menu_01.mp3",
+      "scene": "menu"
+    },
+    {
+      "name": "Menu_02",
+      "file": "Menu_02.mp3",
+      "scene": "menu"
+    },
+    {
+      "name": "Menu_03",
+      "file": "Menu_03.mp3",
+      "scene": "menu"
+    },
+    {
+      "name": "Menu_04",
+      "file": "Menu_04.mp3",
+      "scene": "menu"
+    },
+    {
+      "name": "Menu_05",
+      "file": "Menu_05.mp3",
+      "scene": "menu"
+    }
+  ],
+  "volume": 0.25
 }

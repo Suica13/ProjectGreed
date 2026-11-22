@@ -85,11 +85,9 @@ html = html
   .replaceAll("__PROJECT_NAME__", project.name)
   .replaceAll("__PROJECT_VERSION__", project.version)
   .replace("__PROJECT_META__", json(project))
-  .replace("__DEVELOPMENT_TREE__", json(developmentTree))
   .replace("__STARTER_PROFILE__", json(require("./shared/starter-profile.json")))
   .replace("__PRODUCTION_CATALOG__", json(require("./shared/production-data.cjs")))
   .replace("__AI_UNIT_BANS__", json(require("./shared/ai-unit-bans.json")))
-  .replace("__PILOT_DATA__", json(pilotData))
   .replace("__CLIENT_CONFIG__", json(clientConfig));
 html = html.replace(
   "__UI_LOCALES__",
@@ -100,6 +98,7 @@ html = html.replace(
 );
 function clientCatalogData() {
   const catalog = require("./tools/load-catalog.cjs").loadCatalog({ embedMusic: true });
+  catalog.clientData = { developmentTree, pilotData };
   require("./tools/export-combat-rules.cjs").writeReport(catalog);
   const data=Buffer.from(JSON.stringify(require("./shared/asset-pool.js").pack(catalog)));
   return JSON.stringify({catalogEncoding:"gzip-base64",uncompressedBytes:data.length,payload:zlib.gzipSync(data,{level:9}).toString("base64")});

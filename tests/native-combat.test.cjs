@@ -125,7 +125,7 @@ test("broken ship modules reduce per-emission native EN without changing intact 
   assert.equal(G.weaponStats(w, a).en, 200);
 });
 test("native timing report covers hidden and visible weapons and preserves all statistics", () => {
-  const report = JSON.parse(fs.readFileSync("tools/weapon-timing-report.json", "utf8"));
+  const report = JSON.parse(fs.readFileSync("docs/imports/reports/weapon-timing-report.json", "utf8"));
   assert.equal(
     report.length,
     G.catalog.prefabs.reduce((n, p) => n + Object.keys(p.weapons).length, 0),

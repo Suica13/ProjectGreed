@@ -49,7 +49,7 @@ def main():
         path=ASSETS/ref;p=load_source_json(path.read_text(encoding='utf8'))
         if p['id'] in new_ids or p.get('formOf') in new_ids:
             configure(p,load(MOD/p['source']));apply_era(p);write(path,p)
-    manifest=Path(__file__).with_name('0079-extras-manifest.json')
+    manifest=(Path(__file__).resolve().parents[1] / 'docs/imports/reports/0079-extras-manifest.json')
     previous=load_source_json(manifest.read_text(encoding='utf8')) if manifest.exists() else []
     combined={r['id']:r for r in previous+rows}
     write(manifest,list(combined.values()))

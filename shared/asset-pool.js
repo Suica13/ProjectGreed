@@ -24,8 +24,24 @@ const AssetPool = (() => {
     };
     const mapValues = (values, fn) =>
       Object.fromEntries(Object.entries(values).map(([key, value]) => [key, fn(value)]));
+    const packData = (value) => {
+      if (typeof value === "string" && value.startsWith("data:")) return { $asset: intern(value) };
+      if (Array.isArray(value)) return value.map(packData);
+      if (value && typeof value === "object") return mapValues(value, packData);
+      return value;
+    };
     return {
       ...catalog,
+      ...(catalog.clientData && { clientData: packData(catalog.clientData) }),
+      ...(catalog.music && {
+        music: {
+          ...catalog.music,
+          tracks: catalog.music.tracks.map((track) => ({
+            ...track,
+            ...(typeof track.source === "string" ? { source: intern(track.source) } : {}),
+          })),
+        },
+      }),
       ...(catalog.units && {
         units: catalog.units.map((unit) => ({
           ...unit,
@@ -50,7 +66,7 @@ const AssetPool = (() => {
       sounds: Object.fromEntries(
         Object.entries(catalog.sounds).map(([id, source]) => [id, intern(source)]),
       ),
-      assetPoolVersion: 2,
+      assetPoolVersion: 3,
       objectSources: objects,
       assetSources: sources,
     };
@@ -75,16 +91,37 @@ const AssetPool = (() => {
       }
     }
     if (catalog.assetPoolVersion === undefined) return catalog;
-    if (![1, 2].includes(catalog.assetPoolVersion) || !Array.isArray(catalog.assetSources))
+    if (![1, 2, 3].includes(catalog.assetPoolVersion) || !Array.isArray(catalog.assetSources))
       throw Error("Invalid asset pool");
     const sources = catalog.assetSources;
+    const sourceAt = (index) => {
+      if (!Number.isSafeInteger(index) || typeof sources[index] !== "string")
+        throw Error("Invalid pooled media reference");
+      return sources[index];
+    };
+    if (catalog.assetPoolVersion === 3) {
+      for (const track of catalog.music?.tracks || [])
+        if (track.source !== undefined) track.source = sourceAt(track.source);
+      const unpackData = (value) => {
+        if (Array.isArray(value)) return value.map(unpackData);
+        if (value && typeof value === "object") {
+          if (Object.keys(value).length === 1 && Object.hasOwn(value, "$asset"))
+            return sourceAt(value.$asset);
+          return Object.fromEntries(
+            Object.entries(value).map(([key, child]) => [key, unpackData(child)]),
+          );
+        }
+        return value;
+      };
+      if (catalog.clientData) catalog.clientData = unpackData(catalog.clientData);
+    }
     for (const field of ["assets", "sounds"])
       for (const [id, index] of Object.entries(catalog[field])) {
         if (!Number.isSafeInteger(index) || typeof sources[index] !== "string")
           throw Error("Invalid pooled asset: " + id);
         catalog[field][id] = sources[index];
       }
-    if (catalog.assetPoolVersion === 2) {
+    if (catalog.assetPoolVersion >= 2) {
       if (!Array.isArray(catalog.objectSources)) throw Error("Invalid object pool");
       const objects = catalog.objectSources,
         frozen = new WeakSet();

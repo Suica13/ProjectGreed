@@ -10,7 +10,7 @@ from pathlib import Path
 from mod_source import ROOT, parse
 
 PROJECT = Path(__file__).resolve().parents[1]
-MANIFEST = PROJECT / "tools/0079-page-one-manifest.json"
+MANIFEST = PROJECT / "docs/imports/reports/0079-page-one-manifest.json"
 DEST = PROJECT / "assets/pilots"
 STATS = {
     "shooting": "pilotShootSkill",

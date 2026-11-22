@@ -192,7 +192,8 @@ async function stop() {
   assert.equal(await page.evaluate(() => Net.snapshot.members.length), 1);
   await page.evaluate(() => {
     Net.leave();
-    Formation.current = () => [{ unitId: "Medea", kitId: "standard" }];
+    const ship = Economy.storedUnits().find(item => item.unitId === "Medea");
+    Formation.current = () => [{ unitId: ship.unitId, kitId: ship.kitId, stockId: ship.id }];
     byId("offlineRoomMode").value = "quick";
     LocalRoom.open();
   });

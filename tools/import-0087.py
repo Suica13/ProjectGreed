@@ -79,8 +79,8 @@ def main():
             if (ASSETS / f"units/{ident}/unit.json").exists(): continue
             reason = "ACE驾驶员" if ident.startswith("Pilot_") else "再入辅助状态" if ident.endswith("_OverLine") else "搭载／收纳状态" if ident.endswith("_CloseState") else "系统／飞行／变形状态" if any(token in ident for token in ("_MA", "_ALICE", "_FlyStyle")) else "科技树外专用机／其他单位"
             deferred.append({"id": ident, "name": core.get("displayText_zh", core.get("displayText", ident)), "source": source.relative_to(ROOT).as_posix(), "reason": reason})
-    write(Path(__file__).with_name("0087-deferred-content.json"), sorted({row["id"]:row for row in deferred}.values(), key=lambda row:row["id"]))
-    write(Path(__file__).with_name("0087-manifest.json"), list(rows.values()))
+    write((Path(__file__).resolve().parents[1] / 'docs/imports/reports/0087-deferred-content.json'), sorted({row["id"]:row for row in deferred}.values(), key=lambda row:row["id"]))
+    write((Path(__file__).resolve().parents[1] / 'docs/imports/reports/0087-manifest.json'), list(rows.values()))
     bulk = module("bulk0087", "import-0079-page-one.py")
     effects = bulk.read(ASSETS / "effects/effects.json")
     catalog = bulk.read(ASSETS / "unit-catalog.json")
@@ -104,7 +104,7 @@ def main():
             report.append({"id": row["id"], "status": "error", "error": str(error), "traceback": traceback.format_exc()})
             print("ERROR", row["id"], str(error), flush=True)
     bulk.write(ASSETS / "effects/effects.json", effects)
-    write(Path(__file__).with_name("0087-import-report.json"), {"units": report, "excluded": excluded})
+    write((Path(__file__).resolve().parents[1] / 'docs/imports/reports/0087-import-report.json'), {"units": report, "excluded": excluded})
     if any(r["status"] == "error" for r in report): raise SystemExit("Fix import errors before publishing registry")
     check = subprocess.run([shutil.which("node"), "-e", "require('./tools/load-catalog.cjs').loadCatalog({catalogOverride:JSON.parse(require('fs').readFileSync(0,'utf8')),embedAssets:false})"], input=json.dumps(catalog), text=True, capture_output=True, cwd=PROJECT)
     if check.returncode: raise SystemExit(check.stderr)

@@ -191,7 +191,7 @@ def finalize(p,row,data):
  return correct(p,row,data)
 
 def main():
- manifest=load_source_json(Path('tools/0079-page-one-manifest.json').read_text(encoding='utf-8'))
+ manifest=load_source_json(Path('docs/imports/reports/0079-page-one-manifest.json').read_text(encoding='utf-8'))
  for row in manifest:
   path=ASSETS/f"units/{row['id']}/unit.json"
   if not path.exists():continue

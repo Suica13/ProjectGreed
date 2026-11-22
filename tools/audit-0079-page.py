@@ -32,5 +32,5 @@ for faction in ['EFSF','ZEON']:
    result.append(row)
    print(unit,name,tags,','.join(Path(r).stem for r in row['nativeSkills']))
   except Exception as e:print('ERROR',unit,str(e)[:180])
-Path('tools/0079-page-one-manifest.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+Path('docs/imports/reports/0079-page-one-manifest.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print('TOTAL',len(result))

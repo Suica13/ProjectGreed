@@ -1,10 +1,11 @@
-# ProjectGreed V89
+# ProjectGreed
 
 多人回合制战术游戏，支持遭遇战、小队自动交火和历史战役。服务端裁定动作，浏览器负责界面和演出。
 
 - 安装依赖：`npm.cmd ci`
-- 启动游戏服务端：`npm.cmd start`，默认端口1313，配置见cfg.json。
+- 初次检出或更新源码后，先执行 `npm.cmd run build`，再用 `npm.cmd start` 启动服务端；默认端口1313，配置见cfg.json。
 - 构建客户端：`npm.cmd run build`，输出public/client.html；也可独立打开客户端后连接服务器。
+- `public/` 为本地生成目录，不再提交或推送。完整发行包执行 `npm.cmd run release:all`，输出到 `build/<版本号>/`。
 - 编辑服务端：`npm.cmd run developer`；管理员独立打开developer.html，手动输入地址和密钥。
 - 服务端打包仅按需执行`npm.cmd run package:server`；默认构建不打包服务端、开发者版或br/gz。
 

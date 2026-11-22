@@ -8,7 +8,7 @@
 | guides | 使用与源码导读、房间、图鉴、本地化和活动管理 |
 | tools | 服务端打包、地图编辑器和单位工坊 |
 | maps / data | 地图结构、地理数据和本地化数据维护 |
-| imports | 原MOD移植来源、清单和未实现机制；不是当前平衡规则 |
+| imports | 原MOD移植来源、清单和未实现机制；reports/保存生成清单及历史时间线，不是当前平衡规则 |
 | maintenance / editor-changes | 例外配置、审计日志、性能证据和维护待办 |
 
 ## 常用入口
@@ -35,6 +35,8 @@
 - [人工例外表](maintenance/unit-exceptions.md)
 - [编辑记录](editor-changes/README.md)
 - [本轮文档清理记录](maintenance/document-cleanup.md)
+- [构建体积与工作区清理](tools/workspace-cleanup.md)
+- [独立HTML客户端](tools/client-package.md)
 
 ## 全部文档
 

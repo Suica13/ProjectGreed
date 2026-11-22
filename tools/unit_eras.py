@@ -27,7 +27,7 @@ def eras():
     return result
 
 def apply(prefab):
-    page_two = Path(__file__).with_name("0079-page-two-manifest.json")
+    page_two = (Path(__file__).resolve().parents[1] / 'docs/imports/reports/0079-page-two-manifest.json')
     rows = load_source_json(page_two.read_text(encoding="utf-8")) if page_two.exists() else []
     row = next((row for row in rows if row["id"] == prefab["id"]), None)
     if row:

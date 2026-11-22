@@ -11,9 +11,8 @@ build/ProjectGreed_V02.html
 
 /server-data/
 
-/public/*.gz
-/public/*.br
-/public/developer.html
+# Generated locally by build.cjs; release artifacts live under build/<version>/.
+/public/
 
 /tmp/
 

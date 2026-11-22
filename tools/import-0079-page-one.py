@@ -233,14 +233,14 @@ def build(row,effects):
 
 def main():
  sys.stdout.reconfigure(encoding='utf-8');catalog=read(ASSETS/'unit-catalog.json');effects=read(ASSETS/'effects/effects.json');existing={'RGM_79','RGC_80','RGM_79L','MS_06F','MS_09','RGM_79_G','MS_06J','MS_06K','MS_14A','RX_79_G','MS_06F2','MS_09R','SalamisClass','RX_78_1','FF_X7'};report=[]
- for row in read(Path(__file__).with_name('0079-page-one-manifest.json')):
+ for row in read((Path(__file__).resolve().parents[1] / 'docs/imports/reports/0079-page-one-manifest.json')):
   if 'Pilot' in row['tags'].split(','):continue
   if row['id'] in existing:report.append({'id':row['id'],'status':'existing'});continue
   try:
    p=build(row,effects);write(ASSETS/f"units/{p['id']}/unit.json",p)
    report.append({'id':row['id'],'status':'imported','weapons':len(p['weapons']),'mechanics':p['mechanics']});print('OK',row['id'],len(p['weapons']))
   except Exception as e:report.append({'id':row['id'],'status':'error','error':str(e)});print('ERROR',row['id'],str(e))
- write(Path(__file__).with_name('0079-import-report.json'),report);write(ASSETS/'effects/effects.json',{**read(ASSETS/'effects/effects.json'),**effects})
+ write((Path(__file__).resolve().parents[1] / 'docs/imports/reports/0079-import-report.json'),report);write(ASSETS/'effects/effects.json',{**read(ASSETS/'effects/effects.json'),**effects})
  # Only expose the batch when every prefab has passed import, followed by loader validation.
  if any(r['status']=='error' for r in report):raise SystemExit('Import failed; unit catalog was not updated.')
  for r in report:

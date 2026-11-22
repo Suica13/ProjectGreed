@@ -1,8 +1,8 @@
 {
   "name": "projectgreed",
-  "version": "0.136.0",
+  "version": "0.137.0",
   "private": true,
-  "description": "ProjectGreed V136 turn-based tactical game",
+  "description": "ProjectGreed V137 turn-based tactical game",
   "engines": {
     "node": ">=22"
   },
@@ -31,6 +31,8 @@
     "build:save-editor": "node tools/build-save-editor.cjs",
     "docs:combat-rules": "node tools/export-combat-rules.cjs",
     "docs:check": "node tools/check-docs.cjs",
+    "audit:size": "node tools/audit-client-size.cjs",
+    "clean:workspace": "node tools/clean-workspace.cjs",
     "app:prepare": "node tools/build-apps.cjs prepare",
     "app:windows": "node tools/build-apps.cjs windows",
     "release:windows": "npm run app:windows",

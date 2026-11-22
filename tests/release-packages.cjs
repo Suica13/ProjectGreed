@@ -90,7 +90,7 @@ async function main() {
     assert.equal(mission.mission.rewards.inventory.RX_77_2,1);
     require(path.join(serverDir,"shared/mission-mode.js")).validate(mission.mission,mission,rules);
     const shuttle = rules.getMap("mission_shuttle_defense");
-    assert.equal(shuttle.mission.costLimit,6000);
+    assert.equal(shuttle.mission.costLimit,9000);
     require(path.join(serverDir,"shared/mission-mode.js")).validate(shuttle.mission,shuttle,rules);
     assert.equal(require(path.join(serverDir,"shared/pilots.json")).aces.filter(p=>p.id.includes("_0087_")).length,14);
     console.log(

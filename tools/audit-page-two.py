@@ -10,7 +10,7 @@ from v17_balance import rounded_hp
 
 
 def main():
-    rows=load_source_json(Path("tools/0079-page-two-manifest.json").read_text(encoding="utf-8"))
+    rows=load_source_json(Path("docs/imports/reports/0079-page-two-manifest.json").read_text(encoding="utf-8"))
     units=weapons=0
     errors=[]
     for row in rows:
@@ -31,7 +31,7 @@ def main():
             if abs(weapon["hit"]-expected_hit)>0.00001:errors.append([prefab["id"],key,"hit"])
             weapons+=1
     result={"units":units,"weapons":weapons,"errors":errors}
-    Path("tools/0079-page-two-audit.json").write_text(dump_source_json(result,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+    Path("docs/imports/reports/0079-page-two-audit.json").write_text(dump_source_json(result,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     print("Source audit:", units, "units,", weapons, "weapons,", len(errors), "mismatches")
     if errors:raise SystemExit(1)
 

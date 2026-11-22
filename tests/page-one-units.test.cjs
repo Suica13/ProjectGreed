@@ -1,7 +1,7 @@
 const test = require("node:test"),
   assert = require("node:assert/strict");
 const G = require("../shared/rules"),
-  manifest = require("../tools/0079-page-one-manifest.json");
+  manifest = require("../docs/imports/reports/0079-page-one-manifest.json");
 const entry = (id) => ({
   unitId: id,
   kitId: G.catalog.prefabs.find((p) => p.id === id).weaponKits[0].id,

@@ -4,8 +4,8 @@ const fs = require("node:fs");
 const path = require("node:path");
 const G = require("../shared/rules.js");
 const D = require("../shared/development.js");
-const manifest = require("../tools/0079-page-two-manifest.json");
-const early = new Set(require("../tools/0079-page-one-manifest.json").map((row) => row.id));
+const manifest = require("../docs/imports/reports/0079-page-two-manifest.json");
+const early = new Set(require("../docs/imports/reports/0079-page-one-manifest.json").map((row) => row.id));
 const tree = require("../shared/development-tree.json");
 const production = require("../shared/production-catalog.json");
 

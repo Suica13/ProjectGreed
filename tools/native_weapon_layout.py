@@ -223,13 +223,13 @@ def correct(p,row,data):
  return kit_names(apply_balance(visibility_and_deferred(p,data),data))
 
 def main():
- rows=load_source_json(Path(__file__).with_name('0079-page-one-manifest.json').read_text(encoding='utf-8'));catalog=load_source_json((ASSETS/'unit-catalog.json').read_text(encoding='utf-8'));byid={r['id']:r for r in rows}
+ rows=load_source_json((Path(__file__).resolve().parents[1] / 'docs/imports/reports/0079-page-one-manifest.json').read_text(encoding='utf-8'));catalog=load_source_json((ASSETS/'unit-catalog.json').read_text(encoding='utf-8'));byid={r['id']:r for r in rows}
  report=[]
  for ref in catalog['units']:
   path=ASSETS/ref;p=load_source_json(path.read_text(encoding='utf-8'));row=byid.get(p['id'])
   if not row:continue
   p=correct(p,row,load(ROOT/row['source']));path.write_text(dump_source_json(p,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
   report.append({'id':p['id'],'kits':len(p['weaponKits']),'hidden':{k:w['availability'] for k,w in p['weapons'].items() if w.get('availability')},'cost':p.get('costBalance')})
- Path('tools/0079-layout-audit.json').write_text(dump_source_json(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+ Path('docs/imports/reports/0079-layout-audit.json').write_text(dump_source_json(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
  print('Corrected',len(report),'prefabs')
 if __name__=='__main__':main()

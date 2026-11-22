@@ -5,12 +5,12 @@ from pathlib import Path
 from mod_source import ASSETS
 from page_one_adaptations import LABELS
 read=lambda path:load_source_json(path.read_text(encoding='utf-8'))
-manifest=read(Path('tools/0079-page-one-manifest.json'));catalog=read(ASSETS/'unit-catalog.json');prefabs={p['id']:p for p in [read(ASSETS/ref) for ref in catalog['units']]}
+manifest=read(Path('docs/imports/reports/0079-page-one-manifest.json'));catalog=read(ASSETS/'unit-catalog.json');prefabs={p['id']:p for p in [read(ASSETS/ref) for ref in catalog['units']]}
 rows=[]
 for row in manifest:
  if 'Pilot' in row['tags'].split(','):continue
  p=prefabs[row['id']];rows.append({'id':p['id'],'faction':p.get('faction',row['faction']),'name':p['name'],'source':row['source'],'status':'imported' if p.get('mechanics') else 'existing','weapons':len(p['weapons']),'skills':[{'id':s['id'],'name':s['name'],'type':s['type']} for s in p.get('skills',[])],'mechanics':p.get('mechanics',[])})
-Path('tools/0079-import-report.json').write_text(dump_source_json(rows,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+Path('docs/imports/reports/0079-import-report.json').write_text(dump_source_json(rows,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
 pending={}
 for row in rows:
  for m in row['mechanics']:
@@ -46,7 +46,7 @@ lines+=['','说明：CustomUnit／驾驶员专属改修、解析等与未接入�
 '','## 每单位核对表','', '| 阵营 | 单位ID | 名称 | 移动类型 | 原Level | 基础COST | 实装主动技能 | 待接入原机制 |','| --- | --- | --- | --- | ---: | ---: | --- | --- |']
 for row in rows:
  p=prefabs[row['id']];waiting=[LABELS.get(m['id'],m['id']) for m in row['mechanics'] if m['status']=='review'];lines.append('| '+' | '.join([row['faction'],row['id'],row['name'],p['stats'].get('movementType','ground'),str(int(p['sourceStats']['unitLevel'])),str(p['stats']['cost']),', '.join(s['name'] for s in row['skills']) or '—',', '.join(waiting) or '—'])+' |')
-lines+=['','## 维护','', '- `tools/0079-page-one-manifest.json`：科技树来源清单。','- `tools/0079-import-report.json`：当前JSON实现状态报告。','- `python tools/import-0079-page-one.py`：从原MOD重新生成本次新增预制体，不覆盖原先15种已平衡单位；Node.js需在PATH中，更新目录前执行完整资源校验。','- `python tools/import-death-effects.py`：重新提取死亡特效。','- `python tools/add-coastal-map.py`：重建海陆测试图。','- `npm run units:reload`：扫描项目内普通JSON并重建网页，不读取原MOD。','- 修改源码或JSON后运行 `npm run build`，服务端重启、客户端刷新。没有生成ZIP或部署服务器。','', '已发现原MOD GallopClass 与 JotunheimClass 的阵营tag误写EFSF，按ZEON第一页的解锁归属校正；Wappa缺失阵营／年代tag，补为ZEON、0079。']
+lines+=['','## 维护','', '- `docs/imports/reports/0079-page-one-manifest.json`：科技树来源清单。','- `docs/imports/reports/0079-import-report.json`：当前JSON实现状态报告。','- `python tools/import-0079-page-one.py`：从原MOD重新生成本次新增预制体，不覆盖原先15种已平衡单位；Node.js需在PATH中，更新目录前执行完整资源校验。','- `python tools/import-death-effects.py`：重新提取死亡特效。','- `python tools/add-coastal-map.py`：重建海陆测试图。','- `npm run units:reload`：扫描项目内普通JSON并重建网页，不读取原MOD。','- 修改源码或JSON后运行 `npm run build`，服务端重启、客户端刷新。没有生成ZIP或部署服务器。','', '已发现原MOD GallopClass 与 JotunheimClass 的阵营tag误写EFSF，按ZEON第一页的解锁归属校正；Wappa缺失阵营／年代tag，补为ZEON、0079。']
 lines += ['', '## 武器与显示修正', '',
 '- 坦克读取basePositionFromTurret，使用独立命名炮塔骨骼，炮口随同一挂点旋转。',
 '- 战舰附件贴图、镜像与层级逐模块读取原MOD，舰桥也导入；默认在舰体上方，原生setDrawLayerOnBottom保持下层。待机、规划和受击不追踪敌人，仅开火演出中当前武器的完好、射界合法炮塔瞄准；射界按舰体方向和原始idleDir判定。详见《docs/imports/ship-turrets.md》。',
@@ -55,7 +55,7 @@ lines += ['', '## 武器与显示修正', '',
 '- 双臂同类远程武器以pairedWeapons声明物理通道和independent模式，加载成左右臂独立选项，各自扣AP与对应EN并播放本侧动画；每手仅保留自身实际载荷，不复制双手完整流程。同侧双管、非手臂武器及舰船模块保留原有齐射。钢加农迫击炮依赖背包。',
 '- 舰船所有权Ring改为核心位置小圆；全部地面Ring先于所有单位贴图绘制。原导入炮塔中的Ring范围提示贴图全部移除。指挥范围用脚本圆形绘制，仅选中该战舰或同队、范围内单位时显示；可以查看选中敌舰的指挥范围。指挥增益本身仍在待接入机制列表中。',
 '- 删除或合并的套件通过kitAliases兼容旧编组，保留单位自定义名称。',
-'- python tools/native_weapon_layout.py：修正现有预制体并生成tools/0079-layout-audit.json。批量导入末尾调用同一套修正规则。',
+'- python tools/native_weapon_layout.py：修正现有预制体并生成docs/imports/reports/0079-layout-audit.json。批量导入末尾调用同一套修正规则。',
 '', '## 行动点与多武器攻击（已接入）', '',
 '每单位默认5 AP（stats.actionPoints可覆盖），每个己方回合重置；移动不耗AP。普通攻击先选一个敌人，再按顺序添加武器，允许重复。光束步枪/火箭筒2，机枪扫射3，头部火神炮1，手臂/内藏武装2，加农炮/舰炮3；未列出的格斗、光束喷枪、导弹2，航空炸弹3。',
 '服务器校验整个序列的总AP、总EN、各武器射程/部位/炮塔射界后原子保存，预留AP但不提前扣EN或造成伤害。取消/替换会退还原预留AP，真正结算只为实际执行的武器扣EN。目标死亡后不继续消耗后续武器EN。',
@@ -74,7 +74,7 @@ lines += ['', '## 原MOD资源与武器数据', '',
 '- 格子射程仍用战术类别转换；头部火神炮、腕部机枪/榴弹/光束枪统一1～2格。航空炸弹不能选择空军；迫击炮保留完整九宫格抽取、空格落空与只能防御/回避的回合制规则。',
 '- 狙击技能保留跨己方回合蓄力及命中率×2；技能自身伤害和EN沿用原MOD。首回合锁定使用原LockTarget_1白色帧（0～2），次个己方回合目标有效才转红（19帧）并立即进入应战/开火流程；演出后继续当前己方行动。弹速沿用对应普通狙击弹，不使用锁定标记速度。',
 '- 原生AP伤害独立保留：不减固定防御，只按相应防御百分比的四分之一计算，并穿透护盾；DP及其他异常载荷在面板/源数据中保留，未假装已完整实现原RTS全部异常状态。',
-'- 时间明细、CD分组与多武器排队建议见《tools/weapon-timing-report.json》及同名CSV；全部单位—武器时间线见tools/weapon-timing-report.json。当前为小队自动交火，原生时间/CD作为演出来源；AP只有参考值。',
+'- 时间明细、CD分组与多武器排队建议见《docs/imports/reports/weapon-timing-report.json》及同名CSV；全部单位—武器时间线见docs/imports/reports/weapon-timing-report.json。当前为小队自动交火，原生时间/CD作为演出来源；AP只有参考值。',
 '- 显示名不明确的武器见《docs/imports/weapon-names.md》，等待用户命名逻辑后统一修改，不改武器ID。',
 '- 战舰回避采用原MOD baseReactionLevel；命中系数为原MOD的65%，爆炸弹舰炮命中额外乘80%，所有武器伤害为原MOD的75%，耐久为原MOD的70%；联邦系再提高耐久10%、命中10%、回避15%，最终耐久按500取整。伤害按25取整；不叠加旧通用耐久、炮塔、机枪和姆塞/法梅尔例外修正。',
 '- tools/native_combat.py负责原生数值和流程；tools/native_presentation.py负责狙击持握/射击显示、钢坦克炮管图层、钢加农套件与主手优先。tools/weapon_policy.py负责格子射程与回合制特殊规则。',

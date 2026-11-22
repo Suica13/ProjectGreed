@@ -198,8 +198,8 @@ Page_00清单共135个作战单位条目（含装备／货柜等衍生形态）�
 
 ## 维护
 
-- `tools/0079-page-one-manifest.json`：科技树来源清单。
-- `tools/0079-import-report.json`：当前JSON实现状态报告。
+- `docs/imports/reports/0079-page-one-manifest.json`：科技树来源清单。
+- `docs/imports/reports/0079-import-report.json`：当前JSON实现状态报告。
 - `python tools/import-0079-page-one.py`：从原MOD重新生成本次新增预制体，不覆盖原先15种已平衡单位；Node.js需在PATH中，更新目录前执行完整资源校验。
 - `python tools/import-death-effects.py`：重新提取死亡特效。
 - `python tools/add-coastal-map.py`：重建海陆测试图。
@@ -217,7 +217,7 @@ Page_00清单共135个作战单位条目（含装备／货柜等衍生形态）�
 - 双臂同类远程武器以pairedWeapons声明物理通道和independent模式，加载成左右臂独立选项，各自扣AP与对应EN并播放本侧动画；每手仅保留自身实际载荷，不复制双手完整流程。同侧双管、非手臂武器及舰船模块保留原有齐射。钢加农迫击炮依赖背包。
 - 舰船所有权Ring改为核心位置小圆；全部地面Ring先于所有单位贴图绘制。原导入炮塔中的Ring范围提示贴图全部移除。指挥范围用脚本圆形绘制，仅选中该战舰或同队、范围内单位时显示；可以查看选中敌舰的指挥范围。指挥增益本身仍在待接入机制列表中。
 - 删除或合并的套件通过kitAliases兼容旧编组，保留单位自定义名称。
-- python tools/native_weapon_layout.py：修正现有预制体并生成tools/0079-layout-audit.json。批量导入末尾调用同一套修正规则。
+- python tools/native_weapon_layout.py：修正现有预制体并生成docs/imports/reports/0079-layout-audit.json。批量导入末尾调用同一套修正规则。
 
 ## 行动点与多武器攻击（已接入）
 
@@ -241,7 +241,7 @@ Page_00清单共135个作战单位条目（含装备／货柜等衍生形态）�
 - 格子射程仍用战术类别转换；头部火神炮、腕部机枪/榴弹/光束枪统一1～2格。航空炸弹不能选择空军；迫击炮保留完整九宫格抽取、空格落空与只能防御/回避的回合制规则。
 - 狙击技能保留跨己方回合蓄力及命中率×2；技能自身伤害和EN沿用原MOD。首回合锁定使用原LockTarget_1白色帧（0～2），次个己方回合目标有效才转红（19帧）并立即进入应战/开火流程；演出后继续当前己方行动。弹速沿用对应普通狙击弹，不使用锁定标记速度。
 - 原生AP伤害独立保留：不减固定防御，只按相应防御百分比的四分之一计算，并穿透护盾；DP及其他异常载荷在面板/源数据中保留，未假装已完整实现原RTS全部异常状态。
-- 时间明细、CD分组与多武器排队建议见《武器时间与CD统计.md》及同名CSV；全部单位—武器时间线见tools/weapon-timing-report.json。现已用AP启用单目标多武器顺序攻击，原生时间/CD只影响演出，不作为AP费用。
+- 时间明细、CD分组与多武器排队建议见《武器时间与CD统计.md》及同名CSV；全部单位—武器时间线见docs/imports/reports/weapon-timing-report.json。现已用AP启用单目标多武器顺序攻击，原生时间/CD只影响演出，不作为AP费用。
 - 显示名不明确的武器见《武器命名待确认.md》，等待用户命名逻辑后统一修改，不改武器ID。
 - 战舰回避采用原MOD baseReactionLevel；命中系数为原MOD的65%，爆炸弹舰炮命中额外乘80%，所有武器伤害为原MOD的75%，耐久为原MOD的70%；联邦系再提高耐久10%、命中10%、回避15%，最终耐久按500取整。伤害按25取整；不叠加旧通用耐久、炮塔、机枪和姆塞/法梅尔例外修正。
 - tools/native_combat.py负责原生数值和流程；tools/native_presentation.py负责狙击持握/射击显示、钢坦克炮管图层、钢加农套件与主手优先。tools/weapon_policy.py负责格子射程与回合制特殊规则。

@@ -5299,15 +5299,16 @@
     </section>
     <script>
       const PROJECT = __PROJECT_META__;
-      const DEVELOPMENT_TREE = __DEVELOPMENT_TREE__;
       const PRODUCTION_CATALOG = __PRODUCTION_CATALOG__;
       const STARTER_PROFILE = __STARTER_PROFILE__;
       const AI_UNIT_BANS = __AI_UNIT_BANS__;
-      const PILOT_DATA = __PILOT_DATA__;
       const CLIENT_CONFIG = __CLIENT_CONFIG__;
       const UI_LOCALES = __UI_LOCALES__;
       __ASSET_POOL__;
       const ART = AssetPool.unpack(JSON.parse(document.getElementById("art").textContent));
+      const DEVELOPMENT_TREE = ART.clientData.developmentTree;
+      const PILOT_DATA = ART.clientData.pilotData;
+      delete ART.clientData;
       document.getElementById("art").remove();
       __I18N__;
       __DIALOG__;

@@ -40,9 +40,9 @@ def main():
                 "hidden":bool(weapon.get("availability",{}).get("hidden")),"source":native["source"],
                 "nativePayload":weapon["nativePayload"],"timeline":weapon["attack"]["steps"],
             })
-    (ROOT/"tools/weapon-timing-report.json").write_text(dump_source_json(rows,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+    (ROOT/"docs/imports/reports/weapon-timing-report.json").write_text(dump_source_json(rows,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     fields=[key for key in rows[0] if key not in ["nativePayload","timeline"]]
-    with (ROOT/"武器时间与CD统计.csv").open("w",encoding="utf-8-sig",newline="") as file:
+    with (ROOT/"docs/imports/reports/武器时间与CD统计.csv").open("w",encoding="utf-8-sig",newline="") as file:
         writer=csv.DictWriter(file,fieldnames=fields,extrasaction="ignore");writer.writeheader();writer.writerows(rows)
     groups=defaultdict(list)
     for row in rows:

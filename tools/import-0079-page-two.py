@@ -39,7 +39,7 @@ def manifest():
 def main():
     sys.stdout.reconfigure(encoding="utf-8")
     rows,excluded=manifest()
-    output=Path(__file__).with_name("0079-page-two-manifest.json")
+    output=(Path(__file__).resolve().parents[1] / 'docs/imports/reports/0079-page-two-manifest.json')
     output.write_text(dump_source_json(rows,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     bulk=module("page_two_bulk","import-0079-page-one.py")
     effects=bulk.read(ASSETS/"effects/effects.json");catalog=bulk.read(ASSETS/"unit-catalog.json");report=[]
@@ -57,7 +57,7 @@ def main():
             report.append({"id":row["id"],"status":"error","error":str(error),"traceback":traceback.format_exc()})
             print("ERROR",row["id"],str(error),flush=True)
     bulk.write(ASSETS/"effects/effects.json",effects)
-    bulk.write(Path(__file__).with_name("0079-page-two-import-report.json"),{"units":report,"excluded":excluded})
+    bulk.write((Path(__file__).resolve().parents[1] / 'docs/imports/reports/0079-page-two-import-report.json'),{"units":report,"excluded":excluded})
     if any(row["status"]=="error" for row in report):raise SystemExit("Import errors; registry not published.")
     for row in rows:
         ref=f"units/{row['id']}/unit.json"
