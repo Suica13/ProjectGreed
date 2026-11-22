@@ -81,6 +81,8 @@ def main():
                     kit["cost"] = 75
             if old_cost != kit["cost"]:
                 repriced.append([prefab["id"], kit["id"], old_cost, kit["cost"]])
+        from weapon_kit_policy import apply_kit_overrides
+        apply_kit_overrides(prefab)
         output = dumps(prefab, ensure_ascii=False, indent=2) + "\n"
         if json.loads(output) != json.loads(original_text):
             path.write_text(output, encoding="utf-8")

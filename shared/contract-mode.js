@@ -3,11 +3,17 @@
 const ContractMode = (() => {
   const contacts = typeof ContactTasks !== "undefined" ? ContactTasks : require("./contact-tasks.js");
   const technologyTree = typeof DEVELOPMENT_TREE !== "undefined" ? DEVELOPMENT_TREE : require("./development-tree.json");
+  const weaponClasses = typeof WeaponClasses !== "undefined" ? WeaponClasses : require("./weapon-classes.js");
   const covers = {
     ground: "assets/maps/covers/contract-ground.svg",
     space: "assets/maps/covers/contract-space.svg",
   };
-  const costs = [2000, 4000, 6000, 8000, 10000, 12500, 15000, 17500, 20000];
+  const costs = [2000, 4000, 6000, 8000, 10000, 12500];
+  // Full ordinary-objective completion at baseline era and normal settlement rates.
+  const completionRewards = [
+    [2000, 3000], [3000, 4500], [4500, 6000],
+    [6000, 8000], [8000, 10500], [10000, 13500],
+  ];
   const biomes = [
     { id: "temperate", name: "草原", mapId: "great_plains_5v5" },
     { id: "snow", name: "雪地", mapId: "glacier_gates_3v3" },
@@ -79,7 +85,10 @@ const ContractMode = (() => {
     const result = difficulties.find((d) => d.id === Number(value));
     if (!result) throw Error("合约难度无效");
     const stage = ["UC_0079_T1", "UC_0079_T2", "UC_0087_T1", "UC_0087_T2", "UC_0093_T1"].indexOf(era);
-    return { ...result, costLimit: Math.round(result.costLimit * 1.25 ** Math.max(0, stage)) };
+    // T2 starts at 3000 instead of 2500; subsequent eras keep the 1.25 progression.
+    // Round only the final budget, so rounding does not compound between eras.
+    const scale = stage > 0 ? 1.5 * 1.25 ** (stage - 1) : 1;
+    return { ...result, costLimit: Math.round(result.costLimit * scale / 500) * 500 };
   }
   function roomSettings(settings) {
     const d = config(settings.sweepDifficulty, settings.sweepEra);
@@ -472,13 +481,17 @@ const ContractMode = (() => {
         const visited=new Set(seen).add(node.id);
         return Math.max(node.points || 0,...(node.requires || []).map(id=>byId.has(id)?requirement(byId.get(id),visited):0));
       };
-      const eraPoints=nodes.filter(node=>node.era===era&&!node.placeholder).map(node=>requirement(node));
-      const low=Math.min(...eraPoints),high=Math.max(...eraPoints),thresholds=new Map();
+      // The base node is not a research milestone. T1 divides at the third
+      // paid mainline node (Operation V); T2 at the fourth (GM Kai).
+      const mainline=nodes.filter(node=>node.era===era && node.row==="mid" && !node.placeholder && node.points>0)
+        .sort((a,b)=>a.column-b.column || a.id.localeCompare(b.id));
+      const boundary=mainline[Math.min(mainline.length-1,era.endsWith("_T2")?3:2)];
+      const boundaryPoints=boundary?requirement(boundary):Infinity,thresholds=new Map();
       for(const node of nodes) for(const id of node.unlocks || [])
         thresholds.set(id,Math.min(thresholds.get(id) ?? Infinity,requirement(node)));
-      cache.set(key,{low,high,thresholds,models:new Map()});
+      cache.set(key,{boundaryPoints,thresholds,models:new Map()});
     }
-    const {low,high,thresholds,models}=cache.get(key);
+    const {boundaryPoints,thresholds,models}=cache.get(key);
     if(models.has(model.prefabId)) return models.get(model.prefabId);
     const aliases={MS_05S:"MS_05B",MS_06E3:"MS_06E",YMS_09:"MS_09",
       Apsaras:"ApsarasII",ApsarasIII:"ApsarasII",G_Bull_Easy:"G_Bull"};
@@ -490,24 +503,48 @@ const ContractMode = (() => {
       points=thresholds.get(parent);
     }
     // Unknown or script-only prototypes must not leak into low-difficulty pools.
-    const stage=!Number.isFinite(points)||!Number.isFinite(low)||!Number.isFinite(high) ? 2 :
-      high<=low ? 0 : Math.max(0,Math.min(2,Math.floor((points-low)/(high-low)*3)));
+    const stage=!Number.isFinite(points) || points>=boundaryPoints ? 1 : 0;
     models.set(model.prefabId,stage);
     return stage;
   }
   function pick(room, G, rng, candidates = pool(room, G)) {
+    const early = room.settings.sweepEra === "UC_0079_T1" && config(room.settings.sweepDifficulty).id <= 3;
+    if (early) candidates = candidates.filter(model => earlyCombatRole(room, model));
     if (!candidates.length) throw Error("所选年代、阵营和环境没有可用敌军");
-    const groups=[[],[],[]];
+    const groups=[[],[]];
     for(const model of candidates) groups[enemyStage(room,G,model)].push(model);
-    const phase=Math.floor((config(room.settings.sweepDifficulty).id-1)/3);
-    const desired=phase===2 ? 2 : phase+(rng()<0.2?1:0);
-    let eligible=groups[desired];
-    if(!eligible.length) eligible=groups[phase===2?2:desired===phase?phase+1:phase];
+    const phase=config(room.settings.sweepDifficulty).id<=3?0:1;
+    let eligible=groups[phase];
+    if(!eligible.length) eligible=groups[1-phase];
     if(!eligible?.length) throw Error("所选难度阶段没有适应该环境的敌军单位");
+    if (early) {
+      // Pick combat roles before hulls: numerous support variants and MS kits
+      // must not crowd tanks or fighter squadrons out of low-level contracts.
+      const roles = [["ms", 65], ["tank", 25], ["aircraft", 10]]
+        .map(([role, weight]) => ({ weight, models: eligible.filter(model => earlyCombatRole(room, model) === role) }))
+        .filter(role => role.models.length);
+      let roll = rng() * roles.reduce((sum, role) => sum + role.weight, 0);
+      const role = roles.find(role => (roll -= role.weight) < 0) || roles[roles.length - 1];
+      eligible = role.models;
+    }
     // Select hulls before kits so additional loadouts do not multiply spawn odds.
     const ids=[...new Set(eligible.map(model=>model.prefabId))];
     const id=ids[Math.floor(rng()*ids.length)],kits=eligible.filter(model=>model.prefabId===id);
     return kits[Math.floor(rng()*kits.length)];
+  }
+  function earlyCombatRole(room, model) {
+    const tags = model.unitTags || [];
+    if (tags.some(tag => ["Support", "Transport", "Infantry"].includes(tag))) return null;
+    if (tags.includes("MS")) {
+      // Ground-side early Zeon formations consist of Zaku variants, with a
+      // minority from the middle technology band, rather than Goufs/Doms/MAs.
+      if (room.settings.sweepFaction === "ZEON" && room.settings.sweepEnvironment !== "space" &&
+          !/^MS_0[56](?:[A-Z_]|$)/.test(model.prefabId)) return null;
+      return "ms";
+    }
+    if (tags.includes("Tank")) return "tank";
+    if (tags.includes("Aircraft") && !tags.includes("Recon")) return "aircraft";
+    return null;
   }
   function suitableEnvironment(model, environment) {
     const adaptation = model.adaptability || {};
@@ -659,7 +696,7 @@ const ContractMode = (() => {
       );
     return value;
   }
-  const squadCount = (difficulty) => (difficulty >= 7 ? 3 : difficulty >= 4 ? 2 : 1);
+  const squadCount = (difficulty) => (config(difficulty).id >= 4 ? 2 : 1);
   function group(room, ids, home, role = "patrol", objectiveId = null) {
     const b = brain(room.game),
       entry = {
@@ -966,7 +1003,8 @@ const ContractMode = (() => {
     }
     for (let i = 0; i < d.events + special.length; i++) {
       const task = special[i-d.events],
-        definition = task ? {...kinds.find(k=>k.type===task.kind),name:task.eventName} : types[i % types.length],
+        definition = task ? {...kinds.find(k=>k.type===(task.kind==="enemybase"?"factory":task.kind)),type:task.kind,name:task.eventName,
+          ...(task.kind==="enemybase"?{hint:"摧毁重兵防守的敌军基地，并成功撤离。"}:{})} : types[i % types.length],
         point = { ...locations[i] },
         objective = {
           id: "event-" + i,
@@ -985,24 +1023,24 @@ const ContractMode = (() => {
         for (let x = Math.max(0, point.x - 6); x <= Math.min(map.width - 1, point.x + 6); x++)
           game.tiles[y][x] = "plain";
       if (["defend","rescue"].includes(definition.type)) friendlyGarrison(room,G,objective);
-      if (["factory","radar"].includes(definition.type)) {
-        const count = definition.type === "radar" ? 1 : task?.id === "efsf-5" ? 4 : 2 + Math.floor((d.id - 1) / 4);
+      if (["factory","radar","enemybase"].includes(definition.type)) {
+        const count = ["radar","enemybase"].includes(definition.type) ? 1 : task?.id === "efsf-5" ? 4 : 2 + Math.floor((d.id - 1) / 4);
         for (let j = 0; j < count; j++) {
-          const model = G.models[definition.type === "radar" ? "Facility_Radar__standard" : "Facility_Factory__standard"],
+          const model = G.models[definition.type === "enemybase" ? "Facility_HQ__standard" : definition.type === "radar" ? "Facility_Radar__standard" : "Facility_Factory__standard"],
             u = spawn(room, G, model, {
               x: point.x + (j % 2) * 3 - 2,
               y: point.y + Math.floor(j / 2) * 3 - 2,
             });
           if (!u) throw Error("无法放置合约工厂");
-          u.facility = { id: u.id, type: definition.type === "radar" ? "radar" : "factory", level: 1 };
+          u.facility = { id: u.id, type: definition.type === "enemybase" ? "hq" : definition.type === "radar" ? "radar" : "factory", level: 1 };
           u.missionResourceScale = (20000 + (d.id - 1) * 5000) / model.hp;
           u.hp = G.modelOf(u).hp;
           objective.targets.push(u.id);
           brain(game).health.set(u.id, u.hp);
         }
       }
-      const count = task?.id === "efsf-4" ? 12 : task?.id === "efsf-5" ? 12 : 3 + Math.floor((d.id - 1) / 3);
-      const guards = ["efsf-3","efsf-4"].includes(task?.id) ? [] : patrol(
+      const count = task?.guardCount || (task?.id === "efsf-4" ? 12 : task?.id === "efsf-5" ? 12 : 3 + Math.floor((d.id - 1) / 3));
+      const guards = (["efsf-3","efsf-4"].includes(task?.id) || task?.targetUnit) ? [] : patrol(
         room,
         G,
         { x: point.x + (["defend","rescue"].includes(definition.type) ? 8 : 3), y: point.y + 2 },
@@ -1011,20 +1049,21 @@ const ContractMode = (() => {
         "guard",
         objective.id,
       );
-      if(["efsf-3","efsf-4"].includes(task?.id)) {
-        const prefab=G.catalog.prefabs.find(p=>p.id===(task.id==="efsf-3"?"RGM_79_G":"MS_06F")),model=G.models[prefab.id+"__"+prefab.weaponKits[0].id];
-        for(let j=0;j<(task.id==="efsf-3"?3:12);j++){
+      if(["efsf-3","efsf-4"].includes(task?.id) || task?.targetUnit) {
+        const prefab=G.catalog.prefabs.find(p=>p.id===(task.targetUnit || (task.id==="efsf-3"?"RGM_79_G":"MS_06F")));
+        for(let j=0;j<(task.targetKits?.length || (task.id==="efsf-3"?3:12));j++){
+          const model=G.models[prefab.id+"__"+(task.targetKits?.[j] || prefab.weaponKits[0].id)];
           const u=spawn(room,G,model,{x:point.x+3,y:point.y+j});
           if(!u)throw Error("无法放置联络任务小队");
-          if(task.id==="efsf-3") {
-            u.pilot={...u.pilot,...G.pilots.rollGrade("veteran",game.seed+state.serial,model)};
-            u.pilot.name+=" · 文件护卫"+(j+1);
+          if(task.id==="efsf-3" || task.targetPilotGrade) {
+            u.pilot={...u.pilot,...G.pilots.rollGrade(task.targetPilotGrade || "veteran",game.seed+state.serial,model)};
+            u.pilot.name+=" · "+(task.id==="efsf-7"?"不死的雷纳斯":"文件护卫")+(j+1);
           }
           guards.push(u.id);
         }
         group(room,guards,point,"guard",objective.id);
       }
-      if(task?.id === "efsf-5")for(let j=0;j<4;j++){
+      if(task?.id === "efsf-5" || task?.turrets)for(let j=0;j<(task.turrets || 4);j++){
         const u=spawn(room,G,G.models.Facility_MG__standard,{x:point.x+(j%2?5:-5),y:point.y+(j<2?-4:4)});
         if(!u)throw Error("无法放置前线营地炮塔");u.facility={id:u.id,type:"mg",level:1};
       }
@@ -1066,17 +1105,19 @@ const ContractMode = (() => {
     if (!state) return { money: 0, supplies: 0, technology: 0, inventory: {} };
     const completed = state.objectives.filter((o) => o.status === "completed" && !o.contactTaskId).length,
       d = config(room.settings.sweepDifficulty).id,
-      factor =
-        Math.pow(1.25, Math.max(0, G.technologyWeight(room.settings.sweepEra) - 1)) *
-        (1 + (d - 1) * 0.25);
+      era = Math.pow(1.25, Math.max(0, G.technologyWeight(room.settings.sweepEra) - 1)),
+      economy = typeof BattleEconomy !== "undefined" ? BattleEconomy : require("./battle-economy.js"),
+      share = Math.min(1, completed / d),
+      [money, supplies] = completionRewards[d - 1];
     return {
-      money: completed * 1250 * factor,
-      supplies: completed * 1875 * factor,
-      technology: completed * 125 * factor,
+      // Settlement applies its multiplier once; the table already includes it.
+      money: money * share * era / economy.completionRewardMultiplier,
+      supplies: supplies * share * era / economy.completionRewardMultiplier,
+      technology: completed * 125 * era * (1 + (d - 1) * 0.25),
       inventory: {},
     };
   }
-  function recordDefeat(room,G,from,to,model) {
+  function recordDefeat(room,G,from,to,model,weapon = null) {
     const state=room.game.contract;
     if(to.contactKillRecorded)return;
     to.contactKillRecorded=true;
@@ -1085,6 +1126,10 @@ const ContractMode = (() => {
     if(!owner || owner.bot)return;
     state.contactKills ||= [];
     if(!state.contactKills.includes(to.id) && model.unitTags?.includes("MS") && (model.availableFactions||[model.faction]).includes("ZEON"))state.contactKills.push(to.id);
+    state.contactKillRecords ||= [];
+    if(model.unitTags?.includes("MS") && !state.contactKillRecords.some(record=>record.id===to.id))
+      state.contactKillRecords.push({id:to.id,factions:model.availableFactions||[model.faction],
+        artillery:!!weapon && (weapon.slot==="skill" || !!weapon.special) && weaponClasses.classify(weapon)==="mortar"});
     if(/^RX_80PR(?:_|$)/.test(G.modelOf(from).prefabId))to.contactPaleKill=true;
   }
   function commissionProgress(room,G,player) {
@@ -1092,13 +1137,15 @@ const ContractMode = (() => {
     const escaped=room.game.units.some(u=>G.ownerOf(u)===player.seat&&u.hp>0&&u.contractExtracted);
     return (state.commissions?.[player.id]||[]).flatMap(id=>{
       const task=contacts.byId.get(id);if(!contacts.eligible(task,room.settings))return [];
-      if(task.kind==="kills")return [{id,amount:state.contactKills.length}];
+      if(task.kind==="kills")return [{id,amount:task.killMethod==="artillery"
+        ? (state.contactKillRecords||[]).filter(record=>record.artillery && record.factions.includes(task.enemyFaction||"ZEON")).length
+        : (state.contactKills||[]).length}];
       const o=state.objectives.find(o=>o.contactTaskId===id);
       if(id==="efsf-5"){
         const amount=o?.targets.filter(id=>{const u=room.game.units.find(u=>u.id===id);return u?.hp<=0&&u.contactPaleKill;}).length||0;
         return amount ? [{id,amount}] : [];
       }
-      if(o?.status!=="completed" || (task.kind==="salvage"&&!escaped))return [];
+      if(o?.status!=="completed" || ((task.kind==="salvage" || task.requiresExtraction)&&!escaped))return [];
       return [{id,amount:1}];
     });
   }
@@ -1173,7 +1220,7 @@ const ContractMode = (() => {
         if (u && u.hp < (b.health.get(id) ?? u.hp)) {
           force.alerted = true;
           const objective = state.objectives.find((o) => o.id === force.objectiveId);
-          if (objective && ["factory", "command", "radar"].includes(objective.type))
+          if (objective && ["factory", "command", "radar", "enemybase"].includes(objective.type))
             startObjective(state, objective);
           alertNearby(game, u, force.objectiveId);
           const enemy = near(game, G, u, 0, 18).sort((a, c) => distance(a, u) - distance(c, u))[0];
@@ -1184,11 +1231,11 @@ const ContractMode = (() => {
     for (const o of state.objectives) {
       if (["completed","failed"].includes(o.status)) continue;
       if (
-        ["factory", "command", "radar"].includes(o.type) &&
+        ["factory", "command", "radar", "enemybase"].includes(o.type) &&
         near(game, G, o, 0, o.type === "command" ? 6 : 3).length
       )
         startObjective(state, o);
-      if (["factory","radar"].includes(o.type))
+      if (["factory","radar","enemybase"].includes(o.type))
         for (const id of o.targets) {
           const u = game.units.find((u) => u.id === id),
             previous = b.health.get(id);
@@ -1204,7 +1251,7 @@ const ContractMode = (() => {
           }
         }
       if (
-        ["factory", "command", "radar"].includes(o.type) &&
+        ["factory", "command", "radar", "enemybase"].includes(o.type) &&
         o.targets.length &&
         o.targets.every((id) => !game.units.some((u) => u.id === id && u.hp > 0))
       ) {

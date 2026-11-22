@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test');
 const { pathToFileURL } = require('node:url');
 const path = require('node:path');
-const url = pathToFileURL(path.resolve('public/map-editor.html')).href;
+const url = pathToFileURL(path.resolve('admin/map-editor.html')).href;
 
 for (const width of [1440, 768, 390]) test(`mission editor map picking and dock layout at ${width}px`, async ({ page }) => {
   const errors = [];

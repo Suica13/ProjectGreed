@@ -39,7 +39,7 @@ async function ensureDeveloper({
     return true;
   };
   let running = await probe();
-  if (!fs.existsSync(path.join(root, "public/developer.html"))) {
+  if (!fs.existsSync(path.join(root, "admin/developer.html"))) {
     const result = spawnSync(process.execPath, [path.join(root, "build.cjs"), "--developer"], {
       cwd: root,
       stdio: "inherit",

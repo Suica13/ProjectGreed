@@ -885,6 +885,12 @@
     "ZN_MS_06JK_Gatling": {
       "ref": "ZN_MS_06JK_Gatling__lv1",
       "overrides": {
+        "name": "肩部加特林",
+        "localization": {
+          "zh": {"name": "肩部加特林"},
+          "en": {"name": "Shoulder Gatling"},
+          "ja": {"name": "肩部ガトリング"}
+        },
         "requiredParts": [
           "backpack"
         ],

@@ -1623,7 +1623,7 @@ function createRoomEngine({
           if (from.team !== to.team)
             recordPilotBattle(room, from, "kill", defeatedModel.cost, !!defeatedModel.ship);
           recordPilotBattle(room, to, "loss", defeatedModel.cost);
-          awardDefeat(room, from, to, defeatedModel, visibleBeforeCombat);
+          awardDefeat(room, from, to, defeatedModel, visibleBeforeCombat, G.eventWeapon(from, e));
           settlePilotAssists(room, to, from);
         }
         for (const evacuation of e.evacuations || []) {
@@ -1894,9 +1894,9 @@ function createRoomEngine({
     }
     if (room.battlefieldAttackers) delete room.battlefieldAttackers[to.id];
   }
-  function awardDefeat(room, from, to, defeatedModel, visibleBefore = {}) {
+  function awardDefeat(room, from, to, defeatedModel, visibleBefore = {}, weapon = null) {
     recordDefeatDialogue(room, from, to, visibleBefore);
-    if (room.game.contract) { Contract.recordDefeat(room, G, from, to, defeatedModel); return; }
+    if (room.game.contract) { Contract.recordDefeat(room, G, from, to, defeatedModel, weapon); return; }
     if (room.settings.mode === "battlefield") {
       awardBattlefieldDefeat(room, from, to, defeatedModel);
       return;
@@ -2222,6 +2222,7 @@ function createRoomEngine({
           kind: "result",
           ...battlefieldLosses(room, player.seat),
           stockStates: survivingStockStates(room, player),
+          settledStockIds: Object.values(room.battleRoster || {}).filter(record => record.memberId === player.id && record.stockId).map(record => record.stockId),
           money: roundReward(entryReward.money * bonus.money),
           supplies: roundReward(entryReward.supplies * bonus.supplies),
         });
@@ -2273,6 +2274,7 @@ function createRoomEngine({
         kind: "result",
         ...(stockLost ? { stockLost } : {}),
         stockStates: survivingStockStates(room, player),
+        settledStockIds: Object.values(room.battleRoster || {}).filter(record => record.memberId === player.id && record.stockId).map(record => record.stockId),
         ...(room.game.contract ? {contactProgress: Contract.commissionProgress(room,G,player)} : {}),
         destroyedCost,
         ...(missionReward ? {stockGained:{inventory:missionReward.inventory}} : {}),

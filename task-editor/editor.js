@@ -2,38 +2,38 @@
   "use strict";
   const $ = (id) => document.getElementById(id),
     M = TaskTreeModel,
-    key = "projectgreed.task-tree-editor.v1";
-  const categories = {
-    plan: "任务设计",
-    contract: "合约事件",
-    condition: "剧本触发条件",
-    action: "剧本动作",
-    victory: "胜利条件",
-    contact: "联络任务",
-  };
+    statuses = EDITOR_DATA.statuses,
+    key = "projectgreed.contact-planning.v1";
   let doc = M.blank(),
+    contactId = doc.contacts[0].id,
     selected = null,
     scale = 1,
     history = [],
     future = [],
-    saveTimer;
-  const typeOf = (n) => EDITOR_DATA.types.find((t) => t.id === n.kind),
-    selectedNode = () => doc.nodes.find((n) => n.id === selected);
+    timer,
+    contactMode = false;
+  const contact = () => doc.contacts.find((c) => c.id === contactId) || doc.contacts[0],
+    task = () => contact().tasks.find((t) => t.id === selected),
+    statusOf = (t) => statuses.find((s) => s.id === t.status);
   const el = (tag, text, cls) => {
-    const n = document.createElement(tag);
-    if (text !== undefined) n.textContent = text;
-    if (cls) n.className = cls;
-    return n;
-  };
-  const tell = (text) => {
-    $("status").textContent = text;
-  };
+      const n = document.createElement(tag);
+      if (text !== undefined) n.textContent = text;
+      if (cls) n.className = cls;
+      return n;
+    },
+    tell = (text) => {
+      $("status").textContent = text;
+    };
   function persist() {
+    if (M.validate(doc, statuses).length) {
+      tell("请补全版本号或委托名称，当前修改尚未保存。");
+      return;
+    }
     try {
       localStorage.setItem(key, JSON.stringify(doc));
-      tell("草稿已自动保存 · " + new Date().toLocaleTimeString());
+      tell("策划草稿已保存 · 系统版本 " + doc.systemVersion);
     } catch {
-      tell("浏览器无法保存草稿，请及时导出JSON。");
+      tell("无法保存草稿，请导出JSON。");
     }
   }
   function checkpoint() {
@@ -41,62 +41,53 @@
     if (history.length > 60) history.shift();
     future = [];
   }
-  function changed() {
-    clearTimeout(saveTimer);
-    saveTimer = setTimeout(persist, 250);
-    $("undo").disabled = !history.length;
-    $("redo").disabled = !future.length;
-    draw();
-  }
   function edit(fn, refresh = true) {
     checkpoint();
     fn();
-    changed();
-    if (refresh) renderInspector();
+    clearTimeout(timer);
+    timer = setTimeout(persist, 250);
+    draw();
+    list();
+    if (refresh) inspect();
   }
   function load(value) {
-    const errors = M.validate(value, EDITOR_DATA.types);
+    const errors = M.validate(value, statuses);
     if (errors.length) throw Error(errors.join("\n"));
     doc = M.clone(value);
-    selected = doc.nodes[0]?.id || null;
+    delete doc.aiGuide;
+    contactId = doc.contacts[0].id;
+    selected = contact().tasks[0]?.id || null;
     history = [];
     future = [];
+    contactMode = false;
     render();
     persist();
   }
-  function add(type) {
-    edit(() => {
-      const n = M.add(doc, type, selected);
-      selected = n.id;
-    });
-    center();
-  }
-  function library() {
-    const q = $("search").value.trim().toLowerCase();
-    $("library").replaceChildren();
-    for (const [category, name] of Object.entries(categories)) {
-      const matches = EDITOR_DATA.types.filter(
-        (t) =>
-          t.category === category &&
-          [t.name, t.id, t.description].some((v) => v.toLowerCase().includes(q)),
-      );
-      if (!matches.length) continue;
-      const details = el("details"),
-        summary = el("summary", name + " · " + matches.length);
-      details.open = category === "plan" || category === "contract" || !!q;
-      details.append(summary);
-      for (const type of matches) {
-        const button = el("button", type.name);
-        button.title = type.description;
-        button.append(el("small", type.type));
-        button.onclick = () => add(type);
-        details.append(button);
-      }
-      $("library").append(details);
+  function list() {
+    const q = $("search").value.trim().toLowerCase(),
+      filter = $("statusFilter").value;
+    $("taskList").replaceChildren();
+    for (const t of contact().tasks.filter(
+      (t) =>
+        (!filter || filter === t.status) &&
+        [t.name, t.text, t.id].some((v) => v.toLowerCase().includes(q)),
+    )) {
+      const b = el("button", t.name);
+      b.append(el("small", t.status + " · " + t.id));
+      b.style.borderLeft = "3px solid " + statusOf(t).color;
+      b.onclick = () => {
+        selected = t.id;
+        contactMode = false;
+        draw();
+        inspect();
+        center();
+      };
+      $("taskList").append(b);
     }
   }
   function draw() {
-    const { positions, width, height } = M.layout(doc),
+    const c = contact(),
+      { positions, width, height } = M.layout(c),
       scene = $("scene");
     scene.style.width = width + "px";
     scene.style.height = height + "px";
@@ -125,287 +116,199 @@
     marker.append(make("path", { d: "M 0 0 L 10 5 L 0 10 z", fill: "#598aa7" }));
     defs.append(marker);
     svg.append(defs);
-    for (const n of doc.nodes) {
-      const p = positions.get(n.id),
-        t = typeOf(n);
+    for (const t of c.tasks) {
+      const p = positions.get(t.id);
       if (!p) continue;
-      if (n.parent) {
-        const a = positions.get(n.parent);
-        if (a) {
-          const sx = a.x + 108,
-            sy = a.y + 112,
-            tx = p.x + 108,
-            ty = p.y;
-          svg.append(
-            make("path", {
-              d: `M${sx} ${sy} C${sx} ${sy + 35},${tx} ${ty - 35},${tx} ${ty - 8}`,
-              fill: "none",
-              stroke: "#598aa7",
-              "stroke-width": 2,
-              "marker-end": "url(#arrow)",
-            }),
-          );
-          const label = make("text", {
-            x: (sx + tx) / 2 + 7,
-            y: (sy + ty) / 2,
-            fill: "#9fbfd1",
-            "font-size": 11,
-          });
-          label.textContent = n.edgeLabel;
-          svg.append(label);
-        }
+      for (const id of t.requires) {
+        const a = positions.get(id);
+        if (!a) continue;
+        const sx = a.x + 108,
+          sy = a.y + 112,
+          tx = p.x + 108,
+          ty = p.y;
+        svg.append(
+          make("path", {
+            d: `M${sx} ${sy} C${sx} ${sy + 35},${tx} ${ty - 35},${tx} ${ty - 8}`,
+            fill: "none",
+            stroke: "#598aa7",
+            "stroke-width": 2,
+            "marker-end": "url(#arrow)",
+          }),
+        );
       }
-      const button = el("button", undefined, "node" + (selected === n.id ? " selected" : ""));
-      button.dataset.id = n.id;
-      button.dataset.category = t.category;
-      button.style.left = p.x + "px";
-      button.style.top = p.y + "px";
-      button.append(
-        el("small", categories[t.category] + " · " + t.type),
-        el("strong", n.title),
-        el("p", n.description || t.description),
-      );
-      button.onclick = () => {
-        selected = n.id;
+      const s = statusOf(t),
+        b = el(
+          "button",
+          undefined,
+          "node" + (selected === t.id && !contactMode ? " selected" : ""),
+        );
+      b.dataset.id = t.id;
+      b.style.left = p.x + "px";
+      b.style.top = p.y + "px";
+      b.style.borderLeftColor = s.color;
+      b.append(el("small", t.status), el("strong", t.name), el("p", t.text || "填写委托策划文本"));
+      b.onclick = () => {
+        selected = t.id;
+        contactMode = false;
         draw();
-        renderInspector();
+        inspect();
       };
-      $("nodes").append(button);
+      $("nodes").append(b);
     }
-    if (!doc.nodes.length)
-      $("nodes").append(el("p", "从左侧选择一种事件，开始编写任务树。", "empty"));
-    $("count").textContent = doc.nodes.length + " 个节点";
+    if (!c.tasks.length)
+      $("nodes").append(el("p", "点击“新增委托”，填写标记和策划文本。", "empty"));
+    $("count").textContent = c.tasks.length + " 项委托";
     $("zoom").textContent = Math.round(scale * 100) + "%";
     $("undo").disabled = !history.length;
     $("redo").disabled = !future.length;
   }
   function field(label, input, hint) {
     const wrap = el("label", label);
+    input.setAttribute("aria-label", label);
     wrap.append(input);
     if (hint) wrap.append(el("small", hint));
     return wrap;
   }
-  function input(value, change, tag = "input") {
-    const node = el(tag);
-    node.value = value;
-    node.onchange = () => change(node.value, node);
-    return node;
+  function textField(parent, obj, k, label, multiline = false) {
+    const input = el(multiline ? "textarea" : "input");
+    input.value = obj[k];
+    input.onchange = () => edit(() => (obj[k] = input.value), false);
+    if (multiline) input.className = "planning-text";
+    parent.append(field(label, input));
   }
-  function renderInspector() {
+  function inspect() {
     const panel = $("inspector"),
-      n = selectedNode();
+      c = contact(),
+      t = task();
     panel.replaceChildren();
-    if (!n) {
-      panel.append(el("p", "选择节点后编辑参数。", "hint"));
+    $("panelTitle").textContent = contactMode ? "联络人策划文本" : "委托策划";
+    if (contactMode) {
+      if (c.portrait) {
+        const image = el("img", undefined, "contact-portrait");
+        image.src = c.portrait.dataUrl;
+        image.alt = c.name + "头像";
+        panel.append(image);
+      }
+      const upload = el("input");
+      upload.type = "file";
+      upload.accept = "image/png,image/jpeg,image/webp";
+      upload.onchange = async () => {
+        const file = upload.files[0];
+        if (!file) return;
+        try {
+          if (file.size > 1024 * 1024) throw Error("头像不得超过1MB。");
+          const dataUrl = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = () => reject(Error("头像读取失败。"));
+            reader.readAsDataURL(file);
+          });
+          const candidate = M.clone(doc),
+            portrait = { id: "", source: file.name, dataUrl };
+          candidate.contacts.find((item) => item.id === c.id).portrait = portrait;
+          const errors = M.validate(candidate, statuses);
+          if (errors.length) throw Error(errors.join("\n"));
+          const image = new Image();
+          image.src = dataUrl;
+          await image.decode();
+          edit(() => (c.portrait = portrait));
+        } catch (error) {
+          tell(error.message);
+          alert(error.message);
+        }
+      };
+      panel.append(field("联络人头像", upload, "PNG、JPEG或WebP，最多1MB；图片随联络人JSON保存。"));
+      if (c.portrait) {
+        const remove = el("button", "移除头像");
+        remove.onclick = () => edit(() => delete c.portrait);
+        panel.append(remove);
+      }
+      textField(panel, c, "text", "联络人文本（初见对话、背景或共通要求）", true);
       return;
     }
-    const t = typeOf(n);
-    panel.append(
-      el("div", t.description, "description"),
-      el("p", n.id + " · " + n.kind, "node-code"),
-    );
-    panel.append(
-      field(
-        "节点名称",
-        input(n.title, (v) => edit(() => (n.title = v), false)),
-      ),
-      field(
-        "设计描述 / AI补充说明",
-        input(n.description, (v) => edit(() => (n.description = v), false), "textarea"),
-      ),
-    );
-    const type = el("select");
-    for (const item of EDITOR_DATA.types) {
-      const option = el("option", categories[item.category] + " / " + item.name);
-      option.value = item.id;
-      type.append(option);
+    if (!t) {
+      panel.append(el("p", "选中委托后填写名称、改动标记和策划文本。", "hint"));
+      return;
     }
-    type.value = n.kind;
-    type.onchange = () => {
-      if (!confirm("切换类型将重置该节点的参数，是否继续？")) {
-        type.value = n.kind;
-        return;
-      }
-      edit(() => {
-        const next = EDITOR_DATA.types.find((t) => t.id === type.value);
-        n.kind = next.id;
-        n.parameters = Object.fromEntries(next.fields.map((f) => [f.key, M.clone(f.value)]));
-      });
-    };
-    panel.append(field("事件类型", type));
-    const parents = el("select"),
-      none = el("option", "无（根节点）");
-    none.value = "";
-    parents.append(none);
-    const excluded = M.descendants(doc, n.id);
-    for (const p of doc.nodes.filter((p) => !excluded.has(p.id))) {
-      const option = el("option", p.title + " · " + p.id);
-      option.value = p.id;
-      parents.append(option);
+    panel.append(el("p", "稳定编号：" + t.id, "node-code"));
+    textField(panel, t, "name", "委托名称");
+    const select = el("select");
+    for (const s of statuses) {
+      const o = el("option", s.id);
+      o.value = s.id;
+      select.append(o);
     }
-    parents.value = n.parent || "";
-    parents.onchange = () => edit(() => (n.parent = parents.value || null));
+    select.value = t.status;
+    select.onchange = () => edit(() => (t.status = select.value));
+    panel.append(field("委托改动标记", select), el("div", statusOf(t).description, "description"));
+    textField(panel, t, "text", "策划文本", true);
     panel.append(
-      field("前置节点", parents),
-      field(
-        "连线文字 / 分支选项",
-        input(n.edgeLabel, (v) => edit(() => (n.edgeLabel = v), false)),
-      ),
+      el("p", "自由填写任务内容、目标、对话、初始装备、奖励及特殊条件。无需填写程序字段。", "hint"),
     );
-    const fields = el("section", undefined, "fields");
-    fields.append(el("h2", "事件参数"));
-    for (const f of t.fields) {
-      const value = n.parameters[f.key] ?? M.clone(f.value);
-      if (f.type === "dialogue") {
-        const lines = el("div");
-        lines.append(
-          el("p", "对话按从上到下播放。声音为资源路径；头像为assets/pilots/下的图片。", "hint"),
+    const box = el("details", undefined, "prerequisites");
+    box.append(el("summary", "前置委托（可选）"));
+    const excluded = M.descendants(c, t.id);
+    for (const other of c.tasks.filter((x) => !excluded.has(x.id))) {
+      const check = el("input");
+      check.type = "checkbox";
+      check.checked = t.requires.includes(other.id);
+      check.onchange = () =>
+        edit(
+          () =>
+            (t.requires = check.checked
+              ? [...t.requires, other.id]
+              : t.requires.filter((id) => id !== other.id)),
         );
-        for (const [index, line] of (Array.isArray(value) ? value : []).entries()) {
-          const box = el("div", undefined, "dialogue-line");
-          box.append(el("b", "第 " + (index + 1) + " 句"));
-          for (const [k, label] of Object.entries({
-            actor: "镜头聚焦的脚本单位ID",
-            name: "角色名称",
-            text: "对话文本",
-            portrait: "头像路径（可选）",
-            sound: "声音路径（可选）",
-          }))
-            box.append(
-              field(
-                label,
-                input(
-                  line[k] || "",
-                  (v) =>
-                    edit(() => {
-                      n.parameters[f.key] = value;
-                      value[index][k] = v;
-                    }, false),
-                  k === "text" ? "textarea" : "input",
-                ),
-              ),
-            );
-          const remove = el("button", "移除本句");
-          remove.onclick = () =>
-            edit(() => {
-              n.parameters[f.key] = value.filter((_, i) => i !== index);
-            });
-          box.append(remove);
-          lines.append(box);
-        }
-        const plus = el("button", "＋ 添加对话");
-        plus.disabled = value.length >= 50;
-        plus.onclick = () =>
-          edit(() => {
-            n.parameters[f.key] = [
-              ...value,
-              { actor: "", name: "", text: "", portrait: "", sound: "" },
-            ];
-          });
-        lines.append(plus);
-        fields.append(field(f.label, lines));
-        continue;
-      }
-      const text =
-        f.type === "json"
-          ? JSON.stringify(value, null, 2)
-          : f.type === "list"
-            ? value.join(", ")
-            : value;
-      const node = input(
-        text,
-        (v, control) => {
-          try {
-            let parsed =
-              f.type === "number"
-                ? Number(v)
-                : f.type === "json"
-                  ? JSON.parse(v)
-                  : f.type === "list"
-                    ? v
-                        .split(/[,，\n]/)
-                        .map((s) => s.trim())
-                        .filter(Boolean)
-                    : v;
-            if (f.type === "number" && (!v.trim() || !Number.isFinite(parsed)))
-              throw Error("请填写有效数字。");
-            if (f.type === "json" && (parsed === null || typeof parsed !== "object"))
-              throw Error("此参数需要JSON对象或列表。");
-            edit(() => (n.parameters[f.key] = parsed), false);
-          } catch (error) {
-            control.classList.add("invalid");
-            control.setCustomValidity(error.message);
-            control.reportValidity();
-            tell("参数未保存：" + error.message);
-          }
-        },
-        f.type === "json" ? "textarea" : "input",
-      );
-      if (f.type === "number") node.type = "number";
-      node.oninput = () => {
-        node.setCustomValidity("");
-        node.classList.remove("invalid");
-      };
-      fields.append(field(f.label, node, f.hint));
+      box.append(field(other.name + " · " + other.id, check));
     }
-    if (!t.fields.length) fields.append(el("p", "此类型不需要额外参数。", "hint"));
-    panel.append(fields);
+    panel.append(box);
     const row = el("div", undefined, "row"),
-      child = el("button", "＋ 子任务"),
-      copy = el("button", "复制节点"),
-      remove = el("button", "删除分支", "danger");
-    child.onclick = () => add(EDITOR_DATA.types[0]);
+      copy = el("button", "复制委托"),
+      remove = el("button", "删除卡片", "danger");
     copy.onclick = () =>
       edit(() => {
-        const x = M.add(doc, t, n.parent);
-        Object.assign(x, {
-          title: n.title + "（副本）",
-          description: n.description,
-          edgeLabel: n.edgeLabel,
-          parameters: M.clone(n.parameters),
-        });
-        selected = x.id;
+        const n = M.add(doc, c, null);
+        n.name = t.name + "（副本）";
+        n.text = t.text;
+        n.requires = [...t.requires];
+        selected = n.id;
       });
     remove.onclick = () => {
-      const ids = M.descendants(doc, n.id);
-      if (confirm(`删除此节点及其 ${ids.size - 1} 个后续节点？`))
+      if (confirm("删除策划卡片？若希望通知AI停用委托，请保留卡片并标为“废弃”。"))
         edit(() => {
-          doc.nodes = doc.nodes.filter((x) => !ids.has(x.id));
-          selected = n.parent;
+          c.tasks = c.tasks.filter((x) => x !== t);
+          for (const x of c.tasks) x.requires = x.requires.filter((id) => id !== t.id);
+          selected = null;
         });
     };
-    row.append(child, copy, remove);
+    row.append(copy, remove);
     panel.append(row);
-    if (doc.sourceMap)
-      panel.append(
-        el(
-          "p",
-          "已保留导入的原地图。节点编辑不会自动改写原地图；请导出设计稿交由AI生成新剧本。",
-          "reference",
-        ),
-      );
   }
   function render() {
-    for (const [id, k] of [
-      ["title", "name"],
-      ["era", "era"],
-      ["environment", "environment"],
-      ["cost", "costLimit"],
-      ["fleet", "fleetLimit"],
-    ])
-      $(id).value = doc.project[k];
-    library();
+    const s = $("contact");
+    s.replaceChildren();
+    for (const c of doc.contacts) {
+      const o = el("option", c.name);
+      o.value = c.id;
+      s.append(o);
+    }
+    s.value = contact().id;
+    $("contactName").value = contact().name;
+    $("systemVersion").value = doc.systemVersion;
+    $("notes").value = doc.notes;
+    $("addContact").disabled = doc.contacts.length >= 30;
+    list();
     draw();
-    renderInspector();
+    inspect();
   }
   function center() {
-    const node = $("nodes").querySelector(`[data-id="${selected}"]`);
-    if (node) node.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+    const n = $("nodes").querySelector(`[data-id="${selected}"]`);
+    n?.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
   }
-  function exportValue() {
-    const errors = M.validate(doc, EDITOR_DATA.types);
+  function exported() {
+    const errors = M.validate(doc, statuses);
     if (errors.length) throw Error(errors.join("\n"));
-    return M.bundle(doc, EDITOR_DATA.types, EDITOR_DATA.version);
+    return M.bundle(doc, statuses, contact().id);
   }
   function download(name, text, mime) {
     const a = el("a");
@@ -416,118 +319,122 @@
     a.remove();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   }
-  function safeName() {
-    return doc.project.name.replace(/[\\/:*?"<>|]/g, "_").slice(0, 80) || "task-tree";
-  }
-  function aiText() {
-    const value = exportValue();
-    return (
-      "请根据以下ProjectGreed任务设计树制作任务。先阅读reference中的现有事件语义与注意事项，列出待补全的内容，再修改工程并验证。\n\n" +
-      JSON.stringify(value, null, 2)
-    );
-  }
-  for (const era of EDITOR_DATA.eras) {
-    const o = el("option", era);
-    o.value = era;
-    $("era").append(o);
-  }
-  for (const [id, k] of [
-    ["title", "name"],
-    ["era", "era"],
-    ["environment", "environment"],
-    ["cost", "costLimit"],
-    ["fleet", "fleetLimit"],
-  ])
-    $(id).onchange = () => {
-      checkpoint();
-      doc.project[k] = ["cost", "fleet"].includes(id) ? Number($(id).value) : $(id).value;
-      changed();
-    };
-  $("search").oninput = library;
-  $("new").onclick = () => {
-    if (confirm("新建任务？当前草稿将替换，请先导出需要保留的内容。")) load(M.blank());
+  const filename = () =>
+    (contact().id + "-" + contact().name + "-" + doc.systemVersion).replace(/[\\/:*?"<>|]/g, "_").slice(0, 100);
+  $("contact").onchange = () => {
+    contactId = $("contact").value;
+    selected = null;
+    contactMode = false;
+    render();
   };
-  $("sample").onclick = () => {
-    if (confirm("载入示例并替换当前草稿？")) load(EDITOR_DATA.sample);
+  $("contactName").onchange = () => {
+    if (!$("contactName").value.trim()) return;
+    edit(() => (contact().name = $("contactName").value));
+    render();
+  };
+  $("systemVersion").onchange = () =>
+    edit(() => (doc.systemVersion = $("systemVersion").value), false);
+  $("notes").onchange = () => edit(() => (doc.notes = $("notes").value), false);
+  $("addContact").onclick = () => {
+    edit(() => {
+      if (doc.contacts.length >= 30) throw Error("最多30个联络人。");
+      let n = 1;
+      while (doc.contacts.some((c) => c.id === "contact_" + n)) n++;
+      const c = { id: "contact_" + n, name: "新联络人", text: "", tasks: [] };
+      doc.contacts.push(c);
+      contactId = c.id;
+      selected = null;
+    });
+    render();
+  };
+  function add(root) {
+    contactMode = false;
+    try {
+      edit(() => (selected = M.add(doc, contact(), root ? null : selected).id));
+      center();
+    } catch (e) {
+      tell(e.message);
+    }
+  }
+  $("addTask").onclick = () => add(false);
+  $("addRoot").onclick = () => add(true);
+  $("contactText").onclick = () => {
+    contactMode = !contactMode;
+    inspect();
+    draw();
+  };
+  $("search").oninput = list;
+  $("statusFilter").onchange = list;
+  $("new").onclick = () => {
+    if (confirm("新建并替换草稿？请先导出需要保留的内容。")) load(M.blank());
   };
   $("import").onclick = () => $("file").click();
   $("file").onchange = async () => {
-    const file = $("file").files[0];
-    if (!file) return;
+    const f = $("file").files[0];
+    if (!f) return;
     try {
-      if (file.size > 20 * 1024 * 1024) throw Error("文件不得超过20MB。");
-      const value = JSON.parse(await file.text());
-      const next =
-        value.format === "projectgreed-task-tree" ? value : M.fromMap(value, EDITOR_DATA.types);
-      if (confirm("导入并替换当前草稿？")) load(next);
-    } catch (error) {
-      tell("导入失败：" + error.message);
-      alert(error.message);
+      if (f.size > 5 * 1024 * 1024) throw Error("文件不得超过5MB。");
+      const next = JSON.parse(await f.text()),
+        errors = M.validate(next, statuses);
+      if (errors.length) throw Error(errors.join("\n"));
+      if (confirm("导入并替换草稿？")) load(next);
+    } catch (e) {
+      tell("导入失败：" + e.message);
+      alert(e.message);
     } finally {
       $("file").value = "";
     }
   };
   $("export").onclick = () => {
     try {
-      download(
-        safeName() + ".task-tree.json",
-        JSON.stringify(exportValue(), null, 2),
-        "application/json",
-      );
-      tell("已导出设计JSON。");
+      download(filename() + ".json", JSON.stringify(exported(), null, 2), "application/json");
+      tell("已导出当前联络人JSON（含头像及全部委托）。");
     } catch (e) {
       alert(e.message);
     }
   };
   $("ai").onclick = () => {
     try {
-      download(safeName() + ".ai-task.txt", aiText(), "text/plain;charset=utf-8");
-      tell("已导出AI制作说明，含结构化任务树和全部事件参考。");
+      download(
+        filename() + ".txt",
+        "请先核对委托系统版本号，然后严格按委托改动标记和策划文本确定实现范围。\n\n" +
+          JSON.stringify(exported(), null, 2),
+        "text/plain;charset=utf-8",
+      );
+      tell("已导出AI制作说明。");
     } catch (e) {
       alert(e.message);
     }
   };
   $("preview").onclick = () => {
-    const errors = M.validate(doc, EDITOR_DATA.types),
-      todo = doc.nodes.filter((n) => !n.description.trim()).length;
+    const errors = M.validate(doc, statuses);
     $("validation").textContent = errors.length
-      ? "校验失败：\n" + errors.join("\n")
-      : `设计结构有效。${todo}个节点尚无补充描述。此校验不代表地图坐标、单位引用或游戏逻辑已经可运行。`;
-    $("json").value = JSON.stringify(
-      M.bundle(doc, EDITOR_DATA.types, EDITOR_DATA.version),
-      null,
-      2,
-    );
+      ? errors.join("\n")
+      : "文档结构有效。系统版本：" + doc.systemVersion + "；仅校验策划文档，不校验程序实现。";
+    $("json").value = JSON.stringify(M.bundle(doc, statuses, contact().id), null, 2);
     $("output").showModal();
   };
+  $("close").onclick = () => $("output").close();
   $("copy").onclick = async () => {
     try {
       await navigator.clipboard.writeText($("json").value);
-      $("copy").textContent = "已复制";
+      tell("已复制。");
     } catch {
       $("json").select();
-      tell("浏览器限制剪贴板，请按Ctrl+C复制选中的内容。");
+      tell("请按Ctrl+C复制。");
     }
   };
-  $("close").onclick = () => $("output").close();
-  $("undo").onclick = () => {
-    if (history.length) {
-      future.push(JSON.stringify(doc));
-      doc = JSON.parse(history.pop());
-      selected = doc.nodes.some((n) => n.id === selected) ? selected : doc.nodes[0]?.id;
-      render();
-      persist();
-    }
-  };
-  $("redo").onclick = () => {
-    if (future.length) {
-      history.push(JSON.stringify(doc));
-      doc = JSON.parse(future.pop());
-      selected = doc.nodes[0]?.id;
-      render();
-      persist();
-    }
-  };
+  function restore(from, to) {
+    if (!from.length) return;
+    to.push(JSON.stringify(doc));
+    doc = JSON.parse(from.pop());
+    contactId = contact().id;
+    selected = null;
+    render();
+    persist();
+  }
+  $("undo").onclick = () => restore(history, future);
+  $("redo").onclick = () => restore(future, history);
   $("zoomIn").onclick = () => {
     scale = Math.min(1.5, scale + 0.1);
     draw();
@@ -537,14 +444,23 @@
     draw();
   };
   $("center").onclick = center;
+  for (const s of statuses) {
+    const o = el("option", s.id);
+    o.value = s.id;
+    $("statusFilter").append(o);
+    const p = el("p", s.id + "：" + s.description, "hint");
+    p.style.borderLeft = "3px solid " + s.color;
+    p.style.paddingLeft = "7px";
+    $("legend").append(p);
+  }
   try {
     const saved = JSON.parse(localStorage.getItem(key) || "null");
-    if (saved && !M.validate(saved, EDITOR_DATA.types).length) doc = saved;
+    if (saved && !M.validate(saved, statuses).length) doc = saved;
   } catch {
-    tell("无法读取草稿，将使用空白任务。");
+    tell("无法读取草稿。");
   }
-  selected = doc.nodes[0]?.id || null;
+  contactId = doc.contacts[0].id;
+  selected = contact().tasks[0]?.id || null;
   render();
-  // Read-only inspection hook for automated verification and AI-assisted review.
-  window.TaskTreeEditor = { snapshot: () => M.clone(doc), exportValue };
+  window.TaskTreeEditor = { snapshot: () => M.clone(doc), exportValue: exported };
 })();

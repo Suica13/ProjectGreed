@@ -4,6 +4,27 @@ const path=require("node:path");
 const {createServer}=require("../server");
 const Contract=require("../shared/contract-mode");
 
+test("standalone low-level contracts load the front-line combat pool", async ({page}) => {
+  const errors=[];page.on("pageerror",error=>errors.push(error.message));
+  await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
+  await page.waitForFunction(()=>assetsReady);
+  const result=await page.evaluate(()=>{
+    const ids=new Set(),invalid=[];
+    for(const difficulty of [1,2,3])for(let seed=1;seed<=200;seed++) {
+      const room={settings:{sweepDifficulty:difficulty,sweepEra:"UC_0079_T1",sweepFaction:"ZEON",sweepEnvironment:"ground"}};
+      for(const entry of ContractMode.enemies(room,Rules,Math.imul(seed,0x9e3779b1)>>>0)) {
+        const model=Rules.models[entry.unitId+"__"+entry.kitId];ids.add(model.prefabId);
+        if(model.unitTags.some(tag=>["Support","Transport","Infantry"].includes(tag)) ||
+           !ContractMode.suitableEnvironment(model,"ground"))invalid.push(model.prefabId);
+      }
+    }
+    return {ids:[...ids],invalid};
+  });
+  expect(result.invalid).toEqual([]);
+  for(const id of ["MS_06F","MS_06J","MTank","Dopp"])expect(result.ids).toContain(id);
+  expect(errors).toEqual([]);
+});
+
 test("random contract biomes render distinct grass, snow, desert and urban battlefields",async({page})=>{
   await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
   await page.waitForFunction(()=>assetsReady);

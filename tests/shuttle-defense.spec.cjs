@@ -36,7 +36,7 @@ for(const width of [1440,390])test(`shuttle defense art, dialogue and objective 
 test('shuttle defense group survival and scripted pilot options remain editable',async({page})=>{
  test.setTimeout(60000);const errors=[];page.on('pageerror',e=>errors.push(e.message));
  const map=JSON.parse(require('node:fs').readFileSync('assets/maps/missions/shuttle_defense.json','utf8'));
- await page.goto(pathToFileURL(path.resolve('public/map-editor.html')).href);
+ await page.goto(pathToFileURL(path.resolve('admin/map-editor.html')).href);
  await page.evaluate(map=>{MapEditor.importMap(map.tileMap);MapEditor.tab('mission');},map);
  await expect(page.locator('#missionScriptValidation')).toHaveText('✓ 脚本结构检查通过');
  await expect(page.getByLabel('胜利条件',{exact:true})).toHaveValue('defend_group');

@@ -45,7 +45,7 @@ for(const width of [1440,390])test(`burning city cover, dusk, autonomous allies 
 test('burning city scripts remain editable with AI control and retreat tools',async({page})=>{
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
   const map=JSON.parse(require('node:fs').readFileSync('assets/maps/missions/burning_city.json','utf8'));
-  await page.goto(pathToFileURL(path.resolve('public/map-editor.html')).href);
+  await page.goto(pathToFileURL(path.resolve('admin/map-editor.html')).href);
   await page.evaluate(map=>{MapEditor.importMap(map.tileMap);MapEditor.tab('mission');},map);
   await expect(page.locator('#missionScriptValidation')).toHaveText('✓ 脚本结构检查通过');
   await page.evaluate(()=>MissionEditor.focusActor('aeug-line-0-0'));

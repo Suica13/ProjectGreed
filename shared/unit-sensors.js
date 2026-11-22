@@ -61,7 +61,7 @@ const UnitSensors = {
           distance(source, target) + (ranges(target, g).antiDetection || 0) <
             range *
               crossLayer(g, source, target) *
-              (ranges(target, g).stealth ? 0.75 : 1) *
+              (ranges(target, g).stealth && !ranges(source, g).ignoreStealth ? 0.75 : 1) *
               (ranges(target, g).antiDetect ? 0.5 : 1),
       );
     }
@@ -80,7 +80,7 @@ const UnitSensors = {
           distanceOf(u, target) + (rangeOf(target).antiDetection || 0) <
             rangeOf(u).radar *
               (u.sensorArea ? crossLayer(g, u, target) : 1) *
-              (rangeOf(target).stealth ? 0.75 : 1) *
+              (rangeOf(target).stealth && !rangeOf(u).ignoreStealth ? 0.75 : 1) *
               (rangeOf(target).antiDetect ? 0.5 : 1),
       );
     }

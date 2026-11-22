@@ -35,7 +35,7 @@ test("unit overrides, source prices, localization and slot order persist without
     fs.readFileSync(path.join(f.root, "public/client.html"), "utf8"),
     "Unchanged client build",
   );
-  assert.equal(fs.existsSync(path.join(f.root, "public/developer.html")), false);
+  assert.equal(fs.existsSync(path.join(f.root, "admin/developer.html")), false);
   const saved = f.store.getUnit(data.id);
   assert.equal(saved.unit.stats.hp, data.unit.stats.hp);
   assert.equal(saved.unit.weapons[id].damagePerShot, 2000);

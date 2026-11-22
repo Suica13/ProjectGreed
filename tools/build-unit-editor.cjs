@@ -11,6 +11,6 @@ function buildUnitEditor(root=path.resolve(__dirname,'..')) {
  });
  const inline=s=>s.replace(/<\/script/gi,'<\\/script');
  const html=read('unit-editor/editor.html').replace('__CSS__',()=>read('unit-editor/editor.css')).replace('__JS__',()=>inline('const UNIT_TEMPLATES='+JSON.stringify(templates)+';const EXISTING_UNIT_IDS='+JSON.stringify(ids)+';const RW_TEMPLATES='+read('unit-editor/rw-templates.json')+';\n'+read('unit-editor/rw-export.js')+'\n'+read('unit-editor/model.js')+'\n'+read('map-editor/authoring.js')+'\nconst ART={units:[],models:{},assets:{}};const SpriteEffects={clipFog(){},brokenModules(){}};\n'+read('client/renderer.js')+'\n'+read('unit-editor/editor.js')));
- fs.writeFileSync(path.join(root,'public/unit-editor.html'),html);console.log('Built unit-editor.html: '+Buffer.byteLength(html)+' bytes');
+ fs.mkdirSync(path.join(root,'admin'),{recursive:true});fs.writeFileSync(path.join(root,'admin/unit-editor.html'),html);console.log('Built unit-editor.html: '+Buffer.byteLength(html)+' bytes');
 }
 module.exports={buildUnitEditor};if(require.main===module)buildUnitEditor();

@@ -569,6 +569,7 @@
                 <p class="muted">按默认套件发放实物，单位／舰船自动分仓；满仓奖励进入机库保管库，不自动授予许可。</p>
                 <div id="stockRewards"></div>
                 <button id="addChassisStock" type="button">添加单位</button>
+<h3>租赁单位奖励</h3><p class="muted">每场战斗结算消耗一次，返回机库免费修复；预设零件不可更改，次数用尽自动回收。</p><div id="rentalRewards"></div><button id="addRentalStock" type="button">添加租赁单位</button>
               </section>
               <section>
                 <h3>模块零件奖励</h3>
@@ -620,6 +621,7 @@
           /></label>
         </div>
         <p id="rewardConfigError" role="status"></p>
+<section id="rentalConfig" hidden><label>可用战斗次数<input id="rewardRentalUses" type="number" min="1" max="1000000" step="1" value="1" /></label><label>武器套件<select id="rewardRentalKit"></select></label><p>预设零件（最多四件，不占玩家零件库存）</p><div id="rewardRentalPlugins"></div></section>
         <div class="picker-actions">
           <button id="cancelRewardConfig" type="button">取消</button
           ><button id="confirmRewardConfig" type="submit">确认</button>
@@ -644,7 +646,7 @@
       let unlockUnits = [],
         unlockAces = [];
       let licenseUnits = [],
-        stockRewards = { inventory: {} }, pluginRewards={};
+        stockRewards = { inventory: {} }, pluginRewards={}, rentalRewards=[];
       async function api(route = "", value) {
         const response = await fetch("/api/activities/admin" + route, {
           method: value ? "POST" : "GET",
@@ -888,7 +890,7 @@
           info.append(name, details);
           row.append(
             info,
-            rewardButton("编辑", () => openUnitConfig(id, true)),
+            rewardButton("编辑", () => {pickerKind="inventory";openUnitConfig(id, true);}),
             rewardButton("删除", () => {
               clearUnitStock(id);
               renderStockRewards();
@@ -898,6 +900,7 @@
         }
       }
       function loadRewards(rewards = {}) {
+        rentalRewards=structuredClone(rewards.rentals||[]);renderRentalRewards();
         byId("money").value = rewards.money || 0;
         byId("supplies").value = rewards.supplies || 0;
         licenseUnits = [...new Set([...Object.keys(rewards.licenses || {}).filter((id) => rewards.licenses[id]),...(rewards.unlockUnits||[])])];
@@ -916,6 +919,7 @@
           supplies: Number(byId("supplies").value),
           licenses: Object.fromEntries(licenseUnits.map((id) => [id, true])),
           inventory: { ...stockRewards.inventory },
+          rentals: structuredClone(rentalRewards),
           unlockUnits: [],
           pluginInventory:{...pluginRewards},
           unlockAces: [...unlockAces],
@@ -999,6 +1003,17 @@
         const unit=snapshot.units.find(unit=>unit.id===id);
         byId("rewardConfigTitle").textContent="配置奖励："+unit.name;
         byId("rewardChassisCount").value=stockRewards.inventory[id] || 1;
+        const rental=pickerKind==="rental",entry=rentalRewards.find(entry=>entry.unitId===id);
+        byId("rentalConfig").hidden=!rental;
+        if(rental){
+          byId("rewardChassisCount").value=entry?.count||1;byId("rewardRentalUses").value=entry?.uses||1;
+          byId("rewardRentalKit").replaceChildren(...(unit.weaponKits||[]).map(kit=>new Option(kit.name,kit.id)));
+          if(entry?.kitId)byId("rewardRentalKit").value=entry.kitId;
+          byId("rewardRentalPlugins").replaceChildren(...Array.from({length:4},(_,index)=>{
+            const select=document.createElement("select");select.setAttribute("aria-label","预设零件"+(index+1));select.add(new Option("空槽位",""));
+            for(const part of snapshot.plugins||[])select.add(new Option(part.name,part.id));select.value=entry?.plugins?.[index]||"";return select;
+          }));
+        }
         byId("rewardConfigError").textContent="";
         byId("rewardConfigDialog").showModal();byId("rewardChassisCount").focus();
       }
@@ -1008,7 +1023,13 @@
         if(!Number.isSafeInteger(count)||count<1||count>1000000){
           byId("rewardConfigError").textContent="机体数量须为1至100万的整数";return;
         }
-        clearUnitStock(configUnitId);stockRewards.inventory[configUnitId]=count;
+        if(!byId("rentalConfig").hidden){
+          const uses=Number(byId("rewardRentalUses").value),plugins=[...byId("rewardRentalPlugins").children].map(select=>select.value||null);
+          if(!Number.isSafeInteger(uses)||uses<1||uses>1000000){byId("rewardConfigError").textContent="次数须为1至100万的整数";return;}
+          if(new Set(plugins.filter(Boolean)).size!==plugins.filter(Boolean).length){byId("rewardConfigError").textContent="预设零件不能重复";return;}
+          rentalRewards=rentalRewards.filter(entry=>entry.unitId!==configUnitId);
+          rentalRewards.push({unitId:configUnitId,kitId:byId("rewardRentalKit").value||undefined,count,uses,plugins});renderRentalRewards();
+        }else{clearUnitStock(configUnitId);stockRewards.inventory[configUnitId]=count;}
         renderStockRewards();byId("rewardConfigDialog").close();
       };
       byId("cancelRewardUnit").onclick = () => byId("rewardUnitDialog").close();
@@ -1023,6 +1044,16 @@
       for (const id of ["rewardUnitFaction", "rewardUnitEra", "rewardUnitType"])
         byId(id).onchange = renderUnitPicker;
       byId("addChassisStock").onclick = () => openUnitPicker("inventory");
+      byId("addRentalStock").onclick = () => openUnitPicker("rental");
+      function renderRentalRewards(){
+        const list=byId("rentalRewards");list.replaceChildren();
+        for(const entry of rentalRewards){
+          const row=document.createElement("div");row.className="reward-summary";row.dataset.unitId=entry.unitId;
+          row.append(document.createTextNode(unitName(entry.unitId)+" ×"+entry.count+" · 剩余次数:"+entry.uses+"次"),
+            rewardButton("编辑",()=>{pickerKind="rental";openUnitConfig(entry.unitId,true);}),
+            rewardButton("删除",()=>{rentalRewards=rentalRewards.filter(value=>value!==entry);renderRentalRewards();}));list.append(row);
+        }
+      }
       function addUnit() {
         openUnitPicker("license");
       }

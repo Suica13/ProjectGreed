@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>合约事件策划编辑器 · ProjectGreed</title>
+    <style>
+      __CSS__
+    </style>
+  </head>
+  <body>
+    <header>
+      <div>
+        <small>PROJECTGREED · __VERSION__</small>
+        <h1>合约事件策划编辑器</h1>
+      </div>
+      <nav aria-label="文件操作">
+        <button id="restore">载入现有事件</button><button id="import">导入JSON</button
+        ><button id="export">导出全部JSON</button><button id="exportCurrent">导出当前事件</button
+        ><button id="exportMarkdown">导出策划MD</button
+        ><input id="file" type="file" accept=".json,application/json" hidden />
+      </nav>
+    </header>
+    <div class="metadata">
+      <label>事件系统版本<input id="systemVersion" maxlength="100" /></label
+      ><span id="sourceVersion"></span><strong id="saveState">尚未修改</strong
+      ><button id="common">共用规则与备注</button><button id="preview">AI交接预览</button>
+    </div>
+    <p class="notice">
+      独立策划工具：导入导出不会修改游戏或玩家存档。改动标记供AI识别待实现内容，和游戏内“进行中／已完成”无关。关闭前请导出JSON。
+    </p>
+    <main>
+      <aside>
+        <label>搜索<input id="search" type="search" placeholder="事件名称、编号或类型" /></label>
+        <div class="filters">
+          <label
+            >分类<select id="group">
+              <option value="">全部分类</option>
+              <option>基础事件</option>
+              <option>联络委托变体</option>
+              <option>新增方案</option>
+            </select></label
+          ><label
+            >改动标记<select id="filterStatus">
+              <option value="">全部标记</option>
+            </select></label
+          >
+        </div>
+        <div class="list-heading">
+          <strong id="count"></strong><button id="add">＋新增事件</button>
+        </div>
+        <div id="eventList" aria-label="事件列表"></div>
+      </aside>
+      <section class="workspace">
+        <div id="empty" hidden>没有选中的事件。可从左侧选择，或新增事件。</div>
+        <div id="eventPanel">
+          <div class="event-heading">
+            <h2 id="eventTitle"></h2>
+            <div>
+              <button id="up" title="上移">↑</button><button id="down" title="下移">↓</button
+              ><button id="duplicate">复制</button><button id="remove" class="danger">删除</button>
+            </div>
+          </div>
+          <div class="identity">
+            <label>事件名称<input id="name" maxlength="200" /></label
+            ><label>稳定编号<input id="eventId" maxlength="80" /></label>
+            <label
+              >分类<select id="eventGroup">
+                <option>基础事件</option>
+                <option>联络委托变体</option>
+                <option>新增方案</option>
+              </select></label
+            >
+            <label>改动标记<select id="status"></select></label>
+          </div>
+          <div class="type-row">
+            <label>参考事件类型<select id="type"></select></label
+            ><label id="customTypeLabel" hidden
+              >新增类型ID<input id="customType" placeholder="例如 escort" maxlength="80"
+            /></label>
+          </div>
+          <p id="typeHint" class="hint"></p>
+          <div id="tabs" role="tablist" aria-label="策划章节"></div>
+          <div id="fields"></div>
+          <p class="hint">
+            切换参考类型只改变类型ID，不覆盖已写文本。使用“从模板新增”可获得整份现行规则。列表顺序仅用于整理文档。
+          </p>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <span id="message" role="status" aria-live="polite"
+        >已载入现有事件，修改后导出交由AI实现。</span
+      ><span>格式版本 1 · 最多200项事件</span>
+    </footer>
+    <dialog id="commonDialog">
+      <div class="dialog-heading">
+        <h2>共用规则与策划备注</h2>
+        <button data-close>关闭</button>
+      </div>
+      <label>共用规则<textarea id="commonRules" rows="16"></textarea></label
+      ><label>策划备注<textarea id="notes" rows="5"></textarea></label>
+    </dialog>
+    <dialog id="previewDialog">
+      <div class="dialog-heading">
+        <h2>AI交接预览</h2>
+        <button data-close>关闭</button>
+      </div>
+      <p class="hint">
+        AI应先比较事件系统版本，再根据每项改动标记处理。此文档包含参考规则，不是可执行脚本。
+      </p>
+      <pre id="previewText"></pre>
+    </dialog>
+    <dialog id="addDialog">
+      <div class="dialog-heading">
+        <h2>新增事件</h2>
+        <button data-close>关闭</button>
+      </div>
+      <label>从现有类型模板开始<select id="template"></select></label>
+      <p class="hint">从当前构建携带的原始模板复制。编辑现有事件不会改变模板。</p>
+      <button id="confirmAdd">新增</button>
+    </dialog>
+    <script>
+      __DATA__;
+      __JS__;
+    </script>
+  </body>
+</html>

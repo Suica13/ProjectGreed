@@ -136,7 +136,7 @@ test("visual mission editor loads sample and edits trigger and dialogue without 
 }) => {
   const errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
-  await page.goto(pathToFileURL(path.resolve("public/map-editor.html")).href);
+  await page.goto(pathToFileURL(path.resolve("admin/map-editor.html")).href);
   await page.locator('[data-tab="mission"]').click();
   page.once("dialog", (d) => d.accept());
   await page.locator("#missionLoadSample").click();
@@ -155,7 +155,7 @@ test("visual mission editor loads sample and edits trigger and dialogue without 
 test("mission event templates expose compound conditions, named targets, sequence preview and map regions", async ({
   page,
 }) => {
-  await page.goto(pathToFileURL(path.resolve("public/map-editor.html")).href);
+  await page.goto(pathToFileURL(path.resolve("admin/map-editor.html")).href);
   await page.locator('[data-tab="mission"]').click();
   page.once("dialog", (d) => d.accept());
   await page.locator("#missionLoadSample").click();

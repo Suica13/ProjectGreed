@@ -12,7 +12,7 @@ def apply(prefab,native=None):
             effect='BZ_Fire_1_S',actionCost=2,enCost=100,cooldownTurns=3,durationRounds=2,maxUses=99,consumeAction=False,
             sound={'file':'../../sounds/Smoke_1.ogg','volume':.7},
             localization={'zh':{'name':'烟雾弹'},'en':{'name':'Smoke Grenade'},'ja':{'name':'煙幕弾'}},
-            description='消耗2 AP与100 EN，在当前位置形成半径2格烟雾；区域内所有单位受到远程攻击时命中率降低25%，不叠加，持续至下次己方回合，冷却3个己方回合。'))
+            description='消耗2 AP与100 EN，在当前位置形成半径2格烟雾；区域内所有单位受到远程攻击时命中率降低10%，不叠加，持续至下次己方回合，冷却3个己方回合。'))
         for mechanic in prefab.get('mechanics',[]):
             if 'SmokingLauncher' in mechanic['id']:mechanic.update(status='adapted',name='烟雾弹：半径2格远程命中率×75%，2 AP、100 EN，冷却3回合')
     if any(m['id']=='I_Field' for m in prefab.get('mechanics',[])):

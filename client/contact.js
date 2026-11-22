@@ -22,7 +22,10 @@ window.ContactUI = (() => {
     view = "home",
     query = "",
     purchasing = false;
-  let selectedTask="efsf-1", dialogue=null;
+  const collapsedTaskGroups = new Set();
+  let selectedTask = null,
+    selectedAcceptedTask = null,
+    dialogue = null;
   const button = (text, action, cls = "") => {
     const node = element("button", cls, text);
     node.type = "button";
@@ -39,15 +42,15 @@ window.ContactUI = (() => {
         stats = element("dl");
       card.dataset.merchantId = merchant.id;
       frame.setAttribute("aria-label", I18n.text(merchant.name));
-      image.src = PilotSystem.portrait({ portraitId: merchant.portraitId });
+      image.src = merchant.portraitImage || PilotSystem.portrait({ portraitId: merchant.portraitId });
       image.alt = "";
       image.draggable = false;
       frame.append(image);
       stats.append(
         element("dt", "", "好感度"),
-        element("dd", "", merchant.id==="efsf"?Economy.liaisonAffinity().toFixed(1):"0"),
+        element("dd", "", Economy.merchantAffinity(merchant.id).toFixed(1)),
         element("dt", "", "等级"),
-        element("dd", "", "Lv1"),
+        element("dd", "", "Lv" + Economy.merchantLevel(merchant.id)),
       );
       info.append(element("h3", "", merchant.name), stats);
       card.append(frame, info);
@@ -55,63 +58,308 @@ window.ContactUI = (() => {
     }
   }
   function renderTasks() {
-    tasks.replaceChildren();
-    for(const entry of Economy.snapshot().contactTasks.filter(e=>e.status!=="claimed")){
-      const task=ContactTasks.byId.get(entry.id),row=element("article","contact-accepted-task"),open=button("联络",()=>{openMerchant("efsf");if(!dialogue){view="tasks";selectedTask=task.id;renderTerminal();}});
-      row.append(element("strong","",task.name),element("span","",task.objective),element("span","",entry.progress+" / "+task.required+(entry.status==="ready"?" · 可交付":"")),open);tasks.append(row);
-    }
-    if(!tasks.children.length)tasks.append(element("p","muted contact-empty","暂无已接受任务"));
+    const scroll=taskScroll(tasks);
+    tasks.replaceChildren(taskPanel({ acceptedOnly: true }));
+    restoreTaskScroll(tasks,scroll);
+  }
+  function taskScroll(root) {
+    return {
+      selected:root.querySelector(".contact-task-layout")?.dataset.selectedTask,
+      list:root.querySelector(".contact-task-list")?.scrollTop || 0,
+      detail:root.querySelector(".contact-task-detail")?.scrollTop || 0,
+    };
+  }
+  function restoreTaskScroll(root,scroll) {
+    const list=root.querySelector(".contact-task-list"),detail=root.querySelector(".contact-task-detail");
+    if(list) list.scrollTop=scroll.list;
+    if(detail && root.querySelector(".contact-task-layout")?.dataset.selectedTask===scroll.selected)
+      detail.scrollTop=scroll.detail;
+  }
+  function selectTask(box,task,acceptedOnly) {
+    if(box.dataset.selectedTask===task.id) return;
+    if(acceptedOnly) selectedAcceptedTask=task.id;
+    else selectedTask=task.id;
+    // Keep the live list and focused card attached. Replacing the entire
+    // terminal loses the nested scroller and jumps back to the first task.
+    const next=taskPanel({acceptedOnly});
+    box.querySelector(".contact-task-detail").replaceWith(next.querySelector(".contact-task-detail"));
+    box.dataset.selectedTask=task.id;
+    for(const card of box.querySelectorAll("[data-task-id]"))
+      card.setAttribute("aria-pressed",String(card.dataset.taskId===task.id));
+  }
+  function taskTitle(task,tag="span") {
+    const title=element(tag,"contact-task-title");
+    if(ContactTasks.isSideTask(task))title.append(element("span","contact-task-side-tag","支线"));
+    title.append(element("strong","",task.name));
+    return title;
+  }
+  function taskSummary(task, progress = 0) {
+    const targets = {
+      "efsf-1": "歼灭吉翁军MS",
+      "efsf-2": "取回坠落米迪亚残骸中的数据后撤离",
+      "efsf-3": "击败记名联邦MS小队",
+      "efsf-4": "击毁指定区域的吉翁MS",
+      "efsf-5": "使用苍白骑士摧毁工厂",
+      "efsf-6": "调查运输车队残骸后成功撤离",
+      "efsf-7": "击败不死的雷纳斯小队",
+      "efsf-8": "歼灭吉翁军MS",
+      "efsf-9": "摧毁敌军基地后成功撤离",
+      "efsf-10": "使用炮击技能击坠吉翁军MS",
+    };
+    return {
+      conditions: [
+        I18n.text("合约模式"),
+        "N" + task.difficulty + I18n.text("以上"),
+        "0079T1",
+        I18n.text(task.enemyFaction === "EFSF" ? "敌军：地球联邦军" : "敌军：吉翁军"),
+        ...(task.ground ? [I18n.text("地面")] : []),
+      ].join(" · "),
+      objective:
+        I18n.text(targets[task.id] || task.eventName || task.name) +
+        " " +
+        progress +
+        "/" +
+        task.required,
+    };
   }
   function playDialogue(lines, done, title) {
-    dialogue={lines,index:0,lastSound:-1,done,title};view="dialogue";renderTerminal();
+    dialogue = { lines, index: 0, lastSound: -1, done, title };
+    view = "dialogue";
+    renderTerminal();
   }
   function renderDialogue(body) {
-    const d=dialogue,line=d.lines[d.index],panel=element("section","liaison-dialogue"),portrait=element("img"),text=element("div");
-    portrait.src=PilotSystem.portrait({portraitId:trader.portraitId});portrait.alt="";
-    text.className="liaison-dialogue-text";
-    if(d.lastSound!==d.index){d.lastSound=d.index;GameAudio.play("infoSound");}
-    text.append(element("h3","",line[0]),element("p","",I18n.text(line[1]).replaceAll("【玩家公司名】",PlayerProfile.name())));
-    const next=button(d.index===d.lines.length-1?"结束通信":"继续",()=>{
-      if(d.index<d.lines.length-1){d.index++;renderTerminal();return;}
-      try{d.done();dialogue=null;view="home";renderMerchants();renderTasks();renderTerminal();}catch(error){note(Economy.errorMessage(error));}
-    },"primary");
-    next.disabled=Net.started;next.id="liaisonDialogueNext";
-    panel.append(element("small","muted",d.title+" · "+(d.index+1)+" / "+d.lines.length),portrait,text,next);body.append(panel);
-  }
-  function taskPanel() {
-    const box=element("div","contact-task-layout"),list=element("nav","contact-task-list"),detail=element("section","contact-task-detail"),state=Economy.snapshot();
-    if(trader.id!=="efsf")return element("p","muted","暂无可用任务");
-    for(const task of ContactTasks.tasks){
-      const entry=state.contactTasks.find(e=>e.id===task.id),available=state.contactIntro&&(task.number===1||state.contactTasks.some(e=>e.id==="efsf-"+(task.number-1)&&e.status==="claimed"));
-      const b=button(task.number+". "+task.name+(entry?" · "+({accepted:"进行中",ready:"可交付",claimed:"已完成"})[entry.status]:available?"":" · 未解锁"),()=>{selectedTask=task.id;renderTerminal();});
-      b.disabled=!available&&!entry;
-      b.dataset.taskId=task.id;b.setAttribute("aria-pressed",String(selectedTask===task.id));list.append(b);
+    const d = dialogue,
+      line = d.lines[d.index],
+      panel = element("section", "liaison-dialogue"),
+      portrait = element("img"),
+      text = element("div");
+    portrait.src = trader.portraitImage || PilotSystem.portrait({ portraitId: trader.portraitId });
+    portrait.alt = "";
+    text.className = "liaison-dialogue-text";
+    if (d.lastSound !== d.index) {
+      d.lastSound = d.index;
+      GameAudio.play("infoSound");
     }
-    const task=ContactTasks.byId.get(selectedTask)||ContactTasks.tasks[0],entry=state.contactTasks.find(e=>e.id===task.id),available=state.contactIntro&&(task.number===1||state.contactTasks.some(e=>e.id==="efsf-"+(task.number-1)&&e.status==="claimed"));
-    const unitRewards=inventory=>{
-      const group=element("div","contact-unit-rewards");
-      for(const [id,count]of Object.entries(inventory)){
-        const modelId=Economy.defaultModel(id),m=UnitModels[modelId],row=element("span","contact-unit-reward"),img=element("img");
-        img.src=unitIcon(modelId);img.alt="";row.append(img,element("span","",m.name+" ×"+count));group.append(row);
+    text.append(
+      element("h3", "", line[0]),
+      element("p", "", I18n.text(line[1]).replaceAll("【玩家公司名】", PlayerProfile.name())),
+    );
+    const next = button(
+      d.index === d.lines.length - 1 ? "结束通信" : "继续",
+      () => {
+        if (d.index < d.lines.length - 1) {
+          d.index++;
+          renderTerminal();
+          return;
+        }
+        try {
+          d.done();
+          dialogue = null;
+          view = "home";
+          renderMerchants();
+          renderTasks();
+          renderTerminal();
+        } catch (error) {
+          note(Economy.errorMessage(error));
+        }
+      },
+      "primary",
+    );
+    next.disabled = Net.started;
+    next.id = "liaisonDialogueNext";
+    panel.append(
+      element("small", "muted", d.title + " · " + (d.index + 1) + " / " + d.lines.length),
+      portrait,
+      text,
+      next,
+    );
+    body.append(panel);
+  }
+  function taskPanel({ acceptedOnly = false } = {}) {
+    const box = element("div", "contact-task-layout"),
+      list = element("nav", "contact-task-list"),
+      detail = element("section", "contact-task-detail"),
+      state = Economy.snapshot();
+    const candidates = ContactTasks.tasks.filter((task) =>
+      acceptedOnly
+        ? state.contactTasks.some((e) => e.id === task.id && e.status !== "claimed")
+        : (task.contactId || "efsf") === trader.id,
+    );
+    const current = acceptedOnly ? selectedAcceptedTask : selectedTask;
+    const selected = candidates.find((task) => task.id === current);
+    box.dataset.selectedTask=selected?.id || "";
+    if (acceptedOnly) selectedAcceptedTask = selected?.id || null;
+    else if (selected) selectedTask = selected.id;
+    list.setAttribute("aria-label", I18n.text("联络人任务"));
+    for (const merchant of Economy.merchants.filter((m) => acceptedOnly || m.id === trader.id)) {
+      const grouped = candidates.filter((task) => (task.contactId || "efsf") === merchant.id);
+      if (acceptedOnly && !grouped.length && merchant.id !== "efsf") continue;
+      const group = element("section", "contact-task-group"),
+        heading = element("h3"),
+        cards = element("div", "contact-task-group-cards"),
+        groupId = (acceptedOnly ? "accepted-" : "merchant-") + merchant.id,
+        toggle = button(
+          merchant.id === "efsf" ? "联邦联络人" : merchant.name,
+          () => {
+            if (collapsedTaskGroups.has(groupId)) collapsedTaskGroups.delete(groupId);
+            else collapsedTaskGroups.add(groupId);
+            if (acceptedOnly) renderTasks();
+            else renderTerminal();
+          },
+          "contact-task-group-toggle",
+        );
+      cards.id = "contact-task-group-" + groupId;
+      cards.hidden = collapsedTaskGroups.has(groupId);
+      toggle.setAttribute("aria-expanded", String(!cards.hidden));
+      toggle.setAttribute("aria-controls", cards.id);
+      heading.append(toggle);
+      group.dataset.contactId = merchant.id;
+      group.append(heading);
+      for (const task of grouped) {
+        const entry = state.contactTasks.find((e) => e.id === task.id),
+          available =
+            ContactTasks.unlocked(task, state.contactTasks, state.contactIntro);
+        const b = button(
+          "",
+          () => selectTask(box,task,acceptedOnly),
+          "contact-task-card",
+        );
+        b.append(
+          taskTitle(task),
+          element(
+            "span",
+            "contact-task-card-status",
+            entry
+              ? { accepted: "进行中", ready: "可交付", claimed: "已完成" }[entry.status]
+              : available
+                ? "可接受"
+                : "未解锁",
+          ),
+        );
+        b.dataset.locked = String(!available && !entry);
+        b.dataset.taskId = task.id;
+        b.dataset.branch = ContactTasks.isSideTask(task) ? "side" : "main";
+        b.setAttribute("aria-pressed", String(selected?.id === task.id));
+        cards.append(b);
+      }
+      if (!grouped.length)
+        cards.append(element("p", "muted", acceptedOnly ? "暂无已接受任务" : "暂无可用任务"));
+      group.append(cards);
+      list.append(group);
+    }
+    if (!selected) {
+      detail.classList.add("contact-task-unselected");
+      detail.append(element("p", "muted", "请选择任务"));
+      box.append(list, detail);
+      return box;
+    }
+    const task = selected,
+      entry = state.contactTasks.find((e) => e.id === task.id),
+      available =
+        ContactTasks.unlocked(task, state.contactTasks, state.contactIntro);
+    const unitRewards = (inventory) => {
+      const group = element("div", "contact-unit-rewards");
+      for (const [id, count] of Object.entries(inventory)) {
+        const modelId = Economy.defaultModel(id),
+          m = UnitModels[modelId],
+          row = element("span", "contact-unit-reward"),
+          img = element("img");
+        img.src = unitIcon(modelId);
+        img.alt = "";
+        row.append(img, element("span", "", m.name + " ×" + count));
+        group.append(row);
       }
       return group;
     };
-    detail.append(element("h3","",task.name),element("p","contact-task-description",task.description),element("h4","","任务目标"),element("p","",task.objective),element("strong","",(entry?.progress||0)+" / "+task.required));
-    if(task.grant)detail.append(element("h4","","初始装备"),unitRewards(task.grant));
-    detail.append(element("h4","","任务奖励"));
-    const rewards=element("div","contact-task-rewards"),currency=element("div","contact-currency-reward"),technology=element("div","contact-technology-reward");
-    ProductionUI.resources(currency,{money:task.money,supplies:task.supplies||0},{compact:true});currency.append(element("span","","好感度 +0.1"));
-    technology.append(element("span","",task.licensePlan?"科技奖励：先期量产型MS开发计划（单位许可）":"科技奖励：无"));
-    if(task.facilityUnlock)technology.append(element("p","","允许HQ、工厂、巨型工厂、士官学院升级到2级"));
-    rewards.append(currency,unitRewards(task.inventory),technology);
-    const action=button(entry?.status==="ready"?"交付任务":entry?.status==="claimed"?"已完成":entry?"进行中":"接受任务",()=>{
-      if(Net.started)return;
-      try{
-        if(entry?.status==="ready")playDialogue(task.ending.split("\n").map(text=>["联邦联络人",text]),()=>{Economy.completeContactTask(task.id);note(task.licensePlan?"任务已交付，获得奖励及先期量产型MS计划对应单位许可":"任务已交付，奖励已发放；满仓单位保存在保管库。");},task.name);
-        else {Economy.acceptContactTask(task.id);renderTerminal();note(task.grant?"任务已接取，苍白骑士已发放；机库满员时请到保管库接受。":"任务已接取");}
-      }catch(error){note(Economy.errorMessage(error));}
-    },"primary");action.id="contactTaskAction";action.disabled=Net.started||!available||!!entry&&entry.status!=="ready";
-    detail.append(rewards,action);box.append(list,detail);return box;
+    const summary = taskSummary(task, entry?.progress || 0),
+      objective = element("section", "contact-task-objective");
+    objective.append(
+      element("p", "contact-task-conditions", summary.conditions),
+      element("p", "contact-task-progress", summary.objective),
+    );
+    detail.append(
+      taskTitle(task,"h3"),
+      element("p", "contact-task-description", task.description),
+      element("h4", "", "任务目标"),
+      objective,
+    );
+    if (task.grant) detail.append(element("h4", "", "初始装备"), unitRewards(task.grant));
+    if (task.reclaim) detail.append(element("p", "muted", "完成目标后回收赠送的苍白骑士，已安装零件与驾驶员保留。"));
+    detail.append(element("h4", "", "任务奖励"));
+    const rewards = element("div", "contact-task-rewards"),
+      currency = element("div", "contact-currency-reward"),
+      technology = element("div", "contact-technology-reward");
+    ProductionUI.resources(
+      currency,
+      { money: task.money, supplies: task.supplies || 0 },
+      { compact: true },
+    );
+    currency.append(element("span", "", I18n.text("好感度") + " +" + (task.affinity || 100)));
+    const plan = task.licensePlan && Object.values(DEVELOPMENT_TREE).flat().find(node => node.id === task.licensePlan);
+    technology.append(
+      element(
+        "span",
+        "",
+        plan ? I18n.text("科技奖励") + "：" + I18n.text(plan.name) + "（" + I18n.text("单位许可") + "）" : "科技奖励：无",
+      ),
+    );
+    if (task.facilityUnlock)
+      technology.append(element("p", "", "允许HQ、工厂、巨型工厂、士官学院升级到2级"));
+    rewards.append(currency, unitRewards(task.inventory), technology);
+    const action = button(
+      entry?.status === "ready"
+        ? "交付任务"
+        : entry?.status === "claimed"
+          ? "已完成"
+          : entry
+            ? "进行中"
+            : "接受任务",
+      () => {
+        if (Net.started) return;
+        try {
+          if (entry?.status === "ready") {
+            if (acceptedOnly) openMerchant(task.contactId || "efsf");
+            playDialogue(
+              task.ending.split("\n").map((text) => ["联邦联络人", text]),
+              () => {
+                Economy.completeContactTask(task.id);
+                note(
+                  task.licensePlan
+                    ? "任务已交付，获得奖励及对应单位许可"
+                    : "任务已交付，奖励已发放；满仓单位保存在保管库。",
+                );
+              },
+              task.name,
+            );
+          } else {
+            Economy.acceptContactTask(task.id);
+            renderTerminal();
+            note(
+              task.grant ? "任务已接取，苍白骑士已发放；机库满员时请到保管库接受。" : "任务已接取",
+            );
+          }
+        } catch (error) {
+          note(Economy.errorMessage(error));
+        }
+      },
+      "primary",
+    );
+    action.id = acceptedOnly ? "acceptedContactTaskAction" : "contactTaskAction";
+    action.disabled = Net.started || !available || (!!entry && entry.status !== "ready");
+    const actions=element("div","contact-task-actions");
+    actions.append(action);
+    if(!available && !entry) {
+      const requirements=element("div","contact-task-requirements");
+      requirements.setAttribute("role","status");
+      for(const requirement of ContactTasks.unmetRequirements(task,state.contactTasks,state.contactIntro))
+        requirements.append(element("span","",requirement.type==="intro"
+          ? I18n.text("前提条件：完成初见联络人通信")
+          : I18n.text("前提任务：")+I18n.text(requirement.name)));
+      actions.append(requirements);
+    }
+    detail.append(rewards, actions);
+    box.append(list, detail);
+    return box;
   }
   function buy(action) {
     if (purchasing || Net.started) return;
@@ -141,10 +389,15 @@ window.ContactUI = (() => {
         );
       card.dataset.pluginId = part.id;
       ProductionUI.resources(price, offer, { compact: true });
-      purchase.disabled = Net.started || !Economy.affordable(offer);
+      purchase.disabled = Net.started || !offer.available || !Economy.affordable(offer);
       card.append(
         UnitPreview.pluginCard(part),
         price,
+        element(
+          "small",
+          "merchant-unlock" + (offer.available ? "" : " is-locked"),
+          "需要好感度等级 " + offer.requiredLevel,
+        ),
         element("small", "muted", "可用 " + Economy.pluginQuantity(part.id) + " 件"),
         purchase,
       );
@@ -175,24 +428,30 @@ window.ContactUI = (() => {
   }
   function renderTerminal() {
     if (!trader) return;
+    const taskPosition=taskScroll(terminal),terminalScroll=terminal.scrollTop;
     const top = element("header", "contact-terminal-nav"),
       name = element("h2", "", trader.name),
       balance = element("div", "resource-balance"),
       body = element("div", "contact-terminal-body");
-    body.dataset.view=view;
+    body.dataset.view = view;
     name.id = "merchantTerminalName";
     ProductionUI.resources(balance, Economy.snapshot(), { compact: true });
-    top.append(name, element("span", "", "好感度 "+(trader.id==="efsf"?Economy.liaisonAffinity().toFixed(1):"0")), element("span", "", "Lv1"), balance);
+    top.append(
+      name,
+      element("span", "", "好感度 " + Economy.merchantAffinity(trader.id).toFixed(1)),
+      element("span", "", "Lv" + Economy.merchantLevel(trader.id)),
+      balance,
+    );
     if (view !== "home")
       top.append(
         button("返回", () => {
-          dialogue=null;
+          dialogue = null;
           view = "home";
           renderTerminal();
         }),
       );
     top.append(button("关闭", () => terminal.close()));
-    if(view==="dialogue"&&dialogue)renderDialogue(body);
+    if (view === "dialogue" && dialogue) renderDialogue(body);
     else if (view === "home") {
       const menu = element("div", "contact-terminal-menu");
       menu.append(
@@ -201,28 +460,39 @@ window.ContactUI = (() => {
           renderTerminal();
         }),
       );
-      if (trader.sellsPlugins) menu.append(
-        button("购买", () => {
-          view = "shop";
-          renderTerminal();
-        }),
-      );
+      if (trader.sellsPlugins)
+        menu.append(
+          button("购买", () => {
+            view = "shop";
+            renderTerminal();
+          }),
+        );
       body.append(element("p", "contact-terminal-status", "通信链路已建立"), menu);
     } else if (view === "tasks") body.append(taskPanel());
     else body.append(shop());
     const scroll = terminal.querySelector(".contact-terminal-body")?.scrollTop || 0;
     terminal.replaceChildren(top, body);
     body.scrollTop = scroll;
+    restoreTaskScroll(terminal,taskPosition);
+    terminal.scrollTop=terminalScroll;
   }
   function openMerchant(id) {
     trader = Economy.merchants.find((merchant) => merchant.id === id);
     if (!trader) return;
     view = "home";
-    dialogue=null;
+    dialogue = null;
     query = "";
     renderTerminal();
     terminal.showModal();
-    if(id==="efsf"&&!Economy.snapshot().contactIntro)playDialogue(ContactTasks.intro,()=>{Economy.meetLiaison();note("已获取反MS计划对应单位许可");},"初见联络人");
+    if (id === "efsf" && !Economy.snapshot().contactIntro)
+      playDialogue(
+        ContactTasks.intro,
+        () => {
+          Economy.meetLiaison();
+          note("已获取反MS计划对应单位许可");
+        },
+        "初见联络人",
+      );
   }
   window.addEventListener("economy-changed", () => {
     renderTasks();
@@ -240,6 +510,7 @@ window.ContactUI = (() => {
   renderMerchants();
   renderTasks();
   return {
+    taskSummary,
     open(view) {
       tasks.hidden = view !== "contactTasks";
       merchants.hidden = view !== "contactMerchants";

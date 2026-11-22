@@ -39,6 +39,8 @@ const Warehouse = (() => {
     return -1;
   }
   function condition(value, model) {
+    if (value.rentalUses !== undefined && (!Number.isSafeInteger(value.rentalUses) || value.rentalUses < 1 || value.rentalUses > 1000000))
+      throw Error("租赁剩余次数无效");
     const installed = plugins.normalize(value.plugins, model);
     model = plugins.apply(model, installed);
     const destroyed = value.destroyed === true || value.hp === 0;
@@ -61,8 +63,26 @@ const Warehouse = (() => {
       moduleHp[part.id] = Math.min(part.hp, hp);
       if (!hp) brokenParts[part.id] = true;
     }
-    return { plugins: installed, hp: resource("hp"), en: resource("en"), destroyed, brokenParts,
+    return { ...(value.rentalUses === undefined ? {} : { rentalUses: value.rentalUses }), plugins: installed, hp: resource("hp"), en: resource("en"), destroyed, brokenParts,
       ...(Object.keys(moduleHp).length ? { moduleHp } : {}) };
+  }
+  // Activity rewards describe physical rentals separately from permanent stock.
+  function rentalRewards(value = [], models, defaultKit = unitId =>
+    Object.keys(models).find(id => id.startsWith(unitId + "__"))?.slice(unitId.length + 2)) {
+    if (!Array.isArray(value) || value.length > 100) throw Error("租赁奖励格式无效");
+    let total = 0;
+    return value.map(entry => {
+      const kitId = entry?.kitId || defaultKit(entry?.unitId),
+        model = models[entry?.unitId + "__" + kitId];
+      if (!model || !Number.isSafeInteger(entry.count) || entry.count < 1 ||
+          (total += entry.count) > 10000 || !Number.isSafeInteger(entry.uses) ||
+          entry.uses < 1 || entry.uses > 1000000)
+        throw Error("租赁单位、数量或次数无效");
+      return {
+        unitId: entry.unitId, kitId, count: entry.count, uses: entry.uses,
+        plugins: plugins.normalize(entry.plugins, model),
+      };
+    });
   }
   function status(item, model) {
     if (model) model = plugins.apply(model, item.plugins);
@@ -138,8 +158,11 @@ const Warehouse = (() => {
     storage.deliveries ??= [];
     if (!Array.isArray(storage.deliveries) || storage.deliveries.length > 10000)
       throw Error("待入库队列无效");
-    for (const item of storage.deliveries)
-      if (!models[item.unitId + "__" + item.kitId]) throw Error("待入库单位无效");
+    for (const item of storage.deliveries) {
+      const model = models[item.unitId + "__" + item.kitId];
+      if (!model) throw Error("待入库单位无效");
+      Object.assign(item, condition(item, model));
+    }
     // Existing count-based operations (settlement, sale, bulk production) use this one reconciliation boundary.
     const current = {};
     for (const kind of ["units", "ships"])
@@ -176,6 +199,6 @@ const Warehouse = (() => {
       if (!item.destroyed) result[item.unitId] = (result[item.unitId] || 0) + 1;
     return result;
   }
-  return { defaults, category, freeSlot, empty, normalize, usage, fits, counts, condition, status, profile };
+  return { defaults, category, freeSlot, empty, normalize, usage, fits, counts, condition, status, profile, rentalRewards };
 })();
 if (typeof module !== "undefined") module.exports = Warehouse;

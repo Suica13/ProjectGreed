@@ -207,6 +207,9 @@ body dialog.contact-terminal[open] {
   color: #9cc8e1;
   margin-top: 5px;
 }
+.plugin-origin { color: #9bbfd3; font-size: 11px; line-height: 1.5; }
+.merchant-unlock { color: #9bc9df; }
+.merchant-unlock.is-locked { color: #d5ac73; }
 @media (max-width: 720px) {
   .contact-content {
     padding: 10px;
@@ -268,51 +271,503 @@ body dialog.contact-terminal[open] {
   }
 }
 /* Liaison task list, dialogue and overflow reward storage. */
-.contact-task-layout{display:grid;grid-template-columns:minmax(160px,28%) minmax(0,1fr);gap:16px;flex:1;min-height:0;width:100%;height:100%}
-.contact-task-list{display:flex;flex-direction:column;gap:8px}
-.contact-task-list button{text-align:left;min-height:44px}
-.contact-task-list button[aria-pressed=true]{background:#20536e;border-color:#69c8eb}
-.contact-task-detail{min-width:0;background:#112431;border:1px solid #42677e;padding:18px}
-.contact-task-description{white-space:pre-wrap;line-height:1.8}
-.contact-task-rewards{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:16px 0}
-.contact-unit-reward{display:flex;align-items:center;gap:8px;background:#1b3445;padding:6px}
-.contact-unit-reward img{width:48px;height:48px;object-fit:contain;background:#0e1e2b;border:1px solid #52798f}
-.contact-accepted-task{display:flex;flex-wrap:wrap;align-items:center;gap:16px;padding:18px;border:1px solid #4d7287;margin-bottom:12px;background:#142b39}
-.liaison-dialogue{display:grid;grid-template-columns:128px 1fr;gap:20px;align-items:center;min-height:300px;padding:20px;background:#102937;border:1px solid #4e91b0}
-.liaison-dialogue>small{grid-column:1/-1}.liaison-dialogue>img{width:128px;height:128px;object-fit:contain;background:#163c4d;border:1px solid #5d9fb5}.liaison-dialogue p{white-space:pre-wrap;line-height:1.9;font-size:1.1em}.liaison-dialogue>button{grid-column:2;justify-self:end;min-width:120px}
-.warehouse-delivery-list{display:flex;flex-direction:column;gap:10px}
-.warehouse-delivery-card{display:flex;align-items:center;gap:14px;padding:12px;background:#152f41;border:1px solid #4b6f85}
-.warehouse-delivery-card>img{width:80px;height:80px;object-fit:contain;background:#10202f;border:1px solid #4b7188}
-.warehouse-delivery-card>div{display:flex;flex-direction:column;gap:8px;flex:1;min-width:0}.warehouse-delivery-card>button{flex-shrink:0}
-@media(max-width:720px){.contact-task-layout{grid-template-columns:1fr}.contact-task-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.contact-task-detail{padding:12px}.liaison-dialogue{grid-template-columns:80px 1fr;padding:12px;gap:12px}.liaison-dialogue>img{width:80px;height:80px}.warehouse-delivery-card>img{width:60px;height:60px}}
-
-.contact-terminal-body[data-view=tasks],.contact-terminal-body[data-view=dialogue]{display:flex;overflow:hidden;box-sizing:border-box}
-.contact-task-layout{display:grid;grid-template-columns:minmax(160px,28%) minmax(0,1fr);gap:16px;flex:1;min-height:0;width:100%;height:100%}
-.contact-task-list,.contact-task-detail{overflow-y:auto;min-height:0;box-sizing:border-box}
-.contact-task-list{align-self:stretch}
-.contact-task-list button{flex-shrink:0}
-.contact-task-list button:disabled{opacity:.4;background:#15212d;border-color:#33434e;cursor:default}
-.contact-task-detail{width:100%;height:100%}
-.contact-task-rewards{display:flex;flex-direction:column;align-items:stretch;gap:14px}
-.contact-currency-reward,.contact-unit-rewards{display:flex;align-items:center;flex-wrap:wrap;gap:12px}
-.contact-terminal .resource-icon{width:18px;height:18px;min-width:18px;max-width:18px;flex:0 0 18px;vertical-align:middle}
-.contact-terminal .resource-value{display:inline-flex;align-items:center;gap:5px}
-.liaison-dialogue{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(96px,1fr) minmax(130px,1fr) auto;gap:14px;min-height:0;width:100%;height:100%;box-sizing:border-box}
-.liaison-dialogue>small{grid-column:1}
-.liaison-dialogue>img{width:clamp(96px,18vh,180px);height:clamp(96px,18vh,180px);justify-self:center;align-self:center}
-.liaison-dialogue-text{min-height:0;overflow-y:auto;padding:16px 22px;background:#091c29;border:1px solid #436f88}
-.liaison-dialogue-text h3{margin:0 0 10px;color:#8ed8ff}
-.liaison-dialogue-text p{margin:0}
-.liaison-dialogue>button{grid-column:1}
-.dorm-depot{padding:18px;box-sizing:border-box}
-.dorm-depot .warehouse-delivery-list{max-height:65dvh;overflow-y:auto}
-@media(max-width:720px){
- .contact-task-layout{grid-template-columns:1fr;grid-template-rows:100px minmax(0,1fr);gap:10px}
- .liaison-dialogue{padding:12px;gap:10px}
- .liaison-dialogue-text{padding:12px}
- #dormTabs{flex-wrap:wrap;gap:5px}
- #dormTabs button{font-size:11px;padding:6px 8px}
+.contact-task-layout {
+  display: grid;
+  grid-template-columns: minmax(160px, 28%) minmax(0, 1fr);
+  gap: 16px;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+}
+.contact-task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.contact-task-list button {
+  text-align: left;
+  min-height: 44px;
+}
+.contact-task-list button[aria-pressed="true"] {
+  background: #20536e;
+  border-color: #69c8eb;
+}
+.contact-task-detail {
+  min-width: 0;
+  background: #112431;
+  border: 1px solid #42677e;
+  padding: 18px;
+}
+.contact-task-description {
+  white-space: pre-wrap;
+  line-height: 1.8;
+}
+.contact-task-rewards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin: 16px 0;
+}
+.contact-unit-reward {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #1b3445;
+  padding: 6px;
+}
+.contact-unit-reward img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  background: #0e1e2b;
+  border: 1px solid #52798f;
+}
+.contact-accepted-task {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  padding: 18px;
+  border: 1px solid #4d7287;
+  margin-bottom: 12px;
+  background: #142b39;
+}
+.liaison-dialogue {
+  display: grid;
+  grid-template-columns: 128px 1fr;
+  gap: 20px;
+  align-items: center;
+  min-height: 300px;
+  padding: 20px;
+  background: #102937;
+  border: 1px solid #4e91b0;
+}
+.liaison-dialogue > small {
+  grid-column: 1/-1;
+}
+.liaison-dialogue > img {
+  width: 128px;
+  height: 128px;
+  object-fit: contain;
+  background: #163c4d;
+  border: 1px solid #5d9fb5;
+}
+.liaison-dialogue p {
+  white-space: pre-wrap;
+  line-height: 1.9;
+  font-size: 1.1em;
+}
+.liaison-dialogue > button {
+  grid-column: 2;
+  justify-self: end;
+  min-width: 120px;
+}
+.warehouse-delivery-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.warehouse-delivery-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px;
+  background: #152f41;
+  border: 1px solid #4b6f85;
+}
+.warehouse-delivery-card > img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  background: #10202f;
+  border: 1px solid #4b7188;
+}
+.warehouse-delivery-card > div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+.warehouse-delivery-card > button {
+  flex-shrink: 0;
+}
+@media (max-width: 720px) {
+  .contact-task-layout {
+    grid-template-columns: 1fr;
+  }
+  .contact-task-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .contact-task-detail {
+    padding: 12px;
+  }
+  .liaison-dialogue {
+    grid-template-columns: 80px 1fr;
+    padding: 12px;
+    gap: 12px;
+  }
+  .liaison-dialogue > img {
+    width: 80px;
+    height: 80px;
+  }
+  .warehouse-delivery-card > img {
+    width: 60px;
+    height: 60px;
+  }
 }
 
-.warehouse-delivery-card > .warehouse-depot-actions { flex:0 0 auto; display:flex; flex-direction:column; gap:6px; }
-.warehouse-depot-actions > button { min-width:66px; white-space:nowrap; }
+.contact-terminal-body[data-view="tasks"],
+.contact-terminal-body[data-view="dialogue"] {
+  display: flex;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.contact-task-layout {
+  display: grid;
+  grid-template-columns: minmax(160px, 28%) minmax(0, 1fr);
+  gap: 16px;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+}
+.contact-task-list,
+.contact-task-detail {
+  overflow-y: auto;
+  min-height: 0;
+  box-sizing: border-box;
+}
+.contact-task-list {
+  align-self: stretch;
+}
+.contact-task-list button {
+  flex-shrink: 0;
+}
+.contact-task-list button:disabled {
+  opacity: 0.4;
+  background: #15212d;
+  border-color: #33434e;
+  cursor: default;
+}
+.contact-task-detail {
+  width: 100%;
+  height: 100%;
+}
+.contact-task-rewards {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 14px;
+}
+.contact-currency-reward,
+.contact-unit-rewards {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.contact-terminal .resource-icon {
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  max-width: 18px;
+  flex: 0 0 18px;
+  vertical-align: middle;
+}
+.contact-terminal .resource-value {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.liaison-dialogue {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(96px, 1fr) minmax(130px, 1fr) auto;
+  gap: 14px;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+.liaison-dialogue > small {
+  grid-column: 1;
+}
+.liaison-dialogue > img {
+  width: clamp(96px, 18vh, 180px);
+  height: clamp(96px, 18vh, 180px);
+  justify-self: center;
+  align-self: center;
+}
+.liaison-dialogue-text {
+  min-height: 0;
+  overflow-y: auto;
+  padding: 16px 22px;
+  background: #091c29;
+  border: 1px solid #436f88;
+}
+.liaison-dialogue-text h3 {
+  margin: 0 0 10px;
+  color: #8ed8ff;
+}
+.liaison-dialogue-text p {
+  margin: 0;
+}
+.liaison-dialogue > button {
+  grid-column: 1;
+}
+.dorm-depot {
+  padding: 18px;
+  box-sizing: border-box;
+}
+.dorm-depot .warehouse-delivery-list {
+  max-height: 65dvh;
+  overflow-y: auto;
+}
+@media (max-width: 720px) {
+  .contact-task-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: 100px minmax(0, 1fr);
+    gap: 10px;
+  }
+  .liaison-dialogue {
+    padding: 12px;
+    gap: 10px;
+  }
+  .liaison-dialogue-text {
+    padding: 12px;
+  }
+  #dormTabs {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  #dormTabs button {
+    font-size: 11px;
+    padding: 6px 8px;
+  }
+}
+
+.warehouse-delivery-card > .warehouse-depot-actions {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.warehouse-depot-actions > button {
+  min-width: 66px;
+  white-space: nowrap;
+}
+
+/* Accepted commissions and merchant offers share the same list/detail layout. */
+#contactScreen > .warehouse-main > .contact-content {
+  flex: 1 1 0;
+  min-height: 0;
+  padding: 16px;
+  overflow: auto;
+  background: #0d1924;
+}
+#contactScreen .contact-content:has(> .contact-tasks:not([hidden])) {
+  display: flex;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.contact-tasks {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+}
+.contact-currency-reward > :is(.resource-money, .resource-supplies) {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+}
+.contact-currency-reward .resource-icon {
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  max-width: 18px;
+  flex: 0 0 18px;
+}
+.contact-task-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.contact-task-group > h3 {
+  margin: 0 0 4px;
+  padding: 10px 12px;
+  border-left: 3px solid #62bddd;
+  background: #173448;
+  color: #c9efff;
+  font-size: 14px;
+}
+.contact-task-group > h3:has(> .contact-task-group-toggle) {
+  padding: 0;
+}
+body button.contact-task-group-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 42px;
+  padding: 10px 12px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  font-size: 14px;
+}
+.contact-task-group-toggle::before {
+  content: "▾";
+  color: #80d7f7;
+}
+.contact-task-group-toggle[aria-expanded="false"]::before {
+  content: "▸";
+}
+.contact-task-group-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-left: 14px;
+  padding-left: 10px;
+  border-left: 1px solid #355b72;
+}
+.contact-task-group-cards[hidden] {
+  display: none;
+}
+.contact-task-detail.contact-task-unselected {
+  display: grid;
+  place-items: center;
+}
+body button.contact-task-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: 7px;
+  padding: 12px;
+  min-height: 76px;
+  border: 1px solid #3f657b;
+  background: #142c3f;
+}
+body button.contact-task-card[aria-pressed="true"] {
+  background: #20536e;
+  border-color: #69c8eb;
+}
+body button.contact-task-card[data-locked="true"] {
+  background: #15212d;
+  color: #9aabb9;
+  border-color: #33434e;
+}
+body button.contact-task-card[data-locked="true"]:not([aria-pressed="true"]) {
+  opacity: 0.6;
+}
+.contact-task-card strong {
+  overflow-wrap: anywhere;
+  font-size: 14px;
+}
+.contact-task-card-status {
+  font-size: 12px;
+  color: #9dc8de;
+}
+.contact-task-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+.contact-task-side-tag {
+  flex: 0 0 auto;
+  padding: 2px 6px;
+  border: 1px solid #558ca1;
+  border-radius: 3px;
+  background: #173c4d;
+  color: #9ed6e8;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.contact-task-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+.contact-task-actions > button {
+  flex: 0 0 auto;
+}
+.contact-task-requirements {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  color: #b8cadd;
+  font-size: 12px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.contact-task-list,
+.contact-task-detail {
+  overflow-anchor: none;
+}
+.contact-task-objective {
+  padding: 12px 14px;
+  border: 1px solid #355b72;
+  background: #0b1c29;
+}
+.contact-task-conditions {
+  margin: 0 0 9px;
+  color: #a8c9dd;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.contact-task-progress {
+  margin: 0;
+  color: #def4ff;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.6;
+}
+@media (max-width: 720px) {
+  #contactScreen > .warehouse-main > .contact-content {
+    padding: 10px;
+  }
+  .contact-task-list {
+    display: flex;
+  }
+  .contact-task-layout {
+    grid-template-rows: minmax(90px, 30%) minmax(0, 1fr);
+  }
+  .contact-task-group {
+    display: flex;
+  }
+  .contact-task-group-cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .contact-task-group-cards[hidden] {
+    display: none;
+  }
+  .contact-task-group > h3,
+  .contact-task-group > p {
+    grid-column: 1/-1;
+  }
+  body button.contact-task-card {
+    min-height: 64px;
+    padding: 9px;
+    gap: 5px;
+  }
+  .contact-task-objective {
+    padding: 10px;
+  }
+  .contact-task-conditions {
+    font-size: 12px;
+  }
+  .contact-task-progress {
+    font-size: 14px;
+  }
+}

@@ -323,7 +323,7 @@ const UnitSkills = (() => {
       sensors,
       cells: unitCells,
     } = G;
-    const of = (unit) => [...(models[unit.model]?.skills || []), ...pilots.skillsOf(unit)].filter(skill => skill.type !== "emp");
+    const of = (unit) => [...(modelOf(unit)?.skills || []), ...pilots.skillsOf(unit)].filter(skill => skill.type !== "emp");
     const usageKey = (unit, skill) => models[unit.model].prefabId + "/" + skill.id;
     const turnKey = skill => skill.type === "transform" ? "transformation" : skill.type === "flight" ? "flight" : skill.id;
     const energyCost = (unit, skill) =>
@@ -895,6 +895,7 @@ const UnitSkills = (() => {
         );
         game.minovskyFields.push({
           id: `minovsky_${game.round}_${game.minovskyFields.length}`,
+          team: unit.team,
           x: origin.x,
           y: origin.y,
           radius: skill.radius,

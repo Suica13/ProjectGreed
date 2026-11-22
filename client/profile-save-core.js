@@ -64,6 +64,7 @@ const ProfileSave = (() => {
     const result = {
       format: value.format,
       schemaVersion: 1,
+      ...(value.companyName !== undefined ? { companyName: companyName(value.companyName) } : {}),
       identity: value.identity
         ? ProfileIdentity.validate(value.identity)
         : ProfileIdentity.snapshot(),
@@ -147,6 +148,7 @@ const ProfileSave = (() => {
         formations,
         development: Development.exportProgress(),
         economy: Economy.exportProgress(),
+        companyName: localStorage.getItem("projectgreed.playerId") || "",
       }),
       createdAt: new Date().toISOString(),
     };
@@ -193,6 +195,8 @@ const ProfileSave = (() => {
       formations,
       economy,
       identity: read(ProfileIdentity.key),
+      ...(value.values["projectgreed.playerId"] !== undefined
+        ? { companyName: value.values["projectgreed.playerId"] } : {}),
       development: read("projectgreed.developmentProgress.v1", Development.exportProgress()),
     });
   }
@@ -243,6 +247,7 @@ const ProfileSave = (() => {
     writes.set("slg-formations-v1-active", null);
     writes.set("slg-formations-v1.pmc-unified", null);
     writes.set(ProfileIdentity.key, JSON.stringify(clean.identity));
+    if (clean.companyName !== undefined) writes.set("projectgreed.playerId", clean.companyName);
     writes.set(Economy.key, SaveCodec.stringify(clean.economy));
     writes.set(pilotKey + "migrated", "imported");
     writes.set("projectgreed.developmentProgress.v1", SaveCodec.stringify(clean.development));
@@ -250,6 +255,12 @@ const ProfileSave = (() => {
   }
   function importData(value) {
     ProfileStorage.replace(storageEntries(value));
+  }
+  function companyName(value) {
+    if (typeof value !== "string") throw Error("PMC公司名称无效");
+    const name = value.trim().replace(/[\u0000-\u001f\u007f]/g, "");
+    if (Array.from(name).length > 24) throw Error("PMC公司名称最多24个字");
+    return name;
   }
   return { validate, exportData, encodeData, importData, fromNativeSnapshot, storageEntries };
 })();

@@ -96,10 +96,10 @@ function createServer({
         ? path.join(publicDir, "client.html")
         : pathname === "/client.html"
           ? path.join(publicDir, "client.html")
-          : pathname === "/map-editor.html" || pathname === "/map-editor"
-            ? path.join(publicDir, "map-editor.html")
-          : pathname === "/unit-editor.html" || pathname === "/unit-editor"
-            ? path.join(publicDir, "unit-editor.html")
+          : ["/admin", "/admin/", "/admin/index.html"].includes(pathname)
+            ? path.join(__dirname, "admin/index.html")
+          : ["/admin/map-editor.html", "/admin/unit-editor.html", "/admin/task-tree-editor.html", "/admin/contract-event-editor.html", "/admin/save-editor.html"].includes(pathname)
+            ? path.join(__dirname, "admin", path.basename(pathname))
             : null;
     if (!file) {
       res.writeHead(404);

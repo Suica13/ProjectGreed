@@ -11,6 +11,7 @@ const fields = {
     shootingHitOffset: ["射击基础命中增减", -100, 100, false, "分类基础命中直接增减百分点，再应用命中倍率；包含分段射击及照射。"],
     handheldCannonHitOffset: ["手持加农炮命中增减", -100, 100, true, "180mm、170mm手持加农炮与马哲拉顶炮额外增加的命中百分点；不包含舰炮、肩炮或坦克炮。"],
     kitCostOffset: ["武器套件COST增减", -10000, 10000, true, "对各套件原始COST加成统一增减，最低0；不改变机体基础COST。"],
+    beamGunKitCostOffset: ["光束枪／喷枪套件COST增减", -10000, 10000, true, "仅主武器为光束枪或光束喷枪的套件，在通用套件COST增减之后额外应用；不影响光束步枪。"],
     shipMediumAccuracyBonus: ["战舰对中型命中补偿", 0, 1, false, "只减轻已有对中型命中惩罚，最高恢复到1；不影响非战舰。"],
     damage: ["全部武装伤害倍率", 0.01, 10, false, "在武器分类倍率之后叠乘，包含有伤害的机体技能。"],
     accuracy: ["武器命中率倍率", 0.01, 10, false, "同时处理单发及分段命中率。"],
@@ -66,6 +67,7 @@ function validate(value) {
   if (value?.weapons) value.weapons.nonCounterTargetAccuracy ??= 1.1;
   if (value?.weapons) value.weapons.handheldCannonHitOffset ??= 15;
   if (value?.weapons) value.weapons.kitCostOffset ??= -25;
+  if (value?.weapons) value.weapons.beamGunKitCostOffset ??= -25;
   if (value?.weapons) for (const key of ["shootingDamageOffset", "shootingHitOffset", "shipMediumAccuracyBonus"])
     value.weapons[key] ??= 0;
   if (value?.weapons && value.weapons.shipCannonAccuracy === undefined) value.weapons.shipCannonAccuracy = 0.85;
@@ -132,7 +134,11 @@ function globals(prefab, rules) {
   const w = rules.weapons;
   for (const kit of prefab.weaponKits || []) {
     kit.conversionBaseCost ??= kit.cost;
-    kit.cost = Math.max(0, kit.conversionBaseCost + (w.kitCostOffset || 0));
+    const primary = prefab.weapons?.[kit.weapons?.[0]];
+    const beamGun = /Beam(?:Spray)?Gun/i.test(primary?.sourceName || kit.weapons?.[0] || "") &&
+      !/BeamRifle/i.test(primary?.sourceName || "");
+    kit.cost = Math.max(0, kit.conversionBaseCost + (w.kitCostOffset || 0) +
+      (beamGun ? w.beamGunKitCostOffset || 0 : 0));
   }
   const isWeaponSkill = Classes.isWeaponSkill;
   for (const weapon of [

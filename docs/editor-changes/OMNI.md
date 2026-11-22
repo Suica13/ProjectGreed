@@ -9,6 +9,7 @@
 
 | 时间（日本时间） | 来源IP | 单位 | 修改对象 | 修改内容 | 详细日志 |
 |---|---|---|---|---|---|
+| 2026-11-22 21:45:04 | local | 垂直起降运输机（VTOLTransport） | 共用武器 light-transports | /stats/move：5 → 7 | [JSON](../../server-data/editor-changes/2026-11-22/2026-11-22T12-45-04-817Z-11c2de12-ee25-4cd7-b946-7eb173d0f7ba.json) |
 | 2026-11-15 03:33:15 | local | 垂直起降运输机（VTOLTransport_DeployState） | 单位特例 | /stats/cost：275 → 250 | [JSON](../../server-data/editor-changes/2026-11-15/2026-11-14T18-33-15-222Z-8b783a76-be10-4431-b7a3-622d1c3b6592.json) |
 | 2026-11-15 03:33:13 | local | 垂直起降运输机（VTOLTransport） | 单位特例 | /stats/cost：275 → 250 | [JSON](../../server-data/editor-changes/2026-11-15/2026-11-14T18-33-13-809Z-a433dad6-7787-40ef-aaa2-bbafe2d6fbb7.json) |
 | 2026-11-15 03:33:08 | local | 马赛III级（MarseilleIIIClass） | 单位特例 | /stats/cost：500 → 250 | [JSON](../../server-data/editor-changes/2026-11-15/2026-11-14T18-33-08-165Z-1e89f64e-5f47-4a7e-a875-fe92b52d23c6.json) |

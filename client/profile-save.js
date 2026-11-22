@@ -1,6 +1,17 @@
 /* Personal progress controls; serialization is shared with the offline save editor. */
 (() => {
-  const factions = ["PMC", "EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON", "EFSF_0093", "NEO_ZEON_0093", "OMNI", "ZAFT"];
+  const factions = [
+    "PMC",
+    "EFSF",
+    "ZEON",
+    "AEUG",
+    "TITANS",
+    "NEO_ZEON",
+    "EFSF_0093",
+    "NEO_ZEON_0093",
+    "OMNI",
+    "ZAFT",
+  ];
   const { validate, exportData, encodeData, importData } = ProfileSave;
   const panel = document.createElement("div"),
     actions = document.createElement("div"),
@@ -70,9 +81,11 @@
       status.textContent = "请先退出当前战局，再新建存档";
       return;
     }
+    const setup = await ProfileOnboarding.choose();
+    if (!setup) return;
     if (
       !(await GameDialog.confirm(
-        "新建存档将重置驾驶员、编组、科技、资金、物资和单位库存，是否继续？",
+        "新建存档将重置编组、科技、资金、物资和单位库存，自定义PMC驾驶员将保留。是否继续？",
         {
           title: "新建存档",
           confirmText: "新建存档",
@@ -92,10 +105,15 @@
         pilots[faction] = { pilots: [], awards: [] };
         formations[faction] = null;
       }
+      pilots.PMC.pilots = ProfileReset.roster(
+        Object.values(Formation.exportPilotStores()).flatMap((store) => store.pilots),
+      );
       importData({
         format: "ProjectGreed-profile",
         schemaVersion: 1,
         identity: ProfileIdentity.create(),
+        companyName: setup.companyName,
+        economy: Economy.initial(setup.faction),
         pilots,
         formations,
         development: { points: { EFSF: 0, ZEON: 0 }, claimed: {} },
@@ -126,20 +144,38 @@
   diagnosticText.setAttribute("role", "status");
   let lastDiagnostic;
   function inspectStorage() {
-    lastDiagnostic = { ...ProfileStorage.inspect(), backend: typeof AppRuntime !== "undefined" && AppRuntime.native ? "native-file" : "browser-localStorage", client: document.title,
-      entryMode: location.protocol, browser: navigator.userAgent };
-    const kib = bytes => (bytes / 1024).toFixed(1) + " KiB";
+    lastDiagnostic = {
+      ...ProfileStorage.inspect(),
+      backend:
+        typeof AppRuntime !== "undefined" && AppRuntime.native
+          ? "native-file"
+          : "browser-localStorage",
+      client: document.title,
+      entryMode: location.protocol,
+      browser: navigator.userAgent,
+    };
+    const kib = (bytes) => (bytes / 1024).toFixed(1) + " KiB";
     const native = lastDiagnostic.backend === "native-file";
-    let message = lastDiagnostic.writable ? (native ? "应用文件存档写入正常。" : "本地存储写入正常。") :
-      native ? "应用文件存档暂时无法写入。" :
-      lastDiagnostic.errorName === "QuotaExceededError" ?
-        "浏览器连极小的数据也无法保存（配额不足）。" : "浏览器禁止或无法保存本地数据。";
-    message += (native ? " 当前应用存档估算占用 " : " 当前页面存储估算占用 ") + kib(lastDiagnostic.estimatedBytes) + "。";
+    let message = lastDiagnostic.writable
+      ? native
+        ? "应用文件存档写入正常。"
+        : "本地存储写入正常。"
+      : native
+        ? "应用文件存档暂时无法写入。"
+        : lastDiagnostic.errorName === "QuotaExceededError"
+          ? "浏览器连极小的数据也无法保存（配额不足）。"
+          : "浏览器禁止或无法保存本地数据。";
+    message +=
+      (native ? " 当前应用存档估算占用 " : " 当前页面存储估算占用 ") +
+      kib(lastDiagnostic.estimatedBytes) +
+      "。";
     if (!lastDiagnostic.writable)
-      message += native ? "请检查磁盘空间与应用数据目录权限，并导出存储诊断以便排查。" : "新建个人存档不会清除历史战役备份或其他页面数据，也不能解除浏览器存储限制。请导出存储诊断以便排查。";
+      message += native
+        ? "请检查磁盘空间与应用数据目录权限，并导出存储诊断以便排查。"
+        : "新建个人存档不会清除历史战役备份或其他页面数据，也不能解除浏览器存储限制。请导出存储诊断以便排查。";
     if (native && !lastDiagnostic.writable && lastDiagnostic.errorMessage)
       message += " " + lastDiagnostic.errorMessage;
-    message += lastDiagnostic.groups.map(group => group.name + " " + kib(group.bytes)).join("；");
+    message += lastDiagnostic.groups.map((group) => group.name + " " + kib(group.bytes)).join("；");
     diagnosticText.textContent = message;
     diagnosticText.hidden = false;
     return lastDiagnostic;
@@ -147,7 +183,9 @@
   checkStorage.onclick = inspectStorage;
   exportDiagnostic.onclick = () => {
     const report = inspectStorage();
-    const url = URL.createObjectURL(new Blob([JSON.stringify(report, null, 2)], {type:"application/json"}));
+    const url = URL.createObjectURL(
+      new Blob([JSON.stringify(report, null, 2)], { type: "application/json" }),
+    );
     const link = document.createElement("a");
     link.href = url;
     link.download = "ProjectGreed-storage-diagnostic.json";
@@ -157,4 +195,24 @@
   diagnostics.append(checkStorage, exportDiagnostic);
   panel.append(diagnostics, diagnosticText);
   document.getElementById("clientSettingsDialog").append(panel);
+  async function firstCompany() {
+    if (!Economy.snapshot().onboardingPending || Economy.storageIssue()) return;
+    while (Economy.snapshot().onboardingPending) {
+      const setup = await ProfileOnboarding.choose({ initial: true });
+      if (!setup) continue;
+      try {
+        if (Net.active) throw Error("请先退出当前战局，再新建存档");
+        if (
+          Economy.completeOnboarding(setup.faction, [["projectgreed.playerId", setup.companyName]])
+        ) {
+          document.getElementById("playerId").value = setup.companyName;
+          PlayerProfile.name();
+        }
+      } catch (error) {
+        status.textContent = "新建失败：" + Economy.errorMessage(error);
+        await GameDialog.alert(status.textContent);
+      }
+    }
+  }
+  window.addEventListener("game-assets-ready", firstCompany, { once: true });
 })();

@@ -312,6 +312,8 @@ const Tactics = (() => {
     return value;
   }
   function validateBattleMode(value = "regular") {
+    if (value === "mission") throw Error("任务模式暂时锁定");
+    if (value === "battlefield") throw Error("雇佣兵战争模式暂时锁定");
     if (!["regular", "quick", "battlefield", "sweep", "mission"].includes(value))
       throw Error("对战模式无效");
     return value;
@@ -323,17 +325,19 @@ const Tactics = (() => {
   function tagRestrictionsEnabled(settings = {}) {
     return !["sweep", "mission", "battlefield"].includes(settings.mode);
   }
+  const openEras = ["UC_0079_T1", "UC_0079_T2"];
   function validateOpenContent(settings) {
+    if (settings.mode === "mission") throw Error("任务模式暂时锁定");
+    if (settings.mode === "battlefield") throw Error("雇佣兵战争模式暂时锁定");
     if (settings.mode === "mission") return;
     if (settings.mode === "battlefield" && settings.costLimit > 7500)
       throw Error("雇佣兵战争暂时最多开放7500 COST作战规模");
-    if (settings.mode === "sweep" && Number(settings.sweepDifficulty) > 3)
-      throw Error("合约模式暂时只开放N1至N3难度");
+    if (settings.mode === "sweep") contractMode.config(settings.sweepDifficulty);
     const eras = settings.mode === "battlefield"
       ? [settings.battlefieldEra, ...(settings.battlefieldTeams || []).map(t=>t.era)]
       : [settings.mode === "sweep" ? settings.sweepEra : settings.regularEra];
-    if (eras.some(era=>era && era !== "UC_0079_T1"))
-      throw Error("当前暂时仅开放UC_0079_T1年代，固定年代剧本任务除外");
+    if (eras.some(era=>era && !openEras.includes(era)))
+      throw Error("当前暂时仅开放UC_0079_T1和UC_0079_T2年代");
   }
   function defaultRoomSettings() {
     return {
@@ -1226,7 +1230,7 @@ const Tactics = (() => {
       weapon.pairedChannels && weapon.energySpent === undefined
         ? new Set(availableStrikes(unit, weapon).map((s) => s.channelId))
         : null;
-    const en = liveChannels
+    const baseEN = liveChannels
       ? weapon.pairedChannels.filter((c) => liveChannels.has(c.id)).reduce((n, c) => n + c.en, 0)
       : unit.model &&
           weapon.nativeTiming?.energyMode === "perShot" &&
@@ -1236,7 +1240,8 @@ const Tactics = (() => {
               (s) => `${s.at}:${weapon.attack.muzzleIndices[s.shotIndex]}`,
             ),
           ).size * weapon.nativeTiming.energyPerEmission
-        : weapon.en;
+        : (weapon.talentBaseEN ?? weapon.en);
+    const en = Math.ceil(baseEN * Math.max(0, 1 + (pilots.talents.effects(unit.pilot).enCost || 0)));
     if (
       attackMultiplier === previousAttack &&
       en === weapon.en &&
@@ -1255,6 +1260,7 @@ const Tactics = (() => {
     return {
       ...weapon,
       en: Math.round(en),
+      talentBaseEN: baseEN,
       partDamageMultiplier: attackMultiplier,
       remoteDamageMultiplier: remoteMultiplier,
       get name() {
@@ -1375,15 +1381,30 @@ const Tactics = (() => {
     }
     return variants.get(factor);
   }
-  function pilotModelOf(unit, base) {
+  function talentContext(unit, g, base, extra = {}) {
+    const context = {unit, maxHP:base.hp, environment:environmentOf(g,unit), ...extra};
+    const ids = unit.pilot?.talents || [];
+    if (ids.some(id => ['pt40','pt41','pt42'].includes(id)))
+      context.squadCount = g ? g.units.filter(other => onMap(other) && other.owner === unit.owner && other.x === unit.x && other.y === unit.y).length : 1;
+    if (g && ids.includes('pt43')) {
+      const climate = typeof BattlefieldClimate !== 'undefined' ? BattlefieldClimate : require('./battlefield-climate.js');
+      context.night = ['evening','late_night','pre_dawn'].includes(climate.resolve(g.climateMap || getMap(g.mapId),g.climateSettings || {},g.round,g.seed).time);
+    }
+    return context;
+  }
+  function pilotModelOf(unit, base, g = null) {
     const pilot = pilots.of(unit, base), stats = pilot.stats;
     const experience = pilots.experienceMultiplier(unit);
+    const talentEffects = pilots.talents.effects(unit.pilot, talentContext(unit,g,base));
     const key = [stats.shooting,stats.melee,stats.defense,stats.speed,stats.accuracy,
-      stats.reaction,stats.leadership,stats.awakening,experience].join(":");
+      stats.reaction,stats.leadership,stats.awakening,experience,JSON.stringify(talentEffects)].join(":");
     let variants = pilotModels.get(base);
     if (!variants) pilotModels.set(base, (variants = new Map()));
     if (!variants.has(key)) {
-      const modifiers = pilots.modifiers(unit, base);
+      const modifiers = {...pilots.modifiers(unit, base)};
+      modifiers.move *= 1 + (talentEffects.speed || 0);
+      modifiers.accuracy *= 1 + (talentEffects.accuracy || 0);
+      modifiers.reaction *= 1 + (talentEffects.reaction || 0);
       // Snapshot decoding replaces pilot objects; keep equivalent attributes
       // reusable across frames without retaining entire matches or portraits.
       const victim = pilotModelSlots[pilotModelCursor];
@@ -1406,6 +1427,7 @@ const Tactics = (() => {
         mobility: Math.round(base.mobility * modifiers.reaction),
         accuracy: Math.round(base.accuracy * modifiers.accuracy),
         pilotModifiers: modifiers,
+        talentEffects,
         pilotExperienceMultiplier:
           (base.pilotExperienceMultiplier ?? 1) * experience,
       });
@@ -1485,7 +1507,7 @@ const Tactics = (() => {
     return contexts.get(g);
   }
   function deriveModel(unit, g = null) {
-    const original = pilotModelOf(unit, missionModelOf(unit)),
+    const original = pilotModelOf(unit, missionModelOf(unit), g),
       grounded = environmentOf(g, unit) === "ground" && original.groundMoveBonus
         ? {...original,move:original.deployed?0:original.move+original.groundMoveBonus} : original,
       base = unit.flying
@@ -1770,9 +1792,10 @@ const Tactics = (() => {
   function activeMinovskyFields(g) {
     return (g.minovskyFields || []).filter((field) => field.expiresRound > g.round);
   }
-  function minovskyAt(g, unit) {
+  function minovskyAt(g, unit, friendlyTeam = null) {
     if (!g || !unit || unit.embarked || unit.hp <= 0) return false;
     return activeMinovskyFields(g).some((field) =>
+      (friendlyTeam === null || field.team === friendlyTeam) &&
       cells(unit).some((cell) => Math.hypot(cell.x - field.x, cell.y - field.y) <= field.radius),
     );
   }
@@ -1812,14 +1835,17 @@ const Tactics = (() => {
     hasSfsMS,
   });
   // Grid anchors remain integers; a ship's explicit heading determines its whole rectangle.
+  function commandKinds(model) {
+    return model.commandAuras?.length ? model.commandAuras : [{type:({support:'cmdCom',general:'cmdDef',raid:'cmdAtk'})[model.combatRole] || 'cmdCom'}];
+  }
   function commandAura(provider) {
-    const model = modelOf(provider);
-    const leadership = pilots.of(provider, model).stats.leadership;
-    const steps = Math.trunc((leadership - 100) / 25);
+    const model = modelOf(provider), leadership = pilots.of(provider,model).stats.leadership;
+    const active = leadership > 100, steps = Math.floor((leadership - 100) / 25);
     return {
-      radius: Math.max(1, 3 + steps + (model.commandRangeBonus || 0)),
-      effect: Math.max(0, 0.1 + steps * 0.025),
-      kinds: model.commandAuras || [],
+      active,
+      radius: (model.ship ? 4 : 2) + (model.commandAuras?.length ? 2 : 0) + (model.commandRangeBonus || 0) + (pilots.talents.effects(provider.pilot).commandRange || 0),
+      effect: active ? 0.1 + steps * 0.025 : 0,
+      kinds: commandKinds(model),
     };
   }
   function commandEffects(g, target) {
@@ -1828,12 +1854,11 @@ const Tactics = (() => {
     for (const provider of g.units) {
       if (
         !onMap(provider) ||
-        provider.team !== target.team ||
-        !modelOf(provider).commandAuras?.length
+        provider.team !== target.team
       )
         continue;
       const aura = commandAura(provider);
-      if (dist(provider, target) > aura.radius) continue;
+      if (!aura.active || dist(provider, target) > aura.radius) continue;
       for (const kind of aura.kinds) {
         const key = { cmdAtk: "attack", cmdDef: "defense", cmdCom: "communication" }[kind.type];
         if (key) effects[key] = Math.max(effects[key], aura.effect);
@@ -3395,6 +3420,8 @@ const Tactics = (() => {
   function estimate(g, a, b, w, response = "counter", isCounter = false) {
     if (!canEvade(b) && response === "evade") response = "defend";
     w = weaponStats(w, a);
+    const attackTalent = pilots.talents.effects(a.pilot, talentContext(a,g,modelOf(a,g),{target:b,targetMaxHP:modelOf(b,g).hp,weapon:w,distance:dist(a,b),attack:!isCounter,isCounter,response}));
+    const defenseTalent = pilots.talents.effects(b.pilot, talentContext(b,g,modelOf(b,g),{target:a,targetMaxHP:modelOf(a,g).hp,weapon:w,distance:dist(a,b),defender:true,response}));
     const attacker = modelOf(a, g),
       bonuses = attacker.attackBonuses,
       attackCommand = commandEffects(g, a),
@@ -3447,14 +3474,15 @@ const Tactics = (() => {
         Math.max(0, baseHit - (response === "evade" ? 15 : 0)) *
         (w.hitScale || 1) *
         (attacker.pilotModifiers?.accuracy ?? 1) *
-        (1 + attackCommand.communication),
+        (1 + attackCommand.communication) * (1 + (attackTalent.accuracy || 0)) / (1 + (attacker.talentEffects?.accuracy || 0)),
       pilotEvasionHit =
-        rawHit / (canEvade(b) ? (defender.pilotModifiers?.reaction ?? 1) * (1 + defenseCommand.communication) * (opticalCamouflageActive(b) ? 1.25 : 1) : 1),
+        rawHit / (canEvade(b) ? (defender.pilotModifiers?.reaction ?? 1) * (1 + (defenseTalent.reaction || 0)) / (1 + (defender.talentEffects?.reaction || 0)) * (1 + defenseCommand.communication) * (opticalCamouflageActive(b) ? 1.25 : 1) : 1),
       particleDefense = minovskyAt(g, b),
+      friendlyParticleEvasion = canEvade(b) && minovskyAt(g, b, b.team),
       // Preserve Minovsky's extra miss chance, without turning a negative miss
       // chance into an accuracy bonus when the uncapped result exceeds 100%.
-      particleEvasionHit = particleDefense
-        ? pilotEvasionHit - Math.max(0, 100 - pilotEvasionHit) * 0.25
+      particleEvasionHit = friendlyParticleEvasion
+        ? pilotEvasionHit - Math.max(0, 100 - pilotEvasionHit) * 0.15
         : pilotEvasionHit,
       resolvedHit = Math.max(
         0,
@@ -3465,7 +3493,7 @@ const Tactics = (() => {
               ? 0.75
               : 1) *
             sensorFactor *
-            (w.type !== "melee" && smokeAt(g, b) ? 0.75 : 1) +
+            (w.type !== "melee" && smokeAt(g, b) ? 0.9 : 1) +
             (attacker.pilotModifiers?.awakeningHit ?? 0),
         ) -
           (canEvade(b) ? (defender.pilotModifiers?.awakeningEvasion ?? 0) + squadEvasion(g, b) : 0),
@@ -3474,6 +3502,9 @@ const Tactics = (() => {
         (canEvade(b) && combatRoleAdvantage(defender, attacker) ? 5 : 0)),
       defenseMultiplier = response === "defend" ? 1.25 : 1,
       finalDamageMultiplier =
+        (1 + (attackTalent[w.type === 'melee' ? 'melee' : 'shooting'] || 0)) *
+        (1 + (attackTalent.damage || 0)) / (1 + (defenseTalent.defense || 0)) *
+        (1 - (defenseTalent.finalReduction || 0)) *
         (weakPoint(b, w.aimCell ?? b.aimCell) ? 1.5 : 1) *
         (response === "defend" ? 0.75 : 1) *
         (defender.pilotModifiers?.defense ?? 1) *
@@ -3517,6 +3548,7 @@ const Tactics = (() => {
               damageMultiplier *
               categoryBonus *
               elementBonus *
+              (w.type !== "melee" ? 1 + (attackTalent[element === "beam" ? "beamDamage" : element === "shell" ? "shellDamage" : "unused"] || 0) : 1) *
               sizeModifier.damage *
               targetFactor *
               share -
@@ -3593,7 +3625,7 @@ const Tactics = (() => {
       iFieldBlockedDamage: fieldInitial - blockedFieldLeft,
       blockChance:
         shieldAvailable && b.shield > 0
-          ? Math.min(.75, defender.shield.blockChance + (response === "defend" ? 0.25 : 0))
+          ? Math.min(.75, defender.shield.blockChance + (defenseTalent.blockChance || 0) + (response === "defend" ? 0.25 : 0))
           : 0,
     };
   }
@@ -4895,6 +4927,7 @@ const Tactics = (() => {
     placementQuery,
     defaultRoomSettings,
     validateOpenContent,
+    openEras,
     formationStyle,
     tagRestrictionsEnabled,
     sweepMapId,
@@ -4968,6 +5001,7 @@ const Tactics = (() => {
     combatRoleAdvantage,
     weaponStats,
     inSupplyRange,
+    commandKinds,
     commandAura,
     commandEffects,
     supplyCells,

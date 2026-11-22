@@ -1,0 +1,31 @@
+const {test,expect} = require("@playwright/test"), {pathToFileURL} = require("node:url"), path = require("node:path");
+test("heavy Guncannon kit switching removes mortar from the displayed and persisted loadout", async ({page}) => {
+  test.setTimeout(90000);
+  const errors = [];
+  page.on("pageerror", error => errors.push(error.message));
+  await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
+  await page.waitForFunction(() => assetsReady);
+  await page.locator("#profileCompanyName").fill("Kit PMC");
+  await page.locator("#profileOnboardingConfirm").click();
+  const stockId = await page.evaluate(() => {
+    I18n.setLanguage("zh");
+    Economy.creditActivity({id:"heavy-kit",matchId:"heavy-kit",money:0,supplies:0,inventory:{RX_77_3:1}});
+    return Economy.snapshot().storage.units.find(u=>u.unitId==="RX_77_3").id;
+  });
+  await page.locator("#shellHangar").click();
+  await page.locator(`#warehouseBays [data-stock-id="${stockId}"]`).click();
+  await page.locator("#warehouseDialog").getByRole("button",{name:"武装列表",exact:true}).click();
+  const weapons = page.locator("#warehouseWeaponList");
+  await expect(weapons.locator('[data-weapon-id="Common_MortarDouble_B4"]')).toHaveCount(1);
+  await expect(page.locator('#warehouseDetailKit option[value="kit_4"]')).toHaveText("光束加农套件");
+  await page.locator("#warehouseDetailKit").selectOption("kit_4");
+  await expect(weapons).toBeVisible();
+  await expect(weapons.locator('[data-weapon-id="EF_RX_77_4_BeamCannon"]')).toHaveCount(1);
+  await expect(weapons.locator('[data-weapon-id*="Mortar"]')).toHaveCount(0);
+  expect(await page.evaluate(id=>Economy.snapshot().storage.units.find(u=>u.id===id).kitId,stockId)).toBe("kit_4");
+  await page.screenshot({path:"tmp/verification/screenshots/heavy-guncannon-beam-kit.png"});
+  await page.locator("#warehouseDetailKit").selectOption("kit_2");
+  await expect(weapons.locator('[data-weapon-id="Common_MortarDouble_B4"]')).toHaveCount(1);
+  await expect(weapons.locator('[data-weapon-id="EF_RX_77_4_BeamCannon"]')).toHaveCount(0);
+  expect(errors).toEqual([]);
+});

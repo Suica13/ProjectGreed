@@ -11,6 +11,7 @@
 
 | 时间（日本时间） | 来源IP | 单位 | 修改对象 | 修改内容 | 详细日志 |
 |---|---|---|---|---|---|
+| 2026-11-22 21:45:04 | local | 胖叔叔改（FatUncleKai） | 共用武器 light-transports | /stats/hp：31500 → 35000<br>/stats/move：5 → 7 | [JSON](../../server-data/editor-changes/2026-11-22/2026-11-22T12-45-04-817Z-11c2de12-ee25-4cd7-b946-7eb173d0f7ba.json) |
 | 2026-11-15 03:38:59 | local | 胖叔叔改（FatUncleKai） | 单位特例 | /stats/cost：250 → 300 | [JSON](../../server-data/editor-changes/2026-11-15/2026-11-14T18-38-59-001Z-14e6ebb0-1899-470f-b4cd-e920c724dfc9.json) |
 | 2026-11-14 11:30:29 | local | 帕佐克级（PazockClass） | 单位特例 | /displayLocalization/en：（无） → {"name":"Pazock Class","description":"Main Supply Ship of the Principality of Zeon Fleet"}<br>/localization/ja/description：（无） → "ジオン公国軍艦隊の主力補給艦。"<br>/localization/ja/name：（无） → "パゾク級"<br>/stats/cost：750 → 350<br>/weapons/PazockClass_Turret_AA/hit：85 → 125<br>/weapons/PazockClass_Turret_AA/max：2 → 1 | [JSON](../../server-data/editor-changes/2026-11-14/2026-11-14T02-30-29-567Z-de1f0255-8c78-4654-9a36-22234fd53399.json) |
 | 2026-11-14 11:30:26 | local | 胖叔叔改（FatUncleKai） | 单位特例 | /displayLocalization/en/description：（无） → "Improved FatUncleKai, with enhanced mobility"<br>/localization/en/name："FatUncleKai" → "Fat Uncle Kai"<br>/localization/ja/description：（无） → "ファット・アンクルの改良型。機動性が向上している。"<br>/localization/ja/name：（无） → "ファット・アンクル改"<br>/stats/cost：350 → 300 | [JSON](../../server-data/editor-changes/2026-11-14/2026-11-14T02-30-26-196Z-62e2c0fe-d3c6-43d8-91f0-4df4643cfc5d.json) |

@@ -13,6 +13,11 @@ build/ProjectGreed_V02.html
 
 # Generated locally by build.cjs; release artifacts live under build/<version>/.
 /public/
+/admin/map-editor.html
+/admin/unit-editor.html
+/admin/task-tree-editor.html
+/admin/contract-event-editor.html
+/admin/developer.html
 
 /tmp/
 

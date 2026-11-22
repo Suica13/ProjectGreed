@@ -92,6 +92,11 @@ window.WarehouseUI = (() => {
       resources.append(bar);
     }
     const state = Warehouse.status(item, model), status = element("span", "warehouse-condition " + state, I18n.text(statusNames[state]));
+    if (item.rentalUses) {
+      status.textContent = I18n.text("剩余次数:{count}次").replace("{count}", item.rentalUses);
+      resources.append(status);
+      return resources;
+    }
     status.setAttribute("role","button");status.tabIndex=0;
     status.onclick = event => { event.stopPropagation();showRepair(item); };
     status.onkeydown = event => { if (["Enter"," "].includes(event.key)) {event.preventDefault();event.stopPropagation();showRepair(item);} };
@@ -309,8 +314,10 @@ window.WarehouseUI = (() => {
     relocate.onclick = () => showRelocatePicker(item);
     sell.id = "warehouseSellUnit";
     sell.type = "button";
-    sell.disabled = Net.started;
+    sell.disabled = Net.started || Economy.isContactLoan(item) || !!item.rentalUses;
+    if(item.rentalUses)sell.title=I18n.text("租赁单位不能出售");
     if (discard) sell.title = I18n.text("销毁不返还资金或物资");
+    if(Economy.isContactLoan(item))sell.title=I18n.text("任务借用机体不能出售或删除，完成任务后自动回收");
     sell.onclick = async () => {
       if (sell.disabled) return;
       sell.disabled = true;
@@ -364,7 +371,8 @@ window.WarehouseUI = (() => {
     const grid=element("div","warehouse-plugin-slots");
     UnitPlugins.normalize(item.plugins,model).forEach((id,index)=>{
       const button=element("button","warehouse-plugin-slot"),part=UnitPlugins.byId.get(id);
-      button.type="button";button.dataset.pluginSlot=index;button.disabled=busy;
+      button.type="button";button.dataset.pluginSlot=index;button.disabled=busy || !!item.rentalUses;
+      if(item.rentalUses)button.title=I18n.text("租赁单位不能调整零件");
       if(part)button.append(pluginCard(part));
       else button.append(element("span","plugin-slot-plus","+"));
       button.onclick=()=>showPluginPicker(item,index);grid.append(button);
@@ -682,11 +690,13 @@ window.WarehouseUI = (() => {
         image=element("img"),text=element("div"),accept=element("button","primary","接受");
       row.dataset.deliveryIndex=index;image.src=unitIcon(id);image.alt="";
       text.append(element("strong","",model.name),element("small","",model.cost+"C · "+model.kitName));
+      if(item.rentalUses)text.append(element("small","",I18n.text("剩余次数:{count}次").replace("{count}",item.rentalUses)));
       accept.disabled=Net.started || !Warehouse.fits(Economy.snapshot().storage,model,UnitModels);
       if(accept.disabled)accept.title=I18n.text(Net.started?"对局进行中不能领取":"对应机库已满");
       accept.onclick=()=>{try{if(!Net.started){Economy.receiveDeliveries(index);showDeliveries();}}catch(error){note(error.message);}};
       const remove=element("button","danger","移除"),actions=element("div","warehouse-depot-actions");
-      remove.disabled=Net.started;
+      remove.disabled=Net.started || Economy.isContactLoan(item);
+      if(Economy.isContactLoan(item))remove.title=I18n.text("任务借用机体不能出售或删除，完成任务后自动回收");
       remove.onclick=async()=>{
         if(Net.started || remove.disabled)return;
         remove.disabled=true;
@@ -694,7 +704,7 @@ window.WarehouseUI = (() => {
           if(!await GameDialog.confirm(I18n.text("确定移除保管库中的「{name}」？此操作无法撤销。").replace("{name}",I18n.text(model.name)),{title:I18n.text("移除单位")}) || Net.started)return;
           Economy.discardDelivery(index,item);showDeliveries();
         } catch(error){note(error.message);}
-        finally {remove.disabled=Net.started;}
+        finally {remove.disabled=Net.started || Economy.isContactLoan(item);}
       };
       actions.append(accept,remove);row.append(image,text,actions);list.append(row);
     });

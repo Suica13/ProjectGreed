@@ -59,7 +59,9 @@ def main():
         stage.mkdir()
         for directory in ["shared", "admin"]:
             shutil.copytree(ROOT / directory, stage / directory,
-                            ignore=shutil.ignore_patterns("__pycache__", "*.log", "*.tmp", "asset-pool.js"))
+                            ignore=shutil.ignore_patterns("__pycache__", "*.log", "*.tmp", "asset-pool.js",
+                                *(["map-editor.html", "unit-editor.html", "task-tree-editor.html", "contract-event-editor.html", "developer.html", "index.html"]
+                                  if directory == "admin" and not args.with_client else [])))
         # The server creates authoritative dialogue records from the shared client generator.
         (stage / "client").mkdir()
         shutil.copy2(ROOT / "client/battle-dialogue.js", stage / "client/battle-dialogue.js")
@@ -69,8 +71,7 @@ def main():
         if args.with_client:
             (stage / "public").mkdir()
             shutil.copy2(client, stage / "public/client.html")
-            for editor in ["map-editor.html", "unit-editor.html"]:
-                shutil.copy2(ROOT / "public" / editor, stage / "public" / editor)
+            # Offline admin editors are already copied from admin above.
         for filename in TOOLS + (["client-resources.cjs", "static-client.cjs"] if args.with_client else []):
             destination = stage / "tools" / filename
             destination.parent.mkdir(exist_ok=True)
@@ -102,7 +103,7 @@ def main():
                 '双击 start_server.bat 启动服务端。已附带 Node 与 ws，无需安装依赖。\n'
                 '服务器默认端口1313，可修改 cfg.json 后重启。网页客户端：http://127.0.0.1:1313/ 。\n'
                 '其他玩家可在浏览器访问 http://服务器IP:1313/，也可复制 public/client.html 独立打开后输入服务器IP连接。\n'
-                '地图编辑器：http://127.0.0.1:1313/map-editor.html；单位工坊：http://127.0.0.1:1313/unit-editor.html 。\n'
+                '地图编辑器：http://127.0.0.1:1313/admin/map-editor.html；单位工坊：http://127.0.0.1:1313/admin/unit-editor.html 。\n'
                 'open_activities.bat 用于本机活动管理。关闭CMD窗口或按 Ctrl+C 停服。\n'
                 '首次启动从 shared/default-activities.json 初始化活动；运行后生成的 server-data 为活动、领取记录与结算日志，升级时请保留。发行包不包含打包者的玩家、领取记录及累计进度。\n'
                 '房间与对局在内存中，停服不会保留。manifest.json 记录发行文件的 SHA-256。\n', encoding="utf-8")

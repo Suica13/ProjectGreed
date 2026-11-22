@@ -272,6 +272,11 @@ const ServerActivities = (() => {
       row.append(element("span", "", name + " · " + I18n.text("机体库存") + " ×" + count));
       rewards.append(row);
     }
+    for(const rental of item.rewards.rentals||[]){
+      const row=element("div","server-activity-unit"),image=element("img");
+      image.src=unitIcon(rental.unitId+"__"+(rental.kitId||Economy.defaultKit(rental.unitId)));image.alt="";
+      row.append(image,element("span","",I18n.text("租赁单位")+" · "+unitLabel(rental.unitId)+" ×"+rental.count+" · "+I18n.text("剩余次数:{count}次").replace("{count}",rental.uses)));rewards.append(row);
+    }
     for(const [id,count]of Object.entries(item.rewards.pluginInventory||{})){
       const part=UnitPlugins.byId.get(id);
       rewards.append(element("p","",I18n.text("模块零件")+" · "+I18n.text(part?.name||id)+" ×"+count));

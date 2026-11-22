@@ -1,6 +1,6 @@
 /* A one-time progress reset, also applied to pre-reset imported profiles. */
 const ProfileReset = (() => {
-  const epoch = 1,
+  const epoch = 2,
     marker = "projectgreed.progress-reset.v1";
   const factions = [
     "PMC",
@@ -20,22 +20,15 @@ const ProfileReset = (() => {
     for (const p of values) {
       if (!p || p.ace || p.aceId || p.hired || p.pmcGeneral || !p.id || !p.name) continue;
       if (unique.has(p.id)) continue;
-      const fresh = pilots().createCustom(p.id, p.name, p.portraitId, "PMC");
-      const custom = pilots().custom({
-        ...fresh,
-        ...Object.fromEntries(
-          ["personality", "background", "dialogue", "uploadedPortrait", "originFaction", "record"]
-            .filter((k) => p[k] !== undefined)
-            .map((k) => [k, p[k]]),
-        ),
-        needsRecruitment: false,
-      });
+      const custom = pilots().custom({ ...p, faction: "PMC" });
       unique.set(p.id, custom);
     }
-    return [...unique.values()].map((p, i) => ({
-      ...p,
-      ...(i >= 10 ? { inDormStorage: true } : {}),
-    }));
+    return [...unique.values()].map((p, i) => {
+      const kept = { ...p };
+      if (i >= 10) kept.inDormStorage = true;
+      else delete kept.inDormStorage;
+      return kept;
+    });
   }
   function apply(storage, replace) {
     if (storage.getItem(marker) === String(epoch)) return false;

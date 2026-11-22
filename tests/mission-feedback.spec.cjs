@@ -33,7 +33,7 @@ for(const width of [1440,390])test(`night raid objectives and extraction at ${wi
 test('night raid export preserves random targets, clock, extraction and technology in editor',async({page})=>{
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  const map=JSON.parse(require('node:fs').readFileSync('assets/maps/missions/sleepless_raid.json','utf8'));
- await page.goto(pathToFileURL(path.resolve('public/map-editor.html')).href);
+ await page.goto(pathToFileURL(path.resolve('admin/map-editor.html')).href);
  await page.evaluate(map=>{MapEditor.importMap(map.tileMap);MapEditor.tab('mission');},map);
  await expect(page.locator('#missionScriptValidation')).toHaveText('✓ 脚本结构检查通过');
  expect(await page.evaluate(()=>MissionEditor.issues())).toEqual([]);

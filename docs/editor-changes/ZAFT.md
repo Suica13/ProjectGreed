@@ -9,6 +9,7 @@
 
 | 时间（日本时间） | 来源IP | 单位 | 修改对象 | 修改内容 | 详细日志 |
 |---|---|---|---|---|---|
+| 2026-11-22 21:45:04 | local | 垂直起降运输机（VoLPHAU） | 共用武器 light-transports | /stats/hp：31500 → 25000<br>/stats/move：5 → 7 | [JSON](../../server-data/editor-changes/2026-11-22/2026-11-22T12-45-04-817Z-11c2de12-ee25-4cd7-b946-7eb173d0f7ba.json) |
 | 2026-11-15 03:47:30 | local | 希古（ZGMF_515） | 单位特例 | /stats/cost：325 → 375 | [JSON](../../server-data/editor-changes/2026-11-15/2026-11-14T18-47-30-373Z-eebb7811-d518-44d8-8717-5d7444bd71cd.json) |
 | 2026-11-15 03:39:00 | local | 长距离强行侦察型金恩（ZGMF_LRR704B） | 单位特例 | /stats/cost：250 → 300 | [JSON](../../server-data/editor-changes/2026-11-15/2026-11-14T18-39-00-140Z-d4228ccb-63d3-4168-83a9-6b29c849185d.json) |
 | 2026-11-15 03:33:08 | local | 马赛III级（MarseilleIIIClass） | 单位特例 | /stats/cost：500 → 250 | [JSON](../../server-data/editor-changes/2026-11-15/2026-11-14T18-33-08-165Z-1e89f64e-5f47-4a7e-a875-fe92b52d23c6.json) |

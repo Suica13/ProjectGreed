@@ -2,11 +2,14 @@
   {
     "id": "efsf",
     "name": "地球联邦军",
-    "portraitId": "Pilot_EFSF_0079_Common_1"
+    "portraitImage": "assets/ui/contact-efsf.png",
+    "portraitId": "Pilot_EFSF_0079_Common_1",
+    "sellsPlugins": true
   },
   {
     "id": "anaheim",
     "name": "阿纳海姆",
+    "portraitImage": "assets/ui/contact-ae.png",
     "portraitId": "Pilot_EFSF_0079_Common_2",
     "sellsPlugins": true
   }

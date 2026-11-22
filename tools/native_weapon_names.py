@@ -2,6 +2,7 @@
 import re
 
 EXACT = {
+    "ZN_MS_06JK_Gatling": ("肩部加特林", "Shoulder Gatling", "肩部ガトリング"),
     "OMNI_GAT_X105_Launcher": ("高能脉冲炮", "High-Energy Impulse Cannon", "高エネルギー・インパルス砲"),
     "OMNI_GAT_X103_BR_HyperSniper": ("组合式步枪[狙击]", "Combined Rifle [Sniper]", "連結ライフル[狙撃]"),
     "EF_RGM_89_BZ": ("火箭筒", "Bazooka", "バズーカ"),
@@ -103,4 +104,5 @@ def apply(prefab):
                 kit["name"] = names[0] + "套件"
                 for lang, name, suffix in zip(("zh", "en", "ja"), names, ("套件", " Kit", "装備")):
                     kit.setdefault("localization", {}).setdefault(lang, {})["name"] = name + suffix
-    return prefab
+    from weapon_kit_policy import apply_kit_overrides
+    return apply_kit_overrides(prefab)

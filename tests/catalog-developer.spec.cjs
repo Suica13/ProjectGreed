@@ -5,7 +5,7 @@ async function login(page, base, standalone = false) {
   if (standalone) {
     const { pathToFileURL } = require("node:url"),
       path = require("node:path");
-    await page.goto(pathToFileURL(path.resolve("public/developer.html")).href);
+    await page.goto(pathToFileURL(path.resolve("admin/developer.html")).href);
   } else await page.goto(base + "/developer.html");
   await page.locator("#editorServerAddress").fill(base);
   await page.locator("#editorAccessKey").fill("13450");
@@ -246,7 +246,7 @@ test("missing IP service gives connection instructions before loading catalog", 
   await page.route("http://127.0.0.1:1314/api/editor/**", (route) =>
     route.abort("connectionrefused"),
   );
-  await page.goto(pathToFileURL(path.resolve("public/developer.html")).href);
+  await page.goto(pathToFileURL(path.resolve("admin/developer.html")).href);
   await page.locator("#editorAccessKey").fill("13450");
   await page.locator("#confirmEditorLogin").click();
   await expect(page.locator("#editorLoginStatus")).toContainText("无法连接编辑服务器");
@@ -462,7 +462,7 @@ test("remote editor completes a slow download and shows transfer progress", asyn
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
   try {
-    await page.goto(pathToFileURL(path.resolve("public/developer.html")).href);
+    await page.goto(pathToFileURL(path.resolve("admin/developer.html")).href);
     const network = await page.context().newCDPSession(page);
     await network.send("Network.enable");
     await network.send("Network.emulateNetworkConditions", {

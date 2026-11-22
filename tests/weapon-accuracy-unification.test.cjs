@@ -15,7 +15,11 @@ test("handheld cannon bonus excludes mounted cannons; kit discount never stacks 
       assert.equal(weapon.hit, 70);
       assert(weapon.attack.steps.every(step => step.accuracy === undefined || step.accuracy === 70));
     }
-    for (const kit of prefab.weaponKits) assert.equal(kit.cost, Math.max(0, kit.conversionBaseCost - 25));
+    for (const kit of prefab.weaponKits) {
+      const primary = prefab.weapons[kit.weapons[0]];
+      const lightBeam = /Beam(?:Spray)?Gun/i.test(primary?.sourceName || kit.weapons[0] || "") && !/BeamRifle/i.test(primary?.sourceName || "");
+      assert.equal(kit.cost, Math.max(0, kit.conversionBaseCost - 25 - (lightBeam ? 25 : 0)));
+    }
   }
   for (const sourceName of ["EF_180mmCannon", "EF_180mmCannon_PR", "EF_170mmCannon", "ZN_MagellaCannon"]) assert(sources.has(sourceName));
   for (const sourceName of ["Common_Cannon", "EF_Type61_Cannon", "PegasusClass_Turret_Cannon", "ZN_MS_06V_Cannon"]) assert(!Classes.handheldCannon({sourceName,category:"cannon",type:"shell"}));

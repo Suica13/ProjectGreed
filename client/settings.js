@@ -55,7 +55,8 @@ const ClientSettings = (() => {
   document.getElementById("closeClientSettings").onclick = () => dialog.close();
   const editor = document.createElement("a");
   editor.id = "openMapEditor";
-  editor.href = "map-editor.html";
+  editor.href = location.protocol === "file:" && /\/public\/client\.html$/i.test(location.pathname)
+    ? "../admin/map-editor.html" : "admin/map-editor.html";
   editor.target = "_blank";
   editor.rel = "noopener";
   editor.textContent = I18n.text("地图编辑器");

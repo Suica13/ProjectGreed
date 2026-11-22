@@ -210,7 +210,7 @@ for (const [key, file] of [
           stdin:{contents:'export { gunzipSync } from "fflate";',resolveDir:root},bundle:true,write:false,
           platform:"browser",format:"iife",globalName:"CatalogInflate",target:"chrome80",minify:true,legalComments:"eof"
         }).outputFiles[0].text + "\n/*! " + read("node_modules/fflate/LICENSE") + " */\n" + read(file))
-      : inlineScript((key === "ECONOMY" ? read("shared/contact-tasks.js")+"\n"+'const MERCHANT_DATA = '+read("shared/merchant-catalog.json")+';\nconst UNIT_PLUGIN_DATA = '+read("shared/unit-plugins.json")+';\n'+read("shared/unit-plugins.js")+'\nconst BASE_FACILITY_TYPES = '+read("shared/base-facility-types.json")+';\n'+read("shared/base-facilities.js")+'\n'+read("shared/warehouse.js") + "\n" : key === "PROFILE_SAVE" ? read("client/profile-save-core.js") + "\n" : "") + read(file)),
+      : inlineScript((key === "ECONOMY" ? read("shared/contact-tasks.js")+"\n"+'const MERCHANT_DATA = '+read("shared/merchant-catalog.json")+';\nconst UNIT_PLUGIN_DATA = '+read("shared/unit-plugins.json")+';\n'+read("shared/unit-plugins.js")+'\nconst BASE_FACILITY_TYPES = '+read("shared/base-facility-types.json")+';\n'+read("shared/base-facilities.js")+'\n'+read("shared/warehouse.js") + "\n" : key === "PILOTS" ? "const PILOT_TALENT_DATA = " + read("shared/pilot-talents.json") + ";\n" + read("shared/pilot-talents.js") + "\n" : key === "PROFILE_SAVE" ? read("client/profile-save-core.js") + "\n" + read("client/profile-onboarding.js") + "\n" : "") + read(file)),
   );
 html = html.replace("</body>", () => `<style>${read("client/warehouse.css")}\n${read("client/unit-panels.css")}\n${read("client/base-facilities.css")}\n${read("client/base-pages.css")}\n${read("client/contact.css")}\n${read("client/item-storage.css")}\n${read("client/catalog-filters.css")}</style><script>${inlineScript(read("client/warehouse.js"))}\n${inlineScript(read("client/base-facilities.js"))}\n${inlineScript(read("client/contact.js"))}\n${inlineScript(read("client/item-storage.js"))}</script></body>`);
 const layout = JSON.parse(read("client/ui-layout.json"));
@@ -248,9 +248,10 @@ if (grantFlag >= 0) {
     () => `<script id="local-profile-grant">${inlineScript(script)}</script></body>`,
   );
 }
-for (const asset of ["warehouse-unit-topdown.webp", "warehouse-ship-topdown.webp"]) {
+for (const asset of ["warehouse-unit-topdown.webp", "warehouse-ship-topdown.webp", "contact-ae.png", "contact-efsf.png"]) {
   const name = "assets/ui/" + asset;
-  html = html.replaceAll(name, "data:image/webp;base64," + fs.readFileSync(path.join(root, name)).toString("base64"));
+  const mime = asset.endsWith(".png") ? "image/png" : "image/webp";
+  html = html.replaceAll(name, "data:" + mime + ";base64," + fs.readFileSync(path.join(root, name)).toString("base64"));
 }
 const outputs = [["client.html", html]];
 fs.mkdirSync(path.join(root, "public"), { recursive: true });
@@ -275,6 +276,7 @@ for (const [name, content] of outputs)
 
 require("./tools/build-map-editor.cjs").buildMapEditor(root);
 require("./tools/build-task-editor.cjs").buildTaskEditor(root);
+require("./tools/build-contract-editor.cjs").buildContractEditor(root);
 
 require("./tools/build-unit-editor.cjs").buildUnitEditor(root);
 
@@ -282,6 +284,11 @@ require("./tools/build-unit-editor.cjs").buildUnitEditor(root);
 if (grantFlag < 0) {
   const releaseDirectory = path.join(root, "build", project.version);
   fs.mkdirSync(releaseDirectory, { recursive: true });
+  // Standalone HTML and its offline management tools keep the same relative paths.
+  fs.cpSync(path.join(root, "admin"), path.join(releaseDirectory, "admin"), {
+    recursive: true,
+    filter: (source) => fs.statSync(source).isDirectory() || source.endsWith(".html"),
+  });
   fs.copyFileSync(path.join(root, "public/client.html"),
     path.join(releaseDirectory, `${project.name}-${project.version}.html`));
 }

@@ -14,7 +14,9 @@ const UnitPreview = (() => {
       info=element("span","plugin-card-info"),visual=element("span","plugin-card-visual"),cost=element("span","plugin-cost",part.costPercent?"COST +10%":"COST +"+part.cost);
     image.src=ART.assets[ART.pluginIcons[part.id]];image.width=image.height=64;image.alt="";
     visual.append(image,cost);
-    info.append(name,element("span","plugin-rarity","★".repeat(part.rarity)),element("span","plugin-effect",part.description));
+    const merchants={anaheim:"阿纳海姆",efsf:"地球联邦军",zeon:"吉翁公国军"};
+    info.append(name,element("span","plugin-rarity","★".repeat(part.rarity)),element("span","plugin-effect",part.description),
+      element("small","plugin-origin",[part.era?.replace("UC_0079_T","0079T"),I18n.text(part.nonShip?"非战舰":"所有"),I18n.text(merchants[part.merchant]||""),I18n.text("好感度等级")+" "+(part.merchantLevel||1)].filter(Boolean).join(" · ")));
     card.append(visual,info);return card;
   }
   function roleIcon(model) {
@@ -69,14 +71,14 @@ const UnitPreview = (() => {
       ["COST",model.cost],["HP",number(model.hp),"hp"],["EN",number(model.en),"en"],
       ["移动",model.move,"move"],
       ["机动",model.speed??100,"speed"],["反应系数",model.mobility,"mobility"],["命中系数",model.accuracy+"%","accuracy"],
-      ["视野距离",formatDistance(model.sensors?.sight)],["侦察距离",formatDistance(model.sensors?.radar)],
+      ["视野距离",formatDistance(model.sensors?.sight),"sensors.sight"],["侦察距离",formatDistance(model.sensors?.radar),"sensors.radar"],
       ...(model.ship?[["战舰占地",model.footprint.width+"×"+model.footprint.height],["炮塔模块",model.modules.length]]:[])
     ]));
     bonuses.append(metrics(reference?"formationDetailBonuses":"warehouseAttackBonuses",Object.entries(model.attackBonuses||{}).map(([type,value])=>[names[type]||type.toUpperCase(),(value>=0?"+":"")+value+"%","attackBonuses."+type])));
     const table=element("table","warehouse-detail-defense unit-defense-table"),heading=element("tr"),tableHost=element("div");
     tableHost.id=reference?"formationDetailDefense":"warehouseDefenses";
     for(const label of ["防护","抗性","固定减伤"])heading.append(element("th","",label));table.append(heading);
-    for(const [type,value] of Object.entries(model.defenses||{})){const row=element("tr");row.append(element("td","",names[type]||type.toUpperCase()),element("td","",value.percent+"%"),element("td","",number(value.flat)));table.append(row);}
+    for(const [type,value] of Object.entries(model.defenses||{})){const row=element("tr");row.append(element("td","",names[type]||type.toUpperCase()),element("td",changed("defenses."+type+".percent")?"plugin-modified-value":"",value.percent+"%"),element("td",changed("defenses."+type+".flat")?"plugin-modified-value":"",number(value.flat)));table.append(row);}
     tableHost.append(table);defense.append(tableHost,metrics(reference?"formationDetailShield":"warehouseSecondaryStats",[
       ["零件强度",model.partStructuralStrength,"partStructuralStrength"],["护盾耐久",number(model.shield.hp),"shield.hp"],["格挡率",Math.round(model.shield.blockChance*100)+"%","shield.blockChance"],
       ...(reference?[["AP参考",model.actionPoints??5]]:[])

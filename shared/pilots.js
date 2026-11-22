@@ -2,6 +2,7 @@
  * from the private match seed and are stored in the authoritative unit state. */
 "use strict";
 const PilotSystem = (() => {
+  const talents = typeof PilotTalents !== "undefined" ? PilotTalents : require("./pilot-talents.js");
   const catalog = typeof PILOT_DATA !== "undefined" ? PILOT_DATA : require("./pilots.json");
   const aceById = new Map((catalog.aces || []).map((p) => [p.id, p]));
   const aceProfile = (value) =>
@@ -439,6 +440,10 @@ const PilotSystem = (() => {
     const portraitId = portraitsById.has(value.portraitId)
       ? value.portraitId
       : defaultPortrait(faction)?.id;
+    if(value.talentSlotsUnlocked!==undefined&&![0,1,2,3].includes(value.talentSlotsUnlocked))throw Error("驾驶员天赋次数无效");
+    const earnedTalentSlots = reincarnations >= 2 ? 3 : reincarnations >= 1 ? 2 : level >= 4 ? 1 : 0;
+    const talentSlotsUnlocked=Math.max(value.talentSlotsUnlocked??0,talents.normalize(value.talents).length,earnedTalentSlots);
+    const talentIds=talents.fill(value,talentSlotsUnlocked);
     return {
       id: value.id,
       name,
@@ -461,6 +466,8 @@ const PilotSystem = (() => {
       ...(selectedSkillId ? { selectedSkillId } : {}),
       ...(selectedSecondSkillId ? { selectedSecondSkillId } : {}),
       custom: true,
+      talents: talentIds,
+      talentSlotsUnlocked,
       needsRecruitment: value.needsRecruitment === true,
     };
   }
@@ -761,16 +768,18 @@ const PilotSystem = (() => {
   }
   function of(unit, model = null) {
     const base = rawPilot(unit, model);
-    if (!Object.keys(unit.pilotBuffs || {}).length) return base;
+    const awakening=talents.effects(base).awakening||0;
+    if (!Object.keys(unit.pilotBuffs || {}).length&&!awakening) return base;
     let cached = buffPilotCache.get(unit);
-    if (!cached || cached.base !== base || cached.buffs !== unit.pilotBuffs) {
+    if (!cached || cached.base !== base || cached.buffs !== unit.pilotBuffs || cached.awakening!==awakening) {
       const stats = { ...base.stats };
+      stats.awakening+=awakening;
       for (const skill of skillsOf(unit))
-        if (unit.pilotBuffs[skill.id])
+        if (unit.pilotBuffs?.[skill.id])
           for (const [key, multiplier] of Object.entries(skill.statMultipliers || {}))
             stats[key] *= multiplier;
       for (const key of Object.keys(stats)) stats[key] = Math.round(stats[key]);
-      cached = { base, buffs: unit.pilotBuffs, value: { ...base, stats } };
+      cached = { base, buffs: unit.pilotBuffs, awakening, value: { ...base, stats } };
       buffPilotCache.set(unit, cached);
     }
     return cached.value;
@@ -805,6 +814,7 @@ const PilotSystem = (() => {
   }
   return {
     catalog,
+    talents,
     skillsOf,
     skillChoices,
     skillUnlockLevel,

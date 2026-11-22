@@ -5,12 +5,13 @@ for (const width of [1440, 390]) test('plugin-modified stats and weapons use gre
   test.setTimeout(90000);
   await page.setViewportSize({ width, height: 1050 });
   const errors = []; page.on('pageerror', error => errors.push(error.message));
-  await page.goto(pathToFileURL(path.resolve('public/client.html')).href); await page.waitForFunction(() => assetsReady);
+  await page.goto(pathToFileURL(path.resolve('public/client.html')).href); await page.waitForFunction(() => assetsReady);await page.locator('#profileCompanyName').fill('Green PMC');await page.locator('#profileOnboardingConfirm').click();
   const id = await page.evaluate(() => {
     I18n.setLanguage('zh'); Economy.creditActivity({ id: 'green-plugin', matchId: 'green-plugin', money: 100000, supplies: 0, inventory: { RGM_79: 1 } });
-    for(const id of ['frame','generator','long_beam','short_beam','shield'])Economy.purchasePlugin('anaheim',id);
-    return Economy.snapshot().storage.units[0].id;
+    const profile=ProfileSave.encodeData();profile.economy.contactAffinity=800;ProfileSave.importData(profile);
+    return Economy.snapshot().storage.units.find(u=>u.unitId==='RGM_79').id;
   });
+  await page.reload();await page.waitForFunction(()=>assetsReady);await page.evaluate(()=>{for(const id of ['frame','generator','long_beam','short_beam','shield'])Economy.purchasePlugin(UnitPlugins.byId.get(id).merchant,id);});
   await page.locator('#shellHangar').click(); await page.locator(`#warehouseBays [data-stock-id="${id}"]`).click();
   await expect(page.locator('#warehouseDialog .plugin-modified-value')).toHaveCount(0);
   await page.evaluate(id => {

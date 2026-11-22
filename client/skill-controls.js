@@ -12,7 +12,7 @@ const SkillControls = (() => {
     );
   }
   function commandAbilities(model, unit = null) {
-    const aura = unit ? Rules.commandAura(unit) : { radius: 3, effect: 0.1 };
+    const aura = unit ? Rules.commandAura(unit) : { radius: (model.ship ? 4 : 2) + (model.commandAuras?.length ? 2 : 0) + (model.commandRangeBonus || 0), effect: 0.1 };
     const percent = Number((aura.effect * 100).toFixed(2));
     const labels = { cmdAtk: "攻击指挥", cmdDef: "防御指挥", cmdCom: "通信指挥" };
     const effects = {
@@ -20,9 +20,9 @@ const SkillControls = (() => {
       cmdDef: `友军最终伤害减免 ${percent}%`,
       cmdCom: `友军最终命中率与回避率 +${percent}%`,
     };
-    return (model.commandAuras || []).map((kind) => ({
+    return (Rules.commandKinds ? Rules.commandKinds(model) : model.commandAuras || []).map((kind) => ({
       name: labels[kind.type],
-      description: `范围 ${aura.radius} 格 · ${effects[kind.type]}。同类取最强；领导力每满25点提高1格与2.5个百分点效果，100点时为3格与10%。`,
+      description: `范围 ${aura.radius} 格 · ${effects[kind.type]}。指挥高于100时生效，同类取最强；非舰船2格、舰船4格，原有指挥额外+2格；每高25点效果增加2.5个百分点。`,
     }));
   }
   function defensiveAbilities(model) {
@@ -120,7 +120,7 @@ const SkillControls = (() => {
         ? `选择${skill.minRange ?? 0}～${Number(skill.range.toFixed(2))}格的位置，提供${skill.areaSight}格视野与${Number(skill.areaRadar.toFixed(2))}格侦测，持续至下次己方回合。消耗${skill.enCost} EN、${skill.actionCost} AP；下次己方回合可再次使用。`
         : `扫描${Number(skill.range.toFixed(2))}格内${skill.waterOnly ? "水域中的" : ""}敌军，标记持续至下次己方回合；消除己方未侦测命中惩罚，不直接揭露普通单位。消耗${skill.enCost} EN${skill.actionCost ? "、" + skill.actionCost + " AP" : "和本次行动"}。${skill.reconMode ? "下次己方回合可再次使用。" : ""}`;
     if (skill.type === "minovsky")
-      return `以自身为中心散布半径 ${skill.radius} 格的米诺夫斯基粒子，持续两个完整回合周期。区域内所有防守单位的回避率乘以 1.25，反侦测距离 +5 格；来袭导弹与迫击炮命中率再乘以 0.75。消耗 ${skill.enCost} EN、${skill.actionCost} AP，冷却 ${skill.cooldownTurns} 个自身回合。`;
+      return `以自身为中心散布半径 ${skill.radius} 格的米诺夫斯基粒子，持续两个完整回合周期。仅区域内友军的回避率乘以 1.15。区域内反侦测距离 +5 格，来袭导弹与迫击炮命中率乘以 0.75。消耗 ${skill.enCost} EN、${skill.actionCost} AP，冷却 ${skill.cooldownTurns} 个自身回合。`;
     if (skill.type === "resupply")
       return I18n.text(
         "消耗自身10%最大EN与2 AP，为相邻目标格内所有友军恢复50%最大EN，每个己方回合限用一次。",
@@ -322,7 +322,14 @@ const SkillControls = (() => {
       badge.append(icon, name);
       row.append(badge);
     }
-    if (!skills.length)
+    const talents = PilotSystem.talents.of(profile);
+    for (const talent of talents) {
+      const badge = element("span", "pilot-list-skill pilot-talent", I18n.text(talent.name));
+      badge.dataset.pilotTalent = talent.id;
+      badge.title = I18n.text(talent.description);
+      row.append(badge);
+    }
+    if (!skills.length && !talents.length)
       row.append(element("small", "muted", I18n.text(profile?.level >= PilotSystem.skillUnlockLevel ? "未选择技能" : "6级解锁技能")));
     return row;
   }

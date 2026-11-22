@@ -6,6 +6,20 @@ from pathlib import Path
 PRICES = json.loads((Path(__file__).resolve().parents[1] / "assets/weapon-kit-costs.json").read_text(encoding="utf-8"))
 
 
+def apply_kit_overrides(prefab):
+    """Equipment choices which cannot be inferred from the shared hand weapon."""
+    if prefab.get("id") == "RX_77_3":
+        for kit in prefab.get("weaponKits", []):
+            if "EF_RX_77_4_BeamCannon" not in kit.get("weapons", []):
+                continue
+            kit["name"] = "光束加农套件"
+            for language, name in zip(("zh", "en", "ja"),
+                                      ("光束加农套件", "Beam Cannon Kit", "ビーム・キャノン装備")):
+                kit.setdefault("localization", {}).setdefault(language, {})["name"] = name
+            kit["weapons"] = [key for key in kit["weapons"] if "Mortar" not in key]
+    return prefab
+
+
 def surcharge(key, weapon=None):
     weapon = weapon or {}
     ident = weapon.get("sourceName", key)

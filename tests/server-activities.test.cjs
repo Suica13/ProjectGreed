@@ -44,6 +44,18 @@ const activity = (mode, extra = {}) => ({
   ...extra,
 });
 
+test("rental activity rewards validate uses and presets, survive restart and retry with an identical receipt", t => {
+  const f=fixture(t),ws={},profile=identity();f.service.identify(ws,profile);
+  const event=f.service.publish(activity('online_now',{rewards:{rentals:[{unitId:'RGM_79',count:2,uses:3,plugins:['frame']}]}}));
+  const mail=f.frames.get(ws).at(-1).mail.find(m=>m.activityId===event.id);
+  assert.equal(mail.rewards.rentals[0].uses,3);assert.equal(mail.rewards.rentals[0].kitId,require('../shared/production-catalog.json').defaultKits.RGM_79);
+  f.service.receive(ws,{type:'activity_claim',mailId:mail.id});const award=f.frames.get(ws).at(-1).award;
+  f.restart();const reconnect={};f.service.identify(reconnect,profile);f.service.receive(reconnect,{type:'activity_claim',mailId:mail.id});
+  assert.deepEqual(f.frames.get(reconnect).at(-1).award,award);
+  for(const rental of [{unitId:'RGM_79',count:1,uses:0},{unitId:'missing',count:1,uses:3},{unitId:'RGM_79',count:1,uses:3,plugins:['frame','frame']}])
+    assert.throws(()=>f.service.publish(activity('online_now',{rewards:{rentals:[rental]}})));
+});
+
 test("legacy activity storage converts quantities once without losing claims or duplicating mail", (t) => {
   const f = fixture(t), profile = identity(), ws = {};
   f.service.identify(ws, profile);

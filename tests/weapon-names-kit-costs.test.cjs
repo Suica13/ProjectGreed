@@ -4,6 +4,36 @@ const { execFileSync } = require("node:child_process");
 const G = require("../shared/rules.js");
 const Classes = require("../shared/weapon-classes.js");
 
+test("heavy Guncannon beam-cannon equipment excludes mortars after naming and native-layout refresh", () => {
+  const cannon = G.models.RX_77_3__kit_4, ballistic = G.models.RX_77_3__kit_2;
+  assert.equal(cannon.kitName, "光束加农套件");
+  assert.equal(cannon.kitLocalization.en.name, "Beam Cannon Kit");
+  assert.equal(cannon.kitLocalization.ja.name, "ビーム・キャノン装備");
+  assert(cannon.weapons.some(w => w.id === "EF_RX_77_4_BeamCannon"));
+  assert(!cannon.weapons.some(w => /Mortar/.test(w.id)));
+  assert(ballistic.weapons.some(w => /Mortar/.test(w.id)));
+  assert(!ballistic.weapons.some(w => w.id === "EF_RX_77_4_BeamCannon"));
+  const refreshed = JSON.parse(execFileSync("python", ["-c", `
+import sys,json,copy
+sys.path.insert(0,'tools')
+from weapon_store import loads
+from native_weapon_names import apply
+from native_weapon_layout import kit_names
+from pathlib import Path
+p=loads(Path('assets/units/RX_77_3/unit.json').read_text(encoding='utf-8'))
+k=next(k for k in p['weaponKits'] if k['id']=='kit_4')
+k['name']='old'
+k['weapons'].extend(['Common_MortarDouble_B4','Common_MortarDouble_B4_L'])
+first=copy.deepcopy(apply(p))
+assert apply(kit_names(p))==first
+print(json.dumps(p['weaponKits']))
+`], { cwd: process.cwd(), encoding: "utf8" }));
+  const beam = refreshed.find(k => k.id === "kit_4");
+  assert.equal(beam.name, cannon.kitName);
+  assert(!beam.weapons.some(id => /Mortar/.test(id)));
+  assert(refreshed.find(k => k.id === "kit_2").weapons.includes("Common_MortarDouble_B4"));
+});
+
 test("RGC-83 variants distinguish 90mm machine-gun and beam-rifle kits in all three languages", () => {
   for (const id of ["RGC_83", "RGC_83_AEUG", "RGC_83_TITANS"]) {
     const prefab = G.catalog.prefabs.find(p => p.id === id);

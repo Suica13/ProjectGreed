@@ -3,7 +3,7 @@ const { pathToFileURL } = require("node:url"),
   path = require("node:path"),
   fs = require("node:fs/promises");
 const M = require("../shared/map-document.js");
-const editorURL = pathToFileURL(path.resolve("public/map-editor.html")).href;
+const editorURL = pathToFileURL(path.resolve("admin/map-editor.html")).href;
 async function field(page, id, value) {
   await page.locator("#" + id).fill(String(value));
   await page.locator("#" + id).press("Tab");

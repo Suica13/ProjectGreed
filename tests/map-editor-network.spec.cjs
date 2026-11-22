@@ -25,7 +25,7 @@ test("HTTP editor entry and authored terrain work with two authoritative clients
     await idle(p);
   };
   try {
-    await host.goto(base + "/map-editor.html");
+    await host.goto(base + "/admin/map-editor.html");
     await host.waitForFunction(() => typeof MapEditor !== "undefined");
     expect(await host.title()).toContain("地图编辑器");
     for (const [i, p] of [host, guest].entries()) {

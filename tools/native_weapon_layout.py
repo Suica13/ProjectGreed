@@ -171,7 +171,8 @@ def kit_names(p):
   if name:
    kit['name'] = name
    if 'zh' in kit.get('localization', {}):kit['localization']['zh']['name'] = name
- return p
+ from weapon_kit_policy import apply_kit_overrides
+ return apply_kit_overrides(p)
 
 def correct(p,row,data):
  from native_passives import apply_command_auras

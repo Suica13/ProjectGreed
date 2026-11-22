@@ -34,7 +34,7 @@ function oldPilot(i) {
     record: { kills: i, battles: 3, losses: 1, shipKills: 0 },
   });
 }
-test("one-time reset retains custom identities and records, resets training and sends overflow to dorm storage", () => {
+test("one-time reset retains full custom pilot profiles and sends overflow to dorm storage", () => {
   const custom = Array.from({ length: 12 }, (_, i) => oldPilot(i));
   const s = storage([
     [
@@ -58,11 +58,11 @@ test("one-time reset retains custom identities and records, resets training and 
     assert.equal(p.id, custom[i].id);
     assert.equal(p.name, custom[i].name);
     assert.deepEqual(p.record, custom[i].record);
-    assert.equal(p.level, 0);
-    assert.equal(p.experience, 0);
-    assert.equal(p.points, 80);
-    assert.equal(p.reincarnations, undefined);
-    assert.deepEqual(p.stats, P.baseStats());
+    const expected = { ...custom[i], faction: "PMC" };
+    delete expected.inDormStorage;
+    const actual = { ...p };
+    delete actual.inDormStorage;
+    assert.deepEqual(actual, expected);
     assert.equal(!!p.inDormStorage, i >= 10);
   });
   assert.equal(s.getItem("projectgreed.economy.v1"), null);
@@ -100,7 +100,7 @@ test("pre-reset imports clear progress while preserving customized PMC pilots", 
   };
   const clean = R.portable(old, E.initial());
   assert.equal(clean.economy.money, 8000);
-  assert.equal(clean.pilots.PMC.pilots[0].level, 0);
+  assert.equal(clean.pilots.PMC.pilots[0].level, 8);
   assert.equal(clean.pilots.PMC.pilots[0].record.kills, 2);
   assert.equal(clean.identity.name, "company");
   assert(R.needsReset(old.economy));
@@ -113,21 +113,17 @@ test("starter profile has exact stock, only both 0079 base permits, and transpor
   assert.equal(initial.licenses.MS_06F, true);
   assert.equal(initial.licenses.Medea, true);
   assert.equal(initial.licenses.RX_78_2, undefined);
-  const D = require('../shared/development.js');
-  assert.deepEqual(D.normalizeResearch({}).EFSF, ['Tech_EFSF_0079_BaseTech']);
-  assert.deepEqual(D.normalizeResearch({}).ZEON, ['Tech_ZEON_0079_BaseTech']);
+  const D = require("../shared/development.js");
+  assert.deepEqual(D.normalizeResearch({}).EFSF, ["Tech_EFSF_0079_BaseTech"]);
+  assert.deepEqual(D.normalizeResearch({}).ZEON, ["Tech_ZEON_0079_BaseTech"]);
   assert.deepEqual(D.normalizeResearch({}).AEUG, []);
-  assert.equal(E.validate({...initial, licenses:{}}).licenses.MS_06F, true);
-  assert.deepEqual(initial.inventory, {
-    RGM_79_E: 3,
-    MS_06F: 3,
-    Medea: 1,
-    FatUncle: 1,
-    ColumbusClass: 1,
-    PapuaClass: 1,
-  });
-  assert.equal(initial.storage.units.length, 6);
-  assert.equal(initial.storage.ships.length, 4);
+  assert.equal(E.validate({ ...initial, licenses: {} }).licenses.MS_06F, true);
+  assert.deepEqual(initial.inventory, {});
+  assert.equal(initial.onboardingPending, true);
+  assert.equal(initial.storage.units.length, 0);
+  assert.equal(initial.storage.ships.length, 0);
+  assert.equal(E.initial("EFSF").storage.units.length, 3);
+  assert.equal(E.initial("EFSF").storage.ships.length, 2);
   const W = require("../shared/warehouse");
   for (const prefabId of ["Medea", "MedeaKai", "FatUncle", "FatUncleKai"])
     assert.equal(W.category({ prefabId }), "ships");
@@ -152,9 +148,18 @@ test("academy caps pilot promotions and only level five enables rebirth", () => 
   assert.equal(P.maxLevel({ ...reborn, reincarnations: 4 }, 5), 12);
   assert.throws(() => P.reincarnate(P.custom({ ...p, level: 8 }), 4));
 });
-test("selectable content is limited but fixed-era missions remain playable", () => {
-  assert.throws(()=>G.validateOpenContent({mode:"battlefield",battlefieldEra:"UC_0079_T1",costLimit:10000}),/7500/);
-  assert.doesNotThrow(()=>G.validateOpenContent({mode:"battlefield",battlefieldEra:"UC_0079_T1",costLimit:7500}));
+test("selectable content is limited and missions are temporarily locked", () => {
+  for (const era of ["UC_0079_T1", "UC_0079_T2"]) {
+    assert.doesNotThrow(() => G.validateOpenContent({mode:"regular",regularEra:era}));
+    for(let difficulty=1;difficulty<=6;difficulty++)
+      assert.doesNotThrow(() => G.validateOpenContent({mode:"sweep",sweepEra:era,sweepDifficulty:difficulty}));
+  }
+  assert.throws(() =>
+    G.validateOpenContent({ mode: "battlefield", battlefieldEra: "UC_0079_T1", costLimit: 10000 }),
+  );
+  assert.throws(() =>
+    G.validateOpenContent({ mode: "battlefield", battlefieldEra: "UC_0079_T1", costLimit: 7500 }),
+  );
   assert.doesNotThrow(() =>
     G.validateOpenContent({
       ...G.defaultRoomSettings(),
@@ -164,7 +169,7 @@ test("selectable content is limited but fixed-era missions remain playable", () 
     }),
   );
   assert.throws(() =>
-    G.validateOpenContent({ mode: "sweep", sweepDifficulty: 4, sweepEra: "UC_0079_T1" }),
+    G.validateOpenContent({ mode: "sweep", sweepDifficulty: 7, sweepEra: "UC_0079_T1" }),
   );
   for (const settings of [
     { mode: "regular", regularEra: "UC_0087_T1" },
@@ -172,7 +177,7 @@ test("selectable content is limited but fixed-era missions remain playable", () 
     { mode: "sweep", sweepDifficulty: 1, sweepEra: "UC_0087_T1" },
   ])
     assert.throws(() => G.validateOpenContent(settings));
-  assert.doesNotThrow(() => G.validateOpenContent({ mode: "mission", missionEra: "UC_0087_T1" }));
+  assert.throws(() => G.validateOpenContent({ mode: "mission", missionEra: "UC_0087_T1" }));
 });
 test("server rejects forbidden room configuration without changing its previous rules", (t) => {
   const { createRoomEngine } = require("../shared/room-engine");
@@ -186,7 +191,7 @@ test("server rejects forbidden room configuration without changing its previous 
   });
   t.after(() => engine.close());
   const ws = { readyState: 1 };
-  const stock = E.initial();
+  const stock = E.initial("EFSF");
   engine.join(ws, {
     mode: "create",
     room: "RESET_GATE",
@@ -210,14 +215,14 @@ test("server rejects forbidden room configuration without changing its previous 
       ...fields,
     });
   const previous = JSON.stringify(room.settings);
-  assert.throws(() => configure({ sweepDifficulty: 4 }), /N1至N3/);
+  assert.throws(() => configure({ sweepDifficulty: 7 }), /合约难度无效/);
   assert.equal(JSON.stringify(room.settings), previous);
   assert.throws(() => configure({ sweepEra: "UC_0087_T1", sweepFaction: "TITANS" }), /仅开放/);
   assert.equal(JSON.stringify(room.settings), previous);
-  assert.doesNotThrow(() => configure({ sweepDifficulty: 3 }));
-  assert.equal(room.settings.sweepDifficulty, 3);
-  const carrier = stock.storage.ships.find((u) => u.unitId === "Medea");
-  const formation = [{ unitId: "Medea", kitId: "standard", stockId: carrier.id }];
+  assert.doesNotThrow(() => configure({ sweepDifficulty: 6 }));
+  assert.equal(room.settings.sweepDifficulty, 6);
+  const carrier = stock.storage.ships.find((u) => u.unitId === "MedeaKai");
+  const formation = [{ unitId: "MedeaKai", kitId: "standard", stockId: carrier.id }];
   assert.doesNotThrow(() =>
     engine.action(ws, {
       id: "start-stock",

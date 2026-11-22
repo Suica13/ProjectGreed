@@ -11,6 +11,7 @@ const Economy = (() => {
   const baseFacilities =
     typeof BaseFacilities !== "undefined" ? BaseFacilities : require("./base-facilities.js");
   const key = "projectgreed.economy.v1";
+  const progressEpoch = typeof ProfileReset !== "undefined" ? ProfileReset.epoch : require("./profile-reset.js").epoch;
   const catalog =
     typeof PRODUCTION_CATALOG !== "undefined"
       ? PRODUCTION_CATALOG
@@ -38,12 +39,16 @@ const Economy = (() => {
         .flatMap(node => node.unlocks)
     ).map(licenseUnit).filter(id => Object.hasOwn(catalog.baseModels, id)).map(id => [id, true])
   );
-  function initial() {
-    const inventory = {...starter.inventory},
+  function initial(faction = null) {
+    if (faction !== null && !Object.hasOwn(starter.startingFactions, faction))
+      throw Error("初始势力无效");
+    const inventory = {...(faction ? starter.startingFactions[faction].inventory : starter.inventory)},
       kits = {};
     return {
       schemaVersion: 4,
-      progressEpoch: 1,
+      progressEpoch,
+      onboardingPending: faction === null,
+      ...(faction ? { startingFaction: faction } : {}),
       storage: warehouse.normalize(warehouse.empty(),modelsForUnits(),inventory,defaultKit),
       baseFacilities: baseFacilities.initial(),
       inventory,
@@ -55,6 +60,9 @@ const Economy = (() => {
       pluginInventory: {},
       contactTasks: [],
       contactIntro: false,
+      contactAffinity: 0,
+      contactRewardVersion: 2,
+      merchantAffinities: { anaheim: 0 },
     };
   }
   function validate(value) {
@@ -91,6 +99,14 @@ const Economy = (() => {
       defaultKit,
     );
     stock.inventory = warehouse.counts(storage);
+    const contactTasks = contacts.normalize(value.contactTasks);
+    for(const entry of contactTasks) {
+      const task=contacts.byId.get(entry.id);
+      if(!task?.reclaim || entry.loanTracking || entry.loanReturned || entry.status==="claimed") continue;
+      const item=[...storage.units,...storage.ships,...storage.deliveries].find(item=>Object.hasOwn(task.reclaim,item.unitId));
+      if(item) item.contactLoan=entry.id;
+      entry.loanTracking=true;
+    }
     const owned = value.licenses;
     if (!owned || typeof owned !== "object" || Array.isArray(owned)) throw Error("部署许可无效");
     const licenses = defaultLicenses();
@@ -114,19 +130,36 @@ const Economy = (() => {
         Object.defineProperty(claimed, id, { value: match, enumerable: true });
       }
     }
+    if (value.startingFaction !== undefined && !Object.hasOwn(starter.startingFactions, value.startingFaction))
+      throw Error("初始势力无效");
+    if (value.contactAffinity !== undefined && (!Number.isFinite(value.contactAffinity) || value.contactAffinity < 0 || value.contactAffinity > Number.MAX_SAFE_INTEGER))
+      throw Error("联络人好感度无效");
+    const merchantAffinities = {};
+    for(const merchant of merchants.filter(m=>m.id!=="efsf")){
+      const points=value.merchantAffinities?.[merchant.id]??0;
+      if(!Number.isFinite(points)||points<0||points>Number.MAX_SAFE_INTEGER)throw Error("联络人好感度无效");
+      merchantAffinities[merchant.id]=points;
+    }
     return {
       money: value.money,
       supplies: value.supplies,
       schemaVersion: 4,
-      progressEpoch: 1,
+      progressEpoch,
+      ...(value.onboardingPending === true ? { onboardingPending: true } : {}),
+      ...(value.startingFaction ? { startingFaction: value.startingFaction } : {}),
       storage,
       baseFacilities: facilities,
       licenses,
       ...stock,
       crewStock: pilots.normalizeCrewStock(value.crewStock),
       pluginInventory: normalizePluginInventory(value.pluginInventory, storage),
-      contactTasks: contacts.normalize(value.contactTasks),
+      contactTasks,
       contactIntro: value.contactIntro === true,
+      contactAffinity: value.contactAffinity === undefined
+        ? contacts.normalize(value.contactTasks).filter(e=>e.status==="claimed").reduce((sum,entry)=>sum+(contacts.byId.get(entry.id).affinity||100),0)
+        : Math.round((value.contactAffinity + (value.contactRewardVersion===2 ? 0 : contacts.normalize(value.contactTasks).filter(e=>e.status==="claimed").length*99.9))*10)/10,
+      contactRewardVersion: 2,
+      merchantAffinities,
       ...(Object.keys(claimed).length ? { claimed } : {}),
     };
   }
@@ -168,6 +201,17 @@ const Economy = (() => {
       return "当前预览禁止访问本地存储，请在 Edge 或 Chrome 中打开此客户端页面。";
     if (error?.name === "SyntaxError") return "经济存档无法解析，请导入有效的个人存档。";
     return error?.message || String(error);
+  }
+  function completeOnboarding(faction, extraWrites = []) {
+    if (!state.onboardingPending) return false;
+    if (!Object.hasOwn(starter.startingFactions, faction)) throw Error("初始势力无效");
+    const next = snapshot();
+    for (const [id, count] of Object.entries(starter.startingFactions[faction].inventory))
+      next.inventory[id] = (next.inventory[id] || 0) + count;
+    next.storage = warehouse.normalize(next.storage, modelsForUnits(), next.inventory, defaultKit);
+    next.onboardingPending = false;
+    next.startingFaction = faction;
+    return commit(next, extraWrites);
   }
   function snapshot() {
     // State is normalized on load/commit. UI reads must not rerun migrations
@@ -313,6 +357,26 @@ const Economy = (() => {
           next[kind][id] = amount;
         }
     }
+    if (award.kind === "result") {
+      const settled = new Set(award.settledStockIds || []);
+      for (const kind of ["units", "ships"]) {
+        next.storage[kind] = next.storage[kind].filter(item => {
+          if (!item.rentalUses || !settled.has(item.id) || item.rentalLastMatchId === award.matchId) return true;
+          const wasDestroyed = item.destroyed;
+          item.rentalUses--;
+          item.rentalLastMatchId = award.matchId;
+          if (!item.rentalUses) {
+            if (!wasDestroyed) next.inventory[item.unitId] = Math.max(0, (next.inventory[item.unitId] || 0) - 1);
+            item.pilotId = null;
+            return false;
+          }
+          if (wasDestroyed) next.inventory[item.unitId] = (next.inventory[item.unitId] || 0) + 1;
+          Object.assign(item, warehouse.condition({ plugins: item.plugins }, modelsForUnits()[item.unitId + "__" + item.kitId]));
+          return true;
+        });
+      }
+    }
+    for (const entry of next.contactTasks) if (entry.status === "ready") reclaimContactLoan(next, entry);
     next.claimed = { ...next.claimed, [award.id]: award.matchId };
     return commit(next);
   }
@@ -327,6 +391,7 @@ const Economy = (() => {
     next.money += award.money;
     next.supplies += award.supplies;
     const awardedStock = normalizeStock(award);
+    const rentals = warehouse.rentalRewards(award.rentals, modelsForUnits(), defaultKit);
     for(const [id,count]of Object.entries(normalizePluginInventory(award.pluginInventory||{},warehouse.empty()))){
       const total=(next.pluginInventory[id]||0)+count;
       if(!Number.isSafeInteger(total)||total>1000000)throw Error("零件库存数量超过上限："+id);
@@ -339,6 +404,18 @@ const Economy = (() => {
           throw Error("库存数量超过上限：" + id);
         next[kind][id] = quantity;
       }
+    // Reconcile permanent rewards first so rentals cannot replace an existing hull.
+    next.storage = warehouse.normalize(next.storage, modelsForUnits(), next.inventory, defaultKit);
+    next.inventory = warehouse.counts(next.storage);
+    for (const entry of rentals) for (let i = 0; i < entry.count; i++) {
+      const model = modelsForUnits()[entry.unitId + "__" + entry.kitId], kind = warehouse.category(model);
+      const item = { unitId: entry.unitId, kitId: entry.kitId, rentalUses: entry.uses,
+        ...warehouse.condition({ plugins: entry.plugins }, model) };
+      if (warehouse.fits(next.storage, model, modelsForUnits())) {
+        next.storage[kind].push({ ...item, id: "stored-" + ++next.storage.serial, slot: warehouse.freeSlot(next.storage, kind) });
+        next.inventory[entry.unitId] = (next.inventory[entry.unitId] || 0) + 1;
+      } else next.storage.deliveries.push(item);
+    }
     for (const [id, owned] of Object.entries(award.licenses || {})) {
       if (!Object.hasOwn(catalog.baseModels, id) || owned !== true) throw Error("活动单位奖励无效");
       next.licenses[id] = true;
@@ -396,7 +473,7 @@ const Economy = (() => {
   }
   function chassisProductionOffer(unitId, production = catalog) {
     const base = unitOffer(unitId, production);
-    return base ? {...base, money: base.money * 3, supplies: base.supplies * 6} : null;
+    return base ? {...base, money: base.money * 2, supplies: base.supplies * 4} : null;
   }
   // Factory times are batch totals. Both campaign orders and the catalog expose
   // the same single-unit duration; personal production remains immediate for now.
@@ -471,6 +548,7 @@ const Economy = (() => {
     const next = snapshot(),
       item = [...next.storage.units, ...next.storage.ships].find((item) => item.id === id);
     if (!item) throw Error("库存单位不存在");
+    if (item.rentalUses) throw Error("租赁单位不能调整零件");
     const base = modelsForUnits()[item.unitId + "__" + item.kitId],
       previous = plugins.apply(base, item.plugins);
     const slots = plugins.normalize(item.plugins, base);
@@ -493,7 +571,7 @@ const Economy = (() => {
   }
   function fittedPlugins(storage) {
     const counts = {};
-    for (const item of [...storage.units, ...storage.ships, ...storage.deliveries])
+    for (const item of [...storage.units, ...storage.ships, ...storage.deliveries].filter(item => !item.rentalUses))
       for (const id of item.plugins || []) if (id) counts[id] = (counts[id] || 0) + 1;
     return counts;
   }
@@ -520,6 +598,7 @@ const Economy = (() => {
     const offer = pluginOffer(merchantId, id);
     if (!offer)
       throw Error("商人或零件不存在");
+    if(!offer.available)throw Error("联络人好感度等级不足");
     if (!affordable(offer)) return false;
     const next = snapshot();
     next.money -= offer.money;
@@ -528,7 +607,7 @@ const Economy = (() => {
   }
   function pluginOffer(merchantId, id) {
     const merchant = merchants.find(item => item.id === merchantId), part = plugins.byId.get(id);
-    return merchant?.sellsPlugins && part ? { money: part.rarity * 3000 } : null;
+    return merchant?.sellsPlugins && part?.merchant===merchantId ? { money: part.rarity * 3000, available: merchantLevel(merchantId)>=(part.merchantLevel||1), requiredLevel:part.merchantLevel||1 } : null;
   }
   function moveStoredUnit(id, slot, swap = false) {
     const next = snapshot(),
@@ -596,6 +675,7 @@ const Economy = (() => {
     if (!Number.isInteger(index) || index < 0 || index >= state.storage.deliveries.length) return false;
     if (expected && JSON.stringify(expected) !== JSON.stringify(state.storage.deliveries[index]))
       throw Error("保管库内容已变化，请重新确认");
+    if(isContactLoan(state.storage.deliveries[index])) throw Error("任务借用机体不能出售或删除，完成任务后自动回收");
     const next = snapshot();
     next.storage.deliveries.splice(index, 1);
     return commit(next);
@@ -614,25 +694,62 @@ const Economy = (() => {
   function acceptContactTask(id) {
     const task=contacts.byId.get(id);
     if(!task || !state.contactIntro || state.contactTasks.some(e=>e.id===id) ||
-      (task.number>1 && !state.contactTasks.some(e=>e.id==="efsf-"+(task.number-1)&&e.status==="claimed"))) throw Error("任务尚未解锁或已接取");
-    const next=snapshot();next.contactTasks.push({id,status:"accepted",progress:0});
-    for(const [unitId,count] of Object.entries(task.grant||{})) next.inventory[unitId]=(next.inventory[unitId]||0)+count;
+      !contacts.unlocked(task,state.contactTasks,state.contactIntro)) throw Error("任务尚未解锁或已接取");
+    const next=snapshot();next.contactTasks.push({id,status:"accepted",progress:0,...(task.reclaim?{loanTracking:true}:{})});
+    for(const [unitId,count] of Object.entries(task.grant||{})) for(let i=0;i<count;i++) {
+      const kitId=defaultKit(unitId),model=modelsForUnits()[unitId+"__"+kitId];
+      const item={unitId,kitId,...warehouse.condition({},model),...(task.reclaim?{contactLoan:id}:{})};
+      if(warehouse.fits(next.storage,model,modelsForUnits())) {
+        next.storage[warehouse.category(model)].push({...item,id:"stored-"+ ++next.storage.serial,slot:warehouse.freeSlot(next.storage,warehouse.category(model))});
+        next.inventory[unitId]=(next.inventory[unitId]||0)+1;
+      } else next.storage.deliveries.push(item);
+    }
     return commit(next);
+  }
+  function reclaimContactLoan(next, entry) {
+    const task=contacts.byId.get(entry.id);
+    if(!task?.reclaim || entry.loanReturned || entry.status==="claimed") return;
+    for(const [unitId,count] of Object.entries(task.reclaim)) for(let i=0;i<count;i++) {
+      const kinds=["units","ships","deliveries"];
+      const tagged=kinds.flatMap(kind=>next.storage[kind].map(item=>({kind,item}))).find(({item})=>item.contactLoan===task.id);
+      // Older accepted saves predate loan tags. Remove at most one matching hull;
+      // newly tagged loans that were sold/discarded never consume another hull.
+      const found=tagged || (!entry.loanTracking && kinds.flatMap(kind=>next.storage[kind].map(item=>({kind,item})))
+        .find(({item})=>item.unitId===unitId));
+      if(!found) continue;
+      // Parts are physical stock totals, and pilot assignments live on the
+      // chassis. Detach both before returning the loan; neither is consumed.
+      found.item.plugins=[];
+      delete found.item.pilotId;
+      next.storage[found.kind].splice(next.storage[found.kind].indexOf(found.item),1);
+      if(found.kind!=="deliveries" && !found.item.destroyed)
+        next.inventory[found.item.unitId]=Math.max(0,(next.inventory[found.item.unitId]||0)-1);
+    }
+    entry.loanReturned=true;
+  }
+  function isContactLoan(item) {
+    return !!item?.contactLoan && state.contactTasks.some(entry=>entry.id===item.contactLoan && entry.status!=="claimed" && !entry.loanReturned);
   }
   function completeContactTask(id) {
     const task=contacts.byId.get(id),next=snapshot(),entry=next.contactTasks.find(e=>e.id===id);
     if(!task || entry?.status!=="ready") throw Error("任务尚未完成或已交付");
+    reclaimContactLoan(next,entry);
     entry.status="claimed";next.money+=task.money;
+    next.contactAffinity += task.affinity || 100;
     for(const [unitId,count] of Object.entries(task.inventory))next.inventory[unitId]=(next.inventory[unitId]||0)+count;
     if(task.licensePlan)grantPlan(next,task.licensePlan);
     return commit(next);
   }
-  const liaisonAffinity = () => state.contactTasks.filter(e=>e.status==="claimed").length/10;
+  const liaisonAffinity = () => state.contactAffinity;
+  const liaisonLevel = () => liaisonAffinity() >= 800 ? 2 : 1;
+  const merchantAffinity = id => id==="efsf"?liaisonAffinity():state.merchantAffinities[id]||0;
+  const merchantLevel = id => merchantAffinity(id)>=800?2:1;
   function facilityUpgradeOffer(id) {
     const offer=baseFacilities.upgradeOffer(state.baseFacilities,id);
-    const unlocked=["hq","factory","giantFactory","academy"].includes(id) && offer.next===2 && state.contactTasks.some(e=>e.id==="efsf-6"&&e.status==="claimed");
+    const supported=["hq","factory","giantFactory","academy"].includes(id) && offer.next===2;
+    const unlocked=supported && state.contactTasks.some(e=>e.id==="efsf-6"&&e.status==="claimed");
     const money=id==="hq"?20000:10000;
-    return {...offer,unlocked,condition:offer.next===2?"完成联邦联络任务：绿色通道":"开发中",money:offer.next===2?money:null,supplies:offer.next===2?money:null,available:unlocked&&!offer.max&&!offer.hqRequired};
+    return {...offer,unlocked,condition:supported?"完成联邦联络任务：绿色通道":id==="beacon"?"信标暂未开放升级":"开发中",money:supported?money:null,supplies:supported?money:null,available:unlocked&&!offer.max&&!offer.hqRequired};
   }
   function upgradeFacility(id, expected) {
     const offer=facilityUpgradeOffer(id);
@@ -674,15 +791,14 @@ const Economy = (() => {
     const offer = saleOffer(unitId);
     if (!offer || quantity(unitId) < 1) return false;
     const next = snapshot();
-    if (storedId) {
-      const kind = ["units", "ships"].find((kind) =>
-        next.storage[kind].some(
-          (item) => item.id === storedId && item.unitId === unitId && !item.destroyed,
-        ),
-      );
-      if (!kind) return false;
-      next.storage[kind] = next.storage[kind].filter((item) => item.id !== storedId);
-    }
+    const all=[...next.storage.units,...next.storage.ships];
+    const item=storedId?all.find(item=>item.id===storedId && item.unitId===unitId && !item.destroyed)
+      :all.find(item=>item.unitId===unitId && !item.destroyed && !item.rentalUses && !isContactLoan(item));
+    if(!item) return false;
+    if(item.rentalUses) throw Error("租赁单位不能出售");
+    if(isContactLoan(item)) throw Error("任务借用机体不能出售或删除，完成任务后自动回收");
+    const kind=["units","ships"].find(kind=>next.storage[kind].some(value=>value.id===item.id));
+    next.storage[kind]=next.storage[kind].filter(value=>value.id!==item.id);
     next.inventory[unitId]--;
     next.money += offer.money;
     next.supplies += offer.supplies;
@@ -698,6 +814,7 @@ const Economy = (() => {
     );
     if (!kind) return false;
     const item = next.storage[kind].find((item) => item.id === storedId);
+    if(isContactLoan(item)) throw Error("任务借用机体不能出售或删除，完成任务后自动回收");
     if (!item.destroyed)
       next.inventory[item.unitId] = Math.max(0, (next.inventory[item.unitId] || 0) - 1);
     next.storage[kind] = next.storage[kind].filter((item) => item.id !== storedId);
@@ -709,6 +826,7 @@ const Economy = (() => {
     const selected = stockIds == null ? null : new Set(stockIds);
     const items = [];
     for (const item of [...state.storage.units, ...state.storage.ships]) {
+      if (item.rentalUses) continue;
       if (selected && !selected.has(item.id)) continue;
       const model = plugins.apply(modelsForUnits()[item.unitId + "__" + item.kitId], item.plugins),
         destroyed = item.destroyed || item.hp === 0,
@@ -914,7 +1032,11 @@ const Economy = (() => {
     meetLiaison,
     acceptContactTask,
     completeContactTask,
+    isContactLoan,
     liaisonAffinity,
+    liaisonLevel,
+    merchantAffinity,
+    merchantLevel,
     facilityUpgradeOffer,
     upgradeFacility,
     storedUnits,
@@ -942,6 +1064,8 @@ const Economy = (() => {
     purchaseMissingStock,
     initial,
     starterFormation: () => [],
+    completeOnboarding,
+    startingFactions: () => structuredClone(starter.startingFactions),
     errorMessage,
     validate,
     snapshot,

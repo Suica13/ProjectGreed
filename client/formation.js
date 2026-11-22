@@ -99,7 +99,13 @@ const Formation = (() => {
     const assigned = entries.map((entry) => {
       let index = entry.stockId ? items.findIndex((item) => item.id === entry.stockId) : items.findIndex((item) => item.unitId === entry.unitId && item.kitId === entry.kitId);
       if (index < 0 && !entry.stockId) index = items.findIndex((item) => item.unitId === entry.unitId);
-      if (index < 0) return entry;
+      if (index < 0) {
+        if (!entry.stockId) return entry;
+        const copy = { ...entry };
+        delete copy.customPilot;
+        delete copy.pilotId;
+        return copy;
+      }
       const item = items.splice(index, 1)[0];
       const copy = { ...entry, stockId: item.id, unitId: item.unitId, kitId: item.kitId, plugins:item.plugins }, pilot = storedPilot(item);
       if (item.destroyed || item.hp === 0) {
@@ -2968,6 +2974,18 @@ const Formation = (() => {
       if(skill.durationTurns)card.append(element("small","muted",I18n.text(`持续${skill.durationTurns}回合 · 冷却${skill.cooldownTurns}回合（效果结束后开始）`)));
       if(skill.icon){const icon=element("img");icon.src=skill.icon;icon.alt="";card.prepend(icon);card.classList.add("has-icon");}return card;
     }):[mechanism("驾驶员技能",I18n.text(pilotEdit.level>=PilotSystem.skillUnlockLevel?"未选择技能":"6级解锁技能"))]));
+    for (const talent of PilotSystem.talents.of(pilotEdit))
+      byId("customPilotSkills").append(mechanism("天赋 · " + talent.name, talent.description));
+    if (!pilotEdit.ace) {
+      const count = PilotSystem.talents.of(pilotEdit).length;
+      const milestones = [
+        ["第一天赋", "达到4级时随机获得；已获得的天赋永久保留。"],
+        ["第二天赋", "第一次转生时随机获得，不与已有天赋重复。"],
+        ["第三天赋", "第二次转生时随机获得；后续转生不再增加天赋。"],
+      ];
+      for (const [name, description] of milestones.slice(count))
+        byId("customPilotSkills").append(mechanism(I18n.text(name), I18n.text(description)));
+    }
     learnPilotSkillButton.hidden = false;
     learnPilotSkillButton.disabled = !!pilotEdit.ace || pilotEdit.level < PilotSystem.skillUnlockLevel;
     learnPilotSkillButton.classList.toggle(
@@ -3123,7 +3141,7 @@ const Formation = (() => {
     if (JSON.parse(pilotOriginal).points !== pilotEdit.points) return;
     const rebirth = PilotSystem.canReincarnate(pilotEdit,Economy.academyLevel());
     const original = pilotOriginal;
-    if (rebirth && !(await GameDialog.confirm(I18n.text("转生将清空经验、强化和技能，回到0级并恢复初始80强化点，等级上限提高1级。是否继续？")))) return;
+    if (rebirth && !(await GameDialog.confirm(I18n.text("转生将保留天赋，清空经验、强化和技能，回到0级并恢复初始80强化点，等级上限提高1级。是否继续？")))) return;
     if (!pilotEdit || original !== pilotOriginal || upgradePilotButton.disabled) return;
     const cost = rebirth ? PilotSystem.reincarnationCost(pilotEdit) : PilotSystem.upgradeCost(pilotEdit);
     const clean = rebirth ? PilotSystem.reincarnate(pilotEdit,Economy.academyLevel()) : PilotSystem.upgrade(pilotEdit,Economy.academyLevel());
@@ -3357,7 +3375,7 @@ const Formation = (() => {
     ],
     [
       "指挥",
-      "100点时指挥光环范围为3格、效果为10%；每高25点，范围增加1格、效果增加2.5个百分点；每低25点相应减少。仅影响机体已有的指挥光环。",
+      "指挥高于100时触发光环：非舰船2格，舰船4格；支援／一般为通信、泛用为防御、突击为攻击。机体原有指挥替换默认类型并额外增加2格。基础效果10%，每高25点增加2.5个百分点，同类取最强。",
     ],
     [
       "觉醒",

@@ -2,38 +2,16 @@
   "money": 8000,
   "supplies": 8000,
   "stockSets": 1,
-  "inventory": {
-    "RGM_79_E": 3,
-    "MS_06F": 3,
-    "Medea": 1,
-    "FatUncle": 1,
-    "ColumbusClass": 1,
-    "PapuaClass": 1
-  },
-  "units": [
-    {
-      "unitId": "RGM_79_E",
-      "kitId": "kit_0"
+  "inventory": {},
+  "units": [],
+  "startingFactions": {
+    "EFSF": {
+      "name": "地球联邦军",
+      "inventory": {"RGM_79_Commander": 1, "RGM_79": 2, "MedeaKai": 1, "ColumbusClass": 1}
     },
-    {
-      "unitId": "MS_06F",
-      "kitId": "machine_gun"
-    },
-    {
-      "unitId": "Medea",
-      "kitId": "standard"
-    },
-    {
-      "unitId": "FatUncle",
-      "kitId": "standard"
-    },
-    {
-      "unitId": "ColumbusClass",
-      "kitId": "standard"
-    },
-    {
-      "unitId": "PapuaClass",
-      "kitId": "standard"
+    "ZEON": {
+      "name": "吉翁公国军",
+      "inventory": {"MS_06F2_Commander": 1, "MS_06F2": 2, "FatUncleKai": 1, "PapuaClass": 1}
     }
-  ]
+  }
 }

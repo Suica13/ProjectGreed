@@ -1028,7 +1028,7 @@ function renderPanel() {
       ),
     );
   if (Rules.smokeAt(game, u))
-    partStatus.append(element("p", "helper", I18n.text("烟雾掩护：受到远程攻击时命中率×75%")));
+    partStatus.append(element("p", "helper", I18n.text("烟雾掩护：受到远程攻击时命中率×90%")));
   if (effects.length) partStatus.append(element("p", "red", effects.join(" · ")));
   overview.append(partStatus);
   const protection = element("details", "rule-box");

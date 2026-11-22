@@ -18,7 +18,8 @@
     "chargedSniperDamage": 1.875,
     "penetrationDamagePerCount": 0.15,
     "armorPiercingIgnore": 0.5,
-    "shipCannonAccuracy": 0.85
+    "shipCannonAccuracy": 0.85,
+    "beamGunKitCostOffset": -25
   },
   "units": {
     "specialCost": 1.1,

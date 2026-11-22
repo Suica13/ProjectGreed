@@ -10,7 +10,7 @@ test("developer edits AP damage and resistance, then reuses the validated catalo
   let app;
   try {
     for (const file of [
-      "public/developer.html",
+      "admin/developer.html",
       "client/locales/en.json",
       "client/locales/ja.json",
     ]) {

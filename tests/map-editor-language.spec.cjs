@@ -1,7 +1,7 @@
 const { test, expect } = require("@playwright/test");
 const { pathToFileURL } = require("node:url");
 const path = require("node:path");
-const editorURL = pathToFileURL(path.resolve("public/map-editor.html")).href;
+const editorURL = pathToFileURL(path.resolve("admin/map-editor.html")).href;
 
 for (const [locale, language, button] of [
   ["en-US", "en", "Export project"],

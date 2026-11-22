@@ -336,7 +336,7 @@ const ContractUI = (() => {
         ctx.lineTo(x, markerY + size);
         ctx.lineTo(x - size, markerY);
         ctx.closePath();
-      } else if (o.type === "factory") {
+      } else if (["factory","enemybase"].includes(o.type)) {
         ctx.moveTo(x - size, markerY + size);
         ctx.lineTo(x - size, markerY - size * 0.3);
         ctx.lineTo(x - size * 0.3, markerY);

@@ -10,9 +10,14 @@
 | maps / data | 地图结构、地理数据和本地化数据维护 |
 | imports | 原MOD移植来源、清单和未实现机制；reports/保存生成清单及历史时间线，不是当前平衡规则 |
 | maintenance / editor-changes | 例外配置、审计日志、性能证据和维护待办 |
+| design | 驾驶员特性、天赋与合约任务类型的策划记录；草案不代表已实现 |
 
 ## 常用入口
 
+- [特性与合约任务策划](design/README.md)
+- [驾驶员天赋：50项草案](design/pilot-talents.md)
+- [合约模式任务类型记录](design/contract-task-types.md)
+- [合约事件HTML策划编辑器](tools/contract-event-editor.md)
 - [现行武器与技能规则](rules/combat.md)
 - [驾驶员与指挥](rules/pilots.md)
 - [小队](rules/squads.md)

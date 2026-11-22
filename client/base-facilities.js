@@ -56,9 +56,8 @@ window.BaseFacilitiesUI = (() => {
         cost = element("dl", "facility-cost");
       body.append(element("h3", "", offer.max ? "已达最高等级" : `Lv.${level} → Lv.${offer.next}`));
       for (const [label, text] of [
-        ["升级条件", offer.condition],
-        ["资金", offer.money===null?"-":formatNumber(offer.money)],
-        ["物资", offer.supplies===null?"-":formatNumber(offer.supplies)],
+        ["资金", offer.money === null ? "-" : formatNumber(offer.money)],
+        ["物资", offer.supplies === null ? "-" : formatNumber(offer.supplies)],
       ]) {
         const dt = element("dt", "", label);
         if (label === "资金" || label === "物资")
@@ -66,13 +65,30 @@ window.BaseFacilitiesUI = (() => {
         cost.append(dt, element("dd", "", text));
       }
       body.append(cost);
-      if (offer.hqRequired) body.append(element("p", "helper", `需要HQ达到${offer.next}级。`));
+      const requirements = element("section", "facility-upgrade-requirements");
+      requirements.setAttribute("aria-label", I18n.text("升级条件"));
+      requirements.append(
+        element("h3", "", "升级条件"),
+        element("p", offer.unlocked ? "is-met" : "", offer.condition),
+      );
+      if (offer.hqRequired)
+        requirements.append(element("p", "helper", `需要HQ达到${offer.next}级。`));
+      body.append(requirements);
       const buttons = element("div", "facility-dialog-actions"),
         confirm = element("button", "primary", "确认"),
         cancel = element("button", "", "取消");
       confirm.id = "confirmFacilityUpgrade";
       confirm.disabled = Net.started || !offer.available || !Economy.affordable(offer);
-      confirm.onclick=()=>{try{if(!Net.started&&Economy.upgradeFacility(id,offer)){dialog.close();render();}}catch(error){note(Economy.errorMessage(error));}};
+      confirm.onclick = () => {
+        try {
+          if (!Net.started && Economy.upgradeFacility(id, offer)) {
+            dialog.close();
+            render();
+          }
+        } catch (error) {
+          note(Economy.errorMessage(error));
+        }
+      };
       cancel.onclick = () => dialog.close();
       buttons.append(confirm, cancel);
       body.append(buttons);

@@ -176,7 +176,7 @@ function createDeveloperServer({
         return res.end();
       }
       if (req.method === "GET" && ["/", "/developer.html"].includes(url.pathname)) {
-        const file = path.join(root, "public/developer.html");
+        const file = path.join(root, "admin/developer.html");
         if (!fs.existsSync(file)) return send(404, { error: "请先执行 npm run build:developer" });
         res.writeHead(200, {
           "Content-Type": "text/html; charset=utf-8",

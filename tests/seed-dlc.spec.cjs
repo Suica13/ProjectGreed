@@ -40,7 +40,7 @@ for(const width of [1440,390])test(`SEED technology, PS textures and CE room set
 
 test('standalone map editor loads the shared UC/CE era module',async({page})=>{
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
-  await page.goto(pathToFileURL(path.resolve('public/map-editor.html')).href);
+  await page.goto(pathToFileURL(path.resolve('admin/map-editor.html')).href);
   expect(await page.evaluate(()=>TechnologyEras.weight('CE_0071_T1'))).toBe(1);
   expect(await page.evaluate(()=>TechnologyEras.eras.includes('UC_0093_T1'))).toBeTruthy();
   expect(errors).toEqual([]);

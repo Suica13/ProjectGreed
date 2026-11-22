@@ -1016,12 +1016,11 @@
     },
     {
       "id": "kit_4",
-      "name": "光束步枪套件",
+      "name": "光束加农套件",
       "cost": 75,
       "weapons": [
         "EF_RX_77_2_BR",
         "EF_RX_77_4_BeamCannon",
-        "Common_MortarDouble_B4",
         "Common_Grenade_B",
         "Common_Cqb_A",
         "Common_DoubleVulcan_MS",
@@ -1029,13 +1028,13 @@
       ],
       "localization": {
         "zh": {
-          "name": "光束步枪套件"
+          "name": "光束加农套件"
         },
         "en": {
-          "name": "Beam Rifle Kit"
+          "name": "Beam Cannon Kit"
         },
         "ja": {
-          "name": "ビーム・ライフル装備"
+          "name": "ビーム・キャノン装備"
         }
       }
     }

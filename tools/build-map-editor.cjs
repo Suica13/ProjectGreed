@@ -12,8 +12,8 @@ function buildMapEditor(root = path.resolve(__dirname, "..")) {
       script("globalThis.ProjectGreedMapAssets = " + JSON.stringify(Object.fromEntries(JSON.parse(read("assets/maps/biomes/catalog.json")).biomes.map(id => ["asset:biome-"+id,"data:image/png;base64,"+fs.readFileSync(path.join(root,"assets/maps/biomes",id,"tiles.png")).toString("base64")]).concat([["asset:encounter-pixel-props-v1","data:image/png;base64,"+fs.readFileSync(path.join(root,"assets/maps/tilesets/encounter-pixel-props-v1.png")).toString("base64")]]))) + ";\n" + read("shared/technology-eras.js") + "\n" + read("shared/mission-mode.js") + "\n" + read("shared/map-document.js") + "\n" + read("shared/biome-tiles.js") + "\n" + read("shared/tilemap-view.js")),
     )
     .replace("__EDITOR_JS__", () => script("const MapEditorUnits = " + JSON.stringify(JSON.parse(read("assets/unit-catalog.json")).units.map(file => { const u = JSON.parse(read("assets/" + file)); return {id:u.id,name:u.name,kits:(u.weaponKits || []).map(k=>({id:k.id,name:k.name}))}; })) + ";\n" + "const MAP_EDITOR_LOCALES = " + JSON.stringify(JSON.parse(read("map-editor/locales.json"))) + ";\n" + read("map-editor/i18n.js") + "\n" + read("map-editor/authoring.js") + "\n" + read("map-editor/editor.js") + "\nconst MissionEditorData = " + JSON.stringify({sample:JSON.parse(read("assets/maps/missions/white_base.json")),pilots:JSON.parse(read("shared/pilots.json")).aces.map(p=>({id:p.id,name:p.name,icon:p.icon})),portraits:Object.fromEntries(JSON.parse(read("shared/pilots.json")).aces.map(p=>[p.icon,"data:image/png;base64,"+fs.readFileSync(path.join(root,p.icon)).toString("base64")]))}) + ";\n" + read("map-editor/mission-editor.js")));
-  fs.mkdirSync(path.join(root, "public"), { recursive: true });
-  const output = path.join(root, "public/map-editor.html");
+  fs.mkdirSync(path.join(root, "admin"), { recursive: true });
+  const output = path.join(root, "admin/map-editor.html");
   // Reuse identical output: an open local editor may prevent Windows truncation.
   if (!fs.existsSync(output) || fs.readFileSync(output, "utf8") !== html)
     fs.writeFileSync(output, html);

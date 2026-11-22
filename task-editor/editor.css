@@ -1,3 +1,11 @@
+.contact-portrait {
+  display: block;
+  width: 128px;
+  height: 128px;
+  object-fit: contain;
+  margin-bottom: 12px;
+  image-rendering: pixelated;
+}
 :root {
   color-scheme: dark;
   font:
@@ -8,6 +16,85 @@
   background: #0b1420;
   --line: #294255;
   --accent: #62d2f2;
+}
+.inspector .planning-text {
+  min-height: 320px;
+  line-height: 1.7;
+}
+.library > button {
+  width: 100%;
+  margin-bottom: 8px;
+}
+.library > label {
+  margin: 12px 0;
+}
+#notes {
+  min-height: 120px;
+  width: 100%;
+  resize: vertical;
+}
+#taskList {
+  margin: 12px 0 20px;
+}
+#taskList button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin: 5px 0;
+}
+#taskList small {
+  display: block;
+}
+.admin-link {
+  color: #9edff5;
+  padding: 8px;
+  text-decoration: none;
+}
+.project {
+  align-items: end;
+}
+.inspector-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin: 12px 0;
+}
+.inspector-tabs button {
+  padding: 7px 4px;
+  font-size: 12px;
+}
+.prerequisites {
+  margin: 15px 0;
+  padding: 10px;
+  border: 1px solid var(--line);
+}
+.prerequisites label {
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  align-items: center;
+}
+.inspector input[type="checkbox"] {
+  width: auto;
+}
+.reward-row {
+  display: grid;
+  grid-template-columns: 1fr 55px 48px;
+  align-items: center;
+  gap: 5px;
+  margin: 8px 0;
+  font-size: 12px;
+}
+.reward-add {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 48px 48px;
+  gap: 5px;
+}
+.reward-add input,
+.reward-row input,
+.reward-row button,
+.reward-add button {
+  min-width: 0;
+  padding: 5px;
 }
 * {
   box-sizing: border-box;
@@ -142,6 +229,7 @@ summary {
   display: block;
 }
 .workspace {
+  min-height: 0;
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -165,6 +253,7 @@ summary {
   align-items: center;
 }
 #canvas {
+  min-height: 0;
   position: relative;
   flex: 1;
   overflow: auto;

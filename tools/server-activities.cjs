@@ -216,6 +216,8 @@ function createActivityService({ rules, send, storePath = null, now = Date.now,
       }
       if(Object.keys(parts).length)rewards.pluginInventory=parts;
     }
+    const rentals = require("../shared/warehouse.js").rentalRewards(value.rentals, rules.models, id => require("../shared/production-catalog.json").defaultKits[id]);
+    if(rentals.length) rewards.rentals = rentals;
     return rewards;
   }
   function validateMultipliers(value) {
@@ -627,6 +629,7 @@ function createActivityService({ rules, send, storePath = null, now = Date.now,
         factions: unit.availableFactions || [unit.faction],
         eras: unit.tags.filter((tag) => rules.eras.includes(tag)),
         tags: unit.unitTags || [],
+        weaponKits: unit.weaponKits,
         developable: (developmentTree[unit.faction] || []).some((node) =>
           node.unlocks.includes(unit.id),
         ),

@@ -40,16 +40,22 @@
       "/stats/hp": 3750
     },
     "Medea": {
-      "/stats/cost": -25
+      "/stats/cost": -25,
+      "/stats/hp": 6250,
+      "/stats/move": 2
     },
     "FatUncle": {
-      "/stats/cost": -25
+      "/stats/cost": -25,
+      "/stats/hp": 6250,
+      "/stats/move": 2
     },
     "MedeaKai_DeployState": {
-      "/stats/cost": 25
+      "/stats/cost": 25,
+      "/stats/hp": 3500
     },
     "FatUncleKai_DeployState": {
-      "/stats/cost": 25
+      "/stats/cost": 25,
+      "/stats/hp": 3500
     },
     "ColumbusClassKai": {
       "/stats/cost": -400
@@ -83,7 +89,8 @@
       "/stats/cost": -250
     },
     "VTOLTransport": {
-      "/stats/cost": -25
+      "/stats/cost": -25,
+      "/stats/move": 2
     },
     "VTOLTransport_DeployState": {
       "/stats/cost": -25
@@ -122,6 +129,34 @@
     "RB_79N": {
       "/stats/move": 1,
       "/stats/cost": -25
+    },
+    "MedeaKai": {
+      "/stats/hp": 3500,
+      "/stats/move": 2
+    },
+    "FatUncleKai": {
+      "/stats/hp": 3500,
+      "/stats/move": 2
+    },
+    "Medea_DeployState": {
+      "/stats/hp": 6250
+    },
+    "FatUncle_DeployState": {
+      "/stats/hp": 6250
+    },
+    "VoLPHAU": {
+      "/stats/hp": -6500,
+      "/stats/move": 2
+    },
+    "MS_06K": {
+      "/weapons/Common_Cannon_AntiAir/damagePerShot": 937.5,
+      "/weapons/Common_Cannon_AntiAir/damageComponents/shell": 937.5
+    },
+    "MS_06JK": {
+      "/weapons/ZN_MS_06JK_Gatling/damagePerShot": -12.5,
+      "/weapons/ZN_MS_06JK_Gatling/damageComponents/shell": -12.5,
+      "/weapons/ZN_MS_06JK_Gatling/targetModifiers/air": -0.25,
+      "/weapons/ZN_MS_06JK_Gatling/attackRounds": -1
     }
   },
   "weapons": {

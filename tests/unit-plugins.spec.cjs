@@ -1,14 +1,14 @@
 const {test,expect}=require('@playwright/test'),{pathToFileURL}=require('node:url'),path=require('node:path');
 for(const width of [1440,390])test('owned unit plugin slots equip, reject duplicates, persist and remove '+width,async({page})=>{
   test.setTimeout(90000);await page.setViewportSize({width,height:1050});const errors=[];page.on('pageerror',error=>errors.push(error.message));
-  await page.goto(pathToFileURL(path.resolve('public/client.html')).href);await page.waitForFunction(()=>assetsReady);
-  const id=await page.evaluate(()=>{I18n.setLanguage('zh');Economy.creditActivity({id:'plugins-ui',matchId:'plugins-ui',money:100000,supplies:0,inventory:{RGM_79:1,Medea:1}});Economy.purchasePlugin('anaheim','frame');Economy.purchasePlugin('anaheim','generator');return Economy.snapshot().storage.units[0].id;});
+  await page.goto(pathToFileURL(path.resolve('public/client.html')).href);await page.waitForFunction(()=>assetsReady);await page.locator('#profileCompanyName').fill('Plugin PMC');await page.locator('#profileOnboardingConfirm').click();
+  const id=await page.evaluate(()=>{I18n.setLanguage('zh');Economy.creditActivity({id:'plugins-ui',matchId:'plugins-ui',money:100000,supplies:0,inventory:{RGM_79:1,ColumbusClass:1}});Economy.purchasePlugin('anaheim','frame');Economy.purchasePlugin('anaheim','generator');return Economy.snapshot().storage.units.find(u=>u.unitId==='RGM_79').id;});
   await page.locator('#shellHangar').click();await page.locator(`#warehouseBays [data-stock-id="${id}"]`).click();
   await expect(page.locator('.warehouse-plugin-slot')).toHaveCount(4);await expect(page.locator('.plugin-slot-plus')).toHaveCount(4);
   const slots=await page.locator('.warehouse-plugin-slot').evaluateAll(nodes=>nodes.map(node=>{const r=node.getBoundingClientRect();return {x:r.x,y:r.y};}));
   expect(new Set(slots.map(slot=>slot.x)).size).toBe(1);expect(slots.every((slot,index)=>!index||slot.y>slots[index-1].y)).toBe(true);
   const original=await page.evaluate(()=>Economy.snapshot());
-  await page.locator('[data-plugin-slot="0"]').click();await expect(page.locator('.plugin-picker-choice')).toHaveCount(18);
+  await page.locator('[data-plugin-slot="0"]').click();await expect(page.locator('.plugin-picker-choice')).toHaveCount(33);
   await page.locator('#warehouseClose').click();await expect(page.locator('.warehouse-plugin-slot')).toHaveCount(4);await expect(page.locator('#warehouseDialog')).toBeVisible();
   await page.locator('[data-plugin-slot="0"]').click();await page.keyboard.press('Escape');await expect(page.locator('.warehouse-plugin-slot')).toHaveCount(4);
   await page.locator('[data-plugin-slot="0"]').click();
@@ -22,14 +22,14 @@ for(const width of [1440,390])test('owned unit plugin slots equip, reject duplic
   await page.locator('[data-plugin-id="frame"]').click();await expect(page.locator('[data-plugin-slot="0"]')).toContainText('强化骨架');
   await page.locator('[data-plugin-slot="1"]').click();await expect(page.locator('[data-plugin-id="frame"]')).toBeDisabled();
   await page.locator('[data-plugin-id="generator"]').click();
-  const fitted=await page.evaluate(()=>{const s=Economy.snapshot(),i=s.storage.units[0];return {money:s.money,supplies:s.supplies,plugins:i.plugins,model:UnitPlugins.apply(UnitModels[i.unitId+'__'+i.kitId],i.plugins)};});
+  const fitted=await page.evaluate(id=>{const s=Economy.snapshot(),i=s.storage.units.find(u=>u.id===id);return {money:s.money,supplies:s.supplies,plugins:i.plugins,model:UnitPlugins.apply(UnitModels[i.unitId+'__'+i.kitId],i.plugins)};},id);
   expect(fitted.money).toBe(original.money);expect(fitted.supplies).toBe(original.supplies);
   expect(fitted.plugins).toEqual(['frame','generator',null,null]);
   await page.screenshot({path:`tmp/verification/screenshots/unit-plugin-equipped-${width}.png`});
   await page.reload();await page.waitForFunction(()=>assetsReady);await page.evaluate(()=>I18n.setLanguage('zh'));await page.locator('#shellHangar').click();await page.locator(`#warehouseBays [data-stock-id="${id}"]`).click();
   await expect(page.locator('[data-plugin-slot="0"]')).toContainText('强化骨架');
   await page.locator('[data-plugin-slot="0"]').click();await page.getByRole('button',{name:'卸下零件',exact:true}).click();await expect(page.locator('.plugin-slot-plus')).toHaveCount(3);
-  await page.locator('#warehouseClose').click();await page.locator('#warehouseShips').click();await page.locator('#warehouseBays [data-stock-id]').first().click();
+  await page.locator('#warehouseClose').click();await page.locator('#warehouseShips').click();const shipId=await page.evaluate(()=>Economy.snapshot().storage.ships.find(u=>u.unitId==='ColumbusClass').id);await page.locator('#warehouseBays [data-stock-id="'+shipId+'"]').click();
   await page.locator('[data-plugin-slot="0"]').click();await expect(page.locator('[data-plugin-id="water"]')).toBeDisabled();
   expect(errors).toEqual([]);
 });

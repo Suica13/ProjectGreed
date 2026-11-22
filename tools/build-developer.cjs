@@ -54,8 +54,8 @@ function buildDeveloper(root) {
 <section id="editorLoginScreen"><form id="editorLogin"><h1>配置编辑</h1><label>编辑服务器IP／地址<input id="editorServerAddress" type="text" required autocomplete="off" placeholder="http://192.168.1.10:1314"></label><label>阵营单位库<select id="editorFaction"><option value="EFSF">地球联邦军</option><option value="ZEON">吉翁公国军</option><option value="AEUG">奥古</option><option value="TITANS">提坦斯</option><option value="NEO_ZEON">新吉翁</option><option value="EFSF_0093">地球联邦军[0093]</option><option value="NEO_ZEON_0093">新吉翁[0093]</option><option value="OMNI">地球联合军</option><option value="ZAFT">扎夫特军</option></select></label><label>密钥<input id="editorAccessKey" type="password" required autocomplete="off"></label><progress id="editorDownloadProgress" max="100" aria-label="编辑数据下载进度" hidden></progress><p id="editorLoginStatus" role="status">输入服务器地址和密钥后连接。</p><button id="confirmEditorLogin" type="submit">确认</button></form></section>
 ${template.slice(start, end)}\n${preview}
 <script type="text/plain" id="catalogRuntime">${inline(runtime)}</script><script>${inline(read("client/catalog-login.js"))}</script></body></html>`;
-  fs.mkdirSync(path.join(root, "public"), { recursive: true });
-  const target = path.join(root, "public/developer.html");
+  fs.mkdirSync(path.join(root, "admin"), { recursive: true });
+  const target = path.join(root, "admin/developer.html");
   fs.writeFileSync(target, html);
   fs.rmSync(target + ".br", { force: true });
   fs.rmSync(target + ".gz", { force: true });

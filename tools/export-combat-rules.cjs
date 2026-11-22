@@ -26,8 +26,8 @@ const explanations = {
   resupply: "消耗自身10%最大EN（原2 AP仅保留配置），为相邻目标格内全部友军恢复各自50%最大EN，不超过上限；每己方回合一次。",
   irradiation: "按方向直线攻击，MEGA照射为10格长、3格宽、基础命中50%的有限矩形；沿途每台单位含友军判定一次；判定射程与固定长度原版演出解绑。有requiresSfsMS时须搭载MS。",
   beam_diffusion: "指定地格生成区域，攻击射线经过区域时光束伤害×0.5，同类区域不重复叠加。",
-  smoke: "当前位置产生烟雾，区域内所有单位受到远程攻击时来袭命中×0.75，不叠加，格斗不受影响。",
-  minovsky: "范围内防守单位回避系数×1.25、反侦测距离+5格。额外命中×0.75当前仅匹配导弹或旧special.type=mortar；现行普通迫击炮为blast，不匹配这项额外惩罚。",
+  smoke: "当前位置产生烟雾，区域内所有单位受到远程攻击时来袭命中×0.9，不叠加，格斗不受影响。",
+  minovsky: "仅范围内友军回避率×1.15；范围内反侦测距离+5格。额外命中×0.75当前仅匹配导弹或旧special.type=mortar；现行普通迫击炮为blast，不匹配这项额外惩罚。",
   recon: "扫描/声呐标记敌人；摄像枪在选定地格生成临时视野/雷达。waterOnly、范围、持续和冷却按各条参数执行。",
   flight: "切换起飞/降落，不消耗AP；检查必需部位和合法降落位置，宇宙中不能切换。",
   fullboost: "增加移动力和反应系数，持续结束后进入冷却；搭载中继续计时。",
@@ -58,7 +58,7 @@ const pilotLabels = {shooting:"射击",melee:"格斗",defense:"防御",accuracy:
 function render(catalog) {
   const config = catalog.conversionRules;
   const sourceFiles = ["shared/rules.js", "shared/unit-roles.json", "shared/automatic-fire.js", "shared/unit-skills.js", "shared/weapon-classes.js",
-    "shared/pilots.js", "shared/hangars.js", "shared/conversion-rules.cjs", "tools/weapon_policy.py", "tools/export-combat-rules.cjs"];
+    "shared/pilots.js", "shared/pilot-talents.js", "shared/pilot-talents.json", "shared/hangars.js", "shared/conversion-rules.cjs", "tools/weapon_policy.py", "tools/export-combat-rules.cjs"];
   const ruleSources = sourceFiles.map(file => [file, fs.readFileSync(path.join(ROOT, file), "utf8")]);
   const pilots = JSON.parse(fs.readFileSync(path.join(ROOT, "shared/pilots.json"), "utf8"));
   const pilotSkills = new Map();
@@ -101,10 +101,12 @@ function render(catalog) {
     "舰炮特性：战舰的加农炮、光束炮、迫击炮额外乘weapons.shipCannonAccuracy（当前0.85）；不包含对空炮、机枪、导弹、航空炸弹。战舰已有对中型命中惩罚减少15个百分点（0.75→0.90，最高恢复至1），不影响非战舰；机体命中系数、驾驶员及人工差值独立计算。", "",
     "精灵光束炮单独分类，按原MOD视觉辅助单位的帧步进和时间间隔播放序列帧，动画时长独立于伤害弹飞行；伤害判定弹保留原弹速。实弹霰弹枪和光束霰弹枪按原MOD实际伤害弹丸Projectile_ShellShotGun／Projectile_BeamShotGun分类，不依赖武器名包含Shotgun；E2／FD光束喷枪及腕部、盾牌BSG据此归类。胸部／机载扩散炮保留对应部位名称。普通光束喷枪与扩散火箭筒不受影响，扩散火箭筒仍属于火箭筒。", "",
     "## 单位零件", "",
-    "每台库存单位有四个独立零件槽位，默认空置；零件仅由阿纳海姆出售，售价为稀有度×3000资金，地球联邦军不出售零件，按实物库存保存；装配占用一件，拆卸或出售机体后返还可用库存，旧存档已装配零件保留为持有库存。同种零件不能重复，MS专用零件仅MS可用。配置持久保存，并随编组及战局快照传递；服务端只接受合法零件ID，在共用规则派生属性，不接受客户端提交的加成数值。", "",
-    "百分比耐久加成相加后乘基础耐久，再加固定耐久；机动指speed、反应指mobility。零件COST百分比以机体本体COST为基准，不含武器套件、驾驶员及其他零件；全部加成合计按25四舍五入。适应性限定0～100%，最终格挡概率最高75%（含防御动作）；地面移动加成只在地面生效。乔巴姆装甲沿用最终实弹减伤25%，已有同机制不重复叠加。装卸时保留HP/EN比例，不能借装卸免费修复；完全损毁单位仍为0HP。", "",
-    "| 零件 | 稀有度 | COST加成 | 效果 | 适用 |", "| --- | --- | --- | --- | --- |",
-    ...require("../shared/unit-plugins.json").map(part=>"| "+part.name+" | "+part.rarity+" | "+(part.costPercent?"+10%":"+"+part.cost)+" | "+part.description+" | "+(part.msOnly?"MS":"所有")+" |"), "",
+    "每台库存单位有四个独立零件槽位，默认空置；零件按配置由阿纳海姆或地球联邦军出售，售价为稀有度×3000资金，指定好感度等级不足时可查看但不能购买；吉翁公国军联络人尚未开放，其零件暂不出售，22／29号暂不制作，年代仅作标签，按实物库存保存；装配占用一件，拆卸或出售机体后返还可用库存，旧存档已装配零件保留为持有库存。同种零件不能重复，非战舰专用零件不能装在战舰上，其他非战舰单位均可用。配置持久保存，并随编组及战局快照传递；服务端只接受合法零件ID，在共用规则派生属性，不接受客户端提交的加成数值。", "",
+    "百分比耐久加成相加后乘基础耐久，再加固定耐久；机动指speed、反应指mobility。零件COST百分比以机体本体COST为基准，不含武器套件、驾驶员及其他零件；全部加成合计按25四舍五入。适应性限定0～100%，最终格挡概率最高75%（含防御动作）；地面移动加成只在地面生效。额外装甲提供实弹百分比抗性与固定减伤，不再附加爆炸反应装甲。定制型护盾只强化已有护盾，不凭空生成护盾。装卸时保留HP/EN比例，不能借装卸免费修复；完全损毁单位仍为0HP。", "",
+    "武器固定伤害加成按实际每发／每击计算，命中率加成为百分点；射击与格斗系数增加单位对应伤害加成。共用规则同时更新根武器、实际分段与合计伤害，穿甲分量按原比例分配，全部伤害对齐25。高精度聚能环命中光束穿甲或光束炮条件时只加一次；机枪长枪管化不作用于头部火神炮、近防炮。", "",
+    "小型米诺夫斯基粒子散布装置提供现有S级技能（半径7格，300 EN，持续4个半回合，冷却3个己方回合，不消耗普通攻击）；已有同级或更大范围散布时不重复添加。隐蔽化改装同时提供隐蔽和反侦测；MS数据库仅绕过隐蔽的雷达范围惩罚，反侦测及直接视野规则不变。", "",
+    "| 零件 | 稀有度 | COST加成 | 效果 | 适用 | 年代 | 来源／好感度等级 |", "| --- | --- | --- | --- | --- | --- | --- |",
+    ...require("../shared/unit-plugins.json").map(part=>"| "+part.name+" | "+part.rarity+" | "+(part.costPercent?"+10%":"+"+part.cost)+" | "+part.description+" | "+(part.nonShip?"非战舰":"所有")+" | "+part.era+" | "+({anaheim:"阿纳海姆",efsf:"地球联邦军",zeon:"吉翁公国军（暂未开放）"}[part.merchant])+" Lv"+part.merchantLevel+" |"), "",
     "## 维护方式", "",
     "战舰机体命中系数：以sourceStats.accuracy记录的原MOD值乘units.shipAccuracy（当前0.9），保留既有阵营修正，再应用通用机体命中倍率和人工差值；不在旧65%导入值上重复乘算。", "",
     "- 刷新：`npm run docs:combat-rules`；核对是否过时：`npm run docs:combat-rules -- --check`。普通客户端构建自动刷新。",
@@ -203,16 +205,18 @@ function render(catalog) {
     "- 驾驶员射击、格斗每点修正0.25个百分点，防御每点减少0.25个百分点承伤倍率；以100为基准，200点时射击与格斗为125%、承伤为75%。命中、反应每点修正0.25个百分点，200点时倍率为125%。机动移动与轮数系数每点修正0.5%（200点为150%）。觉醒达到100后命中、回避各加10个百分点，不再额外提高普通伤害。指挥范围保持每25点变化1格，效果每25点变化2.5个百分点。",
     "- 普通射击轮数=round(基础轮数×机体机动/100×驾驶员机动系数)，至少1轮；格斗、技能、腕部武器、头部火神炮和驾驶员门槛武器限1轮，武器每回合次数上限仍有效。舰毁强制脱出在此之后向下折半，允许0轮。",
     "- 浮游炮/有线炮门槛查pilotRequirements；除INCOM外，觉醒不足100时伤害×max(0.75,觉醒/100)，未满足门槛仍不可使用，预览不再显示零伤害，100以上为×[1+(觉醒-100)×remote.awakeningScale]。INCOM不套此觉醒伤害成长；保留两个战术射击位置，每个位置执行原MOD子单元的完整连射链与独立载荷，不再统一整轮4000伤害；单元数/发数由浮游炮配置决定。",
-    "- 指挥：steps=trunc((领导力-100)/25)，范围=max(1,3+steps)，效果=max(0,0.10+0.025×steps)。攻击加最终射击/格斗伤害，防御减最终伤害，通信提高命中/回避；同类取最大不叠加。",
+    "- 指挥：指挥严格高于100才生效，效果=0.10+0.025×floor((指挥-100)/25)。非舰船基础范围2格，舰船4格。支援／一般默认通信，泛用默认防御，突击默认攻击；机体原有指挥替换默认类型并额外+2格。零件及天赋范围另加。同类取最大不叠加。攻击提高最终伤害、防御降低最终伤害、通信提高命中与回避。",
     "- ABC是有限耐久的光束涂层，普通光束按原MOD比例吸收；格斗光束和贯穿分量减弱，耐久耗尽失效。",
     "- 地图交战按服务端逐发结果显示损伤：机体耐久为金色、盾牌损伤为蓝色；I立场、ABC涂层和PS装甲吸收量为粉色，并分别标明名称。",
     "- I立场拦截远程光束，光束格斗绕过；普通/贯穿光束分别按reduction/piercingReduction减伤，消耗场耐久，下限为capacity×minimumRatio，己方回合恢复recoveryPercent。",
     "- 被动补给光环、自动维修按各自参数在己方回合结算，重叠补给光环不叠加；主动补给不是补给光环。雇佣兵战争模式主基地禁止任何HP恢复（包括补给光环与自动维修），已经损失的HP不会回升。学习型电脑使用机体pilotExperienceMultiplier，与其他经验系数相乘。",
+    "- 租赁单位按每场实际参战的战斗最终结算扣除一次使用次数，未出战和重复结算不扣次数。返回机库免费恢复全部耐久、EN和损毁部位；次数归零回收机体并解除驾驶员配属。租赁机不能出售或调整零件，预设零件不占个人零件库存且随租赁机回收。",
     "- 封闭格纳库载员己方回合恢复25%HP、50%EN，不修复受损部位或护盾；SFS暴露载员不套此维修。任务脚本标记stayOnSfs的乘员不会由AI主动脱离SFS，载具被击毁时仍正常紧急脱出。符合占地与容量要求的SFS可组成小队，整队攻击包含同控制者的暴露乘客；新成员加入已下达普通攻击计划的小队时，自动追加自身可用攻击，不重置已行动成员。整队出击只由一名驾驶员代表全队与运输单位对话，所有成员仍分别记录出击日志；距离和容量判定不变。主动出击不扣AP；母舰死亡紧急退出仅本回合攻击轮数向下折半，允许0，AP数值不变。", "",
     "- PMC驾驶员详情隐藏出身阵营，互动文本按钮始终可用，保存台词后选择自定义性格。每事件默认一个独立输入框，加号可增加，最多10句，每句120字、总计6000字；切换回其他性格保留文本并使用默认台词。触发概率与通信范围沿用原规则，台词确定性随机选取。支持独立JSON导入／导出，保存前只改草稿，不能修改属性。旧存档12句池迁移时保留前10句。", "",
     "## 代码索引", "",
     "- [换算配置](shared/conversion-rules.json)、[换算实现](shared/conversion-rules.cjs)、[人工差值](shared/editor-adjustments.json)",
     "- [分类](shared/weapon-classes.js)、[轮数/交火](shared/automatic-fire.js)、[共享战斗规则](shared/rules.js)",
+    "- 自定义PMC天赋：招募时无天赋，首次4级获得第1项，第一次转生获得第2项，第二次转生获得第3项，后续转生不再增加，最多3项且不重复；旧驾驶员保留已有天赋，按等级／转生补齐。转生、降职与读档保留天赋及解锁次数。系数按比例计算，情境效果在结算时判定，格挡率上限75%。50项效果见 [驾驶员天赋](../design/pilot-talents.md)，执行数据 shared/pilot-talents.json。",
     "- [机体技能](shared/unit-skills.js)、[驾驶员技能](shared/pilots.json)、[驾驶员逻辑](shared/pilots.js)、[格纳库](shared/hangars.js)",
     "- [导入射程政策](tools/weapon_policy.py)、[文档生成器](tools/export-combat-rules.cjs)", ""];
   return {text: out.join("\n").replace(/\]\((shared|tools|client|assets)\//g, "](../../$1/"), stats: {weaponTypes: Object.keys(Classes.labels).length, skillTypes: Object.keys(explanations).length, pilotSkills: pilotSkills.size}};

@@ -102,6 +102,26 @@
   justify-content: flex-end;
   padding-top: 16px;
 }
+.facility-upgrade-requirements {
+  margin-top: 16px;
+  padding: 12px 14px;
+  background: #0d2235;
+  border: 1px solid #37617d;
+  border-radius: 3px;
+}
+.facility-upgrade-requirements h3 {
+  margin: 0 0 9px;
+  font-size: 14px;
+  color: #b9e4ff;
+}
+.facility-upgrade-requirements p {
+  margin: 6px 0 0;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.facility-upgrade-requirements .is-met {
+  color: #8dd6b1;
+}
 .facility-unlock {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);

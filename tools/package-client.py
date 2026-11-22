@@ -12,13 +12,14 @@ output = root / 'build' / project['version']
 output.mkdir(parents=True, exist_ok=True)
 folder = output / f'{project["name"]}-{project["version"]}-client'
 folder.mkdir(exist_ok=True)
-for name in ['client.html', 'map-editor.html', 'unit-editor.html']:
+for name in ['client.html']:
     shutil.copy2(root / 'public' / name, folder / name)
+shutil.copytree(root / 'admin', folder / 'admin', dirs_exist_ok=True)
 archive = output / f'{project["name"]}-{project["version"]}-client.zip'
 with ZipFile(archive, 'w', compression=ZIP_DEFLATED, compresslevel=9) as bundle:
     bundle.write(client, 'client.html')
-    bundle.write(root / 'public/map-editor.html', 'map-editor.html')
-    bundle.write(root / 'public/unit-editor.html', 'unit-editor.html')
+    for tool in sorted((root / 'admin').glob('*.html')):
+        bundle.write(tool, 'admin/' + tool.name)
     bundle.write(notes, '使用说明.md')
 with ZipFile(archive) as bundle:
     assert bundle.testzip() is None

@@ -29,6 +29,7 @@ function buildSaveEditor(root = path.resolve(__dirname, "..")) {
   const headers = {
     ART: art,
     FACTION_DATA: JSON.parse(read("shared/factions.json")),
+    PILOT_TALENT_DATA: JSON.parse(read("shared/pilot-talents.json")),
     PILOT_DATA: JSON.parse(read("shared/pilots.json")),
     DEVELOPMENT_TREE: JSON.parse(read("shared/development-tree.json")),
     STARTER_PROFILE: JSON.parse(read("shared/starter-profile.json")),
@@ -52,6 +53,7 @@ function buildSaveEditor(root = path.resolve(__dirname, "..")) {
     "shared/unit-parts.js",
     "shared/unit-skills.js",
     "shared/hangars.js",
+    "shared/pilot-talents.js",
     "shared/pilots.js",
     "shared/unit-plugins.js",
     "shared/warehouse.js",

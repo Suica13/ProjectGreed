@@ -12,9 +12,9 @@ test('game server and normal client exclude the separately launched catalog edit
   const address = await app.listen();
   t.after(() => app.close());
   const base = `http://127.0.0.1:${address.port}`;
-  for (const path of ['/developer.html', '/api/developer/session', '/api/developer/unit', '/api/developer/reload', '/api/editor/session'])
+  for (const path of ['/developer.html', '/admin/developer.html', '/api/developer/session', '/api/developer/unit', '/api/developer/reload', '/api/editor/session'])
     assert.equal((await fetch(base + path)).status, 404, path);
   assert.equal((await fetch(base + '/')).status, 200);
-  assert.equal((await fetch(base + '/map-editor.html')).status, 200);
+  assert.equal((await fetch(base + '/admin/map-editor.html')).status, 200);
   assert.equal((await fetch(base + '/admin/activities.html')).status, 200);
 });

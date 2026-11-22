@@ -1,0 +1,442 @@
+[
+  {
+    "id": "pt01",
+    "name": "反应迅速",
+    "description": "反应系数+5%",
+    "effects": {
+      "reaction": 0.05
+    }
+  },
+  {
+    "id": "pt02",
+    "name": "神枪手",
+    "description": "命中系数+5%",
+    "effects": {
+      "accuracy": 0.05
+    }
+  },
+  {
+    "id": "pt03",
+    "name": "格斗家",
+    "description": "格斗伤害+10%",
+    "effects": {
+      "melee": 0.1
+    }
+  },
+  {
+    "id": "pt04",
+    "name": "快枪手",
+    "description": "射击伤害+5%",
+    "effects": {
+      "shooting": 0.05
+    }
+  },
+  {
+    "id": "pt05",
+    "name": "冒失鬼",
+    "description": "命中系数-5%",
+    "effects": {
+      "accuracy": -0.05
+    }
+  },
+  {
+    "id": "pt06",
+    "name": "沉着冷静",
+    "description": "防御系数+5%",
+    "effects": {
+      "defense": 0.05
+    }
+  },
+  {
+    "id": "pt07",
+    "name": "驾驶能手",
+    "description": "机动系数+5%",
+    "effects": {
+      "speed": 0.05
+    }
+  },
+  {
+    "id": "pt08",
+    "name": "天生感应",
+    "description": "觉醒值+10",
+    "effects": {
+      "awakening": 10
+    }
+  },
+  {
+    "id": "pt09",
+    "name": "战场领袖",
+    "description": "指挥范围+1格",
+    "effects": {
+      "commandRange": 1
+    }
+  },
+  {
+    "id": "pt10",
+    "name": "精打细算",
+    "description": "武器EN消耗-5%",
+    "effects": {
+      "enCost": -0.05
+    }
+  },
+  {
+    "id": "pt11",
+    "name": "火力至上",
+    "description": "射击伤害+10%，命中系数-5%",
+    "effects": {
+      "shooting": 0.1,
+      "accuracy": -0.05
+    }
+  },
+  {
+    "id": "pt12",
+    "name": "精密瞄准",
+    "description": "命中系数+10%，反应系数-5%",
+    "effects": {
+      "accuracy": 0.1,
+      "reaction": -0.05
+    }
+  },
+  {
+    "id": "pt13",
+    "name": "近战狂热",
+    "description": "格斗伤害+15%，射击伤害-5%",
+    "effects": {
+      "melee": 0.15,
+      "shooting": -0.05
+    }
+  },
+  {
+    "id": "pt14",
+    "name": "谨慎驾驶",
+    "description": "防御系数+10%，机动系数-5%",
+    "effects": {
+      "defense": 0.1,
+      "speed": -0.05
+    }
+  },
+  {
+    "id": "pt15",
+    "name": "轻装思维",
+    "description": "机动系数+10%，防御系数-5%",
+    "effects": {
+      "speed": 0.1,
+      "defense": -0.05
+    }
+  },
+  {
+    "id": "pt16",
+    "name": "孤注一掷",
+    "description": "射击、格斗伤害各+5%，防御系数-5%",
+    "effects": {
+      "shooting": 0.05,
+      "melee": 0.05,
+      "defense": -0.05
+    }
+  },
+  {
+    "id": "pt17",
+    "name": "全能选手",
+    "description": "命中、反应、机动系数各+3%",
+    "effects": {
+      "accuracy": 0.03,
+      "reaction": 0.03,
+      "speed": 0.03
+    }
+  },
+  {
+    "id": "pt18",
+    "name": "临危不乱",
+    "description": "当前耐久低于最大耐久30%时，反应系数+10%",
+    "effects": {
+      "reaction": 0.1
+    },
+    "when": "low30"
+  },
+  {
+    "id": "pt19",
+    "name": "背水一战",
+    "description": "当前耐久低于最大耐久30%时，格斗伤害+20%",
+    "effects": {
+      "melee": 0.2
+    },
+    "when": "low30"
+  },
+  {
+    "id": "pt20",
+    "name": "先发制人",
+    "description": "主动攻击时，命中系数+5%",
+    "effects": {
+      "accuracy": 0.05
+    },
+    "when": "attack"
+  },
+  {
+    "id": "pt21",
+    "name": "反击专家",
+    "description": "反击时，射击与格斗伤害各+10%",
+    "effects": {
+      "shooting": 0.1,
+      "melee": 0.1
+    },
+    "when": "counter"
+  },
+  {
+    "id": "pt22",
+    "name": "防守本能",
+    "description": "选择防御时，在原防御效果基础上受到伤害额外降低5%",
+    "effects": {
+      "finalReduction": 0.05
+    },
+    "when": "defend"
+  },
+  {
+    "id": "pt23",
+    "name": "神经紧张",
+    "description": "反应系数+5%，命中系数-5%",
+    "effects": {
+      "reaction": 0.05,
+      "accuracy": -0.05
+    }
+  },
+  {
+    "id": "pt24",
+    "name": "迟钝",
+    "description": "反应系数-5%",
+    "effects": {
+      "reaction": -0.05
+    }
+  },
+  {
+    "id": "pt25",
+    "name": "鲁莽",
+    "description": "格斗伤害+10%，防御系数-10%",
+    "effects": {
+      "melee": 0.1,
+      "defense": -0.1
+    }
+  },
+  {
+    "id": "pt26",
+    "name": "爆破专家",
+    "description": "爆炸类武器伤害+10%",
+    "effects": {
+      "damage": 0.1
+    },
+    "when": "explosive"
+  },
+  {
+    "id": "pt27",
+    "name": "光束专精",
+    "description": "光束射击伤害+5%",
+    "effects": {
+      "beamDamage": 0.05
+    }
+  },
+  {
+    "id": "pt28",
+    "name": "实弹专精",
+    "description": "实弹射击伤害+5%",
+    "effects": {
+      "shellDamage": 0.05
+    }
+  },
+  {
+    "id": "pt29",
+    "name": "重炮手",
+    "description": "加农炮类武器伤害+10%，机动系数-5%",
+    "effects": {
+      "damage": 0.1
+    },
+    "when": "cannon",
+    "always": {
+      "speed": -0.05
+    }
+  },
+  {
+    "id": "pt30",
+    "name": "导弹专家",
+    "description": "使用导弹类武器时，命中系数+5%",
+    "effects": {
+      "accuracy": 0.05
+    },
+    "when": "missile"
+  },
+  {
+    "id": "pt31",
+    "name": "狙击手",
+    "description": "狙击类武器伤害+10%",
+    "effects": {
+      "damage": 0.1
+    },
+    "when": "sniper"
+  },
+  {
+    "id": "pt32",
+    "name": "盾牌专精",
+    "description": "盾牌格挡率+5个百分点，最终不超过75%",
+    "effects": {
+      "blockChance": 0.05
+    }
+  },
+  {
+    "id": "pt33",
+    "name": "精准反击",
+    "description": "反击时，命中系数+5%",
+    "effects": {
+      "accuracy": 0.05
+    },
+    "when": "counter"
+  },
+  {
+    "id": "pt34",
+    "name": "闪避本能",
+    "description": "选择回避时，反应系数+10%",
+    "effects": {
+      "reaction": 0.1
+    },
+    "when": "evade"
+  },
+  {
+    "id": "pt35",
+    "name": "钢铁意志",
+    "description": "当前耐久不高于最大耐久50%时，防御系数+10%",
+    "effects": {
+      "defense": 0.1
+    },
+    "when": "low50"
+  },
+  {
+    "id": "pt36",
+    "name": "胜势追击",
+    "description": "攻击当前耐久低于最大耐久30%的目标时，射击伤害+10%",
+    "effects": {
+      "shooting": 0.1
+    },
+    "when": "targetLow30"
+  },
+  {
+    "id": "pt37",
+    "name": "压制射击",
+    "description": "攻击当前耐久不低于最大耐久75%的目标时，命中系数+5%",
+    "effects": {
+      "accuracy": 0.05
+    },
+    "when": "targetHigh75"
+  },
+  {
+    "id": "pt38",
+    "name": "贴身缠斗",
+    "description": "与目标格距离为1格时，格斗武器的命中系数+5%",
+    "effects": {
+      "accuracy": 0.05
+    },
+    "when": "adjacentMelee"
+  },
+  {
+    "id": "pt39",
+    "name": "远距作战",
+    "description": "与目标格距离不低于4格时，射击伤害+5%",
+    "effects": {
+      "shooting": 0.05
+    },
+    "when": "farRanged"
+  },
+  {
+    "id": "pt40",
+    "name": "协同作战",
+    "description": "当前所在格内同一小队至少有3台存活单位时，命中系数+5%",
+    "effects": {
+      "accuracy": 0.05
+    },
+    "when": "squad"
+  },
+  {
+    "id": "pt41",
+    "name": "独行侠",
+    "description": "当前所在格内仅有自身一台存活作战单位时，反应系数+5%",
+    "effects": {
+      "reaction": 0.05
+    },
+    "when": "alone"
+  },
+  {
+    "id": "pt42",
+    "name": "掩护意识",
+    "description": "当前所在格内同一小队至少有3台存活单位时，防御系数+5%",
+    "effects": {
+      "defense": 0.05
+    },
+    "when": "squad"
+  },
+  {
+    "id": "pt43",
+    "name": "夜战适应",
+    "description": "战场处于夜间时，命中系数+5%",
+    "effects": {
+      "accuracy": 0.05
+    },
+    "when": "night"
+  },
+  {
+    "id": "pt44",
+    "name": "地面老手",
+    "description": "单位以地面状态作战时，机动系数+5%",
+    "effects": {
+      "speed": 0.05
+    },
+    "when": "ground"
+  },
+  {
+    "id": "pt45",
+    "name": "宇宙老手",
+    "description": "单位处于宇宙环境时，机动系数+5%",
+    "effects": {
+      "speed": 0.05
+    },
+    "when": "space"
+  },
+  {
+    "id": "pt46",
+    "name": "水战老手",
+    "description": "单位处于水下状态时，命中系数+5%",
+    "effects": {
+      "accuracy": 0.05
+    },
+    "when": "water"
+  },
+  {
+    "id": "pt47",
+    "name": "急躁",
+    "description": "机动系数+5%，命中系数-5%",
+    "effects": {
+      "speed": 0.05,
+      "accuracy": -0.05
+    }
+  },
+  {
+    "id": "pt48",
+    "name": "手忙脚乱",
+    "description": "武器EN消耗+5%",
+    "effects": {
+      "enCost": 0.05
+    }
+  },
+  {
+    "id": "pt49",
+    "name": "畏缩",
+    "description": "格斗伤害-10%",
+    "effects": {
+      "melee": -0.1
+    }
+  },
+  {
+    "id": "pt50",
+    "name": "脆弱心态",
+    "description": "当前耐久低于最大耐久30%时，反应系数-10%",
+    "effects": {
+      "reaction": -0.1
+    },
+    "when": "low30"
+  }
+]

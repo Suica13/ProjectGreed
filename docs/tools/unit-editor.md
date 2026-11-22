@@ -1,6 +1,6 @@
 # MS 单位工坊
 
-直接打开 `public/unit-editor.html`（无需服务端或登录）。服务器也提供 `/unit-editor.html`，地图编辑器顶部有入口。`npm run build:unit-editor` 可单独构建，正常构建也会更新。
+直接打开 `admin/unit-editor.html`（无需服务端或登录）。服务器也提供 `/admin/unit-editor.html`，地图编辑器顶部有入口。`npm run build:unit-editor` 可单独构建，正常构建也会更新。
 
 ## 制作流程
 
