@@ -40,6 +40,15 @@ for(const width of [1440,390])test(`online contract T1/T2 settings and T2 N6 dep
   await page.locator('#confirmFinalFormation').click();
   await expect.poll(()=>page.evaluate(()=>Net.snapshot.phase)).toBe('deployment');
   const room=app.rooms.get('CONTRACT_SIX');
+  const map=G.catalog.maps[room.game.mapId];
+  const edge=area=>area.x===0?'left':area.x+area.width===map.width?'right':area.y===0?'top':'bottom';
+  expect(edge(room.game.contract.entries[0])).not.toBe(edge(room.game.contract.entries[1]));
+  const maRules=await page.evaluate(()=>{
+   const ma=Object.values(Rules.models).find(model=>model.unitTags?.includes('MA')&&!model.formOnly&&!model.requiredPilotId);
+   return {fleet:Rules.isFleetCarrier(ma),allowed:Rules.hangarAllowsModel(Rules.models.PegasusClass__standard.hangars[0],ma),
+    disabled:Rules.planFormation([{unitId:ma.prefabId,kitId:ma.kitId}],Infinity,{requiresCarriers:true,fleetLimit:1}).disabled};
+  });
+  expect(maRules).toEqual({fleet:true,allowed:false,disabled:[]});
   expect(room.game.contract.objectives).toHaveLength(6);
   for(const unit of room.game.units.filter(unit=>unit.team===1&&!unit.facility)){
    const model=G.modelOf(unit);expect(model.tags).toContain('UC_0079_T2');

@@ -1,4 +1,7 @@
 {
   "regular": ["MS_06C"],
-  "quick": ["MS_06C"]
+  "quick": ["MS_06C"],
+  "sweep": ["MS_06C"],
+  "battlefield": ["MS_06C"],
+  "mission": ["MS_06C"]
 }

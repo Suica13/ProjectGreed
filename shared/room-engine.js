@@ -1455,12 +1455,14 @@ function createRoomEngine({
           !player ||
           aiControlled(room, player) ||
           G.seatTeam(player.seat) !== room.game.team ||
+          (room.game.contract && !room.game.units.some(u => G.ownerOf(u) === player.seat && u.hp > 0 && !u.contractExtracted)) ||
           room.turnDone[player.seat],
       ) &&
       !G.hasActions(room.game)
     );
   }
   function reactionForSeat(room, seat) {
+    if (room.game.contract && !room.seats[seat]?.bot && !playbackParticipant(room, room.seats[seat])) return null;
     return (
       (room.reactions || []).find((request) =>
         canControl(room, seat, unit(room, request.target)),
@@ -1496,6 +1498,7 @@ function createRoomEngine({
         (member) =>
           member &&
           !aiControlled(room, member) &&
+          (!room.game.contract || playbackParticipant(room, member)) &&
           intents.some((intent) => canControl(room, member.seat, unit(room, intent.target))),
       )
       .map((member) => member.seat);
@@ -3492,7 +3495,7 @@ function createRoomEngine({
           hangars.some(
             (hangar) =>
               hangar.kind !== "sfs" &&
-              hangar.allowedTags.some((tag) => model.transport?.loadTags.includes(tag)) &&
+              G.hangarAllowsModel(hangar, model) &&
               G.hangars.used(room.game, u, hangar.id) + G.hangars.slotCost(passenger, hangar) <=
                 hangar.capacity,
           )

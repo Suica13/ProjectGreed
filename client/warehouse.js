@@ -240,6 +240,10 @@ window.WarehouseUI = (() => {
     UnitPreview.renderPreview(modelId, canvas, 180, "card");
     preview.dataset.condition = Warehouse.status(item,model);
     preview.append(canvas, element("span", "warehouse-preview-cost unit-summary-tag cost", model.cost + "C"));
+    if (Economy.isContactLoan(item)) {
+      preview.classList.add("has-task-unit");
+      preview.append(element("span", "warehouse-task-unit", "任务单位"));
+    }
     if (item.destroyed || item.hp === 0) preview.append(element("div","warehouse-wreck-warning","机体大破，需要维修（0耐久）"));
     const catalog = element("button", "warehouse-preview-catalog", "图鉴");
     catalog.id = "warehouseOpenCatalog";
@@ -307,15 +311,14 @@ window.WarehouseUI = (() => {
       transform.disabled = true;
       formActions.prepend(transform);
     }
-    const sale = Economy.saleOffer(item.unitId), discard = !!item.destroyed || !sale,
+    const sale = Economy.saleOffer(item.unitId), discard = !!item.rentalUses || !!item.destroyed || !sale,
       relocate = element("button", "", "调动位置"), sell = element("button", "danger", discard ? "销毁" : "出售");
     relocate.id = "warehouseRelocate";
     relocate.type = "button";
     relocate.onclick = () => showRelocatePicker(item);
     sell.id = "warehouseSellUnit";
     sell.type = "button";
-    sell.disabled = Net.started || Economy.isContactLoan(item) || !!item.rentalUses;
-    if(item.rentalUses)sell.title=I18n.text("租赁单位不能出售");
+    sell.disabled = Net.started || Economy.isContactLoan(item);
     if (discard) sell.title = I18n.text("销毁不返还资金或物资");
     if(Economy.isContactLoan(item))sell.title=I18n.text("任务借用机体不能出售或删除，完成任务后自动回收");
     sell.onclick = async () => {
@@ -371,8 +374,9 @@ window.WarehouseUI = (() => {
     const grid=element("div","warehouse-plugin-slots");
     UnitPlugins.normalize(item.plugins,model).forEach((id,index)=>{
       const button=element("button","warehouse-plugin-slot"),part=UnitPlugins.byId.get(id);
-      button.type="button";button.dataset.pluginSlot=index;button.disabled=busy || !!item.rentalUses;
+      button.type="button";button.dataset.pluginSlot=index;button.disabled=busy || !!item.rentalUses || Economy.isContactLoan(item);
       if(item.rentalUses)button.title=I18n.text("租赁单位不能调整零件");
+      if(Economy.isContactLoan(item))button.title=I18n.text("任务临时单位不能装备零件");
       if(part)button.append(pluginCard(part));
       else button.append(element("span","plugin-slot-plus","+"));
       button.onclick=()=>showPluginPicker(item,index);grid.append(button);
@@ -623,6 +627,7 @@ window.WarehouseUI = (() => {
         title.title = model.name;
         heading.append(title, UnitPreview.roleIcon(model), element("span", "unit-summary-tag cost", model.cost + "C"));
         imageFrame.append(image, UnitPreview.identityTags(model));
+        if (Economy.isContactLoan(item)) imageFrame.append(element("span", "warehouse-task-unit", "任务单位"));
         const environments = element("div", "warehouse-environments");
         for (const [key, label] of [["ground", "地面"], ["space", "宇宙"]]) {
           const tag = element("span", "warehouse-environment", label);

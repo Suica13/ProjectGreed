@@ -107,6 +107,18 @@ const Economy = (() => {
       if(item) item.contactLoan=entry.id;
       entry.loanTracking=true;
     }
+    const pluginInventory = normalizePluginInventory(value.pluginInventory, storage);
+    // Previously fitted player-owned parts return to stock when a mission loan
+    // becomes non-customizable. Preserve resource ratios rather than repairing it.
+    for (const item of [...storage.units, ...storage.ships, ...storage.deliveries]) {
+      if (!item.contactLoan || !item.plugins?.some(Boolean) ||
+          !contactTasks.some(entry => entry.id === item.contactLoan && entry.status !== "claimed" && !entry.loanReturned)) continue;
+      const base = modelsForUnits()[item.unitId + "__" + item.kitId],
+        previous = plugins.apply(base, item.plugins);
+      item.hp = item.destroyed ? 0 : Math.max(1, Math.min(base.hp, Math.round(item.hp / previous.hp * base.hp)));
+      item.en = previous.en > 0 ? Math.min(base.en, Math.round(item.en / previous.en * base.en)) : base.en;
+      item.plugins = plugins.normalize([], base);
+    }
     const owned = value.licenses;
     if (!owned || typeof owned !== "object" || Array.isArray(owned)) throw Error("部署许可无效");
     const licenses = defaultLicenses();
@@ -152,7 +164,7 @@ const Economy = (() => {
       licenses,
       ...stock,
       crewStock: pilots.normalizeCrewStock(value.crewStock),
-      pluginInventory: normalizePluginInventory(value.pluginInventory, storage),
+      pluginInventory,
       contactTasks,
       contactIntro: value.contactIntro === true,
       contactAffinity: value.contactAffinity === undefined
@@ -549,6 +561,7 @@ const Economy = (() => {
       item = [...next.storage.units, ...next.storage.ships].find((item) => item.id === id);
     if (!item) throw Error("库存单位不存在");
     if (item.rentalUses) throw Error("租赁单位不能调整零件");
+    if (isContactLoan(item)) throw Error("任务临时单位不能装备零件");
     const base = modelsForUnits()[item.unitId + "__" + item.kitId],
       previous = plugins.apply(base, item.plugins);
     const slots = plugins.normalize(item.plugins, base);
@@ -837,7 +850,7 @@ const Economy = (() => {
       const price = chassisProductionOffer(item.unitId)?.supplies || 0;
       items.push({
         ...structuredClone(item),
-        supplies: Math.ceil(price * (destroyed ? 0.75 : parts ? 0.5 : 0)),
+        supplies: Math.ceil(price * (destroyed ? 0.5 : parts ? 0.25 : 0)),
       });
     }
     return { items, supplies: items.reduce((sum, item) => sum + item.supplies, 0) };

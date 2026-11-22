@@ -1,4 +1,10 @@
 {
+  "任务临时单位不能装备零件": "Mission loan units cannot equip parts",
+  "初始赠送：": "Initial grant:",
+  "(临时单位)": "(Temporary Unit)",
+  "临时单位不可装备零件，完成目标后自动回收并解除驾驶员配属。": "Temporary units cannot equip parts. They are reclaimed and their pilots unassigned after the objective is completed.",
+
+  "任务单位": "Mission Unit",
   "当前暂时仅开放UC_0079_T1和UC_0079_T2年代": "Only UC_0079_T1 and UC_0079_T2 are currently available",
   "剩余次数:{count}次": "Uses remaining: {count}",
   "租赁单位": "Rental unit",
@@ -4085,10 +4091,12 @@
   "本次扫荡尚未获得机体": "No units recovered on this sweep yet",
   "没有剩余单位": "No surviving units",
   "选择战舰或运输机": "Select a warship or transport",
+  "选择战舰、运输机或MA": "Select a warship, transport or MA",
   "添加战舰或运输机": "Add warship or transport",
   "选择预先搭载单位": "Select a passenger unit",
   "未搭载单位": "Unassigned units",
   "请先选择战舰或运输机，再配置格纳库。": "Select a warship or transport, then configure its hangars.",
+  "请先选择战舰、运输机或MA，再配置格纳库。": "Select a warship, transport or MA, then configure any hangars.",
   "必须预先搭载": "Must be embarked before deployment",
   "运输单位无法出击": "Carrier cannot deploy",
   "单位容量点": "Unit capacity points",

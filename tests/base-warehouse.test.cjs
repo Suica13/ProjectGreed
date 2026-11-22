@@ -97,8 +97,11 @@ test("bulk repair charges materials once per chassis, restores wreck inventory a
     stockStates:[{stockId:parts.id,unitId:parts.unitId,kitId:parts.kitId,hp:100,en:0,brokenParts:{leftArm:true,rightArm:true}},
       {stockId:resources.id,unitId:resources.unitId,kitId:resources.kitId,hp:100,en:0},
       {stockId:ship.id,unitId:ship.unitId,kitId:ship.kitId,hp:shipModel.hp,en:0,brokenParts:{[shipModel.modules[0].id]:true}}]});
-  const before=E.snapshot(),quote=E.repairQuote(),price=E.unitOffer("RGM_79").supplies;
-  assert.equal(quote.items.length,4);assert.equal(quote.supplies,Math.ceil(price/2)+Math.ceil(price/4)+Math.ceil((E.unitOffer("WhiteBase")?.supplies||0)/4));
+  const before=E.snapshot(),quote=E.repairQuote(),price=E.unitOffer("RGM_79").supplies*4;
+  assert.equal(quote.items.length,4);assert.equal(quote.supplies,Math.ceil(price/2)+Math.ceil(price/4)+Math.ceil((E.unitOffer("WhiteBase")?.supplies||0)*4/4));
+  assert.equal(quote.items.find(item=>item.id===wreck.id).supplies,Math.ceil(price/2));
+  assert.equal(quote.items.find(item=>item.id===parts.id).supplies,Math.ceil(price/4));
+  assert.equal(quote.items.find(item=>item.id===resources.id).supplies,0);
   const poor=load({...before,supplies:0}).E;assert.throws(()=>poor.repairAllStoredUnits(),/物资不足/);assert.equal(poor.quantity("RGM_79"),2);
   assert(E.repairAllStoredUnits(quote));const after=E.snapshot();assert.equal(after.money,before.money);assert.equal(after.supplies,before.supplies-quote.supplies);assert.equal(E.quantity("RGM_79"),3);
   for(const item of [...after.storage.units,...after.storage.ships]){const m=catalog.models[item.unitId+"__"+item.kitId];assert.equal(item.hp,m.hp);assert.equal(item.en,m.en);assert.equal(item.destroyed,false);assert.equal(Object.keys(item.brokenParts).length,0);for(const module of m.modules||[])assert.equal(item.moduleHp[module.id],module.hp);assert.equal(item.slot,[...before.storage.units,...before.storage.ships].find(row=>row.id===item.id).slot);}
@@ -157,7 +160,7 @@ test("stored pilot assignments move atomically between chassis and survive reloa
 
 test("moving a wreck's pilot permits repair and legacy duplicate wreck references are detached", () => {
   const {E}=load();
-  E.creditActivity({id:"wreck-pilot-funds",matchId:"initial",money:0,supplies:100000,inventory:{}});
+  E.creditActivity({id:"wreck-pilot-funds",matchId:"initial",money:0,supplies:100000,inventory:{RGM_79:2}});
   const [wreck,target]=E.snapshot().storage.units;
   E.setStoredPilot(wreck.id,"surviving-pilot");
   E.creditAward({id:"pilot-wreck",matchId:"battle",money:0,supplies:0,

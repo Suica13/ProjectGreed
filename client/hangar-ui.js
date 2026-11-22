@@ -169,7 +169,7 @@ const HangarUI = (() => {
           ),
         );
         const compatible = ART.prefabs.filter(
-          (p) => !p.formOnly && h.allowedTags.some((t) => p.transport?.loadTags.includes(t)),
+          (p) => !p.formOnly && Rules.hangarAllowsModel(h, p),
         );
         const kinds = [...new Set(compatible.flatMap((p) => p.unitTags.slice(0, 1)))];
         if (carrierMode)

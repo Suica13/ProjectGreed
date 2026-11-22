@@ -176,26 +176,27 @@ const ContractMode = (() => {
       biome = space ? "space" : biomes[Math.floor(random(seed ^ 0x71b10)() * biomes.length)].id,
       side = Math.floor(rng() * 4),
       entry = edgeArea(w, h, side, rng, 8 + d.fleetLimit * 2, 8 + d.fleetLimit),
-      extraction = edgeArea(w, h, (side + 2) % 4, rng, 6, 6),
       center = (r) => ({ x: Math.floor(r.x + r.width / 2), y: Math.floor(r.y + r.height / 2) }),
       locations = [];
     const baseTerrain = ["snow", "desert"].includes(biome) ? biome : "plain";
     map.tiles = Array.from({length: h}, () => Array(w).fill(baseTerrain));
-    const axis = side < 2 ? "y" : "x", length = side < 2 ? entry.height : entry.width;
-    const edgeLength = side < 2 ? h : w, middle = Math.floor(edgeLength / 2);
-    entry[axis] = 3 + Math.floor(rng() * Math.max(1, middle - length - 3));
-    const entries = [entry, {...entry, [axis]: middle + 1 + Math.floor(rng() * Math.max(1, edgeLength - middle - length - 3))}];
-    const candidates = [];
-    for (const exitSide of [(side + 1) % 4, (side + 3) % 4])
+    // Opposite edges keep the two shared entry pads apart. The remaining
+    // two edges each provide one extraction pad, with clearance from entries.
+    const entries = [entry, edgeArea(w, h, side ^ 1, rng, entry.width, entry.height)];
+    const extractions = [];
+    for (const exitSide of (side < 2 ? [2, 3] : [0, 1])) {
+      const candidates = [];
       for (let offset = 3; offset <= (exitSide < 2 ? h : w) - 9; offset++) {
         const area = { x: exitSide < 2 ? (exitSide === 0 ? 0 : w - 6) : offset,
           y: exitSide < 2 ? offset : (exitSide === 2 ? 0 : h - 6), width: 6, height: 6 };
-        if ([...entries, extraction].every(other => area.x + area.width + 2 <= other.x ||
+        if ([...entries, ...extractions].every(other => area.x + area.width + 2 <= other.x ||
           other.x + other.width + 2 <= area.x || area.y + area.height + 2 <= other.y ||
           other.y + other.height + 2 <= area.y)) candidates.push(area);
       }
-    if (!candidates.length) throw Error("无法生成合约撤离区域");
-    const extractions = [extraction, candidates[Math.floor(rng() * candidates.length)]];
+      if (!candidates.length) throw Error("无法生成合约撤离区域");
+      extractions.push(candidates[Math.floor(rng() * candidates.length)]);
+    }
+    const extraction = extractions[0];
     const clear = (point, radius) => {
       for (let y = Math.max(0, point.y - radius); y <= Math.min(h - 1, point.y + radius); y++)
         for (let x = Math.max(0, point.x - radius); x <= Math.min(w - 1, point.x + radius); x++)
@@ -453,8 +454,9 @@ const ContractMode = (() => {
           !m.wip &&
           !m.facility &&
           !m.requiredPilotId &&
+          !(G.aiUnitBans?.sweep || []).includes(m.prefabId) &&
           !m.ship &&
-          !G.isFleetCarrier(m) &&
+          (!G.isFleetCarrier(m) || m.unitTags?.includes("MA")) &&
           m.tags?.includes(era) &&
           (m.availableFactions || [m.faction]).includes(faction) &&
           m.weapons?.length &&
@@ -528,8 +530,24 @@ const ContractMode = (() => {
       eligible = role.models;
     }
     // Select hulls before kits so additional loadouts do not multiply spawn odds.
-    const ids=[...new Set(eligible.map(model=>model.prefabId))];
-    const id=ids[Math.floor(rng()*ids.length)],kits=eligible.filter(model=>model.prefabId===id);
+    const hullCosts=new Map();
+    for (const model of eligible) hullCosts.set(model.prefabId,Math.max(hullCosts.get(model.prefabId)||0,model.cost));
+    const ids=[...hullCosts.keys()],costs=[...hullCosts.values()];
+    const maIds=new Set(eligible.filter(model=>model.unitTags?.includes("MA")).map(model=>model.prefabId));
+    const ordinaryCosts=costs.filter((cost,index)=>!maIds.has(ids[index]));
+    const referenceCosts=ordinaryCosts.length?ordinaryCosts:costs;
+    const minimum=Math.min(...referenceCosts), span=Math.max(1,Math.max(...referenceCosts)-minimum);
+    const weights=costs.map(cost=>1+Math.max(0,Math.min(1,(cost-minimum)/span))*(config(room.settings.sweepDifficulty).id+1));
+    const maWeight=weights.reduce((sum,weight,index)=>sum+(maIds.has(ids[index])?weight:0),0);
+    const ordinaryWeight=weights.reduce((sum,weight,index)=>sum+(maIds.has(ids[index])?0:weight),0);
+    if (maWeight && ordinaryWeight) {
+      // MA are rare encounters. They must not dominate merely because their
+      // chassis COST is high; retain normal-unit quality and kit diversity.
+      const scale=Math.min(.25,ordinaryWeight/(9*maWeight));
+      for (let index=0;index<weights.length;index++) if(maIds.has(ids[index])) weights[index]*=scale;
+    }
+    let roll=rng()*weights.reduce((sum,weight)=>sum+weight,0);
+    const id=ids.find((id,index)=>(roll-=weights[index])<0)||ids[ids.length-1],kits=eligible.filter(model=>model.prefabId===id);
     return kits[Math.floor(rng()*kits.length)];
   }
   function earlyCombatRole(room, model) {
@@ -556,7 +574,7 @@ const ContractMode = (() => {
     const state = room.game.contract;
     const before = state.enemyBaseCount || 0;
     state.enemyBaseCount = before + count;
-    const multiplier = 1 + 0.2 * Math.max(0, state.players - 1);
+    const multiplier = 1.1 * (1 + 0.25 * Math.max(0, state.players - 1));
     return Math.round(state.enemyBaseCount * multiplier) - Math.round(before * multiplier);
   }
   function reinforcementCount(room, count) {
@@ -565,7 +583,7 @@ const ContractMode = (() => {
     if (!available) return 0;
     const before = state.reinforcementBaseCount || 0;
     state.reinforcementBaseCount = before + count;
-    const multiplier = 0.75 * (1 + 0.2 * Math.max(0, state.players - 1));
+    const multiplier = 0.75 * 1.1 * (1 + 0.25 * Math.max(0, state.players - 1));
     return Math.min(available, Math.round((before + count) * multiplier) - Math.round(before * multiplier));
   }
   function reinforcementSlots(room) {
@@ -582,13 +600,14 @@ const ContractMode = (() => {
   function enemyLimits() {
     return { costLimit: 99999, unitCostLimit: 99999 };
   }
-  function enemyRestrictions(room) {
+  function enemyRestrictions(room, G) {
     return {
       requiresCarriers: false,
       ignoreDevelopment: true,
       unitCostLimit: Infinity,
       characterFaction: room.settings.sweepFaction,
       aiAllowedEras: [room.settings.sweepEra],
+      aiBannedUnits: [...(G?.aiUnitBans?.sweep || [])],
       environment: room.settings.sweepEnvironment,
     };
   }
@@ -674,7 +693,7 @@ const ContractMode = (() => {
       u.missionGuest = true;
     }
     if (reinforcement) u.contractReinforcement = true;
-    if (elite) u.pilot = { ...u.pilot, ...G.pilots.rollGrade("elite", game.seed + serial, model) };
+    if (team === 1 && !model.facility) assignEnemyPilot(room, G, u, model, game.seed + serial, elite);
     const positions = [];
     for (let r = 0; r <= 9; r++)
       for (let y = point.y - r; y <= point.y + r; y++)
@@ -686,6 +705,18 @@ const ContractMode = (() => {
     Object.assign(u, target);
     game.units.push(u);
     return u;
+  }
+  function enemyPilotGrade(difficulty, roll) {
+    const thresholds = [[.4,1],[0,.8],[0,.35],[0,.2],[0,.1],[0,0]][config(difficulty).id-1];
+    if (roll < thresholds[0]) return null;
+    if (roll < thresholds[1]) return "veteran";
+    return "elite";
+  }
+  function assignEnemyPilot(room, G, unit, model, seed, elite = false) {
+    let grade = enemyPilotGrade(room.settings.sweepDifficulty, random(seed ^ 0x6a09e667)());
+    if (elite && (!grade || grade === "veteran")) grade = "elite";
+    unit.pilot = {...unit.pilot, genericGrade: grade || undefined,
+      ...(grade ? G.pilots.rollGrade(grade, seed, model) : G.pilots.roll(null, seed, 1, 0, model))};
   }
   function brain(game) {
     let value = brains.get(game);
@@ -723,25 +754,28 @@ const ContractMode = (() => {
     const total = reinforcement ? reinforcementCount(room, count) : scaledCount(room, count);
     let squadModel;
     for (let i = 0; i < total; i++) {
-      if (i % 3 === 0 || role === "guard") squadModel = pick(room, G, rng);
+      if (i % 3 === 0) squadModel = pick(room, G, rng);
       const u = spawn(room, G, squadModel, point, elite, reinforcement);
       if (u) ids.push(u.id);
     }
-    for (let start = 0; start < ids.length; start += 3) {
-      const squad = ids.slice(start, start + 3);
-      group(room, squad, point, role, objectiveId);
-      if (role !== "guard")
-        for (let index = 1; index < squad.length; index++) {
-          const unit = room.game.units.find(u => u.id === squad[index]);
-          const target = squad.slice(0, index).map(id => room.game.units.find(u => u.id === id))
-            .find(other => G.squadJoinTarget(room.game, unit, other.x, other.y, [unit]) === other);
-          if (!target) continue;
-          G.joinSquad(room.game, unit, target, [unit]);
-          unit.x = target.x;
-          unit.y = target.y;
-        }
-    }
+    groupSquads(room, G, ids, point, role, objectiveId);
     return ids;
+  }
+  function groupSquads(room, G, ids, point, role = "patrol", objectiveId = null) {
+    const game = room.game, squads = [];
+    for (const id of ids) {
+      const unit = game.units.find(u => u.id === id);
+      if (!unit) continue;
+      const squad = squads.find(members => members.length < 3 &&
+        G.squadJoinTarget(game, unit, members[0].x, members[0].y, [unit]) === members[0]);
+      if (squad) {
+        const target = squad[0];
+        G.joinSquad(game, unit, target, [unit]);
+        Object.assign(unit, {x: target.x, y: target.y});
+        squad.push(unit);
+      } else squads.push([unit]);
+    }
+    for (const members of squads) group(room, members.map(u => u.id), point, role, objectiveId);
   }
   function edge(room, avoidEntry = false, attempt = 0) {
     const game = room.game,
@@ -795,17 +829,17 @@ const ContractMode = (() => {
       let carrier = spawn(room, G, G.models[name + "__standard"], point, false, true);
       if (!carrier) throw Error("追击运输单位没有可用入场位置");
       // Match the current enemy faction, including its generic pilot presentation.
-      carrier.pilot = G.pilots.roll(null, game.seed + game.contract.serial, 1, 0, {
+      assignEnemyPilot(room, G, carrier, {
         ...G.modelOf(carrier),
         faction: room.settings.sweepFaction,
-      });
+      }, game.seed + game.contract.serial);
       const compatible = pool(room, G).filter(
         (m) =>
           !m.ship &&
           m.transport?.loadTags?.length &&
           (m.transport.slotCost || 1) <= 2 &&
           G.modelOf(carrier).hangars.some((h) =>
-            h.allowedTags.some((tag) => m.transport.loadTags.includes(tag)),
+            G.hangarAllowsModel(h, m),
           ),
       );
       if (!compatible.length) throw Error("追击小队没有可搭载单位");
@@ -824,17 +858,17 @@ const ContractMode = (() => {
             game.units.splice(game.units.indexOf(cargo), 1);
             const escort = spawn(room, G, G.models[name + "__standard"], point, false, true);
             if (!escort) throw Error("追击运输单位没有可用入场位置");
-            escort.pilot = G.pilots.roll(null, game.seed + game.contract.serial, 1, 0, {
+            assignEnemyPilot(room, G, escort, {
               ...G.modelOf(escort), faction: room.settings.sweepFaction,
-            });
+            }, game.seed + game.contract.serial);
             ids.push(escort.id);
             continue;
           }
           carrier = spawn(room, G, G.models[name + "__standard"], point, false, true);
           if (!carrier) throw Error("追击运输单位没有可用入场位置");
-          carrier.pilot = G.pilots.roll(null, game.seed + game.contract.serial, 1, 0, {
+          assignEnemyPilot(room, G, carrier, {
             ...G.modelOf(carrier), faction: room.settings.sweepFaction,
-          });
+          }, game.seed + game.contract.serial);
           ids.push(carrier.id);
           j++;
           hangar = G.hangars.of(carrier).find((h) => G.hangars.canLoad(game, cargo, carrier, h.id));
@@ -979,6 +1013,7 @@ const ContractMode = (() => {
     // Seats provide AI ownership, not an extra full army per human participant.
     const initialCount = scaledCount(room, 2);
     for (const u of initial.splice(initialCount)) game.units.splice(game.units.indexOf(u), 1);
+    for (const [index,u] of initial.entries()) assignEnemyPilot(room,G,u,G.modelOf(u),game.seed+index);
     for (let i = types.length - 1; i > 0; i--) {
       const j = Math.floor(rng() * (i + 1));
       [types[i], types[j]] = [types[j], types[i]];
@@ -1039,7 +1074,7 @@ const ContractMode = (() => {
           brain(game).health.set(u.id, u.hp);
         }
       }
-      const count = task?.guardCount || (task?.id === "efsf-4" ? 12 : task?.id === "efsf-5" ? 12 : 3 + Math.floor((d.id - 1) / 3));
+      const count = task?.targetUnits?.length || task?.guardCount || (task?.id === "efsf-5" ? 12 : 3 + Math.floor((d.id - 1) / 3));
       const guards = (["efsf-3","efsf-4"].includes(task?.id) || task?.targetUnit) ? [] : patrol(
         room,
         G,
@@ -1051,8 +1086,10 @@ const ContractMode = (() => {
       );
       if(["efsf-3","efsf-4"].includes(task?.id) || task?.targetUnit) {
         const prefab=G.catalog.prefabs.find(p=>p.id===(task.targetUnit || (task.id==="efsf-3"?"RGM_79_G":"MS_06F")));
-        for(let j=0;j<(task.targetKits?.length || (task.id==="efsf-3"?3:12));j++){
-          const model=G.models[prefab.id+"__"+(task.targetKits?.[j] || prefab.weaponKits[0].id)];
+        const targets=task.targetUnits || Array.from({length:task.targetKits?.length || (task.id==="efsf-3"?3:12)},(_,j)=>
+          ({unitId:prefab.id,kitId:task.targetKits?.[j] || prefab.weaponKits[0].id}));
+        for(const [j,target] of targets.entries()){
+          const model=G.models[target.unitId+"__"+target.kitId];
           const u=spawn(room,G,model,{x:point.x+3,y:point.y+j});
           if(!u)throw Error("无法放置联络任务小队");
           if(task.id==="efsf-3" || task.targetPilotGrade) {
@@ -1061,7 +1098,7 @@ const ContractMode = (() => {
           }
           guards.push(u.id);
         }
-        group(room,guards,point,"guard",objective.id);
+        groupSquads(room,G,guards,point,"guard",objective.id);
       }
       if(task?.id === "efsf-5" || task?.turrets)for(let j=0;j<(task.turrets || 4);j++){
         const u=spawn(room,G,G.models.Facility_MG__standard,{x:point.x+(j%2?5:-5),y:point.y+(j<2?-4:4)});
@@ -1079,6 +1116,8 @@ const ContractMode = (() => {
       const members = initial.slice(i, i + 3),
         point = edge(room, true);
       for (const u of members) {
+        u.deployed = true;
+        u.deploymentStaged = false;
         for (let r = 0; r < 10; r++) {
           if (G.fits(game, u, point.x + r, point.y, 180)) {
             Object.assign(u, { x: point.x + r, y: point.y });
@@ -1086,8 +1125,8 @@ const ContractMode = (() => {
           }
         }
       }
-      group(
-        room,
+      groupSquads(
+        room, G,
         members.map((u) => u.id),
         point,
       );
@@ -1422,6 +1461,7 @@ const ContractMode = (() => {
     enemies,
     enemyLimits,
     enemyStage,
+    enemyPilotGrade,
     enemyRestrictions,
     initialize,
     poll,

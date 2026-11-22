@@ -130,10 +130,13 @@ test("Pale Rider loan returns on verified completion without consuming another c
  assert(x.isContactLoan(loan));
  const unchanged=JSON.stringify(x.snapshot());
  assert.throws(()=>x.discardStoredUnit(loan.id),/任务借用/);assert.throws(()=>x.sellUnit(loan.unitId,loan.id),/任务借用/);
+ assert.throws(()=>x.setStoredPlugin(loan.id,0,'frame'),/任务临时单位不能装备零件/);
  assert.equal(JSON.stringify(x.snapshot()),unchanged);
  const plugin=require('../shared/unit-plugins').catalog[0].id;
  s.pluginInventory[plugin]=1;loan.plugins=[plugin];loan.pilotId='custom-loan-pilot';
  const restored=load(s).E;
+ assert(!restored.snapshot().storage.units.find(u=>u.id===loan.id).plugins.some(Boolean));
+ assert.equal(restored.pluginQuantity(plugin),1);
  restored.creditAward({id:'loan-complete',matchId:'loan-battle',money:0,supplies:0,contactProgress:[{id:'efsf-5',amount:4}]});
  assert.equal(restored.quantity('RX_80PR'),1);
  assert(restored.snapshot().storage.units.some(u=>u.id===owned));

@@ -1,6 +1,10 @@
 /* 格纳库只保存现有单位的搭载关系；不复制单位，不恢复资源。 */
 "use strict";
 const UnitHangars = {
+  allowsModel(hangar, model) {
+    return !!hangar && !!model && !model.unitTags?.includes("MA") &&
+      hangar.allowedTags.some(tag => model.transport?.loadTags.includes(tag));
+  },
   create({
     modelOf,
     ownerOf,
@@ -94,7 +98,7 @@ const UnitHangars = {
       if (
         !hangar ||
         !transport ||
-        !hangar.allowedTags.some((tag) => transport.loadTags.includes(tag)) ||
+        !UnitHangars.allowsModel(hangar, modelOf(u)) ||
         used(g, carrier, hangarId) +
           (u.embarked?.carrierId === carrier.id && u.embarked.hangarId === hangarId ? 0 : slotCost(u, hangar)) > hangar.capacity
       )
@@ -556,7 +560,7 @@ const UnitHangars = {
             (h) =>
               (!repair || h.kind !== "sfs") &&
               members.every((member) =>
-                h.allowedTags.some((tag) => modelOf(member).transport?.loadTags.includes(tag)),
+                UnitHangars.allowsModel(h, modelOf(member)),
               ) &&
               used(g, c, h.id) + members.reduce((sum, member) => sum + slotCost(member, h), 0) <=
                 h.capacity,

@@ -635,7 +635,7 @@ const Formation = (() => {
       );
     return (
       used + (h.kind === "sfs" ? 1 : prefab.transport.slotCost) <= h.capacity &&
-      h.allowedTags.some((t) => prefab.transport.loadTags.includes(t))
+      Rules.hangarAllowsModel(h, prefab)
     );
   }
   let pickerFromHangarCard = false;
@@ -680,7 +680,7 @@ const Formation = (() => {
       ? "预先搭载"
       : freeFormation()
         ? "添加单位"
-        : "选择战舰或运输机";
+        : "选择战舰、运输机或MA";
     renderCatalog();
     byId("closeFormationPicker").focus();
   }
@@ -746,7 +746,7 @@ const Formation = (() => {
               0,
             );
         if (
-          !h.allowedTags.some((tag) => model.transport.loadTags.includes(tag)) ||
+          !Rules.hangarAllowsModel(h, model) ||
           others + (h.kind === "sfs" ? 1 : model.transport.slotCost) > h.capacity
         )
           continue;
@@ -779,7 +779,7 @@ const Formation = (() => {
     byId("formationDetailHangarsBlock").hidden = !model.hangars.length;
     for (const [number, hangar] of model.hangars.entries()) {
       const compatible = Rules.catalog.prefabs.filter(prefab =>
-        !prefab.formOnly && hangar.allowedTags.some(tag => prefab.transport?.loadTags.includes(tag)));
+        !prefab.formOnly && Rules.hangarAllowsModel(hangar, prefab));
       const kinds = [...new Set(compatible.flatMap(prefab => prefab.unitTags.slice(0, 1)))];
       const section = element("section", "unit-reference-hangar");
       section.append(element("h4", "", hangar.kind === "sfs" ? "SFS" : I18n.text("格纳库") + " " + (number + 1)));
@@ -1392,7 +1392,7 @@ const Formation = (() => {
     }
     if (!draft.length)
       fragment.append(
-        element("p", "formation-fleet-empty", "请先选择战舰或运输机，再配置格纳库。"),
+        element("p", "formation-fleet-empty", "请先选择战舰、运输机或MA，再配置格纳库。"),
       );
     list.replaceChildren(fragment);
   }
@@ -2420,7 +2420,7 @@ const Formation = (() => {
         element(
           "span",
           "",
-          `${I18n.text(label)} ${profile.baseStats[key]} → ${Math.round(profile.maxStats[key])}`,
+          `${I18n.text(label)} ${PilotSystem.aceStatValue(profile.baseStats[key], key)} → ${Math.round(PilotSystem.aceStatValue(profile.maxStats[key], key))}`,
         ),
       );
     acePreview.append(attributes);

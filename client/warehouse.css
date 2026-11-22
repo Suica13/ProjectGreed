@@ -259,6 +259,9 @@
 .warehouse-detail-preview { position: relative; min-width: 0; height: 500px; min-height: 0; box-sizing: border-box; border: 1px solid #456e80; background: radial-gradient(ellipse at center, #29414c, #0d1c26 75%); overflow: hidden; }
 .warehouse-preview-catalog, .warehouse-preview-cost { position: absolute; top: 10px; z-index: 1; margin: 0; height: 34px; min-height: 34px; box-sizing: border-box; padding: 6px 12px; font-size: 13px; line-height: 20px; }
 .warehouse-preview-catalog { right: 10px; }
+.warehouse-task-unit { position:absolute; top:5px; right:5px; z-index:2; padding:3px 7px; border:1px solid #dbbc66; border-radius:3px; background:#273344ed; color:#ffe299; font-size:12px; line-height:18px; font-weight:700; pointer-events:none; }
+.warehouse-detail-preview > .warehouse-task-unit { top:10px; right:10px; }
+.warehouse-detail-preview.has-task-unit > .warehouse-preview-catalog { top:48px; }
 .warehouse-preview-cost { left: 10px; display: inline-flex; align-items: center; border: 1px solid #b9a269; }
 .warehouse-detail-preview[data-condition="destroyed"] canvas { filter: grayscale(1) brightness(.55); }
 .warehouse-detail-sprite {

@@ -23,7 +23,8 @@ for(const width of [1440,390])test(`rental activity setup and locked preset equi
     const item=Economy.snapshot().storage.units.find(item=>item.rentalUses);WarehouseUI.open();WarehouseUI.openItem(item.id);return item.id;
   },event.rewards);
   await expect(page.locator('#warehouseDialog .warehouse-condition')).toHaveText('剩余次数:3次');
-  await expect(page.locator('#warehouseAssignPilot')).toBeEnabled();await expect(page.locator('#warehouseSellUnit')).toBeDisabled();
+  await expect(page.locator('#warehouseAssignPilot')).toBeEnabled();await expect(page.locator('#warehouseSellUnit')).toBeEnabled();
+  await expect(page.locator('#warehouseSellUnit')).toHaveText('销毁');
   expect(await page.locator('#warehouseDialog [data-plugin-slot]').evaluateAll(nodes=>nodes.length===4&&nodes.every(node=>node.disabled))).toBe(true);
   await page.locator('#warehouseClose').click();
   await page.evaluate(id=>{
@@ -36,6 +37,14 @@ for(const width of [1440,390])test(`rental activity setup and locked preset equi
   expect(await page.evaluate(id=>{const item=Economy.snapshot().storage.units.find(item=>item.id===id);return {hp:item.hp,en:item.en,broken:item.brokenParts,quote:Economy.repairQuote([id]).items.length};},id)).toMatchObject({broken:{},quote:0});
   await page.locator('#warehouseClose').click();await page.reload();await page.waitForFunction(()=>assetsReady);
   await page.evaluate(id=>{WarehouseUI.open();WarehouseUI.openItem(id);},id);await expect(page.locator('#warehouseDialog .warehouse-condition')).toHaveText('剩余次数:2次');
+  await page.locator('#warehouseSellUnit').click();
+  await expect(page.locator('#gameDialogMessage')).toContainText('销毁');
+  await page.locator('#gameDialog').getByRole('button',{name:'取消',exact:true}).click();
+  await expect(page.locator('#warehouseDialog')).toBeVisible();
+  expect(await page.evaluate(id=>Economy.storedUnits().some(item=>item.id===id),id)).toBe(true);
+  await page.locator('#warehouseSellUnit').click();
+  await page.locator('#gameDialog').getByRole('button',{name:'确认',exact:true}).click();
+  await expect.poll(()=>page.evaluate(id=>Economy.storedUnits().some(item=>item.id===id),id)).toBe(false);
   expect(errors).toEqual([]);
  }finally{await app.close();}
 });

@@ -146,7 +146,7 @@ const Tactics = (() => {
   function isFleetCarrier(model) {
     return (
       !!model &&
-      (model.ship || model.hangars?.some((h) => h.kind === "sfs") ||
+      (model.ship || model.unitTags?.includes("MA") || model.hangars?.some((h) => h.kind === "sfs") ||
         (model.hangars?.some((h) => h.kind !== "sfs") &&
           (model.movementType === "air" ||
             catalog.prefabs.find((p) => p.id === model.prefabId)?.stats.movementType === "air")))
@@ -221,7 +221,7 @@ const Tactics = (() => {
           models[clean[preload.carrierIndex].unitId + "__" + clean[preload.carrierIndex].kitId],
         passenger = models[clean[index].unitId + "__" + clean[index].kitId],
         hangar = carrier.hangars?.find((h) => h.id === preload.hangarId);
-      if (!hangar || !hangar.allowedTags.some((tag) => passenger.transport?.loadTags.includes(tag)))
+      if (!hangarModule.allowsModel(hangar, passenger))
         throw Error("该单位不能预先搭载至此格纳库");
       const key = preload.carrierIndex + "/" + preload.hangarId,
         used =
@@ -872,7 +872,7 @@ const Tactics = (() => {
         choices.some(passenger => !isFleetCarrier(passenger) && passenger.weapons.length &&
           technologyRank(passenger) <= tier && carrier.cost + passenger.cost <= maxCost &&
           carrier.hangars?.some(h => h.capacity >= (passenger.transport?.slotCost || 1) &&
-            h.allowedTags.some(tag => passenger.transport?.loadTags.includes(tag)))));
+            hangarModule.allowsModel(h, passenger))));
       // Some eras begin with infantry or a unit incompatible with the available
       // transports. Open only enough additional tiers to form a viable fleet.
       for (const tier of encounterTiers) {
@@ -926,7 +926,7 @@ const Tactics = (() => {
     const slots = [];
     const passengerSlot = (model) => slots.find(slot =>
       slot.remaining >= (slot.hangar.kind === "sfs" ? 1 : model.transport?.slotCost || 1) &&
-      slot.hangar.allowedTags.some(tag => model.transport?.loadTags.includes(tag)));
+      hangarModule.allowsModel(slot.hangar, model));
     const frontlineTarget = Math.max(
       2,
       Math.ceil(((unitLimit - desiredShips * 4 - desiredTransports) * 0.8) / 2) * 2,
@@ -983,7 +983,7 @@ const Tactics = (() => {
           technologyRank(passenger) <= encounterTier &&
           passenger.weapons.length && passenger.cost <= remaining - model.cost &&
           model.hangars.some(h => h.capacity >= (passenger.transport?.slotCost || 1) &&
-            h.allowedTags.some(tag => passenger.transport?.loadTags.includes(tag))))) return false;
+            hangarModule.allowsModel(h, passenger)))) return false;
         if (
           !firstCarrier && !restrictions.aiDiverseFleet && !model.ship &&
           !support(model) &&
@@ -1066,9 +1066,7 @@ const Tactics = (() => {
                     model.hangars.some(
                       (hangar) =>
                         hangar.capacity >= (passenger.transport?.slotCost || 1) &&
-                        hangar.allowedTags.some((tag) =>
-                          passenger.transport?.loadTags.includes(tag),
-                        ),
+                        hangarModule.allowsModel(hangar, passenger),
                     )
                   );
                 }),
@@ -1178,7 +1176,7 @@ const Tactics = (() => {
           (slot) =>
             slot.carrierIndex !== index &&
             slot.remaining >= (slot.hangar.kind === "sfs" ? 1 : model.transport.slotCost) &&
-            slot.hangar.allowedTags.some((tag) => model.transport.loadTags.includes(tag)),
+            hangarModule.allowsModel(slot.hangar, model),
         )
         .filter((slot) => {
           const seen = new Set([index]);
@@ -4350,6 +4348,8 @@ const Tactics = (() => {
       if (
         u.team !== g.team ||
         u.hp <= 0 ||
+        u.contractExtracted ||
+        u.deploymentStaged ||
         (u.embarked && !hangars.launchCells(g, u).length) ||
         (u.acted && !u.plan) ||
         (ownerSeat !== null && controllerOf(g, u) !== ownerSeat)
@@ -4960,6 +4960,7 @@ const Tactics = (() => {
       allowExistingForms = false,
     ) => validateFormation(entries, maxCost, unitLimit, allowExistingForms, true),
     isFleetCarrier,
+    hangarAllowsModel: hangarModule.allowsModel,
     formationModel,
     formationModelId,
     formationWeight,

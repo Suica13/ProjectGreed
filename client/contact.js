@@ -257,7 +257,7 @@ window.ContactUI = (() => {
       entry = state.contactTasks.find((e) => e.id === task.id),
       available =
         ContactTasks.unlocked(task, state.contactTasks, state.contactIntro);
-    const unitRewards = (inventory) => {
+    const unitRewards = (inventory, temporary = false) => {
       const group = element("div", "contact-unit-rewards");
       for (const [id, count] of Object.entries(inventory)) {
         const modelId = Economy.defaultModel(id),
@@ -266,7 +266,7 @@ window.ContactUI = (() => {
           img = element("img");
         img.src = unitIcon(modelId);
         img.alt = "";
-        row.append(img, element("span", "", m.name + " ×" + count));
+        row.append(img, element("span", "", m.name + (temporary ? I18n.text("(临时单位)") : "") + " ×" + count));
         group.append(row);
       }
       return group;
@@ -283,8 +283,8 @@ window.ContactUI = (() => {
       element("h4", "", "任务目标"),
       objective,
     );
-    if (task.grant) detail.append(element("h4", "", "初始装备"), unitRewards(task.grant));
-    if (task.reclaim) detail.append(element("p", "muted", "完成目标后回收赠送的苍白骑士，已安装零件与驾驶员保留。"));
+    if (task.grant) detail.append(element("h4", "", "初始赠送："), unitRewards(task.grant, !!task.reclaim));
+    if (task.reclaim) detail.append(element("p", "muted", "临时单位不可装备零件，完成目标后自动回收并解除驾驶员配属。"));
     detail.append(element("h4", "", "任务奖励"));
     const rewards = element("div", "contact-task-rewards"),
       currency = element("div", "contact-currency-reward"),

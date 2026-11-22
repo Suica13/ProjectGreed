@@ -4,6 +4,8 @@
 const PilotSystem = (() => {
   const talents = typeof PilotTalents !== "undefined" ? PilotTalents : require("./pilot-talents.js");
   const catalog = typeof PILOT_DATA !== "undefined" ? PILOT_DATA : require("./pilots.json");
+  const commanderLeadershipBonus = 25;
+  const aceStatValue = (value, key) => key === "leadership" ? Math.round(Math.round(value) * 1.25) : value;
   const aceById = new Map((catalog.aces || []).map((p) => [p.id, p]));
   const aceProfile = (value) =>
     aceById.get(typeof value === "string" ? value : value?.aceId) || null;
@@ -14,7 +16,7 @@ const PilotSystem = (() => {
   const academyCap = (level=5) => [3,4,6,8,12][Math.max(1,Math.min(5,level))-1];
   const maxLevel = (value, academyLevel=5) => Math.min(academyCap(academyLevel), aceProfile(value)?.maxLevel ?? growthRules.maxLevel + (value?.reincarnations || 0));
   const aceStatCap = (value, key) =>
-    aceProfile(value) ? Math.round(aceProfile(value).maxStats[key]) : undefined;
+    aceProfile(value) ? Math.round(aceStatValue(aceProfile(value).maxStats[key], key)) : undefined;
   const byId = new Map(catalog.named.map((pilot) => [pilot.id, pilot]));
   const portraitsById = new Map(catalog.portraits.map((portrait) => [portrait.id, portrait]));
   function defaultPortrait(faction = "PMC") {
@@ -197,11 +199,14 @@ const PilotSystem = (() => {
     const stats = Object.fromEntries(
       Object.entries(growthStats).map(([key, n]) => [key, Math.round(n)]),
     );
+    const previousLeadership = stats.leadership;
+    stats.leadership = aceStatValue(previousLeadership, "leadership");
     // Accept exact legacy growth values, then normalize them without losing XP or rank.
     if (
       value.stats &&
       Object.keys(labels).some(
-        (key) => value.stats[key] !== stats[key] && value.stats[key] !== growthStats[key],
+        (key) => value.stats[key] !== stats[key] && value.stats[key] !== growthStats[key] &&
+          !(key === "leadership" && value.stats[key] === previousLeadership),
       )
     )
       throw Error("ACE属性由悟性成长，不能手动修改");
@@ -651,8 +656,13 @@ const PilotSystem = (() => {
     const grade = Object.hasOwn(crewGrades, gradeId) ? crewGrades[gradeId] : null;
     if (!grade || (gradeId === "enhanced" && commandUnit(model))) throw Error("驾驶员类型无效");
     const pilot = roll(null, seed, 0, 0, model);
-    for (const key of Object.keys(labels))
-      if (key !== "awakening" || gradeId === "ace") pilot.stats[key] = Math.round(pilot.stats[key] * grade.multiplier);
+    for (const key of Object.keys(labels)) {
+      if (key === "awakening" && gradeId !== "ace") continue;
+      // Each commander grade receives the same flat bonus, after grade scaling.
+      const bonus = key === "leadership" && commandUnit(model) ? commanderLeadershipBonus : 0;
+      pilot.stats[key] = Math.round((pilot.stats[key] - bonus) * grade.multiplier) + bonus;
+    }
+    if (gradeId === "ace") pilot.stats.leadership = aceStatValue(pilot.stats.leadership, "leadership");
     if (gradeId === "enhanced") pilot.stats.awakening = 75 + hash(seed + ":awakening") % 36;
     return { name: defaultName(model, gradeId), faction: model?.faction, stats: pilot.stats };
   }
@@ -739,6 +749,8 @@ const PilotSystem = (() => {
         : (command ? catalog.commanderRanges : catalog.defaultRanges)[key];
       stats[key] = low + Math.floor(random() * (high - low + 1));
     }
+    if (named) stats.leadership = aceStatValue(stats.leadership, "leadership");
+    else if (command) stats.leadership += commanderLeadershipBonus;
     return { id: named?.id || null, name: named?.name || defaultName(model),
       faction: named?.faction || model?.faction, stats };
   }
@@ -832,6 +844,7 @@ const PilotSystem = (() => {
     combatExperience,
     aceBaseCost,
     aceStatCap,
+    aceStatValue,
     maxLevel,
     createAce,
     recruitAce,

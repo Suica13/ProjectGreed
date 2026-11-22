@@ -26,6 +26,21 @@ test('only participating rentals consume a use at final settlement and repair al
  assert.equal(E.creditAward(result('battle',item.id)),false);
  E.creditAward(result('battle',item.id,{id:'another-receipt'}));assert.equal(E.snapshot().storage.units.find(i=>i.id===item.id).rentalUses,1);
 });
+
+test('discarding a rental removes only that copy, detaches its pilot and never refunds preset parts or currency',()=>{
+ const {E}=load();E.creditActivity(gift({inventory:{RGM_79:1}}));
+ const rental=E.snapshot().storage.units.find(item=>item.rentalUses);
+ E.setStoredPilot(rental.id,'rental-pilot');const before=E.snapshot();
+ assert(E.discardStoredUnit(rental.id));const after=E.snapshot();
+ assert.equal(after.money,before.money);assert.equal(after.supplies,before.supplies);
+ assert.equal(E.quantity('RGM_79'),before.inventory.RGM_79-1);
+ assert(!after.storage.units.some(item=>item.id===rental.id||item.pilotId==='rental-pilot'));
+ assert.equal(after.storage.units.filter(item=>item.rentalUses).length,1);
+ assert.equal(after.storage.units.filter(item=>!item.rentalUses).length,1);
+ assert.equal(E.pluginQuantity('frame'),0);
+ assert.equal(E.discardStoredUnit(rental.id),false);
+ const restored=load(after).E;assert(!restored.storedUnits().some(item=>item.id===rental.id));
+});
 test('destroyed rental repairs at settlement, expires after next battle and detaches its pilot without affecting owned duplicates',()=>{
  const {E}=load();E.creditActivity(gift({inventory:{RGM_79:1}}));const item=E.snapshot().storage.units.find(i=>i.rentalUses),before=E.quantity('RGM_79');E.setStoredPilot(item.id,'pilot');
  E.creditAward({id:'loss',matchId:'battle',money:0,supplies:0,kind:'loss',stockLost:{inventory:{RGM_79:1}},stockLostItems:[{stockId:item.id,unitId:'RGM_79',kitId:item.kitId}]});

@@ -14,7 +14,11 @@ test('standalone browser loads shared talents and displays stable roster and com
     const entry={unitId:'RGM_79',kitId:'machine_gun'};
     const g=Rules.create(false,123,[[entry],[entry]]);
     const unit=g.units[0];unit.pilot={...p,stats:{...p.stats,leadership:101}};
+    const aceSource=PilotSystem.catalog.aces.find(source=>source.price),ace=PilotSystem.createAce(aceSource.id);
     return {count:PilotSystem.talents.catalog.length,fresh:p.talents.length,ids:old.talents,
+      commander: PilotSystem.generalPMC('pmc-general-browser',true).stats.leadership,
+      aceLeadership:ace.stats.leadership,aceExpected:Math.round(Math.round(aceSource.baseStats.leadership)*1.25),
+      aceReload:PilotSystem.custom(JSON.parse(JSON.stringify(ace))).stats.leadership,
       reread:PilotSystem.custom(JSON.parse(JSON.stringify(old))).talents,
       badges:summary.querySelectorAll('[data-pilot-talent]').length,
       command:SkillControls.commandAbilities(Rules.modelOf(unit),unit)};
@@ -22,5 +26,7 @@ test('standalone browser loads shared talents and displays stable roster and com
   expect(result.count).toBe(50);expect(result.fresh).toBe(0);expect(result.badges).toBe(3);
   expect(result.reread).toEqual(result.ids);
   expect(result.command[0].description).toContain('指挥高于100');
+  expect(result.commander).toBeGreaterThanOrEqual(115);expect(result.commander).toBeLessThanOrEqual(135);
+  expect(result.aceLeadership).toBe(result.aceExpected);expect(result.aceReload).toBe(result.aceLeadership);
   expect(errors).toEqual([]);
 });
