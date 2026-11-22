@@ -10,7 +10,7 @@ for(const width of [1440,390])test(`delegation cannot start outside a ready batt
     let requests=0;
     Net.request=()=>requests++;
     Net.seat=0;Net.awaiting=null;
-    const snapshot={started:true,phase:'sweep_map',delegatedSeats:[],game:{winner:null,units:[]}};
+    const snapshot={started:true,phase:'assembly',delegatedSeats:[],game:{winner:null,units:[]}};
     Net.snapshot=snapshot;
     const button=byId('campaignDelegationToggle');
     const check=async()=>{CampaignUI.refreshBattleControls();const state={hidden:button.hidden,disabled:button.disabled};button.click();await Promise.resolve();await Promise.resolve();return state;};

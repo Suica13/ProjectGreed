@@ -573,7 +573,8 @@
         "EF_RB_79K_Cannon",
         "EF_RB_79K_Anchor",
         "Common_Cqb_BF_B"
-      ]
+      ],
+      "conversionBaseCost": 0
     }
   ],
   "description": "铁球的先行量产型,拥有抵抗扎古机枪能力的月神钛合金装甲",

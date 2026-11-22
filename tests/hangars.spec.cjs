@@ -276,3 +276,30 @@ for (const width of [1440, 390]) test(`cargo transfer to nested SFS and back at 
   assert(await page.locator('[data-cargo-id="0-1"]').isVisible());
   assert.deepEqual(errors,[]);
 });
+
+for (const width of [1440, 390])
+test(`cargo multiselection preserves scroll and playback follows log filter at ${width}px`, async ({page}) => {
+  await page.setViewportSize({width,height:700});
+  await fixture(page);
+  await page.evaluate(() => {
+    const ship = getUnit("0-0"), prototype = getUnit("0-1");
+    game.units = [ship, ...Array.from({length:6}, (_,i) => ({
+      ...structuredClone(prototype), id:"cargo-scroll-"+i,
+      embarked:{carrierId:ship.id,hangarId:Rules.hangars.of(ship)[Math.floor(i/3)].id,boardRound:0},
+      acted:false,
+    }))];
+    Rules.hangars.sync(game); HangarUI.open(ship);
+    byId("mapCombatControls").hidden = false;
+  });
+  const content=page.locator("#hangarDialog .hangar-content");
+  const icon=page.locator('[data-cargo-id="cargo-scroll-5"] img');
+  await icon.scrollIntoViewIfNeeded();
+  const before=await content.evaluate(el=>el.scrollTop);
+  assert(before>0); await icon.click();
+  assert.equal(await page.locator('[data-cargo-id="cargo-scroll-5"] img').getAttribute("aria-pressed"),"true");
+  assert(Math.abs((await content.evaluate(el=>el.scrollTop))-before)<2);
+  await page.locator('[data-cargo-id="cargo-scroll-4"] img').click();
+  assert.equal(await page.locator('#hangarDialog img[aria-pressed="true"]').count(),2);
+  assert((await content.evaluate(el=>el.scrollTop))>0);
+  assert(await page.evaluate(()=>byId("battleLogView").nextElementSibling===byId("mapCombatControls") && !byId("mapCombatControls").closest(".map-camera-controls")));
+});

@@ -9,6 +9,7 @@ const GameAudio = (() => {
     generation++;
   }
   function play(key) {
+    if (key === "sonarSound") return WeaponAudio.sonar();
     playSound(ART.presentation[key], "ui");
   }
   function actionAccepted(action, unit = null) {

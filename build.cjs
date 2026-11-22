@@ -144,11 +144,12 @@ for (const [key, file] of [
   ["SFS_UI", "client/sfs-ui.js"],
   ["AI_TACTICS", "shared/ai-tactics.js"],
   ["BATTLEFIELD_MODE", "shared/battlefield-mode.js"],
-  ["SWEEP_MODE", "shared/sweep-mode.js"],
+  ["SWEEP_MODE", "shared/contract-mode.js"],
   ["MISSION_MODE", "shared/mission-mode.js"],
   ["MISSION_UI", "client/mission-ui.js"],
   ["NORMAL_FORMS", "shared/normal-forms.js"],
-  ["SWEEP_UI", "client/sweep-ui.js"],
+  ["BRIEFING_UI", "client/briefing-ui.js"],
+  ["SWEEP_UI", "client/contract-ui.js"],
   ["BATTLEFIELD_UI", "client/battlefield-ui.js"],
   ["SITE_CONTROL", "shared/site-control.js"],
   ["AUTOMATIC_FIRE", "shared/automatic-fire.js"],
@@ -208,7 +209,7 @@ for (const [key, file] of [
           stdin:{contents:'export { gunzipSync } from "fflate";',resolveDir:root},bundle:true,write:false,
           platform:"browser",format:"iife",globalName:"CatalogInflate",target:"chrome80",minify:true,legalComments:"eof"
         }).outputFiles[0].text + "\n/*! " + read("node_modules/fflate/LICENSE") + " */\n" + read(file))
-      : inlineScript((key === "ECONOMY" ? 'const UNIT_PLUGIN_DATA = '+read("shared/unit-plugins.json")+';\n'+read("shared/unit-plugins.js")+'\nconst BASE_FACILITY_TYPES = '+read("shared/base-facility-types.json")+';\n'+read("shared/base-facilities.js")+'\n'+read("shared/warehouse.js") + "\n" : key === "PROFILE_SAVE" ? read("client/profile-save-core.js") + "\n" : key === "SWEEP_UI" ? read("client/sweep-restock.js") + "\n" : "") + read(file)),
+      : inlineScript((key === "ECONOMY" ? read("shared/contact-tasks.js")+"\n"+'const MERCHANT_DATA = '+read("shared/merchant-catalog.json")+';\nconst UNIT_PLUGIN_DATA = '+read("shared/unit-plugins.json")+';\n'+read("shared/unit-plugins.js")+'\nconst BASE_FACILITY_TYPES = '+read("shared/base-facility-types.json")+';\n'+read("shared/base-facilities.js")+'\n'+read("shared/warehouse.js") + "\n" : key === "PROFILE_SAVE" ? read("client/profile-save-core.js") + "\n" : "") + read(file)),
   );
 html = html.replace("</body>", () => `<style>${read("client/warehouse.css")}\n${read("client/unit-panels.css")}\n${read("client/base-facilities.css")}\n${read("client/base-pages.css")}\n${read("client/contact.css")}</style><script>${inlineScript(read("client/warehouse.js"))}\n${inlineScript(read("client/base-facilities.js"))}\n${inlineScript(read("client/contact.js"))}</script></body>`);
 const layout = JSON.parse(read("client/ui-layout.json"));
@@ -219,7 +220,7 @@ html = html.replace(
 );
 html = html
   .replace("__MENU_SHELL_CSS__", () => read("client/menu-shell.css"))
-  .replace("__BLUE_THEME_CSS__", () => read("client/blue-theme.css") + "\n" + read("client/sweep-ui.css"));
+  .replace("__BLUE_THEME_CSS__", () => read("client/blue-theme.css") + "\n" + read("client/contract-ui.css") + "\n" + read("client/briefing-ui.css"));
 // Fixed virtual game dimensions keep viewport-sized panels inside landscape black bars.
 // Use supported vh/vw fallbacks; CSS selects dynamic units only after feature detection.
 // Keep feature queries and the unit definitions themselves intact (no recursive variables).
@@ -245,10 +246,6 @@ if (grantFlag >= 0) {
     "</body>",
     () => `<script id="local-profile-grant">${inlineScript(script)}</script></body>`,
   );
-}
-for (const asset of ["mission-background.png", "mission-scenes.png"]) {
-  const name = "assets/sweep/" + asset;
-  html = html.replaceAll(name, "data:image/png;base64," + fs.readFileSync(path.join(root, name)).toString("base64"));
 }
 for (const asset of ["warehouse-unit-topdown.webp", "warehouse-ship-topdown.webp"]) {
   const name = "assets/ui/" + asset;

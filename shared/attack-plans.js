@@ -606,6 +606,8 @@ function createAttackPlanner(rules, randomId) {
           ? "defend"
           : requestedResponse;
       chooseOne(staged, request.id, stance, counterId, targetId, choice?.weaponIds ?? null);
+      // The whole selected squad faces its chosen enemy, even members without a legal counter weapon.
+      if (requestedResponse === "counter") rules.faceTarget(defender, attacker);
     }
     room.reactions = staged.reactions;
     room.responses = staged.responses;

@@ -1,13 +1,11 @@
 /* 收到整批裁定后并行播放；本机完成只确认本机，全员完成后由服务端交接回合。 */
 const CombatPlayback = (() => {
   let matchId = null;
-  let sweepBattle = null;
   const seen = new Set(),
     finished = new Set(),
     queue = [];
   function reset() {
     matchId = null;
-    sweepBattle = null;
     seen.clear();
     finished.clear();
     queue.length = 0;
@@ -15,16 +13,13 @@ const CombatPlayback = (() => {
     IrradiationFX.reset();
   }
   function receive(snapshot, live) {
-    const nextSweepBattle = snapshot.sweep?.battleIndex ?? null;
-    if (matchId !== snapshot.matchId || sweepBattle !== nextSweepBattle) {
+    if (matchId !== snapshot.matchId) {
       reset();
       matchId = snapshot.matchId;
-      sweepBattle = nextSweepBattle;
       battleView = null;
     }
-    // A route/deployment snapshot supersedes every presentation from the last
-    // node, even when the match ID and actor IDs are reused in the next battle.
-    if (["sweep_map", "sweep_event", "sweep_resupply", "deployment"].includes(snapshot.phase)) {
+    // Deployment supersedes any unfinished presentation from an earlier battle.
+    if (snapshot.phase === "deployment") {
       queue.length = 0;
       if (active()) {
         battleView = null;

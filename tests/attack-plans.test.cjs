@@ -98,6 +98,17 @@ test("focused fire has one response and counters only attacking squads", () => {
   assert(counters.every((battle) => [a.id, ally.id].includes(battle.events[0].to)));
   assert.equal(b.counterCount, 1);
 });
+
+test("selecting a squad counter faces every member toward the enemy, including members unable to fire", () => {
+  const { room, planner, a, b, other } = fixture();
+  Object.assign(b, { x: 6, y: 5, squadId: "defenders", squadSlot: 0, angle: 0 });
+  Object.assign(other, { x: 6, y: 5, squadId: "defenders", squadSlot: 1, angle: 0, en: 0 });
+  planner.plan(room, a, b, null, 0);
+  const [request] = planner.prepare(room);
+  planner.choose(room, request.id, "counter", [], a.id);
+  assert.equal(b.angle, -90);
+  assert.equal(other.angle, -90);
+});
 for (const response of ["defend", "evade"])
   test("focused fire shares " + response + " across all attackers", () => {
     const { room, planner, a, ally, b } = fixture();

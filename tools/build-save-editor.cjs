@@ -34,6 +34,7 @@ function buildSaveEditor(root = path.resolve(__dirname, "..")) {
     STARTER_PROFILE: JSON.parse(read("shared/starter-profile.json")),
     PRODUCTION_CATALOG: require("../shared/production-data.cjs"),
     UNIT_PLUGIN_DATA: JSON.parse(read("shared/unit-plugins.json")),
+    MERCHANT_DATA: JSON.parse(read("shared/merchant-catalog.json")),
     BASE_FACILITY_TYPES: JSON.parse(read("shared/base-facility-types.json")),
     AI_UNIT_BANS: JSON.parse(read("shared/ai-unit-bans.json")),
   };
@@ -54,6 +55,7 @@ function buildSaveEditor(root = path.resolve(__dirname, "..")) {
     "shared/unit-plugins.js",
     "shared/warehouse.js",
     "shared/base-facilities.js",
+    "shared/contact-tasks.js",
     "shared/economy.js",
     "shared/development.js",
     "shared/battlefield-climate.js",
@@ -62,6 +64,7 @@ function buildSaveEditor(root = path.resolve(__dirname, "..")) {
     "shared/site-control.js",
     "shared/battlefield-mode.js",
     "shared/automatic-fire.js",
+    "shared/contract-mode.js",
     "shared/rules.js",
   ];
   const compressed = require("node:zlib")

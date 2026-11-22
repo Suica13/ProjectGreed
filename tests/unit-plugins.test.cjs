@@ -37,8 +37,9 @@ test('beam modifications update actual firing steps and maximum range, leaving s
   for(let i=0;i<weapon.attack.strikes.length;i++)if(Number.isFinite(weapon.attack.strikes[i].accuracy))assert.equal(changed.attack.strikes[i].accuracy,Math.min(100,weapon.attack.strikes[i].accuracy+20));
   for(const w of base.weapons.filter(w=>w.type==='melee'||w.type==='shell'))assert.strictEqual(m.weapons.find(next=>next.id===w.id),w);
 });
-test('fitting is free, persists across reloads, preserves damage, and repair uses equipped maxima',()=>{
-  const E=economy();E.creditActivity({id:'plugin-stock',matchId:'plugin-stock',money:0,supplies:0,inventory:{RGM_79:1}});
+test('purchased equipment fits without additional fees, persists and preserves damage',()=>{
+  const E=economy();E.creditActivity({id:'plugin-stock',matchId:'plugin-stock',money:100000,supplies:0,inventory:{RGM_79:1}});
+  E.purchasePlugin('anaheim','frame');E.purchasePlugin('anaheim','generator');
   const before=E.snapshot(),item=before.storage.units[0],id=item.id;
   E.creditAward({id:'plugin-damage',matchId:'plugin-damage',money:0,supplies:0,stockStates:[{stockId:id,unitId:item.unitId,kitId:item.kitId,hp:Math.round(item.hp/2),en:0,brokenParts:{}}]});
   assert(E.setStoredPlugin(id,0,'frame'));assert(E.setStoredPlugin(id,1,'generator'));
@@ -86,13 +87,4 @@ test('room authority uses stored plugin IDs when creating quick-match actors',t=
   assert.deepEqual(actors.map(actor=>actor.plugins[0]).sort(),['armor','generator']);
   for(const actor of actors){assert.equal(actor.hp,G.modelOf(actor).hp);assert.equal(actor.en,G.modelOf(actor).en);}
   assert.equal(errors.length,0);
-});
-
-test('sweep checkpoints preserve plugins and recover the equipped resource maxima',()=>{
-  const S=require('../shared/sweep-mode');
-  const units=[G.makeUnit({unitId:'Medea',kitId:'standard',plugins:['armor','generator']},0,0,{x:1,y:1}),G.makeUnit({unitId:'RGM_79',kitId:'beam_spray',plugins:['frame','generator']},0,1,{x:2,y:1})];
-  units.forEach((unit,index)=>{unit.formationIndex=index;unit.hp=1;unit.en=0;});
-  const room={settings:G.defaultRoomSettings(),seats:[{id:'p',seat:0}],sweep:{seed:1,depth:0,rosters:{p:units.map((_,index)=>({battleSlot:index,state:{}}))},losses:{p:[]}},game:{winner:1,units}};
-  S.checkpoint(room,G);
-  for(const record of room.sweep.rosters.p){const model=G.modelOf(record.state);assert.equal(record.state.hp,model.hp);assert.equal(record.state.en,model.en);assert(record.state.plugins.some(Boolean));}
 });

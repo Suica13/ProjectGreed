@@ -1,0 +1,13 @@
+[
+  {
+    "id": "efsf",
+    "name": "地球联邦军",
+    "portraitId": "Pilot_EFSF_0079_Common_1"
+  },
+  {
+    "id": "anaheim",
+    "name": "阿纳海姆",
+    "portraitId": "Pilot_EFSF_0079_Common_2",
+    "sellsPlugins": true
+  }
+]

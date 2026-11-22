@@ -1,18 +1,287 @@
-.contact-content { flex:1;min-height:0;overflow:auto;padding:16px;background:#0d1924; }
-.contact-tasks { padding:12px 16px;border:1px solid #3d5868;background:#142c3d; }
-.contact-merchants { display:flex;flex-wrap:nowrap;align-items:flex-start;gap:18px;overflow-x:auto;padding:4px 4px 16px; }
-.contact-merchants[hidden],.contact-tasks[hidden] { display:none; }
-.merchant-card { flex:0 0 240px;display:grid;gap:10px;box-sizing:border-box;padding:10px;border:1px solid #4d7790;border-radius:4px;background:#163248; }
-.merchant-portrait { height:220px;display:grid;place-items:center;border:1px solid #638aa1;background:linear-gradient(145deg,#244b65,#0b1c2b);box-shadow:inset 0 0 24px #06121d88; }
-.merchant-portrait img { display:block;width:80%;height:80%;object-fit:contain;image-rendering:pixelated; }
-.merchant-information { min-width:0;border:1px solid #456b83;background:#102638; }
-.merchant-information h3 { margin:0;padding:10px 12px;border-bottom:1px solid #456b83;color:#cceaff;font-size:16px; }
-.merchant-information dl { margin:0;padding:10px 12px;display:grid;grid-template-columns:1fr auto;gap:8px 16px;font-size:13px; }
-.merchant-information dt { color:#9bb9cc; }
-.merchant-information dd { margin:0;color:#e6f4ff;font-weight:600; }
-@media(max-width:720px) {
-  .contact-content {padding:10px;}
-  .contact-merchants {gap:12px;}
-  .merchant-card {flex-basis:210px;}
-  .merchant-portrait {height:190px;}
+﻿.contact-content {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 16px;
+  background: #0d1924;
 }
+.contact-merchants {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 4px 4px 16px;
+}
+.contact-merchants[hidden],
+.contact-tasks[hidden] {
+  display: none;
+}
+.merchant-card {
+  flex: 0 1 216px;
+  min-width: 0;
+  display: grid;
+  gap: 9px;
+  box-sizing: border-box;
+  padding: 9px;
+  border: 1px solid #4d7790;
+  border-radius: 4px;
+  background: #163248;
+}
+body button.merchant-portrait {
+  padding: 0;
+  width: 100%;
+  aspect-ratio: 1/1;
+  display: grid;
+  place-items: center;
+  border: 1px solid #638aa1;
+  background: linear-gradient(145deg, #244b65, #0b1c2b);
+  box-shadow: inset 0 0 24px #06121d88;
+}
+.merchant-portrait:hover {
+  outline: 1px solid #8ed7ff;
+}
+.merchant-portrait img {
+  display: block;
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+.merchant-information {
+  min-width: 0;
+  border: 1px solid #456b83;
+  background: #102638;
+}
+.merchant-information h3 {
+  margin: 0;
+  padding: 9px 10px;
+  border-bottom: 1px solid #456b83;
+  color: #cceaff;
+  font-size: 15px;
+  text-align: center;
+}
+.merchant-information dl {
+  margin: 0;
+  padding: 9px 10px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 7px 14px;
+  font-size: 12px;
+}
+.merchant-information dt {
+  color: #9bb9cc;
+}
+.merchant-information dd {
+  margin: 0;
+  color: #e6f4ff;
+  font-weight: 600;
+}
+body dialog.contact-terminal {
+  box-sizing: border-box;
+  width: min(1100px, 94vw);
+  height: min(780px, 88dvh);
+  max-height: 88dvh;
+  max-width: 94vw;
+  padding: 0;
+  border: 1px solid #6191ae;
+  border-radius: 6px;
+  background: #0d1b29;
+  color: #dbe9f3;
+  box-shadow: 0 15px 65px #000a;
+}
+body dialog.contact-terminal[open] {
+  display: flex;
+  flex-direction: column;
+}
+.contact-terminal::backdrop {
+  background: #030c17b8;
+}
+.contact-terminal-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #47708c;
+  background: #17394e;
+  flex-shrink: 0;
+}
+.contact-terminal-nav h2 {
+  margin: 0 auto 0 0;
+  font-size: 18px;
+  color: #a8e3ff;
+}
+.contact-terminal-nav > span {
+  font-size: 12px;
+  white-space: nowrap;
+}
+.contact-terminal-nav .resource-balance {
+  margin: 0 8px;
+  gap: 10px;
+}
+.contact-terminal-nav button {
+  padding: 6px 12px;
+}
+.contact-terminal-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 16px;
+}
+.contact-terminal-status {
+  margin: 40px 0 20px;
+  text-align: center;
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  color: #82c8de;
+}
+.contact-terminal-menu {
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+  align-items: center;
+  min-height: 280px;
+}
+.contact-terminal-menu button {
+  width: 180px;
+  height: 100px;
+  font-size: 22px;
+  background: #204b66;
+  border: 1px solid #579abf;
+}
+.contact-empty {
+  padding: 32px;
+  text-align: center;
+  border: 1px solid #35566e;
+  background: #142c3f;
+}
+.contact-shop-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.contact-shop-toolbar input {
+  margin-left: auto;
+  min-width: 0;
+  width: 210px;
+  box-sizing: border-box;
+}
+.merchant-products {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.merchant-product {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  padding: 12px;
+  min-width: 0;
+  background: #142e42;
+  border: 1px solid #3e6580;
+  border-radius: 3px;
+}
+.merchant-product h3 {
+  font-size: 14px;
+  margin: 0;
+  min-height: 36px;
+  overflow-wrap: anywhere;
+}
+.merchant-product .resource-balance {
+  font-size: 12px;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.merchant-product > button {
+  justify-self: stretch;
+}
+.merchant-product .unit-plugin-card {
+  min-width: 0;
+}
+.plugin-stock-count {
+  display: block;
+  text-align: right;
+  font-size: 11px;
+  color: #9cc8e1;
+  margin-top: 5px;
+}
+@media (max-width: 720px) {
+  .contact-content {
+    padding: 10px;
+  }
+  .contact-merchants {
+    gap: 12px;
+  }
+  .merchant-card {
+    flex-basis: 189px;
+    padding: 8px;
+    gap: 8px;
+  }
+  .merchant-information h3 {
+    font-size: 13px;
+    padding: 8px;
+  }
+  .merchant-information dl {
+    padding: 8px;
+    gap: 6px;
+    font-size: 11px;
+  }
+  .contact-terminal-nav {
+    padding: 10px;
+    gap: 8px;
+  }
+  .contact-terminal-nav h2 {
+    font-size: 16px;
+  }
+  .contact-terminal-nav .resource-balance {
+    order: 2;
+    flex-basis: 100%;
+    margin: 0;
+  }
+  .contact-terminal-body {
+    padding: 10px;
+  }
+  .contact-terminal-menu {
+    gap: 12px;
+  }
+  .contact-terminal-menu button {
+    width: 42%;
+    height: 90px;
+  }
+  .merchant-products {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .merchant-product {
+    padding: 8px;
+  }
+  .merchant-plugin {
+    grid-column: 1/-1;
+  }
+  .contact-shop-toolbar {
+    gap: 8px;
+  }
+  .contact-shop-toolbar input {
+    width: 100%;
+  }
+}
+/* Liaison task list, dialogue and overflow reward storage. */
+.contact-task-layout{display:grid;grid-template-columns:minmax(160px,28%) 1fr;gap:16px;min-height:400px}
+.contact-task-list{display:flex;flex-direction:column;gap:8px}
+.contact-task-list button{text-align:left;min-height:44px}
+.contact-task-list button[aria-pressed=true]{background:#20536e;border-color:#69c8eb}
+.contact-task-detail{min-width:0;background:#112431;border:1px solid #42677e;padding:18px}
+.contact-task-description{white-space:pre-wrap;line-height:1.8}
+.contact-task-rewards{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:16px 0}
+.contact-unit-reward{display:flex;align-items:center;gap:8px;background:#1b3445;padding:6px}
+.contact-unit-reward img{width:48px;height:48px;object-fit:contain;background:#0e1e2b;border:1px solid #52798f}
+.contact-accepted-task{display:flex;flex-wrap:wrap;align-items:center;gap:16px;padding:18px;border:1px solid #4d7287;margin-bottom:12px;background:#142b39}
+.liaison-dialogue{display:grid;grid-template-columns:128px 1fr;gap:20px;align-items:center;min-height:300px;padding:20px;background:#102937;border:1px solid #4e91b0}
+.liaison-dialogue>small{grid-column:1/-1}.liaison-dialogue>img{width:128px;height:128px;object-fit:contain;background:#163c4d;border:1px solid #5d9fb5}.liaison-dialogue p{white-space:pre-wrap;line-height:1.9;font-size:1.1em}.liaison-dialogue>button{grid-column:2;justify-self:end;min-width:120px}
+.warehouse-delivery-list{display:flex;flex-direction:column;gap:10px}
+.warehouse-delivery-card{display:flex;align-items:center;gap:14px;padding:12px;background:#152f41;border:1px solid #4b6f85}
+.warehouse-delivery-card>img{width:80px;height:80px;object-fit:contain;background:#10202f;border:1px solid #4b7188}
+.warehouse-delivery-card>div{display:flex;flex-direction:column;gap:8px;flex:1;min-width:0}.warehouse-delivery-card>button{flex-shrink:0}
+@media(max-width:720px){.contact-task-layout{grid-template-columns:1fr}.contact-task-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.contact-task-detail{padding:12px}.liaison-dialogue{grid-template-columns:80px 1fr;padding:12px;gap:12px}.liaison-dialogue>img{width:80px;height:80px}.warehouse-delivery-card>img{width:60px;height:60px}}

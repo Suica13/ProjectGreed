@@ -464,7 +464,8 @@
       "weapons": [
         "EF_RB_79_Cannon",
         "Common_Cqb_A"
-      ]
+      ],
+      "conversionBaseCost": 0
     }
   ],
   "description": "联邦军中距离支援用太空舱,常配合MS进行战斗",

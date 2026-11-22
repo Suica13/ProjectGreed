@@ -1,0 +1,1114 @@
+/* One cooperative battlefield, with authoritative objectives and shared extraction. */
+"use strict";
+const ContractMode = (() => {
+  const contacts = typeof ContactTasks !== "undefined" ? ContactTasks : require("./contact-tasks.js");
+  const covers = {
+    ground: "assets/maps/covers/contract-ground.svg",
+    space: "assets/maps/covers/contract-space.svg",
+  };
+  const costs = [2000, 4000, 6000, 8000, 10000, 12500, 15000, 17500, 20000];
+  const difficulties = costs.map((costLimit, index) => ({
+    id: index + 1,
+    name: "N" + (index + 1),
+    costLimit,
+    fleetLimit: 1 + Math.floor(index / 3),
+    events: index + 1,
+    width: 60 + Math.floor(index * 8.5),
+    height: 38 + Math.floor(index * 10.75),
+  }));
+  const kinds = [
+    {
+      type: "salvage",
+      name: "回收战场资料",
+      hint: "进入白色3×3范围，选择单位并点击行动栏的回收。",
+    },
+    { type: "command", name: "消灭小股敌人势力", hint: "消灭所有标记为目标的敌人。" },
+    {
+      type: "factory",
+      name: "破坏敌方工厂",
+      hint: "击毁所有工厂；攻击会引来支援，每座工厂被毁都会引来边缘巡逻队。",
+    },
+    {
+      type: "capture",
+      name: "占领敌方据点",
+      hint: "进入红色5×5范围启动占领，保持控制五回合；敌军进入时暂停推进。",
+    },
+  ];
+  // Server-only patrol routes, awareness and damage history never enter snapshots.
+  const brains = new WeakMap();
+  const pools = new WeakMap();
+  const mapId = (environment, difficulty = 1) =>
+    "contract_" +
+    (environment === "space" ? "space" : "ground") +
+    (Number(difficulty) > 1 ? "_n" + config(difficulty).id : "");
+  function random(seed) {
+    let n = seed >>> 0;
+    return () => {
+      n = (Math.imul(n, 1664525) + 1013904223) >>> 0;
+      return n / 4294967296;
+    };
+  }
+  function config(value = 1, era = "UC_0079_T1") {
+    const result = difficulties.find((d) => d.id === Number(value));
+    if (!result) throw Error("合约难度无效");
+    const stage = ["UC_0079_T1", "UC_0079_T2", "UC_0087_T1", "UC_0087_T2", "UC_0093_T1"].indexOf(era);
+    return { ...result, costLimit: Math.round(result.costLimit * 1.25 ** Math.max(0, stage)) };
+  }
+  function roomSettings(settings) {
+    const d = config(settings.sweepDifficulty, settings.sweepEra);
+    return { costLimit: d.costLimit, mapId: mapId(settings.sweepEnvironment, d.id), fogMode: "full", pilotPolicy: "allow" };
+  }
+  function edgeArea(w, h, side, rng, width, height) {
+    const offset = (maximum) => 3 + Math.floor(rng() * Math.max(1, maximum - 5));
+    return side === 0
+      ? { x: 0, y: offset(h - height), width, height }
+      : side === 1
+        ? { x: w - width, y: offset(h - height), width, height }
+        : side === 2
+          ? { x: offset(w - width), y: 0, width, height }
+          : { x: offset(w - width), y: h - height, width, height };
+  }
+  function registerMaps(catalog) {
+    for (const environment of ["ground", "space"])
+      for (const d of difficulties) {
+        const id = mapId(environment, d.id);
+        if (catalog.maps[id]) continue;
+        const source =
+          catalog.maps[environment === "space" ? "outer_orbit_5v5" : "great_plains_5v5"];
+        if (!source) continue;
+        const map = structuredClone(source),
+          entry = {
+            x: 0,
+            y: Math.floor((d.height - (12 + d.fleetLimit - 1)) / 2),
+            width: 16 + (d.fleetLimit - 1) * 2,
+            height: 12 + d.fleetLimit - 1,
+          };
+        Object.assign(map, {
+          id,
+          width: d.width,
+          height: d.height,
+          name: (environment === "space" ? "合约作战·宇宙" : "合约作战·地面") + " · " + d.name,
+          description: "每局随机战场，从边缘入场并逐单位撤离。",
+          cover: covers[environment],
+          playersPerTeam: 4,
+          supportedModes: ["sweep"],
+          tiles: Array.from({ length: d.height }, () => Array(d.width).fill("plain")),
+          spawns: [],
+          deploymentAreas: [],
+        });
+        for (const key of [
+          "localization",
+          "battlefield",
+          "mission",
+          "cellEnvironments",
+          "decorations",
+          "objects",
+          "tileMap",
+        ])
+          delete map[key];
+        for (let i = 0; i < 4; i++) {
+          map.spawns.push(
+            { team: 0, position: i + 1, x: entry.x + 4 + i * 3, y: entry.y + 5 },
+            {
+              team: 1,
+              position: i + 1,
+              x: Math.floor(d.width / 2) + i,
+              y: Math.floor(d.height / 2),
+            },
+          );
+          map.deploymentAreas.push(
+            { ...entry },
+            {
+              x: Math.floor(d.width / 2) - 6,
+              y: Math.floor(d.height / 2) - 5,
+              width: 14,
+              height: 12,
+            },
+          );
+        }
+        catalog.maps[id] = map;
+      }
+    delete catalog.maps.battlefield_sweep;
+  }
+  function generateMap(catalog, settings, seed) {
+    const d = config(settings.sweepDifficulty),
+      map = structuredClone(catalog.maps[mapId(settings.sweepEnvironment, d.id)]),
+      rng = random(seed ^ 0xa53c9e17),
+      w = map.width,
+      h = map.height,
+      space = settings.sweepEnvironment === "space",
+      side = Math.floor(rng() * 4),
+      entry = edgeArea(w, h, side, rng, 14 + d.fleetLimit * 2, 11 + d.fleetLimit),
+      extraction = edgeArea(w, h, (side + 2) % 4, rng, 8, 8),
+      center = (r) => ({ x: Math.floor(r.x + r.width / 2), y: Math.floor(r.y + r.height / 2) }),
+      locations = [];
+    const clear = (point, radius) => {
+      for (let y = Math.max(0, point.y - radius); y <= Math.min(h - 1, point.y + radius); y++)
+        for (let x = Math.max(0, point.x - radius); x <= Math.min(w - 1, point.x + radius); x++)
+          map.tiles[y][x] = "plain";
+    };
+    // Coherent patches leave open ground/space between forests, ruins, lakes or asteroid fields.
+    for (let i = 0; i < Math.floor((w * h) / (space ? 110 : 70)); i++) {
+      const cx = Math.floor(rng() * w),
+        cy = Math.floor(rng() * h),
+        rx = 2 + Math.floor(rng() * 5),
+        ry = 2 + Math.floor(rng() * 4),
+        roll = rng(),
+        kind = space
+          ? roll < 0.75
+            ? "rubble"
+            : "rock"
+          : roll < 0.55
+            ? "forest"
+            : roll < 0.72
+              ? "rubble"
+              : roll < 0.85
+                ? "water"
+                : roll < 0.94
+                  ? "rock"
+                  : "highland";
+      for (let y = Math.max(0, cy - ry); y <= Math.min(h - 1, cy + ry); y++)
+        for (let x = Math.max(0, cx - rx); x <= Math.min(w - 1, cx + rx); x++)
+          if (((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2 < 0.65 + rng() * 0.35)
+            map.tiles[y][x] = kind;
+    }
+    for (let attempt = 0; locations.length < d.events && attempt < 2000; attempt++) {
+      const point = { x: 10 + Math.floor(rng() * (w - 20)), y: 9 + Math.floor(rng() * (h - 18)) };
+      if (
+        [entry, extraction].every(
+          (r) =>
+            !inside(point, { x: r.x - 4, y: r.y - 4, width: r.width + 8, height: r.height + 8 }),
+        ) &&
+        [center(entry), center(extraction), ...locations].every(
+          (p) => distance(point, p) > Math.min(w, h) * 0.19,
+        )
+      )
+        locations.push(point);
+    }
+    if (locations.length !== d.events) throw Error("无法生成合约事件布局");
+    // Broad corridors keep objectives and extraction reachable by large ship footprints.
+    const path = (a, b) => {
+      let x = a.x,
+        y = a.y;
+      const first = rng() < 0.5;
+      while (x !== b.x || y !== b.y) {
+        clear({ x, y }, 5);
+        if ((first && x !== b.x) || y === b.y) x += Math.sign(b.x - x);
+        else y += Math.sign(b.y - y);
+      }
+      clear(b, 6);
+    };
+    const start = center(entry);
+    for (const point of [
+      ...locations,
+      center(extraction),
+      { x: Math.floor(w / 2), y: Math.floor(h / 2) },
+    ])
+      path(start, point);
+    for (const area of [entry, extraction])
+      for (let y = area.y; y < area.y + area.height; y++)
+        for (let x = area.x; x < area.x + area.width; x++) map.tiles[y][x] = "plain";
+    for (let i = 0; i < 4; i++) {
+      Object.assign(map.spawns[i * 2], { x: entry.x + 4 + i * 3, y: entry.y + 5 });
+      map.deploymentAreas[i * 2] = { ...entry };
+      map.deploymentAreas[i * 2 + 1] = { ...extraction };
+      Object.assign(map.spawns[i * 2 + 1], { x: extraction.x + 2 + i, y: extraction.y + 3 });
+    }
+    map.contractLayout = { entry, extraction, locations };
+    return map;
+  }
+  function visualMap(catalog, game) {
+    const base = catalog.maps[game.mapId],
+      source =
+        catalog.maps[game.environment === "space" ? "outer_orbit_5v5" : "great_plains_5v5"].tileMap;
+    if (!source) return base;
+    const atlas = structuredClone(source);
+    if (game.environment !== "space")
+      for (const t of [
+        { id: "contract-water", terrain: "water", x: 945, y: 5 },
+        { id: "contract-shallow", terrain: "water", x: 1102, y: 5 },
+        { id: "contract-rock", terrain: "rock", x: 632, y: 162 },
+        { id: "contract-highland", terrain: "highland", x: 319, y: 475 },
+      ])
+        atlas.tiles.push({
+          ...atlas.tiles[0],
+          ...t,
+          name: t.terrain,
+          environment: game.environment,
+          frameWidth: 147,
+          frameHeight: 147,
+          tilesetId: atlas.tilesets[0].id,
+          decorative: false,
+          dynamic: false,
+          elevation: 0,
+        });
+    const doc = atlas,
+      w = game.tiles[0].length,
+      h = game.tiles.length,
+      definitions = doc.tiles.filter(
+        (t) =>
+          !t.decorative &&
+          !t.elevation &&
+          (t.terrain !== "plain" || ["plain", "soil"].includes(t.biomeRole)),
+      ),
+      fallback = definitions.find((t) => t.terrain === "plain"),
+      byTerrain = new Map(),
+      details = doc.tiles.filter((t) => t.decorative && t.biomeRole === "details");
+    for (const t of definitions) {
+      if (!byTerrain.has(t.terrain)) byTerrain.set(t.terrain, []);
+      byTerrain.get(t.terrain).push(t);
+    }
+    const hash = (x, y) => (Math.imul(x + 17, 73856093) ^ Math.imul(y + 11, 19349663)) >>> 0;
+    doc.id = game.mapId;
+    doc.width = w;
+    doc.height = h;
+    doc.playersPerTeam = base.playersPerTeam;
+    doc.spawns = game.spawns;
+    doc.deploymentAreas = game.deploymentAreas;
+    doc.layers = [
+      {
+        id: "contract-ground",
+        name: "随机地形",
+        type: "tile",
+        placement: "below",
+        decorative: false,
+        dynamic: false,
+        visible: true,
+        opacity: 1,
+        data: game.tiles.flatMap((row, y) =>
+          row.map((kind, x) => {
+            if (kind === "water" && game.environment !== "space")
+              return [
+                [0, 1],
+                [0, -1],
+                [1, 0],
+                [-1, 0],
+              ].some(([dx, dy]) => game.tiles[y + dy]?.[x + dx] !== "water")
+                ? "contract-shallow"
+                : "contract-water";
+            const pool = byTerrain.get(kind) || [fallback];
+            return pool[hash(x, y) % pool.length].id;
+          }),
+        ),
+      },
+    ];
+    if (details.length)
+      doc.layers.push({
+        id: "contract-details",
+        name: "地表细节",
+        type: "tile",
+        placement: "below",
+        decorative: true,
+        dynamic: false,
+        visible: true,
+        opacity: 1,
+        data: game.tiles.flatMap((row, y) =>
+          row.map((kind, x) =>
+            kind === "plain" && hash(x, y) % 23 === 0
+              ? details[hash(x + 1, y) % details.length].id
+              : null,
+          ),
+        ),
+      });
+    return { ...base, tileMap: doc };
+  }
+  function factionsForEra(G, era) {
+    const factions = era?.startsWith("UC_0079_") ? ["EFSF", "ZEON"]
+      : era?.startsWith("UC_0087_") ? ["AEUG", "TITANS", "NEO_ZEON"]
+      : era?.startsWith("UC_0093_") ? ["EFSF_0093", "NEO_ZEON_0093"]
+      : era?.startsWith("CE_") ? ["OMNI", "ZAFT"] : [];
+    return G.factions.filter((f) => factions.includes(f) &&
+      G.catalog.prefabs.some(
+        (p) =>
+          !p.formOnly &&
+          !p.wip &&
+          !p.facility &&
+          p.tags?.includes(era) &&
+          (p.availableFactions || [p.faction]).includes(f) &&
+          p.weaponKits?.length,
+      ),
+    );
+  }
+  function pool(room, G) {
+    let cache = pools.get(G.catalog);
+    if (!cache) pools.set(G.catalog, (cache = new Map()));
+    const { sweepEra: era, sweepFaction: faction, sweepEnvironment: environment } = room.settings,
+      key = era + "|" + faction + "|" + environment;
+    if (!cache.has(key)) {
+      const result = Object.values(G.models).filter(
+        (m) =>
+          !m.formOnly &&
+          !m.wip &&
+          !m.facility &&
+          !m.requiredPilotId &&
+          !m.ship &&
+          !G.isFleetCarrier(m) &&
+          m.tags?.includes(era) &&
+          (m.availableFactions || [m.faction]).includes(faction) &&
+          m.weapons?.length &&
+          suitableEnvironment(m, environment),
+      );
+      result.sort(
+        (a, b) =>
+          a.cost - b.cost ||
+          (a.prefabId + "__" + a.kitId).localeCompare(b.prefabId + "__" + b.kitId),
+      );
+      cache.set(key, result);
+    }
+    return cache.get(key);
+  }
+  function pick(room, G, rng, elite = false) {
+    const candidates = pool(room, G);
+    if (!candidates.length) throw Error("所选年代、阵营和环境没有可用敌军");
+    const d = config(room.settings.sweepDifficulty).id,
+      low = elite ? 0.65 : Math.min(0.45, (d - 1) * 0.09),
+      high = elite ? 1 : Math.min(1, 0.45 + d * 0.11);
+    return candidates[
+      Math.min(candidates.length - 1, Math.floor((low + rng() * (high - low)) * candidates.length))
+    ];
+  }
+  function suitableEnvironment(model, environment) {
+    const adaptation = model.adaptability || {};
+    return environment === "space"
+      ? (adaptation.space ?? 0) >= 100
+      : (adaptation.ground ?? 0) >= 100 || (adaptation.air ?? 0) >= 100;
+  }
+  function scaledCount(room, count) {
+    const state = room.game.contract;
+    const before = state.enemyBaseCount || 0;
+    state.enemyBaseCount = before + count;
+    const multiplier = 1 + 0.2 * Math.max(0, state.players - 1);
+    return Math.round(state.enemyBaseCount * multiplier) - Math.round(before * multiplier);
+  }
+  function enemies(room, G, seed) {
+    const rng = random(seed);
+    return Array.from({ length: 2 }, () => {
+      const m = pick(room, G, rng);
+      return { unitId: m.prefabId, kitId: m.kitId };
+    });
+  }
+  function enemyLimits() {
+    return { costLimit: 99999, unitCostLimit: 99999 };
+  }
+  function enemyRestrictions(room) {
+    return {
+      requiresCarriers: false,
+      ignoreDevelopment: true,
+      unitCostLimit: Infinity,
+      characterFaction: room.settings.sweepFaction,
+      aiAllowedEras: [room.settings.sweepEra],
+      environment: room.settings.sweepEnvironment,
+    };
+  }
+  const distance = (a, b) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
+  function root(game, actor) {
+    const seen = new Set();
+    while (actor?.embarked && !seen.has(actor.id)) {
+      seen.add(actor.id);
+      actor = game.units.find((u) => u.id === actor.embarked.carrierId);
+    }
+    return actor;
+  }
+  function allies(game) {
+    return game.units.filter(
+      (u) => u.team === 0 && u.hp > 0 && !u.contractExtracted && !u.deploymentStaged,
+    );
+  }
+  function inside(point, rect) {
+    return (
+      point.x >= rect.x &&
+      point.y >= rect.y &&
+      point.x < rect.x + rect.width &&
+      point.y < rect.y + rect.height
+    );
+  }
+  function canExtract(game, G, actor, seat) {
+    return (
+      !!game?.contract &&
+      !!actor &&
+      actor.hp > 0 &&
+      !actor.contractExtracted &&
+      G.ownerOf(actor) === seat &&
+      G.onMap(actor) &&
+      !actor.embarked &&
+      !actor.plan &&
+      !actor.pendingMove &&
+      inside(G.center(actor), game.contract.extraction)
+    );
+  }
+  function progress(room, G) {
+    return room.seats
+      .filter((p) => p && !p.bot && G.seatTeam(p.seat) === 0)
+      .map((p) => {
+        const units = room.game.units.filter((u) => G.ownerOf(u) === p.seat);
+        return {
+          memberId: p.id,
+          seat: p.seat,
+          name: p.name,
+          remaining: units.filter((u) => u.hp > 0 && !u.contractExtracted).length,
+          extracted: units.filter((u) => u.hp > 0 && u.contractExtracted).length,
+          lost: units.filter((u) => u.hp <= 0).length,
+        };
+      });
+  }
+  function near(game, G, point, team, radius = 2) {
+    return game.units.filter(
+      (u) =>
+        u.team === team && G.onMap(u) && G.cells(u).some((cell) => distance(cell, point) <= radius),
+    );
+  }
+  function spawn(room, G, model, point, elite = false) {
+    const game = room.game,
+      state = game.contract,
+      serial = ++state.serial,
+      u = G.makeUnit(
+        { unitId: model.prefabId, kitId: model.kitId },
+        1,
+        "contract-" + serial,
+        { x: point.x, y: point.y },
+        180,
+        (game.seed + serial) >>> 0,
+        1,
+        room.settings.sweepEnvironment,
+      );
+    u.team = 1;
+    u.ownerSeat = 1;
+    u.formationIndex = -1;
+    u.deployed = true;
+    u.contractEnemy = true;
+    if (elite) u.pilot = { ...u.pilot, ...G.pilots.rollGrade("elite", game.seed + serial, model) };
+    const positions = [];
+    for (let r = 0; r <= 9; r++)
+      for (let y = point.y - r; y <= point.y + r; y++)
+        for (let x = point.x - r; x <= point.x + r; x++)
+          if (Math.max(Math.abs(x - point.x), Math.abs(y - point.y)) === r)
+            positions.push({ x, y });
+    const target = positions.find((p) => G.fits(game, u, p.x, p.y, 180));
+    if (!target) return null;
+    Object.assign(u, target);
+    game.units.push(u);
+    return u;
+  }
+  function brain(game) {
+    let value = brains.get(game);
+    if (!value)
+      brains.set(
+        game,
+        (value = { groups: [], health: new Map(), rng: random(game.contract.seed ^ 0x9137) }),
+      );
+    return value;
+  }
+  const squadCount = (difficulty) => (difficulty >= 7 ? 3 : difficulty >= 4 ? 2 : 1);
+  function group(room, ids, home, role = "patrol", objectiveId = null) {
+    const b = brain(room.game),
+      entry = {
+        ids,
+        home: { ...home },
+        role,
+        objectiveId,
+        alerted: role === "pursuit",
+        goal: null,
+      };
+    b.groups.push(entry);
+    for (const id of ids) {
+      const u = room.game.units.find((u) => u.id === id);
+      if (u) b.health.set(id, u.hp);
+    }
+    return entry;
+  }
+  function patrol(room, G, point, count, elite = false, role = "patrol", objectiveId = null) {
+    const state = room.game.contract,
+      rng = random(state.seed + ++state.wave * 1979),
+      ids = [];
+    // Mandatory event reinforcements are never silently discarded by a soft cap.
+    const total = scaledCount(room, count);
+    for (let i = 0; i < total; i++) {
+      const u = spawn(room, G, pick(room, G, rng, elite), point, elite);
+      if (u) ids.push(u.id);
+    }
+    group(room, ids, point, role, objectiveId);
+    return ids;
+  }
+  function edge(room, avoidEntry = false, attempt = 0) {
+    const game = room.game,
+      rng = brain(game).rng,
+      side = Math.floor(rng() * 4),
+      w = mapWidth(game),
+      h = mapHeight(game);
+    const point =
+      side < 2
+        ? { x: side ? w - 5 : 3, y: 4 + Math.floor(rng() * (h - 8)) }
+        : { x: 4 + Math.floor(rng() * (w - 8)), y: side === 2 ? 3 : h - 5 };
+    const entry = game.contract.entry;
+    return avoidEntry &&
+      attempt < 24 &&
+      inside(point, {
+        x: entry.x - 8,
+        y: entry.y - 8,
+        width: entry.width + 16,
+        height: entry.height + 16,
+      })
+      ? edge(room, true, attempt + 1)
+      : point;
+  }
+  function reinforcements(room, G, objective, squads = 1, transport = false, airborne = false) {
+    const game = room.game,
+      b = brain(game);
+    for (let i = 0; i < squads; i++) {
+      const point = airborne ? { x: objective.x + 5, y: objective.y + (i - 1) * 3 } : edge(room);
+      if (!transport) {
+        const ids = patrol(room, G, point, 3, false, "pursuit", objective.id);
+        b.groups.at(-1).goal = { x: objective.x, y: objective.y };
+        if (airborne)
+          for (const id of ids) {
+            const u = game.units.find((u) => u.id === id);
+            u.airdropRound = game.round;
+          }
+        continue;
+      }
+      const zeon = /ZEON/.test(room.settings.sweepFaction),
+        name =
+          game.environment === "space"
+            ? zeon
+              ? "PapuaClass"
+              : "ColumbusClass"
+            : zeon
+              ? "FatUncle"
+              : "Medea";
+      let carrier = spawn(room, G, G.models[name + "__standard"], point);
+      if (!carrier) throw Error("追击运输单位没有可用入场位置");
+      // Match the current enemy faction, including its generic pilot presentation.
+      carrier.pilot = G.pilots.roll(null, game.seed + game.contract.serial, 1, 0, {
+        ...G.modelOf(carrier),
+        faction: room.settings.sweepFaction,
+      });
+      const compatible = pool(room, G).filter(
+        (m) =>
+          !m.ship &&
+          m.transport?.loadTags?.length &&
+          (m.transport.slotCost || 1) <= 2 &&
+          G.modelOf(carrier).hangars.some((h) =>
+            h.allowedTags.some((tag) => m.transport.loadTags.includes(tag)),
+          ),
+      );
+      if (!compatible.length) throw Error("追击小队没有可搭载单位");
+      const ids = [carrier.id];
+      const cargoCount = scaledCount(room, 4) - 1;
+      for (let j = 0; j < cargoCount; j++) {
+        const model = compatible[Math.floor(b.rng() * compatible.length)],
+          cargo = spawn(room, G, model, point);
+        if (!cargo) continue;
+        let hangar = G.hangars
+          .of(carrier)
+          .find((h) => G.hangars.canLoad(game, cargo, carrier, h.id));
+        if (!hangar) {
+          // Added players may require a second transport; count it within the scaled wave.
+          if (j + 1 >= cargoCount) {
+            game.units.splice(game.units.indexOf(cargo), 1);
+            const escort = spawn(room, G, G.models[name + "__standard"], point);
+            if (!escort) throw Error("追击运输单位没有可用入场位置");
+            escort.pilot = G.pilots.roll(null, game.seed + game.contract.serial, 1, 0, {
+              ...G.modelOf(escort), faction: room.settings.sweepFaction,
+            });
+            ids.push(escort.id);
+            continue;
+          }
+          carrier = spawn(room, G, G.models[name + "__standard"], point);
+          if (!carrier) throw Error("追击运输单位没有可用入场位置");
+          carrier.pilot = G.pilots.roll(null, game.seed + game.contract.serial, 1, 0, {
+            ...G.modelOf(carrier), faction: room.settings.sweepFaction,
+          });
+          ids.push(carrier.id);
+          j++;
+          hangar = G.hangars.of(carrier).find((h) => G.hangars.canLoad(game, cargo, carrier, h.id));
+          if (!hangar) throw Error("追击小队没有可搭载位置");
+        }
+        cargo.embarked = { carrierId: carrier.id, hangarId: hangar.id };
+        ids.push(cargo.id);
+      }
+      G.hangars.sync(game);
+      const force = group(room, ids, point, "pursuit", objective.id);
+      force.goal = { x: objective.x, y: objective.y };
+    }
+  }
+  function alertNearby(game, point, radius = 18) {
+    for (const force of brain(game).groups) {
+      if (
+        force.ids.some((id) =>
+          game.units.some((u) => u.id === id && u.hp > 0 && distance(u, point) <= radius),
+        )
+      ) {
+        force.alerted = true;
+        force.goal = { x: point.x, y: point.y };
+      }
+    }
+  }
+  function aiOrder(game, G, actor) {
+    if (!game.contract || actor.team !== 1) return null;
+    const b = brain(game),
+      force = b.groups.find((f) => f.ids.includes(actor.id));
+    if (!force) return null;
+    const members = force.ids
+      .map((id) => game.units.find((u) => u.id === id))
+      .filter((u) => u && G.onMap(u));
+    const targets = allies(game).filter((u) => G.onMap(u));
+    // Awareness belongs to this formation, not an omniscient allied observer.
+    const query = { observers: members };
+    const contact = targets.filter(
+      (t) =>
+        G.sensors.visible({ ...game, fogMode: "full", intel: undefined }, 1, t, query) ||
+        G.sensors.detected({ ...game, fogMode: "full", intel: undefined }, 1, t, query),
+    );
+    if (contact.length) {
+      force.alerted = true;
+      const target = contact.reduce(
+        (a, t) => (!a || distance(actor, t) < distance(actor, a) ? t : a),
+        null,
+      );
+      force.goal = { ...G.center(target) };
+    }
+    if (force.alerted) return { alerted: true, goal: force.goal || force.home };
+    const origin = members[0] || actor;
+    if (!force.goal || distance(origin, force.goal) <= 2 || force.nextRouteRound <= game.round) {
+      const rng = b.rng,
+        guard = force.role === "guard";
+      force.goal = guard
+        ? {
+            x: Math.max(1, Math.min(mapWidth(game) - 2, force.home.x + Math.floor(rng() * 11) - 5)),
+            y: Math.max(
+              1,
+              Math.min(mapHeight(game) - 2, force.home.y + Math.floor(rng() * 11) - 5),
+            ),
+          }
+        : {
+            x: 3 + Math.floor(rng() * (mapWidth(game) - 6)),
+            y: 3 + Math.floor(rng() * (mapHeight(game) - 6)),
+          };
+      force.nextRouteRound = game.round + (guard ? 6 : 18);
+    }
+    return { alerted: false, goal: force.goal };
+  }
+  function initialize(room, G, seed, log = () => {}) {
+    const game = room.game,
+      map = G.getMap(game.mapId),
+      d = config(room.settings.sweepDifficulty),
+      rng = random(seed),
+      players = room.seats.filter((p) => p && !p.bot && G.seatTeam(p.seat) === 0).length,
+      { entry, extraction, locations } = game.contractLayout;
+    game.contract = {
+      seed,
+      serial: 0,
+      wave: 0,
+      players,
+      objectives: [],
+      cues: [],
+      cueSerial: 0,
+      entry,
+      extraction,
+      lastRound: game.round,
+      turn: 0,
+      extracted: false,
+      contactKills: [],
+      commissions: Object.fromEntries(room.seats.filter(p=>p&&!p.bot&&p.seat%2===0).map(p=>[p.id,contacts.active(p.contactTasks)])),
+    };
+    const state = game.contract,
+      types = kinds.slice(),
+      initial = game.units.filter((u) => u.team === 1);
+    // Seats provide AI ownership, not an extra full army per human participant.
+    const initialCount = scaledCount(room, 2);
+    for (const u of initial.splice(initialCount)) game.units.splice(game.units.indexOf(u), 1);
+    for (let i = types.length - 1; i > 0; i--) {
+      const j = Math.floor(rng() * (i + 1));
+      [types[i], types[j]] = [types[j], types[i]];
+    }
+    const special = contacts.specialTasks(room);
+    for (const task of special) {
+      const candidates=[];
+      for(let y=9;y<map.height-8;y+=3)for(let x=9;x<map.width-8;x+=3){
+        const p={x,y};
+        if([entry,extraction].some(r=>inside(p,{x:r.x-3,y:r.y-3,width:r.width+6,height:r.height+6})))continue;
+        const all=[...locations,{x:entry.x+entry.width/2,y:entry.y+entry.height/2},{x:extraction.x+extraction.width/2,y:extraction.y+extraction.height/2}];
+        candidates.push({p,score:Math.min(...all.map(q=>distance(p,q)))});
+      }
+      candidates.sort((a,b)=>b.score-a.score);
+      if(!candidates.length)throw Error("无法放置联络任务事件");
+      const point=candidates[0].p;locations.push(point);
+      let x=point.x,y=point.y;const goal=locations[0];
+      while(x!==goal.x||y!==goal.y){
+        for(let dy=-4;dy<=4;dy++)for(let dx=-4;dx<=4;dx++)if(game.tiles[y+dy]?.[x+dx]!==undefined)game.tiles[y+dy][x+dx]="plain";
+        if(x!==goal.x)x+=Math.sign(goal.x-x);else y+=Math.sign(goal.y-y);
+      }
+    }
+    for (let i = 0; i < d.events + special.length; i++) {
+      const task = special[i-d.events],
+        definition = task ? {...kinds.find(k=>k.type===task.kind),name:task.eventName} : types[i % types.length],
+        point = { ...locations[i] },
+        objective = {
+          id: "event-" + i,
+          ...definition,
+          ...point,
+          status: "available",
+          progress: 0,
+          required: definition.type === "capture" ? 5 : 1,
+          targets: [],
+          destroyed: [],
+          ...(task ? {contactTaskId:task.id} : {}),
+        };
+      state.objectives.push(objective);
+      for (let y = Math.max(0, point.y - 6); y <= Math.min(map.height - 1, point.y + 6); y++)
+        for (let x = Math.max(0, point.x - 6); x <= Math.min(map.width - 1, point.x + 6); x++)
+          game.tiles[y][x] = "plain";
+      if (definition.type === "factory") {
+        const count = 2 + Math.floor((d.id - 1) / 4);
+        for (let j = 0; j < count; j++) {
+          const model = G.models.Facility_Factory__standard,
+            u = spawn(room, G, model, {
+              x: point.x + (j % 2) * 3 - 2,
+              y: point.y + Math.floor(j / 2) * 3 - 2,
+            });
+          if (!u) throw Error("无法放置合约工厂");
+          u.facility = { id: u.id, type: "factory", level: 1 };
+          u.missionResourceScale = (20000 + (d.id - 1) * 5000) / model.hp;
+          u.hp = G.modelOf(u).hp;
+          objective.targets.push(u.id);
+          brain(game).health.set(u.id, u.hp);
+        }
+      }
+      const count = task?.id === "efsf-4" ? 12 : task?.id === "efsf-5" ? 12 : 3 + Math.floor((d.id - 1) / 3);
+      const guards = ["efsf-3","efsf-4"].includes(task?.id) ? [] : patrol(
+        room,
+        G,
+        { x: point.x + 3, y: point.y + 2 },
+        count,
+        false,
+        "guard",
+        objective.id,
+      );
+      if(["efsf-3","efsf-4"].includes(task?.id)) {
+        const prefab=G.catalog.prefabs.find(p=>p.id===(task.id==="efsf-3"?"RGM_79_G":"MS_06F")),model=G.models[prefab.id+"__"+prefab.weaponKits[0].id];
+        for(let j=0;j<(task.id==="efsf-3"?3:12);j++){
+          const u=spawn(room,G,model,{x:point.x+3,y:point.y+j});
+          if(!u)throw Error("无法放置联络任务小队");
+          if(task.id==="efsf-3") {
+            u.pilot={...u.pilot,...G.pilots.rollGrade("veteran",game.seed+state.serial,model)};
+            u.pilot.name+=" · 文件护卫"+(j+1);
+          }
+          guards.push(u.id);
+        }
+        group(room,guards,point,"guard",objective.id);
+      }
+      if(task?.id === "efsf-5")for(let j=0;j<4;j++){
+        const u=spawn(room,G,G.models.Facility_MG__standard,{x:point.x+(j%2?5:-5),y:point.y+(j<2?-4:4)});
+        if(!u)throw Error("无法放置前线营地炮塔");u.facility={id:u.id,type:"mg",level:1};
+      }
+      if(task?.kind === "salvage") {
+        const id=task.id==="efsf-2"?"Medea":"Type74";
+        const p=G.catalog.prefabs.find(p=>p.id===id);
+        objective.wreckModel = id+"__"+p.weaponKits[0].id;
+      }
+      if (definition.type === "command") objective.targets = guards.slice();
+    }
+    // Initial bot formations roam independently rather than gathering or rushing players.
+    for (let i = 0; i < initial.length; i += 3) {
+      const members = initial.slice(i, i + 3),
+        point = edge(room, true);
+      for (const u of members) {
+        for (let r = 0; r < 10; r++) {
+          if (G.fits(game, u, point.x + r, point.y, 180)) {
+            Object.assign(u, { x: point.x + r, y: point.y });
+            break;
+          }
+        }
+      }
+      group(
+        room,
+        members.map((u) => u.id),
+        point,
+      );
+    }
+    for (let i = 0; i < 1 + Math.floor((d.id - 1) / 3); i++) patrol(room, G, edge(room, true), 3);
+    for (const u of game.units.filter((u) => u.team === 1)) {
+      u.deployed = true;
+      u.deploymentStaged = false;
+    }
+    for (let seat = 1; seat < game.deployment.length; seat += 2) game.deployment[seat] = true;
+    log("[合约模式] 事件 " + d.events + " 项；驻守部队在事件附近巡逻。");
+  }
+  function reward(room, G) {
+    const state = room.game?.contract;
+    if (!state) return { money: 0, supplies: 0, technology: 0, inventory: {} };
+    const completed = state.objectives.filter((o) => o.status === "completed" && !o.contactTaskId).length,
+      d = config(room.settings.sweepDifficulty).id,
+      factor =
+        Math.pow(1.25, Math.max(0, G.technologyWeight(room.settings.sweepEra) - 1)) *
+        (1 + (d - 1) * 0.25);
+    return {
+      money: completed * 1250 * factor,
+      supplies: completed * 1875 * factor,
+      technology: completed * 125 * factor,
+      inventory: {},
+    };
+  }
+  function recordDefeat(room,G,from,to,model) {
+    const state=room.game.contract;
+    if(to.contactKillRecorded)return;
+    to.contactKillRecorded=true;
+    if(!from || from.team!==0 || to.team!==1)return;
+    const owner=room.seats[G.ownerOf(from)];
+    if(!owner || owner.bot)return;
+    state.contactKills ||= [];
+    if(!state.contactKills.includes(to.id) && model.unitTags?.includes("MS") && (model.availableFactions||[model.faction]).includes("ZEON"))state.contactKills.push(to.id);
+    if(/^RX_80PR(?:_|$)/.test(G.modelOf(from).prefabId))to.contactPaleKill=true;
+  }
+  function commissionProgress(room,G,player) {
+    const state=room.game.contract;if(!state)return [];
+    const escaped=room.game.units.some(u=>G.ownerOf(u)===player.seat&&u.hp>0&&u.contractExtracted);
+    return (state.commissions?.[player.id]||[]).flatMap(id=>{
+      const task=contacts.byId.get(id);if(!contacts.eligible(task,room.settings))return [];
+      if(task.kind==="kills")return [{id,amount:state.contactKills.length}];
+      const o=state.objectives.find(o=>o.contactTaskId===id);
+      if(o?.status!=="completed" || (task.kind==="salvage"&&!escaped))return [];
+      if(id==="efsf-5"&&!o.targets.every(id=>room.game.units.find(u=>u.id===id)?.contactPaleKill))return [];
+      return [{id,amount:1}];
+    });
+  }
+  function startObjective(state, objective) {
+    if (objective.status !== "available") return;
+    objective.status = "active";
+    objective.startedTurn = state.turn;
+    state.cues.push({
+      id: ++state.cueSerial,
+      type: "started",
+      objectiveId: objective.id,
+      name: objective.name,
+    });
+  }
+  function completeObjective(state, objective) {
+    if (objective.status === "completed") return;
+    startObjective(state, objective);
+    objective.status = "completed";
+    state.cues.push({
+      id: ++state.cueSerial,
+      type: "completed",
+      objectiveId: objective.id,
+      name: objective.name,
+    });
+    if (state.objectives.every((o) => o.status === "completed") && !state.allCompleted) {
+      state.allCompleted = true;
+      state.cues.push({ id: ++state.cueSerial, type: "all_completed", name: "已完成所有目标" });
+    }
+  }
+  function poll(room, G, log = () => {}) {
+    const game = room.game,
+      state = game?.contract;
+    if (
+      !state ||
+      game.winner !== null ||
+      !["idle", "finished"].includes(room.phase) ||
+      room.playback ||
+      !game.deployment.every(Boolean)
+    )
+      return;
+    if (!allies(game).length) {
+      const evacuated = game.units.some((u) => u.team === 0 && u.hp > 0 && u.contractExtracted);
+      state.extracted = evacuated;
+      game.winner = evacuated ? 0 : 1;
+      room.phase = "finished";
+      log(
+        evacuated
+          ? "[合约模式] 存活部队已全部撤离，行动结束。"
+          : "[合约模式] PMC部队全灭，行动结束。",
+      );
+      return;
+    }
+    for (const p of progress(room, G)) if (!p.remaining) room.turnDone[p.seat] = true;
+    const b = brain(game),
+      newTurn = state.lastRound < game.round && game.team === 0;
+    if (newTurn) {
+      state.lastRound = game.round;
+      state.turn++;
+      if (state.turn % 3 === 0) {
+        patrol(room, G, edge(room, true), 3);
+        log("[合约模式] 敌方边缘巡逻队进入战场。");
+      }
+    }
+    for (const force of b.groups)
+      for (const id of force.ids) {
+        const u = game.units.find((u) => u.id === id);
+        if (u && u.hp < (b.health.get(id) ?? u.hp)) {
+          force.alerted = true;
+          const objective = state.objectives.find((o) => o.id === force.objectiveId);
+          if (objective && ["factory", "command"].includes(objective.type))
+            startObjective(state, objective);
+          alertNearby(game, u);
+          const enemy = near(game, G, u, 0, 18).sort((a, c) => distance(a, u) - distance(c, u))[0];
+          force.goal = enemy ? G.center(enemy) : { x: u.x, y: u.y };
+        }
+        if (u) b.health.set(id, u.hp);
+      }
+    for (const o of state.objectives) {
+      if (o.status === "completed") continue;
+      if (
+        ["factory", "command"].includes(o.type) &&
+        near(game, G, o, 0, o.type === "command" ? 6 : 3).length
+      )
+        startObjective(state, o);
+      if (o.type === "factory")
+        for (const id of o.targets) {
+          const u = game.units.find((u) => u.id === id),
+            previous = b.health.get(id);
+          if (u && u.hp < (previous ?? u.hp)) {
+            startObjective(state, o);
+            alertNearby(game, o);
+          }
+          if (u) b.health.set(id, u.hp);
+          if ((!u || u.hp <= 0) && !o.destroyed.includes(id)) {
+            o.destroyed.push(id);
+            reinforcements(room, G, o);
+            log("[合约模式] 工厂被毁，敌方边缘巡逻队增援。");
+          }
+        }
+      if (
+        ["factory", "command"].includes(o.type) &&
+        o.targets.length &&
+        o.targets.every((id) => !game.units.some((u) => u.id === id && u.hp > 0))
+      ) {
+        completeObjective(state, o);
+        log("[合约模式] 完成事件：" + o.name);
+      }
+      if (o.type !== "capture") continue;
+      if (o.status === "available" && near(game, G, o, 0, 2).length) {
+        startObjective(state, o);
+        alertNearby(game, o);
+        log("[合约模式] 开始占领敌方据点。");
+      }
+      if (o.status !== "active") continue;
+      alertNearby(game, o);
+      if (!newTurn || o.startedTurn === state.turn) continue;
+      const elapsed = state.turn - o.startedTurn;
+      if (elapsed === 2 && !o.airdrop) {
+        o.airdrop = true;
+        reinforcements(
+          room,
+          G,
+          o,
+          squadCount(config(room.settings.sweepDifficulty).id),
+          false,
+          true,
+        );
+        log("[合约模式] 敌方空降部队前来防守。");
+      }
+      if (elapsed % 3 === 0)
+        reinforcements(room, G, o, squadCount(config(room.settings.sweepDifficulty).id));
+      if (near(game, G, o, 0, 2).length && !near(game, G, o, 1, 2).length) o.progress++;
+      if (o.progress >= 5) {
+        completeObjective(state, o);
+        log("[合约模式] 完成事件：" + o.name);
+      }
+    }
+  }
+
+  const mapWidth = (g) => g.tiles[0].length,
+    mapHeight = (g) => g.tiles.length;
+  function action(room, G, member, msg, log = () => {}) {
+    const game = room.game,
+      state = game.contract;
+    if (!state || game.winner !== null || room.phase !== "idle" || game.team !== 0)
+      throw Error("当前不能执行合约操作");
+    if (member.seat === null || G.seatTeam(member.seat) !== 0 || member.bot)
+      throw Error("只有参战PMC可以执行操作");
+    if (msg.action === "contract_extract") {
+      const actor = game.units.find((u) => u.id === msg.unitId);
+      if (!canExtract(game, G, actor, member.seat)) throw Error("请选择撤离区内自己的未撤离单位");
+      const leaving = new Set([actor.id]);
+      let changed = true;
+      while (changed) {
+        changed = false;
+        for (const u of game.units)
+          if (u.hp > 0 && u.embarked && leaving.has(u.embarked.carrierId) && !leaving.has(u.id)) {
+            leaving.add(u.id);
+            changed = true;
+          }
+      }
+      for (const u of game.units.filter((u) => leaving.has(u.id))) {
+        u.contractExtracted = true;
+        u.deploymentStaged = true;
+        u.acted = true;
+        delete u.plan;
+        delete u.pendingMove;
+        delete u.squadOrder;
+        delete u.squadId;
+      }
+      log("[合约模式] " + member.name + " 撤离单位 " + leaving.size + " 台。");
+      return;
+    }
+    if (msg.action !== "contract_interact") throw Error("无效的合约操作");
+    const objective = state.objectives.find((o) => o.id === msg.objectiveId),
+      actor = game.units.find((u) => u.id === msg.unitId);
+    if (!objective || objective.status !== "available" || objective.type !== "salvage")
+      throw Error("该事件当前不能交互");
+    if (
+      !actor ||
+      !G.canControlUnit(room.settings, [...room.members.values()], member.seat, actor) ||
+      !G.onMap(actor) ||
+      actor.acted ||
+      actor.plan ||
+      actor.pendingMove ||
+      !G.cells(actor).some((cell) => distance(cell, objective) <= 1)
+    )
+      throw Error("请选择白色3×3范围内可行动的己方单位");
+    reinforcements(room, G, objective, 1, true);
+    actor.acted = true;
+    completeObjective(state, objective);
+    objective.progress = 1;
+    alertNearby(game, objective);
+    log("[合约模式] 完成事件：" + objective.name + "，敌方运输机搭载追击部队入场。");
+  }
+
+  function view(room, G, multipliers = { money: 1, supplies: 1, technology: 1 }) {
+    const state = room.game?.contract;
+    if (!state) return null;
+    const round = (n) => Math.round(n / 25) * 25,
+      base = reward(room, G);
+    const { seed: privateSeed, ...publicState } = structuredClone(state);
+    return {
+      ...publicState,
+      difficulty: config(room.settings.sweepDifficulty, room.settings.sweepEra),
+      completed: state.objectives.filter((o) => o.status === "completed").length,
+      participants: progress(room, G),
+      pending: {
+        money: round(base.money * multipliers.money),
+        supplies: round(base.supplies * multipliers.supplies),
+        technology: round(base.technology * multipliers.technology),
+      },
+    };
+  }
+  return {
+    recordDefeat,
+    commissionProgress,
+    difficulties,
+    covers,
+    kinds,
+    config,
+    mapId,
+    registerMaps,
+    generateMap,
+    visualMap,
+    roomSettings,
+    factionsForEra,
+    enemies,
+    enemyLimits,
+    enemyRestrictions,
+    initialize,
+    poll,
+    action,
+    view,
+    reward,
+    canExtract,
+    progress,
+    aiOrder,
+    squadCount,
+    suitableEnvironment,
+  };
+})();
+if (typeof module !== "undefined") module.exports = ContractMode;

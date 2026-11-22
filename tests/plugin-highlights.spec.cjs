@@ -7,7 +7,8 @@ for (const width of [1440, 390]) test('plugin-modified stats and weapons use gre
   const errors = []; page.on('pageerror', error => errors.push(error.message));
   await page.goto(pathToFileURL(path.resolve('public/client.html')).href); await page.waitForFunction(() => assetsReady);
   const id = await page.evaluate(() => {
-    I18n.setLanguage('zh'); Economy.creditActivity({ id: 'green-plugin', matchId: 'green-plugin', money: 0, supplies: 0, inventory: { RGM_79: 1 } });
+    I18n.setLanguage('zh'); Economy.creditActivity({ id: 'green-plugin', matchId: 'green-plugin', money: 100000, supplies: 0, inventory: { RGM_79: 1 } });
+    for(const id of ['frame','generator','long_beam','short_beam','shield'])Economy.purchasePlugin('anaheim',id);
     return Economy.snapshot().storage.units[0].id;
   });
   await page.locator('#shellHangar').click(); await page.locator(`#warehouseBays [data-stock-id="${id}"]`).click();

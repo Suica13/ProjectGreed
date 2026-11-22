@@ -465,8 +465,10 @@ const AttackControls = (() => {
     if (!queue.length)
       weapons.append(element("p", "helper", I18n.text(options.emptyMessage || "无可用武器")));
     card.append(header, weapons);
-    const enUsed = queue.reduce((sum, w) => sum + (Rules.weaponStats(w, unit).en || 0), 0);
-    header.append(element("small", "", `EN ${enUsed}/${unit.en}`));
+    if (!options.isCounter) {
+      const enUsed = queue.reduce((sum, w) => sum + (Rules.weaponStats(w, unit).en || 0), 0);
+      header.append(element("small", "", `EN ${enUsed}/${unit.en}`));
+    }
     panel.append(card);
   }
   function renderSummary(panel, unit) {

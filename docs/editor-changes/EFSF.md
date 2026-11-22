@@ -11,6 +11,15 @@
 
 | 时间（日本时间） | 来源IP | 单位 | 修改对象 | 修改内容 | 详细日志 |
 |---|---|---|---|---|---|
+| 2026-11-22 15:13:34 | local | 铁球后期型（RB_79_LateType） | 单位特例 | /stats/cost：125 → 100<br>/stats/move：4 → 5 | [JSON](../../server-data/editor-changes/2026-11-22/2026-11-22T06-13-34-709Z-317c6a44-d8c4-488c-bba9-b635227f2282.json) |
+| 2026-11-22 15:13:32 | local | 铁球M型（RB_79M） | 单位特例 | /stats/cost：100 → 75<br>/stats/move：3 → 4 | [JSON](../../server-data/editor-changes/2026-11-22/2026-11-22T06-13-32-375Z-7b36581f-613a-4fdd-8cd4-9966a9f5ff5d.json) |
+| 2026-11-22 15:13:28 | local | 鱼眼（RB_79N） | 单位特例 | /stats/cost：100 → 75<br>/stats/move：3 → 4 | [JSON](../../server-data/editor-changes/2026-11-22/2026-11-22T06-13-28-038Z-6e13e0c2-0b2b-4138-836f-a918249afcce.json) |
+| 2026-11-22 15:12:38 | local | 铁球（RB_79） | 单位特例 | /stats/cost：100 → 75<br>/stats/move：3 → 4 | [JSON](../../server-data/editor-changes/2026-11-22/2026-11-22T06-12-38-019Z-272dd5bf-f47e-4c7a-b1d8-303864abf9f4.json) |
+| 2026-11-22 15:12:33 | local | 铁球K（RB_79K） | 单位特例 | /stats/cost：150 → 125<br>/stats/move：4 → 5 | [JSON](../../server-data/editor-changes/2026-11-22/2026-11-22T06-12-33-784Z-822182bf-ee68-4b1f-8694-235f7c71ab03.json) |
+| 2026-11-22 14:44:06 | local | 铁球后期型（RB_79_LateType） | 单位特例 | /stats/hp：9000 → 11250 | [JSON](../../server-data/editor-changes/2026-11-22/2026-11-22T05-44-06-774Z-deeb336b-0db8-4f43-80b6-3c8989467301.json) |
+| 2026-11-22 14:44:05 | local | 铁球M型（RB_79M） | 单位特例 | /stats/hp：6500 → 8125 | [JSON](../../server-data/editor-changes/2026-11-22/2026-11-22T05-44-05-692Z-6bf06539-93fd-491b-bf44-1fc9bf14b63c.json) |
+| 2026-11-22 14:44:04 | local | 铁球K（RB_79K） | 单位特例 | /stats/hp：9500 → 11875 | [JSON](../../server-data/editor-changes/2026-11-22/2026-11-22T05-44-04-432Z-3ae2eba3-b153-4c3b-8ffe-d97ea57080c2.json) |
+| 2026-11-22 14:43:59 | local | 铁球（RB_79） | 单位特例 | /stats/hp：6500 → 8125 | [JSON](../../server-data/editor-changes/2026-11-22/2026-11-22T05-43-59-456Z-6df55f0d-f144-4533-aa7f-269aec9d1180.json) |
 | 2026-11-15 12:45:19 | local | 核心推进器（FF_X7Bst） | 单位特例 | /weapons/EF_FF_X7Bst_BR/damageComponents/beam：2812.5 → 1425<br>/weapons/EF_FF_X7Bst_BR/damagePerShot：2812.5 → 1425<br>/weapons/EF_FF_X7Bst_BR_R/damageComponents/beam：2812.5 → 1425<br>/weapons/EF_FF_X7Bst_BR_R/damagePerShot：2812.5 → 1425 | [JSON](../../server-data/editor-changes/2026-11-15/2026-11-15T03-45-19-103Z-d59609d3-ad39-437f-984d-b58d20fb5a7c.json) |
 | 2026-11-15 03:38:57 | local | 米迪亚改（MedeaKai） | 单位特例 | /stats/cost：250 → 300 | [JSON](../../server-data/editor-changes/2026-11-15/2026-11-14T18-38-57-850Z-02d45a5d-e853-4c55-9e66-6e5472e92d64.json) |
 | 2026-11-15 03:38:52 | local | 米迪亚（Medea） | 单位特例 | /stats/cost：200 → 250 | [JSON](../../server-data/editor-changes/2026-11-15/2026-11-14T18-38-52-019Z-f0dbaefb-946a-4aec-adbd-828277ecb955.json) |

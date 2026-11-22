@@ -9,23 +9,19 @@ for (const width of [1440, 390])
     const errors = [];
     page.on("pageerror", (e) => errors.push(e.message));
     await page.setViewportSize({ width, height: 950 });
-    await page.addInitScript(() =>
-      localStorage.setItem(
-        "projectgreed.economy.v1",
-        JSON.stringify({
-          schemaVersion: 3,
-          money: 100000,
-          supplies: 100000,
-          licenses: { ColumbusClass: true },
-          inventory: { ColumbusClass: 5 },
-          kits: {},
-          claimed: {},
-        }),
-      ),
-    );
     await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
     await expect(page.locator("#openSkirmish")).toBeEnabled({ timeout: 20000 });
     await page.evaluate(() => {
+      Economy.creditActivity({
+        id: "briefing-mission-fixture",
+        matchId: "briefing-mission-fixture",
+        money: 0,
+        supplies: 0,
+        inventory: { ColumbusClass: 1 },
+      });
+      window.briefingSonars = 0;
+      const audioPlay = GameAudio.play;
+      GameAudio.play = (key) => { if (key === "sonarSound") window.briefingSonars++; return audioPlay(key); };
       const factory = createRoomEngine;
       createRoomEngine = (options) =>
         (window.missionEngine = factory({ ...options, aiDelayMs: 999999 }));
@@ -40,12 +36,36 @@ for (const width of [1440, 390])
     await page.locator("#offlineRoomMode").selectOption("mission");
     await page.locator("#confirmOfflineMode").click();
     await expect.poll(() => page.evaluate(() => Net.snapshot?.settings.mode)).toBe("mission");
-    await page.evaluate(() =>
-      Net.request("start_game", { formation: [{ unitId: "ColumbusClass", kitId: "standard" }] }),
-    );
+    await page.evaluate(() => {
+      const ship = Economy.snapshot().storage.ships.find((u) => u.unitId === "ColumbusClass");
+      Net.request("start_game", {
+        formation: [{ unitId: ship.unitId, kitId: ship.kitId, stockId: ship.id }],
+      });
+    });
     await expect(page.locator("#confirmFinalFormation")).toBeVisible();
     await page.locator("#confirmFinalFormation").click();
     await expect.poll(() => page.evaluate(() => Net.snapshot.phase)).toBe("deployment");
+    const briefing = page.locator("#operationBriefing");
+    await expect(briefing).toBeVisible();
+    await expect(briefing).toHaveAttribute("data-mode", "mission");
+    await expect(briefing).toContainText("消灭所有敌人");
+    await expect(briefing).toContainText("保护目标被击坠");
+    const goals = briefing.locator(".briefing-goal");
+    expect(await goals.count()).toBeGreaterThan(1);
+    await goals.last().click();
+    await expect(goals.last()).toHaveClass(/active/);
+    await expect(briefing.locator(".briefing-marker.active")).toBeVisible();
+    await page.screenshot({ path: `tmp/verification/screenshots/briefing-mission-${width}.png` });
+    await briefing.locator("footer").getByRole("button", { name: "关闭", exact: true }).click();
+
+    await page.evaluate(() => Deployment.choose(game.units.find(u=>u.ownerSeat===0 && !u.missionActor && Rules.modelOf(u).ship)));
+    const shipId = await page.evaluate(()=>selected);
+    const facing = await page.evaluate(id=>getUnit(id).angle,shipId);
+    await expect(page.locator("#deploymentTurnRight")).toBeVisible();
+    for (let i=1;i<=4;i++) {
+      await page.locator("#deploymentTurnRight").click();
+      await expect.poll(()=>page.evaluate(id=>getUnit(id).angle,shipId)).toBe((facing+i*90)%360);
+    }
     await page.evaluate(() => Net.request("auto_place_deployment"));
     await expect.poll(() => page.evaluate(() => !!Net.awaiting)).toBe(false);
     await page.evaluate(() => Net.request("confirm_deployment"));
@@ -68,6 +88,9 @@ for (const width of [1440, 390])
     await expect(dialog.locator("p")).toHaveText("放出MS部队，作战开始");
     await dialog.getByRole("button", { name: "继续", exact: true }).click();
     await expect(dialog).toBeHidden();
+    await expect(briefing).toBeVisible();
+    await expect(briefing.locator('[data-tactical="defend"]')).not.toHaveCount(0);
+    await briefing.locator("footer button.primary").click();
     await page.evaluate(() => {
       const r = [...missionEngine.rooms.values()][0];
       r.game.units
@@ -81,11 +104,30 @@ for (const width of [1440, 390])
       ["夏亚:", "白色的家伙，越来越能干了啊。"],
       ["阿姆罗:", "得赶紧支援布莱德才行。"],
     ]) {
+      await expect(briefing).toBeHidden();
       await expect(dialog.locator("strong")).toHaveText(name);
       await expect(dialog.locator("p")).toHaveText(text);
       await dialog.getByRole("button", { name: "继续", exact: true }).click();
     }
     await expect(dialog).toBeHidden();
+    await expect(briefing).toBeVisible();
+    await expect.poll(()=>page.evaluate(()=>briefingSonars)).toBe(3);
+    await briefing.locator("footer button.primary").click();
+    await page.evaluate(()=> {
+      const s=structuredClone(Net.snapshot);
+      s.game.mission.objectives.victory[0].current++;
+      BriefingUI.receive(s);
+    });
+    await page.waitForTimeout(250);
+    await expect(briefing).toBeHidden();
+    await page.evaluate(()=> {
+      const s=structuredClone(Net.snapshot);
+      s.game.mission.objectives.failure.push({kind:"protected_destroyed", current:0, total:1, unitId:"RGM_79"});
+      BriefingUI.receive(s);
+    });
+    await expect(briefing).toBeVisible();
+    await expect.poll(()=>page.evaluate(()=>briefingSonars)).toBe(4);
+    await briefing.locator("footer button.primary").click();
     await expect.poll(() => page.evaluate(() => Net.canAct())).toBe(true);
     expect(errors).toEqual([]);
   });

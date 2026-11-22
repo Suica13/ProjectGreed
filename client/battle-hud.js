@@ -18,9 +18,9 @@ const BattleHUD = (() => {
     scene.querySelector(".phase-row"),
     scene.querySelector(".map-camera-controls"),
   );
-  // CampaignUI attaches these controls beside presentation speed in the lower toolbar.
+  // Keep presentation controls immediately after the log filter, including restored layouts.
   const combatControls = byId("mapCombatControls");
-  if (combatControls) scene.querySelector(".log-tabs").append(combatControls);
+  if (combatControls) byId("battleLogView").after(combatControls);
   const topControls = element("div", "hud-top-controls");
   topControls.append(byId("hudTurnActions"));
   const topLine = element("div", "hud-top-line");
@@ -278,7 +278,7 @@ const BattleHUD = (() => {
     MatchIncome.render(byId("hudMatchIncome"), snapshot);
     const roomName = Net.local
       ? "离线" +
-        ({ dominion: "占山为王模式", mission: "任务模式", sweep: "战场扫荡", battlefield: "雇佣兵战争模式", quick: "快速战" }[
+        ({ dominion: "占山为王模式", mission: "任务模式", sweep: "合约模式", battlefield: "雇佣兵战争模式", quick: "快速战" }[
           snapshot?.settings?.mode
         ] || "常规战")
       : snapshot?.room || Net.room || "—";
@@ -289,7 +289,7 @@ const BattleHUD = (() => {
     const members = (snapshot?.members || []).filter(
       (member) =>
         member.connected &&
-        !(snapshot?.settings?.mode === "mission" && member.bot) &&
+        !(["mission", "sweep"].includes(snapshot?.settings?.mode) && member.bot) &&
         !(snapshot?.settings?.mode === "battlefield" && member.seat !== null && member.seat < 2),
     );
     const players = members.filter((member) => member.seat !== null).length;
@@ -299,7 +299,7 @@ const BattleHUD = (() => {
       ": " +
       players +
       "/" +
-      (snapshot?.settings?.mode === "mission" ? Rules.getMap(snapshot.settings.mapId).playersPerTeam : (snapshot?.connected?.length || 0) - (snapshot?.settings?.mode === "battlefield" ? 2 : 0)) +
+      (["mission", "sweep"].includes(snapshot?.settings?.mode) ? Rules.getMap(snapshot.settings.mapId).playersPerTeam : (snapshot?.connected?.length || 0) - (snapshot?.settings?.mode === "battlefield" ? 2 : 0)) +
       (spectators ? " · " + I18n.text("观战玩家") + ": " + spectators : "");
     byId("hudPlayerCount").title = byId("hudPlayerCount").textContent;
   }
@@ -325,7 +325,7 @@ const BattleHUD = (() => {
     byId("hudCancelAction").disabled = !!unit && (!!animating || isBusy(true));
   }
   function refresh() {
-    const active = pageView === "game" && scene.dataset.sweepMission !== "true",
+    const active = pageView === "game",
       unit = getUnit(selected),
       inCombat = ["battle", "reaction", "reaction_wait", "playback_wait", "moving"].includes(phase);
     const reacting = phase === "reaction" && pending,
@@ -532,13 +532,17 @@ const BattleHUD = (() => {
         !isBusy();
       for (const button of row.children)
         button.hidden =
-          button.dataset.unitCommand === "hangar"
+          button.dataset.shipTurn && phase === "deployment"
+            ? true
+            : button.dataset.unitCommand === "hangar"
             ? phase !== "idle"
             : !canCommand;
       row.prepend(infoButton);
       infoButton.hidden = false;
       row.prepend(capturePoint);
       row.append(transferRegion, transferControl);
+      const extractionButton=ContractUI.actionButton(unit);
+      if(extractionButton)row.append(extractionButton);
       transferControl.hidden = !own || !game.campaignBattlefield || phase !== "idle";
       transferControl.disabled = !canCommand || !!unit.plan || !!unit.pendingMove;
       transferControl.onclick = async () => {
@@ -570,6 +574,14 @@ const BattleHUD = (() => {
       capturePoint.disabled =
         !canCommand || !Rules.campaignBattlefield?.canCapture(Rules, game, unit);
       capturePoint.onclick = () => Net.request("capture_point", { unitId: unit.id });
+      capturePoint.textContent = I18n.text("占领");
+      const recovery = ContractUI.recoveryObjective(unit);
+      if (recovery && own && phase === "idle") {
+        capturePoint.hidden = false;
+        capturePoint.textContent = I18n.text("回收");
+        capturePoint.disabled = !canCommand || unit.acted || !!unit.plan || !!unit.pendingMove;
+        capturePoint.onclick = () => Net.request("contract_interact", {unitId:unit.id,objectiveId:recovery.id});
+      }
       const exits = unit ? Rules.campaignBattlefield?.exits(Rules, game, unit) || [] : [];
       transferRegion.hidden = !own || phase !== "idle" || !exits.length;
       transferRegion.disabled = isBusy() || !Net.canAct() || isAI();

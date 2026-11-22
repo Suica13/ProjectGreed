@@ -43,11 +43,6 @@ function fixture(t, mode, extraCarrier = false) {
   act("start_game", { formation });
   assert.equal(room.phase, "assembly");
   act("confirm_formation");
-  if (mode === "sweep") {
-    assert.equal(room.phase, "sweep_map");
-    act("sweep_select", { nodeId: "0:1" });
-    act("sweep_confirm");
-  }
   assert.equal(room.phase, "deployment");
   return { e, room, seat, act };
 }
@@ -59,44 +54,3 @@ for (const mode of ["regular", "quick", "battlefield", "sweep"])
     assert.equal(units.filter((u) => u.embarked).length, 1);
       assert.equal(room.settings.unitLimit, 18);
   });
-test("sweep restock validates hangars using stable roster keys after the original carrier is lost", (t) => {
-  const { e, room, seat, act } = fixture(t, "sweep", true);
-  act("confirm_deployment");
-  const own = room.game.units.filter((u) => G.ownerOf(u) === seat),
-    id = room.seats[seat].id;
-  own.find((u) => G.modelOf(u).prefabId === "Medea").hp = 0;
-  for (const u of room.game.units.filter((u) => u.team === 1)) u.hp = 0;
-  room.game.winner = 0;
-  room.phase = "finished";
-  e.broadcast(room);
-  assert.equal(room.phase, "sweep_map");
-  assert.equal(room.sweep.rosters[id].length, 2);
-  room.sweep.nodes.find((n) => n.id === "1:1").type = "rest";
-  act("sweep_select", { nodeId: "1:1" });
-  act("sweep_confirm");
-  act("sweep_event", { choice: 1 });
-  assert.equal(room.phase, "sweep_resupply");
-  assert.throws(
-    () => act("sweep_restock_commit", { operations: [{type:"add",entry: { unitId: "Type61", kitId: "standard" }}] }),
-    /存活母舰的格纳库/,
-  );
-  const carrier = room.sweep.rosters[id].find((r) => r.entry.unitId === "Medea");
-  assert.equal(carrier.key, 2);
-  room.sweep.pending[id].supplies = 10000;
-  act("sweep_restock_commit", {
-    operations: [{type:"add",entry: {
-      unitId: "Type61",
-      kitId: "standard",
-      preload: { carrierIndex: carrier.key, hangarId: "Hangar_1" },
-    }}],
-  });
-  assert.equal(room.sweep.rosters[id].at(-1).entry.preload.carrierIndex, 2);
-  act("sweep_resupply_done");
-  room.sweep.nodes.find((n) => n.id === "2:1").type = "battle";
-  act("sweep_select", { nodeId: "2:1" });
-  act("sweep_confirm");
-  assert.equal(room.phase, "deployment");
-  const units = room.game.units.filter((u) => G.ownerOf(u) === seat);
-  assert.equal(units.length, 3);
-  assert.equal(units.filter((u) => u.embarked).length, 1);
-});

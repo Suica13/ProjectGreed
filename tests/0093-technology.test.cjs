@@ -4,7 +4,7 @@ const G = require('../shared/rules');
 const D = require('../shared/development');
 const E = require('../shared/economy');
 const B = require('../shared/battle-economy');
-const Sweep = require('../shared/sweep-mode');
+const Sweep = require('../shared/contract-mode');
 const Production = require('../shared/production-data.cjs');
 const factions = ['EFSF_0093', 'NEO_ZEON_0093'];
 const prerequisites = Object.fromEntries(['EFSF','ZEON','AEUG','NEO_ZEON'].map(f=>[f,D.nodes(f).filter(n=>n.row==='mid').map(n=>n.id)]));

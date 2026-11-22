@@ -415,7 +415,7 @@
               "delay": 0.4
             },
             {
-              "delay": 1.0
+              "delay": 1
             }
           ],
           "startAnimation": "Common_Melee_B"
@@ -470,7 +470,8 @@
       "weapons": [
         "EF_RB_79N_Cannon",
         "Common_Cqb_B"
-      ]
+      ],
+      "conversionBaseCost": 0
     }
   ],
   "description": "进行水中用改修的铁球,配备磁轨炮与巨型钳",

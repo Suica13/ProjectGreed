@@ -24,7 +24,7 @@ window.BattleAssets = (() => {
       return false;
     }
     const keys = SpriteRenderer.battleKeys(snapshot);
-    const nextKey = JSON.stringify([snapshot.room, snapshot.matchId, snapshot.game?.mapId, snapshot.game?.campaignBattlefield?.regionId, snapshot.sweep?.battleIndex]);
+    const nextKey = JSON.stringify([snapshot.room, snapshot.matchId, snapshot.game?.mapId, snapshot.game?.campaignBattlefield?.regionId]);
     if (sceneKey !== nextKey) {
       cancel();
       sceneKey = nextKey;

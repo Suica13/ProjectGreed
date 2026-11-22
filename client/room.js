@@ -86,6 +86,13 @@ const RoomPanel = (() => {
   }
   savedPresetOptions();
   function showFormationPreset(settings) {
+    const select = byId("roomFormationPreset");
+    select.querySelector('option[value="contract"]')?.remove();
+    if (settings.mode === "sweep") {
+      select.add(new Option(I18n.text("合约模式"), "contract"));
+      select.value = "contract";
+      return;
+    }
     for (const option of byId("roomFormationPreset").options) {
       if (!/^\d+,\d+$/.test(option.value)) continue;
       const [cost,count]=option.value.split(",");
@@ -156,74 +163,6 @@ const RoomPanel = (() => {
     return badge;
   }
 
-  function drawSweepCover() {
-    const canvas = byId("roomMapPreview"),
-      ctx = canvas.getContext("2d");
-    canvas.width = 520;
-    canvas.height = 190;
-    ctx.fillStyle = "#162735";
-    ctx.fillRect(0, 0, 520, 190);
-    ctx.strokeStyle = "#213b4b";
-    ctx.lineWidth = 1;
-    for (let x = 0; x < 520; x += 26) {
-      ctx.beginPath();
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, 190);
-      ctx.stroke();
-    }
-    for (let y = 0; y < 190; y += 26) {
-      ctx.beginPath();
-      ctx.moveTo(0, y);
-      ctx.lineTo(520, y);
-      ctx.stroke();
-    }
-    const nodes = [
-      [310, 150],
-      [380, 110],
-      [450, 150],
-      [310, 65],
-      [380, 25],
-      [450, 65],
-    ];
-    ctx.strokeStyle = "#718c96";
-    ctx.lineWidth = 2;
-    for (const [a, b] of [
-      [0, 1],
-      [1, 2],
-      [0, 3],
-      [1, 3],
-      [1, 5],
-      [2, 5],
-      [3, 4],
-      [4, 5],
-    ]) {
-      ctx.beginPath();
-      ctx.moveTo(...nodes[a]);
-      ctx.lineTo(...nodes[b]);
-      ctx.stroke();
-    }
-    nodes.forEach(([x, y], i) => {
-      ctx.beginPath();
-      ctx.arc(x, y, 12, 0, Math.PI * 2);
-      ctx.fillStyle = i === 0 ? "#d8ba72" : "#3a6275";
-      ctx.fill();
-      ctx.strokeStyle = "#a6c7ce";
-      ctx.stroke();
-    });
-    ctx.textAlign = "left";
-    ctx.fillStyle = "#a4bac7";
-    ctx.font = "13px sans-serif";
-    ctx.fillText("PMC / OPERATIONS", 24, 44);
-    ctx.fillStyle = "#e0edf3";
-    ctx.font = "bold 30px sans-serif";
-    ctx.fillText(I18n.text("战场扫荡"), 24, 100, 265);
-    ctx.fillStyle = "#99b9c9";
-    ctx.font = "14px sans-serif";
-    ctx.fillText("PVE · PMC", 25, 136);
-    canvas.setAttribute("aria-label", I18n.text("战场扫荡"));
-    byId("roomMapTitle").textContent = I18n.text("战场扫荡");
-    byId("roomMapInfo").textContent = I18n.text("合作模式") + " · " + I18n.text("战场扫荡");
-  }
   const mapCoverImages=new Map();
   function drawMap(map) {
     const canvas = byId("roomMapPreview"),
@@ -274,18 +213,22 @@ const RoomPanel = (() => {
     ctx.textAlign = "left";
     ctx.fillText(I18n.text(map.environment === "space" ? "宇宙" : "地面"), 11, 22);
     canvas.setAttribute("aria-label", map.name + " · " + map.width + "×" + map.height);
-    if(map.mission?.cover && ART.assets[map.mission.cover]) {
-      let cover=mapCoverImages.get(map.mission.cover);
+    const coverKey=map.cover || map.mission?.cover;
+    canvas.dataset.cover = coverKey || "";
+    canvas.dataset.coverLoaded = "false";
+    if(coverKey && ART.assets[coverKey]) {
+      let cover=mapCoverImages.get(coverKey);
       if(!cover) {
-        cover=new Image();mapCoverImages.set(map.mission.cover,cover);
+        cover=new Image();mapCoverImages.set(coverKey,cover);
         cover.onload=()=>{if(Net.snapshot?.settings.mapId===map.id)drawMap(map);};
-        cover.src=ART.assets[map.mission.cover];
+        cover.src=ART.assets[coverKey];
       }
       if(cover.complete && cover.naturalWidth) {
         ctx.fillStyle="#101722";ctx.fillRect(0,0,canvas.width,canvas.height);
-        const scale=Math.min(canvas.width/cover.naturalWidth,canvas.height/cover.naturalHeight);
+        const scale=(map.cover ? Math.max : Math.min)(canvas.width/cover.naturalWidth,canvas.height/cover.naturalHeight);
         const width=cover.naturalWidth*scale,height=cover.naturalHeight*scale;
         ctx.drawImage(cover,(canvas.width-width)/2,(canvas.height-height)/2,width,height);
+        canvas.dataset.coverLoaded = "true";
       }
     }
     const playerPositions = map.spawns.filter((spawn) => !spawn.fixedAlly && (!map.mission || spawn.team===0)).length;
@@ -455,7 +398,7 @@ const RoomPanel = (() => {
     const settings = snapshot.settings || Rules.defaultRoomSettings();
     const mapSelect = byId("roomMapSelect");
     mapSelect.replaceChildren();
-    if (settings.mode === "sweep") mapSelect.add(new Option(I18n.text("战场扫荡"), settings.mapId));
+    if (settings.mode === "sweep") mapSelect.add(new Option(I18n.text("合约模式"), settings.mapId));
     for (const map of Object.values(Rules.catalog.maps).filter(
       (map) =>
         settings.mode !== "campaign" &&
@@ -478,12 +421,13 @@ const RoomPanel = (() => {
     mapSelect.hidden = settings.mode === "sweep";
     byId("roomMapChoiceHint").hidden = settings.mode === "sweep";
     const fleetFormation = Rules.formationStyle(settings) === "standard" && settings.mode !== "campaign";
-    byId("roomUnitLimit").value = fleetFormation ? Rules.fleetLimit(settings) : numericDrafts.unitLimit ?? settings.unitLimit;
+    const contractConfig = settings.mode === "sweep" ? ContractMode.config(settings.sweepDifficulty, settings.sweepEra) : null;
+    byId("roomUnitLimit").value = contractConfig?.fleetLimit ?? (fleetFormation ? Rules.fleetLimit(settings) : numericDrafts.unitLimit ?? settings.unitLimit);
     byId("roomUnitLimit").readOnly = fleetFormation;
     const limitLabel = fleetFormation ? "\u8230\u8239\u6570\u91cf\u4e0a\u9650" : "\u5355\u4f4d\u5bb9\u91cf\u70b9\u4e0a\u9650";
     byId("roomUnitLimit").parentElement.firstChild.nodeValue = I18n.text(limitLabel);
     byId("roomUnitLimit").setAttribute("aria-label",I18n.text(limitLabel));
-    byId("roomCostLimit").value = numericDrafts.costLimit ?? settings.costLimit;
+    byId("roomCostLimit").value = contractConfig?.costLimit ?? numericDrafts.costLimit ?? settings.costLimit;
     byId("roomUnitCostLimit").value = numericDrafts.unitCostLimit ?? settings.unitCostLimit;
     const locked = snapshot.started || snapshot.you?.id !== snapshot.hostId || busy;
     byId("roomTechnologyRules").hidden = ["battlefield", "sweep", "mission"].includes(settings.mode);
@@ -506,7 +450,7 @@ const RoomPanel = (() => {
     if(!missionOptions){missionOptions=element("details","room-rule-group room-mode-rules");missionOptions.id="missionRoomOptions";missionOptions.open=true;byId("roomTechnologyRules").before(missionOptions);}
     missionOptions.hidden=settings.mode!=="mission";
     missionOptions.replaceChildren();
-    if(settings.mode==="mission") {
+    if(["mission","sweep"].includes(settings.mode)) {
       missionOptions.append(element("summary","","任务模式设置"));
       const map=Rules.getMap(settings.mapId);
       missionOptions.append(element("p","helper",map.description));
@@ -545,22 +489,23 @@ const RoomPanel = (() => {
     sweepOptions.hidden = settings.mode !== "sweep";
     sweepOptions.replaceChildren();
     if (settings.mode === "sweep") {
-      sweepOptions.append(element("summary", "", "战场扫荡模式设置"));
+      sweepOptions.append(element("summary", "", "合约模式设置"));
       const fields = element("div", "room-mode-fields");
       sweepOptions.append(fields);
       for (const [key, name, values] of [
-        ["sweepEra", "年代", Rules.eras.filter((era) => SweepMode.factionsForEra(Rules, era).length)],
-        ["sweepFaction", "敌军阵营", SweepMode.factionsForEra(Rules, settings.sweepEra)],
+        ["sweepDifficulty", "难度", ContractMode.difficulties.map(d=>String(d.id))],
+        ["sweepEra", "年代", Rules.eras.filter((era) => ContractMode.factionsForEra(Rules, era).length)],
+        ["sweepFaction", "敌军阵营", ContractMode.factionsForEra(Rules, settings.sweepEra)],
       ]) {
         const label = element("label", "", name),
           select = document.createElement("select");
         select.id = key;
-        for (const value of values) select.add(new Option(Rules.factionInfo[value]?.name || value, value));
+        for (const value of values) select.add(new Option(key === "sweepDifficulty" ? I18n.text(ContractMode.config(value).name) : Rules.factionInfo[value]?.name || value, value));
         select.value = settings[key];
         select.disabled = locked;
         select.onchange = () => {
           if (key === "sweepEra") {
-            const factions = SweepMode.factionsForEra(Rules, select.value);
+            const factions = ContractMode.factionsForEra(Rules, select.value);
             sendSettings({ sweepEra: select.value, sweepFaction: factions.includes(settings.sweepFaction) ? settings.sweepFaction : factions[0] });
           } else sendSettings({ [key]: select.value });
         };
@@ -581,11 +526,13 @@ const RoomPanel = (() => {
         sendSettings({ sweepEnvironment: environmentSelect.value });
       environment.append(environmentSelect);
       fields.append(environment);
+      const difficulty=ContractMode.config(settings.sweepDifficulty, settings.sweepEra);
+      sweepOptions.append(element("p","helper",difficulty.name+" · "+I18n.text("编组COST")+" "+difficulty.costLimit+" · "+I18n.text("舰船数量")+" "+difficulty.fleetLimit+" · "+difficulty.width+"×"+difficulty.height));
       sweepOptions.append(
         element(
           "p",
           "helper",
-          "纯PVE；按人数和作战环境随机抽选战斗地图。敌军上限与节点奖励每节点增长5%，战利品仅在撤离时结算。",
+          "纯PVE；每局随机地图与边缘入场区，事件数量等于N级。单位到达撤离区后可独立撤离，收益按完成事件数结算。",
         ),
       );
     }
@@ -669,7 +616,7 @@ const RoomPanel = (() => {
 
     mapSelect.hidden = settings.mode === "sweep";
     byId("roomFormationRules").hidden = settings.mode === "battlefield";
-    if(settings.mode==="mission") {
+    if(["mission","sweep"].includes(settings.mode)) {
       for(const id of ["roomCostLimit","roomUnitLimit","roomFormationPreset","saveRoomPreset","deleteRoomPreset"])
         byId(id).disabled=true;
     }
@@ -677,9 +624,14 @@ const RoomPanel = (() => {
     teamRulesPanel.closest("details").hidden = settings.mode !== "quick";
     for (const id of ["roomFogMode", "roomShareAlliedUnits"])
       byId(id).closest("label").hidden = false;
+    if (settings.mode === "sweep") {
+      byId("roomFogMode").value = "full";
+      byId("roomFogMode").disabled = true;
+      byId("roomPilotPolicy").value = "allow";
+      byId("roomPilotPolicy").disabled = true;
+    }
     renderBattlefieldOptions(snapshot, locked);
-    if (settings.mode === "sweep") drawSweepCover();
-    else drawMap(Rules.getMap(mapSelect.value));
+    drawMap(Rules.getMap(mapSelect.value));
   }
   function closeDetail() {
     detail = null;
@@ -1233,7 +1185,7 @@ const RoomPanel = (() => {
     byId("roomTitle").textContent = Net.local
       ? "离线" +
         {
-          sweep: "战场扫荡",
+          sweep: "合约模式",
           mission: "任务模式",
           battlefield: "雇佣兵战争模式",
           dominion: "占山为王模式",
@@ -1326,7 +1278,7 @@ const RoomPanel = (() => {
         }
         if (
           (!snapshot.started || !!snapshot.campaign) &&
-          snapshot.settings.mode !== "mission" &&
+          !["mission", "sweep"].includes(snapshot.settings.mode) &&
           self.id === snapshot.hostId &&
           (!member || member.bot) &&
           !reserved &&

@@ -1,5 +1,5 @@
 const test = require("node:test"), assert = require("node:assert/strict");
-const G = require("../shared/rules"), S = require("../shared/sweep-mode");
+const G = require("../shared/rules");
 const { createRoomEngine } = require("../shared/room-engine");
 const formation = [{ unitId: "Medea", kitId: "standard" }, {
   unitId: "Type61", kitId: "standard", preload: { carrierIndex: 0, hangarId: "Hangar_1" },
@@ -29,7 +29,7 @@ function fixture(t, mode, storedUnits) {
     act(1, "confirm_formation");
     for (const i of [0, 1]) { act(i, "auto_place_deployment"); act(i, "confirm_deployment"); }
     assert.equal(room.phase, "idle");
-  } else assert.equal(room.phase, "sweep_map");
+  } else assert.equal(room.phase, "deployment");
   const player = [...room.members.values()].find((p) => p.ws === clients[0]);
   return { engine, room, clients, frames, act, player };
 }
@@ -115,27 +115,4 @@ test("returning from an unfinished regular match never settles casualties or rew
   assert.equal(f.player.inventory.Medea, 5);
   assert.equal(f.frames.get(f.clients[0]).rewardsSettled, false);
   assert(!f.room.economyAwards.some((a) => a.stockLost || a.kind === "result"));
-});
-for (const failed of [false, true]) test(`sweep node losses remain pending until ${failed ? "wipeout" : "extraction"}`, (t) => {
-  const f = fixture(t, "sweep"), s = f.room.sweep, id = f.player.id;
-  s.depth = 0;
-  s.losses[id].push(s.rosters[id].pop());
-  s.pending[id] = { money: 1000, supplies: 2000, technology: 250, inventory: { Type61: 2 } };
-  f.act(0, "sync");
-  assert.equal(f.player.inventory.Type61, 5);
-  const view = S.view(f.room, id);
-  assert.equal(view.inventoryRemaining.Type61, 4);
-  assert.equal(f.frames.get(f.clients[0]).rewardsSettled, false);
-  assert(!f.room.economyAwards.some((a) => a.stockLost));
-  if (failed) { S.finish(f.room, true); f.engine.broadcast(f.room); f.act(0, "sync"); }
-  else f.act(0, "sweep_extract");
-  const award = f.room.economyAwards.find((a) => a.kind === "result");
-  assert.equal(f.player.inventory.Type61, 4);
-  assert.deepEqual(award.stockLost.inventory, { Type61: 1 });
-  assert.deepEqual(award.stockGained.inventory, { Type61: 2 });
-  assert.equal(award.money, failed ? 500 : 1000);
-  assert.equal(f.frames.get(f.clients[0]).rewardsSettled, true);
-  f.act(0, "sync");
-  assert.equal(f.player.inventory.Type61, 4);
-  assert.equal(f.room.economyAwards.filter((a) => a.kind === "result").length, 1);
 });

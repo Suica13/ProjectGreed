@@ -802,25 +802,28 @@
         "ja": {
           "name": "120mmマシンガン装備"
         }
-      }
+      },
+      "conversionBaseCost": 0
     },
     {
       "id": "main_1",
       "name": "270mm火箭筒套件",
-      "cost": 50,
+      "cost": 25,
       "weapons": [
         "ZN_270mmBazooka",
         "Common_Cqb_A"
-      ]
+      ],
+      "conversionBaseCost": 50
     },
     {
       "id": "main_2",
       "name": "导弹发射器套件",
-      "cost": 50,
+      "cost": 25,
       "weapons": [
         "ZN_MP_02A_MS",
         "Common_Cqb_A"
-      ]
+      ],
+      "conversionBaseCost": 50
     }
   ],
   "description": "吉翁军为填补与联邦那种几何增长的作战单位差距,而生产的急造机动舱",

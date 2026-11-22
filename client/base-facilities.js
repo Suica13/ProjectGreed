@@ -52,13 +52,13 @@ window.BaseFacilitiesUI = (() => {
     const body = byId("facilityDialogBody");
     body.replaceChildren();
     if (upgrade) {
-      const offer = BaseFacilities.upgradeOffer(state, id),
+      const offer = Economy.facilityUpgradeOffer(id),
         cost = element("dl", "facility-cost");
       body.append(element("h3", "", offer.max ? "已达最高等级" : `Lv.${level} → Lv.${offer.next}`));
       for (const [label, text] of [
-        ["升级条件", "开发中"],
-        ["资金", "-"],
-        ["物资", "-"],
+        ["升级条件", offer.condition],
+        ["资金", offer.money===null?"-":formatNumber(offer.money)],
+        ["物资", offer.supplies===null?"-":formatNumber(offer.supplies)],
       ]) {
         const dt = element("dt", "", label);
         if (label === "资金" || label === "物资")
@@ -71,7 +71,8 @@ window.BaseFacilitiesUI = (() => {
         confirm = element("button", "primary", "确认"),
         cancel = element("button", "", "取消");
       confirm.id = "confirmFacilityUpgrade";
-      confirm.disabled = true;
+      confirm.disabled = Net.started || !offer.available || !Economy.affordable(offer);
+      confirm.onclick=()=>{try{if(!Net.started&&Economy.upgradeFacility(id,offer)){dialog.close();render();}}catch(error){note(Economy.errorMessage(error));}};
       cancel.onclick = () => dialog.close();
       buttons.append(confirm, cancel);
       body.append(buttons);

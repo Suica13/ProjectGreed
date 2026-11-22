@@ -13,7 +13,7 @@ for(const width of [1440,390])test('contact tabs and horizontal merchant cards '
   await page.locator('#shellContactMerchants').click();
   await expect(page.locator('#contactTasks')).toBeHidden();
   await expect(page.locator('#contactMerchants')).toBeVisible();
-  await expect(page.locator('.merchant-card')).toHaveCount(3);
+  await expect(page.locator('.merchant-card')).toHaveCount(2);
   const layout=await page.locator('.merchant-card').evaluateAll(async cards=>{
     for(const image of cards.flatMap(card=>[...card.querySelectorAll('img')]))await image.decode();
     return cards.map(card=>{const r=card.getBoundingClientRect();return{x:r.x,y:r.y,w:r.width,portrait:!!card.querySelector('.merchant-portrait'),info:card.querySelector('.merchant-information').textContent};});

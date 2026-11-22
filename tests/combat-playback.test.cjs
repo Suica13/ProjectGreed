@@ -70,8 +70,8 @@ const battle = (id) => ({
   before: { a: 100, b: 100 },
   events: [],
 });
-test("sweep route and next deployment discard active and queued combat presentations", () => {
-  for (const phase of ["sweep_map", "sweep_event", "sweep_resupply", "deployment"]) {
+test("next deployment discards active and queued combat presentations", () => {
+  for (const phase of ["deployment"]) {
     const { context, playback, calls } = runtime();
     context.Net.snapshot = snapshot();
     playback.receive(context.Net.snapshot, true);
@@ -86,28 +86,9 @@ test("sweep route and next deployment discard active and queued combat presentat
   }
 });
 
-test("new sweep battle accepts its own playback even when actor and batch IDs repeat", () => {
-  const { context, playback } = runtime();
-  context.Net.snapshot = { ...snapshot(), sweep: { battleIndex: 1 } };
-  playback.receive(context.Net.snapshot, true);
-  playback.show();
-  context.Net.snapshot = { ...snapshot(), phase: "deployment", playback: null, sweep: { battleIndex: 2 } };
-  playback.receive(context.Net.snapshot, true);
-  assert.equal(playback.active(), false);
-  context.Net.snapshot = { ...snapshot(), sweep: { battleIndex: 2 } };
-  playback.receive(context.Net.snapshot, true);
-  assert.equal(playback.queued, 1);
-});
-
 function snapshot(ready = []) {
-  return {
-    matchId: "match",
-    started: true,
-    phase: "playback",
-    you: { id: "viewer" },
-    playback: { id: "batch", members: ["viewer", "other"], ready },
-    combats: [battle("one"), battle("two")],
-  };
+  return {matchId:"match",started:true,phase:"playback",you:{id:"viewer"},
+    playback:{id:"batch",members:["viewer","other"],ready},combats:[battle("one"),battle("two")]};
 }
 test("all results start as one parallel batch, repeated snapshots never restart it, and completion acknowledges only this viewer", () => {
   const { context, playback, calls } = runtime();

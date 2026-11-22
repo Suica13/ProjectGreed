@@ -48,6 +48,8 @@ function fixture() {
       money: 12000,
       supplies: 24000,
       claimed: { "activity:unchanged": "activity" },
+      pluginInventory: { frame: 2 },
+      contactTasks: [{ merchantId: "efsf", mapId: "mission_no_fool", status: "accepted" }],
     },
     development: { points: { EFSF: 1000, ZEON: 2000 }, claimed: { "tech:unchanged": "battle" } },
   };
@@ -104,6 +106,8 @@ for (const width of [1440, 390])
     const save = await downloaded(page, "#downloadSave");
     expect(save.schemaVersion).toBe(3);
     expect(save.economy.money).toBe(87654);
+    expect(save.economy.pluginInventory).toEqual({ frame: 2 });
+    expect(save.economy.contactTasks).toEqual([]);
     expect(save.economy.inventory.MS_06F).toBe(19);
     expect(save.pilots.PMC.pilots[0].name).toBe("修改后的驾驶员");
     expect(save.formations.PMC.squads[0].units[1].customPilot).toEqual({ id: "custom-editor" });

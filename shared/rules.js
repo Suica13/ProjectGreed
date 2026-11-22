@@ -7,6 +7,8 @@ const Tactics = (() => {
   const catalog =
     typeof ART !== "undefined" ? ART : require("../tools/load-catalog.cjs").loadCatalog();
   const models = catalog.models;
+  const contractMode = typeof ContractMode !== "undefined" ? ContractMode : require("./contract-mode.js");
+  contractMode.registerMaps(catalog);
   const roleTargets = { general:"support", support:"raid", raid:"general" };
   const combatRoleAdvantage = (attacker, defender) => !!roleTargets[attacker?.combatRole] &&
     roleTargets[attacker.combatRole] === defender?.combatRole;
@@ -14,7 +16,8 @@ const Tactics = (() => {
     .filter(s => ["transform","armor_purge"].includes(s.type) && !s.deploymentMode)
     .flatMap(s => [p.id,s.source?.unitId]).filter(Boolean)));
   const technologyIds = new Map(catalog.prefabs.map(prefab=>[prefab.id,prefab.formOf||prefab.id]));
-  const sweepMapId = "battlefield_sweep";
+  // Keep the legacy wire setting for existing room presets; the route mode is removed.
+  const sweepMapId = "contract_ground";
   const automaticFire =
     typeof AutomaticFire !== "undefined" ? AutomaticFire : require("./automatic-fire.js");
   const aiTactics = typeof AITactics !== "undefined" ? AITactics : require("./ai-tactics.js");
@@ -38,7 +41,7 @@ const Tactics = (() => {
   const pilots = typeof PilotSystem !== "undefined" ? PilotSystem : require("./pilots.js");
   // SFS passengers remain independent combat actors; enclosed cargo stays hidden.
   const onMap = (u) =>
-    !!u && u.hp > 0 && !u.deploymentStaged && (!u.embarked || u.embarked.exposed === true);
+    !!u && u.hp > 0 && !u.contractExtracted && !u.deploymentStaged && (!u.embarked || u.embarked.exposed === true);
   const sensors = sensorModule.create({
     modelOf,
     cells,
@@ -328,6 +331,7 @@ const Tactics = (() => {
       sweepFaction: "ZEON",
       sweepEra: "UC_0079_T1",
       sweepEnvironment: "ground",
+      sweepDifficulty: 1,
       fogMode: "full",
       mapId: catalog.defaultMap,
       costLimit: 1500,
@@ -668,7 +672,7 @@ const Tactics = (() => {
         (player?.bot ? (player.formationVariation?.budget ?? 1) : 1),
     );
   }
-  const fleetLimit = settings => settings?.mode === "mission" ? settings.missionFleetLimit ?? 3 : 3;
+  const fleetLimit = settings => settings?.mode === "sweep" ? contractMode.config(settings.sweepDifficulty).fleetLimit : settings?.mode === "mission" ? settings.missionFleetLimit ?? 3 : 3;
   function armyUnitLimit(settings, player) {
     if (formationStyle(settings) === "standard" && !player?.battlefieldAI && !player?.sweepEnemy)
       return player?.bot ? catalog.formation.maxUnits : fleetLimit(settings);
@@ -1525,7 +1529,8 @@ const Tactics = (() => {
     };
   }
   function deploymentCells(g, seat, unit = null) {
-    const map = getMap(g.mapId),
+    const base = getMap(g.mapId),
+      map = g.deploymentAreas ? {...base,spawns:g.spawns,deploymentAreas:g.deploymentAreas} : base,
       spawn = map.spawns[seat],
       available = new Map();
     if (!spawn) return [];
@@ -2095,6 +2100,7 @@ const Tactics = (() => {
         c.x < mapWidth(g) &&
         c.y < mapHeight(g) &&
         !blocked?.has(key(c.x, c.y)) &&
+        !g.contract?.objectives.some(o => o.type === "capture" && o.x === c.x && o.y === c.y) &&
         Number.isFinite(terrainCost(g, unit, c.x, c.y)) &&
         (!area || area.has(key(c.x, c.y))) &&
         !(occupancy ? occupancy.reserved.get(key(c.x, c.y)) || [] : g.units || []).some(
@@ -2118,22 +2124,23 @@ const Tactics = (() => {
     );
   }
   function canRotate(g, unit, direction) {
+    const deploying = g.deployment && !g.deployment.every(Boolean);
     if (
       !(models[unit.model]?.ship || models[unit.model]?.fixedWeaponFacing) ||
       ![-1, 1].includes(direction) ||
-      !onMap(unit) ||
+      (!onMap(unit) && !(deploying && unit.deploymentStaged && !unit.embarked)) ||
       unit.acted ||
       unit.plan ||
       unit.pendingMove
     )
       return false;
-    const deploying = g.deployment && !g.deployment.every(Boolean);
     if (
       deploying
         ? g.deployment[ownerOf(unit)]
         : unit.team !== g.team || unit.moved || unit.rotated || g.winner !== null
     )
       return false;
+    if (deploying && unit.deploymentStaged) return true;
     const angle = (((unit.angle + direction * 90) % 360) + 360) % 360;
     // Check the entire swept bounding square; rotation cannot clip an asteroid or another unit.
     const size = dimensions(unit),
@@ -2149,6 +2156,9 @@ const Tactics = (() => {
       };
     const left = Math.min(unit.x, nextAnchor.x),
       top = Math.min(unit.y, nextAnchor.y);
+    // Deployment changes placement rather than simulating a turn through surrounding cells.
+    if (deploying)
+      return fits(g, unit, nextAnchor.x, nextAnchor.y, angle, false, ownerOf(unit));
     for (let y = top; y < top + sweep.height; y++)
       for (let x = left; x < left + sweep.width; x++) {
         if (
@@ -2336,7 +2346,7 @@ const Tactics = (() => {
     restoration = null,
   ) {
     validateBattleMode(settings.mode);
-    const map = getMap(settings.mapId),
+    const map = settings.mode === "sweep" ? contractMode.generateMap(catalog,settings,seed) : getMap(settings.mapId),
       costLimit = validateCostLimit(settings.costLimit ?? catalog.formation.maxCost),
       unitLimit = validateUnitLimit(settings.unitLimit ?? catalog.formation.maxUnits),
       fogMode = validateFogMode(settings.fogMode);
@@ -2351,9 +2361,7 @@ const Tactics = (() => {
     if (
       map.supportedModes &&
       !map.supportedModes.includes(
-        (settings.mode === "sweep" && map.id !== sweepMapId)
-          ? "regular"
-          : settings.mode || "regular",
+        settings.mode || "regular",
       )
     )
       throw Error("此地图不支持所选对战模式");
@@ -2411,7 +2419,7 @@ const Tactics = (() => {
       );
       if (stockPlan) formations[seat] = stockPlan.deployable;
       const placements = deploymentPlacements(
-        { tiles, units, mapId: map.id, environment: map.environment },
+        { tiles, units, mapId: map.id, environment: map.environment, ...(map.contractLayout ? {spawns:map.spawns,deploymentAreas:map.deploymentAreas} : {}) },
         formations[seat],
         seat,
         false,
@@ -2472,6 +2480,7 @@ const Tactics = (() => {
       units,
       deployment: deploying ? formations.map((army) => army === null) : null,
       mapId: map.id,
+      ...(map.contractLayout ? {spawns:map.spawns,deploymentAreas:map.deploymentAreas,contractLayout:map.contractLayout} : {}),
       climateMap: { environment: map.environment, climate: map.climate || map.weather || null },
       climateSettings: {
         weather: settings.weather || "map",
@@ -3837,7 +3846,7 @@ const Tactics = (() => {
       g.units.some((u) => u.team === t && u.hp > 0),
     );
     if (g.battlefield) battlefieldMode.sync(Tactics, g);
-    else if (!g.mission && !options.deferVictory && (!alive[0] || !alive[1])) g.winner = alive[0] ? 0 : 1;
+    else if (!g.mission && !g.contract && !options.deferVictory && (!alive[0] || !alive[1])) g.winner = alive[0] ? 0 : 1;
     return events;
   }
   // Counter waves share reaction state across the entire batch; EN is checked per shot.
@@ -3985,7 +3994,7 @@ const Tactics = (() => {
       g.units.some((u) => u.hp > 0 && u.team === team),
     );
     if (g.battlefield) battlefieldMode.sync(Tactics, g);
-    else if (!g.mission && (!alive[0] || !alive[1])) g.winner = alive[0] ? 0 : 1;
+    else if (!g.mission && !g.contract && (!alive[0] || !alive[1])) g.winner = alive[0] ? 0 : 1;
     return {
       type: "skill",
       skillId: skill.id,
@@ -4060,7 +4069,7 @@ const Tactics = (() => {
     const events = [];
     for (const u of g.units) {
       const burn = u.burning;
-      if (!burn) continue;
+      if (!burn || u.contractExtracted) continue;
       if (u.hp <= 0 || burn.expiresRound <= g.round) {
         delete u.burning;
         continue;
@@ -4093,12 +4102,15 @@ const Tactics = (() => {
         g.units.some((u) => u.team === team && u.hp > 0),
       );
       if (g.battlefield) battlefieldMode.sync(Tactics, g);
-      else if (!g.mission && (!alive[0] || !alive[1])) g.winner = alive[0] ? 0 : 1;
+      else if (!g.mission && !g.contract && (!alive[0] || !alive[1])) g.winner = alive[0] ? 0 : 1;
     }
     return events;
   }
   function end(g) {
     if (g.winner !== null) throw Error("战斗已经结束");
+    const evacuated=g.units.filter(u=>u.contractExtracted);
+    if(evacuated.length)g.units=g.units.filter(u=>!u.contractExtracted);
+    try {
     g.turnEffects = tickBurning(g);
     for (const u of g.units) if (!u.overdrive) skills.revertDamaged(u);
     for (const u of g.units.filter((u) => u.team === g.team && u.hp > 0 && u.overdrive)) {
@@ -4161,7 +4173,7 @@ const Tactics = (() => {
     const teamsAlive = [0, 1].map((team) =>
       g.units.some((unit) => unit.team === team && unit.hp > 0),
     );
-    if (!g.battlefield && !g.mission && (!teamsAlive[0] || !teamsAlive[1])) g.winner = teamsAlive[0] ? 0 : 1;
+    if (!g.battlefield && !g.mission && !g.contract && (!teamsAlive[0] || !teamsAlive[1])) g.winner = teamsAlive[0] ? 0 : 1;
     g.team = 1 - g.team;
     g.round++;
     skills.tickPilotBuffs(g);
@@ -4265,8 +4277,9 @@ const Tactics = (() => {
       g.units.some((u) => u.team === team && u.hp > 0),
     );
     if (g.battlefield) battlefieldMode.sync(Tactics, g);
-    else if (!g.mission && (!alive[0] || !alive[1])) g.winner = alive[0] ? 0 : 1;
+    else if (!g.mission && !g.contract && (!alive[0] || !alive[1])) g.winner = alive[0] ? 0 : 1;
     if (g.battlefield) battlefieldMode.advance(Tactics, g);
+    } finally { if(evacuated.length)g.units.push(...evacuated); }
   }
   // 待机不阻止自动结束；仍可使用脱出等非攻击技能时保留行动机会。
   function hasActions(g, ownerSeat = null) {
@@ -4537,6 +4550,11 @@ const Tactics = (() => {
       pressure = aiTargetPressure(g, u.team);
     yield;
     let strategy = aiTactics.forUnit(Tactics, g, u, aiTactics.decide(Tactics, g, u));
+    const contractOrder = contractMode.aiOrder(g, Tactics, u);
+    if (contractOrder) {
+      strategy = { ...strategy, goal: contractOrder.goal, strategic: true, occupation: true };
+      if (!contractOrder.alerted) enemies = [];
+    }
     let route =
       !destinations &&
       strategy.strategic &&
@@ -4546,7 +4564,7 @@ const Tactics = (() => {
       strategy.goal
         ? yield* aiRouteField(g, u, strategy, true)
         : null;
-    if (route && !route.has(key(u.x, u.y))) {
+    if (route && !route.has(key(u.x, u.y)) && !contractOrder) {
       // A nearer post can be on another island or behind an impassable ridge.
       // Choose a reachable mission instead of marching into that shoreline forever.
       const points = aiTactics.captureCapable(Tactics, u)
@@ -4657,7 +4675,15 @@ const Tactics = (() => {
         near = !destinations ? 0 : enemies.length
           ? Math.min(...enemies.map((e) => dist(virtual, e)))
           : Math.hypot(c.x - (u.team === 0 ? mapWidth(g) - 3 : 2), c.y - mapHeight(g) / 2);
-      const tacticalScore = positionScore(c);
+      let facingBonus = 0;
+      if (c.rotation && models[u.model]?.ship && strategy.goal) {
+        const source = center(u), goal = strategy.goal;
+        const desired = Math.atan2(goal.x - source.x, -(goal.y - source.y)) * 180 / Math.PI;
+        const error = angle => Math.abs(((angle - desired + 540) % 360) - 180);
+        const before = error(u.angle), after = error(virtual.angle);
+        if (before >= 60 && after < before) facingBonus = Math.min(6, (before - after) / 22.5);
+      }
+      const tacticalScore = positionScore(c.rotation ? {x:u.x,y:u.y} : c) + facingBonus;
       let score = tacticalScore - c.cost * 0.025,
         target = null,
         weapon = null,
@@ -4706,6 +4732,7 @@ const Tactics = (() => {
       !u.moved &&
       best &&
       !best.target &&
+      !best.rotation &&
       strategy.goal &&
       ["advance", "flank", "overrun"].includes(strategy.state)
     ) {
@@ -4839,6 +4866,7 @@ const Tactics = (() => {
     defaultRoomSettings,
     formationStyle,
     sweepMapId,
+    contractMode,
     formationRestrictions,
     restrictionReason,
     technologyUnitId: id => technologyIds.get(id) || id,

@@ -2,7 +2,7 @@ const {test,expect}=require('@playwright/test'),{pathToFileURL}=require('node:ur
 for(const width of [1440,390])test('owned unit plugin slots equip, reject duplicates, persist and remove '+width,async({page})=>{
   test.setTimeout(90000);await page.setViewportSize({width,height:1050});const errors=[];page.on('pageerror',error=>errors.push(error.message));
   await page.goto(pathToFileURL(path.resolve('public/client.html')).href);await page.waitForFunction(()=>assetsReady);
-  const id=await page.evaluate(()=>{I18n.setLanguage('zh');Economy.creditActivity({id:'plugins-ui',matchId:'plugins-ui',money:0,supplies:0,inventory:{RGM_79:1,Medea:1}});return Economy.snapshot().storage.units[0].id;});
+  const id=await page.evaluate(()=>{I18n.setLanguage('zh');Economy.creditActivity({id:'plugins-ui',matchId:'plugins-ui',money:100000,supplies:0,inventory:{RGM_79:1,Medea:1}});Economy.purchasePlugin('anaheim','frame');Economy.purchasePlugin('anaheim','generator');return Economy.snapshot().storage.units[0].id;});
   await page.locator('#shellHangar').click();await page.locator(`#warehouseBays [data-stock-id="${id}"]`).click();
   await expect(page.locator('.warehouse-plugin-slot')).toHaveCount(4);await expect(page.locator('.plugin-slot-plus')).toHaveCount(4);
   const slots=await page.locator('.warehouse-plugin-slot').evaluateAll(nodes=>nodes.map(node=>{const r=node.getBoundingClientRect();return {x:r.x,y:r.y};}));

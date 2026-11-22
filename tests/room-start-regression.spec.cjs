@@ -77,9 +77,11 @@ for (const online of [false, true])
         await expect(page.locator("#confirmFinalFormation")).toBeVisible();
         await page.locator("#confirmFinalFormation").click();
         if (mode === "sweep") {
-          await expect(page.locator("#sweepMission")).toBeVisible();
-          await page.locator('[data-sweep-node="0:1"]').click();
-          await page.locator("#sweepConfirm").click();
+          await expect(page.locator("#contractHud")).toBeVisible();
+          await page.locator("#contractHud button").filter({hasText:"入场区"}).click();
+          await page.locator("#contractHud button").filter({hasText:"事件目标"}).click();
+          await expect(page.locator("#contractObjectives .contract-objective")).toHaveCount(1);
+          await page.locator("#contractObjectives header button").click();
         }
         await expect.poll(() => page.evaluate(() => Net.snapshot.phase)).toBe("deployment");
         await expect(page.locator("#gameScene")).toBeVisible();

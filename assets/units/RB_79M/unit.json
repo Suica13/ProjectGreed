@@ -330,7 +330,7 @@
     },
     "v17BaseHp": 5000,
     "technologyEra": "0079T1",
-    "actionTurnSpeed": 1.0,
+    "actionTurnSpeed": 1,
     "mobilityMoveTarget": 5
   },
   "presentation": {
@@ -437,7 +437,8 @@
       "cost": 0,
       "weapons": [
         "Common_Cqb_A"
-      ]
+      ],
+      "conversionBaseCost": 0
     }
   ],
   "description": "装备了机雷夹舱的铁球,用于宇宙空间中的布防作业",

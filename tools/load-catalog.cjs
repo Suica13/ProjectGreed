@@ -1392,6 +1392,9 @@ function loadCatalog({
       )
     )
       throw Error("Unknown WIP unit or series: " + pattern);
+  for (const asset of Object.values(require("../shared/contract-mode.js").covers))
+    if (embedAssets) result.assets[asset] = "data:image/svg+xml;base64," +
+      fs.readFileSync(file(root, asset.slice(7))).toString("base64");
   const missionPilots = new Set(require("../shared/pilots.json").aces.map(p => p.id));
   for (const map of Object.values(result.maps)) if (map.mission) {
     if(map.mission.cover && embedAssets)

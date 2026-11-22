@@ -211,7 +211,12 @@ const BattlefieldUI = (() => {
     const state = game?.battlefield;
     hud.hidden = !state || !Net.started || pageView !== "game";
     topLine.classList.toggle("battlefield-top-line", !hud.hidden);
-    if (!state) return;
+    if (!state) {
+      if (game?.contract && identity !== Net.snapshot?.matchId) {
+        identity=Net.snapshot?.matchId;arrivals.clear();
+      }
+      return;
+    }
     const key = Net.snapshot?.matchId || game;
     if (key !== identity) {
       identity = key;
@@ -230,7 +235,7 @@ const BattlefieldUI = (() => {
     }
   }
   function dropHeight(unit, now) {
-    if (!game.battlefield || unit.airdropRound !== game.round) return 0;
+    if ((!game.battlefield && !game.contract) || unit.airdropRound !== game.round) return 0;
     if (!arrivals.has(unit.id)) arrivals.set(unit.id, now);
     return Math.max(0, 1 - (now - arrivals.get(unit.id)) / 1400) * 5;
   }

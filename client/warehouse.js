@@ -5,7 +5,7 @@ window.WarehouseUI = (() => {
   screen.hidden = true;
   screen.innerHTML = `<section class="warehouse-main"><header><div class="warehouse-tabs">
     <button id="warehouseUnits" aria-pressed="true">单位</button><button id="warehouseShips" aria-pressed="false">舰船</button></div>
-    <strong id="warehouseCapacity"></strong><button id="warehouseDeliveries" hidden></button></header>
+    <button id="warehouseDeliveries">保管库</button><strong id="warehouseCapacity"></strong></header>
     <div class="base-page-toolbar" id="warehouseToolbar"><label for="warehouseSearch"><span>搜索</span><input id="warehouseSearch" type="search" placeholder="搜索" /></label><label for="warehouseFaction"><span>阵营筛选</span><select id="warehouseFaction" aria-label="阵营筛选"></select></label><div id="warehouseSortControl"></div></div>
     <div class="warehouse-yard" id="warehouseYard"><div id="warehouseBays"></div></div>
     <footer><button id="warehouseRepairAll">一键修复</button><div class="warehouse-pagination"><button id="warehousePrevious">上一页</button><span id="warehousePage"></span><button id="warehouseNext">下一页</button></div></footer></section>`;
@@ -383,8 +383,11 @@ window.WarehouseUI = (() => {
     if(slots[slot]){const remove=element("button","danger","卸下零件");remove.onclick=()=>equip(null);body.append(remove);}
     for(const part of UnitPlugins.catalog){
       const button=element("button","plugin-picker-choice");button.type="button";button.dataset.pluginId=part.id;
-      button.disabled=!UnitPlugins.allowed(part,model)||slots.some((id,index)=>index!==slot&&id===part.id);
-      button.append(pluginCard(part));button.onclick=()=>equip(part.id);list.append(button);
+      const quantity = Economy.pluginQuantity(part.id);
+      button.disabled=!UnitPlugins.allowed(part,model)||slots.some((id,index)=>index!==slot&&id===part.id)||quantity<1;
+      button.append(pluginCard(part),element("small","plugin-stock-count",`可用 ${quantity} 件`));
+      if (quantity < 1) button.title = I18n.text("零件库存不足，请前往联络商人购买");
+      button.onclick=()=>equip(part.id);list.append(button);
     }
     back.onclick=()=>showUnit(currentItem(item));body.append(list,back);dialog.scrollTop=0;
   }
@@ -532,9 +535,9 @@ window.WarehouseUI = (() => {
     byId("warehouseRepairAll").disabled = Net.started || repairPending || !Economy.repairQuote().items.length;
     byId("warehouseCapacity").textContent =
       `${I18n.text(kind === "units" ? "单位库存" : "战舰库存")} ${used.count} / ${used.slots}`;
-    byId("warehouseDeliveries").hidden = !storage.deliveries.length;
+    byId("warehouseDeliveries").hidden = false;
     byId("warehouseDeliveries").textContent =
-      `${I18n.text("领取待入库单位")} (${storage.deliveries.length})`;
+      `${I18n.text("保管库")} (${storage.deliveries.length})`;
     const query=byId("warehouseSearch").value.trim().toLocaleLowerCase(), faction=byId("warehouseFaction").value;
     const filtering=!!query || faction!=="all";
     const matching=storage[kind].filter(item=>{
@@ -665,13 +668,23 @@ window.WarehouseUI = (() => {
     page++;
     render();
   };
-  byId("warehouseDeliveries").onclick = () => {
-    try {
-      Economy.receiveDeliveries();
-    } catch (error) {
-      note(error.message);
-    }
-  };
+  function showDeliveries() {
+    const body=openPanel(I18n.text("保管库")), list=element("div","warehouse-delivery-list");
+    const deliveries=Economy.snapshot().storage.deliveries;
+    deliveries.forEach((item,index)=>{
+      const id=item.unitId+"__"+item.kitId,model=UnitModels[id],row=element("article","warehouse-delivery-card"),
+        image=element("img"),text=element("div"),accept=element("button","primary","接受");
+      row.dataset.deliveryIndex=index;image.src=unitIcon(id);image.alt="";
+      text.append(element("strong","",model.name),element("small","",model.cost+"C · "+model.kitName));
+      accept.disabled=Net.started || !Warehouse.fits(Economy.snapshot().storage,model,UnitModels);
+      if(accept.disabled)accept.title=I18n.text(Net.started?"对局进行中不能领取":"对应机库已满");
+      accept.onclick=()=>{try{if(!Net.started){Economy.receiveDeliveries(index);showDeliveries();}}catch(error){note(error.message);}};
+      row.append(image,text,accept);list.append(row);
+    });
+    if(!deliveries.length)list.append(element("p","muted","保管库为空"));
+    body.append(element("p","muted","机库已满时收到的奖励保存在这里，腾出位置后可逐个接受。"),list);
+  }
+  byId("warehouseDeliveries").onclick=showDeliveries;
   for (const event of ["economy-changed", "game-assets-ready", "language-change"])
     window.addEventListener(event, render);
   let resizeFrame;

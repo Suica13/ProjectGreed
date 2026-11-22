@@ -93,6 +93,35 @@
       "/weapons/EF_FF_X7Bst_BR/damageComponents/beam": -1387.5,
       "/weapons/EF_FF_X7Bst_BR_R/damagePerShot": -1387.5,
       "/weapons/EF_FF_X7Bst_BR_R/damageComponents/beam": -1387.5
+    },
+    "RB_79": {
+      "/stats/hp": 1625,
+      "/stats/move": 1,
+      "/stats/cost": -25
+    },
+    "RB_79K": {
+      "/stats/hp": 2375,
+      "/stats/move": 1,
+      "/stats/cost": -25
+    },
+    "RB_79M": {
+      "/stats/hp": 1625,
+      "/stats/move": 1,
+      "/stats/cost": -25
+    },
+    "RB_79_LateType": {
+      "/stats/hp": 2250,
+      "/stats/move": 1,
+      "/stats/cost": -25
+    },
+    "MP_02A": {
+      "/stats/hp": 1750,
+      "/stats/move": 1,
+      "/stats/cost": -25
+    },
+    "RB_79N": {
+      "/stats/move": 1,
+      "/stats/cost": -25
     }
   },
   "weapons": {

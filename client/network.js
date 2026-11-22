@@ -264,6 +264,7 @@ const Net = (() => {
     if (profileActions.has(intent.action) && n.snapshot?.settings.mode !== "campaign") {
       message.licenses = Economy.snapshot().licenses;
       message.crewStock = Economy.snapshot().crewStock;
+      message.contactTasks = Economy.snapshot().contactTasks;
       if (!n.snapshot?.started || n.snapshot?.phase === "assembly") message.storedUnits = Economy.storedUnits();
       Object.assign(message, Economy.normalizeStock(Economy.snapshot()));
       message.technologyPoints = Development.pointSnapshot();
@@ -338,7 +339,8 @@ const Net = (() => {
   }
   function leave({ notify = true, forget = true } = {}) {
     window.MissionUI?.clear();
-    SweepUI.receive({phase:"waiting"});
+    ContractUI.receive({phase:"waiting"});
+    BriefingUI.clear();
     BattleAssets.release();
     if (window.ReplayPlayer?.active) window.ReplayPlayer.stop(false);
     window.BattlePrompts?.reset();
@@ -506,7 +508,7 @@ const Net = (() => {
     foregroundSyncAt = -Infinity;
     session++;
     moving = null;
-    status("离线" + ({mission:"任务模式",sweep:"战场扫荡",battlefield:"雇佣兵战争模式",campaign:"历史战役",quick:"快速战"}[byId("offlineRoomMode").value] || "常规战"));
+    status("离线" + ({mission:"任务模式",sweep:"合约模式",battlefield:"雇佣兵战争模式",campaign:"历史战役",quick:"快速战"}[byId("offlineRoomMode").value] || "常规战"));
   }
   function connect(mode = "join", auto = false, roomCode = null, credentials = {}) {
     cancelReconnect();
@@ -593,6 +595,7 @@ const Net = (() => {
           licenses: Economy.snapshot().licenses,
           crewStock: Economy.snapshot().crewStock,
           storedUnits: Economy.storedUnits(),
+          contactTasks: Economy.snapshot().contactTasks,
           ...Economy.normalizeStock(Economy.snapshot()),
           roomMode: mode === "create" ? byId("newRoomMode").value : undefined,
           mode,
@@ -655,7 +658,7 @@ const Net = (() => {
     // They must never restore a superseded room phase or reopen its modal.
     if (!n.active || !s || s !== n.snapshot) return;
     if (!s.started) BattleAssets.release();
-    else if (s.returnCountdown || ["sweep_map", "sweep_event", "sweep_resupply"].includes(s.phase)) BattleAssets.cancel();
+    else if (s.returnCountdown) BattleAssets.cancel();
     else if (BattleAssets.guard(s, () => applySnapshot(s))) {
       phase = "loading";
       return;
@@ -686,7 +689,7 @@ const Net = (() => {
       n.memberId = s.you.id;
     }
     n.started = s.started;
-    SweepUI.receive(s);
+    ContractUI.receive(s);
     window.CampaignUI?.refreshBattleControls(s);
     document.body.classList.toggle("campaign-active", !!s.campaign);
     document.body.classList.toggle("campaign-room", s.settings.mode === "campaign");
@@ -708,6 +711,7 @@ const Net = (() => {
     game = s.game;
     if (previousGame.mapId !== game.mapId) MapCamera.reset();
     window.MissionUI?.receive(s);
+    BriefingUI.receive(s);
     game.ai = false;
     log = s.log.slice();
 
@@ -807,15 +811,7 @@ const Net = (() => {
     byId("reaction").hidden = true;
     const ownResponse =
       s.phase === "reaction" && s.pending && canControl(getUnit(s.pending.target));
-    if (["sweep_map", "sweep_event", "sweep_resupply"].includes(s.phase)) {
-      phase = s.phase;
-      battleView = moving = selected = weaponId = null;
-      mode = "select";
-      PlanningUI.reset();
-      AttackControls.reset();
-      TurnFlow.reset();
-      byId("battle").hidden = true;
-    } else if (CombatPlayback.active() && !ownResponse) {
+    if (CombatPlayback.active() && !ownResponse) {
       phase = "battle";
       MapCombat.resume(battleView);
     } else if (!online && s.phase !== "finished") {
@@ -881,7 +877,7 @@ const Net = (() => {
     if (s.started && online)
       status(
         (n.local
-          ? "离线" + ({mission:"任务模式",sweep:"战场扫荡",battlefield:"雇佣兵战争模式",quick:"快速战"}[s.settings?.mode]||"常规战")
+          ? "离线" + ({mission:"任务模式",sweep:"合约模式",battlefield:"雇佣兵战争模式",quick:"快速战"}[s.settings?.mode]||"常规战")
           : "房间 " + n.room) +
           " · " +
           roleName(),

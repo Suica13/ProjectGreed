@@ -11,6 +11,8 @@
 
 | 时间（日本时间） | 来源IP | 单位 | 修改对象 | 修改内容 | 详细日志 |
 |---|---|---|---|---|---|
+| 2026-11-22 15:13:33 | local | 食人魔（MP_02A） | 单位特例 | /stats/cost：100 → 75<br>/stats/move：3 → 4 | [JSON](../../server-data/editor-changes/2026-11-22/2026-11-22T06-13-33-575Z-8d1c517d-8f4b-4449-91d8-ec6c1fd9e2aa.json) |
+| 2026-11-22 14:44:07 | local | 食人魔（MP_02A） | 单位特例 | /stats/hp：7000 → 8750 | [JSON](../../server-data/editor-changes/2026-11-22/2026-11-22T05-44-07-949Z-45d4d871-75ad-42ec-b9f8-bf6dc36fded6.json) |
 | 2026-11-15 03:38:59 | local | 胖叔叔改（FatUncleKai） | 单位特例 | /stats/cost：250 → 300 | [JSON](../../server-data/editor-changes/2026-11-15/2026-11-14T18-38-59-001Z-14e6ebb0-1899-470f-b4cd-e920c724dfc9.json) |
 | 2026-11-15 03:38:56 | local | 胖叔叔（FatUncle） | 单位特例 | /stats/cost：200 → 250 | [JSON](../../server-data/editor-changes/2026-11-15/2026-11-14T18-38-56-618Z-b63b79c6-f0bd-492e-8706-578533a2034f.json) |
 | 2026-11-14 11:30:29 | local | 帕佐克级（PazockClass） | 单位特例 | /displayLocalization/en：（无） → {"name":"Pazock Class","description":"Main Supply Ship of the Principality of Zeon Fleet"}<br>/localization/ja/description：（无） → "ジオン公国軍艦隊の主力補給艦。"<br>/localization/ja/name：（无） → "パゾク級"<br>/stats/cost：750 → 350<br>/weapons/PazockClass_Turret_AA/hit：85 → 125<br>/weapons/PazockClass_Turret_AA/max：2 → 1 | [JSON](../../server-data/editor-changes/2026-11-14/2026-11-14T02-30-29-567Z-de1f0255-8c78-4654-9a36-22234fd53399.json) |

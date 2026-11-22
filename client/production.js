@@ -4,7 +4,8 @@ const ProductionUI = (() => {
     kitId = null,
     tab = "stats";
   let returnView = "menu",
-    onReturn = null, storageTarget = null;
+    onReturn = null,
+    storageTarget = null;
   const filters = { faction: "", era: "", type: "" };
   let salePending = false;
   const screen = byId("productionScreen");
@@ -87,7 +88,13 @@ const ProductionUI = (() => {
   }
   function receiveAwards(snapshot) {
     RewardNotifications.sync(snapshot);
-    if (!snapshot.rewardsSettled || snapshot.replay || snapshot.phase === "replay" || snapshot.startedFromSave) return;
+    if (
+      !snapshot.rewardsSettled ||
+      snapshot.replay ||
+      snapshot.phase === "replay" ||
+      snapshot.startedFromSave
+    )
+      return;
     for (const award of snapshot.economyAwards || []) {
       try {
         if (Economy.creditAward(award)) RewardNotifications.add("currency", award, snapshot);
@@ -102,8 +109,13 @@ const ProductionUI = (() => {
   }
   function saleTitle(unitId) {
     const offer = Economy.saleOffer(unitId);
-    return Net.started ? I18n.text("对局进行中不能出售") : offer
-      ? I18n.text(`出售价格：资金 ${formatNumber(offer.money)} · 物资 ${formatNumber(offer.supplies)}`) : "";
+    return Net.started
+      ? I18n.text("对局进行中不能出售")
+      : offer
+        ? I18n.text(
+            `出售价格：资金 ${formatNumber(offer.money)} · 物资 ${formatNumber(offer.supplies)}`,
+          )
+        : "";
   }
   async function sellStock(unitId) {
     if (Net.started || salePending || Economy.quantity(unitId) < 1) return null;
@@ -112,7 +124,9 @@ const ProductionUI = (() => {
     salePending = true;
     try {
       const confirmed = await GameDialog.confirm(
-        I18n.text(`出售1台库存单位，获得资金 ${formatNumber(offer.money)}、物资 ${formatNumber(offer.supplies)}，是否继续？`),
+        I18n.text(
+          `出售1台库存单位，获得资金 ${formatNumber(offer.money)}、物资 ${formatNumber(offer.supplies)}，是否继续？`,
+        ),
         { title: I18n.text("出售库存单位") },
       );
       if (!confirmed) return null;
@@ -278,16 +292,17 @@ const ProductionUI = (() => {
     const owned = Economy.hasLicense(prefab.id),
       locked = !allows(prefab);
     const busy = Net.started && Net.snapshot?.phase !== "assembly";
-    byId("productionUnitName").replaceChildren(element("span", "production-unit-title", prefab.name),UnitPreview.roleIcon(model));
+    byId("productionUnitName").replaceChildren(
+      element("span", "production-unit-title", prefab.name),
+      UnitPreview.roleIcon(model),
+    );
     Formation.renderPreview(id, byId("productionPreview"));
     renderInfo(model);
     const prices = byId("productionPrice");
     prices.replaceChildren();
     prices.hidden = false;
     if (offer)
-      for (const [name, value] of [
-        ["机体生产费", offer.chassis],
-      ]) {
+      for (const [name, value] of [["机体生产费", offer.chassis]]) {
         const row = element("div", "production-price-row");
         row.append(element("small", "muted", name));
         const amount = element("span", "resource-balance");
@@ -298,11 +313,26 @@ const ProductionUI = (() => {
     else prices.append(element("span", "muted", "无法直接生产"));
     byId("productionLicenseStatus").hidden = owned;
     byId("produceUnit").dataset.licenseLocked = String(!owned);
-    byId("produceUnit").disabled = !owned || !offer || locked || busy || !Economy.affordable(offer) || !Economy.canStore(selectedId, kitId);
+    byId("produceUnit").disabled =
+      !owned ||
+      !offer ||
+      locked ||
+      busy ||
+      !Economy.affordable(offer) ||
+      !Economy.canStore(selectedId, kitId);
     byId("produceUnit").textContent = "生产";
-    byId("produceUnit").title = !owned ? "未许可" : locked ? "当前无法生产" :
-      !Economy.canStore(selectedId, kitId) ? "机库或船坞已满" : "";
-    byId("sellProductionUnit").disabled = Net.started || salePending || !Economy.saleOffer(prefab.id) || Economy.quantity(prefab.id) < 1;
+    byId("produceUnit").title = !owned
+      ? "未许可"
+      : locked
+        ? "当前无法生产"
+        : !Economy.canStore(selectedId, kitId)
+          ? "机库或船坞已满"
+          : "";
+    byId("sellProductionUnit").disabled =
+      Net.started ||
+      salePending ||
+      !Economy.saleOffer(prefab.id) ||
+      Economy.quantity(prefab.id) < 1;
     byId("sellProductionUnit").title = saleTitle(prefab.id);
   }
 
@@ -311,7 +341,9 @@ const ProductionUI = (() => {
     const list = byId("productionList"),
       scroll = list.scrollTop;
     const prefabs = UnitCatalog.select(byId("productionSearch").value, filters, allows).sort(
-      UnitCatalog.compareDevelopedCost(PlayerProfile.faction(), prefab => Economy.hasLicense(prefab.id)),
+      UnitCatalog.compareDevelopedCost(PlayerProfile.faction(), (prefab) =>
+        Economy.hasLicense(prefab.id),
+      ),
     );
     if (!prefabs.some((p) => p.id === selectedId)) {
       selectedId = prefabs[0]?.id || null;
@@ -342,7 +374,7 @@ const ProductionUI = (() => {
         metadata = element("span", "unit-line-meta");
       const name = element("strong", "unit-line-title", prefab.name);
       name.title = prefab.name;
-      heading.append(name,UnitPreview.roleIcon(defaultModel||prefab));
+      heading.append(name, UnitPreview.roleIcon(defaultModel || prefab));
       metadata.append(tags);
       const price = element("span", "production-unit-price"),
         balance = element("span", "resource-balance");
@@ -451,17 +483,25 @@ const ProductionUI = (() => {
     }
     byId("productionStatus").textContent = message;
   }
-  byId("produceUnit").onclick=()=>{
-    if(Net.started&&Net.snapshot?.phase!=="assembly")return;
+  byId("produceUnit").onclick = () => {
+    if (Net.started && Net.snapshot?.phase !== "assembly") return;
     try {
       const model = UnitModels[selectedId + "__" + kitId],
-        target = storageTarget && Warehouse.category(model) === storageTarget.kind &&
-          !Economy.snapshot().storage[storageTarget.kind].some((item) => item.slot === storageTarget.slot) ? storageTarget.slot : undefined;
-      const ok=Economy.produce(selectedId,kitId,PlayerProfile.faction(),target);
+        target =
+          storageTarget &&
+          Warehouse.category(model) === storageTarget.kind &&
+          !Economy.snapshot().storage[storageTarget.kind].some(
+            (item) => item.slot === storageTarget.slot,
+          )
+            ? storageTarget.slot
+            : undefined;
+      const ok = Economy.produce(selectedId, kitId, PlayerProfile.faction(), target);
       if (ok && target !== undefined) storageTarget = null;
-      if(ok)GameAudio.play("productionSound");
-      finishPurchase(ok?"已生产机体 ×1":"无法生产，请检查许可及资金物资");
-    } catch(error){finishPurchase("生产失败："+Economy.errorMessage(error));}
+      if (ok) GameAudio.play("productionSound");
+      finishPurchase(ok ? "已生产机体 ×1" : "无法生产，请检查许可及资金物资");
+    } catch (error) {
+      finishPurchase("生产失败：" + Economy.errorMessage(error));
+    }
   };
   byId("sellProductionUnit").onclick = async () => {
     byId("sellProductionUnit").disabled = true;
@@ -498,7 +538,13 @@ const ProductionUI = (() => {
     setupFilters();
     byId("productionSearch").value = unitId || "";
     byId("closeProduction").textContent =
-      returnView === "warehouse" ? "返回格纳库" : returnView === "formation" ? "返回编组" : returnView === "room" ? "返回房间" : "返回主菜单";
+      returnView === "warehouse"
+        ? "返回格纳库"
+        : returnView === "formation"
+          ? "返回编组"
+          : returnView === "room"
+            ? "返回房间"
+            : "返回主菜单";
     setPageView("production");
     render();
   }

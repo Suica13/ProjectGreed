@@ -547,6 +547,12 @@ const BattlefieldMode = (() => {
     },
   };
   const waveStage = (round) => (round < 31 ? "early" : round < 71 ? "middle" : "late");
+  function suitableEnvironment(model, environment) {
+    if (!model) return false;
+    return environment === "space"
+      ? (model.adaptability?.space ?? 0) >= 100
+      : (model.adaptability?.ground ?? 0) >= 100 || (model.adaptability?.air ?? 0) >= 100;
+  }
   function pool(G, state, team, environment = "ground") {
     const selected = state.teams[team];
     const allowedEras = factionEras(selected.faction).filter(era => eraData.weight(era) <= eraData.weight(selected.era));
@@ -563,7 +569,7 @@ const BattlefieldMode = (() => {
         affiliated(model, selected.faction) &&
         allowedEras.some((era) => model.tags.includes(era)) &&
         model.movementType !== "naval" &&
-        (model.adaptability?.[environment] ?? 100) > 0 &&
+        suitableEnvironment(model, environment) &&
         model.move > 0 &&
         !(G.aiUnitBans?.regular || []).includes(prefab.id)
         ? [{ unitId: prefab.id, kitId: kit.id }]
@@ -589,8 +595,9 @@ const BattlefieldMode = (() => {
         // Fixed early-war ground forces have role-equivalent space variants.
         const replacements = {Type61:"RB_79",FF_B2:"FF_S3",MTank:"Gattle"};
         let unitId = environment === "space" ? replacements[sourceId] || sourceId : sourceId;
-        const sourceModel = Object.values(G.models).find(m => m.prefabId === unitId && !m.formOnly);
-        if ((sourceModel?.adaptability?.[environment] ?? 0) <= 0) {
+        const sourcePrefab = G.catalog.prefabs.find(p => p.id === unitId);
+        const sourceModel = sourcePrefab && G.models[unitId + "__" + sourcePrefab.weaponKits[0]?.id];
+        if (!suitableEnvironment(sourceModel, environment)) {
           const candidates = available.ms.map(e => ({entry:e,model:G.models[e.unitId+"__"+e.kitId]}))
             .sort((a,b)=>Math.abs(a.model.cost-(sourceModel?.cost || 0))-Math.abs(b.model.cost-(sourceModel?.cost || 0)) || a.entry.unitId.localeCompare(b.entry.unitId));
           if (!candidates.length) throw Error("该环境没有可用的增援单位：" + sourceId);
@@ -863,6 +870,7 @@ const BattlefieldMode = (() => {
     eras,
     fixedWaves,
     waveStage,
+    suitableEnvironment,
     wavePlan,
     teams,
     erasForFaction,

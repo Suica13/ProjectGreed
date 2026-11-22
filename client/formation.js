@@ -3405,6 +3405,13 @@ const Deployment = (() => {
     if (unit.embarked) squadSingleMove = true;
     update();
   }
+  function turn(direction) {
+    const unit = getUnit(selected);
+    if (!canEditUnit(unit) || !Rules.canRotate(game, unit, direction)) return;
+    if (Net.active) return Net.request("rotate", { unitId: unit.id, direction });
+    Rules.rotate(game, unit, direction);
+    update();
+  }
   function render() {
     byId("deploymentPanel").hidden = phase !== "deployment";
     byId("deploymentBottomBar").hidden = phase !== "deployment";
@@ -3429,6 +3436,19 @@ const Deployment = (() => {
       forms = actor
         ? NormalForms.options(ART, Rules.modelOf(actor).prefabId).filter((f) => f.skillId && ["transform", "armor_purge"].includes(f.type))
         : [];
+    for (const direction of [-1, 1]) {
+      const id = direction < 0 ? "deploymentTurnLeft" : "deploymentTurnRight";
+      let button = byId(id);
+      if (!button) {
+        button = element("button", "", direction < 0 ? "左转90°" : "右转90°");
+        button.id = id;
+        button.dataset.deploymentTurn = String(direction);
+        byId("confirmDeployment").before(button);
+      }
+      button.hidden = phase !== "deployment" || !actor || !(Rules.modelOf(actor).ship || Rules.modelOf(actor).fixedWeaponFacing);
+      button.disabled = !canEditUnit(actor) || !Rules.canRotate(game, actor, direction);
+      button.onclick = () => turn(direction);
+    }
     transform.hidden =
       phase !== "deployment" || !actor || actor.embarked || !Net.canControl(actor) || !forms.length;
     transform.onclick = () =>
@@ -3721,6 +3741,7 @@ const Deployment = (() => {
     canEdit,
     canEditUnit,
     choose,
+    turn,
     areaSeat,
     reset: () => {
       previewSeat = 0;

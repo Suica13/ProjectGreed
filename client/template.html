@@ -1985,7 +1985,6 @@
           <span id="hudMatchIncome" class="resource-balance" aria-label="本局收入" aria-live="polite" data-i18n-ignore></span>
         </div>
         <div data-ui-node="node-7" class="header-buttons">
-          <button id="sweepLootButton" type="button" aria-haspopup="dialog" hidden>本次收获单位</button>
           <button data-ui-node="node-9" id="netSettings">主菜单</button
           ><button data-ui-node="node-174" id="roomSettings" hidden>房间席位</button
           ><button data-ui-node="node-10" id="helpBtn" hidden>规则</button>
@@ -2067,11 +2066,6 @@
             </div>
             <span id="mapEnvironment" class="map-environment is-ground">地面</span><span id="mapClimateStatus" aria-live="polite" style="position:absolute;top:42px;left:12px;z-index:8;padding:3px 8px;background:#071b2bbd;border-radius:4px;font-size:12px"></span>
             <div class="map-camera-controls" aria-label="地图缩放">
-              <span id="mapCombatControls" hidden>
-                <span id="mapCombatStatus"></span>
-                <label><input type="checkbox" id="mapQuick" />快速演出</label>
-                <button id="mapSkipBattle">跳过本批演出</button>
-              </span>
               <button id="mapZoomOut" aria-label="缩小地图">−</button>
               <span id="mapZoomLabel">100%</span>
               <button id="mapZoomIn" aria-label="放大地图">＋</button>
@@ -2106,6 +2100,11 @@
               </button>
               <button id="showLog" role="tab" aria-selected="false" aria-controls="log">LOG</button>
               <select id="battleLogView" aria-label="战斗记录类型"><option value="combined">综合记录</option><option value="combat">战斗记录</option><option value="dialogue">对话记录</option></select>
+              <span id="mapCombatControls" hidden>
+                <span id="mapCombatStatus"></span>
+                <label><input type="checkbox" id="mapQuick" />快速演出</label>
+                <button id="mapSkipBattle">跳过本批演出</button>
+              </span>
               <select id="battleLogPerspective" aria-label="战报下载视角" hidden></select>
               <button id="downloadBattleLog" type="button" aria-label="下载战斗LOG" disabled>
                 下载战斗LOG
@@ -2422,7 +2421,7 @@
             <label>离线房间模式<select id="offlineRoomMode">
               <optgroup label="合作模式">
                 <option value="mission">任务模式</option>
-                <option value="sweep" disabled>战场扫荡</option>
+                <option value="sweep">合约模式</option>
               </optgroup>
               <optgroup label="战场模式">
                 <option value="battlefield">雇佣兵战争模式</option>
@@ -2600,7 +2599,7 @@
                     <div id="roomRulesActions"><label class="room-mode-selector"><span>对战模式</span><select id="roomBattleMode" aria-label="对战模式">
                         <optgroup label="合作模式">
                 <option value="mission">任务模式</option>
-                <option value="sweep" disabled>战场扫荡</option>
+                <option value="sweep">合约模式</option>
               </optgroup>
               <optgroup label="战场模式">
                 <option value="battlefield">雇佣兵战争模式</option>
@@ -5123,7 +5122,7 @@
           <label>新房间模式<select id="newRoomMode">
             <optgroup label="合作模式">
                 <option value="mission">任务模式</option>
-                <option value="sweep" disabled>战场扫荡</option>
+                <option value="sweep">合约模式</option>
               </optgroup>
               <optgroup label="战场模式">
                 <option value="battlefield">雇佣兵战争模式</option>
@@ -5398,6 +5397,7 @@
       __SFS_UI__;
       __BATTLE_HUD__;
       __BATTLEFIELD_UI__;
+      __BRIEFING_UI__;
       __SWEEP_UI__;
       __MISSION_UI__;
       __REPLAY_PLAYER__;

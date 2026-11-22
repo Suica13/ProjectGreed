@@ -379,7 +379,7 @@ document.addEventListener("scroll", event => {
 function capturePanelView(root) {
   if (!root || root.closest("[hidden]")) return null;
   const entries = [];
-  const candidates = new Set([root, ...root.querySelectorAll("details,#unitPanel,.weapon-list,.weapon,.hud-attack-queue")]);
+  const candidates = new Set([root, ...root.querySelectorAll("details,#unitPanel,.weapon-list,.weapon,.hud-attack-queue,.hangar-content")]);
   for (const node of scrolledPanelNodes) {
     if (!node.isConnected) scrolledPanelNodes.delete(node);
     else if (root.contains(node)) candidates.add(node);
@@ -504,7 +504,7 @@ function updateContents() {
   );
   byId("modeLabel").textContent = Net.active
     ? (Net.local ? "离线" : "联机") +
-      ({ mission: "任务模式", sweep: "战场扫荡", battlefield: "雇佣兵战争模式", quick: "快速战", regular: "常规战" }[Net.snapshot?.settings?.mode] || "常规战") +
+      ({ mission: "任务模式", sweep: "合约模式", battlefield: "雇佣兵战争模式", quick: "快速战", regular: "常规战" }[Net.snapshot?.settings?.mode] || "常规战") +
       " · " +
       Net.roleName()
     : "常规战";
@@ -1170,6 +1170,7 @@ function renderPanel() {
           : canCommand;
       button.disabled = !commanding || !Rules.canRotate(game, u, direction);
       button.onclick = () => {
+        if (phase === "deployment") return Deployment.turn(direction);
         if (Net.active) return Net.request("rotate", { unitId: u.id, direction });
         Rules.previewRotate(game, u, direction, Rules.ownerOf(u));
         update();
@@ -1501,7 +1502,7 @@ function resetMapPresentation(keepKeys = []) {
   delete globalThis.ProjectGreedLightTransition;
 }
 function drawCachedMapTerrain(target, w, h, dpr, tile, ox, oy, immersive, deploymentArea) {
-  if (Rules.getMap(game.mapId).tileMap) {
+  if ((ContractUI.map || Rules.getMap(game.mapId)).tileMap) {
     // Authored art supplies terrain detail; its fallback colors need only one pixel per cell.
     const base = authoredTerrainBase;
     if (base.tiles !== game.tiles || base.mapId !== game.mapId) {
@@ -1789,7 +1790,7 @@ function drawMapFrame(now) {
     lastX = Math.min(Rules.mapWidth(game), Math.ceil((w - ox) / tile)),
     lastY = Math.min(Rules.mapHeight(game), Math.ceil((h - oy) / tile));
   drawCachedMapTerrain(ctx, w, h, dpr, tile, ox, oy, immersive, deploymentArea);
-  TileMapRenderer.draw(ctx, Rules.getMap(game.mapId), "below", mapGeo, w, h);
+  TileMapRenderer.draw(ctx, ContractUI.map || Rules.getMap(game.mapId), "below", mapGeo, w, h);
   for (const site of Rules.getMap(game.mapId).mission?.landmarks || []) {
     if(site.type==="base_compound"){
       ctx.save();ctx.translate(ox+site.x*tile,oy+site.y*tile);ctx.scale(tile,tile);
@@ -1851,7 +1852,7 @@ function drawMapFrame(now) {
     ctx.fillText(I18n.text("护送目标区"),ox+(escortGoal.x+escortGoal.width/2)*tile,oy+escortGoal.y*tile-5);
     ctx.restore();
   }
-  if (Rules.getMap(game.mapId).tileMap && !immersive) {
+  if ((ContractUI.map || Rules.getMap(game.mapId)).tileMap && !immersive) {
     // Authored art can be opaque, so tactical guides belong above the image layers.
     ctx.strokeStyle = "#49616b66";
     ctx.lineWidth = 0.7;
@@ -1978,13 +1979,15 @@ function drawMapFrame(now) {
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.fillStyle = "#8ea5af";
-  for (let x = 0; !immersive && x < Rules.mapWidth(game); x++)
+  const axisStep=game.contract?Math.max(1,Math.ceil(16/tile)):1;
+  for (let x = 0; !immersive && x < Rules.mapWidth(game); x+=axisStep)
     ctx.fillText(Rules.columnLabel(x), ox + (x + 0.5) * tile, oy - 9);
-  for (let y = 0; !immersive && y < Rules.mapHeight(game); y++)
+  for (let y = 0; !immersive && y < Rules.mapHeight(game); y+=axisStep)
     ctx.fillText(String(y + 1), ox - 9, oy + (y + 0.5) * tile);
   const intel =
     Net.snapshot?.phase === "playback" ? Net.snapshot.combatIntel || game.intel : game.intel;
   EnvironmentVisuals.fog(ctx, intel, ox, oy, tile);
+  ContractUI.drawCoverage(ctx, {ox,oy,tile});
   window.BattlefieldUI?.draw(ctx, ox, oy, tile);
   // The clip remains available for individual effects opting out of fog visibility.
   const visibilityClip = EnvironmentVisuals.visibilityClip(intel, ox, oy, tile);
@@ -2003,7 +2006,7 @@ function drawMapFrame(now) {
     for (const id of actor.pendingMove?.squadIds || [])
       squadPendingMoves.set(id, actor.pendingMove);
   drawVisibleEffects(() => MapCombat.drawUnderlay(ctx, mapGeo));
-  const authoredMap = Rules.getMap(game.mapId);
+  const authoredMap = ContractUI.map || Rules.getMap(game.mapId);
   const mapClimate = game.climateMap || authoredMap;
   const climate = typeof BattlefieldClimate !== "undefined"
     ? BattlefieldClimate.resolve(mapClimate, game.climateSettings || Net.snapshot?.settings || {},
@@ -2333,6 +2336,11 @@ function drawMapFrame(now) {
     ctx.fillStyle = "#efd568";
     const enRatio = Math.max(0, Math.min(1, u.en / Math.max(1, frameModelOf(u).en)));
     ctx.fillRect(barx, bary + 6, hpw * enRatio, 3);
+    const statusIconSize = unitThumbnails
+      ? Math.max(7, Math.min(12, Math.min(28, tile * .9) * .45))
+      : Math.max(18, Math.min(24, spriteTile * .16)) * battleSettings.mapBarScale;
+    UnitIdentity.drawStatusBadges(ctx, u, frameModelOf(u), barx, bary, hpw, statusIconSize,
+      unitThumbnails || (pilotLabels && (u.pilot?.custom || u.pilot?.aceId)));
     if (
       u.acted &&
       u.team === game.team &&
@@ -2360,13 +2368,7 @@ function drawMapFrame(now) {
       ctx.textBaseline = "middle";
       const label = I18n.pilotName(u.pilot);
       const labelY = bary + 12 + nameSize / 2;
-      if (u.pilot?.custom || u.pilot?.aceId) {
-        const width = ctx.measureText(label).width,
-          iconSize = Math.max(18, nameSize * 1.1);
-        const left = pos.x - (width + iconSize + 3) / 2;
-        UnitIdentity.drawPilotPortrait(ctx, u.pilot, left, labelY - iconSize / 2, iconSize);
-        ctx.fillText(label, pos.x + (iconSize + 3) / 2, labelY);
-      } else ctx.fillText(label, pos.x, labelY);
+      ctx.fillText(label, pos.x, labelY);
       ctx.restore();
     }
     PilotRewards.draw(
@@ -2528,6 +2530,7 @@ function drawMapFrame(now) {
     }
   }
   window.TeamMarkers?.draw(ctx, mapGeo, now);
+  ContractUI.draw(ctx, mapGeo);
   drawDialogueBubbles(ctx, mapPosesById, intel, w, h, now, pilotLabels);
 }
 function drawDialogueBubbles(ctx, poses, intel, width, height, now, labelsVisible = MapCamera.pilotLabels) {
@@ -3617,7 +3620,7 @@ function tick(now) {
     if (assetsReady) {
       if (window.GamePreview?.active) window.GamePreview.tick(now);
       else if (pageView === "game" && !window.BattleAssets?.loading) {
-        if (typeof SweepUI === "undefined" || !SweepUI.active) {
+        {
           MapCombat.update(now);
           drawMap(now);
           drawBattle(now);

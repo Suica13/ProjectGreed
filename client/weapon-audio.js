@@ -115,6 +115,30 @@ const WeaponAudio = (() => {
       return Promise.resolve();
     }
   }
+  function sonar() {
+    unlock().then(() => {
+      if (!context || context.state !== "running") return;
+      for (const [delay, frequency, volume] of [[0, 1120, .12], [.3, 1080, .05]]) {
+        const oscillator = context.createOscillator(), envelope = context.createGain(), gain = context.createGain();
+        const start = context.currentTime + delay;
+        oscillator.type = "sine";
+        oscillator.frequency.setValueAtTime(frequency, start);
+        oscillator.frequency.exponentialRampToValueAtTime(frequency * .92, start + .8);
+        envelope.gain.setValueAtTime(.001, start);
+        envelope.gain.exponentialRampToValueAtTime(1, start + .015);
+        envelope.gain.exponentialRampToValueAtTime(.001, start + .9);
+        gain.gain.value = volume * volumeMultiplier();
+        oscillator.connect(envelope).connect(gain).connect(context.destination);
+        nodes.set(oscillator, "ui");
+        volumeGains.set(oscillator, { gain, volume });
+        oscillator.onended = () => {
+          nodes.delete(oscillator); volumeGains.delete(oscillator);
+          oscillator.disconnect(); envelope.disconnect(); gain.disconnect();
+        };
+        oscillator.start(start); oscillator.stop(start + .95);
+      }
+    });
+  }
   function play(sound, at = null, rate = 1, channel = "map") {
     if (channel === "battle" && battleMuted) return;
     if (!context || context.state !== "running" || !sound?.asset) return;
@@ -207,5 +231,5 @@ const WeaponAudio = (() => {
     if (document.hidden) stop(true);
   });
   window.addEventListener("pagehide", () => stop(true));
-  return { unlock, prepare, prepareBattle, sync, stop, stopBattle, setBattleMuted, play, releaseBattle };
+  return { unlock, prepare, prepareBattle, sync, stop, stopBattle, setBattleMuted, play, sonar, releaseBattle };
 })();

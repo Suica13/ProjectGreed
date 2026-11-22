@@ -457,7 +457,8 @@
       "weapons": [
         "EF_RB_79_LateType_Cannon",
         "Common_Cqb_A"
-      ]
+      ],
+      "conversionBaseCost": 0
     }
   ],
   "description": "铁球的后期生产型,性能有所提升",

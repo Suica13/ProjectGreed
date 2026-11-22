@@ -3,7 +3,6 @@ const assert = require('node:assert/strict');
 const G = require('../shared/rules');
 const E = require('../shared/battle-economy');
 const B = G.battlefieldMode;
-const S = require('../shared/sweep-mode');
 const M = require('../shared/mission-mode');
 
 
@@ -40,20 +39,6 @@ test('mercenary kills receive 150 percent, assists keep their funding, and all s
     const settings={battlefieldTeams:[{era}]};
     for(const reward of [B.captureReward(settings,0), B.baseDamageReward(settings,0)])
       assert.equal(reward.supplies,reward.money*1.5);
-  }
-});
-
-test('sweep node growth and per-resource activity multipliers use 1000/1500 and settle no rewards early', () => {
-  for(const depth of [0,1,4,9,50]) for(const multiplier of [1,2,3]) {
-    const pending={money:0,supplies:0,technology:0,inventory:{}};
-    const room={settings:{sweepEra:'UC_0079_T1'},seats:[{id:'p',seat:0}],
-      sweep:{depth,pending:{p:pending},rewardMultipliers:{money:2,supplies:3,technology:1}}};
-    S.reward(room,G,multiplier,0,1.1);
-    const scale=1+.05*depth;
-    assert.equal(pending.money,E.roundReward(1000*scale*multiplier*2));
-    assert.equal(pending.supplies,E.roundReward(1500*scale*multiplier*3));
-    assert.equal(pending.technology,E.roundReward(250*scale*multiplier*1.1));
-    assert.equal(room.economyAwards,undefined);
   }
 });
 

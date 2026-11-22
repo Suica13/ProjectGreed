@@ -25,6 +25,10 @@ window.MissionUI = (() => {
   objectivePanel.setAttribute("aria-labelledby", "missionObjectivesTitle");
   objectivePanel.innerHTML = '<header><h2 id="missionObjectivesTitle"></h2><button type="button"></button></header><section><h3></h3><ul data-objectives="victory"></ul></section><section><h3></h3><ul data-objectives="failure"></ul></section><p class="muted"></p>';
   document.body.append(objectivePanel);
+  const briefingButton=document.createElement("button");
+  briefingButton.type="button";briefingButton.textContent="作战简报";
+  briefingButton.onclick=()=>{objectivePanel.close();BriefingUI.open(Net.snapshot);};
+  objectivePanel.append(briefingButton);
   objectives.onclick = () => { if (!objectivePanel.open) objectivePanel.showModal(); };
   objectivePanel.querySelector("button").onclick = () => objectivePanel.close();
   objectivePanel.addEventListener("keydown", event=>event.stopPropagation());

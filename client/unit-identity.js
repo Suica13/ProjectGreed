@@ -119,6 +119,38 @@ const UnitIdentity = (() => {
     ctx.restore();
   }
   const unitImages = new Map();
+  const roleBadges = new Map();
+  const roleStyles = {
+    general: ["✂\uFE0E", "#76baff", "#173e67"],
+    support: ["✋\uFE0E", "#91efb3", "#1c503a"],
+    raid: ["✊\uFE0E", "#ff9298", "#5d2935"],
+    normal: ["●", "#c7d2dc", "#344451"],
+  };
+  function drawStatusBadges(ctx, unit, model, barX, barY, barWidth, size, portrait) {
+    const role = Object.hasOwn(roleStyles, model.combatRole) ? model.combatRole : "normal";
+    let badge = roleBadges.get(role);
+    if (!badge) {
+      badge = document.createElement("canvas");
+      badge.width = badge.height = 64;
+      const paint = badge.getContext("2d"), [glyph, color, background] = roleStyles[role];
+      paint.fillStyle = background;
+      paint.fillRect(0, 0, 64, 64);
+      paint.strokeStyle = color;
+      paint.lineWidth = 3;
+      paint.strokeRect(1.5, 1.5, 61, 61);
+      paint.translate(32, 32);
+      if (role === "general") paint.rotate(-Math.PI / 4);
+      paint.font = '48px "Segoe UI Symbol", "Noto Sans Symbols 2", sans-serif';
+      paint.textAlign = "center";
+      paint.textBaseline = "middle";
+      paint.fillStyle = color;
+      paint.fillText(glyph, 0, 1);
+      roleBadges.set(role, badge);
+    }
+    const y = barY + (9 - size) / 2;
+    ctx.drawImage(badge, barX + barWidth + 3, y, size, size);
+    if (portrait && unit.pilot?.name) drawPilotPortrait(ctx, unit.pilot, barX - size - 3, y, size);
+  }
   function drawMapSymbol(ctx, unit, position, tile) {
     const center = Rules.center(unit);
     ctx.save();
@@ -143,10 +175,6 @@ const UnitIdentity = (() => {
     const x = position.x - size / 2,
       y = position.y - size / 2;
     if (image.complete && image.naturalWidth) ctx.drawImage(image, x, y, size, size);
-    if (unit.pilot?.name) {
-      const badge = Math.max(7, Math.min(12, size * 0.45));
-      drawPilotPortrait(ctx, unit.pilot, x + size - badge * 0.8, y + size - badge * 0.8, badge);
-    }
     ctx.restore();
   }
   function drawCommandAura(ctx, unit, position, tile, selectedUnit) {
@@ -207,6 +235,7 @@ const UnitIdentity = (() => {
     drawRing,
     drawCommandAura,
     drawPilotPortrait,
+    drawStatusBadges,
     drawMapSymbol,
   };
 })();

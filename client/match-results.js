@@ -7,9 +7,9 @@ const MatchIncome = (() => {
       const p=snapshot.game.dominion.players[snapshot.you?.seat];
       return {money:p?.money||0,supplies:p?.supplies||0,technology:p?.points||0};
     }
-    // Sweep receipts are emitted only at extraction; its live HUD uses the run's pending balance.
-    if (snapshot?.sweep && !snapshot.rewardsSettled) {
-      const pending = snapshot.sweep.pending || {};
+    // Contract event rewards remain provisional until the battlefield settles.
+    if (snapshot?.contract && !snapshot.rewardsSettled) {
+      const pending = snapshot.contract.pending || {};
       return { money: pending.money || 0, supplies: pending.supplies || 0, technology: pending.technology || 0 };
     }
     // Snapshots are immutable in live play; length checks also support appended local fixtures.
