@@ -274,6 +274,7 @@ for (const [name, content] of outputs)
   console.log("Built " + name + ": " + Buffer.byteLength(content) + " bytes");
 
 require("./tools/build-map-editor.cjs").buildMapEditor(root);
+require("./tools/build-task-editor.cjs").buildTaskEditor(root);
 
 require("./tools/build-unit-editor.cjs").buildUnitEditor(root);
 

@@ -37,6 +37,7 @@
 - [本轮文档清理记录](maintenance/document-cleanup.md)
 - [构建体积与工作区清理](tools/workspace-cleanup.md)
 - [独立HTML客户端](tools/client-package.md)
+- [任务树编辑器与AI制作说明](tools/task-tree-editor.md)
 
 ## 全部文档
 

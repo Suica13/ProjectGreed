@@ -27,6 +27,7 @@
     "package:server": "python tools/package-server.py",
     "maps:import": "node tools/import-map.cjs",
     "build:map-editor": "node tools/build-map-editor.cjs",
+    "build:task-editor": "node tools/build-task-editor.cjs",
     "build:unit-editor": "node tools/build-unit-editor.cjs",
     "build:save-editor": "node tools/build-save-editor.cjs",
     "docs:combat-rules": "node tools/export-combat-rules.cjs",
