@@ -37,6 +37,7 @@ if (mode === "windows") {
   run("dotnet", [
     "build",
     "apps/windows/ProjectGreed.Client.csproj",
+    "-p:Version=0." + project.version.replace(/^V/, "") + ".0",
     "-c",
     "Release",
     "-o",

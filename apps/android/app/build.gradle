@@ -1,5 +1,6 @@
 plugins { id 'com.android.application' }
 def engine = new groovy.json.JsonSlurper().parse(rootProject.file('engine.json'))
+def gameProject = new groovy.json.JsonSlurper().parse(rootProject.file('../../project.json'))
 
 android {
     namespace 'io.projectgreed.apptest2'
@@ -11,8 +12,8 @@ android {
         minSdk 26
         targetSdk 35
         testInstrumentationRunner 'io.projectgreed.apptest2.StoreInstrumentation'
-        versionCode 126001
-        versionName 'V126'
+        versionCode gameProject.version.substring(1).toInteger() * 1000 + 1
+        versionName gameProject.version
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
