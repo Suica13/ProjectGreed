@@ -15,6 +15,7 @@ for(const p of catalog.prefabs)for(const s of p.skills||[])
 function assign(p,seen=new Set()){
   if(roles[p.id])return roles[p.id];
   seen=new Set(seen).add(p.id);
+  if(overrides[p.id])return roles[p.id]={role:overrides[p.id].role,method:'manual-override',source:overrides[p.id].reason};
   const baseId=p.formOf||bases.get(p.id),base=prefabs.get(baseId);
   if((p.formOnly||/(_MA|_Mode[A-Z]|_NA|_DeployState|_EXAM|_HADES|_ALICE)/.test(p.id))&&base&&!seen.has(base.id)){
     const inherited=assign(base,seen);return roles[p.id]={role:inherited.role,method:'base-form',source:base.id};
@@ -25,7 +26,7 @@ function assign(p,seen=new Set()){
   if(match)return roles[p.id]={role:categories[match.category],method:'native',source:match.source,nativeId:match.id,nativeCategory:match.category};
   const variant=native.filter(n=>normalize(p.id).startsWith(normalize(n.id))&&normalize(n.id).length>=5).sort((a,b)=>normalize(b.id).length-normalize(a.id).length)[0];
   if(variant)return roles[p.id]={role:categories[variant.category],method:'native-variant',source:variant.source,nativeId:variant.id,nativeCategory:variant.category};
-  if(overrides[p.id])return roles[p.id]={role:overrides[p.id].role,method:'role-inference',source:overrides[p.id].reason};
+
   const text=p.id+' '+p.name+' '+(p.description||'');
   let role='general',reason='balanced-mobile-suit';
   if(/加农|加農|钢坦克|刚坦克|炮击|炮战|狙击|侦察|支援|扎梅尔|大扎姆|精神感应|精神力|FAZZ|GP03D|GAT_X103|Providence/i.test(text)){role='support';reason='artillery-sniper-support';}

@@ -329,6 +329,9 @@
 .warehouse-pilot-choice > img { width: 48px; height: 48px; object-fit: cover; flex: none; border: 1px solid #54778e; }
 .warehouse-pilot-choice > span { display: grid; gap: 6px; min-width: 0; }
 .warehouse-pilot-choice small { font-size: 12px; line-height: 1.5; white-space: normal; }
+#warehouseDialog .warehouse-pilot-choice:disabled, .formation-pilot-card.pilot-unavailable { opacity: .45; filter: grayscale(.8); }
+.pilot-assignment-location { color: #a9d7ef; }
+.pilot-recovery-pending { color: #edb3af; }
 .warehouse-loadout { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: end; gap: 8px; }
 .warehouse-kit-field { position: relative; height: 36px; box-sizing: border-box; border: 1px solid #54778e; background: #101b27; padding: 8px 24px 8px 8px; min-width: 0; }
 .warehouse-kit-field::after { content: "▾"; position: absolute; right: 8px; top: 8px; pointer-events: none; }

@@ -247,5 +247,10 @@ window.MenuShell = (() => {
   for (const id of cardPanels) cardResizeObserver.observe(byId(id));
   window.addEventListener("resize", () => cardPanels.forEach((id) => fitCards(byId(id))));
   refresh();
-  return { refresh, go, returnView: () => (Net.active ? "room" : "menu") };
+  return {
+    refresh,
+    go,
+    isPreparationView: (view) => Boolean(sectionFor(view)) || view === "records",
+    returnView: () => (Net.active ? "room" : "menu"),
+  };
 })();

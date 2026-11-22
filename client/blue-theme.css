@@ -3548,7 +3548,7 @@ body.menu-shell-active #formationScreen #formationUnits .formation-row > .format
 #roomTechnologyRules > .room-options > label { display:flex; flex-direction:column; gap:6px; min-width:0; margin:0; padding:0; }
 #roomTechnologyRules :is(select,input) { width:100%; min-width:0; height:38px; margin:0; box-sizing:border-box; }
 #roomTechnologyRules > small { display:block; margin-top:8px; line-height:1.5; overflow-wrap:anywhere; }
-#sweepRoomOptions .room-mode-fields > label:first-child { grid-column:1/-1; }
+#sweepRoomOptions .room-mode-fields > label:first-child { grid-column:auto; }
 #roomRulesPanel #roomClimateOptions { grid-column:1/-1; width:100%; }
 @media(max-width:600px) {
   #roomRulesPanel .room-battle-rules { grid-template-columns:repeat(2,minmax(0,1fr)); }

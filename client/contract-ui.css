@@ -76,6 +76,15 @@
 .contract-objective[data-status="completed"] strong {
   color: #7bd5a5;
 }
+.contract-objective[data-status="failed"] strong {
+  color: #ed8b82;
+}
+.contract-cutin[data-kind="failed"] .contract-cutin-card {
+  border-color: #ed8b82;
+}
+.contract-cutin[data-kind="failed"] .contract-cutin-kind {
+  color: #ed8b82;
+}
 .contract-objective p {
   grid-column: 1/-1;
   line-height: 1.6;

@@ -56,7 +56,7 @@ for (const width of [1440, 390])
       await expect(page.locator("#roomFormationPreset")).toHaveValue("contract");
       await expect(page.locator("#roomFormationPreset option:checked")).toHaveText("合约模式");
       await expect(page.locator("#roomCostLimit")).toHaveValue("2000");
-      await expect(page.locator("#roomUnitLimit")).toHaveValue("1");
+      await expect(page.locator("#roomUnitLimit")).toHaveValue("2");
       await expect(page.locator("#roomFogMode")).toHaveValue("full");
       await expect(page.locator("#roomFogMode")).toBeDisabled();
       await expect(page.locator("#roomPilotPolicy")).toHaveValue("allow");
@@ -97,7 +97,7 @@ for (const width of [1440, 390])
         expect(options.every((f) => allowed.includes(f))).toBe(true);
         await expect(page.locator("#sweepRoomOptions")).toContainText(String(cost));
         await expect(page.locator("#roomCostLimit")).toHaveValue(String(cost));
-        await expect(page.locator("#roomUnitLimit")).toHaveValue("3");
+        await expect(page.locator("#roomUnitLimit")).toHaveValue("4");
         await expect(page.locator("#roomFormationPreset")).toHaveValue("contract");
       }
       if (width < 700) await page.locator("#closeRoomSettingsSheet").click();
@@ -125,7 +125,7 @@ for (const width of [1440, 390])
       const briefing = page.locator("#operationBriefing");
       await expect(briefing).toBeVisible();
       await expect(briefing).toHaveAttribute("data-mode", "sweep");
-      await expect(briefing.locator(".briefing-goal")).toHaveCount(10);
+      await expect(briefing.locator(".briefing-goal")).toHaveCount(13);
       await expect(briefing.locator(".briefing-radar-sweep")).toHaveCSS(
         "animation-name",
         "briefing-radar-sweep",

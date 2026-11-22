@@ -44,10 +44,14 @@ function createRoomEngine({
   const roundReward = (value) => roomBattleEconomy().roundReward(value);
   function stockState(actor, unitId, modelId) {
     const model = G.modelOf({...actor,model:modelId || actor.model});
+    const currentModel = G.modelOf(actor);
+    // Return to the sortie form and kit without repairing damage or refilling EN.
+    const restoreResource = (value, before, after) => before > 0
+      ? Math.max(0, Math.min(after, value / before * after)) : 0;
     const allowed = new Set(["head", "backpack", "leftArm", "rightArm", "leftLeg", "rightLeg",
       ...(model.modules || []).map((part) => part.id)]);
     return { stockId: actor.stockId, unitId, kitId: model.kitId || model.id?.split("__")[1] || (modelId || actor.model).split("__")[1],
-      hp: Math.max(0, Math.min(model.hp, actor.hp)), en: Math.max(0, Math.min(model.en, actor.en)),
+      hp: Math.round(restoreResource(actor.hp, currentModel.hp, model.hp)), en: restoreResource(actor.en, currentModel.en, model.en),
       destroyed: actor.hp <= 0,
       brokenParts: Object.fromEntries(Object.entries(actor.brokenParts || {}).filter(([key, broken]) => allowed.has(key) && broken)),
       ...(actor.moduleHp ? { moduleHp: Object.fromEntries(Object.entries(actor.moduleHp).filter(([key]) => allowed.has(key))) } : {}) };
@@ -188,9 +192,10 @@ function createRoomEngine({
   }
   function ensureMissionAllies(room) {
     const map=G.getMap(room.settings.mapId);
-    if(!map.mission?.actors.some(a=>a.autonomous))return;
+    const contract = room.settings.mode === "sweep" && room.game.units.some(u=>u.contractAlly);
+    if(!contract && !map.mission?.actors.some(a=>a.autonomous))return;
     const seat=map.spawns.length,id=randomId();
-    const ally={id,name:"奥古任务友军",bot:true,missionAlly:true,seat,characterFaction:"PMC",
+    const ally={id,name:contract?"合约友军守备队":"奥古任务友军",bot:true,missionAlly:true,seat,characterFaction:"PMC",
       ready:true,finalReady:true,requests:new Map(),aiSettings:G.validateAISettings(),
       ws:{room:room.code,memberId:id,seat}};
     room.members.set(id,ally);room.seats[seat]=ally;room.missionAllySeat=seat;
@@ -1406,6 +1411,7 @@ function createRoomEngine({
     room.technologyStartPoints = {};
     room.stockReservations = {};
     room.hiredCasualties = {};
+    if (room.settings.mode === "sweep") clearMissionAllies(room);
     room.game = G.create(false, randomSeed());
     delete room.aiFormationSeed;
     delete room.aiFormationEras;
@@ -2780,6 +2786,16 @@ function createRoomEngine({
     room.resumeSave = Records.clone(save);
     room.turnSave = Records.clone(save);
     room.settings = { ...G.defaultRoomSettings(), ...Records.clone(save.settings) };
+    if (room.settings.mode === "mission") {
+      const forced = Mission.settings(G, room.settings.mapId);
+      for (const settings of [room.settings, room.resumeSave.settings, room.turnSave.settings])
+        Object.assign(settings, {fogMode:forced.fogMode,pilotPolicy:forced.pilotPolicy});
+    }
+    if (!G.tagRestrictionsEnabled(room.settings))
+      for (const settings of [room.settings, room.resumeSave.settings, room.turnSave.settings])
+        Object.assign(settings, G.validateTagRestrictions(), {
+          teamRestrictions: [G.validateTagRestrictions(), G.validateTagRestrictions()],
+        });
     if (room.settings.mode === "regular" && !save.settings.regularEra) {
       const savedEras = new Set((save.game?.units || []).flatMap(unit => G.models[unit.model]?.tags || []));
       room.settings.regularEra = [...G.eras].reverse().find(era => savedEras.has(era)) || "UC_0079_T1";
@@ -2816,7 +2832,7 @@ function createRoomEngine({
   function resumeSavedGame(room) {
     const save = room.resumeSave;
     room.game = Records.clone(save.game);
-    if(room.settings.mode==="mission")ensureMissionAllies(room);
+    if(["mission","sweep"].includes(room.settings.mode))ensureMissionAllies(room);
     room.game.fogMode = room.settings.fogMode;
     room.game.costLimit = room.settings.costLimit;
     room.game.unitLimit = room.settings.unitLimit;
@@ -2900,6 +2916,7 @@ function createRoomEngine({
   function startGame(room) {
     G.validateOpenContent(room.settings);
     if (room.settings.mode === "sweep") Object.assign(room.settings, Contract.roomSettings(room.settings));
+    if (room.settings.mode === "mission") Object.assign(room.settings, Mission.settings(G, room.settings.mapId));
     if (
       room.started ||
       !room.seats
@@ -3082,6 +3099,8 @@ function createRoomEngine({
     log(room, "最终编组已确认，请在各自出生区部署并确认。");
     if (room.settings.mode === "sweep") {
       Contract.initialize(room,G,randomSeed(),text=>log(room,text));
+      ensureMissionAllies(room);
+      if(room.missionAllySeat!==undefined)room.turnDone[room.missionAllySeat]=false;
       room.phase=room.game.deployment.every(Boolean)?"idle":"deployment";
     }
   }
@@ -4730,11 +4749,11 @@ function createRoomEngine({
                 unitCostLimit: G.validateUnitCostLimit(
                   msg.unitCostLimit ?? room.settings.unitCostLimit,
                 ),
-                ...G.validateTagRestrictions({
+                ...G.validateTagRestrictions(G.tagRestrictionsEnabled({mode: nextMode}) ? {
                   bannedFactions: msg.bannedFactions ?? room.settings.bannedFactions,
                   bannedEras: msg.bannedEras ?? room.settings.bannedEras,
                   bannedTypes: msg.bannedTypes ?? room.settings.bannedTypes,
-                }),
+                } : {}),
                 teamRestrictions:
                   G.validateBattleMode(msg.battleMode ?? room.settings.mode) === "quick"
                     ? G.validateTeamRestrictions(

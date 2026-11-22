@@ -415,6 +415,9 @@ const WeaponEffects = (() => {
             ? Math.round(((event.shieldDamage || 0) * (index + 1)) / steps.length) -
               Math.round(((event.shieldDamage || 0) * index) / steps.length)
             : 0,
+          ...Object.fromEntries(["iFieldDamage","abcDamage","phaseShiftDamage"].map(key => [key,event?.hit
+            ? Math.round(((event[key] || 0) * (index + 1)) / steps.length) - Math.round(((event[key] || 0) * index) / steps.length)
+            : 0])),
         };
         return {
           ...step,

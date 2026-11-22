@@ -4,7 +4,9 @@ const ContractUI = (() => {
     summary = element("span"),
     listButton = element("button", "", "事件目标"),
     entryButton = element("button", "", "入场区"),
+    secondEntryButton = element("button", "", "入场区"),
     exitButton = element("button", "", "撤离区"),
+    secondExitButton = element("button", "", "撤离区"),
     extract = element("button", "contract-extract", "撤离"),
     notice = element("div", "contract-evacuated");
   bar.id = "contractHud";
@@ -12,7 +14,7 @@ const ContractUI = (() => {
   extract.id = "hudContractExtract";
   notice.id = "contractEvacuationStatus";
   notice.hidden = true;
-  bar.append(summary, entryButton, exitButton, listButton);
+  bar.append(summary, entryButton, secondEntryButton, exitButton, secondExitButton, listButton);
   byId("mapWrap").append(bar, notice);
   const dialog = element("dialog", "contract-objectives"),
     heading = element("header"),
@@ -66,7 +68,7 @@ const ContractUI = (() => {
     cutin.dataset.cueId = String(cue.id);
     cutin.dataset.kind = cue.type;
     cueKind.textContent = I18n.text(
-      cue.type === "started" ? "事件开始" : cue.type === "completed" ? "事件完成" : "全部目标完成",
+      cue.type === "started" ? "事件开始" : cue.type === "completed" ? "事件完成" : cue.type === "failed" ? "事件失败" : "全部目标完成",
     );
     cueName.textContent = I18n.text(cue.name);
     cutin.hidden = false;
@@ -94,7 +96,7 @@ const ContractUI = (() => {
   }
 
   const label = (o) =>
-    o.status === "completed"
+    o.status === "failed" ? I18n.text("事件失败") : o.status === "completed"
       ? "已完成"
       : o.status === "active"
         ? I18n.text("执行中") + " " + o.progress + "/" + o.required
@@ -126,8 +128,18 @@ const ContractUI = (() => {
     dialog.showModal();
   };
   const areaFocus = (area) => focus({ x: area.x + area.width / 2, y: area.y + area.height / 2 });
-  entryButton.onclick = () => snapshot?.contract && areaFocus(snapshot.contract.entry);
-  exitButton.onclick = () => snapshot?.contract && areaFocus(snapshot.contract.extraction);
+  [entryButton, secondEntryButton].forEach((button, index) => {
+    button.onclick = () => {
+      const area = ContractMode.deploymentZones(snapshot?.contract)[index];
+      if (area) areaFocus(area);
+    };
+  });
+  [exitButton, secondExitButton].forEach((button, index) => {
+    button.onclick = () => {
+      const area = ContractMode.extractionZones(snapshot?.contract)[index];
+      if (area) areaFocus(area);
+    };
+  });
   extract.onclick = () => {
     const actor = getUnit(selected);
     if (actor && ContractMode.canExtract(game, Rules, actor, Net.seat) && !Net.awaiting)
@@ -148,6 +160,11 @@ const ContractUI = (() => {
       mode = "select";
     }
     const state = value.contract;
+    const exits = ContractMode.extractionZones(state);
+    [exitButton, secondExitButton].forEach((button, index) => {
+      button.hidden = !exits[index];
+      button.textContent = I18n.text("撤离区") + " " + (index + 1);
+    });
     bar.hidden = !value.started || !state || value.game?.winner !== null;
     if (bar.hidden) {
       dialog.close();
@@ -164,6 +181,9 @@ const ContractUI = (() => {
       I18n.text("合约模式") +
       " · " +
       I18n.text(state.difficulty.name) +
+      " · " +
+      (value.game.environment === "space" ? I18n.text("宇宙") : I18n.text(
+        ContractMode.biomes.find(b=>b.id === value.game.contractLayout?.biome)?.name || "草原")) +
       " · " +
       I18n.text("事件") +
       " " +
@@ -182,7 +202,10 @@ const ContractUI = (() => {
         else areaFocus(state.entry);
       });
     }
-    entryButton.hidden = value.phase !== "deployment";
+    [entryButton, secondEntryButton].forEach((button, index) => {
+      button.hidden = value.phase !== "deployment" || !ContractMode.deploymentZones(state)[index];
+      button.textContent = I18n.text("入场区") + " " + (index + 1);
+    });
     const own = state.participants?.find((p) => p.seat === value.you?.seat),
       remaining = state.participants?.reduce((n, p) => n + p.remaining, 0) || 0;
     notice.hidden = !own || !!own.remaining || value.phase === "deployment";
@@ -203,9 +226,10 @@ const ContractUI = (() => {
     ctx.save();
     ctx.lineWidth = 2;
     for (const o of state.objectives) {
-      if (!["salvage", "capture"].includes(o.type)) continue;
-      const radius = o.type === "salvage" ? 1 : 2,
-        color = o.status === "completed" ? "#72d5a2" : o.type === "salvage" ? "#ffffff" : "#ed6c67",
+      if (!["salvage", "capture", "defend", "rescue", "upload"].includes(o.type)) continue;
+      const radius = ["defend","rescue"].includes(o.type) ? 5 : ["salvage","upload"].includes(o.type) ? 1 : 2,
+        color = o.status === "failed" ? "#6f7780" : o.status === "completed" ? "#72d5a2" :
+          ["defend","rescue","upload"].includes(o.type) ? "#79d5ff" : o.type === "salvage" ? "#ffffff" : "#ed6c67",
         left = geo.ox + (o.x - radius) * geo.tile,
         top = geo.oy + (o.y - radius) * geo.tile,
         span = (radius * 2 + 1) * geo.tile;
@@ -241,7 +265,7 @@ const ContractUI = (() => {
     const state = snapshot?.contract;
     if (!state || snapshot.game?.winner !== null) return;
     ctx.save();
-    const r = state.extraction;
+    for (const [index, r] of ContractMode.extractionZones(state).entries()) {
     ctx.fillStyle = "#5ebaaa18";
     ctx.strokeStyle = "#71d6ba";
     ctx.lineWidth = 2;
@@ -263,10 +287,11 @@ const ContractUI = (() => {
     ctx.textAlign = "center";
     ctx.fillStyle = "#a0ffe4";
     ctx.fillText(
-      I18n.text("撤离区"),
+      I18n.text("撤离区") + " " + (index + 1),
       geo.ox + (r.x + r.width / 2) * geo.tile,
       geo.oy + (r.y + r.height / 2) * geo.tile,
     );
+    }
     for (const [index, o] of state.objectives.entries()) {
       const x = geo.ox + (o.x + 0.5) * geo.tile,
         y = geo.oy + (o.y + 0.5) * geo.tile,
@@ -276,33 +301,34 @@ const ContractUI = (() => {
         SpriteRenderer.draw(ctx,o.wreckModel,x,y+geo.tile*.5,geo.tile/Rules.mapCellPixels*ART.presentation.unitMapScale*model.presentation.mapScale,90,model.presentation.idle,0,null,true,false,false,{},90,false,true,"ground");
         ctx.restore();
       }
-      if (o.type === "capture") {
+      if (["capture","defend","rescue","upload"].includes(o.type)) {
+        if (["capture","defend"].includes(o.type))
         BattlefieldUI.drawCampaignObjective(
           ctx,
           { kind: "point" },
-          o.status === "completed" ? 0 : 1,
+          o.type === "defend" || o.status === "completed" ? 0 : 1,
           x,
           y,
           geo.tile,
         );
         const width = Math.max(40, geo.tile * 2.3),
           gap = 2,
-          cell = (width - gap * 4) / 5,
+          cell = (width - gap * (o.required - 1)) / o.required,
           top = y + geo.tile * 0.95;
         ctx.fillStyle = "#09121fe8";
         ctx.fillRect(x - width / 2 - 3, top - 3, width + 6, 14);
-        for (let j = 0; j < 5; j++) {
-          ctx.fillStyle = j < o.progress ? "#55b9f5" : "#e56d65";
+        for (let j = 0; j < o.required; j++) {
+          ctx.fillStyle = o.status === "failed" ? "#626b78" : j < o.progress ? "#55b9f5" : "#e56d65";
           ctx.fillRect(x - width / 2 + j * (cell + gap), top, cell, 8);
         }
       }
-      const markerY = o.type === "capture" ? y - geo.tile * 1.15 : y;
+      const markerY = ["capture","defend"].includes(o.type) ? y - geo.tile * 1.15 : y;
       ctx.strokeStyle =
-        o.status === "completed" ? "#72d5a2" : o.status === "active" ? "#79d5ff" : "#f3c965";
+        o.status === "failed" ? "#9199a4" : o.status === "completed" ? "#72d5a2" : o.status === "active" ? "#79d5ff" : "#f3c965";
       ctx.fillStyle = "#10202de8";
       ctx.lineWidth = 2;
       ctx.beginPath();
-      // Four distinct silhouettes: data square, elimination diamond, factory, outpost ring.
+      // Distinct geometric silhouettes remain readable at tactical zoom.
       if (o.type === "salvage") ctx.rect(x - size, markerY - size, size * 2, size * 2);
       else if (o.type === "command") {
         ctx.moveTo(x, markerY - size);
@@ -320,12 +346,29 @@ const ContractUI = (() => {
         ctx.lineTo(x + size, markerY - size);
         ctx.lineTo(x + size, markerY + size);
         ctx.closePath();
+      } else if (o.type === "defend") {
+        ctx.moveTo(x-size,markerY-size);ctx.lineTo(x+size,markerY-size);
+        ctx.lineTo(x+size*.8,markerY+size*.3);ctx.lineTo(x,markerY+size*1.2);
+        ctx.lineTo(x-size*.8,markerY+size*.3);ctx.closePath();
+      } else if (o.type === "rescue") {
+        const a=size*.4;
+        ctx.moveTo(x-a,markerY-size);ctx.lineTo(x+a,markerY-size);ctx.lineTo(x+a,markerY-a);
+        ctx.lineTo(x+size,markerY-a);ctx.lineTo(x+size,markerY+a);ctx.lineTo(x+a,markerY+a);
+        ctx.lineTo(x+a,markerY+size);ctx.lineTo(x-a,markerY+size);ctx.lineTo(x-a,markerY+a);
+        ctx.lineTo(x-size,markerY+a);ctx.lineTo(x-size,markerY-a);ctx.lineTo(x-a,markerY-a);ctx.closePath();
+      } else if (o.type === "upload") {
+        ctx.moveTo(x,markerY-size);ctx.lineTo(x+size,markerY);ctx.lineTo(x+size*.4,markerY);
+        ctx.lineTo(x+size*.4,markerY+size);ctx.lineTo(x-size*.4,markerY+size);
+        ctx.lineTo(x-size*.4,markerY);ctx.lineTo(x-size,markerY);ctx.closePath();
+      } else if (o.type === "radar") {
+        ctx.arc(x,markerY,size,Math.PI,Math.PI*2);ctx.lineTo(x+size,markerY+size);
+        ctx.lineTo(x-size,markerY+size);ctx.closePath();
       } else ctx.arc(x, markerY, size, 0, Math.PI * 2);
       ctx.fill();
       ctx.stroke();
       ctx.fillStyle = ctx.strokeStyle;
       ctx.textBaseline = "middle";
-      ctx.fillText(o.status === "completed" ? "✓" : String(index + 1), x, markerY);
+      ctx.fillText(o.status === "completed" ? "✓" : o.status === "failed" ? "×" : String(index + 1), x, markerY);
       if (o.type === "command" && o.status !== "completed")
         for (const id of o.targets) {
           const target = game.units.find((u) => u.id === id);

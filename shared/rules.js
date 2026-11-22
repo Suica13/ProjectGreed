@@ -320,6 +320,9 @@ const Tactics = (() => {
   function formationStyle(settings) {
     return settings.mode === "quick" && settings.formationStyle === "free" ? "free" : "standard";
   }
+  function tagRestrictionsEnabled(settings = {}) {
+    return !["sweep", "mission", "battlefield"].includes(settings.mode);
+  }
   function validateOpenContent(settings) {
     if (settings.mode === "mission") return;
     if (settings.mode === "battlefield" && settings.costLimit > 7500)
@@ -365,12 +368,13 @@ const Tactics = (() => {
         deploymentSeat: seat ?? 0,
         unitCostLimit: Infinity,
         ...validateTagRestrictions(),
-        ...(settings.mode === "mission" ? {pilotPolicy: validatePilotPolicy(settings.pilotPolicy)} : {}),
+        pilotPolicy: "allow",
       };
+    const tagSettings = tagRestrictionsEnabled(settings) ? settings : {};
     const teamRules =
       seat === null || settings.mode !== "quick"
         ? null
-        : settings.teamRestrictions?.[seatTeam(seat)];
+        : tagSettings.teamRestrictions?.[seatTeam(seat)];
     return {
       ...(settings.mapId
         ? {
@@ -382,11 +386,11 @@ const Tactics = (() => {
       unitCostLimit: settings.unitCostLimit ?? Infinity,
       pilotPolicy: validatePilotPolicy(settings.pilotPolicy),
       bannedFactions: [
-        ...new Set([...(settings.bannedFactions || []), ...(teamRules?.bannedFactions || [])]),
+        ...new Set([...(tagSettings.bannedFactions || []), ...(teamRules?.bannedFactions || [])]),
       ],
-      bannedEras: [...new Set([...(settings.bannedEras || []), ...(teamRules?.bannedEras || [])])],
+      bannedEras: [...new Set([...(tagSettings.bannedEras || []), ...(teamRules?.bannedEras || [])])],
       bannedTypes: [
-        ...new Set([...(settings.bannedTypes || []), ...(teamRules?.bannedTypes || [])]),
+        ...new Set([...(tagSettings.bannedTypes || []), ...(teamRules?.bannedTypes || [])]),
       ],
     };
   }
@@ -1996,7 +2000,7 @@ const Tactics = (() => {
       (other) =>
         onMap(other) && !other.embarked && !members.includes(other) && occupies(other, x, y),
     );
-    const destination = squadMembers(g, target);
+    const destination = squadMembers(g, target).filter((other) => !members.includes(other));
     return squadFits([...members, ...destination], g) &&
       occupants.every((other) => destination.includes(other)) &&
       destination.every((other) => !other.pendingMove && other.attackSkillRound !== g.round)
@@ -2361,7 +2365,7 @@ const Tactics = (() => {
     const map = settings.mode === "sweep" ? contractMode.generateMap(catalog,settings,seed) : getMap(settings.mapId),
       costLimit = validateCostLimit(settings.costLimit ?? catalog.formation.maxCost),
       unitLimit = validateUnitLimit(settings.unitLimit ?? catalog.formation.maxUnits),
-      fogMode = validateFogMode(settings.fogMode);
+      fogMode = settings.mode === "mission" ? "full" : validateFogMode(settings.fogMode);
     formations ??= map.spawns.map((_, seat) =>
       randomFormation(
         seed + seat,
@@ -2634,9 +2638,13 @@ const Tactics = (() => {
         push(entry);
       }
     }
-    // 友军可作为路径中间点，但不能作为移动终点。
+    // Friendly occupied endpoints must validate capacity even if a separated
+    // group still shares this unit's historical squadId (fits ignores that ID).
     for (const [cell, entry] of best) {
-      if (!fits(g, u, entry.x, entry.y, u.angle, false, null, null, occupancy)) {
+      const occupied = (occupancy.current.get(cell) || []).some(
+        (other) => other !== u && onMap(other) && !other.embarked,
+      );
+      if (occupied || !fits(g, u, entry.x, entry.y, u.angle, false, null, null, occupancy)) {
         const target = squadJoinTarget(g, u, entry.x, entry.y, [u], occupancy);
         if (target) entry.squadTarget = target.id;
         else best.delete(cell);
@@ -2692,11 +2700,13 @@ const Tactics = (() => {
         else route.squadBoarding = plan;
         continue;
       }
+      const target = occupied ? squadJoinTarget(g, unit, route.x, route.y, members, occupancy) : null;
       if (
         routes.some((walk) => !walk.has(cell) || walk.get(cell).boarding) ||
-        (occupied && !squadJoinTarget(g, unit, route.x, route.y, members, occupancy))
-      )
-        result.delete(cell);
+        (occupied && !target)
+      ) result.delete(cell);
+      else if (target) route.squadTarget = target.id;
+      else delete route.squadTarget;
     }
     return result;
   }
@@ -3691,6 +3701,7 @@ const Tactics = (() => {
           ? consumeIField(to, blocked ? e.iFieldBlockedDamage : e.iFieldDamage)
           : 0;
         const abcDamage = hit ? ((blocked ? e.coatingBlockedDamage : e.coatingDamage)?.abc?.loss || 0) : 0;
+        const phaseShiftDamage = hit ? ((blocked ? e.coatingBlockedDamage : e.coatingDamage)?.phaseShift?.loss || 0) : 0;
         if (hit) coatings.consume(modelOf(to), to, blocked ? e.coatingBlockedDamage : e.coatingDamage);
         to.hp -= damage;
         to.shield -= shieldDamage;
@@ -3730,6 +3741,7 @@ const Tactics = (() => {
           before: hpBefore,
           after: to.hp,
           ...(abcDamage > 0 ? {abcDamage} : {}),
+          ...(phaseShiftDamage > 0 ? {phaseShiftDamage} : {}),
           shieldBefore: shieldBeforeStrike,
           shieldAfter: to.shield,
           ...(modelOf(to).iField ? { iFieldBefore, iFieldAfter: iFieldHP(to), iFieldDamage } : {}),
@@ -3785,6 +3797,8 @@ const Tactics = (() => {
         shieldBefore,
         shieldAfter: to.shield,
         shieldDamage: shieldBefore - to.shield,
+        abcDamage: strikes.reduce((sum,strike) => sum + (strike.abcDamage || 0),0),
+        phaseShiftDamage: strikes.reduce((sum,strike) => sum + (strike.phaseShiftDamage || 0),0),
         after: to.hp,
         hitChance: strikes[0]?.hitChance,
         response: stance,
@@ -3966,6 +3980,7 @@ const Tactics = (() => {
         ? Math.min(target.hp, blocked ? estimateHit.blockedDamage : estimateHit.damage)
         : 0;
       const abcDamage = hit ? ((blocked ? estimateHit.coatingBlockedDamage : estimateHit.coatingDamage)?.abc?.loss || 0) : 0;
+      const phaseShiftDamage = hit ? ((blocked ? estimateHit.coatingBlockedDamage : estimateHit.coatingDamage)?.phaseShift?.loss || 0) : 0;
       if (hit) coatings.consume(modelOf(target), target, blocked ? estimateHit.coatingBlockedDamage : estimateHit.coatingDamage);
       const iFieldBefore = iFieldHP(target),
         iFieldDamage = hit
@@ -3989,6 +4004,8 @@ const Tactics = (() => {
       hits.push({
         unitId: target.id,
         ...(abcDamage > 0 ? {abcDamage} : {}),
+        ...(phaseShiftDamage > 0 ? {phaseShiftDamage} : {}),
+        shieldDamage: shieldBefore - target.shield,
         ...(modelOf(target).iField
           ? { iFieldBefore, iFieldAfter: iFieldHP(target), iFieldDamage }
           : {}),
@@ -4566,6 +4583,7 @@ const Tactics = (() => {
     if (contractOrder) {
       strategy = { ...strategy, goal: contractOrder.goal, strategic: true, occupation: true };
       if (!contractOrder.alerted) enemies = [];
+      else if (contractOrder.targetIds?.length) enemies = enemies.filter(enemy => contractOrder.targetIds.includes(enemy.id));
     }
     let route =
       !destinations &&
@@ -4878,6 +4896,7 @@ const Tactics = (() => {
     defaultRoomSettings,
     validateOpenContent,
     formationStyle,
+    tagRestrictionsEnabled,
     sweepMapId,
     contractMode,
     formationRestrictions,

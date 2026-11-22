@@ -10,9 +10,13 @@ for(const width of [1440,390])test('production has permit status only and produc
   const before=await page.evaluate(()=>Economy.snapshot());
   const kit=await page.evaluate(()=>{Economy.creditActivity({id:'test-permit',matchId:'test-permit',money:0,supplies:0,licenses:{RX_78_2:true},inventory:{}});ProductionUI.render();return Economy.defaultKit('RX_78_2');});
   await expect(page.locator('#productionLicenseStatus')).toBeHidden();await expect(page.locator('#produceUnit')).toBeEnabled();
+  const price=await page.evaluate(()=>{const base=Economy.unitOffer('RX_78_2');return {money:base.money*3,supplies:base.supplies*6};});
+  await expect(page.locator('#productionPrice')).toContainText(price.money.toLocaleString('en-US'));
+  await expect(page.locator('#productionPrice')).toContainText(price.supplies.toLocaleString('en-US'));
   await expect(page.locator('#productionList [data-unit-id="RX_78_2"] .unit-portrait-status')).toHaveCount(0);await page.locator('#produceUnit').click();
   const after=await page.evaluate(()=>Economy.snapshot());expect(after.storage.units.filter(item=>item.unitId==='RX_78_2')).toHaveLength(1);
   expect(after.storage.units.find(item=>item.unitId==='RX_78_2').kitId).toBe(kit);expect(after.money).toBeLessThan(before.money);
+  expect(after.money).toBe(before.money-price.money);expect(after.supplies).toBe(before.supplies-price.supplies);
   await page.screenshot({path:`tmp/verification/screenshots/production-default-${width}.png`});
   await page.locator('#productionSearch').fill('no-matching-unit');await expect(page.locator('#produceUnit')).toBeDisabled();
   expect(errors).toEqual([]);

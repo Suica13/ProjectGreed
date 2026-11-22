@@ -142,15 +142,44 @@ test("wrecks keep occupying slots and new production never silently repairs or r
   assert.equal(E.canStore("RGM_79"), false);
   assert.equal(load(E.snapshot()).E.snapshot().storage.units.filter((item) => item.destroyed).length, 30);
 });
-test("stored pilot assignments survive reload and reject duplicate personal pilots", () => {
+test("stored pilot assignments move atomically between chassis and survive reload", () => {
   const { E } = load();
   E.creditActivity({ id: "pilot-stock", matchId: "initial", money: 0, supplies: 0, inventory: { RGM_79: 2 } });
   const [a, b] = E.snapshot().storage.units;
   assert(E.setStoredPilot(a.id, "personal-pilot"));
-  assert.throws(() => E.setStoredPilot(b.id, "personal-pilot"), /驾驶员重复配属/);
-  assert.equal(load(E.snapshot()).E.snapshot().storage.units[0].pilotId, "personal-pilot");
+  assert(E.setStoredPilot(b.id, "personal-pilot"));
+  const records=load(E.snapshot()).E.snapshot().storage.units;
+  assert.equal(records.find(item=>item.id === a.id).pilotId,null);
+  assert.equal(records.find(item=>item.id === b.id).pilotId,"personal-pilot");
   assert(E.setStoredPilot(a.id, null));
   assert(E.setStoredPilot(b.id, "personal-pilot"));
+});
+
+test("moving a wreck's pilot permits repair and legacy duplicate wreck references are detached", () => {
+  const {E}=load();
+  E.creditActivity({id:"wreck-pilot-funds",matchId:"initial",money:0,supplies:100000,inventory:{}});
+  const [wreck,target]=E.snapshot().storage.units;
+  E.setStoredPilot(wreck.id,"surviving-pilot");
+  E.creditAward({id:"pilot-wreck",matchId:"battle",money:0,supplies:0,
+    stockLost:{inventory:{[wreck.unitId]:1}},stockLostItems:[{stockId:wreck.id,unitId:wreck.unitId}]});
+  assert(E.setStoredPilot(target.id,"surviving-pilot"));
+  assert.equal(E.snapshot().storage.units.find(item=>item.id===wreck.id).pilotId,null);
+  const legacy=E.snapshot();legacy.storage.units.find(item=>item.id===wreck.id).pilotId="surviving-pilot";
+  const restored=load(legacy).E,quote=restored.repairQuote([wreck.id]),before=restored.snapshot();
+  assert(restored.repairAllStoredUnits(quote));
+  const after=restored.snapshot(),fixed=after.storage.units.find(item=>item.id===wreck.id);
+  assert(fixed.hp>0 && !fixed.destroyed);assert.equal(fixed.pilotId,null);
+  assert.equal(after.storage.units.find(item=>item.id===target.id).pilotId,"surviving-pilot");
+  assert.equal(after.supplies,before.supplies-quote.supplies);
+  assert.equal(load(after).E.snapshot().storage.units.find(item=>item.id===wreck.id).hp,fixed.hp);
+});
+
+test("failed pilot migration persistence leaves both original assignments intact", () => {
+  const {E,data}=load(),[a,b]=E.snapshot().storage.units;
+  E.setStoredPilot(a.id,"pilot-a");E.setStoredPilot(b.id,"pilot-b");
+  const before=JSON.stringify(E.snapshot());data.set=()=>{throw Error("save failed");};
+  assert.throws(()=>E.setStoredPilot(b.id,"pilot-a"),/save failed/);
+  assert.equal(JSON.stringify(E.snapshot()),before);
 });
 test("transforming one selected chassis preserves its identity, pilot and battle damage", () => {
   const { E } = load();

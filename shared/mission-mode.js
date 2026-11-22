@@ -350,6 +350,8 @@ const MissionMode = (() => {
     return {
       mapId: map.id,
       mode: "mission",
+      fogMode: "full",
+      pilotPolicy: "allow",
       missionEra: m.era,
       missionTechnologyLimitEnabled: m.technologyLimitEnabled !== false,
       technologyLimitMode: "custom",

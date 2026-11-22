@@ -327,3 +327,12 @@
 #operationBriefing .briefing-marker[data-tactical="retreat"] { color:#f1ce8c; border-color:#d1a55e; }
 #operationBriefing .briefing-marker[data-tactical="attack"] { color:#ffb4ab; }
 #operationBriefing .briefing-marker[data-tactical="move"] { color:#9bd9ff; }
+
+#operationBriefing .briefing-deployment-area { background:#55b5ec24; border:2px solid #72d2ff; }
+.battle-task-list { width:min(760px,94vw); max-height:85dvh; padding:18px; color:#d9ebf7; background:#102332; border:1px solid #53829e; }
+.battle-task-list > header { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.battle-task-list h2 { margin:0; font-size:20px; }
+.battle-task-body { max-height:65dvh; overflow:auto; }
+.battle-task-body article { border:1px solid #36566c; background:#162d3d; margin:8px 0; padding:12px; }
+.battle-task-body article p { margin:7px 0 0; white-space:pre-line; }
+.battle-task-progress { float:right; color:#91d3f7; margin-left:12px; }

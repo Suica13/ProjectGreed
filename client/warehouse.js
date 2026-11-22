@@ -135,7 +135,7 @@ window.WarehouseUI = (() => {
     function draw() {
       list.replaceChildren();
       const profiles = [PilotSystem.generalPMC("pmc-general-"+item.id,PilotSystem.commandUnit(model)),
-        ...Formation.availablePilots().filter(profile=>PilotSystem.canAssign(profile,PlayerProfile.faction()))];
+        ...Formation.availablePilots({includeUnavailable:true}).filter(profile=>PilotSystem.canAssign(profile,PlayerProfile.faction()))];
       for (const profile of profiles) {
         const id = profile?.hired ? "crew:" + profile.grade : profile?.id || null,
           name = profile ? I18n.pilotName(profile) : PilotSystem.defaultName(model),
@@ -150,9 +150,15 @@ window.WarehouseUI = (() => {
         const stats = profile?.stats;
         if (stats) text.append(element("small", "", Object.entries(PilotSystem.labels).map(([key, label]) => I18n.text(label) + " " + stats[key]).join(" · ")));
         if (profile && !profile.hired) text.append(SkillControls.pilotSummary(profile));
-        const occupied = storedItems().filter((record) => !record.destroyed && record.id !== item.id && record.pilotId === id);
-        card.disabled = profile?.hired ? occupied.length >= (Economy.snapshot().crewStock[profile.grade] || 0) : !!id && !!occupied.length;
-        if (card.disabled) text.append(element("small", "", profile?.hired ? "驾驶员库存不足" : "已配属其他单位"));
+        const occupied = storedItems().filter((record) => record.id !== item.id && record.pilotId === id);
+        for (const record of occupied) {
+          const owner = UnitModels[record.unitId + "__" + record.kitId];
+          text.append(element("small", "pilot-assignment-location", I18n.text("目前配属：{unit}").replace("{unit}",
+            (record.slot + 1) + ". " + I18n.text(owner?.name || record.unitId))));
+        }
+        card.disabled = !!profile?.needsRecruitment || (profile?.hired && occupied.length >= (Economy.snapshot().crewStock[profile.grade] || 0));
+        if (profile?.needsRecruitment) text.append(element("small", "pilot-recovery-pending", "等待复归"));
+        else if (card.disabled) text.append(element("small", "", "驾驶员库存不足"));
         card.onclick = () => {
           try { if (Economy.setStoredPilot(item.id, id)) showUnit(currentItem(item)); }
           catch (error) { note(error.message); }
@@ -679,7 +685,18 @@ window.WarehouseUI = (() => {
       accept.disabled=Net.started || !Warehouse.fits(Economy.snapshot().storage,model,UnitModels);
       if(accept.disabled)accept.title=I18n.text(Net.started?"对局进行中不能领取":"对应机库已满");
       accept.onclick=()=>{try{if(!Net.started){Economy.receiveDeliveries(index);showDeliveries();}}catch(error){note(error.message);}};
-      row.append(image,text,accept);list.append(row);
+      const remove=element("button","danger","移除"),actions=element("div","warehouse-depot-actions");
+      remove.disabled=Net.started;
+      remove.onclick=async()=>{
+        if(Net.started || remove.disabled)return;
+        remove.disabled=true;
+        try {
+          if(!await GameDialog.confirm(I18n.text("确定移除保管库中的「{name}」？此操作无法撤销。").replace("{name}",I18n.text(model.name)),{title:I18n.text("移除单位")}) || Net.started)return;
+          Economy.discardDelivery(index,item);showDeliveries();
+        } catch(error){note(error.message);}
+        finally {remove.disabled=Net.started;}
+      };
+      actions.append(accept,remove);row.append(image,text,actions);list.append(row);
     });
     if(!deliveries.length)list.append(element("p","muted","保管库为空"));
     body.append(element("p","muted","机库已满时收到的奖励保存在这里，腾出位置后可逐个接受。"),list);

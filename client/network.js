@@ -340,6 +340,7 @@ const Net = (() => {
   function leave({ notify = true, forget = true } = {}) {
     window.MissionUI?.clear();
     ContractUI.receive({phase:"waiting"});
+    window.BattleTaskList?.receive(null);
     BriefingUI.clear();
     BattleAssets.release();
     if (window.ReplayPlayer?.active) window.ReplayPlayer.stop(false);
@@ -712,11 +713,17 @@ const Net = (() => {
     if (previousGame.mapId !== game.mapId) MapCamera.reset();
     window.MissionUI?.receive(s);
     BriefingUI.receive(s);
+    window.BattleTaskList?.receive(s);
     game.ai = false;
     log = s.log.slice();
 
     pending = s.pending;
     window.BattlePrompts?.receive(s);
+    // Room broadcasts update shared state, not another player's selected menu page.
+    // Use the navigation registry so new base/contact pages are preserved as well.
+    const preparationView =
+      window.MenuShell?.isPreparationView(pageView) ??
+      ["menu", "formation", "production", "development", "records", "encyclopedia"].includes(pageView);
     if (s.returnCountdown) {
       TurnFlow.reset();
       if (battleView?.mapBattle) MapCombat.suspend(battleView);
@@ -731,13 +738,7 @@ const Net = (() => {
       n.assemblyPending = true;
       phase = "assembly";
       battleView = null;
-      if (
-        !n.applied ||
-        !["menu", "formation", "production", "development", "records", "encyclopedia"].includes(
-          pageView,
-        )
-      )
-        setPageView("room");
+      if (!n.applied || !preparationView) setPageView("room");
       RoomPanel.render(s);
       n.applied = true;
       update();
@@ -777,14 +778,7 @@ const Net = (() => {
       }
       phase = "waiting";
       battleView = null;
-      if (
-        wasStarted ||
-        !n.applied ||
-        !["menu", "formation", "production", "development", "records", "encyclopedia"].includes(
-          pageView,
-        )
-      )
-        setPageView("room");
+      if (wasStarted || !n.applied || !preparationView) setPageView("room");
       RoomPanel.render(s);
       n.applied = true;
       update();

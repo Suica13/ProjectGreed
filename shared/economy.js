@@ -394,6 +394,10 @@ const Economy = (() => {
     // Retain the original single-chassis production basis independently of permit pricing.
     return { unitId, money: permit.money, supplies: permit.supplies, quantity: 1 };
   }
+  function chassisProductionOffer(unitId, production = catalog) {
+    const base = unitOffer(unitId, production);
+    return base ? {...base, money: base.money * 3, supplies: base.supplies * 6} : null;
+  }
   // Factory times are batch totals. Both campaign orders and the catalog expose
   // the same single-unit duration; personal production remains immediate for now.
   function productionTiming(unitId, kitId = defaultKit(unitId), production = catalog) {
@@ -412,8 +416,7 @@ const Economy = (() => {
     };
   }
   function productionOffer(unitId, kitId, production = catalog, models = modelsForUnits()) {
-    const base = unitOffer(unitId, production),
-      chassis = base ? {...base,money:base.money*3,supplies:base.supplies*3} : null,
+    const chassis = chassisProductionOffer(unitId, production),
       model = models[unitId + "__" + kitId];
     if (!chassis || !model || model.formOnly || model.wip) return null;
     return {
@@ -549,6 +552,10 @@ const Economy = (() => {
     const next = snapshot(),
       item = [...next.storage.units, ...next.storage.ships].find((item) => item.id === id);
     if (!item || item.destroyed) return false;
+    // A personal pilot moves with the assignment, including away from a wreck.
+    if (pilotId && !pilotId.startsWith("crew:"))
+      for (const other of [...next.storage.units, ...next.storage.ships])
+        if (other.id !== id && other.pilotId === pilotId) other.pilotId = null;
     item.pilotId = pilotId;
     return commit(next);
   }
@@ -583,6 +590,14 @@ const Economy = (() => {
       } else remaining.push(item);
     }
     next.storage.deliveries = remaining;
+    return commit(next);
+  }
+  function discardDelivery(index, expected) {
+    if (!Number.isInteger(index) || index < 0 || index >= state.storage.deliveries.length) return false;
+    if (expected && JSON.stringify(expected) !== JSON.stringify(state.storage.deliveries[index]))
+      throw Error("保管库内容已变化，请重新确认");
+    const next = snapshot();
+    next.storage.deliveries.splice(index, 1);
     return commit(next);
   }
   function grantPlan(next, planId) {
@@ -701,32 +716,42 @@ const Economy = (() => {
           Object.values(item.brokenParts || {}).some(Boolean) ||
           (model.modules || []).some((part) => (item.moduleHp?.[part.id] ?? part.hp) < part.hp);
       if (!destroyed && !parts && item.hp >= model.hp && item.en >= model.en) continue;
-      const price = unitOffer(item.unitId)?.supplies || 0;
+      const price = chassisProductionOffer(item.unitId)?.supplies || 0;
       items.push({
         ...structuredClone(item),
-        supplies: Math.ceil(price * (destroyed ? 0.5 : parts ? 0.25 : 0)),
+        supplies: Math.ceil(price * (destroyed ? 0.75 : parts ? 0.5 : 0)),
       });
     }
     return { items, supplies: items.reduce((sum, item) => sum + item.supplies, 0) };
   }
-  function repairAllStoredUnits(expected) {
+  function repairAllStoredUnits(expected, additionalSupplies = 0, extraWrites = []) {
+    if (!Number.isSafeInteger(additionalSupplies) || additionalSupplies < 0) throw Error("无效的整备费用");
     const quote = repairQuote(expected ? expected.items.map((item) => item.id) : null);
     if (expected && JSON.stringify(expected) !== JSON.stringify(quote))
       throw Error("库存状态已变化，请重新确认修复费用");
-    if (!quote.items.length) return false;
-    if (!affordable({ supplies: quote.supplies })) throw Error("物资不足");
+    if (!quote.items.length && !extraWrites.length) return false;
+    const totalSupplies = quote.supplies + additionalSupplies;
+    if (!Number.isSafeInteger(totalSupplies) || !affordable({ supplies: totalSupplies })) throw Error("物资不足");
     const next = snapshot(),
       ids = new Set(quote.items.map((item) => item.id));
-    next.supplies -= quote.supplies;
+    const claimedPilots = new Set([...next.storage.units, ...next.storage.ships]
+      .filter(item => !item.destroyed && item.hp > 0 && item.pilotId && !item.pilotId.startsWith("crew:"))
+      .map(item => item.pilotId));
+    next.supplies -= totalSupplies;
     for (const item of [...next.storage.units, ...next.storage.ships]) {
       if (!ids.has(item.id)) continue;
+      if ((item.destroyed || item.hp === 0) && item.pilotId && !item.pilotId.startsWith("crew:")) {
+        // Older saves allowed the same pilot on a wreck and a surviving chassis.
+        if (claimedPilots.has(item.pilotId)) item.pilotId = null;
+        else claimedPilots.add(item.pilotId);
+      }
       const model = plugins.apply(modelsForUnits()[item.unitId + "__" + item.kitId], item.plugins);
       Object.assign(item, { hp: model.hp, en: model.en, destroyed: false, brokenParts: {} });
       if (model.modules?.length)
         item.moduleHp = Object.fromEntries(model.modules.map((part) => [part.id, part.hp]));
     }
     next.inventory = warehouse.counts(next.storage);
-    return commit(next);
+    return commit(next, extraWrites);
   }
   function purchasePlan(entries) {
     const units = {};
@@ -885,6 +910,7 @@ const Economy = (() => {
     setStoredPlugin,
     moveStoredUnit,
     receiveDeliveries,
+    discardDelivery,
     meetLiaison,
     acceptContactTask,
     completeContactTask,

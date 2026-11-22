@@ -1,0 +1,63 @@
+const {test,expect}=require("@playwright/test");
+const {pathToFileURL}=require("node:url"),path=require("node:path");
+for(const width of [1440,390]) test(`pilot migration, recovery availability and formation condition warnings at ${width}px`,async({page})=>{
+  test.setTimeout(90000);
+  await page.setViewportSize({width,height:960});
+  const errors=[];page.on("pageerror",e=>errors.push(e.message));
+  await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
+  await page.waitForFunction(()=>assetsReady);
+  const fixture=await page.evaluate(()=>{
+    I18n.setLanguage("zh");
+    const ready=PilotSystem.createCustom("custom-transfer-ready","迁移测试驾驶员"),dead=PilotSystem.createCustom("custom-transfer-dead","复归测试驾驶员");
+    dead.needsRecruitment=true;
+    localStorage.setItem("projectgreed.custom-pilots.v3.shared",JSON.stringify({pilots:[ready,dead],awards:[]}));
+    Economy.creditActivity({id:"transfer-wallet",matchId:"transfer-wallet",money:0,supplies:100000,inventory:{}});
+    const [a,b]=Economy.snapshot().storage.units,ship=Economy.snapshot().storage.ships.find(u=>u.unitId === "Medea");
+    Economy.setStoredPilot(a.id,ready.id);
+    Economy.creditAward({id:"transfer-damage",matchId:"transfer-battle",money:0,supplies:0,
+      stockLost:{inventory:{[a.unitId]:1}},stockLostItems:[{stockId:a.id,unitId:a.unitId}],
+      stockStates:[{stockId:b.id,unitId:b.unitId,kitId:b.kitId,hp:100,en:0}]});
+    const hangar=UnitModels[ship.unitId+"__"+ship.kitId].hangars[0].id;
+    const units=[ship,a,b].map((item,i)=>({unitId:item.unitId,kitId:item.kitId,stockId:item.id,
+      ...(i?{preload:{carrierIndex:0,hangarId:hangar}}:{})}));
+    localStorage.setItem("slg-formations-v1.PMC",JSON.stringify({version:3,squads:[{name:"损坏提示",units}]}));
+    return {a,b,readyId:ready.id,deadId:dead.id};
+  });
+  await page.reload();await page.waitForFunction(()=>assetsReady);
+  await page.evaluate(()=>{MenuShell.go("formation");});
+  await expect(page.locator('#formationUnits [data-formation-index="1"]')).toHaveAttribute("data-condition","destroyed");
+  await expect(page.locator('#formationUnits [data-formation-index="2"] .warehouse-condition')).toHaveText("需要修理");
+  await page.locator('#formationUnits [data-formation-index="2"] .formation-detail-button').click();
+  await page.locator("#warehouseAssignPilot").click();
+  const ready=page.locator(`.warehouse-pilot-choice[data-pilot-id="${fixture.readyId}"]`),dead=page.locator(`.warehouse-pilot-choice[data-pilot-id="${fixture.deadId}"]`);
+  await expect(ready).toBeEnabled();await expect(ready.locator(".pilot-assignment-location")).toContainText("目前配属：");
+  await expect(dead).toBeDisabled();await expect(dead).toContainText("等待复归");
+  expect(await dead.evaluate(n=>parseFloat(getComputedStyle(n).opacity))).toBeLessThan(.6);
+  await ready.click();
+  let assignments=await page.evaluate(()=>Economy.snapshot().storage.units.map(u=>({id:u.id,pilotId:u.pilotId})));
+  expect(assignments.find(u=>u.id===fixture.a.id).pilotId).toBeNull();
+  expect(assignments.find(u=>u.id===fixture.b.id).pilotId).toBe(fixture.readyId);
+  await page.locator("#warehouseAssignPilot").click();
+  await page.locator(`.warehouse-pilot-choice[data-pilot-id="${fixture.readyId}"]`).click();
+  await page.locator("#warehouseClose").click();
+  await page.locator('#formationUnits [data-formation-index="1"] .formation-detail-button').click();
+  await page.locator("#warehouseDialog .warehouse-condition").click();
+  await page.locator("#gameDialog").getByRole("button",{name:"修复",exact:true}).click();
+  await expect(page.locator("#warehouseDialog .warehouse-wreck-warning")).toHaveCount(0);
+  await page.locator("#warehouseClose").click();
+  await expect(page.locator('#formationUnits [data-formation-index="1"] [class~="destroyed"]')).toHaveCount(0);
+  await expect(page.locator('#formationUnits [data-formation-index="2"] .warehouse-condition')).toHaveText("需要修理");
+  await page.locator('#formationUnits [data-formation-index="1"] .formation-detail-button').click();
+  await page.locator("#warehouseAssignPilot").click();
+  const migrated=page.locator(`.warehouse-pilot-choice[data-pilot-id="${fixture.readyId}"]`);
+  await expect(migrated).toBeEnabled();await expect(migrated.locator(".pilot-assignment-location")).toContainText((fixture.b.slot+1)+".");
+  await migrated.click();await page.locator("#warehouseClose").click();
+  const assigned=await page.evaluate(()=>Formation.current().filter(entry=>entry.customPilot?.id === "custom-transfer-ready").map(entry=>entry.stockId));
+  expect(assigned).toEqual([fixture.a.id]);
+  await page.reload();await page.waitForFunction(()=>assetsReady);
+  const after=await page.evaluate(()=>Economy.snapshot().storage.units);
+  expect(after.find(u=>u.id===fixture.a.id).hp).toBeGreaterThan(0);
+  expect(after.find(u=>u.id===fixture.a.id).pilotId).toBe(fixture.readyId);
+  expect(after.find(u=>u.id===fixture.b.id).pilotId).toBeNull();
+  expect(errors).toEqual([]);
+});

@@ -188,6 +188,7 @@ for (const [key, file] of [
   ["ATTACK_PLANS", "shared/attack-plans.js"],
   ["MATCH_RECORDS", "shared/match-records.js"],
   ["REPLAY_PLAYER", "client/replay-player.js"],
+  ["BATTLE_TASK_LIST", "client/battle-task-list.js"],
   ["LOCAL_RECORDS", "client/local-records.js"],
   ["SETTINGS_LAYOUT", "client/settings-layout.js"],
   ["MOVEMENT_TIMING", "shared/movement-timing.js"],

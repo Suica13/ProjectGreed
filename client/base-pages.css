@@ -254,3 +254,18 @@ body.menu-shell-active .dorm-footer .dorm-create-actions { grid-column:3;justify
 .base-swap-source { opacity:.55; }
 .base-swap-target { outline:3px solid #8ee9ff; outline-offset:-3px; }
 body .base-swap-ghost { position:fixed; z-index:2147483647; pointer-events:none; width:96px; height:96px; object-fit:contain; transform:translate(-50%,-50%); opacity:.8; border:1px solid #8ee9ff; background:#102638; }
+
+/* The phone workshop stacks its catalog and details beyond one viewport. */
+@media (max-width:760px), (pointer:coarse) {
+  body.menu-shell-active #productionScreen > .modal.production-dialog {
+    overflow-y:auto; overflow-x:hidden; overscroll-behavior-y:contain;
+    -webkit-overflow-scrolling:touch; touch-action:pan-y;
+  }
+  body.menu-shell-active #productionScreen #productionWorkspace {
+    display:flex; flex-direction:column; flex:0 0 auto; overflow:visible;
+  }
+  body.menu-shell-active #productionScreen .production-browser { flex:none; min-height:0; }
+  body.menu-shell-active #productionScreen .production-list { flex:none; height:clamp(240px,46dvh,560px); max-height:none; }
+  body.menu-shell-active #productionScreen .production-details { flex:none; min-height:580px; overflow:visible; }
+  body.menu-shell-active #productionScreen #productionInfo { flex:none; max-height:240px; }
+}

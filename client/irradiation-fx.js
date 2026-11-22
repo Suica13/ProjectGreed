@@ -99,6 +99,20 @@ const IrradiationFX = (() => {
       (u) => !u.embarked || u.embarked.exposed || u.pendingMove?.launch,
     );
   }
+  function drawDamage(ctx, beam, time, position, actorPose) {
+    if (beam.visualOnly || window.ReplayPresentation?.immersive || time >= beam.chargeSeconds + 0.9) return;
+    ctx.save();ctx.font="bold 12px system-ui";ctx.textAlign="center";
+    for (const hit of beam.hits || []) {
+      const actor = (beam.actors || []).find(unit => unit.id === hit.unitId);
+      if (!actor) continue;
+      const p = actorPose?.(hit.unitId) || position(actor.x,actor.y), rows = MapCombat.damageReadouts([hit]);
+      if (!hit.hit) rows.push({text:"MISS",color:"#b9dbe8"});
+      for (const [index,row] of rows.entries()) {
+        ctx.fillStyle=row.color;ctx.fillText(row.text,p.x,p.y-32-index*16);
+      }
+    }
+    ctx.restore();
+  }
   function draw(ctx, now, position, tile, actorPose = null) {
     for (const beam of active.values()) {
       const key = (part) => "Irradiation_" + part + "_" + beam.color;
@@ -196,6 +210,7 @@ const IrradiationFX = (() => {
             ctx.restore();
           }
         }
+        drawDamage(ctx,beam,time,position,actorPose);
         continue;
       }
       const // Native sheet height 168 × imageScale 1.25 × imageScaleY 1.5.
@@ -232,6 +247,7 @@ const IrradiationFX = (() => {
         );
       }
       ctx.restore();
+      drawDamage(ctx,beam,time,position,actorPose);
     }
   }
   function fieldImpact(id, now, kind = "iFieldDamage") {

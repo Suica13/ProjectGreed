@@ -300,7 +300,7 @@ public final class MainActivity extends Activity {
         if (assets != null) assets.event("foreground", true);
     }
     @Override protected void onDestroy() {
-        if (prompts != null) prompts.cancelFile();
+        if (prompts != null) prompts.close();
         if (web != null) web.close();
         if (assets != null) assets.close();
         super.onDestroy();

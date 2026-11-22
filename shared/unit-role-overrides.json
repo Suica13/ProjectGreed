@@ -27,5 +27,8 @@
   "MS_15B": {"role":"raid","reason":"high-mobility Gyan melee chassis"},
   "MS_15K": {"role":"raid","reason":"upgraded Gyan melee chassis"},
   "MS_15Kg": {"role":"raid","reason":"Gyan melee chassis"},
-  "AMX_004G": {"role":"support","reason":"mass-production Qubeley remote weapons"}
+  "AMX_004G": {"role":"support","reason":"mass-production Qubeley remote weapons"},
+  "RGM_79_G_WithBackpack": {"role": "support", "reason": "weapon-container ground fire support (user override)"},
+  "RX_79_G_WithBackpack": {"role": "support", "reason": "weapon-container ground fire support (user override)"},
+  "RX_79_G_Ez8_WithBackpack": {"role": "support", "reason": "weapon-container ground fire support (user override)"}
 }

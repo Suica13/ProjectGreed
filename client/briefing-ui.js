@@ -60,9 +60,17 @@ const BriefingUI = (() => {
   function goals(value) {
     const game = value.game;
     if (value.contract) {
-      const state = value.contract,
-        exit = state.extraction;
+      const state = value.contract;
       return [
+        ...ContractMode.deploymentZones(state).map((entry, index) => ({
+          id: "deployment-" + index,
+          label: I18n.text("入场区") + " " + (index + 1),
+          text: "部署阶段",
+          kind: "deployment",
+          tactical: "move",
+          area: entry,
+          points: [{x:entry.x+(entry.width-1)/2,y:entry.y+(entry.height-1)/2}],
+        })),
         ...state.objectives.map((o) => ({
           id: o.id,
           label: o.name,
@@ -71,21 +79,21 @@ const BriefingUI = (() => {
           count:
             o.status === "completed"
               ? "✓"
-              : o.type === "capture"
-                ? `${o.progress}/5`
+              : o.status === "failed" ? I18n.text("事件失败") : o.required > 1
+                ? `${o.progress}/${o.required}`
                 : I18n.text("未完成"),
           points: [{ x: o.x, y: o.y }],
-          tactical: o.type === "capture" ? "defend" : o.type === "salvage" ? "move" : "attack",
-          radius: o.type === "capture" ? 2 : o.type === "salvage" ? 1 : 0,
+          tactical: ["capture","defend","rescue","upload"].includes(o.type) ? "defend" : o.type === "salvage" ? "move" : "attack",
+          radius: ["defend","rescue"].includes(o.type) ? 5 : o.type === "capture" ? 2 : ["salvage","upload"].includes(o.type) ? 1 : 0,
         })),
-        {
-          id: "extraction",
-          label: "前往撤离区",
+        ...ContractMode.extractionZones(state).map((exit, index) => ({
+          id: "extraction-" + index,
+          label: I18n.text("前往撤离区") + " " + (index + 1),
           text: "可提前撤离；收益按已完成事件数量结算。",
           kind: "extraction",
           tactical: "retreat",
           points: [{ x: exit.x + exit.width / 2, y: exit.y + exit.height / 2 }],
-        },
+        })),
       ];
     }
     const config = Rules.getMap(game.mapId).mission,
@@ -95,7 +103,21 @@ const BriefingUI = (() => {
         game.units.find((u) => u.missionActor === id) || config.actors.find((a) => a.id === id),
       initial = config.actors.filter((a) => a.initial),
       primary = config.victory;
-    return ["victory", "failure"].flatMap((kind) =>
+    const battlefield = Rules.getMap(game.mapId),
+      spawns = game.spawns || battlefield.spawns,
+      areas = game.deploymentAreas || battlefield.deploymentAreas,
+      deployments = [], seenAreas = new Set();
+    for (let seat = 0; seat < spawns.length; seat += 2) {
+      const spawn = spawns[seat], radius = battlefield.deploymentRadius || 2,
+        area = areas?.[seat] || {x:Math.max(0,spawn.x-radius),y:Math.max(0,spawn.y-radius),width:radius*2+1,height:radius*2+1},
+        signature = JSON.stringify(area);
+      if (seenAreas.has(signature)) continue;
+      seenAreas.add(signature);
+      deployments.push({id:"deployment-"+deployments.length,label:I18n.text("入场区")+" "+(deployments.length+1),
+        text:"部署阶段",kind:"deployment",tactical:"move",area,
+        points:[{x:area.x+(area.width-1)/2,y:area.y+(area.height-1)/2}]});
+    }
+    return deployments.concat(["victory", "failure"].flatMap((kind) =>
       progress[kind].map((item, index) => {
         const model =
             item.unitId && Object.values(Rules.models).find((m) => m.prefabId === item.unitId),
@@ -144,7 +166,7 @@ const BriefingUI = (() => {
             .filter((p) => Number.isFinite(p.x) && Number.isFinite(p.y)),
         };
       }),
-    );
+    ));
   }
   function schedulePaint() {
     if (!panel.open || frame !== null) return;
@@ -229,13 +251,13 @@ const BriefingUI = (() => {
       marker.setAttribute("aria-label", I18n.text(row.label));
       marker.onclick = () => select(index, true);
       markers.append(marker);
-      if (index === active && (row.points.length > 1 || row.radius)) {
+      if (row.area || (index === active && (row.points.length > 1 || row.radius))) {
         const radius = row.radius || 1,
-          x0 = Math.min(...row.points.map((p) => p.x)) - radius,
-          y0 = Math.min(...row.points.map((p) => p.y)) - radius,
-          x1 = Math.max(...row.points.map((p) => p.x)) + radius + 1,
-          y1 = Math.max(...row.points.map((p) => p.y)) + radius + 1,
-          area = element("span", "briefing-target-area");
+          x0 = row.area?.x ?? Math.min(...row.points.map((p) => p.x)) - radius,
+          y0 = row.area?.y ?? Math.min(...row.points.map((p) => p.y)) - radius,
+          x1 = row.area ? x0 + row.area.width : Math.max(...row.points.map((p) => p.x)) + radius + 1,
+          y1 = row.area ? y0 + row.area.height : Math.max(...row.points.map((p) => p.y)) + radius + 1,
+          area = element("span", "briefing-target-area" + (row.kind === "deployment" ? " briefing-deployment-area" : ""));
         area.style.cssText = `left:${((ox + x0 * tile) / width) * 100}%;top:${((oy + y0 * tile) / height) * 100}%;width:${(((x1 - x0) * tile) / width) * 100}%;height:${(((y1 - y0) * tile) / height) * 100}%`;
         markers.prepend(area);
       }
@@ -410,6 +432,7 @@ const BriefingUI = (() => {
   return {
     open,
     close,
+    goals,
     receive,
     clear() {
       close();

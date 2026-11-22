@@ -1,5 +1,19 @@
 /* 大地图交战演出：使用地图坐标和已裁定逐发结果，不修改权威战局。 */
 const MapCombat = (() => {
+  function damageReadouts(contacts) {
+    const rows = [];
+    for (const [key,label,color] of [
+      ["damage","","#ffe7aa"],
+      ["shieldDamage","盾牌","#70bfff"],
+      ["iFieldDamage","I立场","#ff8ed0"],
+      ["abcDamage","涂层","#ff8ed0"],
+      ["phaseShiftDamage","PS装甲","#ff8ed0"],
+    ]) {
+      const total = contacts.reduce((sum,contact) => sum + (contact[key] || 0),0);
+      if (total > 0) rows.push({text:(label ? I18n.text(label)+" " : "")+"-"+total.toLocaleString("en-US"),color});
+    }
+    return rows;
+  }
   const iconPlayback = () => typeof MapCamera !== "undefined" && MapCamera.unitThumbnails;
   const restingPoses = new Map(),
     meleeExchanges = new Map();
@@ -1028,14 +1042,12 @@ const MapCombat = (() => {
     ) {
       ctx.font = "bold 12px system-ui";
       ctx.textAlign = "center";
-      ctx.fillStyle = latest.hit ? "#ffe7aa" : "#b9dbe8";
-      ctx.fillText(
-        latest.hit
-          ? "-" + contacts.reduce((sum, c) => sum + c.damage, 0).toLocaleString("en-US")
-          : "MISS",
-        targetPose.x,
-        targetPose.y - 32,
-      );
+      const readouts = damageReadouts(contacts);
+      if (!latest.hit) readouts.push({text:"MISS",color:"#b9dbe8"});
+      for (const [index,row] of readouts.entries()) {
+        ctx.fillStyle = row.color;
+        ctx.fillText(row.text,targetPose.x,targetPose.y - 32 - index * 16);
+      }
     }
     const partContact = contacts.filter((contact) => contact.brokenParts?.length).at(-1);
     if (
@@ -1052,7 +1064,7 @@ const MapCombat = (() => {
           " · " +
           I18n.text("部位破坏"),
         targetPose.x,
-        targetPose.y - 48,
+        targetPose.y - 32 - Math.max(1,damageReadouts(contacts).length) * 16,
       );
     }
     ctx.restore();
@@ -1092,6 +1104,7 @@ const MapCombat = (() => {
     }
   }
   return {
+    damageReadouts,
     reset,
     seed,
     begin,

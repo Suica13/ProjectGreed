@@ -531,7 +531,7 @@ const RoomPanel = (() => {
       environmentSelect.onchange = () =>
         sendSettings({ sweepEnvironment: environmentSelect.value });
       environment.append(environmentSelect);
-      fields.append(environment);
+      fields.insertBefore(environment, fields.children[1]);
       const difficulty=ContractMode.config(settings.sweepDifficulty, settings.sweepEra);
       sweepOptions.append(element("p","helper",difficulty.name+" · "+I18n.text("编组COST")+" "+difficulty.costLimit+" · "+I18n.text("舰船数量")+" "+difficulty.fleetLimit+" · "+difficulty.width+"×"+difficulty.height));
       sweepOptions.append(
@@ -587,7 +587,8 @@ const RoomPanel = (() => {
     // 数值输入时仍可继续打字，不因上一笔请求未确认而失去焦点。
     for (const id of ["roomCostLimit", "roomUnitLimit"])
       byId(id).disabled = snapshot.started || snapshot.you?.id !== snapshot.hostId;
-    tagControls(byId("roomTagRestrictions"), "roomBan", settings, locked, () => {
+    const tagRulesEnabled = Rules.tagRestrictionsEnabled(settings);
+    tagControls(byId("roomTagRestrictions"), "roomBan", settings, locked || !tagRulesEnabled, () => {
       sendSettings(readTags(byId("roomTagRestrictions")));
     });
     const teamRulesPanel = byId("roomTeamRestrictions");
@@ -626,11 +627,11 @@ const RoomPanel = (() => {
       for(const id of ["roomCostLimit","roomUnitLimit","roomFormationPreset","saveRoomPreset","deleteRoomPreset"])
         byId(id).disabled=true;
     }
-    byId("roomTagRestrictions").closest("details").hidden = settings.mode === "mission";
+    byId("roomTagRestrictions").closest("details").hidden = !tagRulesEnabled;
     teamRulesPanel.closest("details").hidden = settings.mode !== "quick";
     for (const id of ["roomFogMode", "roomShareAlliedUnits"])
       byId(id).closest("label").hidden = false;
-    if (settings.mode === "sweep") {
+    if (["sweep","mission"].includes(settings.mode)) {
       byId("roomFogMode").value = "full";
       byId("roomFogMode").disabled = true;
       byId("roomPilotPolicy").value = "allow";
@@ -740,6 +741,10 @@ const RoomPanel = (() => {
   function renderDetail(snapshot) {
     if (!detail) return;
     if (Number.isInteger(detail.team)) {
+      if (!Rules.tagRestrictionsEnabled(snapshot.settings)) {
+        closeDetail();
+        return;
+      }
       const team = detail.team;
       const quick = snapshot.settings.mode === "quick";
       byId("roomDetailTitle").textContent = "队伍" + (team + 1) + " · 禁用标签";
@@ -1134,6 +1139,7 @@ const RoomPanel = (() => {
     shareButton.textContent =
       snapshot.settings.shareAlliedUnits || own?.shareUnits ? "已共享单位给友军" : "共享单位给友军";
     byId("roomFormation").disabled = busy || !Formation.canEditRoom();
+    byId("roomRepairFormation").disabled = busy || snapshot.started || !Formation.canEditRoom() || !own || !!snapshot.loadedSave;
     const formationSelect = byId("roomFormationSelect");
     formationSelect.replaceChildren();
     const presets = Formation.presets();
@@ -1231,6 +1237,8 @@ const RoomPanel = (() => {
           : "房间禁用标签",
       );
       summary.id = "teamBanSummary" + team;
+      summary.hidden = !Rules.tagRestrictionsEnabled(snapshot.settings);
+      summary.disabled = summary.hidden;
       summary.title = summary.textContent;
       summary.setAttribute("aria-haspopup", "dialog");
       summary.onclick = () => {

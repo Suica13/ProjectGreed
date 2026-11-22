@@ -2255,11 +2255,9 @@
       "nativeCategory": 3
     },
     "RGM_79_G_WithBackpack": {
-      "role": "general",
-      "method": "native-variant",
-      "source": "Units/SystemUnits/UnitCard/Single/RGM-79[G].ini",
-      "nativeId": "RGM-79[G]",
-      "nativeCategory": 1
+      "role": "support",
+      "method": "manual-override",
+      "source": "weapon-container ground fire support (user override)"
     },
     "RGM_79C": {
       "role": "general",
@@ -3061,18 +3059,14 @@
       "nativeCategory": 1
     },
     "RX_79_G_Ez8_WithBackpack": {
-      "role": "general",
-      "method": "native-variant",
-      "source": "Units/SystemUnits/UnitCard/Single/RX-79[G]Ez8.ini",
-      "nativeId": "RX-79[G]Ez8",
-      "nativeCategory": 1
+      "role": "support",
+      "method": "manual-override",
+      "source": "weapon-container ground fire support (user override)"
     },
     "RX_79_G_WithBackpack": {
-      "role": "general",
-      "method": "native-variant",
-      "source": "Units/SystemUnits/UnitCard/Single/RX-79[G].ini",
-      "nativeId": "RX-79[G]",
-      "nativeCategory": 1
+      "role": "support",
+      "method": "manual-override",
+      "source": "weapon-container ground fire support (user override)"
     },
     "RX_80PR": {
       "role": "raid",
