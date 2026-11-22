@@ -35,6 +35,8 @@ const ProfileSave = (() => {
         development: unpackClaims(value.development),
         economy: unpackClaims(value.economy),
       };
+    if (typeof ProfileReset !== "undefined" && ProfileReset.needsReset(value.economy))
+      value=ProfileReset.portable(value,Economy.initial());
     if (value.schemaVersion === 3) {
       const roster = Object.values(value.pilots || {}).flatMap((store) => store?.pilots || []);
       const ids = new Set(roster.map((pilot) => pilot?.id));
@@ -197,6 +199,7 @@ const ProfileSave = (() => {
   function storageEntries(value) {
     const clean = validate(value),
       writes = new Map();
+    if(typeof ProfileReset!=="undefined")writes.set(ProfileReset.marker,String(ProfileReset.epoch));
     // Older faction archives can contain copies of the same pilot; retain the
     // most advanced copy, matching the existing shared-roster migration.
     const uniquePilots = new Map();

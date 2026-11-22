@@ -15,15 +15,6 @@ const Development = (() => {
     EFSF_0093: ["AEUG", "TITANS"],
     NEO_ZEON_0093: ["NEO_ZEON"],
   };
-  const starterTech = {
-    // 原 MOD 的起始科技；61式和飞鳐都由联邦基础科技解锁。
-    EFSF: ["Tech_EFSF_0079_BaseTech"],
-    ZEON: ["Tech_ZEON_0079_BaseTech"],
-    OMNI: ["Tech_OMNI_CE71_BaseTech"],
-    ZAFT: ["Tech_ZAFT_CE71_BaseTech"],
-    EFSF_0093: ["Tech_0093_EFSF_BaseTech"],
-    NEO_ZEON_0093: ["Tech_0093_NZN_BaseTech"],
-  };
   const unitCache = new Map();
   const aces =
     (typeof PILOT_DATA !== "undefined" ? PILOT_DATA : require("./pilots.json")).aces || [];
@@ -102,8 +93,9 @@ const Development = (() => {
         if (!includeLocked && !treeAccessible(faction, result)) continue;
         const requested = new Set(Array.isArray(value?.[faction]) ? value[faction] : []);
         const active = new Set(result[faction]);
-        const start = starterTech[faction] || ["Tech_" + faction + "_0087_BaseTech"];
-        for (const id of start) if (nodes(faction).some(node => node.id === id)) active.add(id);
+        // Both 0079 base nodes are available from the start; later nodes remain rewards.
+        if (faction === "EFSF" || faction === "ZEON")
+          requested.add(`Tech_${faction}_0079_BaseTech`);
         for (let pass = 0; pass < nodes(faction).length; pass++) {
           const before = active.size;
           for (const node of nodes(faction))
@@ -200,14 +192,15 @@ const Development = (() => {
   }
   function receiveActivity(award) {
     const next = exportProgress();
-    for (const id of [...(award.unlockUnits || []), ...(award.unlockAces || [])]) {
+    for (const id of award.unlockAces || []) {
       const faction =
         aces.find((p) => p.id === id)?.faction ||
         factions.find((group) => nodes(group).some((node) => node.unlocks.includes(id)));
       if (!faction) throw Error("活动开发奖励无效：" + id);
       if (!next.researched.units[faction].includes(id)) next.researched.units[faction].push(id);
     }
-    if (!economy.creditActivity(award, [[progressKey, saveCodec.stringify(next)]])) return false;
+    const reward={...award,licenses:{...award.licenses,...Object.fromEntries((award.unlockUnits||[]).map(id=>[id,true]))}};
+    if (!economy.creditActivity(reward, [[progressKey, saveCodec.stringify(next)]])) return false;
     progress = next;
     unitCache.clear();
     if (typeof window !== "undefined") window.dispatchEvent(new Event("development-changed"));
@@ -236,6 +229,8 @@ const Development = (() => {
       if (faction !== "PMC" && !(ace.availableFactions || [ace.faction]).includes(faction))
         return false;
       faction = ace.faction;
+      const unlocked=researched===undefined?currentResearch():normalizeResearch(researched);
+      if(unlocked.units[ace.faction]?.includes(prefabId))return true;
     }
     if (researched !== undefined) {
       const active = normalizeResearch(researched);

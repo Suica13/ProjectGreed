@@ -3521,5 +3521,29 @@
       "description": "アクシズが開発した砲撃用MS。集団戦闘を得意とする。"
     }
   },
-  "Mission_SpaceShuttle": {}
+  "Mission_SpaceShuttle": {},
+  "Facility_Factory": {
+    "en": {
+      "description": "Produces combat units."
+    },
+    "ja": {
+      "description": "戦闘ユニットを生産する施設。"
+    }
+  },
+  "Facility_Refinery": {
+    "en": {
+      "description": "Provides money and supplies each turn."
+    },
+    "ja": {
+      "description": "毎ターン資金と物資を生み出す施設。"
+    }
+  },
+  "Facility_Research": {
+    "en": {
+      "description": "Provides technology points each turn."
+    },
+    "ja": {
+      "description": "毎ターン技術ポイントを生み出す施設。"
+    }
+  }
 }

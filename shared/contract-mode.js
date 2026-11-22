@@ -759,7 +759,7 @@ const ContractMode = (() => {
         for (let x = Math.max(0, point.x - 6); x <= Math.min(map.width - 1, point.x + 6); x++)
           game.tiles[y][x] = "plain";
       if (definition.type === "factory") {
-        const count = 2 + Math.floor((d.id - 1) / 4);
+        const count = task?.id === "efsf-5" ? 4 : 2 + Math.floor((d.id - 1) / 4);
         for (let j = 0; j < count; j++) {
           const model = G.models.Facility_Factory__standard,
             u = spawn(room, G, model, {
@@ -867,8 +867,11 @@ const ContractMode = (() => {
       const task=contacts.byId.get(id);if(!contacts.eligible(task,room.settings))return [];
       if(task.kind==="kills")return [{id,amount:state.contactKills.length}];
       const o=state.objectives.find(o=>o.contactTaskId===id);
+      if(id==="efsf-5"){
+        const amount=o?.targets.filter(id=>{const u=room.game.units.find(u=>u.id===id);return u?.hp<=0&&u.contactPaleKill;}).length||0;
+        return amount ? [{id,amount}] : [];
+      }
       if(o?.status!=="completed" || (task.kind==="salvage"&&!escaped))return [];
-      if(id==="efsf-5"&&!o.targets.every(id=>room.game.units.find(u=>u.id===id)?.contactPaleKill))return [];
       return [{id,amount:1}];
     });
   }

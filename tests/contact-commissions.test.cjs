@@ -65,21 +65,21 @@ test("six commissions unlock in sequence, commit rewards once, preserve progress
  assert(E.upgradeFacility('hq'));assert.equal(E.snapshot().money,before.money-20000);assert.equal(E.snapshot().supplies,before.supplies-20000);
  for(const id of ['factory','giantFactory','academy'])assert(E.upgradeFacility(id));
  assert.equal(E.snapshot().money,before.money-50000);assert.equal(E.snapshot().supplies,before.supplies-50000);
- assert.equal(E.storageUsage('units').slots,30);assert.equal(E.storageUsage('ships').slots,8);assert.equal(E.customPilotLimit(),20);
+ assert.equal(E.storageUsage('units').slots,30);assert.equal(E.storageUsage('ships').slots,10);assert.equal(E.customPilotLimit(),20);
  assert.throws(()=>E.upgradeFacility('hq'));assert.throws(()=>E.upgradeFacility('beacon'));
  assert(earned>0);
 });
 test("full unit and ship rewards remain in safekeeping and can be individually accepted without duplication",()=>{
  const {E}=funded();E.creditActivity({id:'fill',matchId:'fill',money:0,supplies:0,inventory:{RGM_79:20,Medea:4}});
  assert(E.creditActivity({id:'overflow',matchId:'overflow',money:0,supplies:0,inventory:{RX_77_2:2,ColumbusClass:1}}));
- assert.equal(E.snapshot().storage.deliveries.length,5); // two GM overflow plus three reward units
+ assert.equal(E.snapshot().storage.deliveries.length,13); // starter stock and added rewards overflow both warehouses
  const before=E.snapshot();E.receiveDeliveries(2);assert.deepEqual(E.snapshot().storage.deliveries,before.storage.deliveries);
  const unit=E.snapshot().storage.units[0];assert(E.discardStoredUnit(unit.id));
  const index=E.snapshot().storage.deliveries.findIndex(u=>u.unitId==='RX_77_2');assert(index>=0);
- E.receiveDeliveries(index);assert.equal(E.snapshot().storage.deliveries.length,4);assert.equal(E.quantity('RX_77_2'),1);
+ E.receiveDeliveries(index);assert.equal(E.snapshot().storage.deliveries.length,12);assert.equal(E.quantity('RX_77_2'),1);
  const ship=E.snapshot().storage.ships[0];E.discardStoredUnit(ship.id);
  E.receiveDeliveries(E.snapshot().storage.deliveries.findIndex(u=>u.unitId==='ColumbusClass'));
- assert.equal(E.quantity('ColumbusClass'),1);assert.equal(E.snapshot().storage.deliveries.length,3);
+ assert.equal(E.quantity('ColumbusClass'),2);assert.equal(E.snapshot().storage.deliveries.length,11);
  const restored=load(E.snapshot()).E;assert.equal(JSON.stringify(restored.snapshot()),JSON.stringify(E.snapshot()));
 });
 test("failed task writes roll back permits, progress, acceptance gifts and reward claims",()=>{

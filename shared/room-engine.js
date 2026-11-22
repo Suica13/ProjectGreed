@@ -2898,6 +2898,7 @@ function createRoomEngine({
     for (const player of members(room)) player.finalReady = !!player.bot;
   }
   function startGame(room) {
+    G.validateOpenContent(room.settings);
     if (room.settings.mode === "sweep") Object.assign(room.settings, Contract.roomSettings(room.settings));
     if (
       room.started ||
@@ -4784,6 +4785,7 @@ function createRoomEngine({
               battlefieldEra: era,
             });
           }
+          G.validateOpenContent(settings);
           if (JSON.stringify(settings) !== JSON.stringify(room.settings)) {
             const mapChanged = settings.mapId !== room.settings.mapId;
             const modeChanged = settings.mode !== room.settings.mode;

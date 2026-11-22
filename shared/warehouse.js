@@ -4,7 +4,7 @@ const Warehouse = (() => {
   const plugins = typeof UnitPlugins !== "undefined" ? UnitPlugins : require("./unit-plugins.js");
   const defaults = { pages: 1, unitsPerPage: 10, shipsPerPage: 10, maxLevel: 5 };
   function category(model) {
-    return model.ship ||
+    return model.ship || /^(Medea|FatUncle)/.test(model.prefabId||model.id||"") ||
       ((model.movementType === "air" || model.tags?.includes("Aircraft")) &&
         model.hangars?.some((h) => h.kind !== "sfs"))
       ? "ships"
@@ -15,7 +15,7 @@ const Warehouse = (() => {
       version: 1,
       serial: 0,
       pages: { units: 2, ships: 1 },
-      slots: { units: 20, ships: 4 },
+      slots: { units: 20, ships: 6 },
       units: [],
       ships: [],
       deliveries: [],

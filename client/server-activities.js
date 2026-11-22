@@ -272,8 +272,12 @@ const ServerActivities = (() => {
       row.append(element("span", "", name + " · " + I18n.text("机体库存") + " ×" + count));
       rewards.append(row);
     }
+    for(const [id,count]of Object.entries(item.rewards.pluginInventory||{})){
+      const part=UnitPlugins.byId.get(id);
+      rewards.append(element("p","",I18n.text("模块零件")+" · "+I18n.text(part?.name||id)+" ×"+count));
+    }
     for (const id of item.rewards.unlockUnits || [])
-      rewards.append(element("p", "", I18n.text("立即开发") + " · " + unitLabel(id)));
+      rewards.append(element("p", "", I18n.text("部署许可") + " · " + unitLabel(id)));
     for (const id of item.rewards.unlockAces || []) {
       const ace = PilotSystem.aceProfile(id);
       rewards.append(

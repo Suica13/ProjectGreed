@@ -418,26 +418,7 @@ const ProductionUI = (() => {
         render();
       };
     }
-    const select = byId("productionType"),
-      types = document.createElement("optgroup"),
-      environments = document.createElement("optgroup");
-    types.label = "单位类型";
-    environments.label = "环境筛选";
-    for (const value of [
-      ...new Set(Rules.catalog.prefabs.filter((p) => !p.formOnly).flatMap((p) => p.unitTags || [])),
-    ].sort())
-      types.append(new Option(I18n.text(Rules.unitTagName(value)), "type:" + value));
-    for (const [key, name] of [
-      ["ground", "地面"],
-      ["space", "宇宙"],
-    ])
-      environments.append(new Option(name, "environment:" + key));
-    select.replaceChildren(new Option("不限", ""), types, environments);
-    select.value = filters.type;
-    select.onchange = () => {
-      filters.type = select.value;
-      render();
-    };
+    UnitCatalog.checkboxFilters(byId("productionType"),filters,render);
   }
   byId("openProduction").onclick = () => {
     returnView = Net.active ? "room" : "menu";
@@ -532,6 +513,7 @@ const ProductionUI = (() => {
     storageTarget = options.storageTarget || null;
     warehouseReturn.hidden = returnView !== "warehouse";
     filters.era = filters.type = "";
+    UnitCatalog.checkboxFilters(byId("productionType"),filters,render).clear();
     // A direct unit link must remain visible even when it belongs to another faction.
     filters.faction =
       !unitId && Rules.factions.includes(PlayerProfile.faction()) ? PlayerProfile.faction() : "";

@@ -147,7 +147,8 @@ const DevelopmentUI = (() => {
       card.style.gridColumn = String(branchColumns[node.row]);
       card.style.gridRow = String(node.column + (node.page ? lateStart - 1 : 0));
       card.dataset.techId = node.id;
-      card.dataset.state = "unlocked";
+      const permitUnits=node.unlocks.filter(id=>Economy.catalog.baseModels[id]);
+      card.dataset.state = unlocked.has(node.id) || permitUnits.length && permitUnits.every(id => Economy.hasLicense(id)) ? "unlocked" : "locked";
       card.dataset.prerequisiteLocked = "false";
       card.setAttribute("aria-pressed", String(node.id === selectedId));
       const main = element("span", "development-node-main");
@@ -244,6 +245,7 @@ const DevelopmentUI = (() => {
     }
   });
   window.addEventListener("character-selected", render);
+  window.addEventListener("economy-changed", render);
   window.addEventListener("language-change", render);
   function selectedFaction() {
     const value = byId("developmentFactionSelect").value;

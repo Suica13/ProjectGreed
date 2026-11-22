@@ -11,6 +11,7 @@
 
 | 时间（日本时间） | 来源IP | 单位 | 修改对象 | 修改内容 | 详细日志 |
 |---|---|---|---|---|---|
+| 2026-11-22 16:33:39 | local | 吉姆初期型（RGM_79_E） | 单位特例 | /stats/cost：150 → 125 | [JSON](../../server-data/editor-changes/2026-11-22/2026-11-22T07-33-39-590Z-79c7cbd5-4b9e-404c-84dc-ed9d7bc8e153.json) |
 | 2026-11-22 15:13:34 | local | 铁球后期型（RB_79_LateType） | 单位特例 | /stats/cost：125 → 100<br>/stats/move：4 → 5 | [JSON](../../server-data/editor-changes/2026-11-22/2026-11-22T06-13-34-709Z-317c6a44-d8c4-488c-bba9-b635227f2282.json) |
 | 2026-11-22 15:13:32 | local | 铁球M型（RB_79M） | 单位特例 | /stats/cost：100 → 75<br>/stats/move：3 → 4 | [JSON](../../server-data/editor-changes/2026-11-22/2026-11-22T06-13-32-375Z-7b36581f-613a-4fdd-8cd4-9966a9f5ff5d.json) |
 | 2026-11-22 15:13:28 | local | 鱼眼（RB_79N） | 单位特例 | /stats/cost：100 → 75<br>/stats/move：3 → 4 | [JSON](../../server-data/editor-changes/2026-11-22/2026-11-22T06-13-28-038Z-6e13e0c2-0b2b-4138-836f-a918249afcce.json) |

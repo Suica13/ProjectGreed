@@ -63,7 +63,7 @@ for (const dir of ["client", "shared"])
     const source = fs.readFileSync(path.join(root, dir, name), "utf8");
     for (const match of source.matchAll(/(["'])([^\n"']*[\u3400-\u9fff][^\n"']*)\1/g)) {
       const key = match[2].trim();
-      if (!/[<>\\{;]/.test(key) && !dictionaries.en[key]) errors.push(`${dir}/${name}: ${key}`);
+      if (!/[<>\\{;]/.test(key) && !key.includes(".test(") && !dictionaries.en[key]) errors.push(`${dir}/${name}: ${key}`);
     }
   }
 console.log(JSON.stringify({ counts, errors: [...new Set(errors)] }, null, 2));

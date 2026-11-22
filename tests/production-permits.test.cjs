@@ -27,6 +27,8 @@ test('awards grant permits without a free chassis and licensed production ignore
   const alternate=catalog.prefabs.find(p=>p.id===unit).weaponKits.find(k=>k.id!==kit).id;
   assert(E.mayProduce(unit,'PMC'));
   const before=E.snapshot(),offer=E.productionOffer(unit,kit);assert(E.produce(unit,alternate,'PMC'));
+  const base=E.unitOffer(unit);assert.equal(offer.money,base.money*3);assert.equal(offer.supplies,base.supplies*3);assert.equal(offer.chassis.money,offer.money);
+  const plan=E.purchasePlan([{unitId:unit,kitId:kit}]);assert.equal(plan.money,0);
   const after=E.snapshot(),item=after.storage.units.find(item=>item.unitId===unit);
   assert.equal(item.kitId,kit);assert.equal(after.money,before.money-offer.money);assert.equal(after.supplies,before.supplies-offer.supplies);
   assert.equal(E.quantity(unit),beforeCount+1);assert.equal(load(after).E.hasLicense(unit),true);
@@ -35,4 +37,18 @@ test('unlicensed production cannot consume resources even with stock already own
   const {E}=load();E.creditActivity({id:'stock-only',matchId:'stock-only',money:100000,supplies:100000,inventory:{RX_78_2:1}});
   const before=JSON.stringify(E.snapshot());assert.equal(E.mayProduce('RX_78_2','PMC'),false);
   assert.equal(E.produce('RX_78_2',E.defaultKit('RX_78_2'),'PMC'),false);assert.equal(JSON.stringify(E.snapshot()),before);
+});
+
+test('module activity gifts persist atomically with permits and cannot be claimed twice',()=>{
+  const {E}=load();
+  const award={id:'module-mail',matchId:'module-mail',money:25,supplies:50,pluginInventory:{frame:3},licenses:{RX_78_2:true}};
+  assert(E.creditActivity(award));
+  assert.equal(E.snapshot().pluginInventory.frame,3);
+  assert(E.hasLicense('RX_78_2'));
+  const after=JSON.stringify(E.snapshot());
+  assert.equal(E.creditActivity(award),false);
+  assert.equal(JSON.stringify(E.snapshot()),after);
+  assert.equal(load(E.snapshot()).E.snapshot().pluginInventory.frame,3);
+  assert.throws(()=>E.creditActivity({...award,id:'bad-module',pluginInventory:{unknown:1}}));
+  assert.equal(JSON.stringify(E.snapshot()),after);
 });

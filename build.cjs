@@ -132,6 +132,7 @@ for (const [key, file] of [
   ["IRRADIATION_FX", "client/irradiation-fx.js"],
   ["SPECIAL_TRANSFORMS", "client/special-transforms.js"],
   ["PROFILE_MIGRATIONS", "shared/profile-migrations.js"],
+  ["PROFILE_RESET", "shared/profile-reset.js"],
   ["ECONOMY", "shared/economy.js"],
   ["BATTLE_ECONOMY", "shared/battle-economy.js"],
   ["UNIT_PARTS", "shared/unit-parts.js"],
@@ -211,7 +212,7 @@ for (const [key, file] of [
         }).outputFiles[0].text + "\n/*! " + read("node_modules/fflate/LICENSE") + " */\n" + read(file))
       : inlineScript((key === "ECONOMY" ? read("shared/contact-tasks.js")+"\n"+'const MERCHANT_DATA = '+read("shared/merchant-catalog.json")+';\nconst UNIT_PLUGIN_DATA = '+read("shared/unit-plugins.json")+';\n'+read("shared/unit-plugins.js")+'\nconst BASE_FACILITY_TYPES = '+read("shared/base-facility-types.json")+';\n'+read("shared/base-facilities.js")+'\n'+read("shared/warehouse.js") + "\n" : key === "PROFILE_SAVE" ? read("client/profile-save-core.js") + "\n" : "") + read(file)),
   );
-html = html.replace("</body>", () => `<style>${read("client/warehouse.css")}\n${read("client/unit-panels.css")}\n${read("client/base-facilities.css")}\n${read("client/base-pages.css")}\n${read("client/contact.css")}</style><script>${inlineScript(read("client/warehouse.js"))}\n${inlineScript(read("client/base-facilities.js"))}\n${inlineScript(read("client/contact.js"))}</script></body>`);
+html = html.replace("</body>", () => `<style>${read("client/warehouse.css")}\n${read("client/unit-panels.css")}\n${read("client/base-facilities.css")}\n${read("client/base-pages.css")}\n${read("client/contact.css")}\n${read("client/item-storage.css")}\n${read("client/catalog-filters.css")}</style><script>${inlineScript(read("client/warehouse.js"))}\n${inlineScript(read("client/base-facilities.js"))}\n${inlineScript(read("client/contact.js"))}\n${inlineScript(read("client/item-storage.js"))}</script></body>`);
 const layout = JSON.parse(read("client/ui-layout.json"));
 html = html.replace(
   "</body>",

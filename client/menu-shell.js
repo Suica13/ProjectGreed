@@ -8,6 +8,7 @@ window.MenuShell = (() => {
       room: "lobby",
       formation: "hangar",
       warehouse: "hangar",
+      itemStorage: "hangar",
       facilities: "hangar",
       production: "hangar",
       development: "catalog",
@@ -34,6 +35,7 @@ window.MenuShell = (() => {
         leaveEditor();
         if (view === "facilities") BaseFacilitiesUI.open();
         else if (view === "warehouse") WarehouseUI.open();
+        else if (view === "itemStorage") ItemStorageUI.open();
         else if (view === "production") byId("openProduction").click();
         else if (view === "development") byId("openDevelopment").click();
         else if (view === "encyclopedia") Encyclopedia.open();
@@ -102,6 +104,8 @@ window.MenuShell = (() => {
       tabs.at(-1).id = "shellWarehouse";
       tabs.push(tab("宿舍", () => go("pilots"), pilots));
       tabs.at(-1).id = "shellPilots";
+      tabs.push(tab("仓库", () => go("itemStorage"), pageView === "itemStorage"));
+      tabs.at(-1).id = "shellItemStorage";
       tabs.push(tab("生产", () => go("production"), pageView === "production"));
       tabs.at(-1).id = "shellProduction";
     } else if (section === "contact") {

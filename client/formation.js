@@ -70,6 +70,11 @@ const Formation = (() => {
   } else {
     pilotStore.pilots = pilotStore.pilots.map((pilot) => PilotSystem.custom(pilot));
   }
+  function activePilots() { return pilotStore.pilots.filter(p=>!p.inDormStorage); }
+  for(const ace of [false,true]) {
+    const limit=ace?Economy.acePilotLimit():Economy.customPilotLimit();
+    activePilots().filter(p=>!!p.ace===ace).slice(limit).forEach(p=>p.inDormStorage=true);
+  }
   savePilots();
   function savePilots() {
     try {
@@ -116,7 +121,7 @@ const Formation = (() => {
         }
         if (copy.customPilot.hired) return copy;
         const saved = pilotStore.pilots.find((p) => p.id === copy.customPilot.id);
-        if (saved && !saved.needsRecruitment && PilotSystem.canAssign(saved, group))
+        if (saved && !saved.inDormStorage && !saved.needsRecruitment && PilotSystem.canAssign(saved, group))
           copy.customPilot = structuredClone(saved);
         else delete copy.customPilot;
       }
@@ -130,7 +135,7 @@ const Formation = (() => {
     if (!item.pilotId || item.pilotId.startsWith("crew:")) return fallback();
     if (item.pilotId.startsWith("pmc-general-")) return PilotSystem.generalPMC(item.pilotId,
       PilotSystem.commandUnit(UnitModels[item.unitId + "__" + item.kitId]));
-    const pilot = pilotStore.pilots.find((pilot) => pilot.id === item.pilotId && !pilot.needsRecruitment && PilotSystem.canAssign(pilot, group));
+    const pilot = activePilots().find((pilot) => pilot.id === item.pilotId && !pilot.needsRecruitment && PilotSystem.canAssign(pilot, group));
     return pilot ? structuredClone(pilot) : fallback();
   }
   function saveStoredPilot(entry, profile) {
@@ -645,8 +650,7 @@ const Formation = (() => {
   function openPicker(context = null, fromHangarCard = false) {
     byId("formationSearch").value = "";
     byId("formationSort").value = "storage";
-    catalogFilters.type = "";
-    byId("formationType").value = "";
+    catalogChecks.clear();
     catalogFilters.faction = Rules.factions.includes(PlayerProfile.faction())
       ? PlayerProfile.faction()
       : "";
@@ -1478,7 +1482,7 @@ const Formation = (() => {
     byId("formationPilotTitle").textContent = "驾驶员配属 · " + model.name;
     list.replaceChildren();
     const command = PilotSystem.commandUnit(model);
-    const available = pilotStore.pilots.filter(
+    const available = activePilots().filter(
       (p) =>
         !p.needsRecruitment &&
         PilotSystem.canAssign(p, group) &&
@@ -1901,16 +1905,8 @@ const Formation = (() => {
   }
   setupCatalogFilter("formationFaction", "faction", Rules.factions);
   setupCatalogFilter("formationEra", "era", Rules.eras);
-  const typeSelect = byId("formationType");
-  function refreshTypeFilter() {
-    UnitCatalog.populateTypeFilter(typeSelect, catalogFilters.type);
-  }
-  typeSelect.onchange = () => {
-    catalogFilters.type = typeSelect.value;
-    renderCatalog();
-  };
-  window.addEventListener("language-change", refreshTypeFilter);
-  refreshTypeFilter();
+  const catalogChecks=UnitCatalog.checkboxFilters(byId("formationType"),catalogFilters,renderCatalog);
+  window.addEventListener("language-change",catalogChecks.refresh);
   renderCatalog();
   byId("openFormationShare").onclick = openShare;
   byId("closeFormationShare").onclick = () => closeShare();
@@ -2314,7 +2310,7 @@ const Formation = (() => {
     if(owned?.needsRecruitment)return !Net.started;
     return (
       !!profile?.price &&
-      (owned || pilotStore.pilots.filter(p=>p.ace).length < Economy.acePilotLimit()) &&
+      (owned || activePilots().filter(p=>p.ace).length < Economy.acePilotLimit()) &&
       Economy.canRecruitCrew("ace") &&
       PilotSystem.canAssign({ aceId: profile.id }, group) &&
       Development.allows(group, profile.id)
@@ -2428,7 +2424,7 @@ const Formation = (() => {
     if (!canRecruitAce(profile)) return;
     try {
       const previous = pilotStore.pilots.find((p) => p.aceId === profile.id);
-      if (!previous && pilotStore.pilots.filter(p=>p.ace).length >= Economy.acePilotLimit()) return note("ACE驾驶员人数已达到士官学院上限");
+      if (!previous && activePilots().filter(p=>p.ace).length >= Economy.acePilotLimit()) return note("ACE驾驶员人数已达到士官学院上限");
       const pilot = PilotSystem.recruitAce(profile.id, previous),
         next = {
           ...pilotStore,
@@ -2469,7 +2465,7 @@ const Formation = (() => {
     );
   }
   function pilotExperienceText(pilot) {
-    return `EXP ${pilot.experience}/${pilot.level >= PilotSystem.maxLevel(pilot) ? "MAX" : PilotSystem.experienceRequired(pilot.level, pilot)}`;
+    return `EXP ${pilot.experience}/${pilot.level >= PilotSystem.maxLevel(pilot,Economy.academyLevel()) ? "MAX" : PilotSystem.experienceRequired(pilot.level, pilot)}`;
   }
   function populatePilotFilters() {
     const filter = byId("pilotRosterFilter"),
@@ -2486,6 +2482,31 @@ const Formation = (() => {
   populatePilotFilters();
   window.addEventListener("language-change", populatePilotFilters);
   let dormKind = "pmc", dormPage = 0, visiblePilotIds = [], revivalPending = false;
+  const dormDepot = element("dialog","warehouse-dialog dorm-depot");
+  dormDepot.id="dormStorageDialog";document.body.append(dormDepot);
+  function showDormStorage(ace) {
+    const title=ace?"ACE保管库":"PMC保管库",header=element("header"),close=element("button","","关闭"),body=element("div","warehouse-delivery-list");
+    close.onclick=()=>dormDepot.close();header.append(element("h2","",title),close);dormDepot.replaceChildren(header,body);
+    for(const pilot of pilotStore.pilots.filter(p=>p.inDormStorage&&!!p.ace===ace)){
+      const row=element("article","warehouse-delivery-card"),portrait=element("img"),text=element("div"),accept=element("button","primary","接受");
+      row.dataset.pilotId=pilot.id;portrait.src=PilotSystem.portrait(pilot);portrait.alt="";
+      text.append(element("strong","",I18n.pilotName(pilot)),element("small","",`Lv${pilot.level} · ${PilotSystem.cost(pilot)}C`));
+      accept.disabled=Net.started||activePilots().filter(p=>!!p.ace===ace).length>=(ace?Economy.acePilotLimit():Economy.customPilotLimit());
+      accept.onclick=()=>{
+        if(Net.started)return;
+        const limit=ace?Economy.acePilotLimit():Economy.customPilotLimit();if(activePilots().filter(p=>!!p.ace===ace).length>=limit)return;
+        delete pilot.inDormStorage;
+        if(!savePilots()){pilot.inDormStorage=true;return;}
+        renderPilotRoster();showDormStorage(ace);
+      };
+      row.append(portrait,text,accept);body.append(row);
+    }
+    if(!body.children.length)body.append(element("p","muted","保管库为空"));
+    if(!dormDepot.open)dormDepot.showModal();
+  }
+  byId("dormPMCStorage").onclick=()=>showDormStorage(false);
+  byId("dormACEStorage").onclick=()=>showDormStorage(true);
+  window.addEventListener("page-changing",()=>dormDepot.close());
   async function revivePilots(ids) {
     if(Net.started || revivalPending)return;
     const selected=pilotStore.pilots.filter(p=>ids.includes(p.id)&&p.needsRecruitment);
@@ -2506,7 +2527,7 @@ const Formation = (() => {
   byId("dormReviveAll").onclick=async()=>{
     if(Net.started || revivalPending)return;
     const scope=await GameDialog.scope("一键复归");
-    if(scope)await revivePilots(scope==="page"?visiblePilotIds:pilotStore.pilots.map(p=>p.id));
+    if(scope)await revivePilots(scope==="page"?visiblePilotIds:activePilots().map(p=>p.id));
   };
   byId("reviveSelectedPilot").onclick=()=>pilotEdit && revivePilots([pilotEdit.id]);
   for (const [id,kind] of [["dormPMCTab","pmc"],["dormACETab","ace"]]) byId(id).onclick=()=>{dormKind=kind;dormPage=0;renderPilotRoster();};
@@ -2519,20 +2540,21 @@ const Formation = (() => {
     byId("formationPilotBudget").textContent =
       `驾驶员 ${pilotStore.pilots.length} 名 · COST ${pilotStore.pilots.reduce((sum, p) => sum + PilotSystem.cost(p), 0)}`;
     const search = byId("pilotRosterSearch").value.trim().toLocaleLowerCase();
-    const matching = pilotStore.pilots.filter(
+    const matching = activePilots().filter(
       (p) =>
         (dormKind === "ace" ? p.ace : !p.ace) && (p.name + " " + I18n.pilotName(p)).toLocaleLowerCase().includes(search) &&
         PilotSystem.matchesFilter(p, byId("pilotRosterFilter").value),
     );
+    for(const [id,ace] of [["dormPMCStorage",false],["dormACEStorage",true]])byId(id).textContent=I18n.text(ace?"ACE保管库":"PMC保管库")+" ("+pilotStore.pilots.filter(p=>p.inDormStorage&&!!p.ace===ace).length+")";
     const pageSize=window.matchMedia("(max-width:720px)").matches?4:10;
     list.dataset.pageSize=String(pageSize);
-    const capacity=dormKind==="ace"?Economy.acePilotLimit():Economy.customPilotLimit(),categoryCount=pilotStore.pilots.filter(p=>!!p.ace===(dormKind==="ace")).length,
+    const capacity=dormKind==="ace"?Economy.acePilotLimit():Economy.customPilotLimit(),categoryCount=activePilots().filter(p=>!!p.ace===(dormKind==="ace")).length,
       displayCount=search || byId("pilotRosterFilter").value!=="all"?matching.length:Math.max(capacity,categoryCount),
       pageCount=Math.max(1,Math.ceil(displayCount/pageSize));dormPage=Math.min(dormPage,pageCount-1);
     const visible=matching.slice(dormPage*pageSize,dormPage*pageSize+pageSize);
     visiblePilotIds=visible.map(p=>p.id);
-    byId("formationPilotBudget").textContent=`${I18n.text(dormKind==="ace"?"ACE驾驶员":"PMC驾驶员")} ${categoryCount} / ${capacity} · COST ${pilotStore.pilots.filter(p=>!!p.ace===(dormKind==="ace")).reduce((n,p)=>n+PilotSystem.cost(p),0)}`;
-    byId("dormReviveAll").disabled=Net.started || revivalPending || !pilotStore.pilots.some(p=>p.needsRecruitment);
+    byId("formationPilotBudget").textContent=`${I18n.text(dormKind==="ace"?"ACE驾驶员":"PMC驾驶员")} ${categoryCount} / ${capacity} · COST ${activePilots().filter(p=>!!p.ace===(dormKind==="ace")).reduce((n,p)=>n+PilotSystem.cost(p),0)}`;
+    byId("dormReviveAll").disabled=Net.started || revivalPending || !activePilots().some(p=>p.needsRecruitment);
     byId("dormPMCTab").setAttribute("aria-pressed",String(dormKind==="pmc"));
     byId("dormACETab").setAttribute("aria-pressed",String(dormKind==="ace"));
     byId("dormPage").textContent=`${dormPage+1} / ${pageCount} 页`;
@@ -2585,7 +2607,7 @@ const Formation = (() => {
       experience.title = `Lv.${p.level} · ${pilotExperienceText(p)}`;
       if (p.reincarnations) badges.append(element("span", "pilot-training-points pilot-reincarnation-tag",
         I18n.text(["", "一转", "二转", "三转", "四转"][p.reincarnations])));
-      if (PilotSystem.canUpgrade(p)) badges.append(element("span", "pilot-training-points pilot-promotion-tag", "可升级"));
+      if (PilotSystem.canUpgrade(p,Economy.academyLevel())) badges.append(element("span", "pilot-training-points pilot-promotion-tag", "可升级"));
       if (!p.ace && p.points > 0) badges.append(element("span", "pilot-training-points", `强化点 ${p.points}`));
       if (PilotSystem.canLearnSkill(p)) badges.append(element("span", "pilot-training-points", "可选技能"));
       progress.append(experience, badges);
@@ -2640,9 +2662,9 @@ const Formation = (() => {
       const slot=element("div","dorm-card-slot");
       empty.setAttribute("aria-hidden","true");slot.append(empty);list.append(slot);
     }
-    byId("recruitAcePilot").disabled = !Economy.canRecruitCrew("ace") || pilotStore.pilots.filter(p=>p.ace).length>=Economy.acePilotLimit();
+    byId("recruitAcePilot").disabled = !Economy.canRecruitCrew("ace") || activePilots().filter(p=>p.ace).length>=Economy.acePilotLimit();
     byId("recruitAcePilot").title = Economy.canRecruitCrew("ace") ? "" : "需要2级信标";
-    const customCount = pilotStore.pilots.filter(p=>!p.ace).length;
+    const customCount = activePilots().filter(p=>!p.ace).length;
     byId("createCustomPilot").disabled = customCount >= Economy.customPilotLimit();
     byId("createCustomPilot").title = `PMC驾驶员 ${customCount} / ${Economy.customPilotLimit()}`;
     list.scrollTop = scrollTop;
@@ -2655,12 +2677,12 @@ const Formation = (() => {
   };
   byId("pilotRosterFilter").onchange = renderPilotRoster;
   BasePageControls.sortMenu("pilotRosterSortControl", [["name","名称排序"],["level","等级排序"],["cost","COST排序"]], rule => {
-    const selected = pilotStore.pilots.filter(p => dormKind === "ace" ? p.ace : !p.ace);
+    const selected = activePilots().filter(p => dormKind === "ace" ? p.ace : !p.ace);
     const nameOrder = (a,b) => I18n.pilotName(a).localeCompare(I18n.pilotName(b), I18n.language);
     selected.sort((a,b) => (rule === "level" ? b.level-a.level : rule === "cost" ? PilotSystem.cost(a)-PilotSystem.cost(b) : 0) || nameOrder(a,b) || a.id.localeCompare(b.id));
     let index=0;
     const previous=pilotStore.pilots;
-    pilotStore.pilots=previous.map(p => (dormKind === "ace" ? p.ace : !p.ace) ? selected[index++] : p);
+    pilotStore.pilots=previous.map(p => !p.inDormStorage && (dormKind === "ace" ? p.ace : !p.ace) ? selected[index++] : p);
     if (!savePilots()) { pilotStore.pilots=previous; return false; }
     dormPage=0;renderPilotRoster();
   });
@@ -2685,8 +2707,8 @@ const Formation = (() => {
   function commitPilot(profile) {
     const clean = PilotSystem.custom(profile);
     const i = pilotStore.pilots.findIndex((p) => p.id === clean.id);
-    if(i<0 && !clean.ace && pilotStore.pilots.filter(p=>!p.ace).length>=Economy.customPilotLimit())throw Error("PMC驾驶员人数已达到士官学院上限");
-    if(i<0 && clean.ace && pilotStore.pilots.filter(p=>p.ace).length>=Economy.acePilotLimit())throw Error("ACE驾驶员人数已达到士官学院上限");
+    if(i<0 && !clean.ace && activePilots().filter(p=>!p.ace).length>=Economy.customPilotLimit())throw Error("PMC驾驶员人数已达到士官学院上限");
+    if(i<0 && clean.ace && activePilots().filter(p=>p.ace).length>=Economy.acePilotLimit())throw Error("ACE驾驶员人数已达到士官学院上限");
     if (i < 0) pilotStore.pilots.push(clean);
     else pilotStore.pilots[i] = clean;
     savePilots();
@@ -2702,7 +2724,7 @@ const Formation = (() => {
   }
   function editPilot(p = null) {
     clearTimeout(pilotNameTimer);
-    if(!p && pilotStore.pilots.filter(p=>!p.ace).length>=Economy.customPilotLimit())return note("PMC驾驶员人数已达到士官学院上限");
+    if(!p && activePilots().filter(p=>!p.ace).length>=Economy.customPilotLimit())return note("PMC驾驶员人数已达到士官学院上限");
     pilotFocus = document.activeElement;
     pilotIsNew = !p;
     pilotEdit = structuredClone(
@@ -2843,7 +2865,7 @@ const Formation = (() => {
     resetTraining.textContent = "重置属性点 · 资金 " + 1000 * pilotEdit.level;
     resetTraining.disabled = !!pilotEdit.ace || pilotIsNew || !Economy.affordable({ money: 1000 * pilotEdit.level });
     byId("customPilotProgress").replaceChildren(
-      element("strong","pilot-detail-level",`Lv${pilotEdit.level}/${PilotSystem.maxLevel(pilotEdit)}`),
+      element("strong","pilot-detail-level",`Lv${pilotEdit.level}/${PilotSystem.maxLevel(pilotEdit,Economy.academyLevel())}`),
       document.createTextNode(
         ` · ${pilotExperienceText(pilotEdit)}${pilotEdit.ace ? " · ACE · " + I18n.text("悟性") + " " + PilotSystem.aceProfile(pilotEdit).comprehension : " · 强化点 " + pilotEdit.points}`,
       ),
@@ -2870,10 +2892,10 @@ const Formation = (() => {
     );
     const original = JSON.parse(pilotOriginal);
     const pendingPoints = original.points - pilotEdit.points;
-    const readyToUpgrade = PilotSystem.canUpgrade(pilotEdit);
-    const rebirth = PilotSystem.canReincarnate(pilotEdit);
+    const readyToUpgrade = PilotSystem.canUpgrade(pilotEdit,Economy.academyLevel());
+    const rebirth = PilotSystem.canReincarnate(pilotEdit,Economy.academyLevel());
     const advancementCost = rebirth ? PilotSystem.reincarnationCost(pilotEdit) : PilotSystem.upgradeCost(pilotEdit);
-    upgradePilotButton.hidden = pilotIsNew || (pilotEdit.level >= PilotSystem.maxLevel(pilotEdit) && !rebirth);
+    upgradePilotButton.hidden = pilotIsNew || (pilotEdit.level >= PilotSystem.maxLevel(pilotEdit,Economy.academyLevel()) && !rebirth);
     upgradePilotButton.classList.toggle("pilot-skill-alert", readyToUpgrade || rebirth);
     upgradePilotButton.disabled =
       !(readyToUpgrade || rebirth) ||
@@ -3008,12 +3030,12 @@ const Formation = (() => {
   upgradePilotButton.onclick = async () => {
     if (!pilotEdit || pilotIsNew || upgradePilotButton.disabled) return;
     if (JSON.parse(pilotOriginal).points !== pilotEdit.points) return;
-    const rebirth = PilotSystem.canReincarnate(pilotEdit);
+    const rebirth = PilotSystem.canReincarnate(pilotEdit,Economy.academyLevel());
     const original = pilotOriginal;
     if (rebirth && !(await GameDialog.confirm(I18n.text("转生将清空经验、强化和技能，回到0级并恢复初始80强化点，等级上限提高1级。是否继续？")))) return;
     if (!pilotEdit || original !== pilotOriginal || upgradePilotButton.disabled) return;
     const cost = rebirth ? PilotSystem.reincarnationCost(pilotEdit) : PilotSystem.upgradeCost(pilotEdit);
-    const clean = rebirth ? PilotSystem.reincarnate(pilotEdit) : PilotSystem.upgrade(pilotEdit);
+    const clean = rebirth ? PilotSystem.reincarnate(pilotEdit,Economy.academyLevel()) : PilotSystem.upgrade(pilotEdit,Economy.academyLevel());
     const next = {
       ...pilotStore,
       pilots: pilotStore.pilots.map((p) => (p.id === clean.id ? clean : p)),
@@ -3301,7 +3323,7 @@ const Formation = (() => {
   loadCharacter();
   return {
     renderPreview,
-    availablePilots: () => structuredClone(pilotStore.pilots.filter(p=>!p.needsRecruitment)),
+    availablePilots: () => structuredClone(activePilots().filter(p=>!p.needsRecruitment)),
     storedPilot,
     unitTags,
     unitSummaryTags,

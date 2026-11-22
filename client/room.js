@@ -350,6 +350,7 @@ const RoomPanel = (() => {
         applyPreset(value + "-cost-" + cost, value);
       },
     );
+    for(const option of eraRow.querySelectorAll("option"))option.disabled=option.value!=="UC_0079_T1";
     eraRow.style.gridColumn = "1 / -1";
     for (const team of [0, 1]) {
       const group = element("fieldset", "battlefield-team-options");
@@ -374,7 +375,7 @@ const RoomPanel = (() => {
       panel.append(group);
     }
     const preset = mode.roomPreset(settings);
-    const presets = mode.roomPresets.filter((item) => item.era === era);
+    const presets = mode.roomPresets.filter((item) => item.era === era && item.costLimit <= 7500);
     const scaleRow = selectRow(
       panel,
       "battlefieldScalePreset",
@@ -472,6 +473,7 @@ const RoomPanel = (() => {
         select = document.createElement("select");
       select.id = "regularEra";
       for (const era of Rules.eras) select.add(new Option(era, era));
+      for(const option of select.options)option.disabled=option.value!=="UC_0079_T1";
       select.value = settings.regularEra || "UC_0079_T1";
       select.disabled = locked;
       select.onchange = () => sendSettings({ regularEra: select.value });
@@ -500,7 +502,11 @@ const RoomPanel = (() => {
         const label = element("label", "", name),
           select = document.createElement("select");
         select.id = key;
-        for (const value of values) select.add(new Option(key === "sweepDifficulty" ? I18n.text(ContractMode.config(value).name) : Rules.factionInfo[value]?.name || value, value));
+        for (const value of values) {
+          const option=new Option(key === "sweepDifficulty" ? I18n.text(ContractMode.config(value).name) : Rules.factionInfo[value]?.name || value, value);
+          option.disabled=key==="sweepDifficulty"?Number(value)>3:key==="sweepEra"&&value!=="UC_0079_T1";
+          select.add(option);
+        }
         select.value = settings[key];
         select.disabled = locked;
         select.onchange = () => {

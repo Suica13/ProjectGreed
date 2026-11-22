@@ -30,6 +30,8 @@ const Encyclopedia = (() => {
     ].join(":");
   const categories = WeaponClasses.labels;
   const field = (name) => byId("encyclopedia" + name);
+  const unitFilters={types:[],environments:[],roles:[]};
+  const catalogChecks=UnitCatalog.checkboxFilters(field("Type"),unitFilters,()=>{list.scrollTop=0;render();});
   function options(name, items) {
     const select = field(name),
       previous = select.value;
@@ -54,7 +56,8 @@ const Encyclopedia = (() => {
       ["licensed", "有许可"],
       ["locked", "未解锁"],
     ]);
-    if (tab === "units") UnitCatalog.populateTypeFilter(field("Type"), field("Type").value);
+    catalogChecks.setEnabled(tab === "units");
+    if(tab === "units")catalogChecks.refresh();
     else options("Type", [["", "全部类型"], ...Object.entries(categories)]);
     options("Level", [
       ["", "全部等级"],
@@ -229,7 +232,7 @@ const Encyclopedia = (() => {
     const filters = {
       faction: field("Faction").value,
       era: field("Era").value,
-      type: tab === "units" ? field("Type").value : "",
+      ...(tab === "units" ? unitFilters : {}),
     };
     const allowed = (p) =>
       window.CATALOG_DEVELOPER_MODE || Development.allows(PlayerProfile.faction(), p.id);
@@ -436,6 +439,7 @@ const Encyclopedia = (() => {
     byId(id).onclick = () => {
       tab = value;
       field("Type").value = "";
+      catalogChecks.clear();
       list.scrollTop = 0;
       setup();
       render();

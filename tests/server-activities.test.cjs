@@ -737,6 +737,7 @@ test("published reward edits update pending mail, preserve in-flight receipts an
     licenses: { MS_14A: true },
     unlockUnits: ["RX_78_2"],
     unlockAces: ["Pilot_ZEON_0079_N_ACE_CIA"],
+    pluginInventory: { frame: 3 },
   };
   f.service.updateCopy(event.id, "Updated", "New reward", {
     rewards, stockConfigurations:{RGM_79:{kitId:"RGM_79__beam_spray",extraKits:{RGM_79__beam_spray:1}}}
@@ -768,4 +769,20 @@ test("published reward edits update pending mail, preserve in-flight receipts an
   const later = { ws: {}, identity: identity() };
   f.service.identify(later.ws, later.identity, "Later");
   assert.deepEqual(mailFor(later).rewards, current.rewards);
+});
+
+test("module gifts validate quantities and retain the same claim receipt on retry", t => {
+  const f=fixture(t), ws={}, profile=identity();
+  f.service.identify(ws,profile);
+  const event=f.service.publish(activity('online_now',{rewards:{pluginInventory:{frame:3},unlockUnits:['RX_78_2']}}));
+  const mail=f.frames.get(ws).at(-1).mail.find(m=>m.activityId===event.id);
+  assert.deepEqual(mail.rewards.pluginInventory,{frame:3});
+  assert.equal(mail.rewards.licenses.RX_78_2,true);
+  assert.deepEqual(mail.rewards.unlockUnits,[]);
+  f.service.receive(ws,{type:'activity_claim',mailId:mail.id});
+  const award=f.frames.get(ws).at(-1).award;
+  f.service.receive(ws,{type:'activity_claim',mailId:mail.id});
+  assert.deepEqual(f.frames.get(ws).at(-1).award,award);
+  for(const pluginInventory of [{missing:1},{frame:-1},{frame:1.5},{frame:1000001}])
+    assert.throws(()=>f.service.publish(activity('online_now',{rewards:{pluginInventory}})));
 });

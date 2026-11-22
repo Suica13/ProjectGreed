@@ -559,28 +559,24 @@
               <section>
                 <h3>部署许可奖励</h3>
                 <p class="muted">
-                  直接授予永久部署许可，即使尚未开发也可以编组出战；不会额外开发科技。
+                  直接授予单位生产许可，不赠送实物。开发页仅作展示；编组仍须使用机库中持有的单位。
                 </p>
                 <div id="licenseRewards"></div>
                 <button id="addUnit" type="button">添加部署许可</button>
               </section>
               <section>
                 <h3>机体库存奖励</h3>
-                <p class="muted">领取机体库存不自动授予开发或部署许可；套件可自由选择。</p>
+                <p class="muted">按默认套件发放实物，单位／舰船自动分仓；满仓奖励进入机库保管库，不自动授予许可。</p>
                 <div id="stockRewards"></div>
                 <button id="addChassisStock" type="button">添加单位</button>
               </section>
               <section>
-                <h3>开发奖励</h3>
-                <p class="muted">
-                  逐条添加需要立即开发的单位，不消耗科技点或货币。仅开放部署许可的购买条件，不赠送部署许可。
-                </p>
-                <div id="unlocks"></div>
-                <button id="addUnlock" type="button">添加开发单位</button
-                ><button id="clearUnlocks" type="button">清空开发奖励</button>
+                <h3>模块零件奖励</h3>
+                <p class="muted">按数量加入零件仓库，可装配到单位；领取回执去重，不重复入账。</p>
+                <div id="pluginRewards"></div><button id="addPluginReward" type="button">添加零件</button>
               </section>
               <section>
-                <h3>解锁ACE驾驶员</h3>
+                <h3>ACE招募解锁</h3><p class="muted">开放对应ACE的招募资格，不直接赠送驾驶员；仍需满足信标等级及招募费用。</p>
                 <div id="aceUnlocks"></div>
                 <button id="addAceUnlock" type="button">添加ACE解锁</button
                 ><button id="clearAceUnlocks" type="button">清空ACE解锁</button>
@@ -648,7 +644,7 @@
       let unlockUnits = [],
         unlockAces = [];
       let licenseUnits = [],
-        stockRewards = { inventory: {} };
+        stockRewards = { inventory: {} }, pluginRewards={};
       async function api(route = "", value) {
         const response = await fetch("/api/activities/admin" + route, {
           method: value ? "POST" : "GET",
@@ -705,7 +701,7 @@
           };
           byId("activities").append(button);
         }
-        renderUnlocks();
+        renderPluginRewards();
         showDetail();
       }
       function localDate(value) {
@@ -790,7 +786,7 @@
           Object.entries(rewards.inventory || {})
             .map(([id, count]) => "\n机体库存：" + unitName(id) + " ×" + count)
             .join("") +
-          rewards.unlockUnits.map((id) => "\n立即开发：" + unitName(id)).join("") +
+          Object.entries(rewards.pluginInventory||{}).map(([id,count])=>"\n模块零件："+(snapshot.plugins.find(p=>p.id===id)?.name||id)+" ×"+count).join("") +
           (rewards.unlockAces || [])
             .map((id) => "\n解锁ACE：" + (snapshot.aces.find((p) => p.id === id)?.name || id))
             .join("") +
@@ -861,12 +857,18 @@
           renderLicenses();
         });
       }
-      function renderUnlocks() {
-        renderUnitRewards("unlocks", unlockUnits, (id) => {
-          unlockUnits = unlockUnits.filter((value) => value !== id);
-          renderUnlocks();
-        });
+      function renderPluginRewards(){
+        const list=byId("pluginRewards");list.replaceChildren();
+        for(const [id,count]of Object.entries(pluginRewards)){
+          const row=document.createElement("div"),select=document.createElement("select"),input=document.createElement("input");row.className="reward-unit";
+          select.setAttribute("aria-label","奖励零件");input.type="number";input.min=1;input.max=1000000;input.value=count;input.setAttribute("aria-label","零件数量");
+          for(const part of snapshot?.plugins||[]){const option=new Option(part.name+" · "+"★".repeat(part.rarity),part.id,false,id===part.id);option.disabled=part.id!==id&&Object.hasOwn(pluginRewards,part.id);select.add(option);}
+          select.onchange=()=>{delete pluginRewards[id];pluginRewards[select.value]=count;renderPluginRewards();};
+          input.onchange=()=>{const quantity=Number(input.value);if(!Number.isSafeInteger(quantity)||quantity<1||quantity>1000000){input.value=count;byId("status").textContent="零件数量须为1至100万的整数";return;}pluginRewards[id]=quantity;};
+          row.append(select,input,rewardButton("删除",()=>{delete pluginRewards[id];renderPluginRewards();}));list.append(row);
+        }
       }
+      byId("addPluginReward").onclick=()=>{const part=snapshot?.plugins?.find(p=>!Object.hasOwn(pluginRewards,p.id));if(part){pluginRewards[part.id]=1;renderPluginRewards();}};
       function clearUnitStock(id) {
         delete stockRewards.inventory[id];
       }
@@ -898,12 +900,13 @@
       function loadRewards(rewards = {}) {
         byId("money").value = rewards.money || 0;
         byId("supplies").value = rewards.supplies || 0;
-        licenseUnits = Object.keys(rewards.licenses || {}).filter((id) => rewards.licenses[id]);
-        unlockUnits = [...(rewards.unlockUnits || [])];
+        licenseUnits = [...new Set([...Object.keys(rewards.licenses || {}).filter((id) => rewards.licenses[id]),...(rewards.unlockUnits||[])])];
+        unlockUnits = [];
+        pluginRewards={...rewards.pluginInventory};
         unlockAces = [...(rewards.unlockAces || [])];
         stockRewards = { inventory: { ...rewards.inventory } };
         renderLicenses();
-        renderUnlocks();
+        renderPluginRewards();
         renderAceUnlocks();
         renderStockRewards();
       }
@@ -913,7 +916,8 @@
           supplies: Number(byId("supplies").value),
           licenses: Object.fromEntries(licenseUnits.map((id) => [id, true])),
           inventory: { ...stockRewards.inventory },
-          unlockUnits: [...unlockUnits],
+          unlockUnits: [],
+          pluginInventory:{...pluginRewards},
           unlockAces: [...unlockAces],
         };
       }
@@ -977,7 +981,7 @@
                 const values = pickerKind === "license" ? licenseUnits : unlockUnits;
                 if (!values.includes(unit.id)) values.push(unit.id);
                 if (pickerKind === "license") renderLicenses();
-                else renderUnlocks();
+                else renderPluginRewards();
               } else openUnitConfig(unit.id, false);
             });
             button.dataset.unitId = unit.id;
@@ -1022,7 +1026,6 @@
       function addUnit() {
         openUnitPicker("license");
       }
-      byId("addUnlock").onclick = () => openUnitPicker("unlock");
       function renderAceUnlocks() {
         const list = byId("aceUnlocks");
         list.replaceChildren();
@@ -1073,10 +1076,6 @@
         renderAceUnlocks();
       };
       byId("addUnit").onclick = addUnit;
-      byId("clearUnlocks").onclick = () => {
-        unlockUnits = [];
-        renderUnlocks();
-      };
       byId("mode").onchange = () => {
         const scheduled = ["online_window", "battle_bonus", "cumulative_kill_cost"].includes(
           byId("mode").value,
@@ -1093,9 +1092,10 @@
         byId("form").reset();
         loadRewards();
         unlockUnits = [];
+        pluginRewards={};
         unlockAces = [];
         renderAceUnlocks();
-        renderUnlocks();
+        renderPluginRewards();
         byId("mode").onchange();
         selectedId = null;
         showDetail();

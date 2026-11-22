@@ -63,12 +63,14 @@ window.ContactUI = (() => {
     if(!tasks.children.length)tasks.append(element("p","muted contact-empty","暂无已接受任务"));
   }
   function playDialogue(lines, done, title) {
-    dialogue={lines,index:0,done,title};view="dialogue";renderTerminal();
+    dialogue={lines,index:0,lastSound:-1,done,title};view="dialogue";renderTerminal();
   }
   function renderDialogue(body) {
     const d=dialogue,line=d.lines[d.index],panel=element("section","liaison-dialogue"),portrait=element("img"),text=element("div");
     portrait.src=PilotSystem.portrait({portraitId:trader.portraitId});portrait.alt="";
-    text.append(element("h3","",line[0]),element("p","",line[1].replaceAll("【玩家公司名】",PlayerProfile.name())));
+    text.className="liaison-dialogue-text";
+    if(d.lastSound!==d.index){d.lastSound=d.index;GameAudio.play("infoSound");}
+    text.append(element("h3","",line[0]),element("p","",I18n.text(line[1]).replaceAll("【玩家公司名】",PlayerProfile.name())));
     const next=button(d.index===d.lines.length-1?"结束通信":"继续",()=>{
       if(d.index<d.lines.length-1){d.index++;renderTerminal();return;}
       try{d.done();dialogue=null;view="home";renderMerchants();renderTasks();renderTerminal();}catch(error){note(Economy.errorMessage(error));}
@@ -82,14 +84,26 @@ window.ContactUI = (() => {
     for(const task of ContactTasks.tasks){
       const entry=state.contactTasks.find(e=>e.id===task.id),available=state.contactIntro&&(task.number===1||state.contactTasks.some(e=>e.id==="efsf-"+(task.number-1)&&e.status==="claimed"));
       const b=button(task.number+". "+task.name+(entry?" · "+({accepted:"进行中",ready:"可交付",claimed:"已完成"})[entry.status]:available?"":" · 未解锁"),()=>{selectedTask=task.id;renderTerminal();});
+      b.disabled=!available&&!entry;
       b.dataset.taskId=task.id;b.setAttribute("aria-pressed",String(selectedTask===task.id));list.append(b);
     }
     const task=ContactTasks.byId.get(selectedTask)||ContactTasks.tasks[0],entry=state.contactTasks.find(e=>e.id===task.id),available=state.contactIntro&&(task.number===1||state.contactTasks.some(e=>e.id==="efsf-"+(task.number-1)&&e.status==="claimed"));
-    detail.append(element("h3","",task.name),element("p","contact-task-description",task.description),element("h4","","任务目标"),element("p","",task.objective),element("strong","",(entry?.progress||0)+" / "+task.required),element("h4","","任务奖励"));
-    const rewards=element("div","contact-task-rewards");ProductionUI.resources(rewards,{money:task.money},{compact:true});rewards.append(element("span","","好感度 +0.1"));
-    for(const [id,count]of Object.entries(task.inventory)){const modelId=Economy.defaultModel(id),m=UnitModels[modelId],row=element("span","contact-unit-reward"),img=element("img");img.src=unitIcon(modelId);img.alt="";row.append(img,element("span","",m.name+" ×"+count));rewards.append(row);}
-    if(task.licensePlan)rewards.append(element("p","","解锁先期量产型MS开发计划：直接获取对应单位许可"));
-    if(task.facilityUnlock)rewards.append(element("p","","允许HQ、工厂、巨型工厂、士官学院升级到2级"));
+    const unitRewards=inventory=>{
+      const group=element("div","contact-unit-rewards");
+      for(const [id,count]of Object.entries(inventory)){
+        const modelId=Economy.defaultModel(id),m=UnitModels[modelId],row=element("span","contact-unit-reward"),img=element("img");
+        img.src=unitIcon(modelId);img.alt="";row.append(img,element("span","",m.name+" ×"+count));group.append(row);
+      }
+      return group;
+    };
+    detail.append(element("h3","",task.name),element("p","contact-task-description",task.description),element("h4","","任务目标"),element("p","",task.objective),element("strong","",(entry?.progress||0)+" / "+task.required));
+    if(task.grant)detail.append(element("h4","","初始装备"),unitRewards(task.grant));
+    detail.append(element("h4","","任务奖励"));
+    const rewards=element("div","contact-task-rewards"),currency=element("div","contact-currency-reward"),technology=element("div","contact-technology-reward");
+    ProductionUI.resources(currency,{money:task.money,supplies:task.supplies||0},{compact:true});currency.append(element("span","","好感度 +0.1"));
+    technology.append(element("span","",task.licensePlan?"科技奖励：先期量产型MS开发计划（单位许可）":"科技奖励：无"));
+    if(task.facilityUnlock)technology.append(element("p","","允许HQ、工厂、巨型工厂、士官学院升级到2级"));
+    rewards.append(currency,unitRewards(task.inventory),technology);
     const action=button(entry?.status==="ready"?"交付任务":entry?.status==="claimed"?"已完成":entry?"进行中":"接受任务",()=>{
       if(Net.started)return;
       try{
@@ -165,6 +179,7 @@ window.ContactUI = (() => {
       name = element("h2", "", trader.name),
       balance = element("div", "resource-balance"),
       body = element("div", "contact-terminal-body");
+    body.dataset.view=view;
     name.id = "merchantTerminalName";
     ProductionUI.resources(balance, Economy.snapshot(), { compact: true });
     top.append(name, element("span", "", "好感度 "+(trader.id==="efsf"?Economy.liaisonAffinity().toFixed(1):"0")), element("span", "", "Lv1"), balance);

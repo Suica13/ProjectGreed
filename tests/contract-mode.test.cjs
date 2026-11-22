@@ -8,7 +8,8 @@ function fixture(t, { difficulty = 9, environment = "ground", seed = 34567, play
   const frames = new Map(),
     errors = [];
   const engine = createRoomEngine({
-    rules: G,
+    // Cover retained N1-N9 mechanics independently of the temporary lobby policy.
+    rules: {...G,validateOpenContent(){}},
     randomId: () => "contract-" + ++serial,
     randomToken: () => "token-" + ++serial,
     randomSeed: () => seed,
@@ -95,7 +96,7 @@ test("accepted liaison events are shared, environment gated and contain their sp
  const evidence=special.find(o=>o.contactTaskId==='efsf-3');assert.equal(evidence.targets.length,3);
  for(const id of evidence.targets){const u=g.units.find(u=>u.id===id);assert.equal(G.modelOf(u).faction,'EFSF');assert.match(u.pilot.name,/老兵/);}
  assert.equal(special.find(o=>o.contactTaskId==='efsf-4').targets.length,12);
- const camp=special.find(o=>o.contactTaskId==='efsf-5');assert(camp.targets.length>=2);
+ const camp=special.find(o=>o.contactTaskId==='efsf-5');assert.equal(camp.targets.length,4);
  assert.equal(g.units.filter(u=>u.facility?.type==='mg').length,4);
  for(const o of special.filter(o=>o.type==='salvage'))assert(G.models[o.wreckModel]);
  const no=fixture(t,{difficulty:3,environment:'space',contactTasks});assert.equal(no.room.game.contract.objectives.filter(o=>o.contactTaskId).length,0);
@@ -116,10 +117,12 @@ test("liaison recovery requires personal extraction and the camp must be destroy
  salvage.status='completed';camp.status='completed';
  assert.deepEqual(C.commissionProgress(f.room,G,f.member),[]);
  const p=G.catalog.prefabs.find(p=>p.id==='RX_80PR'),pale=G.makeUnit({unitId:p.id,kitId:p.weaponKits[0].id},0,'pale',{x:2,y:2});pale.ownerSeat=0;
- for(const id of camp.targets){const target=g.units.find(u=>u.id===id);C.recordDefeat(f.room,G,pale,target,G.modelOf(target));}
+ const first=g.units.find(u=>u.id===camp.targets[0]);first.hp=0;C.recordDefeat(f.room,G,pale,first,G.modelOf(first));
  assert.deepEqual(C.commissionProgress(f.room,G,f.member),[{id:'efsf-5',amount:1}]);
+ for(const id of camp.targets){const target=g.units.find(u=>u.id===id);target.hp=0;C.recordDefeat(f.room,G,pale,target,G.modelOf(target));}
+ assert.deepEqual(C.commissionProgress(f.room,G,f.member),[{id:'efsf-5',amount:4}]);
  f.actor.contractExtracted=true;
- assert.deepEqual(C.commissionProgress(f.room,G,f.member),[{id:'efsf-2',amount:1},{id:'efsf-5',amount:1}]);
+ assert.deepEqual(C.commissionProgress(f.room,G,f.member),[{id:'efsf-2',amount:1},{id:'efsf-5',amount:4}]);
 });
 test("era budgets scale every difficulty cumulatively while fleet limits and event counts stay fixed", () => {
   const eras = ["UC_0079_T1", "UC_0079_T2", "UC_0087_T1", "UC_0087_T2"];

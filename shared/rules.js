@@ -320,6 +320,18 @@ const Tactics = (() => {
   function formationStyle(settings) {
     return settings.mode === "quick" && settings.formationStyle === "free" ? "free" : "standard";
   }
+  function validateOpenContent(settings) {
+    if (settings.mode === "mission") return;
+    if (settings.mode === "battlefield" && settings.costLimit > 7500)
+      throw Error("雇佣兵战争暂时最多开放7500 COST作战规模");
+    if (settings.mode === "sweep" && Number(settings.sweepDifficulty) > 3)
+      throw Error("合约模式暂时只开放N1至N3难度");
+    const eras = settings.mode === "battlefield"
+      ? [settings.battlefieldEra, ...(settings.battlefieldTeams || []).map(t=>t.era)]
+      : [settings.mode === "sweep" ? settings.sweepEra : settings.regularEra];
+    if (eras.some(era=>era && era !== "UC_0079_T1"))
+      throw Error("当前暂时仅开放UC_0079_T1年代，固定年代剧本任务除外");
+  }
   function defaultRoomSettings() {
     return {
       mode: "regular",
@@ -4864,6 +4876,7 @@ const Tactics = (() => {
     makeUnit,
     placementQuery,
     defaultRoomSettings,
+    validateOpenContent,
     formationStyle,
     sweepMapId,
     contractMode,

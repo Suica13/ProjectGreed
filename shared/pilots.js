@@ -10,7 +10,8 @@ const PilotSystem = (() => {
     !aceProfile(value) ||
     faction === "PMC" ||
     (aceProfile(value).availableFactions || [aceProfile(value).faction]).includes(faction);
-  const maxLevel = (value) => aceProfile(value)?.maxLevel ?? growthRules.maxLevel + (value?.reincarnations || 0);
+  const academyCap = (level=5) => [3,4,6,8,12][Math.max(1,Math.min(5,level))-1];
+  const maxLevel = (value, academyLevel=5) => Math.min(academyCap(academyLevel), aceProfile(value)?.maxLevel ?? growthRules.maxLevel + (value?.reincarnations || 0));
   const aceStatCap = (value, key) =>
     aceProfile(value) ? Math.round(aceProfile(value).maxStats[key]) : undefined;
   const byId = new Map(catalog.named.map((pilot) => [pilot.id, pilot]));
@@ -215,6 +216,7 @@ const PilotSystem = (() => {
       ace: true,
       aceGrowthVersion: version,
       custom: true,
+      ...(value.inDormStorage ? {inDormStorage:true} : {}),
       name: source.name,
       faction: source.faction,
       originFaction: source.originFaction || source.faction,
@@ -455,6 +457,7 @@ const PilotSystem = (() => {
       stats,
       record,
       points: trainingBudget(level) - spent,
+      ...(value.inDormStorage ? {inDormStorage:true} : {}),
       ...(selectedSkillId ? { selectedSkillId } : {}),
       ...(selectedSecondSkillId ? { selectedSecondSkillId } : {}),
       custom: true,
@@ -495,23 +498,23 @@ const PilotSystem = (() => {
         ? (aceProfile(value).price?.money ?? null)
         : upgradePrices[value.level - 1] / 2
       : 0;
-  const canUpgrade = (value) =>
+  const canUpgrade = (value, academyLevel=5) =>
     !value.needsRecruitment &&
-    value.level < maxLevel(value) &&
+    value.level < maxLevel(value,academyLevel) &&
     upgradeCost(value) !== null &&
     value.experience >= experienceRequired(value.level, value);
-  const canReincarnate = (value) => !!value?.custom && !aceProfile(value) &&
+  const canReincarnate = (value, academyLevel=5) => academyLevel===5 && !!value?.custom && !aceProfile(value) &&
     !value.needsRecruitment && (value.reincarnations || 0) < 4 && value.level === maxLevel(value);
   const reincarnationCost = (value) => canReincarnate(value) ? upgradePrices[value.level] * 2 : 0;
-  function reincarnate(value) {
+  function reincarnate(value, academyLevel=5) {
     const pilot = custom(value);
-    if (!canReincarnate(pilot)) throw Error("驾驶员尚未满足转生条件");
+    if (!canReincarnate(pilot,academyLevel)) throw Error("驾驶员尚未满足转生条件");
     return custom({ ...pilot, reincarnations: (pilot.reincarnations || 0) + 1,
       level: 0, experience: 0, stats: baseStats(), selectedSkillId: null, selectedSecondSkillId: null });
   }
-  function upgrade(value) {
+  function upgrade(value, academyLevel=5) {
     const p = custom(value);
-    if (!canUpgrade(p)) throw Error("驾驶员尚未满足升职条件");
+    if (!canUpgrade(p,academyLevel)) throw Error("驾驶员尚未满足升职条件");
     p.level++;
     if (p.ace) delete p.stats;
     return custom(p);

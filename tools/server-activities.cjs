@@ -10,6 +10,7 @@ function createActivityService({ rules, send, storePath = null, now = Date.now,
   const developmentTree = require("../shared/development-tree.json");
   const aceMap = new Map(require("../shared/pilots.json").aces.map((p) => [p.id, p]));
   const unitMap = new Map(rules.catalog.prefabs.map((unit) => [unit.id, unit]));
+  const pluginMap=new Map(require("../shared/unit-plugins.json").map(part=>[part.id,part]));
   let state = { schemaVersion: 2, serverId: crypto.randomUUID(), players: {}, activities: [] };
   function save(next) {
     if (storePath) {
@@ -161,7 +162,10 @@ function createActivityService({ rules, send, storePath = null, now = Date.now,
     save(next);
   }
   // Project outgoing rewards onto current mechanics; legacy on-disk records stay intact.
-  function currentRewards(value = {}) { const { kits, ...rewards } = value; return rewards; }
+  function currentRewards(value = {}) {
+    const {kits,unlockUnits,...rewards}=value;
+    return {...rewards,licenses:{...rewards.licenses,...Object.fromEntries((unlockUnits||[]).map(id=>[id,true]))},unlockUnits:[]};
+  }
   function currentItem(value) {
     const { stockConfigurations, ...item } = value;
     return { ...item, rewards: currentRewards(item.rewards) };
@@ -196,12 +200,21 @@ function createActivityService({ rules, send, storePath = null, now = Date.now,
       const unit = unitMap.get(id);
       if (!unit || !(developmentTree[unit.faction] || []).some((node) => node.unlocks.includes(id)))
         throw Error("单位没有可解锁科技：" + id);
-      rewards.unlockUnits.push(id);
+      rewards.licenses[id]=true;
     }
     if (!Array.isArray(value.unlockAces ?? [])) throw Error("ACE解锁奖励格式无效");
     for (const id of new Set(value.unlockAces || [])) {
       if (!aceMap.has(id)) throw Error("ACE解锁奖励无效：" + id);
       rewards.unlockAces.push(id);
+    }
+    if(value.pluginInventory!==undefined){
+      if(!value.pluginInventory||typeof value.pluginInventory!=="object"||Array.isArray(value.pluginInventory))throw Error("零件奖励格式无效");
+      const parts={};
+      for(const [id,count]of Object.entries(value.pluginInventory)){
+        if(!pluginMap.has(id)||!Number.isSafeInteger(count)||count<0||count>1000000)throw Error("零件奖励数量无效："+id);
+        if(count)parts[id]=count;
+      }
+      if(Object.keys(parts).length)rewards.pluginInventory=parts;
     }
     return rewards;
   }
@@ -600,6 +613,7 @@ function createActivityService({ rules, send, storePath = null, now = Date.now,
         name: player.name,
         online: online.has(id),
       })),
+      plugins:[...pluginMap.values()].map(({id,name,rarity,description})=>({id,name,rarity,description})),
       aces: [...aceMap.values()].map((p) => ({
         id: p.id,
         name: p.name,

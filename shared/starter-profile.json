@@ -1,63 +1,39 @@
 {
-  "money": 10000,
-  "supplies": 20000,
-  "stockSets": 5,
+  "money": 8000,
+  "supplies": 8000,
+  "stockSets": 1,
+  "inventory": {
+    "RGM_79_E": 3,
+    "MS_06F": 3,
+    "Medea": 1,
+    "FatUncle": 1,
+    "ColumbusClass": 1,
+    "PapuaClass": 1
+  },
   "units": [
+    {
+      "unitId": "RGM_79_E",
+      "kitId": "kit_0"
+    },
+    {
+      "unitId": "MS_06F",
+      "kitId": "machine_gun"
+    },
     {
       "unitId": "Medea",
       "kitId": "standard"
-    },
-    {
-      "unitId": "RFF_06",
-      "kitId": "kit_0",
-      "preload": {
-        "carrierIndex": 0,
-        "hangarId": "Hangar_1"
-      }
-    },
-    {
-      "unitId": "RFF_06",
-      "kitId": "kit_0",
-      "preload": {
-        "carrierIndex": 0,
-        "hangarId": "Hangar_1"
-      }
-    },
-    {
-      "unitId": "RFF_06",
-      "kitId": "kit_0",
-      "preload": {
-        "carrierIndex": 0,
-        "hangarId": "Hangar_1"
-      }
     },
     {
       "unitId": "FatUncle",
       "kitId": "standard"
     },
     {
-      "unitId": "MS_06F",
-      "kitId": "machine_gun",
-      "preload": {
-        "carrierIndex": 4,
-        "hangarId": "Hangar_1"
-      }
+      "unitId": "ColumbusClass",
+      "kitId": "standard"
     },
     {
-      "unitId": "MS_06F",
-      "kitId": "machine_gun",
-      "preload": {
-        "carrierIndex": 4,
-        "hangarId": "Hangar_1"
-      }
-    },
-    {
-      "unitId": "MS_06F",
-      "kitId": "machine_gun",
-      "preload": {
-        "carrierIndex": 4,
-        "hangarId": "Hangar_1"
-      }
+      "unitId": "PapuaClass",
+      "kitId": "standard"
     }
   ]
 }

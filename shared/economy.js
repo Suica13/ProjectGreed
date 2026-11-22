@@ -32,23 +32,19 @@ const Economy = (() => {
   const licenseUnit = (id) =>
     catalog.unitFamilies?.[id]?.unitId || (id === "RGZ_91" ? "RGZ_91_MA" : id);
   const ownsLicense = (id) => !!state.licenses[licenseUnit(id)];
-  const defaultPermits = [
-    ...new Set([
-      ...starter.units.map((unit) => unit.unitId),
-      ...Object.values(tree)
-        .flatMap((nodes) =>
-          nodes.filter((node) => /BaseTech$/i.test(node.id)).flatMap((node) => node.unlocks),
-        )
-        .filter((id) => Object.hasOwn(catalog.baseModels, id)),
-    ]),
-  ];
-  const defaultLicenses = () => Object.fromEntries(defaultPermits.map((id) => [id, true]));
+  const defaultLicenses = () => Object.fromEntries(
+    ["EFSF", "ZEON"].flatMap(faction =>
+      (tree[faction] || []).filter(node => node.id === `Tech_${faction}_0079_BaseTech`)
+        .flatMap(node => node.unlocks)
+    ).map(licenseUnit).filter(id => Object.hasOwn(catalog.baseModels, id)).map(id => [id, true])
+  );
   function initial() {
-    const inventory = {},
+    const inventory = {...starter.inventory},
       kits = {};
     return {
       schemaVersion: 4,
-      storage: warehouse.empty(),
+      progressEpoch: 1,
+      storage: warehouse.normalize(warehouse.empty(),modelsForUnits(),inventory,defaultKit),
       baseFacilities: baseFacilities.initial(),
       inventory,
       kits,
@@ -122,6 +118,7 @@ const Economy = (() => {
       money: value.money,
       supplies: value.supplies,
       schemaVersion: 4,
+      progressEpoch: 1,
       storage,
       baseFacilities: facilities,
       licenses,
@@ -330,6 +327,11 @@ const Economy = (() => {
     next.money += award.money;
     next.supplies += award.supplies;
     const awardedStock = normalizeStock(award);
+    for(const [id,count]of Object.entries(normalizePluginInventory(award.pluginInventory||{},warehouse.empty()))){
+      const total=(next.pluginInventory[id]||0)+count;
+      if(!Number.isSafeInteger(total)||total>1000000)throw Error("零件库存数量超过上限："+id);
+      next.pluginInventory[id]=total;
+    }
     for (const kind of ["inventory"])
       for (const [id, count] of Object.entries(awardedStock[kind])) {
         const quantity = (next[kind][id] || 0) + count;
@@ -410,7 +412,8 @@ const Economy = (() => {
     };
   }
   function productionOffer(unitId, kitId, production = catalog, models = modelsForUnits()) {
-    const chassis = unitOffer(unitId, production),
+    const base = unitOffer(unitId, production),
+      chassis = base ? {...base,money:base.money*3,supplies:base.supplies*3} : null,
       model = models[unitId + "__" + kitId];
     if (!chassis || !model || model.formOnly || model.wip) return null;
     return {
@@ -736,7 +739,7 @@ const Economy = (() => {
       if (offer) for (const key of ["money", "supplies"]) total[key] += offer[key] * count;
     }
     for (const [id, needed] of Object.entries(units)) {
-      add("inventory", id, Math.max(0, needed - quantity(id)), unitOffer(id));
+      add("inventory", id, Math.max(0, needed - quantity(id)), productionOffer(id, defaultKit(id)));
     }
     return { ...total, items };
   }
@@ -874,6 +877,7 @@ const Economy = (() => {
     purchasePlugin,
     canRecruitCrew: (grade) => baseFacilities.canRecruit(state.baseFacilities, grade),
     customPilotLimit: () => baseFacilities.pilotLimit(state.baseFacilities),
+    academyLevel: () => state.baseFacilities.levels.academy,
     acePilotLimit: () => baseFacilities.pilotLimit(state.baseFacilities),
     canStore,
     storageUsage,

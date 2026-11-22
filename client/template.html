@@ -3139,10 +3139,12 @@
                 <div class="production-purchase">
                   <div id="productionSaleRow">
                     <div id="productionPrice" class="resource-balance"></div>
-                    <button id="produceUnit" type="button" class="primary">生产</button>
-                    <button id="sellProductionUnit" type="button" class="danger">出售</button>
+                    <div class="production-order-actions">
+                      <span id="productionLicenseStatus" class="muted" hidden>未许可</span>
+                      <button id="produceUnit" type="button" class="primary">生产</button>
+                      <button id="sellProductionUnit" type="button" class="danger">出售</button>
+                    </div>
                   </div>
-                  <span id="productionLicenseStatus" class="muted" hidden>未许可</span>
                 </div>
               </div>
               <p id="productionStatus" role="status" aria-live="polite"></p>
@@ -3183,7 +3185,7 @@
       <div id="formationMain" class="modal formation-dialog" data-ui-node="node-206">
         <div class="formation-heading shell-page-heading">
           <h2 data-ui-node="node-207" id="formationPageTitle" class="shell-page-title">编组</h2>
-          <nav id="dormTabs" class="warehouse-tabs" hidden aria-label="宿舍分类"><button id="dormPMCTab" aria-pressed="true">PMC驾驶员</button><button id="dormACETab" aria-pressed="false">ACE驾驶员</button></nav><p id="formationPilotBudget" hidden></p>
+          <nav id="dormTabs" class="warehouse-tabs" hidden aria-label="宿舍分类"><button id="dormPMCTab" aria-pressed="true">PMC驾驶员</button><button id="dormACETab" aria-pressed="false">ACE驾驶员</button><button id="dormPMCStorage">PMC保管库</button><button id="dormACEStorage">ACE保管库</button></nav><p id="formationPilotBudget" hidden></p>
           <div id="formationHeadingActions" class="formation-heading-actions">
             <label class="formation-style-picker"><select id="formationEditorStyle" aria-label="编组方式"><option value="standard">常规编组</option><option value="free">自由编组</option></select></label>
             <p id="formationBudget" data-ui-node="node-213"></p>
@@ -5320,6 +5322,8 @@
       __SAVE_CODEC__;
       __PROFILE_STORAGE__;
       __PROFILE_MIGRATIONS__;
+      __PROFILE_RESET__;
+      ProfileReset.apply(localStorage, ProfileStorage.replace);
       const FACTION_DATA = __FACTION_DATA__;
       __ECONOMY__;
       __TECHNOLOGY_ERAS__;

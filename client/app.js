@@ -57,6 +57,7 @@ function setPageView(view) {
   byId("productionScreen").hidden = view !== "production";
   byId("encyclopediaScreen").hidden = view !== "encyclopedia";
   if (byId("warehouseScreen")) byId("warehouseScreen").hidden = view !== "warehouse";
+  if (byId("itemStorageScreen")) byId("itemStorageScreen").hidden = view !== "itemStorage";
   if (byId("baseFacilitiesScreen")) byId("baseFacilitiesScreen").hidden = view !== "facilities";
   if (byId("contactScreen")) byId("contactScreen").hidden = !["contactTasks", "contactMerchants"].includes(view);
   byId("roomSettings").hidden = !Net.active;

@@ -28,7 +28,7 @@ for (const width of [1280, 390])
       await page.locator("#rewardUnitFaction").selectOption("EFSF");
       await expect(page.locator('#rewardUnitList [data-unit-id="MS_06F"]')).toHaveCount(0);
       await page.locator("#rewardUnitFaction").selectOption("ZEON");
-      await page.locator("#rewardUnitEra").selectOption("0079T1");
+      await page.locator("#rewardUnitEra").selectOption("UC_0079_T1");
       await page.locator("#rewardUnitType").selectOption("MS");
       await choose("MS_06F");
       await page.locator("#rewardChassisCount").fill("9");
@@ -39,10 +39,15 @@ for (const width of [1280, 390])
       await page.locator("#rewardChassisCount").fill("2");
       await page.locator("#confirmRewardConfig").click();
       await expect(page.locator('#stockRewards [data-unit-id="MS_06F"]')).toContainText("机体 ×2");
+      await expect(page.locator('#addUnlock')).toHaveCount(0);
+      await page.locator('#addPluginReward').click();
+      await page.locator('#pluginRewards select').selectOption('frame');
+      await page.locator('#pluginRewards input').fill('3');
       await page.locator("#publish").click();
       await expect(page.locator("#status")).toContainText("活动已发布");
       const event = app.activities.adminSnapshot().activities.at(-1);
       expect(event.rewards.inventory).toEqual({ MS_06F: 2 });
+      expect(event.rewards.pluginInventory).toEqual({ frame: 3 });
       expect(event.rewards.kits).toBeUndefined();
       expect(event.stockConfigurations).toBeUndefined();
       await page
@@ -69,9 +74,11 @@ for (const width of [1280, 390])
       await page.reload();
       await page.locator("#activities button").filter({ hasText: "Configurable stock" }).click();
       await expect(page.locator("#money")).toHaveValue("765");
+      await expect(page.locator('#pluginRewards input')).toHaveValue('3');
       await expect(page.locator('#stockRewards [data-unit-id="MS_06F"]')).toContainText("机体 ×4");
       await page.locator("#newActivity").click();
       await expect(page.locator("#stockRewards .reward-summary")).toHaveCount(0);
+      await expect(page.locator('#pluginRewards input')).toHaveCount(0);
       await expect(page.locator("#money")).toHaveValue("0");
       await expect(page.locator("#addKitStock")).toHaveCount(0);
       expect(errors).toEqual([]);

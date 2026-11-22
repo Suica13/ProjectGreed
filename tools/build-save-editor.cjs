@@ -46,6 +46,7 @@ function buildSaveEditor(root = path.resolve(__dirname, "..")) {
     "client/profile-storage.js",
     "client/profile-identity.js",
     "shared/profile-migrations.js",
+    "shared/profile-reset.js",
     "shared/weapon-classes.js",
     "shared/weapon-sequence.js",
     "shared/unit-parts.js",

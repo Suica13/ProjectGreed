@@ -854,18 +854,20 @@
         "ja": {
           "name": "90mmマシンガン装備"
         }
-      }
+      },
+      "conversionBaseCost": 0
     },
     {
       "id": "kit_1",
       "name": "火箭筒套件",
-      "cost": 50,
+      "cost": 25,
       "weapons": [
         "EF_HypeBazooka",
         "EF_BeamSaber_A",
         "Common_DoubleVulcan_MS",
         "Common_Push_A"
-      ]
+      ],
+      "conversionBaseCost": 50
     }
   ],
   "description": "月神二号所开发的初期型吉姆,性能较为平庸",
