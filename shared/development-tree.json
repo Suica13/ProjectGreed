@@ -193,6 +193,7 @@
       ],
       "unlocks": [
         "RGM_79",
+        "RGM_79L",
         "RGM_79_Commander",
         "MedeaKai",
         "Pilot_EFSF_0079_N_ACE_TAM",
@@ -257,7 +258,6 @@
       ],
       "unlocks": [
         "RX_80PR_GroundType",
-        "RX_80PR_2",
         "RX_79_BD_2",
         "RGM_79DO"
       ],
@@ -546,6 +546,7 @@
       "unlocks": [
         "RX_78_4_Bst",
         "RX_78_5_Bst",
+        "RX_80PR_2",
         "RX_80PR_SpaceType",
         "RGM_79GL",
         "Pilot_EFSF_0079_N_ACE_FOT",
@@ -1154,9 +1155,7 @@
         "MSN_02",
         "MS_14B",
         "MS_14C",
-        "MS_14JG",
-        "MS_06Z",
-        "MSN_01"
+        "MS_14JG"
       ],
       "page": 1,
       "era": "UC_0079_T2",

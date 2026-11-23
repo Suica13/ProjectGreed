@@ -9,6 +9,8 @@
 
 | 时间（日本时间） | 来源IP | 单位 | 修改对象 | 修改内容 | 详细日志 |
 |---|---|---|---|---|---|
+| 2026-11-23 04:56:04 | local | 长距离强行侦察型金恩（ZGMF_LRR704B） | 单位特例 | /weapons/ZGMF_LRR704B_LBR_Sniper_Aim/damageComponents/beam：6523.4375 → 6210.9375<br>/weapons/ZGMF_LRR704B_LBR_Sniper_Aim/damageComponents/beamAP：3261.71875 → 3105.46875<br>/weapons/ZGMF_LRR704B_LBR_Sniper_Aim/damagePerShot：9785.15625 → 9316.40625<br>/weapons/ZGMF_LRR704B_LBR_Sniper_Aim/min：5 → 3 | [JSON](../../server-data/editor-changes/2026-11-23/2026-11-22T19-56-04-694Z-8cd7ded7-f53e-4f72-acb5-1f344bea8a06.json) |
+| 2026-11-23 04:56:00 | local | 暴风高达（GAT_X103） | 单位特例 | /weapons/OMNI_GAT_X103_BR_HyperSniper/min：5 → 3 | [JSON](../../server-data/editor-changes/2026-11-23/2026-11-22T19-56-00-547Z-156af2eb-6fd4-43b7-825b-1cadeaa4c861.json) |
 | 2026-11-22 21:45:04 | local | 垂直起降运输机（VoLPHAU） | 共用武器 light-transports | /stats/hp：31500 → 25000<br>/stats/move：5 → 7 | [JSON](../../server-data/editor-changes/2026-11-22/2026-11-22T12-45-04-817Z-11c2de12-ee25-4cd7-b946-7eb173d0f7ba.json) |
 | 2026-11-15 03:47:30 | local | 希古（ZGMF_515） | 单位特例 | /stats/cost：325 → 375 | [JSON](../../server-data/editor-changes/2026-11-15/2026-11-14T18-47-30-373Z-eebb7811-d518-44d8-8717-5d7444bd71cd.json) |
 | 2026-11-15 03:39:00 | local | 长距离强行侦察型金恩（ZGMF_LRR704B） | 单位特例 | /stats/cost：250 → 300 | [JSON](../../server-data/editor-changes/2026-11-15/2026-11-14T18-39-00-140Z-d4228ccb-63d3-4168-83a9-6b29c849185d.json) |

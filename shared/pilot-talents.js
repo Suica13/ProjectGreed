@@ -4,30 +4,33 @@ const PilotTalents = (() => {
   const catalog =
     typeof PILOT_TALENT_DATA !== "undefined" ? PILOT_TALENT_DATA : require("./pilot-talents.json");
   const byId = new Map(catalog.map((t) => [t.id, t]));
-  function normalize(value = []) {
+  const poolVersion = 2;
+  const retired = new Set(["pt05", "pt24", "pt48", "pt49", "pt50"]);
+  function normalize(value = [], allowRetired = false) {
     if (
       !Array.isArray(value) ||
       value.length > 3 ||
-      value.some((id) => !byId.has(id)) ||
+      value.some((id) => !byId.has(id) && !(allowRetired && retired.has(id))) ||
       new Set(value).size !== value.length
     )
       throw Error("驾驶员天赋无效");
     return [...value];
   }
   function fill(profile, count) {
-    const talents = normalize(profile.talents),
+    const previous = normalize(profile.talents, true),
+      talents = profile.talentPoolVersion === poolVersion ? normalize(previous) : [],
       limit = Math.min(3, count);
     for (let slot = talents.length; slot < limit; slot++) {
       const available = catalog.filter((t) => !talents.includes(t.id));
       let hash = 2166136261;
-      for (const c of profile.id + "/talent/" + slot)
+      for (const c of profile.id + "/talent/" + poolVersion + "/" + slot)
         hash = Math.imul(hash ^ c.charCodeAt(0), 16777619) >>> 0;
       talents.push(available[hash % available.length].id);
     }
     return talents;
   }
   const of = (p) =>
-    p?.custom && !p.ace && !p.aceId ? normalize(p.talents).map((id) => byId.get(id)) : [];
+    p?.custom && !p.ace && !p.aceId ? normalize(p.talents, true).map((id) => byId.get(id)).filter(Boolean) : [];
   function matches(when, c) {
     if (!when) return true;
     const hp = c.unit && c.maxHP > 0 ? c.unit.hp / c.maxHP : null;
@@ -101,6 +104,6 @@ const PilotTalents = (() => {
     }
     return result;
   }
-  return { catalog, normalize, fill, of, effects };
+  return { catalog, poolVersion, normalize, fill, of, effects };
 })();
 if (typeof module !== "undefined") module.exports = PilotTalents;

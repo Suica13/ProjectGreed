@@ -54,8 +54,16 @@ const Tactics = (() => {
     H = catalog.map.height;
   const maxCostLimit = 99999;
   const seatTeam = (seat) => (seat === null ? null : seat % 2);
+  // Hostile factions keep independent allegiance/vision, sharing the NPC action phase.
+  const isUnitTurn = (g, unit) => !!unit && (unit.team === g.team ||
+    (g.contract?.noAllies && g.team === 1 && unit.contractEnemy && unit.team > 0));
   const ownerOf = (unit) => unit.ownerSeat ?? unit.team;
   const controllerOf = (game, unit) => ownerOf(unit);
+  function isSeatUnattended(members, seat) {
+    const owner = members?.find(member => member.seat === seat);
+    return !owner || (!owner.bot && (owner.connected === false ||
+      (Object.hasOwn(owner, "ws") && owner.ws?.readyState !== 1)));
+  }
   function canControlUnit(settings, members, seat, unit) {
     if (unit?.missionEscort || unit?.missionEscaped) return false;
     if (unit?.missionAutonomous && ownerOf(unit)!==seat) return false;
@@ -64,7 +72,7 @@ const Tactics = (() => {
     if (ownerOf(unit) === seat) return true;
     return (
       unit.team === seatTeam(seat) &&
-      (settings?.shareAlliedUnits === true ||
+      (isSeatUnattended(members, ownerOf(unit)) || settings?.shareAlliedUnits === true ||
         members.some((m) => m.seat === ownerOf(unit) && m.shareUnits === true))
     );
   }
@@ -348,6 +356,7 @@ const Tactics = (() => {
       technologyLimitFaction: "EFSF",
       technologyLimit: 0,
       sweepFaction: "ZEON",
+      sweepAlliedFaction: "EFSF",
       sweepEra: "UC_0079_T1",
       sweepEnvironment: "ground",
       sweepDifficulty: 1,
@@ -420,8 +429,12 @@ const Tactics = (() => {
     const stock = restrictions.ownedStock || restrictions;
     return (stock.inventory?.[model.prefabId] || 0) > 0;
   }
+  function aiTechnologyAllows(model, faction) {
+    return !!model && development.treeAllows(technologyIds.get(model.prefabId) || model.prefabId, faction);
+  }
   function restrictionReason(model, restrictions = {}) {
     if (model.wip) return "wip";
+    if (restrictions.aiTechnologyOnly && !model.facility && !aiTechnologyAllows(model)) return "not_allowed";
     if (!model.facility && !development.allowsPointCaps(technologyIds.get(model.prefabId)||model.prefabId, restrictions.technologyCaps)) return "technology_limit";
     if (restrictions.aiBannedUnits?.includes(model.prefabId)) return "not_allowed";
     if (
@@ -737,7 +750,8 @@ const Tactics = (() => {
       ? player.characterFaction
       : null;
     // AI exclusions affect generation, previews and final deployment together.
-    // Human rosters and strategic armies keep their own existing rules.
+    // Human rosters keep their own inventory and licensing rules.
+    if (player?.bot) rules.aiTechnologyOnly = true;
     if (player?.bot && aiUnitBans[settings.mode || "regular"])
       rules.aiBannedUnits = [...aiUnitBans[settings.mode || "regular"]];
     // Room authority supplies the merged, cross-faction AI progression.
@@ -828,6 +842,7 @@ const Tactics = (() => {
     const choices = Object.values(models).filter(
         (model) =>
           !model.formOnly &&
+          aiTechnologyAllows(model) &&
           !model.requiredPilotId &&
           !restrictionReason(model, { ...restrictions, environment }) &&
           adaptation(model) > 0 &&
@@ -1814,6 +1829,7 @@ const Tactics = (() => {
     return result;
   }
   const skills = skillModule.create({
+    isUnitTurn,
     cellEnvironment,
     environmentOf,
     pilots,
@@ -2176,7 +2192,7 @@ const Tactics = (() => {
     if (
       deploying
         ? g.deployment[ownerOf(unit)]
-        : unit.team !== g.team || unit.moved || unit.rotated || g.winner !== null
+        : !isUnitTurn(g, unit) || unit.moved || unit.rotated || g.winner !== null
     )
       return false;
     if (deploying && unit.deploymentStaged) return true;
@@ -2779,7 +2795,7 @@ const Tactics = (() => {
       u.embarked ||
       u.pendingMove ||
       g.winner !== null ||
-      u.team !== g.team ||
+      !isUnitTurn(g, u) ||
       u.acted ||
       u.moved
     )
@@ -2850,7 +2866,7 @@ const Tactics = (() => {
     return (
       g.winner === null &&
       onMap(u) &&
-      u.team === g.team &&
+      isUnitTurn(g, u) &&
       !u.acted &&
       (u.moved || u.rotated) &&
       !!u.origin &&
@@ -2864,7 +2880,7 @@ const Tactics = (() => {
     if (
       !onMap(u) ||
       g.winner !== null ||
-      u.team !== g.team ||
+      !isUnitTurn(g, u) ||
       u.acted ||
       u.moved ||
       u.pendingMove ||
@@ -3660,7 +3676,7 @@ const Tactics = (() => {
     if (
       !options.launched &&
       (g.winner !== null ||
-        (!counterOnly && (a.team !== g.team || a.acted || !canAttack(g, a, b, w))))
+        (!counterOnly && (!isUnitTurn(g, a) || a.acted || !canAttack(g, a, b, w))))
     )
       throw Error("攻击条件已失效");
     if (!["counter", "defend", "evade"].includes(response)) throw Error("未知应战方式");
@@ -3910,7 +3926,7 @@ const Tactics = (() => {
     return fight(g, attacker, defender, null, "counter", weaponIds, true, true, orders, progress);
   }
   function wait(g, u, single = false) {
-    if (!onMap(u) || g.winner !== null || u.team !== g.team || u.acted) throw Error("无法待机");
+    if (!onMap(u) || g.winner !== null || !isUnitTurn(g, u) || u.acted) throw Error("无法待机");
     for (const member of single ? [u] : squadMembers(g, u)) {
       member.acted = true;
       member.origin = null;
@@ -4133,7 +4149,7 @@ const Tactics = (() => {
         delete u.burning;
         continue;
       }
-      if (u.team !== g.team || burn.lastTickRound === g.round) continue;
+      if (!isUnitTurn(g, u) || burn.lastTickRound === g.round) continue;
       burn.lastTickRound = g.round;
       const m = modelOf(u),
         resistance = Math.max(0, Math.min(100, m.defenses.sp?.percent || 0)),
@@ -4172,7 +4188,7 @@ const Tactics = (() => {
     try {
     g.turnEffects = tickBurning(g);
     for (const u of g.units) if (!u.overdrive) skills.revertDamaged(u);
-    for (const u of g.units.filter((u) => u.team === g.team && u.hp > 0 && u.overdrive)) {
+    for (const u of g.units.filter((u) => isUnitTurn(g, u) && u.hp > 0 && u.overdrive)) {
       const active = u.overdrive,
         m = modelOf(u);
       const forced = !!u.brokenParts?.head;
@@ -4196,7 +4212,7 @@ const Tactics = (() => {
         en: u.en,
       });
     }
-    for (const u of g.units.filter((u) => u.team === g.team && u.hp > 0 && u.overBoost)) {
+    for (const u of g.units.filter((u) => isUnitTurn(g, u) && u.hp > 0 && u.overBoost)) {
       const active = u.overBoost;
       if (g.round > active.startedRound) {
         const maximum = performanceModelOf(u).hp;
@@ -4210,7 +4226,7 @@ const Tactics = (() => {
         });
       }
     }
-    for (const u of g.units.filter((u) => u.team === g.team && u.hp > 0 && u.fullBoost)) {
+    for (const u of g.units.filter((u) => isUnitTurn(g, u) && u.hp > 0 && u.fullBoost)) {
       const active = u.fullBoost;
       active.remaining--;
       const expired = active.remaining <= 0;
@@ -4250,7 +4266,7 @@ const Tactics = (() => {
       delete u.weaponTurnUses;
       delete u.counterTargetId;
     }
-    for (const u of g.units.filter((u) => u.team === g.team && u.hp > 0)) {
+    for (const u of g.units.filter((u) => isUnitTurn(g, u) && u.hp > 0)) {
       for (const id of Object.keys(u.weaponCooldowns || {})) {
         if (--u.weaponCooldowns[id] <= 0) delete u.weaponCooldowns[id];
       }
@@ -4290,11 +4306,11 @@ const Tactics = (() => {
     }
     battlefieldMode.heal(Tactics, g);
     // Supply ticks once on the recipient team's turn, with no stacking from overlapping providers.
-    const providers = g.units.filter((u) => onMap(u) && u.team === g.team && modelOf(u).supplyAura);
-    for (const u of g.units.filter((u) => onMap(u) && u.team === g.team)) {
+    const providers = g.units.filter((u) => onMap(u) && isUnitTurn(g, u) && modelOf(u).supplyAura);
+    for (const u of g.units.filter((u) => onMap(u) && isUnitTurn(g, u))) {
       const aura = providers
         .map((provider) => ({ provider, aura: modelOf(provider).supplyAura }))
-        .find(({ provider, aura }) => inSupplyRange(provider, u));
+        .find(({ provider, aura }) => provider.team === u.team && inSupplyRange(provider, u));
       if (!aura) continue;
       const m = modelOf(u);
       if (!battlefieldMode.unrepairable(g, u))
@@ -4302,7 +4318,7 @@ const Tactics = (() => {
       u.en = Math.min(m.en, u.en + (m.en * aura.aura.enPercent) / 100);
     }
     // Charge once per incoming own turn, after all regeneration sources.
-    for (const u of g.units.filter(u => u.team === g.team && u.hp > 0 && u.opticalCamouflage)) {
+    for (const u of g.units.filter(u => isUnitTurn(g, u) && u.hp > 0 && u.opticalCamouflage)) {
       const camouflage = modelOf(u).skills?.find(skill => skill.type === "optical_camouflage");
       if (!camouflage || u.en < camouflage.upkeep) u.opticalCamouflage = false;
       else {
@@ -4310,7 +4326,7 @@ const Tactics = (() => {
         if (u.en <= 0) u.opticalCamouflage = false;
       }
     }
-    for (const u of g.units.filter((u) => u.team === g.team && u.snipeOrder)) {
+    for (const u of g.units.filter((u) => isUnitTurn(g, u) && u.snipeOrder)) {
       const order = u.snipeOrder;
       if (order.readyRound > g.round) continue;
       delete u.snipeOrder;
@@ -4343,10 +4359,10 @@ const Tactics = (() => {
   // 待机不阻止自动结束；仍可使用脱出等非攻击技能时保留行动机会。
   function hasActions(g, ownerSeat = null) {
     if (g.winner !== null || (g.deployment && !g.deployment.every(Boolean))) return false;
-    const enemies = g.units.filter((u) => u.team !== g.team && onMap(u));
+    const enemies = g.units.filter((u) => onMap(u));
     return g.units.some((u) => {
       if (
-        u.team !== g.team ||
+        !isUnitTurn(g, u) ||
         u.hp <= 0 ||
         u.contractExtracted ||
         u.deploymentStaged ||
@@ -4851,6 +4867,7 @@ const Tactics = (() => {
     return best;
   }
   const hangars = hangarModule.create({
+    isUnitTurn,
     placementQuery,
     modelOf,
     ownerOf,
@@ -4906,10 +4923,12 @@ const Tactics = (() => {
     mapWidth,
     mapHeight,
     columnLabel,
+    isUnitTurn,
     seatTeam,
     ownerOf,
     controllerOf,
     canControlUnit,
+    isSeatUnattended,
     validateCostLimit,
     validateUnitLimit,
     validateUnitCostLimit,
@@ -4935,6 +4954,7 @@ const Tactics = (() => {
     formationRestrictions,
     restrictionReason,
     technologyUnitId: id => technologyIds.get(id) || id,
+    aiTechnologyAllows,
     normalizeLicenses,
     normalizeStock: economy.normalizeStock,
     stockPlan: economy.stockPlan,

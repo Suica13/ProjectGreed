@@ -142,13 +142,13 @@ const ContractUI = (() => {
   });
   extract.onclick = () => {
     const actor = getUnit(selected);
-    if (actor && ContractMode.canExtract(game, Rules, actor, Net.seat) && !Net.awaiting)
+    if (actor && ContractMode.canExtract(game, Rules, actor, Net.seat, snapshot?.members) && !Net.awaiting)
       Net.request("contract_extract", { unitId: actor.id });
   };
   let terrainMap = null,
     terrainMatch = null;
   function actionButton(actor) {
-    const visible = snapshot?.contract && ContractMode.canExtract(game, Rules, actor, Net.seat);
+    const visible = snapshot?.contract && ContractMode.canExtract(game, Rules, actor, Net.seat, snapshot?.members);
     extract.hidden = !visible;
     extract.disabled = !!Net.awaiting || snapshot?.phase !== "idle" || game.team !== 0;
     return visible ? extract : null;
@@ -226,10 +226,10 @@ const ContractUI = (() => {
     ctx.save();
     ctx.lineWidth = 2;
     for (const o of state.objectives) {
-      if (!["salvage", "capture", "defend", "rescue", "upload"].includes(o.type)) continue;
-      const radius = ["defend","rescue"].includes(o.type) ? 5 : ["salvage","upload"].includes(o.type) ? 1 : 2,
+      if (!["salvage", "capture", "defend", "upload"].includes(o.type)) continue;
+      const radius = ["salvage","upload"].includes(o.type) ? 1 : 2,
         color = o.status === "failed" ? "#6f7780" : o.status === "completed" ? "#72d5a2" :
-          ["defend","rescue","upload"].includes(o.type) ? "#79d5ff" : o.type === "salvage" ? "#ffffff" : "#ed6c67",
+          ["defend","upload"].includes(o.type) ? "#79d5ff" : o.type === "salvage" ? "#ffffff" : "#ed6c67",
         left = geo.ox + (o.x - radius) * geo.tile,
         top = geo.oy + (o.y - radius) * geo.tile,
         span = (radius * 2 + 1) * geo.tile;
@@ -301,7 +301,7 @@ const ContractUI = (() => {
         SpriteRenderer.draw(ctx,o.wreckModel,x,y+geo.tile*.5,geo.tile/Rules.mapCellPixels*ART.presentation.unitMapScale*model.presentation.mapScale,90,model.presentation.idle,0,null,true,false,false,{},90,false,true,"ground");
         ctx.restore();
       }
-      if (["capture","defend","rescue","upload"].includes(o.type)) {
+      if (["capture","defend","upload"].includes(o.type)) {
         if (["capture","defend"].includes(o.type))
         BattlefieldUI.drawCampaignObjective(
           ctx,
@@ -350,12 +350,6 @@ const ContractUI = (() => {
         ctx.moveTo(x-size,markerY-size);ctx.lineTo(x+size,markerY-size);
         ctx.lineTo(x+size*.8,markerY+size*.3);ctx.lineTo(x,markerY+size*1.2);
         ctx.lineTo(x-size*.8,markerY+size*.3);ctx.closePath();
-      } else if (o.type === "rescue") {
-        const a=size*.4;
-        ctx.moveTo(x-a,markerY-size);ctx.lineTo(x+a,markerY-size);ctx.lineTo(x+a,markerY-a);
-        ctx.lineTo(x+size,markerY-a);ctx.lineTo(x+size,markerY+a);ctx.lineTo(x+a,markerY+a);
-        ctx.lineTo(x+a,markerY+size);ctx.lineTo(x-a,markerY+size);ctx.lineTo(x-a,markerY+a);
-        ctx.lineTo(x-size,markerY+a);ctx.lineTo(x-size,markerY-a);ctx.lineTo(x-a,markerY-a);ctx.closePath();
       } else if (o.type === "upload") {
         ctx.moveTo(x,markerY-size);ctx.lineTo(x+size,markerY);ctx.lineTo(x+size*.4,markerY);
         ctx.lineTo(x+size*.4,markerY+size);ctx.lineTo(x-size*.4,markerY+size);
@@ -380,7 +374,7 @@ const ContractUI = (() => {
             continue;
           const center = Rules.center(target),
             tx = geo.ox + (center.x + 0.5) * geo.tile,
-            ty = geo.oy + (center.y - 0.75) * geo.tile,
+            ty = geo.oy + (center.y + 0.25) * geo.tile,
             text = I18n.text("目标"),
             width = Math.max(12, Math.min(54, geo.tile * 0.92)),
             half = width / 2,

@@ -36,7 +36,7 @@ for (const width of [1440, 390])
       await expect(page.locator("#contactTasks")).toContainText("暂无已接受任务");
       await expect(page.locator("#contactTasks .contact-task-item")).toHaveCount(0);
       await page.locator("#shellContactMerchants").click();
-      await expect(page.locator(".merchant-card")).toHaveCount(2);
+      await expect(page.locator(".merchant-card")).toHaveCount(3);
       await page.locator('[data-merchant-id="efsf"] .merchant-portrait').click();
       const terminal = page.locator("#merchantTerminal");
       await terminal.getByRole("button", { name: "任务", exact: true }).click();

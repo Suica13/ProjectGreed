@@ -798,3 +798,21 @@ test("module gifts validate quantities and retain the same claim receipt on retr
   for(const pluginInventory of [{missing:1},{frame:-1},{frame:1.5},{frame:1000001}])
     assert.throws(()=>f.service.publish(activity('online_now',{rewards:{pluginInventory}})));
 });
+
+test("supply token gifts validate quantities, survive restart and retain the same claim receipt", t => {
+  const f=fixture(t),ws={},profile=identity();
+  f.service.identify(ws,profile);
+  const event=f.service.publish(activity("online_now",{rewards:{itemInventory:{"0079t1-token":123}}}));
+  const mail=f.frames.get(ws).at(-1).mail.find(item=>item.activityId===event.id);
+  assert.deepEqual(mail.rewards.itemInventory,{"0079t1-token":123});
+  f.service.receive(ws,{type:"activity_claim",mailId:mail.id});
+  const award=f.frames.get(ws).at(-1).award;
+  assert.deepEqual(award.itemInventory,{"0079t1-token":123});
+  f.restart();const reconnect={};f.service.identify(reconnect,profile);
+  f.service.receive(reconnect,{type:"activity_claim",mailId:mail.id});
+  assert.deepEqual(f.frames.get(reconnect).at(-1).award,award);
+  for(const itemInventory of [null,[],{"missing":1},{"0079t1-token":-1},{"0079t1-token":1.5},{"0079t1-token":1000001}])
+    assert.throws(()=>f.service.publish(activity("online_now",{rewards:{itemInventory}})));
+  const empty=f.service.publish(activity("online_now",{rewards:{itemInventory:{"0079t1-token":0}}}));
+  assert.equal(empty.rewards.itemInventory,undefined);
+});

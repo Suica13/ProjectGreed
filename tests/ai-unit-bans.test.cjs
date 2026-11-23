@@ -7,6 +7,25 @@ const research = Object.fromEntries(["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON
 const player = {seat: 1, characterFaction: "PMC", researched: research, licenses: {MS_06C: true}};
 const entries = Object.entries(G.models).filter(([,m]) => m.prefabId === "MS_06C").map(([,m]) => ({unitId:m.prefabId, kitId:m.kitId}));
 
+test("AI candidates require actual technology unlocks even when development progress is ignored", () => {
+  const outside = Object.values(G.models).find(model => model.prefabId === "MS_05S");
+  assert(outside && !G.aiTechnologyAllows(outside));
+  assert(G.aiTechnologyAllows(G.models.MS_06F__machine_gun, "ZEON"));
+  for (const mode of ["regular", "quick", "sweep", "battlefield", "mission"]) {
+    const settings = {...G.defaultRoomSettings(), mode};
+    const restrictions = {...G.armyRestrictions(settings, {...player, bot:true}), ignoreDevelopment:true};
+    assert.equal(G.restrictionReason(outside, restrictions), "not_allowed");
+  }
+  const human = {characterFaction:"PMC", licenses:{MS_05S:true}};
+  assert.equal(G.restrictionReason(outside, human), null);
+  const models = {...G.models};
+  try {
+    for (const [id, model] of Object.entries(G.models))
+      if (G.aiTechnologyAllows(model)) delete G.models[id];
+    assert.deepEqual(G.randomFormation(182, 99999, {ignoreDevelopment:true}, 12), []);
+  } finally { Object.assign(G.models, models); }
+});
+
 test("AI exclusion configuration contains valid unique unit IDs for both ordinary modes", () => {
   assert(entries.length > 0);
   for (const mode of ["regular", "quick"]) {

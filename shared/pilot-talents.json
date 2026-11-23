@@ -32,14 +32,6 @@
     }
   },
   {
-    "id": "pt05",
-    "name": "冒失鬼",
-    "description": "命中系数-5%",
-    "effects": {
-      "accuracy": -0.05
-    }
-  },
-  {
     "id": "pt06",
     "name": "沉着冷静",
     "description": "防御系数+5%",
@@ -197,14 +189,6 @@
     "effects": {
       "reaction": 0.05,
       "accuracy": -0.05
-    }
-  },
-  {
-    "id": "pt24",
-    "name": "迟钝",
-    "description": "反应系数-5%",
-    "effects": {
-      "reaction": -0.05
     }
   },
   {
@@ -413,30 +397,5 @@
       "speed": 0.05,
       "accuracy": -0.05
     }
-  },
-  {
-    "id": "pt48",
-    "name": "手忙脚乱",
-    "description": "武器EN消耗+5%",
-    "effects": {
-      "enCost": 0.05
-    }
-  },
-  {
-    "id": "pt49",
-    "name": "畏缩",
-    "description": "格斗伤害-10%",
-    "effects": {
-      "melee": -0.1
-    }
-  },
-  {
-    "id": "pt50",
-    "name": "脆弱心态",
-    "description": "当前耐久低于最大耐久30%时，反应系数-10%",
-    "effects": {
-      "reaction": -0.1
-    },
-    "when": "low30"
   }
 ]

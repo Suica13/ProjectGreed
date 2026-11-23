@@ -231,5 +231,5 @@ const WeaponAudio = (() => {
     if (document.hidden) stop(true);
   });
   window.addEventListener("pagehide", () => stop(true));
-  return { unlock, prepare, prepareBattle, sync, stop, stopBattle, setBattleMuted, play, sonar, releaseBattle };
+  return { unlock, prepare, prepareBattle, sync, stop, stopBattle, stopChannel: stopNodes, setBattleMuted, play, sonar, releaseBattle };
 })();

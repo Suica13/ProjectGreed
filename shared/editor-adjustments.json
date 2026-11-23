@@ -67,7 +67,6 @@
       "/weapons/ZAFT_ZGMF_1017_LBR/hit": -20
     },
     "GAT_X103": {
-      "/weapons/OMNI_GAT_X103_BR_HyperSniper/min": 2,
       "/weapons/OMNI_GAT_X103_BR_HyperSniper/max": 1
     },
     "ZGMF_515": {
@@ -76,11 +75,10 @@
     },
     "ZGMF_LRR704B": {
       "/stats/cost": 25,
-      "/weapons/ZGMF_LRR704B_LBR_Sniper_Aim/min": 2,
       "/weapons/ZGMF_LRR704B_LBR_Sniper_Aim/max": 3,
-      "/weapons/ZGMF_LRR704B_LBR_Sniper_Aim/damagePerShot": 1875,
-      "/weapons/ZGMF_LRR704B_LBR_Sniper_Aim/damageComponents/beam": 1250,
-      "/weapons/ZGMF_LRR704B_LBR_Sniper_Aim/damageComponents/beamAP": 625
+      "/weapons/ZGMF_LRR704B_LBR_Sniper_Aim/damagePerShot": 1406.25,
+      "/weapons/ZGMF_LRR704B_LBR_Sniper_Aim/damageComponents/beam": 937.5,
+      "/weapons/ZGMF_LRR704B_LBR_Sniper_Aim/damageComponents/beamAP": 468.75
     },
     "GAT_X207": {
       "/stats/hp": -2500
@@ -221,9 +219,9 @@
       "/damageComponents/beam": 500
     },
     "AEUG_MSZ_006C1_BeamSmartGun_Sniper_Aim__lv1": {
-      "/damagePerShot": 8125,
-      "/damageComponents/beam": 4375,
-      "/damageComponents/beamAP": 3750,
+      "/damagePerShot": 6093.75,
+      "/damageComponents/beam": 3281.25,
+      "/damageComponents/beamAP": 2812.5,
       "/max": 1
     },
     "AEUG_MSA_0011_BeamSmartGun__lv1": {

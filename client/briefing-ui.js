@@ -83,8 +83,8 @@ const BriefingUI = (() => {
                 ? `${o.progress}/${o.required}`
                 : I18n.text("未完成"),
           points: [{ x: o.x, y: o.y }],
-          tactical: ["capture","defend","rescue","upload"].includes(o.type) ? "defend" : o.type === "salvage" ? "move" : "attack",
-          radius: ["defend","rescue"].includes(o.type) ? 5 : o.type === "capture" ? 2 : ["salvage","upload"].includes(o.type) ? 1 : 0,
+          tactical: ["capture","defend","upload"].includes(o.type) ? "defend" : o.type === "salvage" ? "move" : "attack",
+          radius: ["defend","capture"].includes(o.type) ? 2 : ["salvage","upload"].includes(o.type) ? 1 : 0,
         })),
         ...ContractMode.extractionZones(state).map((exit, index) => ({
           id: "extraction-" + index,

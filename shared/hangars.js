@@ -6,6 +6,7 @@ const UnitHangars = {
       hangar.allowedTags.some(tag => model.transport?.loadTags.includes(tag));
   },
   create({
+    isUnitTurn = (g, u) => u.team === g.team,
     modelOf,
     ownerOf,
     cells,
@@ -134,7 +135,7 @@ const UnitHangars = {
       if (!sourceRoot || !targetRoot || sourceRoot.team !== u.team || targetRoot.team !== u.team) return false;
       if (deploying(g)) {
         if (g.deployment[ownerOf(u)]) return false;
-      } else if (u.team !== g.team) return false;
+      } else if (!isUnitTurn(g, u)) return false;
       // Reorganize one ship's cargo without launching. Moving between ships
       // requires adjacent hulls and follows ordinary boarding's action lock.
       return sourceRoot.id === targetRoot.id ||
@@ -167,7 +168,7 @@ const UnitHangars = {
         return !g.deployment[ownerOf(u)] && (edgeDistance(carrier, u) === 1 || inDeploymentArea);
       }
       return (
-        u.team === g.team &&
+        isUnitTurn(g, u) &&
         !u.acted &&
         !u.plan &&
         !u.snipeOrder &&
@@ -258,7 +259,7 @@ const UnitHangars = {
         !emergency &&
         (deploying(g)
           ? g.deployment[ownerOf(u)]
-          : u.team !== g.team || u.acted || u.embarked.boardRound === g.round)
+          : !isUnitTurn(g, u) || u.acted || u.embarked.boardRound === g.round)
       )
         return [];
       if (!emergency) {

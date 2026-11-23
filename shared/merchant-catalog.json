@@ -7,6 +7,13 @@
     "sellsPlugins": true
   },
   {
+    "id": "zeon",
+    "name": "吉翁公国军",
+    "portraitImage": "assets/ui/contact-zeon.png",
+    "portraitId": "Pilot_ZEON_0079_Common_1",
+    "sellsPlugins": true
+  },
+  {
     "id": "anaheim",
     "name": "阿纳海姆",
     "portraitImage": "assets/ui/contact-ae.png",

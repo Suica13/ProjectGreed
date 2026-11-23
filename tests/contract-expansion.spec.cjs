@@ -58,7 +58,36 @@ test("random contract biomes render distinct grass, snow, desert and urban battl
   await page.locator("#contractBiomePreview").screenshot({path:"tmp/verification/screenshots/contract-biomes.png"});
 });
 
-test("all eight event markers and failed objectives have usable localized briefing UI",async({page})=>{
+test("target markers sit just above their unit cell and remain hidden by fog",async({page})=>{
+  await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
+  await page.waitForFunction(()=>assetsReady);
+  const results=await page.evaluate(()=>{
+    const map=ContractMode.generateMap(Rules.catalog,{sweepDifficulty:1,sweepEnvironment:"ground"},12345);
+    const target=Rules.makeUnit({unitId:"MS_06F",kitId:"machine_gun"},1,"marker-target",{x:8,y:6});
+    game={...map,mapId:map.id,winner:null,units:[target],intel:{visibleIds:[target.id]}};
+    const objective={id:"marker-command",type:"command",name:"消灭小股敌人势力",x:15,y:10,
+      status:"active",required:1,progress:0,targets:[target.id]};
+    ContractUI.receive({started:true,matchId:"marker-placement",phase:"idle",settings:{mode:"sweep"},you:{seat:0},game,
+      contract:{objectives:[objective],difficulty:ContractMode.config(1),completed:0,participants:[],cues:[]}});
+    return [25,60].map(tile=>{
+      const canvas=document.createElement("canvas"),ctx=canvas.getContext("2d"),geo={ox:10,oy:20,tile};
+      let path=[],triangles=[];
+      const begin=ctx.beginPath.bind(ctx),move=ctx.moveTo.bind(ctx),line=ctx.lineTo.bind(ctx),fill=ctx.fill.bind(ctx);
+      ctx.beginPath=()=>{path=[];begin();};
+      ctx.moveTo=(x,y)=>{path.push([x,y]);move(x,y);};
+      ctx.lineTo=(x,y)=>{path.push([x,y]);line(x,y);};
+      ctx.fill=()=>{if(path.length===3)triangles.push(path.slice());fill();};
+      ContractUI.draw(ctx,geo);
+      const tip=triangles[0]?.[2],center=Rules.center(target);
+      game.intel.visibleIds=[];triangles=[];ContractUI.draw(ctx,geo);
+      const hidden=triangles.length===0;game.intel.visibleIds=[target.id];
+      return {tip,expected:[geo.ox+(center.x+.5)*tile,geo.oy+(center.y+.25)*tile+3],hidden};
+    });
+  });
+  for(const result of results){expect(result.tip).toEqual(result.expected);expect(result.hidden).toBe(true);}
+});
+
+test("all seven event markers and failed objectives have usable localized briefing UI",async({page})=>{
   const errors=[];page.on("pageerror",e=>errors.push(e.message));
   await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
   await page.waitForFunction(()=>assetsReady);
@@ -66,7 +95,7 @@ test("all eight event markers and failed objectives have usable localized briefi
     I18n.setLanguage("zh");
     const map=ContractMode.generateMap(Rules.catalog,{sweepDifficulty:1,sweepEnvironment:"ground"},12345);
     const objectives=ContractMode.kinds.map((kind,i)=>({...kind,id:"event-"+i,x:3+i*6,y:5,
-      status:kind.type === "rescue" ? "failed" : "active",required:["defend","capture"].includes(kind.type)?5:3,progress:1,targets:[]}));
+      status:kind.type === "defend" ? "failed" : "active",required:["defend","capture"].includes(kind.type)?5:3,progress:1,targets:[]}));
     ContractUI.receive({started:true,matchId:"marker-test",phase:"idle",settings:{mode:"sweep"},you:{seat:0},
       game:{...map,mapId:map.id,winner:null,units:[]},
       contract:{objectives,difficulty:ContractMode.config(1),completed:0,participants:[],cues:[]}});
@@ -79,7 +108,7 @@ test("all eight event markers and failed objectives have usable localized briefi
   await page.locator("#contractMarkerPreview").evaluate(n=>n.remove());
   // This isolated marker fixture runs without opening a network battle's map wrapper.
   await page.locator("#contractHud button").last().evaluate(button=>button.click());
-  await expect(page.locator("#contractObjectives .contract-objective")).toHaveCount(8);
+  await expect(page.locator("#contractObjectives .contract-objective")).toHaveCount(7);
   await expect(page.locator('#contractObjectives [data-status="failed"] strong')).toHaveText("事件失败");
   await page.evaluate(()=>I18n.setLanguage("en"));
   await expect(page.locator('#contractObjectives [data-status="failed"] strong')).toHaveText("Objective failed");
@@ -90,7 +119,7 @@ test("two network players share a proximity defense event and can extract after 
   test.setTimeout(90000);
   const original=Contract.initialize;
   // Fix only the authoritative event shuffle; terrain and live sockets remain real.
-  Contract.initialize=(room,G,seed,log)=>original(room,G,1,log);
+  Contract.initialize=(room,G,seed,log)=>original(room,G,4,log);
   const app=createServer({host:"127.0.0.1",port:0,aiDelayMs:999999,resultReturnMs:999999});
   const address=await app.listen(),base="http://127.0.0.1:"+address.port;
   const contexts=[],pages=[],errors=[];

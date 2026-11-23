@@ -2,6 +2,7 @@
  * 此模块不管理网络、计时或客户端演出，便于独立验证。 */
 "use strict";
 function createAttackPlanner(rules, randomId) {
+  const inTurn = (game, unit) => rules.isUnitTurn ? rules.isUnitTurn(game, unit) : unit.team === game.team;
   const find = (room, id) => room.game.units.find((unit) => unit.id === id);
   function reset(room) {
     room.plans = [];
@@ -47,7 +48,7 @@ function createAttackPlanner(rules, randomId) {
     const skill = skillWeapon(attacker, weapon);
     if (attacker.attackSkillRound === room.game.round) throw Error("本回合已使用攻击类技能");
     if (skill) {
-      if (attacker.plan || attacker.acted || attacker.team !== room.game.team || !rules.canAttack(room.game, attacker, target, skill))
+      if (attacker.plan || attacker.acted || !inTurn(room.game, attacker) || !rules.canAttack(room.game, attacker, target, skill))
         throw Error("攻击类技能不能与普通攻击同时使用");
       const intent = { automatic: false, attacker: attacker.id, target: target.id,
         ...(target.groundTarget ? { targetCell: {x:target.x,y:target.y} } : {}),
@@ -63,7 +64,7 @@ function createAttackPlanner(rules, randomId) {
     if (
       !target ||
       target.groundTarget ||
-      attacker.team !== room.game.team ||
+      !inTurn(room.game, attacker) ||
       (attacker.acted && !attacker.plan)
     )
       throw Error("当前不能攻击此目标");

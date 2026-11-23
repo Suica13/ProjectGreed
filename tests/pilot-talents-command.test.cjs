@@ -16,7 +16,7 @@ function pair() {
 const assign = (unit, ids) =>
   (unit.pilot = { ...fresh(), talents: ids, talentSlotsUnlocked: ids.length });
 test("level four and the first two reincarnations grant at most three persistent talents", () => {
-  assert.equal(T.catalog.length, 50);
+  assert.equal(T.catalog.length, 45);
   let p = fresh();
   assert.equal(p.talents.length, 0);
   assert.equal(p.talentSlotsUnlocked, 0);
@@ -53,7 +53,28 @@ test("level four and the first two reincarnations grant at most three persistent
   assert.throws(() => T.normalize(["bad"]));
   assert.deepEqual(T.of({ ace: true, talents: ["pt01"] }), []);
 });
-test("all fifty talent effects have valid numeric values and known activation conditions", () => {
+test('old custom pilots reroll once into the positive/tradeoff pool and retain their other data',()=>{
+ for(const ids of [['pt05'],['pt24','pt48'],['pt49','pt50','pt01'],['pt01','pt02']]){
+  const previous={...fresh('custom-legacy-'+ids.join('-')),talents:ids,talentSlotsUnlocked:ids.length,
+   record:{kills:13,shipKills:2,battles:7,losses:1},personality:'custom',background:'keep this'};
+  delete previous.talentPoolVersion;
+  const migrated=P.custom(previous);
+  assert.equal(migrated.talents.length,ids.length);
+  assert.equal(migrated.talentPoolVersion,T.poolVersion);
+  assert(migrated.talents.every(id=>T.catalog.some(t=>t.id===id)));
+  assert.equal(new Set(migrated.talents).size,ids.length);
+  for(const key of ['id','name','level','experience','stats','record','points','personality','background','portraitId'])
+   assert.deepEqual(migrated[key],previous[key]);
+  assert.deepEqual(P.custom(JSON.parse(JSON.stringify(migrated))).talents,migrated.talents);
+  assert.deepEqual(P.custom(previous).talents,migrated.talents,'retrying a migration is stable');
+  assert.deepEqual(migrated.talents,T.fill({...previous,talents:[]},ids.length),'all legacy rolls use the new pool');
+ }
+ assert.throws(()=>P.custom({...fresh(),talents:['unknown']}));
+ const data=require('../shared/pilot-talents.json');
+ assert(!data.some(t=>['pt05','pt24','pt48','pt49','pt50'].includes(t.id)));
+});
+
+test("all active talent effects have valid numeric values and known activation conditions", () => {
   const contexts = [
     {},
     {
@@ -145,5 +166,5 @@ test("talents change actual forecast, contextual effects and EN without repeated
   assert.equal(once.en, 95);
   assert.equal(G.weaponStats(once, a).en, 95);
   a.pilot.talents = ["pt48"];
-  assert.equal(G.weaponStats(once, a).en, 105);
+  assert.equal(G.weaponStats(once, a).en, 100, 'retired negative talent no longer penalizes EN');
 });

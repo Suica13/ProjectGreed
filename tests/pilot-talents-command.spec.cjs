@@ -23,7 +23,7 @@ test('standalone browser loads shared talents and displays stable roster and com
       badges:summary.querySelectorAll('[data-pilot-talent]').length,
       command:SkillControls.commandAbilities(Rules.modelOf(unit),unit)};
   });
-  expect(result.count).toBe(50);expect(result.fresh).toBe(0);expect(result.badges).toBe(3);
+  expect(result.count).toBe(45);expect(result.fresh).toBe(0);expect(result.badges).toBe(3);
   expect(result.reread).toEqual(result.ids);
   expect(result.command[0].description).toContain('指挥高于100');
   expect(result.commander).toBeGreaterThanOrEqual(115);expect(result.commander).toBeLessThanOrEqual(135);

@@ -59,7 +59,7 @@ function setPageView(view) {
   if (byId("warehouseScreen")) byId("warehouseScreen").hidden = view !== "warehouse";
   if (byId("itemStorageScreen")) byId("itemStorageScreen").hidden = view !== "itemStorage";
   if (byId("baseFacilitiesScreen")) byId("baseFacilitiesScreen").hidden = view !== "facilities";
-  if (byId("contactScreen")) byId("contactScreen").hidden = !["contactTasks", "contactMerchants"].includes(view);
+  if (byId("contactScreen")) byId("contactScreen").hidden = !["contactTasks", "contactMerchants", "contactSupply"].includes(view);
   byId("roomSettings").hidden = !Net.active;
   window.MenuShell?.refresh();
   window.WarehouseUI?.render();
@@ -542,6 +542,8 @@ function updateContents() {
     else if (!busy && game.team !== Net.team()) hint = "对手回合，可查看单位并等待行动。";
   }
   if (phase === "deployment") hint = "在高亮出生区内调整位置，两队确认后开始回合。";
+  if (!busy && u && SkillControls.confirmation(u).active)
+    hint = "点击高亮格子选择技能目标，再点击确认技能。";
   if (pendingMove && phase === "idle") hint = "确认移动后更新视野与索敌，取消则返回原位。";
   if (MapEffects.pending()) hint = "单位击破演出中…";
   if (TurnFlow.active) hint = "回合交接中…";
@@ -1270,7 +1272,9 @@ function renderPanel() {
         element("span", "muted", `${Rules.dist(u, target)}格 · ${e.hit}%`),
       );
       button.disabled = !canCommand;
-      button.onclick = () => beginAttack(u, target, w);
+      button.onclick = () => {
+        if (!SkillControls.chooseWeaponTarget(u,target,w)) beginAttack(u,target,w);
+      };
       targetContainer.append(button);
     }
   }
@@ -2731,6 +2735,7 @@ byId("map").onclick = async (e) => {
     if (["mortar", "nuke"].includes(w?.special?.type))
       target = Rules.groundTarget(game, u, cell.x, cell.y);
     if (target && Rules.canAttack(game, u, target, w)) {
+      if (SkillControls.chooseWeaponTarget(u,target,w)) return;
       beginAttack(u, target, w);
       return;
     }

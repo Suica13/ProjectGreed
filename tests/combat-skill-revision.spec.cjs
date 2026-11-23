@@ -3,6 +3,8 @@ const {pathToFileURL}=require("node:url"),path=require("node:path");
 async function open(page){
  await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
  await expect(page.locator("#openSkirmish")).toBeEnabled();
+ await page.locator("#profileCompanyName").fill("Skill regression PMC");
+ await page.locator("#profileOnboardingConfirm").click();
  await page.evaluate(async()=>{
   Net.leave();session++;const e={unitId:"RGM_79",kitId:"machine_gun"};
   game=Rules.create(false,1,[[e],[e]],false,{fogMode:"disabled"});game.tiles.forEach(r=>r.fill("plain"));game.deployment=null;
@@ -47,6 +49,9 @@ test("mortar skill targets and cancels separately from the ordinary automatic at
   return {x:p.x*r.width/c.width,y:p.y*r.height/c.height};
  });
  await page.locator("#map").click({position:point,force:true});
+ await expect(page.locator("#hudConfirmSkill")).toBeEnabled();
+ expect(await page.evaluate(()=>phase)).toBe("idle");
+ await page.locator("#hudConfirmSkill").click();
  expect(await page.evaluate(()=>pending.offensiveSkill)).toBe(true);
  await page.evaluate(()=>{response="defend";counterDraftState=null;commitAttack();});
  expect(await page.evaluate(()=>game.units[0].attackSkillRound===game.round)).toBe(true);

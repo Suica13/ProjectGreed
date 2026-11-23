@@ -617,23 +617,33 @@ function createRoomEngine({
     send(member.ws, reply);
     return true;
   }
-  // 未参战的出生点不等待连接；参战席位掉线仍然暂停，保留重连/补位流程。
+  // A teammate can temporarily operate an unattended seat without changing ownership.
   const createPlanner =
     typeof createAttackPlanner === "undefined"
       ? require("./attack-plans.js").createAttackPlanner
       : createAttackPlanner;
   const planner = createPlanner(G, randomId);
+  const sharedVacantSeat = (room, seat) => room.started &&
+    (room.activeSeats?.[seat] || room.game.units.some(unit => G.ownerOf(unit) === seat)) &&
+    !room.seats[seat]?.bot && !onlineMember(room.seats[seat]) &&
+    room.seats.some(player => player && !player.bot && player.seat !== seat &&
+      G.seatTeam(player.seat) === G.seatTeam(seat) && onlineMember(player));
+  const hasParticipantUnits = (room, member) => room.game.units.some(unit =>
+    unit.hp > 0 && !unit.contractExtracted && (G.ownerOf(unit) === member.seat ||
+      (unit.team === G.seatTeam(member.seat) && sharedVacantSeat(room, G.ownerOf(unit)))));
   const connected = (room) =>
     room.seats.map(
       (player, seat) =>
         !!player?.bot ||
         onlineMember(player) ||
+        sharedVacantSeat(room, seat) ||
         (room.game.contract && player && !room.game.units.some(u=>u.hp>0&&!u.contractExtracted&&G.ownerOf(u)===seat)) ||
         (room.started && !player && (room.phase === "assembly" || !room.activeSeats?.[seat])),
     );
   const playbackParticipant = (room, member) => !!member && !member.bot &&
     Number.isInteger(member.seat) && room.seats[member.seat]?.id === member.id &&
-    (!room.game.contract || room.game.units.some(u=>u.hp>0&&!u.contractExtracted&&G.ownerOf(u)===member.seat));
+    !sharedVacantSeat(room, member.seat) &&
+    (!room.game.contract || hasParticipantUnits(room, member));
   const reconnectTimers = new Map();
   const retained = (room) => members(room).some((m) => onlineMember(m) || reconnectTimers.has(m));
   const onlineMember = (member) => member?.ws?.readyState === 1;
@@ -1048,6 +1058,7 @@ function createRoomEngine({
         .map(effectBattle),
       phase: room.phase,
       contract: Contract.view(room, G, roomBattleEconomy().settlementMultipliers(getRewardMultipliers())),
+      contactTaskStatus: Contract.commissionStatus(room, G, recipient),
       pending,
       reactions,
       reactionReview:
@@ -1323,6 +1334,7 @@ function createRoomEngine({
     }
     if (["sweep", "mission"].includes(room.settings.mode) && (!room.started || room.phase === "assembly"))
       ensureSweepSeats(room);
+    refreshUnattendedSeats(room);
     if (room.started && room.game.battlefield) {
       G.battlefieldMode.captureNearby(G, room.game);
       awardBattlefieldCaptures(room);
@@ -1441,6 +1453,45 @@ function createRoomEngine({
     resultTimers.set(room, timer);
   }
   const autoEndTimers = new Map();
+  function refreshUnattendedSeats(room) {
+    if (!room.started) return;
+    const seats = room.seats.map((_, seat) => seat).filter(seat => sharedVacantSeat(room, seat));
+    if (!seats.length) return;
+    room.delegatedSeats = (room.delegatedSeats || []).filter(seat => !seats.includes(seat));
+    if (room.campaignBattle?.delegatedSeats)
+      room.campaignBattle.delegatedSeats = room.campaignBattle.delegatedSeats.filter(seat => !seats.includes(seat));
+    for (const seat of seats) cancelSeatMoves(room, seat);
+    if (room.phase === "assembly") {
+      for (const seat of seats) if (room.seats[seat]) room.seats[seat].finalReady = true;
+      startDeployment(room);
+    }
+    if (room.phase === "deployment") {
+      for (const seat of seats) {
+        const teammates = room.seats.filter(player => player && !player.bot && onlineMember(player) &&
+          G.seatTeam(player.seat) === G.seatTeam(seat));
+        if (!room.game.deployment[seat] && teammates.length &&
+            teammates.every(player => room.game.deployment[player.seat])) {
+          G.autoPlaceDeployment(room.game, seat);
+          if (G.confirmDeployment(room.game, seat)) {
+            room.phase = "idle";
+            recordPilotParticipation(room);
+          }
+        }
+      }
+    }
+    const activeHumans = room.seats.filter(player => player && !player.bot && onlineMember(player) &&
+      G.seatTeam(player.seat) === room.game.team && (!room.game.contract || hasParticipantUnits(room, player)));
+    if (room.phase === "idle" && activeHumans.length && activeHumans.every(player => room.turnDone[player.seat])) {
+      for (const actor of room.game.units)
+        if (seats.includes(G.ownerOf(actor)) && actor.team === room.game.team && G.onMap(actor) && !actor.acted)
+          G.wait(room.game, actor);
+    }
+    if (room.phase === "reaction" && !room.reactions?.length && !room.plans.length &&
+        reactionReviewSeats(room).every(seat => room.reactionReady?.includes(seat))) {
+      room.lastEvent = {id:randomId(), ...resolvePlans(room)};
+      room.revision++;
+    }
+  }
   function canAutoEnd(room) {
     return (
       !room.game.mission?.dialogue && !room.game.mission?.choice && !room.game.mission?.error &&
@@ -1453,15 +1504,22 @@ function createRoomEngine({
       room.seats.every(
         (player) =>
           !player ||
+          sharedVacantSeat(room, player.seat) ||
           aiControlled(room, player) ||
           G.seatTeam(player.seat) !== room.game.team ||
-          (room.game.contract && !room.game.units.some(u => G.ownerOf(u) === player.seat && u.hp > 0 && !u.contractExtracted)) ||
+          (room.game.contract && !hasParticipantUnits(room, player)) ||
           room.turnDone[player.seat],
       ) &&
-      !G.hasActions(room.game)
+      // An explicit end-plan confirmation also ends opportunities to launch
+      // enclosed cargo. Those passengers keep their unit action flags, but
+      // cannot hold the team after another participant extracts or disconnects.
+      !room.seats.some(player => player && G.seatTeam(player.seat) === room.game.team &&
+        !room.turnDone[player.seat] && !sharedVacantSeat(room, player.seat) &&
+        G.hasActions(room.game, player.seat))
     );
   }
   function reactionForSeat(room, seat) {
+    if (sharedVacantSeat(room, seat)) return null;
     if (room.game.contract && !room.seats[seat]?.bot && !playbackParticipant(room, room.seats[seat])) return null;
     return (
       (room.reactions || []).find((request) =>
@@ -1489,6 +1547,7 @@ function createRoomEngine({
         (intent) =>
           room.campaign ||
           room.settings.shareAlliedUnits ||
+          sharedVacantSeat(room, G.ownerOf(unit(room, intent.target))) ||
           room.seats[G.ownerOf(unit(room, intent.target))]?.shareUnits,
       )
     )
@@ -1497,6 +1556,7 @@ function createRoomEngine({
       .filter(
         (member) =>
           member &&
+          !sharedVacantSeat(room, member.seat) &&
           !aiControlled(room, member) &&
           (!room.game.contract || playbackParticipant(room, member)) &&
           intents.some((intent) => canControl(room, member.seat, unit(room, intent.target))),
@@ -1668,7 +1728,8 @@ function createRoomEngine({
         id: randomId(),
         matchId: room.matchId,
         members: members(room)
-          .filter((member) => playbackParticipant(room, member) && onlineMember(member))
+          .filter((member) => playbackParticipant(room, member) && onlineMember(member) &&
+            (!room.game.contract?.noAllies || battles.some(battle=>battle.actors?.some(actor=>G.ownerOf(actor)===member.seat))))
           .map((member) => member.id),
         ready: [],
         automatic,
@@ -2468,6 +2529,7 @@ function createRoomEngine({
     const entries = room.pilotDamage?.[target.id];
     if (!entries) return;
     delete room.pilotDamage[target.id];
+    if (room.game.contract?.noAllies && killer?.team > 0 && target.team > 0) return;
     for (const entry of Object.values(entries)) {
       if (entry.damage < G.modelOf(target).hp * 0.25) continue;
       if (killer?.pilot?.id === entry.pilotId && G.ownerOf(killer) === entry.seat) continue;
@@ -3280,7 +3342,7 @@ function createRoomEngine({
         !aiControlled(room, owner) ||
         !available(passenger) ||
         !allowed(owner) ||
-        passenger.team !== room.game.team ||
+        !G.isUnitTurn(room.game, passenger) ||
         room.turnDone[owner.seat]
       )
         continue;
@@ -3695,7 +3757,7 @@ function createRoomEngine({
             !unit.plan &&
             unit.attackSkillRound !== room.game.round &&
             G.onMap(unit) &&
-            unit.team === room.game.team
+            G.isUnitTurn(room.game, unit)
           ) {
             try {
               automate(intent.player.ws, {
@@ -4727,6 +4789,7 @@ function createRoomEngine({
                 mode: G.validateBattleMode(msg.battleMode ?? room.settings.mode),
                 regularEra: G.normalizeEra(msg.regularEra ?? room.settings.regularEra ?? "UC_0079_T1"),
                 sweepFaction: msg.sweepFaction ?? room.settings.sweepFaction ?? "ZEON",
+                sweepAlliedFaction: msg.sweepAlliedFaction ?? room.settings.sweepAlliedFaction,
                 sweepEra: G.normalizeEra(msg.sweepEra ?? room.settings.sweepEra ?? "UC_0079_T1"),
                 sweepEnvironment:
                   msg.sweepEnvironment ?? room.settings.sweepEnvironment ?? "ground",
@@ -4783,10 +4846,16 @@ function createRoomEngine({
           if (!G.eras.includes(settings.regularEra)) throw Error("常规战年代无效");
           if (
             settings.mode === "sweep" &&
-            (!G.factions.includes(settings.sweepFaction) || !G.eras.includes(settings.sweepEra) ||
-              !Contract.factionsForEra(G, settings.sweepEra).includes(settings.sweepFaction))
+            (!G.eras.includes(settings.sweepEra) || (settings.sweepFaction !== "NONE" &&
+              (!G.factions.includes(settings.sweepFaction) || !Contract.factionsForEra(G, settings.sweepEra).includes(settings.sweepFaction))))
           )
             throw Error("合约敌军阵营或年代无效");
+          if (settings.mode === "sweep") {
+            const allies = Contract.factionsForEra(G,settings.sweepEra).filter(f=>f!==settings.sweepFaction);
+            if (msg.sweepAlliedFaction !== undefined && !(settings.sweepFaction === "NONE" ? msg.sweepAlliedFaction === "NONE" : allies.includes(msg.sweepAlliedFaction)))
+              throw Error("合约我军阵营或年代无效");
+            settings.sweepAlliedFaction = Contract.alliedFaction(G,settings);
+          }
           if (settings.mode === "sweep") Object.assign(settings,Contract.roomSettings(settings));
           if (settings.mode === "sweep" && !["ground", "space"].includes(settings.sweepEnvironment))
             throw Error("合约作战环境无效");
@@ -4832,7 +4901,8 @@ function createRoomEngine({
             const eraChanged = settings.regularEra !== room.settings.regularEra ||
               settings.sweepEra !== room.settings.sweepEra ||
               settings.battlefieldEra !== room.settings.battlefieldEra ||
-              settings.sweepFaction !== room.settings.sweepFaction;
+              settings.sweepFaction !== room.settings.sweepFaction ||
+              settings.sweepAlliedFaction !== room.settings.sweepAlliedFaction;
             room.settings = settings;
             if (technologyChanged || eraChanged || modeChanged || factionsChanged)
               for (const player of members(room))
@@ -5256,10 +5326,18 @@ function createRoomEngine({
       case "auto_place_deployment": {
         if (room.phase !== "deployment") throw Error("Not deploying");
         G.autoPlaceDeployment(room.game, seat);
+        for (const [owner, confirmed] of room.game.deployment.entries())
+          if (!confirmed && owner !== seat && G.seatTeam(owner) === G.seatTeam(seat) && sharedVacantSeat(room, owner))
+            G.autoPlaceDeployment(room.game, owner);
         break;
       }
       case "confirm_deployment": {
         if (room.phase !== "deployment") throw Error("Not deploying");
+        for (const [owner, confirmed] of room.game.deployment.entries())
+          if (!confirmed && owner !== seat && G.seatTeam(owner) === G.seatTeam(seat) && sharedVacantSeat(room, owner)) {
+            G.autoPlaceDeployment(room.game, owner);
+            G.confirmDeployment(room.game, owner);
+          }
         if (G.confirmDeployment(room.game, seat)) {
           room.phase = "idle";
           recordPilotParticipation(room);
@@ -5360,7 +5438,8 @@ function createRoomEngine({
             startedAt: Date.now(),
             matchId: room.matchId,
             members: members(room)
-              .filter((m) => playbackParticipant(room, m) && onlineMember(m))
+              .filter((m) => playbackParticipant(room, m) && onlineMember(m) &&
+                (!room.game.contract?.noAllies || room.irradiationActors.some(actor=>G.ownerOf(actor)===m.seat)))
               .map((m) => m.id),
             ready: [],
             automatic: false,
@@ -5494,11 +5573,13 @@ function createRoomEngine({
         room.turnDone[seat] = true;
         for (const u of room.game.units)
           if (G.controllerOf(room.game, u) === seat && G.onMap(u) && !u.acted) G.wait(room.game, u);
+        refreshUnattendedSeats(room);
         const teammates = room.seats.filter(
           (player) =>
             player &&
+            !sharedVacantSeat(room, player.seat) &&
             G.seatTeam(player.seat) === room.game.team &&
-            room.game.units.some((u) => G.ownerOf(u) === player.seat && u.hp > 0 && !u.contractExtracted),
+            hasParticipantUnits(room, player),
         );
         event = teammates.every((player) => room.turnDone[player.seat])
           ? resolvePlans(room)

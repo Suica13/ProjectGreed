@@ -93,6 +93,7 @@ window.WarehouseUI = (() => {
     }
     const state = Warehouse.status(item, model), status = element("span", "warehouse-condition " + state, I18n.text(statusNames[state]));
     if (item.rentalUses) {
+      status.classList.add("rental");
       status.textContent = I18n.text("剩余次数:{count}次").replace("{count}", item.rentalUses);
       resources.append(status);
       return resources;

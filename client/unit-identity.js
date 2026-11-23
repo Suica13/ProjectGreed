@@ -25,7 +25,16 @@ const UnitIdentity = (() => {
     const controlled = Net.active
       ? Net.canControl(unit)
       : !globalThis.ReplayPlayer?.active && Rules.ownerOf(unit) === viewerSeat();
-    return controlled ? colors.own.color : unit.team ? "#ed9685" : "#83d6ee";
+    return controlled ? colors.own.color : game.contract?.noAllies && unit.team > 0
+      ? ["", "#f06464", "#ff7848", "#f18bb8"][unit.team] || "#f06464"
+      : unit.team ? "#ed9685" : "#83d6ee";
+  }
+  function style(unit) {
+    if(game.contract?.noAllies && unit.team>0) {
+      const color=["", "#f06464", "#ff7848", "#f18bb8"][unit.team] || "#f06464";
+      return {color,fill:color+"2c"};
+    }
+    return colors[relation(unit)];
   }
   function owner(unit) {
     const seat = Rules.ownerOf(unit);
@@ -154,7 +163,7 @@ const UnitIdentity = (() => {
   function drawMapSymbol(ctx, unit, position, tile) {
     const center = Rules.center(unit);
     ctx.save();
-    ctx.strokeStyle = colors[relation(unit)].color;
+    ctx.strokeStyle = style(unit).color;
     ctx.lineWidth = 1.25;
     for (const cell of Rules.cells(unit))
       ctx.strokeRect(
@@ -211,7 +220,7 @@ const UnitIdentity = (() => {
     ctx.restore();
   }
   function drawRing(ctx, unit, position, tile) {
-    const palette = unit.missionAutonomous ? {color:"#f5d66f",fill:"#f5d66f2c"} : colors[relation(unit)];
+    const palette = unit.missionAutonomous ? {color:"#f5d66f",fill:"#f5d66f2c"} : style(unit);
     ctx.fillStyle = palette.fill;
     ctx.strokeStyle = palette.color;
     ctx.lineWidth = 1.8;
@@ -231,6 +240,7 @@ const UnitIdentity = (() => {
     viewerSeat,
     relation,
     healthColor,
+    style,
     owner,
     drawRing,
     drawCommandAura,

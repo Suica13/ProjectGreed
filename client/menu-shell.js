@@ -15,6 +15,7 @@ window.MenuShell = (() => {
       encyclopedia: "catalog",
       contactTasks: "contact",
       contactMerchants: "contact",
+      contactSupply: "contact",
     })[view];
   let navigating = false;
   function leaveEditor() {
@@ -39,7 +40,7 @@ window.MenuShell = (() => {
         else if (view === "production") byId("openProduction").click();
         else if (view === "development") byId("openDevelopment").click();
         else if (view === "encyclopedia") Encyclopedia.open();
-        else if (view === "contactTasks" || view === "contactMerchants") ContactUI.open(view);
+        else if (["contactTasks", "contactMerchants", "contactSupply"].includes(view)) ContactUI.open(view);
         else {
           setPageView(view);
           if (view === "room" && Net.snapshot) RoomPanel.render(Net.snapshot);
@@ -113,6 +114,8 @@ window.MenuShell = (() => {
       tabs.at(-1).id = "shellContactTasks";
       tabs.push(tab("商人", () => go("contactMerchants"), pageView === "contactMerchants"));
       tabs.at(-1).id = "shellContactMerchants";
+      tabs.push(tab("补给", () => go("contactSupply"), pageView === "contactSupply"));
+      tabs.at(-1).id = "shellContactSupply";
     } else if (section === "catalog") {
       tabs.push(tab("开发", () => go("development"), pageView === "development"));
       tabs.at(-1).id = "shellDevelopment";

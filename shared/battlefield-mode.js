@@ -566,6 +566,7 @@ const BattlefieldMode = (() => {
         !model.ship &&
         !prefab.facility &&
         !model.requiredPilotId &&
+        G.aiTechnologyAllows(model) &&
         affiliated(model, selected.faction) &&
         allowedEras.some((era) => model.tags.includes(era)) &&
         model.movementType !== "naval" &&
@@ -597,7 +598,7 @@ const BattlefieldMode = (() => {
         let unitId = environment === "space" ? replacements[sourceId] || sourceId : sourceId;
         const sourcePrefab = G.catalog.prefabs.find(p => p.id === unitId);
         const sourceModel = sourcePrefab && G.models[unitId + "__" + sourcePrefab.weaponKits[0]?.id];
-        if (!suitableEnvironment(sourceModel, environment)) {
+        if (!G.aiTechnologyAllows(sourceModel) || !suitableEnvironment(sourceModel, environment)) {
           const candidates = available.ms.map(e => ({entry:e,model:G.models[e.unitId+"__"+e.kitId]}))
             .sort((a,b)=>Math.abs(a.model.cost-(sourceModel?.cost || 0))-Math.abs(b.model.cost-(sourceModel?.cost || 0)) || a.entry.unitId.localeCompare(b.entry.unitId));
           if (!candidates.length) throw Error("该环境没有可用的增援单位：" + sourceId);

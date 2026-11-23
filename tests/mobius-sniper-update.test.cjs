@@ -23,10 +23,9 @@ test('Mobius H has exclusive missile/nuclear loadouts with valid legacy aliases 
   assert.equal(p.layers.find(l => l.name === 'Nuke').visibleWhen.kit, 'nuclear');
 });
 
-test('all normal and charged sniper payloads gain 25 percent before final quantization', () => {
+test('charged sniper payloads lose 25 percent while ordinary sniper payloads are unchanged', () => {
   const current = Conversion.read(), previous = structuredClone(current);
-  previous.weapons.sniperDamage = 1.25;
-  previous.weapons.chargedSniperDamage = 1.5;
+  previous.weapons.chargedSniperDamage = 1.875;
   let normal = 0, charged = 0;
   for (const prefab of G.catalog.prefabs) {
     if (!Object.values(prefab.weapons).some(w => Classes.classify(w) === 'sniper' || w.special?.type === 'snipe')) continue;
@@ -43,7 +42,7 @@ test('all normal and charged sniper payloads gain 25 percent before final quanti
       payloads(weapon).forEach((payload, index) => {
         const original = payloads(old)[index];
         for (const [channel, damage] of Object.entries(payload.damageComponents || {})) {
-          const expected = original.damageComponents[channel] * (sniper ? 1.25 : 1);
+          const expected = original.damageComponents[channel] * (chargedShot ? 0.75 : 1);
           assert(Math.abs(damage - expected) < .00001, prefab.id + '/' + id + '/' + channel);
         }
       });

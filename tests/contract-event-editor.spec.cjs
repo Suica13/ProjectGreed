@@ -14,7 +14,7 @@ for (const width of [1440, 390])
     });
     page.on("dialog", (dialog) => dialog.accept());
     await page.goto(url);
-    await expect(page.locator(".event-item")).toHaveCount(15);
+    await expect(page.locator(".event-item")).toHaveCount(14);
     await page.locator("#systemVersion").fill("2.1");
     await page.locator("#status").selectOption("有变动");
     await page.getByRole("tab", { name: "触发与判定" }).click();
@@ -30,7 +30,7 @@ for (const width of [1440, 390])
     const download = await promise;
     const raw = fs.readFileSync(await download.path(), "utf8"),
       exported = JSON.parse(raw);
-    expect(exported.events).toHaveLength(15);
+    expect(exported.events).toHaveLength(14);
     expect(exported.events[0].status).toBe("有变动");
     expect(download.suggestedFilename()).toBe("contract-events-2.1.json");
     await page
@@ -55,7 +55,7 @@ for (const width of [1440, 390])
     await page.locator("#add").click();
     await page.locator("#template").selectOption("capture");
     await page.locator("#confirmAdd").click();
-    await expect(page.locator(".event-item")).toHaveCount(16);
+    await expect(page.locator(".event-item")).toHaveCount(15);
     await expect(page.locator("#status")).toHaveValue("需要调整");
     await expect(page.locator("#type")).toHaveValue("capture");
     expect(

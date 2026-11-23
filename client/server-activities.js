@@ -281,6 +281,13 @@ const ServerActivities = (() => {
       const part=UnitPlugins.byId.get(id);
       rewards.append(element("p","",I18n.text("模块零件")+" · "+I18n.text(part?.name||id)+" ×"+count));
     }
+    for (const [id, count] of Object.entries(item.rewards.itemInventory || {})) {
+      const token = Economy.supplyPools.find(pool => pool.tokenId === id);
+      const row = element("div", "server-activity-unit");
+      row.append(element("span", "supply-token-symbol", "◈"),
+        element("span", "", I18n.text(token?.tokenName || id) + " ×" + formatNumber(count)));
+      rewards.append(row);
+    }
     for (const id of item.rewards.unlockUnits || [])
       rewards.append(element("p", "", I18n.text("部署许可") + " · " + unitLabel(id)));
     for (const id of item.rewards.unlockAces || []) {

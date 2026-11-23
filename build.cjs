@@ -3,6 +3,7 @@ const fs = require("node:fs"),
   path = require("node:path"),
   root = __dirname;
 const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
+require("./tools/compile-contract-force-pools.cjs").generate();
 const zlib = require("node:zlib");
 const json = (value) => JSON.stringify(value).replace(/</g, "\\u003c");
 // HTML 解析器会把字符串里的 </script> 也当作脚本结束符。
@@ -210,9 +211,9 @@ for (const [key, file] of [
           stdin:{contents:'export { gunzipSync } from "fflate";',resolveDir:root},bundle:true,write:false,
           platform:"browser",format:"iife",globalName:"CatalogInflate",target:"chrome80",minify:true,legalComments:"eof"
         }).outputFiles[0].text + "\n/*! " + read("node_modules/fflate/LICENSE") + " */\n" + read(file))
-      : inlineScript((key === "ECONOMY" ? read("shared/contact-tasks.js")+"\n"+'const MERCHANT_DATA = '+read("shared/merchant-catalog.json")+';\nconst UNIT_PLUGIN_DATA = '+read("shared/unit-plugins.json")+';\n'+read("shared/unit-plugins.js")+'\nconst BASE_FACILITY_TYPES = '+read("shared/base-facility-types.json")+';\n'+read("shared/base-facilities.js")+'\n'+read("shared/warehouse.js") + "\n" : key === "PILOTS" ? "const PILOT_TALENT_DATA = " + read("shared/pilot-talents.json") + ";\n" + read("shared/pilot-talents.js") + "\n" : key === "PROFILE_SAVE" ? read("client/profile-save-core.js") + "\n" + read("client/profile-onboarding.js") + "\n" : "") + read(file)),
+      : inlineScript((key === "ECONOMY" ? read("shared/contact-zeon.js")+"\n"+read("shared/contact-anaheim.js")+"\n"+read("shared/contact-tasks.js")+"\n"+'const SUPPLY_POOL_DATA = '+read("shared/supply-pools.json")+';\n'+'const MERCHANT_DATA = '+read("shared/merchant-catalog.json")+';\nconst UNIT_PLUGIN_DATA = '+read("shared/unit-plugins.json")+';\n'+read("shared/unit-plugins.js")+'\nconst BASE_FACILITY_TYPES = '+read("shared/base-facility-types.json")+';\n'+read("shared/base-facilities.js")+'\n'+read("shared/warehouse.js") + "\n" : key === "SWEEP_MODE" ? "const CONTRACT_FORCE_POOLS = " + read("shared/contract-force-pools.json") + ";\n" + read("shared/contract-forces.js") + "\n" : key === "PILOTS" ? "const PILOT_TALENT_DATA = " + read("shared/pilot-talents.json") + ";\n" + read("shared/pilot-talents.js") + "\n" : key === "PROFILE_SAVE" ? read("client/profile-save-core.js") + "\n" + read("client/profile-onboarding.js") + "\n" : "") + read(file)),
   );
-html = html.replace("</body>", () => `<style>${read("client/warehouse.css")}\n${read("client/unit-panels.css")}\n${read("client/base-facilities.css")}\n${read("client/base-pages.css")}\n${read("client/contact.css")}\n${read("client/item-storage.css")}\n${read("client/catalog-filters.css")}</style><script>${inlineScript(read("client/warehouse.js"))}\n${inlineScript(read("client/base-facilities.js"))}\n${inlineScript(read("client/contact.js"))}\n${inlineScript(read("client/item-storage.js"))}</script></body>`);
+html = html.replace("</body>", () => `<style>${read("client/warehouse.css")}\n${read("client/unit-panels.css")}\n${read("client/base-facilities.css")}\n${read("client/base-pages.css")}\n${read("client/contact.css")}\n${read("client/supply.css")}\n${read("client/supply-delivery.css")}\n${read("client/item-storage.css")}\n${read("client/catalog-filters.css")}</style><script>${inlineScript(read("client/warehouse.js"))}\n${inlineScript(read("client/base-facilities.js"))}\n${inlineScript(read("client/supply-delivery.js"))}\n${inlineScript(read("client/supply.js"))}\n${inlineScript(read("client/contact.js"))}\n${inlineScript(read("client/item-storage.js"))}</script></body>`);
 const layout = JSON.parse(read("client/ui-layout.json"));
 html = html.replace(
   "</body>",
@@ -248,7 +249,7 @@ if (grantFlag >= 0) {
     () => `<script id="local-profile-grant">${inlineScript(script)}</script></body>`,
   );
 }
-for (const asset of ["warehouse-unit-topdown.webp", "warehouse-ship-topdown.webp", "contact-ae.png", "contact-efsf.png"]) {
+for (const asset of ["warehouse-unit-topdown.webp", "warehouse-ship-topdown.webp", "contact-ae.png", "contact-efsf.png", "contact-zeon.png"]) {
   const name = "assets/ui/" + asset;
   const mime = asset.endsWith(".png") ? "image/png" : "image/webp";
   html = html.replaceAll(name, "data:" + mime + ";base64," + fs.readFileSync(path.join(root, name)).toString("base64"));

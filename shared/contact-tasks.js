@@ -1,5 +1,7 @@
 /* Persistent liaison commissions; separate from scripted battle missions. */
 const ContactTasks = (() => {
+  const zeon = typeof ZeonContact !== "undefined" ? ZeonContact : require("./contact-zeon.js");
+  const anaheim = typeof AnaheimContact !== "undefined" ? AnaheimContact : require("./contact-anaheim.js");
   const planningVersion = "1.21";
   const tasks = [
     {
@@ -35,7 +37,7 @@ const ContactTasks = (() => {
         "Medea": 1,
         "ColumbusClass": 1
       },
-      "ending": "噢...你们活着回来了。\n把数据传过来吧，我这边有些装备不好处理。\n便宜卖给你们吧。",
+      "ending": "噢……你们活着回来了。\n把数据传过来吧，我让人核对一下。\n他们最后还在等我们的回复，妈的。算了，你先去休息。",
       "requires": [
         "efsf-1"
       ],
@@ -57,7 +59,7 @@ const ContactTasks = (() => {
         "RGM_79_G": 1,
         "RGM_79_E": 2
       },
-      "ending": "你们成功了对吧？\n太好了，我现在让我的人去你们营地取文件。\n对了，这几台MS原本是那个小队的补给。\n现在他们肯定用不上了......放心，不会有问题的。\n他们会在纸面上活得好好的。",
+      "ending": "你们成功了对吧？\n太好了，我现在让我的人去你们营地取文件。\n放心，不会有人追问那支小队的下落。\n他们会在纸面上活得好好的。",
       "requires": [
         "efsf-2"
       ],
@@ -86,7 +88,7 @@ const ContactTasks = (() => {
       "inventory": {
         "RGM_79_G": 2
       },
-      "ending": "办得怎么样了？\n啊，别说了，我早就知道结果不错。\n你不是好端端的站在这嘛，身上也没少零件，对吧？\n那些大佬也传话过来，说他们那边也很顺利。\n给，这是你的报酬，有我的小小心意，还有大人物们的酬谢。",
+      "ending": "办得怎么样了？\n啊，别说了，我早就知道结果不错。\n你不是好端端地站在这嘛，身上也没少零件，对吧？\n那些大佬也传话过来，说他们那边很顺利。\n行了，今天别再接电话。让他们知道你也得喘口气。",
       "requires": [
         "efsf-3"
       ],
@@ -111,7 +113,7 @@ const ContactTasks = (() => {
         "RX_80PR": 1
       },
       "licensePlan": "Tech_EFSF_0079_EarlyTypeMSDevelopmentPlan",
-      "ending": "你居然没死在外面？\n另一个负责实验这MS的部队把自己基地都玩没了。\n好啦好啦，我会把他们的装备弄到你这里的。\n当然，不是免费的。",
+      "ending": "你居然没死在外面？\n另一个负责试验这MS的部队把自己基地都玩没了。\n把记录留下，我得让上面那帮人看看，机器没毛病，关键是里面坐着谁。",
       "requires": [
         "efsf-4"
       ],
@@ -156,7 +158,12 @@ const ContactTasks = (() => {
         "RX_78_1": 1
       },
       "licensePlan": "Tech_EFSF_0079_BlueDestinyProject",
-      "targetUnit": "RGM_79_G",
+      "targetUnit": "RX_79_G",
+      "targetUnits": [
+        { "unitId": "RX_79_G", "kitId": "beam_rifle" },
+        { "unitId": "RGM_79_G", "kitId": "machine_gun" },
+        { "unitId": "RGM_79_G", "kitId": "bazooka" }
+      ],
       "targetKits": [
         "machine_gun",
         "bazooka",
@@ -166,10 +173,24 @@ const ContactTasks = (() => {
       "requires": [
         "efsf-6"
       ],
+      "targetLeaderPilot": {
+        "name": "不死的雷纳斯",
+        "grade": "ace",
+        "dialogue": {
+          "attack": ["这里由我接管。识相的就滚开！", "佣兵？又是来替人擦屁股的！"],
+          "hit": ["这点伤，还杀不死我！"],
+          "miss": ["有本事别躲在掩体后面！"],
+          "kill": ["记住了，这就是不死的雷纳斯！"],
+          "defeat": ["不可能……我怎么会死在这种地方！"],
+          "allyLoss": ["队形别散！跟着我打！"],
+          "taunt": ["想拿我的东西？自己过来取！"],
+          "reply": ["让派你来的人亲自来见我！"]
+        }
+      },
       "affinity": 100,
       "description": "嘿！佣兵头子！\n我这里有一个很棒的差事，你还记得之前让你去调查的那个车队对吧？\n那个车队被我们这边的一个混蛋抢了，他叫【不死的雷纳斯】。\n去把他和他的部队干掉，把东西拿回来。\n但是要小心，他的部队有些实力，我可不想我们的好合作伙伴把自己玩死了！\n吉翁佬也对这里面的东西很感兴趣，所以不要把他们当自己人！\n这次的报酬非常棒，但风险也很高，考虑一下吧。",
       "objective": "合约模式 · 地面 · N3以上 · 敌人联邦军：击坠敌方小股兵力记名机",
-      "ending": "都处理好了？\n干得好佣兵，看来他也不是真的死不了是吧？\n我这就派人去把东西运走。\n这台MS给你了，这可是个好东西。\n上面的大人物说可以给你们提供一些“先进”的装备。\n当然......不是免费的。",
+      "ending": "都处理好了？\n干得好，佣兵，看来他也不是真的死不了是吧？\n我这就派人去把东西运走。\n这事咱们都烂在肚子里。名字都叫不死了，要是让人知道是我找你去的，我晚上还睡不睡了？",
       "eventName": "【不死的雷纳斯】"
     },
     {
@@ -188,7 +209,7 @@ const ContactTasks = (() => {
       "affinity": 100,
       "description": "好了，佣兵头子！\n听好了，我代表伟大的联邦授予你一项任务！\n我需要除掉一些吉翁佬，为我们在当地的记录再添一笔。\n觉得这事很简单？别得意忘形。\n脚踏实地把任务完成了再说。\n完事之后一定要回来向我汇报情况。\n要是汇报没让我满意，就等着和你的报酬说再见吧。",
       "objective": "合约模式 · 地面 · N3以上 · 敌人吉翁军：歼灭50架吉翁军MS。",
-      "ending": "哦，你居然还记得要回来打报告。\n挺不错，来，这是给你的奖励。"
+      "ending": "哦，你居然还记得要回来打报告。\n挺不错，写得比那些军官实在。上面的人总算能安静一会儿，我也能清静一会儿。"
     },
     {
       "id": "efsf-9",
@@ -210,7 +231,7 @@ const ContactTasks = (() => {
       "affinity": 100,
       "description": "气色不错啊，佣兵。\n看样子你还待在这破地儿没走？\n闲话不多说了。\n我这有件事儿，挺敏感的事情。\n我们现在算是互相信任了吧？\n所以我也相信你。\n具体的我就不和你说太多了，反正和我交给你的事没啥大关系。\n你的任务就是去拿一样东西，再把它放到另一个地方。\n听起来不难，是吧？\n但是这里有点细节问题，这个东西在沦陷的基地里面，现在这个基地在吉翁手里。\n听上去有点强人所难对吧？但这个东西真的很重要。\n但不要太担心，我把你们的IFF登录到前线联邦军的系统里面了。\n怎么样，有兴趣跑这一趟吗？",
       "objective": "合约模式 · 地面 · N3以上 · 敌人吉翁军：摧毁敌方大量兵力保守的基地",
-      "ending": "什么，又成功了？\n很快你就能名震整个联邦，吉翁佬听了你的名字就要尿裤子的那种，哈哈！\n嘿，说着玩的，不过事情干得不错。\n我这个人很容易相处——只要你能把活办成，那就你好我好大家好，明白了吗？\n上面的人觉得可以和你们分享一下这次的成果......有偿。",
+      "ending": "什么，又成功了？\n很快你就能名震整个联邦，吉翁佬听了你的名字就要尿裤子的那种，哈哈！\n嘿，说着玩的，不过事情干得不错。\n我这个人很容易相处——只要你能把活办成，那就你好我好大家好，明白了吗？",
       "eventName": "摧毁敌方大量兵力保守的基地"
     },
     {
@@ -229,18 +250,20 @@ const ContactTasks = (() => {
         "efsf-9"
       ],
       "affinity": 100,
-      "description": "嘿，你好啊，佣兵头子！\n上面谈成了一单MS供应的生意，全新类型的家伙什，你之前绝对没见过的那种。\n和量产型钢坦克算是一类玩意儿，但要劲爆得多。\n这种东西可不能随随便便卖给其他人，想要用好它们，必须要有严格的开火纪律，精准的判断力。\n况且库存有限，我就算是想多卖也没货。\n所以啊，如果你真想从我这儿买这种正经的大威力武器，那就得先向我证明你是个真正的爆炸物专家，能把爆炸物精准送到敌人脸上。",
+      "description": "嘿，你好啊，佣兵头子！\n前线最近总在抱怨，说炮火一停，吉翁佬就从土里冒出来。给他们炸塌一堵墙，他们转头就钻进另一栋楼。\n我需要一个真正懂炮击的人，把那些据守的MS连同掩体一起处理掉。不是隔着山随便丢几发，听见响就回来喝酒。\n观察、校射，盯紧落点。让他们觉得躲在墙后面还不如跑出来痛快。\n你要是能干这个，我就不用每天听那些军官在通信里哭丧了。",
       "objective": "合约模式 · 地面 · N4以上 · 敌人吉翁军：以炮击的方式击坠30架MS。",
-      "ending": "没错，你的“光辉事迹”连我都听说了，整个战线都知道有个疯子见人就炸。\n相信我，钢加农重装型在你手里只会让你如虎添翼。\n虽然我说过，这种货实在是不好搞，但是我可以在每次补货的时候都给你留几台。"
+      "ending": "没错，你的“光辉事迹”连我都听说了，整个战线都知道有个疯子见人就炸。\n前线安静了不少，至少他们现在知道该往哪儿躲了——离你远点。\n行，别把这表情录进战报里。上面喜欢听战术，不喜欢听我笑。"
     }
   ];
+  tasks.push(...zeon.tasks);
+  tasks.push(...anaheim.tasks);
   const byId = new Map(tasks.map(t=>[t.id,t]));
   const technologyTree = typeof DEVELOPMENT_TREE !== "undefined" ? DEVELOPMENT_TREE : require("./development-tree.json");
   const plans = new Map(Object.values(technologyTree).flat().map(node=>[node.id,node]));
   const mainTasks = new Set();
+  const planIds = task => [...new Set([task?.licensePlan,...(task?.licensePlans || []),...(task?.extraLicensePlans || [])].filter(Boolean))];
   const pending = tasks.filter(task=>{
-    const plan=plans.get(task.licensePlan);
-    return plan?.row==="mid" && !plan.placeholder;
+    return planIds(task).some(id=>plans.get(id)?.row==="mid" && !plans.get(id).placeholder);
   }).map(task=>task.id);
   while(pending.length) {
     const id=pending.pop();
@@ -263,11 +286,21 @@ const ContactTasks = (() => {
     ["联邦联络人","不要问是从哪里来的......朋友，我们都有一些秘密。"],
     ["联邦联络人","这次通信就到这里吧，希望...我们可以合作愉快......"],
   ];
+  const contactId = task => task?.contactId || "efsf";
+  function met(value, id="efsf") {
+    return typeof value === "boolean" ? id === "efsf" && value :
+      id === "efsf" ? value?.contactIntro === true : value?.merchantIntros?.[id] === true;
+  }
+  const introFor = id => id === "zeon" ? zeon.intro : id === "efsf" ? intro : id === "anaheim" ? anaheim.intro : [];
+  const introPlan = id => id === "zeon" ? zeon.introPlan : id === "efsf" ? "Tech_EFSF_0079_AntiMSPlan" : null;
+  const contactName = id => id === "zeon" ? "吉翁联络人" : id === "efsf" ? "联邦联络人" : "阿纳海姆";
   function normalize(value) {
     if (!Array.isArray(value)) return [];
     return tasks.flatMap(task=>{
       const entry=value.find(e=>e?.id===task.id && ["accepted","ready","claimed"].includes(e.status));
-      return entry?[{id:task.id,status:entry.status,progress:Math.max(0,Math.min(task.required,Math.floor(Number(entry.progress)||0))),
+      const reset = task.progressVersion && entry && entry.status !== "claimed" && entry.progressVersion !== task.progressVersion;
+      return entry?[{id:task.id,status:reset?"accepted":entry.status,progress:reset?0:Math.max(0,Math.min(task.required,Math.floor(Number(entry.progress)||0))),
+        ...(task.progressVersion ? {progressVersion:task.progressVersion} : {}),
         ...(task.reclaim && entry.loanTracking===true ? {loanTracking:true} : {}),
         ...(task.reclaim && entry.loanReturned===true ? {loanReturned:true} : {})}]:[];
     });
@@ -275,6 +308,7 @@ const ContactTasks = (() => {
   const active = value => normalize(value).filter(e=>e.status==="accepted").map(e=>e.id);
   function eligible(task, settings) {
     return task && settings.mode==="sweep" && settings.sweepFaction===(task.enemyFaction || "ZEON") &&
+      (!task.era || settings.sweepEra===task.era) &&
       Number(settings.sweepDifficulty)>=task.difficulty && (!task.ground || settings.sweepEnvironment==="ground");
   }
   function unlocked(task, entries, intro) {
@@ -284,7 +318,7 @@ const ContactTasks = (() => {
     if(!task) return [];
     const claimed=new Set(normalize(entries).filter(entry=>entry.status==="claimed").map(entry=>entry.id));
     return [
-      ...(!intro?[{type:"intro"}]:[]),
+      ...(!met(intro,contactId(task))?[{type:"intro"}]:[]),
       ...(task.requires || []).filter(id=>!claimed.has(id)).map(id=>({type:"task",id,name:byId.get(id)?.name || id})),
     ];
   }
@@ -292,6 +326,6 @@ const ContactTasks = (() => {
     const ids=new Set(room.seats.filter(p=>p&&!p.bot&&p.seat%2===0).flatMap(p=>active(p.contactTasks)));
     return tasks.filter(t=>t.kind!=="kills" && ids.has(t.id) && eligible(t,room.settings));
   }
-  return {planningVersion,tasks,byId,intro,normalize,active,eligible,unlocked,unmetRequirements,isSideTask,specialTasks};
+  return {planningVersion,tasks,byId,intro,introFor,introPlan,contactId,contactName,met,planIds,normalize,active,eligible,unlocked,unmetRequirements,isSideTask,specialTasks};
 })();
 if(typeof module!=="undefined")module.exports=ContactTasks;

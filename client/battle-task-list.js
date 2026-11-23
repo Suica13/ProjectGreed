@@ -1,4 +1,4 @@
-/* Read-only overlay: keep the battlefield active while inspecting objectives and commissions. */
+/* Read-only liaison progress; battle objectives belong to the briefing. */
 window.BattleTaskList = (() => {
   const access = element("button", "", "任务列表"),
     dialog = element("dialog", "battle-task-list"),
@@ -34,34 +34,17 @@ window.BattleTaskList = (() => {
     body.append(group);
   }
   function render() {
+    const scroll = body.scrollTop;
     body.replaceChildren();
     const s = snapshot;
     if (!s?.game) return;
-    const scenario = s.contract || s.game.mission;
-    if (scenario) {
-      const goals = BriefingUI.goals(s);
+    const entries=(s.contactTaskStatus ?? Economy.snapshot().contactTasks).filter(entry=>entry.status!=="claimed");
+    for(const id of ["efsf","zeon","anaheim"]) {
+      const grouped=entries.filter(entry=>ContactTasks.contactId(ContactTasks.byId.get(entry.id))===id);
+      if(!grouped.length && (entries.length || id!=="efsf"))continue;
       section(
-        "胜利条件",
-        goals.filter((row) => row.kind === "victory"),
-      );
-      if (s.game.mission)
-        section(
-          "失败条件",
-          goals.filter((row) => row.kind === "failure"),
-        );
-      else
-        section(
-          "撤离",
-          goals.filter((row) => row.kind === "extraction"),
-        );
-    } else
-      section("胜利条件", [
-        { label: I18n.text(s.game.campaignBattlefield ? "摧毁敌方HQ" : "消灭所有敌人") },
-      ]);
-    section(
-      "联邦联络人",
-      Economy.snapshot()
-        .contactTasks.filter((entry) => entry.status !== "claimed")
+      ContactTasks.contactName(id),
+      grouped
         .flatMap((entry) => {
           const task = ContactTasks.byId.get(entry.id);
           if (!task) return [];
@@ -76,6 +59,8 @@ window.BattleTaskList = (() => {
           ];
         }),
     );
+    }
+    body.scrollTop = scroll;
   }
   access.onclick = () => {
     render();

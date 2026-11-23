@@ -23,6 +23,14 @@ function economy(saved) {
   vm.runInContext(fs.readFileSync("shared/economy.js", "utf8"), context);
   return context.module.exports;
 }
+function unlockAnaheim(E, count) {
+  E.meetLiaison('anaheim');
+  for(const task of require('../shared/contact-tasks').tasks.filter(t=>t.contactId==='anaheim'&&t.number<=count)) {
+    E.acceptContactTask(task.id);
+    E.creditAward({id:'unlock-'+task.id,matchId:'unlock-'+task.id,money:0,supplies:0,contactProgress:[{id:task.id,amount:task.required}]});
+    E.completeContactTask(task.id);
+  }
+}
 test("four empty slots, whitelist, non-warship restrictions and duplicate rejection", () => {
   assert.equal(P.catalog.length, 33);
   assert.deepEqual(P.normalize(undefined, base), [null, null, null, null]);
@@ -118,6 +126,7 @@ test("purchased equipment fits without additional fees, persists and preserves d
     supplies: 0,
     inventory: { RGM_79: 1 },
   });
+  unlockAnaheim(E,3);
   E.purchasePlugin("anaheim", "frame");
   E.purchasePlugin("anaheim", "generator");
   const before = E.snapshot(),
@@ -196,20 +205,22 @@ test("fixed plugin COST is independent of weapon kits, pilots and other plugins"
   assert.equal(P.apply(second, ["water", "frame"]).cost - second.cost, 100);
 });
 
-test("catalog, merchant levels, unavailable Zeon source and era labels follow the revised equipment table", () => {
+test("catalog, task-gated Anaheim, faction merchant levels and era labels follow the revised equipment table", () => {
   assert.deepEqual(
     P.catalog.map((p) => p.number),
     Array.from({ length: 35 }, (_, i) => i + 1).filter((n) => ![22, 29].includes(n)),
   );
   const E = economy();
   E.creditActivity({ id: "market", matchId: "market", money: 100000, supplies: 0 });
-  assert(E.purchasePlugin("anaheim", "ambac")); // T2 is a label, not a purchase gate.
+  assert.throws(()=>E.purchasePlugin("anaheim","ambac"),/前提任务/);
+  unlockAnaheim(E,7);
+  assert(E.purchasePlugin("anaheim", "ambac")); // T2 is a label; claimed task is the gate.
   assert.equal(E.pluginOffer("efsf", "v_data").available, false);
   const before = JSON.stringify(E.snapshot());
   assert.throws(() => E.purchasePlugin("efsf", "v_data"));
   assert.equal(JSON.stringify(E.snapshot()), before);
   assert.equal(E.pluginOffer("anaheim", "v_data"), null);
-  assert.equal(E.pluginOffer("zeon", "hover"), null);
+  assert.equal(E.pluginOffer("zeon", "hover").available, false);
   const state = E.snapshot();
   state.contactAffinity = 800;
   state.merchantAffinities.anaheim = 800;

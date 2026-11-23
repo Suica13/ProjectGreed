@@ -160,6 +160,7 @@
 .warehouse-condition.healthy, #warehouseDialog .warehouse-condition.healthy { color: #c6f5d9; background: #205a40; border-color: #4d9f73; }
 .warehouse-condition.damaged, #warehouseDialog .warehouse-condition.damaged { color: #ffebaf; background: #735321; border-color: #c79c45; }
 .warehouse-condition.destroyed, #warehouseDialog .warehouse-condition.destroyed { color: #ffd3d3; background: #6b2c35; border-color: #bd6471; }
+.warehouse-condition.rental, #warehouseDialog .warehouse-condition.rental { color: #34260c; background: linear-gradient(#ffe7a2, #c89a39); border-color: #f2cf74; font-weight: bold; }
 .warehouse-bay[data-condition="destroyed"] .warehouse-card-icon { filter: grayscale(1) brightness(.55); }
 .bay-empty { margin: auto; color: #9cc9dc; font-size: 40px; }
 .warehouse-main footer { display: flex; align-items: center; justify-content: center; gap: 20px; padding: 8px; }

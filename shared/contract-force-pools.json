@@ -1,0 +1,1711 @@
+{
+  "version": 1,
+  "era": "UC_0079_T1",
+  "environment": "ground",
+  "factions": {
+    "EFSF": {
+      "1": {
+        "formations": [
+          {
+            "label": "61式主战坦克A5型x3 61式主战坦克A5型x3",
+            "units": [
+              "Type61A5",
+              "Type61A5",
+              "Type61A5",
+              "Type61A5",
+              "Type61A5",
+              "Type61A5"
+            ],
+            "budget": 75,
+            "weight": 8
+          },
+          {
+            "label": "飞鳐x3 飞鳐x3",
+            "units": [
+              "FF_B2",
+              "FF_B2",
+              "FF_B2",
+              "FF_B2",
+              "FF_B2",
+              "FF_B2"
+            ],
+            "budget": 75,
+            "weight": 8
+          },
+          {
+            "label": "迪普罗格x3",
+            "units": [
+              "DEPP_ROG",
+              "DEPP_ROG",
+              "DEPP_ROG"
+            ],
+            "budget": 100,
+            "weight": 8
+          },
+          {
+            "label": "吉姆初期型x3",
+            "units": [
+              "RGM_79_E",
+              "RGM_79_E",
+              "RGM_79_E"
+            ],
+            "budget": 100,
+            "weight": 1
+          }
+        ],
+        "garrisons": {
+          "salvage": 175,
+          "command": 300,
+          "factory": 175,
+          "capture": 175,
+          "upload": 175,
+          "radar": 175
+        },
+        "waves": {
+          "factory.first": 100,
+          "capture.airdrop": 200,
+          "capture.edge": 100,
+          "defend.first": 300,
+          "defend.followup": 100,
+          "upload.airdrop": 200,
+          "radar.first": 300
+        },
+        "transports": {
+          "unitId": "Medea",
+          "budgets": [
+            100,
+            100
+          ]
+        }
+      },
+      "2": {
+        "formations": [
+          {
+            "label": "61式主战坦克A5型x3 61式主战坦克A5型x3",
+            "units": [
+              "Type61A5",
+              "Type61A5",
+              "Type61A5",
+              "Type61A5",
+              "Type61A5",
+              "Type61A5"
+            ],
+            "budget": 75,
+            "weight": 8
+          },
+          {
+            "label": "61式主战坦克A5型x3 61式主战坦克A5型x3 61式主战坦克A5型x3",
+            "units": [
+              "Type61A5",
+              "Type61A5",
+              "Type61A5",
+              "Type61A5",
+              "Type61A5",
+              "Type61A5",
+              "Type61A5",
+              "Type61A5",
+              "Type61A5"
+            ],
+            "budget": 100,
+            "weight": 8
+          },
+          {
+            "label": "飞鳐x3 飞鳐x3",
+            "units": [
+              "FF_B2",
+              "FF_B2",
+              "FF_B2",
+              "FF_B2",
+              "FF_B2",
+              "FF_B2"
+            ],
+            "budget": 75,
+            "weight": 8
+          },
+          {
+            "label": "迪普罗格x3",
+            "units": [
+              "DEPP_ROG",
+              "DEPP_ROG",
+              "DEPP_ROG"
+            ],
+            "budget": 100,
+            "weight": 8
+          },
+          {
+            "label": "飞鳐x3 迪普罗格x3",
+            "units": [
+              "FF_B2",
+              "FF_B2",
+              "FF_B2",
+              "DEPP_ROG",
+              "DEPP_ROG",
+              "DEPP_ROG"
+            ],
+            "budget": 125,
+            "weight": 8
+          },
+          {
+            "label": "吉姆初期型x3",
+            "units": [
+              "RGM_79_E",
+              "RGM_79_E",
+              "RGM_79_E"
+            ],
+            "budget": 100,
+            "weight": 1
+          }
+        ],
+        "garrisons": {
+          "salvage": 225,
+          "command": 400,
+          "factory": 250,
+          "capture": 225,
+          "upload": 250,
+          "radar": 225
+        },
+        "waves": {
+          "factory.first": 125,
+          "capture.airdrop": 300,
+          "capture.edge": 125,
+          "defend.first": 500,
+          "defend.followup": 125,
+          "upload.airdrop": 300,
+          "radar.first": 500
+        },
+        "transports": {
+          "unitId": "Medea",
+          "budgets": [
+            100,
+            125
+          ]
+        }
+      },
+      "3": {
+        "formations": [
+          {
+            "label": "陆战型吉姆x3",
+            "units": [
+              "RGM_79_G",
+              "RGM_79_G",
+              "RGM_79_G"
+            ],
+            "budget": 100,
+            "weight": 8
+          },
+          {
+            "label": "陆战型吉姆[武器货柜]x3",
+            "units": [
+              "RGM_79_G_WithBackpack",
+              "RGM_79_G_WithBackpack",
+              "RGM_79_G_WithBackpack"
+            ],
+            "budget": 125,
+            "weight": 8
+          },
+          {
+            "label": "61式主战坦克A5型x3 61式主战坦克A5型x3",
+            "units": [
+              "Type61A5",
+              "Type61A5",
+              "Type61A5",
+              "Type61A5",
+              "Type61A5",
+              "Type61A5"
+            ],
+            "budget": 75,
+            "weight": 8
+          },
+          {
+            "label": "61式主战坦克A5型x3 61式主战坦克A5型x3 61式主战坦克A5型x3",
+            "units": [
+              "Type61A5",
+              "Type61A5",
+              "Type61A5",
+              "Type61A5",
+              "Type61A5",
+              "Type61A5",
+              "Type61A5",
+              "Type61A5",
+              "Type61A5"
+            ],
+            "budget": 100,
+            "weight": 8
+          },
+          {
+            "label": "飞鳐x3 飞鳐x3",
+            "units": [
+              "FF_B2",
+              "FF_B2",
+              "FF_B2",
+              "FF_B2",
+              "FF_B2",
+              "FF_B2"
+            ],
+            "budget": 75,
+            "weight": 8
+          },
+          {
+            "label": "迪普罗格x3",
+            "units": [
+              "DEPP_ROG",
+              "DEPP_ROG",
+              "DEPP_ROG"
+            ],
+            "budget": 100,
+            "weight": 8
+          },
+          {
+            "label": "陆战型高达x1 陆战型吉姆x2",
+            "units": [
+              "RX_79_G",
+              "RGM_79_G",
+              "RGM_79_G"
+            ],
+            "budget": 125,
+            "weight": 1
+          },
+          {
+            "label": "吉姆狙击型x1 陆战型吉姆x2",
+            "units": [
+              "RGM_79_G_SP",
+              "RGM_79_G",
+              "RGM_79_G"
+            ],
+            "budget": 250,
+            "weight": 1
+          },
+          {
+            "label": "量产型钢坦克x3",
+            "units": [
+              "RX_75R",
+              "RX_75R",
+              "RX_75R"
+            ],
+            "budget": 125,
+            "weight": 1
+          }
+        ],
+        "garrisons": {
+          "salvage": 350,
+          "command": 700,
+          "factory": 400,
+          "capture": 350,
+          "upload": 400,
+          "radar": 350
+        },
+        "waves": {
+          "factory.first": 200,
+          "capture.airdrop": 450,
+          "capture.edge": 200,
+          "defend.first": 750,
+          "defend.followup": 200,
+          "upload.airdrop": 450,
+          "radar.first": 750
+        },
+        "transports": {
+          "unitId": "Medea",
+          "budgets": [
+            125,
+            125,
+            150
+          ]
+        }
+      },
+      "4": {
+        "formations": [
+          {
+            "label": "陆战型吉姆x3",
+            "units": [
+              "RGM_79_G",
+              "RGM_79_G",
+              "RGM_79_G"
+            ],
+            "budget": 100,
+            "weight": 8
+          },
+          {
+            "label": "陆战型吉姆[武器货柜]x3",
+            "units": [
+              "RGM_79_G_WithBackpack",
+              "RGM_79_G_WithBackpack",
+              "RGM_79_G_WithBackpack"
+            ],
+            "budget": 125,
+            "weight": 8
+          },
+          {
+            "label": "陆战型吉姆x3 陆战型吉姆[武器货柜]x3",
+            "units": [
+              "RGM_79_G",
+              "RGM_79_G",
+              "RGM_79_G",
+              "RGM_79_G_WithBackpack",
+              "RGM_79_G_WithBackpack",
+              "RGM_79_G_WithBackpack"
+            ],
+            "budget": 200,
+            "weight": 8
+          },
+          {
+            "label": "61式主战坦克A5型x3 61式主战坦克A5型x3",
+            "units": [
+              "Type61A5",
+              "Type61A5",
+              "Type61A5",
+              "Type61A5",
+              "Type61A5",
+              "Type61A5"
+            ],
+            "budget": 75,
+            "weight": 8
+          },
+          {
+            "label": "61式主战坦克A5型x3 61式主战坦克A5型x3 61式主战坦克A5型x3",
+            "units": [
+              "Type61A5",
+              "Type61A5",
+              "Type61A5",
+              "Type61A5",
+              "Type61A5",
+              "Type61A5",
+              "Type61A5",
+              "Type61A5",
+              "Type61A5"
+            ],
+            "budget": 100,
+            "weight": 8
+          },
+          {
+            "label": "飞鳐x3 飞鳐x3",
+            "units": [
+              "FF_B2",
+              "FF_B2",
+              "FF_B2",
+              "FF_B2",
+              "FF_B2",
+              "FF_B2"
+            ],
+            "budget": 75,
+            "weight": 8
+          },
+          {
+            "label": "迪普罗格x3",
+            "units": [
+              "DEPP_ROG",
+              "DEPP_ROG",
+              "DEPP_ROG"
+            ],
+            "budget": 100,
+            "weight": 8
+          },
+          {
+            "label": "飞鳐x3 迪普罗格x3",
+            "units": [
+              "FF_B2",
+              "FF_B2",
+              "FF_B2",
+              "DEPP_ROG",
+              "DEPP_ROG",
+              "DEPP_ROG"
+            ],
+            "budget": 125,
+            "weight": 8
+          },
+          {
+            "label": "吉姆x3",
+            "units": [
+              "RGM_79",
+              "RGM_79",
+              "RGM_79"
+            ],
+            "budget": 125,
+            "weight": 4
+          },
+          {
+            "label": "吉姆/吉姆/吉姆[指挥官机]",
+            "units": [
+              "RGM_79",
+              "RGM_79",
+              "RGM_79_Commander"
+            ],
+            "budget": 150,
+            "weight": 4
+          },
+          {
+            "label": "陆战型高达x1 陆战型吉姆x2",
+            "units": [
+              "RX_79_G",
+              "RGM_79_G",
+              "RGM_79_G"
+            ],
+            "budget": 125,
+            "weight": 1
+          },
+          {
+            "label": "陆战型高达[武器货柜]x1 陆战型吉姆[武器货柜]x2",
+            "units": [
+              "RX_79_G_WithBackpack",
+              "RGM_79_G_WithBackpack",
+              "RGM_79_G_WithBackpack"
+            ],
+            "budget": 175,
+            "weight": 1
+          },
+          {
+            "label": "吉姆狙击型x1 陆战型吉姆x2",
+            "units": [
+              "RGM_79_G_SP",
+              "RGM_79_G",
+              "RGM_79_G"
+            ],
+            "budget": 250,
+            "weight": 1
+          },
+          {
+            "label": "量产型钢坦克x3",
+            "units": [
+              "RX_75R",
+              "RX_75R",
+              "RX_75R"
+            ],
+            "budget": 125,
+            "weight": 1
+          }
+        ],
+        "garrisons": {
+          "salvage": 450,
+          "command": 900,
+          "factory": 500,
+          "capture": 450,
+          "upload": 500,
+          "radar": 450
+        },
+        "waves": {
+          "factory.first": 250,
+          "capture.airdrop": 550,
+          "capture.edge": 250,
+          "defend.first": 1000,
+          "defend.followup": 250,
+          "upload.airdrop": 550,
+          "radar.first": 1000
+        },
+        "transports": {
+          "unitId": "MedeaKai",
+          "budgets": [
+            175,
+            175
+          ]
+        }
+      },
+      "5": {
+        "formations": [
+          {
+            "label": "吉姆x3",
+            "units": [
+              "RGM_79",
+              "RGM_79",
+              "RGM_79"
+            ],
+            "budget": 125,
+            "weight": 8
+          },
+          {
+            "label": "吉姆/吉姆/吉姆[指挥官机]",
+            "units": [
+              "RGM_79",
+              "RGM_79",
+              "RGM_79_Commander"
+            ],
+            "budget": 150,
+            "weight": 8
+          },
+          {
+            "label": "吉姆x3 吉姆x3",
+            "units": [
+              "RGM_79",
+              "RGM_79",
+              "RGM_79",
+              "RGM_79",
+              "RGM_79",
+              "RGM_79"
+            ],
+            "budget": 200,
+            "weight": 8
+          },
+          {
+            "label": "吉姆[指挥官机]/吉姆/吉姆 吉姆x3",
+            "units": [
+              "RGM_79_Commander",
+              "RGM_79",
+              "RGM_79",
+              "RGM_79",
+              "RGM_79",
+              "RGM_79"
+            ],
+            "budget": 225,
+            "weight": 8
+          },
+          {
+            "label": "飞鳐x3 飞鳐x3",
+            "units": [
+              "FF_B2",
+              "FF_B2",
+              "FF_B2",
+              "FF_B2",
+              "FF_B2",
+              "FF_B2"
+            ],
+            "budget": 75,
+            "weight": 8
+          },
+          {
+            "label": "迪普罗格x3",
+            "units": [
+              "DEPP_ROG",
+              "DEPP_ROG",
+              "DEPP_ROG"
+            ],
+            "budget": 100,
+            "weight": 8
+          },
+          {
+            "label": "陆战型吉姆x3",
+            "units": [
+              "RGM_79_G",
+              "RGM_79_G",
+              "RGM_79_G"
+            ],
+            "budget": 100,
+            "weight": 4
+          },
+          {
+            "label": "陆战型吉姆[武器货柜]x3",
+            "units": [
+              "RGM_79_G_WithBackpack",
+              "RGM_79_G_WithBackpack",
+              "RGM_79_G_WithBackpack"
+            ],
+            "budget": 125,
+            "weight": 4
+          },
+          {
+            "label": "陆战型吉姆x3 陆战型吉姆[武器货柜]x3",
+            "units": [
+              "RGM_79_G",
+              "RGM_79_G",
+              "RGM_79_G",
+              "RGM_79_G_WithBackpack",
+              "RGM_79_G_WithBackpack",
+              "RGM_79_G_WithBackpack"
+            ],
+            "budget": 200,
+            "weight": 4
+          },
+          {
+            "label": "钢加农x1 吉姆x2",
+            "units": [
+              "RX_77_2",
+              "RGM_79",
+              "RGM_79"
+            ],
+            "budget": 200,
+            "weight": 1
+          },
+          {
+            "label": "钢坦克x1 吉姆x2",
+            "units": [
+              "RX_75",
+              "RGM_79",
+              "RGM_79"
+            ],
+            "budget": 175,
+            "weight": 1
+          },
+          {
+            "label": "高达x1 吉姆x2",
+            "units": [
+              "RX_78_2",
+              "RGM_79",
+              "RGM_79"
+            ],
+            "budget": 275,
+            "weight": 0.25
+          }
+        ],
+        "garrisons": {
+          "salvage": 550,
+          "command": 1100,
+          "factory": 625,
+          "capture": 550,
+          "upload": 625,
+          "radar": 550
+        },
+        "waves": {
+          "factory.first": 300,
+          "capture.airdrop": 700,
+          "capture.edge": 300,
+          "defend.first": 1250,
+          "defend.followup": 300,
+          "upload.airdrop": 700,
+          "radar.first": 1250
+        },
+        "transports": {
+          "unitId": "MedeaKai",
+          "budgets": [
+            175,
+            175,
+            175
+          ]
+        }
+      },
+      "6": {
+        "formations": [
+          {
+            "label": "吉姆x3",
+            "units": [
+              "RGM_79",
+              "RGM_79",
+              "RGM_79"
+            ],
+            "budget": 125,
+            "weight": 8
+          },
+          {
+            "label": "吉姆/吉姆/吉姆[指挥官机]",
+            "units": [
+              "RGM_79",
+              "RGM_79",
+              "RGM_79_Commander"
+            ],
+            "budget": 150,
+            "weight": 8
+          },
+          {
+            "label": "吉姆x3 吉姆x3",
+            "units": [
+              "RGM_79",
+              "RGM_79",
+              "RGM_79",
+              "RGM_79",
+              "RGM_79",
+              "RGM_79"
+            ],
+            "budget": 200,
+            "weight": 8
+          },
+          {
+            "label": "吉姆[指挥官机]/吉姆/吉姆 吉姆x3",
+            "units": [
+              "RGM_79_Commander",
+              "RGM_79",
+              "RGM_79",
+              "RGM_79",
+              "RGM_79",
+              "RGM_79"
+            ],
+            "budget": 225,
+            "weight": 8
+          },
+          {
+            "label": "飞鳐x3 飞鳐x3",
+            "units": [
+              "FF_B2",
+              "FF_B2",
+              "FF_B2",
+              "FF_B2",
+              "FF_B2",
+              "FF_B2"
+            ],
+            "budget": 75,
+            "weight": 8
+          },
+          {
+            "label": "迪普罗格x3",
+            "units": [
+              "DEPP_ROG",
+              "DEPP_ROG",
+              "DEPP_ROG"
+            ],
+            "budget": 100,
+            "weight": 8
+          },
+          {
+            "label": "飞鳐x3 迪普罗格x3",
+            "units": [
+              "FF_B2",
+              "FF_B2",
+              "FF_B2",
+              "DEPP_ROG",
+              "DEPP_ROG",
+              "DEPP_ROG"
+            ],
+            "budget": 125,
+            "weight": 8
+          },
+          {
+            "label": "陆战型吉姆x3",
+            "units": [
+              "RGM_79_G",
+              "RGM_79_G",
+              "RGM_79_G"
+            ],
+            "budget": 100,
+            "weight": 4
+          },
+          {
+            "label": "陆战型吉姆[武器货柜]x3",
+            "units": [
+              "RGM_79_G_WithBackpack",
+              "RGM_79_G_WithBackpack",
+              "RGM_79_G_WithBackpack"
+            ],
+            "budget": 125,
+            "weight": 4
+          },
+          {
+            "label": "吉姆x3 陆战型吉姆x3",
+            "units": [
+              "RGM_79",
+              "RGM_79",
+              "RGM_79",
+              "RGM_79_G",
+              "RGM_79_G",
+              "RGM_79_G"
+            ],
+            "budget": 200,
+            "weight": 4
+          },
+          {
+            "label": "钢加农x1 吉姆x2",
+            "units": [
+              "RX_77_2",
+              "RGM_79",
+              "RGM_79"
+            ],
+            "budget": 200,
+            "weight": 4
+          },
+          {
+            "label": "钢坦克x1 吉姆x2",
+            "units": [
+              "RX_75",
+              "RGM_79",
+              "RGM_79"
+            ],
+            "budget": 175,
+            "weight": 4
+          },
+          {
+            "label": "钢加农x1 吉姆x2 吉姆x3",
+            "units": [
+              "RX_77_2",
+              "RGM_79",
+              "RGM_79",
+              "RGM_79",
+              "RGM_79",
+              "RGM_79"
+            ],
+            "budget": 300,
+            "weight": 4
+          },
+          {
+            "label": "钢加农x3",
+            "units": [
+              "RX_77_2",
+              "RX_77_2",
+              "RX_77_2"
+            ],
+            "budget": 300,
+            "weight": 4
+          },
+          {
+            "label": "钢坦克x3",
+            "units": [
+              "RX_75",
+              "RX_75",
+              "RX_75"
+            ],
+            "budget": 275,
+            "weight": 4
+          },
+          {
+            "label": "高达x1 吉姆x2",
+            "units": [
+              "RX_78_2",
+              "RGM_79",
+              "RGM_79"
+            ],
+            "budget": 275,
+            "weight": 1
+          },
+          {
+            "label": "高达x1 钢加农x1 钢坦克x1",
+            "units": [
+              "RX_78_2",
+              "RX_77_2",
+              "RX_75"
+            ],
+            "budget": 350,
+            "weight": 1
+          }
+        ],
+        "garrisons": {
+          "salvage": 700,
+          "command": 1400,
+          "factory": 800,
+          "capture": 700,
+          "upload": 800,
+          "radar": 700
+        },
+        "waves": {
+          "factory.first": 400,
+          "capture.airdrop": 900,
+          "capture.edge": 400,
+          "defend.first": 1500,
+          "defend.followup": 400,
+          "upload.airdrop": 900,
+          "radar.first": 1500
+        },
+        "transports": {
+          "unitId": "MedeaKai",
+          "budgets": [
+            200,
+            200,
+            200
+          ]
+        }
+      }
+    },
+    "ZEON": {
+      "1": {
+        "formations": [
+          {
+            "label": "扎古2Fx3",
+            "units": [
+              "MS_06F",
+              "MS_06F",
+              "MS_06F"
+            ],
+            "budget": 100,
+            "weight": 8
+          },
+          {
+            "label": "扎古2F/扎古2F/扎古2S",
+            "units": [
+              "MS_06F",
+              "MS_06F",
+              "MS_06S"
+            ],
+            "budget": 100,
+            "weight": 8
+          },
+          {
+            "label": "马哲兰坦克X3 马哲兰坦克X3",
+            "units": [
+              "MTank",
+              "MTank",
+              "MTank",
+              "MTank",
+              "MTank",
+              "MTank"
+            ],
+            "budget": 75,
+            "weight": 4
+          },
+          {
+            "label": "多普x3 战斗直升机[ZEON]x3",
+            "units": [
+              "Dopp",
+              "Dopp",
+              "Dopp",
+              "ZN_Heli",
+              "ZN_Heli",
+              "ZN_Heli"
+            ],
+            "budget": 75,
+            "weight": 4
+          },
+          {
+            "label": "水中型扎古x3",
+            "units": [
+              "MS_06M",
+              "MS_06M",
+              "MS_06M"
+            ],
+            "budget": 100,
+            "weight": 1
+          }
+        ],
+        "garrisons": {
+          "salvage": 175,
+          "command": 300,
+          "factory": 175,
+          "capture": 175,
+          "upload": 175,
+          "radar": 175
+        },
+        "waves": {
+          "factory.first": 100,
+          "capture.airdrop": 200,
+          "capture.edge": 100,
+          "defend.first": 300,
+          "defend.followup": 100,
+          "upload.airdrop": 200,
+          "radar.first": 300
+        },
+        "transports": {
+          "unitId": "FatUncle",
+          "budgets": [
+            100,
+            100
+          ]
+        }
+      },
+      "2": {
+        "formations": [
+          {
+            "label": "扎古2Fx3",
+            "units": [
+              "MS_06F",
+              "MS_06F",
+              "MS_06F"
+            ],
+            "budget": 100,
+            "weight": 8
+          },
+          {
+            "label": "扎古2F/扎古2F/扎古2S",
+            "units": [
+              "MS_06F",
+              "MS_06F",
+              "MS_06S"
+            ],
+            "budget": 100,
+            "weight": 8
+          },
+          {
+            "label": "扎古2Jx3",
+            "units": [
+              "MS_06J",
+              "MS_06J",
+              "MS_06J"
+            ],
+            "budget": 100,
+            "weight": 8
+          },
+          {
+            "label": "扎古2Jx3 扎古2Jx3",
+            "units": [
+              "MS_06J",
+              "MS_06J",
+              "MS_06J",
+              "MS_06J",
+              "MS_06J",
+              "MS_06J"
+            ],
+            "budget": 150,
+            "weight": 8
+          },
+          {
+            "label": "马哲兰坦克X3 马哲兰坦克X3",
+            "units": [
+              "MTank",
+              "MTank",
+              "MTank",
+              "MTank",
+              "MTank",
+              "MTank"
+            ],
+            "budget": 75,
+            "weight": 4
+          },
+          {
+            "label": "多普x3 战斗直升机[ZEON]x3",
+            "units": [
+              "Dopp",
+              "Dopp",
+              "Dopp",
+              "ZN_Heli",
+              "ZN_Heli",
+              "ZN_Heli"
+            ],
+            "budget": 75,
+            "weight": 4
+          },
+          {
+            "label": "马哲兰坦克X3 马哲兰坦克x3 战斗直升机[ZEON]x3",
+            "units": [
+              "MTank",
+              "MTank",
+              "MTank",
+              "MTank",
+              "MTank",
+              "MTank",
+              "ZN_Heli",
+              "ZN_Heli",
+              "ZN_Heli"
+            ],
+            "budget": 100,
+            "weight": 4
+          },
+          {
+            "label": "水中型扎古x3",
+            "units": [
+              "MS_06M",
+              "MS_06M",
+              "MS_06M"
+            ],
+            "budget": 100,
+            "weight": 1
+          },
+          {
+            "label": "扎古加农x3",
+            "units": [
+              "MS_06K",
+              "MS_06K",
+              "MS_06K"
+            ],
+            "budget": 125,
+            "weight": 1
+          }
+        ],
+        "garrisons": {
+          "salvage": 225,
+          "command": 400,
+          "factory": 250,
+          "capture": 225,
+          "upload": 250,
+          "radar": 225
+        },
+        "waves": {
+          "factory.first": 125,
+          "capture.airdrop": 300,
+          "capture.edge": 125,
+          "defend.first": 500,
+          "defend.followup": 125,
+          "upload.airdrop": 300,
+          "radar.first": 500
+        },
+        "transports": {
+          "unitId": "FatUncle",
+          "budgets": [
+            100,
+            125
+          ]
+        }
+      },
+      "3": {
+        "formations": [
+          {
+            "label": "老虎B型x3",
+            "units": [
+              "MS_07B",
+              "MS_07B",
+              "MS_07B"
+            ],
+            "budget": 125,
+            "weight": 8
+          },
+          {
+            "label": "老虎B型x1 扎古2Jx2",
+            "units": [
+              "MS_07B",
+              "MS_06J",
+              "MS_06J"
+            ],
+            "budget": 125,
+            "weight": 8
+          },
+          {
+            "label": "扎古2Jx3",
+            "units": [
+              "MS_06J",
+              "MS_06J",
+              "MS_06J"
+            ],
+            "budget": 100,
+            "weight": 4
+          },
+          {
+            "label": "扎古2Jx3 扎古2Jx3",
+            "units": [
+              "MS_06J",
+              "MS_06J",
+              "MS_06J",
+              "MS_06J",
+              "MS_06J",
+              "MS_06J"
+            ],
+            "budget": 150,
+            "weight": 4
+          },
+          {
+            "label": "扎古2陆战型高机动型x3",
+            "units": [
+              "MS_06G",
+              "MS_06G",
+              "MS_06G"
+            ],
+            "budget": 175,
+            "weight": 4
+          },
+          {
+            "label": "扎古加农x3",
+            "units": [
+              "MS_06K",
+              "MS_06K",
+              "MS_06K"
+            ],
+            "budget": 125,
+            "weight": 1
+          },
+          {
+            "label": "战蟹x3",
+            "units": [
+              "MSM_03",
+              "MSM_03",
+              "MSM_03"
+            ],
+            "budget": 125,
+            "weight": 1
+          },
+          {
+            "label": "扎古沙漠型x3",
+            "units": [
+              "MS_06D",
+              "MS_06D",
+              "MS_06D"
+            ],
+            "budget": 125,
+            "weight": 1
+          },
+          {
+            "label": "龟霸x3",
+            "units": [
+              "MSM_04",
+              "MSM_04",
+              "MSM_04"
+            ],
+            "budget": 125,
+            "weight": 1
+          },
+          {
+            "label": "老虎特装型x1 扎古2陆战型高机动型x2",
+            "units": [
+              "MS_07B3",
+              "MS_06G",
+              "MS_06G"
+            ],
+            "budget": 150,
+            "weight": 1
+          }
+        ],
+        "garrisons": {
+          "salvage": 350,
+          "command": 700,
+          "factory": 400,
+          "capture": 350,
+          "upload": 400,
+          "radar": 350
+        },
+        "waves": {
+          "factory.first": 200,
+          "capture.airdrop": 450,
+          "capture.edge": 200,
+          "defend.first": 750,
+          "defend.followup": 200,
+          "upload.airdrop": 450,
+          "radar.first": 750
+        },
+        "transports": {
+          "unitId": "FatUncle",
+          "budgets": [
+            125,
+            125,
+            150
+          ]
+        }
+      },
+      "4": {
+        "formations": [
+          {
+            "label": "老虎B型x3",
+            "units": [
+              "MS_07B",
+              "MS_07B",
+              "MS_07B"
+            ],
+            "budget": 125,
+            "weight": 8
+          },
+          {
+            "label": "老虎B型x3 老虎B型x3",
+            "units": [
+              "MS_07B",
+              "MS_07B",
+              "MS_07B",
+              "MS_07B",
+              "MS_07B",
+              "MS_07B"
+            ],
+            "budget": 200,
+            "weight": 8
+          },
+          {
+            "label": "老虎特装型x1 老虎B型x2",
+            "units": [
+              "MS_07B3",
+              "MS_07B",
+              "MS_07B"
+            ],
+            "budget": 175,
+            "weight": 8
+          },
+          {
+            "label": "大魔x3",
+            "units": [
+              "MS_09",
+              "MS_09",
+              "MS_09"
+            ],
+            "budget": 200,
+            "weight": 4
+          },
+          {
+            "label": "扎古2F2后期型/扎古2F2后期型/扎古2F2后期型[指挥官机]",
+            "units": [
+              "MS_06F2",
+              "MS_06F2",
+              "MS_06F2_Commander"
+            ],
+            "budget": 150,
+            "weight": 4
+          },
+          {
+            "label": "扎古2陆战型高机动型x3",
+            "units": [
+              "MS_06G",
+              "MS_06G",
+              "MS_06G"
+            ],
+            "budget": 175,
+            "weight": 4
+          },
+          {
+            "label": "大魔热带式样x1 大魔x2",
+            "units": [
+              "MS_09D",
+              "MS_09",
+              "MS_09"
+            ],
+            "budget": 225,
+            "weight": 1
+          },
+          {
+            "label": "老虎特装型x1 扎古2陆战型高机动型x2",
+            "units": [
+              "MS_07B3",
+              "MS_06G",
+              "MS_06G"
+            ],
+            "budget": 175,
+            "weight": 1
+          },
+          {
+            "label": "扎古加农x1 扎古2F2后期型x2",
+            "units": [
+              "MS_06K",
+              "MS_06F2",
+              "MS_06F2"
+            ],
+            "budget": 175,
+            "weight": 1
+          },
+          {
+            "label": "扎古半加农x3",
+            "units": [
+              "MS_06JK",
+              "MS_06JK",
+              "MS_06JK"
+            ],
+            "budget": 175,
+            "weight": 1
+          },
+          {
+            "label": "战蟹x3 水中型扎古x3",
+            "units": [
+              "MSM_03",
+              "MSM_03",
+              "MSM_03",
+              "MS_06M",
+              "MS_06M",
+              "MS_06M"
+            ],
+            "budget": 200,
+            "weight": 1
+          }
+        ],
+        "garrisons": {
+          "salvage": 450,
+          "command": 900,
+          "factory": 500,
+          "capture": 450,
+          "upload": 500,
+          "radar": 450
+        },
+        "waves": {
+          "factory.first": 250,
+          "capture.airdrop": 550,
+          "capture.edge": 250,
+          "defend.first": 1000,
+          "defend.followup": 250,
+          "upload.airdrop": 550,
+          "radar.first": 1000
+        },
+        "transports": {
+          "unitId": "FatUncleKai",
+          "budgets": [
+            175,
+            175
+          ]
+        }
+      },
+      "5": {
+        "formations": [
+          {
+            "label": "大魔x3",
+            "units": [
+              "MS_09",
+              "MS_09",
+              "MS_09"
+            ],
+            "budget": 200,
+            "weight": 8
+          },
+          {
+            "label": "大魔x3 大魔x3",
+            "units": [
+              "MS_09",
+              "MS_09",
+              "MS_09",
+              "MS_09",
+              "MS_09",
+              "MS_09"
+            ],
+            "budget": 300,
+            "weight": 8
+          },
+          {
+            "label": "老虎B型x3",
+            "units": [
+              "MS_07B",
+              "MS_07B",
+              "MS_07B"
+            ],
+            "budget": 125,
+            "weight": 4
+          },
+          {
+            "label": "老虎特装型x1 老虎B型x2",
+            "units": [
+              "MS_07B3",
+              "MS_07B",
+              "MS_07B"
+            ],
+            "budget": 175,
+            "weight": 4
+          },
+          {
+            "label": "老虎特装型x1 大魔x2",
+            "units": [
+              "MS_07B3",
+              "MS_09",
+              "MS_09"
+            ],
+            "budget": 250,
+            "weight": 4
+          },
+          {
+            "label": "扎古2F2后期型/扎古2F2后期型/扎古2F2后期型[指挥官机]",
+            "units": [
+              "MS_06F2",
+              "MS_06F2",
+              "MS_06F2_Commander"
+            ],
+            "budget": 150,
+            "weight": 4
+          },
+          {
+            "label": "扎古2陆战型高机动型x3",
+            "units": [
+              "MS_06G",
+              "MS_06G",
+              "MS_06G"
+            ],
+            "budget": 175,
+            "weight": 4
+          },
+          {
+            "label": "扎古2F2后期型[指挥官机]x1 扎古2F2后期型x2 大魔x3",
+            "units": [
+              "MS_06F2_Commander",
+              "MS_06F2",
+              "MS_06F2",
+              "MS_09",
+              "MS_09",
+              "MS_09"
+            ],
+            "budget": 275,
+            "weight": 4
+          },
+          {
+            "label": "大魔热带式样x1 大魔x2",
+            "units": [
+              "MS_09D",
+              "MS_09",
+              "MS_09"
+            ],
+            "budget": 225,
+            "weight": 1
+          },
+          {
+            "label": "扎古加农x1 扎古2F2后期型x2",
+            "units": [
+              "MS_06K",
+              "MS_06F2",
+              "MS_06F2"
+            ],
+            "budget": 175,
+            "weight": 1
+          },
+          {
+            "label": "扎古半加农x3",
+            "units": [
+              "MS_06JK",
+              "MS_06JK",
+              "MS_06JK"
+            ],
+            "budget": 175,
+            "weight": 1
+          },
+          {
+            "label": "战蟹x3 水中型扎古x3",
+            "units": [
+              "MSM_03",
+              "MSM_03",
+              "MSM_03",
+              "MS_06M",
+              "MS_06M",
+              "MS_06M"
+            ],
+            "budget": 200,
+            "weight": 1
+          },
+          {
+            "label": "老虎特装型x3",
+            "units": [
+              "MS_07B3",
+              "MS_07B3",
+              "MS_07B3"
+            ],
+            "budget": 250,
+            "weight": 1
+          }
+        ],
+        "garrisons": {
+          "salvage": 550,
+          "command": 1100,
+          "factory": 625,
+          "capture": 550,
+          "upload": 625,
+          "radar": 550
+        },
+        "waves": {
+          "factory.first": 300,
+          "capture.airdrop": 700,
+          "capture.edge": 300,
+          "defend.first": 1250,
+          "defend.followup": 300,
+          "upload.airdrop": 700,
+          "radar.first": 1250
+        },
+        "transports": {
+          "unitId": "FatUncleKai",
+          "budgets": [
+            175,
+            175,
+            175
+          ]
+        }
+      },
+      "6": {
+        "formations": [
+          {
+            "label": "大魔x3",
+            "units": [
+              "MS_09",
+              "MS_09",
+              "MS_09"
+            ],
+            "budget": 200,
+            "weight": 8
+          },
+          {
+            "label": "大魔x3 大魔x3",
+            "units": [
+              "MS_09",
+              "MS_09",
+              "MS_09",
+              "MS_09",
+              "MS_09",
+              "MS_09"
+            ],
+            "budget": 300,
+            "weight": 8
+          },
+          {
+            "label": "老虎B型x3",
+            "units": [
+              "MS_07B",
+              "MS_07B",
+              "MS_07B"
+            ],
+            "budget": 125,
+            "weight": 4
+          },
+          {
+            "label": "老虎特装型x3",
+            "units": [
+              "MS_07B3",
+              "MS_07B3",
+              "MS_07B3"
+            ],
+            "budget": 250,
+            "weight": 4
+          },
+          {
+            "label": "老虎特装型x1 大魔x2",
+            "units": [
+              "MS_07B3",
+              "MS_09",
+              "MS_09"
+            ],
+            "budget": 250,
+            "weight": 4
+          },
+          {
+            "label": "大魔热带式样x3",
+            "units": [
+              "MS_09D",
+              "MS_09D",
+              "MS_09D"
+            ],
+            "budget": 250,
+            "weight": 4
+          },
+          {
+            "label": "大魔热带式样x3 大魔x3",
+            "units": [
+              "MS_09D",
+              "MS_09D",
+              "MS_09D",
+              "MS_09",
+              "MS_09",
+              "MS_09"
+            ],
+            "budget": 400,
+            "weight": 4
+          },
+          {
+            "label": "扎古2F2后期型/扎古2F2后期型/扎古2F2后期型[指挥官机]",
+            "units": [
+              "MS_06F2",
+              "MS_06F2",
+              "MS_06F2_Commander"
+            ],
+            "budget": 150,
+            "weight": 4
+          },
+          {
+            "label": "扎古2F2后期型[指挥官机]x1 扎古2F2后期型x2 大魔x3",
+            "units": [
+              "MS_06F2_Commander",
+              "MS_06F2",
+              "MS_06F2",
+              "MS_09",
+              "MS_09",
+              "MS_09"
+            ],
+            "budget": 275,
+            "weight": 4
+          },
+          {
+            "label": "老虎特装型x3 扎古2陆战型高机动型x3",
+            "units": [
+              "MS_07B3",
+              "MS_07B3",
+              "MS_07B3",
+              "MS_06G",
+              "MS_06G",
+              "MS_06G"
+            ],
+            "budget": 350,
+            "weight": 4
+          },
+          {
+            "label": "扎古半加农x3 扎古2F2后期型x3",
+            "units": [
+              "MS_06JK",
+              "MS_06JK",
+              "MS_06JK",
+              "MS_06F2",
+              "MS_06F2",
+              "MS_06F2"
+            ],
+            "budget": 225,
+            "weight": 1
+          },
+          {
+            "label": "扎古2F2后期型[指挥官机]x1 扎古2F2后期型x2 扎古狙击型x1 扎古加农x2",
+            "units": [
+              "MS_06F2_Commander",
+              "MS_06F2",
+              "MS_06F2",
+              "MS_05SP",
+              "MS_06K",
+              "MS_06K"
+            ],
+            "budget": 450,
+            "weight": 1
+          }
+        ],
+        "garrisons": {
+          "salvage": 700,
+          "command": 1400,
+          "factory": 800,
+          "capture": 700,
+          "upload": 800,
+          "radar": 700
+        },
+        "waves": {
+          "factory.first": 400,
+          "capture.airdrop": 900,
+          "capture.edge": 400,
+          "defend.first": 1500,
+          "defend.followup": 400,
+          "upload.airdrop": 900,
+          "radar.first": 1500
+        },
+        "transports": {
+          "unitId": "FatUncleKai",
+          "budgets": [
+            200,
+            200,
+            200
+          ]
+        }
+      }
+    }
+  }
+}

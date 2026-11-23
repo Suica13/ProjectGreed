@@ -57,6 +57,13 @@ const BattleHUD = (() => {
   confirmMove.hidden = true;
   confirmMove.onclick = () => finishMovement(true);
   byId("hudCancelAction").after(confirmMove);
+  const confirmSkill = element("button", "primary", "确认技能"),
+    skillTarget = element("span", "helper");
+  confirmSkill.id="hudConfirmSkill";
+  confirmSkill.hidden=skillTarget.hidden=true;
+  skillTarget.id="hudSkillTarget";
+  confirmSkill.onclick=()=>SkillControls.confirm();
+  confirmMove.after(confirmSkill,skillTarget);
   const pickingAction = () =>
     [
       "move",
@@ -172,6 +179,7 @@ const BattleHUD = (() => {
     if (pageView !== "game" || !["idle", "deployment"].includes(phase) || !pickingAction()) return;
     if (pendingMovement()) return finishMovement(false);
     window.HangarUI?.cancel();
+    SkillControls.reset();
     AttackControls.reset();
     weaponId = null;
     mode = "select";
@@ -458,6 +466,16 @@ const BattleHUD = (() => {
     if (confirmingMove) byId("hudCancelAction").setAttribute("aria-keyshortcuts", "W");
     else byId("hudCancelAction").removeAttribute("aria-keyshortcuts");
     confirmMove.hidden = !actionActive || !confirmingMove;
+    const skillSelection=SkillControls.confirmation(unit);
+    confirmSkill.hidden=!actionActive || !skillSelection.active;
+    confirmSkill.disabled=!skillSelection.ready;
+    confirmSkill.textContent=I18n.text("确认技能");
+    skillTarget.hidden=confirmSkill.hidden;
+    skillTarget.textContent=skillSelection.draft
+      ? I18n.text("目标：") + (skillSelection.target && !skillSelection.target.groundTarget
+        ? unitName(skillSelection.target)
+        : Rules.columnLabel(skillSelection.draft.x)+(skillSelection.draft.y+1))
+      : I18n.text("请选择技能目标");
     refreshMovement();
     byId("hudActionBand").hidden = !actionActive && !spectating;
     byId("hudCancelAction").hidden = spectating;

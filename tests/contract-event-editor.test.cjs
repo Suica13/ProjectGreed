@@ -4,14 +4,16 @@ const Model = require("../contract-editor/model.js");
 const catalog = require("../contract-editor/catalog.cjs");
 const Contract = require("../shared/contract-mode.js");
 
-test("current contract planning includes eight source types and seven special variants without conflating liaison kills", () => {
+test("current contract planning includes seven source types and both liaison chains without conflating kills", () => {
   const doc = Model.create(catalog, "V138");
   assert.deepEqual(Model.validate(doc), []);
   assert.deepEqual(
     doc.events.filter((e) => e.group === "基础事件").map((e) => e.type),
     Contract.kinds.map((k) => k.type),
   );
-  assert.equal(doc.events.filter((e) => e.group === "联络委托变体").length, 7);
+  assert.equal(doc.events.filter((e) => e.group === "联络委托变体").length, 22);
+  assert(doc.events.find(e=>e.id==='zeon-6').summary.includes('吉翁联络人'));
+  assert(doc.events.find(e=>e.id==='zeon-5').completion.includes('机动扎古指挥官机'));
   assert.equal(doc.events.find(e=>e.id==='efsf-9').type,'enemybase');
   assert(doc.events.find(e=>e.id==='efsf-7').conditions.includes('敌军联邦'));
   assert(!doc.events.some((e) => e.id === "efsf-1"));

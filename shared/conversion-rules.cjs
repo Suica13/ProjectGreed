@@ -270,6 +270,11 @@ function globals(prefab, rules) {
     // Preserve native/base values for reimports and relative editor adjustments.
     for (const key of ["min", "minRange", "max", "range"])
       if (Number.isFinite(weapon[key])) weapon[key] = Math.max(1, Math.ceil(weapon[key] * w.range));
+    // Some charged weapons inherit their minimum only during compilation.
+    // Give those weapons the configured sniper minimum before editor offsets.
+    if (Classes.classify(weapon) === "sniper" && group.minRange >= 0 &&
+        !Number.isFinite(base.min) && !Number.isFinite(base.minRange))
+      weapon.min = Math.max(1, Math.ceil(Math.round(group.minRange * range) * w.range));
     // Area irradiation dimensions are explicit tactical cells, not imported
     // ordinary-weapon ranges. Apply editor deltas afterwards as usual.
     if (weapon.type === "irradiation" && weapon.areaWidth > 0) {

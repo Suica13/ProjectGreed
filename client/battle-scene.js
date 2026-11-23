@@ -141,7 +141,7 @@ const BattleScene = (() => {
       if (displayHp[unit.id] <= 0) ctx.globalAlpha = 0.25;
       const ring =
         typeof UnitIdentity !== "undefined"
-          ? UnitIdentity.colors[UnitIdentity.relation(unit)]
+          ? UnitIdentity.style(unit)
           : {
               fill: unit.team ? "#ff9a8233" : "#6bcff833",
               color: unit.team ? "#ff9a82" : "#6bcff8",

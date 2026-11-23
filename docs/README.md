@@ -15,8 +15,10 @@
 ## 常用入口
 
 - [特性与合约任务策划](design/README.md)
-- [驾驶员天赋：50项草案](design/pilot-talents.md)
+- [驾驶员天赋：45项](design/pilot-talents.md)
 - [合约模式任务类型记录](design/contract-task-types.md)
+- [0079T1吉翁陆地部队池](design/contract-force-pools-zeon-0079t1.md)
+- [0079T1联邦陆地部队池](design/contract-force-pools-efsf-0079t1.md)
 - [合约事件HTML策划编辑器](tools/contract-event-editor.md)
 - [现行武器与技能规则](rules/combat.md)
 - [驾驶员与指挥](rules/pilots.md)
@@ -24,6 +26,8 @@
 - [舰队与搭载编组](rules/formation.md)
 - [基地仓储](rules/storage.md)
 - [联络与商人](rules/contact.md)
+- [吉翁联络人任务链与策划JSON](design/zeon-contact.md)
+- [阿纳海姆委托与零件购买解锁](design/anaheim-contact.md)
 - [零件图标与生成提示](imports/unit-plugin-icons.md)
 - [基地设施](rules/base-facilities.md)
 - [收益](rules/economy.md)

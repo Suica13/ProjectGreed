@@ -7,7 +7,11 @@ test('every fixed and random faction wave fits the battlefield environment in ev
   const selected={faction,era};
   const pool=B.pool(G,{teams:[selected,selected]},0,environment);
   assert(pool.choices.length,environment+'/'+faction+'/'+era);
-  for(const entry of pool.choices)assert(suitable(G.models[entry.unitId+'__'+entry.kitId],environment),JSON.stringify(entry));
+  for(const entry of pool.choices){
+   const model=G.models[entry.unitId+'__'+entry.kitId];
+   assert(suitable(model,environment),JSON.stringify(entry));
+   assert(G.aiTechnologyAllows(model),entry.unitId);
+  }
   for(const random of [()=>0,()=>.99999]){
    const wave=B.wavePlan(G,selected,round,1,random,environment);
    assert(wave.length);

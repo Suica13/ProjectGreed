@@ -15,7 +15,7 @@
     "sniperRangeBonus": 2,
     "projectileSpeed": 0.1,
     "sniperDamage": 1.5625,
-    "chargedSniperDamage": 1.875,
+    "chargedSniperDamage": 1.40625,
     "penetrationDamagePerCount": 0.15,
     "armorPiercingIgnore": 0.5,
     "shipCannonAccuracy": 0.85,
@@ -161,7 +161,7 @@
       "rangeBonus": 0,
       "baseEN": -1,
       "baseHit": 100,
-      "minRange": -1,
+      "minRange": 6,
       "maxRange": -1
     },
     "mortar": {

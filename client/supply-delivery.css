@@ -1,0 +1,58 @@
+.supply-reward-icon { height: 100px; display: grid; place-items: center; }
+.supply-reward-icon canvas { width: 100%; height: 100%; object-fit: contain; min-width: 0; }
+.supply-reward-icon img { width: 64px; height: 64px; object-fit: contain; image-rendering: pixelated; }
+.supply-reward-icon svg.resource-icon { width: 52px; height: 52px; color: #f0d27b; }
+.supply-result[data-reward-kind="supplies"] svg { color: #8ad9b1; }
+.supply-delivery { box-sizing: border-box; width: min(1000px, 94vw); max-height: 90dvh; padding: 0; overflow: auto; border: 1px solid #bca459; border-radius: 6px; color: #e6eff3; background: #0b1b2b; box-shadow: 0 12px 70px #000c; }
+.supply-delivery::backdrop { background: #020914dd; }
+.supply-delivery > header { position: sticky; top: 0; z-index: 3; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 20px; background: #142b3d; border-bottom: 1px solid #466271; }
+.supply-delivery h2 { margin: 0; font-size: 21px; color: #ffe3a0; }
+.supply-delivery-stage { position: relative; isolation: isolate; height: clamp(300px, 50vh, 470px); overflow: hidden; background: radial-gradient(ellipse at 50% 80%, #2b647b, #102c44 50%, #071727); }
+.supply-delivery-stage[hidden], .supply-reward-panel[hidden], .supply-delivery-status[hidden] { display: none; }
+.supply-delivery-stage::before { content: ""; position: absolute; inset: 0; opacity: .3; background: repeating-linear-gradient(0deg, transparent 0 38px, #6dbcd622 39px 40px); }
+.supply-drop-zone { position: absolute; left: 28%; bottom: 8%; width: 44%; height: 20%; border: 2px dashed #91c9d577; border-radius: 50%; box-shadow: 0 0 40px #69c4da22; transform: perspective(240px) rotateX(40deg); text-align: center; color: #91c9d5; font-size: 10px; letter-spacing: .2em; }
+.supply-drop-zone span { position: absolute; bottom: 10%; left: 0; width: 100%; }
+.supply-aircraft { position: absolute; z-index: 2; width: 36%; height: 47%; top: 2%; left: -40%; opacity: 0; pointer-events: none; text-align: center; }
+.supply-aircraft canvas { width: 100%; height: calc(100% - 22px); object-fit: contain; filter: drop-shadow(-22px 28px 9px #0008); }
+.supply-aircraft span { display: block; font-size: 12px; color: #bad8e8; }
+.is-delivering .supply-aircraft { animation: supply-flyover 3.1s linear both; }
+body button.supply-crate { position: absolute; z-index: 1; left: 50%; bottom: 20%; width: 106px; height: 90px; padding: 0; opacity: 0; transform: translateX(-50%); border: 3px solid #efcf83; border-radius: 4px; background: repeating-linear-gradient(90deg, #95713d 0 22px, #493e2c 22px 30px); color: #fff0b4; box-shadow: inset 0 0 0 5px #45371f, 0 15px 20px #0008; }
+body button.supply-crate:disabled { cursor: default; }
+.supply-crate-lid { position: absolute; top: -9px; left: -7px; right: -7px; height: 16px; border: 2px solid #f4dc9f; background: #8b713f; transform-origin: left bottom; }
+.supply-crate-mark { display: block; font-size: 35px; line-height: 1; }
+.supply-crate-label { display: block; font-size: 11px; font-weight: bold; letter-spacing: .18em; }
+.supply-parachute { position: absolute; left: -29px; top: -112px; width: 158px; height: 76px; border-radius: 80px 80px 10px 10px; background: repeating-linear-gradient(90deg, #d8e1d9 0 25px, #7d998f 25px 27px); border: 2px solid #e7f2eb; opacity: 0; }
+.supply-parachute::before, .supply-parachute::after { content: ""; position: absolute; top: 73px; height: 48px; width: 1px; background: #deebe0; }
+.supply-parachute::before { left: 15px; transform: rotate(-30deg); }
+.supply-parachute::after { right: 15px; transform: rotate(30deg); }
+.supply-delivery[data-phase="dropping"] .supply-crate { animation: supply-drop 1.4s cubic-bezier(.25,.1,.55,1) both; }
+.supply-delivery[data-phase="dropping"] .supply-parachute { opacity: 1; }
+.supply-delivery[data-phase="landed"] .supply-crate, .supply-delivery[data-phase="opening"] .supply-crate { opacity: 1; }
+.supply-delivery[data-phase="landed"] .supply-crate { cursor: pointer; outline: 3px solid #ffe7a5; outline-offset: 8px; filter: drop-shadow(0 0 20px #e1c98280); }
+.supply-delivery[data-phase="opening"] .supply-crate-lid { animation: supply-unseal .6s ease-out forwards; }
+.supply-open-flash { position: absolute; inset: 0; pointer-events: none; opacity: 0; background: radial-gradient(ellipse, #fff1bd 0, #f0d57466 24%, transparent 65%); }
+.supply-delivery[data-phase="opening"] .supply-open-flash { animation: supply-reveal .65s ease-out; }
+.supply-delivery-status { padding: 16px; margin: 0; min-height: 24px; text-align: center; color: #e6d4a5; }
+.supply-reward-panel { padding: 16px 20px 24px; }
+.supply-reward-panel > button { display: block; margin: 16px auto 0; min-width: 160px; }
+.supply-reward-panel .supply-result-cards { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.supply-reward-panel .supply-result { align-content: start; }
+.supply-reward-panel .supply-result > span { min-height: 36px; overflow-wrap: anywhere; }
+@keyframes supply-flyover { 0% { left: -40%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { left: 110%; opacity: 0; } }
+@keyframes supply-drop { 0% { opacity: 1; transform: translate(-50%, -210px) scale(.65); } 90% { opacity: 1; transform: translate(-50%, 0) scale(1); } 100% { opacity: 1; transform: translate(-50%, 0) scale(1); } }
+@keyframes supply-unseal { to { transform: translateY(-60px) rotate(-20deg); opacity: 0; } }
+@keyframes supply-reveal { 15% { opacity: 0; } 65% { opacity: .8; } 100% { opacity: 0; } }
+@media(prefers-reduced-motion: reduce) {
+  .is-delivering .supply-aircraft { animation: none; opacity: 1; left: 32%; }
+  .supply-delivery[data-phase="landed"] .supply-aircraft, .supply-delivery[data-phase="opening"] .supply-aircraft { opacity: 0; }
+  .supply-delivery[data-phase="dropping"] .supply-crate { animation: none; opacity: 1; }
+  .supply-delivery[data-phase="opening"] .supply-crate-lid { animation: none; opacity: 0; }
+  .supply-delivery[data-phase="opening"] .supply-open-flash { animation: none; }
+}
+@media(max-width: 720px) {
+  .supply-reward-panel .supply-result-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .supply-delivery > header { padding: 12px; }
+  .supply-delivery h2 { font-size: 18px; }
+  .supply-aircraft { width: 52%; }
+  .supply-reward-panel { padding: 12px; }
+}

@@ -39,76 +39,76 @@
   },
   "skeleton": {
     "Pelvis": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Body": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "LeftArm": {
-      "x": -9.0,
-      "y": 0.0
+      "x": -9,
+      "y": 0
     },
     "RightArm": {
-      "x": 9.0,
-      "y": 0.0
+      "x": 9,
+      "y": 0
     },
     "LeftShoulder": {
-      "x": -9.0,
-      "y": 0.0
+      "x": -9,
+      "y": 0
     },
     "RightShoulder": {
-      "x": 9.0,
-      "y": 0.0
+      "x": 9,
+      "y": 0
     },
     "LeftWeapon": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "RightWeapon": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Attachment12": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Attachment13": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Attachment15": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Head": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "Eye": {
-      "x": 0.0,
-      "y": 0.0
+      "x": 0,
+      "y": 0
     },
     "LeftFoot": {
-      "x": -6.0,
-      "y": 0.0,
-      "endDirOffset": -8.0
+      "x": -6,
+      "y": 0,
+      "endDirOffset": -8
     },
     "LeftLeg": {
-      "x": -6.0,
-      "y": 0.0,
-      "endDirOffset": -8.0
+      "x": -6,
+      "y": 0,
+      "endDirOffset": -8
     },
     "RightFoot": {
-      "x": 6.0,
-      "y": 0.0,
-      "endDirOffset": 8.0
+      "x": 6,
+      "y": 0,
+      "endDirOffset": 8
     },
     "RightLeg": {
-      "x": 6.0,
-      "y": 0.0,
-      "endDirOffset": 8.0
+      "x": 6,
+      "y": 0,
+      "endDirOffset": 8
     }
   },
   "layers": [
@@ -116,11 +116,11 @@
       "name": "LeftFoot",
       "texture": "NoPS__GAT_X103_FootL_1.png",
       "bone": "LeftFoot",
-      "order": 1.0,
+      "order": 1,
       "scale": 0.85,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "requiredParts": [
         "leftLeg"
@@ -133,11 +133,11 @@
       "name": "RightFoot",
       "texture": "NoPS__GAT_X103_FootR_1.png",
       "bone": "RightFoot",
-      "order": 1.0,
+      "order": 1,
       "scale": 0.85,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "requiredParts": [
         "rightLeg"
@@ -150,11 +150,11 @@
       "name": "LeftFoot_PS",
       "texture": "PS__GAT_X103_FootL_1.png",
       "bone": "LeftFoot",
-      "order": 1.0,
+      "order": 1,
       "scale": 0.85,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "requiredParts": [
         "leftLeg"
@@ -167,11 +167,11 @@
       "name": "RightFoot_PS",
       "texture": "PS__GAT_X103_FootR_1.png",
       "bone": "RightFoot",
-      "order": 1.0,
+      "order": 1,
       "scale": 0.85,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "requiredParts": [
         "leftLeg"
@@ -184,11 +184,11 @@
       "name": "LeftLeg",
       "texture": "NoPS__GAT_X103_LegL_1.png",
       "bone": "LeftLeg",
-      "order": 2.0,
+      "order": 2,
       "scale": 0.85,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "requiredParts": [
         "leftLeg"
@@ -201,11 +201,11 @@
       "name": "RightLeg",
       "texture": "NoPS__GAT_X103_LegR_1.png",
       "bone": "RightLeg",
-      "order": 2.0,
+      "order": 2,
       "scale": 0.85,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "requiredParts": [
         "rightLeg"
@@ -218,11 +218,11 @@
       "name": "LeftLeg_PS",
       "texture": "PS__GAT_X103_LegL_1.png",
       "bone": "LeftLeg",
-      "order": 2.0,
+      "order": 2,
       "scale": 0.85,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "requiredParts": [
         "leftLeg"
@@ -235,11 +235,11 @@
       "name": "RightLeg_PS",
       "texture": "PS__GAT_X103_LegR_1.png",
       "bone": "RightLeg",
-      "order": 2.0,
+      "order": 2,
       "scale": 0.85,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "requiredParts": [
         "leftLeg"
@@ -252,11 +252,11 @@
       "name": "Crotch",
       "texture": "NoPS__GAT_X103_Crotch_1.png",
       "bone": "Pelvis",
-      "order": 4.0,
+      "order": 4,
       "scale": 0.85,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "visibleWhen": {
         "phaseShiftActive": false
@@ -266,11 +266,11 @@
       "name": "ArmL",
       "texture": "NoPS__GAT_X103_ArmL_1.png",
       "bone": "LeftArm",
-      "order": 4.0,
+      "order": 4,
       "scale": 0.85,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "requiredParts": [
         "leftArm"
@@ -283,11 +283,11 @@
       "name": "ArmR",
       "texture": "NoPS__GAT_X103_ArmR_1.png",
       "bone": "RightArm",
-      "order": 4.0,
+      "order": 4,
       "scale": 0.85,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "requiredParts": [
         "rightArm"
@@ -300,11 +300,11 @@
       "name": "Crotch_PS",
       "texture": "PS__GAT_X103_Crotch_1.png",
       "bone": "Pelvis",
-      "order": 4.0,
+      "order": 4,
       "scale": 0.85,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "visibleWhen": {
         "phaseShiftActive": true
@@ -314,11 +314,11 @@
       "name": "ArmL_PS",
       "texture": "PS__GAT_X103_ArmL_1.png",
       "bone": "LeftArm",
-      "order": 4.0,
+      "order": 4,
       "scale": 0.85,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "requiredParts": [
         "leftArm"
@@ -331,11 +331,11 @@
       "name": "ArmR_PS",
       "texture": "PS__GAT_X103_ArmR_1.png",
       "bone": "RightArm",
-      "order": 4.0,
+      "order": 4,
       "scale": 0.85,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "requiredParts": [
         "rightArm"
@@ -348,14 +348,14 @@
       "name": "BoostReversing",
       "texture": "BoostReversing_1.png",
       "bone": "Body",
-      "order": 4.0,
-      "scale": 2.0,
+      "order": 4,
+      "scale": 2,
       "offset": {
         "x": -2.5,
-        "y": -12.0
+        "y": -12
       },
       "scaleY": 1.5,
-      "rotation": 0.0,
+      "rotation": 0,
       "alpha": 0.75,
       "frames": 3,
       "frameFps": 12,
@@ -363,7 +363,7 @@
       "visibleWhen": {
         "sustainedThrust": true
       },
-      "scaleX": 1.0,
+      "scaleX": 1,
       "independentClock": true
     },
     {
@@ -371,15 +371,15 @@
       "texture": "Boost_1.png",
       "bone": "Body",
       "order": 4.1,
-      "scale": 2.0,
+      "scale": 2,
       "offset": {
         "x": -2.5,
-        "y": -7.0
+        "y": -7
       },
       "scaleY": 1.5,
-      "rotation": 0.0,
+      "rotation": 0,
       "alpha": 0.75,
-      "frames": 3.0,
+      "frames": 3,
       "frameFps": 12,
       "frame": 0,
       "visibleWhen": {
@@ -393,11 +393,11 @@
       "bone": "RightArm",
       "order": 4.4,
       "scale": 0.75,
-      "scaleX": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "rotation": 0,
       "offset": {
-        "x": 3.0,
-        "y": -7.0
+        "x": 3,
+        "y": -7
       },
       "requiredParts": [
         "leftArm"
@@ -412,11 +412,11 @@
       "bone": "LeftArm",
       "order": 4.4,
       "scale": 0.75,
-      "scaleX": -1.0,
-      "rotation": 0.0,
+      "scaleX": -1,
+      "rotation": 0,
       "offset": {
         "x": -1.5,
-        "y": -8.0
+        "y": -8
       },
       "requiredParts": [
         "rightArm"
@@ -434,11 +434,11 @@
       "bone": "RightArm",
       "order": 4.5,
       "scale": 0.75,
-      "scaleX": 1.0,
-      "rotation": 0.0,
+      "scaleX": 1,
+      "rotation": 0,
       "offset": {
         "x": 1.5,
-        "y": 20.0
+        "y": 20
       },
       "requiredParts": [
         "leftArm"
@@ -453,11 +453,11 @@
       "bone": "LeftArm",
       "order": 4.5,
       "scale": 0.75,
-      "scaleX": -1.0,
-      "rotation": 0.0,
+      "scaleX": -1,
+      "rotation": 0,
       "offset": {
-        "x": -3.0,
-        "y": 12.0
+        "x": -3,
+        "y": 12
       },
       "requiredParts": [
         "rightArm"
@@ -475,10 +475,10 @@
       "bone": "LeftArm",
       "order": 4.5,
       "scale": 0.75,
-      "rotation": 0.0,
+      "rotation": 0,
       "offset": {
-        "x": -3.0,
-        "y": 8.0
+        "x": -3,
+        "y": 8
       },
       "visibleWhen": {
         "kit": [
@@ -496,10 +496,10 @@
       "bone": "RightArm",
       "order": 4.5,
       "scale": 0.75,
-      "rotation": 0.0,
+      "rotation": 0,
       "offset": {
-        "x": 3.0,
-        "y": 7.0
+        "x": 3,
+        "y": 7
       },
       "visibleWhen": {
         "kit": [
@@ -515,11 +515,11 @@
       "name": "Body",
       "texture": "NoPS__GAT_X103_Body_1.png",
       "bone": "Body",
-      "order": 5.0,
+      "order": 5,
       "scale": 0.85,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "visibleWhen": {
         "phaseShiftActive": false
@@ -529,11 +529,11 @@
       "name": "Body_PS",
       "texture": "PS__GAT_X103_Body_1.png",
       "bone": "Body",
-      "order": 5.0,
+      "order": 5,
       "scale": 0.85,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "visibleWhen": {
         "phaseShiftActive": true
@@ -543,11 +543,11 @@
       "name": "ShoulderL",
       "texture": "NoPS__GAT_X103_ShoulderL_1.png",
       "bone": "LeftShoulder",
-      "order": 6.0,
+      "order": 6,
       "scale": 0.85,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "requiredParts": [
         "leftArm"
@@ -560,11 +560,11 @@
       "name": "ShoulderR",
       "texture": "NoPS__GAT_X103_ShoulderR_1.png",
       "bone": "RightShoulder",
-      "order": 6.0,
+      "order": 6,
       "scale": 0.85,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "requiredParts": [
         "rightArm"
@@ -577,11 +577,11 @@
       "name": "ShoulderL_PS",
       "texture": "PS__GAT_X103_ShoulderL_1.png",
       "bone": "LeftShoulder",
-      "order": 6.0,
+      "order": 6,
       "scale": 0.85,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "requiredParts": [
         "leftArm"
@@ -594,11 +594,11 @@
       "name": "ShoulderR_PS",
       "texture": "PS__GAT_X103_ShoulderR_1.png",
       "bone": "RightShoulder",
-      "order": 6.0,
+      "order": 6,
       "scale": 0.85,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "requiredParts": [
         "rightArm"
@@ -611,11 +611,11 @@
       "name": "Head",
       "texture": "NoPS__GAT_X103_Head_1.png",
       "bone": "Head",
-      "order": 7.0,
+      "order": 7,
       "scale": 0.85,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "visibleWhen": {
         "visorClosed": false,
@@ -629,11 +629,11 @@
       "name": "Head_Close",
       "texture": "NoPS__GAT_X103_Head_1_Close.png",
       "bone": "Head",
-      "order": 7.0,
+      "order": 7,
       "scale": 0.85,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "visibleWhen": {
         "visorClosed": true,
@@ -647,11 +647,11 @@
       "name": "Head_PS",
       "texture": "PS__GAT_X103_Head_1.png",
       "bone": "Head",
-      "order": 7.0,
+      "order": 7,
       "scale": 0.85,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "requiredParts": [
         "head"
@@ -664,11 +664,11 @@
       "name": "Head_Close_PS",
       "texture": "PS__GAT_X103_Head_1_Close.png",
       "bone": "Head",
-      "order": 7.0,
+      "order": 7,
       "scale": 0.85,
       "offset": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 0,
+        "y": 0
       },
       "requiredParts": [
         "head"
@@ -705,22 +705,22 @@
   },
   "stats": {
     "hp": 40000,
-    "en": 950.0,
+    "en": 950,
     "move": 6,
-    "mobility": 115.0,
+    "mobility": 115,
     "cost": 825,
     "counterLimit": 1,
-    "accuracy": 115.0,
-    "partStructuralStrength": 125.0,
+    "accuracy": 115,
+    "partStructuralStrength": 125,
     "partsBreakable": true,
     "movementType": "ground",
     "adaptability": {
       "ground": 100,
       "space": 100,
-      "water": 75.0,
-      "air": 50.0,
+      "water": 75,
+      "air": 50,
       "atmosphere": 0,
-      "mountain": 100.0,
+      "mountain": 100,
       "forest": 75,
       "snow": 75,
       "desert": 75,
@@ -731,8 +731,8 @@
     "actionPoints": 10,
     "sensors": {
       "sight": 8,
-      "radar": 10.0,
-      "antiDetection": 0.0,
+      "radar": 10,
+      "antiDetection": 0,
       "revealOnDetection": false,
       "antiDetect": false,
       "stealth": false,
@@ -740,7 +740,7 @@
       "antiDetectAqua": false
     },
     "phaseShift": {
-      "capacity": 20000.0,
+      "capacity": 20000,
       "reductions": {
         "shell": 0.8,
         "shellAP": 0.2,
@@ -753,65 +753,65 @@
     }
   },
   "attackBonuses": {
-    "melee": 25.0,
-    "shooting": 25.0,
+    "melee": 25,
+    "shooting": 25,
     "beam": 0,
     "shell": 0
   },
   "defenses": {
     "beam": {
-      "percent": 5.0,
-      "flat": 150.0
+      "percent": 5,
+      "flat": 150
     },
     "shell": {
-      "percent": 15.0,
-      "flat": 150.0
+      "percent": 15,
+      "flat": 150
     },
     "melee": {
-      "percent": 15.0,
-      "flat": 150.0
+      "percent": 15,
+      "flat": 150
     },
     "dp": {
-      "percent": 15.0,
-      "flat": 25.0
+      "percent": 15,
+      "flat": 25
     },
     "sp": {
-      "percent": 0.0,
-      "flat": 0.0
+      "percent": 0,
+      "flat": 0
     }
   },
   "shield": {
-    "hp": 0.0,
+    "hp": 0,
     "blockChance": 0,
     "coverage": 0,
     "defenses": {
       "beam": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "shell": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "melee": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       },
       "dp": {
-        "percent": 1.0,
-        "flat": 0.0
+        "percent": 1,
+        "flat": 0
       }
     },
     "requiredParts": []
   },
   "sourceStats": {
-    "hp": 32000.0,
+    "hp": 32000,
     "walkSpeed": 0.6,
     "boostSpeed": 1.4,
     "turnSpeed": 1.5,
-    "reaction": 115.0,
-    "shooting": 125.0,
-    "melee": 125.0,
+    "reaction": 115,
+    "shooting": 125,
+    "melee": 125,
     "nativeTags": [
       "GAT_X103",
       "Unit",
@@ -823,30 +823,30 @@
     "nativeSkills": [
       "PSA"
     ],
-    "accuracy": 115.0,
-    "partStructuralStrength": 125.0,
+    "accuracy": 115,
+    "partStructuralStrength": 125,
     "actionTurnSpeed": 1.5,
     "movementBeforeMobility": 5,
     "mobilityMoveTarget": 6,
-    "enBeforeReduction": 950.0,
+    "enBeforeReduction": 950,
     "enCapacityMultiplier": 1,
     "adaptability": {
-      "ground": 100.0,
-      "space": 100.0,
-      "water": 75.0,
-      "air": 50.0,
-      "mountain": 100.0,
+      "ground": 100,
+      "space": 100,
+      "water": 75,
+      "air": 50,
+      "mountain": 100,
       "atmosphere": 0
     },
     "sensors": {
-      "sight": 20.0,
-      "radar": 360.0,
-      "antiDetection": 0.0
+      "sight": 20,
+      "radar": 360,
+      "antiDetection": 0
     },
     "balanceStatus": "native-level",
-    "unitLevel": 3250.0,
+    "unitLevel": 3250,
     "tacticalMoveBeforeBonus": 5,
-    "v17BaseHp": 32000.0,
+    "v17BaseHp": 32000,
     "technologyEra": "CE_0071_T1"
   },
   "presentation": {
@@ -900,7 +900,7 @@
               "delay": 0.45
             },
             {
-              "delay": 1.0
+              "delay": 1
             }
           ],
           "startAnimation": "Common_Push_A"
@@ -909,14 +909,14 @@
           "source": "Units/BattleUnits/Weapon/Cqb/Common_Push_A.gw",
           "barrel": "Common_Push_A",
           "entry": "hiddenAction_Common_Push_A_Fire",
-          "cooldown": 3.0,
+          "cooldown": 3,
           "duration": 1.45,
           "firstShot": 0.45,
           "lastShot": 0.45,
           "firingEvents": 1,
           "projectiles": 1,
           "secondaryProjectiles": 0,
-          "declaredEnergy": 0.0,
+          "declaredEnergy": 0,
           "energyMode": "perVolley",
           "energyPerEmission": 0,
           "energy": 0,
@@ -941,16 +941,16 @@
           "barrels": [
             {
               "id": "Common_Push_A",
-              "x": 0.0,
-              "y": 0.0
+              "x": 0,
+              "y": 0
             }
           ]
         },
         "muzzle": {
           "bone": "Body",
           "offset": {
-            "x": 0.0,
-            "y": 0.0
+            "x": 0,
+            "y": 0
           }
         }
       },
@@ -981,8 +981,8 @@
           "barrels": [
             {
               "id": "OMNI_GAT_X103_BR_HyperSniper",
-              "x": 11.0,
-              "y": 40.0
+              "x": 11,
+              "y": 40
             }
           ]
         },
@@ -991,8 +991,8 @@
             {
               "bone": "Body",
               "offset": {
-                "x": 11.0,
-                "y": 40.0
+                "x": 11,
+                "y": 40
               }
             }
           ]
@@ -1010,8 +1010,8 @@
           "barrels": [
             {
               "id": "OMNI_GAT_X103_AntiArmorShotgun",
-              "x": -10.0,
-              "y": 30.0
+              "x": -10,
+              "y": 30
             }
           ]
         },
@@ -1020,8 +1020,8 @@
             {
               "bone": "Body",
               "offset": {
-                "x": -10.0,
-                "y": 30.0
+                "x": -10,
+                "y": 30
               }
             }
           ]
@@ -1037,13 +1037,13 @@
           "barrels": [
             {
               "id": "OMNI_GAT_X103_MS",
-              "x": 15.0,
-              "y": -10.0
+              "x": 15,
+              "y": -10
             },
             {
               "id": "OMNI_GAT_X103_MS_L",
-              "x": -15.0,
-              "y": -10.0
+              "x": -15,
+              "y": -10
             }
           ]
         },
@@ -1052,15 +1052,15 @@
             {
               "bone": "Body",
               "offset": {
-                "x": 15.0,
-                "y": -10.0
+                "x": 15,
+                "y": -10
               }
             },
             {
               "bone": "Body",
               "offset": {
-                "x": -15.0,
-                "y": -10.0
+                "x": -15,
+                "y": -10
               }
             }
           ]
@@ -1080,13 +1080,13 @@
           "barrels": [
             {
               "id": "OMNI_GAT_X103_MS",
-              "x": 15.0,
-              "y": -10.0
+              "x": 15,
+              "y": -10
             },
             {
               "id": "OMNI_GAT_X103_MS_L",
-              "x": -15.0,
-              "y": -10.0
+              "x": -15,
+              "y": -10
             }
           ]
         },
@@ -1095,15 +1095,15 @@
             {
               "bone": "Body",
               "offset": {
-                "x": 15.0,
-                "y": -10.0
+                "x": 15,
+                "y": -10
               }
             },
             {
               "bone": "Body",
               "offset": {
-                "x": -15.0,
-                "y": -10.0
+                "x": -15,
+                "y": -10
               }
             }
           ]
@@ -1132,8 +1132,8 @@
           "barrels": [
             {
               "id": "OMNI_GAT_X103_BR",
-              "x": -11.0,
-              "y": 40.0
+              "x": -11,
+              "y": 40
             }
           ]
         },
@@ -1162,8 +1162,8 @@
           "barrels": [
             {
               "id": "OMNI_GAT_X103_Railgun",
-              "x": 11.0,
-              "y": 40.0
+              "x": 11,
+              "y": 40
             }
           ]
         },
@@ -1173,7 +1173,7 @@
               "layer": "OMNI_GAT_X103_Railgun",
               "point": {
                 "x": -1.3333333333333306,
-                "y": -44.0
+                "y": -44
               }
             }
           ]
@@ -1198,17 +1198,17 @@
           "source": "Units/BattleUnits/Weapon/Shell/Common_DoubleVulcan_MS.gw",
           "barrel": "Common_DoubleVulcan_MS",
           "entry": "automatic_turret",
-          "cooldown": 4.0,
+          "cooldown": 4,
           "duration": 1.5,
-          "firstShot": 0.0,
+          "firstShot": 0,
           "lastShot": 1.5,
           "firingEvents": 16,
           "projectiles": 16,
           "secondaryProjectiles": 0,
-          "declaredEnergy": 0.0,
+          "declaredEnergy": 0,
           "energyMode": "perShot",
-          "energyPerEmission": 0.0,
-          "energy": 0.0,
+          "energyPerEmission": 0,
+          "energy": 0,
           "actions": []
         },
         "requiredParts": [
@@ -1219,8 +1219,8 @@
           "barrels": [
             {
               "id": "Common_DoubleVulcan_MS",
-              "x": 3.0,
-              "y": 0.0
+              "x": 3,
+              "y": 0
             }
           ]
         },
@@ -1229,10 +1229,10 @@
             {
               "bone": "Head",
               "offset": {
-                "x": 3.0,
-                "y": 0.0
+                "x": 3,
+                "y": 0
               },
-              "alternatingOffsetX": -6.0
+              "alternatingOffsetX": -6
             }
           ]
         }
@@ -1254,7 +1254,7 @@
             {
               "shots": 1,
               "muzzleIndex": 0,
-              "partBreakModifier": 1.0,
+              "partBreakModifier": 1,
               "requiredParts": [],
               "swingEffects": [
                 "Cqb_Fire_1_White_R"
@@ -1271,14 +1271,14 @@
           "source": "Units/BattleUnits/Weapon/Cqb/Common_Cqb_A.gw",
           "barrel": "Common_Cqb_A",
           "entry": "hiddenAction_Common_Cqb_A_Fire",
-          "cooldown": 3.0,
-          "duration": 2.0,
+          "cooldown": 3,
+          "duration": 2,
           "firstShot": 0.6,
           "lastShot": 0.6,
           "firingEvents": 1,
           "projectiles": 1,
           "secondaryProjectiles": 0,
-          "declaredEnergy": 0.0,
+          "declaredEnergy": 0,
           "energyMode": "perVolley",
           "energyPerEmission": 0,
           "energy": 0,
@@ -1302,16 +1302,16 @@
           "barrels": [
             {
               "id": "Common_Cqb_A",
-              "x": 0.0,
-              "y": 0.0
+              "x": 0,
+              "y": 0
             }
           ]
         },
         "muzzle": {
           "bone": "Body",
           "offset": {
-            "x": 0.0,
-            "y": 0.0
+            "x": 0,
+            "y": 0
           }
         }
       },
@@ -1347,7 +1347,8 @@
         "Common_DoubleVulcan_MS",
         "Common_Cqb_A",
         "Common_Push_A"
-      ]
+      ],
+      "conversionBaseCost": 0
     }
   ],
   "description": "地球联合与曙光社合作的产物之一,具备很强的炮击战能力",
@@ -1389,7 +1390,7 @@
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
   "costBalance": {
-    "nativeLevel": 3250.0,
+    "nativeLevel": 3250,
     "levelMultiplier": 0.25,
     "published": 825
   },

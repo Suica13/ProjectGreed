@@ -4,17 +4,17 @@ const M = require("../task-editor/model"),
   statuses = require("../task-editor/catalog.cjs");
 test("contact exports keep embedded portraits and exclude other contacts", () => {
   const fs = require("node:fs");
-  const d = JSON.parse(fs.readFileSync("docs/data/contacts/efsf-1.0.json", "utf8"));
+  const d = JSON.parse(fs.readFileSync("docs/data/contacts/zeon-吉翁联络人-1.0.json", "utf8"));
   const other = JSON.parse(fs.readFileSync("docs/data/contacts/anaheim-1.0.json", "utf8"));
   d.contacts.push(other.contacts[0]);
   assert.deepEqual(M.validate(d, statuses), []);
-  const output = M.bundle(d, statuses, "efsf");
+  const output = M.bundle(d, statuses, "zeon");
   assert.equal(output.contacts.length, 1);
   assert.equal(d.contacts.length, 2);
-  assert.equal(output.contacts[0].tasks.length, 6);
+  assert.equal(output.contacts[0].tasks.length, 10);
   const portrait = output.contacts[0].portrait;
   assert.deepEqual(Buffer.from(portrait.dataUrl.split(",")[1], "base64"), fs.readFileSync(portrait.source));
-  assert.equal(M.bundle(d, statuses, "anaheim").contacts[0].tasks.length, 0);
+  assert.equal(M.bundle(d, statuses, "anaheim").contacts[0].tasks.length, 10);
   assert.throws(() => M.bundle(d, statuses, "missing"));
   d.contacts[0].portrait.dataUrl = "https://example.com/avatar.svg";
   assert(M.validate(d, statuses).some(e => e.includes("头像")));

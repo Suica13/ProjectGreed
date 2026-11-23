@@ -11,6 +11,18 @@ const Economy = (() => {
   const baseFacilities =
     typeof BaseFacilities !== "undefined" ? BaseFacilities : require("./base-facilities.js");
   const key = "projectgreed.economy.v1";
+  const supplyPools = typeof SUPPLY_POOL_DATA !== "undefined" ? SUPPLY_POOL_DATA : require("./supply-pools.json");
+  function normalizeItems(value = {}) {
+    if (!value || typeof value !== "object" || Array.isArray(value)) throw Error("道具库存无效");
+    const result = {};
+    for (const [id, count] of Object.entries(value)) {
+      if (!["supply-token", "0079t1-token"].includes(id) || !Number.isSafeInteger(count) || count < 0 || count > 1000000)
+        throw Error("道具库存无效");
+      result["0079t1-token"] = (result["0079t1-token"] || 0) + count;
+      if (result["0079t1-token"] > 1000000) throw Error("道具库存无效");
+    }
+    return result;
+  }
   const progressEpoch = typeof ProfileReset !== "undefined" ? ProfileReset.epoch : require("./profile-reset.js").epoch;
   const catalog =
     typeof PRODUCTION_CATALOG !== "undefined"
@@ -58,11 +70,13 @@ const Economy = (() => {
       licenses: defaultLicenses(),
       crewStock: pilots.normalizeCrewStock(),
       pluginInventory: {},
+      itemInventory: {},
       contactTasks: [],
       contactIntro: false,
+      merchantIntros: {},
       contactAffinity: 0,
       contactRewardVersion: 2,
-      merchantAffinities: { anaheim: 0 },
+      merchantAffinities: { anaheim: 0, zeon: 0 },
     };
   }
   function validate(value) {
@@ -92,6 +106,20 @@ const Economy = (() => {
       units: Math.ceil(capacity.units / warehouse.defaults.unitsPerPage),
       ships: Math.ceil(capacity.ships / warehouse.defaults.shipsPerPage),
     };
+    // Replace only the tagged trial loan; independently owned Goufs stay intact.
+    for (const item of [...(storageInput.units || []), ...(storageInput.ships || []), ...(storageInput.deliveries || [])]) {
+      if (item.contactLoan !== "zeon-5" || item.unitId !== "MS_07B3") continue;
+      if (!storageInput.deliveries?.includes(item)) {
+        stock.inventory.MS_07B3 = Math.max(0, (stock.inventory.MS_07B3 || 0) - 1);
+        stock.inventory.MS_11S = (stock.inventory.MS_11S || 0) + 1;
+      }
+      const old = modelsForUnits()[item.unitId + "__" + item.kitId];
+      item.unitId = "MS_11S";
+      item.kitId = defaultKit(item.unitId);
+      const model = modelsForUnits()[item.unitId + "__" + item.kitId];
+      item.hp = item.destroyed ? 0 : Math.max(1, Math.round(model.hp * Math.min(1, item.hp / (old?.hp || model.hp))));
+      item.en = Math.round(model.en * Math.min(1, item.en / (old?.en || model.en || 1)));
+    }
     const storage = warehouse.normalize(
       storageInput,
       modelsForUnits(),
@@ -165,11 +193,14 @@ const Economy = (() => {
       ...stock,
       crewStock: pilots.normalizeCrewStock(value.crewStock),
       pluginInventory,
+      itemInventory: normalizeItems(value.itemInventory),
+      ...(value.supplyTestGrant === true ? { supplyTestGrant: true } : {}),
       contactTasks,
       contactIntro: value.contactIntro === true,
+      merchantIntros: Object.fromEntries(merchants.filter(m=>m.id!=="efsf").map(m=>[m.id,value.merchantIntros?.[m.id]===true])),
       contactAffinity: value.contactAffinity === undefined
-        ? contacts.normalize(value.contactTasks).filter(e=>e.status==="claimed").reduce((sum,entry)=>sum+(contacts.byId.get(entry.id).affinity||100),0)
-        : Math.round((value.contactAffinity + (value.contactRewardVersion===2 ? 0 : contacts.normalize(value.contactTasks).filter(e=>e.status==="claimed").length*99.9))*10)/10,
+        ? contacts.normalize(value.contactTasks).filter(e=>e.status==="claimed"&&contacts.contactId(contacts.byId.get(e.id))==="efsf").reduce((sum,entry)=>sum+(contacts.byId.get(entry.id).affinity||100),0)
+        : Math.round((value.contactAffinity + (value.contactRewardVersion===2 ? 0 : contacts.normalize(value.contactTasks).filter(e=>e.status==="claimed"&&contacts.contactId(contacts.byId.get(e.id))==="efsf").length*99.9))*10)/10,
       contactRewardVersion: 2,
       merchantAffinities,
       ...(Object.keys(claimed).length ? { claimed } : {}),
@@ -187,11 +218,21 @@ const Economy = (() => {
             ? ProfileMigrations
             : require("./profile-migrations.js");
         state = validate(migrations.economy(parsed));
+        // One-time test grant for this development client's existing local saves.
+        // Remote origins and new profiles receive no tokens.
+        if (typeof location !== "undefined" &&
+            (location.protocol === "file:" || ["localhost", "127.0.0.1", "[::1]"].includes(location.hostname)) &&
+            !state.supplyTestGrant) {
+          const next = snapshot();
+          next.itemInventory["0079t1-token"] = (next.itemInventory["0079t1-token"] || 0) + 99999;
+          next.supplyTestGrant = true;
+          commit(next);
+        }
         if (parsed.schemaVersion !== 4 || parsed.licenses === undefined) {
           const backupKey = key + ".before-counted-stock";
           if (localStorage.getItem(backupKey) === null) localStorage.setItem(backupKey, saved);
           localStorage.setItem(key, saveCodec.stringify(state));
-        } else if (parsed.contactTasks?.length) {
+        } else if (parsed.contactTasks?.length || Object.hasOwn(parsed.itemInventory || {}, "supply-token")) {
           // Retire the erroneous tactical-mission links, leaving wallet and parts intact.
           localStorage.setItem(key, saveCodec.stringify(state));
         }
@@ -402,8 +443,18 @@ const Economy = (() => {
     const next = snapshot();
     next.money += award.money;
     next.supplies += award.supplies;
+    applyActivityRewards(next, award);
+    next.claimed = { ...next.claimed, [award.id]: award.matchId };
+    return commit(next, extraWrites);
+  }
+  function applyActivityRewards(next, award) {
     const awardedStock = normalizeStock(award);
     const rentals = warehouse.rentalRewards(award.rentals, modelsForUnits(), defaultKit);
+    for (const [id, count] of Object.entries(normalizeItems(award.itemInventory))) {
+      const total = (next.itemInventory[id] || 0) + count;
+      if (!Number.isSafeInteger(total) || total > 1000000) throw Error("道具库存数量超过上限：" + id);
+      next.itemInventory[id] = total;
+    }
     for(const [id,count]of Object.entries(normalizePluginInventory(award.pluginInventory||{},warehouse.empty()))){
       const total=(next.pluginInventory[id]||0)+count;
       if(!Number.isSafeInteger(total)||total>1000000)throw Error("零件库存数量超过上限："+id);
@@ -432,8 +483,90 @@ const Economy = (() => {
       if (!Object.hasOwn(catalog.baseModels, id) || owned !== true) throw Error("活动单位奖励无效");
       next.licenses[id] = true;
     }
-    next.claimed = { ...next.claimed, [award.id]: award.matchId };
-    return commit(next, extraWrites);
+  }
+  function supplyProducts(poolId) {
+    const pool = supplyPools.find(pool => pool.id === poolId);
+    if (!pool) throw Error("补给池不存在");
+    const treeUnits = new Set(Object.values(tree).flatMap(nodes => nodes.filter(node => !node.placeholder).flatMap(node => node.unlocks || [])));
+    const specifiedUnits = new Set(pool.grades.flatMap(grade => grade.rewards.flatMap(reward => reward.unitIds || [])));
+    const eras = pool.eras || [pool.era];
+    return pool.grades.map(grade => {
+      const total = grade.rewards.reduce((sum, reward) => sum + (reward.weight ?? 1), 0);
+      if (!Number.isFinite(total) || total <= 0 || grade.rewards.some(reward => !Number.isFinite(reward.weight ?? 1) || (reward.weight ?? 1) <= 0))
+        throw Error("补给商品权重无效");
+      return { ...grade, rewards: grade.rewards.map(reward => {
+      const choices = reward.unitIds ? reward.unitIds.map(id => {
+        if (!modelsForUnits()[id + "__" + defaultKit(id)]) throw Error("补给指定单位不存在：" + id);
+        return id;
+      }) : reward.kind === "unit"
+        ? Object.keys(catalog.baseModels).filter(id => {
+          const model = modelsForUnits()[id + "__" + defaultKit(id)];
+          return (!reward.treeOnly || treeUnits.has(id)) && (!reward.excludeSpecified || !specifiedUnits.has(id)) &&
+            model && !model.wip && !model.disabled && !model.formOnly && eras.some(era => model.tags?.includes(era)) &&
+            model.cost >= (reward.minCost ?? 0) && model.cost <= (reward.maxCost ?? Infinity);
+        })
+        : reward.kind === "plugin" ? plugins.catalog.filter(part => eras.includes(part.era) &&
+          (reward.rarity == null || part.rarity === reward.rarity) &&
+          (reward.merchant == null || part.merchant === reward.merchant) &&
+          (reward.level == null || part.merchantLevel === reward.level)).map(part => part.id)
+        : ["featured", "rental"].includes(reward.kind) ? [...pool.featured] : [];
+      return { ...reward, weight: reward.weight ?? 1, chance: grade.weight * (reward.weight ?? 1) / total, choices };
+    }) };
+    });
+  }
+  function supplyRandom() {
+    if (typeof crypto !== "undefined" && crypto.getRandomValues)
+      return crypto.getRandomValues(new Uint32Array(1))[0] / 4294967296;
+    return Math.random();
+  }
+  function drawSupply(poolId, count) {
+    if (typeof Net !== "undefined" && Net.started) throw Error("战斗中不能抽取补给");
+    if (![1, 10].includes(count)) throw Error("抽取次数无效");
+    if (supplyStorageStatus().blocked) throw Error("保管库已超过99台，请先领取单位后再抽取");
+    const pool = supplyPools.find(pool => pool.id === poolId);
+    if (!pool) throw Error("补给池不存在");
+    if ((state.itemInventory[pool.tokenId] || 0) < count) throw Error(pool.tokenName + "不足");
+    const grades = supplyProducts(poolId);
+    if (grades.some(grade => grade.rewards.some(reward => !["money", "supplies", "item"].includes(reward.kind) && !reward.choices.length)))
+      throw Error("补给商品配置为空");
+    const next = snapshot(), results = [];
+    const pick = entries => entries[Math.floor(supplyRandom() * entries.length)];
+    for (let i = 0; i < count; i++) {
+      let roll = supplyRandom() * 100;
+      const grade = grades.find(grade => (roll -= grade.weight) < 0);
+      let rewardRoll = supplyRandom() * grade.rewards.reduce((sum, reward) => sum + reward.weight, 0);
+      const reward = grade.rewards.find(reward => (rewardRoll -= reward.weight) < 0);
+      const result = { grade: grade.id, kind: reward.kind, quantity: 1 };
+      const award = { inventory: {}, pluginInventory: {}, rentals: [] };
+      if (["money", "supplies"].includes(reward.kind)) {
+        result.quantity = reward.min + Math.floor(supplyRandom() * (reward.max - reward.min + 1));
+        next[reward.kind] += result.quantity;
+      } else if (reward.kind === "item") {
+        if (reward.itemId !== pool.tokenId || !Number.isSafeInteger(reward.quantity) || reward.quantity <= 0)
+          throw Error("补给道具配置无效");
+        result.itemId = reward.itemId;
+        result.quantity = reward.quantity;
+        next.itemInventory[result.itemId] = (next.itemInventory[result.itemId] || 0) + result.quantity;
+      } else if (reward.kind === "plugin") {
+        result.pluginId = pick(reward.choices);
+        award.pluginInventory[result.pluginId] = 1;
+      } else {
+        result.unitId = pick(reward.choices);
+        if (reward.kind === "rental") result.uses = reward.uses;
+        const kitId = defaultKit(result.unitId), model = modelsForUnits()[result.unitId + "__" + kitId];
+        next.storage.deliveries.push({ unitId: result.unitId, kitId, ...warehouse.condition({}, model),
+          ...(result.uses ? { rentalUses: result.uses } : {}) });
+      }
+      applyActivityRewards(next, award);
+      results.push(result);
+    }
+    next.itemInventory[pool.tokenId] -= count;
+    commit(next);
+    return results;
+  }
+  function supplyStorageStatus() {
+    const count = state.storage.deliveries.length;
+    return { count, blocked: count > 99 };
   }
   function normalizeStock(value = {}) {
     const result = { inventory: {}, kits: {} };
@@ -611,7 +744,7 @@ const Economy = (() => {
     const offer = pluginOffer(merchantId, id);
     if (!offer)
       throw Error("商人或零件不存在");
-    if(!offer.available)throw Error("联络人好感度等级不足");
+    if(!offer.available)throw Error(offer.requiredTask ? "尚未交付前提任务："+offer.requiredTaskName : "联络人好感度等级不足");
     if (!affordable(offer)) return false;
     const next = snapshot();
     next.money -= offer.money;
@@ -620,7 +753,13 @@ const Economy = (() => {
   }
   function pluginOffer(merchantId, id) {
     const merchant = merchants.find(item => item.id === merchantId), part = plugins.byId.get(id);
-    return merchant?.sellsPlugins && part?.merchant===merchantId ? { money: part.rarity * 3000, available: merchantLevel(merchantId)>=(part.merchantLevel||1), requiredLevel:part.merchantLevel||1 } : null;
+    if (!merchant?.sellsPlugins || part?.merchant!==merchantId) return null;
+    if (merchantId === "anaheim") {
+      const task=contacts.tasks.find(task=>task.contactId==="anaheim" && task.pluginUnlocks?.includes(id));
+      return {money:part.rarity*3000,available:!!task && state.contactTasks.some(entry=>entry.id===task.id&&entry.status==="claimed"),
+        requiredTask:task?.id,requiredTaskName:task?.name,requiredLevel:1};
+    }
+    return { money: part.rarity * 3000, available: merchantLevel(merchantId)>=(part.merchantLevel||1), requiredLevel:part.merchantLevel||1 };
   }
   function moveStoredUnit(id, slot, swap = false) {
     const next = snapshot(),
@@ -698,17 +837,21 @@ const Economy = (() => {
     if (!plan) throw Error("许可计划不存在");
     for (const id of plan.unlocks || []) if (modelsForUnits()[id+"__"+defaultKit(id)] && catalog.baseModels[licenseUnit(id)]) next.licenses[licenseUnit(id)] = true;
   }
-  function meetLiaison() {
-    if (state.contactIntro) return false;
-    const next=snapshot();next.contactIntro=true;
-    grantPlan(next,"Tech_EFSF_0079_AntiMSPlan");
+  function meetLiaison(id="efsf") {
+    const plan = contacts.introPlan(id);
+    if (!plan && !contacts.introFor(id).length) throw Error("联络人不存在");
+    if (contacts.met(state,id)) return false;
+    const next=snapshot();
+    if(id==="efsf")next.contactIntro=true;
+    else next.merchantIntros[id]=true;
+    if(plan) grantPlan(next,plan);
     return commit(next);
   }
   function acceptContactTask(id) {
     const task=contacts.byId.get(id);
-    if(!task || !state.contactIntro || state.contactTasks.some(e=>e.id===id) ||
-      !contacts.unlocked(task,state.contactTasks,state.contactIntro)) throw Error("任务尚未解锁或已接取");
-    const next=snapshot();next.contactTasks.push({id,status:"accepted",progress:0,...(task.reclaim?{loanTracking:true}:{})});
+    if(!task || state.contactTasks.some(e=>e.id===id) ||
+      !contacts.unlocked(task,state.contactTasks,state)) throw Error("任务尚未解锁或已接取");
+    const next=snapshot();next.contactTasks.push({id,status:"accepted",progress:0,...(task.progressVersion?{progressVersion:task.progressVersion}:{}),...(task.reclaim?{loanTracking:true}:{})});
     for(const [unitId,count] of Object.entries(task.grant||{})) for(let i=0;i<count;i++) {
       const kitId=defaultKit(unitId),model=modelsForUnits()[unitId+"__"+kitId];
       const item={unitId,kitId,...warehouse.condition({},model),...(task.reclaim?{contactLoan:id}:{})};
@@ -748,9 +891,11 @@ const Economy = (() => {
     if(!task || entry?.status!=="ready") throw Error("任务尚未完成或已交付");
     reclaimContactLoan(next,entry);
     entry.status="claimed";next.money+=task.money;
-    next.contactAffinity += task.affinity || 100;
+    const merchantId=contacts.contactId(task);
+    if(merchantId==="efsf")next.contactAffinity += task.affinity || 100;
+    else next.merchantAffinities[merchantId]=(next.merchantAffinities[merchantId]||0)+(task.affinity||100);
     for(const [unitId,count] of Object.entries(task.inventory))next.inventory[unitId]=(next.inventory[unitId]||0)+count;
-    if(task.licensePlan)grantPlan(next,task.licensePlan);
+    for(const plan of contacts.planIds(task))grantPlan(next,plan);
     return commit(next);
   }
   const liaisonAffinity = () => state.contactAffinity;
@@ -760,9 +905,9 @@ const Economy = (() => {
   function facilityUpgradeOffer(id) {
     const offer=baseFacilities.upgradeOffer(state.baseFacilities,id);
     const supported=["hq","factory","giantFactory","academy"].includes(id) && offer.next===2;
-    const unlocked=supported && state.contactTasks.some(e=>e.id==="efsf-6"&&e.status==="claimed");
+    const unlocked=supported && state.contactTasks.some(e=>["efsf-6","zeon-6"].includes(e.id)&&e.status==="claimed");
     const money=id==="hq"?20000:10000;
-    return {...offer,unlocked,condition:supported?"完成联邦联络任务：绿色通道":id==="beacon"?"信标暂未开放升级":"开发中",money:supported?money:null,supplies:supported?money:null,available:unlocked&&!offer.max&&!offer.hqRequired};
+    return {...offer,unlocked,condition:supported?"完成联邦联络任务：绿色通道，或吉翁联络任务：通行税":id==="beacon"?"信标暂未开放升级":"开发中",money:supported?money:null,supplies:supported?money:null,available:unlocked&&!offer.max&&!offer.hqRequired};
   }
   function upgradeFacility(id, expected) {
     const offer=facilityUpgradeOffer(id);
@@ -1027,6 +1172,10 @@ const Economy = (() => {
     return commit(next);
   }
   return {
+    supplyPools,
+    supplyStorageStatus,
+    supplyProducts,
+    drawSupply,
     merchants,
     pluginQuantity,
     pluginOffer,

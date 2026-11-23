@@ -4,12 +4,14 @@ const { WebSocket, WebSocketServer } = require("ws");
 const G = require("../shared/rules.js");
 const { createRoomEngine } = require("../shared/room-engine.js");
 
-for (const [shared, delegate] of [
+for (const [shared, delegate, unattended] of [
   [true, false],
   [false, false],
   [true, true],
+  [false, false, "reaction"],
+  [true, false, "review"],
 ])
-  test(`response review barrier applies only to shared units (${shared}, delegated ${delegate})`, async (t) => {
+  test(`response review barrier applies only to shared units (${shared}, delegated ${delegate}, unattended ${unattended || false})`, async (t) => {
     let sequence = 0;
     const frames = [];
     const wire = new WebSocketServer({ host: "127.0.0.1", port: 0 });
@@ -128,15 +130,28 @@ for (const [shared, delegate] of [
       await act(host, "attack", { unitId: attackers[i].id, targetId: target.id });
     await act(host, "end_turn");
     assert.equal(room.phase, "reaction");
+    if (unattended === "reaction") engine.disconnect(second);
     const before = room.game.units.map((unit) => unit.hp);
     const requests = room.reactions.map((request) => request.id);
     for (const reactionId of requests) {
       const targetId = room.reactions.find((request) => request.id === reactionId).target;
       const owner = G.ownerOf(room.game.units.find((unit) => unit.id === targetId));
-      await act(shared || owner === 1 ? first : second, "respond", {
+      await act(shared || unattended === "reaction" || owner === 1 ? first : second, "respond", {
         reactionId,
         response: "defend",
       });
+    }
+    if (unattended === "reaction") {
+      assert.equal(room.phase, "reaction");
+      await act(first, "confirm_responses", {reviewId:room.reactionReviewId});
+      assert.equal(room.phase, "playback");
+      assert(!room.playback.members.includes(second.memberId));
+      const batchId=room.playback.id;
+      await act(host,"playback_ready",{batchId});
+      await act(first,"playback_ready",{batchId});
+      assert.equal(room.phase,"idle");
+      assert.equal(room.game.team,1);
+      return;
     }
     if (!shared) {
       assert.notEqual(room.phase, "reaction");
@@ -159,6 +174,11 @@ for (const [shared, delegate] of [
     let reviewId = room.reactionReviewId;
     await act(first, "confirm_responses", { reviewId });
     assert.equal(room.phase, "reaction");
+    if (unattended === "review") {
+      engine.disconnect(second);
+      assert.notEqual(room.phase,"reaction","confirmed teammate no longer waits for the disconnected reviewer");
+      return;
+    }
     await act(second, "edit_response", { reactionId: requests[0] });
     assert.deepEqual(room.reactionReady, []);
     await act(second, "respond", { reactionId: requests[0], response: "evade" });

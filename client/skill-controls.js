@@ -1,6 +1,45 @@
 /* 脱出按钮与落点选择。只发意图，实际恢复、换机和生成由共用规则裁定。 */
 const SkillControls = (() => {
+  let targetDraft = null;
+  const reset = () => { targetDraft = null; };
   const activeId = () => (mode.startsWith("skill:") ? mode.slice(6) : null);
+  function confirmation(unit) {
+    const weapon = mode === "target" && unit && getWeapon(unit, weaponId);
+    const active = !!unit && (!!activeId() || weapon?.slot === "skill");
+    const draft = active && targetDraft?.game === game && targetDraft.unitId === unit.id &&
+      targetDraft.mode === mode && targetDraft.weaponId === weaponId ? targetDraft : null;
+    let target = null;
+    if (draft?.kind === "weapon") {
+      target = draft.ground ? Rules.groundTarget(game, unit, draft.x, draft.y) : getUnit(draft.targetId);
+      if (target && draft.aimCell) target = {...target, aimCell:draft.aimCell};
+    }
+    const legal = !!draft && (draft.kind === "weapon"
+      ? !!target && Rules.canAttack(game, unit, target, weapon)
+      : Rules.canUseSkill(game, unit, activeId()) &&
+        Rules.skillTargets(game, unit, activeId()).some(cell=>cell.x===draft.x&&cell.y===draft.y));
+    return {active, draft, target, weapon, ready:legal && phase === "idle" && !isBusy() &&
+      (!Net.active || (Net.canAct() && Net.canControl(unit) && !Net.awaiting))};
+  }
+  function chooseWeaponTarget(unit, target, weapon) {
+    if (weapon?.slot !== "skill") return false;
+    if (!Rules.canAttack(game, unit, target, weapon)) return true;
+    targetDraft = {kind:"weapon",game,unitId:unit.id,mode,weaponId:weapon.id,targetId:target.id,
+      ground:!!target.groundTarget,x:target.x,y:target.y,aimCell:target.aimCell};
+    update();
+    return true;
+  }
+  function confirm() {
+    const unit = getUnit(selected), selection = confirmation(unit);
+    if (!selection.ready) return;
+    if (selection.draft.kind === "weapon") {
+      const {target,weapon}=selection;
+      reset();
+      beginAttack(unit,target,weapon);
+      weaponId = null;
+      mode = "select";
+      update();
+    } else execute(selection.draft,unit);
+  }
   const resultName = (result) =>
     UnitModels[result.unitId + "__" + result.kitId]?.name || result.unitId;
   function recovery(result) {
@@ -155,6 +194,7 @@ const SkillControls = (() => {
       use.disabled = !canCommand || unit.acted || !!unit.plan ||
         unit.attackSkillRound === game.round || !Rules.canUse(unit,weapon);
       use.onclick = () => {
+        reset();
         AttackControls.reset();
         mode = "target"; weaponId = weapon.id;
         squadSingleMove = true;
@@ -236,6 +276,7 @@ const SkillControls = (() => {
         !Rules.canUseSkill(game, unit, skill.id) ||
         !Rules.skillTargets(game, unit, skill.id).length;
       button.onclick = () => {
+        reset();
         GameAudio.play("selectWeaponSound");
         AttackControls.reset();
         mode = "skill:" + skill.id;
@@ -255,13 +296,13 @@ const SkillControls = (() => {
           ].includes(skill.type) ||
           (skill.type === "recon" && skill.reconMode !== "camera")
         )
-          click({ x: unit.x, y: unit.y }, unit);
+          click({ x: unit.x, y: unit.y }, unit, true);
         else update();
       };
       list.append(button);
     }
     if (activeId())
-      list.append(element("p", "helper", "点击高亮格子选择技能目标，再次选择单位可取消。"));
+      list.append(element("p", "helper", "点击高亮格子选择技能目标，再点击确认技能。"));
   }
   function cells(unit) {
     if (
@@ -274,6 +315,7 @@ const SkillControls = (() => {
     return new Set(Rules.skillTargets(game, unit, activeId()).map((c) => Rules.key(c.x, c.y)));
   }
   function applied(event) {
+    reset();
     if (selected === event.unitId) {
       selected = event.resultId;
       weaponId = null;
@@ -282,7 +324,7 @@ const SkillControls = (() => {
     if (event.irradiation) IrradiationFX.start(event);
     else SkillEffects.start(event);
   }
-  function click(cell, unit) {
+  function click(cell, unit, immediate = false) {
     const skillId = activeId();
     if (!skillId || !unit) return false;
     if (!Rules.skillTargets(game, unit, skillId).some((c) => c.x === cell.x && c.y === cell.y)) {
@@ -291,7 +333,21 @@ const SkillControls = (() => {
       else note("请选择高亮的合法技能目标。");
       return true;
     }
-    if (Net.active) Net.request("skill", { unitId: unit.id, skillId, x: cell.x, y: cell.y });
+    if (!immediate) {
+      targetDraft={kind:"unit",game,unitId:unit.id,mode,weaponId,x:cell.x,y:cell.y};
+      update();
+      return true;
+    }
+    execute(cell,unit);
+    return true;
+  }
+  function execute(cell, unit) {
+    const skillId = activeId();
+    reset();
+    if (Net.active) {
+      Net.request("skill", { unitId: unit.id, skillId, x: cell.x, y: cell.y });
+      mode="select";weaponId=null;update();
+    }
     else {
       try {
         const skillName =
@@ -305,7 +361,6 @@ const SkillControls = (() => {
         note(error.message);
       }
     }
-    return true;
   }
   // Roster, assignment and campaign lists use the same equipped-skill presentation.
   function pilotSummary(profile) {
@@ -333,5 +388,6 @@ const SkillControls = (() => {
       row.append(element("small", "muted", I18n.text(profile?.level >= PilotSystem.skillUnlockLevel ? "未选择技能" : "6级解锁技能")));
     return row;
   }
-  return { render, cells, click, applied, description, commandAbilities, defensiveAbilities, pilotSummary };
+  return { render, cells, click, applied, description, commandAbilities, defensiveAbilities, pilotSummary,
+    confirmation, chooseWeaponTarget, confirm, reset };
 })();

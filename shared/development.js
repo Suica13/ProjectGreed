@@ -38,6 +38,13 @@ const Development = (() => {
   function nodes(faction) {
     return tree[faction] || [];
   }
+  const treeUnits = new Map(factions.map(faction => [faction,
+    new Set(nodes(faction).filter(node => !node.placeholder).flatMap(node => node.unlocks || []))]));
+  function treeAllows(unitId, faction) {
+    return treeUnits.has(faction)
+      ? treeUnits.get(faction).has(unitId)
+      : [...treeUnits.values()].some(units => units.has(unitId));
+  }
   const unitThresholds = new Map();
   function allowsPointCaps(unitId, caps) {
     if (!caps) return true;
@@ -288,6 +295,7 @@ const Development = (() => {
   }
   return {
     factions,
+    treeAllows,
     allowsPointCaps,
     hasCompleted0079,
     mainlineComplete,

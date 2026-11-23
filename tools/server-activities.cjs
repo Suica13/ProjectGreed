@@ -11,6 +11,7 @@ function createActivityService({ rules, send, storePath = null, now = Date.now,
   const aceMap = new Map(require("../shared/pilots.json").aces.map((p) => [p.id, p]));
   const unitMap = new Map(rules.catalog.prefabs.map((unit) => [unit.id, unit]));
   const pluginMap=new Map(require("../shared/unit-plugins.json").map(part=>[part.id,part]));
+  const tokenIds = new Set(require("../shared/supply-pools.json").map(pool => pool.tokenId));
   let state = { schemaVersion: 2, serverId: crypto.randomUUID(), players: {}, activities: [] };
   function save(next) {
     if (storePath) {
@@ -185,6 +186,17 @@ function createActivityService({ rules, send, storePath = null, now = Date.now,
     )
       throw Error("资金、物资必须为0至10亿的整数");
     const stock = rules.normalizeStock({ inventory: value.inventory });
+    if (value.itemInventory !== undefined) {
+      if (!value.itemInventory || typeof value.itemInventory !== "object" || Array.isArray(value.itemInventory))
+        throw Error("道具奖励格式无效");
+      const items = {};
+      for (const [id, count] of Object.entries(value.itemInventory)) {
+        if (!tokenIds.has(id) || !Number.isSafeInteger(count) || count < 0 || count > 1000000)
+          throw Error("道具奖励数量无效：" + id);
+        if (count) items[id] = count;
+      }
+      if (Object.keys(items).length) rewards.itemInventory = items;
+    }
     if (Object.keys(stock.inventory).length) rewards.inventory = stock.inventory;
     if (
       value.licenses !== undefined &&

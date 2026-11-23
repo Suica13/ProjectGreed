@@ -1,0 +1,91 @@
+.contact-supply[hidden] { display: none; }
+.contact-content.is-supply { display: flex; overflow: hidden; }
+.contact-supply { display: grid; flex: 1; min-height: 0; min-width: 0; grid-template-rows: minmax(0, 1fr); grid-template-columns: minmax(200px, .8fr) minmax(0, 1.2fr); gap: 22px; width: 100%; max-width: 1360px; margin: 0 auto; color: #e6eff3; overflow: hidden; }
+.supply-pool-list, .supply-detail { min-width: 0; }
+.supply-pool-list { min-height: 0; overflow-x: hidden; overflow-y: auto; padding: 3px; overscroll-behavior: contain; scrollbar-gutter: stable; }
+.supply-detail { min-height: 0; display: flex; flex-direction: column; gap: 10px; overflow: hidden; }
+.supply-pool-list h2 { margin: 0 0 4px; color: #f3d882; letter-spacing: .08em; }
+.supply-pool-list > small { color: #73c9de; letter-spacing: .15em; }
+body button.supply-pool-card { position: relative; width: 100%; display: grid; grid-template-columns: 1fr 1fr; padding: 8px; margin-top: 16px; overflow: hidden; border: 2px solid #d0b66b; border-radius: 3px; background: linear-gradient(120deg, #244b67, #142631 55%, #73602b); box-shadow: inset 0 0 20px #73c9de25; }
+body button.supply-pool-card[aria-pressed="true"] { border-color: #ffe6a0; box-shadow: 0 0 0 2px #c7a64a55, inset 0 0 25px #e1c65a22; }
+.supply-pool-card canvas { width: 100%; height: 140px; object-fit: contain; }
+.supply-pool-card strong { grid-column: 1 / -1; padding: 8px; background: #081522c9; text-align: left; color: #ffe5a1; }
+.supply-pool-era { display: block; margin-top: 4px; font-size: 12px; color: #98d8ed; }
+.supply-capacity-warning { flex: 0 0 100%; color: #ffe3a0; }
+.supply-unit-preview { image-rendering: pixelated; }
+.supply-pool-number { position: absolute; top: 8px; right: 12px; color: #fff0ae; letter-spacing: .15em; font-weight: bold; }
+.supply-cover { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; position: relative; border: 2px solid #bca459; background: radial-gradient(ellipse at 25% 55%, #36567d 0, #112338 48%, #0c1824 75%); padding: 14px 18px 0; }
+.supply-cover > h2, .supply-kicker, .supply-featured-label { flex: none; }
+.supply-cover::before { content: ""; position: absolute; width: 130%; height: 22px; background: #cdb05425; transform: rotate(-28deg); top: 38%; left: -15%; pointer-events: none; }
+.supply-cover h2 { margin: 8px 0 0; font-size: clamp(20px, 2.3vw, 32px); color: #ffe3a0; }
+.supply-kicker { letter-spacing: .2em; color: #8bccdf; }
+.supply-featured { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: minmax(0, 1fr); position: relative; }
+.supply-featured figure { display: flex; flex-direction: column; margin: 0; min-width: 0; min-height: 0; text-align: center; }
+.supply-featured figure:first-child canvas { transform: translateX(5%); }
+.supply-featured figure:last-child canvas { transform: translateX(-5%); }
+.supply-featured canvas { display: block; flex: 1; min-height: 0; width: 100%; height: 0; object-fit: contain; }
+.supply-featured figcaption { flex: none; font-size: 19px; font-weight: bold; color: #fff0b1; padding-bottom: 8px; }
+.supply-featured-label { display: block; margin: 0 -18px; padding: 9px 18px; background: #081521c9; color: #c3d9e4; font-size: 12px; }
+.supply-rates { flex: none; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding: 2px 0; font-weight: bold; }
+[data-grade="S"] { --grade-color: #ffdc7b; }
+[data-grade="A"] { --grade-color: #d6adff; }
+[data-grade="B"] { --grade-color: #83cbff; }
+[data-grade="C"] { --grade-color: #b0c5cb; }
+.supply-rates span, .supply-result > strong, .supply-product-grade h3 { color: var(--grade-color); }
+.supply-wallet { flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; border-block: 1px solid #40616e; background: #172e3b; padding: 12px; }
+.supply-wallet strong { color: #f4d78e; font-size: 22px; margin-right: auto; }
+.supply-actions { flex: none; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.supply-results { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.supply-results:empty { display: none; }
+body button.supply-draw { display: grid; gap: 5px; min-height: 78px; border: 1px solid #f0ce77; border-radius: 4px; background: linear-gradient(#82602b, #b18a3c 45%, #735327 50%, #493619); color: #fff0b4; box-shadow: inset 0 0 0 3px #2b291d; }
+.supply-draw strong { font-size: clamp(18px, 2vw, 25px); }
+.supply-draw small { color: #f6e4b5; }
+body button.supply-draw:disabled { opacity: .45; }
+.supply-result-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; margin-bottom: 12px; }
+.supply-result { display: grid; gap: 8px; padding: 12px; border: 1px solid var(--grade-color); background: #142737; font-size: 13px; }
+.supply-products { max-height: 85vh; }
+.supply-products-body { overflow: auto; padding: 16px; }
+.supply-product-grade { border-top: 1px solid #3a5368; padding-bottom: 12px; }
+.supply-product-grade ul { columns: 2 240px; padding-left: 24px; font-size: 13px; }
+.supply-product-grade li { break-inside: avoid; margin-bottom: 6px; }
+.supply-token-symbol { font-size: 42px; color: #f0d27b; }
+@media(max-height: 650px) {
+  .supply-detail { gap: 5px; }
+  .supply-kicker { display: none; }
+  .supply-cover { padding-top: 6px; }
+  .supply-cover h2 { font-size: 16px; margin: 0; }
+  .supply-featured figcaption { font-size: 12px; padding-bottom: 3px; }
+  .supply-featured-label { display: none; }
+  .supply-rates { font-size: 11px; }
+  .supply-wallet { padding: 5px; gap: 6px; font-size: 11px; }
+  .supply-wallet strong { font-size: 17px; }
+  body button.supply-draw { min-height: 44px; padding: 4px; gap: 2px; }
+  .supply-draw strong { font-size: 16px; }
+  .supply-draw small { font-size: 10px; }
+  .supply-results button { padding: 4px 6px; font-size: 11px; }
+}
+@media(max-width: 720px) {
+  .contact-content.is-supply { padding: 8px; }
+  .contact-supply { grid-template-columns: 86px minmax(0, 1fr); gap: 8px; }
+  .supply-detail { gap: 8px; }
+  body button.supply-pool-card { padding: 3px; margin-top: 10px; }
+  .supply-pool-card canvas { height: 52px; }
+  .supply-pool-card strong { padding: 4px; font-size: 10px; }
+  .supply-pool-era { font-size: 9px; }
+  .supply-pool-number { font-size: 8px; top: 4px; right: 4px; }
+  .supply-pool-list h2 { font-size: 12px; letter-spacing: 0; }
+  .supply-pool-list > small { font-size: 8px; letter-spacing: 0; }
+  .supply-cover { padding: 8px 8px 0; }
+  .supply-cover h2 { font-size: 17px; }
+  .supply-kicker { font-size: 8px; letter-spacing: .1em; }
+  .supply-featured figcaption { font-size: 12px; }
+  .supply-featured-label { margin-inline: -8px; padding: 5px 8px; font-size: 10px; }
+  .supply-rates { font-size: 10px; gap: 4px; }
+  .supply-wallet { gap: 6px; padding: 8px; font-size: 10px; }
+  .supply-wallet strong { font-size: 18px; }
+  .supply-wallet button, .supply-results button { font-size: 11px; padding: 6px; }
+  .supply-actions { gap: 6px; }
+  body button.supply-draw { min-height: 62px; padding: 8px 4px; }
+  .supply-draw strong { font-size: 17px; }
+  .supply-draw small, .supply-results small { font-size: 10px; }
+}

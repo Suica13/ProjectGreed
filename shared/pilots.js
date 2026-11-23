@@ -447,7 +447,7 @@ const PilotSystem = (() => {
       : defaultPortrait(faction)?.id;
     if(value.talentSlotsUnlocked!==undefined&&![0,1,2,3].includes(value.talentSlotsUnlocked))throw Error("驾驶员天赋次数无效");
     const earnedTalentSlots = reincarnations >= 2 ? 3 : reincarnations >= 1 ? 2 : level >= 4 ? 1 : 0;
-    const talentSlotsUnlocked=Math.max(value.talentSlotsUnlocked??0,talents.normalize(value.talents).length,earnedTalentSlots);
+    const talentSlotsUnlocked=Math.max(value.talentSlotsUnlocked??0,talents.normalize(value.talents,true).length,earnedTalentSlots);
     const talentIds=talents.fill(value,talentSlotsUnlocked);
     return {
       id: value.id,
@@ -472,6 +472,7 @@ const PilotSystem = (() => {
       ...(selectedSecondSkillId ? { selectedSecondSkillId } : {}),
       custom: true,
       talents: talentIds,
+      talentPoolVersion: talents.poolVersion,
       talentSlotsUnlocked,
       needsRecruitment: value.needsRecruitment === true,
     };

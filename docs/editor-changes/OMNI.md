@@ -9,6 +9,7 @@
 
 | 时间（日本时间） | 来源IP | 单位 | 修改对象 | 修改内容 | 详细日志 |
 |---|---|---|---|---|---|
+| 2026-11-23 04:56:00 | local | 暴风高达（GAT_X103） | 单位特例 | /weapons/OMNI_GAT_X103_BR_HyperSniper/min：5 → 3 | [JSON](../../server-data/editor-changes/2026-11-23/2026-11-22T19-56-00-547Z-156af2eb-6fd4-43b7-825b-1cadeaa4c861.json) |
 | 2026-11-22 21:45:04 | local | 垂直起降运输机（VTOLTransport） | 共用武器 light-transports | /stats/move：5 → 7 | [JSON](../../server-data/editor-changes/2026-11-22/2026-11-22T12-45-04-817Z-11c2de12-ee25-4cd7-b946-7eb173d0f7ba.json) |
 | 2026-11-15 03:33:15 | local | 垂直起降运输机（VTOLTransport_DeployState） | 单位特例 | /stats/cost：275 → 250 | [JSON](../../server-data/editor-changes/2026-11-15/2026-11-14T18-33-15-222Z-8b783a76-be10-4431-b7a3-622d1c3b6592.json) |
 | 2026-11-15 03:33:13 | local | 垂直起降运输机（VTOLTransport） | 单位特例 | /stats/cost：275 → 250 | [JSON](../../server-data/editor-changes/2026-11-15/2026-11-14T18-33-13-809Z-a433dad6-7787-40ef-aaa2-bbafe2d6fbb7.json) |

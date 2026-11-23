@@ -1,0 +1,34 @@
+[
+  {
+    "id": "gundam-04-05",
+    "name": "0079年代扭蛋机",
+    "featured": ["RX_78_4", "RX_78_5"],
+    "eras": ["UC_0079_T1", "UC_0079_T2"],
+    "tokenId": "0079t1-token",
+    "tokenName": "0079年代补给代币",
+    "machineName": "0079年代扭蛋机",
+    "grades": [
+      { "id": "S", "weight": 3, "rewards": [
+        { "kind": "unit", "weight": 3, "unitIds": ["RX_78_2_ACE", "Thoroughbred", "BlancRival"] },
+        { "kind": "rental", "weight": 2, "uses": 10, "unitIds": ["RX_78_2_ACE", "Thoroughbred", "BlancRival"] }
+      ] },
+      { "id": "A", "weight": 5, "rewards": [
+        { "kind": "unit", "weight": 5, "unitIds": ["G_Fighter", "RX_78_2_BPart", "RX_78_4", "RX_78_5", "RX_78_6_WIP", "MSN_01"] },
+        { "kind": "rental", "weight": 4, "uses": 10, "unitIds": ["G_Fighter", "RX_78_2_BPart", "RX_78_4", "RX_78_5", "RX_78_6_WIP", "MSN_01"] },
+        { "kind": "item", "weight": 1, "itemId": "0079t1-token", "quantity": 10 }
+      ] },
+      { "id": "B", "weight": 10, "rewards": [
+        { "kind": "unit", "weight": 9, "unitIds": ["MS_06F_EFSF", "AMS_Squad", "MS_05S", "EMS_05M", "RGM_79G_EarlyDeployment", "RGM_79U", "RGM_79F", "MS_06Z"] },
+        { "kind": "rental", "weight": 6, "uses": 10, "unitIds": ["MS_06F_EFSF", "AMS_Squad", "MS_05S", "EMS_05M", "RGM_79G_EarlyDeployment", "RGM_79U", "RGM_79F", "MS_06Z"] }
+      ] },
+      { "id": "C", "weight": 82, "rewards": [
+        { "kind": "supplies", "weight": 25, "min": 2000, "max": 10000 },
+        { "kind": "money", "weight": 25, "min": 2000, "max": 10000 },
+        { "kind": "item", "weight": 4, "itemId": "0079t1-token", "quantity": 1 },
+        { "kind": "plugin", "weight": 16, "rarity": 1 },
+        { "kind": "plugin", "weight": 8, "rarity": 2 },
+        { "kind": "plugin", "weight": 4, "rarity": 3 }
+      ] }
+    ]
+  }
+]

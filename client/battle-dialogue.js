@@ -185,7 +185,7 @@ const BattleDialogue = (() => {
       : personalities[hash(pilot?.id || pilot?.name || "anonymous") % personalities.length];
   }
   function customLines(pilot,event) {
-    const pool=pilot?.custom && pilot.personality === "custom" && !pilot.ace && !pilot.aceId ? pilot.dialogue?.[event] : null;
+    const pool=pilot?.missionDialogue?.[event] || (pilot?.custom && pilot.personality === "custom" && !pilot.ace && !pilot.aceId ? pilot.dialogue?.[event] : null);
     return Array.isArray(pool) && pool.length ? pool : null;
   }
   function generate({ event, speaker, target, sequence = 0, faction } = {}) {

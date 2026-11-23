@@ -43,11 +43,14 @@ for (const width of [1280, 390])
       await page.locator('#addPluginReward').click();
       await page.locator('#pluginRewards select').selectOption('frame');
       await page.locator('#pluginRewards input').fill('3');
+      await page.locator("#supplyTokens").fill("123");
       await page.locator("#publish").click();
       await expect(page.locator("#status")).toContainText("活动已发布");
       const event = app.activities.adminSnapshot().activities.at(-1);
       expect(event.rewards.inventory).toEqual({ MS_06F: 2 });
       expect(event.rewards.pluginInventory).toEqual({ frame: 3 });
+      expect(event.rewards.itemInventory).toEqual({ "0079t1-token": 123 });
+      await expect(page.locator("#detail")).toContainText("0079年代补给代币：×123");
       expect(event.rewards.kits).toBeUndefined();
       expect(event.stockConfigurations).toBeUndefined();
       await page
@@ -58,6 +61,7 @@ for (const width of [1280, 390])
       await page.locator("#cancelRewardConfig").click();
       await expect(page.locator('#stockRewards [data-unit-id="MS_06F"]')).toContainText("机体 ×2");
       await page.locator("#money").fill("765");
+      await page.locator("#supplyTokens").fill("456");
       await page
         .locator('#stockRewards [data-unit-id="MS_06F"]')
         .getByRole("button", { name: "编辑", exact: true })
@@ -68,18 +72,21 @@ for (const width of [1280, 390])
       await expect(page.locator("#status")).toContainText("活动修改已保存");
       expect(app.activities.adminSnapshot().activities.at(-1).id).toBe(event.id);
       expect(app.activities.adminSnapshot().activities.at(-1).rewards.money).toBe(765);
+      expect(app.activities.adminSnapshot().activities.at(-1).rewards.itemInventory).toEqual({ "0079t1-token": 456 });
       expect(app.activities.adminSnapshot().activities.at(-1).rewards.inventory).toEqual({
         MS_06F: 4,
       });
       await page.reload();
       await page.locator("#activities button").filter({ hasText: "Configurable stock" }).click();
       await expect(page.locator("#money")).toHaveValue("765");
+      await expect(page.locator("#supplyTokens")).toHaveValue("456");
       await expect(page.locator('#pluginRewards input')).toHaveValue('3');
       await expect(page.locator('#stockRewards [data-unit-id="MS_06F"]')).toContainText("机体 ×4");
       await page.locator("#newActivity").click();
       await expect(page.locator("#stockRewards .reward-summary")).toHaveCount(0);
       await expect(page.locator('#pluginRewards input')).toHaveCount(0);
       await expect(page.locator("#money")).toHaveValue("0");
+      await expect(page.locator("#supplyTokens")).toHaveValue("0");
       await expect(page.locator("#addKitStock")).toHaveCount(0);
       expect(errors).toEqual([]);
     } finally {

@@ -370,7 +370,7 @@ const UnitSkills = (() => {
         !unit.embarked &&
         (!unit.acted || skill.owner === "pilot") &&
         !unit.plan &&
-        unit.team === game.team &&
+        (G.isUnitTurn ? G.isUnitTurn(game, unit) : unit.team === game.team) &&
         game.winner === null &&
         (!game.deployment || game.deployment.every(Boolean)) &&
         (!Number.isInteger(skill.maxUses) ||

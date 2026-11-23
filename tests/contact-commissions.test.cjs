@@ -38,12 +38,157 @@ function funded() {
   return result;
 }
 
+test("Anaheim mid-0079 commissions require 0079T1 without changing their difficulty gates",()=>{
+ const C=require('../shared/contact-tasks');
+ for(const task of C.tasks.filter(t=>t.contactId==='anaheim')){
+  assert.equal(task.era,'UC_0079_T1');
+  const settings={mode:'sweep',sweepFaction:task.enemyFaction,sweepEnvironment:'ground',sweepEra:'UC_0079_T1',sweepDifficulty:task.difficulty};
+  assert(C.eligible(task,settings),task.id);
+  assert(!C.eligible(task,{...settings,sweepEra:'UC_0079_T2'}),task.id);
+  assert(!C.eligible(task,{...settings,sweepDifficulty:task.difficulty-1}),task.id);
+ }
+});
+
+test("Anaheim commissions unlock every product by claimed task, never by affinity alone",()=>{
+ const {E}=funded(),C=require('../shared/contact-tasks'),P=require('../shared/unit-plugins');
+ const tasks=C.tasks.filter(t=>t.contactId==='anaheim');assert.equal(tasks.length,10);
+ const parts=P.catalog.filter(p=>p.merchant==='anaheim');assert.equal(parts.length,19);
+ assert(parts.every(p=>!E.pluginOffer('anaheim',p.id).available));
+ assert.throws(()=>E.purchasePlugin('anaheim','frame'),/前提任务/);
+ assert(E.meetLiaison('anaheim'));assert.equal(E.snapshot().contactIntro,false);
+ assert(C.met(E.snapshot(),'anaheim'));assert.equal(E.meetLiaison('anaheim'),false);
+ const unlocked=new Set();
+ for(const task of tasks){
+  assert(E.acceptContactTask(task.id));
+  if(task.reclaim)assert(E.snapshot().storage.units.some(u=>u.contactLoan===task.id&&u.unitId==='RX_79_G'));
+  E.creditAward({id:'ae-'+task.id,matchId:'ae-'+task.id,money:0,supplies:0,contactProgress:[{id:task.id,amount:task.required}]});
+  for(const id of task.pluginUnlocks)assert(!E.pluginOffer('anaheim',id).available,'ready is not claimed');
+  E.completeContactTask(task.id);task.pluginUnlocks.forEach(id=>unlocked.add(id));
+  for(const part of parts)assert.equal(E.pluginOffer('anaheim',part.id).available,unlocked.has(part.id));
+ }
+ assert.equal(unlocked.size,19);assert.equal(E.merchantAffinity('anaheim'),1000);assert.equal(E.liaisonAffinity(),0);
+ assert(E.purchasePlugin('anaheim','ms_database'));assert.equal(E.pluginQuantity('ms_database'),1);
+ const restored=load(E.snapshot()).E;assert(restored.pluginOffer('anaheim','ms_database').available);
+ assert(!restored.snapshot().storage.units.some(u=>u.contactLoan==='anaheim-8'));
+ const high=restored.snapshot();high.contactTasks=[];high.merchantAffinities.anaheim=10000;
+ const locked=load(high).E;assert(!locked.pluginOffer('anaheim','ms_database').available);
+ assert.equal(locked.pluginQuantity('ms_database'),1,'owned parts remain available');
+});
+
+test("Anaheim planning JSON round trips every original commission and embedded portrait",()=>{
+ const A=require('../shared/contact-anaheim'),M=require('../task-editor/model');
+ const doc=JSON.parse(fs.readFileSync('docs/data/contacts/anaheim-1.0.json','utf8'));
+ assert.deepEqual(M.validate(doc,require('../task-editor/catalog.cjs')),[]);
+ for(const task of A.tasks){const entry=doc.contacts[0].tasks.find(t=>t.id===task.id);assert(entry.text.includes(task.description));assert(entry.text.includes(task.ending));}
+ assert.deepEqual(Buffer.from(doc.contacts[0].portrait.dataUrl.split(',')[1],'base64'),fs.readFileSync('assets/ui/contact-ae.png'));
+});
+
 test("first liaison contact grants unit permits once without researching the tree",()=>{
  const {E}=funded();assert.equal(E.snapshot().contactIntro,false);
  assert(E.meetLiaison());assert(E.hasLicense("RGM_79_E"));assert(E.hasLicense("RB_79"));
  const saved=JSON.stringify(E.snapshot());assert.equal(E.meetLiaison(),false);
  assert.equal(JSON.stringify(E.snapshot()),saved);
  assert.equal(load(E.snapshot()).E.snapshot().contactIntro,true);
+});
+
+test("Zeon first contact, progression and affinity are independent from EFSF and survive reload",()=>{
+ const {E}=funded(),C=require('../shared/contact-tasks');
+ assert(!C.met(E.snapshot(),'zeon'));assert.throws(()=>E.acceptContactTask('zeon-1'));
+ assert(E.meetLiaison('zeon'));assert(C.met(E.snapshot(),'zeon'));
+ assert.equal(E.snapshot().contactIntro,false);assert(E.hasLicense('MS_06J'));
+ assert.equal(E.meetLiaison('zeon'),false);assert.throws(()=>E.acceptContactTask('efsf-1'));
+ assert.equal(C.tasks.filter(t=>t.contactId==='zeon').length,10);
+ for(const task of C.tasks.filter(t=>t.contactId==='zeon')){
+  assert(E.acceptContactTask(task.id));assert.throws(()=>E.acceptContactTask(task.id));
+  if(task.id==='zeon-5'){
+   const loan=E.snapshot().storage.units.find(u=>u.contactLoan==='zeon-5');assert(loan);
+   assert.equal(loan.unitId,'MS_11S');assert(E.isContactLoan(loan));
+  }
+  const receipt={id:'zeon-'+task.id,matchId:'battle-'+task.id,money:0,supplies:0,contactProgress:[{id:task.id,amount:task.required}]};
+  assert(E.creditAward(receipt));assert.equal(E.creditAward(receipt),false);
+  const before=E.snapshot().money;assert(E.completeContactTask(task.id));
+  assert.equal(E.snapshot().money,before+task.money);assert.throws(()=>E.completeContactTask(task.id));
+ }
+ assert.equal(E.merchantAffinity('zeon'),1000);assert.equal(E.merchantLevel('zeon'),2);
+ assert.equal(E.liaisonAffinity(),0);assert.equal(E.snapshot().contactIntro,false);
+ assert.equal(E.merchantAffinity('anaheim'),0);assert(!E.snapshot().storage.units.some(u=>u.contactLoan==='zeon-5'));
+ const unlocked=new Set([C.introPlan('zeon'),...C.tasks.filter(t=>t.contactId==='zeon').flatMap(C.planIds)]);
+ for(const plan of require('../shared/development-tree.json').ZEON.filter(p=>p.era==='UC_0079_T1'&&p.points>0))assert.equal(unlocked.has(plan.id),plan.id!=='Tech_ZEON_0079_ZakuIILateTypeDevelopmentPlan',plan.id);
+ for(const part of require('../shared/unit-plugins').catalog.filter(p=>p.merchant==='zeon')){
+  assert(E.pluginOffer('zeon',part.id).available);assert.equal(E.pluginOffer('efsf',part.id),null);
+ }
+ for(const unit of ['MS_06J','MS_06G','MS_09','EMS_10','MS_08TX','ApsarasII','MS_11'])assert(E.hasLicense(unit),unit);
+ assert(!E.hasLicense('MS_06F2'));assert(!E.hasLicense('MS_06F2_Commander'));
+ const restored=load(E.snapshot()).E;assert(C.met(restored.snapshot(),'zeon'));assert.equal(restored.merchantAffinity('zeon'),1000);
+ assert(restored.hasLicense('MS_09'));assert.equal(restored.facilityUpgradeOffer('hq').available,true);
+});
+
+test("either sixth liaison commission unlocks the same level-two facilities at unchanged prices",()=>{
+ for(const id of ['efsf-6','zeon-6']){
+  const state=funded().E.snapshot();state.contactTasks=[{id,status:'claimed',progress:1}];
+  const {E}=load(state),offer=E.facilityUpgradeOffer('hq');
+  assert(offer.available);assert.equal(offer.money,20000);assert.equal(offer.supplies,20000);
+  assert.match(offer.condition,/绿色通道.*或.*通行税/);
+  assert(E.upgradeFacility('hq'));
+  for(const type of ['factory','giantFactory','academy']){
+   const offer=E.facilityUpgradeOffer(type);assert(offer.available);assert.equal(offer.money,10000);assert.equal(offer.supplies,10000);
+  }
+  assert(!E.facilityUpgradeOffer('beacon').available);
+ }
+ for(const status of ['accepted','ready']){
+  const state=funded().E.snapshot();state.contactTasks=[{id:'zeon-6',status,progress:1}];
+  assert(!load(state).E.facilityUpgradeOffer('hq').available);
+ }
+});
+
+test("Zeon trial loan returns only the borrowed command Zaku and detaches its pilot and parts",()=>{
+ const C=require('../shared/contact-tasks'),state=funded().E.snapshot();state.merchantIntros={zeon:true};
+ state.contactTasks=C.tasks.filter(t=>t.contactId==='zeon'&&t.number<5).map(t=>({id:t.id,status:'claimed',progress:t.required}));
+ const {E}=load(state);E.creditActivity({id:'owned-gouf',matchId:'owned-gouf',money:0,supplies:0,inventory:{MS_11S:1}});
+ const owned=E.snapshot().storage.units.find(u=>u.unitId==='MS_11S').id;
+ E.acceptContactTask('zeon-5');const next=E.snapshot(),loan=next.storage.units.find(u=>u.contactLoan==='zeon-5');assert(loan);
+ assert.throws(()=>E.discardStoredUnit(loan.id),/任务借用/);
+ assert.throws(()=>E.setStoredPlugin(loan.id,0,'frame'),/任务临时单位不能装备零件/);
+ loan.pilotId='custom-zeon-trial';loan.plugins=['frame'];next.pluginInventory.frame=1;
+ const restored=load(next).E;
+ restored.creditAward({id:'return-gouf',matchId:'return-gouf',money:0,supplies:0,contactProgress:[{id:'zeon-5',amount:4}]});
+ assert(restored.snapshot().storage.units.some(u=>u.id===owned));
+ assert(!restored.snapshot().storage.units.some(u=>u.contactLoan==='zeon-5'||u.pilotId==='custom-zeon-trial'));
+ assert.equal(restored.pluginQuantity('frame'),1);assert.equal(restored.quantity('MS_11S'),1);
+});
+
+test("existing tagged trial Gouf migrates to the command Zaku without replacing owned units",()=>{
+ const state=funded().E.snapshot();state.merchantIntros={zeon:true};
+ state.contactTasks=[{id:'zeon-5',status:'accepted',progress:2,loanTracking:true}];
+ const prefab=G.catalog.prefabs.find(p=>p.id==='MS_07B3'),kitId=prefab.weaponKits[0].id;
+ const model=G.models['MS_07B3__'+kitId];
+ state.inventory={MS_07B3:2};
+ state.storage.units=[
+  {id:'old-trial',unitId:'MS_07B3',kitId,hp:model.hp,en:model.en,contactLoan:'zeon-5'},
+  {id:'owned-gouf',unitId:'MS_07B3',kitId,hp:model.hp,en:model.en}
+ ];
+ const {E}=load(state),units=E.snapshot().storage.units;
+ assert.equal(units.find(u=>u.id==='old-trial').unitId,'MS_11S');
+ assert.equal(units.find(u=>u.id==='owned-gouf').unitId,'MS_07B3');
+ assert.equal(E.snapshot().contactTasks.find(t=>t.id==='zeon-5').progress,2);
+ assert.equal(require('../shared/contact-tasks').byId.get('zeon-10').required,50);
+});
+
+test("Zeon planning JSON keeps all runtime dialogue, dependency IDs and the supplied portrait",()=>{
+ const Z=require('../shared/contact-zeon'),M=require('../task-editor/model');
+ const doc=JSON.parse(fs.readFileSync('docs/data/contacts/zeon-吉翁联络人-1.0.json','utf8'));
+ assert.deepEqual(M.validate(doc,require('../task-editor/catalog.cjs')),[]);
+ const contact=doc.contacts[0];assert.equal(contact.id,'zeon');assert.equal(contact.tasks.length,10);
+ for(const task of Z.tasks){const entry=contact.tasks.find(e=>e.id===task.id);assert(entry.text.includes(task.description));assert(entry.text.includes(task.ending));assert.deepEqual(entry.requires,task.requires);}
+ assert.deepEqual(Buffer.from(contact.portrait.dataUrl.split(',')[1],'base64'),fs.readFileSync('assets/ui/contact-zeon.png'));
+});
+
+test("Peace Statistics resets obsolete kill progress but preserves new squad completion and claimed rewards",()=>{
+ const C=require('../shared/contact-tasks');
+ const old=C.normalize([{id:'zeon-8',status:'ready',progress:50}])[0];
+ assert.deepEqual(old,{id:'zeon-8',status:'accepted',progress:0,progressVersion:2});
+ assert.equal(C.normalize([{...old,status:'ready',progress:1}])[0].status,'ready');
+ assert.equal(C.normalize([{id:'zeon-8',status:'claimed',progress:50}])[0].status,'claimed');
 });
 
 test("liaison level switches at 800 affinity, persists and preserves old claimed-task affinity", () => {
@@ -74,7 +219,7 @@ test("ten commissions follow dependencies, commit rewards once and retain Green 
  const {E}=funded();E.meetLiaison();
  assert.throws(()=>E.acceptContactTask("efsf-2"));
  const Contact=require('../shared/contact-tasks');let earned=0;
- for(const task of Contact.tasks){
+ for(const task of Contact.tasks.filter(task=>(task.contactId||'efsf')==='efsf')){
   assert(E.acceptContactTask(task.id));
   assert.throws(()=>E.acceptContactTask(task.id));assert.throws(()=>E.completeContactTask(task.id));
   if(task.id==='efsf-5')assert(E.snapshot().storage.units.some(u=>u.unitId==='RX_80PR'));
@@ -99,7 +244,7 @@ test("ten commissions follow dependencies, commit rewards once and retain Green 
 test("planning 1.21 branches seven and eight from Green Corridor and accepts N4-N6 while rejecting removed levels",()=>{
  const C=require('../shared/contact-tasks'),initial=funded().E.snapshot();
  initial.contactIntro=true;initial.contactTasks=C.tasks.slice(0,6).map(t=>({id:t.id,status:'claimed',progress:t.required}));
- const {E}=load(initial);assert.equal(C.planningVersion,'1.21');assert.equal(C.tasks.length,10);
+ const {E}=load(initial);assert.equal(C.planningVersion,'1.21');assert.equal(C.tasks.filter(t=>(t.contactId||'efsf')==='efsf').length,10);
  assert(E.acceptContactTask('efsf-8'));assert(E.acceptContactTask('efsf-7'));
  assert.throws(()=>E.acceptContactTask('efsf-9'));
  assert(C.eligible(C.byId.get('efsf-7'),{mode:'sweep',sweepFaction:'EFSF',sweepDifficulty:3,sweepEnvironment:'ground'}));
@@ -110,7 +255,7 @@ test("planning 1.21 branches seven and eight from Green Corridor and accepts N4-
 
 test("mainline technology missions include their prerequisite chain and locked tasks explain unclaimed requirements",()=>{
  const C=require('../shared/contact-tasks');
- assert.deepEqual(C.tasks.filter(C.isSideTask).map(t=>t.id),['efsf-7','efsf-10']);
+ assert.deepEqual(C.tasks.filter(t=>(t.contactId||'efsf')==='efsf').filter(C.isSideTask).map(t=>t.id),['efsf-7','efsf-10']);
  for(const id of ['efsf-1','efsf-6','efsf-8','efsf-9'])assert(!C.isSideTask(C.byId.get(id)),id);
  const task=C.byId.get('efsf-9');
  assert.deepEqual(C.unmetRequirements(task,[],false),[{type:'intro'},{type:'task',id:'efsf-8',name:'最好的差事'}]);
@@ -172,8 +317,9 @@ test("planning JSON 1.21 round trips all ten stable IDs and dependency branches"
  const plan=JSON.parse(fs.readFileSync('docs/data/contacts/efsf-联邦联络人-1.21.json','utf8'));
  assert.equal(plan.systemVersion,C.planningVersion);
  assert.deepEqual(M.validate(plan,plan.aiGuide.statusMeanings),[]);
- assert.deepEqual(plan.contacts[0].tasks.map(t=>t.id),C.tasks.map(t=>t.id));
- for(const task of C.tasks)assert.deepEqual(plan.contacts[0].tasks.find(t=>t.id===task.id).requires,task.requires);
+ const federal=C.tasks.filter(t=>(t.contactId||'efsf')==='efsf');
+ assert.deepEqual(plan.contacts[0].tasks.map(t=>t.id),federal.map(t=>t.id));
+ for(const task of federal)assert.deepEqual(plan.contacts[0].tasks.find(t=>t.id===task.id).requires,task.requires);
 });
 test("full unit and ship rewards remain in safekeeping and can be individually accepted without duplication",()=>{
  const {E}=funded();

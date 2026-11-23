@@ -947,6 +947,7 @@
   }
 }
 #gameScene #hudCancelAction,
+#gameScene #hudConfirmSkill,
 #gameScene #hudConfirmMove {
   box-sizing: border-box;
   width: 104px;
@@ -956,6 +957,12 @@
   border: 1px solid #a87771;
   font-size: 12px;
   line-height: 18px;
+}
+#gameScene #hudSkillTarget {
+  max-width: min(240px, 36vw);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 #gameScene #hudCancelAction {
   color: #f1b7b0;
