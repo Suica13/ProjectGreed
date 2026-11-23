@@ -180,6 +180,11 @@ const Economy = (() => {
       if(!Number.isFinite(points)||points<0||points>Number.MAX_SAFE_INTEGER)throw Error("联络人好感度无效");
       merchantAffinities[merchant.id]=points;
     }
+    const itemInventory = normalizeItems(value.itemInventory);
+    // Retire the development-only grant once. Dropping its marker makes later
+    // saves and ordinary activity/draw rewards independent of this cleanup.
+    if (value.supplyTestGrant === true)
+      itemInventory["0079t1-token"] = Math.max(0, (itemInventory["0079t1-token"] || 0) - 99999);
     return {
       money: value.money,
       supplies: value.supplies,
@@ -193,8 +198,7 @@ const Economy = (() => {
       ...stock,
       crewStock: pilots.normalizeCrewStock(value.crewStock),
       pluginInventory,
-      itemInventory: normalizeItems(value.itemInventory),
-      ...(value.supplyTestGrant === true ? { supplyTestGrant: true } : {}),
+      itemInventory,
       contactTasks,
       contactIntro: value.contactIntro === true,
       merchantIntros: Object.fromEntries(merchants.filter(m=>m.id!=="efsf").map(m=>[m.id,value.merchantIntros?.[m.id]===true])),
@@ -218,22 +222,12 @@ const Economy = (() => {
             ? ProfileMigrations
             : require("./profile-migrations.js");
         state = validate(migrations.economy(parsed));
-        // One-time test grant for this development client's existing local saves.
-        // Remote origins and new profiles receive no tokens.
-        if (typeof location !== "undefined" &&
-            (location.protocol === "file:" || ["localhost", "127.0.0.1", "[::1]"].includes(location.hostname)) &&
-            !state.supplyTestGrant) {
-          const next = snapshot();
-          next.itemInventory["0079t1-token"] = (next.itemInventory["0079t1-token"] || 0) + 99999;
-          next.supplyTestGrant = true;
-          commit(next);
-        }
         if (parsed.schemaVersion !== 4 || parsed.licenses === undefined) {
           const backupKey = key + ".before-counted-stock";
           if (localStorage.getItem(backupKey) === null) localStorage.setItem(backupKey, saved);
           localStorage.setItem(key, saveCodec.stringify(state));
-        } else if (parsed.contactTasks?.length || Object.hasOwn(parsed.itemInventory || {}, "supply-token")) {
-          // Retire the erroneous tactical-mission links, leaving wallet and parts intact.
+        } else if (parsed.supplyTestGrant === true || parsed.contactTasks?.length || Object.hasOwn(parsed.itemInventory || {}, "supply-token")) {
+          // Persist retired grant markers, old token names and tactical-mission links.
           localStorage.setItem(key, saveCodec.stringify(state));
         }
       }

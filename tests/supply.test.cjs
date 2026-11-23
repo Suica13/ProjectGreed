@@ -102,7 +102,7 @@ test("draws stop above 99 pending units before random selection or payment; ten 
   assert.throws(()=>single.E.drawSupply(pool,1),/超过99/);
 });
 test("old generic tokens migrate to 0079T1 tokens without duplicating balances or test grants", () => {
-  const saved=profile();saved.supplyTestGrant=true;saved.itemInventory={"supply-token":12345};
+  const saved=profile();saved.itemInventory={"supply-token":12345};
   const {E,data}=load(saved),next=E.snapshot();
   assert.equal(next.itemInventory["0079t1-token"],12345);
   assert.equal(next.itemInventory["supply-token"],undefined);
@@ -189,12 +189,45 @@ test("mixed ten-draw save failure rolls back the entire batch and wallet", () =>
   assert.throws(()=>E.drawSupply(pool,10),/save failed/);
   assert.equal(JSON.stringify(E.snapshot()),before);assert.equal(data.get(E.key),persisted);
 });
-test("existing local saves receive 99999 test tokens exactly once; remote and new saves receive none", () => {
-  const location={protocol:"file:",hostname:""},saved=profile();saved.itemInventory={};
-  const local=load(saved,{location}).E.snapshot();assert.equal(local.itemInventory["0079t1-token"],99999);
-  local.itemInventory["0079t1-token"]--;
-  assert.equal(load(local,{location}).E.snapshot().itemInventory["0079t1-token"],99998);
-  assert.equal(load(undefined,{location}).E.snapshot().itemInventory["0079t1-token"],undefined);
-  assert.equal(load(saved,{location:{protocol:"https:",hostname:"example.com"}}).E.snapshot().supplyTestGrant,undefined);
-  for(const value of [-1,1.5,1000001]) assert.throws(()=>load({...saved,itemInventory:{"0079t1-token":value}}).E.validate({...saved,itemInventory:{"0079t1-token":value}}),/道具库存无效/);
+test("no origin grants test tokens to new or existing saves", () => {
+  for (const location of [{protocol:"file:",hostname:""},{protocol:"http:",hostname:"localhost"},
+    {protocol:"http:",hostname:"127.0.0.1"},{protocol:"http:",hostname:"[::1]"},
+    {protocol:"https:",hostname:"example.com"}]) {
+    const saved=profile();saved.itemInventory={};
+    for(const value of [saved,undefined])
+      assert.equal(load(value,{location}).E.snapshot().itemInventory["0079t1-token"],undefined);
+    saved.itemInventory={"0079t1-token":99999};
+    assert.equal(load(saved,{location}).E.snapshot().itemInventory["0079t1-token"],99999);
+  }
+});
+
+test("marked legacy grants are reclaimed once, preserving excess tokens and all other progress", () => {
+  for (const count of [0,50,99989,99999,100122]) {
+    const saved=profile();saved.supplyTestGrant=true;saved.itemInventory={"0079t1-token":count};
+    const {E,data}=load(saved),next=E.snapshot(),expected=Math.max(0,count-99999);
+    assert.equal(next.itemInventory["0079t1-token"],expected);
+    assert.equal(next.supplyTestGrant,undefined);
+    assert.equal(next.money,saved.money);assert.equal(next.supplies,saved.supplies);
+    assert.equal(JSON.stringify(next.storage),JSON.stringify(saved.storage));
+    assert(!data.get(E.key).includes('supplyTestGrant'));
+    assert.equal(JSON.parse(data.get(E.key)).itemInventory["0079t1-token"],expected);
+    E.creditActivity({id:"post-cleanup",matchId:"post-cleanup",money:0,supplies:0,itemInventory:{"0079t1-token":123}});
+    assert.equal(load(E.snapshot()).E.snapshot().itemInventory["0079t1-token"],expected+123);
+    assert.equal(E.validate(next).itemInventory["0079t1-token"],expected);
+  }
+  const saved=profile();saved.supplyTestGrant=true;saved.itemInventory={"supply-token":99999,"0079t1-token":17};
+  assert.equal(load(saved).E.snapshot().itemInventory["0079t1-token"],17);
+});
+
+test("cleanup write failure preserves the original marked save and blocks further transactions", () => {
+  const saved=profile();saved.supplyTestGrant=true;saved.itemInventory={"0079t1-token":99999};
+  const data=new Map([["projectgreed.economy.v1",JSON.stringify(saved)]]);
+  const ctx=vm.createContext({require:createRequire(path.resolve("shared/economy.js")),module:{exports:{}},
+    structuredClone,ART:catalog,localStorage:{getItem:key=>data.get(key)??null,
+      setItem:()=>{throw Error("cleanup save failed");},removeItem:key=>data.delete(key)}});
+  vm.runInContext(source,ctx);
+  const E=ctx.module.exports;
+  assert.equal(data.get(E.key),JSON.stringify(saved));
+  assert.throws(()=>E.transact({money:1}),/cleanup save failed/);
+  assert.throws(()=>E.exportProgress(),/cleanup save failed/);
 });

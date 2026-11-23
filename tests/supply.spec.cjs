@@ -10,6 +10,8 @@ for (const width of [1440, 390]) test(`supply page, item wallet and persistent s
   await page.evaluate(() => {
     I18n.setLanguage("zh");
     const profile = Economy.initial("EFSF");
+    // Explicit test wallet; production no longer grants development tokens.
+    profile.itemInventory = { "0079t1-token": 99999 };
     localStorage.setItem(Economy.key, SaveCodec.stringify(profile));
   });
   await page.reload();
@@ -126,7 +128,7 @@ test("closing or reloading a delivery preserves paid rewards and releases the ne
   await page.waitForFunction(() => assetsReady);
   await page.evaluate(() => {
     I18n.setLanguage("zh");
-    const profile = Economy.initial("EFSF");profile.itemInventory = { "0079t1-token": 50 };profile.supplyTestGrant = true;
+    const profile = Economy.initial("EFSF");profile.itemInventory = { "0079t1-token": 50 };
     localStorage.setItem(Economy.key, SaveCodec.stringify(profile));
   });
   await page.reload();await page.waitForFunction(() => assetsReady);
@@ -159,7 +161,7 @@ test("0079T1 token migration and full deliveries block both draws until units ar
   await page.waitForFunction(() => assetsReady);
   await page.evaluate(() => {
     I18n.setLanguage("zh");
-    const profile=Economy.initial("EFSF");profile.supplyTestGrant=true;
+    const profile=Economy.initial("EFSF");
     profile.itemInventory={"supply-token":100};
     profile.storage.deliveries=Array.from({length:100},()=>({unitId:"RGM_79",kitId:Economy.defaultKit("RGM_79")}));
     localStorage.setItem(Economy.key,SaveCodec.stringify(profile));

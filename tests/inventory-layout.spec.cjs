@@ -13,7 +13,7 @@ for (const [width, height] of [[1440, 960], [1280, 720], [390, 844], [844, 390]]
       I18n.setLanguage("zh");
       const profile = Economy.initial("EFSF");
       profile.pluginInventory = Object.fromEntries(UnitPlugins.catalog.map(part => [part.id, 2]));
-      profile.itemInventory = { "0079t1-token": 100 };profile.supplyTestGrant = true;
+      profile.itemInventory = { "0079t1-token": 100 };
       localStorage.setItem(Economy.key, SaveCodec.stringify(profile));
     });
     await page.reload();await page.waitForFunction(() => assetsReady);

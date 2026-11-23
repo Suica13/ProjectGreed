@@ -10,7 +10,7 @@ for (const width of [1280, 390]) test(`activity tokens persist atomically after 
   try {
     await page.goto(base);await page.waitForFunction(()=>assetsReady);
     await page.evaluate(()=>{
-      const profile=Economy.initial("EFSF");profile.supplyTestGrant=true;
+      const profile=Economy.initial("EFSF");
       profile.itemInventory={"0079t1-token":100};
       localStorage.setItem(Economy.key,SaveCodec.stringify(profile));
     });
