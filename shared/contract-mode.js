@@ -9,11 +9,12 @@ const ContractMode = (() => {
     ground: "assets/maps/covers/contract-ground.svg",
     space: "assets/maps/covers/contract-space.svg",
   };
-  const costs = [2000, 4000, 6000, 8000, 10000, 12500];
+  const costs = [2000, 3000, 4000, 6000, 8000, 10000];
+  const ordinaryForceScale = [.5, .6, .65, .7, .7, .75];
   // Full ordinary-objective completion at baseline era and normal settlement rates.
   const completionRewards = [
-    [2000, 3000], [3000, 4500], [4500, 6000],
-    [6000, 8000], [8000, 10500], [10000, 13500],
+    [2500, 3500], [4000, 6000], [6000, 8000],
+    [9000, 11000], [12000, 15000], [15000, 20000],
   ];
   const biomes = [
     { id: "temperate", name: "草原", mapId: "great_plains_5v5" },
@@ -26,7 +27,7 @@ const ContractMode = (() => {
     name: "N" + (index + 1),
     costLimit,
     fleetLimit: 2 + Math.floor(index / 3),
-    patrolLimit: 24 + index * 3,
+    patrolLimit: 12 + index * 3,
     events: index + 1,
     width: 60 + Math.floor(index * 8.5),
     height: 38 + Math.floor(index * 10.75),
@@ -97,7 +98,7 @@ const ContractMode = (() => {
     const result = difficulties.find((d) => d.id === Number(value));
     if (!result) throw Error("合约难度无效");
     const stage = ["UC_0079_T1", "UC_0079_T2", "UC_0087_T1", "UC_0087_T2", "UC_0093_T1"].indexOf(era);
-    // T2 starts at 3000 instead of 2500; subsequent eras keep the 1.25 progression.
+    // T2 scales the baseline by 1.5; subsequent eras keep the 1.25 progression.
     // Round only the final budget, so rounding does not compound between eras.
     const scale = stage > 0 ? 1.5 * 1.25 ** (stage - 1) : 1;
     return { ...result, costLimit: Math.round(result.costLimit * scale / 500) * 500 };
@@ -607,7 +608,8 @@ const ContractMode = (() => {
     const state = room.game.contract;
     const before = state.enemyBaseCount || 0;
     state.enemyBaseCount = before + count;
-    const multiplier = 1.1 * (1 + 0.25 * Math.max(0, state.players - 1));
+    const multiplier = 1.1 * ordinaryForceScale[config(room.settings.sweepDifficulty).id - 1] *
+      (1 + 0.25 * Math.max(0, state.players - 1));
     return Math.round(state.enemyBaseCount * multiplier) - Math.round(before * multiplier);
   }
   function reinforcementCount(room, count) {
@@ -616,7 +618,8 @@ const ContractMode = (() => {
     if (!available) return 0;
     const before = state.reinforcementBaseCount || 0;
     state.reinforcementBaseCount = before + count;
-    const multiplier = 0.75 * 1.1 * (1 + 0.25 * Math.max(0, state.players - 1));
+    const multiplier = 0.75 * 1.1 * ordinaryForceScale[config(room.settings.sweepDifficulty).id - 1] *
+      (1 + 0.25 * Math.max(0, state.players - 1));
     return Math.min(available, Math.round((before + count) * multiplier) - Math.round(before * multiplier));
   }
   function reinforcementSlots(room) {
@@ -748,15 +751,12 @@ const ContractMode = (() => {
     game.units.push(u);
     return u;
   }
-  function enemyPilotGrade(difficulty, roll) {
-    const thresholds = [[.4,1],[0,.8],[0,.35],[0,.2],[0,.1],[0,0]][config(difficulty).id-1];
-    if (roll < thresholds[0]) return null;
-    if (roll < thresholds[1]) return "veteran";
-    return "elite";
+  function enemyPilotGrade(difficulty) {
+    config(difficulty);
+    return null;
   }
   function assignEnemyPilot(room, G, unit, model, seed, elite = false) {
-    let grade = enemyPilotGrade(room.settings.sweepDifficulty, random(seed ^ 0x6a09e667)());
-    if (elite && (!grade || grade === "veteran")) grade = "elite";
+    const grade = elite ? "elite" : enemyPilotGrade(room.settings.sweepDifficulty);
     unit.pilot = {...unit.pilot, genericGrade: grade || undefined,
       ...(grade ? G.pilots.rollGrade(grade, seed, model) : G.pilots.roll(null, seed, 1, 0, model))};
   }
@@ -924,7 +924,7 @@ const ContractMode = (() => {
         continue;
       }
       if (reinforcementSlots(room) < 2) continue;
-      const waveCount = reinforcementCount(room, 4);
+      const waveCount = Math.max(2, reinforcementCount(room, 4));
       const zeon = /ZEON/.test(room.settings.sweepFaction),
         name =
           game.environment === "space"
@@ -1317,7 +1317,7 @@ const ContractMode = (() => {
   }
   function reward(room, G) {
     const state = room.game?.contract;
-    if (!state) return { money: 0, supplies: 0, technology: 0, inventory: {} };
+    if (!state) return { money: 0, supplies: 0, technology: 0, experience: 0, inventory: {} };
     const completed = state.objectives.filter((o) => o.status === "completed" && !o.contactTaskId).length,
       d = config(room.settings.sweepDifficulty).id,
       era = Math.pow(1.25, Math.max(0, G.technologyWeight(room.settings.sweepEra) - 1)),
@@ -1328,6 +1328,7 @@ const ContractMode = (() => {
       // Settlement applies its multiplier once; the table already includes it.
       money: money * share * era / economy.completionRewardMultiplier,
       supplies: supplies * share * era / economy.completionRewardMultiplier,
+      experience: Math.floor([500, 1000, 1500, 3000, 4000, 5000][d - 1] * share),
       technology: completed * 125 * era * (1 + (d - 1) * 0.25),
       inventory: {},
     };

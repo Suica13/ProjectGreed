@@ -91,6 +91,30 @@ function clearEnemies(f) {
   for (const u of f.room.game.units.filter((u) => u.team === 1)) u.hp = 0;
 }
 
+for(const [id,faction,difficulty,count,unitId,grade,kitId] of [
+ ['efsf-11','ZEON',4,6,'MS_11','elite','kit_1'],
+ ['efsf-12','EFSF',5,1,'RX_78XX','veteran','kit_3'],
+ ['zeon-11','EFSF',4,6,'RX_79_G','elite','beam_rifle'],
+]) test(`new commission ${id} spawns exact targets once and waits for the whole target group`,t=>{
+ const contactTasks=[{id,status:'accepted',progress:0}];
+ const f=fixture(t,{difficulty,faction,players:2,contactTasks,secondContactTasks:contactTasks}),g=f.room.game;
+ const objectives=g.contract.objectives.filter(o=>o.contactTaskId===id);assert.equal(objectives.length,1);
+ const o=objectives[0],targets=o.targets.map(id=>g.units.find(u=>u.id===id));assert.equal(targets.length,count);
+ for(const u of targets){
+  const model=G.modelOf(u);assert.equal(model.prefabId,unitId);assert.equal(model.kitId,kitId);
+  assert.equal(u.team,1);assert.equal(u.pilot.genericGrade,grade);
+  if(count===6)assert.equal(G.squadMembers(g,u).length,3);
+ }
+ if(count>1){targets.slice(0,-1).forEach(u=>u.hp=0);C.poll(f.room,G);assert.deepEqual(C.commissionProgress(f.room,G,f.member),[]);}
+ targets.at(-1).hp=0;C.poll(f.room,G);
+ assert.deepEqual(C.commissionProgress(f.room,G,f.member),[{id,amount:1}]);
+ assert.deepEqual(C.commissionProgress(f.room,G,f.room.seats[2]),[{id,amount:1}]);
+ const wrong=fixture(t,{difficulty,faction:faction==='EFSF'?'ZEON':'EFSF',contactTasks});
+ assert(!wrong.room.game.contract.objectives.some(o=>o.contactTaskId===id));
+ const low=fixture(t,{difficulty:difficulty-1,faction,contactTasks});
+ assert(!low.room.game.contract.objectives.some(o=>o.contactTaskId===id));
+});
+
 test("an unattended seat shares control, preserves ownership, and restores privacy on reconnect", t => {
   const f=fixture(t,{players:2}),g=f.room.game;
   const ally=g.units.find(u=>G.ownerOf(u)===2);
@@ -269,7 +293,7 @@ test('restored old rescue objectives, their cut-ins and NPCs are retired without
  assert(!state.cues.some(c=>c.objectiveId===old.id));assert(npc.contractExtracted);assert(!G.onMap(npc));
  const count=state.objectives.length;C.poll(f.room,G);assert.equal(state.objectives.length,count);
  for(const objective of state.objectives)objective.status='completed';
- assert.equal(C.reward(f.room,G).money,3000/require('../shared/battle-economy').completionRewardMultiplier);
+ assert.equal(C.reward(f.room,G).money,4000/require('../shared/battle-economy').completionRewardMultiplier);
 });
 
 test("scripted event targets can use a unit that is not unlocked by the technology tree", t => {
@@ -645,7 +669,8 @@ test("an actual server-resolved mortar kill carries its weapon into commission c
 test("era budgets scale every difficulty cumulatively while fleet limits and event counts stay fixed", () => {
   const eras = ["UC_0079_T1", "UC_0079_T2", "UC_0087_T1", "UC_0087_T2", "UC_0093_T1"];
   assert.deepEqual(eras.map(era=>C.config(1,era).costLimit),[2000,3000,4000,4500,6000]);
-  assert.deepEqual([1,2,3,4,5,6].map(n=>C.config(n,"UC_0079_T2").costLimit),[3000,6000,9000,12000,15000,19000]);
+  assert.deepEqual([1,2,3,4,5,6].map(n=>C.config(n).costLimit),[2000,3000,4000,6000,8000,10000]);
+  assert.deepEqual([1,2,3,4,5,6].map(n=>C.config(n,"UC_0079_T2").costLimit),[3000,4500,6000,9000,12000,15000]);
   for (let n = 1; n <= 6; n++) {
     for (const [stage, era] of eras.entries()) {
       const d = C.config(n, era), settings = C.roomSettings({ sweepDifficulty: n, sweepEra: era, sweepEnvironment: "ground" });
@@ -825,15 +850,15 @@ for (const environment of ["ground", "space"])
 test("contract completion budget prorates objectives before era and preview multipliers", (t) => {
   const f = fixture(t, { difficulty: 3 });
   for (const o of f.room.game.contract.objectives) o.status = "available";
-  assert.deepEqual(C.reward(f.room, G), { money: 0, supplies: 0, technology: 0, inventory: {} });
+  assert.deepEqual(C.reward(f.room, G), { money: 0, supplies: 0, technology: 0, experience: 0, inventory: {} });
   f.room.game.contract.objectives[0].status = "completed";
   f.room.game.contract.objectives[1].status = "completed";
   const factor = 2 * 1.5;
-  assert.deepEqual(C.reward(f.room, G), { money: 2400, supplies: 3200, technology: 125 * factor, inventory: {} });
+  assert.deepEqual(C.reward(f.room, G), { money: 3200, supplies: 8000 * (2 / 3) / 1.25, technology: 125 * factor, experience: 1000, inventory: {} });
   f.room.settings.sweepEra = "UC_0087_T1";
   const reward = C.reward(f.room, G), era = 1.25 ** 2;
-  assert.equal(reward.money, 2400 * era);
-  assert.equal(reward.supplies, 3200 * era);
+  assert.equal(reward.money, 3200 * era);
+  assert.equal(reward.supplies, 8000 * (2 / 3) * era / 1.25);
   assert.equal(reward.technology, 125 * factor * era);
   const bonuses = { money: 1.5, supplies: 2, technology: 0 };
   const pending = C.view(f.room, G, bonuses).pending;
@@ -842,15 +867,17 @@ test("contract completion budget prorates objectives before era and preview mult
 
 test("N1-N6 full completion rewards match final budgets and partial extraction pays only its share", () => {
   const economy = require("../shared/battle-economy"),
-    budgets = [[2000,3000],[3000,4500],[4500,6000],[6000,8000],[8000,10500],[10000,13500]],
+    budgets = [[2500,3500],[4000,6000],[6000,8000],[9000,11000],[12000,15000],[15000,20000]],
     rates = economy.settlementMultipliers(economy.rewardMultipliers());
   for (let d = 1; d <= 6; d++) {
-    const room = {settings:{sweepDifficulty:d,sweepEra:"UC_0079_T1"},game:{contract:{objectives:Array.from({length:d},()=>({status:"completed"}))}}};
+    const room = {seats:[],settings:{sweepDifficulty:d,sweepEra:"UC_0079_T1"},game:{units:[],contract:{objectives:Array.from({length:d},()=>({status:"completed"}))}}};
     const final = () => {
       const base = C.reward(room,G);
       return [economy.roundReward(base.money*rates.money),economy.roundReward(base.supplies*rates.supplies)];
     };
     assert.deepEqual(final(),budgets[d-1]);
+    const preview=C.view(room,G,rates).pending;
+    assert.deepEqual([preview.money,preview.supplies],budgets[d-1]);
     room.game.contract.objectives.push({status:"completed",contactTaskId:"liaison"});
     assert.deepEqual(final(),budgets[d-1]);
     room.game.contract.objectives[0].status="available";
@@ -1074,7 +1101,7 @@ test("contract settings force full fog and enabled pilots even when clients subm
   assert.equal(f.room.game.fogMode, "full");
   assert.equal(f.room.settings.pilotPolicy, "allow");
   assert.deepEqual(C.roomSettings({ ...f.room.settings, fogMode: "disabled", pilotPolicy: "none" }), {
-    costLimit: 12500, mapId: C.mapId("ground", 6), fogMode: "full", pilotPolicy: "allow",
+    costLimit: 10000, mapId: C.mapId("ground", 6), fogMode: "full", pilotPolicy: "allow",
   });
 });
 
@@ -1348,16 +1375,11 @@ for(const shared of [false,true])test(`ending first with passengers in hangar th
  assert.deepEqual(f.errors,[]);
 });
 
-test("contract difficulty upgrades generic pilots without changing scripted grades",t=>{
- const expected=[{general:400,veteran:600},{veteran:800,elite:200},{veteran:350,elite:650},
-  {veteran:200,elite:800},{veteran:100,elite:900},{elite:1000}];
- for(let n=1;n<=6;n++){
-  const counts={};for(let i=0;i<1000;i++){const grade=C.enemyPilotGrade(n,i/1000)||'general';counts[grade]=(counts[grade]||0)+1;}
-  assert.deepEqual(counts,expected[n-1]);
- }
+test("ordinary contract pilots stay general at every difficulty while scripted grades remain explicit",t=>{
+ for(let n=1;n<=6;n++)for(const roll of [0,.4,.8,.999999])assert.equal(C.enemyPilotGrade(n,roll),null);
  const f=fixture(t,{difficulty:6});
  const enemies=f.room.game.units.filter(u=>u.team===1&&!u.facility);
- assert(enemies.length>0);assert(enemies.every(u=>u.pilot.genericGrade==='elite'));
+ assert(enemies.length>0);assert(enemies.every(u=>!u.pilot.genericGrade&&u.pilot.name.includes("\u4e00\u822c")));
 });
 
 test("contract hull selection favors stronger chassis while retaining multiple hulls and kits",()=>{
@@ -1482,7 +1504,7 @@ test("procedural maps vary by seed, increase by difficulty, and have navigable e
       assert.deepEqual(a, C.generateMap(G.catalog, settings, 910 + difficulty));
       assert.equal(
         C.config(difficulty).costLimit,
-        [2000, 4000, 6000, 8000, 10000, 12500, 15000, 17500, 20000][difficulty - 1],
+        [2000, 3000, 4000, 6000, 8000, 10000][difficulty - 1],
       );
       assert.equal(
         G.fleetLimit({ mode: "sweep", sweepDifficulty: difficulty }),
@@ -1530,7 +1552,7 @@ test("procedural maps vary by seed, increase by difficulty, and have navigable e
 });
 test("difficulty locks formation COST and ship count, ignoring custom room budgets", (t) => {
   const f = fixture(t, { difficulty: 4 });
-  assert.equal(f.room.settings.costLimit, 8000);
+  assert.equal(f.room.settings.costLimit, 6000);
   assert.equal(G.fleetLimit(f.room.settings), 3);
   const rules = G.armyRestrictions(f.room.settings, f.member);
   const units = Array.from({ length: 4 }, () => ({ unitId: "Medea", kitId: "standard" }));
@@ -1546,7 +1568,7 @@ test("difficulty locks formation COST and ship count, ignoring custom room budge
 test("five-player contracts share two opposite deployment edges on ground and in space", (t) => {
   for (const environment of ["ground", "space"]) {
     const f = fixture(t, { players: 5, environment, difficulty: 6 });
-    assert.equal(f.room.settings.costLimit, 12500);
+    assert.equal(f.room.settings.costLimit, 10000);
     assert.equal(C.progress(f.room, G).length, 5);
     assert.equal(f.engine.roomList()[0].capacity, 5);
     assert.equal(f.room.seats.filter(player=>player && !player.bot).length,5);
@@ -1690,7 +1712,7 @@ test("both deployment pads are shared by every player and remain distinct", t =>
   assert.deepEqual(C.deploymentZones(g.contract),[g.contract.entry]);
 });
 
-for(const [difficulty,limit] of [[1,24],[5,36],[6,39]])
+for(const [difficulty,limit] of [[1,12],[5,24],[6,27]])
   test(`N${difficulty} caps live reinforcements at ${limit} and resumes after casualties`, t => {
     const f=fixture(t,{difficulty}),g=f.room.game;
     clearEnemies(f);
@@ -1708,8 +1730,12 @@ for(const [difficulty,limit] of [[1,24],[5,36],[6,39]])
     assert.equal(g.contract.reinforcementBaseCount,budget);
     alive()[0].hp=0;
     for(let turn=0;turn<4;turn++) {g.round+=2;C.poll(f.room,G);}
+    assert.equal(alive().length,limit-1,"one slot cannot fit a complete configured formation");
+    assert.equal(g.units.length,count);
+    for(const unit of alive().slice(0,2))unit.hp=0;
+    for(let turn=0;turn<4;turn++) {g.round+=2;C.poll(f.room,G);}
     assert.equal(alive().length,limit);
-    assert.equal(g.units.length,count+1,"partial wave fills only the available slot");
+    assert.equal(g.units.length,count+3,"replace casualties only with a complete formation");
   });
 
 test("event transports, factory defenders and capture airdrops cannot bypass the shared reinforcement cap", t => {

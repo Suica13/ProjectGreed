@@ -18,6 +18,37 @@ async function setup(page) {
   await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
   await page.waitForFunction(() => assetsReady);
 }
+
+test("contract settlement XP persists once for PMC and ACE", async ({ page }) => {
+  await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
+  await page.waitForFunction(() => assetsReady);
+  await page.locator('#profileCompanyName').fill('Contract pilots');await page.locator('#profileOnboardingConfirm').click();
+  await page.evaluate(pilots => {
+    const save = ProfileSave.exportData();
+    for (const store of Object.values(save.pilots)) store.pilots = [];
+    for (const pilot of pilots) save.pilots[pilot.faction].pilots.push(pilot);
+    ProfileSave.importData(save);
+  }, pilots);
+  await page.reload();await page.waitForFunction(() => assetsReady);
+  const result = await page.evaluate((pilots) => {
+    const awards = pilots.map((p, i) => ({ id: 'contract-settlement-' + i, pilotId: p.id,
+      faction: p.faction, kind: 'contract', points: 0, experiencePoints: 5000, persistent: true }));
+    const snapshot = { matchId: 'contract-settlement', phase: 'idle', rewardsSettled: false,
+      settings: { mode: 'sweep' }, pilotAwards: awards };
+    const read = () => JSON.parse(localStorage.getItem('projectgreed.custom-pilots.v3.shared'));
+    Formation.receivePilotAwards(snapshot);
+    const before = read();
+    Formation.receivePilotAwards({ ...snapshot, phase: 'finished', rewardsSettled: true });
+    const settled = read();
+    Formation.receivePilotAwards({ ...snapshot, phase: 'finished', rewardsSettled: true });
+    return { before, settled, repeated: read() };
+  }, pilots);
+  expect(result.before.pilots.map(p => p.experience)).toEqual([0, 0]);
+  expect(result.settled.pilots.map(p => p.experience)).toEqual([5000, 5000]);
+  expect(result.repeated).toEqual(result.settled);
+  await page.reload();await page.waitForFunction(() => assetsReady);
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem('projectgreed.custom-pilots.v3.shared')).pilots.map(p => p.experience))).toEqual([5000, 5000]);
+});
 test("all mode XP saves in the combat turn for PMC and ACE and replays no floating receipt twice", async ({
   page,
 }) => {

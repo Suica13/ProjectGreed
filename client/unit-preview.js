@@ -384,7 +384,7 @@ const UnitPreview = (() => {
   function unitSummaryTags(adaptability, kitName, cost) {
     const tags = element("span", "unit-summary-tags");
     for (const environment of ["ground", "space"]) {
-      const value = adaptability?.[environment] ?? 0;
+      const value = UnitCatalog.environmentValue(adaptability, environment);
       tags.append(
         element(
           "span",
@@ -423,7 +423,7 @@ const UnitPreview = (() => {
       result.push({ label: tag, value: tag, className: "era-tag" });
     const adaptability = model.adaptability || model.stats?.adaptability;
     for (const environment of ["ground", "space"]) {
-      const value = adaptability?.[environment] ?? 0;
+      const value = UnitCatalog.environmentValue(adaptability, environment);
       result.push({
         label: environmentLabel(environment, value),
         value: environment,

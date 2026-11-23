@@ -5,7 +5,7 @@ const G = require("../shared/rules"),
   F = require("../shared/contract-forces");
 const { createRoomEngine } = require("../shared/room-engine"),
   { generate } = require("../tools/compile-contract-force-pools.cjs");
-function fixture(t, { difficulty = 6, faction = "ZEON", players = 1, lobby = false } = {}) {
+function fixture(t, { difficulty = 6, faction = "ZEON", players = 1, lobby = false, seed = 1936384585 } = {}) {
   let serial = 0;
   const errors = [],
     clients = Array.from({ length: players }, () => ({ readyState: 1 }));
@@ -13,7 +13,7 @@ function fixture(t, { difficulty = 6, faction = "ZEON", players = 1, lobby = fal
     rules: G,
     randomId: () => "pool-" + ++serial,
     randomToken: () => "token-" + ++serial,
-    randomSeed: () => 1936384585,
+    randomSeed: () => seed,
     aiDelayMs: 999999,
     roomReturnMs: 999999,
     send: (ws, msg) => {
@@ -90,14 +90,14 @@ test("both runtime force pools exactly match the six-level Markdown source", () 
         assert.equal(f.units.length % 3, 0);
         assert(f.kits.every((kits) => kits.length));
       }
-      assert.equal(profile.garrisons.command, [300, 400, 700, 900, 1100, 1400][difficulty - 1]);
+      assert.equal(profile.garrisons.command, [150, 250, 450, 625, 775, 1050][difficulty - 1]);
       assert.equal(
         profile.waves["defend.first"],
-        [300, 500, 750, 1000, 1250, 1500][difficulty - 1],
+        [150, 300, 500, 700, 875, 1125][difficulty - 1],
       );
       assert.equal(
         profile.waves["defend.followup"],
-        [100, 125, 200, 250, 300, 400][difficulty - 1],
+        [75, 75, 125, 175, 200, 300][difficulty - 1],
       );
     }
 });
@@ -125,13 +125,13 @@ test("budget draws keep whole formations, caps, availability, and rarity separat
         f.units.includes("RX_78_2") && f.units.includes("RX_77_2") && f.units.includes("RX_75"),
     ),
   );
-  assert(list.filter((f) => f.units.includes("RX_78_2")).every((f) => f.weight === 1));
+  assert(list.filter((f) => f.units.includes("RX_78_2")).every((f) => f.weight === .25));
   assert(
     list
       .filter((f) => f.units.every((id) => id === "RX_77_2" || id === "RX_75"))
-      .every((f) => f.weight === 4),
+      .every((f) => f.weight === 1),
   );
-  assert(list.filter((f) => f.units.every((id) => id === "RGM_79")).every((f) => f.weight === 8));
+  assert(list.filter((f) => f.units.every((id) => id === "RGM_79")).every((f) => f.weight === (f.units.length===3?8:4)));
 });
 test("explicit budgets scale by player count once, replacing generic head-count adjustments", () => {
   for (let players = 1; players <= 5; players++) {
@@ -140,6 +140,16 @@ test("explicit budgets scale by player count once, replacing generic head-count 
     assert.equal(F.budget(room, 100, true), 100 + 25 * (players - 1));
   }
 });
+
+for (const faction of ["EFSF", "ZEON"])
+  test(`N1 ${faction} starts with at most nine ordinary enemies across sampled maps`, t => {
+    for (let sample=0;sample<8;sample++) {
+      const f=fixture(t,{faction,difficulty:1,seed:1936384585+sample*1979});
+      const enemies=f.room.game.units.filter(unit=>unit.team===1&&!unit.facility);
+      assert(enemies.length>0&&enemies.length<=9);
+      assert(enemies.every(unit=>!unit.pilot.genericGrade));
+    }
+  });
 test("Zeon switches from Zaku to Gouf to Dom, excludes branch units and middle/late conventional aircraft", () => {
   const branches = new Set([
     "EMS_10",
@@ -185,6 +195,7 @@ for (const faction of ["EFSF", "ZEON"])
       const mobile = () => g.units.filter((u) => u.team === 1 && !u.facility && !u.embarked);
       assert(mobile().length);
       assert(mobile().every((u) => allowed.has(G.modelOf(u).prefabId)));
+      assert(mobile().every(u=>!u.pilot.genericGrade&&u.pilot.name.includes("\u4e00\u822c")));
       for (const o of g.contract.objectives) o.status = "completed";
       const before = g.units.length;
       for (let i = 0; i < 4; i++) {
@@ -196,9 +207,10 @@ for (const faction of ["EFSF", "ZEON"])
       assert.equal(added.length % 3, 0);
       assert(added.every((u) => u.contractReinforcement && allowed.has(G.modelOf(u).prefabId)));
       assert(added.every((u) => G.squadMembers(g, u).length <= 3));
+      assert(added.every(u=>!u.pilot.genericGrade));
     });
 for (const faction of ["EFSF", "ZEON"])
-  test(`live ${faction} N6 salvage uses three upgraded, loaded transports`, (t) => {
+  test(`live ${faction} N6 salvage uses two upgraded, loaded transports`, (t) => {
     const f = fixture(t, { faction }),
       g = f.room.game,
       o = g.contract.objectives.find((o) => o.type === "salvage");
@@ -215,7 +227,7 @@ for (const faction of ["EFSF", "ZEON"])
       ships = added.filter(
         (u) => G.modelOf(u).prefabId === (faction === "EFSF" ? "MedeaKai" : "FatUncleKai"),
       );
-    assert.equal(ships.length, 3);
+    assert.equal(ships.length, 2);
     assert.equal(o.status, "completed");
     for (const ship of ships) {
       const cargo = added.filter((u) => u.embarked?.carrierId === ship.id);
@@ -223,6 +235,7 @@ for (const faction of ["EFSF", "ZEON"])
       assert.equal(cargo.length % 3, 0);
     }
     assert(added.length <= C.config(6).patrolLimit);
+    assert(added.every(u=>!u.pilot.genericGrade));
   });
 test("lobby and startup authoritatively reject space contracts without limiting quick battles", (t) => {
   assert.throws(
@@ -257,7 +270,7 @@ test("five-player configured waves keep complete formations below the shared liv
   }
   let alive = g.units.filter((u) => u.contractReinforcement && u.hp > 0);
   assert(alive.length > 0);
-  assert(alive.length <= 39);
+  assert(alive.length <= 27);
   assert.equal(alive.length % 3, 0);
   const count = g.units.length;
   for (let i = 0; i < 8; i++) {
@@ -271,5 +284,5 @@ test("five-player configured waves keep complete formations below the shared liv
     C.poll(f.room, G);
   }
   assert(g.units.length > count);
-  assert(g.units.filter((u) => u.contractReinforcement && u.hp > 0).length <= 39);
+  assert(g.units.filter((u) => u.contractReinforcement && u.hp > 0).length <= 27);
 });

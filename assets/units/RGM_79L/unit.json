@@ -585,10 +585,10 @@
       "antiDetection": 0
     },
     "v17BaseHp": 17000,
-    "technologyEra": "UC_0079_T2",
+    "technologyEra": "UC_0079_T1",
     "actionTurnSpeed": 2.5,
     "mobilityMoveTarget": 8,
-    "technologyWeight": 2
+    "technologyWeight": 1
   },
   "weapons": {
     "EF_90mmMG": {
@@ -868,7 +868,7 @@
   },
   "tags": [
     "EFSF",
-    "UC_0079_T2"
+    "UC_0079_T1"
   ],
   "costBalance": {
     "nativeLevel": 1350,

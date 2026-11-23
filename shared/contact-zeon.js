@@ -265,6 +265,83 @@ const ZeonContact = (() => {
       ending:
         "前线的报告已经送到了。\n你终于让他们看见了退让不会发生。\n我们还会走得更远，直到联邦的枷锁被彻底砸断。\n吉翁万岁。",
     },
+    {
+  "id": "zeon-11",
+  "name": "不可退让",
+  "difficulty": 4,
+  "kind": "command",
+  "ground": true,
+  "required": 1,
+  "money": 20000,
+  "inventory": {},
+  "requires": [
+    "zeon-9"
+  ],
+  "licensePlan": "Tech_ZEON_0079_ZakuIILateTypeDevelopmentPlan",
+  "eventName": "【铁壁沃尔克】",
+  "targetUnit": "RX_79_G",
+  "targetUnits": [
+    {
+      "unitId": "RX_79_G",
+      "kitId": "beam_rifle"
+    },
+    {
+      "unitId": "RX_79_G",
+      "kitId": "beam_rifle"
+    },
+    {
+      "unitId": "RX_79_G",
+      "kitId": "beam_rifle"
+    },
+    {
+      "unitId": "RX_79_G",
+      "kitId": "beam_rifle"
+    },
+    {
+      "unitId": "RX_79_G",
+      "kitId": "beam_rifle"
+    },
+    {
+      "unitId": "RX_79_G",
+      "kitId": "beam_rifle"
+    }
+  ],
+  "targetPilotGrade": "elite",
+  "targetName": "沃尔克中队",
+  "targetLeaderPilot": {
+    "name": "铁壁沃尔克",
+    "grade": "elite",
+    "dialogue": {
+      "attack": [
+        "守住这条线，不能再让他们前进！"
+      ],
+      "hit": [
+        "还能战斗，稳住！"
+      ],
+      "miss": [
+        "不要追，保持交叉火力！"
+      ],
+      "kill": [
+        "目标停止，继续警戒！"
+      ],
+      "defeat": [
+        "防线……交给你们了……"
+      ],
+      "allyLoss": [
+        "收拢队形，不要各自为战！"
+      ],
+      "taunt": [
+        "这里不会再让你们过去！"
+      ],
+      "reply": [
+        "我们不会撤退！"
+      ]
+    }
+  },
+  "objectiveText": "歼灭【铁壁沃尔克】中队全部陆战型高达",
+  "description": "联邦在我们的进军路线上钉下了一支精锐部队，领头的自称铁壁沃尔克。\n他把占领区叫防线，把拒绝撤走叫守土。他们踩在谁的土地上，难道已经忘了吗？\n那支中队装备陆战型高达，驾驶员都是打过硬仗的人。摧毁他们，不要让这块所谓的铁壁继续挡在公国面前。\n有人劝我绕开，说正面强攻的损失不值得。今天绕开一条线，明天就会有人提议放弃一座城。\n我要这条路打开，也要那些劝退的人亲眼看着它被打开。",
+  "ending": "铁壁倒了。那些拿它当借口的人，现在还有什么可说？\n不是我们走得太远，是他们忘了我们为什么出发。\n前线会继续向前，你也一样。别把今天的战果当成可以停下的理由。吉翁万岁。"
+},
   ].map((task, index) => ({
     ...task,
     contactId: "zeon",

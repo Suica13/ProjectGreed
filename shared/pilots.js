@@ -552,7 +552,7 @@ const PilotSystem = (() => {
   }
   function battleResult(value, kind, unitCost, experiencePoints = unitCost, details = {}) {
     if (
-      !["kill", "loss", "assist", "battle"].includes(kind) ||
+      !["kill", "loss", "assist", "battle", "contract"].includes(kind) ||
       !Number.isSafeInteger(unitCost) ||
       unitCost < 0
     )
@@ -566,7 +566,7 @@ const PilotSystem = (() => {
       p = gainExperience(p, experiencePoints);
     } else if (kind === "battle") {
       p.record.battles++;
-    } else if (kind === "assist") {
+    } else if (kind === "assist" || kind === "contract") {
       p = gainExperience(p, experiencePoints);
     } else {
       p.record.losses++;
@@ -578,8 +578,8 @@ const PilotSystem = (() => {
     const received = new Set(store.awards);
     let changed = false;
     for (const award of awards) {
-      // XP is immediate; casualties still follow final match settlement.
-      if (award.persistent === false || (!settled && award.kind === "loss")) continue;
+      // Combat XP is immediate; contract XP and casualties require final settlement.
+      if (award.persistent === false || (!settled && ["loss", "contract"].includes(award.kind))) continue;
       if (received.has(award.id)) continue;
       const i = store.pilots.findIndex(
         (p) => p.id === award.pilotId && (!award.faction || p.faction === award.faction),

@@ -2272,6 +2272,7 @@ function createRoomEngine({
       return;
     room.economySettled = true;
     settleCrewLosses(room);
+    settleContractPilotExperience(room);
     const bonus = roomBattleEconomy().settlementMultipliers(getRewardMultipliers());
     if (room.settings.mode === "battlefield") {
       syncBattlefieldStock(room);
@@ -2482,6 +2483,7 @@ function createRoomEngine({
       battleRate *
       (G.modelOf(actor).pilotExperienceMultiplier ?? 1);
     const experiencePoints =
+      room.game.contract ||
       kind === "loss" ||
       kind === "battle" ||
       beforeLevel >= G.pilots.maxLevel(actor.pilot)
@@ -2513,6 +2515,26 @@ function createRoomEngine({
         requiresRecruitment,
         persistent: !room.campaign && !actor.missionActor,
       });
+  }
+  function settleContractPilotExperience(room) {
+    if (!room.game.contract || room.campaign) return;
+    const points = Math.max(0, Math.floor(Contract.reward(room, G).experience * getRewardMultipliers().experience));
+    if (!points) return;
+    const awarded = new Set();
+    for (const actor of room.game.units) {
+      const owner = room.seats[G.ownerOf(actor)],
+        key = G.ownerOf(actor) + ":" + actor.pilot?.id;
+      if (!owner || owner.bot || !actor.pilot?.custom || actor.missionActor ||
+          !room.pilotParticipants?.has(key) || awarded.has(key)) continue;
+      awarded.add(key);
+      const experiencePoints = actor.pilot.level >= G.pilots.maxLevel(actor.pilot) ? 0 : points;
+      actor.pilot = G.pilots.battleResult(actor.pilot, "contract", 0, experiencePoints);
+      (room.pilotAwards ||= []).push({
+        id: randomId(), memberId: owner.id, pilotId: actor.pilot.id,
+        faction: actor.pilot.faction, kind: "contract", points: 0, experiencePoints,
+        unitId: actor.id, persistent: true,
+      });
+    }
   }
   function recordPilotParticipation(room) {
     if (room.replay || room.phase !== "idle") return;

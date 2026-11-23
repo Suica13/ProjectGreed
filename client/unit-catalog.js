@@ -1,5 +1,10 @@
 ﻿/* Shared formation/production catalog order and search semantics. */
 const UnitCatalog = (() => {
+  function environmentValue(adaptability, environment) {
+    return environment === "ground"
+      ? Math.max(adaptability?.ground ?? 0, adaptability?.air ?? 0)
+      : adaptability?.[environment] ?? 0;
+  }
   function select(query, filters, allows, includeForms = false) {
     query = query.trim().toLocaleLowerCase();
     const [kind, value] = (filters.type || "").split(":", 2);
@@ -25,12 +30,12 @@ const UnitCatalog = (() => {
           matches(filters.types, (tag) => (p.unitTags || []).includes(tag)) &&
           matches(
             filters.environments,
-            (environment) => (p.stats.adaptability?.[environment] ?? 0) >= 90,
+            (environment) => environmentValue(p.stats.adaptability, environment) >= 90,
           ) &&
           matches(filters.roles, (role) => (p.combatRole || "normal") === role) &&
           (!filters.type ||
             (kind === "type" && (p.unitTags || []).includes(value)) ||
-            (kind === "environment" && (p.stats.adaptability?.[value] ?? 0) >= 90)),
+            (kind === "environment" && environmentValue(p.stats.adaptability, value) >= 90)),
       )
       .sort(
         (a, b) =>
@@ -247,5 +252,5 @@ const UnitCatalog = (() => {
       compareNames(a.name, b.name) ||
       a.id.localeCompare(b.id, "en");
   }
-  return { select, compareDevelopedCost, populateTypeFilter, checkboxFilters };
+  return { select, compareDevelopedCost, populateTypeFilter, checkboxFilters, environmentValue };
 })();

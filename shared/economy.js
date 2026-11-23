@@ -751,6 +751,25 @@ const Economy = (() => {
     next.pluginInventory[id] = (next.pluginInventory[id] || 0) + 1;
     return commit(next);
   }
+  function resourceExchangeOffer(merchantId, source, quantity) {
+    const rates = merchants.find(merchant => merchant.id === merchantId)?.resourceExchange;
+    if (!rates || !["money", "supplies"].includes(source)) throw Error("该商人不提供此兑换服务");
+    if (!Number.isSafeInteger(quantity) || quantity <= 0) throw Error("兑换份数必须为正整数");
+    const target = source === "money" ? "supplies" : "money",
+      cost = { [source]: quantity * rates[source] },
+      gain = { [target]: quantity * rates[target] };
+    if (!Number.isSafeInteger(cost[source]) || !Number.isSafeInteger(gain[target]) ||
+        !Number.isSafeInteger(state[target] + gain[target])) throw Error("兑换数量超出上限");
+    return { cost, gain, available: affordable(cost) };
+  }
+  function exchangeResources(merchantId, source, quantity) {
+    const offer = resourceExchangeOffer(merchantId, source, quantity);
+    if (!offer.available) return false;
+    const next = snapshot();
+    for (const kind of ["money", "supplies"])
+      next[kind] += (offer.gain[kind] || 0) - (offer.cost[kind] || 0);
+    return commit(next);
+  }
   function pluginOffer(merchantId, id) {
     const merchant = merchants.find(item => item.id === merchantId), part = plugins.byId.get(id);
     if (!merchant?.sellsPlugins || part?.merchant!==merchantId) return null;
@@ -1177,6 +1196,8 @@ const Economy = (() => {
     supplyProducts,
     drawSupply,
     merchants,
+    resourceExchangeOffer,
+    exchangeResources,
     pluginQuantity,
     pluginOffer,
     purchasePlugin,

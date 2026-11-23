@@ -2,7 +2,7 @@
   "format": "projectgreed-contact-planning",
   "version": 1,
   "systemVersion": "1.0",
-  "notes": "极端主义军国狂信徒；既有ID、军令、许可与设施条件沿用。",
+  "notes": "极端主义军国狂信徒；既有ID、军令、许可与设施条件沿用。 新增不可退让：特殊精锐中队任务，交付授予扎古Ⅱ后期型开发计划许可。",
   "contacts": [
     {
       "id": "zeon",
@@ -101,6 +101,15 @@
             "zeon-9"
           ],
           "text": "合约条件：UC_0079_T1 · N4以上 · 敌军EFSF · 地面\n\n开始：\n他们总说公国只会躲在炮火后面。我要一份让这种傲慢闭嘴的近战报告。\n带上你的格斗武器，迎着联邦的MS打过去。我要他们亲眼看清是谁破开了他们的防线，不是在烟散以后再去争论炮弹来自哪边。\n别把勇气解释成愚蠢，保持队形，执行军令。公国需要胜利者，不需要没有意义的尸体。\n战争不会因为敌人觉得痛苦就自动结束，它会在他们再也不能阻挡我们时结束。\n\n任务目标：使用格斗武器消灭联邦军MS 0/50\n\n逻辑与奖励配置（单位编号为项目实际ID）：\n{\n  \"id\": \"zeon-10\",\n  \"difficulty\": 4,\n  \"kind\": \"kills\",\n  \"ground\": true,\n  \"required\": 50,\n  \"money\": 25000,\n  \"inventory\": {},\n  \"requires\": [\n    \"zeon-9\"\n  ],\n  \"killMethod\": \"melee\",\n  \"licensePlan\": \"Tech_ZEON_0079_PezunProject\",\n  \"contactId\": \"zeon\",\n  \"number\": 10,\n  \"enemyFaction\": \"EFSF\",\n  \"era\": \"UC_0079_T1\",\n  \"affinity\": 100\n}\n\n完成：\n前线的报告已经送到了。\n你终于让他们看见了退让不会发生。\n我们还会走得更远，直到联邦的枷锁被彻底砸断。\n吉翁万岁。"
+        },
+        {
+          "id": "zeon-11",
+          "name": "不可退让",
+          "status": "无需调整",
+          "requires": [
+            "zeon-9"
+          ],
+          "text": "合约条件：0079T1 · N4以上 · 敌军EFSF · 地面\n\n开始：\n联邦在我们的进军路线上钉下了一支精锐部队，领头的自称铁壁沃尔克。\n他把占领区叫防线，把拒绝撤走叫守土。他们踩在谁的土地上，难道已经忘了吗？\n那支中队装备陆战型高达，驾驶员都是打过硬仗的人。摧毁他们，不要让这块所谓的铁壁继续挡在公国面前。\n有人劝我绕开，说正面强攻的损失不值得。今天绕开一条线，明天就会有人提议放弃一座城。\n我要这条路打开，也要那些劝退的人亲眼看着它被打开。\n\n任务目标：歼灭【铁壁沃尔克】中队全部陆战型高达 0/1\n\n逻辑与奖励配置（单位编号为项目实际ID）：\n{\n  \"id\": \"zeon-11\",\n  \"difficulty\": 4,\n  \"kind\": \"command\",\n  \"ground\": true,\n  \"required\": 1,\n  \"money\": 20000,\n  \"inventory\": {},\n  \"requires\": [\n    \"zeon-9\"\n  ],\n  \"licensePlan\": \"Tech_ZEON_0079_ZakuIILateTypeDevelopmentPlan\",\n  \"eventName\": \"【铁壁沃尔克】\",\n  \"targetUnit\": \"RX_79_G\",\n  \"targetUnits\": [\n    {\n      \"unitId\": \"RX_79_G\",\n      \"kitId\": \"beam_rifle\"\n    },\n    {\n      \"unitId\": \"RX_79_G\",\n      \"kitId\": \"beam_rifle\"\n    },\n    {\n      \"unitId\": \"RX_79_G\",\n      \"kitId\": \"beam_rifle\"\n    },\n    {\n      \"unitId\": \"RX_79_G\",\n      \"kitId\": \"beam_rifle\"\n    },\n    {\n      \"unitId\": \"RX_79_G\",\n      \"kitId\": \"beam_rifle\"\n    },\n    {\n      \"unitId\": \"RX_79_G\",\n      \"kitId\": \"beam_rifle\"\n    }\n  ],\n  \"targetPilotGrade\": \"elite\",\n  \"targetName\": \"沃尔克中队\",\n  \"targetLeaderPilot\": {\n    \"name\": \"铁壁沃尔克\",\n    \"grade\": \"elite\",\n    \"dialogue\": {\n      \"attack\": [\n        \"守住这条线，不能再让他们前进！\"\n      ],\n      \"hit\": [\n        \"还能战斗，稳住！\"\n      ],\n      \"miss\": [\n        \"不要追，保持交叉火力！\"\n      ],\n      \"kill\": [\n        \"目标停止，继续警戒！\"\n      ],\n      \"defeat\": [\n        \"防线……交给你们了……\"\n      ],\n      \"allyLoss\": [\n        \"收拢队形，不要各自为战！\"\n      ],\n      \"taunt\": [\n        \"这里不会再让你们过去！\"\n      ],\n      \"reply\": [\n        \"我们不会撤退！\"\n      ]\n    }\n  },\n  \"contactId\": \"zeon\",\n  \"number\": 11,\n  \"enemyFaction\": \"EFSF\",\n  \"era\": \"UC_0079_T1\",\n  \"affinity\": 100\n}\n\n完成：\n铁壁倒了。那些拿它当借口的人，现在还有什么可说？\n不是我们走得太远，是他们忘了我们为什么出发。\n前线会继续向前，你也一样。别把今天的战果当成可以停下的理由。吉翁万岁。"
         }
       ]
     }

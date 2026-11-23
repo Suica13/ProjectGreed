@@ -137,6 +137,7 @@ body dialog.contact-terminal[open] {
 }
 .contact-terminal-menu {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   gap: 22px;
   align-items: center;
@@ -270,6 +271,12 @@ body dialog.contact-terminal[open] {
     width: 100%;
   }
 }
+.contact-exchange { display:grid; gap:16px; width:min(100%,480px); box-sizing:border-box; margin:0 auto; padding:20px; border:1px solid #456b83; background:#102638; }
+.contact-exchange h3,.contact-exchange p { margin:0; }
+.contact-exchange label { display:grid; gap:8px; min-width:0; }
+.contact-exchange :is(input,select) { width:100%; min-width:0; box-sizing:border-box; }
+.contact-exchange-preview { display:grid; gap:12px; padding:12px; background:#0d1b29; }
+.contact-exchange-row { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
 /* Liaison task list, dialogue and overflow reward storage. */
 .contact-task-layout {
   display: grid;

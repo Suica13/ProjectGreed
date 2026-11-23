@@ -266,6 +266,8 @@ body .base-swap-ghost { position:fixed; z-index:2147483647; pointer-events:none;
   }
   body.menu-shell-active #productionScreen .production-browser { flex:none; min-height:0; }
   body.menu-shell-active #productionScreen .production-list { flex:none; height:clamp(240px,46dvh,560px); max-height:none; }
-  body.menu-shell-active #productionScreen .production-details { flex:none; min-height:580px; overflow:visible; }
-  body.menu-shell-active #productionScreen #productionInfo { flex:none; max-height:240px; }
+  body.menu-shell-active #productionScreen .production-details { flex:none; height:auto; min-height:0; overflow:visible; }
+  /* Keep specifications in the page flow so touch gestures reach the order below. */
+  body.menu-shell-active #productionScreen #productionInfo { flex:none; height:auto; max-height:none; overflow:visible; }
+  body.menu-shell-active #productionScreen .production-list { overscroll-behavior-y:auto; touch-action:pan-y; }
 }

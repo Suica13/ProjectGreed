@@ -56,7 +56,7 @@ for (const width of [1440, 390])
       ]),
     ).toEqual([true, false, true]);
     await terminal.getByRole("button", { name: "任务", exact: true }).click();
-    await expect(terminal.locator("[data-task-id]")).toHaveCount(10);
+    await expect(terminal.locator("[data-task-id]")).toHaveCount(11);
     await terminal.locator('[data-task-id="zeon-8"]').click();
     await expect(terminal).toContainText('机动扎古指挥官机');
     expect(await page.evaluate(()=>{

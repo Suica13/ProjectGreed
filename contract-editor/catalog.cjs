@@ -92,6 +92,9 @@ const base = Contract.kinds.map((kind) => ({
   ...details[kind.type],
 }));
 const extra = {
+  "efsf-11": {forces:"六台光束步枪型机动扎古，全部配属精英驾驶员，组成两个三机小队；队长记名小丑特丽娜。",completion:"N4以上、0079T1、地面、敌军吉翁，击毁全部六台目标。"},
+  "efsf-12": {forces:"一台记名PIXY的精灵高达，配属老兵驾驶员。",completion:"N5以上、0079T1、地面、敌军联邦，击毁指定精灵高达。"},
+  "zeon-11": {forces:"六台光束步枪型陆战型高达，全部配属精英驾驶员，组成两个三机小队；队长记名铁壁沃尔克。",completion:"N4以上、0079T1、地面、敌军联邦，击毁全部六台目标。"},
   "zeon-2": {forces:"坠毁胖叔叔残骸＋事件驻军。",completion:"回收运输记录，且接取者至少一台存活单位成功撤离。"},
   "zeon-3": {forces:"三台叛变扎古ⅡF型，机枪／火箭筒／机枪套件，配属老兵驾驶员。",completion:"击毁全部三台账外护卫。"},
   "zeon-4": {forces:"六台初期型吉姆，组成两个三机警卫小队。",completion:"击毁两个小队的全部六台MS。"},

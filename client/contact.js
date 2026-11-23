@@ -25,6 +25,7 @@ window.ContactUI = (() => {
     query = "",
     purchasing = false;
   const collapsedTaskGroups = new Set();
+  let exchangeSource = "supplies", exchangeQuantity = 1;
   let selectedTask = null,
     selectedAcceptedTask = null,
     dialogue = null;
@@ -430,6 +431,70 @@ window.ContactUI = (() => {
     renderShopItems(list);
     return box;
   }
+  function resourceExchange() {
+    const form = element("form", "contact-exchange"),
+      directionLabel = element("label", "", "兑换方向"),
+      direction = element("select"),
+      quantityLabel = element("label", "", "兑换份数"),
+      quantity = element("input"),
+      preview = element("div", "contact-exchange-preview"),
+      submit = element("button", "primary", "确认兑换");
+    direction.id = "merchantExchangeDirection";
+    quantity.id = "merchantExchangeQuantity";
+    directionLabel.htmlFor = direction.id;
+    quantityLabel.htmlFor = quantity.id;
+    for (const [value, label] of [["supplies", "物资 → 资金"], ["money", "资金 → 物资"]]) {
+      const option = element("option", "", label);
+      option.value = value;
+      direction.append(option);
+    }
+    direction.value = exchangeSource;
+    quantity.type = "number";
+    quantity.min = "1";
+    quantity.step = "1";
+    quantity.required = true;
+    quantity.value = String(exchangeQuantity);
+    submit.type = "submit";
+    const refresh = () => {
+      exchangeSource = direction.value;
+      exchangeQuantity = quantity.valueAsNumber;
+      preview.replaceChildren();
+      try {
+        const offer = Economy.resourceExchangeOffer(trader.id, exchangeSource, exchangeQuantity);
+        for (const [label, amount] of [["交付", offer.cost], ["获得", offer.gain]]) {
+          const row = element("div", "contact-exchange-row"), balance = element("div", "resource-balance");
+          ProductionUI.resources(balance, amount, { compact: true });
+          row.append(element("span", "", label), balance);
+          preview.append(row);
+        }
+        submit.disabled = Net.started || !offer.available;
+        if (!offer.available) preview.append(element("p", "muted", "资金或物资不足"));
+      } catch (error) {
+        submit.disabled = true;
+        preview.append(element("p", "muted", Economy.errorMessage(error)));
+      }
+    };
+    direction.onchange = quantity.oninput = refresh;
+    form.onsubmit = event => {
+      event.preventDefault();
+      if (purchasing || Net.started) return;
+      purchasing = true;
+      try {
+        note(Economy.exchangeResources(trader.id, direction.value, quantity.valueAsNumber) ? "兑换成功" : "资金或物资不足");
+      } catch (error) {
+        note(Economy.errorMessage(error));
+      } finally {
+        purchasing = false;
+      }
+    };
+    directionLabel.append(direction);
+    quantityLabel.append(quantity);
+    form.append(element("h3", "", "资源兑换"), element("p", "muted", "每份：1物资 ⇄ 2资金，可双向兑换。"),
+      directionLabel, quantityLabel, preview, submit);
+    if (Net.started) form.append(element("p", "muted", "对局进行中不能兑换"));
+    refresh();
+    return form;
+  }
   function renderTerminal() {
     if (!trader) return;
     const taskPosition=taskScroll(terminal),terminalScroll=terminal.scrollTop;
@@ -471,8 +536,14 @@ window.ContactUI = (() => {
             renderTerminal();
           }),
         );
+      if (trader.resourceExchange)
+        menu.append(button("资源兑换", () => {
+          view = "exchange";
+          renderTerminal();
+        }));
       body.append(element("p", "contact-terminal-status", "通信链路已建立"), menu);
     } else if (view === "tasks") body.append(taskPanel());
+    else if (view === "exchange") body.append(resourceExchange());
     else body.append(shop());
     const scroll = terminal.querySelector(".contact-terminal-body")?.scrollTop || 0;
     terminal.replaceChildren(top, body);

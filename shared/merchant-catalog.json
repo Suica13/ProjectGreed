@@ -17,6 +17,7 @@
     "id": "anaheim",
     "name": "阿纳海姆",
     "portraitImage": "assets/ui/contact-ae.png",
+    "resourceExchange": { "supplies": 1, "money": 2 },
     "portraitId": "Pilot_EFSF_0079_Common_2",
     "sellsPlugins": true
   }

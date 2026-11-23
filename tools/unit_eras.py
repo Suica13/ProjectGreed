@@ -35,7 +35,9 @@ def apply(prefab):
         if len(factions) > 1:
             prefab["availableFactions"] = sorted(set(factions + prefab.get("availableFactions", [])))
     mapping = eras()
-    era = "UC_0079_T2" if prefab["id"] in ("MS_06Z", "MSN_01", "MS_14G", "RGM_79L", "MS_17R", "RX_80PR_2", "RX_80PR_2_HADES") else mapping.get(prefab["id"])
+    era = "UC_0079_T2" if prefab["id"] in ("MS_06Z", "MSN_01", "MS_14G", "MS_17R", "RX_80PR_2", "RX_80PR_2_HADES") else mapping.get(prefab["id"])
+    if prefab["id"] in ("RGM_79L", "RGM_79G_EarlyDeployment"):
+        era = "UC_0079_T1"
     if prefab.get("source", "").startswith("GW_BattleUniverse_DLC_0093/"):
         era = "UC_0093_T1"
     if prefab.get("source", "").startswith("GW_BattleUniverse_DLC_SEED/"):

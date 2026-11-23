@@ -2,7 +2,7 @@
 const ContactTasks = (() => {
   const zeon = typeof ZeonContact !== "undefined" ? ZeonContact : require("./contact-zeon.js");
   const anaheim = typeof AnaheimContact !== "undefined" ? AnaheimContact : require("./contact-anaheim.js");
-  const planningVersion = "1.21";
+  const planningVersion = "1.3";
   const tasks = [
     {
       "id": "efsf-1",
@@ -255,6 +255,119 @@ const ContactTasks = (() => {
       "ending": "没错，你的“光辉事迹”连我都听说了，整个战线都知道有个疯子见人就炸。\n前线安静了不少，至少他们现在知道该往哪儿躲了——离你远点。\n行，别把这表情录进战报里。上面喜欢听战术，不喜欢听我笑。"
     }
   ];
+  tasks.push({
+  "id": "efsf-11",
+  "number": 11,
+  "name": "小菜一碟",
+  "difficulty": 4,
+  "kind": "command",
+  "ground": true,
+  "era": "UC_0079_T1",
+  "required": 1,
+  "enemyFaction": "ZEON",
+  "money": 20000,
+  "inventory": {},
+  "affinity": 100,
+  "requires": [
+    "efsf-9"
+  ],
+  "licensePlan": "Tech_EFSF_0079_GMDevelopmentPlan",
+  "eventName": "【小丑特丽娜】",
+  "targetUnit": "MS_11",
+  "targetUnits": [
+    {
+      "unitId": "MS_11",
+      "kitId": "kit_1"
+    },
+    {
+      "unitId": "MS_11",
+      "kitId": "kit_1"
+    },
+    {
+      "unitId": "MS_11",
+      "kitId": "kit_1"
+    },
+    {
+      "unitId": "MS_11",
+      "kitId": "kit_1"
+    },
+    {
+      "unitId": "MS_11",
+      "kitId": "kit_1"
+    },
+    {
+      "unitId": "MS_11",
+      "kitId": "kit_1"
+    }
+  ],
+  "targetPilotGrade": "elite",
+  "targetName": "特丽娜中队",
+  "targetLeaderPilot": {
+    "name": "小丑特丽娜",
+    "grade": "elite",
+    "dialogue": {
+      "attack": [
+        "又派佣兵来？联邦已经没人了吗？"
+      ],
+      "hit": [
+        "打中了？别急着谢幕！"
+      ],
+      "miss": [
+        "别躲啊，这才刚刚开场！"
+      ],
+      "kill": [
+        "下一个！可别让我失望！"
+      ],
+      "defeat": [
+        "这场戏……不该这样收场……"
+      ],
+      "allyLoss": [
+        "别乱，跟着我！"
+      ],
+      "taunt": [
+        "想找我？我就在这里！"
+      ],
+      "reply": [
+        "来吧，让我看看你的本事！"
+      ]
+    }
+  },
+  "objective": "歼灭【小丑特丽娜】中队全部机动扎古",
+  "description": "佣兵头子，我给你安排了一个任务，我建议你一刻也不要拖延。\n在一位大人物附近的战线沦陷了，那群吉翁的无耻混蛋占领了那里。\n领头的好像是个有名人，叫什么【小丑特丽娜】？\n反正不管她叫什么，我们要她死！\n随便你用什么办法都行。",
+  "ending": "你们还活着？\n这倒是不简单。\n原本驻扎在这里的正规军都被那混蛋干掉了，我还以为这回又得收拾一摊烂账。\n行了，剩下的事交给我。你最好也别到处提她的名字，大人物不喜欢被人提醒自己差点成了笑话。"
+},
+{
+  "id": "efsf-12",
+  "number": 12,
+  "name": "财不外露",
+  "difficulty": 5,
+  "kind": "command",
+  "ground": true,
+  "era": "UC_0079_T1",
+  "required": 1,
+  "enemyFaction": "EFSF",
+  "money": 22500,
+  "inventory": {},
+  "affinity": 100,
+  "requires": [
+    "efsf-7",
+    "efsf-11"
+  ],
+  "licensePlan": "Tech_EFSF_0079_PaleRiderProject",
+  "eventName": "【PIXY】",
+  "targetUnit": "RX_78XX",
+  "targetUnits": [
+    {
+      "unitId": "RX_78XX",
+      "kitId": "kit_3"
+    }
+  ],
+  "targetPilotGrade": "veteran",
+  "targetName": "PIXY",
+  "objective": "击坠记名精灵高达【PIXY】",
+  "description": "嘿，佣兵头子！\n你还记得之前提供给你的那些“先进”MS吗？\n有个混蛋发现了我们的小秘密，打算收集证据告发我们。\n我们原本和一伙吉翁佬打好招呼打算偷偷把他做掉，结果这家伙手底下有点东西。\n那家伙的部队里有台MS性能很夸张，是架高达。\n大人物最近被缠住了，我们不能用我们自己的人去干这件事。\n放心，你只要把那架MS干掉，剩下的我们来搞定。",
+  "ending": "干得好！朋友，你简直是我们的救星！\n那家伙收集的东西，我已经让人去处理了。\n我们那点小秘密就留在这儿。你什么都没听说，我也从没打过这通电话。"
+});
   tasks.push(...zeon.tasks);
   tasks.push(...anaheim.tasks);
   const byId = new Map(tasks.map(t=>[t.id,t]));

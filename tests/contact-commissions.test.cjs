@@ -5,6 +5,35 @@ const test = require("node:test"),
   path = require("node:path");
 const G = require("../shared/rules.js"),
   codec = require("../shared/save-codec.js");
+
+test("new 1.3 commissions require both branches and grant production permits once",()=>{
+ const C=require('../shared/contact-tasks'),state=funded().E.snapshot();
+ state.contactIntro=true;
+ state.contactTasks=C.tasks.filter(t=>(t.contactId||'efsf')==='efsf'&&t.number<=9&&t.id!=='efsf-7').map(t=>({id:t.id,status:'claimed',progress:t.required}));
+ const {E}=load(state);
+ assert.throws(()=>E.acceptContactTask('efsf-12'));
+ assert(E.acceptContactTask('efsf-11'));
+ assert.throws(()=>E.completeContactTask('efsf-11'));
+ E.creditAward({id:'trina',matchId:'trina',money:0,supplies:0,contactProgress:[{id:'efsf-11',amount:1}]});
+ const balance=E.snapshot().money;
+ E.completeContactTask('efsf-11');assert.equal(E.snapshot().money,balance+20000);
+ assert(E.hasLicense('RGM_79'));
+ assert.throws(()=>E.acceptContactTask('efsf-12'),'Renass prerequisite is still missing');
+ E.acceptContactTask('efsf-7');
+ E.creditAward({id:'renass-new',matchId:'renass-new',money:0,supplies:0,contactProgress:[{id:'efsf-7',amount:1}]});
+ E.completeContactTask('efsf-7');E.acceptContactTask('efsf-12');
+ E.creditAward({id:'pixy',matchId:'pixy',money:0,supplies:0,contactProgress:[{id:'efsf-12',amount:1}]});
+ E.completeContactTask('efsf-12');assert(E.hasLicense('RX_80PR'));
+ assert.throws(()=>E.completeContactTask('efsf-12'));
+ assert.equal(load(E.snapshot()).E.snapshot().contactTasks.find(t=>t.id==='efsf-12').status,'claimed');
+ const doc=JSON.parse(fs.readFileSync('docs/data/contacts/efsf-联邦联络人-1.3.json','utf8'));
+ const M=require('../task-editor/model');assert.deepEqual(M.validate(doc,require('../task-editor/catalog.cjs')),[]);
+ for(const id of ['efsf-11','efsf-12']){
+  const task=C.byId.get(id),entry=doc.contacts[0].tasks.find(t=>t.id===id);
+  assert.deepEqual(entry.requires,task.requires);assert(entry.text.includes(task.description));assert(entry.text.includes(task.ending));
+ }
+ for(const id of ['task_3','task_4','task_5'])assert(!C.byId.has(id),'unrequested drafts remain planning only');
+});
 function load(saved) {
   const key = "projectgreed.economy.v1",
     data = new Map(saved ? [[key, codec.stringify(saved)]] : []);
@@ -97,7 +126,7 @@ test("Zeon first contact, progression and affinity are independent from EFSF and
  assert(E.meetLiaison('zeon'));assert(C.met(E.snapshot(),'zeon'));
  assert.equal(E.snapshot().contactIntro,false);assert(E.hasLicense('MS_06J'));
  assert.equal(E.meetLiaison('zeon'),false);assert.throws(()=>E.acceptContactTask('efsf-1'));
- assert.equal(C.tasks.filter(t=>t.contactId==='zeon').length,10);
+ assert.equal(C.tasks.filter(t=>t.contactId==='zeon').length,11);
  for(const task of C.tasks.filter(t=>t.contactId==='zeon')){
   assert(E.acceptContactTask(task.id));assert.throws(()=>E.acceptContactTask(task.id));
   if(task.id==='zeon-5'){
@@ -109,17 +138,17 @@ test("Zeon first contact, progression and affinity are independent from EFSF and
   const before=E.snapshot().money;assert(E.completeContactTask(task.id));
   assert.equal(E.snapshot().money,before+task.money);assert.throws(()=>E.completeContactTask(task.id));
  }
- assert.equal(E.merchantAffinity('zeon'),1000);assert.equal(E.merchantLevel('zeon'),2);
+ assert.equal(E.merchantAffinity('zeon'),1100);assert.equal(E.merchantLevel('zeon'),2);
  assert.equal(E.liaisonAffinity(),0);assert.equal(E.snapshot().contactIntro,false);
  assert.equal(E.merchantAffinity('anaheim'),0);assert(!E.snapshot().storage.units.some(u=>u.contactLoan==='zeon-5'));
  const unlocked=new Set([C.introPlan('zeon'),...C.tasks.filter(t=>t.contactId==='zeon').flatMap(C.planIds)]);
- for(const plan of require('../shared/development-tree.json').ZEON.filter(p=>p.era==='UC_0079_T1'&&p.points>0))assert.equal(unlocked.has(plan.id),plan.id!=='Tech_ZEON_0079_ZakuIILateTypeDevelopmentPlan',plan.id);
+ for(const plan of require('../shared/development-tree.json').ZEON.filter(p=>p.era==='UC_0079_T1'&&p.points>0))assert.equal(unlocked.has(plan.id),true,plan.id);
  for(const part of require('../shared/unit-plugins').catalog.filter(p=>p.merchant==='zeon')){
   assert(E.pluginOffer('zeon',part.id).available);assert.equal(E.pluginOffer('efsf',part.id),null);
  }
  for(const unit of ['MS_06J','MS_06G','MS_09','EMS_10','MS_08TX','ApsarasII','MS_11'])assert(E.hasLicense(unit),unit);
- assert(!E.hasLicense('MS_06F2'));assert(!E.hasLicense('MS_06F2_Commander'));
- const restored=load(E.snapshot()).E;assert(C.met(restored.snapshot(),'zeon'));assert.equal(restored.merchantAffinity('zeon'),1000);
+ assert(E.hasLicense('MS_06F2'));assert(E.hasLicense('MS_06F2_Commander'));
+ const restored=load(E.snapshot()).E;assert(C.met(restored.snapshot(),'zeon'));assert.equal(restored.merchantAffinity('zeon'),1100);
  assert(restored.hasLicense('MS_09'));assert.equal(restored.facilityUpgradeOffer('hq').available,true);
 });
 
@@ -178,7 +207,7 @@ test("Zeon planning JSON keeps all runtime dialogue, dependency IDs and the supp
  const Z=require('../shared/contact-zeon'),M=require('../task-editor/model');
  const doc=JSON.parse(fs.readFileSync('docs/data/contacts/zeon-吉翁联络人-1.0.json','utf8'));
  assert.deepEqual(M.validate(doc,require('../task-editor/catalog.cjs')),[]);
- const contact=doc.contacts[0];assert.equal(contact.id,'zeon');assert.equal(contact.tasks.length,10);
+ const contact=doc.contacts[0];assert.equal(contact.id,'zeon');assert.equal(contact.tasks.length,11);
  for(const task of Z.tasks){const entry=contact.tasks.find(e=>e.id===task.id);assert(entry.text.includes(task.description));assert(entry.text.includes(task.ending));assert.deepEqual(entry.requires,task.requires);}
  assert.deepEqual(Buffer.from(contact.portrait.dataUrl.split(',')[1],'base64'),fs.readFileSync('assets/ui/contact-zeon.png'));
 });
@@ -215,7 +244,7 @@ test("beacon remains locked after all commissions and HQ level two, without adve
  assert.throws(()=>E.upgradeFacility('beacon'));assert.equal(JSON.stringify(E.snapshot()),before);
  assert.equal(E.facilityUpgradeOffer('factory').available,true);
 });
-test("ten commissions follow dependencies, commit rewards once and retain Green Corridor facility unlocks",()=>{
+test("twelve commissions follow dependencies, commit rewards once and retain Green Corridor facility unlocks",()=>{
  const {E}=funded();E.meetLiaison();
  assert.throws(()=>E.acceptContactTask("efsf-2"));
  const Contact=require('../shared/contact-tasks');let earned=0;
@@ -229,7 +258,7 @@ test("ten commissions follow dependencies, commit rewards once and retain Green 
   const before=E.snapshot().money;assert(E.completeContactTask(task.id));earned+=task.money;
   assert.equal(E.snapshot().money,before+task.money);assert.throws(()=>E.completeContactTask(task.id));
  }
- assert.equal(E.liaisonAffinity(),1000);assert(E.hasLicense('RX_79_G'));assert(E.hasLicense('RX_78_2'));assert(E.hasLicense('RX_77_3'));
+ assert.equal(E.liaisonAffinity(),1200);assert(E.hasLicense('RX_79_G'));assert(E.hasLicense('RX_78_2'));assert(E.hasLicense('RX_77_3'));
  assert.equal(E.quantity('RX_80PR'),0);
  const before=E.snapshot();
  assert.equal(E.facilityUpgradeOffer('factory').available,false);
@@ -244,7 +273,7 @@ test("ten commissions follow dependencies, commit rewards once and retain Green 
 test("planning 1.21 branches seven and eight from Green Corridor and accepts N4-N6 while rejecting removed levels",()=>{
  const C=require('../shared/contact-tasks'),initial=funded().E.snapshot();
  initial.contactIntro=true;initial.contactTasks=C.tasks.slice(0,6).map(t=>({id:t.id,status:'claimed',progress:t.required}));
- const {E}=load(initial);assert.equal(C.planningVersion,'1.21');assert.equal(C.tasks.filter(t=>(t.contactId||'efsf')==='efsf').length,10);
+ const {E}=load(initial);assert.equal(C.planningVersion,'1.3');assert.equal(C.tasks.filter(t=>(t.contactId||'efsf')==='efsf').length,12);
  assert(E.acceptContactTask('efsf-8'));assert(E.acceptContactTask('efsf-7'));
  assert.throws(()=>E.acceptContactTask('efsf-9'));
  assert(C.eligible(C.byId.get('efsf-7'),{mode:'sweep',sweepFaction:'EFSF',sweepDifficulty:3,sweepEnvironment:'ground'}));
@@ -255,7 +284,7 @@ test("planning 1.21 branches seven and eight from Green Corridor and accepts N4-
 
 test("mainline technology missions include their prerequisite chain and locked tasks explain unclaimed requirements",()=>{
  const C=require('../shared/contact-tasks');
- assert.deepEqual(C.tasks.filter(t=>(t.contactId||'efsf')==='efsf').filter(C.isSideTask).map(t=>t.id),['efsf-7','efsf-10']);
+ assert.deepEqual(C.tasks.filter(t=>(t.contactId||'efsf')==='efsf').filter(C.isSideTask).map(t=>t.id),['efsf-7','efsf-10','efsf-12']);
  for(const id of ['efsf-1','efsf-6','efsf-8','efsf-9'])assert(!C.isSideTask(C.byId.get(id)),id);
  const task=C.byId.get('efsf-9');
  assert.deepEqual(C.unmetRequirements(task,[],false),[{type:'intro'},{type:'task',id:'efsf-8',name:'最好的差事'}]);
@@ -312,13 +341,13 @@ test("Pale Rider loan protection and automatic return also cover safekeeping and
  }
 });
 
-test("planning JSON 1.21 round trips all ten stable IDs and dependency branches",()=>{
+test("planning JSON 1.3 preserves runtime IDs and dependencies alongside future drafts",()=>{
  const C=require('../shared/contact-tasks'),M=require('../task-editor/model');
- const plan=JSON.parse(fs.readFileSync('docs/data/contacts/efsf-联邦联络人-1.21.json','utf8'));
+ const plan=JSON.parse(fs.readFileSync('docs/data/contacts/efsf-联邦联络人-1.3.json','utf8'));
  assert.equal(plan.systemVersion,C.planningVersion);
  assert.deepEqual(M.validate(plan,plan.aiGuide.statusMeanings),[]);
  const federal=C.tasks.filter(t=>(t.contactId||'efsf')==='efsf');
- assert.deepEqual(plan.contacts[0].tasks.map(t=>t.id),federal.map(t=>t.id));
+ assert.deepEqual(plan.contacts[0].tasks.filter(t=>C.byId.has(t.id)).map(t=>t.id),federal.map(t=>t.id));
  for(const task of federal)assert.deepEqual(plan.contacts[0].tasks.find(t=>t.id===task.id).requires,task.requires);
 });
 test("full unit and ship rewards remain in safekeeping and can be individually accepted without duplication",()=>{
