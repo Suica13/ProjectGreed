@@ -1758,6 +1758,12 @@ const UnitSkills = (() => {
           ? { campaignDurability: unit.campaignDurability }
           : {}),
         pilot: unit.pilot,
+        // The same hull keeps its installed parts while computing the new
+        // resource maximum. Newly spawned escape units do not duplicate them.
+        ...(id === unit.id && unit.plugins ? { plugins: [...unit.plugins] } : {}),
+        ...(id === unit.id && unit.missionResourceScale !== undefined
+          ? { missionResourceScale: unit.missionResourceScale }
+          : {}),
         ...(unit.forcedExitRound !== undefined ? { forcedExitRound: unit.forcedExitRound } : {}),
         ...(unit.weaponTurnUses ? { weaponTurnUses: { ...unit.weaponTurnUses } } : {}),
         ...(unit.pilotBuffs ? { pilotBuffs: structuredClone(unit.pilotBuffs) } : {}),
@@ -5454,7 +5460,7 @@ const Economy = (() => {
           if (localStorage.getItem(backupKey) === null) localStorage.setItem(backupKey, saved);
           localStorage.setItem(key, saveCodec.stringify(state));
         } else if (parsed.supplyTestGrant === true || parsed.contactTasks?.length || Object.hasOwn(parsed.itemInventory || {}, "supply-token")) {
-          // Retire the erroneous tactical-mission links, leaving wallet and parts intact.
+          // Persist retired grant markers, old token names and tactical-mission links.
           localStorage.setItem(key, saveCodec.stringify(state));
         }
       }
@@ -6392,6 +6398,12 @@ const Economy = (() => {
       kitId = forms.kit(catalog, stockId, to, originalKit, defaultKit(to)),
       model = modelsForUnits()[to + "__" + kitId];
     if (item) {
+      const previousModel = plugins.apply(modelsForUnits()[item.unitId + "__" + item.kitId], item.plugins),
+        nextModel = plugins.apply(model, item.plugins),
+        inheritResource = (current, before, after) => before > 0
+          ? Math.max(0, Math.min(after, current / before * after)) : 0;
+      item.hp = Math.max(1, Math.round(inheritResource(item.hp, previousModel.hp, nextModel.hp)));
+      item.en = inheritResource(item.en, previousModel.en, nextModel.en);
       const previousKind = warehouse.category(modelsForUnits()[item.unitId + "__" + item.kitId]),
         nextKind = warehouse.category(model);
       if (previousKind !== nextKind) {

@@ -406,6 +406,12 @@ const UnitSkills = (() => {
           ? { campaignDurability: unit.campaignDurability }
           : {}),
         pilot: unit.pilot,
+        // The same hull keeps its installed parts while computing the new
+        // resource maximum. Newly spawned escape units do not duplicate them.
+        ...(id === unit.id && unit.plugins ? { plugins: [...unit.plugins] } : {}),
+        ...(id === unit.id && unit.missionResourceScale !== undefined
+          ? { missionResourceScale: unit.missionResourceScale }
+          : {}),
         ...(unit.forcedExitRound !== undefined ? { forcedExitRound: unit.forcedExitRound } : {}),
         ...(unit.weaponTurnUses ? { weaponTurnUses: { ...unit.weaponTurnUses } } : {}),
         ...(unit.pilotBuffs ? { pilotBuffs: structuredClone(unit.pilotBuffs) } : {}),

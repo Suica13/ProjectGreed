@@ -1165,6 +1165,12 @@ const Economy = (() => {
       kitId = forms.kit(catalog, stockId, to, originalKit, defaultKit(to)),
       model = modelsForUnits()[to + "__" + kitId];
     if (item) {
+      const previousModel = plugins.apply(modelsForUnits()[item.unitId + "__" + item.kitId], item.plugins),
+        nextModel = plugins.apply(model, item.plugins),
+        inheritResource = (current, before, after) => before > 0
+          ? Math.max(0, Math.min(after, current / before * after)) : 0;
+      item.hp = Math.max(1, Math.round(inheritResource(item.hp, previousModel.hp, nextModel.hp)));
+      item.en = inheritResource(item.en, previousModel.en, nextModel.en);
       const previousKind = warehouse.category(modelsForUnits()[item.unitId + "__" + item.kitId]),
         nextKind = warehouse.category(model);
       if (previousKind !== nextKind) {

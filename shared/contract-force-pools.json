@@ -7,6 +7,16 @@
       "1": {
         "formations": [
           {
+            "label": "吉姆初期型x3",
+            "units": [
+              "RGM_79_E",
+              "RGM_79_E",
+              "RGM_79_E"
+            ],
+            "budget": 75,
+            "weight": 8
+          },
+          {
             "label": "61式主战坦克A5型x3",
             "units": [
               "Type61A5",
@@ -37,14 +47,14 @@
             "weight": 8
           },
           {
-            "label": "吉姆初期型x3",
+            "label": "陆战型吉姆x3",
             "units": [
-              "RGM_79_E",
-              "RGM_79_E",
-              "RGM_79_E"
+              "RGM_79_G",
+              "RGM_79_G",
+              "RGM_79_G"
             ],
             "budget": 100,
-            "weight": 1
+            "weight": 0.25
           }
         ],
         "garrisons": {
@@ -73,6 +83,16 @@
       },
       "2": {
         "formations": [
+          {
+            "label": "吉姆初期型x3",
+            "units": [
+              "RGM_79_E",
+              "RGM_79_E",
+              "RGM_79_E"
+            ],
+            "budget": 75,
+            "weight": 8
+          },
           {
             "label": "迪普罗格x3",
             "units": [
@@ -114,14 +134,14 @@
             "weight": 4
           },
           {
-            "label": "吉姆初期型x3",
+            "label": "陆战型吉姆x3",
             "units": [
-              "RGM_79_E",
-              "RGM_79_E",
-              "RGM_79_E"
+              "RGM_79_G",
+              "RGM_79_G",
+              "RGM_79_G"
             ],
             "budget": 100,
-            "weight": 1
+            "weight": 0.25
           }
         ],
         "garrisons": {
