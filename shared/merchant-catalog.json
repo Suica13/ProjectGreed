@@ -4,21 +4,41 @@
     "name": "地球联邦军",
     "portraitImage": "assets/ui/contact-efsf.png",
     "portraitId": "Pilot_EFSF_0079_Common_1",
-    "sellsPlugins": true
+    "sellsPlugins": true,
+    "timeline": "UC"
   },
   {
     "id": "zeon",
     "name": "吉翁公国军",
     "portraitImage": "assets/ui/contact-zeon.png",
     "portraitId": "Pilot_ZEON_0079_Common_1",
-    "sellsPlugins": true
+    "sellsPlugins": true,
+    "timeline": "UC"
   },
   {
     "id": "anaheim",
     "name": "阿纳海姆",
     "portraitImage": "assets/ui/contact-ae.png",
-    "resourceExchange": { "supplies": 1, "money": 2 },
+    "resourceExchange": {
+      "supplies": 1,
+      "money": 2
+    },
     "portraitId": "Pilot_EFSF_0079_Common_2",
-    "sellsPlugins": true
+    "sellsPlugins": true,
+    "timeline": "UC"
+  },
+  {
+    "id": "omni",
+    "name": "地球联合军",
+    "portraitImage": "assets/ui/contact-omni.png",
+    "sellsPlugins": false,
+    "timeline": "CE"
+  },
+  {
+    "id": "zaft",
+    "name": "扎夫特",
+    "portraitImage": "assets/ui/contact-zaft.png",
+    "sellsPlugins": false,
+    "timeline": "CE"
   }
 ]

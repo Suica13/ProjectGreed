@@ -851,13 +851,14 @@ const Economy = (() => {
     for (const id of plan.unlocks || []) if (modelsForUnits()[id+"__"+defaultKit(id)] && catalog.baseModels[licenseUnit(id)]) next.licenses[licenseUnit(id)] = true;
   }
   function meetLiaison(id="efsf") {
+    if (!contacts.available(state,id)) throw Error("完成小菜一碟或不可退让后解锁该联络人");
     const plan = contacts.introPlan(id);
     if (!plan && !contacts.introFor(id).length) throw Error("联络人不存在");
     if (contacts.met(state,id)) return false;
     const next=snapshot();
     if(id==="efsf")next.contactIntro=true;
     else next.merchantIntros[id]=true;
-    if(plan) grantPlan(next,plan);
+    for (const planId of contacts.introPlans(id)) grantPlan(next,planId);
     return commit(next);
   }
   function acceptContactTask(id) {

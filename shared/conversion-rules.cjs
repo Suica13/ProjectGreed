@@ -234,7 +234,8 @@ function globals(prefab, rules) {
         weapon[key] = Math.max(0, (weapon.baseHitOverride ?? (group.baseHit >= 0 ? group.baseHit : base[key])) + hitOffset) * accuracy;
     if (prefab.stats?.ship) weapon.shipWeapon = true;
     else delete weapon.shipWeapon;
-    if (Classes.wristWeapon(weapon)) weapon.maxUsesPerTurn = 1;
+    if (Classes.wristWeapon(weapon))
+      weapon.maxUsesPerTurn = ["shell_shotgun", "beam_shotgun"].includes(Classes.classify(weapon)) ? 2 : 1;
     for (const key of ["en", "enCost"])
       if (base[key] !== undefined) {
         const value = group.baseEN >= 0 ? group.baseEN : base[key];

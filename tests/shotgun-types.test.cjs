@@ -11,7 +11,7 @@ test('beam scatter guns retain native pellets and use shotgun names, classes and
     assert.equal(weapon.attack.steps.reduce((sum,step)=>sum+(step.shots||0)*(step.repeat||1),0),shots);
     for(const model of Object.values(G.models).filter(m=>m.prefabId===unit)){
       const compiled=model.weapons.find(w=>w.sourceName===source);if(!compiled)continue;
-      assert.equal(Classes.classify(compiled),'beam_shotgun');assert.equal(Classes.rounds(compiled),1);
+      assert.equal(Classes.classify(compiled),'beam_shotgun');assert.equal(Classes.rounds(compiled),2);
     }
   }
   assert.equal(definitions.EF_BeamSprayGunE2__lv1.damagePerShot,1250);
@@ -30,6 +30,16 @@ test('native scatter carriers identify shields, wrist guns and ballistic shotgun
   for(const source of ['EF_BeamSprayGun','EF_BeamSprayGunB2','EF_BeamSprayGunF'])assert.equal(Classes.classify(definitions[source+'__lv1']),'beam_spray');
   for(const weapon of Object.values(definitions).filter(w=>/Bazooka.*ShotgunMode/.test(w.sourceName)))assert.equal(Classes.classify(weapon),'bazooka');
 });
+test('all compiled shotgun variants including wrist and shield guns have two rounds',()=>{
+  const kinds=new Set();let count=0;
+  for(const model of Object.values(G.models))for(const weapon of model.weapons){
+    const kind=Classes.classify(weapon);if(!['beam_shotgun','shell_shotgun'].includes(kind))continue;
+    assert.equal(Classes.rounds(weapon),2,model.id+':'+weapon.id);
+    kinds.add(kind);count++;
+  }
+  assert(count>20);assert.equal(kinds.size,2);
+});
+
 test('native importer marks actual scatter carriers before category and multilingual naming policies',()=>{
   const result=JSON.parse(execFileSync('python',['-c',`
 import sys,json

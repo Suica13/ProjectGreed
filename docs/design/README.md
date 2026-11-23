@@ -12,3 +12,7 @@
 | [0079T1联邦陆地部队池](contract-force-pools-efsf-0079t1.md) | 按N1至N6分别列出巡逻队、驻军与特殊增援 | 已接入UC_0079_T1地面合约 |
 
 后续同类特性可以在此新增MD，注明“策划草案”或“已实现”，并在本索引登记。新增合约任务类型时同时写清触发、完成、失败、驻军／增援与多人判定，避免将联络人委托链和地图事件混为一谈。
+
+- [CE0071T1地球联合军地面部队池](contract-force-pools-omni-ce0071t1.md)
+- [CE0071T1扎夫特地面部队池](contract-force-pools-zaft-ce0071t1.md)
+- [CE0071T1联络任务链](ce-contact.md)

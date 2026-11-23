@@ -45,9 +45,9 @@ const names = [
 ];
 const aliases = Object.fromEntries(names),
   weights = { 主力: 8, "主力／常规": 8, 常规辅助: 4, 部分: 4, 少数: 1, 极少数: 0.25 };
-function compile(text) {
+function compile(text, { minimum = 1 } = {}) {
   const levels = Object.fromEntries(
-    Array.from({ length: 6 }, (_, i) => [i + 1, { formations: [], garrisons: {}, waves: {} }]),
+    Array.from({ length: 7 - minimum }, (_, i) => [i + minimum, { formations: [], garrisons: {}, waves: {} }]),
   );
   let section,
     level,
@@ -80,10 +80,11 @@ function compile(text) {
       const units = m[1].split(/[ /]+/).flatMap((token) => {
         const q = /^(.*?)[xX](\d+)$/.exec(token),
           name = q ? q[1] : token;
-        if (!aliases[name]) throw Error("Unknown force-pool unit: " + name);
+        const unitId = aliases[name] || (/^[A-Za-z][A-Za-z0-9_]*$/.test(name) ? name : null);
+        if (!unitId) throw Error("Unknown force-pool unit: " + name);
         const count = Number(q?.[2] || 1);
         if (count < 1 || count > 60) throw Error("Invalid formation quantity: " + token);
-        return Array(count).fill(aliases[name]);
+        return Array(count).fill(unitId);
       });
       level.formations.push({ label: m[1], units, budget: Number(m[2]), weight });
       continue;
@@ -104,7 +105,7 @@ function compile(text) {
     const transport = /^(.+?)x(\d+)\s+([\d/]+)$/.exec(line);
     if (transport) {
       const budgets = transport[3].split("/").map(Number),
-        unitId = aliases[transport[1]];
+        unitId = aliases[transport[1]] || (/^[A-Za-z][A-Za-z0-9_]*$/.test(transport[1]) ? transport[1] : null);
       if (!unitId || budgets.length !== Number(transport[2]))
         throw Error("Invalid transport wave: " + line);
       level.transports = { unitId, budgets };
@@ -137,6 +138,10 @@ function generate({ check = false } = {}) {
         "utf8",
       ),
     );
+  data.eras = {CE_0071_T1:{environment:"ground", factions:{}}};
+  for (const faction of ["OMNI", "ZAFT"])
+    data.eras.CE_0071_T1.factions[faction] = compile(fs.readFileSync(
+      path.join(root, `docs/design/contract-force-pools-${faction.toLowerCase()}-ce0071t1.md`), "utf8"), {minimum:2});
   const output = JSON.stringify(data, null, 2) + "\n",
     target = path.join(root, "shared/contract-force-pools.json");
   if (check) {
@@ -148,5 +153,5 @@ function generate({ check = false } = {}) {
 module.exports = { compile, generate };
 if (require.main === module) {
   generate({ check: process.argv.includes("--check") });
-  console.log("Contract force pools: EFSF/ZEON N1-N6 checked.");
+  console.log("Contract force pools: EFSF/ZEON N1-N6 and OMNI/ZAFT N2-N6 checked.");
 }

@@ -68,8 +68,8 @@ test("menus use Menu tracks and battles use Battle tracks", () => {
   assert(menu.every((t) => t.scene === "menu"));
   assert(menu.every((t) => /^Menu_\d+\.mp3$/.test(t.file)));
   const tracks = require("../assets/music/playlist.json").tracks;
-  assert.equal(tracks.filter((t) => t.scene === "menu").length, 5);
-  assert.equal(tracks.filter((t) => t.scene === "battle").length, 8);
+  assert.equal(tracks.filter((t) => t.scene === "menu").length, 6);
+  assert.equal(tracks.filter((t) => t.scene === "battle").length, 12);
   for (const track of tracks) {
     assert(fs.existsSync(require("node:path").join("assets/music", track.file)));
     assert.match(track.file, track.scene === "menu" ? /^Menu_\d+\.mp3$/ : /^Battle_\d+\.mp3$/);

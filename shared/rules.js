@@ -340,11 +340,11 @@ const Tactics = (() => {
     if (settings.mode === "mission") return;
     if (settings.mode === "battlefield" && settings.costLimit > 7500)
       throw Error("雇佣兵战争暂时最多开放7500 COST作战规模");
-    if (settings.mode === "sweep") contractMode.config(settings.sweepDifficulty);
+    if (settings.mode === "sweep") contractMode.config(settings.sweepDifficulty, settings.sweepEra);
     const eras = settings.mode === "battlefield"
       ? [settings.battlefieldEra, ...(settings.battlefieldTeams || []).map(t=>t.era)]
       : [settings.mode === "sweep" ? settings.sweepEra : settings.regularEra];
-    if (eras.some(era=>era && !openEras.includes(era)))
+    if (eras.some(era=>era && !openEras.includes(era) && !(settings.mode === "sweep" && era === "CE_0071_T1")))
       throw Error("当前暂时仅开放UC_0079_T1和UC_0079_T2年代");
   }
   function defaultRoomSettings() {

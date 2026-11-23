@@ -5,17 +5,23 @@ const ContractForces = (() => {
       ? CONTRACT_FORCE_POOLS
       : require("./contract-force-pools.json");
   const caches = new WeakMap();
+  function aiKitAllowed(model) {
+    return !/nuclear|nuke|核弹|核爆/i.test(model.kitId || "") &&
+      !(model.weapons || []).some(w => /nuclear|nuke|核弹|核爆/i.test([w.id,w.name,w.category,w.special?.type].join(" "))) &&
+      !(model.skills || []).some(s => /nuclear|nuke|核弹|核爆/i.test([s.id,s.type,s.name].join(" ")));
+  }
   function profile(settings) {
-    if (settings.sweepEra !== data.era || settings.sweepEnvironment !== data.environment)
+    const source = settings.sweepEra === data.era ? data : data.eras?.[settings.sweepEra];
+    if (!source || settings.sweepEnvironment !== source.environment)
       return null;
-    return data.factions[settings.sweepFaction]?.[settings.sweepDifficulty] || null;
+    return source.factions[settings.sweepFaction]?.[settings.sweepDifficulty] || null;
   }
   function formations(settings, G) {
     const level = profile(settings);
     if (!level) return null;
     let cache = caches.get(G.catalog);
     if (!cache) caches.set(G.catalog, (cache = new Map()));
-    const key = settings.sweepFaction + ":" + settings.sweepDifficulty;
+    const key = settings.sweepEra + ":" + settings.sweepFaction + ":" + settings.sweepDifficulty;
     if (!cache.has(key)) {
       const models = Object.values(G.models);
       cache.set(
@@ -32,9 +38,10 @@ const ContractForces = (() => {
                   !m.requiredPilotId &&
                   !m.facility &&
                   !m.ship &&
+                  aiKitAllowed(m) &&
                   G.aiTechnologyAllows(m, settings.sweepFaction) &&
                   !(G.aiUnitBans?.sweep || []).includes(id) &&
-                  m.tags?.includes(data.era) &&
+                  m.tags?.includes(settings.sweepEra) &&
                   (m.availableFactions || [m.faction]).includes(settings.sweepFaction) &&
                   ((m.adaptability.ground || 0) >= 100 || (m.adaptability.air || 0) >= 100),
               );
@@ -109,6 +116,6 @@ const ContractForces = (() => {
     const multiplier = 1 + 0.25 * Math.max(0, players - 1);
     return Math.round((amount * multiplier) / 25) * 25;
   }
-  return { profile, formations, draw, pick, budget };
+  return { profile, formations, draw, pick, budget, aiKitAllowed };
 })();
 if (typeof module !== "undefined") module.exports = ContractForces;

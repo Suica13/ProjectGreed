@@ -1634,5 +1634,1032 @@
         }
       }
     }
+  },
+  "eras": {
+    "CE_0071_T1": {
+      "environment": "ground",
+      "factions": {
+        "OMNI": {
+          "2": {
+            "formations": [
+              {
+                "label": "LinearGunTankx3",
+                "units": [
+                  "LinearGunTank",
+                  "LinearGunTank",
+                  "LinearGunTank"
+                ],
+                "budget": 75,
+                "weight": 8
+              },
+              {
+                "label": "VTOLFighterx3",
+                "units": [
+                  "VTOLFighter",
+                  "VTOLFighter",
+                  "VTOLFighter"
+                ],
+                "budget": 75,
+                "weight": 8
+              },
+              {
+                "label": "F_7Dx3",
+                "units": [
+                  "F_7D",
+                  "F_7D",
+                  "F_7D"
+                ],
+                "budget": 100,
+                "weight": 8
+              },
+              {
+                "label": "GAT_01Dx3",
+                "units": [
+                  "GAT_01D",
+                  "GAT_01D",
+                  "GAT_01D"
+                ],
+                "budget": 125,
+                "weight": 4
+              },
+              {
+                "label": "LinearArtilleryx1 LinearGunTankx2",
+                "units": [
+                  "LinearArtillery",
+                  "LinearGunTank",
+                  "LinearGunTank"
+                ],
+                "budget": 100,
+                "weight": 4
+              }
+            ],
+            "garrisons": {
+              "salvage": 175,
+              "command": 300,
+              "factory": 200,
+              "capture": 175,
+              "upload": 200,
+              "radar": 175
+            },
+            "waves": {
+              "factory.first": 100,
+              "capture.airdrop": 225,
+              "capture.edge": 100,
+              "defend.first": 350,
+              "defend.followup": 100,
+              "upload.airdrop": 225,
+              "radar.first": 350
+            },
+            "transports": {
+              "unitId": "VTOLTransport",
+              "budgets": [
+                100
+              ]
+            }
+          },
+          "3": {
+            "formations": [
+              {
+                "label": "LinearGunTankx3",
+                "units": [
+                  "LinearGunTank",
+                  "LinearGunTank",
+                  "LinearGunTank"
+                ],
+                "budget": 75,
+                "weight": 8
+              },
+              {
+                "label": "F_7Dx3",
+                "units": [
+                  "F_7D",
+                  "F_7D",
+                  "F_7D"
+                ],
+                "budget": 100,
+                "weight": 8
+              },
+              {
+                "label": "GAT_01Dx3",
+                "units": [
+                  "GAT_01D",
+                  "GAT_01D",
+                  "GAT_01D"
+                ],
+                "budget": 125,
+                "weight": 4
+              },
+              {
+                "label": "LinearArtilleryx1 LinearGunTankx2",
+                "units": [
+                  "LinearArtillery",
+                  "LinearGunTank",
+                  "LinearGunTank"
+                ],
+                "budget": 100,
+                "weight": 4
+              },
+              {
+                "label": "GAT_01D_ASx1 GAT_01Dx2",
+                "units": [
+                  "GAT_01D_AS",
+                  "GAT_01D",
+                  "GAT_01D"
+                ],
+                "budget": 150,
+                "weight": 4
+              }
+            ],
+            "garrisons": {
+              "salvage": 225,
+              "command": 450,
+              "factory": 250,
+              "capture": 225,
+              "upload": 250,
+              "radar": 225
+            },
+            "waves": {
+              "factory.first": 100,
+              "capture.airdrop": 300,
+              "capture.edge": 100,
+              "defend.first": 500,
+              "defend.followup": 100,
+              "upload.airdrop": 300,
+              "radar.first": 500
+            },
+            "transports": {
+              "unitId": "VTOLTransport",
+              "budgets": [
+                100,
+                100
+              ]
+            }
+          },
+          "4": {
+            "formations": [
+              {
+                "label": "GAT_01x3",
+                "units": [
+                  "GAT_01",
+                  "GAT_01",
+                  "GAT_01"
+                ],
+                "budget": 125,
+                "weight": 8
+              },
+              {
+                "label": "GAT_01Dx3",
+                "units": [
+                  "GAT_01D",
+                  "GAT_01D",
+                  "GAT_01D"
+                ],
+                "budget": 125,
+                "weight": 8
+              },
+              {
+                "label": "GAT_X102x1 GAT_01x2",
+                "units": [
+                  "GAT_X102",
+                  "GAT_01",
+                  "GAT_01"
+                ],
+                "budget": 200,
+                "weight": 4
+              },
+              {
+                "label": "GAT_X103x1 GAT_01x2",
+                "units": [
+                  "GAT_X103",
+                  "GAT_01",
+                  "GAT_01"
+                ],
+                "budget": 200,
+                "weight": 4
+              },
+              {
+                "label": "F_7Dx3",
+                "units": [
+                  "F_7D",
+                  "F_7D",
+                  "F_7D"
+                ],
+                "budget": 100,
+                "weight": 4
+              },
+              {
+                "label": "LinearArtilleryx1 LinearGunTankx2",
+                "units": [
+                  "LinearArtillery",
+                  "LinearGunTank",
+                  "LinearGunTank"
+                ],
+                "budget": 100,
+                "weight": 4
+              },
+              {
+                "label": "GAT_X105x1 GAT_01x2",
+                "units": [
+                  "GAT_X105",
+                  "GAT_01",
+                  "GAT_01"
+                ],
+                "budget": 225,
+                "weight": 1
+              },
+              {
+                "label": "GAT_X207x1 GAT_01x2",
+                "units": [
+                  "GAT_X207",
+                  "GAT_01",
+                  "GAT_01"
+                ],
+                "budget": 200,
+                "weight": 1
+              }
+            ],
+            "garrisons": {
+              "salvage": 325,
+              "command": 625,
+              "factory": 350,
+              "capture": 325,
+              "upload": 350,
+              "radar": 325
+            },
+            "waves": {
+              "factory.first": 175,
+              "capture.airdrop": 375,
+              "capture.edge": 175,
+              "defend.first": 725,
+              "defend.followup": 175,
+              "upload.airdrop": 375,
+              "radar.first": 725
+            },
+            "transports": {
+              "unitId": "VTOLTransport",
+              "budgets": [
+                175
+              ]
+            }
+          },
+          "5": {
+            "formations": [
+              {
+                "label": "GAT_01x3",
+                "units": [
+                  "GAT_01",
+                  "GAT_01",
+                  "GAT_01"
+                ],
+                "budget": 125,
+                "weight": 8
+              },
+              {
+                "label": "GAT_01D1x3",
+                "units": [
+                  "GAT_01D1",
+                  "GAT_01D1",
+                  "GAT_01D1"
+                ],
+                "budget": 150,
+                "weight": 8
+              },
+              {
+                "label": "GAT_X102x1 GAT_01x2",
+                "units": [
+                  "GAT_X102",
+                  "GAT_01",
+                  "GAT_01"
+                ],
+                "budget": 200,
+                "weight": 8
+              },
+              {
+                "label": "GAT_X103x1 GAT_01x2",
+                "units": [
+                  "GAT_X103",
+                  "GAT_01",
+                  "GAT_01"
+                ],
+                "budget": 200,
+                "weight": 8
+              },
+              {
+                "label": "GAT_X105x1 GAT_01x2",
+                "units": [
+                  "GAT_X105",
+                  "GAT_01",
+                  "GAT_01"
+                ],
+                "budget": 225,
+                "weight": 4
+              },
+              {
+                "label": "GAT_X207x1 GAT_01x2",
+                "units": [
+                  "GAT_X207",
+                  "GAT_01",
+                  "GAT_01"
+                ],
+                "budget": 200,
+                "weight": 4
+              },
+              {
+                "label": "FX_550x3",
+                "units": [
+                  "FX_550",
+                  "FX_550",
+                  "FX_550"
+                ],
+                "budget": 150,
+                "weight": 4
+              },
+              {
+                "label": "LinearArtilleryx1 LinearGunTankx2",
+                "units": [
+                  "LinearArtillery",
+                  "LinearGunTank",
+                  "LinearGunTank"
+                ],
+                "budget": 100,
+                "weight": 4
+              },
+              {
+                "label": "GAT_X303x1 GAT_01D1x2",
+                "units": [
+                  "GAT_X303",
+                  "GAT_01D1",
+                  "GAT_01D1"
+                ],
+                "budget": 250,
+                "weight": 1
+              }
+            ],
+            "garrisons": {
+              "salvage": 425,
+              "command": 850,
+              "factory": 500,
+              "capture": 425,
+              "upload": 500,
+              "radar": 425
+            },
+            "waves": {
+              "factory.first": 225,
+              "capture.airdrop": 550,
+              "capture.edge": 225,
+              "defend.first": 975,
+              "defend.followup": 225,
+              "upload.airdrop": 550,
+              "radar.first": 975
+            },
+            "transports": {
+              "unitId": "VTOLTransport",
+              "budgets": [
+                175,
+                175
+              ]
+            }
+          },
+          "6": {
+            "formations": [
+              {
+                "label": "GAT_01x3",
+                "units": [
+                  "GAT_01",
+                  "GAT_01",
+                  "GAT_01"
+                ],
+                "budget": 125,
+                "weight": 8
+              },
+              {
+                "label": "GAT_01D1_ASx1 GAT_01D1x2",
+                "units": [
+                  "GAT_01D1_AS",
+                  "GAT_01D1",
+                  "GAT_01D1"
+                ],
+                "budget": 175,
+                "weight": 8
+              },
+              {
+                "label": "GAT_X105x1 GAT_01x2",
+                "units": [
+                  "GAT_X105",
+                  "GAT_01",
+                  "GAT_01"
+                ],
+                "budget": 225,
+                "weight": 8
+              },
+              {
+                "label": "GAT_X103x1 GAT_01x2",
+                "units": [
+                  "GAT_X103",
+                  "GAT_01",
+                  "GAT_01"
+                ],
+                "budget": 200,
+                "weight": 8
+              },
+              {
+                "label": "GAT_X102x1 GAT_01x2",
+                "units": [
+                  "GAT_X102",
+                  "GAT_01",
+                  "GAT_01"
+                ],
+                "budget": 200,
+                "weight": 8
+              },
+              {
+                "label": "GAT_X207x1 GAT_01x2",
+                "units": [
+                  "GAT_X207",
+                  "GAT_01",
+                  "GAT_01"
+                ],
+                "budget": 200,
+                "weight": 4
+              },
+              {
+                "label": "GAT_X303x1 GAT_01D1x2",
+                "units": [
+                  "GAT_X303",
+                  "GAT_01D1",
+                  "GAT_01D1"
+                ],
+                "budget": 250,
+                "weight": 4
+              },
+              {
+                "label": "FX_550x3",
+                "units": [
+                  "FX_550",
+                  "FX_550",
+                  "FX_550"
+                ],
+                "budget": 150,
+                "weight": 4
+              },
+              {
+                "label": "GAT_X105x1 GAT_X102x1 GAT_X103x1",
+                "units": [
+                  "GAT_X105",
+                  "GAT_X102",
+                  "GAT_X103"
+                ],
+                "budget": 350,
+                "weight": 1
+              }
+            ],
+            "garrisons": {
+              "salvage": 575,
+              "command": 1150,
+              "factory": 650,
+              "capture": 575,
+              "upload": 650,
+              "radar": 575
+            },
+            "waves": {
+              "factory.first": 325,
+              "capture.airdrop": 750,
+              "capture.edge": 325,
+              "defend.first": 1250,
+              "defend.followup": 325,
+              "upload.airdrop": 750,
+              "radar.first": 1250
+            },
+            "transports": {
+              "unitId": "VTOLTransport",
+              "budgets": [
+                200,
+                200
+              ]
+            }
+          }
+        },
+        "ZAFT": {
+          "2": {
+            "formations": [
+              {
+                "label": "ZGMF_1017x3",
+                "units": [
+                  "ZGMF_1017",
+                  "ZGMF_1017",
+                  "ZGMF_1017"
+                ],
+                "budget": 100,
+                "weight": 8
+              },
+              {
+                "label": "ConnectedArmoredVehiclex3",
+                "units": [
+                  "ConnectedArmoredVehicle",
+                  "ConnectedArmoredVehicle",
+                  "ConnectedArmoredVehicle"
+                ],
+                "budget": 75,
+                "weight": 8
+              },
+              {
+                "label": "Agilex3",
+                "units": [
+                  "Agile",
+                  "Agile",
+                  "Agile"
+                ],
+                "budget": 75,
+                "weight": 8
+              },
+              {
+                "label": "AMF_101x3",
+                "units": [
+                  "AMF_101",
+                  "AMF_101",
+                  "AMF_101"
+                ],
+                "budget": 125,
+                "weight": 4
+              },
+              {
+                "label": "Infestusx3",
+                "units": [
+                  "Infestus",
+                  "Infestus",
+                  "Infestus"
+                ],
+                "budget": 100,
+                "weight": 4
+              }
+            ],
+            "garrisons": {
+              "salvage": 150,
+              "command": 275,
+              "factory": 175,
+              "capture": 150,
+              "upload": 175,
+              "radar": 150
+            },
+            "waves": {
+              "factory.first": 75,
+              "capture.airdrop": 200,
+              "capture.edge": 75,
+              "defend.first": 325,
+              "defend.followup": 75,
+              "upload.airdrop": 200,
+              "radar.first": 325
+            },
+            "transports": {
+              "unitId": "VoLPHAU",
+              "budgets": [
+                100
+              ]
+            }
+          },
+          "3": {
+            "formations": [
+              {
+                "label": "ZGMF_1017x3",
+                "units": [
+                  "ZGMF_1017",
+                  "ZGMF_1017",
+                  "ZGMF_1017"
+                ],
+                "budget": 100,
+                "weight": 8
+              },
+              {
+                "label": "AMF_101x3",
+                "units": [
+                  "AMF_101",
+                  "AMF_101",
+                  "AMF_101"
+                ],
+                "budget": 125,
+                "weight": 8
+              },
+              {
+                "label": "ZGMF_515x1 ZGMF_1017x2",
+                "units": [
+                  "ZGMF_515",
+                  "ZGMF_1017",
+                  "ZGMF_1017"
+                ],
+                "budget": 150,
+                "weight": 4
+              },
+              {
+                "label": "ConnectedArmoredVehiclex3",
+                "units": [
+                  "ConnectedArmoredVehicle",
+                  "ConnectedArmoredVehicle",
+                  "ConnectedArmoredVehicle"
+                ],
+                "budget": 75,
+                "weight": 4
+              },
+              {
+                "label": "Agilex3",
+                "units": [
+                  "Agile",
+                  "Agile",
+                  "Agile"
+                ],
+                "budget": 75,
+                "weight": 4
+              },
+              {
+                "label": "TFA_2x3",
+                "units": [
+                  "TFA_2",
+                  "TFA_2",
+                  "TFA_2"
+                ],
+                "budget": 125,
+                "weight": 4
+              }
+            ],
+            "garrisons": {
+              "salvage": 250,
+              "command": 500,
+              "factory": 275,
+              "capture": 250,
+              "upload": 275,
+              "radar": 250
+            },
+            "waves": {
+              "factory.first": 150,
+              "capture.airdrop": 325,
+              "capture.edge": 150,
+              "defend.first": 550,
+              "defend.followup": 150,
+              "upload.airdrop": 325,
+              "radar.first": 550
+            },
+            "transports": {
+              "unitId": "VoLPHAU",
+              "budgets": [
+                100,
+                100
+              ]
+            }
+          },
+          "4": {
+            "formations": [
+              {
+                "label": "TMF_A_802x3",
+                "units": [
+                  "TMF_A_802",
+                  "TMF_A_802",
+                  "TMF_A_802"
+                ],
+                "budget": 150,
+                "weight": 8
+              },
+              {
+                "label": "ZGMF_1017Mx3",
+                "units": [
+                  "ZGMF_1017M",
+                  "ZGMF_1017M",
+                  "ZGMF_1017M"
+                ],
+                "budget": 150,
+                "weight": 8
+              },
+              {
+                "label": "AMF_101x3",
+                "units": [
+                  "AMF_101",
+                  "AMF_101",
+                  "AMF_101"
+                ],
+                "budget": 125,
+                "weight": 4
+              },
+              {
+                "label": "ZGMF_515x1 ZGMF_1017x2",
+                "units": [
+                  "ZGMF_515",
+                  "ZGMF_1017",
+                  "ZGMF_1017"
+                ],
+                "budget": 150,
+                "weight": 4
+              },
+              {
+                "label": "UMF_5x3",
+                "units": [
+                  "UMF_5",
+                  "UMF_5",
+                  "UMF_5"
+                ],
+                "budget": 150,
+                "weight": 4
+              },
+              {
+                "label": "UWMF_S_1x3",
+                "units": [
+                  "UWMF_S_1",
+                  "UWMF_S_1",
+                  "UWMF_S_1"
+                ],
+                "budget": 125,
+                "weight": 4
+              },
+              {
+                "label": "ZGMF_600x1 ZGMF_1017Mx2",
+                "units": [
+                  "ZGMF_600",
+                  "ZGMF_1017M",
+                  "ZGMF_1017M"
+                ],
+                "budget": 225,
+                "weight": 1
+              },
+              {
+                "label": "GAT_X102x1 ZGMF_1017x2",
+                "units": [
+                  "GAT_X102",
+                  "ZGMF_1017",
+                  "ZGMF_1017"
+                ],
+                "budget": 225,
+                "weight": 0.25
+              }
+            ],
+            "garrisons": {
+              "salvage": 350,
+              "command": 700,
+              "factory": 375,
+              "capture": 350,
+              "upload": 375,
+              "radar": 350
+            },
+            "waves": {
+              "factory.first": 200,
+              "capture.airdrop": 425,
+              "capture.edge": 200,
+              "defend.first": 775,
+              "defend.followup": 200,
+              "upload.airdrop": 425,
+              "radar.first": 775
+            },
+            "transports": {
+              "unitId": "VoLPHAU",
+              "budgets": [
+                175
+              ]
+            }
+          },
+          "5": {
+            "formations": [
+              {
+                "label": "TMF_A_802x3",
+                "units": [
+                  "TMF_A_802",
+                  "TMF_A_802",
+                  "TMF_A_802"
+                ],
+                "budget": 150,
+                "weight": 8
+              },
+              {
+                "label": "ZGMF_1017Mx3",
+                "units": [
+                  "ZGMF_1017M",
+                  "ZGMF_1017M",
+                  "ZGMF_1017M"
+                ],
+                "budget": 150,
+                "weight": 8
+              },
+              {
+                "label": "UMF_5x3",
+                "units": [
+                  "UMF_5",
+                  "UMF_5",
+                  "UMF_5"
+                ],
+                "budget": 150,
+                "weight": 4
+              },
+              {
+                "label": "UWMF_S_1x3",
+                "units": [
+                  "UWMF_S_1",
+                  "UWMF_S_1",
+                  "UWMF_S_1"
+                ],
+                "budget": 125,
+                "weight": 4
+              },
+              {
+                "label": "AMF_101x3",
+                "units": [
+                  "AMF_101",
+                  "AMF_101",
+                  "AMF_101"
+                ],
+                "budget": 125,
+                "weight": 4
+              },
+              {
+                "label": "ZGMF_600x1 ZGMF_1017Mx2",
+                "units": [
+                  "ZGMF_600",
+                  "ZGMF_1017M",
+                  "ZGMF_1017M"
+                ],
+                "budget": 225,
+                "weight": 4
+              },
+              {
+                "label": "GAT_X102_ASx1 ZGMF_1017Mx2",
+                "units": [
+                  "GAT_X102_AS",
+                  "ZGMF_1017M",
+                  "ZGMF_1017M"
+                ],
+                "budget": 250,
+                "weight": 1
+              },
+              {
+                "label": "GAT_X103x1 ZGMF_1017Mx2",
+                "units": [
+                  "GAT_X103",
+                  "ZGMF_1017M",
+                  "ZGMF_1017M"
+                ],
+                "budget": 250,
+                "weight": 1
+              },
+              {
+                "label": "GAT_X207x1 ZGMF_1017Mx2",
+                "units": [
+                  "GAT_X207",
+                  "ZGMF_1017M",
+                  "ZGMF_1017M"
+                ],
+                "budget": 250,
+                "weight": 0.25
+              }
+            ],
+            "garrisons": {
+              "salvage": 425,
+              "command": 850,
+              "factory": 500,
+              "capture": 425,
+              "upload": 500,
+              "radar": 425
+            },
+            "waves": {
+              "factory.first": 225,
+              "capture.airdrop": 550,
+              "capture.edge": 225,
+              "defend.first": 975,
+              "defend.followup": 225,
+              "upload.airdrop": 550,
+              "radar.first": 975
+            },
+            "transports": {
+              "unitId": "VoLPHAU",
+              "budgets": [
+                175,
+                175
+              ]
+            }
+          },
+          "6": {
+            "formations": [
+              {
+                "label": "TMF_A_802x3",
+                "units": [
+                  "TMF_A_802",
+                  "TMF_A_802",
+                  "TMF_A_802"
+                ],
+                "budget": 150,
+                "weight": 8
+              },
+              {
+                "label": "ZGMF_1017Mx3",
+                "units": [
+                  "ZGMF_1017M",
+                  "ZGMF_1017M",
+                  "ZGMF_1017M"
+                ],
+                "budget": 150,
+                "weight": 8
+              },
+              {
+                "label": "ZGMF_600x1 ZGMF_1017Mx2",
+                "units": [
+                  "ZGMF_600",
+                  "ZGMF_1017M",
+                  "ZGMF_1017M"
+                ],
+                "budget": 225,
+                "weight": 4
+              },
+              {
+                "label": "UMF_5x3",
+                "units": [
+                  "UMF_5",
+                  "UMF_5",
+                  "UMF_5"
+                ],
+                "budget": 150,
+                "weight": 4
+              },
+              {
+                "label": "UWMF_S_1x3",
+                "units": [
+                  "UWMF_S_1",
+                  "UWMF_S_1",
+                  "UWMF_S_1"
+                ],
+                "budget": 125,
+                "weight": 4
+              },
+              {
+                "label": "AMF_101Cx1 AMF_101x2",
+                "units": [
+                  "AMF_101C",
+                  "AMF_101",
+                  "AMF_101"
+                ],
+                "budget": 150,
+                "weight": 4
+              },
+              {
+                "label": "GAT_X102_ASx1 ZGMF_1017Mx2",
+                "units": [
+                  "GAT_X102_AS",
+                  "ZGMF_1017M",
+                  "ZGMF_1017M"
+                ],
+                "budget": 250,
+                "weight": 1
+              },
+              {
+                "label": "GAT_X103x1 ZGMF_1017Mx2",
+                "units": [
+                  "GAT_X103",
+                  "ZGMF_1017M",
+                  "ZGMF_1017M"
+                ],
+                "budget": 250,
+                "weight": 1
+              },
+              {
+                "label": "GAT_X207x1 ZGMF_1017Mx2",
+                "units": [
+                  "GAT_X207",
+                  "ZGMF_1017M",
+                  "ZGMF_1017M"
+                ],
+                "budget": 250,
+                "weight": 1
+              },
+              {
+                "label": "GAT_X303x1 ZGMF_600x2",
+                "units": [
+                  "GAT_X303",
+                  "ZGMF_600",
+                  "ZGMF_600"
+                ],
+                "budget": 300,
+                "weight": 0.25
+              }
+            ],
+            "garrisons": {
+              "salvage": 575,
+              "command": 1150,
+              "factory": 650,
+              "capture": 575,
+              "upload": 650,
+              "radar": 575
+            },
+            "waves": {
+              "factory.first": 325,
+              "capture.airdrop": 750,
+              "capture.edge": 325,
+              "defend.first": 1250,
+              "defend.followup": 325,
+              "upload.airdrop": 750,
+              "radar.first": 1250
+            },
+            "transports": {
+              "unitId": "VoLPHAU",
+              "budgets": [
+                200,
+                200
+              ]
+            }
+          }
+        }
+      }
+    }
   }
 }

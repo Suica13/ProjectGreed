@@ -14,7 +14,8 @@ const AutomaticFire = (() => {
     const mobility = Math.max(0, model?.speed ?? 100) / 100;
     const pilot = model?.pilotModifiers?.attackRounds ?? 1;
     const limit = weapon.type === "melee" || weapon.slot === "skill" ||
-      Classes.wristWeapon(weapon) || Classes.headVulcan(weapon) || weapon.pilotRequirements?.length
+      (Classes.wristWeapon(weapon) && !["shell_shotgun", "beam_shotgun"].includes(Classes.classify(weapon))) ||
+      Classes.headVulcan(weapon) || weapon.pilotRequirements?.length
       ? 1 : weapon.maxUsesPerTurn ?? Infinity;
     const scaled = Math.min(limit, Math.max(1, Math.round(count * mobility * pilot)));
     return Math.floor(scaled * (unit?.forcedExitRound === game.round ? 0.5 : 1));

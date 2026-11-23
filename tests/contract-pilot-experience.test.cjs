@@ -18,12 +18,13 @@ function fixture(t, difficulty, { ace = false, multiplier = 1, aiDelayMs = 99999
     ? G.pilots.createAce(G.pilots.catalog.aces.find(p => p.id.endsWith('_CHA')).id)
     : G.pilots.createCustom('custom-contract-xp', 'Contract');
   engine.join(ws, { mode: 'create', room: 'CONTRACTXP', roomMode: 'sweep', characterFaction: 'PMC',
-    inventory: { Medea: 2 }, licenses: { Medea: true } });
+    inventory: { Medea: 2 }, licenses: { Medea: true },
+    storedUnits:[{id:'stock',unitId:'Medea',kitId:'standard',hp:G.models.Medea__standard.hp,en:G.models.Medea__standard.en}] });
   const room = engine.rooms.get('CONTRACTXP');
   const act = (action, fields = {}) => engine.action(ws, { id: 'act-' + ++serial,
     revision: room.revision, round: room.game.round, phase: room.phase, matchId: room.matchId, action, ...fields });
   act('configure_room', { ...room.settings, sweepDifficulty: difficulty });
-  act('start_game', { formation: [{ unitId: 'Medea', kitId: 'standard', customPilot: pilot }] });
+  act('start_game', { formation: [{ unitId: 'Medea', kitId: 'standard', stockId:'stock', customPilot: pilot }] });
   act('confirm_formation');
   act('auto_place_deployment');
   act('confirm_deployment');
@@ -40,7 +41,7 @@ function fixture(t, difficulty, { ace = false, multiplier = 1, aiDelayMs = 99999
   return { room, actor, pilot, act, settle, frames };
 }
 
-for (const [difficulty, expected] of [[1,500],[2,1000],[3,1500],[4,3000],[5,4000],[6,5000]])
+for (const [difficulty, expected] of [[1,625],[2,1250],[3,1875],[4,3750],[5,5000],[6,6250]])
   test(`N${difficulty} pays ${expected} XP per deployed PMC/ACE at settlement only`, t => {
     const f = fixture(t, difficulty, { ace: difficulty % 2 === 0 });
     for (const o of f.room.game.contract.objectives) o.status = 'completed';
@@ -68,7 +69,7 @@ test('partial completion scales XP, excludes contact events and retains activity
   f.room.game.contract.objectives.forEach((o, i) => o.status = i === 0 ? 'completed' : 'failed');
   f.room.game.contract.objectives.push({ id: 'contact-extra', contactTaskId: 'extra', status: 'completed' });
   f.settle();
-  assert.equal(f.actor.pilot.experience, 1000);
+  assert.equal(f.actor.pilot.experience, 1250);
 });
 
 test('zero ordinary completion grants no XP even with completed contact event', t => {
@@ -91,7 +92,7 @@ test('casualties receive settlement XP, while undeployed and maximum-level pilot
   for (const actor of [casualty, capped]) f.room.pilotParticipants.add('0:' + actor.pilot.id);
   f.room.game.contract.objectives[0].status = 'completed';
   f.settle();
-  assert.equal(casualty.pilot.experience, 500);
+  assert.equal(casualty.pilot.experience, 625);
   assert.equal(casualty.pilot.needsRecruitment, true);
   assert.equal(undeployed.pilot.experience, 0);
   assert.equal(capped.pilot.experience, 0);

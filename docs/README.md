@@ -108,3 +108,7 @@
 - [maintenance/v88-release.md](maintenance/v88-release.md)
 
 - [V123 地图与合作任务](maintenance/v123-content.md)
+
+- [CE0071T1地球联合军地面部队池](design/contract-force-pools-omni-ce0071t1.md)
+- [CE0071T1扎夫特地面部队池](design/contract-force-pools-zaft-ce0071t1.md)
+- [CE0071T1联络任务链](design/ce-contact.md)

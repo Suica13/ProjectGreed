@@ -37,13 +37,27 @@ window.ContactUI = (() => {
   };
   function renderMerchants() {
     merchants.replaceChildren();
+    const groups = new Map();
+    for (const era of ["UC","CE"]) {
+      const frame = element("section","contact-era-frame"),
+        heading = element("h3","contact-era-heading",era),
+        cards = element("div","contact-era-cards");
+      frame.dataset.era = era;
+      frame.setAttribute("aria-label",era + "联络人");
+      frame.append(heading,cards);
+      merchants.append(frame);
+      groups.set(era,cards);
+    }
     for (const merchant of Economy.merchants) {
+      const available = ContactTasks.available(Economy.snapshot(),merchant.id);
       const card = element("article", "merchant-card"),
         frame = button("", () => openMerchant(merchant.id), "merchant-portrait"),
         image = element("img"),
         info = element("div", "merchant-information"),
         stats = element("dl");
       card.dataset.merchantId = merchant.id;
+      card.classList.toggle("is-locked",!available);
+      frame.disabled = !available;
       frame.setAttribute("aria-label", I18n.text(merchant.name));
       image.src = merchant.portraitImage || PilotSystem.portrait({ portraitId: merchant.portraitId });
       image.alt = "";
@@ -55,9 +69,9 @@ window.ContactUI = (() => {
         element("dt", "", "等级"),
         element("dd", "", "Lv" + Economy.merchantLevel(merchant.id)),
       );
-      info.append(element("h3", "", merchant.name), stats);
+      info.append(element("h3", "", merchant.name), available ? stats : element("p", "merchant-locked", "未解锁"));
       card.append(frame, info);
-      merchants.append(card);
+      groups.get(merchant.timeline || "UC").append(card);
     }
   }
   function renderTasks() {
@@ -113,8 +127,8 @@ window.ContactUI = (() => {
       conditions: [
         I18n.text("合约模式"),
         "N" + task.difficulty + I18n.text("以上"),
-        task.era ? task.era.replace("UC_", "").replace("_", "") : ContactTasks.contactId(task)==="anaheim" ? "当前年代" : "0079T1",
-        I18n.text(task.enemyFaction === "NONE" ? "无友军" : task.enemyFaction === "EFSF" ? "敌军：地球联邦军" : "敌军：吉翁军"),
+        task.era ? task.era.replace("UC_", "").replaceAll("_", "") : ContactTasks.contactId(task)==="anaheim" ? "当前年代" : "0079T1",
+        I18n.text(task.enemyFaction === "NONE" ? "武装介入" : "敌军：" + (Rules.factionInfo[task.enemyFaction || "ZEON"]?.name || task.enemyFaction)),
         ...(task.ground ? [I18n.text("地面")] : []),
       ].join(" · "),
       objective:
@@ -496,7 +510,7 @@ window.ContactUI = (() => {
     return form;
   }
   function renderTerminal() {
-    if (!trader) return;
+    if (!trader || !ContactTasks.available(Economy.snapshot(),trader.id)) return;
     const taskPosition=taskScroll(terminal),terminalScroll=terminal.scrollTop;
     const top = element("header", "contact-terminal-nav"),
       name = element("h2", "", trader.name),
@@ -553,7 +567,7 @@ window.ContactUI = (() => {
   }
   function openMerchant(id) {
     trader = Economy.merchants.find((merchant) => merchant.id === id);
-    if (!trader) return;
+    if (!trader || !ContactTasks.available(Economy.snapshot(),id)) return;
     view = "home";
     dialogue = null;
     query = "";
@@ -564,7 +578,7 @@ window.ContactUI = (() => {
         ContactTasks.introFor(id),
         () => {
           Economy.meetLiaison(id);
-          note(id === "zeon" ? "已获取陆战型扎古开发计划对应单位许可" : "已获取反MS计划对应单位许可");
+          if (ContactTasks.introPlan(id)) note("已获取初次联络开发计划对应单位许可");
         },
         "初见联络人",
       );
@@ -591,6 +605,7 @@ window.ContactUI = (() => {
       merchants.hidden = view !== "contactMerchants";
       supply.hidden = view !== "contactSupply";
       content.classList.toggle("is-supply", !supply.hidden);
+      content.classList.toggle("is-merchants", !merchants.hidden);
       if (!supply.hidden) SupplyUI.open(supply);
       renderTasks();
       setPageView(view);

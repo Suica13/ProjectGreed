@@ -505,8 +505,8 @@ const RoomPanel = (() => {
         for (const value of values) {
           const pair=key==="sweepFaction"?value.split("|"):null,
             text=pair?pair.map(id=>I18n.text(Rules.factionInfo[id]?.name || id)):null,
-            option=new Option(pair ? (pair[0]==="NONE" ? I18n.text("无友军") : text[0]+"["+text[1]+"]") : key === "sweepDifficulty" ? I18n.text(ContractMode.config(value).name) : Rules.factionInfo[value]?.name || value, value);
-          option.disabled=key==="sweepEra"&&!Rules.openEras.includes(value);
+            option=new Option(pair ? (pair[0]==="NONE" ? I18n.text("武装介入") : text[0]+"["+text[1]+"]") : key === "sweepDifficulty" ? I18n.text(ContractMode.config(value).name) : Rules.factionInfo[value]?.name || value, value);
+          option.disabled=key==="sweepEra"&&!Rules.openEras.includes(value)&&value!=="CE_0071_T1" || key==="sweepDifficulty"&&settings.sweepEra==="CE_0071_T1"&&Number(value)<2;
           select.add(option);
         }
         select.value = key==="sweepFaction" ? settings.sweepFaction+"|"+ContractMode.alliedFaction(Rules,settings) : settings[key];
@@ -516,7 +516,8 @@ const RoomPanel = (() => {
             const factions = ContractMode.factionsForEra(Rules, select.value);
             const sweepFaction=settings.sweepFaction==="NONE" || factions.includes(settings.sweepFaction) ? settings.sweepFaction : factions[0],
               sweepAlliedFaction=ContractMode.alliedFaction(Rules,{...settings,sweepEra:select.value,sweepFaction});
-            sendSettings({ sweepEra: select.value, sweepFaction, sweepAlliedFaction });
+            sendSettings({ sweepEra: select.value, sweepFaction, sweepAlliedFaction,
+              sweepDifficulty:Math.max(select.value==="CE_0071_T1"?2:1,settings.sweepDifficulty) });
           } else if(key==="sweepFaction") {
             const [sweepFaction,sweepAlliedFaction]=select.value.split("|");
             sendSettings({sweepFaction,sweepAlliedFaction});
@@ -542,13 +543,13 @@ const RoomPanel = (() => {
         sendSettings({ sweepEnvironment: environmentSelect.value });
       environment.append(environmentSelect);
       fields.insertBefore(environment, fields.children[1]);
-      const difficulty=ContractMode.config(settings.sweepDifficulty, settings.sweepEra);
+      const difficulty=ContractMode.scenarioConfig(settings);
       sweepOptions.append(element("p","helper",difficulty.name+" · "+I18n.text("编组COST")+" "+difficulty.costLimit+" · "+I18n.text("舰船数量")+" "+difficulty.fleetLimit+" · "+difficulty.width+"×"+difficulty.height));
       sweepOptions.append(
         element(
           "p",
           "helper",
-          "纯PVE；每局随机地图与边缘入场区，事件数量等于N级。单位到达撤离区后可独立撤离，收益按完成事件数结算。",
+          "纯PVE；每局随机地图与边缘入场区，基础事件数量等于N级。武装介入：无友军，事件+1，地图宽高+10%，增援上限与额外奖励+25%。单位可独立撤离，收益按完成事件数结算。",
         ),
       );
     }

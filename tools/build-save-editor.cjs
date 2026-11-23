@@ -37,6 +37,8 @@ function buildSaveEditor(root = path.resolve(__dirname, "..")) {
     UNIT_PLUGIN_DATA: JSON.parse(read("shared/unit-plugins.json")),
     MERCHANT_DATA: JSON.parse(read("shared/merchant-catalog.json")),
     BASE_FACILITY_TYPES: JSON.parse(read("shared/base-facility-types.json")),
+    SUPPLY_POOL_DATA: JSON.parse(read("shared/supply-pools.json")),
+    CONTRACT_FORCE_POOLS: JSON.parse(read("shared/contract-force-pools.json")),
     AI_UNIT_BANS: JSON.parse(read("shared/ai-unit-bans.json")),
   };
   const modules = [
@@ -58,6 +60,9 @@ function buildSaveEditor(root = path.resolve(__dirname, "..")) {
     "shared/unit-plugins.js",
     "shared/warehouse.js",
     "shared/base-facilities.js",
+    "shared/contact-zeon.js",
+    "shared/contact-anaheim.js",
+    "shared/contact-ce.js",
     "shared/contact-tasks.js",
     "shared/economy.js",
     "shared/development.js",
@@ -67,6 +72,7 @@ function buildSaveEditor(root = path.resolve(__dirname, "..")) {
     "shared/site-control.js",
     "shared/battlefield-mode.js",
     "shared/automatic-fire.js",
+    "shared/contract-forces.js",
     "shared/contract-mode.js",
     "shared/rules.js",
   ];

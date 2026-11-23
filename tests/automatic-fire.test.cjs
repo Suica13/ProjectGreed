@@ -352,6 +352,8 @@ test("the original cadence table is shared by preview and resolution, with per-r
     bazooka: 2,
     beam_bazooka: 2,
     cannon: 2,
+    shell_shotgun: 2,
+    beam_shotgun: 2,
     missile: 1,
     panzerfaust: 1,
     grenade: 1,
@@ -371,9 +373,14 @@ test("the original cadence table is shared by preview and resolution, with per-r
     assert.equal(f.a.actionPoints, 0, kind);
   }
 });
-test("cadence exceptions limit wrists, head vulcans and pilot-gated weapons to one round", () => {
+test("cadence exceptions limit non-shotgun wrists, head vulcans and pilot-gated weapons to one round", () => {
   const C = require("../shared/weapon-classes.js");
   assert.equal(C.rounds({ id: "Common_ArmBR_L", weaponClass: "beam_gun", type: "beam" }), 1);
+  const wristFixture=fixture(),wrist=wristFixture.make("Common_ArmBSG_L",99,1000,7);
+  wrist.weaponClass="beam_shotgun";wrist.maxUsesPerTurn=2;
+  wristFixture.model.weapons=[wrist];
+  assert.equal(C.rounds(wrist),2);
+  assert.equal(G.firePlan(wristFixture.game,wristFixture.a,wristFixture.b).weapons.length,2);
   assert.equal(
     C.rounds({ id: "Common_DoubleVulcan_MS", weaponClass: "small_vulcan", type: "shell" }),
     1,

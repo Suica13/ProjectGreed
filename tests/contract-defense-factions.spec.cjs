@@ -21,7 +21,7 @@ for(const width of [1440,390])test(`contract faction pair selector saves enemy a
   await expect(select.locator('option')).toHaveCount(3);
   await select.selectOption('NONE|NONE');
   await expect.poll(()=>page.evaluate(()=>[Net.snapshot.settings.sweepFaction,Net.snapshot.settings.sweepAlliedFaction])).toEqual(['NONE','NONE']);
-  await expect(select.locator('option:checked')).toHaveText('无友军');
+  await expect(select.locator('option:checked')).toHaveText('武装介入');
   expect(await page.evaluate(()=>{
     const previous=game.contract;game.contract={noAllies:true};
     const colors=[1,2,3].map(team=>UnitIdentity.style({team,ownerSeat:1}).color);

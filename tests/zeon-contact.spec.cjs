@@ -25,7 +25,7 @@ for (const width of [1440, 390])
     });
     await page.locator("#shellMissions").click();
     await page.locator("#shellContactMerchants").click();
-    await expect(page.locator(".merchant-card")).toHaveCount(3);
+    await expect(page.locator(".merchant-card")).toHaveCount(5);
     const portrait = page.locator('[data-merchant-id="zeon"] img');
     await expect(portrait).toHaveAttribute("src", /^data:image\/png;base64,/);
     expect(

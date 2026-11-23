@@ -2,6 +2,7 @@
 const ContactTasks = (() => {
   const zeon = typeof ZeonContact !== "undefined" ? ZeonContact : require("./contact-zeon.js");
   const anaheim = typeof AnaheimContact !== "undefined" ? AnaheimContact : require("./contact-anaheim.js");
+  const ce = typeof CEContacts !== "undefined" ? CEContacts : require("./contact-ce.js");
   const planningVersion = "1.3";
   const tasks = [
     {
@@ -370,6 +371,7 @@ const ContactTasks = (() => {
 });
   tasks.push(...zeon.tasks);
   tasks.push(...anaheim.tasks);
+  tasks.push(...ce.tasks);
   const byId = new Map(tasks.map(t=>[t.id,t]));
   const technologyTree = typeof DEVELOPMENT_TREE !== "undefined" ? DEVELOPMENT_TREE : require("./development-tree.json");
   const plans = new Map(Object.values(technologyTree).flat().map(node=>[node.id,node]));
@@ -404,9 +406,11 @@ const ContactTasks = (() => {
     return typeof value === "boolean" ? id === "efsf" && value :
       id === "efsf" ? value?.contactIntro === true : value?.merchantIntros?.[id] === true;
   }
-  const introFor = id => id === "zeon" ? zeon.intro : id === "efsf" ? intro : id === "anaheim" ? anaheim.intro : [];
-  const introPlan = id => id === "zeon" ? zeon.introPlan : id === "efsf" ? "Tech_EFSF_0079_AntiMSPlan" : null;
-  const contactName = id => id === "zeon" ? "吉翁联络人" : id === "efsf" ? "联邦联络人" : "阿纳海姆";
+  const introFor = id => ce.contacts[id]?.intro || (id === "zeon" ? zeon.intro : id === "efsf" ? intro : id === "anaheim" ? anaheim.intro : []);
+  const introPlan = id => ce.contacts[id]?.introPlan || (id === "zeon" ? zeon.introPlan : id === "efsf" ? "Tech_EFSF_0079_AntiMSPlan" : null);
+  const introPlans = id => [ce.contacts[id]?.basePlan, introPlan(id)].filter(Boolean);
+  const available = (state,id) => !ce.contacts[id] || ce.available(state);
+  const contactName = id => ce.contacts[id]?.name || (id === "zeon" ? "吉翁联络人" : id === "efsf" ? "联邦联络人" : "阿纳海姆");
   function normalize(value) {
     if (!Array.isArray(value)) return [];
     return tasks.flatMap(task=>{
@@ -432,6 +436,7 @@ const ContactTasks = (() => {
     const claimed=new Set(normalize(entries).filter(entry=>entry.status==="claimed").map(entry=>entry.id));
     return [
       ...(!met(intro,contactId(task))?[{type:"intro"}]:[]),
+      ...(!available({...intro,contactTasks:entries},contactId(task))?[{type:"task",name:"小菜一碟或不可退让"}]:[]),
       ...(task.requires || []).filter(id=>!claimed.has(id)).map(id=>({type:"task",id,name:byId.get(id)?.name || id})),
     ];
   }
@@ -439,6 +444,6 @@ const ContactTasks = (() => {
     const ids=new Set(room.seats.filter(p=>p&&!p.bot&&p.seat%2===0).flatMap(p=>active(p.contactTasks)));
     return tasks.filter(t=>t.kind!=="kills" && ids.has(t.id) && eligible(t,room.settings));
   }
-  return {planningVersion,tasks,byId,intro,introFor,introPlan,contactId,contactName,met,planIds,normalize,active,eligible,unlocked,unmetRequirements,isSideTask,specialTasks};
+  return {planningVersion,tasks,byId,intro,introFor,introPlan,introPlans,available,contactId,contactName,met,planIds,normalize,active,eligible,unlocked,unmetRequirements,isSideTask,specialTasks};
 })();
 if(typeof module!=="undefined")module.exports=ContactTasks;

@@ -41,6 +41,26 @@
       "scene": "battle"
     },
     {
+      "name": "Battle_09",
+      "file": "Battle_09.mp3",
+      "scene": "battle"
+    },
+    {
+      "name": "Battle_10",
+      "file": "Battle_10.mp3",
+      "scene": "battle"
+    },
+    {
+      "name": "Battle_11",
+      "file": "Battle_11.mp3",
+      "scene": "battle"
+    },
+    {
+      "name": "Battle_12",
+      "file": "Battle_12.mp3",
+      "scene": "battle"
+    },
+    {
       "name": "Menu_01",
       "file": "Menu_01.mp3",
       "scene": "menu"
@@ -63,6 +83,11 @@
     {
       "name": "Menu_05",
       "file": "Menu_05.mp3",
+      "scene": "menu"
+    },
+    {
+      "name": "Menu_06",
+      "file": "Menu_06.mp3",
       "scene": "menu"
     }
   ],

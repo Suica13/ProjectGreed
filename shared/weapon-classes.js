@@ -124,11 +124,13 @@ const WeaponClasses = (() => {
     bazooka: 2,
     beam_bazooka: 2,
     cannon: 2,
+    shell_shotgun: 2,
+    beam_shotgun: 2,
   };
   function baseRounds(weapon) {
     if (
       weapon.type === "melee" ||
-      wristWeapon(weapon) ||
+      (wristWeapon(weapon) && !["shell_shotgun", "beam_shotgun"].includes(classify(weapon))) ||
       headVulcan(weapon) ||
       weapon.pilotRequirements?.length ||
       weapon.special?.type === "snipe"

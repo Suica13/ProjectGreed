@@ -139,9 +139,9 @@ const variants = Contacts.tasks
     group: "联络委托变体",
     status: "无需调整",
     summary: `${Contacts.contactName(Contacts.contactId(t))}委托「${t.name}」追加的特殊地图事件。`,
-    conditions: `全房间任意玩家已接取${t.id}；地面、N${t.difficulty}以上、${t.enemyFaction === "NONE" ? "无友军" : "敌军"+(t.enemyFaction === "EFSF" ? "联邦" : "吉翁")}时固定追加。同一委托全房间只生成一项，不占普通事件数量。`,
+    conditions: `全房间任意玩家已接取${t.id}；地面、N${t.difficulty}以上、${t.enemyFaction === "NONE" ? "武装介入" : "敌军"+({EFSF:"联邦",ZEON:"吉翁",OMNI:"地球联合军",ZAFT:"扎夫特"}[t.enemyFaction] || t.enemyFaction)}时固定追加。同一委托全房间只生成一项，不占普通事件数量。`,
     rewards: "不增加普通合约事件收益；委托完成条件和交付奖励由联络委托单独判定，不能重复计算。",
-    source: `${t.contactId === "zeon" ? "shared/contact-zeon.js" : t.contactId === "anaheim" ? "shared/contact-anaheim.js" : "shared/contact-tasks.js"}：${t.id}；shared/contract-mode.js：initialize / recordDefeat / commissionProgress。`,
+    source: `${["omni","zaft"].includes(t.contactId) ? "shared/contact-ce.js" : t.contactId === "zeon" ? "shared/contact-zeon.js" : t.contactId === "anaheim" ? "shared/contact-anaheim.js" : "shared/contact-tasks.js"}：${t.id}；shared/contract-mode.js：initialize / recordDefeat / commissionProgress。`,
     ...extra[t.id],
   }));
 module.exports = { commonRules, events: [...base, ...variants] };

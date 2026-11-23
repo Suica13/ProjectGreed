@@ -97,11 +97,17 @@ const ContractMode = (() => {
   function config(value = 1, era = "UC_0079_T1") {
     const result = difficulties.find((d) => d.id === Number(value));
     if (!result) throw Error("合约难度无效");
+    if (era === "CE_0071_T1" && result.id < 2) throw Error("CE0071T1合约最低难度为N2");
     const stage = ["UC_0079_T1", "UC_0079_T2", "UC_0087_T1", "UC_0087_T2", "UC_0093_T1"].indexOf(era);
     // T2 scales the baseline by 1.5; subsequent eras keep the 1.25 progression.
     // Round only the final budget, so rounding does not compound between eras.
     const scale = stage > 0 ? 1.5 * 1.25 ** (stage - 1) : 1;
     return { ...result, costLimit: Math.round(result.costLimit * scale / 500) * 500 };
+  }
+  function scenarioConfig(settings) {
+    const d = config(settings.sweepDifficulty, settings.sweepEra);
+    return noAllies(settings) ? {...d, events:d.events + 1,
+      width:Math.ceil(d.width * 1.1), height:Math.ceil(d.height * 1.1)} : d;
   }
   function roomSettings(settings) {
     if (settings.sweepEnvironment !== "ground") throw Error("合约模式宇宙作战暂时禁用");
@@ -181,11 +187,11 @@ const ContractMode = (() => {
     delete catalog.maps.battlefield_sweep;
   }
   function generateMap(catalog, settings, seed) {
-    const d = config(settings.sweepDifficulty),
+    const d = scenarioConfig(settings),
       map = structuredClone(catalog.maps[mapId(settings.sweepEnvironment, d.id)]),
       rng = random(seed ^ 0xa53c9e17),
-      w = map.width,
-      h = map.height,
+      w = map.width = d.width,
+      h = map.height = d.height,
       space = settings.sweepEnvironment === "space",
       biome = space ? "space" : biomes[Math.floor(random(seed ^ 0x71b10)() * biomes.length)].id,
       side = Math.floor(rng() * 4),
@@ -483,6 +489,7 @@ const ContractMode = (() => {
           !m.wip &&
           !m.facility &&
           !m.requiredPilotId &&
+          forces.aiKitAllowed(m) &&
           G.aiTechnologyAllows(m, faction) &&
           !(G.aiUnitBans?.sweep || []).includes(m.prefabId) &&
           !m.ship &&
@@ -625,7 +632,7 @@ const ContractMode = (() => {
   function reinforcementSlots(room) {
     const alive = room.game.units.filter(unit => unit.contractReinforcement && unit.hp > 0 && !unit.contractExtracted).length;
     const limit=config(room.settings.sweepDifficulty).patrolLimit;
-    return Math.max(0, Math.floor(limit * (room.game.contract.noAllies ? 1.1 : 1)) - alive);
+    return Math.max(0, Math.floor(limit * (room.game.contract.noAllies ? 1.25 : 1)) - alive);
   }
   function enemies(room, G, seed) {
     if (noAllies(room.settings)) return factionRoom(room,enemyFactions(G,room.settings)[0],()=>enemies(room,G,seed));
@@ -1123,7 +1130,7 @@ const ContractMode = (() => {
   function initialize(room, G, seed, log = () => {}) {
     const game = room.game,
       map = G.getMap(game.mapId),
-      d = config(room.settings.sweepDifficulty),
+      d = scenarioConfig(room.settings),
       rng = random(seed),
       players = room.seats.filter((p) => p && !p.bot && G.seatTeam(p.seat) === 0).length,
       { entry, extraction, locations } = game.contractLayout;
@@ -1241,7 +1248,9 @@ const ContractMode = (() => {
         const targets=task.targetUnits || Array.from({length:task.targetCount || task.targetKits?.length || (task.id==="efsf-3"?3:12)},(_,j)=>
           ({unitId:prefab.id,kitId:task.targetKits?.[j] || prefab.weaponKits[0].id}));
         for(const [j,target] of targets.entries()){
-          const model=G.models[target.unitId+"__"+target.kitId];
+          const model=target.kitId ? G.models[target.unitId+"__"+target.kitId] :
+            Object.values(G.models).find(m=>m.prefabId===target.unitId && !m.formOnly && forces.aiKitAllowed(m));
+          if (!model || !forces.aiKitAllowed(model)) throw Error("联络任务目标没有可用的非核弹套件："+target.unitId);
           const u=spawn(room,G,model,{x:point.x+3,y:point.y+j});
           if(!u)throw Error("无法放置联络任务小队");
           if(task.id==="efsf-3" || task.targetPilotGrade) {
@@ -1323,13 +1332,14 @@ const ContractMode = (() => {
       era = Math.pow(1.25, Math.max(0, G.technologyWeight(room.settings.sweepEra) - 1)),
       economy = typeof BattleEconomy !== "undefined" ? BattleEconomy : require("./battle-economy.js"),
       share = Math.min(1, completed / Math.max(1, state.objectives.filter(o => !o.contactTaskId).length)),
-      [money, supplies] = completionRewards[d - 1];
+      [money, supplies] = completionRewards[d - 1],
+      bonus = 1.25 * (state.noAllies ? 1.25 : 1);
     return {
       // Settlement applies its multiplier once; the table already includes it.
-      money: money * share * era / economy.completionRewardMultiplier,
-      supplies: supplies * share * era / economy.completionRewardMultiplier,
-      experience: Math.floor([500, 1000, 1500, 3000, 4000, 5000][d - 1] * share),
-      technology: completed * 125 * era * (1 + (d - 1) * 0.25),
+      money: money * share * era * bonus / economy.completionRewardMultiplier,
+      supplies: supplies * share * era * bonus / economy.completionRewardMultiplier,
+      experience: Math.floor([500, 1000, 1500, 3000, 4000, 5000][d - 1] * share * bonus),
+      technology: completed * 125 * era * (1 + (d - 1) * 0.25) * bonus,
       inventory: {},
     };
   }
@@ -1647,7 +1657,7 @@ const ContractMode = (() => {
     const { seed: privateSeed, ...publicState } = structuredClone(state);
     return {
       ...publicState,
-      difficulty: config(room.settings.sweepDifficulty, room.settings.sweepEra),
+      difficulty: scenarioConfig(room.settings),
       completed: state.objectives.filter((o) => o.status === "completed").length,
       participants: progress(room, G),
       pending: {
@@ -1666,6 +1676,7 @@ const ContractMode = (() => {
     covers,
     kinds,
     config,
+    scenarioConfig,
     mapId,
     registerMaps,
     generateMap,
