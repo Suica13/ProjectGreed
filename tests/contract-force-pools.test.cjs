@@ -5,6 +5,11 @@ const G = require("../shared/rules"),
   F = require("../shared/contract-forces");
 const { createRoomEngine } = require("../shared/room-engine"),
   { generate } = require("../tools/compile-contract-force-pools.cjs");
+function checkPilots(units, difficulty) {
+  assert(units.every(u => [undefined, "veteran", "elite"].includes(u.pilot.genericGrade)));
+  if (difficulty < 5)
+    assert(units.every(u => !u.pilot.genericGrade && u.pilot.name.includes("\u4e00\u822c")));
+}
 function fixture(t, { difficulty = 6, faction = "ZEON", players = 1, lobby = false, seed = 1936384585 } = {}) {
   let serial = 0;
   const errors = [],
@@ -196,7 +201,7 @@ for (const faction of ["EFSF", "ZEON"])
       const mobile = () => g.units.filter((u) => u.team === 1 && !u.facility && !u.embarked);
       assert(mobile().length);
       assert(mobile().every((u) => allowed.has(G.modelOf(u).prefabId)));
-      assert(mobile().every(u=>!u.pilot.genericGrade&&u.pilot.name.includes("\u4e00\u822c")));
+      checkPilots(mobile(), difficulty);
       for (const o of g.contract.objectives) o.status = "completed";
       const before = g.units.length;
       for (let i = 0; i < 4; i++) {
@@ -208,7 +213,7 @@ for (const faction of ["EFSF", "ZEON"])
       assert.equal(added.length % 3, 0);
       assert(added.every((u) => u.contractReinforcement && allowed.has(G.modelOf(u).prefabId)));
       assert(added.every((u) => G.squadMembers(g, u).length <= 3));
-      assert(added.every(u=>!u.pilot.genericGrade));
+      checkPilots(added, difficulty);
     });
 for (const faction of ["EFSF", "ZEON"])
   test(`live ${faction} N6 salvage uses two upgraded, loaded transports`, (t) => {
@@ -236,7 +241,7 @@ for (const faction of ["EFSF", "ZEON"])
       assert.equal(cargo.length % 3, 0);
     }
     assert(added.length <= C.config(6).patrolLimit);
-    assert(added.every(u=>!u.pilot.genericGrade));
+    checkPilots(added, 6);
   });
 test("lobby and startup authoritatively reject space contracts without limiting quick battles", (t) => {
   assert.throws(

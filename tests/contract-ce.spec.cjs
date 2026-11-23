@@ -31,12 +31,18 @@ for(const width of [1440,390])test(`CE liaisons unlock, play their intros and ex
     for(let i=0;i<lines;i++)await page.locator('#liaisonDialogueNext').click();
     expect(await page.evaluate(id=>ContactTasks.met(Economy.snapshot(),id),id)).toBe(true);
     await terminal.getByRole('button',{name:'任务',exact:true}).click();
-    await expect(terminal.locator('[data-task-id]')).toHaveCount(id==='omni'?4:5);
+    await expect(terminal.locator('[data-task-id]')).toHaveCount(10);
     await terminal.locator(`[data-task-id="${id}-1"]`).click();
     await expect(terminal.locator('.contact-task-detail')).toContainText('CE0071T1');
     await expect(terminal.locator('.contact-task-detail')).toContainText(id==='omni'?'扎夫特':'地球联合');
     await expect(page.locator('#contactTaskAction')).toBeEnabled();
     await page.locator('#contactTaskAction').click();
+    await terminal.locator(`[data-task-id="${id}-10"]`).click();
+    await expect(terminal.locator('.contact-task-detail')).toContainText('同一局完成');
+    await expect(terminal.locator('.contact-task-detail')).toContainText(id==='omni'?'公司印章':'哈维尔');
+    await expect(terminal.locator('.contact-task-detail')).toContainText(id==='omni'?'决斗短剑':'决斗高达');
+    await expect(page.locator('#contactTaskAction')).toBeDisabled();
+    await expect(terminal.locator('.contact-task-requirements')).toContainText(id==='omni'?'中立的价码':'没有中立的潮水');
     await page.screenshot({path:`tmp/verification/screenshots/ce-contact-${id}-${width}.png`});
     await terminal.getByRole('button',{name:'关闭',exact:true}).click();
   }

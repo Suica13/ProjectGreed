@@ -758,12 +758,19 @@ const ContractMode = (() => {
     game.units.push(u);
     return u;
   }
-  function enemyPilotGrade(difficulty) {
-    config(difficulty);
-    return null;
+  function enemyPilotGrade(difficulty, roll = 1) {
+    const level = config(difficulty).id;
+    if (level < 5) return null;
+    const eliteChance = level === 5 ? .05 : .1;
+    const veteranChance = level === 5 ? .2 : .3;
+    return roll < eliteChance ? "elite" : roll < eliteChance + veteranChance ? "veteran" : null;
   }
   function assignEnemyPilot(room, G, unit, model, seed, elite = false) {
-    const grade = elite ? "elite" : enemyPilotGrade(room.settings.sweepDifficulty);
+    // Mix adjacent spawn seeds so nearby squad members roll independently.
+    let mixed = Math.imul(seed ^ (seed >>> 16), 0x21f0aaad);
+    mixed = Math.imul(mixed ^ (mixed >>> 15), 0x735a2d97);
+    const roll = ((mixed ^ (mixed >>> 15)) >>> 0) / 4294967296;
+    const grade = elite ? "elite" : enemyPilotGrade(room.settings.sweepDifficulty, roll);
     unit.pilot = {...unit.pilot, genericGrade: grade || undefined,
       ...(grade ? G.pilots.rollGrade(grade, seed, model) : G.pilots.roll(null, seed, 1, 0, model))};
   }
@@ -1166,7 +1173,8 @@ const ContractMode = (() => {
       const j = Math.floor(rng() * (i + 1));
       [types[i], types[j]] = [types[j], types[i]];
     }
-    const special = contacts.specialTasks(room);
+    const special = contacts.specialTasks(room).flatMap(task => task.stages?.length
+      ? task.stages.map(stage => ({...task, ...stage})) : [task]);
     for (const task of special) {
       const candidates=[];
       for(let y=9;y<map.height-8;y+=3)for(let x=9;x<map.width-8;x+=3){
@@ -1195,7 +1203,7 @@ const ContractMode = (() => {
           ...point,
           status: "available",
           progress: 0,
-          required: ["capture","defend"].includes(definition.type) ? 5 : definition.type === "upload" ? 3 : 1,
+          required: task?.eventRequired ?? (["capture","defend"].includes(definition.type) ? 5 : definition.type === "upload" ? 3 : 1),
           targets: [],
           protected: [],
           destroyed: [],
@@ -1232,8 +1240,8 @@ const ContractMode = (() => {
         }
       }
       const count = task?.targetUnits?.length || task?.guardCount || (task?.id === "efsf-5" ? 12 : 3 + Math.floor((d.id - 1) / 3));
-      const guards = (definition.type === "defend" || ["efsf-3","efsf-4"].includes(task?.id) || task?.targetUnit) ? [] : objectiveProfile && !task ? budgetPatrol(
-        room,G,{x:point.x+3,y:point.y+2},objectiveProfile.garrisons[definition.type],false,"guard",objective.id
+      const guards = (definition.type === "defend" || (!task?.guardBudget && (["efsf-3","efsf-4"].includes(task?.id) || task?.targetUnit))) ? [] : objectiveProfile && (!task || task.guardBudget) ? budgetPatrol(
+        room,G,{x:point.x+3,y:point.y+2},task?.guardBudget ?? objectiveProfile.garrisons[definition.type],false,"guard",objective.id
       ) : patrol(
         room,
         G,
@@ -1247,22 +1255,24 @@ const ContractMode = (() => {
         const prefab=G.catalog.prefabs.find(p=>p.id===(task.targetUnit || (task.id==="efsf-3"?"RGM_79_G":"MS_06F")));
         const targets=task.targetUnits || Array.from({length:task.targetCount || task.targetKits?.length || (task.id==="efsf-3"?3:12)},(_,j)=>
           ({unitId:prefab.id,kitId:task.targetKits?.[j] || prefab.weaponKits[0].id}));
+        const scriptedIds=[];
         for(const [j,target] of targets.entries()){
           const model=target.kitId ? G.models[target.unitId+"__"+target.kitId] :
             Object.values(G.models).find(m=>m.prefabId===target.unitId && !m.formOnly && forces.aiKitAllowed(m));
           if (!model || !forces.aiKitAllowed(model)) throw Error("联络任务目标没有可用的非核弹套件："+target.unitId);
           const u=spawn(room,G,model,{x:point.x+3,y:point.y+j});
           if(!u)throw Error("无法放置联络任务小队");
-          if(task.id==="efsf-3" || task.targetPilotGrade) {
+          if(task.id==="efsf-3" || task.targetPilotGrade || task.targetLeaderPilot) {
             const leader = j === 0 ? task.targetLeaderPilot : null;
-            const grade = leader?.grade || task.targetPilotGrade || "veteran";
-            u.pilot={...u.pilot,...G.pilots.rollGrade(grade,game.seed+state.serial,model),genericGrade:grade};
+            const grade = leader?.grade || task.targetPilotGrade || (task.id==="efsf-3" ? "veteran" : null);
+            if(grade) u.pilot={...u.pilot,...G.pilots.rollGrade(grade,game.seed+state.serial,model),genericGrade:grade};
             u.pilot.name+=" · "+(leader?.name || task.targetName || (task.id==="efsf-7"?"雷纳斯卫队":"文件护卫"))+(j+1);
             if (leader?.dialogue) u.pilot.missionDialogue = G.pilots.normalizeDialogue(leader.dialogue);
           }
           guards.push(u.id);
+          scriptedIds.push(u.id);
         }
-        groupSquads(room,G,guards,point,"guard",objective.id);
+        groupSquads(room,G,scriptedIds,point,"guard",objective.id);
       }
       if(task?.id === "efsf-5" || task?.turrets)for(let j=0;j<(task.turrets || 4);j++){
         const u=spawn(room,G,G.models.Facility_MG__standard,{x:point.x+(j%2?5:-5),y:point.y+(j<2?-4:4)});
@@ -1367,18 +1377,20 @@ const ContractMode = (() => {
     const escaped=room.game.units.some(u=>G.ownerOf(u)===player.seat&&u.hp>0&&u.contractExtracted);
     return (state.commissions?.[player.id]||[]).flatMap(id=>{
       const task=contacts.byId.get(id);if(!contacts.eligible(task,room.settings))return [];
+      if(task.requiresExtraction && !escaped)return [];
       if(task.kind==="kills")return [{id,amount:(state.contactKillRecords||[]).filter(record=>
         (task.enemyFaction==="NONE" || record.factions.includes(task.enemyFaction||"ZEON")) &&
         (!task.requiredAttackerUnit || record.attackerUnit===task.requiredAttackerUnit) &&
         (!task.requiredAttackerPlugin || record.attackerPlugins?.includes(task.requiredAttackerPlugin)) &&
         (task.killMethod!=="artillery" || record.artillery) && (task.killMethod!=="melee" || record.melee)).length}];
-      const o=state.objectives.find(o=>o.contactTaskId===id);
+      const objectives=state.objectives.filter(o=>o.contactTaskId===id),o=objectives[0];
       if(id==="efsf-5" || task.requiredAttackerUnit){
         const amount=o?.targets.filter(id=>{const u=room.game.units.find(u=>u.id===id);return u?.hp<=0&&
           (task.requiredAttackerUnit ? u.contactAttackerUnit===task.requiredAttackerUnit : u.contactPaleKill);}).length||0;
         return amount ? [{id,amount}] : [];
       }
-      if(o?.status!=="completed" || ((task.kind==="salvage" || task.requiresExtraction)&&!escaped))return [];
+      if(objectives.length!==(task.stages?.length || 1) || objectives.some(o=>o.status!=="completed") ||
+        (task.kind==="salvage"&&!escaped))return [];
       return [{id,amount:1}];
     });
   }

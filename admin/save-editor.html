@@ -5352,95 +5352,187 @@ const AnaheimContact = (() => {
 if (typeof module !== "undefined") module.exports = AnaheimContact;
 
 ;
-/* CE0071T1 liaison chains. Licenses are awarded only after the dialogue/hand-in. */
+/* Two ten-commission CE0071T1 campaigns; stable IDs preserve existing saves. */
 "use strict";
 const CEContacts = (() => {
-  const gateTasks = ["efsf-11", "zeon-11"];
-  const available = state => gateTasks.some(id => state?.contactTasks?.some(e => e.id === id && e.status === "claimed"));
-  const contacts = {
-    omni: {
-      name: "地球联合军联络人",
-      introPlan: "Tech_OMNI_CE71_MilitaryReconstructionPlan",
-      basePlan: "Tech_OMNI_CE71_BaseTech",
-      intro: [
-        ["地球联合军联络人", "听说你们在另一条战线上干得不错。这里是地球联合军对外事务处，以后的委托由我签字。"],
-        ["玩家", "先说报酬，再说任务。"],
-        ["地球联合军联络人", "很好，我喜欢明白人。扎夫特和那些调整人把地球当成了试验场，我要他们为每一寸占领区付出代价。"],
-        ["玩家", "我们接军事目标，别把平民名单塞进合同。"],
-        ["地球联合军联络人", "哼，合同会写清楚。眼前先把我们的地面军队重新组织起来。"],
-        ["地球联合军联络人", "军队重建计划和基础装备许可已经转交。线性炮坦克、飞机、长刃，你可以自己挑。"],
-        ["玩家", "奥布也在你的作战地图上？"],
-        ["地球联合军联络人", "他们占着质量加速器，庇护调整人，却坚持说自己中立。联合不会永远有耐心。"],
-        ["地球联合军联络人", "先完成N2地面合同。等你证明价值，我再让你接触真正的MS计划。"],
+  const gateTasks=["efsf-11","zeon-11"];
+  const available=state=>gateTasks.some(id=>state?.contactTasks?.some(e=>e.id===id&&e.status==="claimed"));
+  const contacts={
+    omni:{
+      name:"地球联合军联络人",introPlan:"Tech_OMNI_CE71_MilitaryReconstructionPlan",basePlan:"Tech_OMNI_CE71_BaseTech",
+      intro:[
+        ["地球联合军联络人","……第六车队不算失踪，按延期交付处理。司机家属的电话转抚恤科，别再转到我这里。"],
+        ["地球联合军联络人","＊通话切换，镜头里的人把一叠盖好章的表格推到桌子另一头＊"],
+        ["地球联合军联络人","【玩家公司名】？克雷恩，战区军需协调处。军衔写在合同最后一页，你翻到了再叫。"],
+        ["玩家","刚才那支车队，也在合同里？"],
+        ["地球联合军联络人","车在扎夫特手里，人不知道。办公室里有三个人坚持叫它运输损耗，因为写成战损，他们就得解释路线上为什么没有护卫。"],
+        ["玩家","所以找我们。"],
+        ["地球联合军联络人","所以找拿了钱就会出门的人。正规军等调令，调令等签字，签字的人还在等敌情确认。等齐了，调整人连路牌都搬走了。"],
+        ["玩家","我们也要等预付款。"],
+        ["地球联合军联络人","哈。这句话倒让我放心了。上一个跟我谈保卫地球的家伙，卖了两次同一批发动机。"],
+        ["地球联合军联络人","基础装备和军队重建计划的许可先给你。坦克、飞机、长刃，工厂能做什么自己列单。我不赠送成品，也不替你养驾驶员。"],
+        ["玩家","重建到什么程度了？"],
+        ["地球联合军联络人","能把报表上的番号变成地图上会喘气的部队，就算成功一半。另一半，是让那些扎夫特的调整人知道，地球不是他们下来练枪的靶场。"],
+        ["玩家","你对他们意见不小。"],
+        ["地球联合军联络人","我弟弟守过一座维修场。最后一份求援还在走流程，阵地就没了。对面给自己的飞行员发了勋章。你要我怎么称呼他们，客人？"],
+        ["地球联合军联络人","＊他翻过一张海港照片，背面是奥布商社的印章＊"],
+        ["玩家","这又是哪笔运输损耗？"],
+        ["地球联合军联络人","暂时不是。奥布的机器能把零件做得那么漂亮，嘴上却只会念中立。我们缺产能，他们缺的恐怕是有人把价钱开得足够清楚。"],
+        ["玩家","你想买，还是想拿？"],
+        ["地球联合军联络人","先把眼前的账收回来。等你看过他们签过字的运单，你就知道这两个词没隔多远。"],
+        ["地球联合军联络人","第一份合同发过去了。别给我带宣言，带能核对的战果。钱到账前随你骂我；到账以后，记得出门。"],
       ],
     },
-    zaft: {
-      name: "扎夫特联络人",
-      introPlan: "Tech_ZAFT_CE71_HeavyarmsGINNDevelopmentPlan",
-      basePlan: "Tech_ZAFT_CE71_BaseTech",
-      intro: [
-        ["扎夫特联络人", "你就是那家佣兵公司的负责人？履历勉强值得一看，别把这当作赞赏。"],
-        ["玩家", "你可以直接谈合同。"],
-        ["扎夫特联络人", "自然人的军队只会用数量填补能力的差距。我们需要的是执行力，不是他们那种低劣的喧嚣。"],
-        ["玩家", "如果你想按出身给我的驾驶员排座次，这次通信可以结束了。"],
-        ["扎夫特联络人", "至少你敢回答。拿到战果，再来讨论你的立场。"],
-        ["扎夫特联络人", "基础装备和重装规格金恩开发计划已经授权。以金恩、迪恩和支援部队组织你的队伍。"],
-        ["玩家", "那奥布呢？"],
-        ["扎夫特联络人", "他们本该放弃那些自然人市民，站到调整人的未来这边，却执意维持那场平等的幻梦。"],
-        ["玩家", "我的合同只对武装目标有效。把这一条也记进去。"],
-        ["扎夫特联络人", "先在N2地面战场证明你能活着回来。其余计划要靠成果换取。"],
+    zaft:{
+      name:"扎夫特联络人",introPlan:"Tech_ZAFT_CE71_HeavyarmsGINNDevelopmentPlan",basePlan:"Tech_ZAFT_CE71_BaseTech",
+      intro:[
+        ["扎夫特联络人","镜头抬高。我要见负责人，不是看你们桌上的杯子。"],
+        ["玩家","杯子不用领薪水，比我的驾驶员省心。"],
+        ["扎夫特联络人","笑话留给你的下属。莱斯，地面作战联络官。你的战报我看过了，附件缺两页，伤亡栏还有涂改。"],
+        ["玩家","补过抚恤金，数字当然要改。"],
+        ["扎夫特联络人","你倒没把他们写成失踪。至少在这一点上，你的账比联合军诚实。"],
+        ["玩家","所以我们通过了？"],
+        ["扎夫特联络人","通过的是申请，不是信任。一个自然人的机构能做成几件事，与自然人有资格和我们相提并论，是两回事。"],
+        ["玩家","我的驾驶员按执照上机，不按你的家谱上机。合同准备好了吗？"],
+        ["扎夫特联络人","＊他停了一下，把桌上的名册合拢＊"],
+        ["扎夫特联络人","基础科技和重装规格金恩开发计划已经放行。别把许可理解为编制，你的损失不列入我的补充名单。"],
+        ["玩家","放心。你的补充名单，大概也不愿意坐我的飞机。"],
+        ["扎夫特联络人","他们没有拒绝命令的习惯。你最好也没有。"],
+        ["玩家","我拒绝过没付钱的命令。"],
+        ["扎夫特联络人","那就用你听得懂的语言合作。每份合同规定战果、撤离和报酬，少一项，验收官都不会签字。"],
+        ["玩家","背景里的地图，是奥布？"],
+        ["扎夫特联络人","他们有值得尊重的工程师，却让自然人的选票决定工厂为谁工作。明明能成为调整人的庇护所，偏要扮演所有人的国家。"],
+        ["玩家","你想替他们改章程？"],
+        ["扎夫特联络人","他们应该放弃那些自然人市民，先分清自己属于谁。庇护一切人的结果，就是让真正有价值的人替下等人承担代价。"],
+        ["玩家","这段话要放进公开招募广告吗？佣金得加。"],
+        ["扎夫特联络人","放进你对雇主的理解里。你不需要赞同，但别假装自己接的是一份没有立场的工作。"],
+        ["扎夫特联络人","先从前线清剿做起。让你的战果比你的嘴更有用，我们才有第二次谈话。"],
       ],
     },
   };
-  const definitions = {
-    omni: [
-      {name:"重建的第一步", difficulty:2, kind:"salvage", guardCount:5, wreckUnit:"VTOLTransport",
-        eventName:"回收联合军前线补给记录", plan:"MSDevelopmentPlan",
-        description:"扎夫特截断了重建部队的补给线。运输机残骸里有分发记录，抢在他们销毁之前带回来。\n守军有金恩和空中掩护，别指望只开一辆卡车就能混过去。\n记录完整带回，我就把MS开发计划交给你。",
-        ending:"记录还在，补给点可以重新启用。\n那些调整人以为炸掉几架运输机就能让我们停下来？现在轮到他们担心我们的MS了。"},
-      {name:"量产的答案", difficulty:3, kind:"command", guardCount:3, targets:["ZGMF_1017","ZGMF_1017","ZGMF_515","AMF_101"],
-        eventName:"击破扎夫特机动封锁队", plan:"MassProductionMSDevelopmentPlan",
-        description:"我们不能永远依靠少数试验机守住战线。量产MS计划需要一条安全的运输走廊。\n扎夫特的封锁队占住了通道，金恩、希古和迪恩互相掩护。把他们全部清掉。\n你打通道路，强袭短剑和新型高达的资料就归你。",
-        ending:"道路通了，量产计划也会继续。\n自然人未必需要和调整人比天赋，只要生产线上出来的每一台MS都能把他们赶回宇宙。"},
-      {name:"夺回制空权", difficulty:4, kind:"radar", guardCount:6, turrets:2, eventName:"摧毁扎夫特空域引导站", plan:"SkyGrasperDevelopmentPlan",
-        description:"扎夫特用雷达站给迪恩机群指示目标，后方的车队连白天都不敢移动。\n摧毁引导站，撑过守卫增援，再从地面撤离。\n空中霸王开发资料可以补上你的空中支援，我不想再听见空域丢失的报告。",
-        ending:"空域终于能用了。空中霸王的许可给你。\n奥布那些工厂也很擅长制造飞机……总有一天，我们会认真谈谈他们的产能该为谁服务。"},
-      {name:"装甲之下", difficulty:5, kind:"factory", guardCount:7, targetCount:3, turrets:2, eventName:"破坏扎夫特前线整备群", plan:"DuelDaggerDevelopmentPlan",
-        description:"巴库和高机动金恩开始成批出现在前线，补给和整备比它们的驾驶员更值得下手。\n摧毁三座整备设施，注意工厂受击和被毁都会引来增援。\n决斗短剑计划已经备好，活着回来签收。",
-        ending:"他们的整备线停了，我们的不会停。\n决斗短剑开发计划交给你。第一阶段的技术资料已经齐全，接下来用战果证明这笔投资值得。"},
+  const definitions={
+    omni:[
+      {name:"先把收据拿来",difficulty:2,kind:"kills",required:12,
+        objectiveText:"击毁12台扎夫特MS；取得战果的合约须成功撤离，可跨局累计",
+        description:"佣兵头子，你的开户申请被退了。\n财务科说，公司名不能证明作战能力。我把你那一沓战报砸在桌上，他们又说不是本战区的。你看，这就是我们为什么总在重建。\n先替我敲掉十二台扎夫特MS。金恩也好，迪恩也好，要有击毁记录，别拿一地履带讲它原来多威风。战果能分几趟交，每趟都得有人回来签收。\n我不想先办供应商登记，再办你的遗属登记。至于那些调整人的残骸，前线终于能拿来堵漏风的营房了。",
+        ending:"十二台，记录对得上，财务那边的脸也对得上——跟吃了苍蝇似的。钱拨了，他们现在总算知道怎么拼你们公司的名字了。\n还有一批失踪的货。准确地说，货找到了，负责的人希望它继续失踪。我需要一个不会替他着想的人去跑这一趟。你应该不会让我失望吧？"},
+      {name:"账上没有的人",difficulty:2,kind:"salvage",guardBudget:200,wreckUnit:"VTOLTransport",eventName:"账上没有的人 · 回收货舱记录",
+        description:"还记得接通时那支“延期交付”的车队吗？领队的定位器终于响了，在一架运输机残骸旁边。\n那批车根本没走错路。有人卖了备用路线，又把护卫调去看一座空仓库。前线在吃配给饼干，后方已经准备把损失摊进下个月的采购价。\n我要货舱记录仪，原件。扎夫特设了守备，回收以后还有运输机带追击队过来，别拆完一队就坐地上数螺丝。\n东西和活人一起带回来。名单里如果还有没登记的司机，我会认；但别替任何人预签死亡证明。",
+        ending:"记录能读，领队确实收到了备用路线。签发人那栏很有意思，居然还是个管纪律的。\n他明早会来喝茶。倒茶的人，丈夫就在那支车队里，我打算让她知道这件事。你们的款不走那条审批线，这点自保的本事我还有。\n真正截货的扎夫特部队，我也找到落脚处了。"},
+      {name:"过路费",difficulty:3,kind:"command",guardBudget:100,eventName:"过路费 · 歼灭机动收费站",
+        targets:["ZGMF_1017","ZGMF_1017","ZGMF_1017","ZGMF_515","AMF_101","AMF_101"],
+        description:"扎夫特在公路口设了个补给点。我们的车过不去，挂别国商社牌子的车却能过；只要卸一半货，连盘问都省了。调整人也会做生意嘛，本钱总爱从别人家里拿。\n清掉金恩、希古和迪恩，再处理外围掩护。我不要一个换了班长的收费站，要这条路重新能走车。名单上的目标一个都别漏。\n空地单位混在一起，不会排成一列等你炮击。你放走的飞机，会把留在后面的车辆挨个找出来。做完撤离，沿途别给我另外开一张过路费发票。",
+        ending:"第一支车队过去了，没少一箱滤芯。司机非说你们的识别码该挂在后视镜上，能辟邪。\n缴获的单子里有几家奥布商社，把机床轴承写成农用泵配件，写得还挺认真。中立这买卖，利润真不低。\n先不碰这些名字。我还需要一份命令，看看是谁让这帮混蛋留在那里收钱的。"},
+      {name:"签字的人",difficulty:3,kind:"command",guardBudget:125,eventName:"签字的人 · 击破前线督战队",
+        targets:["ZGMF_515","ZGMF_1017","ZGMF_1017","ZGMF_1017","ZGMF_1017","AMF_101","AMF_101","ConnectedArmoredVehicle","ConnectedArmoredVehicle"],
+        targetName:"前线督战队",targetLeaderPilot:{name:"霍尔兹上尉",grade:"veteran"},plan:"MSDevelopmentPlan",
+        description:"霍尔兹上尉亲自来检查封锁为什么断了，还带了一队护卫。我都替他心疼油钱。\n这人喜欢在开放频道教训我们“自然人的组织能力”。上一回他说完，轰炸落在了救护站的发电车上。那以后，我一直给他留着一个名字栏。\n希古是他的座机，由老兵驾驶。金恩和迪恩围着走，还有随队车辆与外围守备。整支队伍全清掉，别让一个会发报的人把他接出去。\n做完，MS开发计划就交给你。你替我把一个签名抹掉，我替你把几个签名补上。",
+        ending:"他最后的广播我听了。炮弹打进座舱之前，还在命令别人替他挡住道路。我的名字栏终于能填上日期了，这笔账我记你的。\nMS开发计划已经签发。性能比坦克强，账单也一样。你要是生产出来连运费都付不起，我会笑，而且不会替你撤销订单。"},
+      {name:"天上也有账",difficulty:4,kind:"radar",guardBudget:350,turrets:2,eventName:"天上也有账 · 摧毁空域引导站",
+        description:"扎夫特开始专挑回程车队打。迪恩从雷达盲区进来，飞行员还没拉高，下一批坐标就发下去了。\n别以为打掉几架飞机，他们就会嫌贵。那些家伙算自己人的账，可比算我们的命精细。端掉空域引导站和守备；雷达一响，响应部队就来，两座炮塔也不会看你表演。\n站毁了还得把公司的人带出来，我不接受“最后一台MS成功撞毁雷达”这种漂亮的破产报告。我们自己的飞机计划还没下来，我正在跟一个把螺旋桨当收藏品的部门扯皮。",
+        ending:"运输队今天头一次敢开灯进场。仓库主任说，损耗率降得不像真的，问能不能先别上报。\n当然不能，让他把前几个月多报的也一块儿解释了。\n飞机计划还没批，别瞪我。答应过的不会少，眼前先有一座维修场和它的账房，需要你帮我一起处理。"},
+      {name:"销账",difficulty:4,kind:"factory",eventName:"销账",stages:[
+        {kind:"factory",eventName:"销账 · 摧毁三座维修工厂",targetCount:3,guardBudget:375,turrets:2},
+        {kind:"upload",eventName:"销账 · 上传真正的供货记录",eventRequired:4,guardBudget:250,turrets:2},
+      ],
+        description:"“农用泵配件”追到了，进扎夫特维修场，出来就装在金恩关节里。供货商的声明很干净：只卖通用品，不问最终用途。\n那咱们也办两件通用的事。三座工厂全拆掉，再从另一处终端把完整供货记录传回来。上传要保持四回合，守备和响应部队不会替你留网线。两处在同一局办完，别把半份报告分两次要钱。\n我需要证据，也需要这批零件没有地方安装。记录一到，维修场的名字就从账上划掉——这一次，不是把损失藏起来。",
+        ending:"一边是冒烟的厂房，一边是商社的签章。终于有人得解释，自己的中立声明为什么连字都没改，就能寄给两支军队。\n法务建议措辞温和，叫“供货链管理存在疏漏”。我采纳了，标题温和，附件照样能把人按在桌上。\n量产计划在审签了，还缺一份战果：证明这批MS离开维修场以后，也没把战线拿回去。"},
+      {name:"用产量说话",difficulty:5,kind:"command",guardBudget:225,eventName:"用产量说话 · 歼灭夺路混成群",
+        targets:["ZGMF_600","ZGMF_600","ZGMF_1017M","ZGMF_1017M","ZGMF_1017M","ZGMF_1017M","TMF_A_802","TMF_A_802","TMF_A_802","AMF_101"],plan:"MassProductionMSDevelopmentPlan",
+        description:"扎夫特没撤。他们把盖茨、高机动金恩、巴库凑成机动群，准备抢回公路，再拿我们的仓库补充。算盘响得我这里都听见了。\n名单上的十台单位，加上掩护，一台不留。空地目标混编，别把整队配成只能打地面的样子。这回炸掉指挥车就走可不算交差。\n量产型MS计划就压在战果报告下面。上头总有人说，少数王牌能解决的事，没必要批那么多生产线。替我把那句话炸掉，我给你强袭短剑和新型高达的许可。",
+        ending:"会上那个最爱讲王牌的军官，翻来覆去找报告里有没有漏记友军支援。没有，他的表情比报告精彩。\n量产型MS计划通过了。调整人愿意把每个驾驶员都刻成纪念章，是他们的事；我们的部队要能补充、轮换，明天还得出门。\n你现在也是供应链的一环了。生产线交给你，可不代表没人查成品。"},
+      {name:"不入库的货",difficulty:5,kind:"salvage",eventName:"不入库的货",stages:[
+        {kind:"salvage",eventName:"不入库的货 · 回收航空装备清单",wreckUnit:"FX_550",guardBudget:350},
+        {kind:"radar",eventName:"不入库的货 · 拆除追踪站",guardBudget:400,turrets:3},
+      ],plan:"SkyGrasperDevelopmentPlan",
+        description:"飞机计划有眉目了，货也差点没了。转运的人想替我省一次入库手续，空中霸王的试装件就落进了扎夫特封锁区。\n现在他说，要把清单带回来才能“重新确认资产”。翻译过来，就是拿不到清单，他就把货写成根本没出过库。\n从残骸回收清单，同时拆掉追踪雷达。回收有运输追击，雷达有自己的守备和增援，毁掉一个，另一个不会识趣地闭嘴。同一局全部完成，再撤离。\n空中霸王计划做报酬。替一群会计救飞机，总不能只给你几张表。",
+        ending:"清单是真的，序列号也对。转运负责人说，资产得到确认，他很欣慰。我问他，要不要把你的发票也一起确认。他现在没那么欣慰了。\n空中霸王许可给你，别再让飞机在报表里飞。原始清单夹着一张海港转运单，又是奥布的印章。我们可以开始谈他们的价码了。"},
+      {name:"中立的价码",difficulty:6,kind:"upload",eventName:"中立的价码",stages:[
+        {kind:"upload",eventName:"中立的价码 · 上传港口军需账册",eventRequired:5,guardBudget:425,turrets:3},
+        {kind:"command",eventName:"中立的价码 · 歼灭扎夫特接货队",guardBudget:200,targets:["ZGMF_600","ZGMF_600","ZGMF_600","GAT_X102_AS","GAT_X103","GAT_X207"]},
+      ],
+        description:"目标是扎夫特接货站，不是奥布本土。战报上别多写爱国演说，我还得找人刮掉。\n账册要连续五回合完整上传，盖茨和高达混编的接货队也得清掉。两项缺一项，商社都能说货没送到自己签过字的人手里。同一局做完并撤离。\n账册拿来干什么？给奥布的朋友看。机床、港口、质量加速器，他们拿着太多东西，却总想让别人维持中立牌子。\n证据摆上桌，就该想想，是继续替调整人保管秘密，还是给联合的重建计划腾几条生产线。战果你拿，我来开价。",
+        ending:"发货人、验收人、转运日期，连茶水费都记着。中立还附赠招待服务，真周到。\n我给商社发了封措辞很好的信，他们回得飞快，愿意重新讨论供货优先级。门不是打不开，是以前敲得不够响。\n还别叫它胜利。挡在供货线末端的基地还在，决斗短剑计划也差最后一道手续。一起办完吧。"},
+      {name:"重建完成",difficulty:6,kind:"enemybase",eventName:"重建完成",stages:[
+        {kind:"enemybase",eventName:"重建完成 · 摧毁前线指挥部",guardBudget:600,turrets:4},
+        {kind:"command",eventName:"重建完成 · 歼灭直属MS卫队",guardBudget:200,targets:["ZGMF_600","GAT_X102_AS","GAT_X103","GAT_X207","ZGMF_600","ZGMF_1017M","ZGMF_1017M","ZGMF_1017M","TMF_A_802"],targetName:"直属MS卫队",targetLeaderPilot:{name:"凯尔纳少校",grade:"elite"}},
+        {kind:"upload",eventName:"重建完成 · 上传接管识别资料",eventRequired:5,guardBudget:350,turrets:2},
+      ],plan:"DuelDaggerDevelopmentPlan",
+        description:"最后一份。不是最后一场战争，别想漂亮话，我只是把这摞文件写到了底。\n摧毁扎夫特HQ，消灭直属MS卫队，并在独立终端保持五回合上传，交回接管识别资料。三处目标，同一局做完，带人撤离。\n少校的盖茨由精英驾驶员驾驶，剩下的单位不会因为HQ冒烟就自动停机。别把最后一台运输机也押去抢人头，我不替你捡公司印章。\n全部办妥，决斗短剑计划交割，T1技术许可就齐了。你把路修到这儿，我至少得让签发文件的人活着把名字写完。",
+        ending:"HQ摧毁，卫队清除，接管识别通过。第一支重建部队已经进场，报表上的番号，总算有了会喘气的人。\n决斗短剑计划签好了。T1能给的都给了，钱也结清，少一位数尽管来骂。奥布昨天还说产能紧张，今天已肯让我看排产表了。\n别走太远，佣兵头子。重建完成，只代表我们终于有本钱去办下一件不体面的事。"},
     ],
-    zaft: [
-      {name:"空中的资格", difficulty:2, kind:"radar", guardCount:5, eventName:"摧毁联合军航空警戒站", plan:"DINNDevelopmentPlan",
-        description:"联合军的常规航空队依靠地面警戒站勉强维持空域。别让那些自然人把这种配合当成优势。\n摧毁警戒站，并处理赶来支援的部队。\n完成后你可以取得迪恩开发计划，包括空中预警与格乌支援装备。",
-        ending:"警戒站失联，空中部队已经开始推进。\n迪恩计划归你。你至少证明了自己比那些只会叫嚷的自然人军官更懂得执行命令。"},
-      {name:"地面的尺度", difficulty:3, kind:"command", guardCount:3, targets:["GAT_01D","GAT_01D","LinearGunTank","LinearArtillery"],
-        eventName:"击破联合军地面混成队", plan:"GroundTypeMSDevelopmentPlan",
-        description:"长刃配合坦克和火炮，正在试探我们的地面防线。性能平庸的兵器，只要数量足够也会变成麻烦。\n歼灭这支混成队，别漏掉后方的火炮。\n地面战用MS开发计划会作为报酬，巴库和高机动金恩能让你的部队跟上我们的节奏。",
-        ending:"混成队已经从战术图上消失。\n地面战用MS的许可已签发。记住，速度和判断比堆砌钢铁更有价值。"},
-      {name:"夺取的代价", difficulty:4, kind:"salvage", guardCount:7, wreckUnit:"GAT_X102", eventName:"回收G系列作战数据", plan:"GundamSeizurePlan",
-        description:"联合军正在转移G系列的作战记录。他们的量产短剑会掩护回收区，你不能只盯着残骸。\n取得数据后会有追击部队，组织好撤离顺序。\n高达夺取计划不是给无能者准备的，别让我后悔把这件事交给佣兵。",
-        ending:"数据完整，技术部门可以继续推进。\n他们把少数新机当作救命稻草，我们会把这些设计用得更好。高达夺取计划已经授权。"},
-      {name:"海岸的选择", difficulty:5, kind:"upload", guardCount:7, turrets:2, eventName:"上传联合军海岸部署资料", plan:"AquaMSDevelopmentPlan",
-        description:"联合军把海岸仓库和新型MS部队连成了防线。潜入资料终端覆盖区，保持上传三回合。\n守军会试图打断传输，别让通讯员成为他们的靶子。\n奥布以为接纳自然人就能置身事外？海岸部署资料会让他们明白，中立并不等于没有代价。",
-        ending:"海岸部署已经查明。水中MS开发计划交给你。\n至于奥布，他们迟早要作出选择。我认为他们早就该放弃那种保护自然人的执念。"},
-      {name:"傲慢的试金石", difficulty:6, kind:"command", guardCount:5, targets:["GAT_X105","GAT_X103","GAT_01D1_AS","GAT_01","GAT_01","GAT_01"],
-        eventName:"歼灭联合军强化MS试验队", plan:"DuelGundamEnhancementPlan",
-        description:"联合军把高达与量产MS组成了试验队，打算证明自然人也能压过我们的主力。\n摧毁整支试验队，再带着你的部队回来。不要把撤离计划留到最后一分钟。\n决斗高达强化计划和盖茨许可会交给完成任务的人。",
-        ending:"试验队全灭。你的战果已经足够，不必再重复证明。\n决斗高达强化与盖茨的许可已签发，第一阶段的科技资料全部开放。至少在战场上，你赢得了我的认可。"},
+    zaft:[
+      {name:"允许旁听",difficulty:2,kind:"kills",required:12,
+        objectiveText:"击毁12台地球联合军MS；取得战果的合约须成功撤离，可跨局累计",
+        description:"让你参加战区联络，不代表有资格听作战会议。验收官需要能放进同一张表里的记录。\n十二台联合军MS，由你的部队完成最后击毁。车辆和飞机另有统计，不必拿来装饰这个数字。可以分次，每次都要有人成功撤离，否则只能知道那里又多了批无人认领的金属。\n别抱怨自然人的机体少，长刃正在随混成部队进场。找得到敌人的人，才值得领侦察报告。\n这次不附技术许可。先证明能做完一件规定得如此清楚的事，再决定是否准你靠近更贵的东西。",
+        ending:"击毁记录一致，撤离人员和出击名册相符。我收回关于你们不会填附件的判断，范围仅限这一份。\n报酬核准了。庆祝时别用军方识别频道，我不需要知道你的驾驶员醉后能唱多大声。\n下一份部署资料会发给你。离开“找到一台，打掉一台”的办法以后，让我看看你还剩多少本事。"},
+      {name:"自然人的阵列",difficulty:2,kind:"command",guardBudget:100,eventName:"自然人的阵列 · 击破公路支撑队",
+        targets:["GAT_01D","GAT_01D","GAT_01D","LinearGunTank","LinearGunTank","LinearArtillery"],
+        description:"联合军把长刃摆前面，坦克守路口，线性火炮藏后面。连他们自己也明白，勇气填不平性能差距，所以至少学会了让兵器分工。\n消灭名单里的六个目标和外围掩护，恢复巡逻路线。别光追MS，你绕过的火炮，会替他们补上背后的空隙。地图有道路，也有能机动的地形，怎么分兵由你决定，我不在交战时替你喊口令。\n如果打算等对面先犯错，记住：自然人偶尔也会把训练做完。我鄙视他们，不意味着准许你低估一门正在朝你开火的炮。",
+        ending:"参谋把战斗写成“对方协同不足”，我让他重写。目标知道自己在做什么，是你把他们拆开的。\n我承认战术结果，不打算把你的公司改编成荣誉部队，别露出那种表情。\n联合军加了一座航空警戒站，会让迪恩的行动变得昂贵。我可以交出飞机许可，前提是你先让那座站闭嘴。"},
+      {name:"一份合格的答卷",difficulty:3,kind:"radar",guardBudget:325,turrets:2,eventName:"一份合格的答卷 · 摧毁航空警戒站",plan:"DINNDevelopmentPlan",
+        description:"扫描间隔、守备部署都在简报里。少问一次有没有更多情报，就能多看一遍已经发给你的东西。\n雷达把常规战斗机和地面防空连在一起，受威胁就呼叫响应部队，两座炮塔负责拖住靠近的人。我要站毁，不是外围一张漂亮击坠表。\n完成并撤离，迪恩开发计划交给你，包括预警和格乌支援设备。有了这些，再把部队送进看不见的火力区，就不能怪装备。\n我推荐过一个成绩几乎完美的驾驶员，他也觉得不需要看第二遍简报。那份推荐还在我的抽屉里。",
+        ending:"警戒站停机，飞行队已越过截击线。你交的数据比简报多，说明执行时至少还用着脑子。迪恩计划批准。\n别把刚才那个人编成激励下属的故事，我没有准许你消费他的名字。\n接下来回收一份配属档案。技术部门看机器，情报部门看人。我想看看，联合军打算用什么人填进越来越多的座舱。"},
+      {name:"出生证明",difficulty:3,kind:"salvage",guardBudget:275,wreckUnit:"GAT_01D",eventName:"出生证明 · 回收试验队配属档案",
+        description:"长刃残骸里有试验队档案，联合军正在回收。里面不只是履历，还有训练时数、适配测试和淘汰记录。\n我们从出生起就被要求更优秀，他们却能把不合格的人一批批推上战场，再把活下来的叫作英雄。我要知道，这套办法把多少差错留给机体承受。\n从守备手里取回原件，处理回收后到场的追击，再撤离。别现场筛选“有用”的部分，更别用自己的判断覆盖仪器记录。\n如果觉得我只想找证据嘲笑自然人，那就带一份让我笑不出来的东西回来。",
+        ending:"有个驾驶员，三次适配测试都在末位，存活率却比教官高。他的编组一直保留同一批地勤。情报官把那页标成偶然，我没有签。\n一个偏离样本推翻不了差距，但我不靠漏看一页纸来维持结论。档案留下，报酬归你。下一份合同会考验判断，而不是出生栏。"},
+      {name:"把膝盖留给敌人",difficulty:4,kind:"command",guardBudget:225,eventName:"把膝盖留给敌人 · 歼灭装甲试验群",
+        targets:["GAT_01D_AS","GAT_01D_AS","GAT_01","GAT_01","GAT_01","GAT_01","GAT_01","GAT_01","GAT_X102"],plan:"GroundTypeMSDevelopmentPlan",
+        description:"长刃附加装甲、强袭短剑和一台决斗高达，联合军把它们拼成试验群，后方收集损伤数据。再跑几次，下一批改良就会写进生产单。\n九台MS全部击毁，外围掩护也得处理。别只挑装甲薄的打出数字，我们要阻止试验继续，不是替他们提供丰富样本。\n交付后批准地面战用MS计划。高机动金恩、巴库和支援机体给的是机动选择，不是冲进正面的理由。\n带部队撤离。把膝盖留给被迫停的敌人，别留在自己的维修清单上。",
+        ending:"试验群没回来，损伤报告只能由我们写。对方工程师拿不到想要的数据了，地面战用MS计划批准。\n用过以后你会明白，有些优势不需要宣传证明。可惜，不是拿到优势的人都知道怎么用。\n下一批维修设备正在被联合军当私产变卖。它们该补充战线，不该补充某个军官的账户。"},
+      {name:"优良资产",difficulty:4,kind:"factory",eventName:"优良资产",stages:[
+        {kind:"factory",eventName:"优良资产 · 摧毁三座转卖工厂",targetCount:3,guardBudget:400,turrets:2},
+        {kind:"capture",eventName:"优良资产 · 控制军需转运据点",eventRequired:6,guardBudget:275},
+      ],
+        description:"采购官把机械登记成报废品，另一家公司按完好品买走。工厂依旧运转，只是零件每走一圈，多出一笔中间费用。自然人爱说自己更懂自由，大概也包括自由地出售同袍的补给。\n三座工厂全毁，同时控制另一处转运据点六回合。空降、周期追击和工厂被毁后的增援会分别到场，两处在同一局处理，再撤离。\n不要求保护设备，那会让你替所有人的贪婪承担运输风险。我要交易停下来，残骸由他们的审计员分辨哪块还值钱。",
+        ending:"交易停了。截获的联络里，采购官第一句话是问工厂损失算谁的。他到最后还觉得，只要摊对账，就没有人真的输。\n转运库存记录里有不该出现在这里的G系列备件。联合军一边把技术当资产倒卖，一边指责我们只会窃取。下一份合同，你替我把那些东西真正的价值带回来。"},
+      {name:"借来的未来",difficulty:5,kind:"salvage",eventName:"借来的未来",stages:[
+        {kind:"salvage",eventName:"借来的未来 · 回收G系列校准资料",wreckUnit:"GAT_X103",guardBudget:400},
+        {kind:"command",eventName:"借来的未来 · 歼灭数据护送队",guardBudget:225,targets:["GAT_X102","GAT_X207","GAT_X303","GAT_01","GAT_01","GAT_01"]},
+      ],plan:"GundamSeizurePlan",
+        description:"能操作夺取的机体，不等于能长期复制整备条件。校准文件、替换周期、误差记录，联合军分散存放，打算让失去的机器慢慢变成昂贵废物。\n暴风高达残骸里有完整校准资料。取回它，再歼灭转移另一份数据的护送队，决斗、迅雷和圣盾都在名单上。两处同一局完成，资料和撤离记录一起验收，授权高达夺取计划。\n别用“捡来的机器”敷衍我。从为别人设计的系统里找出自己的路，也是一种本领。我们会比他们更了解这些机体。",
+        ending:"两份资料能互相校验，技术部门不必靠一次拆卸去猜下次怎么装回去。高达夺取计划授权了。\n你若叫它借来的未来，记得补后半句：我们打算自己决定什么时候归还。\n奥布港口接连放行联合军运输船，却告诉我们一视同仁。替我看看，这个一视同仁到底写在哪本账上。"},
+      {name:"听话的海岸",difficulty:5,kind:"upload",eventName:"听话的海岸",stages:[
+        {kind:"upload",eventName:"听话的海岸 · 上传海岸调度记录",eventRequired:4,guardBudget:425,turrets:2},
+        {kind:"radar",eventName:"听话的海岸 · 摧毁航路监听站",guardBudget:450,turrets:2},
+      ],
+        description:"联合军控制的海岸调度区，监听站替进港船队挑安全航路，终端记录货从哪里来、到哪里去。\n毁掉监听站，同时保持终端上传四回合。设施守备和上传响应分别到场，别让通讯车为了躲一门炮，退出整个覆盖区。两项同一局完成并撤离。\n奥布的声明我听腻了。调整人工程师维持产能，港口却先照顾自然人的船。人人说保护市民，从不问哪些市民在替别人的决定付账。\n记录给我，别再让中立成为他们拒绝回答的理由。",
+        ending:"口头上的一视同仁，到了泊位分配表上，居然有这么多例外。记录会送去谈判部门，奥布该知道自己正替谁挡住压力。\n你不用附和，我听得出你从来没附和过。海上的事不能只靠几本账，我们还需要能真正从水里走过去的兵器。"},
+      {name:"没有中立的潮水",difficulty:6,kind:"capture",eventName:"没有中立的潮水",stages:[
+        {kind:"capture",eventName:"没有中立的潮水 · 控制沿岸观测据点",eventRequired:7,guardBudget:475},
+        {kind:"factory",eventName:"没有中立的潮水 · 摧毁三座水际维修厂",targetCount:3,guardBudget:550,turrets:3},
+      ],plan:"AquaMSDevelopmentPlan",
+        description:"联合军想用观测点和维修设施，把海岸变成只能正面进入的走廊。奥布商船照旧通过，大家就都假装那条线不存在。\n控制观测据点七回合，摧毁另一处的三座维修厂。空降、周期追击、工厂被毁后的增援会分别来，别当成只来一次的迎宾队。同一局做完两项，再把公司带回来。\n报酬是水中MS开发计划。陆上的路可以被关卡拦住，海里的路径不该永远由港务员批准。给我一段由我们决定用途的海岸，谈判代表就能把问题问得更直接。",
+        ending:"观测点已交接，维修群停用。水中MS计划给你，我们终于能绕过他们喜欢拿来讨价还价的门。\n奥布代表表示关切，我也关切：为什么总要航路受影响，他们才想起对地面战争发言？\n还有最后一支联合军试验队。他们把最好的机体和改良资料放在一起，想证明战线仍归他们安排。替他们结束这个想法。"},
+      {name:"血统之外",difficulty:6,kind:"enemybase",eventName:"血统之外",stages:[
+        {kind:"enemybase",eventName:"血统之外 · 摧毁试验指挥部",guardBudget:625,turrets:4},
+        {kind:"command",eventName:"血统之外 · 歼灭强化MS试验队",guardBudget:225,targets:["GAT_X105","GAT_X102","GAT_X103","GAT_X207","GAT_X303","GAT_01D1_AS","GAT_01D1_AS","GAT_01","GAT_01"],targetName:"强化MS试验队",targetLeaderPilot:{name:"哈维尔少校",grade:"elite"}},
+        {kind:"salvage",eventName:"血统之外 · 回收装甲修正资料",wreckUnit:"GAT_X102_AS",guardBudget:375},
+      ],plan:"DuelGundamEnhancementPlan",
+        description:"哈维尔少校的适配成绩不高，实战记录却很长，换过三次部队，还在守联合军最舍不得放弃的地方。我不会把他写成方便被你击败的蠢人。\n强袭高达是他的座机，试验队还有其他G系列和强化短剑。领队确认是精英驾驶员，其他机体也可能由老兵或精英驾驶。别按杂兵估算他们。\n摧毁HQ，歼灭整支试验队，再去另一处残骸回收装甲修正资料。三项同一局完成并撤离，才交付最后的决斗强化计划和盖茨许可。\n你说驾驶员按执照上机，不按家谱。我仍认为粗糙，但这次会把敌人的本事写进简报，免得自己的优越感替他多杀几个人。",
+        ending:"三项全部验收。决斗高达强化和盖茨许可发出，T1技术没有再对你保留的部分。\n战报保留了哈维尔的记录，也保留了你们公司名字。有人建议改成协力单位，我拒绝了。奥布的问题仍在，我也仍认为他们选错了该庇护的人。\n但你完成的事，不需要出生证明才能成立。别拿这句话替我写平等演说。钱按合同付，你的人也该休息了。"},
     ],
   };
-  const tasks = Object.entries(definitions).flatMap(([contactId, chain]) => chain.map((entry,index) => {
-    const {plan, targets, ...data} = entry, faction = contactId === "omni" ? "OMNI" : "ZAFT";
-    return {...data, id:contactId+"-"+(index+1), number:index+1, contactId,
-      era:"CE_0071_T1", ground:true, enemyFaction:faction === "OMNI" ? "ZAFT" : "OMNI",
-      required:1, money:7500+entry.difficulty*4000, inventory:{}, affinity:100,
-      requires:index ? [contactId+"-"+index] : [], licensePlan:"Tech_"+faction+"_CE71_"+plan,
-      ...(targets ? {targetUnit:targets[0], targetUnits:targets.map(unitId=>({unitId}))} : {}),
-      objective:"CE0071T1 · 地面 · N"+entry.difficulty+"以上 · "+entry.eventName+"，成功撤离后交付。"};
+  function combatSpec(entry){
+    const {targets,...data}=entry;
+    return {...data,...(targets?{targetUnit:targets[0],targetUnits:targets.map(unitId=>({unitId}))}:{})};
+  }
+  const tasks=Object.entries(definitions).flatMap(([contactId,chain])=>chain.map((entry,index)=>{
+    const {plan,stages,...data}=entry,faction=contactId==='omni'?'OMNI':'ZAFT';
+    const task={...combatSpec(data),id:contactId+'-'+(index+1),number:index+1,contactId,
+      progressVersion:2,era:'CE_0071_T1',ground:true,enemyFaction:faction==='OMNI'?'ZAFT':'OMNI',
+      required:entry.required||1,money:10000+entry.difficulty*4000+index*1500,inventory:{},affinity:100,
+      requires:index?[contactId+'-'+index]:[],requiresExtraction:true,
+      ...(plan?{licensePlan:'Tech_'+faction+'_CE71_'+plan}:{}),
+      ...(stages?{stages:stages.map(combatSpec)}:{}),
+      ...(entry.kind!=='kills'?{eventName:entry.eventName||entry.name}:{})};
+    task.objectiveText=entry.objectiveText||(stages?'同一局完成：'+stages.map(s=>s.eventName.split(' · ').slice(-1)[0]+(s.eventRequired?'（'+s.eventRequired+'回合）':'')).join('、')+'，并成功撤离':entry.eventName.split(' · ').slice(-1)[0]+'，并成功撤离');
+    task.objective='CE0071T1 · 地面 · N'+entry.difficulty+'以上 · '+task.objectiveText;
+    return task;
   }));
-  return {contacts, tasks, available, gateTasks};
+  return {contacts,tasks,available,gateTasks};
 })();
-if (typeof module !== "undefined") module.exports = CEContacts;
+if(typeof module!=="undefined")module.exports=CEContacts;
 
 ;
 /* Persistent liaison commissions; separate from scripted battle missions. */
@@ -5861,7 +5953,7 @@ const ContactTasks = (() => {
     return tasks.flatMap(task=>{
       const entry=value.find(e=>e?.id===task.id && ["accepted","ready","claimed"].includes(e.status));
       const reset = task.progressVersion && entry && entry.status !== "claimed" && entry.progressVersion !== task.progressVersion;
-      return entry?[{id:task.id,status:reset?"accepted":entry.status,progress:reset?0:Math.max(0,Math.min(task.required,Math.floor(Number(entry.progress)||0))),
+      return entry?[{id:task.id,status:reset?"accepted":entry.status,progress:entry.status==="claimed"?task.required:reset?0:Math.max(0,Math.min(task.required,Math.floor(Number(entry.progress)||0))),
         ...(task.progressVersion ? {progressVersion:task.progressVersion} : {}),
         ...(task.reclaim && entry.loanTracking===true ? {loanTracking:true} : {}),
         ...(task.reclaim && entry.loanReturned===true ? {loanReturned:true} : {})}]:[];
@@ -10517,12 +10609,19 @@ const ContractMode = (() => {
     game.units.push(u);
     return u;
   }
-  function enemyPilotGrade(difficulty) {
-    config(difficulty);
-    return null;
+  function enemyPilotGrade(difficulty, roll = 1) {
+    const level = config(difficulty).id;
+    if (level < 5) return null;
+    const eliteChance = level === 5 ? .05 : .1;
+    const veteranChance = level === 5 ? .2 : .3;
+    return roll < eliteChance ? "elite" : roll < eliteChance + veteranChance ? "veteran" : null;
   }
   function assignEnemyPilot(room, G, unit, model, seed, elite = false) {
-    const grade = elite ? "elite" : enemyPilotGrade(room.settings.sweepDifficulty);
+    // Mix adjacent spawn seeds so nearby squad members roll independently.
+    let mixed = Math.imul(seed ^ (seed >>> 16), 0x21f0aaad);
+    mixed = Math.imul(mixed ^ (mixed >>> 15), 0x735a2d97);
+    const roll = ((mixed ^ (mixed >>> 15)) >>> 0) / 4294967296;
+    const grade = elite ? "elite" : enemyPilotGrade(room.settings.sweepDifficulty, roll);
     unit.pilot = {...unit.pilot, genericGrade: grade || undefined,
       ...(grade ? G.pilots.rollGrade(grade, seed, model) : G.pilots.roll(null, seed, 1, 0, model))};
   }
@@ -10925,7 +11024,8 @@ const ContractMode = (() => {
       const j = Math.floor(rng() * (i + 1));
       [types[i], types[j]] = [types[j], types[i]];
     }
-    const special = contacts.specialTasks(room);
+    const special = contacts.specialTasks(room).flatMap(task => task.stages?.length
+      ? task.stages.map(stage => ({...task, ...stage})) : [task]);
     for (const task of special) {
       const candidates=[];
       for(let y=9;y<map.height-8;y+=3)for(let x=9;x<map.width-8;x+=3){
@@ -10954,7 +11054,7 @@ const ContractMode = (() => {
           ...point,
           status: "available",
           progress: 0,
-          required: ["capture","defend"].includes(definition.type) ? 5 : definition.type === "upload" ? 3 : 1,
+          required: task?.eventRequired ?? (["capture","defend"].includes(definition.type) ? 5 : definition.type === "upload" ? 3 : 1),
           targets: [],
           protected: [],
           destroyed: [],
@@ -10991,8 +11091,8 @@ const ContractMode = (() => {
         }
       }
       const count = task?.targetUnits?.length || task?.guardCount || (task?.id === "efsf-5" ? 12 : 3 + Math.floor((d.id - 1) / 3));
-      const guards = (definition.type === "defend" || ["efsf-3","efsf-4"].includes(task?.id) || task?.targetUnit) ? [] : objectiveProfile && !task ? budgetPatrol(
-        room,G,{x:point.x+3,y:point.y+2},objectiveProfile.garrisons[definition.type],false,"guard",objective.id
+      const guards = (definition.type === "defend" || (!task?.guardBudget && (["efsf-3","efsf-4"].includes(task?.id) || task?.targetUnit))) ? [] : objectiveProfile && (!task || task.guardBudget) ? budgetPatrol(
+        room,G,{x:point.x+3,y:point.y+2},task?.guardBudget ?? objectiveProfile.garrisons[definition.type],false,"guard",objective.id
       ) : patrol(
         room,
         G,
@@ -11006,22 +11106,24 @@ const ContractMode = (() => {
         const prefab=G.catalog.prefabs.find(p=>p.id===(task.targetUnit || (task.id==="efsf-3"?"RGM_79_G":"MS_06F")));
         const targets=task.targetUnits || Array.from({length:task.targetCount || task.targetKits?.length || (task.id==="efsf-3"?3:12)},(_,j)=>
           ({unitId:prefab.id,kitId:task.targetKits?.[j] || prefab.weaponKits[0].id}));
+        const scriptedIds=[];
         for(const [j,target] of targets.entries()){
           const model=target.kitId ? G.models[target.unitId+"__"+target.kitId] :
             Object.values(G.models).find(m=>m.prefabId===target.unitId && !m.formOnly && forces.aiKitAllowed(m));
           if (!model || !forces.aiKitAllowed(model)) throw Error("联络任务目标没有可用的非核弹套件："+target.unitId);
           const u=spawn(room,G,model,{x:point.x+3,y:point.y+j});
           if(!u)throw Error("无法放置联络任务小队");
-          if(task.id==="efsf-3" || task.targetPilotGrade) {
+          if(task.id==="efsf-3" || task.targetPilotGrade || task.targetLeaderPilot) {
             const leader = j === 0 ? task.targetLeaderPilot : null;
-            const grade = leader?.grade || task.targetPilotGrade || "veteran";
-            u.pilot={...u.pilot,...G.pilots.rollGrade(grade,game.seed+state.serial,model),genericGrade:grade};
+            const grade = leader?.grade || task.targetPilotGrade || (task.id==="efsf-3" ? "veteran" : null);
+            if(grade) u.pilot={...u.pilot,...G.pilots.rollGrade(grade,game.seed+state.serial,model),genericGrade:grade};
             u.pilot.name+=" · "+(leader?.name || task.targetName || (task.id==="efsf-7"?"雷纳斯卫队":"文件护卫"))+(j+1);
             if (leader?.dialogue) u.pilot.missionDialogue = G.pilots.normalizeDialogue(leader.dialogue);
           }
           guards.push(u.id);
+          scriptedIds.push(u.id);
         }
-        groupSquads(room,G,guards,point,"guard",objective.id);
+        groupSquads(room,G,scriptedIds,point,"guard",objective.id);
       }
       if(task?.id === "efsf-5" || task?.turrets)for(let j=0;j<(task.turrets || 4);j++){
         const u=spawn(room,G,G.models.Facility_MG__standard,{x:point.x+(j%2?5:-5),y:point.y+(j<2?-4:4)});
@@ -11126,18 +11228,20 @@ const ContractMode = (() => {
     const escaped=room.game.units.some(u=>G.ownerOf(u)===player.seat&&u.hp>0&&u.contractExtracted);
     return (state.commissions?.[player.id]||[]).flatMap(id=>{
       const task=contacts.byId.get(id);if(!contacts.eligible(task,room.settings))return [];
+      if(task.requiresExtraction && !escaped)return [];
       if(task.kind==="kills")return [{id,amount:(state.contactKillRecords||[]).filter(record=>
         (task.enemyFaction==="NONE" || record.factions.includes(task.enemyFaction||"ZEON")) &&
         (!task.requiredAttackerUnit || record.attackerUnit===task.requiredAttackerUnit) &&
         (!task.requiredAttackerPlugin || record.attackerPlugins?.includes(task.requiredAttackerPlugin)) &&
         (task.killMethod!=="artillery" || record.artillery) && (task.killMethod!=="melee" || record.melee)).length}];
-      const o=state.objectives.find(o=>o.contactTaskId===id);
+      const objectives=state.objectives.filter(o=>o.contactTaskId===id),o=objectives[0];
       if(id==="efsf-5" || task.requiredAttackerUnit){
         const amount=o?.targets.filter(id=>{const u=room.game.units.find(u=>u.id===id);return u?.hp<=0&&
           (task.requiredAttackerUnit ? u.contactAttackerUnit===task.requiredAttackerUnit : u.contactPaleKill);}).length||0;
         return amount ? [{id,amount}] : [];
       }
-      if(o?.status!=="completed" || ((task.kind==="salvage" || task.requiresExtraction)&&!escaped))return [];
+      if(objectives.length!==(task.stages?.length || 1) || objectives.some(o=>o.status!=="completed") ||
+        (task.kind==="salvage"&&!escaped))return [];
       return [{id,amount:1}];
     });
   }

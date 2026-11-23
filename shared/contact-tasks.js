@@ -416,7 +416,7 @@ const ContactTasks = (() => {
     return tasks.flatMap(task=>{
       const entry=value.find(e=>e?.id===task.id && ["accepted","ready","claimed"].includes(e.status));
       const reset = task.progressVersion && entry && entry.status !== "claimed" && entry.progressVersion !== task.progressVersion;
-      return entry?[{id:task.id,status:reset?"accepted":entry.status,progress:reset?0:Math.max(0,Math.min(task.required,Math.floor(Number(entry.progress)||0))),
+      return entry?[{id:task.id,status:reset?"accepted":entry.status,progress:entry.status==="claimed"?task.required:reset?0:Math.max(0,Math.min(task.required,Math.floor(Number(entry.progress)||0))),
         ...(task.progressVersion ? {progressVersion:task.progressVersion} : {}),
         ...(task.reclaim && entry.loanTracking===true ? {loanTracking:true} : {}),
         ...(task.reclaim && entry.loanReturned===true ? {loanReturned:true} : {})}]:[];

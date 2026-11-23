@@ -1375,11 +1375,35 @@ for(const shared of [false,true])test(`ending first with passengers in hangar th
  assert.deepEqual(f.errors,[]);
 });
 
-test("ordinary contract pilots stay general at every difficulty while scripted grades remain explicit",t=>{
- for(let n=1;n<=6;n++)for(const roll of [0,.4,.8,.999999])assert.equal(C.enemyPilotGrade(n,roll),null);
- const f=fixture(t,{difficulty:6});
- const enemies=f.room.game.units.filter(u=>u.team===1&&!u.facility);
- assert(enemies.length>0);assert(enemies.every(u=>!u.pilot.genericGrade&&u.pilot.name.includes("\u4e00\u822c")));
+test("N1-N4 pilots stay general and N5-N6 mix veterans and elites at defined probability boundaries",()=>{
+ for(let n=1;n<=4;n++)for(const roll of [0,.04,.09,.24,.39,.999999])assert.equal(C.enemyPilotGrade(n,roll),null);
+ for(const [n,elite,veteran] of [[5,.05,.2],[6,.1,.3]]){
+  assert.equal(C.enemyPilotGrade(n,0),'elite');
+  assert.equal(C.enemyPilotGrade(n,elite-1e-6),'elite');
+  assert.equal(C.enemyPilotGrade(n,elite),'veteran');
+  assert.equal(C.enemyPilotGrade(n,elite+veteran-1e-6),'veteran');
+  assert.equal(C.enemyPilotGrade(n,elite+veteran),null);
+  const grades=Array.from({length:1000},(_,i)=>C.enemyPilotGrade(n,(i+.5)/1000));
+  assert.equal(grades.filter(g=>g==='elite').length,elite*1000);
+  assert.equal(grades.filter(g=>g==='veteran').length,veteran*1000);
+ }
+});
+
+for(const difficulty of [5,6])test(`N${difficulty} pilot mixes are deterministic and vary across neighboring spawn seeds`,t=>{
+ const grades=[];
+ for(let sample=0;sample<4;sample++){
+  const f=fixture(t,{difficulty,seed:1936384585+sample*1979});
+  const enemies=f.room.game.units.filter(u=>u.team===1&&!u.facility);
+  assert(enemies.length>0);
+  grades.push(...enemies.map(u=>u.pilot.genericGrade || 'general'));
+  if(sample===0){
+   const replay=fixture(t,{difficulty,seed:1936384585});
+   assert.deepEqual(replay.room.game.units.filter(u=>u.team===1&&!u.facility).map(u=>u.pilot),enemies.map(u=>u.pilot));
+  }
+ }
+ assert(grades.includes('general'));assert(grades.includes('veteran'));assert(grades.includes('elite'));
+ assert(!grades.includes('ace'));
+ assert(grades.filter(g=>g==='general').length>grades.length*.4);
 });
 
 test("contract hull selection favors stronger chassis while retaining multiple hulls and kits",()=>{
