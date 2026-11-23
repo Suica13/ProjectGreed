@@ -9,15 +9,15 @@ for (const entry of ["client", "developer"]) test(entry + " shows native pilot g
   await page.evaluate(() => Formation.previewUnit("RX_78_2"));
   const card = page.locator("#formationDetailSlots .weapon-card").filter({hasText:"驾驶员要求"});
   await expect(card).toHaveCount(1);
-  await expect(card).toContainText("格斗 > 145");
+  await expect(card).toContainText("格斗 >= 145");
   const result = await page.evaluate(async () => {
     const [id,m] = Object.entries(UnitModels).find(([,m])=>m.prefabId === "RX_78_2");
     const w = m.weapons.find(w=>w.pilotRequirements);
     const unit = {id:"test",model:id,hp:m.hp,en:m.en,shield:m.shield.hp,x:5,y:5,
-      pilot:{stats:{shooting:100,melee:145,defense:100,speed:100,accuracy:100,reaction:100,leadership:80,awakening:60}}};
+      pilot:{stats:{shooting:100,melee:144,defense:100,speed:100,accuracy:100,reaction:100,leadership:80,awakening:60}}};
     const locked = WeaponInfo.summary(w,{unit});
     const disabled = locked.querySelector(".weapon-unavailable")?.textContent;
-    unit.pilot.stats.melee = 146;
+    unit.pilot.stats.melee = 145;
     const unlocked = WeaponInfo.summary(w,{unit});
     I18n.setLanguage("en");
     const english = WeaponInfo.summary(w,{unit}).textContent;
@@ -33,7 +33,7 @@ for (const entry of ["client", "developer"]) test(entry + " shows native pilot g
     }
     return {disabled,unlocked:unlocked.querySelectorAll(".weapon-unavailable").length,english,japanese,blades};
   });
-  expect(result.disabled).toContain("当前 145");
+  expect(result.disabled).toContain("当前 144");
   expect(result.unlocked).toBe(0);
   expect(result.english).toContain("Pilot requirement");
   expect(result.japanese).toContain("パイロット条件");

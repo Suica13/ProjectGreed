@@ -1955,24 +1955,25 @@ function drawMapFrame(now) {
         ctx.fillRect(px + 2, py + 2, tile - 4, tile - 4);
       }
     }
-  if (!immersive && mode === "target" && weapon?.special?.type === "nuke" && hover) {
-    const target = Rules.groundTarget(game, chosen, hover.x, hover.y);
+  const skillAim = SkillControls.targetCell(chosen), blastAim = skillAim || hover;
+  if (!immersive && mode === "target" && weapon?.special?.type === "nuke" && blastAim) {
+    const target = Rules.groundTarget(game, chosen, blastAim.x, blastAim.y);
     if (target && Rules.canAttack(game, chosen, target, weapon)) {
       const radius = weapon.special.radius;
       ctx.fillStyle = "rgba(255, 116, 64, 0.35)";
       ctx.strokeStyle = "#ffb36b";
       ctx.lineWidth = 1;
       for (
-        let y = Math.max(firstY, hover.y - radius);
-        y < Math.min(lastY, hover.y + radius + 1);
+        let y = Math.max(firstY, blastAim.y - radius);
+        y < Math.min(lastY, blastAim.y + radius + 1);
         y++
       )
         for (
-          let x = Math.max(firstX, hover.x - radius);
-          x < Math.min(lastX, hover.x + radius + 1);
+          let x = Math.max(firstX, blastAim.x - radius);
+          x < Math.min(lastX, blastAim.x + radius + 1);
           x++
         ) {
-          if (!Rules.blastContains(hover, { x, y }, radius, weapon.special.shape)) continue;
+          if (!Rules.blastContains(blastAim, { x, y }, radius, weapon.special.shape)) continue;
           const px = ox + x * tile,
             py = oy + y * tile;
           ctx.fillRect(px, py, tile, tile);
@@ -2488,6 +2489,7 @@ function drawMapFrame(now) {
   if (!smokeDrawn) EnvironmentVisuals.smoke(ctx, game, mapPosition, tile);
   if (!immersive) PlanningUI.sniperLocks(ctx, now);
   drawVisibleEffects(() => SkillEffects.draw(ctx, now, mapPosition, tile));
+  if (!immersive) SkillControls.drawTarget(ctx, chosen, mapPosition, tile);
   IrradiationFX.draw(ctx, now, mapPosition, tile, (id) => {
     const pose = mapUnitPoses.find((item) => item.u.id === id);
     if (!pose) return null;
@@ -2517,7 +2519,7 @@ function drawMapFrame(now) {
     };
   }); // Native beam/charge sprites remain visible through fog.
   drawVisibleEffects(() => MapEffects.draw(ctx, now, mapPosition, tile));
-  if (!immersive && hover) {
+  if (!immersive && hover && !skillAim) {
     let p = mapPosition(hover.x, hover.y);
     ctx.strokeStyle = "#f2f1c9aa";
     ctx.lineWidth = 1;

@@ -1887,6 +1887,27 @@ const Formation = (() => {
       image.src = unitIcon(item.unitId + "__" + item.kitId);
       image.alt = model.name;
       portrait.append(image);
+      if (item.rentalUses) {
+        const rental = element("span", "catalog-rental-badge",
+          I18n.text("租赁") + " " + item.rentalUses);
+        rental.title = I18n.text("剩余次数:{count}次").replace("{count}", item.rentalUses);
+        portrait.append(rental);
+      }
+      const bound = draft.find(entry => entry.stockId === item.id),
+        pilot = Object.hasOwn(item, "pilotId") ? storedPilot(item) :
+          (bound?.customPilot && !bound.customPilot.hired ? bound.customPilot : null) || storedPilot(item);
+      if (pilot) {
+        const badge = element("span", "catalog-pilot-badge"), avatar = element("img"),
+          name = I18n.pilotName(pilot);
+        badge.title = I18n.text("驾驶员") + " · " + name;
+        badge.setAttribute("role", "img");
+        badge.setAttribute("aria-label", badge.title);
+        badge.dataset.pilotId = pilot.id;
+        avatar.src = PilotSystem.portrait(pilot);
+        avatar.alt = "";
+        badge.append(avatar);
+        portrait.append(badge);
+      }
       const tags = unitTags(model, { cost: model.cost, kitName: model.kitName, twoRows: true });
       for (const more of tags.querySelectorAll(".unit-tags-more")) more.remove();
       const storedName=element("strong", "", (item.slot + 1) + ". " + model.name);

@@ -22,6 +22,9 @@ test(`${kind} selects a target, cancels without cost and submits once on confirm
     Net.snapshot={started:true,phase:"idle",settings:Rules.defaultRoomSettings(),members:[{seat:0,connected:true},{seat:1,connected:true}],
       connected:[true,true],delegatedSeats:[],turnDone:[false,false],game};
     window.skillRequests=[];Net.request=(action,fields)=>skillRequests.push({action,fields});
+    window.skillSounds=[];
+    const play=GameAudio.play;
+    GameAudio.play=(sound,...args)=>{skillSounds.push(sound);return play(sound,...args);};
     window.skillBefore=game.units[0].en;
     setPageView("game");update();BattleHUD.setTab("skills");
     return Rules.modelOf(game.units[0]).weapons.find(weapon=>kind==="mortar"?weapon.category==="mortar":weapon.special?.type===kind).id;
@@ -39,6 +42,19 @@ test(`${kind} selects a target, cancels without cost and submits once on confirm
   const confirm=page.locator("#hudConfirmSkill");
   await expect(confirm).toBeVisible();await expect(confirm).toBeDisabled();
   await aim();await expect(confirm).toBeEnabled();
+  expect(await page.evaluate(()=>skillSounds.includes("lockonSound"))).toBe(true);
+  const locked=await page.evaluate(()=>({
+    targetId:SkillControls.confirmation(getUnit(selected)).draft.targetId,
+    cell:SkillControls.targetCell(getUnit(selected)),
+  }));
+  // Move away from the clicked enemy, then leave the map for the confirmation panel.
+  const mapBox=await page.locator("#map").boundingBox();
+  await page.mouse.move(mapBox.x+20,mapBox.y+20);
+  await confirm.hover();
+  expect(await page.evaluate(()=>({
+    targetId:SkillControls.confirmation(getUnit(selected)).draft.targetId,
+    cell:SkillControls.targetCell(getUnit(selected)),
+  }))).toEqual(locked);
   expect(await page.evaluate(()=>skillRequests.length)).toBe(0);
   const box=await confirm.boundingBox();expect(box.x).toBeGreaterThanOrEqual(0);expect(box.x+box.width).toBeLessThanOrEqual(width);
   await page.locator("#hudCancelAction").click();

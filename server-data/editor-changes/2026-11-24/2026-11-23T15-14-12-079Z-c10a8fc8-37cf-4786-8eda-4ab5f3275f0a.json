@@ -1,0 +1,245 @@
+{
+  "schemaVersion": 1,
+  "id": "c10a8fc8-37cf-4786-8eda-4ab5f3275f0a",
+  "timestamp": "2026-11-23T15:14:12.079Z",
+  "localTimestamp": "2026-11-24 00:14:12",
+  "timeZone": "Asia/Tokyo",
+  "operation": "unit",
+  "target": {
+    "id": "RX_78_2_ACE",
+    "newId": "RX_78_2_ACE",
+    "name": "高达[ACE]"
+  },
+  "source": {
+    "ip": "local-user-request"
+  },
+  "beforeRevision": "99d1ca7d64bd7ddafad3b66ee0f31729e9d46760797246ce2eec3c21c9aac8fc",
+  "units": [
+    {
+      "id": "RX_78_2_ACE",
+      "previousId": "RX_78_2_ACE",
+      "name": "高达[ACE]",
+      "factions": [
+        "EFSF"
+      ],
+      "faction": "EFSF",
+      "previousName": "高达[ACE]",
+      "file": "assets/units/RX_78_2_ACE/unit.json",
+      "changes": [
+        {
+          "path": "/stats/cost",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1125,
+          "after": 1100
+        },
+        {
+          "path": "/weapons/Common_DoubleVulcan_MS/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 126.5625,
+          "after": 52.20703125
+        },
+        {
+          "path": "/weapons/Common_DoubleVulcan_MS/damageComponents/shellAP",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 12.375,
+          "after": 5.1046875
+        },
+        {
+          "path": "/weapons/Common_DoubleVulcan_MS/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 138.9375,
+          "after": 57.31171875
+        },
+        {
+          "path": "/weapons/Common_Push_A/damageComponents/melee",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1828.125,
+          "after": 754.1015625
+        },
+        {
+          "path": "/weapons/Common_Push_A/damageComponents/meleeShell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1828.125,
+          "after": 754.1015625
+        },
+        {
+          "path": "/weapons/Common_Push_A/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3656.25,
+          "after": 1508.203125
+        },
+        {
+          "path": "/weapons/EF_BeamSaber_AF_Fast_A/damageComponents/melee",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2437.5,
+          "after": 1005.46875
+        },
+        {
+          "path": "/weapons/EF_BeamSaber_AF_Fast_A/damageComponents/meleeBeam",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2437.5,
+          "after": 1005.46875
+        },
+        {
+          "path": "/weapons/EF_BeamSaber_AF_Fast_A/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 4875,
+          "after": 2010.9375
+        },
+        {
+          "path": "/weapons/EF_HypeBazooka_ACE/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 6900,
+          "after": 2846.25
+        },
+        {
+          "path": "/weapons/EF_HypeBazooka_ACE/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 6900,
+          "after": 2846.25
+        },
+        {
+          "path": "/weapons/EF_RX_78_2_BR/damageComponents/beam",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 7875,
+          "after": 3248.4375
+        },
+        {
+          "path": "/weapons/EF_RX_78_2_BR/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 7875,
+          "after": 3248.4375
+        },
+        {
+          "path": "/weapons/EF_SHM_ACE/damageComponents/melee",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 7500,
+          "after": 3093.75
+        },
+        {
+          "path": "/weapons/EF_SHM_ACE/damageComponents/meleeShell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 7500,
+          "after": 3093.75
+        },
+        {
+          "path": "/weapons/EF_SHM_ACE/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 15000,
+          "after": 6187.5
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "file": "shared/editor-adjustments.json",
+      "changes": [
+        {
+          "path": "/units/RX_78_2_ACE",
+          "kind": "added",
+          "beforeExists": false,
+          "afterExists": true,
+          "before": null,
+          "after": {
+            "/stats/cost": -25,
+            "/weapons/Common_Push_A/damagePerShot": -2148.046875,
+            "/weapons/Common_Push_A/damageComponents/melee": -1074.0234375,
+            "/weapons/Common_Push_A/damageComponents/meleeShell": -1074.0234375,
+            "/weapons/EF_RX_78_2_BR/damagePerShot": -4626.5625,
+            "/weapons/EF_RX_78_2_BR/damageComponents/beam": -4626.5625,
+            "/weapons/EF_BeamSaber_AF_Fast_A/damagePerShot": -2864.0625,
+            "/weapons/EF_BeamSaber_AF_Fast_A/damageComponents/melee": -1432.03125,
+            "/weapons/EF_BeamSaber_AF_Fast_A/damageComponents/meleeBeam": -1432.03125,
+            "/weapons/EF_HypeBazooka_ACE/damagePerShot": -4053.75,
+            "/weapons/EF_HypeBazooka_ACE/damageComponents/shell": -4053.75,
+            "/weapons/EF_SHM_ACE/damagePerShot": -8812.5,
+            "/weapons/EF_SHM_ACE/damageComponents/melee": -4406.25,
+            "/weapons/EF_SHM_ACE/damageComponents/meleeShell": -4406.25,
+            "/weapons/Common_DoubleVulcan_MS/damagePerShot": -81.62578125,
+            "/weapons/Common_DoubleVulcan_MS/damageComponents/shell": -74.35546875,
+            "/weapons/Common_DoubleVulcan_MS/damageComponents/shellAP": -7.2703125
+          }
+        }
+      ]
+    },
+    {
+      "file": "assets/units/RX_78_2_ACE/unit.json",
+      "changes": [
+        {
+          "path": "/weaponKits",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": [
+            {
+              "id": "standard",
+              "name": "标准套件",
+              "cost": 0,
+              "weapons": [
+                "EF_RX_78_2_BR",
+                "EF_BeamSaber_AF_Fast_A",
+                "EF_HypeBazooka_ACE",
+                "EF_SHM_ACE",
+                "Common_DoubleVulcan_MS",
+                "Common_Push_A"
+              ]
+            }
+          ],
+          "after": [
+            {
+              "id": "standard",
+              "name": "标准套件",
+              "cost": 0,
+              "weapons": [
+                "EF_RX_78_2_BR",
+                "EF_BeamSaber_AF_Fast_A",
+                "EF_HypeBazooka_ACE",
+                "EF_SHM_ACE",
+                "Common_DoubleVulcan_MS",
+                "Common_Push_A"
+              ],
+              "conversionBaseCost": 0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "logFile": "server-data/editor-changes/2026-11-24/2026-11-23T15-14-12-079Z-c10a8fc8-37cf-4786-8eda-4ab5f3275f0a.json",
+  "afterRevision": "3b221a88ed6534485733c64943c0e9afbffe2a0d15e9806445da72680d656cd4"
+}

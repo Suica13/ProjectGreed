@@ -11,6 +11,7 @@
 
 | 时间（日本时间） | 来源IP | 单位 | 修改对象 | 修改内容 | 详细日志 |
 |---|---|---|---|---|---|
+| 2026-11-24 01:03:57 | local-user-request | 全局换算规则（（暂无受影响单位）） | 全局换算规则 | /weaponClasses/mortar/damage：1.25 → 1.5625 | [JSON](../../server-data/editor-changes/2026-11-24/2026-11-23T16-03-57-844Z-5c7314f4-625a-4ac8-b945-48845c6ecc96.json) |
 | 2026-11-22 23:04:55 | local | 全局换算规则（（暂无受影响单位）） | 全局换算规则 | /weapons/beamGunKitCostOffset：（无） → -25 | [JSON](../../server-data/editor-changes/2026-11-22/2026-11-22T14-04-55-398Z-da5e1b10-9d2a-4a9b-8116-9c11827334e3.json) |
 | 2026-11-14 11:30:17 | local | 全局换算规则（（暂无受影响单位）） | 全局换算规则 | /units/shipAccuracy：（无） → 0.8 | [JSON](../../server-data/editor-changes/2026-11-14/2026-11-14T02-30-17-983Z-bbcd43e7-52f5-47c2-a0e2-4f0d18f39260.json) |
 

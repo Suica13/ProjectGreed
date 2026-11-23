@@ -90,14 +90,15 @@ test("both runtime force pools exactly match the six-level Markdown source", () 
         assert.equal(f.units.length % 3, 0);
         assert(f.kits.every((kits) => kits.length));
       }
-      assert.equal(profile.garrisons.command, [150, 250, 450, 625, 775, 1050][difficulty - 1]);
+      assert.equal(profile.garrisons.command,
+        (faction === "EFSF" ? [150, 275, 400, 575, 775, 1050] : [150, 250, 450, 625, 775, 1050])[difficulty - 1]);
       assert.equal(
         profile.waves["defend.first"],
-        [150, 300, 500, 700, 875, 1125][difficulty - 1],
+        (faction === "EFSF" ? [150, 325, 450, 650, 875, 1125] : [150, 300, 500, 700, 875, 1125])[difficulty - 1],
       );
       assert.equal(
         profile.waves["defend.followup"],
-        [75, 75, 125, 175, 200, 300][difficulty - 1],
+        (faction === "EFSF" ? [75, 100, 100, 150, 200, 300] : [75, 75, 125, 175, 200, 300])[difficulty - 1],
       );
     }
 });

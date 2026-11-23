@@ -25,6 +25,7 @@ const SkillControls = (() => {
     if (!Rules.canAttack(game, unit, target, weapon)) return true;
     targetDraft = {kind:"weapon",game,unitId:unit.id,mode,weaponId:weapon.id,targetId:target.id,
       ground:!!target.groundTarget,x:target.x,y:target.y,aimCell:target.aimCell};
+    GameAudio.play("lockonSound");
     update();
     return true;
   }
@@ -195,6 +196,7 @@ const SkillControls = (() => {
         unit.attackSkillRound === game.round || !Rules.canUse(unit,weapon);
       use.onclick = () => {
         reset();
+        GameAudio.play("selectWeaponSound");
         AttackControls.reset();
         mode = "target"; weaponId = weapon.id;
         squadSingleMove = true;
@@ -335,6 +337,7 @@ const SkillControls = (() => {
     }
     if (!immediate) {
       targetDraft={kind:"unit",game,unitId:unit.id,mode,weaponId,x:cell.x,y:cell.y};
+      GameAudio.play("lockonSound");
       update();
       return true;
     }
@@ -361,6 +364,25 @@ const SkillControls = (() => {
         note(error.message);
       }
     }
+  }
+  function targetCell(unit) {
+    const {draft, target} = confirmation(unit);
+    if (!draft) return null;
+    return draft.aimCell || (target ? Rules.center(target) : {x:draft.x,y:draft.y});
+  }
+  function drawTarget(ctx, unit, position, tile) {
+    const cell = targetCell(unit);
+    if (!cell) return;
+    const point = position(cell.x, cell.y);
+    ctx.save();
+    ctx.strokeStyle = "#ffd45b";
+    ctx.lineWidth = 3;
+    const half = tile * .45;
+    ctx.strokeRect(point.x-half, point.y-half, half*2, half*2);
+    ctx.beginPath();
+    ctx.arc(point.x, point.y, tile*.28, 0, Math.PI*2);
+    ctx.stroke();
+    ctx.restore();
   }
   // Roster, assignment and campaign lists use the same equipped-skill presentation.
   function pilotSummary(profile) {
@@ -389,5 +411,5 @@ const SkillControls = (() => {
     return row;
   }
   return { render, cells, click, applied, description, commandAbilities, defensiveAbilities, pilotSummary,
-    confirmation, chooseWeaponTarget, confirm, reset };
+    confirmation, chooseWeaponTarget, confirm, reset, targetCell, drawTarget };
 })();

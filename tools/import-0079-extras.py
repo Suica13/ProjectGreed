@@ -34,7 +34,8 @@ def main():
             native['core']['displayDescription_zh']=row['name']
             native['core']['displayDescription']=native['core'].get('displayText',row['id'])
         p=bulk.build(row,effects)
-        if row['id'].endswith('_BPart'):p['formOnly']=True
+        # Gundam+B parts is also a standalone supply reward chassis.
+        if row['id'].endswith('_BPart'):p['formOnly']=row['id']!='RX_78_2_BPart'
         write(ASSETS/f"units/{p['id']}/unit.json",p)
         catalog['units'].append(f"units/{p['id']}/unit.json")
         print('Imported',p['id'],flush=True)

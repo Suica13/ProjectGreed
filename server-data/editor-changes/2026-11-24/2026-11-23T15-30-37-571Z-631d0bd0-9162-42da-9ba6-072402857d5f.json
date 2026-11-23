@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "id": "631d0bd0-9162-42da-9ba6-072402857d5f",
+  "timestamp": "2026-11-23T15:30:37.571Z",
+  "localTimestamp": "2026-11-24 00:30:37",
+  "timeZone": "Asia/Tokyo",
+  "operation": "unit",
+  "target": {
+    "id": "G_Fighter",
+    "newId": "G_Fighter",
+    "name": "G战机"
+  },
+  "source": {
+    "ip": "local-user-request"
+  },
+  "beforeRevision": "99c223d21608b4d926ecd2dbdc2f5447c4e55f6816db1776440f80ca3f363033",
+  "units": [
+    {
+      "id": "G_Fighter",
+      "previousId": "G_Fighter",
+      "name": "G战机",
+      "factions": [
+        "EFSF"
+      ],
+      "faction": "EFSF",
+      "previousName": "G战机",
+      "file": "assets/units/G_Fighter/unit.json",
+      "changes": [
+        {
+          "path": "/stats/cost",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 550,
+          "after": 700
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "file": "shared/editor-adjustments.json",
+      "changes": [
+        {
+          "path": "/units/G_Fighter/~1stats~1cost",
+          "kind": "added",
+          "beforeExists": false,
+          "afterExists": true,
+          "before": null,
+          "after": 150
+        }
+      ]
+    },
+    {
+      "file": "assets/units/G_Fighter/unit.json",
+      "changes": [
+        {
+          "path": "/weaponKits",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": [
+            {
+              "id": "standard",
+              "name": "标准套件",
+              "cost": 0,
+              "weapons": [
+                "Common_DoubleMS_G_Fighter",
+                "EF_G_Fighter_BR"
+              ]
+            }
+          ],
+          "after": [
+            {
+              "id": "standard",
+              "name": "标准套件",
+              "cost": 0,
+              "weapons": [
+                "Common_DoubleMS_G_Fighter",
+                "EF_G_Fighter_BR"
+              ],
+              "conversionBaseCost": 0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "logFile": "server-data/editor-changes/2026-11-24/2026-11-23T15-30-37-571Z-631d0bd0-9162-42da-9ba6-072402857d5f.json",
+  "afterRevision": "62bb0ff2ae236fdaf0750f82e3081c7183886ca84e5eed2f565fd552aa31faa1"
+}

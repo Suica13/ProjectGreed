@@ -349,9 +349,9 @@
     "name": "月神钛合金弹药",
     "rarity": 2,
     "cost": 50,
-    "description": "实弹类武器单发伤害+150",
+    "description": "实弹类武器单发伤害+75",
     "effects": {
-      "shellDamage": 150
+      "shellDamage": 75
     },
     "era": "UC_0079_T2",
     "merchant": "zeon",
@@ -471,9 +471,9 @@
     "name": "阿纳海姆特供辅助瞄准系统",
     "rarity": 2,
     "cost": 50,
-    "description": "所有武器单发伤害+200，命中率+5个百分点",
+    "description": "所有武器单发伤害+50，命中率+5个百分点",
     "effects": {
-      "allDamage": 200,
+      "allDamage": 50,
       "allHit": 5
     },
     "era": "UC_0079_T2",

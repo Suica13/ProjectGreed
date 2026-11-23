@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "id": "d6e02ed0-a990-4450-8746-4a36b8ec7857",
+  "timestamp": "2026-11-23T15:18:18.342Z",
+  "localTimestamp": "2026-11-24 00:18:18",
+  "timeZone": "Asia/Tokyo",
+  "operation": "unit",
+  "target": {
+    "id": "MS_05SP",
+    "newId": "MS_05SP",
+    "name": "扎古狙击型"
+  },
+  "source": {
+    "ip": "local-user-request"
+  },
+  "beforeRevision": "9660008350c578280d41638fcf518c73a1154ab82770e98fe8edacd5e166746d",
+  "units": [
+    {
+      "id": "MS_05SP",
+      "previousId": "MS_05SP",
+      "name": "扎古狙击型",
+      "factions": [
+        "ZEON"
+      ],
+      "faction": "ZEON",
+      "previousName": "扎古狙击型",
+      "file": "assets/units/MS_05SP/unit.json",
+      "changes": [
+        {
+          "path": "/stats/cost",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 350,
+          "after": 500
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "file": "shared/editor-adjustments.json",
+      "changes": [
+        {
+          "path": "/units/MS_05SP",
+          "kind": "added",
+          "beforeExists": false,
+          "afterExists": true,
+          "before": null,
+          "after": {
+            "/stats/cost": 150
+          }
+        }
+      ]
+    },
+    {
+      "file": "assets/units/MS_05SP/unit.json",
+      "changes": [
+        {
+          "path": "/weaponKits",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": [
+            {
+              "id": "kit_2",
+              "name": "标准套件",
+              "cost": 0,
+              "weapons": [
+                "ZN_105mmMG",
+                "ZN_LongRangeBeamSniperRifle_Sniper_Aim",
+                "ZN_HeatHawk_A",
+                "ZN_LongRangeBeamSniperRifle",
+                "Common_Push_A"
+              ]
+            }
+          ],
+          "after": [
+            {
+              "id": "kit_2",
+              "name": "标准套件",
+              "cost": 0,
+              "weapons": [
+                "ZN_105mmMG",
+                "ZN_LongRangeBeamSniperRifle_Sniper_Aim",
+                "ZN_HeatHawk_A",
+                "ZN_LongRangeBeamSniperRifle",
+                "Common_Push_A"
+              ],
+              "conversionBaseCost": 0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "logFile": "server-data/editor-changes/2026-11-24/2026-11-23T15-18-18-342Z-d6e02ed0-a990-4450-8746-4a36b8ec7857.json",
+  "afterRevision": "5ec2469eb2661df34511ba907f6d37fed1022500fe0a72e25acf76b9a7df4cf0"
+}

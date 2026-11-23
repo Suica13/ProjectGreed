@@ -155,6 +155,43 @@
       "/weapons/ZN_MS_06JK_Gatling/damageComponents/shell": -12.5,
       "/weapons/ZN_MS_06JK_Gatling/targetModifiers/air": -0.25,
       "/weapons/ZN_MS_06JK_Gatling/attackRounds": -1
+    },
+    "RX_78_2_ACE": {
+      "/stats/cost": -25,
+      "/weapons/Common_Push_A/damagePerShot": -2148.046875,
+      "/weapons/Common_Push_A/damageComponents/melee": -1074.0234375,
+      "/weapons/Common_Push_A/damageComponents/meleeShell": -1074.0234375,
+      "/weapons/EF_RX_78_2_BR/damagePerShot": -4626.5625,
+      "/weapons/EF_RX_78_2_BR/damageComponents/beam": -4626.5625,
+      "/weapons/EF_BeamSaber_AF_Fast_A/damagePerShot": -2864.0625,
+      "/weapons/EF_BeamSaber_AF_Fast_A/damageComponents/melee": -1432.03125,
+      "/weapons/EF_BeamSaber_AF_Fast_A/damageComponents/meleeBeam": -1432.03125,
+      "/weapons/EF_HypeBazooka_ACE/damagePerShot": -4053.75,
+      "/weapons/EF_HypeBazooka_ACE/damageComponents/shell": -4053.75,
+      "/weapons/EF_SHM_ACE/damagePerShot": -8525,
+      "/weapons/EF_SHM_ACE/damageComponents/melee": -4275,
+      "/weapons/EF_SHM_ACE/damageComponents/meleeShell": -4250,
+      "/weapons/Common_DoubleVulcan_MS/damagePerShot": -81.62578125,
+      "/weapons/Common_DoubleVulcan_MS/damageComponents/shell": -74.35546875,
+      "/weapons/Common_DoubleVulcan_MS/damageComponents/shellAP": -7.2703125
+    },
+    "MS_05SP": {
+      "/stats/cost": 150
+    },
+    "G_Fighter": {
+      "/weapons/Common_DoubleMS_G_Fighter/damagePerShot": 100,
+      "/weapons/Common_DoubleMS_G_Fighter/damageComponents/shell": 100,
+      "/weapons/Common_DoubleMS_G_Fighter_L/damagePerShot": 100,
+      "/weapons/Common_DoubleMS_G_Fighter_L/damageComponents/shell": 100,
+      "/weapons/EF_G_Fighter_BR/damagePerShot": -1975,
+      "/weapons/EF_G_Fighter_BR/damageComponents/beam": -1975,
+      "/weapons/EF_G_Fighter_BR_R/damagePerShot": -1975,
+      "/weapons/EF_G_Fighter_BR_R/damageComponents/beam": -1975,
+      "/stats/cost": 150
+    },
+    "G_Bull_Easy": {
+      "/weapons/EF_G_Bull_Easy_BeamGun/damagePerShot": -950,
+      "/weapons/EF_G_Bull_Easy_BeamGun/damageComponents/beam": -950
     }
   },
   "weapons": {

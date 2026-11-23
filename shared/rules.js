@@ -1456,9 +1456,10 @@ const Tactics = (() => {
       "ground"
     );
   }
+  const airborne = (unit) => !!unit.flying || unit.embarked?.exposed === true;
   function environmentOf(g, unit, x = unit.x, y = unit.y) {
     if ((g ? cellEnvironment(g, x, y) : unit.environment) === "space") return "space";
-    const movement = unit.flying ? "air" : models[unit.model].movementType;
+    const movement = airborne(unit) ? "air" : models[unit.model].movementType;
     if (movement === "air") return "air";
     if (movement === "hover") return "ground";
     return g?.tiles
@@ -1477,7 +1478,7 @@ const Tactics = (() => {
   function adaptationOf(g, unit, x = unit.x, y = unit.y) {
     const environment = environmentOf(g, unit, x, y);
     return (
-      (unit.flying && environment === "air"
+      (airborne(unit) && environment === "air"
         ? flightAdaptability(unit)
         : (performanceModelOf(unit).adaptability?.[environment] ?? 100)) / 100
     );
@@ -1523,7 +1524,7 @@ const Tactics = (() => {
     const original = pilotModelOf(unit, missionModelOf(unit), g),
       grounded = environmentOf(g, unit) === "ground" && original.groundMoveBonus
         ? {...original,move:original.deployed?0:original.move+original.groundMoveBonus} : original,
-      base = unit.flying
+      base = airborne(unit)
         ? {
             ...grounded,
             movementType: "air",
@@ -1879,6 +1880,17 @@ const Tactics = (() => {
       }
     }
     return effects;
+  }
+  function commandCells(g, provider) {
+    const aura = commandAura(provider);
+    if (!onMap(provider) || !aura.active) return [];
+    const size = dimensions(provider), result = [];
+    for (let y = Math.max(0, Math.floor(provider.y - aura.radius));
+      y < Math.min(mapHeight(g), provider.y + size.height + aura.radius); y++)
+      for (let x = Math.max(0, Math.floor(provider.x - aura.radius));
+        x < Math.min(mapWidth(g), provider.x + size.width + aura.radius); x++)
+        if (dist(provider, {x,y}) <= aura.radius) result.push({x,y});
+    return result;
   }
   function inSupplyRange(provider, target) {
     const aura = modelOf(provider).supplyAura;
@@ -5025,6 +5037,7 @@ const Tactics = (() => {
     commandKinds,
     commandAura,
     commandEffects,
+    commandCells,
     supplyCells,
     dimensions,
     cells,

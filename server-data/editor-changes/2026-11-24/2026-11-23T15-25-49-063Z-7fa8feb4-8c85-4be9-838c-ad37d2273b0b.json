@@ -1,0 +1,203 @@
+{
+  "schemaVersion": 1,
+  "id": "7fa8feb4-8c85-4be9-838c-ad37d2273b0b",
+  "timestamp": "2026-11-23T15:25:49.063Z",
+  "localTimestamp": "2026-11-24 00:25:49",
+  "timeZone": "Asia/Tokyo",
+  "operation": "unit",
+  "target": {
+    "id": "G_Fighter",
+    "newId": "G_Fighter",
+    "name": "G战机"
+  },
+  "source": {
+    "ip": "local-user-request"
+  },
+  "beforeRevision": "176ea2c53317444f4ab28e1715be038e664605f83f121d37020bd5a5647b10b9",
+  "units": [
+    {
+      "id": "G_Fighter",
+      "previousId": "G_Fighter",
+      "name": "G战机",
+      "factions": [
+        "EFSF"
+      ],
+      "faction": "EFSF",
+      "previousName": "G战机",
+      "file": "assets/units/G_Fighter/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/Common_DoubleMS_G_Fighter/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 625,
+          "after": 1000
+        },
+        {
+          "path": "/weapons/Common_DoubleMS_G_Fighter/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 625,
+          "after": 1000
+        },
+        {
+          "path": "/weapons/Common_DoubleMS_G_Fighter_L/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 625,
+          "after": 1000
+        },
+        {
+          "path": "/weapons/Common_DoubleMS_G_Fighter_L/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 625,
+          "after": 1000
+        },
+        {
+          "path": "/weapons/EF_G_Fighter_BR/damageComponents/beam",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3075,
+          "after": 2525
+        },
+        {
+          "path": "/weapons/EF_G_Fighter_BR/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3075,
+          "after": 2525
+        },
+        {
+          "path": "/weapons/EF_G_Fighter_BR_R/damageComponents/beam",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3075,
+          "after": 2525
+        },
+        {
+          "path": "/weapons/EF_G_Fighter_BR_R/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3075,
+          "after": 2525
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "file": "shared/editor-adjustments.json",
+      "changes": [
+        {
+          "path": "/units/G_Fighter/~1weapons~1Common_DoubleMS_G_Fighter~1damageComponents~1shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": -275,
+          "after": 100
+        },
+        {
+          "path": "/units/G_Fighter/~1weapons~1Common_DoubleMS_G_Fighter~1damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": -275,
+          "after": 100
+        },
+        {
+          "path": "/units/G_Fighter/~1weapons~1Common_DoubleMS_G_Fighter_L~1damageComponents~1shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": -275,
+          "after": 100
+        },
+        {
+          "path": "/units/G_Fighter/~1weapons~1Common_DoubleMS_G_Fighter_L~1damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": -275,
+          "after": 100
+        },
+        {
+          "path": "/units/G_Fighter/~1weapons~1EF_G_Fighter_BR~1damageComponents~1beam",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": -1425,
+          "after": -1975
+        },
+        {
+          "path": "/units/G_Fighter/~1weapons~1EF_G_Fighter_BR~1damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": -1425,
+          "after": -1975
+        },
+        {
+          "path": "/units/G_Fighter/~1weapons~1EF_G_Fighter_BR_R~1damageComponents~1beam",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": -1425,
+          "after": -1975
+        },
+        {
+          "path": "/units/G_Fighter/~1weapons~1EF_G_Fighter_BR_R~1damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": -1425,
+          "after": -1975
+        }
+      ]
+    },
+    {
+      "file": "assets/units/G_Fighter/unit.json",
+      "changes": [
+        {
+          "path": "/weaponKits",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": [
+            {
+              "id": "standard",
+              "name": "标准套件",
+              "cost": 0,
+              "weapons": [
+                "Common_DoubleMS_G_Fighter",
+                "EF_G_Fighter_BR"
+              ]
+            }
+          ],
+          "after": [
+            {
+              "id": "standard",
+              "name": "标准套件",
+              "cost": 0,
+              "weapons": [
+                "Common_DoubleMS_G_Fighter",
+                "EF_G_Fighter_BR"
+              ],
+              "conversionBaseCost": 0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "logFile": "server-data/editor-changes/2026-11-24/2026-11-23T15-25-49-063Z-7fa8feb4-8c85-4be9-838c-ad37d2273b0b.json",
+  "afterRevision": "5ec92884e11a8292562fb467e90c39963dd97a585d2105ffe07e6005d54615bd"
+}

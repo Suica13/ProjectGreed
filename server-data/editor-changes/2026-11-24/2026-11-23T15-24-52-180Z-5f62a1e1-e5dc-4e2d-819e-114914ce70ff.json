@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "id": "5f62a1e1-e5dc-4e2d-819e-114914ce70ff",
+  "timestamp": "2026-11-23T15:24:52.180Z",
+  "localTimestamp": "2026-11-24 00:24:52",
+  "timeZone": "Asia/Tokyo",
+  "operation": "unit",
+  "target": {
+    "id": "G_Fighter",
+    "newId": "G_Fighter",
+    "name": "G战机"
+  },
+  "source": {
+    "ip": "local-user-request"
+  },
+  "beforeRevision": "facc66f71582ce4577e0b2a8a208763572d059977931e81ce20b11bf9f00be62",
+  "units": [
+    {
+      "id": "G_Fighter",
+      "previousId": "G_Fighter",
+      "name": "G战机",
+      "factions": [
+        "EFSF"
+      ],
+      "faction": "EFSF",
+      "previousName": "G战机",
+      "file": "assets/units/G_Fighter/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/Common_DoubleMS_G_Fighter/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 900,
+          "after": 625
+        },
+        {
+          "path": "/weapons/Common_DoubleMS_G_Fighter/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 900,
+          "after": 625
+        },
+        {
+          "path": "/weapons/Common_DoubleMS_G_Fighter_L/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 900,
+          "after": 625
+        },
+        {
+          "path": "/weapons/Common_DoubleMS_G_Fighter_L/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 900,
+          "after": 625
+        },
+        {
+          "path": "/weapons/EF_G_Fighter_BR/damageComponents/beam",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 4500,
+          "after": 3075
+        },
+        {
+          "path": "/weapons/EF_G_Fighter_BR/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 4500,
+          "after": 3075
+        },
+        {
+          "path": "/weapons/EF_G_Fighter_BR_R/damageComponents/beam",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 4500,
+          "after": 3075
+        },
+        {
+          "path": "/weapons/EF_G_Fighter_BR_R/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 4500,
+          "after": 3075
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "file": "shared/editor-adjustments.json",
+      "changes": [
+        {
+          "path": "/units/G_Fighter",
+          "kind": "added",
+          "beforeExists": false,
+          "afterExists": true,
+          "before": null,
+          "after": {
+            "/weapons/Common_DoubleMS_G_Fighter/damagePerShot": -275,
+            "/weapons/Common_DoubleMS_G_Fighter/damageComponents/shell": -275,
+            "/weapons/Common_DoubleMS_G_Fighter_L/damagePerShot": -275,
+            "/weapons/Common_DoubleMS_G_Fighter_L/damageComponents/shell": -275,
+            "/weapons/EF_G_Fighter_BR/damagePerShot": -1425,
+            "/weapons/EF_G_Fighter_BR/damageComponents/beam": -1425,
+            "/weapons/EF_G_Fighter_BR_R/damagePerShot": -1425,
+            "/weapons/EF_G_Fighter_BR_R/damageComponents/beam": -1425
+          }
+        }
+      ]
+    },
+    {
+      "file": "assets/units/G_Fighter/unit.json",
+      "changes": [
+        {
+          "path": "/weaponKits",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": [
+            {
+              "id": "standard",
+              "name": "标准套件",
+              "cost": 0,
+              "weapons": [
+                "Common_DoubleMS_G_Fighter",
+                "EF_G_Fighter_BR"
+              ]
+            }
+          ],
+          "after": [
+            {
+              "id": "standard",
+              "name": "标准套件",
+              "cost": 0,
+              "weapons": [
+                "Common_DoubleMS_G_Fighter",
+                "EF_G_Fighter_BR"
+              ],
+              "conversionBaseCost": 0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "logFile": "server-data/editor-changes/2026-11-24/2026-11-23T15-24-52-180Z-5f62a1e1-e5dc-4e2d-819e-114914ce70ff.json",
+  "afterRevision": "7effca5824ee186461ac4404caf423d38ee038e5e7632d9fe8a445a1f4b2465a"
+}

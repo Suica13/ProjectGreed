@@ -1005,7 +1005,10 @@ const Economy = (() => {
           Object.values(item.brokenParts || {}).some(Boolean) ||
           (model.modules || []).some((part) => (item.moduleHp?.[part.id] ?? part.hp) < part.hp);
       if (!destroyed && !parts && item.hp >= model.hp && item.en >= model.en) continue;
-      const price = chassisProductionOffer(item.unitId)?.supplies || 0;
+      // Reward-only chassis can lack a production offer. Their maintenance basis
+      // follows a configured comparable chassis without granting production access.
+      const price = (chassisProductionOffer(item.unitId) ||
+        chassisProductionOffer(catalog.repairPriceReferences?.[item.unitId]))?.supplies || 0;
       items.push({
         ...structuredClone(item),
         supplies: Math.ceil(price * (destroyed ? 0.5 : parts ? 0.25 : 0)),

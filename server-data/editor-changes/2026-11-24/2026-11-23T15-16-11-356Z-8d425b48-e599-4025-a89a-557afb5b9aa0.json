@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "id": "8d425b48-e599-4025-a89a-557afb5b9aa0",
+  "timestamp": "2026-11-23T15:16:11.356Z",
+  "localTimestamp": "2026-11-24 00:16:11",
+  "timeZone": "Asia/Tokyo",
+  "operation": "unit",
+  "target": {
+    "id": "RX_78_2_ACE",
+    "newId": "RX_78_2_ACE",
+    "name": "高达[ACE]"
+  },
+  "source": {
+    "ip": "local-user-request"
+  },
+  "beforeRevision": "6521f1e63c5331b35846154715b20416e023e6f478c4bb45ce901f65649b2e04",
+  "units": [
+    {
+      "id": "RX_78_2_ACE",
+      "previousId": "RX_78_2_ACE",
+      "name": "高达[ACE]",
+      "factions": [
+        "EFSF"
+      ],
+      "faction": "EFSF",
+      "previousName": "高达[ACE]",
+      "file": "assets/units/RX_78_2_ACE/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/EF_SHM_ACE/damageComponents/melee",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3093.75,
+          "after": 3225
+        },
+        {
+          "path": "/weapons/EF_SHM_ACE/damageComponents/meleeShell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3093.75,
+          "after": 3250
+        },
+        {
+          "path": "/weapons/EF_SHM_ACE/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 6187.5,
+          "after": 6475
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "file": "shared/editor-adjustments.json",
+      "changes": [
+        {
+          "path": "/units/RX_78_2_ACE/~1weapons~1EF_SHM_ACE~1damageComponents~1melee",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": -4406.25,
+          "after": -4275
+        },
+        {
+          "path": "/units/RX_78_2_ACE/~1weapons~1EF_SHM_ACE~1damageComponents~1meleeShell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": -4406.25,
+          "after": -4250
+        },
+        {
+          "path": "/units/RX_78_2_ACE/~1weapons~1EF_SHM_ACE~1damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": -8812.5,
+          "after": -8525
+        }
+      ]
+    },
+    {
+      "file": "assets/units/RX_78_2_ACE/unit.json",
+      "changes": [
+        {
+          "path": "/weaponKits",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": [
+            {
+              "id": "standard",
+              "name": "标准套件",
+              "cost": 0,
+              "weapons": [
+                "EF_RX_78_2_BR",
+                "EF_BeamSaber_AF_Fast_A",
+                "EF_HypeBazooka_ACE",
+                "EF_SHM_ACE",
+                "Common_DoubleVulcan_MS",
+                "Common_Push_A"
+              ]
+            }
+          ],
+          "after": [
+            {
+              "id": "standard",
+              "name": "标准套件",
+              "cost": 0,
+              "weapons": [
+                "EF_RX_78_2_BR",
+                "EF_BeamSaber_AF_Fast_A",
+                "EF_HypeBazooka_ACE",
+                "EF_SHM_ACE",
+                "Common_DoubleVulcan_MS",
+                "Common_Push_A"
+              ],
+              "conversionBaseCost": 0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "logFile": "server-data/editor-changes/2026-11-24/2026-11-23T15-16-11-356Z-8d425b48-e599-4025-a89a-557afb5b9aa0.json",
+  "afterRevision": "b738d7d007027fdd7f099ebe110a4614bffcea75a18d0e535fcc77aa71bf3ca1"
+}

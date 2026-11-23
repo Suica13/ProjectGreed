@@ -11,6 +11,7 @@
 
 | 时间（日本时间） | 来源IP | 单位 | 修改对象 | 修改内容 | 详细日志 |
 |---|---|---|---|---|---|
+| 2026-11-24 00:18:18 | local-user-request | 扎古狙击型（MS_05SP） | 单位特例 | /stats/cost：350 → 500 | [JSON](../../server-data/editor-changes/2026-11-24/2026-11-23T15-18-18-342Z-d6e02ed0-a990-4450-8746-4a36b8ec7857.json) |
 | 2026-11-22 23:05:00 | local | 扎古半加农（MS_06JK） | 单位特例 | /weapons/ZN_MS_06JK_Gatling/attackRounds：2 → 1<br>/weapons/ZN_MS_06JK_Gatling/damageComponents/shell：262.5 → 250<br>/weapons/ZN_MS_06JK_Gatling/damagePerShot：262.5 → 250<br>/weapons/ZN_MS_06JK_Gatling/localization：（无） → {"zh":{"name":"肩部加特林"},"en":{"name":"Shoulder Gatling"},"ja":{"name":"肩部ガトリング"}}<br>/weapons/ZN_MS_06JK_Gatling/name："导弹发射器" → "肩部加特林"<br>/weapons/ZN_MS_06JK_Gatling/targetModifiers/air：1.75 → 1.5 | [JSON](../../server-data/editor-changes/2026-11-22/2026-11-22T14-05-00-333Z-fb4b842e-cd78-47c0-b934-841549da5dca.json) |
 | 2026-11-22 23:04:59 | local | 扎古加农（MS_06K） | 单位特例 | /faction：（无） → "ZEON"<br>/weapons/Common_Cannon_AntiAir/damageComponents/shell：1312.5 → 2250<br>/weapons/Common_Cannon_AntiAir/damagePerShot：1312.5 → 2250 | [JSON](../../server-data/editor-changes/2026-11-22/2026-11-22T14-04-59-346Z-ad179b73-69d9-4197-95ca-15671a2f73a7.json) |
 | 2026-11-22 21:45:04 | local | 胖叔叔（FatUncle） | 共用武器 light-transports | /stats/hp：18750 → 25000<br>/stats/move：5 → 7 | [JSON](../../server-data/editor-changes/2026-11-22/2026-11-22T12-45-04-817Z-11c2de12-ee25-4cd7-b946-7eb173d0f7ba.json) |

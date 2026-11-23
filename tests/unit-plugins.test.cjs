@@ -238,7 +238,7 @@ test("weapon category bonuses reach every actual strike once and preserve native
   for (const [plugin, predicate, bonus] of [
     ["rocket_head", (w) => classes.classify(w) === "bazooka", 1000],
     ["beam_generator", (w) => classes.classify(w) === "beam_rifle", 1000],
-    ["luna_ammo", (w) => w.type === "shell" && w.damageComponents.shell > 0, 150],
+    ["luna_ammo", (w) => w.type === "shell" && w.damageComponents.shell > 0, 75],
     ["beam_melee", (w) => w.type === "melee" && w.damageComponents.meleeBeam > 0, 1500],
     ["heat_melee", (w) => w.type === "melee" && w.damageComponents.meleeShell > 0, 1500],
     [
@@ -246,7 +246,7 @@ test("weapon category bonuses reach every actual strike once and preserve native
       (w) => classes.classify(w) === "beam_cannon" && w.damageComponents.beamAP > 0,
       2000,
     ],
-    ["aiming_system", (w) => w.damagePerShot > 0, 200],
+    ["aiming_system", (w) => w.damagePerShot > 0, 50],
   ]) {
     const weapon = all.find(predicate);
     assert(weapon, plugin);

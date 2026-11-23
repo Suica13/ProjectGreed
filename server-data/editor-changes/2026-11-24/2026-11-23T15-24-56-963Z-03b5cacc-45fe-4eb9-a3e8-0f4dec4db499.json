@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "id": "03b5cacc-45fe-4eb9-a3e8-0f4dec4db499",
+  "timestamp": "2026-11-23T15:24:56.963Z",
+  "localTimestamp": "2026-11-24 00:24:56",
+  "timeZone": "Asia/Tokyo",
+  "operation": "unit",
+  "target": {
+    "id": "G_Bull_Easy",
+    "newId": "G_Bull_Easy",
+    "name": "G公牛简易型"
+  },
+  "source": {
+    "ip": "local-user-request"
+  },
+  "beforeRevision": "6cd7f4560d9673db3988471958ab995b842b999d552b1e7343e065f4270a3853",
+  "units": [
+    {
+      "id": "G_Bull_Easy",
+      "previousId": "G_Bull_Easy",
+      "name": "G公牛简易型",
+      "factions": [
+        "EFSF"
+      ],
+      "faction": "EFSF",
+      "previousName": "G公牛简易型",
+      "file": "assets/units/G_Bull_Easy/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/EF_G_Bull_Easy_BeamGun/damageComponents/beam",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3000,
+          "after": 2050
+        },
+        {
+          "path": "/weapons/EF_G_Bull_Easy_BeamGun/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3000,
+          "after": 2050
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "file": "shared/editor-adjustments.json",
+      "changes": [
+        {
+          "path": "/units/G_Bull_Easy",
+          "kind": "added",
+          "beforeExists": false,
+          "afterExists": true,
+          "before": null,
+          "after": {
+            "/weapons/EF_G_Bull_Easy_BeamGun/damagePerShot": -950,
+            "/weapons/EF_G_Bull_Easy_BeamGun/damageComponents/beam": -950
+          }
+        }
+      ]
+    },
+    {
+      "file": "assets/units/G_Bull_Easy/unit.json",
+      "changes": [
+        {
+          "path": "/weaponKits",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": [
+            {
+              "id": "standard",
+              "name": "标准套件",
+              "cost": 0,
+              "weapons": [
+                "EF_G_Bull_Easy_BeamGun"
+              ]
+            }
+          ],
+          "after": [
+            {
+              "id": "standard",
+              "name": "标准套件",
+              "cost": 0,
+              "weapons": [
+                "EF_G_Bull_Easy_BeamGun"
+              ],
+              "conversionBaseCost": 0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "logFile": "server-data/editor-changes/2026-11-24/2026-11-23T15-24-56-963Z-03b5cacc-45fe-4eb9-a3e8-0f4dec4db499.json",
+  "afterRevision": "627deeaa8d0cf7d1c444361bc94944e1e8f6968af567bc1c9116cb8682fa9875"
+}

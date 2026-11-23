@@ -17,6 +17,36 @@ function fixture(carrierId = "DodaiYS") {
   Object.assign(enemy, { x: 12, y: 8 });
   return { g, carrier, u, extra, enemy, h: G.hangars.of(carrier)[0] };
 }
+test("exposed SFS riders use air targeting and reject ground-only area weapons until launch", () => {
+  const {g,carrier,u,enemy,h}=fixture();
+  const weapon={...G.modelOf(enemy).weapons[0],min:0,max:20,en:0};
+  assert.equal(G.environmentOf(g,u),"ground");
+  G.hangars.embark(g,u,carrier,h.id);
+  assert.equal(G.environmentOf(g,u),"air");
+  assert.equal(G.modelOf(u).movementType,"air");
+  assert.equal(G.adaptationOf(g,u),1);
+  assert.equal(u.flying,undefined,"boarding must not persist an independent flight toggle");
+  assert.equal(G.targetModifier(g,u,{...weapon,targetModifiers:{air:.5,ground:2}}),.5);
+  assert(G.canAttack(g,enemy,u,weapon),"ordinary anti-air fire remains legal");
+  for(const type of ["bomb","mortar","nuke"]) {
+    const area={...weapon,special:{type,radius:2},blastCenter:{x:u.x,y:u.y}};
+    assert.equal(G.targetModifier(g,u,area),0,type);
+    assert(!G.canAttack(g,enemy,u,area),type);
+    assert(G.canAttack(g,enemy,u,{...area,special:{...area.special,affectsAir:true}}),type);
+  }
+  const environments=g.cellEnvironments;
+  g.cellEnvironments=g.tiles.map(row=>row.map(()=>"space"));
+  assert.equal(G.environmentOf(g,u),"space");
+  assert.equal(G.adaptationOf(g,u),G.models[u.model].adaptability.space/100);
+  g.cellEnvironments=environments;
+  G.end(g);G.end(g);
+  const point=G.hangars.launchCells(g,u)[0];
+  assert(point);G.hangars.launch(g,u,point.x,point.y);
+  assert.equal(G.environmentOf(g,u),"ground");
+  assert.equal(G.modelOf(u).movementType,G.models[u.model].movementType);
+  assert(G.targetModifier(g,u,{...weapon,special:{type:"mortar"}})>0);
+});
+
 test("native SFS platforms have one exposed MS slot with original offsets", () => {
   const platforms = G.catalog.prefabs.filter((p) => p.hangars.some((h) => h.kind === "sfs"));
   assert.deepEqual(platforms.map((p) => p.id).sort(), [

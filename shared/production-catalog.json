@@ -1,5 +1,15 @@
 {
   "schemaVersion": 1,
+  "repairPriceReferences": {
+    "RX_78_2_ACE": "RX_78_2",
+    "Thoroughbred": "PegasusClass",
+    "BlancRival": "PegasusClass",
+    "RX_78_2_BPart": "RX_78_2",
+    "MS_06F_EFSF": "MS_06F",
+    "MS_05S": "MS_05",
+    "RGM_79G_EarlyDeployment": "RGM_79G",
+    "RGM_79F": "RGM_79_G"
+  },
   "timeEnabled": false,
   "productionSecondsPerTurn": 20,
   "equipmentPolicy": "counted-chassis-and-kits",

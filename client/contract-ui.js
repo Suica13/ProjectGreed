@@ -302,11 +302,11 @@ const ContractUI = (() => {
         ctx.restore();
       }
       if (["capture","defend","upload"].includes(o.type)) {
-        if (["capture","defend"].includes(o.type))
+        if (o.type === "capture")
         BattlefieldUI.drawCampaignObjective(
           ctx,
           { kind: "point" },
-          o.type === "defend" || o.status === "completed" ? 0 : 1,
+          o.status === "completed" ? 0 : 1,
           x,
           y,
           geo.tile,

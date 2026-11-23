@@ -187,18 +187,23 @@ const UnitIdentity = (() => {
     ctx.restore();
   }
   function drawCommandAura(ctx, unit, position, tile, selectedUnit) {
-    if (!selectedUnit || !Rules.modelOf(unit).supplyAura) return;
-    if (
-      selectedUnit.id !== unit.id &&
-      (selectedUnit.team !== unit.team || !Rules.inSupplyRange(unit, selectedUnit))
-    )
-      return;
-    const area = Rules.supplyCells(game, unit),
-      center = Rules.center(unit);
+    if (!selectedUnit) return;
+    const self = selectedUnit.id === unit.id, ally = selectedUnit.team === unit.team,
+      aura = Rules.commandAura(unit);
+    if (aura.active && (self || (ally && Rules.dist(unit, selectedUnit) <= aura.radius))) {
+      const colors = {cmdAtk:["#f5797130","#f57971bb"],cmdDef:["#f3ce6830","#f3ce68bb"],cmdCom:["#73baff30","#73baffbb"]},
+        palette = colors[aura.kinds[0]?.type] || colors.cmdCom;
+      drawAuraArea(ctx, unit, position, tile, Rules.commandCells(game, unit), ...palette);
+    }
+    if (Rules.modelOf(unit).supplyAura && (self || (ally && Rules.inSupplyRange(unit, selectedUnit))))
+      drawAuraArea(ctx, unit, position, tile, Rules.supplyCells(game, unit), "#35d6c130", "#51e5d3bb");
+  }
+  function drawAuraArea(ctx, unit, position, tile, area, fill, stroke) {
+    const center = Rules.center(unit);
     const occupied = new Set(area.map((c) => Rules.key(c.x, c.y)));
     ctx.save();
-    ctx.fillStyle = "#35d6c130";
-    ctx.strokeStyle = "#51e5d3bb";
+    ctx.fillStyle = fill;
+    ctx.strokeStyle = stroke;
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     for (const c of area) {

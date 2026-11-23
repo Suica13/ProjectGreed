@@ -1,0 +1,1404 @@
+{
+  "schemaVersion": 1,
+  "id": "5c7314f4-625a-4ac8-b945-48845c6ecc96",
+  "timestamp": "2026-11-23T16:03:57.844Z",
+  "localTimestamp": "2026-11-24 01:03:57",
+  "timeZone": "Asia/Tokyo",
+  "operation": "conversion-rules",
+  "target": {
+    "id": "global",
+    "name": "全局换算规则"
+  },
+  "source": {
+    "ip": "local-user-request"
+  },
+  "beforeRevision": "e47cec743123c1d133cfe6a9cbad72c09be94cdf0a65c1c7bfd789cafeeaa0a1",
+  "units": [
+    {
+      "id": "RGC_80",
+      "previousId": "RGC_80",
+      "name": "吉姆加农",
+      "factions": [
+        "EFSF",
+        "AEUG",
+        "TITANS"
+      ],
+      "faction": "EFSF",
+      "previousName": "吉姆加农",
+      "file": "assets/units/RGC_80/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/Common_Mortar/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_Mortar/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 4687.5,
+          "after": 5859.375
+        },
+        {
+          "path": "/weapons/Common_Mortar/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 4687.5,
+          "after": 5859.375
+        }
+      ]
+    },
+    {
+      "id": "Type61_SPG",
+      "previousId": "Type61_SPG",
+      "name": "61式主战坦克[榴弹炮搭载型]",
+      "factions": [
+        "EFSF"
+      ],
+      "faction": "EFSF",
+      "previousName": "61式主战坦克[榴弹炮搭载型]",
+      "file": "assets/units/Type61_SPG/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/Common_Mortar_Type61_SPG/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_Mortar_Type61_SPG/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3281.25,
+          "after": 4101.5625
+        },
+        {
+          "path": "/weapons/Common_Mortar_Type61_SPG/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3281.25,
+          "after": 4101.5625
+        }
+      ]
+    },
+    {
+      "id": "RX_75R",
+      "previousId": "RX_75R",
+      "name": "量产型钢坦克",
+      "factions": [
+        "EFSF"
+      ],
+      "faction": "EFSF",
+      "previousName": "量产型钢坦克",
+      "file": "assets/units/RX_75R/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/Common_MortarDouble_RX_75R/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_RX_75R/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2343.75,
+          "after": 2929.6875
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_RX_75R/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2343.75,
+          "after": 2929.6875
+        }
+      ]
+    },
+    {
+      "id": "BigTrayClass",
+      "previousId": "BigTrayClass",
+      "name": "大托盘级",
+      "factions": [
+        "EFSF"
+      ],
+      "faction": "EFSF",
+      "previousName": "大托盘级",
+      "file": "assets/units/BigTrayClass/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/Common_Turret_Mortar_BigTrayClass/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_Turret_Mortar_BigTrayClass/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2109.375,
+          "after": 2636.71875
+        },
+        {
+          "path": "/weapons/Common_Turret_Mortar_BigTrayClass/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2109.375,
+          "after": 2636.71875
+        }
+      ]
+    },
+    {
+      "id": "RX_77_2",
+      "previousId": "RX_77_2",
+      "name": "钢加农",
+      "factions": [
+        "EFSF"
+      ],
+      "faction": "EFSF",
+      "previousName": "钢加农",
+      "file": "assets/units/RX_77_2/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/Common_MortarDouble/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3281.25,
+          "after": 4101.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3281.25,
+          "after": 4101.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_L/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_L/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3281.25,
+          "after": 4101.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_L/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3281.25,
+          "after": 4101.5625
+        }
+      ]
+    },
+    {
+      "id": "RX_75",
+      "previousId": "RX_75",
+      "name": "钢坦克",
+      "factions": [
+        "EFSF"
+      ],
+      "faction": "EFSF",
+      "previousName": "钢坦克",
+      "file": "assets/units/RX_75/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/Common_MortarDouble_RX_75/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_RX_75/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2812.5,
+          "after": 3515.625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_RX_75/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2812.5,
+          "after": 3515.625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_RX_75_L/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_RX_75_L/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2812.5,
+          "after": 3515.625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_RX_75_L/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2812.5,
+          "after": 3515.625
+        }
+      ]
+    },
+    {
+      "id": "HeavyForkClass",
+      "previousId": "HeavyForkClass",
+      "name": "重叉级",
+      "factions": [
+        "EFSF"
+      ],
+      "faction": "EFSF",
+      "previousName": "重叉级",
+      "file": "assets/units/HeavyForkClass/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/Common_Turret_Mortar_HeavyForkClass/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_Turret_Mortar_HeavyForkClass/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2109.375,
+          "after": 2636.71875
+        },
+        {
+          "path": "/weapons/Common_Turret_Mortar_HeavyForkClass/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2109.375,
+          "after": 2636.71875
+        }
+      ]
+    },
+    {
+      "id": "RX_77_3",
+      "previousId": "RX_77_3",
+      "name": "钢加农重装型",
+      "factions": [
+        "EFSF",
+        "AEUG",
+        "TITANS"
+      ],
+      "faction": "EFSF",
+      "previousName": "钢加农重装型",
+      "file": "assets/units/RX_77_3/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/Common_MortarDouble_B4/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_B4/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2343.75,
+          "after": 2929.6875
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_B4/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2343.75,
+          "after": 2929.6875
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_B4_L/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_B4_L/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2343.75,
+          "after": 2929.6875
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_B4_L/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2343.75,
+          "after": 2929.6875
+        }
+      ]
+    },
+    {
+      "id": "RX_77_3D",
+      "previousId": "RX_77_3D",
+      "name": "钢加农重装型D",
+      "factions": [
+        "EFSF"
+      ],
+      "faction": "EFSF",
+      "previousName": "钢加农重装型D",
+      "file": "assets/units/RX_77_3D/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/Common_MortarDouble/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3281.25,
+          "after": 4101.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3281.25,
+          "after": 4101.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_L/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_L/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3281.25,
+          "after": 4101.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_L/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3281.25,
+          "after": 4101.5625
+        }
+      ]
+    },
+    {
+      "id": "RTX_440",
+      "previousId": "RTX_440",
+      "name": "强袭型钢坦克",
+      "factions": [
+        "EFSF"
+      ],
+      "faction": "EFSF",
+      "previousName": "强袭型钢坦克",
+      "file": "assets/units/RTX_440/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/Common_Mortar_Bombing_MS/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_Mortar_Bombing_MS/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2343.75,
+          "after": 2929.6875
+        },
+        {
+          "path": "/weapons/Common_Mortar_Bombing_MS/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2343.75,
+          "after": 2929.6875
+        }
+      ]
+    },
+    {
+      "id": "RMV_1",
+      "previousId": "RMV_1",
+      "name": "钢坦克II",
+      "factions": [
+        "EFSF"
+      ],
+      "faction": "EFSF",
+      "previousName": "钢坦克II",
+      "file": "assets/units/RMV_1/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/Common_MortarDouble/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2812.5,
+          "after": 3515.625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2812.5,
+          "after": 3515.625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_L/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_L/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2812.5,
+          "after": 3515.625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_L/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2812.5,
+          "after": 3515.625
+        }
+      ]
+    },
+    {
+      "id": "DabudeClass",
+      "previousId": "DabudeClass",
+      "name": "达布德级",
+      "factions": [
+        "ZEON"
+      ],
+      "faction": "ZEON",
+      "previousName": "达布德级",
+      "file": "assets/units/DabudeClass/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/Common_Turret_Mortar_DabudeClass/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_Turret_Mortar_DabudeClass/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2812.5,
+          "after": 3515.625
+        },
+        {
+          "path": "/weapons/Common_Turret_Mortar_DabudeClass/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2812.5,
+          "after": 3515.625
+        }
+      ]
+    },
+    {
+      "id": "GallopClass",
+      "previousId": "GallopClass",
+      "name": "盖洛普级",
+      "factions": [
+        "ZEON"
+      ],
+      "faction": "ZEON",
+      "previousName": "盖洛普级",
+      "file": "assets/units/GallopClass/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/Common_Turret_Mortar_DabudeClass/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_Turret_Mortar_DabudeClass/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2109.375,
+          "after": 2636.71875
+        },
+        {
+          "path": "/weapons/Common_Turret_Mortar_DabudeClass/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2109.375,
+          "after": 2636.71875
+        }
+      ]
+    },
+    {
+      "id": "YMT_05",
+      "previousId": "YMT_05",
+      "name": "斗狼",
+      "factions": [
+        "ZEON"
+      ],
+      "faction": "ZEON",
+      "previousName": "斗狼",
+      "file": "assets/units/YMT_05/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/Common_Mortar_Bombing_Shell_Napalm/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_Mortar_Bombing_Shell_Napalm/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1875,
+          "after": 2343.75
+        },
+        {
+          "path": "/weapons/Common_Mortar_Bombing_Shell_Napalm/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1875,
+          "after": 2343.75
+        }
+      ]
+    },
+    {
+      "id": "MS_12",
+      "previousId": "MS_12",
+      "name": "吉刚",
+      "factions": [
+        "ZEON"
+      ],
+      "faction": "ZEON",
+      "previousName": "吉刚",
+      "file": "assets/units/MS_12/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/Common_Mortar/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_Mortar/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 4687.5,
+          "after": 5859.375
+        },
+        {
+          "path": "/weapons/Common_Mortar/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 4687.5,
+          "after": 5859.375
+        }
+      ]
+    },
+    {
+      "id": "RGC_80S",
+      "previousId": "RGC_80S",
+      "name": "吉姆加农[空间战式样]",
+      "factions": [
+        "EFSF",
+        "AEUG",
+        "TITANS"
+      ],
+      "faction": "EFSF",
+      "previousName": "吉姆加农[空间战式样]",
+      "file": "assets/units/RGC_80S/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/Common_Mortar_Bombing_Shell/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_Mortar_Bombing_Shell/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3281.25,
+          "after": 4101.5625
+        },
+        {
+          "path": "/weapons/Common_Mortar_Bombing_Shell/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3281.25,
+          "after": 4101.5625
+        }
+      ]
+    },
+    {
+      "id": "RX_77D",
+      "previousId": "RX_77D",
+      "name": "量产型钢加农",
+      "factions": [
+        "EFSF",
+        "AEUG",
+        "TITANS"
+      ],
+      "faction": "EFSF",
+      "previousName": "量产型钢加农",
+      "file": "assets/units/RX_77D/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/Common_MortarDouble_Bombing_Shell/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_Bombing_Shell/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3281.25,
+          "after": 4101.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_Bombing_Shell/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3281.25,
+          "after": 4101.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_Bombing_Shell_R/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_Bombing_Shell_R/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3281.25,
+          "after": 4101.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_Bombing_Shell_R/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3281.25,
+          "after": 4101.5625
+        }
+      ]
+    },
+    {
+      "id": "MS_09_K_1",
+      "previousId": "MS_09_K_1",
+      "name": "大魔加农一型",
+      "factions": [
+        "ZEON"
+      ],
+      "faction": "ZEON",
+      "previousName": "大魔加农一型",
+      "file": "assets/units/MS_09_K_1/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/Common_Mortar/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_Mortar/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 4687.5,
+          "after": 5859.375
+        },
+        {
+          "path": "/weapons/Common_Mortar/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 4687.5,
+          "after": 5859.375
+        }
+      ]
+    },
+    {
+      "id": "YMS_16M",
+      "previousId": "YMS_16M",
+      "name": "扎梅尔",
+      "factions": [
+        "ZEON"
+      ],
+      "faction": "ZEON",
+      "previousName": "扎梅尔",
+      "file": "assets/units/YMS_16M/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/Common_Mortar_YMS_16M/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_Mortar_YMS_16M/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 9375,
+          "after": 11718.75
+        },
+        {
+          "path": "/weapons/Common_Mortar_YMS_16M/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 9375,
+          "after": 11718.75
+        }
+      ]
+    },
+    {
+      "id": "MS_09_K_2",
+      "previousId": "MS_09_K_2",
+      "name": "大魔加农二型",
+      "factions": [
+        "ZEON"
+      ],
+      "faction": "ZEON",
+      "previousName": "大魔加农二型",
+      "file": "assets/units/MS_09_K_2/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/Common_MortarDouble/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3281.25,
+          "after": 4101.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3281.25,
+          "after": 4101.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_L/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_L/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3281.25,
+          "after": 4101.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_L/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3281.25,
+          "after": 4101.5625
+        }
+      ]
+    },
+    {
+      "id": "MS_15C",
+      "previousId": "MS_15C",
+      "name": "强人加农型",
+      "factions": [
+        "ZEON"
+      ],
+      "faction": "ZEON",
+      "previousName": "强人加农型",
+      "file": "assets/units/MS_15C/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/Common_MortarDouble/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3281.25,
+          "after": 4101.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3281.25,
+          "after": 4101.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_L/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_L/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3281.25,
+          "after": 4101.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_L/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3281.25,
+          "after": 4101.5625
+        }
+      ]
+    },
+    {
+      "id": "MSM_04G",
+      "previousId": "MSM_04G",
+      "name": "玖阿格",
+      "factions": [
+        "ZEON"
+      ],
+      "faction": "ZEON",
+      "previousName": "玖阿格",
+      "file": "assets/units/MSM_04G/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/Common_MortarDouble_Bombing_Shell/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_Bombing_Shell/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2578.125,
+          "after": 3222.65625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_Bombing_Shell/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2578.125,
+          "after": 3222.65625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_Bombing_Shell_R/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_Bombing_Shell_R/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2578.125,
+          "after": 3222.65625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_Bombing_Shell_R/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2578.125,
+          "after": 3222.65625
+        }
+      ]
+    },
+    {
+      "id": "MS_06V_DeployState",
+      "previousId": "MS_06V_DeployState",
+      "name": "扎古坦克 [部署]",
+      "factions": [
+        "ZEON"
+      ],
+      "faction": "ZEON",
+      "previousName": "扎古坦克 [部署]",
+      "file": "assets/units/MS_06V_DeployState/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/Common_Mortar/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_Mortar/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 4687.5,
+          "after": 5859.375
+        },
+        {
+          "path": "/weapons/Common_Mortar/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 4687.5,
+          "after": 5859.375
+        }
+      ]
+    },
+    {
+      "id": "RX_75R_DeployState",
+      "previousId": "RX_75R_DeployState",
+      "name": "量产型钢坦克 [部署]",
+      "factions": [
+        "EFSF"
+      ],
+      "faction": "EFSF",
+      "previousName": "量产型钢坦克 [部署]",
+      "file": "assets/units/RX_75R_DeployState/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/Common_MortarDouble_RX_75R/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_RX_75R/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2343.75,
+          "after": 2929.6875
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_RX_75R/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2343.75,
+          "after": 2929.6875
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_RX_75R_L/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_RX_75R_L/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2343.75,
+          "after": 2929.6875
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_RX_75R_L/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2343.75,
+          "after": 2929.6875
+        }
+      ]
+    },
+    {
+      "id": "Type61_SPG_DeployState",
+      "previousId": "Type61_SPG_DeployState",
+      "name": "61式主战坦克[榴弹炮搭载型] [部署]",
+      "factions": [
+        "EFSF"
+      ],
+      "faction": "EFSF",
+      "previousName": "61式主战坦克[榴弹炮搭载型] [部署]",
+      "file": "assets/units/Type61_SPG_DeployState/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/Common_Mortar_Type61_SPG/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_Mortar_Type61_SPG/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3281.25,
+          "after": 4101.5625
+        },
+        {
+          "path": "/weapons/Common_Mortar_Type61_SPG/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3281.25,
+          "after": 4101.5625
+        }
+      ]
+    },
+    {
+      "id": "TFA_2",
+      "previousId": "TFA_2",
+      "name": "扎乌特",
+      "factions": [
+        "ZAFT"
+      ],
+      "faction": "ZAFT",
+      "previousName": "扎乌特",
+      "file": "assets/units/TFA_2/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/Common_MortarDouble/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2812.5,
+          "after": 3515.625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2812.5,
+          "after": 3515.625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_L/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_L/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2812.5,
+          "after": 3515.625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_L/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2812.5,
+          "after": 3515.625
+        }
+      ]
+    },
+    {
+      "id": "ConnectedArmoredVehicle_DeployState",
+      "previousId": "ConnectedArmoredVehicle_DeployState",
+      "name": "连结装甲车",
+      "factions": [
+        "ZAFT"
+      ],
+      "faction": "ZAFT",
+      "previousName": "连结装甲车",
+      "file": "assets/units/ConnectedArmoredVehicle_DeployState/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/Common_Mortar_Type61_SPG/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_Mortar_Type61_SPG/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3281.25,
+          "after": 4101.5625
+        },
+        {
+          "path": "/weapons/Common_Mortar_Type61_SPG/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3281.25,
+          "after": 4101.5625
+        }
+      ]
+    },
+    {
+      "id": "LinearArtillery_DeployState",
+      "previousId": "LinearArtillery_DeployState",
+      "name": "线性火炮",
+      "factions": [
+        "OMNI"
+      ],
+      "faction": "OMNI",
+      "previousName": "线性火炮",
+      "file": "assets/units/LinearArtillery_DeployState/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/Common_Mortar_Type61_SPG/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_Mortar_Type61_SPG/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3281.25,
+          "after": 4101.5625
+        },
+        {
+          "path": "/weapons/Common_Mortar_Type61_SPG/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 3281.25,
+          "after": 4101.5625
+        }
+      ]
+    },
+    {
+      "id": "TFA_2_ModeB",
+      "previousId": "TFA_2_ModeB",
+      "name": "扎乌特",
+      "factions": [
+        "ZAFT"
+      ],
+      "faction": "ZAFT",
+      "previousName": "扎乌特",
+      "file": "assets/units/TFA_2_ModeB/unit.json",
+      "changes": [
+        {
+          "path": "/weapons/Common_MortarDouble/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2812.5,
+          "after": 3515.625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2812.5,
+          "after": 3515.625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_L/classDamageScale",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_L/damageComponents/shell",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2812.5,
+          "after": 3515.625
+        },
+        {
+          "path": "/weapons/Common_MortarDouble_L/damagePerShot",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 2812.5,
+          "after": 3515.625
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "file": "shared/conversion-rules.json",
+      "changes": [
+        {
+          "path": "/weaponClasses/mortar/damage",
+          "kind": "replaced",
+          "beforeExists": true,
+          "afterExists": true,
+          "before": 1.25,
+          "after": 1.5625
+        }
+      ]
+    }
+  ],
+  "logFile": "server-data/editor-changes/2026-11-24/2026-11-23T16-03-57-844Z-5c7314f4-625a-4ac8-b945-48845c6ecc96.json",
+  "afterRevision": "d48dc224fdc562ac2251134a96b33e6b68f4d52024c4108308a3bf9d69bee19c"
+}

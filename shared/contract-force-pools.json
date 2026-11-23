@@ -145,21 +145,21 @@
           }
         ],
         "garrisons": {
-          "salvage": 125,
-          "command": 250,
-          "factory": 150,
-          "capture": 125,
-          "upload": 150,
-          "radar": 125
+          "salvage": 150,
+          "command": 275,
+          "factory": 175,
+          "capture": 150,
+          "upload": 175,
+          "radar": 150
         },
         "waves": {
-          "factory.first": 75,
-          "capture.airdrop": 175,
-          "capture.edge": 75,
-          "defend.first": 300,
-          "defend.followup": 75,
-          "upload.airdrop": 175,
-          "radar.first": 300
+          "factory.first": 100,
+          "capture.airdrop": 200,
+          "capture.edge": 100,
+          "defend.first": 325,
+          "defend.followup": 100,
+          "upload.airdrop": 200,
+          "radar.first": 325
         },
         "transports": {
           "unitId": "Medea",
@@ -210,7 +210,7 @@
               "Type61A5",
               "Type61A5"
             ],
-            "budget": 75,
+            "budget": 100,
             "weight": 4
           },
           {
@@ -223,7 +223,7 @@
               "FF_B2",
               "FF_B2"
             ],
-            "budget": 75,
+            "budget": 100,
             "weight": 4
           },
           {
@@ -258,21 +258,21 @@
           }
         ],
         "garrisons": {
-          "salvage": 225,
-          "command": 450,
-          "factory": 250,
-          "capture": 225,
-          "upload": 250,
-          "radar": 225
+          "salvage": 200,
+          "command": 400,
+          "factory": 225,
+          "capture": 200,
+          "upload": 225,
+          "radar": 200
         },
         "waves": {
-          "factory.first": 125,
-          "capture.airdrop": 300,
-          "capture.edge": 125,
-          "defend.first": 500,
-          "defend.followup": 125,
-          "upload.airdrop": 300,
-          "radar.first": 500
+          "factory.first": 100,
+          "capture.airdrop": 275,
+          "capture.edge": 100,
+          "defend.first": 450,
+          "defend.followup": 100,
+          "upload.airdrop": 275,
+          "radar.first": 450
         },
         "transports": {
           "unitId": "Medea",
@@ -337,7 +337,7 @@
               "Type61A5",
               "Type61A5"
             ],
-            "budget": 75,
+            "budget": 100,
             "weight": 4
           },
           {
@@ -350,7 +350,7 @@
               "FF_B2",
               "FF_B2"
             ],
-            "budget": 75,
+            "budget": 100,
             "weight": 4
           },
           {
@@ -428,21 +428,21 @@
           }
         ],
         "garrisons": {
-          "salvage": 325,
-          "command": 625,
-          "factory": 350,
-          "capture": 325,
-          "upload": 350,
-          "radar": 325
+          "salvage": 300,
+          "command": 575,
+          "factory": 325,
+          "capture": 300,
+          "upload": 325,
+          "radar": 300
         },
         "waves": {
-          "factory.first": 175,
-          "capture.airdrop": 375,
-          "capture.edge": 175,
-          "defend.first": 700,
-          "defend.followup": 175,
-          "upload.airdrop": 375,
-          "radar.first": 700
+          "factory.first": 150,
+          "capture.airdrop": 350,
+          "capture.edge": 150,
+          "defend.first": 650,
+          "defend.followup": 150,
+          "upload.airdrop": 350,
+          "radar.first": 650
         },
         "transports": {
           "unitId": "MedeaKai",

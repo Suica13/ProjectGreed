@@ -50,6 +50,10 @@ function applyWeaponBalance(
   definitions,
 ) {
   synchronizeZZRifle(prefab, definitions);
+  // Published 145-point pilot gates include the boundary; native sources remain archived.
+  for (const ability of [...Object.values(prefab.weapons || {}), ...(prefab.skills || [])])
+    for (const requirement of ability.pilotRequirements || [])
+      if (requirement.operator === ">" && requirement.value === 145) requirement.operator = ">=";
   const production = require("../shared/native-production.json")[prefab.id];
   if (production)
     prefab.sourceStats = { ...prefab.sourceStats, nativeProductionQuantity: production.quantity };

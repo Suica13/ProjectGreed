@@ -110,6 +110,7 @@ test("supply ranges use footprint cells below sprites, appear for selected enemy
       modelOf: () => ({ ship: true, supplyAura: { range: 2 } }),
       inSupplyRange: (a, b) => Math.abs((b.x || 0) - (a.x || 0)) <= 2,
       supplyCells: () => [{ x: 0, y: 0 }],
+      commandAura: () => ({active:false}),
       key: (x, y) => x + "," + y,
       models: { ship: { ship: true } },
     },
