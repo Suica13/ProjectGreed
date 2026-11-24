@@ -3,7 +3,7 @@ test('TB ace hulls and forms match G3 attributes and default COST while retainin
  const ref=G.models.RX_78_3__kit_2;
  for(const id of ['FA_78_1_TB','FA_78_1_TB_WeaponModeB','FA_78_1_TB_NA','MS_06R_TB','MS_06R_TB_WeaponModeB']){
   const m=G.models[id+'__default'];for(const k of ['hp','en','speed','mobility','accuracy','partStructuralStrength'])assert.equal(m[k],ref[k],id+'/'+k);
-  assert.equal(m.cost,1000);assert.deepEqual(m.defenses,ref.defenses);assert.deepEqual(m.attackBonuses,ref.attackBonuses);assert.equal(m.move,id==='FA_78_1_TB_WeaponModeB'?5:ref.move);
+  assert.equal(m.cost,1250);assert.deepEqual(m.defenses,ref.defenses);assert.deepEqual(m.attackBonuses,ref.attackBonuses);assert.equal(m.move,id==='FA_78_1_TB_WeaponModeB'?5:ref.move);
  }
  assert.equal(G.models.FA_78_1_TB__default.shield.hp,32000);assert.equal(G.models.MS_06R_TB__default.shield.hp,0);
 });

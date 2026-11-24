@@ -513,6 +513,9 @@ function loadCatalog({
     require("./unit-footprint.cjs").compactShipFootprint(prefab);
     require("./weapon-balance.cjs").applyWeaponBalance(prefab, conversion, weaponDefinitionsOverride || undefined, { adjustments });
     Adjust.unit(prefab, adjustments, raw.weapons);
+    // Form changes preserve existing action state and never end the unit turn.
+    for (const skill of prefab.skills || [])
+      if (["transform", "armor_purge"].includes(skill.type)) skill.consumeAction = false;
     require("./gn-charged-snipe.cjs").apply(prefab, conversion, weaponDefinitionsOverride || undefined, adjustments);
     require("./charged-sniper-policy.cjs").apply(prefab, conversion, adjustments);
     require("../shared/conversion-rules.cjs").roundValues(prefab);

@@ -168,7 +168,7 @@
       "maxRange": -1
     },
     "mortar": {
-      "damage": 0.75,
+      "damage": 1,
       "accuracy": 1,
       "en": 1,
       "range": 1,

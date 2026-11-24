@@ -64,7 +64,6 @@ def main():
   p.update(name=names[0],localization=localized(names),tags=['CB','AD_2307_T1'],weapons={},weaponKits=[],skills=[],mechanics=[],formOnly=id.endswith('_MA'))
   p['stats'].update(hp=values['baseHpMax'],en=values['baseEnMax'],cost=values['unitLevel']*250,move=round(5*values['baseBoostMoveSpeed']/1.4)+1,mobility=100,accuracy=100,actionPoints=10,vision=round(values['baseFogOfWarSightRange']/5),movementType='air' if values['flyUnit'] else 'ground',adaptability={k:min(100,values[v+'Adaptability']) for k,v in [('ground','ground'),('water','water'),('air','sky'),('space','space')]})
   p['unitTags']=['MS']+(['Aircraft'] if id.endswith('_MA') else [])
-  p['transport']={'slotCost':1,'loadTags':['CanLoadInto','CanUseSFS']}
   p['sourceStats'].update(nativeLevel=4,hp=values['baseHpMax'],en=values['baseEnMax'],boostSpeed=values['baseBoostMoveSpeed'],technologyEra='AD_2307_T1',technologyWeight=1,costPolicy='GBO2 tier x 250')
   p['shield'].update(hp=values['baseShieldMax'],blockChance=.5 if values['baseShieldMax'] else 0,coverage=1 if values['baseShieldMax'] else 0,requiredParts=['leftArm'] if values['baseShieldMax'] else [])
   icon=args.icons/(id[:6]+'.png');dest=ASSETS/'units'/id/'textures'/icon.name
@@ -117,6 +116,9 @@ def main():
   p['stats']=saved_stats;p['sourceStats']=saved_source
   from native_sensors import correct as correct_sensors
   correct_sensors(p,data)
+  # GBO2 has no Battle Universe carrier tag. Restore compatibility after
+  # native_presentation corrects transport metadata from the source MOD.
+  p['transport']={'slotCost':1,'loadTags':['CanLoadInto','CanUseSFS']}
   p['presentation']['shield']=values['baseShieldMax']>0
   dual=p['weapons'].get('CB_GN_002_BG_Double')
   if dual:

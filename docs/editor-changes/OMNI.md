@@ -9,6 +9,7 @@
 
 | 时间（日本时间） | 来源IP | 单位 | 修改对象 | 修改内容 | 详细日志 |
 |---|---|---|---|---|---|
+| 2026-11-25 01:12:18 | local | 线性火炮（LinearArtillery_DeployState） | 共用武器 CB-TB-COST-and-mortar-100-percent | /weapons/Common_Mortar_Type61_SPG/classDamageScale：0.75 → （无）<br>/weapons/Common_Mortar_Type61_SPG/damageComponents/shell：1968.75 → 2625<br>/weapons/Common_Mortar_Type61_SPG/damagePerShot：1968.75 → 2625 | [JSON](../../server-data/editor-changes/2026-11-25/2026-11-24T16-12-18-032Z-9f8fdae8-eba2-40ae-a580-a4148979ded5.json) |
 | 2026-11-25 00:12:03 | local | 马赛III级（MarseilleIIIClass） | 共用武器 space-transport-exclusions | /deploymentLicense/money：563 → 750<br>/deploymentLicense/supplies：1313 → 1750<br>/stats/cost：200 → 250 | [JSON](../../server-data/editor-changes/2026-11-25/2026-11-24T15-12-03-044Z-e81253b4-2c1e-4813-8dca-79493177e0a0.json) |
 | 2026-11-24 21:11:15 | local | 强袭高达（GAT_X105） | 单位特例 | /stats/cost：1000 → 850<br>/weaponKits：&#91;{"id":"standard","name":"标准套件","cost":0,"weapons":&#91;"OMNI_GAT_X105_BR","OMNI_GAT_X105_Dagger_Double_… → &#91;{"id":"standard","name":"标准套件","cost":150,"weapons":&#91;"OMNI_GAT_X105_BR","OMNI_GAT_X105_Dagger_Doubl… | [JSON](../../server-data/editor-changes/2026-11-24/2026-11-24T12-11-15-591Z-af819f85-1504-4093-ad5f-2658a90e80db.json) |
 | 2026-11-24 21:08:47 | local | 强袭高达（GAT_X105） | 共用武器 combat-balance | /stats/cost：900 → 1000<br>/stats/hp：46500 → 41850 | [JSON](../../server-data/editor-changes/2026-11-24/2026-11-24T12-08-47-054Z-d475d6e4-9d6a-4741-bced-1e5649a76a7e.json) |

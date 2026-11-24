@@ -75,11 +75,10 @@ test("NT-1 FA and FA-78-1 purge in place, add native 35 percent resources and re
     const { g, u } = pair(id),
       old = G.modelOf(u),
       count = g.units.length,
-      beforeAP = G.actionPoints(u);
+      beforeAP = u.actionPoints;
     u.hp = old.hp * 0.2;
     u.en = old.en * 0.1;
     u.brokenParts = { leftArm: true };
-    u.customName = "Custom";
     u.counterCount = 1;
     const uid = u.id;
     assert.equal(G.unitSkills(u)[0].type, "armor_purge");
@@ -89,18 +88,17 @@ test("NT-1 FA and FA-78-1 purge in place, add native 35 percent resources and re
     assert.equal(u.hp, Math.round(next.hp * 0.55));
     assert.ok(Math.abs(u.en - next.en * 0.45) < 0.00001);
     assert.equal(u.id, uid);
-    assert.equal(u.customName, "Custom");
     assert.deepEqual(u.brokenParts, { leftArm: true });
     assert.equal(u.counterCount, 1);
     assert.equal(u.acted, false);
-    assert.equal(u.actionPoints, beforeAP - 1);
+    assert.equal(u.actionPoints, beforeAP);
     assert.equal(g.units.length, count);
   }
 });
-test("FA-78-1's purged body can eject again with remaining AP and transformations cannot heal or reset spent actions", () => {
+test("FA-78-1 can eject next turn after purging; free transformations preserve damage and per-turn limits", () => {
   const { g, u } = pair("FA_78_1");
   G.useSkill(g, u, "ExitUnit", 10, 10);
-  assert.equal(G.canUseSkill(g, u, "ExitUnit"), true);
+  assert.equal(G.canUseSkill(g, u, "ExitUnit"), false);
   G.end(g);
   G.end(g);
   const e = G.useSkill(g, u, "ExitUnit", 11, 10),
@@ -115,7 +113,7 @@ test("FA-78-1's purged body can eject again with remaining AP and transformation
   G.useSkill(world.g, unit, "Transform", 10, 10);
   assert.equal(G.modelOf(unit).prefabId, "YMT_05_ModeB");
   assert.equal(unit.id, id);
-  assert.equal(unit.acted, true);
+  assert.equal(unit.acted, false);
   assert.equal(G.canUseSkill(world.g, unit, "Transform"), false);
   assert.ok(Math.abs(unit.hp / G.modelOf(unit).hp - 0.3) < 0.0001);
   assert.ok(Math.abs(unit.en / G.modelOf(unit).en - 0.4) < 0.0001);

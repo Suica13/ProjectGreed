@@ -77,7 +77,7 @@ const Economy = (() => {
       merchantIntros: {},
       contactAffinity: 0,
       contactRewardVersion: 2,
-      merchantAffinities: { anaheim: 0, zeon: 0 },
+      merchantAffinities: Object.fromEntries(merchants.filter(m=>m.id!=="efsf").map(m=>[m.id,0])),
     };
   }
   function validate(value) {
@@ -179,7 +179,11 @@ const Economy = (() => {
     for(const merchant of merchants.filter(m=>m.id!=="efsf")){
       const points=value.merchantAffinities?.[merchant.id]??0;
       if(!Number.isFinite(points)||points<0||points>Number.MAX_SAFE_INTEGER)throw Error("联络人好感度无效");
-      merchantAffinities[merchant.id]=points;
+      // Affinity is cumulative and never spent. Claimed commissions provide a
+      // durable lower bound when an older save omitted or reset this field.
+      const earned=contactTasks.filter(e=>e.status==="claimed" && contacts.contactId(contacts.byId.get(e.id))===merchant.id)
+        .reduce((sum,e)=>sum+(contacts.byId.get(e.id).affinity||100),0);
+      merchantAffinities[merchant.id]=Math.max(points,earned);
     }
     const itemInventory = normalizeItems(value.itemInventory);
     // Retire the development-only grant once. Dropping its marker makes later

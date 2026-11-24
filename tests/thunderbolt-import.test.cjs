@@ -52,6 +52,7 @@ test('native weapon changes and armor purge preserve resource ratios, parts and 
   G.useSkill(g,a,skill.id,a.x,a.y);const next=G.modelOf(a);
   assert.equal(next.prefabId,target);assert.equal(a.id,identity);
   assert(Math.abs(a.hp/next.hp-hpRatio)<.001);assert(Math.abs(a.en/next.en-enRatio)<.001);
-  assert.equal(a.skillUsed?.[skill.id]===true||a.transformed||a.hasTransformed||a.acted,true);
+  assert.equal(a.acted,false);
+  assert.equal(a.skillTurnUses[skill.type==='transform'?'transformation':skill.id],g.round);
  }
 });

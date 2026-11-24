@@ -8,10 +8,10 @@ const deltas=require('../shared/editor-adjustments.json').units;
 test('GBO2 global policy doubles current HP, shields and movement, uses 75 percent mountain and explicit COST',()=>{
  for(const id of ['GN_001','GN_002','GN_003','GN_003_MA','GN_005']){
   const p=pref(id),base=neutral.prefabs.find(p=>p.id===id);
-  assert.equal(p.stats.cost,1250);for(const key of ['hp','move']){const d=deltas[id]?.['/stats/'+key]||0;assert.equal(p.stats[key]-d,(base.stats[key]-d)*2);}
+  assert.equal(p.stats.cost,1500);for(const key of ['hp','move']){const d=deltas[id]?.['/stats/'+key]||0;assert.equal(p.stats[key]-d,(base.stats[key]-d)*2);}
   assert.equal(p.shield.hp,base.shield.hp*2);assert.equal(p.stats.adaptability.mountain,75);
   for(const reference of p.gbo2Conversion.reference.units){
-   const m=Object.values(catalog.models).find(m=>m.prefabId===reference&&m.cost===1250);
+   const m=Object.values(catalog.models).find(m=>m.prefabId===reference&&m.cost===p.gbo2Conversion.reference.cost);
    assert(m);for(const key of ['mobility','accuracy'])assert.equal(p.stats[key]-(deltas[id]?.['/stats/'+key]||0),m[key]);
   }
  }

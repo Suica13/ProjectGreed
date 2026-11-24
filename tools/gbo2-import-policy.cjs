@@ -58,7 +58,7 @@ function prepare(prefab,definitions) {
  return prefab;
 }
 function referenceProfile(prefab,rules,adjustments,fallback=false) {
- const finalCost=prefab.stats.cost+(adjustments.units[prefab.id]?.['/stats/cost']||0);
+ const finalCost=config.referenceCosts?.[prefab.id] ?? (prefab.stats.cost+(adjustments.units[prefab.id]?.['/stats/cost']||0));
  const wanted=fallback?null:config.referenceUnits[prefab.id];
  const catalog=JSON.parse(fs.readFileSync(path.join(ROOT,'assets/unit-catalog.json'),'utf8'));
  const candidates=[];

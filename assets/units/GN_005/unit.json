@@ -960,6 +960,7 @@
   "transport": {
     "slotCost": 1,
     "loadTags": [
+      "CanLoadInto",
       "CanUseSFS"
     ]
   },

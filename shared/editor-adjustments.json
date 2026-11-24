@@ -261,7 +261,7 @@
       "/stats/cost": 100
     },
     "GN_001": {
-      "/stats/cost": 250,
+      "/stats/cost": 500,
       "/stats/en": 0,
       "/stats/move": 0,
       "/stats/speed": 50,
@@ -293,7 +293,7 @@
       "/weapons/CB_GN_001_GNArmGun/damageComponents/beam": 31.25
     },
     "GN_002": {
-      "/stats/cost": 250,
+      "/stats/cost": 500,
       "/stats/en": 0,
       "/stats/move": 0,
       "/stats/speed": 25,
@@ -325,7 +325,7 @@
       "/weapons/CB_GN_002_BG_Double/damageComponents/beam": 650
     },
     "GN_003": {
-      "/stats/cost": 250,
+      "/stats/cost": 500,
       "/stats/en": 0,
       "/stats/move": -1,
       "/stats/speed": 60,
@@ -359,7 +359,7 @@
       "/weapons/Common_ShieldAttack_BL/damageComponents/meleeShell": -375
     },
     "GN_003_MA": {
-      "/stats/cost": 250,
+      "/stats/cost": 500,
       "/stats/en": 0,
       "/stats/move": -1,
       "/stats/speed": 60,
@@ -390,7 +390,7 @@
       "/weapons/CB_GN_003_BMG/damageComponents/beam": 60
     },
     "GN_005": {
-      "/stats/cost": 250,
+      "/stats/cost": 500,
       "/skills/0/damageComponents/beamAP": 34425,
       "/stats/en": 500,
       "/stats/move": -1,
@@ -630,7 +630,7 @@
       "/shield/blockChance": 0.2,
       "/shield/coverage": 0.25,
       "/weapons/EF_GroundTypeMissileLauncher_FA_78_1_TB/damageComponents/shell": -3450,
-      "/stats/cost": 50,
+      "/stats/cost": 300,
       "/weapons/EF_FA_78_1_BR_TB/damageComponents/beam": -843.75,
       "/weapons/EF_BeamSaber_Lv2/damageComponents/melee": -975,
       "/weapons/EF_BeamSaber_Lv2/damageComponents/meleeBeam": -487.5
@@ -645,7 +645,7 @@
       "/weapons/EF_FA_78_1_TB_BeamCannon/en": 70,
       "/weapons/EF_FA_78_1_TB_BackpackMS/en": 100,
       "/weapons/EF_FA_78_1_TB_BackpackMS/hit": -20,
-      "/stats/cost": 50,
+      "/stats/cost": 300,
       "/weapons/EF_FA_78_1_TB_BackpackMS/damageComponents/shell": -450,
       "/weapons/Common_Cqb/damageComponents/melee": -411.328125,
       "/weapons/Common_Cqb/damageComponents/meleeShell": -137.109375
@@ -654,7 +654,7 @@
       "/shield/hp": 0,
       "/shield/blockChance": 0,
       "/shield/coverage": 0.25,
-      "/stats/cost": 50,
+      "/stats/cost": 300,
       "/weapons/EF_HeadVulcan_Lv2/damageComponents/shell": -27.7875,
       "/weapons/EF_BeamSaber_Lv2/damageComponents/melee": -292.5,
       "/weapons/EF_BeamSaber_Lv2/damageComponents/meleeBeam": -146.25,
@@ -663,7 +663,7 @@
     },
     "MS_06R_TB": {
       "/weapons/ZN_BeamBazooka_Lv2/damageComponents/beam": -1018.75,
-      "/stats/cost": 50,
+      "/stats/cost": 300,
       "/weapons/ZN_HeatHawk_Lv2/damageComponents/melee": -337.5,
       "/weapons/ZN_HeatHawk_Lv2/damageComponents/meleeShell": -168.75,
       "/weapons/ZN_Panzerfaust/damageComponents/shellAP": -840.9375
@@ -672,7 +672,7 @@
       "/weapons/ZN_360mmBazooka_D_TB_Lv2/damageComponents/shell": 831.25,
       "/weapons/ZN_360mmBazooka_D_TB_Lv2/attackRounds": 0,
       "/weapons/ZN_360mmBazooka_D_TB_Lv2/en": 45,
-      "/stats/cost": 50,
+      "/stats/cost": 300,
       "/weapons/ZN_HeatHawk_Lv2/damageComponents/melee": -337.5,
       "/weapons/ZN_HeatHawk_Lv2/damageComponents/meleeShell": -168.75,
       "/weapons/ZN_120mmMG_D_TB_Lv2/damageComponents/shell": -54.375

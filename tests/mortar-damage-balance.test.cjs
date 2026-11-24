@@ -1,20 +1,20 @@
 const test=require("node:test"),assert=require("node:assert/strict");
 const {loadCatalog}=require("../tools/load-catalog.cjs"),Classes=require("../shared/weapon-classes");
 const rules=require("../shared/conversion-rules.json"),previous=structuredClone(rules);
-previous.weaponClasses.mortar.damage=.78125;
-previous.weaponClasses.cannon.damage=1.05;
-previous.weapons.mortarHitOffset=10;
-previous.weapons.cannonHitOffset=0;
+previous.weaponClasses.mortar.damage=.75;
+previous.weaponClasses.cannon.damage=rules.weaponClasses.cannon.damage;
+previous.weapons.mortarHitOffset=rules.weapons.mortarHitOffset;
+previous.weapons.cannonHitOffset=rules.weapons.cannonHitOffset;
 const adjustmentsOverride={schemaVersion:1,units:{},weapons:{},prices:{}};
 const before=loadCatalog({embedAssets:false,conversionOverride:previous,adjustmentsOverride}),after=loadCatalog({embedAssets:false,adjustmentsOverride});
-test("mortars use 0.75 and lose five hit points; cannons use 1.10 and gain five hit points without changing native firing chains",()=>{
+test("mortars use 1.00 instead of 0.75 while retaining accuracy and native firing chains",()=>{
   let count=0;
   const oldUnits=new Map(before.prefabs.map(p=>[p.id,p]));
   for(const p of after.prefabs)for(const [id,w] of Object.entries(p.weapons)) {
     const old=oldUnits.get(p.id).weapons[id],mortar=Classes.classify(w,id)==="mortar";
     const cannon=Classes.classify(w,id)==='cannon';
-    const ratio=mortar?.75/.78125:cannon?1.10/1.05:1;
-    const hitDelta=mortar?-5:cannon?5:0;
+    const ratio=mortar?1/.75:1;
+    const hitDelta=0;
     assert(Math.abs(w.damagePerShot-old.damagePerShot*ratio)<1e-6,p.id+"/"+id);
     for(const [channel,value] of Object.entries(w.damageComponents))
       assert(Math.abs(value-old.damageComponents[channel]*ratio)<1e-6,p.id+"/"+id+"/"+channel);
