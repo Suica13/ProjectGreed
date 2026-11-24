@@ -9860,6 +9860,27 @@ const ContractForces = (() => {
     const variants = kits[Math.floor(rng() * kits.length)].filter(allows);
     return variants[Math.floor(rng() * variants.length)];
   }
+  const countQuotas = new WeakMap();
+  const countScale = difficulty => Number(difficulty) >= 4 ? .75 : 1;
+  function selectCount(room, formations, reinforcement = false) {
+    const scale = reinforcement ? countScale(room.settings.sweepDifficulty) : 1;
+    if (scale === 1) return formations;
+    let quotas = countQuotas.get(room.game);
+    if (!quotas) countQuotas.set(room.game, quotas = {});
+    const key = reinforcement ? "reinforcement" : "initial";
+    const quota = quotas[key] ||= { proposed: 0, retained: 0 };
+    return formations.filter(formation => {
+      const count = formation.models.length;
+      quota.proposed += count;
+      const target = quota.proposed * scale;
+      // Keep whole configured formations, carrying rounding error into later waves.
+      if (Math.abs(quota.retained + count - target) <= Math.abs(quota.retained - target)) {
+        quota.retained += count;
+        return true;
+      }
+      return false;
+    });
+  }
   const difficultyScale = difficulty => [1, 1, 1.1, 1.15, 1.15, 1.15][Number(difficulty) - 1] || 1;
   function budget(room, amount, reinforcement = false) {
     const players = room.game.contract.players;
@@ -9870,7 +9891,7 @@ const ContractForces = (() => {
     const percent = Math.round(difficultyScale(room.settings.sweepDifficulty) * 100);
     return Math.round(amount * multiplier * percent / 2500) * 25;
   }
-  return { profile, formations, draw, pick, budget, aiKitAllowed, difficultyScale };
+  return { profile, formations, draw, pick, budget, aiKitAllowed, difficultyScale, countScale, selectCount };
 })();
 if (typeof module !== "undefined") module.exports = ContractForces;
 
@@ -9904,7 +9925,8 @@ const ContractMode = (() => {
     name: "N" + (index + 1),
     costLimit,
     fleetLimit: 2 + Math.floor(index / 3),
-    patrolLimit: 12 + index * 3,
+    initialEnemyCount: [9, 12, 18, 24, 30, 36][index],
+    patrolLimit: Math.floor([9, 12, 18, 24, 30, 36][index] * 1.5),
     events: index + 1,
     width: 60 + Math.floor(index * 8.5),
     height: 38 + Math.floor(index * 10.75),
@@ -10489,27 +10511,69 @@ const ContractMode = (() => {
       : (adaptation.ground ?? 0) >= 100 || (adaptation.air ?? 0) >= 100;
   }
   function scaledCount(room, count) {
+    if (brain(room.game).fillSlots != null) return brain(room.game).fillSlots;
     const state = room.game.contract;
     const before = state.enemyBaseCount || 0;
     state.enemyBaseCount = before + count;
-    const multiplier = forces.difficultyScale(room.settings.sweepDifficulty) * 1.1 * ordinaryForceScale[config(room.settings.sweepDifficulty).id - 1] *
+    const multiplier = forces.countScale(room.settings.sweepDifficulty) * forces.difficultyScale(room.settings.sweepDifficulty) * 1.1 * ordinaryForceScale[config(room.settings.sweepDifficulty).id - 1] *
       (1 + 0.25 * Math.max(0, state.players - 1));
     return Math.round(state.enemyBaseCount * multiplier) - Math.round(before * multiplier);
   }
-  function reinforcementCount(room, count) {
+  function reinforcementCount(room, count, objectiveId = null) {
     const state = room.game.contract;
-    const available = reinforcementSlots(room);
+    const available = reinforcementSlots(room, objectiveId);
     if (!available) return 0;
     const before = state.reinforcementBaseCount || 0;
     state.reinforcementBaseCount = before + count;
-    const multiplier = 0.75 * forces.difficultyScale(room.settings.sweepDifficulty) * 1.1 * ordinaryForceScale[config(room.settings.sweepDifficulty).id - 1] *
+    const multiplier = 0.75 * forces.countScale(room.settings.sweepDifficulty) * forces.difficultyScale(room.settings.sweepDifficulty) * 1.1 * ordinaryForceScale[config(room.settings.sweepDifficulty).id - 1] *
       (1 + 0.25 * Math.max(0, state.players - 1));
     return Math.min(available, Math.round((before + count) * multiplier) - Math.round(before * multiplier));
   }
-  function reinforcementSlots(room) {
-    const alive = room.game.units.filter(unit => unit.contractReinforcement && unit.hp > 0 && !unit.contractExtracted).length;
-    const limit=config(room.settings.sweepDifficulty).patrolLimit;
-    return Math.max(0, Math.floor(limit * (room.game.contract.noAllies ? 1.25 : 1)) - alive);
+  function initialEnemyTarget(room) {
+    const state = room.game.contract;
+    const scale = (1 + .25 * Math.max(0, state.players - 1)) * (state.noAllies ? 1.25 : 1);
+    return Math.round(config(room.settings.sweepDifficulty).initialEnemyCount * scale / 3) * 3;
+  }
+  function reinforcementSlots(room, objectiveId = null) {
+    // Event garrisons, scripted targets and event reinforcements have separate budgets.
+    if (objectiveId) return Infinity;
+    const game = room.game;
+    const alive = game.units.filter(unit => unit.team > 0 && unit.hp > 0 &&
+      !unit.contractExtracted && !unit.facility && !unit.contractObjectiveId).length;
+    return Math.max(0, Math.floor(initialEnemyTarget(room) * 1.5) - alive);
+  }
+  function normalizeInitialEnemies(room, G) {
+    const game = room.game, state = game.contract, b = brain(game);
+    const scripted = new Set(state.objectives.filter(o => o.contactTaskId).map(o => o.id));
+    const eligible = () => game.units.filter(u => u.team > 0 && !u.facility &&
+      !G.modelOf(u).facility && !scripted.has(u.contractObjectiveId));
+    const target = initialEnemyTarget(room);
+    let excess = eligible().length - target;
+    // Remove complete squads, taking the largest ordinary garrison first.
+    while (excess > 0) {
+      const candidates = b.groups.filter(g => !scripted.has(g.objectiveId) && g.ids.length <= excess &&
+        g.ids.every(id => eligible().some(u => u.id === id)) &&
+        (!g.objectiveId || state.objectives.find(o => o.id === g.objectiveId)?.type !== "command" ||
+          eligible().filter(u => u.contractObjectiveId === g.objectiveId).length > g.ids.length));
+      candidates.sort((a,c) => eligible().filter(u => u.contractObjectiveId === c.objectiveId).length -
+        eligible().filter(u => u.contractObjectiveId === a.objectiveId).length);
+      const squad = candidates[0];
+      if (!squad) break;
+      const removed = new Set(squad.ids);
+      game.units = game.units.filter(u => !removed.has(u.id));
+      b.groups.splice(b.groups.indexOf(squad), 1);
+      for (const id of removed) b.health.delete(id);
+      for (const objective of state.objectives)
+        if (objective.targets) objective.targets = objective.targets.filter(id => !removed.has(id));
+      excess -= removed.size;
+    }
+    try {
+      for (let attempt = 0; eligible().length < target && attempt < 30; attempt++) {
+        b.fillSlots = target - eligible().length;
+        patrol(room, G, edge(room, true), b.fillSlots);
+      }
+    } finally { delete b.fillSlots; }
+    if (eligible().length !== target) throw Error("Contract initial enemy quota could not be filled");
   }
   function enemies(room, G, seed) {
     if (noAllies(room.settings)) return factionRoom(room,enemyFactions(G,room.settings)[0],()=>enemies(room,G,seed));
@@ -10684,7 +10748,10 @@ const ContractMode = (() => {
     b.groups.push(entry);
     for (const id of ids) {
       const u = room.game.units.find((u) => u.id === id);
-      if (u) b.health.set(id, u.hp);
+      if (u) {
+        if (objectiveId) u.contractObjectiveId = objectiveId;
+        b.health.set(id, u.hp);
+      }
     }
     return entry;
   }
@@ -10694,7 +10761,7 @@ const ContractMode = (() => {
       const faction=state.objectives.find(o=>o.id===objectiveId)?.enemyFaction || patrolFaction(room,G,point);
       // A single shared stream, with one extra patrol wave per ten normal waves.
       const before=state.patrolBaseWaves || 0;
-      const waves=role==="patrol" ? Math.floor((before+1)*1.1+1e-9)-Math.floor(before*1.1+1e-9) : 1;
+      const waves=brain(room.game).fillSlots != null ? 1 : role==="patrol" ? Math.floor((before+1)*1.1+1e-9)-Math.floor(before*1.1+1e-9) : 1;
       if(role==="patrol") state.patrolBaseWaves=before+1;
       const home=state.objectives.filter(o=>o.enemyFaction===faction).sort((a,b)=>distance(a,point)-distance(b,point))[0];
       const spawnPoint=role==="patrol" && !reinforcement && home ? {x:home.x+7,y:home.y+3} : point;
@@ -10703,12 +10770,12 @@ const ContractMode = (() => {
     const profile = forces.profile(room.settings);
     if (profile && role !== "guard")
       return budgetPatrol(room,G,point,profile.waves["factory.first"],elite,role,objectiveId,reinforcement);
-    if (reinforcement && !reinforcementSlots(room)) return [];
+    if (reinforcement && !reinforcementSlots(room, objectiveId)) return [];
     const state = room.game.contract,
       rng = random(state.seed + ++state.wave * 1979),
       ids = [];
     // Initial garrisons keep their full strength; later waves share a live-unit cap.
-    const total = reinforcement ? reinforcementCount(room, count) : scaledCount(room, count);
+    const total = reinforcement ? reinforcementCount(room, count, objectiveId) : scaledCount(room, count);
     let squadModel;
     for (let i = 0; i < total; i++) {
       if (i % 3 === 0) squadModel = pick(room, G, rng);
@@ -10720,11 +10787,11 @@ const ContractMode = (() => {
   }
   function budgetPatrol(room,G,point,amount,elite=false,role="guard",objectiveId=null,reinforcement=false,airborne=false) {
     const state = room.game.contract;
-    const slots = reinforcement ? reinforcementSlots(room) : Infinity;
+    const slots = reinforcement ? reinforcementSlots(room, objectiveId) : (brain(room.game).fillSlots ?? Infinity);
     if (!slots) return [];
     const rng = random(state.seed + ++state.wave * 1979);
-    const budget = forces.budget(room,amount,reinforcement);
-    const formations = forces.draw(room.settings,G,rng,budget,slots), ids = [];
+    const budget = brain(room.game).fillSlots != null ? Infinity : forces.budget(room,amount,reinforcement);
+    const formations = forces.selectCount(room, forces.draw(room.settings,G,rng,budget,slots), reinforcement), ids = [];
     for (const formation of formations) {
       const spawned = [];
       for (const model of formation.models) {
@@ -10816,8 +10883,8 @@ const ContractMode = (() => {
           }
         continue;
       }
-      if (reinforcementSlots(room) < 2) continue;
-      const waveCount = Math.max(2, reinforcementCount(room, 4));
+      if (reinforcementSlots(room, objective.id) < 2) continue;
+      const waveCount = Math.max(2, reinforcementCount(room, 4, objective.id));
       const zeon = /ZEON/.test(room.settings.sweepFaction),
         name =
           game.environment === "space"
@@ -10889,12 +10956,12 @@ const ContractMode = (() => {
     const model = G.models[definition.unitId+"__standard"];
     if (!model) throw Error("合约追击运输机不可用："+definition.unitId);
     for (const amount of definition.budgets) {
-      const slots = reinforcementSlots(room);
+      const slots = reinforcementSlots(room, objective.id);
       if (slots < 4) break;
       const point = edge(room), hangars = model.hangars || [];
       const capacity = hangars.reduce((sum,h)=>sum+h.capacity,0);
       const allows = m => !!m.transport?.loadTags?.length && hangars.some(h=>G.hangarAllowsModel(h,m));
-      const formations = forces.draw(room.settings,G,rng,forces.budget(room,amount,true),slots-1,allows,capacity);
+      const formations = forces.selectCount(room, forces.draw(room.settings,G,rng,forces.budget(room,amount,true),slots-1,allows,capacity), true);
       if (!formations.length) continue;
       const carrier = spawn(room,G,model,point,false,true);
       if (!carrier) continue;
@@ -11186,6 +11253,7 @@ const ContractMode = (() => {
       );
     }
     for (let i = 0; i < 1 + Math.floor((d.id - 1) / 3); i++) patrol(room, G, edge(room, true), 3);
+    normalizeInitialEnemies(room, G);
     // Other initial patrols/garrisons must not accidentally spawn in a friendly
     // defense area either. Keep their units and relocate only overlapping ones.
     const defenses = state.objectives.filter(o => o.type === "defend");

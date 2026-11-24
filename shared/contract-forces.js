@@ -109,6 +109,27 @@ const ContractForces = (() => {
     const variants = kits[Math.floor(rng() * kits.length)].filter(allows);
     return variants[Math.floor(rng() * variants.length)];
   }
+  const countQuotas = new WeakMap();
+  const countScale = difficulty => Number(difficulty) >= 4 ? .75 : 1;
+  function selectCount(room, formations, reinforcement = false) {
+    const scale = reinforcement ? countScale(room.settings.sweepDifficulty) : 1;
+    if (scale === 1) return formations;
+    let quotas = countQuotas.get(room.game);
+    if (!quotas) countQuotas.set(room.game, quotas = {});
+    const key = reinforcement ? "reinforcement" : "initial";
+    const quota = quotas[key] ||= { proposed: 0, retained: 0 };
+    return formations.filter(formation => {
+      const count = formation.models.length;
+      quota.proposed += count;
+      const target = quota.proposed * scale;
+      // Keep whole configured formations, carrying rounding error into later waves.
+      if (Math.abs(quota.retained + count - target) <= Math.abs(quota.retained - target)) {
+        quota.retained += count;
+        return true;
+      }
+      return false;
+    });
+  }
   const difficultyScale = difficulty => [1, 1, 1.1, 1.15, 1.15, 1.15][Number(difficulty) - 1] || 1;
   function budget(room, amount, reinforcement = false) {
     const players = room.game.contract.players;
@@ -119,6 +140,6 @@ const ContractForces = (() => {
     const percent = Math.round(difficultyScale(room.settings.sweepDifficulty) * 100);
     return Math.round(amount * multiplier * percent / 2500) * 25;
   }
-  return { profile, formations, draw, pick, budget, aiKitAllowed, difficultyScale };
+  return { profile, formations, draw, pick, budget, aiKitAllowed, difficultyScale, countScale, selectCount };
 })();
 if (typeof module !== "undefined") module.exports = ContractForces;

@@ -11,6 +11,7 @@ for(const width of [1440,390])test(`online contract T1/T2 settings and T2 N6 dep
   await page.locator('#profileCompanyName').fill('N6 PMC');await page.locator('#profileOnboardingConfirm').click();
   await page.evaluate(()=>{
    I18n.setLanguage('zh');Economy.creditActivity({id:'n6-carrier',matchId:'n6-carrier',money:0,supplies:0,inventory:{Medea:1}});
+   Economy.receiveDeliveries();
    const item=Economy.snapshot().storage.ships.find(item=>item.unitId==='Medea');
    localStorage.setItem('slg-formations-v1.PMC',JSON.stringify({version:3,squads:[{name:'N6',units:[{unitId:item.unitId,kitId:item.kitId,stockId:item.id}]}]}));
    localStorage.setItem('slg-formations-v1.PMC-active','0');
@@ -56,7 +57,7 @@ for(const width of [1440,390])test(`online contract T1/T2 settings and T2 N6 dep
    expect([undefined,'veteran','elite']).toContain(unit.pilot.genericGrade);
   }
   expect(await page.evaluate(()=>[1,2,3,4,5,6].map(n=>({grade:ContractMode.enemyPilotGrade(n,.99),cap:ContractMode.config(n).patrolLimit})))).toEqual(
-   [12,15,18,21,24,27].map(cap=>({grade:null,cap})));
+   [13,18,27,36,45,54].map(cap=>({grade:null,cap})));
   await page.evaluate(()=>Net.request('auto_place_deployment'));await idle();
   await page.evaluate(()=>Net.request('confirm_deployment'));await idle();
   await expect.poll(()=>page.evaluate(()=>Net.snapshot.phase)).toBe('idle');

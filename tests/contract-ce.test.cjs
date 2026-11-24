@@ -136,14 +136,14 @@ for(const task of contacts.tasks.filter(t=>['omni','zaft'].includes(t.contactId)
     }
   });
 
-test('intervention reinforcement waves share a 25 percent larger cap across both factions',t=>{
+test('intervention patrols share the scaled initial-force cap across both factions',t=>{
   const f=fixture(t,'NONE',6);f.start();const game=f.room.game;
   for(const u of game.units.filter(u=>u.team>0))u.hp=0;
   for(const o of game.contract.objectives)o.status='completed';
   for(let i=0;i<80;i++){game.round+=2;C.poll(f.room,G);}
   const alive=game.units.filter(u=>u.contractReinforcement&&u.hp>0);
-  assert(alive.length>Math.floor(27*1.1),'new capacity must exceed the previous 10 percent allowance');
-  assert(alive.length<=Math.floor(27*1.25));
+  assert(alive.length>54,'intervention capacity grows with its initial force');
+  assert(alive.length<=Math.floor(45*1.5));
   const count=game.units.length;
   for(let i=0;i<12;i++){game.round+=2;C.poll(f.room,G);}
   assert.equal(game.units.length,count);

@@ -1,0 +1,6106 @@
+{
+  "schemaVersion": 1,
+  "samplesPerScenario": 4,
+  "generatedMaps": 272,
+  "seeds": [
+    1936384585,
+    1936386564,
+    1936388543,
+    1936390522
+  ],
+  "scope": "ordinary ground contracts; no armed intervention or contact commissions; initial mobile enemies; event troops excluded from roaming cap; 25 patrol requests and casualty replenishment; no combat simulation",
+  "rows": [
+    {
+      "era": "UC_0079_T1",
+      "faction": "EFSF",
+      "players": 1,
+      "difficulty": 1,
+      "samples": 4,
+      "initialMean": 9,
+      "initialMin": 9,
+      "initialMax": 9,
+      "patrolWaveMean": 3,
+      "facilityMean": 0,
+      "initialCostMean": 1062.5,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 9,
+            "facilities": 0,
+            "cost": 825,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 13,
+            "roamingAtSaturation": 12
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 9,
+            "facilities": 0,
+            "cost": 1300,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 13,
+            "roamingAtSaturation": 12
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 9,
+            "facilities": 0,
+            "cost": 1150,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 13,
+            "roamingAtSaturation": 12
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 9,
+            "facilities": 0,
+            "cost": 975,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 13,
+            "roamingAtSaturation": 12
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T1",
+      "faction": "EFSF",
+      "players": 1,
+      "difficulty": 2,
+      "samples": 4,
+      "initialMean": 12,
+      "initialMin": 12,
+      "initialMax": 12,
+      "patrolWaveMean": 3,
+      "facilityMean": 0.5,
+      "initialCostMean": 1668.75,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 12,
+            "facilities": 2,
+            "cost": 1775,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 18,
+            "roamingAtSaturation": 18
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 12,
+            "facilities": 0,
+            "cost": 1700,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 18,
+            "roamingAtSaturation": 18
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 12,
+            "facilities": 0,
+            "cost": 1600,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 18,
+            "roamingAtSaturation": 18
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 12,
+            "facilities": 0,
+            "cost": 1600,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 18,
+            "roamingAtSaturation": 18
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T1",
+      "faction": "EFSF",
+      "players": 1,
+      "difficulty": 3,
+      "samples": 4,
+      "initialMean": 18,
+      "initialMin": 18,
+      "initialMax": 18,
+      "patrolWaveMean": 4.5,
+      "facilityMean": 0.75,
+      "initialCostMean": 3681.25,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 18,
+            "facilities": 2,
+            "cost": 4850,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory",
+              "command"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 27,
+            "roamingAtSaturation": 27
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 18,
+            "facilities": 0,
+            "cost": 4950,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload",
+              "salvage"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 27,
+            "roamingAtSaturation": 27
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 18,
+            "facilities": 0,
+            "cost": 2100,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend",
+              "salvage"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 27,
+            "roamingAtSaturation": 27
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 18,
+            "facilities": 1,
+            "cost": 2825,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command",
+              "radar"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 27,
+            "roamingAtSaturation": 27
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T1",
+      "faction": "EFSF",
+      "players": 1,
+      "difficulty": 4,
+      "samples": 4,
+      "initialMean": 24,
+      "initialMin": 24,
+      "initialMax": 24,
+      "patrolWaveMean": 3.75,
+      "facilityMean": 1,
+      "initialCostMean": 6306.25,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 24,
+            "facilities": 2,
+            "cost": 5700,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 36,
+            "roamingAtSaturation": 36
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 24,
+            "facilities": 0,
+            "cost": 6225,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 36,
+            "roamingAtSaturation": 36
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 24,
+            "facilities": 1,
+            "cost": 5725,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 36,
+            "roamingAtSaturation": 36
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 24,
+            "facilities": 1,
+            "cost": 7575,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 36,
+            "roamingAtSaturation": 36
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T1",
+      "faction": "EFSF",
+      "players": 1,
+      "difficulty": 5,
+      "samples": 4,
+      "initialMean": 30,
+      "initialMin": 30,
+      "initialMax": 30,
+      "patrolWaveMean": 6,
+      "facilityMean": 1.5,
+      "initialCostMean": 7318.75,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 30,
+            "facilities": 3,
+            "cost": 7575,
+            "veterans": 7,
+            "elites": 4,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage",
+              "capture"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 45,
+            "roamingAtSaturation": 45
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 30,
+            "facilities": 1,
+            "cost": 6075,
+            "veterans": 9,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command",
+              "radar"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 45,
+            "roamingAtSaturation": 45
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 30,
+            "facilities": 1,
+            "cost": 7500,
+            "veterans": 3,
+            "elites": 2,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar",
+              "capture"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 45,
+            "roamingAtSaturation": 45
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 30,
+            "facilities": 1,
+            "cost": 8125,
+            "veterans": 7,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend",
+              "capture"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 45,
+            "roamingAtSaturation": 45
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T1",
+      "faction": "EFSF",
+      "players": 1,
+      "difficulty": 6,
+      "samples": 4,
+      "initialMean": 36,
+      "initialMin": 36,
+      "initialMax": 36,
+      "patrolWaveMean": 8.25,
+      "facilityMean": 3.25,
+      "initialCostMean": 9131.25,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 36,
+            "facilities": 4,
+            "cost": 8775,
+            "veterans": 12,
+            "elites": 10,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage",
+              "capture",
+              "radar"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 54,
+            "roamingAtSaturation": 54
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 36,
+            "facilities": 4,
+            "cost": 8000,
+            "veterans": 11,
+            "elites": 7,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command",
+              "radar",
+              "factory"
+            ],
+            "patrolWave": 12,
+            "roamingLimit": 54,
+            "roamingAtSaturation": 54
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 36,
+            "facilities": 1,
+            "cost": 10400,
+            "veterans": 11,
+            "elites": 4,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar",
+              "capture",
+              "upload"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 54,
+            "roamingAtSaturation": 54
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 36,
+            "facilities": 4,
+            "cost": 9350,
+            "veterans": 15,
+            "elites": 6,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend",
+              "capture",
+              "factory"
+            ],
+            "patrolWave": 9,
+            "roamingLimit": 54,
+            "roamingAtSaturation": 54
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T1",
+      "faction": "EFSF",
+      "players": 4,
+      "difficulty": 1,
+      "samples": 4,
+      "initialMean": 15,
+      "initialMin": 15,
+      "initialMax": 15,
+      "patrolWaveMean": 3,
+      "facilityMean": 0,
+      "initialCostMean": 1806.25,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 15,
+            "facilities": 0,
+            "cost": 1500,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 22,
+            "roamingAtSaturation": 21
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 15,
+            "facilities": 0,
+            "cost": 1825,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 22,
+            "roamingAtSaturation": 21
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 15,
+            "facilities": 0,
+            "cost": 1900,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 22,
+            "roamingAtSaturation": 21
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 15,
+            "facilities": 0,
+            "cost": 2000,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 22,
+            "roamingAtSaturation": 21
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T1",
+      "faction": "EFSF",
+      "players": 4,
+      "difficulty": 2,
+      "samples": 4,
+      "initialMean": 21,
+      "initialMin": 21,
+      "initialMax": 21,
+      "patrolWaveMean": 5.25,
+      "facilityMean": 0.5,
+      "initialCostMean": 3062.5,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 21,
+            "facilities": 2,
+            "cost": 3025,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 31,
+            "roamingAtSaturation": 30
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 21,
+            "facilities": 0,
+            "cost": 3075,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 31,
+            "roamingAtSaturation": 30
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 21,
+            "facilities": 0,
+            "cost": 2700,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 31,
+            "roamingAtSaturation": 30
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 21,
+            "facilities": 0,
+            "cost": 3450,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 31,
+            "roamingAtSaturation": 30
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T1",
+      "faction": "EFSF",
+      "players": 4,
+      "difficulty": 3,
+      "samples": 4,
+      "initialMean": 33,
+      "initialMin": 33,
+      "initialMax": 33,
+      "patrolWaveMean": 6.75,
+      "facilityMean": 0.75,
+      "initialCostMean": 7162.5,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 33,
+            "facilities": 2,
+            "cost": 8000,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory",
+              "command"
+            ],
+            "patrolWave": 9,
+            "roamingLimit": 49,
+            "roamingAtSaturation": 48
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 33,
+            "facilities": 0,
+            "cost": 8125,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload",
+              "salvage"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 49,
+            "roamingAtSaturation": 48
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 33,
+            "facilities": 0,
+            "cost": 5900,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend",
+              "salvage"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 49,
+            "roamingAtSaturation": 48
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 33,
+            "facilities": 1,
+            "cost": 6625,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command",
+              "radar"
+            ],
+            "patrolWave": 12,
+            "roamingLimit": 49,
+            "roamingAtSaturation": 48
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T1",
+      "faction": "EFSF",
+      "players": 4,
+      "difficulty": 4,
+      "samples": 4,
+      "initialMean": 42,
+      "initialMin": 42,
+      "initialMax": 42,
+      "patrolWaveMean": 6,
+      "facilityMean": 1,
+      "initialCostMean": 10925,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 42,
+            "facilities": 2,
+            "cost": 7875,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 63,
+            "roamingAtSaturation": 63
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 42,
+            "facilities": 0,
+            "cost": 7575,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 63,
+            "roamingAtSaturation": 63
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 42,
+            "facilities": 1,
+            "cost": 13425,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 63,
+            "roamingAtSaturation": 63
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 42,
+            "facilities": 1,
+            "cost": 14825,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 63,
+            "roamingAtSaturation": 63
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T1",
+      "faction": "EFSF",
+      "players": 4,
+      "difficulty": 5,
+      "samples": 4,
+      "initialMean": 54,
+      "initialMin": 54,
+      "initialMax": 54,
+      "patrolWaveMean": 9.75,
+      "facilityMean": 1.5,
+      "initialCostMean": 14087.5,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 54,
+            "facilities": 3,
+            "cost": 13725,
+            "veterans": 12,
+            "elites": 7,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage",
+              "capture"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 81,
+            "roamingAtSaturation": 81
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 54,
+            "facilities": 1,
+            "cost": 12650,
+            "veterans": 15,
+            "elites": 4,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command",
+              "radar"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 81,
+            "roamingAtSaturation": 81
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 54,
+            "facilities": 1,
+            "cost": 15675,
+            "veterans": 8,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar",
+              "capture"
+            ],
+            "patrolWave": 12,
+            "roamingLimit": 81,
+            "roamingAtSaturation": 81
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 54,
+            "facilities": 1,
+            "cost": 14300,
+            "veterans": 11,
+            "elites": 5,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend",
+              "capture"
+            ],
+            "patrolWave": 15,
+            "roamingLimit": 81,
+            "roamingAtSaturation": 81
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T1",
+      "faction": "EFSF",
+      "players": 4,
+      "difficulty": 6,
+      "samples": 4,
+      "initialMean": 63,
+      "initialMin": 63,
+      "initialMax": 63,
+      "patrolWaveMean": 12.75,
+      "facilityMean": 3.25,
+      "initialCostMean": 15443.75,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 63,
+            "facilities": 4,
+            "cost": 14750,
+            "veterans": 25,
+            "elites": 10,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage",
+              "capture",
+              "radar"
+            ],
+            "patrolWave": 12,
+            "roamingLimit": 94,
+            "roamingAtSaturation": 93
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 63,
+            "facilities": 4,
+            "cost": 16725,
+            "veterans": 18,
+            "elites": 7,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command",
+              "radar",
+              "factory"
+            ],
+            "patrolWave": 12,
+            "roamingLimit": 94,
+            "roamingAtSaturation": 93
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 63,
+            "facilities": 1,
+            "cost": 13750,
+            "veterans": 20,
+            "elites": 5,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar",
+              "capture",
+              "upload"
+            ],
+            "patrolWave": 12,
+            "roamingLimit": 94,
+            "roamingAtSaturation": 93
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 63,
+            "facilities": 4,
+            "cost": 16550,
+            "veterans": 23,
+            "elites": 8,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend",
+              "capture",
+              "factory"
+            ],
+            "patrolWave": 15,
+            "roamingLimit": 94,
+            "roamingAtSaturation": 93
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T1",
+      "faction": "ZEON",
+      "players": 1,
+      "difficulty": 1,
+      "samples": 4,
+      "initialMean": 9,
+      "initialMin": 9,
+      "initialMax": 9,
+      "patrolWaveMean": 3,
+      "facilityMean": 0,
+      "initialCostMean": 943.75,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 9,
+            "facilities": 0,
+            "cost": 900,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 13,
+            "roamingAtSaturation": 12
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 9,
+            "facilities": 0,
+            "cost": 1000,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 13,
+            "roamingAtSaturation": 12
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 9,
+            "facilities": 0,
+            "cost": 975,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 13,
+            "roamingAtSaturation": 12
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 9,
+            "facilities": 0,
+            "cost": 900,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 13,
+            "roamingAtSaturation": 12
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T1",
+      "faction": "ZEON",
+      "players": 1,
+      "difficulty": 2,
+      "samples": 4,
+      "initialMean": 12,
+      "initialMin": 12,
+      "initialMax": 12,
+      "patrolWaveMean": 3,
+      "facilityMean": 0.5,
+      "initialCostMean": 1393.75,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 12,
+            "facilities": 2,
+            "cost": 1425,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 18,
+            "roamingAtSaturation": 18
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 12,
+            "facilities": 0,
+            "cost": 1400,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 18,
+            "roamingAtSaturation": 18
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 12,
+            "facilities": 0,
+            "cost": 1375,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 18,
+            "roamingAtSaturation": 18
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 12,
+            "facilities": 0,
+            "cost": 1375,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 18,
+            "roamingAtSaturation": 18
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T1",
+      "faction": "ZEON",
+      "players": 1,
+      "difficulty": 3,
+      "samples": 4,
+      "initialMean": 18,
+      "initialMin": 18,
+      "initialMax": 18,
+      "patrolWaveMean": 3,
+      "facilityMean": 0.75,
+      "initialCostMean": 3043.75,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 18,
+            "facilities": 2,
+            "cost": 3000,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory",
+              "command"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 27,
+            "roamingAtSaturation": 27
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 18,
+            "facilities": 0,
+            "cost": 2950,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload",
+              "salvage"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 27,
+            "roamingAtSaturation": 27
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 18,
+            "facilities": 0,
+            "cost": 2825,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend",
+              "salvage"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 27,
+            "roamingAtSaturation": 27
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 18,
+            "facilities": 1,
+            "cost": 3400,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command",
+              "radar"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 27,
+            "roamingAtSaturation": 27
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T1",
+      "faction": "ZEON",
+      "players": 1,
+      "difficulty": 4,
+      "samples": 4,
+      "initialMean": 24,
+      "initialMin": 24,
+      "initialMax": 24,
+      "patrolWaveMean": 3,
+      "facilityMean": 1,
+      "initialCostMean": 5543.75,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 24,
+            "facilities": 2,
+            "cost": 5475,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 36,
+            "roamingAtSaturation": 36
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 24,
+            "facilities": 0,
+            "cost": 5800,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 36,
+            "roamingAtSaturation": 36
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 24,
+            "facilities": 1,
+            "cost": 5800,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 36,
+            "roamingAtSaturation": 36
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 24,
+            "facilities": 1,
+            "cost": 5100,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 36,
+            "roamingAtSaturation": 36
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T1",
+      "faction": "ZEON",
+      "players": 1,
+      "difficulty": 5,
+      "samples": 4,
+      "initialMean": 30,
+      "initialMin": 30,
+      "initialMax": 30,
+      "patrolWaveMean": 3,
+      "facilityMean": 1.5,
+      "initialCostMean": 8862.5,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 30,
+            "facilities": 3,
+            "cost": 8250,
+            "veterans": 6,
+            "elites": 2,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage",
+              "capture"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 45,
+            "roamingAtSaturation": 45
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 30,
+            "facilities": 1,
+            "cost": 9500,
+            "veterans": 5,
+            "elites": 6,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command",
+              "radar"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 45,
+            "roamingAtSaturation": 45
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 30,
+            "facilities": 1,
+            "cost": 8625,
+            "veterans": 3,
+            "elites": 4,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar",
+              "capture"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 45,
+            "roamingAtSaturation": 45
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 30,
+            "facilities": 1,
+            "cost": 9075,
+            "veterans": 5,
+            "elites": 1,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend",
+              "capture"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 45,
+            "roamingAtSaturation": 45
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T1",
+      "faction": "ZEON",
+      "players": 1,
+      "difficulty": 6,
+      "samples": 4,
+      "initialMean": 36,
+      "initialMin": 36,
+      "initialMax": 36,
+      "patrolWaveMean": 6,
+      "facilityMean": 3.25,
+      "initialCostMean": 10625,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 36,
+            "facilities": 4,
+            "cost": 11150,
+            "veterans": 14,
+            "elites": 6,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage",
+              "capture",
+              "radar"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 54,
+            "roamingAtSaturation": 54
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 36,
+            "facilities": 4,
+            "cost": 10500,
+            "veterans": 14,
+            "elites": 4,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command",
+              "radar",
+              "factory"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 54,
+            "roamingAtSaturation": 54
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 36,
+            "facilities": 1,
+            "cost": 10600,
+            "veterans": 7,
+            "elites": 4,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar",
+              "capture",
+              "upload"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 54,
+            "roamingAtSaturation": 54
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 36,
+            "facilities": 4,
+            "cost": 10250,
+            "veterans": 14,
+            "elites": 2,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend",
+              "capture",
+              "factory"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 54,
+            "roamingAtSaturation": 54
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T1",
+      "faction": "ZEON",
+      "players": 4,
+      "difficulty": 1,
+      "samples": 4,
+      "initialMean": 15,
+      "initialMin": 15,
+      "initialMax": 15,
+      "patrolWaveMean": 3,
+      "facilityMean": 0,
+      "initialCostMean": 1762.5,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 15,
+            "facilities": 0,
+            "cost": 1875,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 22,
+            "roamingAtSaturation": 21
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 15,
+            "facilities": 0,
+            "cost": 1750,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 22,
+            "roamingAtSaturation": 21
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 15,
+            "facilities": 0,
+            "cost": 1625,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 22,
+            "roamingAtSaturation": 21
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 15,
+            "facilities": 0,
+            "cost": 1800,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 22,
+            "roamingAtSaturation": 21
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T1",
+      "faction": "ZEON",
+      "players": 4,
+      "difficulty": 2,
+      "samples": 4,
+      "initialMean": 21,
+      "initialMin": 21,
+      "initialMax": 21,
+      "patrolWaveMean": 3,
+      "facilityMean": 0.5,
+      "initialCostMean": 2587.5,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 21,
+            "facilities": 2,
+            "cost": 2550,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 31,
+            "roamingAtSaturation": 30
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 21,
+            "facilities": 0,
+            "cost": 2425,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 31,
+            "roamingAtSaturation": 30
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 21,
+            "facilities": 0,
+            "cost": 2775,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 31,
+            "roamingAtSaturation": 30
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 21,
+            "facilities": 0,
+            "cost": 2600,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 31,
+            "roamingAtSaturation": 30
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T1",
+      "faction": "ZEON",
+      "players": 4,
+      "difficulty": 3,
+      "samples": 4,
+      "initialMean": 33,
+      "initialMin": 33,
+      "initialMax": 33,
+      "patrolWaveMean": 6.75,
+      "facilityMean": 0.75,
+      "initialCostMean": 5625,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 33,
+            "facilities": 2,
+            "cost": 5525,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory",
+              "command"
+            ],
+            "patrolWave": 9,
+            "roamingLimit": 49,
+            "roamingAtSaturation": 48
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 33,
+            "facilities": 0,
+            "cost": 5400,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload",
+              "salvage"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 49,
+            "roamingAtSaturation": 48
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 33,
+            "facilities": 0,
+            "cost": 5700,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend",
+              "salvage"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 49,
+            "roamingAtSaturation": 48
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 33,
+            "facilities": 1,
+            "cost": 5875,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command",
+              "radar"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 49,
+            "roamingAtSaturation": 48
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T1",
+      "faction": "ZEON",
+      "players": 4,
+      "difficulty": 4,
+      "samples": 4,
+      "initialMean": 42,
+      "initialMin": 42,
+      "initialMax": 42,
+      "patrolWaveMean": 6,
+      "facilityMean": 1,
+      "initialCostMean": 10112.5,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 42,
+            "facilities": 2,
+            "cost": 9625,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 63,
+            "roamingAtSaturation": 63
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 42,
+            "facilities": 0,
+            "cost": 10350,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 63,
+            "roamingAtSaturation": 63
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 42,
+            "facilities": 1,
+            "cost": 11100,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 63,
+            "roamingAtSaturation": 63
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 42,
+            "facilities": 1,
+            "cost": 9375,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 63,
+            "roamingAtSaturation": 63
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T1",
+      "faction": "ZEON",
+      "players": 4,
+      "difficulty": 5,
+      "samples": 4,
+      "initialMean": 54,
+      "initialMin": 54,
+      "initialMax": 54,
+      "patrolWaveMean": 6,
+      "facilityMean": 1.5,
+      "initialCostMean": 16006.25,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 54,
+            "facilities": 3,
+            "cost": 16550,
+            "veterans": 13,
+            "elites": 6,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage",
+              "capture"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 81,
+            "roamingAtSaturation": 81
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 54,
+            "facilities": 1,
+            "cost": 15225,
+            "veterans": 12,
+            "elites": 5,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command",
+              "radar"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 81,
+            "roamingAtSaturation": 81
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 54,
+            "facilities": 1,
+            "cost": 15875,
+            "veterans": 8,
+            "elites": 2,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar",
+              "capture"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 81,
+            "roamingAtSaturation": 81
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 54,
+            "facilities": 1,
+            "cost": 16375,
+            "veterans": 16,
+            "elites": 2,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend",
+              "capture"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 81,
+            "roamingAtSaturation": 81
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T1",
+      "faction": "ZEON",
+      "players": 4,
+      "difficulty": 6,
+      "samples": 4,
+      "initialMean": 63,
+      "initialMin": 63,
+      "initialMax": 63,
+      "patrolWaveMean": 6.75,
+      "facilityMean": 3.25,
+      "initialCostMean": 18750,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 63,
+            "facilities": 4,
+            "cost": 19425,
+            "veterans": 18,
+            "elites": 12,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage",
+              "capture",
+              "radar"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 94,
+            "roamingAtSaturation": 93
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 63,
+            "facilities": 4,
+            "cost": 19400,
+            "veterans": 24,
+            "elites": 7,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command",
+              "radar",
+              "factory"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 94,
+            "roamingAtSaturation": 93
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 63,
+            "facilities": 1,
+            "cost": 19425,
+            "veterans": 18,
+            "elites": 2,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar",
+              "capture",
+              "upload"
+            ],
+            "patrolWave": 9,
+            "roamingLimit": 94,
+            "roamingAtSaturation": 93
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 63,
+            "facilities": 4,
+            "cost": 16750,
+            "veterans": 17,
+            "elites": 9,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend",
+              "capture",
+              "factory"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 94,
+            "roamingAtSaturation": 93
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T2",
+      "faction": "EFSF",
+      "players": 1,
+      "difficulty": 1,
+      "samples": 4,
+      "initialMean": 9,
+      "initialMin": 9,
+      "initialMax": 9,
+      "patrolWaveMean": 1,
+      "facilityMean": 0,
+      "initialCostMean": 7175,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 9,
+            "facilities": 0,
+            "cost": 7450,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend"
+            ],
+            "patrolWave": 1,
+            "roamingLimit": 13,
+            "roamingAtSaturation": 13
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 9,
+            "facilities": 0,
+            "cost": 6225,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend"
+            ],
+            "patrolWave": 1,
+            "roamingLimit": 13,
+            "roamingAtSaturation": 13
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 9,
+            "facilities": 0,
+            "cost": 7475,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command"
+            ],
+            "patrolWave": 1,
+            "roamingLimit": 13,
+            "roamingAtSaturation": 13
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 9,
+            "facilities": 0,
+            "cost": 7550,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload"
+            ],
+            "patrolWave": 1,
+            "roamingLimit": 13,
+            "roamingAtSaturation": 13
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T2",
+      "faction": "EFSF",
+      "players": 1,
+      "difficulty": 2,
+      "samples": 4,
+      "initialMean": 12,
+      "initialMin": 12,
+      "initialMax": 12,
+      "patrolWaveMean": 1,
+      "facilityMean": 0.5,
+      "initialCostMean": 9731.25,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 12,
+            "facilities": 2,
+            "cost": 9000,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory"
+            ],
+            "patrolWave": 1,
+            "roamingLimit": 18,
+            "roamingAtSaturation": 18
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 12,
+            "facilities": 0,
+            "cost": 10000,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload"
+            ],
+            "patrolWave": 1,
+            "roamingLimit": 18,
+            "roamingAtSaturation": 18
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 12,
+            "facilities": 0,
+            "cost": 10225,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend"
+            ],
+            "patrolWave": 1,
+            "roamingLimit": 18,
+            "roamingAtSaturation": 18
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 12,
+            "facilities": 0,
+            "cost": 9700,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command"
+            ],
+            "patrolWave": 1,
+            "roamingLimit": 18,
+            "roamingAtSaturation": 18
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T2",
+      "faction": "EFSF",
+      "players": 1,
+      "difficulty": 3,
+      "samples": 4,
+      "initialMean": 18,
+      "initialMin": 18,
+      "initialMax": 18,
+      "patrolWaveMean": 2,
+      "facilityMean": 0.75,
+      "initialCostMean": 15731.25,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 18,
+            "facilities": 2,
+            "cost": 14450,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory",
+              "command"
+            ],
+            "patrolWave": 2,
+            "roamingLimit": 27,
+            "roamingAtSaturation": 27
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 18,
+            "facilities": 0,
+            "cost": 14800,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload",
+              "salvage"
+            ],
+            "patrolWave": 2,
+            "roamingLimit": 27,
+            "roamingAtSaturation": 27
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 18,
+            "facilities": 0,
+            "cost": 16800,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend",
+              "salvage"
+            ],
+            "patrolWave": 2,
+            "roamingLimit": 27,
+            "roamingAtSaturation": 27
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 18,
+            "facilities": 1,
+            "cost": 16875,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command",
+              "radar"
+            ],
+            "patrolWave": 2,
+            "roamingLimit": 27,
+            "roamingAtSaturation": 27
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T2",
+      "faction": "EFSF",
+      "players": 1,
+      "difficulty": 4,
+      "samples": 4,
+      "initialMean": 24,
+      "initialMin": 24,
+      "initialMax": 24,
+      "patrolWaveMean": 1,
+      "facilityMean": 1,
+      "initialCostMean": 25468.75,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 24,
+            "facilities": 2,
+            "cost": 25975,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage"
+            ],
+            "patrolWave": 1,
+            "roamingLimit": 36,
+            "roamingAtSaturation": 36
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 24,
+            "facilities": 0,
+            "cost": 23350,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command"
+            ],
+            "patrolWave": 1,
+            "roamingLimit": 36,
+            "roamingAtSaturation": 36
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 24,
+            "facilities": 1,
+            "cost": 25475,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar"
+            ],
+            "patrolWave": 1,
+            "roamingLimit": 36,
+            "roamingAtSaturation": 36
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 24,
+            "facilities": 1,
+            "cost": 27075,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend"
+            ],
+            "patrolWave": 1,
+            "roamingLimit": 36,
+            "roamingAtSaturation": 36
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T2",
+      "faction": "EFSF",
+      "players": 1,
+      "difficulty": 5,
+      "samples": 4,
+      "initialMean": 30,
+      "initialMin": 30,
+      "initialMax": 30,
+      "patrolWaveMean": 1,
+      "facilityMean": 1.5,
+      "initialCostMean": 32075,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 30,
+            "facilities": 3,
+            "cost": 30225,
+            "veterans": 4,
+            "elites": 4,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage",
+              "capture"
+            ],
+            "patrolWave": 1,
+            "roamingLimit": 45,
+            "roamingAtSaturation": 45
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 30,
+            "facilities": 1,
+            "cost": 32600,
+            "veterans": 9,
+            "elites": 6,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command",
+              "radar"
+            ],
+            "patrolWave": 1,
+            "roamingLimit": 45,
+            "roamingAtSaturation": 45
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 30,
+            "facilities": 1,
+            "cost": 32525,
+            "veterans": 4,
+            "elites": 5,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar",
+              "capture"
+            ],
+            "patrolWave": 1,
+            "roamingLimit": 45,
+            "roamingAtSaturation": 45
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 30,
+            "facilities": 1,
+            "cost": 32950,
+            "veterans": 9,
+            "elites": 2,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend",
+              "capture"
+            ],
+            "patrolWave": 1,
+            "roamingLimit": 45,
+            "roamingAtSaturation": 45
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T2",
+      "faction": "EFSF",
+      "players": 1,
+      "difficulty": 6,
+      "samples": 4,
+      "initialMean": 36,
+      "initialMin": 36,
+      "initialMax": 36,
+      "patrolWaveMean": 2,
+      "facilityMean": 3.25,
+      "initialCostMean": 37293.75,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 36,
+            "facilities": 4,
+            "cost": 39825,
+            "veterans": 14,
+            "elites": 3,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage",
+              "capture",
+              "radar"
+            ],
+            "patrolWave": 2,
+            "roamingLimit": 54,
+            "roamingAtSaturation": 54
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 36,
+            "facilities": 4,
+            "cost": 39125,
+            "veterans": 13,
+            "elites": 10,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command",
+              "radar",
+              "factory"
+            ],
+            "patrolWave": 2,
+            "roamingLimit": 54,
+            "roamingAtSaturation": 54
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 36,
+            "facilities": 1,
+            "cost": 37450,
+            "veterans": 8,
+            "elites": 6,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar",
+              "capture",
+              "upload"
+            ],
+            "patrolWave": 2,
+            "roamingLimit": 54,
+            "roamingAtSaturation": 54
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 36,
+            "facilities": 4,
+            "cost": 32775,
+            "veterans": 9,
+            "elites": 4,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend",
+              "capture",
+              "factory"
+            ],
+            "patrolWave": 2,
+            "roamingLimit": 54,
+            "roamingAtSaturation": 54
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T2",
+      "faction": "EFSF",
+      "players": 4,
+      "difficulty": 1,
+      "samples": 4,
+      "initialMean": 15,
+      "initialMin": 15,
+      "initialMax": 15,
+      "patrolWaveMean": 2,
+      "facilityMean": 0,
+      "initialCostMean": 11706.25,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 15,
+            "facilities": 0,
+            "cost": 11025,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend"
+            ],
+            "patrolWave": 2,
+            "roamingLimit": 22,
+            "roamingAtSaturation": 22
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 15,
+            "facilities": 0,
+            "cost": 9325,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend"
+            ],
+            "patrolWave": 2,
+            "roamingLimit": 22,
+            "roamingAtSaturation": 22
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 15,
+            "facilities": 0,
+            "cost": 12500,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command"
+            ],
+            "patrolWave": 2,
+            "roamingLimit": 22,
+            "roamingAtSaturation": 22
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 15,
+            "facilities": 0,
+            "cost": 13975,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload"
+            ],
+            "patrolWave": 2,
+            "roamingLimit": 22,
+            "roamingAtSaturation": 22
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T2",
+      "faction": "EFSF",
+      "players": 4,
+      "difficulty": 2,
+      "samples": 4,
+      "initialMean": 21,
+      "initialMin": 21,
+      "initialMax": 21,
+      "patrolWaveMean": 3,
+      "facilityMean": 0.5,
+      "initialCostMean": 16481.25,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 21,
+            "facilities": 2,
+            "cost": 14800,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 31,
+            "roamingAtSaturation": 31
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 21,
+            "facilities": 0,
+            "cost": 15475,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 31,
+            "roamingAtSaturation": 31
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 21,
+            "facilities": 0,
+            "cost": 16275,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 31,
+            "roamingAtSaturation": 31
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 21,
+            "facilities": 0,
+            "cost": 19375,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 31,
+            "roamingAtSaturation": 31
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T2",
+      "faction": "EFSF",
+      "players": 4,
+      "difficulty": 3,
+      "samples": 4,
+      "initialMean": 33,
+      "initialMin": 33,
+      "initialMax": 33,
+      "patrolWaveMean": 3,
+      "facilityMean": 0.75,
+      "initialCostMean": 29787.5,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 33,
+            "facilities": 2,
+            "cost": 28900,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory",
+              "command"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 49,
+            "roamingAtSaturation": 49
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 33,
+            "facilities": 0,
+            "cost": 28500,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload",
+              "salvage"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 49,
+            "roamingAtSaturation": 49
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 33,
+            "facilities": 0,
+            "cost": 30350,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend",
+              "salvage"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 49,
+            "roamingAtSaturation": 49
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 33,
+            "facilities": 1,
+            "cost": 31400,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command",
+              "radar"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 49,
+            "roamingAtSaturation": 49
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T2",
+      "faction": "EFSF",
+      "players": 4,
+      "difficulty": 4,
+      "samples": 4,
+      "initialMean": 42,
+      "initialMin": 42,
+      "initialMax": 42,
+      "patrolWaveMean": 3,
+      "facilityMean": 1,
+      "initialCostMean": 45125,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 42,
+            "facilities": 2,
+            "cost": 45775,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 63,
+            "roamingAtSaturation": 63
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 42,
+            "facilities": 0,
+            "cost": 42375,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 63,
+            "roamingAtSaturation": 63
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 42,
+            "facilities": 1,
+            "cost": 46450,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 63,
+            "roamingAtSaturation": 63
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 42,
+            "facilities": 1,
+            "cost": 45900,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 63,
+            "roamingAtSaturation": 63
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T2",
+      "faction": "EFSF",
+      "players": 4,
+      "difficulty": 5,
+      "samples": 4,
+      "initialMean": 54,
+      "initialMin": 54,
+      "initialMax": 54,
+      "patrolWaveMean": 3,
+      "facilityMean": 1.5,
+      "initialCostMean": 56106.25,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 54,
+            "facilities": 3,
+            "cost": 55650,
+            "veterans": 8,
+            "elites": 5,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage",
+              "capture"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 81,
+            "roamingAtSaturation": 81
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 54,
+            "facilities": 1,
+            "cost": 58225,
+            "veterans": 15,
+            "elites": 8,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command",
+              "radar"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 81,
+            "roamingAtSaturation": 81
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 54,
+            "facilities": 1,
+            "cost": 55075,
+            "veterans": 6,
+            "elites": 6,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar",
+              "capture"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 81,
+            "roamingAtSaturation": 81
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 54,
+            "facilities": 1,
+            "cost": 55475,
+            "veterans": 13,
+            "elites": 3,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend",
+              "capture"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 81,
+            "roamingAtSaturation": 81
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T2",
+      "faction": "EFSF",
+      "players": 4,
+      "difficulty": 6,
+      "samples": 4,
+      "initialMean": 63,
+      "initialMin": 63,
+      "initialMax": 63,
+      "patrolWaveMean": 3,
+      "facilityMean": 3.25,
+      "initialCostMean": 65506.25,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 63,
+            "facilities": 4,
+            "cost": 68400,
+            "veterans": 23,
+            "elites": 6,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage",
+              "capture",
+              "radar"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 94,
+            "roamingAtSaturation": 94
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 63,
+            "facilities": 4,
+            "cost": 64950,
+            "veterans": 22,
+            "elites": 12,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command",
+              "radar",
+              "factory"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 94,
+            "roamingAtSaturation": 94
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 63,
+            "facilities": 1,
+            "cost": 64725,
+            "veterans": 14,
+            "elites": 7,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar",
+              "capture",
+              "upload"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 94,
+            "roamingAtSaturation": 94
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 63,
+            "facilities": 4,
+            "cost": 63950,
+            "veterans": 18,
+            "elites": 6,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend",
+              "capture",
+              "factory"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 94,
+            "roamingAtSaturation": 94
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T2",
+      "faction": "ZEON",
+      "players": 1,
+      "difficulty": 1,
+      "samples": 4,
+      "initialMean": 9,
+      "initialMin": 9,
+      "initialMax": 9,
+      "patrolWaveMean": 1,
+      "facilityMean": 0,
+      "initialCostMean": 4150,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 9,
+            "facilities": 0,
+            "cost": 4350,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend"
+            ],
+            "patrolWave": 1,
+            "roamingLimit": 13,
+            "roamingAtSaturation": 13
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 9,
+            "facilities": 0,
+            "cost": 3900,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend"
+            ],
+            "patrolWave": 1,
+            "roamingLimit": 13,
+            "roamingAtSaturation": 13
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 9,
+            "facilities": 0,
+            "cost": 4200,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command"
+            ],
+            "patrolWave": 1,
+            "roamingLimit": 13,
+            "roamingAtSaturation": 13
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 9,
+            "facilities": 0,
+            "cost": 4150,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload"
+            ],
+            "patrolWave": 1,
+            "roamingLimit": 13,
+            "roamingAtSaturation": 13
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T2",
+      "faction": "ZEON",
+      "players": 1,
+      "difficulty": 2,
+      "samples": 4,
+      "initialMean": 12,
+      "initialMin": 12,
+      "initialMax": 12,
+      "patrolWaveMean": 1,
+      "facilityMean": 0.5,
+      "initialCostMean": 5581.25,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 12,
+            "facilities": 2,
+            "cost": 5475,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory"
+            ],
+            "patrolWave": 1,
+            "roamingLimit": 18,
+            "roamingAtSaturation": 18
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 12,
+            "facilities": 0,
+            "cost": 5650,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload"
+            ],
+            "patrolWave": 1,
+            "roamingLimit": 18,
+            "roamingAtSaturation": 18
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 12,
+            "facilities": 0,
+            "cost": 5650,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend"
+            ],
+            "patrolWave": 1,
+            "roamingLimit": 18,
+            "roamingAtSaturation": 18
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 12,
+            "facilities": 0,
+            "cost": 5550,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command"
+            ],
+            "patrolWave": 1,
+            "roamingLimit": 18,
+            "roamingAtSaturation": 18
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T2",
+      "faction": "ZEON",
+      "players": 1,
+      "difficulty": 3,
+      "samples": 4,
+      "initialMean": 18,
+      "initialMin": 18,
+      "initialMax": 18,
+      "patrolWaveMean": 2,
+      "facilityMean": 0.75,
+      "initialCostMean": 8575,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 18,
+            "facilities": 2,
+            "cost": 8275,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory",
+              "command"
+            ],
+            "patrolWave": 2,
+            "roamingLimit": 27,
+            "roamingAtSaturation": 27
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 18,
+            "facilities": 0,
+            "cost": 8050,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload",
+              "salvage"
+            ],
+            "patrolWave": 2,
+            "roamingLimit": 27,
+            "roamingAtSaturation": 27
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 18,
+            "facilities": 0,
+            "cost": 8800,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend",
+              "salvage"
+            ],
+            "patrolWave": 2,
+            "roamingLimit": 27,
+            "roamingAtSaturation": 27
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 18,
+            "facilities": 1,
+            "cost": 9175,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command",
+              "radar"
+            ],
+            "patrolWave": 2,
+            "roamingLimit": 27,
+            "roamingAtSaturation": 27
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T2",
+      "faction": "ZEON",
+      "players": 1,
+      "difficulty": 4,
+      "samples": 4,
+      "initialMean": 24,
+      "initialMin": 24,
+      "initialMax": 24,
+      "patrolWaveMean": 1,
+      "facilityMean": 1,
+      "initialCostMean": 17106.25,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 24,
+            "facilities": 2,
+            "cost": 17150,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage"
+            ],
+            "patrolWave": 1,
+            "roamingLimit": 36,
+            "roamingAtSaturation": 36
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 24,
+            "facilities": 0,
+            "cost": 16325,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command"
+            ],
+            "patrolWave": 1,
+            "roamingLimit": 36,
+            "roamingAtSaturation": 36
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 24,
+            "facilities": 1,
+            "cost": 17100,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar"
+            ],
+            "patrolWave": 1,
+            "roamingLimit": 36,
+            "roamingAtSaturation": 36
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 24,
+            "facilities": 1,
+            "cost": 17850,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend"
+            ],
+            "patrolWave": 1,
+            "roamingLimit": 36,
+            "roamingAtSaturation": 36
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T2",
+      "faction": "ZEON",
+      "players": 1,
+      "difficulty": 5,
+      "samples": 4,
+      "initialMean": 30,
+      "initialMin": 30,
+      "initialMax": 30,
+      "patrolWaveMean": 1,
+      "facilityMean": 1.5,
+      "initialCostMean": 21306.25,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 30,
+            "facilities": 3,
+            "cost": 20675,
+            "veterans": 4,
+            "elites": 4,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage",
+              "capture"
+            ],
+            "patrolWave": 1,
+            "roamingLimit": 45,
+            "roamingAtSaturation": 45
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 30,
+            "facilities": 1,
+            "cost": 21250,
+            "veterans": 9,
+            "elites": 6,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command",
+              "radar"
+            ],
+            "patrolWave": 1,
+            "roamingLimit": 45,
+            "roamingAtSaturation": 45
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 30,
+            "facilities": 1,
+            "cost": 21750,
+            "veterans": 4,
+            "elites": 5,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar",
+              "capture"
+            ],
+            "patrolWave": 1,
+            "roamingLimit": 45,
+            "roamingAtSaturation": 45
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 30,
+            "facilities": 1,
+            "cost": 21550,
+            "veterans": 9,
+            "elites": 2,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend",
+              "capture"
+            ],
+            "patrolWave": 1,
+            "roamingLimit": 45,
+            "roamingAtSaturation": 45
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T2",
+      "faction": "ZEON",
+      "players": 1,
+      "difficulty": 6,
+      "samples": 4,
+      "initialMean": 36,
+      "initialMin": 36,
+      "initialMax": 36,
+      "patrolWaveMean": 2,
+      "facilityMean": 3.25,
+      "initialCostMean": 25212.5,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 36,
+            "facilities": 4,
+            "cost": 25800,
+            "veterans": 14,
+            "elites": 3,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage",
+              "capture",
+              "radar"
+            ],
+            "patrolWave": 2,
+            "roamingLimit": 54,
+            "roamingAtSaturation": 54
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 36,
+            "facilities": 4,
+            "cost": 25950,
+            "veterans": 13,
+            "elites": 10,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command",
+              "radar",
+              "factory"
+            ],
+            "patrolWave": 2,
+            "roamingLimit": 54,
+            "roamingAtSaturation": 54
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 36,
+            "facilities": 1,
+            "cost": 25200,
+            "veterans": 8,
+            "elites": 6,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar",
+              "capture",
+              "upload"
+            ],
+            "patrolWave": 2,
+            "roamingLimit": 54,
+            "roamingAtSaturation": 54
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 36,
+            "facilities": 4,
+            "cost": 23900,
+            "veterans": 9,
+            "elites": 4,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend",
+              "capture",
+              "factory"
+            ],
+            "patrolWave": 2,
+            "roamingLimit": 54,
+            "roamingAtSaturation": 54
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T2",
+      "faction": "ZEON",
+      "players": 4,
+      "difficulty": 1,
+      "samples": 4,
+      "initialMean": 15,
+      "initialMin": 15,
+      "initialMax": 15,
+      "patrolWaveMean": 2,
+      "facilityMean": 0,
+      "initialCostMean": 6943.75,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 15,
+            "facilities": 0,
+            "cost": 6825,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend"
+            ],
+            "patrolWave": 2,
+            "roamingLimit": 22,
+            "roamingAtSaturation": 22
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 15,
+            "facilities": 0,
+            "cost": 6400,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend"
+            ],
+            "patrolWave": 2,
+            "roamingLimit": 22,
+            "roamingAtSaturation": 22
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 15,
+            "facilities": 0,
+            "cost": 7050,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command"
+            ],
+            "patrolWave": 2,
+            "roamingLimit": 22,
+            "roamingAtSaturation": 22
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 15,
+            "facilities": 0,
+            "cost": 7500,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload"
+            ],
+            "patrolWave": 2,
+            "roamingLimit": 22,
+            "roamingAtSaturation": 22
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T2",
+      "faction": "ZEON",
+      "players": 4,
+      "difficulty": 2,
+      "samples": 4,
+      "initialMean": 21,
+      "initialMin": 21,
+      "initialMax": 21,
+      "patrolWaveMean": 3,
+      "facilityMean": 0.5,
+      "initialCostMean": 9662.5,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 21,
+            "facilities": 2,
+            "cost": 9325,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 31,
+            "roamingAtSaturation": 31
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 21,
+            "facilities": 0,
+            "cost": 9325,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 31,
+            "roamingAtSaturation": 31
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 21,
+            "facilities": 0,
+            "cost": 9550,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 31,
+            "roamingAtSaturation": 31
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 21,
+            "facilities": 0,
+            "cost": 10450,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 31,
+            "roamingAtSaturation": 31
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T2",
+      "faction": "ZEON",
+      "players": 4,
+      "difficulty": 3,
+      "samples": 4,
+      "initialMean": 33,
+      "initialMin": 33,
+      "initialMax": 33,
+      "patrolWaveMean": 3,
+      "facilityMean": 0.75,
+      "initialCostMean": 16156.25,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 33,
+            "facilities": 2,
+            "cost": 16450,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory",
+              "command"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 49,
+            "roamingAtSaturation": 49
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 33,
+            "facilities": 0,
+            "cost": 15400,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload",
+              "salvage"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 49,
+            "roamingAtSaturation": 49
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 33,
+            "facilities": 0,
+            "cost": 15875,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend",
+              "salvage"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 49,
+            "roamingAtSaturation": 49
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 33,
+            "facilities": 1,
+            "cost": 16900,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command",
+              "radar"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 49,
+            "roamingAtSaturation": 49
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T2",
+      "faction": "ZEON",
+      "players": 4,
+      "difficulty": 4,
+      "samples": 4,
+      "initialMean": 42,
+      "initialMin": 42,
+      "initialMax": 42,
+      "patrolWaveMean": 3,
+      "facilityMean": 1,
+      "initialCostMean": 30400,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 42,
+            "facilities": 2,
+            "cost": 30250,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 63,
+            "roamingAtSaturation": 63
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 42,
+            "facilities": 0,
+            "cost": 29575,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 63,
+            "roamingAtSaturation": 63
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 42,
+            "facilities": 1,
+            "cost": 30725,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 63,
+            "roamingAtSaturation": 63
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 42,
+            "facilities": 1,
+            "cost": 31050,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 63,
+            "roamingAtSaturation": 63
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T2",
+      "faction": "ZEON",
+      "players": 4,
+      "difficulty": 5,
+      "samples": 4,
+      "initialMean": 54,
+      "initialMin": 54,
+      "initialMax": 54,
+      "patrolWaveMean": 3,
+      "facilityMean": 1.5,
+      "initialCostMean": 38343.75,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 54,
+            "facilities": 3,
+            "cost": 37850,
+            "veterans": 8,
+            "elites": 5,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage",
+              "capture"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 81,
+            "roamingAtSaturation": 81
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 54,
+            "facilities": 1,
+            "cost": 39000,
+            "veterans": 15,
+            "elites": 8,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command",
+              "radar"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 81,
+            "roamingAtSaturation": 81
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 54,
+            "facilities": 1,
+            "cost": 38200,
+            "veterans": 6,
+            "elites": 6,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar",
+              "capture"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 81,
+            "roamingAtSaturation": 81
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 54,
+            "facilities": 1,
+            "cost": 38325,
+            "veterans": 13,
+            "elites": 3,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend",
+              "capture"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 81,
+            "roamingAtSaturation": 81
+          }
+        }
+      ]
+    },
+    {
+      "era": "UC_0079_T2",
+      "faction": "ZEON",
+      "players": 4,
+      "difficulty": 6,
+      "samples": 4,
+      "initialMean": 63,
+      "initialMin": 63,
+      "initialMax": 63,
+      "patrolWaveMean": 3,
+      "facilityMean": 3.25,
+      "initialCostMean": 44868.75,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 63,
+            "facilities": 4,
+            "cost": 45700,
+            "veterans": 23,
+            "elites": 6,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage",
+              "capture",
+              "radar"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 94,
+            "roamingAtSaturation": 94
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 63,
+            "facilities": 4,
+            "cost": 44650,
+            "veterans": 22,
+            "elites": 12,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command",
+              "radar",
+              "factory"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 94,
+            "roamingAtSaturation": 94
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 63,
+            "facilities": 1,
+            "cost": 44650,
+            "veterans": 14,
+            "elites": 7,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar",
+              "capture",
+              "upload"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 94,
+            "roamingAtSaturation": 94
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 63,
+            "facilities": 4,
+            "cost": 44475,
+            "veterans": 18,
+            "elites": 6,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend",
+              "capture",
+              "factory"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 94,
+            "roamingAtSaturation": 94
+          }
+        }
+      ]
+    },
+    {
+      "era": "CE_0071_T1",
+      "faction": "OMNI",
+      "players": 1,
+      "difficulty": 2,
+      "samples": 4,
+      "initialMean": 12,
+      "initialMin": 12,
+      "initialMax": 12,
+      "patrolWaveMean": 3,
+      "facilityMean": 0.5,
+      "initialCostMean": 1087.5,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 12,
+            "facilities": 2,
+            "cost": 975,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 18,
+            "roamingAtSaturation": 18
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 12,
+            "facilities": 0,
+            "cost": 1425,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 18,
+            "roamingAtSaturation": 18
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 12,
+            "facilities": 0,
+            "cost": 975,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 18,
+            "roamingAtSaturation": 18
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 12,
+            "facilities": 0,
+            "cost": 975,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 18,
+            "roamingAtSaturation": 18
+          }
+        }
+      ]
+    },
+    {
+      "era": "CE_0071_T1",
+      "faction": "OMNI",
+      "players": 1,
+      "difficulty": 3,
+      "samples": 4,
+      "initialMean": 18,
+      "initialMin": 18,
+      "initialMax": 18,
+      "patrolWaveMean": 3,
+      "facilityMean": 0.75,
+      "initialCostMean": 1743.75,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 18,
+            "facilities": 2,
+            "cost": 2100,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory",
+              "command"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 27,
+            "roamingAtSaturation": 27
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 18,
+            "facilities": 0,
+            "cost": 1425,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload",
+              "salvage"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 27,
+            "roamingAtSaturation": 27
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 18,
+            "facilities": 0,
+            "cost": 1425,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend",
+              "salvage"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 27,
+            "roamingAtSaturation": 27
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 18,
+            "facilities": 1,
+            "cost": 2025,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command",
+              "radar"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 27,
+            "roamingAtSaturation": 27
+          }
+        }
+      ]
+    },
+    {
+      "era": "CE_0071_T1",
+      "faction": "OMNI",
+      "players": 1,
+      "difficulty": 4,
+      "samples": 4,
+      "initialMean": 24,
+      "initialMin": 24,
+      "initialMax": 24,
+      "patrolWaveMean": 3.75,
+      "facilityMean": 1,
+      "initialCostMean": 6175,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 24,
+            "facilities": 2,
+            "cost": 7225,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 36,
+            "roamingAtSaturation": 36
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 24,
+            "facilities": 0,
+            "cost": 7050,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 36,
+            "roamingAtSaturation": 36
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 24,
+            "facilities": 1,
+            "cost": 5775,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 36,
+            "roamingAtSaturation": 36
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 24,
+            "facilities": 1,
+            "cost": 4650,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 36,
+            "roamingAtSaturation": 36
+          }
+        }
+      ]
+    },
+    {
+      "era": "CE_0071_T1",
+      "faction": "OMNI",
+      "players": 1,
+      "difficulty": 5,
+      "samples": 4,
+      "initialMean": 30,
+      "initialMin": 30,
+      "initialMax": 30,
+      "patrolWaveMean": 4.5,
+      "facilityMean": 1.5,
+      "initialCostMean": 7968.75,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 30,
+            "facilities": 3,
+            "cost": 9525,
+            "veterans": 4,
+            "elites": 1,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage",
+              "capture"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 45,
+            "roamingAtSaturation": 45
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 30,
+            "facilities": 1,
+            "cost": 8550,
+            "veterans": 7,
+            "elites": 3,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command",
+              "radar"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 45,
+            "roamingAtSaturation": 45
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 30,
+            "facilities": 1,
+            "cost": 5525,
+            "veterans": 3,
+            "elites": 1,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar",
+              "capture"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 45,
+            "roamingAtSaturation": 45
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 30,
+            "facilities": 1,
+            "cost": 8275,
+            "veterans": 8,
+            "elites": 2,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend",
+              "capture"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 45,
+            "roamingAtSaturation": 45
+          }
+        }
+      ]
+    },
+    {
+      "era": "CE_0071_T1",
+      "faction": "OMNI",
+      "players": 1,
+      "difficulty": 6,
+      "samples": 4,
+      "initialMean": 36,
+      "initialMin": 36,
+      "initialMax": 36,
+      "patrolWaveMean": 6,
+      "facilityMean": 3.25,
+      "initialCostMean": 12950,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 36,
+            "facilities": 4,
+            "cost": 10200,
+            "veterans": 14,
+            "elites": 6,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage",
+              "capture",
+              "radar"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 54,
+            "roamingAtSaturation": 54
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 36,
+            "facilities": 4,
+            "cost": 12775,
+            "veterans": 8,
+            "elites": 6,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command",
+              "radar",
+              "factory"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 54,
+            "roamingAtSaturation": 54
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 36,
+            "facilities": 1,
+            "cost": 12750,
+            "veterans": 6,
+            "elites": 2,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar",
+              "capture",
+              "upload"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 54,
+            "roamingAtSaturation": 54
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 36,
+            "facilities": 4,
+            "cost": 16075,
+            "veterans": 14,
+            "elites": 3,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend",
+              "capture",
+              "factory"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 54,
+            "roamingAtSaturation": 54
+          }
+        }
+      ]
+    },
+    {
+      "era": "CE_0071_T1",
+      "faction": "OMNI",
+      "players": 4,
+      "difficulty": 2,
+      "samples": 4,
+      "initialMean": 21,
+      "initialMin": 21,
+      "initialMax": 21,
+      "patrolWaveMean": 5.25,
+      "facilityMean": 0.5,
+      "initialCostMean": 2287.5,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 21,
+            "facilities": 2,
+            "cost": 2175,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 31,
+            "roamingAtSaturation": 30
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 21,
+            "facilities": 0,
+            "cost": 2175,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 31,
+            "roamingAtSaturation": 30
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 21,
+            "facilities": 0,
+            "cost": 3225,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 31,
+            "roamingAtSaturation": 30
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 21,
+            "facilities": 0,
+            "cost": 1575,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 31,
+            "roamingAtSaturation": 30
+          }
+        }
+      ]
+    },
+    {
+      "era": "CE_0071_T1",
+      "faction": "OMNI",
+      "players": 4,
+      "difficulty": 3,
+      "samples": 4,
+      "initialMean": 33,
+      "initialMin": 33,
+      "initialMax": 33,
+      "patrolWaveMean": 5.25,
+      "facilityMean": 0.75,
+      "initialCostMean": 3825,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 33,
+            "facilities": 2,
+            "cost": 3300,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory",
+              "command"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 49,
+            "roamingAtSaturation": 48
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 33,
+            "facilities": 0,
+            "cost": 2775,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload",
+              "salvage"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 49,
+            "roamingAtSaturation": 48
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 33,
+            "facilities": 0,
+            "cost": 4800,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend",
+              "salvage"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 49,
+            "roamingAtSaturation": 48
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 33,
+            "facilities": 1,
+            "cost": 4425,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command",
+              "radar"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 49,
+            "roamingAtSaturation": 48
+          }
+        }
+      ]
+    },
+    {
+      "era": "CE_0071_T1",
+      "faction": "OMNI",
+      "players": 4,
+      "difficulty": 4,
+      "samples": 4,
+      "initialMean": 42,
+      "initialMin": 42,
+      "initialMax": 42,
+      "patrolWaveMean": 6,
+      "facilityMean": 1,
+      "initialCostMean": 10781.25,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 42,
+            "facilities": 2,
+            "cost": 10275,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 63,
+            "roamingAtSaturation": 63
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 42,
+            "facilities": 0,
+            "cost": 12325,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 63,
+            "roamingAtSaturation": 63
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 42,
+            "facilities": 1,
+            "cost": 9975,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 63,
+            "roamingAtSaturation": 63
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 42,
+            "facilities": 1,
+            "cost": 10550,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 63,
+            "roamingAtSaturation": 63
+          }
+        }
+      ]
+    },
+    {
+      "era": "CE_0071_T1",
+      "faction": "OMNI",
+      "players": 4,
+      "difficulty": 5,
+      "samples": 4,
+      "initialMean": 54,
+      "initialMin": 54,
+      "initialMax": 54,
+      "patrolWaveMean": 6.75,
+      "facilityMean": 1.5,
+      "initialCostMean": 16681.25,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 54,
+            "facilities": 3,
+            "cost": 18725,
+            "veterans": 16,
+            "elites": 6,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage",
+              "capture"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 81,
+            "roamingAtSaturation": 81
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 54,
+            "facilities": 1,
+            "cost": 17325,
+            "veterans": 11,
+            "elites": 4,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command",
+              "radar"
+            ],
+            "patrolWave": 9,
+            "roamingLimit": 81,
+            "roamingAtSaturation": 81
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 54,
+            "facilities": 1,
+            "cost": 14900,
+            "veterans": 7,
+            "elites": 3,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar",
+              "capture"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 81,
+            "roamingAtSaturation": 81
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 54,
+            "facilities": 1,
+            "cost": 15775,
+            "veterans": 11,
+            "elites": 1,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend",
+              "capture"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 81,
+            "roamingAtSaturation": 81
+          }
+        }
+      ]
+    },
+    {
+      "era": "CE_0071_T1",
+      "faction": "OMNI",
+      "players": 4,
+      "difficulty": 6,
+      "samples": 4,
+      "initialMean": 63,
+      "initialMin": 63,
+      "initialMax": 63,
+      "patrolWaveMean": 6,
+      "facilityMean": 3.25,
+      "initialCostMean": 23443.75,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 63,
+            "facilities": 4,
+            "cost": 23800,
+            "veterans": 18,
+            "elites": 12,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage",
+              "capture",
+              "radar"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 94,
+            "roamingAtSaturation": 93
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 63,
+            "facilities": 4,
+            "cost": 20825,
+            "veterans": 20,
+            "elites": 8,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command",
+              "radar",
+              "factory"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 94,
+            "roamingAtSaturation": 93
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 63,
+            "facilities": 1,
+            "cost": 26000,
+            "veterans": 13,
+            "elites": 2,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar",
+              "capture",
+              "upload"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 94,
+            "roamingAtSaturation": 93
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 63,
+            "facilities": 4,
+            "cost": 23150,
+            "veterans": 26,
+            "elites": 9,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend",
+              "capture",
+              "factory"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 94,
+            "roamingAtSaturation": 93
+          }
+        }
+      ]
+    },
+    {
+      "era": "CE_0071_T1",
+      "faction": "ZAFT",
+      "players": 1,
+      "difficulty": 2,
+      "samples": 4,
+      "initialMean": 12,
+      "initialMin": 12,
+      "initialMax": 12,
+      "patrolWaveMean": 3,
+      "facilityMean": 0.5,
+      "initialCostMean": 1312.5,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 12,
+            "facilities": 2,
+            "cost": 1200,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 18,
+            "roamingAtSaturation": 18
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 12,
+            "facilities": 0,
+            "cost": 1425,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 18,
+            "roamingAtSaturation": 18
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 12,
+            "facilities": 0,
+            "cost": 1200,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 18,
+            "roamingAtSaturation": 18
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 12,
+            "facilities": 0,
+            "cost": 1425,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 18,
+            "roamingAtSaturation": 18
+          }
+        }
+      ]
+    },
+    {
+      "era": "CE_0071_T1",
+      "faction": "ZAFT",
+      "players": 1,
+      "difficulty": 3,
+      "samples": 4,
+      "initialMean": 18,
+      "initialMin": 18,
+      "initialMax": 18,
+      "patrolWaveMean": 3.75,
+      "facilityMean": 0.75,
+      "initialCostMean": 2387.5,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 18,
+            "facilities": 2,
+            "cost": 3075,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory",
+              "command"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 27,
+            "roamingAtSaturation": 27
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 18,
+            "facilities": 0,
+            "cost": 1800,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload",
+              "salvage"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 27,
+            "roamingAtSaturation": 27
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 18,
+            "facilities": 0,
+            "cost": 1900,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend",
+              "salvage"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 27,
+            "roamingAtSaturation": 27
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 18,
+            "facilities": 1,
+            "cost": 2775,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command",
+              "radar"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 27,
+            "roamingAtSaturation": 27
+          }
+        }
+      ]
+    },
+    {
+      "era": "CE_0071_T1",
+      "faction": "ZAFT",
+      "players": 1,
+      "difficulty": 4,
+      "samples": 4,
+      "initialMean": 24,
+      "initialMin": 24,
+      "initialMax": 24,
+      "patrolWaveMean": 3,
+      "facilityMean": 1,
+      "initialCostMean": 4812.5,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 24,
+            "facilities": 2,
+            "cost": 4850,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 36,
+            "roamingAtSaturation": 36
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 24,
+            "facilities": 0,
+            "cost": 5125,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 36,
+            "roamingAtSaturation": 36
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 24,
+            "facilities": 1,
+            "cost": 5200,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 36,
+            "roamingAtSaturation": 36
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 24,
+            "facilities": 1,
+            "cost": 4075,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 36,
+            "roamingAtSaturation": 36
+          }
+        }
+      ]
+    },
+    {
+      "era": "CE_0071_T1",
+      "faction": "ZAFT",
+      "players": 1,
+      "difficulty": 5,
+      "samples": 4,
+      "initialMean": 30,
+      "initialMin": 30,
+      "initialMax": 30,
+      "patrolWaveMean": 3.75,
+      "facilityMean": 1.5,
+      "initialCostMean": 6537.5,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 30,
+            "facilities": 3,
+            "cost": 5400,
+            "veterans": 5,
+            "elites": 3,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage",
+              "capture"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 45,
+            "roamingAtSaturation": 45
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 30,
+            "facilities": 1,
+            "cost": 7475,
+            "veterans": 9,
+            "elites": 5,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command",
+              "radar"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 45,
+            "roamingAtSaturation": 45
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 30,
+            "facilities": 1,
+            "cost": 6425,
+            "veterans": 5,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar",
+              "capture"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 45,
+            "roamingAtSaturation": 45
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 30,
+            "facilities": 1,
+            "cost": 6850,
+            "veterans": 8,
+            "elites": 1,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend",
+              "capture"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 45,
+            "roamingAtSaturation": 45
+          }
+        }
+      ]
+    },
+    {
+      "era": "CE_0071_T1",
+      "faction": "ZAFT",
+      "players": 1,
+      "difficulty": 6,
+      "samples": 4,
+      "initialMean": 36,
+      "initialMin": 36,
+      "initialMax": 36,
+      "patrolWaveMean": 6,
+      "facilityMean": 3.25,
+      "initialCostMean": 8275,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 36,
+            "facilities": 4,
+            "cost": 7875,
+            "veterans": 14,
+            "elites": 6,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage",
+              "capture",
+              "radar"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 54,
+            "roamingAtSaturation": 54
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 36,
+            "facilities": 4,
+            "cost": 7550,
+            "veterans": 10,
+            "elites": 5,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command",
+              "radar",
+              "factory"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 54,
+            "roamingAtSaturation": 54
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 36,
+            "facilities": 1,
+            "cost": 9875,
+            "veterans": 10,
+            "elites": 2,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar",
+              "capture",
+              "upload"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 54,
+            "roamingAtSaturation": 54
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 36,
+            "facilities": 4,
+            "cost": 7800,
+            "veterans": 16,
+            "elites": 3,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend",
+              "capture",
+              "factory"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 54,
+            "roamingAtSaturation": 54
+          }
+        }
+      ]
+    },
+    {
+      "era": "CE_0071_T1",
+      "faction": "ZAFT",
+      "players": 4,
+      "difficulty": 2,
+      "samples": 4,
+      "initialMean": 21,
+      "initialMin": 21,
+      "initialMax": 21,
+      "patrolWaveMean": 3,
+      "facilityMean": 0.5,
+      "initialCostMean": 2381.25,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 21,
+            "facilities": 2,
+            "cost": 2250,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 31,
+            "roamingAtSaturation": 30
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 21,
+            "facilities": 0,
+            "cost": 2400,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 31,
+            "roamingAtSaturation": 30
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 21,
+            "facilities": 0,
+            "cost": 2625,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 31,
+            "roamingAtSaturation": 30
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 21,
+            "facilities": 0,
+            "cost": 2250,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command"
+            ],
+            "patrolWave": 3,
+            "roamingLimit": 31,
+            "roamingAtSaturation": 30
+          }
+        }
+      ]
+    },
+    {
+      "era": "CE_0071_T1",
+      "faction": "ZAFT",
+      "players": 4,
+      "difficulty": 3,
+      "samples": 4,
+      "initialMean": 33,
+      "initialMin": 33,
+      "initialMax": 33,
+      "patrolWaveMean": 7.5,
+      "facilityMean": 0.75,
+      "initialCostMean": 4681.25,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 33,
+            "facilities": 2,
+            "cost": 4750,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory",
+              "command"
+            ],
+            "patrolWave": 9,
+            "roamingLimit": 49,
+            "roamingAtSaturation": 48
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 33,
+            "facilities": 0,
+            "cost": 4775,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload",
+              "salvage"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 49,
+            "roamingAtSaturation": 48
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 33,
+            "facilities": 0,
+            "cost": 4625,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend",
+              "salvage"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 49,
+            "roamingAtSaturation": 48
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 33,
+            "facilities": 1,
+            "cost": 4575,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command",
+              "radar"
+            ],
+            "patrolWave": 9,
+            "roamingLimit": 49,
+            "roamingAtSaturation": 48
+          }
+        }
+      ]
+    },
+    {
+      "era": "CE_0071_T1",
+      "faction": "ZAFT",
+      "players": 4,
+      "difficulty": 4,
+      "samples": 4,
+      "initialMean": 42,
+      "initialMin": 42,
+      "initialMax": 42,
+      "patrolWaveMean": 6,
+      "facilityMean": 1,
+      "initialCostMean": 8662.5,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 42,
+            "facilities": 2,
+            "cost": 8275,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 63,
+            "roamingAtSaturation": 63
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 42,
+            "facilities": 0,
+            "cost": 8800,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 63,
+            "roamingAtSaturation": 63
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 42,
+            "facilities": 1,
+            "cost": 9000,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 63,
+            "roamingAtSaturation": 63
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 42,
+            "facilities": 1,
+            "cost": 8575,
+            "veterans": 0,
+            "elites": 0,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 63,
+            "roamingAtSaturation": 63
+          }
+        }
+      ]
+    },
+    {
+      "era": "CE_0071_T1",
+      "faction": "ZAFT",
+      "players": 4,
+      "difficulty": 5,
+      "samples": 4,
+      "initialMean": 54,
+      "initialMin": 54,
+      "initialMax": 54,
+      "patrolWaveMean": 6,
+      "facilityMean": 1.5,
+      "initialCostMean": 12118.75,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 54,
+            "facilities": 3,
+            "cost": 11225,
+            "veterans": 13,
+            "elites": 9,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage",
+              "capture"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 81,
+            "roamingAtSaturation": 81
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 54,
+            "facilities": 1,
+            "cost": 11725,
+            "veterans": 14,
+            "elites": 3,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command",
+              "radar"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 81,
+            "roamingAtSaturation": 81
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 54,
+            "facilities": 1,
+            "cost": 13275,
+            "veterans": 5,
+            "elites": 3,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar",
+              "capture"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 81,
+            "roamingAtSaturation": 81
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 54,
+            "facilities": 1,
+            "cost": 12250,
+            "veterans": 10,
+            "elites": 2,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend",
+              "capture"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 81,
+            "roamingAtSaturation": 81
+          }
+        }
+      ]
+    },
+    {
+      "era": "CE_0071_T1",
+      "faction": "ZAFT",
+      "players": 4,
+      "difficulty": 6,
+      "samples": 4,
+      "initialMean": 63,
+      "initialMin": 63,
+      "initialMax": 63,
+      "patrolWaveMean": 8.25,
+      "facilityMean": 3.25,
+      "initialCostMean": 14681.25,
+      "entries": [
+        {
+          "seed": 1936384585,
+          "after": {
+            "initial": 63,
+            "facilities": 4,
+            "cost": 17000,
+            "veterans": 21,
+            "elites": 9,
+            "events": [
+              "defend",
+              "factory",
+              "command",
+              "salvage",
+              "capture",
+              "radar"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 94,
+            "roamingAtSaturation": 93
+          }
+        },
+        {
+          "seed": 1936386564,
+          "after": {
+            "initial": 63,
+            "facilities": 4,
+            "cost": 16550,
+            "veterans": 15,
+            "elites": 6,
+            "events": [
+              "defend",
+              "upload",
+              "salvage",
+              "command",
+              "radar",
+              "factory"
+            ],
+            "patrolWave": 12,
+            "roamingLimit": 94,
+            "roamingAtSaturation": 93
+          }
+        },
+        {
+          "seed": 1936388543,
+          "after": {
+            "initial": 63,
+            "facilities": 1,
+            "cost": 13950,
+            "veterans": 17,
+            "elites": 3,
+            "events": [
+              "command",
+              "defend",
+              "salvage",
+              "radar",
+              "capture",
+              "upload"
+            ],
+            "patrolWave": 6,
+            "roamingLimit": 94,
+            "roamingAtSaturation": 93
+          }
+        },
+        {
+          "seed": 1936390522,
+          "after": {
+            "initial": 63,
+            "facilities": 4,
+            "cost": 11225,
+            "veterans": 25,
+            "elites": 7,
+            "events": [
+              "upload",
+              "command",
+              "radar",
+              "defend",
+              "capture",
+              "factory"
+            ],
+            "patrolWave": 9,
+            "roamingLimit": 94,
+            "roamingAtSaturation": 93
+          }
+        }
+      ]
+    }
+  ]
+}

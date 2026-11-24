@@ -270,13 +270,13 @@ test("five-player configured waves keep complete formations below the shared liv
   assert.equal(g.contract.players, 5);
   for (const u of g.units.filter((u) => u.team === 1)) u.hp = 0;
   for (const o of g.contract.objectives) o.status = "completed";
-  for (let i = 0; i < 40; i++) {
+  for (let i = 0; i < 160; i++) {
     g.round += 2;
     C.poll(f.room, G);
   }
   let alive = g.units.filter((u) => u.contractReinforcement && u.hp > 0);
   assert(alive.length > 0);
-  assert(alive.length <= 27);
+  assert(alive.length <= 108);
   assert.equal(alive.length % 3, 0);
   const count = g.units.length;
   for (let i = 0; i < 8; i++) {
@@ -290,5 +290,5 @@ test("five-player configured waves keep complete formations below the shared liv
     C.poll(f.room, G);
   }
   assert(g.units.length > count);
-  assert(g.units.filter((u) => u.contractReinforcement && u.hp > 0).length <= 27);
+  assert(g.units.filter((u) => u.contractReinforcement && u.hp > 0).length <= 108);
 });
