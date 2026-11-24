@@ -119,14 +119,14 @@ window.SupplyUI = (() => {
     const wallet = element("div", "supply-wallet"), tokenCount = element("strong", "", "◈ " + formatNumber(tokens));
     tokenCount.id = "supplyTokenCount";
     wallet.append(element("span", "", "剩余" + pool.tokenName), tokenCount, button("商品一览", showProducts));
-    if (storage.blocked) wallet.append(element("small", "supply-capacity-warning", "保管库已超过99台，请先领取单位"));
+    if (storage.blocked) wallet.append(element("small", "supply-capacity-warning", "保管库已满200台，请先领取单位"));
     const actions = element("div", "supply-actions");
     for (const count of [1, 10]) {
       const action = button("", () => draw(count), "supply-draw");
       action.id = count === 1 ? "supplyDrawOnce" : "supplyDrawTen";
       action.append(element("strong", "", count === 1 ? "抽取一次" : "抽取十次"), element("small", "", `消耗 ${count} 枚${pool.tokenName}`));
-      action.disabled = busy || Net.started || tokens < count || storage.blocked;
-      if (storage.blocked) action.title = "保管库已超过99台，请先领取单位";
+      action.disabled = busy || Net.started || tokens < count || storage.count + count > storage.limit;
+      if (storage.count + count > storage.limit) action.title = "保管库空位不足，上限200台，请先领取单位";
       actions.append(action);
     }
     const history = element("section", "supply-results");

@@ -57,11 +57,11 @@ test('global rewards and intervention rewards stack for currency, research and p
     const state={objectives:Array.from({length:n},()=>({status:'completed'}))};
     const room={settings:{sweepDifficulty:n,sweepEra:'UC_0079_T1'},game:{contract:state}};
     const normal=C.reward(room,G),oldXP=[500,1000,1500,3000,4000,5000][n-1];
-    assert.equal(normal.experience,Math.floor(oldXP*1.25*[1,1,1.2,1.3,1.6,1.9][n-1]));
+    assert.equal(normal.experience,Math.round(oldXP*1.25*[1,1,1.2,1.3,1.6,1.9][n-1]*.5/50)*50);
     assert.equal(normal.money,[2500,4000,6000,9000,12000,15000][n-1]*[1,1,1.2,1.3,1.6,1.9][n-1]); // settlement adds its existing x1.25 once
     state.noAllies=true;const intervention=C.reward(room,G);
     for(const key of ['money','supplies','technology'])assert.equal(intervention[key],normal[key]*1.25);
-    assert.equal(intervention.experience,Math.floor(oldXP*1.25*[1,1,1.2,1.3,1.6,1.9][n-1]*1.25));
+    assert.equal(intervention.experience,Math.round(oldXP*1.25*[1,1,1.2,1.3,1.6,1.9][n-1]*1.25*.5/50)*50);
     state.objectives.forEach(o=>o.status='failed');assert.equal(C.reward(room,G).money,0);
   }
 });

@@ -2,6 +2,7 @@
 "use strict";
 const Warehouse = (() => {
   const plugins = typeof UnitPlugins !== "undefined" ? UnitPlugins : require("./unit-plugins.js");
+  const deliveryLimit = 200;
   const defaults = { pages: 1, unitsPerPage: 10, shipsPerPage: 10, maxLevel: 5 };
   function category(model) {
     return model.ship || /^(Medea|FatUncle)/.test(model.prefabId||model.id||"") ||
@@ -199,6 +200,6 @@ const Warehouse = (() => {
       if (!item.destroyed) result[item.unitId] = (result[item.unitId] || 0) + 1;
     return result;
   }
-  return { defaults, category, freeSlot, empty, normalize, usage, fits, counts, condition, status, profile, rentalRewards };
+  return { defaults, deliveryLimit, category, freeSlot, empty, normalize, usage, fits, counts, condition, status, profile, rentalRewards };
 })();
 if (typeof module !== "undefined") module.exports = Warehouse;

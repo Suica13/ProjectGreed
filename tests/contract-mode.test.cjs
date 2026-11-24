@@ -854,7 +854,7 @@ test("contract completion budget prorates objectives before era and preview mult
   f.room.game.contract.objectives[0].status = "completed";
   f.room.game.contract.objectives[1].status = "completed";
   const factor = 2 * 1.5 * 1.25 * 1.2;
-  assert.deepEqual(C.reward(f.room, G), { money: 4800, supplies: 6400, technology: 125 * factor, experience: 1500, inventory: {} });
+  assert.deepEqual(C.reward(f.room, G), { money: 4800, supplies: 6400, technology: 125 * factor, experience: 750, inventory: {} });
   f.room.settings.sweepEra = "UC_0087_T1";
   const reward = C.reward(f.room, G), era = 1.25 ** 2;
   assert.equal(reward.money, 4800 * era);

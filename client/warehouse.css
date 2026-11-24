@@ -409,3 +409,15 @@
   .warehouse-production-row > img { width: 42px; height: 42px; }
   .warehouse-production-row > button { padding: 8px; }
 }
+
+#warehouseDeliveries.has-deliveries {
+  border-color: #ffd876;
+  animation: warehouse-deliveries-pulse 1.4s ease-in-out infinite;
+}
+@keyframes warehouse-deliveries-pulse {
+  0%, 100% { background-color: #40351b; box-shadow: 0 0 0 0 #ffd87600; }
+  50% { background-color: #6a5120; box-shadow: 0 0 10px 2px #ffd87688; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #warehouseDeliveries.has-deliveries { animation: none; background-color: #6a5120; }
+}

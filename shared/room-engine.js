@@ -2518,7 +2518,7 @@ function createRoomEngine({
   }
   function settleContractPilotExperience(room) {
     if (!room.game.contract || room.campaign) return;
-    const points = Math.max(0, Math.floor(Contract.reward(room, G).experience * getRewardMultipliers().experience));
+    const points = Contract.reward(room, G, getRewardMultipliers().experience).experience;
     if (!points) return;
     const awarded = new Set();
     for (const actor of room.game.units) {

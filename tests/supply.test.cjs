@@ -83,24 +83,24 @@ test("all drawn chassis wait in deliveries even with free hangar slots and can l
   assert.equal(E.snapshot().storage.deliveries.length,0);
   assert(E.snapshot().storage.units.some(item=>item.unitId==="RX_78_5"&&item.rentalUses===10));
 });
-test("draws stop above 99 pending units before random selection or payment; ten draws remain atomic", () => {
+test("draws reserve room within 200 pending units before random selection or payment", () => {
   const saved=profile(),kitId=load().E.defaultKit("RGM_79");
-  saved.storage.deliveries=Array.from({length:99},()=>({unitId:"RGM_79",kitId}));
+  saved.storage.deliveries=Array.from({length:190},()=>({unitId:"RGM_79",kitId}));
   const {E,rolls}=load(saved);
   assert.equal(E.supplyStorageStatus().blocked,false);
   for(let i=0;i<10;i++)rolls.push(0,0,0);
-  E.drawSupply(pool,10);
-  const after=JSON.stringify(E.snapshot());
-  assert.equal(E.supplyStorageStatus().count,109);assert.equal(E.supplyStorageStatus().blocked,true);
-  assert.throws(()=>E.drawSupply(pool,1),/超过99/);
-  assert.throws(()=>E.drawSupply(pool,10),/超过99/);
+  E.drawSupply(pool,10);const after=JSON.stringify(E.snapshot());
+  assert.equal(E.supplyStorageStatus().count,200);assert.equal(E.supplyStorageStatus().blocked,true);
+  assert.throws(()=>E.drawSupply(pool,1),/200/);assert.throws(()=>E.drawSupply(pool,10),/200/);
   assert.equal(JSON.stringify(E.snapshot()),after);
-  saved.storage.deliveries.length=98;
-  const single=load(saved);single.rolls.push(0,0,0,0,0,0);
-  single.E.drawSupply(pool,1);assert.equal(single.E.supplyStorageStatus().count,99);
-  single.E.drawSupply(pool,1);assert.equal(single.E.supplyStorageStatus().count,100);
-  assert.throws(()=>single.E.drawSupply(pool,1),/超过99/);
+  saved.storage.deliveries.length=190;
+  saved.storage.deliveries.push(...Array.from({length:9},()=>({unitId:"RGM_79",kitId})));
+  const single=load(saved);single.rolls.push(0,0,0);
+  assert.throws(()=>single.E.drawSupply(pool,10),/200/);
+  single.E.drawSupply(pool,1);assert.equal(single.E.supplyStorageStatus().count,200);
+  assert.throws(()=>single.E.drawSupply(pool,1),/200/);
 });
+
 test("old generic tokens migrate to 0079T1 tokens without duplicating balances or test grants", () => {
   const saved=profile();saved.itemInventory={"supply-token":12345};
   const {E,data}=load(saved),next=E.snapshot();

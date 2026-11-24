@@ -35,7 +35,7 @@ test('settlement and preview apply new rewards once across completion, eras and 
       const room={settings:{sweepDifficulty:n,sweepEra:era},game:{contract:{noAllies,objectives:Array.from({length:n},(_,i)=>({status:i<completed?'completed':'failed'}))}}};
       const r=C.reward(room,G),scale=1.25*[1,1,1.2,1.3,1.6,1.9][n-1]*(noAllies?1.25:1)*completed/n;
       for(const [i,k]of ['money','supplies'].entries())assert.equal(E.roundReward(r[k]*rates[k]),E.roundReward(budgets[n-1][i]*scale));
-      assert.equal(r.experience,Math.floor([500,1000,1500,3000,4000,5000][n-1]*scale));
+      assert.equal(r.experience,Math.round([500,1000,1500,3000,4000,5000][n-1]*scale*.5/50)*50);
     }
   }
 });

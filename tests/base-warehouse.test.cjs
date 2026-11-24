@@ -6,6 +6,11 @@ const { createRequire } = require("node:module"),
   path = require("node:path");
 const relative = createRequire(path.resolve("shared/economy.js"));
 const catalog = require("../tools/load-catalog.cjs").loadCatalog({ embedAssets: false });
+function creditAndReceive(E, reward) {
+  const result=E.creditActivity(reward);
+  if(result) E.receiveDeliveries();
+  return result;
+}
 function established() {
   return {version:2,levels:{hq:3,factory:2,giantFactory:3,beacon:3,academy:1}};
 }
@@ -31,7 +36,7 @@ function load(saved) {
 
 test("inventory sorting preserves complete chassis records and validates a full category permutation", () => {
   const { E } = load();
-  E.creditActivity({ id: "sort-stock", matchId: "sort-stock", money: 0, supplies: 0, inventory: { RGM_79: 3, Medea: 1 } });
+  creditAndReceive(E,{ id: "sort-stock", matchId: "sort-stock", money: 0, supplies: 0, inventory: { RGM_79: 3, Medea: 1 } });
   const original = E.snapshot().storage.units;
   E.setStoredPilot(original[0].id, "sort-pilot");
   E.creditAward({ id: "sort-damage", matchId: "sort-battle", money: 0, supplies: 0,
@@ -51,7 +56,7 @@ test("inventory sorting preserves complete chassis records and validates a full 
 
 test("unpriced base units sell for zero while alternate and purged forms cannot be sold", () => {
   const { E } = load();
-  E.creditActivity({ id: "sale-forms", matchId: "sale-forms", money: 0, supplies: 0,
+  creditAndReceive(E,{ id: "sale-forms", matchId: "sale-forms", money: 0, supplies: 0,
     inventory: { WhiteBase: 1, MSZ_006: 1, FA_78_1: 1, RGZ_91_MA: 1 } });
   const base = E.snapshot().storage.ships.find(item => item.unitId === "WhiteBase"), before = E.snapshot();
   assert.deepEqual(JSON.parse(JSON.stringify(E.saleOffer("WhiteBase"))), {unitId:"WhiteBase",quantity:1,money:0,supplies:0});
@@ -71,7 +76,7 @@ test("unpriced base units sell for zero while alternate and purged forms cannot 
 
 test("scrapping escape forms and wrecks removes only the selected record without refunds or duplicate loss", () => {
   const {E,data}=load();
-  E.creditActivity({id:"scrap-stock",matchId:"scrap-stock",money:0,supplies:0,inventory:{MTank_Top:2,RGM_79:2}});
+  creditAndReceive(E,{id:"scrap-stock",matchId:"scrap-stock",money:0,supplies:0,inventory:{MTank_Top:2,RGM_79:2}});
   const [top,otherTop]=E.snapshot().storage.units.filter(item=>item.unitId==="MTank_Top");
   const [wreck,healthy]=E.snapshot().storage.units.filter(item=>item.unitId==="RGM_79");
   E.creditAward({id:"scrap-loss",matchId:"scrap-loss",money:0,supplies:0,stockLost:{inventory:{RGM_79:1}},stockLostItems:[{stockId:wreck.id,unitId:"RGM_79"}]});
@@ -89,7 +94,7 @@ test("scrapping escape forms and wrecks removes only the selected record without
 });
 
 test("bulk repair charges materials once per chassis, restores wreck inventory and persists atomically", () => {
-  const {E}=load();E.creditActivity({id:"repair-stock",matchId:"repair-stock",money:100000,supplies:100000,inventory:{RGM_79:3,WhiteBase:1}});
+  const {E}=load();creditAndReceive(E,{id:"repair-stock",matchId:"repair-stock",money:100000,supplies:100000,inventory:{RGM_79:3,WhiteBase:1}});
   const [wreck,parts,resources]=E.snapshot().storage.units,ship=E.snapshot().storage.ships[0];
   const model=catalog.models[parts.unitId+"__"+parts.kitId],shipModel=catalog.models[ship.unitId+"__"+ship.kitId];
   E.creditAward({id:"repair-damage",matchId:"repair-damage",money:0,supplies:0,
@@ -112,7 +117,7 @@ test("bulk repair charges materials once per chassis, restores wreck inventory a
 
 test("settlement preserves individual wrecks, damage and resources through reload without duplicate losses", () => {
   const { E } = load();
-  E.creditActivity({ id: "initial-stock", matchId: "initial", money: 0, supplies: 0, inventory: { RGM_79: 3 } });
+  creditAndReceive(E,{ id: "initial-stock", matchId: "initial", money: 0, supplies: 0, inventory: { RGM_79: 3 } });
   const [lost, damaged, intact] = E.snapshot().storage.units;
   const model = catalog.models[damaged.unitId + "__" + damaged.kitId];
   const award = { id: "damage-result", matchId: "battle", money: 0, supplies: 0,
@@ -137,7 +142,7 @@ test("settlement preserves individual wrecks, damage and resources through reloa
 
 test("wrecks keep occupying slots and new production never silently repairs or replaces them", () => {
   const { E } = load();
-  E.creditActivity({ id: "fill", matchId: "initial", money: 0, supplies: 0, inventory: { RGM_79: 30 } });
+  creditAndReceive(E,{ id: "fill", matchId: "initial", money: 0, supplies: 0, inventory: { RGM_79: 30 } });
   E.creditAward({ id: "all-lost", matchId: "battle", money: 0, supplies: 0,
     stockLost: { inventory: { RGM_79: 30 } } });
   assert.equal(E.quantity("RGM_79"), 0);
@@ -147,7 +152,7 @@ test("wrecks keep occupying slots and new production never silently repairs or r
 });
 test("stored pilot assignments move atomically between chassis and survive reload", () => {
   const { E } = load();
-  E.creditActivity({ id: "pilot-stock", matchId: "initial", money: 0, supplies: 0, inventory: { RGM_79: 2 } });
+  creditAndReceive(E,{ id: "pilot-stock", matchId: "initial", money: 0, supplies: 0, inventory: { RGM_79: 2 } });
   const [a, b] = E.snapshot().storage.units;
   assert(E.setStoredPilot(a.id, "personal-pilot"));
   assert(E.setStoredPilot(b.id, "personal-pilot"));
@@ -160,7 +165,7 @@ test("stored pilot assignments move atomically between chassis and survive reloa
 
 test("moving a wreck's pilot permits repair and legacy duplicate wreck references are detached", () => {
   const {E}=load();
-  E.creditActivity({id:"wreck-pilot-funds",matchId:"initial",money:0,supplies:100000,inventory:{RGM_79:2}});
+  creditAndReceive(E,{id:"wreck-pilot-funds",matchId:"initial",money:0,supplies:100000,inventory:{RGM_79:2}});
   const [wreck,target]=E.snapshot().storage.units;
   E.setStoredPilot(wreck.id,"surviving-pilot");
   E.creditAward({id:"pilot-wreck",matchId:"battle",money:0,supplies:0,
@@ -186,7 +191,7 @@ test("failed pilot migration persistence leaves both original assignments intact
 });
 test("transforming one selected chassis preserves its identity, pilot and battle damage", () => {
   const { E } = load();
-  E.creditActivity({ id: "forms-stock", matchId: "initial", money: 0, supplies: 0, inventory: { RGZ_91_MA: 2 } });
+  creditAndReceive(E,{ id: "forms-stock", matchId: "initial", money: 0, supplies: 0, inventory: { RGZ_91_MA: 2 } });
   const [a, b] = E.snapshot().storage.units;
   E.setStoredPilot(b.id, "personal-pilot");
   E.creditAward({ id: "form-damage", matchId: "battle", money: 0, supplies: 0,
@@ -204,7 +209,7 @@ test("transforming one selected chassis preserves its identity, pilot and battle
 });
 test("workshop transformations preserve the weapon kit mapping in both directions", () => {
   const { E } = load();
-  E.creditActivity({ id: "mapped-forms", matchId: "initial", money: 0, supplies: 0, inventory: { MSZ_006: 1 } });
+  creditAndReceive(E,{ id: "mapped-forms", matchId: "initial", money: 0, supplies: 0, inventory: { MSZ_006: 1 } });
   const item = E.snapshot().storage.units[0];
   assert(E.changeStoredKit(item.id, "kit_1"));
   assert(E.transformStock("MSZ_006", "MSZ_006_MA", item.id));
@@ -224,7 +229,7 @@ test("workshop transformations preserve the weapon kit mapping in both direction
 
 test("workshop excludes ejection and temporary systems while preserving deployment changes", () => {
   const { E } = load();
-  E.creditActivity({ id: "escape-stock", matchId: "initial", money: 0, supplies: 0, inventory: { MTank: 1 } });
+  creditAndReceive(E,{ id: "escape-stock", matchId: "initial", money: 0, supplies: 0, inventory: { MTank: 1 } });
   const item = E.snapshot().storage.units[0];
   const before = JSON.stringify(E.snapshot());
   assert.throws(() => E.transformStock("MTank", "MTank_Chassis", item.id));
@@ -233,7 +238,7 @@ test("workshop excludes ejection and temporary systems while preserving deployme
   assert(forms.options(catalog, "Medea").some((form) => form.type === "deployment"));
   assert(!forms.options(catalog, "RX_79_BD_1").some((form) => form.unitId.includes("EXAM")));
   const carrier = load().E;
-  carrier.creditActivity({ id: "deploy-form", matchId: "initial", money: 0, supplies: 0, inventory: { Medea: 1 } });
+  creditAndReceive(carrier,{ id: "deploy-form", matchId: "initial", money: 0, supplies: 0, inventory: { Medea: 1 } });
   const carrierId = carrier.snapshot().storage.ships[0].id;
   assert(carrier.transformStock("Medea", "Medea_DeployState", carrierId));
   assert(carrier.transformStock("Medea_DeployState", "Medea", carrierId));
@@ -312,8 +317,8 @@ test("reward receipts, sale and actual reload keep physical chassis in sync", ()
     supplies: 150,
     inventory: { Type61: 2 },
   };
-  assert.equal(E.creditActivity(award), true);
-  assert.equal(E.creditActivity(award), false);
+  assert.equal(creditAndReceive(E,award), true);
+  assert.equal(creditAndReceive(E,award), false);
   assert.equal(E.quantity("Type61"), 2);
   const ids = E.snapshot().storage.units.map((i) => i.id);
   const reload = load(E.snapshot()).E;
@@ -342,7 +347,7 @@ test("large units consume one storage slot and positions survive gaps and reload
 });
 test("moving a stored chassis across pages preserves its state and rejects occupied or invalid slots", () => {
   const { E } = load();
-  E.creditActivity({ id: "move-stock", matchId: "initial", money: 100, supplies: 150, inventory: { RGM_79: 2 } });
+  creditAndReceive(E,{ id: "move-stock", matchId: "initial", money: 100, supplies: 150, inventory: { RGM_79: 2 } });
   const item = E.snapshot().storage.units[0];
   E.setStoredPilot(item.id, "move-pilot");
   E.creditAward({ id: "move-damage", matchId: "battle", money: 0, supplies: 0,
@@ -369,7 +374,7 @@ test("moving a stored chassis across pages preserves its state and rejects occup
 
 test("selling a selected physical chassis leaves same-model duplicates and their condition intact", () => {
   const { E } = load();
-  E.creditActivity({ id: "sale-chassis", matchId: "initial", money: 0, supplies: 0, inventory: { RGM_79: 2 } });
+  creditAndReceive(E,{ id: "sale-chassis", matchId: "initial", money: 0, supplies: 0, inventory: { RGM_79: 2 } });
   const [a, b] = E.snapshot().storage.units;
   E.setStoredPilot(a.id, "sale-pilot");
   const preserved = E.snapshot().storage.units.find((item) => item.id === b.id), offer = E.saleOffer(a.unitId), before = E.snapshot();

@@ -345,7 +345,7 @@ window.ContactUI = (() => {
                 note(
                   ContactTasks.planIds(task).length
                     ? "任务已交付，获得奖励及对应单位许可"
-                    : "任务已交付，奖励已发放；满仓单位保存在保管库。",
+                    : "任务已交付，奖励已发放；奖励单位已送至保管库。",
                 );
               },
               task.name,

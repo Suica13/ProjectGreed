@@ -1336,7 +1336,7 @@ const ContractMode = (() => {
     for (let seat = 1; seat < game.deployment.length; seat += 2) game.deployment[seat] = true;
     log("[合约模式] 事件 " + d.events + " 项；驻守部队在事件附近巡逻。");
   }
-  function reward(room, G) {
+  function reward(room, G, experienceMultiplier = 1) {
     const state = room.game?.contract;
     if (!state) return { money: 0, supplies: 0, technology: 0, experience: 0, inventory: {} };
     const completed = state.objectives.filter((o) => o.status === "completed" && !o.contactTaskId).length,
@@ -1350,7 +1350,7 @@ const ContractMode = (() => {
       // Settlement applies its multiplier once; the table already includes it.
       money: money * share * era * bonus / economy.completionRewardMultiplier,
       supplies: supplies * share * era * bonus / economy.completionRewardMultiplier,
-      experience: Math.floor([500, 1000, 1500, 3000, 4000, 5000][d - 1] * share * bonus),
+      experience: Math.max(0, Math.round([500, 1000, 1500, 3000, 4000, 5000][d - 1] * share * bonus * .5 * experienceMultiplier / 50) * 50),
       technology: completed * 125 * era * (1 + (d - 1) * 0.25) * bonus,
       inventory: {},
     };

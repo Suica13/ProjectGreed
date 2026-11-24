@@ -399,6 +399,7 @@ const Economy = (() => {
     ]) {
       if (!award[field]) continue;
       const stock = normalizeStock(award[field]);
+      if (field === "stockGained") { queueRewardUnits(next, stock.inventory); continue; }
       for (const kind of ["inventory"])
         for (const [id, count] of Object.entries(stock[kind])) {
           const change = (next[kind][id] || 0) + direction * count;
@@ -446,6 +447,23 @@ const Economy = (() => {
     next.claimed = { ...next.claimed, [award.id]: award.matchId };
     return commit(next, extraWrites);
   }
+  function queueRewardUnits(next, inventory = {}, rentals = []) {
+    const entries = [
+      ...Object.entries(inventory).map(([unitId,count]) => ({unitId,kitId:defaultKit(unitId),count})),
+      ...rentals,
+    ];
+    const total=entries.reduce((sum,entry)=>sum+entry.count,0);
+    if (total > 0 && next.storage.deliveries.length + total > warehouse.deliveryLimit) throw Error("保管库最多200台，请先领取单位");
+    for (const entry of entries) {
+      const model=modelsForUnits()[entry.unitId+"__"+entry.kitId];
+      if (!model || !Number.isSafeInteger(entry.count) || entry.count < 0) throw Error("单位奖励无效");
+      for (let i=0;i<entry.count;i++) next.storage.deliveries.push({
+        unitId:entry.unitId,kitId:entry.kitId,
+        ...warehouse.condition({plugins:entry.plugins},model),
+        ...(entry.uses ? {rentalUses:entry.uses} : {}),
+      });
+    }
+  }
   function applyActivityRewards(next, award) {
     const awardedStock = normalizeStock(award);
     const rentals = warehouse.rentalRewards(award.rentals, modelsForUnits(), defaultKit);
@@ -459,25 +477,7 @@ const Economy = (() => {
       if(!Number.isSafeInteger(total)||total>1000000)throw Error("零件库存数量超过上限："+id);
       next.pluginInventory[id]=total;
     }
-    for (const kind of ["inventory"])
-      for (const [id, count] of Object.entries(awardedStock[kind])) {
-        const quantity = (next[kind][id] || 0) + count;
-        if (!Number.isSafeInteger(quantity) || quantity > 1000000)
-          throw Error("库存数量超过上限：" + id);
-        next[kind][id] = quantity;
-      }
-    // Reconcile permanent rewards first so rentals cannot replace an existing hull.
-    next.storage = warehouse.normalize(next.storage, modelsForUnits(), next.inventory, defaultKit);
-    next.inventory = warehouse.counts(next.storage);
-    for (const entry of rentals) for (let i = 0; i < entry.count; i++) {
-      const model = modelsForUnits()[entry.unitId + "__" + entry.kitId], kind = warehouse.category(model);
-      const item = { unitId: entry.unitId, kitId: entry.kitId, rentalUses: entry.uses,
-        ...warehouse.condition({ plugins: entry.plugins }, model) };
-      if (warehouse.fits(next.storage, model, modelsForUnits())) {
-        next.storage[kind].push({ ...item, id: "stored-" + ++next.storage.serial, slot: warehouse.freeSlot(next.storage, kind) });
-        next.inventory[entry.unitId] = (next.inventory[entry.unitId] || 0) + 1;
-      } else next.storage.deliveries.push(item);
-    }
+    queueRewardUnits(next, awardedStock.inventory, rentals);
     for (const [id, owned] of Object.entries(award.licenses || {})) {
       if (!Object.hasOwn(catalog.baseModels, id) || owned !== true) throw Error("活动单位奖励无效");
       next.licenses[id] = true;
@@ -521,7 +521,7 @@ const Economy = (() => {
   function drawSupply(poolId, count) {
     if (typeof Net !== "undefined" && Net.started) throw Error("战斗中不能抽取补给");
     if (![1, 10].includes(count)) throw Error("抽取次数无效");
-    if (supplyStorageStatus().blocked) throw Error("保管库已超过99台，请先领取单位后再抽取");
+    if (state.storage.deliveries.length + count > warehouse.deliveryLimit) throw Error("保管库空位不足，上限200台，请先领取单位后再抽取");
     const pool = supplyPools.find(pool => pool.id === poolId);
     if (!pool) throw Error("补给池不存在");
     if ((state.itemInventory[pool.tokenId] || 0) < count) throw Error(pool.tokenName + "不足");
@@ -565,7 +565,7 @@ const Economy = (() => {
   }
   function supplyStorageStatus() {
     const count = state.storage.deliveries.length;
-    return { count, blocked: count > 99 };
+    return { count, limit: warehouse.deliveryLimit, blocked: count >= warehouse.deliveryLimit };
   }
   function normalizeStock(value = {}) {
     const result = { inventory: {}, kits: {} };
@@ -913,7 +913,7 @@ const Economy = (() => {
     const merchantId=contacts.contactId(task);
     if(merchantId==="efsf")next.contactAffinity += task.affinity || 100;
     else next.merchantAffinities[merchantId]=(next.merchantAffinities[merchantId]||0)+(task.affinity||100);
-    for(const [unitId,count] of Object.entries(task.inventory))next.inventory[unitId]=(next.inventory[unitId]||0)+count;
+    queueRewardUnits(next, task.inventory);
     for(const plan of contacts.planIds(task))grantPlan(next,plan);
     return commit(next);
   }

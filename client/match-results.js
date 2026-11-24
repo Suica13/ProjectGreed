@@ -124,7 +124,7 @@ const MatchResults = (() => {
     const stockGained = awards.flatMap(a => Object.entries(a.stockGained?.inventory || {}).flatMap(
       ([id, count]) => Array.from({ length: count }, () => ({ model: Economy.defaultModel(id) })),
     ));
-    if (stockGained.length) sections.push({ label: "获得单位库存", records: stockGained });
+    if (stockGained.length) sections.push({ label: "单位已送至保管库", records: stockGained });
     for (const { label, records, team } of sections) {
       const section = element("section", team === undefined ? "" : "result-team-losses");
       if (team !== undefined) section.dataset.team = String(team);

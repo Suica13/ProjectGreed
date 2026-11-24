@@ -555,8 +555,9 @@ window.WarehouseUI = (() => {
     byId("warehouseCapacity").textContent =
       `${I18n.text(kind === "units" ? "单位库存" : "战舰库存")} ${used.count} / ${used.slots}`;
     byId("warehouseDeliveries").hidden = false;
+    byId("warehouseDeliveries").classList.toggle("has-deliveries", storage.deliveries.length > 0);
     byId("warehouseDeliveries").textContent =
-      `${I18n.text("保管库")} (${storage.deliveries.length})`;
+      `${I18n.text("保管库")} (${storage.deliveries.length}/${Warehouse.deliveryLimit})`;
     const query=byId("warehouseSearch").value.trim().toLocaleLowerCase(), faction=byId("warehouseFaction").value;
     const filtering=!!query || faction!=="all";
     const matching=storage[kind].filter(item=>{
@@ -715,7 +716,7 @@ window.WarehouseUI = (() => {
       actions.append(accept,remove);row.append(image,text,actions);list.append(row);
     });
     if(!deliveries.length)list.append(element("p","muted","保管库为空"));
-    body.append(element("p","muted","机库已满时收到的奖励保存在这里，腾出位置后可逐个接受。"),list);
+    body.append(element("p","muted","活动、任务与补给获得的单位保存在这里，可逐个接受到机库。"),list);
   }
   byId("warehouseDeliveries").onclick=showDeliveries;
   for (const event of ["economy-changed", "game-assets-ready", "language-change"])

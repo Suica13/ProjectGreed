@@ -41,7 +41,7 @@ function fixture(t, difficulty, { ace = false, multiplier = 1, aiDelayMs = 99999
   return { room, actor, pilot, act, settle, frames };
 }
 
-for (const [difficulty, expected] of [[1,625],[2,1250],[3,2250],[4,4875],[5,8000],[6,11875]])
+for (const [difficulty, expected] of [[1,300],[2,650],[3,1150],[4,2450],[5,4000],[6,5950]])
   test(`N${difficulty} pays ${expected} XP per deployed PMC/ACE at settlement only`, t => {
     const f = fixture(t, difficulty, { ace: difficulty % 2 === 0 });
     for (const o of f.room.game.contract.objectives) o.status = 'completed';
@@ -69,7 +69,7 @@ test('partial completion scales XP, excludes contact events and retains activity
   f.room.game.contract.objectives.forEach((o, i) => o.status = i === 0 ? 'completed' : 'failed');
   f.room.game.contract.objectives.push({ id: 'contact-extra', contactTaskId: 'extra', status: 'completed' });
   f.settle();
-  assert.equal(f.actor.pilot.experience, 1500);
+  assert.equal(f.actor.pilot.experience, 750);
 });
 
 test('zero ordinary completion grants no XP even with completed contact event', t => {
@@ -92,7 +92,7 @@ test('casualties receive settlement XP, while undeployed and maximum-level pilot
   for (const actor of [casualty, capped]) f.room.pilotParticipants.add('0:' + actor.pilot.id);
   f.room.game.contract.objectives[0].status = 'completed';
   f.settle();
-  assert.equal(casualty.pilot.experience, 625);
+  assert.equal(casualty.pilot.experience, 300);
   assert.equal(casualty.pilot.needsRecruitment, true);
   assert.equal(undeployed.pilot.experience, 0);
   assert.equal(capped.pilot.experience, 0);
@@ -121,4 +121,11 @@ test('contract kills record combat results without immediate XP', async t => {
   assert.equal(f.actor.pilot.experience, 0);
   assert.equal(f.actor.pilot.record.kills, 1);
   assert.equal(f.room.economySettled, false);
+});
+
+test('activity XP multiplier precedes the single final rounding to 50', t => {
+  const f=fixture(t,1,{multiplier:2});
+  f.room.game.contract.objectives.forEach(o=>o.status='completed');
+  assert.equal(C.reward(f.room,G).experience,300);
+  f.settle();assert.equal(f.actor.pilot.experience,650);
 });
