@@ -1343,6 +1343,7 @@ const Tactics = (() => {
         get name() {
           return base.name + " Lv." + level;
         },
+        ...(base.gnField ? { gnField: { ...base.gnField, capacity: base.gnField.capacity * factor } } : {}),
         hp: Math.round(base.hp * factor),
         accuracy: Math.round(base.accuracy * 1.1 ** (level - 1)),
         weapons: base.weapons.map((weapon) =>
@@ -1388,6 +1389,7 @@ const Tactics = (() => {
         ...(base.iField
           ? { iField: { ...base.iField, capacity: base.iField.capacity * factor } }
           : {}),
+        ...(base.gnField ? { gnField: { ...base.gnField, capacity: base.gnField.capacity * factor } } : {}),
         hp: Math.round(base.hp * factor),
         en: Math.round(base.en * factor),
       });
@@ -2395,6 +2397,7 @@ const Tactics = (() => {
         : {}),
       shield: m.shield.hp,
       ...(m.iField ? { iFieldHp: m.iField.capacity } : {}),
+      ...(m.gnField ? { gnFieldHp: m.gnField.capacity } : {}),
       en: m.en,
       moved: false,
       acted: false,
@@ -3008,6 +3011,11 @@ const Tactics = (() => {
         firingArcCanBear(u, step.firingArc, w.aimCell ?? target),
     );
   }
+  function counterCombatMode(request, attackerId) {
+    const attacks = (request?.attacks || (request ? [request] : []))
+      .filter(intent => intent.attacker === attackerId);
+    return attacks.length && attacks.every(intent => intent.combatMode === "charge") ? "charge" : "melee";
+  }
   function attackOrders(unit) {
     return unit.plan ? unit.plan.attacks || [unit.plan] : [];
   }
@@ -3401,22 +3409,24 @@ const Tactics = (() => {
   }
   // 返回预估命中率和命中后的伤害，不修改对局。
   // A segment intersects a circular screen when its nearest point lies in the radius.
-  function iFieldHP(unit) {
-    if (!models[unit?.model]?.iField) return 0;
-    const field = modelOf(unit).iField;
+  function fieldOf(unit) { const m = models[unit?.model] && modelOf(unit); return m?.gnField || m?.iField; }
+  function fieldKey(unit) { return modelOf(unit).gnField ? "gnFieldHp" : "iFieldHp"; }
+  function fieldHP(unit) {
+    if (!fieldOf(unit)) return 0;
+    const field = fieldOf(unit);
     return field
       ? Math.max(
           field.minimumRatio * field.capacity,
-          Math.min(field.capacity, unit.iFieldHp ?? field.capacity),
+          Math.min(field.capacity, unit[fieldKey(unit)] ?? field.capacity),
         )
       : 0;
   }
   function consumeIField(unit, amount) {
-    if (amount <= 0 || !models[unit?.model]?.iField) return 0;
-    const field = modelOf(unit).iField;
-    const before = iFieldHP(unit);
-    unit.iFieldHp = Math.max(field.minimumRatio * field.capacity, before - amount);
-    return before - unit.iFieldHp;
+    if (amount <= 0 || !fieldOf(unit)) return 0;
+    const field = fieldOf(unit);
+    const before = fieldHP(unit);
+    unit[fieldKey(unit)] = Math.max(field.minimumRatio * field.capacity, before - amount);
+    return before - unit[fieldKey(unit)];
   }
   function smokeAt(g, unit) {
     return (g.smokeFields || []).some(
@@ -3545,10 +3555,11 @@ const Tactics = (() => {
       w.aimCell ? { ...w.aimCell, groundTarget: true } : b,
     );
     let components = w.damageComponents;
-    const field = defender.iField,
-      fieldInitial = iFieldHP(b);
+    const field = defender.gnField || defender.iField,
+      fieldInitial = fieldHP(b);
     const normalCoatings = coatings.snapshot(defender, b), blockedCoatings = coatings.snapshot(defender, b);
     let currentCoatings = normalCoatings;
+    let currentFieldBudget = fieldInitial;
     let fieldLeft = fieldInitial,
       blockedFieldLeft = fieldInitial;
     function protectedDamage(
@@ -3596,13 +3607,17 @@ const Tactics = (() => {
           finalDamageMultiplier;
         // Native I-fields intercept ranged beam projectiles; beam sabers bypass them.
         const reduction =
-          fieldActive && w.type !== "melee" && channel === "beam"
+          fieldActive && (!field.guardOnly || response === "defend") &&
+          (field.allDamage || (w.type !== "melee" && channel === "beam"))
             ? ap
               ? field.piercingReduction
               : field.reduction
             : 0;
-        if (tracker) tracker.absorbed += amount * reduction;
-        return sum + coatings.protect(amount * (1 - reduction), channel, ap, defender, currentCoatings, tracker);
+        const absorbed = field?.allDamage
+          ? Math.min(amount * reduction, Math.max(0, currentFieldBudget - (tracker?.absorbed || 0)))
+          : amount * reduction;
+        if (tracker) tracker.absorbed += absorbed;
+        return sum + coatings.protect(amount - absorbed, channel, ap, defender, currentCoatings, tracker);
       }, 0);
     }
     let damage = 0,
@@ -3617,11 +3632,13 @@ const Tactics = (() => {
         normal = { absorbed: 0 },
         blocked = { absorbed: 0 };
       currentCoatings = normalCoatings;
+      currentFieldBudget = fieldLeft;
       damage += roundDamage(
         protectedDamage(defender.defenses, multiplier, 1, fieldLeft > 0, normal),
       );
       coatings.advance(normalCoatings, normal);
       currentCoatings = blockedCoatings;
+      currentFieldBudget = blockedFieldLeft;
       fieldLeft = Math.max(floor, fieldLeft - roundDamage(normal.absorbed));
       const active = blockedFieldLeft > 0,
         coverage = shieldLeft > 0 ? defender.shield.coverage : 0;
@@ -3754,7 +3771,7 @@ const Tactics = (() => {
           damage = hit ? Math.min(to.hp, blocked ? e.blockedDamage : e.damage) : 0;
         const hpBefore = to.hp,
           shieldBeforeStrike = to.shield;
-        const iFieldBefore = iFieldHP(to);
+        const iFieldBefore = fieldHP(to);
         const iFieldDamage = hit
           ? consumeIField(to, blocked ? e.iFieldBlockedDamage : e.iFieldDamage)
           : 0;
@@ -3802,7 +3819,7 @@ const Tactics = (() => {
           ...(phaseShiftDamage > 0 ? {phaseShiftDamage} : {}),
           shieldBefore: shieldBeforeStrike,
           shieldAfter: to.shield,
-          ...(modelOf(to).iField ? { iFieldBefore, iFieldAfter: iFieldHP(to), iFieldDamage } : {}),
+          ...(fieldOf(to) ? { iFieldBefore, iFieldAfter: fieldHP(to), iFieldDamage, fieldName: modelOf(to).gnField ? "GN立场" : "I立场" } : {}),
           brokenParts: brokenPart ? [brokenPart] : [],
           partsAfter: { ...to.brokenParts },
           modelAfter: to.model,
@@ -3833,7 +3850,7 @@ const Tactics = (() => {
         ...(strikes[0]?.iFieldBefore !== undefined
           ? {
               iFieldBefore: strikes[0].iFieldBefore,
-              iFieldAfter: iFieldHP(to),
+              iFieldAfter: fieldHP(to),
               iFieldDamage: strikes.reduce(
                 (total, strike) => total + (strike.iFieldDamage || 0),
                 0,
@@ -3859,6 +3876,7 @@ const Tactics = (() => {
         phaseShiftDamage: strikes.reduce((sum,strike) => sum + (strike.phaseShiftDamage || 0),0),
         after: to.hp,
         hitChance: strikes[0]?.hitChance,
+        ...(fieldOf(to) ? {fieldName:modelOf(to).gnField ? "GN立场" : "I立场"} : {}),
         response: stance,
       });
     }
@@ -4040,7 +4058,7 @@ const Tactics = (() => {
       const abcDamage = hit ? ((blocked ? estimateHit.coatingBlockedDamage : estimateHit.coatingDamage)?.abc?.loss || 0) : 0;
       const phaseShiftDamage = hit ? ((blocked ? estimateHit.coatingBlockedDamage : estimateHit.coatingDamage)?.phaseShift?.loss || 0) : 0;
       if (hit) coatings.consume(modelOf(target), target, blocked ? estimateHit.coatingBlockedDamage : estimateHit.coatingDamage);
-      const iFieldBefore = iFieldHP(target),
+      const iFieldBefore = fieldHP(target),
         iFieldDamage = hit
           ? consumeIField(
               target,
@@ -4064,8 +4082,8 @@ const Tactics = (() => {
         ...(abcDamage > 0 ? {abcDamage} : {}),
         ...(phaseShiftDamage > 0 ? {phaseShiftDamage} : {}),
         shieldDamage: shieldBefore - target.shield,
-        ...(modelOf(target).iField
-          ? { iFieldBefore, iFieldAfter: iFieldHP(target), iFieldDamage }
+        ...(fieldOf(target)
+          ? { iFieldBefore, iFieldAfter: fieldHP(target), iFieldDamage, fieldName: modelOf(target).gnField ? "GN立场" : "I立场" }
           : {}),
         before,
         after: target.hp,
@@ -4102,6 +4120,7 @@ const Tactics = (() => {
       sound: skill.sound,
       model: unit.model,
       color: skill.visualColor,
+      effectPrefix: skill.effectPrefix,
       chargeSeconds: skill.chargeSeconds,
       fireSeconds: skill.fireSeconds,
       fireSound: skill.fireSound,
@@ -4305,12 +4324,13 @@ const Tactics = (() => {
           u.hp + Math.round((modelOf(u).hp * maintenance.hpPercent) / 100),
         );
       }
-      const field = modelOf(u).iField;
+      const field = fieldOf(u);
       if (field)
-        u.iFieldHp = Math.min(
+        u[fieldKey(u)] = Math.min(
           field.capacity,
-          iFieldHP(u) + (field.capacity * field.recoveryPercent) / 100,
+          fieldHP(u) + (field.capacity * field.recoveryPercent) / 100,
         );
+      if (modelOf(u).solarFurnace) u.en = Math.min(modelOf(u).en, u.en + Math.round(modelOf(u).en * modelOf(u).solarFurnace.enRecoveryPercent / 100));
       u.acted = false;
       u.moved = false;
       u.origin = null;
@@ -5143,7 +5163,8 @@ const Tactics = (() => {
     smokeAt,
     opticalCamouflageActive,
     phaseShiftActive: unit => coatings.active(modelOf(unit), unit, "phaseShift"),
-    iFieldHP,
+    iFieldHP: unit => modelOf(unit).iField ? fieldHP(unit) : 0,
+    gnFieldHP: unit => modelOf(unit).gnField ? fieldHP(unit) : 0,
     fight,
     counter,
     wait,
@@ -5155,6 +5176,7 @@ const Tactics = (() => {
     aiChoiceSteps,
     aiSquadChoice,
     counterTargetEntries,
+    counterCombatMode,
     aiTargetPressure,
     aiLaunchChoice,
   };

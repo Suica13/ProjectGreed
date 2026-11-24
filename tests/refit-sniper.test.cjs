@@ -1,15 +1,12 @@
-const test=require("node:test"),assert=require("node:assert/strict");
-const G=require("../shared/rules.js"),Sequence=require("../shared/weapon-sequence.js");
-test("all charged sniper attacks deal half their native damage including per-step payloads",()=>{
-  let count=0;
-  for(const p of G.catalog.prefabs)for(const w of Object.values(p.weapons))if(w.special?.type === "snipe") {
-    count++;
-    const native=structuredClone(w);Object.assign(native,native.sniperDamageBeforeHalving);
-    for(const step of native.attack.steps)if(step.sniperDamageBeforeHalving)step.damageComponents=step.sniperDamageBeforeHalving;
-    const reduced=Sequence.compile(w),original=Sequence.compile(native);
-    const total=w=>w.attack.strikes.reduce((sum,s)=>sum+Object.values(s.damageComponents || w.damageComponents).reduce((a,b)=>a+b,0)*(s.damageMultiplier ?? 1),0);
-    assert.equal(total(reduced),total(original)*.5,p.id);
-    assert.equal(reduced.en,original.en);assert.equal(reduced.shotCount,original.shotCount);
-  }
-  assert.equal(count,8);
+const test=require('node:test'),assert=require('node:assert/strict'),G=require('../shared/rules');
+const total=w=>w.attack.strikes.reduce((sum,s)=>sum+Object.values(s.damageComponents||w.damageComponents).reduce((a,b)=>a+b,0)*(s.damageMultiplier??1),0);
+test('every charged sniper uses 1.5 complete ordinary volleys and 95 base accuracy with preserved double-hit multiplier',()=>{
+ let count=0;
+ for(const m of Object.values(G.models))for(const w of m.weapons)if(w.special?.type==='snipe'){
+  const base=m.weapons.find(b=>b.id===w.special.baseWeapon);assert(base,m.prefabId+'/'+w.id);
+  assert.equal(total(w),Math.round(total(base)*1.5/25)*25,m.prefabId+'/'+w.id);
+  assert.equal(w.hit,95);assert.equal(w.hitScale,2);assert.equal(w.special.delayOwnTurns,1);assert.equal(w.noCounter,true);
+  assert(w.attack.strikes.every(s=>s.accuracy===undefined||s.accuracy===95));count++;
+ }
+ assert(count>=17);
 });

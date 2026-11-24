@@ -1,0 +1,1163 @@
+{
+  "schemaVersion": 2,
+  "id": "MS_06F_TB",
+  "code": "MS-06F_TB",
+  "source": "GundamWars_Duel_A0/Units/BattleUnits/MS-06F_TB/MS-06F_TB.ini",
+  "materials": {
+    "textures": {
+      "MS-06F_TB_Crotch_1.png": "textures/MS-06F_TB_Crotch_1.png",
+      "MS-06F_TB_Body_1.png": "textures/MS-06F_TB_Body_1.png",
+      "MS-06F_TB_ArmL_1.png": "textures/MS-06F_TB_ArmL_1.png",
+      "MS-06F_TB_ArmR_1.png": "textures/MS-06F_TB_ArmR_1.png",
+      "MS-06F_TB_ShoulderL_1.png": "textures/MS-06F_TB_ShoulderL_1.png",
+      "MS-06F_TB_ShoulderR_1.png": "textures/MS-06F_TB_ShoulderR_1.png",
+      "MS-06F_TB_Head_1.png": "textures/MS-06F_TB_Head_1.png",
+      "MS-06F_TB_Eye_1.png": "textures/MS-06F_TB_Eye_1.png",
+      "MS-06F_TB_FootL_1.png": "textures/MS-06F_TB_FootL_1.png",
+      "MS-06F_TB_LegL_1.png": "textures/MS-06F_TB_LegL_1.png",
+      "MS-06F_TB_FootR_1.png": "textures/MS-06F_TB_FootR_1.png",
+      "MS-06F_TB_LegR_1.png": "textures/MS-06F_TB_LegR_1.png",
+      "ZN_270mmBazooka.png": "textures/ZN_270mmBazooka.png",
+      "ZN_HeatHawk.png": "textures/ZN_HeatHawk.png",
+      "ZN_120mmMG.png": "textures/ZN_120mmMG.png",
+      "MS-06F_TB_BackArmL_1.png": "textures/MS-06F_TB_BackArmL_1.png",
+      "MS-06F_TB_BackArmR_1.png": "textures/MS-06F_TB_BackArmR_1.png",
+      "MS.png": "textures/MS.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png",
+      "TB_RenderedIcon.png": "textures/TB_RenderedIcon.png"
+    },
+    "icon": "TB_RenderedIcon.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": -0.5
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "LeftFoot",
+      "texture": "MS-06F_TB_FootL_1.png",
+      "bone": "LeftFoot",
+      "order": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "RightFoot",
+      "texture": "MS-06F_TB_FootR_1.png",
+      "bone": "RightFoot",
+      "order": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "LeftLeg",
+      "texture": "MS-06F_TB_LegL_1.png",
+      "bone": "LeftLeg",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "RightLeg",
+      "texture": "MS-06F_TB_LegR_1.png",
+      "bone": "RightLeg",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -9.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "moving": true,
+        "boosting": true
+      }
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -14.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "moving": true,
+        "boosting": true
+      }
+    },
+    {
+      "name": "Crotch",
+      "texture": "MS-06F_TB_Crotch_1.png",
+      "bone": "Pelvis",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ArmL",
+      "texture": "MS-06F_TB_ArmL_1.png",
+      "bone": "LeftArm",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ArmR",
+      "texture": "MS-06F_TB_ArmR_1.png",
+      "bone": "RightArm",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ZN_270mmBazookaR",
+      "texture": "ZN_270mmBazooka.png",
+      "bone": "RightArm",
+      "order": 5.5,
+      "scale": 0.9,
+      "rotation": 0.0,
+      "offset": {
+        "x": 2.0,
+        "y": 10.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": 0
+      }
+    },
+    {
+      "name": "ZN_HeatHawkR",
+      "texture": "ZN_HeatHawk.png",
+      "bone": "RightWeapon",
+      "order": 5.5,
+      "scale": 0.85,
+      "rotation": -45.0,
+      "offset": {
+        "x": 10.0,
+        "y": 20.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": 1
+      }
+    },
+    {
+      "name": "Body",
+      "texture": "MS-06F_TB_Body_1.png",
+      "bone": "Body",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ShoulderL",
+      "texture": "MS-06F_TB_ShoulderL_1.png",
+      "bone": "LeftShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ShoulderR",
+      "texture": "MS-06F_TB_ShoulderR_1.png",
+      "bone": "RightShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "BackArmL",
+      "texture": "MS-06F_TB_BackArmL_1.png",
+      "bone": "Body",
+      "order": 6.0,
+      "scale": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": 2
+      }
+    },
+    {
+      "name": "BackArmR",
+      "texture": "MS-06F_TB_BackArmR_1.png",
+      "bone": "Body",
+      "order": 6.0,
+      "scale": 1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": 2
+      }
+    },
+    {
+      "name": "ZN_120mmMG_D_TBR",
+      "texture": "ZN_120mmMG.png",
+      "bone": "RightArm",
+      "order": 6.5,
+      "scale": 0.9,
+      "rotation": 0.0,
+      "offset": {
+        "x": 4.0,
+        "y": -5.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": 2
+      }
+    },
+    {
+      "name": "ZN_120mmMG_D_TBL",
+      "texture": "ZN_120mmMG.png",
+      "bone": "LeftArm",
+      "order": 6.5,
+      "scale": 0.9,
+      "scaleX": -1.0,
+      "rotation": 0.0,
+      "offset": {
+        "x": -4.0,
+        "y": -5.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": 2
+      }
+    },
+    {
+      "name": "Head",
+      "texture": "MS-06F_TB_Head_1.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": -0.5,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      }
+    },
+    {
+      "name": "Eye",
+      "texture": "MS-06F_TB_Eye_1.png",
+      "bone": "Eye",
+      "order": 7.5,
+      "scale": 1.5,
+      "offset": {
+        "x": -0.5,
+        "y": 2.5
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      }
+    }
+  ],
+  "animations": {
+    "OnMovingWalk": "../../animations/MS_06F_TB__OnMovingWalk.json",
+    "OnMovingBoost": "../../animations/MS_06F_TB__OnMovingBoost.json",
+    "OnMovingBoostReversing": "../../animations/MS_06F_TB__OnMovingBoostReversing.json",
+    "Common_Daze_A": "../../animations/MS_06F_TB__Common_Daze_A.json",
+    "Common_Stagger_A": "../../animations/MS_06F_TB__Common_Stagger_A.json",
+    "Common_Stun_A": "../../animations/MS_06F_TB__Common_Stun_A.json",
+    "Common_Guard": "../../animations/MS_06F_TB__Common_Guard.json",
+    "Common_SemiAuto_Shoot_A": "../../animations/MS_06F_TB__Common_SemiAuto_Shoot_A.json",
+    "Common_SemiAuto_Shoot_A_L": "../../animations/MS_06F_TB__Common_SemiAuto_Shoot_A_L.json",
+    "Common_Single_DoubleShoot_A": "../../animations/MS_06F_TB__Common_Single_DoubleShoot_A.json",
+    "Common_Melee_A": "../../animations/MS_06F_TB__Common_Melee_A.json",
+    "Common_Melee_A_L": "../../animations/MS_06F_TB__Common_Melee_A_L.json",
+    "Common_Melee_B": "../../animations/MS_06F_TB__Common_Melee_B.json",
+    "Common_Melee_B_L": "../../animations/MS_06F_TB__Common_Melee_B_L.json",
+    "Common_Melee_F": "../../animations/MS_06F_TB__Common_Melee_F.json",
+    "Common_Melee_F_L": "../../animations/MS_06F_TB__Common_Melee_F_L.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 27500,
+    "en": 750,
+    "move": 6,
+    "mobility": 105,
+    "cost": 250,
+    "counterLimit": 1,
+    "partStructuralStrength": 120,
+    "adaptability": {
+      "ground": 100,
+      "space": 100,
+      "water": 50,
+      "air": 10,
+      "atmosphere": 0,
+      "mountain": 100,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "accuracy": 115,
+    "actionPoints": 10,
+    "sensors": {
+      "sight": 8,
+      "radar": 10,
+      "antiDetection": 0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    },
+    "speed": 100
+  },
+  "attackBonuses": {
+    "melee": 15,
+    "shooting": 20,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 5,
+      "flat": 0
+    },
+    "shell": {
+      "percent": 10,
+      "flat": 100
+    },
+    "melee": {
+      "percent": 10,
+      "flat": 50
+    },
+    "dp": {
+      "percent": 10,
+      "flat": 15
+    },
+    "sp": {
+      "percent": 0,
+      "flat": 0
+    }
+  },
+  "shield": {
+    "hp": 0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 1,
+        "flat": 0
+      },
+      "shell": {
+        "percent": 1,
+        "flat": 0
+      },
+      "melee": {
+        "percent": 1,
+        "flat": 0
+      },
+      "dp": {
+        "percent": 1,
+        "flat": 0
+      }
+    },
+    "requiredParts": []
+  },
+  "sourceStats": {
+    "enBeforeReduction": 750,
+    "enCapacityMultiplier": 1,
+    "hp": 22000,
+    "walkSpeed": 0.65,
+    "boostSpeed": 1.4,
+    "turnSpeed": 1.5,
+    "reaction": 105,
+    "shooting": 120,
+    "melee": 115,
+    "partStructuralStrength": 120,
+    "accuracy": 115,
+    "unitLevel": 1000,
+    "balanceStatus": "native-level",
+    "tacticalMoveBeforeBonus": 5,
+    "adaptability": {
+      "ground": 100,
+      "space": 100,
+      "water": 50,
+      "air": 10,
+      "mountain": 100,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 20,
+      "radar": 360,
+      "antiDetection": 0
+    },
+    "v17BaseHp": 22000,
+    "technologyEra": "UC_0079_T1",
+    "actionTurnSpeed": 1.5,
+    "mobilityMoveTarget": 6,
+    "nativeDuel": {
+      "hp": 1000.0,
+      "walkSpeed": 0.5,
+      "boostSpeed": 1.0,
+      "turnSpeed": 1.25,
+      "reaction": 0,
+      "shooting": 105.0,
+      "melee": 100.0,
+      "initialization": "unitCategory=1, unitLevel=3,  baseHpMax=5525, baseMoraleMax=1000, baseEnergyMax=1000, baseDpMax=1000,  baseMoveSpeed=0.5, baseTurnSpeed=1.25, baseHeight=1, baseMass=1000, reverseSpeedMultiplier=0.75,  boostMoveSpeed=1.0, boostTurnSpeed=1, boostOverHeatMax=60, boostCoolDownSpeed=1.5,  baseDetectRange=500, baseFogOfWarSightRange=memory.baseDetectRange/25, baseShootLevel=105, baseCqbLevel=100,  baseShellDef=10, baseBeamDef=10, baseCqbDef=0, baseDpDef=10, baseMoraleDef=10, baseSpDef=10,  shieldMax=0, shieldShellDef=75, shieldBeamDef=75, shieldCqbDef=75, shieldDpDef=75,  groundAdaptability=80, cliftAdaptability=80, waterAdaptability=80, skyAdaptability=80, spaceAdaptability=120, canEnteringAtmosphere=false,  baseActionPoint=3, baseMovePoint=7.5, slgAttackRange=150"
+    },
+    "referenceUnits": {
+      "stats": "MS_06F2",
+      "handling": "MS_06F2"
+    },
+    "technologyWeight": 1,
+    "nativeProductionQuantity": 3,
+    "multiShieldCount": 0
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "ImportedIdle",
+    "move": "OnMovingBoost",
+    "stagger": "Common_Stagger_A",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "OnMovingWalk",
+    "movement": "boost",
+    "thrusters": true
+  },
+  "name": "扎古II F型[TB]",
+  "localization": {
+    "zh": {
+      "name": "扎古II F型[TB]"
+    },
+    "en": {
+      "name": "Zaku II F [Thunderbolt]"
+    },
+    "ja": {
+      "name": "ザクII F型［TB］"
+    }
+  },
+  "tags": [
+    "ZEON",
+    "UC_0079_T1"
+  ],
+  "unitTags": [
+    "MS"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto",
+      "CanUseSFS"
+    ]
+  },
+  "weapons": {
+    "ZN_270mmBazooka": {
+      "ref": "ZN_360mmBazooka__lv1",
+      "overrides": {
+        "name": "380mm火箭筒",
+        "hit": 100,
+        "sourceHit": 100,
+        "clip": "Common_SemiAuto_Shoot_A",
+        "damagePerShot": 500.0,
+        "damageComponents": {
+          "shell": 500.0
+        },
+        "attack": {
+          "steps": [
+            {
+              "weaponDisplayIndex": 0,
+              "delay": 0
+            },
+            {
+              "animation": "Common_SemiAuto_Shoot_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "delay": 0.25
+            },
+            {
+              "delay": 0.5
+            }
+          ],
+          "startAnimation": null
+        },
+        "partBreakModifier": 1,
+        "projectile": {
+          "texture": "../../projectiles/Bazooka_1.png",
+          "scale": 1.0,
+          "speed": 7.5,
+          "nativeSpeed": 7.5,
+          "rotation": 0.0,
+          "presentationSource": "GundamWars_BattleOperation2_V5/Resource/Image/Bullet/Shell/Bazooka_1.png",
+          "presentationSha256": "be27b54724d435fac42e67ca9a3d8def2586fe3c1304ded9fe5230878e222cc6"
+        },
+        "sound": {
+          "file": "../../sounds/TB_Bazooka_1.ogg",
+          "volume": 0.4
+        },
+        "targetModifiers": {
+          "air": 1,
+          "water": 1,
+          "ground": 1,
+          "space": 1
+        },
+        "nativePayload": {
+          "DpDamage": 325.0,
+          "ShellDamage": 500.0,
+          "ProjectileSpeed": 7.5,
+          "ProjectileLife": 100.0
+        },
+        "antiSize": {
+          "small": {
+            "damage": 1,
+            "accuracy": 1
+          },
+          "large": {
+            "damage": 1,
+            "accuracy": 1
+          }
+        },
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Shell/ZN_270mmBazooka.gw",
+          "barrel": "ZN_270mmBazooka",
+          "entry": "action_Weapon0",
+          "cooldown": 0,
+          "duration": 0.75,
+          "firstShot": 0.25,
+          "lastShot": 0.25,
+          "firingEvents": 1,
+          "projectiles": 1,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "action_Weapon0",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SetAttackingOn_ActiveSkills",
+            "hiddenAction_SetShootOn",
+            "hiddenAction_ZN_270mmBazooka_SetWeaponIndex",
+            "hiddenAction_ZN_270mmBazooka_B6_Step_1",
+            "hiddenAction_ZN_270mmBazooka_Fire_Step_0",
+            "hiddenAction_ZN_270mmBazooka_Fire_Step_1",
+            "hiddenAction_ZN_270mmBazooka_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff",
+            "hiddenAction_SetShootOff"
+          ]
+        },
+        "localization": {
+          "zh": {
+            "name": "380mm火箭筒"
+          },
+          "en": {
+            "name": "380mm Bazooka"
+          },
+          "ja": {
+            "name": "380mmバズーカ"
+          }
+        },
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/ZN_270mmBazooka.gw",
+          "barrels": [
+            {
+              "id": "ZN_270mmBazooka",
+              "x": 10.0,
+              "y": 20.0
+            }
+          ],
+          "entry": "action_Weapon0"
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "ZN_270mmBazookaR",
+              "point": {
+                "x": -1.1111111111111103,
+                "y": -11.11111111111111
+              }
+            }
+          ]
+        },
+        "requiredParts": [
+          "rightArm"
+        ],
+        "weaponClass": "bazooka",
+        "thunderboltReference": [
+          "MS_06F2",
+          "ZN_360mmBazooka"
+        ],
+        "nativeSourceName": "ZN_270mmBazooka"
+      }
+    },
+    "ZN_HeatHawk": {
+      "ref": "ZN_HeatHawk_A__lv1",
+      "overrides": {
+        "hit": 100,
+        "sourceHit": 100,
+        "damagePerShot": 900.0,
+        "damageComponents": {
+          "melee": 600.0,
+          "meleeShell": 300.0
+        },
+        "attack": {
+          "steps": [
+            {
+              "weaponDisplayIndex": 1,
+              "delay": 0
+            },
+            {
+              "animation": "Common_Melee_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "swingEffects": [],
+              "delay": 0.7
+            },
+            {
+              "delay": 0.7
+            }
+          ],
+          "startAnimation": null
+        },
+        "partBreakModifier": 1,
+        "sound": {
+          "file": "../../sounds/TB_HeatHawk_1.ogg",
+          "volume": 0.5
+        },
+        "targetModifiers": {
+          "air": 1,
+          "water": 1,
+          "ground": 1,
+          "space": 1
+        },
+        "nativePayload": {
+          "DpDamage": 1000.0,
+          "CqbDamage": 600.0,
+          "CqbShellDamage": 300.0,
+          "ProjectileSpeed": 5.0,
+          "ProjectileLife": 10.0
+        },
+        "antiSize": {
+          "small": {
+            "damage": 1,
+            "accuracy": 1
+          },
+          "large": {
+            "damage": 1,
+            "accuracy": 1
+          }
+        },
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk.gw",
+          "barrel": "ZN_HeatHawk",
+          "entry": "action_Weapon1",
+          "cooldown": 0,
+          "duration": 1.4,
+          "firstShot": 0.7,
+          "lastShot": 0.7,
+          "firingEvents": 1,
+          "projectiles": 1,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "action_Weapon1",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SetAttackingOn_ActiveSkills",
+            "hiddenAction_SetCqbOn",
+            "hiddenAction_ZN_HeatHawk_SetWeaponIndex",
+            "hiddenAction_ZN_HeatHawk_A_Step_1",
+            "hiddenAction_ZN_HeatHawk_Fire_A_Step_1",
+            "hiddenAction_ZN_HeatHawk_Fire_A_Step_2",
+            "hiddenAction_ZN_HeatHawk_Fire_A_Step_Final",
+            "hiddenAction_SetAttackingOff",
+            "hiddenAction_SetCqbOff"
+          ]
+        },
+        "localization": {
+          "zh": {
+            "name": "热能斧"
+          },
+          "en": {
+            "name": "Heat Hawk"
+          },
+          "ja": {
+            "name": "ヒート・ホーク"
+          }
+        },
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk.gw",
+          "barrels": [
+            {
+              "id": "ZN_HeatHawk",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ],
+          "entry": "action_Weapon1"
+        },
+        "requiredParts": [
+          "rightArm"
+        ],
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "ZN_HeatHawkR",
+              "point": {
+                "x": -24.95670992423109,
+                "y": 8.31890330807703
+              }
+            }
+          ]
+        },
+        "weaponClass": "melee",
+        "thunderboltReference": [
+          "MS_06F2",
+          "ZN_HeatHawk_A"
+        ],
+        "nativeSourceName": "ZN_HeatHawk"
+      },
+      "remove": [
+        "swingEffects"
+      ]
+    },
+    "ZN_120mmMG_D_TB": {
+      "ref": "ZN_120mmMG__lv2",
+      "overrides": {
+        "clip": "Common_Single_DoubleShoot_A",
+        "damagePerShot": 60.0,
+        "damageComponents": {
+          "shell": 60.0
+        },
+        "attack": {
+          "steps": [
+            {
+              "weaponDisplayIndex": 2,
+              "delay": 0
+            },
+            {
+              "animation": "Common_Single_DoubleShoot_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 1,
+              "partBreakModifier": 1,
+              "requiredParts": [
+                "leftArm"
+              ],
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "delay": 0.175
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 1,
+              "partBreakModifier": 1,
+              "requiredParts": [
+                "leftArm"
+              ],
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "delay": 0.175
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 1,
+              "partBreakModifier": 1,
+              "requiredParts": [
+                "leftArm"
+              ],
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "delay": 0.175
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 1,
+              "partBreakModifier": 1,
+              "requiredParts": [
+                "leftArm"
+              ],
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "delay": 0.175
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 1,
+              "partBreakModifier": 1,
+              "requiredParts": [
+                "leftArm"
+              ],
+              "delay": 0.0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "delay": 0.175
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 1,
+              "partBreakModifier": 1,
+              "requiredParts": [
+                "leftArm"
+              ],
+              "delay": 0.0
+            },
+            {
+              "delay": 0.2
+            }
+          ],
+          "startAnimation": null
+        },
+        "projectile": {
+          "texture": "../../projectiles/MG_1.png",
+          "scale": 1.0,
+          "speed": 10.0,
+          "nativeSpeed": 10.0,
+          "rotation": 0.0,
+          "presentationSource": "GundamWars_BattleOperation2_V5/Resource/Image/Bullet/Shell/MG_1.png",
+          "presentationSha256": "d30ae88d4efd68d95e23d15f2e9cda499d5f81fa25ba95a789274c6dfc8e2b3c"
+        },
+        "sound": {
+          "file": "../../sounds/TB_MachineGun_1.ogg",
+          "volume": 0.3
+        },
+        "targetModifiers": {
+          "air": 1,
+          "water": 1,
+          "ground": 1,
+          "space": 1
+        },
+        "muzzleEffects": [
+          "MG_Fire_1",
+          "MG_Fire_1"
+        ],
+        "nativePayload": {
+          "DpDamage": 25.0,
+          "ShellDamage": 60.0,
+          "ProjectileSpeed": 10.0,
+          "ProjectileLife": 100.0
+        },
+        "antiSize": {
+          "small": {
+            "damage": 1,
+            "accuracy": 1
+          },
+          "large": {
+            "damage": 1,
+            "accuracy": 1
+          }
+        },
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Shell/ZN_120mmMG_D_TB.gw",
+          "barrel": "ZN_120mmMG_D_TB",
+          "entry": "action_Weapon2",
+          "cooldown": 0,
+          "duration": 1.075,
+          "firstShot": 0.0,
+          "lastShot": 0.875,
+          "firingEvents": 12,
+          "projectiles": 12,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "action_Weapon2",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SetAttackingOn_ActiveSkills",
+            "hiddenAction_SetShootOn",
+            "hiddenAction_ZN_120mmMG_D_TB_SetWeaponIndex",
+            "hiddenAction_PlayCommon_SemiAuto_DoubleShoot_A_Step_1",
+            "hiddenAction_PlayCommon_SemiAuto_DoubleShoot_A_Step_2",
+            "hiddenAction_ZN_120mmMG_D_TB_B6_Step_1",
+            "hiddenAction_ZN_120mmMG_D_TB_Fire_Step_1",
+            "hiddenAction_ZN_120mmMG_D_TB_Fire_Step_Sub",
+            "hiddenAction_ZN_120mmMG_D_TB_Fire_Step_2",
+            "hiddenAction_ZN_120mmMG_D_TB_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff",
+            "hiddenAction_SetShootOff"
+          ]
+        },
+        "displayIndex": 2,
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Shell/ZN_120mmMG_D_TB.gw",
+          "barrels": [
+            {
+              "id": "ZN_120mmMG_D_TB",
+              "x": 13.0,
+              "y": 10.0
+            },
+            {
+              "id": "ZN_120mmMG_D_TB_L",
+              "x": -13.0,
+              "y": 10.0
+            }
+          ],
+          "entry": "action_Weapon2"
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "ZN_120mmMG_D_TBR",
+              "point": {
+                "x": 1.0205389992894611e-15,
+                "y": -16.666666666666668
+              }
+            },
+            {
+              "layer": "ZN_120mmMG_D_TBL",
+              "point": {
+                "x": -1.0205389992894611e-15,
+                "y": -16.666666666666668
+              }
+            }
+          ]
+        },
+        "requiredParts": [],
+        "weaponClass": "machine_gun",
+        "thunderboltReference": [
+          "MS_06F2",
+          "ZN_120mmMG"
+        ],
+        "nativeSourceName": "ZN_120mmMG_D_TB",
+        "anyParts": [
+          "rightArm",
+          "leftArm"
+        ]
+      }
+    }
+  },
+  "skills": [],
+  "hangars": [],
+  "refits": [],
+  "mechanics": [
+    {
+      "id": "AttackUp",
+      "status": "review",
+      "source": "Template/Unit/Skills/AttackUp.gw",
+      "name": "AttackUp"
+    },
+    {
+      "id": "DefensiveUp",
+      "status": "review",
+      "source": "Template/Unit/Skills/DefensiveUp.gw",
+      "name": "DefensiveUp"
+    }
+  ],
+  "formOnly": false,
+  "weaponKits": [
+    {
+      "id": "default",
+      "name": "标准武装",
+      "cost": 0,
+      "weapons": [
+        "ZN_270mmBazooka",
+        "ZN_HeatHawk",
+        "ZN_120mmMG_D_TB"
+      ],
+      "localization": {
+        "zh": {
+          "name": "标准武装"
+        },
+        "en": {
+          "name": "Standard Armament"
+        },
+        "ja": {
+          "name": "標準武装"
+        }
+      }
+    }
+  ],
+  "pairedWeapons": [
+    {
+      "id": "ZN_120mmMG_D_TB",
+      "channels": [
+        {
+          "id": "ZN_120mmMG_D_TB",
+          "weaponId": "ZN_120mmMG_D_TB",
+          "muzzleIndex": 0,
+          "requiredParts": [
+            "rightArm"
+          ],
+          "limb": "rightArm"
+        },
+        {
+          "id": "ZN_120mmMG_D_TB_L",
+          "weaponId": "ZN_120mmMG_D_TB",
+          "muzzleIndex": 1,
+          "requiredParts": [
+            "leftArm"
+          ],
+          "limb": "leftArm"
+        }
+      ],
+      "fireMode": "simultaneous"
+    }
+  ]
+}

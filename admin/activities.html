@@ -558,6 +558,8 @@
               </section>
               <section>
                 <h3>补给代币奖励</h3>
+                <label>雷霆宙域补给代币<input id="thunderboltTokens" type="number" min="0" max="1000000" step="1" value="0" required /></label>
+                <label>天人补给代币<input id="celestialTokens" type="number" min="0" max="1000000" step="1" value="0" required /></label>
                 <label>0079年代补给代币<input id="supplyTokens" type="number" min="0" max="1000000" step="1" value="0" required /></label>
                 <p class="muted">按数量加入仓库的道具栏目，可用于0079年代扭蛋机。</p>
               </section>
@@ -787,6 +789,8 @@
           rewards.money +
           " · 物资：" +
           rewards.supplies +
+          (rewards.itemInventory?.["thunderbolt-token"] ? "\n雷霆宙域补给代币：×" + rewards.itemInventory["thunderbolt-token"] : "") +
+          (rewards.itemInventory?.["celestial-being-token"] ? "\n天人补给代币：×" + rewards.itemInventory["celestial-being-token"] : "") +
           (rewards.itemInventory?.["0079t1-token"] ? "\n0079年代补给代币：×" + rewards.itemInventory["0079t1-token"] : "") +
           Object.entries(rewards.licenses)
             .map(([id, count]) => "\n部署许可：" + unitName(id))
@@ -909,6 +913,8 @@
         rentalRewards=structuredClone(rewards.rentals||[]);renderRentalRewards();
         byId("money").value = rewards.money || 0;
         byId("supplies").value = rewards.supplies || 0;
+        byId("thunderboltTokens").value = rewards.itemInventory?.["thunderbolt-token"] || 0;
+        byId("celestialTokens").value = rewards.itemInventory?.["celestial-being-token"] || 0;
         byId("supplyTokens").value = rewards.itemInventory?.["0079t1-token"] || 0;
         licenseUnits = [...new Set([...Object.keys(rewards.licenses || {}).filter((id) => rewards.licenses[id]),...(rewards.unlockUnits||[])])];
         unlockUnits = [];
@@ -924,7 +930,7 @@
         return {
           money: Number(byId("money").value),
           supplies: Number(byId("supplies").value),
-          itemInventory: { "0079t1-token": Number(byId("supplyTokens").value) },
+          itemInventory: { "0079t1-token": Number(byId("supplyTokens").value), "thunderbolt-token": Number(byId("thunderboltTokens").value), "celestial-being-token": Number(byId("celestialTokens").value) },
           licenses: Object.fromEntries(licenseUnits.map((id) => [id, true])),
           inventory: { ...stockRewards.inventory },
           rentals: structuredClone(rentalRewards),

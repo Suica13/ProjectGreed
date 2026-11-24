@@ -615,7 +615,7 @@ const ContractMode = (() => {
     const state = room.game.contract;
     const before = state.enemyBaseCount || 0;
     state.enemyBaseCount = before + count;
-    const multiplier = 1.1 * ordinaryForceScale[config(room.settings.sweepDifficulty).id - 1] *
+    const multiplier = forces.difficultyScale(room.settings.sweepDifficulty) * 1.1 * ordinaryForceScale[config(room.settings.sweepDifficulty).id - 1] *
       (1 + 0.25 * Math.max(0, state.players - 1));
     return Math.round(state.enemyBaseCount * multiplier) - Math.round(before * multiplier);
   }
@@ -625,7 +625,7 @@ const ContractMode = (() => {
     if (!available) return 0;
     const before = state.reinforcementBaseCount || 0;
     state.reinforcementBaseCount = before + count;
-    const multiplier = 0.75 * 1.1 * ordinaryForceScale[config(room.settings.sweepDifficulty).id - 1] *
+    const multiplier = 0.75 * forces.difficultyScale(room.settings.sweepDifficulty) * 1.1 * ordinaryForceScale[config(room.settings.sweepDifficulty).id - 1] *
       (1 + 0.25 * Math.max(0, state.players - 1));
     return Math.min(available, Math.round((before + count) * multiplier) - Math.round(before * multiplier));
   }
@@ -761,8 +761,10 @@ const ContractMode = (() => {
   function enemyPilotGrade(difficulty, roll = 1) {
     const level = config(difficulty).id;
     if (level < 5) return null;
-    const eliteChance = level === 5 ? .05 : .1;
-    const veteranChance = level === 5 ? .2 : .3;
+    const eliteWeight = (level === 5 ? .05 : .1) * 1.15;
+    const veteranWeight = (level === 5 ? .2 : .3) * 1.15;
+    const total = (level === 5 ? .75 : .6) + eliteWeight + veteranWeight;
+    const eliteChance = eliteWeight / total, veteranChance = veteranWeight / total;
     return roll < eliteChance ? "elite" : roll < eliteChance + veteranChance ? "veteran" : null;
   }
   function assignEnemyPilot(room, G, unit, model, seed, elite = false) {
@@ -1343,7 +1345,7 @@ const ContractMode = (() => {
       economy = typeof BattleEconomy !== "undefined" ? BattleEconomy : require("./battle-economy.js"),
       share = Math.min(1, completed / Math.max(1, state.objectives.filter(o => !o.contactTaskId).length)),
       [money, supplies] = completionRewards[d - 1],
-      bonus = 1.25 * (state.noAllies ? 1.25 : 1);
+      bonus = 1.25 * [1, 1, 1.2, 1.3, 1.6, 1.9][d - 1] * (state.noAllies ? 1.25 : 1);
     return {
       // Settlement applies its multiplier once; the table already includes it.
       money: money * share * era * bonus / economy.completionRewardMultiplier,

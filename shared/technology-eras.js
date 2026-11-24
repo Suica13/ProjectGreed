@@ -3,7 +3,7 @@
 const TechnologyEras = (() => {
   const weights = Object.freeze({
     UC_0079_T1: 1, UC_0079_T2: 2, UC_0087_T1: 3,
-    UC_0087_T2: 4, UC_0093_T1: 5, CE_0071_T1: 1,
+    UC_0087_T2: 4, UC_0093_T1: 5, CE_0071_T1: 1, AD_2307_T1: 1,
   });
   const aliases = Object.freeze({
     "0079E": "UC_0079_T1", "0079L": "UC_0079_T2",

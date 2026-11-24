@@ -12,16 +12,15 @@ function output(id,distance) {
       Object.values(strike.damageComponents||w.damageComponents).reduce((s,n)=>s+n,0)*
       (strike.damageMultiplier??1),0),0);
 }
-test("G Fighter respects the 125 percent Core Booster output cap at every shared distance",()=>{
+test("G Fighter gains 25 percent output with 25-point damage quantization",()=>{
   assert.deepEqual([1,2,3].map(d=>output("FF_X7Bst",d)),[16200,25800,9600]);
-  assert.deepEqual([1,2,3].map(d=>output("G_Fighter",d)),[20200,32200,12000]);
-  for(const d of [1,2,3])assert(output("G_Fighter",d)<=output("FF_X7Bst",d)*1.25);
+  assert.deepEqual([1,2,3].map(d=>output("G_Fighter",d)),[25200,40200,15000]);
 });
-test("the imported G Fighter derivative is reduced too without changing its native firing chain",()=>{
+test("the imported G Fighter derivative gains output without changing its native firing chain",()=>{
   const family=G.catalog.prefabs.filter(p=>p.source.includes("/G_Fighter/"));
   assert.deepEqual(family.map(p=>p.id).sort(),["G_Bull_Easy","G_Fighter"]);
-  assert.equal(output("G_Bull_Easy",1),12300);
-  assert.equal(output("G_Bull_Easy",2),12300);
+  assert.equal(output("G_Bull_Easy",1),15450);
+  assert.equal(output("G_Bull_Easy",2),15450);
   const m=Object.values(G.models).find(m=>m.prefabId==="G_Fighter");
   assert.equal(m.weapons.find(w=>w.id==="EF_G_Fighter_BR").shotCount,2);
   assert.equal(m.weapons.find(w=>w.id==="Common_DoubleMS_G_Fighter").shotCount,6);

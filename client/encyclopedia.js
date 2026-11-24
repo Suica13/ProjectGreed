@@ -41,11 +41,7 @@ const Encyclopedia = (() => {
   function setup() {
     options("Faction", [
       ["", "全部阵营"],
-      ["EFSF", "地球联邦军"],
-      ["ZEON", "吉翁公国军"],
-      ["AEUG", "奥古"],
-      ["TITANS", "提坦斯"],
-      ["NEO_ZEON", "新吉翁"],
+      ...Rules.factions.map(faction => [faction, Rules.factionInfo[faction].name]),
     ]);
     field("Faction").hidden = tab === "plugins" || !!window.CATALOG_DEVELOPER_MODE;
     field("Era").hidden = field("Type").hidden = tab === "plugins";

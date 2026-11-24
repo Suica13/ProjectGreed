@@ -13,6 +13,7 @@ ROOT = Path(os.environ.get("PROJECTGREED_MOD_DLC_ROOT", str(
 )))
 MAIN = MOD / "GW_BattleUniverse_Main"
 ASSETS = Path(__file__).resolve().parents[1] / "assets"
+EXTERNAL_PACKAGES = {"GundamWars_Duel_A0": Path(r"H:/RW_Modding/Locker/A/GundamWars/duel/GundamWars_Duel_A0")}
 
 def package_root(name):
     """Resolve a read-only package without assuming every DLC lives in mods/units."""
@@ -20,6 +21,8 @@ def package_root(name):
         raise ValueError("Invalid MOD package: " + name)
     if name == ROOT.name:
         return ROOT
+    if name in EXTERNAL_PACKAGES:
+        return EXTERNAL_PACKAGES[name]
     original = MOD / name
     sibling = MOD.parent / name
     return original if original.exists() or not sibling.exists() else sibling
@@ -53,6 +56,11 @@ def source_root(path):
     path = Path(path).resolve()
     if path.is_relative_to(ROOT.resolve()):
         return ROOT
+    if path.is_relative_to(MOD.parent.resolve()) and path.parts[len(MOD.parent.resolve().parts)] == "GundamWars_BattleOperation2_V5":
+        return MOD.parent / "GundamWars_BattleOperation2_V5"
+    for external in EXTERNAL_PACKAGES.values():
+        if path.is_relative_to(external.resolve()):
+            return external
     relative = path.relative_to(MOD.resolve())
     return MOD / relative.parts[0]
 
@@ -61,7 +69,7 @@ def resolve(reference, base=ROOT, root=None):
     reference = reference.strip().replace("\\", "/")
     path = root / reference[5:].lstrip("/") if reference.startswith("ROOT:") else base / reference
     path = path.resolve()
-    if not any(path.is_relative_to(base.resolve()) for base in (MOD, ROOT)):
+    if not any(path.is_relative_to(base.resolve()) for base in (MOD, ROOT, MOD.parent / "GundamWars_BattleOperation2_V5", *EXTERNAL_PACKAGES.values())):
         raise ValueError("Source outside MOD checkout: " + str(path))
     return path
 

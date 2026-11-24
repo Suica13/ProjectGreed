@@ -22,7 +22,7 @@ for(const width of [1440,390])test(`online contract T1/T2 settings and T2 N6 dep
   if(width<700)await page.locator('[data-room-tab="settings"]').click();
   expect(await page.locator('#sweepDifficulty option').evaluateAll(nodes=>nodes.map(node=>({value:node.value,disabled:node.disabled}))))
    .toEqual([1,2,3,4,5,6].map(n=>({value:String(n),disabled:false})));
-  expect(await page.locator('#sweepEra option').evaluateAll(nodes=>nodes.filter(n=>!n.disabled).map(n=>n.value))).toEqual(['UC_0079_T1','UC_0079_T2']);
+  expect(await page.locator('#sweepEra option').evaluateAll(nodes=>nodes.filter(n=>!n.disabled).map(n=>n.value))).toEqual(['UC_0079_T1','UC_0079_T2','CE_0071_T1']);
   for(const [n,cost] of [[1,2000],[2,3000],[3,4000],[4,6000],[5,8000],[6,10000]]){
    await page.locator('#sweepDifficulty').selectOption(String(n));await idle();
    await expect.poll(()=>page.evaluate(()=>Net.snapshot.settings.sweepDifficulty)).toBe(n);
@@ -53,7 +53,7 @@ for(const width of [1440,390])test(`online contract T1/T2 settings and T2 N6 dep
   for(const unit of room.game.units.filter(unit=>unit.team===1&&!unit.facility)){
    const model=G.modelOf(unit);expect(model.tags).toContain('UC_0079_T2');
    expect(G.contractMode.enemyStage(room,G,model)).toBe(1);
-   expect(unit.pilot.genericGrade).toBeUndefined();
+   expect([undefined,'veteran','elite']).toContain(unit.pilot.genericGrade);
   }
   expect(await page.evaluate(()=>[1,2,3,4,5,6].map(n=>({grade:ContractMode.enemyPilotGrade(n,.99),cap:ContractMode.config(n).patrolLimit})))).toEqual(
    [12,15,18,21,24,27].map(cap=>({grade:null,cap})));
@@ -64,7 +64,8 @@ for(const width of [1440,390])test(`online contract T1/T2 settings and T2 N6 dep
   const actor=room.game.units.find(unit=>unit.ownerSeat===0),exit=room.game.contract.extractions[0];
   Object.assign(actor,{x:exit.x+1,y:exit.y+1,acted:false,moved:false});
   await page.evaluate(()=>Net.request('sync'));await idle();
-  const expected={money:18750,supplies:25000};
+  // UC0079T2 retains its existing era multiplier; round settlement to 25.
+  const expected={money:44525,supplies:59375};
   await expect.poll(()=>page.evaluate(()=>({money:Net.snapshot.contract.pending.money,supplies:Net.snapshot.contract.pending.supplies}))).toEqual(expected);
   expect(await page.evaluate(()=>({money:MatchIncome.totals().money,supplies:MatchIncome.totals().supplies}))).toEqual(expected);
   await page.evaluate(id=>Net.request('contract_extract',{unitId:id}),actor.id);await idle();

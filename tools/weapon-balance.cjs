@@ -48,7 +48,12 @@ function applyWeaponBalance(
   prefab,
   rules = require("../shared/conversion-rules.cjs").read(),
   definitions,
+  options = {},
 ) {
+  const TB = require("./thunderbolt-balance.cjs");
+  TB.prepare(prefab);
+  const Gbo2 = require("./gbo2-import-policy.cjs");
+  Gbo2.prepare(prefab, definitions);
   synchronizeZZRifle(prefab, definitions);
   // Published 145-point pilot gates include the boundary; native sources remain archived.
   for (const ability of [...Object.values(prefab.weapons || {}), ...(prefab.skills || [])])
@@ -95,6 +100,8 @@ function applyWeaponBalance(
     Conversion.scaleDamage(weapon, target / (weapon.classDamageScale ?? 1));
     if (target !== 1 || weapon.classDamageScale !== undefined) weapon.classDamageScale = target;
   }
-  return Conversion.globals(prefab, rules);
+  Conversion.globals(prefab, rules);
+  Gbo2.apply(prefab, rules, options.adjustments);
+  return TB.apply(prefab, rules, definitions, options.adjustments || require("../shared/catalog-adjustments.cjs").read());
 }
 module.exports = { applyWeaponBalance, synchronizeZZRifle };

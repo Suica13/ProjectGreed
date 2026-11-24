@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "weaponAliases": {
+    "EF_BeamSaber_BF": "EF_BeamSaber_BF_B",
+    "EF_BeamSaber_Double_DBDF": "EF_BeamSaber_Double_DBDF_Yellow"
+  },
+  "referenceUnits": {
+    "GN_001": "RX_121_1_FF_X29A",
+    "GN_002": "AMX_101K",
+    "GN_003": "RGM_86R_FXA_05D",
+    "GN_003_MA": "RGM_86R_FXA_05D",
+    "GN_005": "FA_78_2"
+  }
+}

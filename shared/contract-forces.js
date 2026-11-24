@@ -109,13 +109,16 @@ const ContractForces = (() => {
     const variants = kits[Math.floor(rng() * kits.length)].filter(allows);
     return variants[Math.floor(rng() * variants.length)];
   }
+  const difficultyScale = difficulty => [1, 1, 1.1, 1.15, 1.15, 1.15][Number(difficulty) - 1] || 1;
   function budget(room, amount, reinforcement = false) {
     const players = room.game.contract.players;
     // Explicit per-event budgets supersede the old generic head-count tuning.
     // Only the shared multiplayer multiplier remains; never scale heads again.
     const multiplier = 1 + 0.25 * Math.max(0, players - 1);
-    return Math.round((amount * multiplier) / 25) * 25;
+    // Use integer percentages so a half-step cannot drift below the rounding boundary.
+    const percent = Math.round(difficultyScale(room.settings.sweepDifficulty) * 100);
+    return Math.round(amount * multiplier * percent / 2500) * 25;
   }
-  return { profile, formations, draw, pick, budget, aiKitAllowed };
+  return { profile, formations, draw, pick, budget, aiKitAllowed, difficultyScale };
 })();
 if (typeof module !== "undefined") module.exports = ContractForces;

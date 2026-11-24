@@ -83,7 +83,7 @@ function planAudit(root, changes, metadata) {
     afterWip = json("assets/unit-wip.json", true);
   const snapshot = (raw, library, production, localization, adjustments, rules, policy) => {
     const result = Adjust.unit(
-      require("./weapon-balance.cjs").applyWeaponBalance(Codec.expandPrefab(raw, library), rules),
+      require("./weapon-balance.cjs").applyWeaponBalance(Codec.expandPrefab(raw, library), rules, library, { adjustments }),
       adjustments,
       raw.weapons,
     );

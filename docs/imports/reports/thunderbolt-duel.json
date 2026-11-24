@@ -1,0 +1,1127 @@
+[
+  {
+    "id": "RGM_79_TB",
+    "source": "GundamWars_Duel_A0/Units/BattleUnits/RGM-79_TB/RGM-79_TB.ini",
+    "reference": {
+      "stats": "RGM_79",
+      "handling": "RGM_79",
+      "shield": "RGM_79"
+    },
+    "multiShieldCount": 2,
+    "weapons": {
+      "EF_BeamSprayGun": {
+        "reference": [
+          "RGM_79",
+          "EF_BeamSprayGun"
+        ],
+        "payload": {
+          "DpDamage": 25.0,
+          "BeamDamage": 85.0,
+          "ProjectileSpeed": 7.5,
+          "ProjectileLife": 60.0
+        },
+        "timing": {
+          "source": "Units/BattleUnits/Weapon/Beam/EF_BeamSprayGun.gw",
+          "barrel": "EF_BeamSprayGun",
+          "entry": "action_Weapon0",
+          "cooldown": 0,
+          "duration": 0.2,
+          "firstShot": 0.0,
+          "lastShot": 0.0,
+          "firingEvents": 1,
+          "projectiles": 8,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "action_Weapon0",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SetAttackingOn_ActiveSkills",
+            "hiddenAction_SetShootOn",
+            "hiddenAction_EF_BeamSprayGun_SetWeaponIndex",
+            "hiddenAction_EF_BeamSprayGun_B1_Step_1",
+            "hiddenAction_EF_BeamSprayGun_Fire_Step_1",
+            "hiddenAction_EF_BeamSprayGun_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff",
+            "hiddenAction_SetShootOff"
+          ]
+        }
+      },
+      "EF_BeamSaber": {
+        "reference": [
+          "RGM_79",
+          "EF_BeamSaber_A"
+        ],
+        "payload": {
+          "DpDamage": 1000.0,
+          "CqbDamage": 600.0,
+          "CqbBeamDamage": 300.0,
+          "ProjectileSpeed": 5.0,
+          "ProjectileLife": 10.0
+        },
+        "timing": {
+          "source": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber.gw",
+          "barrel": "EF_BeamSaber",
+          "entry": "action_Weapon1",
+          "cooldown": 0,
+          "duration": 1.4,
+          "firstShot": 0.7,
+          "lastShot": 0.7,
+          "firingEvents": 1,
+          "projectiles": 1,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "action_Weapon1",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SetAttackingOn_ActiveSkills",
+            "hiddenAction_SetCqbOn",
+            "hiddenAction_EF_BeamSaber_SetWeaponIndex",
+            "hiddenAction_EF_BeamSaber_A_Step_1",
+            "hiddenAction_EF_BeamSaber_Fire_A_Step_1",
+            "hiddenAction_EF_BeamSaber_Fire_A_Step_2",
+            "hiddenAction_EF_BeamSaber_Fire_A_Step_Final",
+            "hiddenAction_SetAttackingOff",
+            "hiddenAction_SetCqbOff"
+          ]
+        }
+      },
+      "EF_FA_78_1_BR_TB_GM": {
+        "reference": [
+          "RGM_79",
+          "EF_BeamSprayGun"
+        ],
+        "payload": {
+          "DpDamage": 125.0,
+          "BeamDamage": 325.0,
+          "ProjectileSpeed": 10.0,
+          "ProjectileLife": 50.0
+        },
+        "timing": {
+          "source": "Units/BattleUnits/Weapon/Beam/EF_FA_78_1_BR_TB_GM.gw",
+          "barrel": "EF_FA_78_1_BR",
+          "entry": "action_Weapon2",
+          "cooldown": 0,
+          "duration": 0.2,
+          "firstShot": 0.0,
+          "lastShot": 0.0,
+          "firingEvents": 1,
+          "projectiles": 2,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "action_Weapon2",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SetAttackingOn_ActiveSkills",
+            "hiddenAction_SetShootOn",
+            "hiddenAction_EF_FA_78_1_BR_SetWeaponIndex",
+            "hiddenAction_EF_FA_78_1_BR_B1_Step_1",
+            "hiddenAction_EF_FA_78_1_BR_Fire_Step_1",
+            "hiddenAction_EF_FA_78_1_BR_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff",
+            "hiddenAction_SetShootOff"
+          ]
+        }
+      }
+    },
+    "skills": [],
+    "review": [
+      "实时DP、弹匣装填、冲刺防御、外置燃料箱与姿态控制未冒充回合制主动技能。"
+    ]
+  },
+  {
+    "id": "MS_06F_TB",
+    "source": "GundamWars_Duel_A0/Units/BattleUnits/MS-06F_TB/MS-06F_TB.ini",
+    "reference": {
+      "stats": "MS_06F2",
+      "handling": "MS_06F2"
+    },
+    "multiShieldCount": 0,
+    "weapons": {
+      "ZN_270mmBazooka": {
+        "reference": [
+          "MS_06F2",
+          "ZN_360mmBazooka"
+        ],
+        "payload": {
+          "DpDamage": 325.0,
+          "ShellDamage": 500.0,
+          "ProjectileSpeed": 7.5,
+          "ProjectileLife": 100.0
+        },
+        "timing": {
+          "source": "Units/BattleUnits/Weapon/Shell/ZN_270mmBazooka.gw",
+          "barrel": "ZN_270mmBazooka",
+          "entry": "action_Weapon0",
+          "cooldown": 0,
+          "duration": 0.75,
+          "firstShot": 0.25,
+          "lastShot": 0.25,
+          "firingEvents": 1,
+          "projectiles": 1,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "action_Weapon0",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SetAttackingOn_ActiveSkills",
+            "hiddenAction_SetShootOn",
+            "hiddenAction_ZN_270mmBazooka_SetWeaponIndex",
+            "hiddenAction_ZN_270mmBazooka_B6_Step_1",
+            "hiddenAction_ZN_270mmBazooka_Fire_Step_0",
+            "hiddenAction_ZN_270mmBazooka_Fire_Step_1",
+            "hiddenAction_ZN_270mmBazooka_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff",
+            "hiddenAction_SetShootOff"
+          ]
+        }
+      },
+      "ZN_HeatHawk": {
+        "reference": [
+          "MS_06F2",
+          "ZN_HeatHawk_A"
+        ],
+        "payload": {
+          "DpDamage": 1000.0,
+          "CqbDamage": 600.0,
+          "CqbShellDamage": 300.0,
+          "ProjectileSpeed": 5.0,
+          "ProjectileLife": 10.0
+        },
+        "timing": {
+          "source": "Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk.gw",
+          "barrel": "ZN_HeatHawk",
+          "entry": "action_Weapon1",
+          "cooldown": 0,
+          "duration": 1.4,
+          "firstShot": 0.7,
+          "lastShot": 0.7,
+          "firingEvents": 1,
+          "projectiles": 1,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "action_Weapon1",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SetAttackingOn_ActiveSkills",
+            "hiddenAction_SetCqbOn",
+            "hiddenAction_ZN_HeatHawk_SetWeaponIndex",
+            "hiddenAction_ZN_HeatHawk_A_Step_1",
+            "hiddenAction_ZN_HeatHawk_Fire_A_Step_1",
+            "hiddenAction_ZN_HeatHawk_Fire_A_Step_2",
+            "hiddenAction_ZN_HeatHawk_Fire_A_Step_Final",
+            "hiddenAction_SetAttackingOff",
+            "hiddenAction_SetCqbOff"
+          ]
+        }
+      },
+      "ZN_120mmMG_D_TB": {
+        "reference": [
+          "MS_06F2",
+          "ZN_120mmMG"
+        ],
+        "payload": {
+          "DpDamage": 25.0,
+          "ShellDamage": 60.0,
+          "ProjectileSpeed": 10.0,
+          "ProjectileLife": 100.0
+        },
+        "timing": {
+          "source": "Units/BattleUnits/Weapon/Shell/ZN_120mmMG_D_TB.gw",
+          "barrel": "ZN_120mmMG_D_TB",
+          "entry": "action_Weapon2",
+          "cooldown": 0,
+          "duration": 1.075,
+          "firstShot": 0.0,
+          "lastShot": 0.875,
+          "firingEvents": 12,
+          "projectiles": 12,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "action_Weapon2",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SetAttackingOn_ActiveSkills",
+            "hiddenAction_SetShootOn",
+            "hiddenAction_ZN_120mmMG_D_TB_SetWeaponIndex",
+            "hiddenAction_PlayCommon_SemiAuto_DoubleShoot_A_Step_1",
+            "hiddenAction_PlayCommon_SemiAuto_DoubleShoot_A_Step_2",
+            "hiddenAction_ZN_120mmMG_D_TB_B6_Step_1",
+            "hiddenAction_ZN_120mmMG_D_TB_Fire_Step_1",
+            "hiddenAction_ZN_120mmMG_D_TB_Fire_Step_Sub",
+            "hiddenAction_ZN_120mmMG_D_TB_Fire_Step_2",
+            "hiddenAction_ZN_120mmMG_D_TB_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff",
+            "hiddenAction_SetShootOff"
+          ]
+        }
+      }
+    },
+    "skills": [],
+    "review": [
+      "实时DP、弹匣装填、冲刺防御、外置燃料箱与姿态控制未冒充回合制主动技能。"
+    ]
+  },
+  {
+    "id": "MS_06R_TB",
+    "source": "GundamWars_Duel_A0/Units/BattleUnits/MS-06R_TB/MS-06R_TB.ini",
+    "reference": {
+      "stats": "RX_78_3",
+      "handling": "RX_78_3",
+      "unshielded": true
+    },
+    "multiShieldCount": 0,
+    "weapons": {
+      "ZN_BeamBazooka_Lv2": {
+        "reference": [
+          "MS_09R_CharCustom",
+          "ZN_BeamBazooka"
+        ],
+        "payload": {
+          "DpDamage": 450.0,
+          "BeamDamage": 1250.0,
+          "ProjectileSpeed": 8.5,
+          "ProjectileLife": 100.0
+        },
+        "timing": {
+          "source": "Units/BattleUnits/Weapon/Beam/ZN_BeamBazooka_Lv2.gw",
+          "barrel": "ZN_BeamBazooka",
+          "entry": "action_Weapon0",
+          "cooldown": 0,
+          "duration": 0.75,
+          "firstShot": 0.25,
+          "lastShot": 0.25,
+          "firingEvents": 1,
+          "projectiles": 1,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "action_Weapon0",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SetAttackingOn_ActiveSkills",
+            "hiddenAction_SetShootOn",
+            "hiddenAction_ZN_BeamBazooka_SetWeaponIndex",
+            "hiddenAction_ZN_BeamBazooka_B1_Step_1",
+            "hiddenAction_ZN_BeamBazooka_Fire_Step_0",
+            "hiddenAction_ZN_BeamBazooka_Fire_Step_1",
+            "hiddenAction_ZN_BeamBazooka_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff",
+            "hiddenAction_SetShootOff"
+          ]
+        }
+      },
+      "ZN_HeatHawk_Lv2": {
+        "reference": [
+          "MS_06F2",
+          "ZN_HeatHawk_A"
+        ],
+        "payload": {
+          "DpDamage": 1100.0,
+          "CqbDamage": 750.0,
+          "CqbShellDamage": 375.0,
+          "ProjectileSpeed": 5.0,
+          "ProjectileLife": 10.0
+        },
+        "timing": {
+          "source": "Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_Lv2.gw",
+          "barrel": "ZN_HeatHawk",
+          "entry": "action_Weapon1",
+          "cooldown": 0,
+          "duration": 1.4,
+          "firstShot": 0.7,
+          "lastShot": 0.7,
+          "firingEvents": 1,
+          "projectiles": 1,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "action_Weapon1",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SetAttackingOn_ActiveSkills",
+            "hiddenAction_SetCqbOn",
+            "hiddenAction_ZN_HeatHawk_SetWeaponIndex",
+            "hiddenAction_ZN_HeatHawk_A_Step_1",
+            "hiddenAction_ZN_HeatHawk_Fire_A_Step_1",
+            "hiddenAction_ZN_HeatHawk_Fire_A_Step_2",
+            "hiddenAction_ZN_HeatHawk_Fire_A_Step_Final",
+            "hiddenAction_SetAttackingOff",
+            "hiddenAction_SetCqbOff"
+          ]
+        }
+      },
+      "ZN_Panzerfaust": {
+        "reference": [
+          "MS_06F2",
+          "ZN_Panzerfaust"
+        ],
+        "payload": {
+          "DpDamage": 500.0,
+          "ShellAPDamage": 500.0,
+          "ProjectileSpeed": 7.5,
+          "ProjectileLife": 100.0
+        },
+        "timing": {
+          "source": "Units/BattleUnits/Weapon/Shell/ZN_Panzerfaust.gw",
+          "barrel": "ZN_Panzerfaust",
+          "entry": "action_Weapon2",
+          "cooldown": 0,
+          "duration": 0.6,
+          "firstShot": 0.1,
+          "lastShot": 0.1,
+          "firingEvents": 1,
+          "projectiles": 1,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "action_Weapon2",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SetAttackingOn_ActiveSkills",
+            "hiddenAction_SetShootOn",
+            "hiddenAction_ZN_Panzerfaust_SetWeaponIndex",
+            "hiddenAction_ZN_Panzerfaust_B1_Step_1",
+            "hiddenAction_ZN_Panzerfaust_Fire_Step_0",
+            "hiddenAction_ZN_Panzerfaust_Fire_Step_1",
+            "hiddenAction_ZN_Panzerfaust_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff",
+            "hiddenAction_SetShootOff"
+          ]
+        }
+      }
+    },
+    "skills": [
+      {
+        "id": "WeaponChange",
+        "name": "武装切换",
+        "type": "transform",
+        "range": 0,
+        "maxUses": 99,
+        "consumeAction": true,
+        "effect": "Light_75_NotAttached",
+        "sound": {
+          "file": "../../sounds/Transform_4.ogg",
+          "volume": 0.5
+        },
+        "nativeAction": "action_WeaponChangeB",
+        "source": {
+          "mode": "transform",
+          "unitId": "MS_06R_TB_WeaponModeB",
+          "kitId": "default",
+          "kitMap": {
+            "default": "default"
+          },
+          "inheritResources": true,
+          "hpRecoveryPercent": 0,
+          "enRecoveryPercent": 0,
+          "shieldRecoveryPercent": 0,
+          "repairAllParts": false
+        }
+      }
+    ],
+    "review": [
+      "实时DP、弹匣装填、冲刺防御、外置燃料箱与姿态控制未冒充回合制主动技能。"
+    ]
+  },
+  {
+    "id": "MS_06R_TB_WeaponModeB",
+    "source": "GundamWars_Duel_A0/Units/BattleUnits/MS-06R_TB/MS-06R_TB_WeaponModeB.ini",
+    "reference": {
+      "stats": "RX_78_3",
+      "handling": "RX_78_3",
+      "unshielded": true
+    },
+    "multiShieldCount": 0,
+    "weapons": {
+      "ZN_360mmBazooka_D_TB_Lv2": {
+        "reference": [
+          "MS_06R_2",
+          "ZN_360mmBazooka"
+        ],
+        "payload": {
+          "DpDamage": 150.0,
+          "ShellDamage": 400.0,
+          "ProjectileSpeed": 5.5,
+          "ProjectileLife": 100.0
+        },
+        "timing": {
+          "source": "Units/BattleUnits/Weapon/Shell/ZN_360mmBazooka_D_TB_Lv2.gw",
+          "barrel": "ZN_360mmBazooka_D_TB",
+          "entry": "action_Weapon0",
+          "cooldown": 0,
+          "duration": 1.2,
+          "firstShot": 0.0,
+          "lastShot": 1.0,
+          "firingEvents": 6,
+          "projectiles": 6,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "action_Weapon0",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SetAttackingOn_ActiveSkills",
+            "hiddenAction_SetShootOn",
+            "hiddenAction_ZN_360mmBazooka_D_TB_SetWeaponIndex",
+            "hiddenAction_PlayCommon_SemiAuto_DoubleShoot_A_Step_1",
+            "hiddenAction_PlayCommon_SemiAuto_DoubleShoot_A_Step_2",
+            "hiddenAction_ZN_360mmBazooka_D_TB_B3_Step_1",
+            "hiddenAction_ZN_360mmBazooka_D_TB_Fire_Step_1",
+            "hiddenAction_ZN_360mmBazooka_D_TB_Fire_Step_Sub",
+            "hiddenAction_ZN_360mmBazooka_D_TB_Fire_Step_2",
+            "hiddenAction_ZN_360mmBazooka_D_TB_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff",
+            "hiddenAction_SetShootOff"
+          ]
+        }
+      },
+      "ZN_HeatHawk_Lv2": {
+        "reference": [
+          "MS_06F2",
+          "ZN_HeatHawk_A"
+        ],
+        "payload": {
+          "DpDamage": 1100.0,
+          "CqbDamage": 750.0,
+          "CqbShellDamage": 375.0,
+          "ProjectileSpeed": 5.0,
+          "ProjectileLife": 10.0
+        },
+        "timing": {
+          "source": "Units/BattleUnits/Weapon/Cqb/ZN_HeatHawk_Lv2.gw",
+          "barrel": "ZN_HeatHawk",
+          "entry": "action_Weapon1",
+          "cooldown": 0,
+          "duration": 1.4,
+          "firstShot": 0.7,
+          "lastShot": 0.7,
+          "firingEvents": 1,
+          "projectiles": 1,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "action_Weapon1",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SetAttackingOn_ActiveSkills",
+            "hiddenAction_SetCqbOn",
+            "hiddenAction_ZN_HeatHawk_SetWeaponIndex",
+            "hiddenAction_ZN_HeatHawk_A_Step_1",
+            "hiddenAction_ZN_HeatHawk_Fire_A_Step_1",
+            "hiddenAction_ZN_HeatHawk_Fire_A_Step_2",
+            "hiddenAction_ZN_HeatHawk_Fire_A_Step_Final",
+            "hiddenAction_SetAttackingOff",
+            "hiddenAction_SetCqbOff"
+          ]
+        }
+      },
+      "ZN_120mmMG_D_TB_Lv2": {
+        "reference": [
+          "MS_06F2",
+          "ZN_120mmMG"
+        ],
+        "payload": {
+          "DpDamage": 32.0,
+          "ShellDamage": 90.0,
+          "ProjectileSpeed": 10.0,
+          "ProjectileLife": 100.0
+        },
+        "timing": {
+          "source": "Units/BattleUnits/Weapon/Shell/ZN_120mmMG_D_TB_Lv2.gw",
+          "barrel": "ZN_120mmMG_D_TB",
+          "entry": "action_Weapon2",
+          "cooldown": 0,
+          "duration": 1.075,
+          "firstShot": 0.0,
+          "lastShot": 0.875,
+          "firingEvents": 12,
+          "projectiles": 12,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "action_Weapon2",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SetAttackingOn_ActiveSkills",
+            "hiddenAction_SetShootOn",
+            "hiddenAction_ZN_120mmMG_D_TB_SetWeaponIndex",
+            "hiddenAction_PlayCommon_SemiAuto_DoubleShoot_A_Step_1",
+            "hiddenAction_PlayCommon_SemiAuto_DoubleShoot_A_Step_2",
+            "hiddenAction_ZN_120mmMG_D_TB_B6_Step_1",
+            "hiddenAction_ZN_120mmMG_D_TB_Fire_Step_1",
+            "hiddenAction_ZN_120mmMG_D_TB_Fire_Step_Sub",
+            "hiddenAction_ZN_120mmMG_D_TB_Fire_Step_2",
+            "hiddenAction_ZN_120mmMG_D_TB_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff",
+            "hiddenAction_SetShootOff"
+          ]
+        }
+      }
+    },
+    "skills": [
+      {
+        "id": "WeaponChange",
+        "name": "武装切换",
+        "type": "transform",
+        "range": 0,
+        "maxUses": 99,
+        "consumeAction": true,
+        "effect": "Light_75_NotAttached",
+        "sound": {
+          "file": "../../sounds/Transform_4.ogg",
+          "volume": 0.5
+        },
+        "nativeAction": "action_WeaponChangeA",
+        "source": {
+          "mode": "transform",
+          "unitId": "MS_06R_TB",
+          "kitId": "default",
+          "kitMap": {
+            "default": "default"
+          },
+          "inheritResources": true,
+          "hpRecoveryPercent": 0,
+          "enRecoveryPercent": 0,
+          "shieldRecoveryPercent": 0,
+          "repairAllParts": false
+        }
+      }
+    ],
+    "review": [
+      "实时DP、弹匣装填、冲刺防御、外置燃料箱与姿态控制未冒充回合制主动技能。"
+    ]
+  },
+  {
+    "id": "FA_78_1_TB",
+    "source": "GundamWars_Duel_A0/Units/BattleUnits/FA-78-1_TB/FA-78-1_TB.ini",
+    "reference": {
+      "stats": "RX_78_3",
+      "handling": "RX_78_3",
+      "shield": "RX_78_3"
+    },
+    "multiShieldCount": 4,
+    "weapons": {
+      "EF_FA_78_1_BR_TB": {
+        "reference": [
+          "FA_78_1",
+          "EF_FA_78_1_BR"
+        ],
+        "payload": {
+          "DpDamage": 200.0,
+          "BeamDamage": 500.0,
+          "ProjectileSpeed": 10.0,
+          "ProjectileLife": 50.0
+        },
+        "timing": {
+          "source": "Units/BattleUnits/Weapon/Beam/EF_FA_78_1_BR_TB.gw",
+          "barrel": "EF_FA_78_1_BR",
+          "entry": "action_Weapon0",
+          "cooldown": 0,
+          "duration": 0.2,
+          "firstShot": 0.0,
+          "lastShot": 0.0,
+          "firingEvents": 1,
+          "projectiles": 2,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "action_Weapon0",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SetAttackingOn_ActiveSkills",
+            "hiddenAction_SetShootOn",
+            "hiddenAction_EF_FA_78_1_BR_SetWeaponIndex",
+            "hiddenAction_EF_FA_78_1_BR_B1_Step_1",
+            "hiddenAction_EF_FA_78_1_BR_Fire_Step_1",
+            "hiddenAction_EF_FA_78_1_BR_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff",
+            "hiddenAction_SetShootOff"
+          ]
+        }
+      },
+      "EF_BeamSaber_Lv2": {
+        "reference": [
+          "RX_78_3",
+          "EF_BeamSaber_AF_Fast_A"
+        ],
+        "payload": {
+          "DpDamage": 825.0,
+          "CqbDamage": 750.0,
+          "CqbBeamDamage": 375.0,
+          "ProjectileSpeed": 5.0,
+          "ProjectileLife": 10.0
+        },
+        "timing": {
+          "source": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Lv2.gw",
+          "barrel": "EF_BeamSaber",
+          "entry": "action_Weapon1",
+          "cooldown": 0,
+          "duration": 0.8,
+          "firstShot": 0.5,
+          "lastShot": 0.5,
+          "firingEvents": 1,
+          "projectiles": 1,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "action_Weapon1",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SetAttackingOn_ActiveSkills",
+            "hiddenAction_SetCqbOn",
+            "hiddenAction_EF_BeamSaber_SetWeaponIndex",
+            "hiddenAction_EF_BeamSaber_B_Step_1",
+            "hiddenAction_EF_BeamSaber_Fire_B_Step_1",
+            "hiddenAction_EF_BeamSaber_Fire_B_Step_2",
+            "hiddenAction_EF_BeamSaber_Fire_B_Step_Final",
+            "hiddenAction_SetAttackingOff",
+            "hiddenAction_SetCqbOff"
+          ]
+        }
+      },
+      "EF_GroundTypeMissileLauncher_FA_78_1_TB": {
+        "reference": [
+          "FA_78_1",
+          "EF_FA_78_1_MS"
+        ],
+        "payload": {
+          "DpDamage": 175.0,
+          "ShellDamage": 425.0,
+          "ProjectileSpeed": 2.0,
+          "ProjectileLife": 100.0
+        },
+        "timing": {
+          "source": "Units/BattleUnits/Weapon/Shell/EF_GroundTypeMissileLauncher_FA_78_1_TB.gw",
+          "barrel": "EF_GroundTypeMissileLauncher_FA_78_1_TB",
+          "entry": "action_Weapon2",
+          "cooldown": 0,
+          "duration": 0.95,
+          "firstShot": 0.25,
+          "lastShot": 0.55,
+          "firingEvents": 3,
+          "projectiles": 3,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "action_Weapon2",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SetAttackingOn_ActiveSkills",
+            "hiddenAction_SetShootOn",
+            "hiddenAction_EF_GroundTypeMissileLauncher_FA_78_1_TB_SetWeaponIndex",
+            "hiddenAction_EF_GroundTypeMissileLauncher_FA_78_1_TB_B3_Step_1",
+            "hiddenAction_EF_GroundTypeMissileLauncher_FA_78_1_TB_Fire_Step_0",
+            "hiddenAction_EF_GroundTypeMissileLauncher_FA_78_1_TB_Fire_Step_1",
+            "hiddenAction_EF_GroundTypeMissileLauncher_FA_78_1_TB_Fire_Step_2",
+            "hiddenAction_EF_FA_78_1_BodyMS_Fire_Step_2",
+            "hiddenAction_EF_FA_78_1_BodyMS_Fire_Sub_1",
+            "hiddenAction_EF_GroundTypeMissileLauncher_FA_78_1_TB_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff",
+            "hiddenAction_SetShootOff"
+          ]
+        }
+      }
+    },
+    "skills": [
+      {
+        "id": "WeaponChange",
+        "name": "武装切换",
+        "type": "transform",
+        "range": 0,
+        "maxUses": 99,
+        "consumeAction": true,
+        "effect": "Light_75_NotAttached",
+        "sound": {
+          "file": "../../sounds/Transform_4.ogg",
+          "volume": 0.5
+        },
+        "nativeAction": "action_WeaponChangeB",
+        "source": {
+          "mode": "transform",
+          "unitId": "FA_78_1_TB_WeaponModeB",
+          "kitId": "default",
+          "kitMap": {
+            "default": "default"
+          },
+          "inheritResources": true,
+          "hpRecoveryPercent": 0,
+          "enRecoveryPercent": 0,
+          "shieldRecoveryPercent": 0,
+          "repairAllParts": false
+        }
+      },
+      {
+        "id": "ArmorPurge",
+        "name": "装甲排除",
+        "type": "armor_purge",
+        "range": 0,
+        "maxUses": 99,
+        "consumeAction": true,
+        "effect": "Light_75_NotAttached",
+        "sound": {
+          "file": "../../sounds/Transform_4.ogg",
+          "volume": 0.5
+        },
+        "nativeAction": "action_ComeOut",
+        "source": {
+          "mode": "transform",
+          "unitId": "FA_78_1_TB_NA",
+          "kitId": "default",
+          "kitMap": {
+            "default": "default"
+          },
+          "inheritResources": true,
+          "hpRecoveryPercent": 0,
+          "enRecoveryPercent": 0,
+          "shieldRecoveryPercent": 0,
+          "repairAllParts": false
+        }
+      }
+    ],
+    "review": [
+      "实时DP、弹匣装填、冲刺防御、外置燃料箱与姿态控制未冒充回合制主动技能。"
+    ]
+  },
+  {
+    "id": "FA_78_1_TB_WeaponModeB",
+    "source": "GundamWars_Duel_A0/Units/BattleUnits/FA-78-1_TB/FA-78-1_TB_WeaponModeB.ini",
+    "reference": {
+      "stats": "RX_78_3",
+      "handling": "RX_78_3",
+      "shield": "RX_78_3"
+    },
+    "multiShieldCount": 4,
+    "weapons": {
+      "EF_FA_78_1_TB_BackpackMS": {
+        "reference": [
+          "FA_78_1",
+          "EF_FA_78_1_MS"
+        ],
+        "payload": {
+          "DpDamage": 35.0,
+          "ShellDamage": 100.0,
+          "ProjectileSpeed": 1.0,
+          "ProjectileLife": 100.0
+        },
+        "timing": {
+          "source": "Units/BattleUnits/Weapon/Shell/EF_FA_78_1_TB_BackpackMS.gw",
+          "barrel": "EF_FA_78_1_TB_BackpackMS",
+          "entry": "action_Weapon0",
+          "cooldown": 0,
+          "duration": 0.575,
+          "firstShot": 0.0,
+          "lastShot": 0.375,
+          "firingEvents": 6,
+          "projectiles": 6,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "action_Weapon0",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SetAttackingOn_ActiveSkills",
+            "hiddenAction_SetShootOn",
+            "hiddenAction_EF_FA_78_1_TB_BackpackMS_SetWeaponIndex",
+            "hiddenAction_EF_FA_78_1_TB_BackpackMS_B6_Step_1",
+            "hiddenAction_EF_FA_78_1_TB_BackpackMS_Fire_Step_1",
+            "hiddenAction_EF_FA_78_1_TB_BackpackMS_Fire_Step_2",
+            "hiddenAction_EF_FA_78_1_TB_BackpackMS_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff",
+            "hiddenAction_SetShootOff"
+          ]
+        }
+      },
+      "Common_Cqb": {
+        "reference": [
+          "RX_78_3",
+          "Common_Push_A"
+        ],
+        "payload": {
+          "DpDamage": 1000.0,
+          "CqbDamage": 750.0,
+          "CqbShellDamage": 250.0,
+          "ProjectileSpeed": 5.0,
+          "ProjectileLife": 10.0
+        },
+        "timing": {
+          "source": "Units/BattleUnits/Weapon/Cqb/Common_Cqb.gw",
+          "barrel": "Common_Cqb_D",
+          "entry": "action_Weapon1",
+          "cooldown": 0,
+          "duration": 1.5,
+          "firstShot": 0.25,
+          "lastShot": 0.25,
+          "firingEvents": 1,
+          "projectiles": 1,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "action_Weapon1",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SetAttackingOn_ActiveSkills",
+            "hiddenAction_SetCqbOn",
+            "hiddenAction_Common_Cqb_SetWeaponIndex",
+            "hiddenAction_Common_Cqb_D_Step_1",
+            "hiddenAction_Common_Cqb_Fire_D_Step_1",
+            "hiddenAction_Common_Cqb_Fire_D_Step_2",
+            "hiddenAction_Common_Cqb_Fire_D_Step_Final",
+            "hiddenAction_SetAttackingOff",
+            "hiddenAction_SetCqbOff"
+          ]
+        }
+      },
+      "EF_FA_78_1_TB_BeamCannon": {
+        "reference": [
+          "FA_78_1",
+          "Common_Cannon"
+        ],
+        "payload": {
+          "DpDamage": 500.0,
+          "BeamAPDamage": 1000.0,
+          "ProjectileSpeed": 8.0,
+          "ProjectileLife": 3.0
+        },
+        "timing": {
+          "source": "Units/BattleUnits/Weapon/Beam/EF_FA_78_1_TB_BeamCannon.gw",
+          "barrel": "EF_FA_78_1_TB_BeamCannon",
+          "entry": "action_Weapon2",
+          "cooldown": 0,
+          "duration": 1.5,
+          "firstShot": 0.75,
+          "lastShot": 0.75,
+          "firingEvents": 1,
+          "projectiles": 1,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "action_Weapon2",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SetAttackingOn_ActiveSkills",
+            "hiddenAction_SetShootOn",
+            "hiddenAction_EF_FA_78_1_TB_BeamCannon_SetWeaponIndex",
+            "hiddenAction_EF_FA_78_1_TB_BeamCannon_B1_Stop_Step_1",
+            "hiddenAction_EF_FA_78_1_TB_BeamCannon_Fire_Stop_Step_0",
+            "hiddenAction_EF_FA_78_1_TB_BeamCannon_Fire_Stop_Step_1",
+            "hiddenAction_EF_FA_78_1_TB_BeamCannon_Fire_Stop_Step_Final",
+            "hiddenAction_SetAttackingOff",
+            "hiddenAction_SetShootOff"
+          ]
+        }
+      }
+    },
+    "skills": [
+      {
+        "id": "WeaponChange",
+        "name": "武装切换",
+        "type": "transform",
+        "range": 0,
+        "maxUses": 99,
+        "consumeAction": true,
+        "effect": "Light_75_NotAttached",
+        "sound": {
+          "file": "../../sounds/Transform_4.ogg",
+          "volume": 0.5
+        },
+        "nativeAction": "action_WeaponChangeA",
+        "source": {
+          "mode": "transform",
+          "unitId": "FA_78_1_TB",
+          "kitId": "default",
+          "kitMap": {
+            "default": "default"
+          },
+          "inheritResources": true,
+          "hpRecoveryPercent": 0,
+          "enRecoveryPercent": 0,
+          "shieldRecoveryPercent": 0,
+          "repairAllParts": false
+        }
+      },
+      {
+        "id": "ArmorPurge",
+        "name": "装甲排除",
+        "type": "armor_purge",
+        "range": 0,
+        "maxUses": 99,
+        "consumeAction": true,
+        "effect": "Light_75_NotAttached",
+        "sound": {
+          "file": "../../sounds/Transform_4.ogg",
+          "volume": 0.5
+        },
+        "nativeAction": "action_ComeOut",
+        "source": {
+          "mode": "transform",
+          "unitId": "FA_78_1_TB_NA",
+          "kitId": "default",
+          "kitMap": {
+            "default": "default"
+          },
+          "inheritResources": true,
+          "hpRecoveryPercent": 0,
+          "enRecoveryPercent": 0,
+          "shieldRecoveryPercent": 0,
+          "repairAllParts": false
+        }
+      }
+    ],
+    "review": [
+      "实时DP、弹匣装填、冲刺防御、外置燃料箱与姿态控制未冒充回合制主动技能。"
+    ]
+  },
+  {
+    "id": "FA_78_1_TB_NA",
+    "source": "GundamWars_Duel_A0/Units/BattleUnits/FA-78-1_TB/FA-78-1_TB_NA.ini",
+    "reference": {
+      "stats": "RX_78_3",
+      "handling": "RX_78_3",
+      "shield": "RX_78_3"
+    },
+    "multiShieldCount": 1,
+    "weapons": {
+      "EF_HeadVulcan_Lv2": {
+        "reference": [
+          "RX_78_3",
+          "Common_DoubleVulcan_MS"
+        ],
+        "payload": {
+          "DpDamage": 60.0,
+          "ShellDamage": 37.5,
+          "ProjectileSpeed": 14.0,
+          "ProjectileLife": 100.0
+        },
+        "timing": {
+          "source": "Units/BattleUnits/Weapon/Shell/EF_HeadVulcan_Lv2.gw",
+          "barrel": "EF_HeadVulcan",
+          "entry": "action_Weapon0",
+          "cooldown": 0,
+          "duration": 0.6,
+          "firstShot": 0.0,
+          "lastShot": 0.5,
+          "firingEvents": 12,
+          "projectiles": 12,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "action_Weapon0",
+            "hiddenAction_SetAttackingOn_NoBlockGuard",
+            "hiddenAction_SetAttackingOn_ActiveSkills",
+            "hiddenAction_SetShootOn",
+            "hiddenAction_EF_HeadVulcan_SetWeaponIndex",
+            "hiddenAction_EF_HeadVulcan_B6_Step_1",
+            "hiddenAction_EF_HeadVulcan_Fire_Step_1",
+            "hiddenAction_EF_HeadVulcan_Fire_Sub_1",
+            "hiddenAction_EF_HeadVulcan_Fire_Step_2",
+            "hiddenAction_EF_HeadVulcan_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff",
+            "hiddenAction_SetShootOff"
+          ]
+        }
+      },
+      "EF_BeamSaber_Lv2": {
+        "reference": [
+          "RX_78_3",
+          "EF_BeamSaber_AF_Fast_A"
+        ],
+        "payload": {
+          "DpDamage": 825.0,
+          "CqbDamage": 750.0,
+          "CqbBeamDamage": 375.0,
+          "ProjectileSpeed": 5.0,
+          "ProjectileLife": 10.0
+        },
+        "timing": {
+          "source": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Lv2.gw",
+          "barrel": "EF_BeamSaber",
+          "entry": "action_Weapon1",
+          "cooldown": 0,
+          "duration": 2.9,
+          "firstShot": 0.5,
+          "lastShot": 1.65,
+          "firingEvents": 3,
+          "projectiles": 3,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "action_Weapon1",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SetAttackingOn_ActiveSkills",
+            "hiddenAction_SetCqbOn",
+            "hiddenAction_EF_BeamSaber_SetWeaponIndex",
+            "hiddenAction_EF_BeamSaber_B_Step_1",
+            "hiddenAction_EF_BeamSaber_Fire_B_Step_1",
+            "hiddenAction_EF_BeamSaber_Fire_B_Step_2",
+            "hiddenAction_EF_BeamSaber_Fire_B_Step_Final",
+            "hiddenAction_SetAttackingOff",
+            "hiddenAction_SetCqbOff",
+            "hiddenAction_Weapon1B",
+            "hiddenAction_EF_BeamSaber_F_Step_1",
+            "hiddenAction_EF_BeamSaber_Fire_F_Step_1",
+            "hiddenAction_EF_BeamSaber_Fire_F_Step_2",
+            "hiddenAction_EF_BeamSaber_Fire_F_Step_Final",
+            "hiddenAction_Weapon1C",
+            "hiddenAction_Common_Cqb_SetWeaponIndex",
+            "hiddenAction_Common_Cqb_E_Step_1",
+            "hiddenAction_Common_Cqb_Fire_E_Step_1",
+            "hiddenAction_Common_Cqb_Fire_E_Step_2",
+            "hiddenAction_Common_Cqb_Fire_E_Step_Final"
+          ]
+        }
+      }
+    },
+    "skills": [],
+    "review": [
+      "实时DP、弹匣装填、冲刺防御、外置燃料箱与姿态控制未冒充回合制主动技能。"
+    ]
+  }
+]

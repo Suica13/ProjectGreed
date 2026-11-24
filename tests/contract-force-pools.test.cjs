@@ -131,17 +131,17 @@ test("budget draws keep whole formations, caps, availability, and rarity separat
         f.units.includes("RX_78_2") && f.units.includes("RX_77_2") && f.units.includes("RX_75"),
     ),
   );
-  assert(list.filter((f) => f.units.includes("RX_78_2")).every((f) => f.weight === .25));
+  assert(list.filter((f) => f.units.includes("RX_78_2")).every((f) => f.weight === .25 * 1.15));
   assert(
     list
       .filter((f) => f.units.every((id) => id === "RX_77_2" || id === "RX_75"))
-      .every((f) => f.weight === 1),
+      .every((f) => f.weight === 1 * 1.15),
   );
   assert(list.filter((f) => f.units.every((id) => id === "RGM_79")).every((f) => f.weight === (f.units.length===3?8:4)));
 });
 test("explicit budgets scale by player count once, replacing generic head-count adjustments", () => {
   for (let players = 1; players <= 5; players++) {
-    const room = { game: { contract: { players } } };
+    const room = { settings: {sweepDifficulty:1}, game: { contract: { players } } };
     assert.equal(F.budget(room, 100), 100 + 25 * (players - 1));
     assert.equal(F.budget(room, 100, true), 100 + 25 * (players - 1));
   }

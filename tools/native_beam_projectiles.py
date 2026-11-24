@@ -8,11 +8,11 @@ from mod_source import package_root, ASSETS, MAIN, MOD, load, section, resolve
 
 
 @functools.lru_cache(None)
-def helper_path(name):
-    return next((MAIN / 'Resource/Image/Fx/Weapon/Beam').rglob(name + '.ini'), None)
+def helper_path(name, root=MAIN):
+    return next((root / 'Resource/Image/Fx/Weapon/Beam').rglob(name + '.ini'), None)
 
 
-def parts(path, color):
+def parts(path, color, root=MAIN):
     data = load(path)
     result = []
     for name in data:
@@ -34,11 +34,11 @@ def parts(path, color):
         if not name.startswith('attachment_Effect_'):
             continue
         item = section(data, name)
-        child = helper_path(item.get('onCreateSpawnUnitOf', '') + '_' + color)
+        child = helper_path(item.get('onCreateSpawnUnitOf', '') + '_' + color, root)
         if child is None:
-            child = helper_path(item.get('onCreateSpawnUnitOf', ''))
+            child = helper_path(item.get('onCreateSpawnUnitOf', ''), root)
         if child:
-            for decal, child_data in parts(child, color):
+            for decal, child_data in parts(child, color, root):
                 decal = dict(decal)
                 decal['yOffsetRelative'] = float(decal.get('yOffsetRelative', 0)) + float(item.get('y', 0))
                 result.append((decal, child_data))
@@ -95,21 +95,23 @@ def apply(prefab, weapon, data=None):
         weapon['projectile']['adaptationSource'] = reference.relative_to(MOD).as_posix()
     if not helper:
         return False
-    path = helper_path(helper)
+    beam_root = root if root.name == 'GundamWars_BattleOperation2_V5' else MAIN
+    path = helper_path(helper, beam_root)
     if path is None:
         raise ValueError('Missing native beam helper: ' + helper)
     segments = []
-    for decal, native in parts(path, color):
-        image = resolve(decal['image'], root=MAIN)
+    for decal, native in parts(path, color, beam_root):
+        image = resolve(decal['image'], root=beam_root)
         width, height = struct.unpack_from('>II', image.read_bytes(), 16)
         frames = int(decal['total_frames'])
         if width % frames:
             raise ValueError('Invalid native beam strip: ' + str(image))
-        destination = ASSETS / 'projectiles' / image.name
+        filename = ('GBO2_' if beam_root == root and root.name == 'GundamWars_BattleOperation2_V5' else '') + image.name
+        destination = ASSETS / 'projectiles' / filename
         if not destination.exists() or destination.read_bytes() != image.read_bytes():
             shutil.copyfile(image, destination)
         scale = float(decal.get('imageScale', 1))
-        segments.append(dict(texture='../../projectiles/' + image.name, frames=frames,
+        segments.append(dict(texture='../../projectiles/' + filename, frames=frames,
             width=width // frames, height=height,
             scaleX=scale * float(decal.get('imageScaleX', 1)),
             scaleY=scale * float(decal.get('imageScaleY', 1)),
@@ -119,7 +121,7 @@ def apply(prefab, weapon, data=None):
     if not segments:
         raise ValueError('Missing segmented beam artwork: ' + helper)
     length = max(s['forward'] + s['width'] * s['scaleX'] / 2 for s in segments)
-    sequence = dict(source=path.relative_to(MOD).as_posix(), color=color, length=length,
+    sequence = dict(source=path.relative_to(root.parent if beam_root == root and root.name == "GundamWars_BattleOperation2_V5" else MOD).as_posix(), color=color, length=length,
         segments=segments, clock='flight')
     if 'BeamSmartGun' in weapon.get('sourceName', ''):
         # The visual helper has its own ProjectileSpeed; never use the damage carrier's speed.

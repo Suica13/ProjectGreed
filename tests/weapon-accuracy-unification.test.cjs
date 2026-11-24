@@ -12,8 +12,8 @@ test("handheld cannon bonus excludes mounted cannons; kit discount never stacks 
   for (const prefab of catalog.prefabs) {
     for (const weapon of Object.values(prefab.weapons)) if (Classes.handheldCannon(weapon)) {
       sources.add(weapon.sourceName);
-      assert.equal(weapon.hit, 70);
-      assert(weapon.attack.steps.every(step => step.accuracy === undefined || step.accuracy === 70));
+      assert.equal(weapon.hit, 75);
+      assert(weapon.attack.steps.every(step => step.accuracy === undefined || step.accuracy === 75));
     }
     for (const kit of prefab.weaponKits) {
       const primary = prefab.weapons[kit.weapons[0]];
@@ -27,7 +27,7 @@ test("handheld cannon bonus excludes mounted cannons; kit discount never stacks 
   const costs = prefab.weaponKits.map(k=>k.cost);
   Conversion.globals(prefab, config);Conversion.globals(prefab, config);
   assert.deepEqual(prefab.weaponKits.map(k=>k.cost), costs);
-  assert(Object.values(prefab.weapons).filter(Classes.handheldCannon).every(w=>w.hit===70));
+  assert(Object.values(prefab.weapons).filter(Classes.handheldCannon).every(w=>w.hit===75));
 });
 
 test("all specified types use fixed accuracy, including levels, mounts and firing steps", () => {
@@ -39,7 +39,7 @@ test("all specified types use fixed accuracy, including levels, mounts and firin
       if (!Object.hasOwn(Classes.baseHits, kind)) continue;
       seen.add(kind);
       const cannon = Classes.shipCannon(weapon, prefab.stats.ship);
-      const expected = Math.round(((weapon.baseHitOverride ?? Classes.baseHits[kind]) + (!["melee", "ram"].includes(kind) ? config.weapons.shootingHitOffset : 0) + (Classes.handheldCannon(weapon) ? config.weapons.handheldCannonHitOffset : 0)) * (cannon ? 0.85 : 1));
+      const expected = Math.round(((weapon.baseHitOverride ?? Classes.baseHits[kind]) + (!["melee", "ram"].includes(kind) ? config.weapons.shootingHitOffset : 0) + (Classes.handheldCannon(weapon) ? config.weapons.handheldCannonHitOffset : 0)) * (cannon ? 0.85 : 1) + (kind==='mortar'?config.weapons.mortarHitOffset:kind==='cannon'?config.weapons.cannonHitOffset:0));
       assert.equal(weapon.hit, expected, prefab.id + "/" + weapon.id);
       for (const step of weapon.attack?.steps || [])
         if (step.accuracy !== undefined) assert.equal(step.accuracy, expected);
@@ -66,7 +66,7 @@ test("ship trait excludes non-cannons and non-ships, and reloading does not stac
   changed.weapons.shipCannonAccuracy = 0.8;
   Conversion.globals(prefab, changed);
   for (const weapon of Object.values(prefab.weapons))
-      assert.equal(weapon.hit, Math.round((Classes.baseHits[Classes.classify(weapon)] + (!["melee", "ram"].includes(Classes.classify(weapon)) ? config.weapons.shootingHitOffset : 0) + (Classes.handheldCannon(weapon) ? config.weapons.handheldCannonHitOffset : 0)) * (Classes.shipCannon(weapon, true) ? 0.8 : 1)));
+      assert.equal(weapon.hit, Math.round((Classes.baseHits[Classes.classify(weapon)] + (!["melee", "ram"].includes(Classes.classify(weapon)) ? config.weapons.shootingHitOffset : 0) + (Classes.handheldCannon(weapon) ? config.weapons.handheldCannonHitOffset : 0)) * (Classes.shipCannon(weapon, true) ? 0.8 : 1) + (Classes.classify(weapon)==='mortar'?config.weapons.mortarHitOffset:Classes.classify(weapon)==='cannon'?config.weapons.cannonHitOffset:0)));
 });
 
 test("unspecified classes inherit native accuracy; shooting offset includes both irradiation types", () => {

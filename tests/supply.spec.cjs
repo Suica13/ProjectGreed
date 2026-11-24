@@ -23,7 +23,7 @@ for (const width of [1440, 390]) test(`supply page, item wallet and persistent s
   await expect(page.locator("#contactMerchants")).toBeHidden();
   await expect(page.locator("#supplyTokenCount")).toContainText("99,999");
   await expect(page.locator(".supply-wallet")).toContainText("0079年代补给代币");
-  await expect(page.locator(".supply-pool-card")).toContainText("0079年代扭蛋机");
+  await expect(page.locator(".supply-pool-card").first()).toContainText("0079年代扭蛋机");
   await expect(page.locator(".supply-cover")).toContainText("高达4号机");
   await expect(page.locator(".supply-cover")).toContainText("高达5号机");
   await expect(page.locator('.supply-cover canvas[data-preview-model="RX_78_5__kit_0"]')).toHaveAttribute("data-preview-angle", "90");
@@ -45,8 +45,8 @@ for (const width of [1440, 390]) test(`supply page, item wallet and persistent s
   const ordinary=page.locator('.supply-product-grade[data-grade="C"]');
   await expect(ordinary.locator("h3")).toHaveText("C品 · 82%");
   await expect(ordinary.locator("h4").filter({hasText:"库存"})).toHaveCount(0);
-  await expect(ordinary).toContainText("物资 · 2000–10000 · 25%");
-  await expect(ordinary).toContainText("资金 · 2000–10000 · 25%");
+  await expect(ordinary).toContainText("物资 · 1000–3000 · 25%");
+  await expect(ordinary).toContainText("资金 · 1000–3000 · 25%");
   await expect(ordinary).toContainText("0079年代补给代币 ×1 · 4%");
   await expect(ordinary).toContainText("稀有度1 ×1 · 16%");
   await expect(ordinary).toContainText("稀有度2 ×1 · 8%");

@@ -208,6 +208,7 @@ const SpriteRenderer = (() => {
     variables.phaseShiftActive = phaseShiftActive;
     variables.onLand = onLand;
     variables.attacking = attacking ?? (!!clip && /Shoot|Fire|Attack/.test(clip));
+    variables.attackWeapon = variables.attacking ? attackWeapon : null;
     variables.heldAttacking =
       variables.attacking &&
       (!attackWeapon ||

@@ -1,0 +1,1057 @@
+{
+  "costRounding": 25,
+  "multiplier": 0.75,
+  "excluded": [
+    {
+      "id": "Medea",
+      "cost": 250,
+      "price": {
+        "unitId": "Medea",
+        "faction": "EFSF",
+        "money": 500,
+        "supplies": 1000,
+        "sourceType": "factory",
+        "source": {
+          "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Air/Medea.gw",
+          "action": "action_Produce_Medea_StandardSquad",
+          "buildSeconds": 25,
+          "queueSeconds": 0,
+          "outputs": [
+            {
+              "unitId": "Medea",
+              "quantity": 1,
+              "equipmentIndex": 0,
+              "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "MedeaKai",
+      "cost": 300,
+      "price": {
+        "unitId": "MedeaKai",
+        "faction": "EFSF",
+        "availableFactions": [
+          "EFSF",
+          "AEUG",
+          "TITANS"
+        ],
+        "money": 500,
+        "supplies": 1000,
+        "sourceType": "factory",
+        "source": {
+          "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/EFSF_0079/Units/Air/MedeaKai.gw",
+          "action": "action_Produce_MedeaKai_StandardSquad",
+          "buildSeconds": 25,
+          "queueSeconds": 0,
+          "outputs": [
+            {
+              "unitId": "MedeaKai",
+              "quantity": 1,
+              "equipmentIndex": 0,
+              "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "FatUncle",
+      "cost": 250,
+      "price": {
+        "unitId": "FatUncle",
+        "faction": "ZEON",
+        "money": 500,
+        "supplies": 1000,
+        "sourceType": "factory",
+        "source": {
+          "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Air/FatUncle.gw",
+          "action": "action_Produce_FatUncle_StandardSquad",
+          "buildSeconds": 25,
+          "queueSeconds": 0,
+          "outputs": [
+            {
+              "unitId": "FatUncle",
+              "quantity": 1,
+              "equipmentIndex": 0,
+              "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "FatUncleKai",
+      "cost": 300,
+      "price": {
+        "unitId": "FatUncleKai",
+        "faction": "ZEON",
+        "availableFactions": [
+          "ZEON",
+          "NEO_ZEON"
+        ],
+        "money": 500,
+        "supplies": 1000,
+        "sourceType": "factory",
+        "source": {
+          "file": "GW_BattleUniverse_DLC_0079/Units/Buildings/Factory/UnitList/ZEON_0079/Units/Air/FatUncleKai.gw",
+          "action": "action_Produce_FatUncleKai_StandardSquad",
+          "buildSeconds": 25,
+          "queueSeconds": 0,
+          "outputs": [
+            {
+              "unitId": "FatUncleKai",
+              "quantity": 1,
+              "equipmentIndex": 0,
+              "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "FatUncle_DeployState",
+      "cost": 250,
+      "price": null
+    },
+    {
+      "id": "FatUncleKai_DeployState",
+      "cost": 300,
+      "price": null
+    },
+    {
+      "id": "Medea_DeployState",
+      "cost": 250,
+      "price": null
+    },
+    {
+      "id": "MedeaKai_DeployState",
+      "cost": 300,
+      "price": null
+    },
+    {
+      "id": "VTOLTransport",
+      "cost": 250,
+      "price": {
+        "unitId": "VTOLTransport",
+        "faction": "OMNI",
+        "money": 500,
+        "supplies": 1000,
+        "sourceType": "factory",
+        "source": {
+          "file": "GW_BattleUniverse_DLC_SEED/Units/Buildings/Factory/UnitList/OMNI_CE71/Units/Air/VTOLTransport.gw",
+          "action": "action_Produce_VTOLTransport_StandardSquad",
+          "buildSeconds": 25,
+          "queueSeconds": 0,
+          "outputs": [
+            {
+              "unitId": "VTOLTransport",
+              "quantity": 1,
+              "equipmentIndex": 0,
+              "resources": "addResources=PilotType:1101|EquipmentIndex:0"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "VTOLTransport_DeployState",
+      "cost": 250,
+      "price": null
+    },
+    {
+      "id": "ColumbusClass",
+      "cost": 250,
+      "price": {
+        "money": 750,
+        "supplies": 1750
+      }
+    },
+    {
+      "id": "PapuaClass",
+      "cost": 250,
+      "price": {
+        "money": 750,
+        "supplies": 1750
+      }
+    },
+    {
+      "id": "ColumbusClassKai",
+      "cost": 350,
+      "price": {
+        "money": 1000,
+        "supplies": 2000
+      }
+    },
+    {
+      "id": "PazockClass",
+      "cost": 350,
+      "price": {
+        "money": 1000,
+        "supplies": 2000
+      }
+    },
+    {
+      "id": "MarseilleIIIClass",
+      "cost": 250,
+      "price": {
+        "money": 750,
+        "supplies": 1750
+      }
+    }
+  ],
+  "units": [
+    {
+      "id": "SalamisClass",
+      "name": "萨拉米斯级",
+      "previousCost": 500,
+      "cost": 375,
+      "previousPrice": {
+        "money": 2000,
+        "supplies": 4500
+      },
+      "price": {
+        "money": 1500,
+        "supplies": 3375
+      }
+    },
+    {
+      "id": "BurkeClass",
+      "name": "伯克级驱逐舰",
+      "previousCost": 250,
+      "cost": 200,
+      "previousPrice": {
+        "money": 600,
+        "supplies": 1200
+      },
+      "price": {
+        "money": 450,
+        "supplies": 900
+      }
+    },
+    {
+      "id": "U_Type_Submarine",
+      "name": "U型潜艇",
+      "previousCost": 500,
+      "cost": 375,
+      "previousPrice": {
+        "money": 1500,
+        "supplies": 3000
+      },
+      "price": {
+        "money": 1125,
+        "supplies": 2250
+      }
+    },
+    {
+      "id": "HimalayaClass",
+      "name": "喜马拉雅级",
+      "previousCost": 1000,
+      "cost": 750,
+      "previousPrice": {
+        "money": 2500,
+        "supplies": 5000
+      },
+      "price": {
+        "money": 1875,
+        "supplies": 3750
+      }
+    },
+    {
+      "id": "M_Type_Submarine",
+      "name": "M型潜水艇",
+      "previousCost": 1000,
+      "cost": 750,
+      "previousPrice": {
+        "money": 2500,
+        "supplies": 5000
+      },
+      "price": {
+        "money": 1875,
+        "supplies": 3750
+      }
+    },
+    {
+      "id": "MiniTrayClass",
+      "name": "小托盘级",
+      "previousCost": 500,
+      "cost": 375,
+      "previousPrice": {
+        "money": 2500,
+        "supplies": 3500
+      },
+      "price": {
+        "money": 1875,
+        "supplies": 2625
+      }
+    },
+    {
+      "id": "BigTrayClass",
+      "name": "大托盘级",
+      "previousCost": 1000,
+      "cost": 750,
+      "previousPrice": {
+        "money": 3000,
+        "supplies": 6000
+      },
+      "price": {
+        "money": 2250,
+        "supplies": 4500
+      }
+    },
+    {
+      "id": "MagellanClass",
+      "name": "麦哲伦级",
+      "previousCost": 1000,
+      "cost": 750,
+      "previousPrice": {
+        "money": 4500,
+        "supplies": 9000
+      },
+      "price": {
+        "money": 3375,
+        "supplies": 6750
+      }
+    },
+    {
+      "id": "PegasusClass",
+      "name": "飞马级",
+      "previousCost": 1500,
+      "cost": 1125,
+      "previousPrice": {
+        "money": 7500,
+        "supplies": 13500
+      },
+      "price": {
+        "money": 5625,
+        "supplies": 10125
+      }
+    },
+    {
+      "id": "MagellanClass_Green",
+      "name": "麦哲伦级[指挥舰]",
+      "previousCost": 1250,
+      "cost": 950,
+      "previousPrice": {
+        "money": 6000,
+        "supplies": 11000
+      },
+      "price": {
+        "money": 4500,
+        "supplies": 8250
+      }
+    },
+    {
+      "id": "HeavyForkClass",
+      "name": "重叉级",
+      "previousCost": 1250,
+      "cost": 950,
+      "previousPrice": {
+        "money": 3500,
+        "supplies": 7500
+      },
+      "price": {
+        "money": 2625,
+        "supplies": 5625
+      }
+    },
+    {
+      "id": "U_Type_Submarine_ZEON",
+      "name": "尤康级",
+      "previousCost": 500,
+      "cost": 375,
+      "previousPrice": {
+        "money": 1500,
+        "supplies": 3000
+      },
+      "price": {
+        "money": 1125,
+        "supplies": 2250
+      }
+    },
+    {
+      "id": "MusaiClass",
+      "name": "姆塞级",
+      "previousCost": 500,
+      "cost": 375,
+      "previousPrice": {
+        "money": 2000,
+        "supplies": 4500
+      },
+      "price": {
+        "money": 1500,
+        "supplies": 3375
+      }
+    },
+    {
+      "id": "M_Type_Submarine_ZEON",
+      "name": "魔鲨级",
+      "previousCost": 1000,
+      "cost": 750,
+      "previousPrice": {
+        "money": 2500,
+        "supplies": 5000
+      },
+      "price": {
+        "money": 1875,
+        "supplies": 3750
+      }
+    },
+    {
+      "id": "FalmerClass",
+      "name": "法梅尔级",
+      "previousCost": 625,
+      "cost": 475,
+      "previousPrice": {
+        "money": 3000,
+        "supplies": 6000
+      },
+      "price": {
+        "money": 2250,
+        "supplies": 4500
+      }
+    },
+    {
+      "id": "DabudeClass",
+      "name": "达布德级",
+      "previousCost": 1000,
+      "cost": 750,
+      "previousPrice": {
+        "money": 3000,
+        "supplies": 5000
+      },
+      "price": {
+        "money": 2250,
+        "supplies": 3750
+      }
+    },
+    {
+      "id": "ChivvayClass",
+      "name": "契贝级",
+      "previousCost": 1000,
+      "cost": 750,
+      "previousPrice": {
+        "money": 4500,
+        "supplies": 8750
+      },
+      "price": {
+        "money": 3375,
+        "supplies": 6563
+      }
+    },
+    {
+      "id": "GawClass",
+      "name": "加乌级",
+      "previousCost": 750,
+      "cost": 575,
+      "previousPrice": {
+        "money": 2500,
+        "supplies": 3500
+      },
+      "price": {
+        "money": 1875,
+        "supplies": 2625
+      }
+    },
+    {
+      "id": "GallopClass",
+      "name": "盖洛普级",
+      "previousCost": 500,
+      "cost": 375,
+      "previousPrice": {
+        "money": 2500,
+        "supplies": 3500
+      },
+      "price": {
+        "money": 1875,
+        "supplies": 2625
+      }
+    },
+    {
+      "id": "ZanzibarClass",
+      "name": "桑吉巴尔级",
+      "previousCost": 1500,
+      "cost": 1125,
+      "previousPrice": {
+        "money": 7500,
+        "supplies": 12500
+      },
+      "price": {
+        "money": 5625,
+        "supplies": 9375
+      }
+    },
+    {
+      "id": "GwazineClass",
+      "name": "格瓦金级",
+      "previousCost": 1500,
+      "cost": 1125,
+      "previousPrice": {
+        "money": 7000,
+        "supplies": 14500
+      },
+      "price": {
+        "money": 5250,
+        "supplies": 10875
+      }
+    },
+    {
+      "id": "JotunheimClass",
+      "name": "尤顿海姆级",
+      "previousCost": 500,
+      "cost": 375,
+      "previousPrice": {
+        "money": 2000,
+        "supplies": 5500
+      },
+      "price": {
+        "money": 1500,
+        "supplies": 4125
+      }
+    },
+    {
+      "id": "SalamisClassLateType",
+      "name": "萨拉米斯级后期型",
+      "previousCost": 750,
+      "cost": 575,
+      "previousPrice": {
+        "money": 2500,
+        "supplies": 5500
+      },
+      "price": {
+        "money": 1875,
+        "supplies": 4125
+      }
+    },
+    {
+      "id": "MagellanClassLateType",
+      "name": "麦哲伦级后期型",
+      "previousCost": 1250,
+      "cost": 950,
+      "previousPrice": {
+        "money": 5000,
+        "supplies": 11000
+      },
+      "price": {
+        "money": 3750,
+        "supplies": 8250
+      }
+    },
+    {
+      "id": "GrayPhantomClass",
+      "name": "灰色幽灵级",
+      "previousCost": 1875,
+      "cost": 1400,
+      "previousPrice": {
+        "money": 8000,
+        "supplies": 15500
+      },
+      "price": {
+        "money": 6000,
+        "supplies": 11625
+      }
+    },
+    {
+      "id": "AlbionClass",
+      "name": "阿鲁比昂",
+      "previousCost": 2250,
+      "cost": 1700,
+      "previousPrice": {
+        "money": 9000,
+        "supplies": 17500
+      },
+      "price": {
+        "money": 6750,
+        "supplies": 13125
+      }
+    },
+    {
+      "id": "BirminghamClass",
+      "name": "伯明翰级",
+      "previousCost": 2000,
+      "cost": 1500,
+      "previousPrice": {
+        "money": 7500,
+        "supplies": 15500
+      },
+      "price": {
+        "money": 5625,
+        "supplies": 11625
+      }
+    },
+    {
+      "id": "MagellanClassKai",
+      "name": "麦哲伦级改",
+      "previousCost": 1500,
+      "cost": 1125,
+      "previousPrice": {
+        "money": 6000,
+        "supplies": 12000
+      },
+      "price": {
+        "money": 4500,
+        "supplies": 9000
+      }
+    },
+    {
+      "id": "SalamisClassKai",
+      "name": "萨拉米斯级改",
+      "previousCost": 875,
+      "cost": 650,
+      "previousPrice": {
+        "money": 3000,
+        "supplies": 5500
+      },
+      "price": {
+        "money": 2250,
+        "supplies": 4125
+      }
+    },
+    {
+      "id": "MusaiClassLateType",
+      "name": "姆塞级后期型",
+      "previousCost": 750,
+      "cost": 575,
+      "previousPrice": {
+        "money": 2500,
+        "supplies": 5000
+      },
+      "price": {
+        "money": 1875,
+        "supplies": 3750
+      }
+    },
+    {
+      "id": "ChivvayClassKai",
+      "name": "契贝级改",
+      "previousCost": 1250,
+      "cost": 950,
+      "previousPrice": {
+        "money": 5000,
+        "supplies": 11000
+      },
+      "price": {
+        "money": 3750,
+        "supplies": 8250
+      }
+    },
+    {
+      "id": "ZanzibarClassKai",
+      "name": "桑吉巴尔级改",
+      "previousCost": 1875,
+      "cost": 1400,
+      "previousPrice": {
+        "money": 8000,
+        "supplies": 15000
+      },
+      "price": {
+        "money": 6000,
+        "supplies": 11250
+      }
+    },
+    {
+      "id": "GwanzanClass",
+      "name": "格万赞级",
+      "previousCost": 2000,
+      "cost": 1500,
+      "previousPrice": {
+        "money": 7500,
+        "supplies": 16500
+      },
+      "price": {
+        "money": 5625,
+        "supplies": 12375
+      }
+    },
+    {
+      "id": "ZanzibarClassKai_0083",
+      "name": "桑吉巴尔级改[0083]",
+      "previousCost": 2250,
+      "cost": 1700,
+      "previousPrice": {
+        "money": 9000,
+        "supplies": 17000
+      },
+      "price": {
+        "money": 6750,
+        "supplies": 12750
+      }
+    },
+    {
+      "id": "MusaiClassLateType_0083",
+      "name": "姆塞级后期型[0083]",
+      "previousCost": 875,
+      "cost": 650,
+      "previousPrice": {
+        "money": 3000,
+        "supplies": 5000
+      },
+      "price": {
+        "money": 2250,
+        "supplies": 3750
+      }
+    },
+    {
+      "id": "BlancRival",
+      "name": "白色对抗马",
+      "previousCost": 2125,
+      "cost": 1600,
+      "previousPrice": null,
+      "price": null
+    },
+    {
+      "id": "Thoroughbred",
+      "name": "纯血种马",
+      "previousCost": 2000,
+      "cost": 1500,
+      "previousPrice": null,
+      "price": null
+    },
+    {
+      "id": "WhiteBase",
+      "name": "白色基地",
+      "previousCost": 1750,
+      "cost": 1325,
+      "previousPrice": null,
+      "price": null
+    },
+    {
+      "id": "GrayPhantomClass_0087",
+      "name": "灰色幽灵级[0087]",
+      "previousCost": 1875,
+      "cost": 1400,
+      "previousPrice": {
+        "money": 7000,
+        "supplies": 14500
+      },
+      "price": {
+        "money": 5250,
+        "supplies": 10875
+      }
+    },
+    {
+      "id": "SalamisClassKai_0087_AEUG",
+      "name": "萨拉米斯级改[0087][AEUG]",
+      "previousCost": 1250,
+      "cost": 950,
+      "previousPrice": {
+        "money": 4000,
+        "supplies": 5250
+      },
+      "price": {
+        "money": 3000,
+        "supplies": 3938
+      }
+    },
+    {
+      "id": "IrishClass",
+      "name": "爱尔兰级",
+      "previousCost": 2250,
+      "cost": 1700,
+      "previousPrice": {
+        "money": 7000,
+        "supplies": 12000
+      },
+      "price": {
+        "money": 5250,
+        "supplies": 9000
+      }
+    },
+    {
+      "id": "GarudaClass_AEUG",
+      "name": "迦楼罗级[AEUG]",
+      "previousCost": 2500,
+      "cost": 1875,
+      "previousPrice": {
+        "money": 6000,
+        "supplies": 12000
+      },
+      "price": {
+        "money": 4500,
+        "supplies": 9000
+      }
+    },
+    {
+      "id": "ArgamaClass",
+      "name": "阿伽玛级",
+      "previousCost": 3750,
+      "cost": 2825,
+      "previousPrice": {
+        "money": 14500,
+        "supplies": 25000
+      },
+      "price": {
+        "money": 10875,
+        "supplies": 18750
+      }
+    },
+    {
+      "id": "SalamisClassKai_0087_TITANS",
+      "name": "萨拉米斯级改[0087][TITANS]",
+      "previousCost": 1250,
+      "cost": 950,
+      "previousPrice": {
+        "money": 4000,
+        "supplies": 5250
+      },
+      "price": {
+        "money": 3000,
+        "supplies": 3938
+      }
+    },
+    {
+      "id": "AlexandriaClass",
+      "name": "亚历山大级",
+      "previousCost": 2500,
+      "cost": 1875,
+      "previousPrice": {
+        "money": 7500,
+        "supplies": 14500
+      },
+      "price": {
+        "money": 5625,
+        "supplies": 10875
+      }
+    },
+    {
+      "id": "GarudaClass_TITANS",
+      "name": "迦楼罗级[TITANS]",
+      "previousCost": 2500,
+      "cost": 1875,
+      "previousPrice": {
+        "money": 6000,
+        "supplies": 12000
+      },
+      "price": {
+        "money": 4500,
+        "supplies": 9000
+      }
+    },
+    {
+      "id": "DogosseGiarClass",
+      "name": "多戈斯·基亚级",
+      "previousCost": 3750,
+      "cost": 2825,
+      "previousPrice": {
+        "money": 16500,
+        "supplies": 28000
+      },
+      "price": {
+        "money": 12375,
+        "supplies": 21000
+      }
+    },
+    {
+      "id": "ZanzibarClassKai_0087",
+      "name": "桑吉巴尔级改[0087]",
+      "previousCost": 1875,
+      "cost": 1400,
+      "previousPrice": {
+        "money": 7000,
+        "supplies": 14500
+      },
+      "price": {
+        "money": 5250,
+        "supplies": 10875
+      }
+    },
+    {
+      "id": "MusaiClassFinalType",
+      "name": "姆塞级最终生产型",
+      "previousCost": 1125,
+      "cost": 850,
+      "previousPrice": {
+        "money": 3750,
+        "supplies": 4750
+      },
+      "price": {
+        "money": 2813,
+        "supplies": 3563
+      }
+    },
+    {
+      "id": "GwanbanClass",
+      "name": "格万班级",
+      "previousCost": 2250,
+      "cost": 1700,
+      "previousPrice": {
+        "money": 7500,
+        "supplies": 12500
+      },
+      "price": {
+        "money": 5625,
+        "supplies": 9375
+      }
+    },
+    {
+      "id": "GarudaClass_NEO_ZEON",
+      "name": "迦楼罗级[NEO ZEON]",
+      "previousCost": 2500,
+      "cost": 1875,
+      "previousPrice": {
+        "money": 6000,
+        "supplies": 12000
+      },
+      "price": {
+        "money": 4500,
+        "supplies": 9000
+      }
+    },
+    {
+      "id": "GwadanClass",
+      "name": "格瓦丹级",
+      "previousCost": 3750,
+      "cost": 2825,
+      "previousPrice": {
+        "money": 16500,
+        "supplies": 30000
+      },
+      "price": {
+        "money": 12375,
+        "supplies": 22500
+      }
+    },
+    {
+      "id": "AgamemnonClass",
+      "name": "阿伽门农级",
+      "previousCost": 1000,
+      "cost": 750,
+      "previousPrice": {
+        "money": 4500,
+        "supplies": 9000
+      },
+      "price": {
+        "money": 3375,
+        "supplies": 6750
+      }
+    },
+    {
+      "id": "ArchangelClass",
+      "name": "大天使号",
+      "previousCost": 2250,
+      "cost": 1700,
+      "previousPrice": {
+        "money": 9000,
+        "supplies": 15000
+      },
+      "price": {
+        "money": 6750,
+        "supplies": 11250
+      }
+    },
+    {
+      "id": "DrakeClass",
+      "name": "德雷克级",
+      "previousCost": 375,
+      "cost": 275,
+      "previousPrice": {
+        "money": 2000,
+        "supplies": 3500
+      },
+      "price": {
+        "money": 1500,
+        "supplies": 2625
+      }
+    },
+    {
+      "id": "LaurasiaClass",
+      "name": "罗拉西亚级",
+      "previousCost": 1000,
+      "cost": 750,
+      "previousPrice": {
+        "money": 4500,
+        "supplies": 9000
+      },
+      "price": {
+        "money": 3375,
+        "supplies": 6750
+      }
+    },
+    {
+      "id": "NazcaClass",
+      "name": "纳斯卡级",
+      "previousCost": 500,
+      "cost": 375,
+      "previousPrice": {
+        "money": 2000,
+        "supplies": 4500
+      },
+      "price": {
+        "money": 1500,
+        "supplies": 3375
+      }
+    },
+    {
+      "id": "NelsonClass",
+      "name": "纳尔逊级",
+      "previousCost": 500,
+      "cost": 375,
+      "previousPrice": {
+        "money": 2000,
+        "supplies": 4500
+      },
+      "price": {
+        "money": 1500,
+        "supplies": 3375
+      }
+    },
+    {
+      "id": "SalamisClassKai_0093_EFSF",
+      "name": "萨拉米斯级改[0093]",
+      "previousCost": 1250,
+      "cost": 950,
+      "previousPrice": {
+        "money": 4000,
+        "supplies": 5250
+      },
+      "price": {
+        "money": 3000,
+        "supplies": 3938
+      }
+    },
+    {
+      "id": "MusaiClassFinalType_0093_NZN",
+      "name": "姆塞级最终生产型",
+      "previousCost": 1125,
+      "cost": 850,
+      "previousPrice": {
+        "money": 3750,
+        "supplies": 4750
+      },
+      "price": {
+        "money": 2813,
+        "supplies": 3563
+      }
+    },
+    {
+      "id": "EndraClass",
+      "name": "恩多拉级",
+      "previousCost": 2250,
+      "cost": 1700,
+      "previousPrice": {
+        "money": 6300,
+        "supplies": 10800
+      },
+      "price": {
+        "money": 4725,
+        "supplies": 8100
+      }
+    },
+    {
+      "id": "NahelArgamaClass",
+      "name": "拟阿卡玛级",
+      "previousCost": 4500,
+      "cost": 3375,
+      "previousPrice": {
+        "money": 17500,
+        "supplies": 30000
+      },
+      "price": {
+        "money": 13125,
+        "supplies": 22500
+      }
+    }
+  ]
+}

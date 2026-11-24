@@ -81,6 +81,10 @@ def native_weapon(prefab, weapon, unit_data):
         barrels = [key[7:] for key in weapon_data if key.startswith("turret_") and section(data,key).get("projectile") not in [None,"IGNORE"]]
     weapon["source"]["barrels"] = [{"id":key,"x":number(section(data,"turret_"+key).get("barrelX",0)),"y":number(section(data,"turret_"+key).get("barrelY",0))} for key in barrels]
     allowed = set(barrels)
+    if prefab.get("source", "").startswith("GW_BattleUniverse_DLC_SEED/") and any(b.endswith("_GL") for b in barrels):
+        own = weapon.get("sourceName", "")
+        if own in allowed:
+            allowed = {own}
     animations = prefab["animations"]
     events, visited_actions = [], []
     energy = 0
@@ -185,6 +189,7 @@ def native_weapon(prefab, weapon, unit_data):
         root=next(("action_"+name+"_Trigger" for name in candidates if "action_"+name+"_Trigger" in data),None)
     if not root and stem == "ZN_MA_08_AA_BeamCannon":
         root = "action_" + stem + "_B1_Trigger"
+    root = weapon.get("source", {}).get("entry", root)
     if root:
         visit(root,0)
     if not any(e.get("shots") for e in events):
@@ -256,6 +261,9 @@ def native_weapon(prefab, weapon, unit_data):
     # Follow actual display-index writes, not mount/body-part heuristics or action names alone.
     weapon["changeHeldWeapon"] = any(re.search(r"\bnowWeaponIndex\s*=", section(data, action).get("setUnitMemory", ""))
         for action in visited_actions)
+    if prefab.get("source", "").startswith("GW_BattleUniverse_DLC_SEED/") and native_name.endswith("_GL") and root:
+        energy = 0  # The parent rifle pays the shared native firing action once.
+        weapon["en"] = 0
     weapon["nativeTiming"]={"source":path.relative_to(source_root(path)).as_posix(),"barrel":first["nativeBarrel"],"entry":root or "automatic_turret", "cooldown":cooldown,"duration":duration,"firstShot":min(e["at"] for e in events if e.get("shots")),"lastShot":max(e["at"] for e in events if e.get("shots")),"firingEvents":sum(1 for e in events if e.get("shots") and e.get("clusterRole") != "fragment"),"projectiles":sum(e.get("shots",0) for e in events if e.get("clusterRole") != "fragment"),"secondaryProjectiles":sum(e.get("shots",0) for e in events if e.get("clusterRole") == "fragment"),"declaredEnergy":number(variables.get(native_name+"_EN",variables.get(stem+"_EN",0))),"energyMode":"perShot" if per_shot else "perVolley","energyPerEmission":energy_unit,"energy":energy,"actions":list(dict.fromkeys(visited_actions))}
     from native_beam_projectiles import apply as apply_beam_projectile
     apply_beam_projectile(prefab, weapon, data)

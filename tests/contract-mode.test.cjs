@@ -293,7 +293,7 @@ test('restored old rescue objectives, their cut-ins and NPCs are retired without
  assert(!state.cues.some(c=>c.objectiveId===old.id));assert(npc.contractExtracted);assert(!G.onMap(npc));
  const count=state.objectives.length;C.poll(f.room,G);assert.equal(state.objectives.length,count);
  for(const objective of state.objectives)objective.status='completed';
- assert.equal(C.reward(f.room,G).money,4000/require('../shared/battle-economy').completionRewardMultiplier);
+ assert.equal(C.reward(f.room,G).money,4000*1.25/require('../shared/battle-economy').completionRewardMultiplier);
 });
 
 test("scripted event targets can use a unit that is not unlocked by the technology tree", t => {
@@ -853,12 +853,12 @@ test("contract completion budget prorates objectives before era and preview mult
   assert.deepEqual(C.reward(f.room, G), { money: 0, supplies: 0, technology: 0, experience: 0, inventory: {} });
   f.room.game.contract.objectives[0].status = "completed";
   f.room.game.contract.objectives[1].status = "completed";
-  const factor = 2 * 1.5;
-  assert.deepEqual(C.reward(f.room, G), { money: 3200, supplies: 8000 * (2 / 3) / 1.25, technology: 125 * factor, experience: 1000, inventory: {} });
+  const factor = 2 * 1.5 * 1.25 * 1.2;
+  assert.deepEqual(C.reward(f.room, G), { money: 4800, supplies: 6400, technology: 125 * factor, experience: 1500, inventory: {} });
   f.room.settings.sweepEra = "UC_0087_T1";
   const reward = C.reward(f.room, G), era = 1.25 ** 2;
-  assert.equal(reward.money, 3200 * era);
-  assert.equal(reward.supplies, 8000 * (2 / 3) * era / 1.25);
+  assert.equal(reward.money, 4800 * era);
+  assert(Math.abs(reward.supplies - 6400 * era) < 1e-8);
   assert.equal(reward.technology, 125 * factor * era);
   const bonuses = { money: 1.5, supplies: 2, technology: 0 };
   const pending = C.view(f.room, G, bonuses).pending;
@@ -867,7 +867,7 @@ test("contract completion budget prorates objectives before era and preview mult
 
 test("N1-N6 full completion rewards match final budgets and partial extraction pays only its share", () => {
   const economy = require("../shared/battle-economy"),
-    budgets = [[2500,3500],[4000,6000],[6000,8000],[9000,11000],[12000,15000],[15000,20000]],
+    budgets = [[3125,4375],[5000,7500],[9000,12000],[14625,17875],[24000,30000],[35625,47500]],
     rates = economy.settlementMultipliers(economy.rewardMultipliers());
   for (let d = 1; d <= 6; d++) {
     const room = {seats:[],settings:{sweepDifficulty:d,sweepEra:"UC_0079_T1"},game:{units:[],contract:{objectives:Array.from({length:d},()=>({status:"completed"}))}}};

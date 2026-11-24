@@ -3,7 +3,26 @@ import importlib.util,re
 from pathlib import Path
 from mod_source import ROOT,MOD,ASSETS,load,section,resolve
 
+def underbarrel(p,native):
+ from native_combat import native_weapon
+ for key,w in p['weapons'].items():
+  own=w.get('sourceName',key)
+  if not own.endswith('_GL'):continue
+  parent=own[:-3]
+  for name in (parent,own):
+   if name not in p['weapons']:continue
+   target=p['weapons'][name]
+   native_weapon(p,target,native)
+   target['type']='shell' if name==own else 'beam'
+   target['category']='grenade_launcher' if name==own else 'beam_rifle'
+   target['weaponClass']=target['category']
+   labels=('下挂榴弹发射器','Underbarrel Grenade Launcher','アンダーバレル・グレネードランチャー') if name==own else ('光束步枪','Beam Rifle','ビーム・ライフル')
+   target['name']=labels[0]
+   for lang,label in zip(('zh','en','ja'),labels):target.setdefault('localization',{}).setdefault(lang,{})['name']=label
+ return p
+
 def apply(p,native,effects=None,bulk=None):
+ underbarrel(p,native)
  if p['id']=='TS_MA2_H':
   # Native EquipmentIndex 1/2 are exclusive payloads; main_0 keeps saves compatible.
   fixed=['Common_DoubleVulcan_FF_6','Common_DoubleMS_TS_MA2']

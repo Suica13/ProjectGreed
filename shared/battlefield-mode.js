@@ -788,6 +788,7 @@ const BattlefieldMode = (() => {
         airdropRound: game.round,
       });
       if (model.iField) actor.iFieldHp = model.iField.capacity;
+      if (model.gnField) actor.gnFieldHp = model.gnField.capacity;
       const cells = [];
       placement ||= G.placementQuery(game);
       for (let y = site.y - 5; y <= site.y + 5; y++)

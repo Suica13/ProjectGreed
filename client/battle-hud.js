@@ -390,15 +390,12 @@ const BattleHUD = (() => {
         const fight = element(
           "button",
           "",
-          I18n.text(squadCombatMode === "shooting" ? "射击战" : "格斗战"),
+          I18n.text(AttackControls.combatModeLabel()),
         );
         fight.id = "squadCombatMode";
         fight.disabled =
           isBusy() || !AttackControls.editable(unit) || (Net.active && !Net.canAct());
-        fight.onclick = () => {
-          squadCombatMode = squadCombatMode === "shooting" ? "melee" : "shooting";
-          update();
-        };
+        fight.onclick = () => AttackControls.cycleCombatMode();
         members.append(fight);
       }
     }

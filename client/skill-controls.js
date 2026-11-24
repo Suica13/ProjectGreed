@@ -74,6 +74,8 @@ const SkillControls = (() => {
     if (model.phaseShift) result.push({name:"PS Armor",description:I18n.language === "en"
       ? `Finite ${model.phaseShift.capacity}-point armor. Toggle changes armor and textures. Incoming physical hits drain durability and EN; beams bypass it.`
       : `有限耐久 ${model.phaseShift.capacity}，可开关并切换贴图。开启时减轻实弹与物理格斗伤害，受击消耗装甲耐久及EN，对光束无效。`});
+    if (model.gnField) result.push({name:"GN立场",description:`仅防御时展开，吸收所有伤害类型，独立耐久 ${model.gnField.capacity}；每个己方回合恢复${model.gnField.recoveryPercent}%。`});
+    if (model.solarFurnace) result.push({name:"太阳炉",description:`每个己方回合恢复${model.solarFurnace.enRecoveryPercent}%最大EN。${model.solarFurnace.antiDetect ? "附带反侦测，敌方侦察距离减半。" : ""}${model.solarFurnace.stealth ? "附带隐蔽，敌方侦察距离再乘75%。" : ""}`});
     if (!field) return result;
     return [
       ...result,

@@ -36,6 +36,8 @@ const CatalogEditorSchema = (() => {
     "commandAuras",
     "stealth",
     "iField",
+    "gnField",
+    "solarFurnace",
     "pilotExperienceMultiplier",
   ];
   const labels = {
@@ -96,6 +98,8 @@ const CatalogEditorSchema = (() => {
     commandAuras: "指挥光环",
     stealth: "隐身",
     iField: "I立场",
+    gnField: "GN立场",
+    solarFurnace: "太阳炉",
     pilotExperienceMultiplier: "学习型电脑／经验倍率",
   };
   function setDamage(weapon, value, { preserveSteps = false } = {}) {

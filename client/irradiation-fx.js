@@ -115,7 +115,7 @@ const IrradiationFX = (() => {
   }
   function draw(ctx, now, position, tile, actorPose = null) {
     for (const beam of active.values()) {
-      const key = (part) => "Irradiation_" + part + "_" + beam.color;
+      const key = (part) => (beam.effectPrefix || "Irradiation") + "_" + part + "_" + beam.color;
       if (!beam.barrageProjectile &&
         !["Charge", "Start", "Mid", "End"].every(
           (part) => SpriteRenderer.images[ART.effects[key(part)]?.asset],

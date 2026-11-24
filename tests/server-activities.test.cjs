@@ -802,12 +802,13 @@ test("module gifts validate quantities and retain the same claim receipt on retr
 test("supply token gifts validate quantities, survive restart and retain the same claim receipt", t => {
   const f=fixture(t),ws={},profile=identity();
   f.service.identify(ws,profile);
-  const event=f.service.publish(activity("online_now",{rewards:{itemInventory:{"0079t1-token":123}}}));
+  const tokens={"0079t1-token":123,"thunderbolt-token":45,"celestial-being-token":67};
+  const event=f.service.publish(activity("online_now",{rewards:{itemInventory:tokens}}));
   const mail=f.frames.get(ws).at(-1).mail.find(item=>item.activityId===event.id);
-  assert.deepEqual(mail.rewards.itemInventory,{"0079t1-token":123});
+  assert.deepEqual(mail.rewards.itemInventory,tokens);
   f.service.receive(ws,{type:"activity_claim",mailId:mail.id});
   const award=f.frames.get(ws).at(-1).award;
-  assert.deepEqual(award.itemInventory,{"0079t1-token":123});
+  assert.deepEqual(award.itemInventory,tokens);
   f.restart();const reconnect={};f.service.identify(reconnect,profile);
   f.service.receive(reconnect,{type:"activity_claim",mailId:mail.id});
   assert.deepEqual(f.frames.get(reconnect).at(-1).award,award);

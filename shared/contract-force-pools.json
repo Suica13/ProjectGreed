@@ -553,7 +553,7 @@
               "RGM_79_G_WithBackpack"
             ],
             "budget": 200,
-            "weight": 1
+            "weight": 1.15
           },
           {
             "label": "钢加农x1 吉姆x2",
@@ -563,7 +563,7 @@
               "RGM_79"
             ],
             "budget": 200,
-            "weight": 1
+            "weight": 1.15
           },
           {
             "label": "钢坦克x1 吉姆x2",
@@ -573,7 +573,7 @@
               "RGM_79"
             ],
             "budget": 175,
-            "weight": 1
+            "weight": 1.15
           },
           {
             "label": "高达x1 吉姆x2",
@@ -583,7 +583,7 @@
               "RGM_79"
             ],
             "budget": 275,
-            "weight": 0.25
+            "weight": 0.2875
           }
         ],
         "garrisons": {
@@ -746,7 +746,7 @@
               "RGM_79_G"
             ],
             "budget": 200,
-            "weight": 1
+            "weight": 1.15
           },
           {
             "label": "钢加农x1 吉姆x2 吉姆x3",
@@ -759,7 +759,7 @@
               "RGM_79"
             ],
             "budget": 300,
-            "weight": 1
+            "weight": 1.15
           },
           {
             "label": "钢加农x3",
@@ -769,7 +769,7 @@
               "RX_77_2"
             ],
             "budget": 300,
-            "weight": 1
+            "weight": 1.15
           },
           {
             "label": "钢坦克x3",
@@ -779,7 +779,7 @@
               "RX_75"
             ],
             "budget": 275,
-            "weight": 1
+            "weight": 1.15
           },
           {
             "label": "高达x1 吉姆x2",
@@ -789,7 +789,7 @@
               "RGM_79"
             ],
             "budget": 275,
-            "weight": 0.25
+            "weight": 0.2875
           },
           {
             "label": "高达x1 钢加农x1 钢坦克x1",
@@ -799,7 +799,7 @@
               "RX_75"
             ],
             "budget": 350,
-            "weight": 0.25
+            "weight": 0.2875
           }
         ],
         "garrisons": {
@@ -1373,7 +1373,7 @@
               "MS_09"
             ],
             "budget": 250,
-            "weight": 1
+            "weight": 1.15
           },
           {
             "label": "扎古2F2后期型[指挥官机]x1 扎古2F2后期型x2 大魔x3",
@@ -1386,7 +1386,7 @@
               "MS_09"
             ],
             "budget": 275,
-            "weight": 1
+            "weight": 1.15
           },
           {
             "label": "大魔热带式样x1 大魔x2",
@@ -1396,7 +1396,7 @@
               "MS_09"
             ],
             "budget": 225,
-            "weight": 1
+            "weight": 1.15
           },
           {
             "label": "扎古加农x1 扎古2F2后期型x2",
@@ -1406,7 +1406,7 @@
               "MS_06F2"
             ],
             "budget": 175,
-            "weight": 1
+            "weight": 1.15
           },
           {
             "label": "扎古半加农x3",
@@ -1416,7 +1416,7 @@
               "MS_06JK"
             ],
             "budget": 175,
-            "weight": 1
+            "weight": 1.15
           },
           {
             "label": "战蟹x3 水中型扎古x3",
@@ -1429,7 +1429,7 @@
               "MS_06M"
             ],
             "budget": 200,
-            "weight": 0.25
+            "weight": 0.2875
           },
           {
             "label": "老虎特装型x3",
@@ -1439,7 +1439,7 @@
               "MS_07B3"
             ],
             "budget": 250,
-            "weight": 0.25
+            "weight": 0.2875
           }
         ],
         "garrisons": {
@@ -1520,7 +1520,7 @@
               "MS_07B3"
             ],
             "budget": 250,
-            "weight": 1
+            "weight": 1.15
           },
           {
             "label": "老虎特装型x1 大魔x2",
@@ -1530,7 +1530,7 @@
               "MS_09"
             ],
             "budget": 250,
-            "weight": 1
+            "weight": 1.15
           },
           {
             "label": "大魔热带式样x3",
@@ -1540,7 +1540,7 @@
               "MS_09D"
             ],
             "budget": 250,
-            "weight": 1
+            "weight": 1.15
           },
           {
             "label": "大魔热带式样x3 大魔x3",
@@ -1553,7 +1553,7 @@
               "MS_09"
             ],
             "budget": 400,
-            "weight": 1
+            "weight": 1.15
           },
           {
             "label": "扎古2F2后期型[指挥官机]x1 扎古2F2后期型x2 大魔x3",
@@ -1566,7 +1566,7 @@
               "MS_09"
             ],
             "budget": 275,
-            "weight": 1
+            "weight": 1.15
           },
           {
             "label": "老虎特装型x3 扎古2陆战型高机动型x3",
@@ -1579,7 +1579,7 @@
               "MS_06G"
             ],
             "budget": 350,
-            "weight": 1
+            "weight": 1.15
           },
           {
             "label": "扎古半加农x3 扎古2F2后期型x3",
@@ -1592,7 +1592,7 @@
               "MS_06F2"
             ],
             "budget": 225,
-            "weight": 0.25
+            "weight": 0.2875
           },
           {
             "label": "扎古2F2后期型[指挥官机]x1 扎古2F2后期型x2 扎古狙击型x1 扎古加农x2",
@@ -1605,7 +1605,7 @@
               "MS_06K"
             ],
             "budget": 450,
-            "weight": 0.25
+            "weight": 0.2875
           }
         ],
         "garrisons": {
@@ -1992,7 +1992,7 @@
                   "GAT_01D1"
                 ],
                 "budget": 250,
-                "weight": 1
+                "weight": 1.15
               }
             ],
             "garrisons": {
@@ -2110,7 +2110,7 @@
                   "GAT_X103"
                 ],
                 "budget": 350,
-                "weight": 1
+                "weight": 1.15
               }
             ],
             "garrisons": {
@@ -2482,7 +2482,7 @@
                   "ZGMF_1017M"
                 ],
                 "budget": 250,
-                "weight": 1
+                "weight": 1.15
               },
               {
                 "label": "GAT_X103x1 ZGMF_1017Mx2",
@@ -2492,7 +2492,7 @@
                   "ZGMF_1017M"
                 ],
                 "budget": 250,
-                "weight": 1
+                "weight": 1.15
               },
               {
                 "label": "GAT_X207x1 ZGMF_1017Mx2",
@@ -2502,7 +2502,7 @@
                   "ZGMF_1017M"
                 ],
                 "budget": 250,
-                "weight": 0.25
+                "weight": 0.2875
               }
             ],
             "garrisons": {
@@ -2600,7 +2600,7 @@
                   "ZGMF_1017M"
                 ],
                 "budget": 250,
-                "weight": 1
+                "weight": 1.15
               },
               {
                 "label": "GAT_X103x1 ZGMF_1017Mx2",
@@ -2610,7 +2610,7 @@
                   "ZGMF_1017M"
                 ],
                 "budget": 250,
-                "weight": 1
+                "weight": 1.15
               },
               {
                 "label": "GAT_X207x1 ZGMF_1017Mx2",
@@ -2620,7 +2620,7 @@
                   "ZGMF_1017M"
                 ],
                 "budget": 250,
-                "weight": 1
+                "weight": 1.15
               },
               {
                 "label": "GAT_X303x1 ZGMF_600x2",
@@ -2630,7 +2630,7 @@
                   "ZGMF_600"
                 ],
                 "budget": 300,
-                "weight": 0.25
+                "weight": 0.2875
               }
             ],
             "garrisons": {

@@ -306352,6 +306352,3319 @@
         "energy": 100.0,
         "adaptation": "native_energy_lifetime_and_bursts"
       }
+    },
+    "GBO2_CB_GN_001_BG__lv1": {
+      "name": "GN剑·步枪模式",
+      "type": "beam",
+      "min": 2,
+      "max": 5,
+      "hit": 100,
+      "en": 0,
+      "sourceName": "GBO2_CB_GN_001_BG",
+      "sourceHit": 100,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": "Common_Shoot_A",
+      "damagePerShot": 850.0,
+      "damageComponents": {
+        "beam": 850.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 0,
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.3
+          },
+          {
+            "animation": "Common_Shoot_A",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.25
+          },
+          {
+            "animation": "Common_Shoot_A",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.25
+          },
+          {
+            "animation": "Common_Shoot_A",
+            "delay": 0.0
+          },
+          {
+            "delay": 0.3
+          }
+        ],
+        "startAnimation": null
+      },
+      "partBreakModifier": 1,
+      "changeHeldWeapon": true,
+      "projectile": {
+        "texture": "../../projectiles/Beam_2.png",
+        "scale": 1.0,
+        "speed": 60.0,
+        "forwardOffset": -7.5,
+        "rotation": 0.0
+      },
+      "hitEffect": "Beam_Hit_2_Pink",
+      "sound": {
+        "file": "../../sounds/GBO2_BeamGun_1.ogg",
+        "volume": 0.45
+      },
+      "targetModifiers": {
+        "air": 1,
+        "water": 1,
+        "ground": 1,
+        "space": 1
+      },
+      "muzzleEffects": [
+        "Beam_Fire_1_Pink_S"
+      ],
+      "nativePayload": {
+        "DpDamage": 100.0,
+        "BeamDamage": 850.0,
+        "ProjectileSpeed": 60.0,
+        "ProjectileSpread": 5.0,
+        "ProjectileLife": 10.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 1,
+          "accuracy": 1
+        },
+        "large": {
+          "damage": 1,
+          "accuracy": 1
+        }
+      },
+      "displayIndex": 0,
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Beam/CB_GN_001_BG.gw",
+        "barrel": "CB_GN_001_BG",
+        "entry": "action_Weapon0",
+        "cooldown": 0,
+        "duration": 1.1,
+        "firstShot": 0.3,
+        "lastShot": 0.8,
+        "firingEvents": 3,
+        "projectiles": 3,
+        "secondaryProjectiles": 0,
+        "declaredEnergy": 0.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 0,
+        "actions": [
+          "action_Weapon0",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_Send_BattleUnitCore_GuardOff",
+          "hiddenAction_SetShootOn",
+          "hiddenAction_CB_GN_001_BG_SetWeaponIndex",
+          "hiddenAction_CB_GN_001_BG_B3_Step_1",
+          "hiddenAction_CB_GN_001_BG_Fire_Step_1",
+          "hiddenAction_CB_GN_001_BG_Fire_Step_2",
+          "hiddenAction_CB_GN_001_BG_Fire_Step_3",
+          "hiddenAction_CB_GN_001_BG_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff",
+          "hiddenAction_SetShootOff",
+          "hiddenAction_SetCqbOff"
+        ]
+      },
+      "localization": {
+        "zh": {
+          "name": "GN剑·步枪模式"
+        },
+        "en": {
+          "name": "GN Sword Rifle Mode"
+        },
+        "ja": {
+          "name": "GNソード ライフルモード"
+        }
+      },
+      "category": "beam_rifle",
+      "actionCost": 1,
+      "level": 1
+    },
+    "GBO2_CB_GN_001_Sword_FT__lv1": {
+      "name": "GN剑",
+      "type": "melee",
+      "min": 1,
+      "max": 1,
+      "hit": 100,
+      "en": 0,
+      "sourceName": "GBO2_CB_GN_001_Sword_FT",
+      "sourceHit": 100,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "secondary",
+      "clip": "Common_Melee_F",
+      "damagePerShot": 2800.0,
+      "damageComponents": {
+        "melee": 1400.0,
+        "meleeShell": 1400.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 1,
+            "delay": 0
+          },
+          {
+            "animation": "Common_Melee_F",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "swingEffects": [
+              "Cqb_Fire_1_White_L"
+            ],
+            "delay": 0.35
+          },
+          {
+            "animation": "Common_Melee_Thrust_A",
+            "delay": 0.35
+          },
+          {
+            "weaponDisplayIndex": 11,
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "damageComponents": {
+              "melee": 1050.0,
+              "meleeShell": 1050.0
+            },
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "swingEffects": [],
+            "delay": 0.25
+          },
+          {
+            "delay": 1.2
+          }
+        ],
+        "startAnimation": null
+      },
+      "partBreakModifier": 1,
+      "changeHeldWeapon": true,
+      "hitEffect": "Cqb_Hit_1",
+      "swingEffects": [
+        "Cqb_Fire_1_Pink_R",
+        "Cqb_Fire_1_Pink_L"
+      ],
+      "sound": {
+        "file": "../../sounds/BeamSaber_3.wav",
+        "volume": 0.6
+      },
+      "targetModifiers": {
+        "air": 1,
+        "water": 1,
+        "ground": 1,
+        "space": 1
+      },
+      "nativePayload": {
+        "DpDamage": 1400.0,
+        "CqbDamage": 1400.0,
+        "CqbShellDamage": 1400.0,
+        "ProjectileSpeed": 0.0,
+        "ProjectileSpread": 0.0,
+        "ProjectileLife": 0.3,
+        "ProjectileAttackTimes": 3.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 1,
+          "accuracy": 1
+        },
+        "large": {
+          "damage": 1,
+          "accuracy": 1
+        }
+      },
+      "displayIndex": 11,
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Cqb/CB_GN_001_Sword_FT.gw",
+        "barrel": "CB_GN_001_Sword_FT",
+        "entry": "action_Weapon1",
+        "cooldown": 0,
+        "duration": 2.1500000000000004,
+        "firstShot": 0.35,
+        "lastShot": 0.95,
+        "firingEvents": 2,
+        "projectiles": 2,
+        "secondaryProjectiles": 0,
+        "declaredEnergy": 0.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 0,
+        "actions": [
+          "action_Weapon1",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_Send_BattleUnitCore_GuardOff",
+          "hiddenAction_SetCqbOn",
+          "hiddenAction_SetCqbOn_FindTarget",
+          "hiddenAction_CB_GN_001_Sword_FT_F_SetWeaponIndex",
+          "hiddenAction_CB_GN_001_Sword_FT_Step_1",
+          "hiddenAction_CB_GN_001_Sword_FT_Fire_Step_1",
+          "hiddenAction_CB_GN_001_Sword_FT_Fire_Step_2",
+          "hiddenAction_CB_GN_001_Sword_FT_Fire_Step_3",
+          "hiddenAction_CB_GN_001_Sword_FT_T_SetWeaponIndex",
+          "hiddenAction_SetAttackingCantTurnOn",
+          "hiddenAction_CB_GN_001_Sword_FT_Fire_Step_4",
+          "hiddenAction_CB_GN_001_Sword_FT_Fire_Step_5",
+          "hiddenAction_CB_GN_001_Sword_FT_Fire_Step_Forward",
+          "hiddenAction_CB_GN_001_Sword_FT_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff",
+          "hiddenAction_SetShootOff",
+          "hiddenAction_SetCqbOff",
+          "hiddenAction_SetAttackingCantTurnOff"
+        ]
+      },
+      "localization": {
+        "zh": {
+          "name": "GN剑"
+        },
+        "en": {
+          "name": "GN Sword"
+        },
+        "ja": {
+          "name": "GNソード"
+        }
+      },
+      "category": "melee",
+      "actionCost": 1,
+      "level": 1
+    },
+    "GBO2_CB_GN_001_GNArmGun__lv1": {
+      "name": "GN腕部火神炮",
+      "type": "beam",
+      "min": 1,
+      "max": 2,
+      "hit": 100,
+      "en": 0,
+      "sourceName": "GBO2_CB_GN_001_GNArmGun",
+      "sourceHit": 100,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": "Common_StandShoot_A",
+      "damagePerShot": 100.0,
+      "damageComponents": {
+        "beam": 100.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 2,
+            "delay": 0
+          },
+          {
+            "animation": "Common_StandShoot_A",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.3
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "delay": 0.3
+          }
+        ],
+        "startAnimation": null
+      },
+      "partBreakModifier": 1,
+      "changeHeldWeapon": true,
+      "projectile": {
+        "texture": "../../projectiles/Beam_1.png",
+        "scale": 0.5,
+        "speed": 65.0,
+        "forwardOffset": -2.5,
+        "rotation": 0.0
+      },
+      "hitEffect": "Beam_Hit_1_S_Pink",
+      "sound": {
+        "file": "../../sounds/GBO2_BeamGun_2.ogg",
+        "volume": 0.3
+      },
+      "targetModifiers": {
+        "air": 1,
+        "water": 1,
+        "ground": 1,
+        "space": 1
+      },
+      "muzzleEffects": [
+        "Beam_Fire_1_Pink_S",
+        "Beam_Fire_1_Pink_S"
+      ],
+      "nativePayload": {
+        "DpDamage": 60.0,
+        "BeamDamage": 100.0,
+        "ProjectileSpeed": 65.0,
+        "ProjectileSpread": 4.0,
+        "ProjectileLife": 20.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 1,
+          "accuracy": 1
+        },
+        "large": {
+          "damage": 1,
+          "accuracy": 1
+        }
+      },
+      "displayIndex": 2,
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Beam/CB_GN_001_GNArmGun.gw",
+        "barrel": "CB_GN_001_GNArmGun",
+        "entry": "action_Weapon2",
+        "cooldown": 0,
+        "duration": 1.7249999999999996,
+        "firstShot": 0.3,
+        "lastShot": 1.4249999999999996,
+        "firingEvents": 16,
+        "projectiles": 16,
+        "secondaryProjectiles": 0,
+        "declaredEnergy": 0.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 0,
+        "actions": [
+          "action_Weapon2",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_Send_BattleUnitCore_GuardOff",
+          "hiddenAction_SetShootOn",
+          "hiddenAction_CB_GN_001_GNArmGun_SetWeaponIndex",
+          "hiddenAction_CB_GN_001_GNArmGun_B16_Step_1",
+          "hiddenAction_CB_GN_001_GNArmGun_Fire_Step_1",
+          "hiddenAction_CB_GN_001_GNArmGun_Fire_Step_2",
+          "hiddenAction_CB_GN_001_GNArmGun_Fire_Step_3_L",
+          "hiddenAction_CB_GN_001_GNArmGun_Fire_Step_3",
+          "hiddenAction_CB_GN_001_GNArmGun_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff",
+          "hiddenAction_SetShootOff",
+          "hiddenAction_SetCqbOff"
+        ]
+      },
+      "localization": {
+        "zh": {
+          "name": "GN腕部火神炮"
+        },
+        "en": {
+          "name": "GN Arm Vulcans"
+        },
+        "ja": {
+          "name": "GNバルカン"
+        }
+      },
+      "category": "machine_gun",
+      "actionCost": 1,
+      "level": 1,
+      "weaponClass": "small_vulcan"
+    },
+    "GBO2_EF_BeamSaber_Double_DBDF__lv2": {
+      "name": "双GN光束军刀",
+      "type": "melee",
+      "min": 1,
+      "max": 1,
+      "hit": 100,
+      "en": 0,
+      "sourceName": "GBO2_EF_BeamSaber_Double_DBDF",
+      "sourceHit": 100,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "secondary",
+      "clip": "Common_Melee_Double_B",
+      "damagePerShot": 2000.0,
+      "damageComponents": {
+        "melee": 1000.0,
+        "meleeBeam": 1000.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 3,
+            "delay": 0
+          },
+          {
+            "animation": "Common_Melee_Double_B",
+            "delay": 0
+          },
+          {
+            "shots": 2,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "swingEffects": [
+              "Cqb_Fire_2_Pink_R",
+              "Cqb_Fire_2_Pink_L"
+            ],
+            "delay": 0.45
+          },
+          {
+            "animation": "Common_Melee_Double_F",
+            "delay": 0.45
+          },
+          {
+            "shots": 2,
+            "muzzleIndex": 0,
+            "damageComponents": {
+              "melee": 750.0,
+              "meleeBeam": 750.0
+            },
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "swingEffects": [
+              "Cqb_Fire_1_Pink_R",
+              "Cqb_Fire_1_Pink_L"
+            ],
+            "delay": 0.3
+          },
+          {
+            "delay": 1.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "partBreakModifier": 1,
+      "changeHeldWeapon": true,
+      "hitEffect": "Cqb_Hit_1",
+      "swingEffects": [
+        "Cqb_Fire_1_Pink_R",
+        "Cqb_Fire_1_Pink_L"
+      ],
+      "sound": {
+        "file": "../../sounds/GBO2_BeamSaber_1.ogg",
+        "volume": 0.5
+      },
+      "targetModifiers": {
+        "air": 1,
+        "water": 1,
+        "ground": 1,
+        "space": 1
+      },
+      "nativePayload": {
+        "DpDamage": 1000.0,
+        "CqbDamage": 1000.0,
+        "CqbBeamDamage": 1000.0,
+        "ProjectileSpeed": 0.0,
+        "ProjectileSpread": 0.0,
+        "ProjectileLife": 0.3,
+        "ProjectileAttackTimes": 2.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 1,
+          "accuracy": 1
+        },
+        "large": {
+          "damage": 1,
+          "accuracy": 1
+        }
+      },
+      "displayIndex": 3,
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_DBDF_Lv2.gw",
+        "barrel": "EF_BeamSaber_Double_DBDF",
+        "entry": "action_Weapon3",
+        "cooldown": 0,
+        "duration": 2.2,
+        "firstShot": 0.45,
+        "lastShot": 1.2,
+        "firingEvents": 2,
+        "projectiles": 4,
+        "secondaryProjectiles": 0,
+        "declaredEnergy": 0.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 0,
+        "actions": [
+          "action_Weapon3",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_Send_BattleUnitCore_GuardOff",
+          "hiddenAction_SetCqbOn",
+          "hiddenAction_SetCqbOn_FindTarget",
+          "hiddenAction_EF_BeamSaber_Double_DBDF_SetWeaponIndex",
+          "hiddenAction_EF_BeamSaber_Double_DBDF_Step_1",
+          "hiddenAction_EF_BeamSaber_Double_DBDF_Fire_Step_1",
+          "hiddenAction_EF_BeamSaber_Double_DBDF_Fire_Step_2",
+          "hiddenAction_EF_BeamSaber_Double_DBDF_Fire_Step_3",
+          "hiddenAction_EF_BeamSaber_Double_DBDF_Fire_Step_4",
+          "hiddenAction_EF_BeamSaber_Double_DBDF_Fire_Step_5",
+          "hiddenAction_EF_BeamSaber_Double_DBDF_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff",
+          "hiddenAction_SetShootOff",
+          "hiddenAction_SetCqbOff"
+        ]
+      },
+      "localization": {
+        "zh": {
+          "name": "双GN光束军刀"
+        },
+        "en": {
+          "name": "Twin GN Beam Sabers"
+        },
+        "ja": {
+          "name": "GNビームサーベル二刀流"
+        }
+      },
+      "category": "melee",
+      "actionCost": 1,
+      "level": 2
+    },
+    "GBO2_CB_GN_002_BSR__lv1": {
+      "name": "GN狙击步枪",
+      "type": "shell",
+      "min": 3,
+      "max": 7,
+      "hit": 100,
+      "en": 0,
+      "sourceName": "GBO2_CB_GN_002_BSR",
+      "sourceHit": 100,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": "Common_Shoot_Two_Handed_A",
+      "damagePerShot": 3000.0,
+      "damageComponents": {
+        "beamAP": 3000.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 0,
+            "delay": 0
+          },
+          {
+            "animation": "Common_Shoot_Two_Handed_A",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.75
+          },
+          {
+            "delay": 0.75
+          }
+        ],
+        "startAnimation": null
+      },
+      "partBreakModifier": 1,
+      "changeHeldWeapon": true,
+      "projectile": {
+        "texture": "../../projectiles/Beam_2.png",
+        "scale": 1.0,
+        "speed": 150.0,
+        "forwardOffset": -10.0,
+        "rotation": 0.0,
+        "sequence": {
+          "source": "GundamWars_BattleOperation2_V5/Resource/Image/Fx/Weapon/Beam/Sniper/Projectile_BeamSniper_Pink_Effect.ini",
+          "color": "Pink",
+          "length": 1063.125,
+          "segments": [
+            {
+              "texture": "../../projectiles/GBO2_BeamSniper_1_Start_Pink.png",
+              "frames": 9,
+              "width": 285,
+              "height": 116,
+              "scaleX": 1.25,
+              "scaleY": 1.25,
+              "forward": 185.0,
+              "lateral": 0.0,
+              "rotation": 0.0
+            },
+            {
+              "texture": "../../projectiles/GBO2_BeamSniper_1_Mid_Pink.png",
+              "frames": 9,
+              "width": 285,
+              "height": 116,
+              "scaleX": 1.25,
+              "scaleY": 1.25,
+              "forward": 530.0,
+              "lateral": 0.0,
+              "rotation": 0.0
+            },
+            {
+              "texture": "../../projectiles/GBO2_BeamSniper_1_End_Pink.png",
+              "frames": 9,
+              "width": 285,
+              "height": 116,
+              "scaleX": 1.25,
+              "scaleY": 1.25,
+              "forward": 885.0,
+              "lateral": 0.0,
+              "rotation": 0.0
+            }
+          ],
+          "clock": "flight"
+        },
+        "nativeSpeed": 150.0
+      },
+      "hitEffect": "Explosion_Hit_1",
+      "sound": {
+        "file": "../../sounds/BeamCannon_1.wav",
+        "volume": 0.6
+      },
+      "targetModifiers": {
+        "air": 1,
+        "water": 1,
+        "ground": 1,
+        "space": 1
+      },
+      "muzzleEffects": [
+        "Beam_Fire_1_Pink"
+      ],
+      "nativePayload": {
+        "DpDamage": 600.0,
+        "BeamAPDamage": 3000.0,
+        "ProjectileSpeed": 150.0,
+        "ProjectileSpread": 0.0,
+        "projectileExplosionRange": 100.0,
+        "ProjectileAttackTimes": 5.0,
+        "ProjectileLife": 7.5
+      },
+      "antiSize": {
+        "small": {
+          "damage": 1,
+          "accuracy": 1
+        },
+        "large": {
+          "damage": 1,
+          "accuracy": 1
+        }
+      },
+      "displayIndex": 0,
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Beam/CB_GN_002_BSR.gw",
+        "barrel": "CB_GN_002_BSR",
+        "entry": "action_Weapon0",
+        "cooldown": 0,
+        "duration": 1.5,
+        "firstShot": 0.75,
+        "lastShot": 0.75,
+        "firingEvents": 1,
+        "projectiles": 1,
+        "secondaryProjectiles": 0,
+        "declaredEnergy": 0.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 0,
+        "actions": [
+          "action_Weapon0",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_Send_BattleUnitCore_GuardOff",
+          "hiddenAction_SetShootOn",
+          "hiddenAction_CB_GN_002_BSR_SetWeaponIndex",
+          "hiddenAction_CB_GN_002_BSR_B1_Step_1",
+          "hiddenAction_CB_GN_002_BSR_Fire_SetAttackingTurnSpeedOn",
+          "hiddenAction_SetAttackingCantMoveOn",
+          "hiddenAction_CB_GN_002_BSR_Fire_Step_HighPowerEffect_1",
+          "hiddenAction_CB_GN_002_BSR_Fire_Step_1",
+          "hiddenAction_CB_GN_002_BSR_Fire_Step_2",
+          "hiddenAction_CB_GN_002_BSR_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff",
+          "hiddenAction_SetShootOff",
+          "hiddenAction_SetCqbOff",
+          "hiddenAction_SetAttackingTurnSpeedOff",
+          "hiddenAction_SetAttackingCantMoveOff"
+        ]
+      },
+      "localization": {
+        "zh": {
+          "name": "GN狙击步枪"
+        },
+        "en": {
+          "name": "GN Sniper Rifle"
+        },
+        "ja": {
+          "name": "GNスナイパーライフル"
+        }
+      },
+      "category": "sniper",
+      "actionCost": 1,
+      "level": 1
+    },
+    "GBO2_EF_BeamSaber_F__lv2": {
+      "name": "GN光束军刀",
+      "type": "melee",
+      "min": 1,
+      "max": 1,
+      "hit": 100,
+      "en": 0,
+      "sourceName": "GBO2_EF_BeamSaber_F",
+      "sourceHit": 100,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "secondary",
+      "clip": "Common_Melee_F",
+      "damagePerShot": 3500.0,
+      "damageComponents": {
+        "melee": 1750.0,
+        "meleeBeam": 1750.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 1,
+            "delay": 0
+          },
+          {
+            "animation": "Common_Melee_F",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "swingEffects": [
+              "Cqb_Fire_1_Pink_L"
+            ],
+            "delay": 0.35
+          },
+          {
+            "delay": 0.6
+          }
+        ],
+        "startAnimation": null
+      },
+      "partBreakModifier": 1,
+      "changeHeldWeapon": true,
+      "hitEffect": "Cqb_Hit_1",
+      "swingEffects": [
+        "Cqb_Fire_1_Pink_R",
+        "Cqb_Fire_1_Pink_L"
+      ],
+      "sound": {
+        "file": "../../sounds/GBO2_BeamSaber_1.ogg",
+        "volume": 0.5
+      },
+      "targetModifiers": {
+        "air": 1,
+        "water": 1,
+        "ground": 1,
+        "space": 1
+      },
+      "nativePayload": {
+        "DpDamage": 1500.0,
+        "CqbDamage": 1750.0,
+        "CqbBeamDamage": 1750.0,
+        "ProjectileSpeed": 0.0,
+        "ProjectileSpread": 0.0,
+        "ProjectileLife": 0.3,
+        "ProjectileAttackTimes": 3.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 1,
+          "accuracy": 1
+        },
+        "large": {
+          "damage": 1,
+          "accuracy": 1
+        }
+      },
+      "displayIndex": 1,
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_F_Lv2.gw",
+        "barrel": "EF_BeamSaber_F",
+        "entry": "action_Weapon1",
+        "cooldown": 0,
+        "duration": 0.95,
+        "firstShot": 0.35,
+        "lastShot": 0.35,
+        "firingEvents": 1,
+        "projectiles": 1,
+        "secondaryProjectiles": 0,
+        "declaredEnergy": 0.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 0,
+        "actions": [
+          "action_Weapon1",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_Send_BattleUnitCore_GuardOff",
+          "hiddenAction_SetCqbOn",
+          "hiddenAction_SetCqbOn_FindTarget",
+          "hiddenAction_EF_BeamSaber_F_SetWeaponIndex",
+          "hiddenAction_EF_BeamSaber_F_Step_1",
+          "hiddenAction_EF_BeamSaber_F_Fire_Step_1",
+          "hiddenAction_EF_BeamSaber_F_Fire_Step_2",
+          "hiddenAction_EF_BeamSaber_F_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff",
+          "hiddenAction_SetShootOff",
+          "hiddenAction_SetCqbOff"
+        ]
+      },
+      "localization": {
+        "zh": {
+          "name": "GN光束军刀"
+        },
+        "en": {
+          "name": "GN Beam Saber"
+        },
+        "ja": {
+          "name": "GNビームサーベル"
+        }
+      },
+      "category": "melee",
+      "actionCost": 1,
+      "level": 2
+    },
+    "GBO2_CB_GN_002_BG_Double__lv1": {
+      "name": "双GN光束手枪",
+      "type": "beam",
+      "min": 1,
+      "max": 3,
+      "hit": 100,
+      "en": 0,
+      "sourceName": "GBO2_CB_GN_002_BG_Double",
+      "sourceHit": 100,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": "Common_DoubleShoot_A_Light_R",
+      "damagePerShot": 600.0,
+      "damageComponents": {
+        "beam": 600.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 2,
+            "delay": 0
+          },
+          {
+            "animation": "Common_DoubleShoot_A_Light_R",
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [
+              "rightArm"
+            ],
+            "delay": 0.0
+          },
+          {
+            "animation": "Common_DoubleShoot_A_Light_L",
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1,
+            "requiredParts": [
+              "leftArm"
+            ],
+            "delay": 0.0
+          },
+          {
+            "animation": "Common_DoubleShoot_A_Light_R",
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [
+              "rightArm"
+            ],
+            "delay": 0.0
+          },
+          {
+            "animation": "Common_DoubleShoot_A_Light_L",
+            "delay": 0.15
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1,
+            "requiredParts": [
+              "leftArm"
+            ],
+            "delay": 0.0
+          },
+          {
+            "delay": 0.3
+          }
+        ],
+        "startAnimation": null
+      },
+      "partBreakModifier": 1,
+      "changeHeldWeapon": true,
+      "projectile": {
+        "texture": "../../projectiles/Beam_1.png",
+        "scale": 1.0,
+        "speed": 75.0,
+        "forwardOffset": -7.5,
+        "rotation": 0.0
+      },
+      "hitEffect": "Beam_Hit_1_S_Pink",
+      "sound": {
+        "file": "../../sounds/GBO2_BeamGun_1.ogg",
+        "volume": 0.45
+      },
+      "targetModifiers": {
+        "air": 1,
+        "water": 1,
+        "ground": 1,
+        "space": 1
+      },
+      "muzzleEffects": [
+        "Beam_Fire_1_Pink_S",
+        "Beam_Fire_1_Pink_S"
+      ],
+      "nativePayload": {
+        "DpDamage": 100.0,
+        "BeamDamage": 600.0,
+        "ProjectileSpeed": 75.0,
+        "ProjectileSpread": 4.0,
+        "ProjectileLife": 7.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 1,
+          "accuracy": 1
+        },
+        "large": {
+          "damage": 1,
+          "accuracy": 1
+        }
+      },
+      "displayIndex": 2,
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Beam/CB_GN_002_BG_Double.gw",
+        "barrel": "CB_GN_002_BG_Double",
+        "entry": "action_Weapon2",
+        "cooldown": 0,
+        "duration": 0.8999999999999999,
+        "firstShot": 0.15,
+        "lastShot": 0.6,
+        "firingEvents": 4,
+        "projectiles": 4,
+        "secondaryProjectiles": 0,
+        "declaredEnergy": 0.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 0,
+        "actions": [
+          "action_Weapon2",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_Send_BattleUnitCore_GuardOff",
+          "hiddenAction_SetShootOn",
+          "hiddenAction_CB_GN_002_BG_Double_SetWeaponIndex",
+          "hiddenAction_CB_GN_002_BG_Double_B4_Step_1",
+          "hiddenAction_CB_GN_002_BG_Double_Fire_Step_1",
+          "hiddenAction_CB_GN_002_BG_Double_Fire_Step_2",
+          "hiddenAction_CB_GN_002_BG_Double_Fire_Step_3",
+          "hiddenAction_CB_GN_002_BG_Double_Fire_Step_Sub",
+          "hiddenAction_CB_GN_002_BG_Double_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff",
+          "hiddenAction_SetShootOff",
+          "hiddenAction_SetCqbOff"
+        ]
+      },
+      "localization": {
+        "zh": {
+          "name": "双GN光束手枪"
+        },
+        "en": {
+          "name": "Twin GN Beam Pistols"
+        },
+        "ja": {
+          "name": "GNビームピストル二挺"
+        }
+      },
+      "category": "beam_gun",
+      "actionCost": 1,
+      "level": 1
+    },
+    "GBO2_CB_GN_002_MS__lv1": {
+      "name": "GN导弹",
+      "type": "shell",
+      "min": 2,
+      "max": 5,
+      "hit": 100,
+      "en": 0,
+      "sourceName": "GBO2_CB_GN_002_MS",
+      "sourceHit": 100,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": "Common_Cannon_Shoot_A",
+      "damagePerShot": 700.0,
+      "damageComponents": {
+        "shell": 700.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "animation": "Common_Cannon_Shoot_A",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.35
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.125
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.125
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.125
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.125
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.125
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.125
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.125
+          },
+          {
+            "delay": 0.3
+          }
+        ],
+        "startAnimation": null
+      },
+      "partBreakModifier": 1,
+      "changeHeldWeapon": false,
+      "projectile": {
+        "texture": "../../projectiles/Missile_6.png",
+        "scale": 0.65,
+        "speed": 35.0,
+        "forwardOffset": -5.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Explosion_Hit_1_XS",
+      "sound": {
+        "file": "../../sounds/GBO2_Missile_1.ogg",
+        "volume": 0.4
+      },
+      "targetModifiers": {
+        "air": 1,
+        "water": 1,
+        "ground": 1,
+        "space": 1
+      },
+      "muzzleEffects": [
+        "BZ_Fire_1_S",
+        "BZ_Fire_1_S"
+      ],
+      "nativePayload": {
+        "DpDamage": 70.0,
+        "ShellDamage": 700.0,
+        "ProjectileSpeed": 35.0,
+        "ProjectileTurnspeed": 0.75,
+        "ProjectileSpread": 10.0,
+        "ProjectileExplosionRange": 20.0,
+        "ProjectileLife": 35.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 1,
+          "accuracy": 1
+        },
+        "large": {
+          "damage": 1,
+          "accuracy": 1
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Shell/CB_GN_002_MS.gw",
+        "barrel": "CB_GN_002_MS",
+        "entry": "action_Weapon3",
+        "cooldown": 0,
+        "duration": 1.5250000000000001,
+        "firstShot": 0.35,
+        "lastShot": 1.225,
+        "firingEvents": 8,
+        "projectiles": 8,
+        "secondaryProjectiles": 0,
+        "declaredEnergy": 0.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 0,
+        "actions": [
+          "action_Weapon3",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_Send_BattleUnitCore_GuardOff",
+          "hiddenAction_SetShootOn",
+          "hiddenAction_CB_GN_002_MS_SetWeaponIndex",
+          "hiddenAction_CB_GN_002_MS_B8_Step_1",
+          "hiddenAction_CB_GN_002_MS_Fire_Step_1",
+          "hiddenAction_CB_GN_002_MS_Fire_Step_2",
+          "hiddenAction_CB_GN_002_MS_Fire_Step_3_L",
+          "hiddenAction_CB_GN_002_MS_Fire_Step_3",
+          "hiddenAction_CB_GN_002_MS_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff",
+          "hiddenAction_SetShootOff",
+          "hiddenAction_SetCqbOff"
+        ]
+      },
+      "localization": {
+        "zh": {
+          "name": "GN导弹"
+        },
+        "en": {
+          "name": "GN Missiles"
+        },
+        "ja": {
+          "name": "GNミサイル"
+        }
+      },
+      "category": "missile",
+      "actionCost": 1,
+      "level": 1
+    },
+    "GBO2_CB_GN_003_BMG__lv1": {
+      "name": "GN光束冲锋枪",
+      "type": "beam",
+      "min": 2,
+      "max": 4,
+      "hit": 100,
+      "en": 0,
+      "sourceName": "GBO2_CB_GN_003_BMG",
+      "sourceHit": 100,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": "Common_Shoot_A",
+      "damagePerShot": 240.0,
+      "damageComponents": {
+        "beam": 240.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 0,
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.3
+          },
+          {
+            "animation": "Common_Shoot_A",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.05
+          },
+          {
+            "animation": "Common_Shoot_A",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "animation": "Common_Shoot_A",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.05
+          },
+          {
+            "animation": "Common_Shoot_A",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "animation": "Common_Shoot_A",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.05
+          },
+          {
+            "animation": "Common_Shoot_A",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "animation": "Common_Shoot_A",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.05
+          },
+          {
+            "animation": "Common_Shoot_A",
+            "delay": 0.0
+          },
+          {
+            "delay": 0.3
+          }
+        ],
+        "startAnimation": null
+      },
+      "partBreakModifier": 1,
+      "changeHeldWeapon": true,
+      "projectile": {
+        "texture": "../../projectiles/Beam_1.png",
+        "scale": 1.0,
+        "speed": 70.0,
+        "forwardOffset": -7.5,
+        "rotation": 0.0
+      },
+      "hitEffect": "Beam_Hit_1_S_Pink",
+      "sound": {
+        "file": "../../sounds/GBO2_BeamGun_1.ogg",
+        "volume": 0.25
+      },
+      "targetModifiers": {
+        "air": 1,
+        "water": 1,
+        "ground": 1,
+        "space": 1
+      },
+      "muzzleEffects": [
+        "Beam_Fire_1_Pink_S"
+      ],
+      "nativePayload": {
+        "DpDamage": 50.0,
+        "BeamDamage": 240.0,
+        "ProjectileSpeed": 70.0,
+        "ProjectileSpread": 3.0,
+        "ProjectileLife": 20.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 1,
+          "accuracy": 1
+        },
+        "large": {
+          "damage": 1,
+          "accuracy": 1
+        }
+      },
+      "displayIndex": 0,
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Beam/CB_GN_003_BMG.gw",
+        "barrel": "CB_GN_003_BMG",
+        "entry": "action_Weapon0",
+        "cooldown": 0,
+        "duration": 1.1,
+        "firstShot": 0.3,
+        "lastShot": 0.8,
+        "firingEvents": 8,
+        "projectiles": 8,
+        "secondaryProjectiles": 0,
+        "declaredEnergy": 0.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 0,
+        "actions": [
+          "action_Weapon0",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_Send_BattleUnitCore_GuardOff",
+          "hiddenAction_SetShootOn",
+          "hiddenAction_CB_GN_003_BMG_SetWeaponIndex",
+          "hiddenAction_CB_GN_003_BMG_B8_Step_1",
+          "hiddenAction_CB_GN_003_BMG_Fire_Step_1",
+          "hiddenAction_CB_GN_003_BMG_Fire_Step_2",
+          "hiddenAction_CB_GN_003_BMG_Fire_Step_3",
+          "hiddenAction_CB_GN_003_BMG_Fire_Step_4",
+          "hiddenAction_CB_GN_003_BMG_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff",
+          "hiddenAction_SetShootOff",
+          "hiddenAction_SetCqbOff"
+        ]
+      },
+      "localization": {
+        "zh": {
+          "name": "GN光束冲锋枪"
+        },
+        "en": {
+          "name": "GN Beam Submachine Gun"
+        },
+        "ja": {
+          "name": "GNビームサブマシンガン"
+        }
+      },
+      "category": "machine_gun",
+      "actionCost": 1,
+      "level": 1
+    },
+    "GBO2_EF_BeamSaber_BF__lv2": {
+      "name": "GN光束军刀",
+      "type": "melee",
+      "min": 1,
+      "max": 1,
+      "hit": 100,
+      "en": 0,
+      "sourceName": "GBO2_EF_BeamSaber_BF",
+      "sourceHit": 100,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "secondary",
+      "clip": "Common_Melee_B",
+      "damagePerShot": 2400.0,
+      "damageComponents": {
+        "melee": 1200.0,
+        "meleeBeam": 1200.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 1,
+            "delay": 0
+          },
+          {
+            "animation": "Common_Melee_B",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "swingEffects": [
+              "Cqb_Fire_2_Pink_R"
+            ],
+            "delay": 0.4
+          },
+          {
+            "animation": "Common_Melee_F",
+            "delay": 0.6
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "damageComponents": {
+              "melee": 900.0,
+              "meleeBeam": 900.0
+            },
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "swingEffects": [
+              "Cqb_Fire_1_Pink_L"
+            ],
+            "delay": 0.3
+          },
+          {
+            "delay": 0.7
+          }
+        ],
+        "startAnimation": null
+      },
+      "partBreakModifier": 1,
+      "changeHeldWeapon": true,
+      "hitEffect": "Cqb_Hit_1",
+      "swingEffects": [
+        "Cqb_Fire_1_Pink_R",
+        "Cqb_Fire_1_Pink_L"
+      ],
+      "sound": {
+        "file": "../../sounds/GBO2_BeamSaber_1.ogg",
+        "volume": 0.5
+      },
+      "targetModifiers": {
+        "air": 1,
+        "water": 1,
+        "ground": 1,
+        "space": 1
+      },
+      "nativePayload": {
+        "DpDamage": 1200.0,
+        "CqbDamage": 1200.0,
+        "CqbBeamDamage": 1200.0,
+        "ProjectileSpeed": 0.0,
+        "ProjectileSpread": 0.0,
+        "ProjectileLife": 0.3,
+        "ProjectileAttackTimes": 3.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 1,
+          "accuracy": 1
+        },
+        "large": {
+          "damage": 1,
+          "accuracy": 1
+        }
+      },
+      "displayIndex": 1,
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_BF_Lv2.gw",
+        "barrel": "EF_BeamSaber_BF_A",
+        "entry": "action_Weapon1",
+        "cooldown": 0,
+        "duration": 2.0,
+        "firstShot": 0.4,
+        "lastShot": 1.3,
+        "firingEvents": 2,
+        "projectiles": 2,
+        "secondaryProjectiles": 0,
+        "declaredEnergy": 0.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 0,
+        "actions": [
+          "action_Weapon1",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_Send_BattleUnitCore_GuardOff",
+          "hiddenAction_SetCqbOn",
+          "hiddenAction_SetCqbOn_FindTarget",
+          "hiddenAction_EF_BeamSaber_BF_SetWeaponIndex",
+          "hiddenAction_EF_BeamSaber_BF_Step_1",
+          "hiddenAction_EF_BeamSaber_BF_Fire_Step_1",
+          "hiddenAction_EF_BeamSaber_BF_Fire_Step_2",
+          "hiddenAction_EF_BeamSaber_BF_Fire_Step_3",
+          "hiddenAction_EF_BeamSaber_BF_Fire_Step_4",
+          "hiddenAction_EF_BeamSaber_BF_Fire_Step_5",
+          "hiddenAction_EF_BeamSaber_BF_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff",
+          "hiddenAction_SetShootOff",
+          "hiddenAction_SetCqbOff"
+        ]
+      },
+      "localization": {
+        "zh": {
+          "name": "GN光束军刀"
+        },
+        "en": {
+          "name": "GN Beam Saber"
+        },
+        "ja": {
+          "name": "GNビームサーベル"
+        }
+      },
+      "category": "melee",
+      "actionCost": 1,
+      "level": 2
+    },
+    "GBO2_CB_GN_003_Combo__lv1": {
+      "name": "GN盾钳连击",
+      "type": "melee",
+      "min": 1,
+      "max": 1,
+      "hit": 100,
+      "en": 0,
+      "sourceName": "GBO2_CB_GN_003_Combo",
+      "sourceHit": 100,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "secondary",
+      "clip": "Common_Melee_A_L",
+      "damagePerShot": 2000.0,
+      "damageComponents": {
+        "melee": 1000.0,
+        "meleeShell": 1000.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "animation": "Common_Melee_A_L",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "swingEffects": [
+              "Cqb_Fire_1_White_L_S"
+            ],
+            "delay": 0.5
+          },
+          {
+            "animation": "Combo_GN_003_0",
+            "delay": 1.2
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "damageComponents": {
+              "meleeAP": 550.0
+            },
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "swingEffects": [],
+            "delay": 0.2
+          },
+          {
+            "animation": "Combo_GN_003_0",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "damageComponents": {
+              "meleeAP": 550.0
+            },
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "swingEffects": [],
+            "delay": 0.2
+          },
+          {
+            "animation": "Combo_GN_003_0",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "damageComponents": {
+              "meleeAP": 550.0
+            },
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "swingEffects": [],
+            "delay": 0.2
+          },
+          {
+            "animation": "Combo_GN_003_0",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "damageComponents": {
+              "meleeAP": 550.0
+            },
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "swingEffects": [],
+            "delay": 0.2
+          },
+          {
+            "animation": "Combo_GN_003_0",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "damageComponents": {
+              "meleeAP": 550.0
+            },
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "swingEffects": [],
+            "delay": 0.2
+          },
+          {
+            "animation": "Combo_GN_003_0",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "damageComponents": {
+              "meleeAP": 550.0
+            },
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "swingEffects": [],
+            "delay": 0.2
+          },
+          {
+            "animation": "Combo_GN_003_0",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "damageComponents": {
+              "meleeAP": 550.0
+            },
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "swingEffects": [],
+            "delay": 0.2
+          },
+          {
+            "animation": "Combo_GN_003_0",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "damageComponents": {
+              "meleeAP": 550.0
+            },
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "swingEffects": [],
+            "delay": 0.2
+          },
+          {
+            "animation": "Combo_GN_003_0",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "damageComponents": {
+              "meleeAP": 550.0
+            },
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "swingEffects": [],
+            "delay": 0.2
+          },
+          {
+            "animation": "Combo_GN_003_0",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "damageComponents": {
+              "meleeAP": 550.0
+            },
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "swingEffects": [],
+            "delay": 0.2
+          },
+          {
+            "animation": "Combo_GN_003_0",
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "damageComponents": {
+              "meleeAP": 550.0
+            },
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "swingEffects": [],
+            "delay": 0.2
+          },
+          {
+            "animation": "Combo_GN_003_0",
+            "delay": 0.0
+          },
+          {
+            "animation": "Combo_GN_003_1",
+            "delay": 0.2
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "damageComponents": {
+              "meleeAP": 3000.0
+            },
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "swingEffects": [
+              "Cqb_Fire_1_White_R"
+            ],
+            "delay": 0.4
+          },
+          {
+            "delay": 1.5
+          }
+        ],
+        "startAnimation": null
+      },
+      "partBreakModifier": 1,
+      "changeHeldWeapon": false,
+      "hitEffect": "Cqb_Hit_1",
+      "swingEffects": [
+        "Cqb_Fire_1_Pink_R",
+        "Cqb_Fire_1_Pink_L"
+      ],
+      "sound": {
+        "file": "../../sounds/GBO2_BeamSaber_1.ogg",
+        "volume": 0.5
+      },
+      "targetModifiers": {
+        "air": 1,
+        "water": 1,
+        "ground": 1,
+        "space": 1
+      },
+      "nativePayload": {
+        "ComboSkillIndex": 1.0,
+        "DpDamage": 0.0,
+        "CqbDamage": 1000.0,
+        "CqbShellDamage": 1000.0,
+        "ProjectileSpeed": 0.0,
+        "ProjectileSpread": 0.0,
+        "ProjectileLife": 0.3,
+        "ProjectileAttackTimes": 1.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 1,
+          "accuracy": 1
+        },
+        "large": {
+          "damage": 1,
+          "accuracy": 1
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Cqb/CB_GN_003_Combo.gw",
+        "barrel": "CB_GN_003_Combo",
+        "entry": "action_Weapon2",
+        "cooldown": 0,
+        "duration": 6.000000000000002,
+        "firstShot": 0.5,
+        "lastShot": 4.500000000000002,
+        "firingEvents": 13,
+        "projectiles": 13,
+        "secondaryProjectiles": 0,
+        "declaredEnergy": 0.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 0,
+        "actions": [
+          "action_Weapon2",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_Send_BattleUnitCore_GuardOff",
+          "hiddenAction_SetCqbOn",
+          "hiddenAction_SetCqbOn_FindTarget",
+          "hiddenAction_CB_GN_003_Combo_SetWeaponIndex",
+          "hiddenAction_CB_GN_003_Combo_Step_1",
+          "hiddenAction_CB_GN_003_Combo_Try_Step_1",
+          "hiddenAction_CB_GN_003_Combo_Try_Step_2",
+          "hiddenAction_CB_GN_003_Combo_Try_Step_Final",
+          "hiddenAction_SetAttackingOff",
+          "hiddenAction_SetShootOff",
+          "hiddenAction_SetCqbOff",
+          "hiddenAction_CB_GN_003_Combo_Start",
+          "hiddenAction_CB_GN_003_Combo_Fire_Step_0",
+          "hiddenAction_CB_GN_003_Combo_Fire_Step_1",
+          "hiddenAction_CB_GN_003_Combo_Fire_Step_2",
+          "hiddenAction_CB_GN_003_Combo_Fire_Step_3",
+          "hiddenAction_CB_GN_003_Combo_Fire_Step_4",
+          "hiddenAction_CB_GN_003_Combo_Fire_Step_5",
+          "hiddenAction_CB_GN_003_Combo_Fire_Step_6",
+          "hiddenAction_Send_Enemy_Combo_End",
+          "hiddenAction_Send_Enemy_Combo_End_Step_2",
+          "hiddenAction_Clear_ComboTarget",
+          "hiddenAction_CB_GN_003_Combo_Fire_Step_Final",
+          "hiddenAction_Send_Combo_End"
+        ]
+      },
+      "pilotRequirements": [
+        {
+          "stat": "melee",
+          "operator": ">=",
+          "value": 175
+        }
+      ],
+      "localization": {
+        "zh": {
+          "name": "GN盾钳连击"
+        },
+        "en": {
+          "name": "GN Shield Pincer Combo"
+        },
+        "ja": {
+          "name": "GNシールド連撃"
+        }
+      },
+      "category": "melee",
+      "actionCost": 1,
+      "level": 1
+    },
+    "GBO2_Common_ShieldAttack_BL__lv1": {
+      "name": "GN盾牌攻击",
+      "type": "melee",
+      "min": 1,
+      "max": 1,
+      "hit": 100,
+      "en": 0,
+      "sourceName": "GBO2_Common_ShieldAttack_BL",
+      "sourceHit": 100,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "secondary",
+      "clip": "Common_Melee_B_L",
+      "damagePerShot": 3000.0,
+      "damageComponents": {
+        "melee": 1500.0,
+        "meleeShell": 1500.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "animation": "Common_Melee_B_L",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "swingEffects": [
+              "Cqb_Fire_2_White_L"
+            ],
+            "delay": 0.4
+          },
+          {
+            "delay": 0.7
+          }
+        ],
+        "startAnimation": null
+      },
+      "partBreakModifier": 1,
+      "changeHeldWeapon": false,
+      "hitEffect": "Cqb_Hit_1",
+      "swingEffects": [
+        "Cqb_Fire_1_Pink_R",
+        "Cqb_Fire_1_Pink_L"
+      ],
+      "sound": {
+        "file": "../../sounds/Fist_2.wav",
+        "volume": 0.5
+      },
+      "targetModifiers": {
+        "air": 1,
+        "water": 1,
+        "ground": 1,
+        "space": 1
+      },
+      "nativePayload": {
+        "DpDamage": 1500.0,
+        "CqbDamage": 1500.0,
+        "CqbShellDamage": 1500.0,
+        "ProjectileSpeed": 0.0,
+        "ProjectileSpread": 0.0,
+        "ProjectileLife": 0.3,
+        "ProjectileAttackTimes": 3.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 1,
+          "accuracy": 1
+        },
+        "large": {
+          "damage": 1,
+          "accuracy": 1
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Cqb/Common_ShieldAttack_BL.gw",
+        "barrel": "Common_ShieldAttack_BL",
+        "entry": "action_Weapon3",
+        "cooldown": 0,
+        "duration": 1.1,
+        "firstShot": 0.4,
+        "lastShot": 0.4,
+        "firingEvents": 1,
+        "projectiles": 1,
+        "secondaryProjectiles": 0,
+        "declaredEnergy": 0.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 0,
+        "actions": [
+          "action_Weapon3",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_Send_BattleUnitCore_GuardOff",
+          "hiddenAction_SetCqbOn",
+          "hiddenAction_SetCqbOn_FindTarget",
+          "hiddenAction_Common_ShieldAttack_BL_SetWeaponIndex",
+          "hiddenAction_Common_ShieldAttack_BL_Step_1",
+          "hiddenAction_Common_ShieldAttack_BL_Fire_Step_1",
+          "hiddenAction_Common_ShieldAttack_BL_Fire_Step_2",
+          "hiddenAction_Common_ShieldAttack_BL_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff",
+          "hiddenAction_SetShootOff",
+          "hiddenAction_SetCqbOff"
+        ]
+      },
+      "localization": {
+        "zh": {
+          "name": "GN盾牌攻击"
+        },
+        "en": {
+          "name": "GN Shield Strike"
+        },
+        "ja": {
+          "name": "GNシールド打撃"
+        }
+      },
+      "category": "melee",
+      "actionCost": 1,
+      "level": 1
+    },
+    "GBO2_CB_GN_003_GNVulcan__lv1": {
+      "name": "GN火神炮",
+      "type": "beam",
+      "min": 1,
+      "max": 2,
+      "hit": 100,
+      "en": 0,
+      "sourceName": "GBO2_CB_GN_003_GNVulcan",
+      "sourceHit": 100,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": null,
+      "damagePerShot": 100.0,
+      "damageComponents": {
+        "beam": 100.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.3
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.075
+          },
+          {
+            "delay": 0.3
+          }
+        ],
+        "startAnimation": null
+      },
+      "partBreakModifier": 1,
+      "changeHeldWeapon": false,
+      "projectile": {
+        "texture": "../../projectiles/Beam_1.png",
+        "scale": 0.5,
+        "speed": 75.0,
+        "forwardOffset": -2.5,
+        "rotation": 0.0
+      },
+      "hitEffect": "Beam_Hit_1_S_Pink",
+      "sound": {
+        "file": "../../sounds/GBO2_BeamGun_2.ogg",
+        "volume": 0.3
+      },
+      "targetModifiers": {
+        "air": 1,
+        "water": 1,
+        "ground": 1,
+        "space": 1
+      },
+      "muzzleEffects": [
+        "Beam_Fire_1_Pink_S",
+        "Beam_Fire_1_Pink_S"
+      ],
+      "nativePayload": {
+        "DpDamage": 60.0,
+        "BeamDamage": 100.0,
+        "ProjectileSpeed": 75.0,
+        "ProjectileSpread": 5.0,
+        "ProjectileLife": 10.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 1,
+          "accuracy": 1
+        },
+        "large": {
+          "damage": 1,
+          "accuracy": 1
+        }
+      },
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Beam/CB_GN_003_GNVulcan.gw",
+        "barrel": "CB_GN_003_GNVulcan",
+        "entry": "action_Weapon2",
+        "cooldown": 0,
+        "duration": 1.7249999999999996,
+        "firstShot": 0.3,
+        "lastShot": 1.4249999999999996,
+        "firingEvents": 16,
+        "projectiles": 16,
+        "secondaryProjectiles": 0,
+        "declaredEnergy": 0.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 0,
+        "actions": [
+          "action_Weapon2",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_Send_BattleUnitCore_GuardOff",
+          "hiddenAction_SetAttackingOn_AimTarget",
+          "hiddenAction_SetShootOn",
+          "hiddenAction_CB_GN_003_GNVulcan_SetWeaponIndex",
+          "hiddenAction_CB_GN_003_GNVulcan_B16_Step_1",
+          "hiddenAction_CB_GN_003_GNVulcan_Fire_Step_1",
+          "hiddenAction_CB_GN_003_GNVulcan_Fire_Step_2",
+          "hiddenAction_CB_GN_003_GNVulcan_Fire_Step_3_L",
+          "hiddenAction_CB_GN_003_GNVulcan_Fire_Step_3",
+          "hiddenAction_CB_GN_003_GNVulcan_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff",
+          "hiddenAction_SetShootOff",
+          "hiddenAction_SetCqbOff"
+        ]
+      },
+      "localization": {
+        "zh": {
+          "name": "GN火神炮"
+        },
+        "en": {
+          "name": "GN Vulcans"
+        },
+        "ja": {
+          "name": "GNバルカン"
+        }
+      },
+      "category": "machine_gun",
+      "actionCost": 1,
+      "level": 1,
+      "weaponClass": "small_vulcan"
+    },
+    "GBO2_CB_GN_005_GNBazooka__lv1": {
+      "name": "GN火箭筒",
+      "type": "shell",
+      "min": 2,
+      "max": 5,
+      "hit": 100,
+      "en": 0,
+      "sourceName": "GBO2_CB_GN_005_GNBazooka",
+      "sourceHit": 100,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": "Common_Shoot_A",
+      "damagePerShot": 3000.0,
+      "damageComponents": {
+        "beamAP": 3000.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 0,
+            "delay": 0
+          },
+          {
+            "animation": "Common_Shoot_A",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.9
+          },
+          {
+            "delay": 0.5
+          }
+        ],
+        "startAnimation": null
+      },
+      "partBreakModifier": 1,
+      "changeHeldWeapon": true,
+      "projectile": {
+        "texture": "../../projectiles/Beam_2.png",
+        "scale": 1.0,
+        "speed": 75.0,
+        "forwardOffset": -10.0,
+        "rotation": 0.0,
+        "sequence": {
+          "source": "GundamWars_BattleOperation2_V5/Resource/Image/Fx/Weapon/Beam/HighBeamCannon/Projectile_HighBeamCannon_Pink_Effect.ini",
+          "color": "Pink",
+          "length": 800.0,
+          "segments": [
+            {
+              "texture": "../../projectiles/GBO2_HighBeamCannon_1_Pink_Start.png",
+              "frames": 16,
+              "width": 664,
+              "height": 150,
+              "scaleX": 0.5,
+              "scaleY": 0.5,
+              "forward": 130.0,
+              "lateral": 0.0,
+              "rotation": 0.0
+            },
+            {
+              "texture": "../../projectiles/GBO2_HighBeamCannon_1_Pink_Mid.png",
+              "frames": 16,
+              "width": 545,
+              "height": 150,
+              "scaleX": 0.5,
+              "scaleY": 0.5,
+              "forward": 432.0,
+              "lateral": 0.0,
+              "rotation": 0.0
+            },
+            {
+              "texture": "../../projectiles/GBO2_HighBeamCannon_1_Pink_End.png",
+              "frames": 16,
+              "width": 464,
+              "height": 150,
+              "scaleX": 0.5,
+              "scaleY": 0.5,
+              "forward": 684.0,
+              "lateral": 0.0,
+              "rotation": 0.0
+            }
+          ],
+          "clock": "flight"
+        },
+        "nativeSpeed": 75.0
+      },
+      "hitEffect": "Explosion_Hit_1",
+      "sound": {
+        "file": "../../sounds/BeamCannon_2.wav",
+        "volume": 0.85
+      },
+      "targetModifiers": {
+        "air": 1,
+        "water": 1,
+        "ground": 1,
+        "space": 1
+      },
+      "muzzleEffects": [
+        "Beam_Fire_1_Pink"
+      ],
+      "nativePayload": {
+        "DpDamage": 600.0,
+        "BeamAPDamage": 3000.0,
+        "ProjectileSpeed": 75.0,
+        "ProjectileSpread": 0.0,
+        "projectileExplosionRange": 35.0,
+        "ProjectileAttackTimes": 3.0,
+        "ProjectileLife": 9.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 1,
+          "accuracy": 1
+        },
+        "large": {
+          "damage": 1,
+          "accuracy": 1
+        }
+      },
+      "displayIndex": 0,
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Beam/CB_GN_005_GNBazooka.gw",
+        "barrel": "CB_GN_005_GNBazooka",
+        "entry": "action_Weapon0",
+        "cooldown": 0,
+        "duration": 1.4,
+        "firstShot": 0.8999999999999999,
+        "lastShot": 0.8999999999999999,
+        "firingEvents": 1,
+        "projectiles": 1,
+        "secondaryProjectiles": 0,
+        "declaredEnergy": 0.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 0,
+        "actions": [
+          "action_Weapon0",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_Send_BattleUnitCore_GuardOff",
+          "hiddenAction_SetShootOn",
+          "hiddenAction_CB_GN_005_GNBazooka_SetWeaponIndex",
+          "hiddenAction_CB_GN_005_GNBazooka_B1_Step_1",
+          "hiddenAction_CB_GN_005_GNBazooka_Fire_Step_ChargeEffect_1",
+          "hiddenAction_CB_GN_005_GNBazooka_Fire_Step_SpeedDownL",
+          "hiddenAction_CB_GN_005_GNBazooka_Fire_Step_1",
+          "hiddenAction_CB_GN_005_GNBazooka_Fire_Step_2",
+          "hiddenAction_CB_GN_005_GNBazooka_Fire_Step_3",
+          "hiddenAction_CB_GN_005_GNBazooka_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff",
+          "hiddenAction_SetShootOff",
+          "hiddenAction_SetCqbOff"
+        ]
+      },
+      "localization": {
+        "zh": {
+          "name": "GN火箭筒"
+        },
+        "en": {
+          "name": "GN Bazooka"
+        },
+        "ja": {
+          "name": "GNバズーカ"
+        }
+      },
+      "category": "beam_cannon",
+      "actionCost": 1,
+      "level": 1
+    },
+    "GBO2_EF_BeamSaber_A__lv2": {
+      "name": "GN光束军刀",
+      "type": "melee",
+      "min": 1,
+      "max": 1,
+      "hit": 100,
+      "en": 0,
+      "sourceName": "GBO2_EF_BeamSaber_A",
+      "sourceHit": 100,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "secondary",
+      "clip": "Common_Melee_A",
+      "damagePerShot": 3500.0,
+      "damageComponents": {
+        "melee": 1750.0,
+        "meleeBeam": 1750.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 1,
+            "delay": 0
+          },
+          {
+            "animation": "Common_Melee_A",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "swingEffects": [
+              "Cqb_Fire_1_Pink_R"
+            ],
+            "delay": 0.6
+          },
+          {
+            "delay": 0.7
+          }
+        ],
+        "startAnimation": null
+      },
+      "partBreakModifier": 1,
+      "changeHeldWeapon": true,
+      "hitEffect": "Cqb_Hit_1",
+      "swingEffects": [
+        "Cqb_Fire_1_Pink_R",
+        "Cqb_Fire_1_Pink_L"
+      ],
+      "sound": {
+        "file": "../../sounds/GBO2_BeamSaber_1.ogg",
+        "volume": 0.5
+      },
+      "targetModifiers": {
+        "air": 1,
+        "water": 1,
+        "ground": 1,
+        "space": 1
+      },
+      "nativePayload": {
+        "DpDamage": 1500.0,
+        "CqbDamage": 1750.0,
+        "CqbBeamDamage": 1750.0,
+        "ProjectileSpeed": 0.0,
+        "ProjectileSpread": 0.0,
+        "ProjectileLife": 0.3,
+        "ProjectileAttackTimes": 3.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 1,
+          "accuracy": 1
+        },
+        "large": {
+          "damage": 1,
+          "accuracy": 1
+        }
+      },
+      "displayIndex": 1,
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_A_Lv2.gw",
+        "barrel": "EF_BeamSaber_A",
+        "entry": "action_Weapon1",
+        "cooldown": 0,
+        "duration": 1.2999999999999998,
+        "firstShot": 0.6,
+        "lastShot": 0.6,
+        "firingEvents": 1,
+        "projectiles": 1,
+        "secondaryProjectiles": 0,
+        "declaredEnergy": 0.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 0,
+        "actions": [
+          "action_Weapon1",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_Send_BattleUnitCore_GuardOff",
+          "hiddenAction_SetCqbOn",
+          "hiddenAction_SetCqbOn_FindTarget",
+          "hiddenAction_EF_BeamSaber_A_SetWeaponIndex",
+          "hiddenAction_EF_BeamSaber_A_Step_1",
+          "hiddenAction_EF_BeamSaber_A_Fire_Step_1",
+          "hiddenAction_EF_BeamSaber_A_Fire_Step_2",
+          "hiddenAction_EF_BeamSaber_A_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff",
+          "hiddenAction_SetShootOff",
+          "hiddenAction_SetCqbOff"
+        ]
+      },
+      "localization": {
+        "zh": {
+          "name": "GN光束军刀"
+        },
+        "en": {
+          "name": "GN Beam Saber"
+        },
+        "ja": {
+          "name": "GNビームサーベル"
+        }
+      },
+      "category": "melee",
+      "actionCost": 1,
+      "level": 2
+    },
+    "GBO2_CB_GN_005_GNBazooka_BurstMode__lv1": {
+      "name": "GN火箭筒·爆发模式",
+      "type": "shell",
+      "min": 3,
+      "max": 6,
+      "hit": 100,
+      "en": 0,
+      "sourceName": "GBO2_CB_GN_005_GNBazooka_BurstMode",
+      "sourceHit": 100,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": "Common_StandShoot_A",
+      "damagePerShot": 425.0,
+      "damageComponents": {
+        "beamAP": 425.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 2,
+            "delay": 0
+          },
+          {
+            "animation": "Common_StandShoot_A",
+            "delay": 0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.4
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.1
+          },
+          {
+            "delay": 1.0
+          }
+        ],
+        "startAnimation": null
+      },
+      "partBreakModifier": 1,
+      "changeHeldWeapon": true,
+      "projectile": {
+        "texture": "../../projectiles/Beam_2.png",
+        "scale": 1.0,
+        "speed": 200.0,
+        "forwardOffset": 0.0,
+        "rotation": 0.0
+      },
+      "hitEffect": "Explosion_Hit_1",
+      "sound": {
+        "file": "../../sounds/BeamCannon_2.wav",
+        "volume": 0.0
+      },
+      "targetModifiers": {
+        "air": 1,
+        "water": 1,
+        "ground": 1,
+        "space": 1
+      },
+      "nativePayload": {
+        "DpDamage": 150.0,
+        "BeamAPDamage": 425.0,
+        "ProjectileSpeed": 200.0,
+        "ProjectileSpread": 0.0,
+        "projectileExplosionRange": 40.0,
+        "ProjectileAttackTimes": 5.0,
+        "ProjectileLife": 4.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 1,
+          "accuracy": 1
+        },
+        "large": {
+          "damage": 1,
+          "accuracy": 1
+        }
+      },
+      "displayIndex": 2,
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Beam/CB_GN_005_GNBazooka_BurstMode.gw",
+        "barrel": "CB_GN_005_GNBazooka_BurstMode",
+        "entry": "action_Weapon2",
+        "cooldown": 0,
+        "duration": 5.300000000000001,
+        "firstShot": 0.4,
+        "lastShot": 4.300000000000001,
+        "firingEvents": 40,
+        "projectiles": 40,
+        "secondaryProjectiles": 0,
+        "declaredEnergy": 0.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 0,
+        "actions": [
+          "action_Weapon2",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_Send_BattleUnitCore_GuardOff",
+          "hiddenAction_SetShootOn",
+          "hiddenAction_CB_GN_005_GNBazooka_BurstMode_SetWeaponIndex",
+          "hiddenAction_CB_GN_005_GNBazooka_BurstMode_B1_Step_1",
+          "hiddenAction_SetAttackingCantTurnOn",
+          "hiddenAction_CB_GN_005_GNBazooka_BurstMode_Fire_Step_ChargeEffect_1",
+          "hiddenAction_CB_GN_005_GNBazooka_BurstMode_Fire_Step_1",
+          "hiddenAction_CB_GN_005_GNBazooka_BurstMode_Fire_Step_2",
+          "hiddenAction_CB_GN_005_GNBazooka_BurstMode_Fire_Step_BulletEffect_1",
+          "hiddenAction_CB_GN_005_GNBazooka_BurstMode_Fire_Step_3",
+          "hiddenAction_CB_GN_005_GNBazooka_BurstMode_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff",
+          "hiddenAction_SetShootOff",
+          "hiddenAction_SetCqbOff",
+          "hiddenAction_CB_GN_005_GNBazooka_BurstMode_BulletEffect_1_StopPlay",
+          "hiddenAction_SetAttackingCantTurnOff"
+        ]
+      },
+      "localization": {
+        "zh": {
+          "name": "GN火箭筒·爆发模式"
+        },
+        "en": {
+          "name": "GN Bazooka Burst Mode"
+        },
+        "ja": {
+          "name": "GNバズーカ バーストモード"
+        }
+      },
+      "category": "beam_cannon",
+      "actionCost": 1,
+      "level": 1
+    },
+    "GBO2_CB_GN_005_BeamCannon__lv1": {
+      "name": "GN加农炮",
+      "type": "shell",
+      "min": 3,
+      "max": 6,
+      "hit": 100,
+      "en": 0,
+      "sourceName": "GBO2_CB_GN_005_BeamCannon",
+      "sourceHit": 100,
+      "hitMultiplier": 1,
+      "hitBonus": 0,
+      "slot": "primary",
+      "clip": "Common_Cannon_Shoot_A",
+      "damagePerShot": 750.0,
+      "damageComponents": {
+        "beamAP": 750.0
+      },
+      "hitsPerShot": 1,
+      "attack": {
+        "steps": [
+          {
+            "weaponDisplayIndex": 3,
+            "delay": 0
+          },
+          {
+            "animation": "Common_Cannon_Shoot_A",
+            "delay": 0.35
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 0,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.25
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 1,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 2,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "shots": 1,
+            "muzzleIndex": 3,
+            "partBreakModifier": 1,
+            "requiredParts": [],
+            "delay": 0.0
+          },
+          {
+            "delay": 1.25
+          }
+        ],
+        "startAnimation": null
+      },
+      "partBreakModifier": 1,
+      "changeHeldWeapon": true,
+      "projectile": {
+        "texture": "../../projectiles/Beam_2.png",
+        "scale": 1.0,
+        "speed": 50.0,
+        "forwardOffset": -7.5,
+        "rotation": 0.0
+      },
+      "hitEffect": "Explosion_Hit_1",
+      "sound": {
+        "file": "../../sounds/BeamCannon_1.wav",
+        "volume": 0.4
+      },
+      "targetModifiers": {
+        "air": 1,
+        "water": 1,
+        "ground": 1,
+        "space": 1
+      },
+      "muzzleEffects": [
+        "Beam_Fire_1_Pink_S",
+        "Beam_Fire_1_Pink_S",
+        "Beam_Fire_1_Pink_S",
+        "Beam_Fire_1_Pink_S"
+      ],
+      "nativePayload": {
+        "DpDamage": 150.0,
+        "BeamAPDamage": 750.0,
+        "ProjectileSpeed": 50.0,
+        "ProjectileSpread": 4.0,
+        "projectileExplosionRange": 15.0,
+        "ProjectileAttackTimes": 2.0,
+        "ProjectileLife": 15.0
+      },
+      "antiSize": {
+        "small": {
+          "damage": 1,
+          "accuracy": 1
+        },
+        "large": {
+          "damage": 1,
+          "accuracy": 1
+        }
+      },
+      "displayIndex": 3,
+      "nativeTiming": {
+        "source": "Units/BattleUnits/Weapon/Beam/CB_GN_005_BeamCannon.gw",
+        "barrel": "CB_GN_005_BeamCannon",
+        "entry": "action_Weapon3",
+        "cooldown": 0,
+        "duration": 1.85,
+        "firstShot": 0.6,
+        "lastShot": 0.6,
+        "firingEvents": 4,
+        "projectiles": 4,
+        "secondaryProjectiles": 0,
+        "declaredEnergy": 0.0,
+        "energyMode": "perVolley",
+        "energyPerEmission": 0,
+        "energy": 0,
+        "actions": [
+          "action_Weapon3",
+          "hiddenAction_SetAttackingOn",
+          "hiddenAction_Send_BattleUnitCore_GuardOff",
+          "hiddenAction_SetShootOn",
+          "hiddenAction_CB_GN_005_BeamCannon_SetWeaponIndex",
+          "hiddenAction_CB_GN_005_BeamCannon_B2_Step_1",
+          "hiddenAction_SetAttackingCantTurnOn",
+          "hiddenAction_CB_GN_005_BeamCannon_Fire_Step_1",
+          "hiddenAction_CB_GN_005_BeamCannon_Fire_Step_2",
+          "hiddenAction_CB_GN_005_BeamCannon_Fire_Step_3",
+          "hiddenAction_CB_GN_005_BeamCannon_Fire_Step_R2",
+          "hiddenAction_CB_GN_005_BeamCannon_Fire_Step_L",
+          "hiddenAction_CB_GN_005_BeamCannon_Fire_Step_L2",
+          "hiddenAction_CB_GN_005_BeamCannon_Fire_Step_Final",
+          "hiddenAction_SetAttackingOff",
+          "hiddenAction_SetShootOff",
+          "hiddenAction_SetCqbOff",
+          "hiddenAction_SetAttackingCantTurnOff"
+        ]
+      },
+      "localization": {
+        "zh": {
+          "name": "GN加农炮"
+        },
+        "en": {
+          "name": "GN Cannons"
+        },
+        "ja": {
+          "name": "GNキャノン"
+        }
+      },
+      "category": "cannon",
+      "actionCost": 1,
+      "level": 1
+    },
+    "CB_GN_005_GNBazooka_BurstMode__skill_irradiation__lv1": {
+      "id": "Irradiation",
+      "type": "irradiation",
+      "name": "光束照射",
+      "range": 10,
+      "minRange": 1,
+      "actionCost": 5,
+      "enCostPercent": 50,
+      "cooldownTurns": 3,
+      "maxUses": 99,
+      "consumeAction": false,
+      "baseHit": 60,
+      "damageComponents": {
+        "beamAP": 1700
+      },
+      "areaWidth": 0,
+      "nativeTotalDamage": 85000.0,
+      "nativeRepeatMultiplier": 5,
+      "sourceWeapon": "CB_GN_005_GNBazooka_BurstMode",
+      "requiresSfsMS": false,
+      "chargeSeconds": 1,
+      "fireSeconds": 2,
+      "visualColor": "Pink",
+      "beamWidth": 168.0,
+      "chargeScale": 1.3,
+      "fireSound": {
+        "file": "../../sounds/BeamCannon_2.wav",
+        "volume": 0.0
+      },
+      "beamSections": [
+        {
+          "part": "Start",
+          "left": -81.0,
+          "width": 362.0
+        },
+        {
+          "part": "Mid",
+          "left": 277.5,
+          "width": 139.0
+        },
+        {
+          "part": "End",
+          "left": 414.5,
+          "width": 345.0
+        }
+      ],
+      "beamLength": 759.5,
+      "weaponDisplayIndex": 2,
+      "clip": "Common_StandShoot_A",
+      "effect": "GBO2_Irradiation_Charge_Pink",
+      "sound": {
+        "file": "../../sounds/BeamCharge_4.ogg",
+        "volume": 0.7
+      },
+      "localization": {
+        "zh": {
+          "name": "光束照射"
+        },
+        "en": {
+          "name": "Irradiation Beam"
+        },
+        "ja": {
+          "name": "照射ビーム"
+        }
+      },
+      "description": "基础伤害 1,700 × 1 = 1,700；射程 10 格，宽度 1 格，命中 60%；消耗50%最大EN，冷却 3 个己方回合。对沿途每台单位（含友军）判定一次。",
+      "effectPrefix": "GBO2_Irradiation"
     }
   }
 }

@@ -1,0 +1,967 @@
+{
+  "schemaVersion": 2,
+  "id": "GN_005",
+  "code": "GN-005",
+  "source": "GundamWars_BattleOperation2_V5/Units/BattleUnits/GN-005/GN-005.ini",
+  "materials": {
+    "textures": {
+      "GN-005_Crotch_1.png": "textures/GN-005_Crotch_1.png",
+      "GN-005_Body_1.png": "textures/GN-005_Body_1.png",
+      "GN-005_ArmL_1.png": "textures/GN-005_ArmL_1.png",
+      "GN-005_ArmR_1.png": "textures/GN-005_ArmR_1.png",
+      "GN-005_ShoulderL_1.png": "textures/GN-005_ShoulderL_1.png",
+      "GN-005_ShoulderR_1.png": "textures/GN-005_ShoulderR_1.png",
+      "GN-005_Head_1.png": "textures/GN-005_Head_1.png",
+      "GN-005_FootL_1.png": "textures/GN-005_FootL_1.png",
+      "GN-005_LegL_1.png": "textures/GN-005_LegL_1.png",
+      "GN-005_FootR_1.png": "textures/GN-005_FootR_1.png",
+      "GN-005_LegR_1.png": "textures/GN-005_LegR_1.png",
+      "CB_GN_005_GNBazooka.png": "textures/CB_GN_005_GNBazooka.png",
+      "CB_GN_005_GNBazooka_BurstMode.png": "textures/CB_GN_005_GNBazooka_BurstMode.png",
+      "EF_BeamSaber.png": "textures/EF_BeamSaber.png",
+      "GN-005_Backpack_1.png": "textures/GN-005_Backpack_1.png",
+      "GN-005_BeamCannon_1.png": "textures/GN-005_BeamCannon_1.png",
+      "GN-005_BeamCannon_2.png": "textures/GN-005_BeamCannon_2.png",
+      "GN-005_BeamCannon_3.png": "textures/GN-005_BeamCannon_3.png",
+      "GN-005_LegL_2.png": "textures/GN-005_LegL_2.png",
+      "GN-005_LegR_2.png": "textures/GN-005_LegR_2.png",
+      "MS.png": "textures/MS.png",
+      "Boost_GN_1.png": "textures/Boost_GN_1.png",
+      "Boost_GN_2.png": "textures/Boost_GN_2.png",
+      "GN_005.png": "textures/GN_005.png"
+    },
+    "icon": "GN_005.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0,
+      "y": -0.5
+    },
+    "Body": {
+      "x": 0,
+      "y": 0
+    },
+    "LeftArm": {
+      "x": -9,
+      "y": 0
+    },
+    "RightArm": {
+      "x": 9,
+      "y": 0
+    },
+    "LeftShoulder": {
+      "x": -9,
+      "y": 0
+    },
+    "RightShoulder": {
+      "x": 9,
+      "y": 0
+    },
+    "LeftWeapon": {
+      "x": 0,
+      "y": 0
+    },
+    "RightWeapon": {
+      "x": 0,
+      "y": 0
+    },
+    "Attachment12": {
+      "x": 0,
+      "y": 0
+    },
+    "Attachment13": {
+      "x": 0,
+      "y": 0
+    },
+    "Head": {
+      "x": 0,
+      "y": 0
+    },
+    "Eye": {
+      "x": 0,
+      "y": 0
+    },
+    "LeftFoot": {
+      "x": -6,
+      "y": 0,
+      "endDirOffset": -8
+    },
+    "LeftLeg": {
+      "x": -6,
+      "y": 0,
+      "endDirOffset": -8
+    },
+    "RightFoot": {
+      "x": 6,
+      "y": 0,
+      "endDirOffset": 8
+    },
+    "RightLeg": {
+      "x": 6,
+      "y": 0,
+      "endDirOffset": 8
+    }
+  },
+  "layers": [
+    {
+      "name": "LeftFoot",
+      "texture": "GN-005_FootL_1.png",
+      "bone": "LeftFoot",
+      "order": 1,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "visibleWhen": {},
+      "requiredParts": [
+        "leftLeg"
+      ]
+    },
+    {
+      "name": "RightFoot",
+      "texture": "GN-005_FootR_1.png",
+      "bone": "RightFoot",
+      "order": 1,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "visibleWhen": {},
+      "requiredParts": [
+        "rightLeg"
+      ]
+    },
+    {
+      "name": "LeftLeg",
+      "texture": "GN-005_LegL_1.png",
+      "bone": "LeftLeg",
+      "order": 2,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "visibleWhen": {},
+      "requiredParts": [
+        "leftLeg"
+      ]
+    },
+    {
+      "name": "RightLeg",
+      "texture": "GN-005_LegR_1.png",
+      "bone": "RightLeg",
+      "order": 2,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "visibleWhen": {},
+      "requiredParts": [
+        "rightLeg"
+      ]
+    },
+    {
+      "name": "LeftLeg_GNField",
+      "texture": "GN-005_LegL_2.png",
+      "bone": "LeftLeg",
+      "order": 2,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "visibleWhen": {},
+      "requiredParts": [
+        "leftLeg"
+      ]
+    },
+    {
+      "name": "RightLeg_GNField",
+      "texture": "GN-005_LegR_2.png",
+      "bone": "RightLeg",
+      "order": 2,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "visibleWhen": {},
+      "requiredParts": [
+        "rightLeg"
+      ]
+    },
+    {
+      "name": "Crotch",
+      "texture": "GN-005_Crotch_1.png",
+      "bone": "Pelvis",
+      "order": 4,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ArmL",
+      "texture": "GN-005_ArmL_1.png",
+      "bone": "LeftArm",
+      "order": 4,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "visibleWhen": {},
+      "requiredParts": [
+        "leftArm"
+      ]
+    },
+    {
+      "name": "ArmR",
+      "texture": "GN-005_ArmR_1.png",
+      "bone": "RightArm",
+      "order": 4,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "visibleWhen": {},
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "Boost",
+      "texture": "Boost_GN_1.png",
+      "bone": "Body",
+      "order": 4,
+      "scale": 0.45,
+      "offset": {
+        "x": 0,
+        "y": -35
+      },
+      "scaleY": 1,
+      "rotation": 0,
+      "alpha": 1,
+      "frames": 4,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "Boost_GN_1.png",
+      "bone": "Body",
+      "order": 4,
+      "scale": 0.45,
+      "offset": {
+        "x": 0,
+        "y": -15
+      },
+      "scaleY": 0.5,
+      "rotation": 0,
+      "alpha": 0.75,
+      "frames": 4,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "scaleX": 1,
+      "independentClock": true
+    },
+    {
+      "name": "Boost_2",
+      "texture": "Boost_GN_2.png",
+      "bone": "Body",
+      "order": 4,
+      "scale": 0.45,
+      "offset": {
+        "x": 0,
+        "y": -35
+      },
+      "scaleY": 1,
+      "rotation": 0,
+      "alpha": 1,
+      "frames": 4,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "thrustActive": true
+      },
+      "independentClock": true
+    },
+    {
+      "name": "BoostReversing_2",
+      "texture": "Boost_GN_2.png",
+      "bone": "Body",
+      "order": 4,
+      "scale": 0.45,
+      "offset": {
+        "x": 0,
+        "y": -15
+      },
+      "scaleY": 0.5,
+      "rotation": 0,
+      "alpha": 0.75,
+      "frames": 4,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "sustainedThrust": true
+      },
+      "scaleX": 1,
+      "independentClock": true
+    },
+    {
+      "name": "Body",
+      "texture": "GN-005_Body_1.png",
+      "bone": "Body",
+      "order": 5,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "CB_GN_005_GNBazooka",
+      "texture": "CB_GN_005_GNBazooka.png",
+      "bone": "RightArm",
+      "order": 5.5,
+      "scale": 0.85,
+      "rotation": 0,
+      "offset": {
+        "x": 3,
+        "y": 22
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": [
+          0,
+          3
+        ]
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "CB_GN_005_GNBazooka_BurstMode",
+      "texture": "CB_GN_005_GNBazooka_BurstMode.png",
+      "bone": "Body",
+      "order": 5.5,
+      "scale": 1,
+      "rotation": 0,
+      "offset": {
+        "x": 0,
+        "y": 22
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": 2
+      }
+    },
+    {
+      "name": "EF_BeamSaber_A",
+      "texture": "EF_BeamSaber.png",
+      "bone": "RightWeapon",
+      "order": 5.5,
+      "scale": 0.85,
+      "rotation": -16,
+      "frames": 5,
+      "frame": 1,
+      "offset": {
+        "x": 10,
+        "y": 25
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": 1
+      },
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "Backpack",
+      "texture": "GN-005_Backpack_1.png",
+      "bone": "Body",
+      "order": 5.9,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "ShoulderL",
+      "texture": "GN-005_ShoulderL_1.png",
+      "bone": "LeftShoulder",
+      "order": 6,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "visibleWhen": {},
+      "requiredParts": [
+        "leftArm"
+      ]
+    },
+    {
+      "name": "ShoulderR",
+      "texture": "GN-005_ShoulderR_1.png",
+      "bone": "RightShoulder",
+      "order": 6,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "visibleWhen": {},
+      "requiredParts": [
+        "rightArm"
+      ]
+    },
+    {
+      "name": "BeamCannon_Idle",
+      "texture": "GN-005_BeamCannon_1.png",
+      "bone": "Body",
+      "order": 6.1,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": {
+          "not": 3
+        }
+      }
+    },
+    {
+      "name": "BeamCannon_GNField",
+      "texture": "GN-005_BeamCannon_2.png",
+      "bone": "Body",
+      "order": 6.1,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "visibleWhen": {}
+    },
+    {
+      "name": "BeamCannon_Weapon3",
+      "texture": "GN-005_BeamCannon_3.png",
+      "bone": "Body",
+      "order": 6.1,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": 3
+      }
+    },
+    {
+      "name": "Head",
+      "texture": "GN-005_Head_1.png",
+      "bone": "Head",
+      "order": 7,
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      },
+      "requiredParts": [
+        "head"
+      ]
+    }
+  ],
+  "animations": {
+    "Common_Idle": "../../animations/GN_005__Common_Idle.json",
+    "OnMovingWalk": "../../animations/GN_005__OnMovingWalk.json",
+    "OnMovingBoost": "../../animations/GN_005__OnMovingBoost.json",
+    "OnMovingBoostReversing": "../../animations/GN_005__OnMovingBoostReversing.json",
+    "Common_Daze": "../../animations/GN_005__Common_Daze.json",
+    "Common_Stagger": "../../animations/GN_005__Common_Stagger.json",
+    "Common_Stun": "../../animations/GN_005__Common_Stun.json",
+    "Guard": "../../animations/GN_005__Guard.json",
+    "Common_Shoot_A": "../../animations/GN_005__Common_Shoot_A.json",
+    "Common_StandShoot_A": "../../animations/GN_005__Common_StandShoot_A.json",
+    "Common_Melee_A": "../../animations/GN_005__Common_Melee_A.json",
+    "Common_Cannon_Shoot_A": "../../animations/GN_005__Common_Cannon_Shoot_A.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 27500,
+    "en": 1000,
+    "move": 5,
+    "mobility": 100,
+    "cost": 1000,
+    "counterLimit": 1,
+    "accuracy": 100,
+    "actionPoints": 10,
+    "vision": 4,
+    "movementType": "ground",
+    "adaptability": {
+      "ground": 100,
+      "water": 85,
+      "air": 100,
+      "space": 100
+    },
+    "sensors": {
+      "sight": 8,
+      "radar": 10,
+      "antiDetection": 0,
+      "revealOnDetection": false
+    },
+    "speed": 100,
+    "partStructuralStrength": 100,
+    "gnField": {
+      "capacity": 1,
+      "reduction": 1,
+      "piercingReduction": 1,
+      "minimumRatio": 0,
+      "recoveryPercent": 0,
+      "guardOnly": true,
+      "allDamage": true
+    },
+    "solarFurnace": {
+      "enRecoveryPercent": 0,
+      "antiDetect": true,
+      "stealth": true
+    }
+  },
+  "attackBonuses": {
+    "melee": 0,
+    "shooting": 40,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 20,
+      "flat": 0
+    },
+    "shell": {
+      "percent": 20,
+      "flat": 0
+    },
+    "melee": {
+      "percent": 0,
+      "flat": 0
+    },
+    "dp": {
+      "percent": 35,
+      "flat": 0
+    },
+    "sp": {
+      "percent": 35,
+      "flat": 0
+    }
+  },
+  "shield": {
+    "hp": 0,
+    "blockChance": 0,
+    "coverage": 0,
+    "defenses": {
+      "beam": {
+        "percent": 0,
+        "flat": 0
+      },
+      "shell": {
+        "percent": 0,
+        "flat": 0
+      },
+      "melee": {
+        "percent": 0,
+        "flat": 0
+      },
+      "dp": {
+        "percent": 0,
+        "flat": 0
+      }
+    },
+    "requiredParts": []
+  },
+  "sourceStats": {
+    "hp": 27500,
+    "walkSpeed": 0.4,
+    "boostSpeed": 1,
+    "turnSpeed": 1.25,
+    "reaction": 0,
+    "shooting": 140,
+    "melee": 100,
+    "nativeLevel": 4,
+    "en": 1000,
+    "technologyEra": "AD_2307_T1",
+    "technologyWeight": 1,
+    "costPolicy": "GBO2 tier x 250",
+    "sensors": {
+      "sight": 20,
+      "radar": 360,
+      "antiDetection": 0
+    },
+    "adaptability": {
+      "ground": 100,
+      "water": 85,
+      "air": 100,
+      "space": 115
+    }
+  },
+  "presentation": {
+    "shield": false,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "Common_Idle",
+    "move": "ImportedIdle",
+    "stagger": "Common_Stagger",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "OnMovingWalk",
+    "movement": "boost",
+    "moveSoundKey": "moveSound"
+  },
+  "name": "德天使高达",
+  "localization": {
+    "zh": {
+      "name": "德天使高达"
+    },
+    "en": {
+      "name": "Gundam Virtue"
+    },
+    "ja": {
+      "name": "ガンダムヴァーチェ"
+    }
+  },
+  "tags": [
+    "CB",
+    "AD_2307_T1"
+  ],
+  "weapons": {
+    "CB_GN_005_GNBazooka": {
+      "ref": "GBO2_CB_GN_005_GNBazooka__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/CB_GN_005_GNBazooka.gw",
+          "barrels": [
+            {
+              "id": "CB_GN_005_GNBazooka",
+              "x": 10.5,
+              "y": 38
+            }
+          ],
+          "entry": "action_Weapon0"
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "CB_GN_005_GNBazooka",
+              "point": {
+                "x": -1.7647058823529402,
+                "y": -18.823529411764707
+              }
+            }
+          ]
+        }
+      }
+    },
+    "EF_BeamSaber_A": {
+      "ref": "EF_BeamSaber_A__lv2",
+      "overrides": {
+        "attack": {
+          "steps": [
+            {
+              "weaponDisplayIndex": 1,
+              "delay": 0
+            },
+            {
+              "animation": "Common_Melee_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "requiredParts": [],
+              "swingEffects": [
+                "Cqb_Fire_1_Pink_R"
+              ],
+              "delay": 0.6,
+              "partBreakModifier": 1.25
+            },
+            {
+              "delay": 0.7
+            }
+          ],
+          "startAnimation": null
+        },
+        "sound": {
+          "file": "../../sounds/GBO2_BeamSaber_1.ogg",
+          "volume": 0.5
+        },
+        "nativePayload": {
+          "DpDamage": 1500,
+          "CqbDamage": 1750,
+          "CqbBeamDamage": 1750,
+          "ProjectileSpeed": 0,
+          "ProjectileSpread": 0,
+          "ProjectileLife": 0.3,
+          "ProjectileAttackTimes": 3
+        },
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_A_Lv2.gw",
+          "barrel": "EF_BeamSaber_A",
+          "entry": "action_Weapon1",
+          "cooldown": 0,
+          "duration": 1.2999999999999998,
+          "firstShot": 0.6,
+          "lastShot": 0.6,
+          "firingEvents": 1,
+          "projectiles": 1,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "action_Weapon1",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_Send_BattleUnitCore_GuardOff",
+            "hiddenAction_SetCqbOn",
+            "hiddenAction_SetCqbOn_FindTarget",
+            "hiddenAction_EF_BeamSaber_A_SetWeaponIndex",
+            "hiddenAction_EF_BeamSaber_A_Step_1",
+            "hiddenAction_EF_BeamSaber_A_Fire_Step_1",
+            "hiddenAction_EF_BeamSaber_A_Fire_Step_2",
+            "hiddenAction_EF_BeamSaber_A_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff",
+            "hiddenAction_SetShootOff",
+            "hiddenAction_SetCqbOff"
+          ]
+        },
+        "actionCost": 1,
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_A_Lv2.gw",
+          "barrels": [
+            {
+              "id": "EF_BeamSaber_A",
+              "x": 0,
+              "y": 0
+            }
+          ],
+          "entry": "action_Weapon1"
+        },
+        "muzzle": {
+          "bone": "Body",
+          "offset": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        "gbo2NativeSourceName": "GBO2_EF_BeamSaber_A",
+        "gbo2SharedRef": "EF_BeamSaber_A__lv2"
+      },
+      "remove": [
+        "levelSource"
+      ]
+    },
+    "CB_GN_005_GNBazooka_BurstMode": {
+      "ref": "GBO2_CB_GN_005_GNBazooka_BurstMode__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/CB_GN_005_GNBazooka_BurstMode.gw",
+          "barrels": [
+            {
+              "id": "CB_GN_005_GNBazooka_BurstMode",
+              "x": 0,
+              "y": 42
+            }
+          ],
+          "muzzleNote": "Native weapon has no standalone muzzle flash",
+          "entry": "action_Weapon2"
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "CB_GN_005_GNBazooka_BurstMode",
+              "point": {
+                "x": 1.2246467991473533e-15,
+                "y": -20
+              }
+            }
+          ]
+        },
+        "availability": {
+          "hidden": true,
+          "reasons": [
+            "converted_skill"
+          ],
+          "convertedSkill": "Irradiation"
+        }
+      }
+    },
+    "CB_GN_005_BeamCannon": {
+      "ref": "GBO2_CB_GN_005_BeamCannon__lv1",
+      "overrides": {
+        "requiredParts": [
+          "backpack"
+        ],
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/CB_GN_005_BeamCannon.gw",
+          "barrels": [
+            {
+              "id": "CB_GN_005_BeamCannon",
+              "x": 22,
+              "y": -10
+            },
+            {
+              "id": "CB_GN_005_BeamCannon_R2",
+              "x": 18,
+              "y": -10
+            },
+            {
+              "id": "CB_GN_005_BeamCannon_L",
+              "x": -22,
+              "y": -10
+            },
+            {
+              "id": "CB_GN_005_BeamCannon_L2",
+              "x": -18,
+              "y": -10
+            }
+          ],
+          "entry": "action_Weapon3"
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 22,
+                "y": -10
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": 18,
+                "y": -10
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -22,
+                "y": -10
+              }
+            },
+            {
+              "bone": "Body",
+              "offset": {
+                "x": -18,
+                "y": -10
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "weaponKits": [
+    {
+      "id": "default",
+      "name": "标准武装",
+      "weapons": [
+        "CB_GN_005_GNBazooka",
+        "EF_BeamSaber_A",
+        "CB_GN_005_BeamCannon"
+      ],
+      "primary": "CB_GN_005_GNBazooka",
+      "cost": 0
+    }
+  ],
+  "skills": [
+    {
+      "ref": "CB_GN_005_GNBazooka_BurstMode__skill_irradiation__lv1",
+      "overrides": {
+        "requiredParts": [
+          "rightArm"
+        ],
+        "muzzle": {
+          "mounts": [
+            {
+              "root": true,
+              "offset": {
+                "x": 0,
+                "y": 40
+              }
+            }
+          ]
+        },
+        "chargeMuzzle": {
+          "mounts": [
+            {
+              "root": true,
+              "offset": {
+                "x": 0,
+                "y": 50
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "mechanics": [
+    {
+      "id": "GNField",
+      "status": "adapted",
+      "name": "GN立场：仅防御时吸收全部伤害类型",
+      "source": "Template/Unit/Skills/GNField.gw"
+    },
+    {
+      "id": "SolarFurnace",
+      "status": "adapted",
+      "name": "太阳炉：己方回合恢复5% EN，附带反侦测与隐蔽"
+    },
+    {
+      "id": "Irradiation",
+      "status": "adapted",
+      "name": "光束照射：方向照射、蓄力、逐机命中；原版固定演出与判定射程独立"
+    },
+    {
+      "id": "ObservationalDataLink",
+      "status": "review",
+      "name": "ObservationalDataLink",
+      "source": "Template/Unit/Skills/ObservationalDataLink.gw"
+    },
+    {
+      "id": "Impregnable",
+      "status": "review",
+      "name": "Impregnable",
+      "source": "Template/Unit/Skills/Impregnable.gw"
+    },
+    {
+      "id": "GBO2Level4",
+      "status": "adapted",
+      "name": "原MOD 4级普通版，不含Trans-AM"
+    }
+  ],
+  "formOnly": false,
+  "unitTags": [
+    "MS"
+  ],
+  "transport": {
+    "slotCost": 1,
+    "loadTags": [
+      "CanUseSFS"
+    ]
+  },
+  "hangars": []
+}

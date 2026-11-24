@@ -89,3 +89,19 @@ body button.supply-draw:disabled { opacity: .45; }
   .supply-draw strong { font-size: 17px; }
   .supply-draw small, .supply-results small { font-size: 10px; }
 }
+
+.supply-featured-multiple figure canvas { transform: none; }
+.supply-featured-multiple figcaption { font-size: clamp(10px, 1.1vw, 16px); padding-bottom: 3px; }
+
+/* A fixed card frame contains either one paired row or four outward-facing units. */
+body button.supply-pool-card { height: 204px; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) 38px; }
+.supply-card-art { min-height: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: minmax(0, 1fr); }
+.supply-card-art[data-count="4"] { grid-template-rows: repeat(2, minmax(0, 1fr)); }
+.supply-card-art[data-count="4"] { aspect-ratio: 4 / 3; width: auto; height: 100%; max-width: 100%; justify-self: center; }
+.supply-pool-card .supply-card-art canvas { width: 100%; height: 100%; min-height: 0; object-fit: contain; }
+.supply-pool-card strong { min-height: 0; display: flex; align-items: center; padding-block: 4px; line-height: 1.2; }
+.supply-featured-multiple figure:nth-child(odd) canvas { transform: translateX(8%); }
+.supply-featured-multiple figure:nth-child(even) canvas { transform: translateX(-8%); }
+.supply-featured-multiple { flex: 0 1 410px; width: 100%; max-width: 600px; align-self: center; margin-block: auto; }
+@media(max-width:720px) { body button.supply-pool-card { height: 114px; grid-template-rows: minmax(0, 1fr) 34px; } .supply-pool-card strong { font-size: 10px; padding: 3px; } }
+@media(max-width:720px) { .supply-featured-multiple { flex-basis: 260px; } }

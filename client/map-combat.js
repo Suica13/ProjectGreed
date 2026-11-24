@@ -5,7 +5,7 @@ const MapCombat = (() => {
     for (const [key,label,color] of [
       ["damage","","#ffe7aa"],
       ["shieldDamage","盾牌","#70bfff"],
-      ["iFieldDamage","I立场","#ff8ed0"],
+      ["iFieldDamage",contacts.find(c=>c.fieldName)?.fieldName || "I立场","#ff8ed0"],
       ["abcDamage","涂层","#ff8ed0"],
       ["phaseShiftDamage","PS装甲","#ff8ed0"],
     ]) {
@@ -223,7 +223,7 @@ const MapCombat = (() => {
       initialEn.set(id, unit.en);
       initialIField.set(
         id,
-        unit.iFieldHp ?? firstFieldHealth.get(id) ?? 0,
+        unit.gnFieldHp ?? unit.iFieldHp ?? firstFieldHealth.get(id) ?? 0,
       );
       initialParts.set(id, { ...unit.brokenParts });
     }
@@ -534,7 +534,9 @@ const MapCombat = (() => {
       if (!event.nuclearFollowup) result.set(source.unit.id, sourcePose);
       result.set(target.unit.id, {
         x: target.x, y: target.y, angle: target.angle,
-        model: latest?.modelAfter ?? target.unit.model,
+        gnFieldTime: time,
+      gnFieldDefending: !!Rules.modelOf(target.unit).gnField && event.response === "defend" && (event.iFieldBefore ?? 0) > 0,
+      model: latest?.modelAfter ?? target.unit.model,
         flying: latest?.flyingAfter ?? !!target.unit.flying,
         clip: null, time: 0, moving: false,
         hp: Math.max(0, (event.before ?? target.unit.hp) - arrived.reduce((sum,c)=>sum+c.damage,0)),
@@ -621,6 +623,8 @@ const MapCombat = (() => {
     const dying = plan.deathSoundAt !== null && time >= plan.deathSoundAt;
     if (!event.nuclearFollowup) result.set(source.unit.id, sourcePose);
     result.set(target.unit.id, {
+      gnFieldTime: time,
+      gnFieldDefending: !!Rules.modelOf(target.unit).gnField && event.response === "defend" && (event.iFieldBefore ?? 0) > 0,
       model: latest?.modelAfter ?? target.unit.model,
       flying: latest?.flyingAfter ?? !!target.unit.flying,
       x: target.x + dodge.x,
@@ -925,6 +929,7 @@ const MapCombat = (() => {
           hp: (lanes.length ? state?.hp ?? initialHp.get(unit.id) : effect?.hp) ?? visual.hp,
           shield: (lanes.length ? state?.shield ?? initialShield.get(unit.id) : effect?.shield) ?? visual.shield,
           en: (lanes.length ? state?.en ?? initialEn.get(unit.id) : undefined) ?? visual.en,
+          gnFieldHp: Rules.modelOf(visual).gnField ? ((lanes.length ? state?.iFieldHp ?? initialIField.get(unit.id) : undefined) ?? visual.gnFieldHp) : undefined,
           iFieldHp: (lanes.length ? state?.iFieldHp ?? initialIField.get(unit.id) : undefined) ?? visual.iFieldHp,
           model: effect?.model ?? unit.model,
           mapDying: effect?.keepVisible,

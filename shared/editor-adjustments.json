@@ -67,7 +67,18 @@
       "/weapons/ZAFT_ZGMF_1017_LBR/hit": -20
     },
     "GAT_X103": {
-      "/weapons/OMNI_GAT_X103_BR_HyperSniper/max": 1
+      "/weapons/OMNI_GAT_X103_BR_HyperSniper/max": 1,
+      "/stats/hp": -4000,
+      "/stats/cost": 100,
+      "/weapons/OMNI_GAT_X103_BR_HyperSniper/maxUsesPerTurn": 1,
+      "/weapons/OMNI_GAT_X103_AntiArmorShotgun/attackRounds": -1,
+      "/weapons/OMNI_GAT_X103_AntiArmorShotgun/maxUsesPerTurn": 1,
+      "/weapons/OMNI_GAT_X103_MS/maxUsesPerTurn": 1,
+      "/weapons/OMNI_GAT_X103_MS_L/maxUsesPerTurn": 1,
+      "/weapons/OMNI_GAT_X103_BR/attackRounds": -1,
+      "/weapons/OMNI_GAT_X103_BR/maxUsesPerTurn": 1,
+      "/weapons/OMNI_GAT_X103_Railgun/maxUsesPerTurn": 1,
+      "/weapons/Common_DoubleVulcan_MS/maxUsesPerTurn": 1
     },
     "ZGMF_515": {
       "/weapons/ZAFT_ZGMF_515_Minigun/attackRounds": -1,
@@ -75,13 +86,11 @@
     },
     "ZGMF_LRR704B": {
       "/stats/cost": 25,
-      "/weapons/ZGMF_LRR704B_LBR_Sniper_Aim/max": 3,
-      "/weapons/ZGMF_LRR704B_LBR_Sniper_Aim/damagePerShot": 1406.25,
-      "/weapons/ZGMF_LRR704B_LBR_Sniper_Aim/damageComponents/beam": 937.5,
-      "/weapons/ZGMF_LRR704B_LBR_Sniper_Aim/damageComponents/beamAP": 468.75
+      "/weapons/ZGMF_LRR704B_LBR_Sniper_Aim/max": 3
     },
     "GAT_X207": {
-      "/stats/hp": -2500
+      "/stats/hp": -6250,
+      "/stats/cost": 100
     },
     "MarseilleIIIClass": {
       "/stats/cost": -250
@@ -147,8 +156,8 @@
       "/stats/move": 2
     },
     "MS_06K": {
-      "/weapons/Common_Cannon_AntiAir/damagePerShot": 937.5,
-      "/weapons/Common_Cannon_AntiAir/damageComponents/shell": 937.5
+      "/weapons/Common_Cannon_AntiAir/damagePerShot": 984.375,
+      "/weapons/Common_Cannon_AntiAir/damageComponents/shell": 984.375
     },
     "MS_06JK": {
       "/weapons/ZN_MS_06JK_Gatling/damagePerShot": -12.5,
@@ -158,40 +167,518 @@
     },
     "RX_78_2_ACE": {
       "/stats/cost": -25,
-      "/weapons/Common_Push_A/damagePerShot": -2148.046875,
-      "/weapons/Common_Push_A/damageComponents/melee": -1074.0234375,
-      "/weapons/Common_Push_A/damageComponents/meleeShell": -1074.0234375,
-      "/weapons/EF_RX_78_2_BR/damagePerShot": -4626.5625,
-      "/weapons/EF_RX_78_2_BR/damageComponents/beam": -4626.5625,
-      "/weapons/EF_BeamSaber_AF_Fast_A/damagePerShot": -2864.0625,
-      "/weapons/EF_BeamSaber_AF_Fast_A/damageComponents/melee": -1432.03125,
-      "/weapons/EF_BeamSaber_AF_Fast_A/damageComponents/meleeBeam": -1432.03125,
-      "/weapons/EF_HypeBazooka_ACE/damagePerShot": -4053.75,
-      "/weapons/EF_HypeBazooka_ACE/damageComponents/shell": -4053.75,
-      "/weapons/EF_SHM_ACE/damagePerShot": -8525,
-      "/weapons/EF_SHM_ACE/damageComponents/melee": -4275,
-      "/weapons/EF_SHM_ACE/damageComponents/meleeShell": -4250,
-      "/weapons/Common_DoubleVulcan_MS/damagePerShot": -81.62578125,
-      "/weapons/Common_DoubleVulcan_MS/damageComponents/shell": -74.35546875,
-      "/weapons/Common_DoubleVulcan_MS/damageComponents/shellAP": -7.2703125
+      "/weapons/Common_Push_A/damagePerShot": -1770.99609375,
+      "/weapons/Common_Push_A/damageComponents/melee": -885.498046875,
+      "/weapons/Common_Push_A/damageComponents/meleeShell": -885.498046875,
+      "/weapons/EF_RX_78_2_BR/damagePerShot": -3814.453125,
+      "/weapons/EF_RX_78_2_BR/damageComponents/beam": -3814.453125,
+      "/weapons/EF_BeamSaber_AF_Fast_A/damagePerShot": -2361.328125,
+      "/weapons/EF_BeamSaber_AF_Fast_A/damageComponents/melee": -1180.6640625,
+      "/weapons/EF_BeamSaber_AF_Fast_A/damageComponents/meleeBeam": -1180.6640625,
+      "/weapons/EF_HypeBazooka_ACE/damagePerShot": -3342.1875,
+      "/weapons/EF_HypeBazooka_ACE/damageComponents/shell": -3342.1875,
+      "/weapons/EF_SHM_ACE/damagePerShot": -6906.25,
+      "/weapons/EF_SHM_ACE/damageComponents/melee": -3468.75,
+      "/weapons/EF_SHM_ACE/damageComponents/meleeShell": -3437.5,
+      "/weapons/Common_DoubleVulcan_MS/damagePerShot": -67.2978515625,
+      "/weapons/Common_DoubleVulcan_MS/damageComponents/shell": -61.3037109375,
+      "/weapons/Common_DoubleVulcan_MS/damageComponents/shellAP": -5.994140625
     },
     "MS_05SP": {
       "/stats/cost": 150
     },
     "G_Fighter": {
-      "/weapons/Common_DoubleMS_G_Fighter/damagePerShot": 100,
-      "/weapons/Common_DoubleMS_G_Fighter/damageComponents/shell": 100,
-      "/weapons/Common_DoubleMS_G_Fighter_L/damagePerShot": 100,
-      "/weapons/Common_DoubleMS_G_Fighter_L/damageComponents/shell": 100,
-      "/weapons/EF_G_Fighter_BR/damagePerShot": -1975,
-      "/weapons/EF_G_Fighter_BR/damageComponents/beam": -1975,
-      "/weapons/EF_G_Fighter_BR_R/damagePerShot": -1975,
-      "/weapons/EF_G_Fighter_BR_R/damageComponents/beam": -1975,
+      "/weapons/Common_DoubleMS_G_Fighter/damagePerShot": 350,
+      "/weapons/Common_DoubleMS_G_Fighter/damageComponents/shell": 350,
+      "/weapons/Common_DoubleMS_G_Fighter_L/damagePerShot": 350,
+      "/weapons/Common_DoubleMS_G_Fighter_L/damageComponents/shell": 350,
+      "/weapons/EF_G_Fighter_BR/damagePerShot": -1343.75,
+      "/weapons/EF_G_Fighter_BR/damageComponents/beam": -1343.75,
+      "/weapons/EF_G_Fighter_BR_R/damagePerShot": -1343.75,
+      "/weapons/EF_G_Fighter_BR_R/damageComponents/beam": -1343.75,
       "/stats/cost": 150
     },
     "G_Bull_Easy": {
-      "/weapons/EF_G_Bull_Easy_BeamGun/damagePerShot": -950,
-      "/weapons/EF_G_Bull_Easy_BeamGun/damageComponents/beam": -950
+      "/weapons/EF_G_Bull_Easy_BeamGun/damagePerShot": -437.5,
+      "/weapons/EF_G_Bull_Easy_BeamGun/damageComponents/beam": -437.5
+    },
+    "RGM_79F": {
+      "/stats/cost": 100,
+      "/weapons/EF_RailBazooka/attackRounds": -1,
+      "/weapons/EF_RailBazooka/maxUsesPerTurn": 1
+    },
+    "GAT_X105": {
+      "/stats/hp": -4650,
+      "/stats/cost": -50,
+      "/weaponKits/0/cost": 150
+    },
+    "FX_550": {
+      "/stats/cost": 25,
+      "/weapons/OMNI_GAT_X105_Launcher/min": 2,
+      "/weapons/OMNI_GAT_X105_Launcher/max": 3,
+      "/weapons/OMNI_GAT_X105_Launcher/hit": -5,
+      "/weapons/OMNI_GAT_X105_Launcher/damagePerShot": -2500,
+      "/weapons/OMNI_GAT_X105_Launcher/damageComponents/beam": -1048.951048951,
+      "/weapons/OMNI_GAT_X105_Launcher/damageComponents/beamAP": -1451.048951049
+    },
+    "GAT_X102": {
+      "/stats/hp": -4400,
+      "/stats/cost": 75,
+      "/weaponKits/0/cost": 25
+    },
+    "GAT_X102_AS": {
+      "/stats/hp": -4700,
+      "/stats/cost": 75
+    },
+    "GAT_X303": {
+      "/stats/hp": -4300,
+      "/stats/cost": 100
+    },
+    "GAT_X105_A": {
+      "/stats/hp": -4650,
+      "/stats/cost": -50,
+      "/weaponKits/0/cost": -50,
+      "/weaponKits/1/cost": -25
+    },
+    "GAT_X105_L": {
+      "/stats/hp": -4650,
+      "/stats/cost": -50,
+      "/weapons/OMNI_GAT_X105_Launcher/min": 2,
+      "/weapons/OMNI_GAT_X105_Launcher/max": 3,
+      "/weapons/OMNI_GAT_X105_Launcher/hit": -5,
+      "/weapons/OMNI_GAT_X105_Launcher/damagePerShot": -2500,
+      "/weapons/OMNI_GAT_X105_Launcher/damageComponents/beam": -1048.951048951,
+      "/weapons/OMNI_GAT_X105_Launcher/damageComponents/beamAP": -1451.048951049,
+      "/weapons/OMNI_GAT_X105_L_MG/attackRounds": -1,
+      "/weapons/OMNI_GAT_X105_L_MG/maxUsesPerTurn": 1
+    },
+    "GAT_X105_S": {
+      "/stats/hp": -4650,
+      "/stats/cost": -50
+    },
+    "GAT_X303_MA": {
+      "/stats/hp": -4300,
+      "/stats/cost": 100
+    },
+    "GN_001": {
+      "/stats/cost": 250,
+      "/stats/en": 0,
+      "/stats/move": 0,
+      "/stats/speed": 50,
+      "/stats/mobility": -45,
+      "/stats/accuracy": -25,
+      "/stats/partStructuralStrength": 45,
+      "/stats/sensors/sight": 2,
+      "/stats/sensors/radar": 2,
+      "/stats/gnField/capacity": 7499,
+      "/stats/gnField/recoveryPercent": 5,
+      "/stats/solarFurnace/enRecoveryPercent": 5,
+      "/attackBonuses/melee": 25,
+      "/attackBonuses/shooting": 5,
+      "/defenses/beam/percent": 15,
+      "/defenses/beam/flat": 600,
+      "/defenses/shell/percent": 10,
+      "/defenses/shell/flat": 600,
+      "/defenses/melee/percent": 0,
+      "/defenses/melee/flat": 600,
+      "/weapons/CB_GN_001_BG/min": 0,
+      "/weapons/CB_GN_001_BG/max": 0,
+      "/weapons/CB_GN_001_BG/en": 75,
+      "/weapons/CB_GN_001_BG/attackRounds": 0,
+      "/weapons/CB_GN_001_BG/damageComponents/beam": -368.75,
+      "/weapons/CB_GN_001_GNArmGun/min": 0,
+      "/weapons/CB_GN_001_GNArmGun/max": 0,
+      "/weapons/CB_GN_001_GNArmGun/en": 35,
+      "/weapons/CB_GN_001_GNArmGun/attackRounds": 0,
+      "/weapons/CB_GN_001_GNArmGun/damageComponents/beam": 31.25
+    },
+    "GN_002": {
+      "/stats/cost": 250,
+      "/stats/en": 0,
+      "/stats/move": 0,
+      "/stats/speed": 25,
+      "/stats/mobility": -25,
+      "/stats/accuracy": -25,
+      "/stats/sensors/sight": 3,
+      "/stats/sensors/radar": 4,
+      "/stats/partStructuralStrength": 40,
+      "/attackBonuses/melee": 15,
+      "/attackBonuses/shooting": 20,
+      "/stats/gnField/capacity": 7499,
+      "/stats/gnField/recoveryPercent": 5,
+      "/stats/solarFurnace/enRecoveryPercent": 5,
+      "/defenses/beam/percent": 5,
+      "/defenses/beam/flat": 400,
+      "/defenses/shell/percent": 5,
+      "/defenses/shell/flat": 400,
+      "/defenses/melee/percent": 10,
+      "/defenses/melee/flat": 400,
+      "/weapons/CB_GN_002_BSR/min": 0,
+      "/weapons/CB_GN_002_BSR/max": 1,
+      "/weapons/CB_GN_002_BSR/en": 75,
+      "/weapons/CB_GN_002_BSR/attackRounds": 0,
+      "/weapons/CB_GN_002_BSR/damageComponents/beamAP": 4453.125,
+      "/weapons/CB_GN_002_BG_Double/min": 0,
+      "/weapons/CB_GN_002_BG_Double/max": 0,
+      "/weapons/CB_GN_002_BG_Double/en": 35,
+      "/weapons/CB_GN_002_BG_Double/attackRounds": -1,
+      "/weapons/CB_GN_002_BG_Double/damageComponents/beam": 650
+    },
+    "GN_003": {
+      "/stats/cost": 250,
+      "/stats/en": 0,
+      "/stats/move": -1,
+      "/stats/speed": 60,
+      "/stats/mobility": -35,
+      "/stats/accuracy": -20,
+      "/stats/partStructuralStrength": 35,
+      "/stats/sensors/sight": 2,
+      "/stats/sensors/radar": 2,
+      "/stats/gnField/capacity": 7499,
+      "/stats/gnField/recoveryPercent": 5,
+      "/stats/solarFurnace/enRecoveryPercent": 5,
+      "/attackBonuses/melee": 15,
+      "/attackBonuses/shooting": 15,
+      "/defenses/beam/percent": 0,
+      "/defenses/beam/flat": 400,
+      "/defenses/shell/percent": 0,
+      "/defenses/shell/flat": 400,
+      "/defenses/melee/percent": 5,
+      "/defenses/melee/flat": 400,
+      "/weapons/CB_GN_003_BMG/min": 0,
+      "/weapons/CB_GN_003_BMG/max": 0,
+      "/weapons/CB_GN_003_BMG/en": 75,
+      "/weapons/CB_GN_003_BMG/attackRounds": 1,
+      "/weapons/CB_GN_003_BMG/damageComponents/beam": 60,
+      "/weapons/CB_GN_003_Combo/hit": -20,
+      "/weapons/Common_ShieldAttack_BL/min": 0,
+      "/weapons/Common_ShieldAttack_BL/max": 0,
+      "/weapons/Common_ShieldAttack_BL/en": 0,
+      "/weapons/Common_ShieldAttack_BL/attackRounds": 0,
+      "/weapons/Common_ShieldAttack_BL/damageComponents/melee": -375,
+      "/weapons/Common_ShieldAttack_BL/damageComponents/meleeShell": -375
+    },
+    "GN_003_MA": {
+      "/stats/cost": 250,
+      "/stats/en": 0,
+      "/stats/move": -1,
+      "/stats/speed": 60,
+      "/stats/mobility": -35,
+      "/stats/accuracy": -20,
+      "/stats/partStructuralStrength": 35,
+      "/stats/sensors/sight": 2,
+      "/stats/sensors/radar": 2,
+      "/stats/gnField/capacity": 7499,
+      "/stats/gnField/recoveryPercent": 5,
+      "/stats/solarFurnace/enRecoveryPercent": 5,
+      "/attackBonuses/melee": 15,
+      "/attackBonuses/shooting": 15,
+      "/defenses/beam/percent": 7,
+      "/defenses/beam/flat": 400,
+      "/defenses/shell/percent": 10,
+      "/defenses/shell/flat": 400,
+      "/defenses/melee/percent": 12,
+      "/defenses/melee/flat": 400,
+      "/defenses/dp/percent": 10,
+      "/defenses/dp/flat": 0,
+      "/defenses/sp/percent": 10,
+      "/defenses/sp/flat": 0,
+      "/weapons/CB_GN_003_BMG/min": 0,
+      "/weapons/CB_GN_003_BMG/max": 0,
+      "/weapons/CB_GN_003_BMG/en": 75,
+      "/weapons/CB_GN_003_BMG/attackRounds": 1,
+      "/weapons/CB_GN_003_BMG/damageComponents/beam": 60
+    },
+    "GN_005": {
+      "/stats/cost": 250,
+      "/skills/0/damageComponents/beamAP": 34425,
+      "/stats/en": 500,
+      "/stats/move": -1,
+      "/stats/speed": 15,
+      "/stats/mobility": -5,
+      "/stats/accuracy": 5,
+      "/stats/sensors/sight": 2,
+      "/stats/sensors/radar": 2,
+      "/stats/partStructuralStrength": 50,
+      "/attackBonuses/melee": 10,
+      "/attackBonuses/shooting": 20,
+      "/stats/gnField/capacity": 9999,
+      "/stats/gnField/recoveryPercent": 5,
+      "/stats/solarFurnace/enRecoveryPercent": 5,
+      "/defenses/beam/percent": 5,
+      "/defenses/beam/flat": 500,
+      "/defenses/shell/percent": 5,
+      "/defenses/shell/flat": 500,
+      "/defenses/melee/percent": 10,
+      "/defenses/melee/flat": 500,
+      "/weapons/CB_GN_005_GNBazooka/min": 2,
+      "/weapons/CB_GN_005_GNBazooka/max": 2,
+      "/weapons/CB_GN_005_GNBazooka/en": 100,
+      "/weapons/CB_GN_005_GNBazooka/attackRounds": 0,
+      "/weapons/CB_GN_005_GNBazooka/damageComponents/beamAP": 17250,
+      "/weapons/CB_GN_005_BeamCannon/min": 0,
+      "/weapons/CB_GN_005_BeamCannon/max": -2,
+      "/weapons/CB_GN_005_BeamCannon/en": 100,
+      "/weapons/CB_GN_005_BeamCannon/attackRounds": -1,
+      "/weapons/CB_GN_005_BeamCannon/damageComponents/beamAP": 2143.75,
+      "/stats/hp": 10000
+    },
+    "SalamisClass": {
+      "/stats/cost": -125
+    },
+    "BurkeClass": {
+      "/stats/cost": -50
+    },
+    "U_Type_Submarine": {
+      "/stats/cost": -125
+    },
+    "HimalayaClass": {
+      "/stats/cost": -250
+    },
+    "ColumbusClass": {},
+    "M_Type_Submarine": {
+      "/stats/cost": -250
+    },
+    "MiniTrayClass": {
+      "/stats/cost": -125
+    },
+    "BigTrayClass": {
+      "/stats/cost": -250
+    },
+    "MagellanClass": {
+      "/stats/cost": -250
+    },
+    "PegasusClass": {
+      "/stats/cost": -375
+    },
+    "MagellanClass_Green": {
+      "/stats/cost": -300
+    },
+    "HeavyForkClass": {
+      "/stats/cost": -300
+    },
+    "U_Type_Submarine_ZEON": {
+      "/stats/cost": -125
+    },
+    "MusaiClass": {
+      "/stats/cost": -125
+    },
+    "PapuaClass": {},
+    "M_Type_Submarine_ZEON": {
+      "/stats/cost": -250
+    },
+    "FalmerClass": {
+      "/stats/cost": -150
+    },
+    "DabudeClass": {
+      "/stats/cost": -250
+    },
+    "ChivvayClass": {
+      "/stats/cost": -250
+    },
+    "GawClass": {
+      "/stats/cost": -175
+    },
+    "GallopClass": {
+      "/stats/cost": -125
+    },
+    "ZanzibarClass": {
+      "/stats/cost": -375
+    },
+    "GwazineClass": {
+      "/stats/cost": -375
+    },
+    "JotunheimClass": {
+      "/stats/cost": -125
+    },
+    "SalamisClassLateType": {
+      "/stats/cost": -175
+    },
+    "MagellanClassLateType": {
+      "/stats/cost": -300
+    },
+    "GrayPhantomClass": {
+      "/stats/cost": -475
+    },
+    "AlbionClass": {
+      "/stats/cost": -550
+    },
+    "BirminghamClass": {
+      "/stats/cost": -500
+    },
+    "MagellanClassKai": {
+      "/stats/cost": -375
+    },
+    "SalamisClassKai": {
+      "/stats/cost": -225
+    },
+    "MusaiClassLateType": {
+      "/stats/cost": -175
+    },
+    "ChivvayClassKai": {
+      "/stats/cost": -300
+    },
+    "ZanzibarClassKai": {
+      "/stats/cost": -475
+    },
+    "GwanzanClass": {
+      "/stats/cost": -500
+    },
+    "ZanzibarClassKai_0083": {
+      "/stats/cost": -550
+    },
+    "MusaiClassLateType_0083": {
+      "/stats/cost": -225
+    },
+    "BlancRival": {
+      "/stats/cost": -525
+    },
+    "Thoroughbred": {
+      "/stats/cost": -500
+    },
+    "WhiteBase": {
+      "/stats/cost": -425
+    },
+    "GrayPhantomClass_0087": {
+      "/stats/cost": -475
+    },
+    "SalamisClassKai_0087_AEUG": {
+      "/stats/cost": -300
+    },
+    "IrishClass": {
+      "/stats/cost": -550
+    },
+    "GarudaClass_AEUG": {
+      "/stats/cost": -625
+    },
+    "ArgamaClass": {
+      "/stats/cost": -925
+    },
+    "SalamisClassKai_0087_TITANS": {
+      "/stats/cost": -300
+    },
+    "AlexandriaClass": {
+      "/stats/cost": -625
+    },
+    "GarudaClass_TITANS": {
+      "/stats/cost": -625
+    },
+    "DogosseGiarClass": {
+      "/stats/cost": -925
+    },
+    "ZanzibarClassKai_0087": {
+      "/stats/cost": -475
+    },
+    "MusaiClassFinalType": {
+      "/stats/cost": -275
+    },
+    "GwanbanClass": {
+      "/stats/cost": -550
+    },
+    "GarudaClass_NEO_ZEON": {
+      "/stats/cost": -625
+    },
+    "GwadanClass": {
+      "/stats/cost": -925
+    },
+    "AgamemnonClass": {
+      "/stats/cost": -250
+    },
+    "ArchangelClass": {
+      "/stats/cost": -550
+    },
+    "DrakeClass": {
+      "/stats/cost": -100
+    },
+    "LaurasiaClass": {
+      "/stats/cost": -250
+    },
+    "NazcaClass": {
+      "/stats/cost": -125
+    },
+    "NelsonClass": {
+      "/stats/cost": -125
+    },
+    "SalamisClassKai_0093_EFSF": {
+      "/stats/cost": -300
+    },
+    "MusaiClassFinalType_0093_NZN": {
+      "/stats/cost": -275
+    },
+    "EndraClass": {
+      "/stats/cost": -550
+    },
+    "NahelArgamaClass": {
+      "/stats/cost": -1125
+    },
+    "RGM_79_TB": {
+      "/shield/hp": 4000,
+      "/shield/blockChance": 0.2,
+      "/shield/coverage": 0.25,
+      "/stats/cost": 150,
+      "/weapons/EF_FA_78_1_BR_TB_GM/damageComponents/beam": 2125,
+      "/weapons/EF_FA_78_1_BR_TB_GM/min": 0,
+      "/weapons/EF_FA_78_1_BR_TB_GM/max": 1,
+      "/weapons/EF_FA_78_1_BR_TB_GM/attackRounds": 0,
+      "/weapons/EF_BeamSprayGun/damageComponents/beam": -68.75,
+      "/weapons/EF_BeamSprayGun/min": 0,
+      "/weapons/EF_BeamSprayGun/max": 0,
+      "/weapons/EF_BeamSprayGun/attackRounds": -1
+    },
+    "FA_78_1_TB": {
+      "/shield/hp": 24000,
+      "/shield/blockChance": 0.2,
+      "/shield/coverage": 0.25,
+      "/weapons/EF_GroundTypeMissileLauncher_FA_78_1_TB/damageComponents/shell": -3450,
+      "/stats/cost": 50,
+      "/weapons/EF_FA_78_1_BR_TB/damageComponents/beam": -843.75,
+      "/weapons/EF_BeamSaber_Lv2/damageComponents/melee": -975,
+      "/weapons/EF_BeamSaber_Lv2/damageComponents/meleeBeam": -487.5
+    },
+    "FA_78_1_TB_WeaponModeB": {
+      "/shield/hp": 24000,
+      "/shield/blockChance": 0.2,
+      "/shield/coverage": 0.25,
+      "/stats/speed": 0,
+      "/stats/move": 1,
+      "/weapons/EF_FA_78_1_TB_BeamCannon/damageComponents/beamAP": 6625,
+      "/weapons/EF_FA_78_1_TB_BeamCannon/en": 70,
+      "/weapons/EF_FA_78_1_TB_BackpackMS/en": 100,
+      "/weapons/EF_FA_78_1_TB_BackpackMS/hit": -20,
+      "/stats/cost": 50,
+      "/weapons/EF_FA_78_1_TB_BackpackMS/damageComponents/shell": -450,
+      "/weapons/Common_Cqb/damageComponents/melee": -411.328125,
+      "/weapons/Common_Cqb/damageComponents/meleeShell": -137.109375
+    },
+    "FA_78_1_TB_NA": {
+      "/shield/hp": 0,
+      "/shield/blockChance": 0,
+      "/shield/coverage": 0.25,
+      "/stats/cost": 50,
+      "/weapons/EF_HeadVulcan_Lv2/damageComponents/shell": -27.7875,
+      "/weapons/EF_BeamSaber_Lv2/damageComponents/melee": -292.5,
+      "/weapons/EF_BeamSaber_Lv2/damageComponents/meleeBeam": -146.25,
+      "/weapons/EF_BeamSaber_Lv2/attack/steps/7/damageComponents/melee": -390,
+      "/weapons/EF_BeamSaber_Lv2/attack/steps/7/damageComponents/meleeShell": -195
+    },
+    "MS_06R_TB": {
+      "/weapons/ZN_BeamBazooka_Lv2/damageComponents/beam": -1018.75,
+      "/stats/cost": 50,
+      "/weapons/ZN_HeatHawk_Lv2/damageComponents/melee": -337.5,
+      "/weapons/ZN_HeatHawk_Lv2/damageComponents/meleeShell": -168.75,
+      "/weapons/ZN_Panzerfaust/damageComponents/shellAP": -840.9375
+    },
+    "MS_06R_TB_WeaponModeB": {
+      "/weapons/ZN_360mmBazooka_D_TB_Lv2/damageComponents/shell": 831.25,
+      "/weapons/ZN_360mmBazooka_D_TB_Lv2/attackRounds": 0,
+      "/weapons/ZN_360mmBazooka_D_TB_Lv2/en": 45,
+      "/stats/cost": 50,
+      "/weapons/ZN_HeatHawk_Lv2/damageComponents/melee": -337.5,
+      "/weapons/ZN_HeatHawk_Lv2/damageComponents/meleeShell": -168.75,
+      "/weapons/ZN_120mmMG_D_TB_Lv2/damageComponents/shell": -54.375
+    },
+    "MS_06F_TB": {
+      "/stats/cost": 125
     }
   },
   "weapons": {
@@ -315,5 +802,247 @@
       "/damageComponents/meleeBeam": 1312.5
     }
   },
-  "prices": {}
+  "prices": {
+    "SalamisClass": {
+      "/money": -500,
+      "/supplies": -1125
+    },
+    "BurkeClass": {
+      "/money": -150,
+      "/supplies": -300
+    },
+    "U_Type_Submarine": {
+      "/money": -375,
+      "/supplies": -750
+    },
+    "HimalayaClass": {
+      "/money": -625,
+      "/supplies": -1250
+    },
+    "ColumbusClass": {},
+    "M_Type_Submarine": {
+      "/money": -625,
+      "/supplies": -1250
+    },
+    "MiniTrayClass": {
+      "/money": -625,
+      "/supplies": -875
+    },
+    "BigTrayClass": {
+      "/money": -750,
+      "/supplies": -1500
+    },
+    "MagellanClass": {
+      "/money": -1125,
+      "/supplies": -2250
+    },
+    "PegasusClass": {
+      "/money": -1875,
+      "/supplies": -3375
+    },
+    "MagellanClass_Green": {
+      "/money": -1500,
+      "/supplies": -2750
+    },
+    "HeavyForkClass": {
+      "/money": -875,
+      "/supplies": -1875
+    },
+    "U_Type_Submarine_ZEON": {
+      "/money": -375,
+      "/supplies": -750
+    },
+    "MusaiClass": {
+      "/money": -500,
+      "/supplies": -1125
+    },
+    "PapuaClass": {},
+    "M_Type_Submarine_ZEON": {
+      "/money": -625,
+      "/supplies": -1250
+    },
+    "FalmerClass": {
+      "/money": -750,
+      "/supplies": -1500
+    },
+    "DabudeClass": {
+      "/money": -750,
+      "/supplies": -1250
+    },
+    "ChivvayClass": {
+      "/money": -1125,
+      "/supplies": -2187
+    },
+    "GawClass": {
+      "/money": -625,
+      "/supplies": -875
+    },
+    "GallopClass": {
+      "/money": -625,
+      "/supplies": -875
+    },
+    "ZanzibarClass": {
+      "/money": -1875,
+      "/supplies": -3125
+    },
+    "GwazineClass": {
+      "/money": -1750,
+      "/supplies": -3625
+    },
+    "JotunheimClass": {
+      "/money": -500,
+      "/supplies": -1375
+    },
+    "SalamisClassLateType": {
+      "/money": -625,
+      "/supplies": -1375
+    },
+    "ColumbusClassKai": {},
+    "MagellanClassLateType": {
+      "/money": -1250,
+      "/supplies": -2750
+    },
+    "GrayPhantomClass": {
+      "/money": -2000,
+      "/supplies": -3875
+    },
+    "AlbionClass": {
+      "/money": -2250,
+      "/supplies": -4375
+    },
+    "BirminghamClass": {
+      "/money": -1875,
+      "/supplies": -3875
+    },
+    "MagellanClassKai": {
+      "/money": -1500,
+      "/supplies": -3000
+    },
+    "SalamisClassKai": {
+      "/money": -750,
+      "/supplies": -1375
+    },
+    "MusaiClassLateType": {
+      "/money": -625,
+      "/supplies": -1250
+    },
+    "PazockClass": {},
+    "ChivvayClassKai": {
+      "/money": -1250,
+      "/supplies": -2750
+    },
+    "ZanzibarClassKai": {
+      "/money": -2000,
+      "/supplies": -3750
+    },
+    "GwanzanClass": {
+      "/money": -1875,
+      "/supplies": -4125
+    },
+    "ZanzibarClassKai_0083": {
+      "/money": -2250,
+      "/supplies": -4250
+    },
+    "MusaiClassLateType_0083": {
+      "/money": -750,
+      "/supplies": -1250
+    },
+    "GrayPhantomClass_0087": {
+      "/money": -1750,
+      "/supplies": -3625
+    },
+    "SalamisClassKai_0087_AEUG": {
+      "/money": -1000,
+      "/supplies": -1312
+    },
+    "IrishClass": {
+      "/money": -1750,
+      "/supplies": -3000
+    },
+    "GarudaClass_AEUG": {
+      "/money": -1500,
+      "/supplies": -3000
+    },
+    "ArgamaClass": {
+      "/money": -3625,
+      "/supplies": -6250
+    },
+    "SalamisClassKai_0087_TITANS": {
+      "/money": -1000,
+      "/supplies": -1312
+    },
+    "AlexandriaClass": {
+      "/money": -1875,
+      "/supplies": -3625
+    },
+    "GarudaClass_TITANS": {
+      "/money": -1500,
+      "/supplies": -3000
+    },
+    "DogosseGiarClass": {
+      "/money": -4125,
+      "/supplies": -7000
+    },
+    "ZanzibarClassKai_0087": {
+      "/money": -1750,
+      "/supplies": -3625
+    },
+    "MusaiClassFinalType": {
+      "/money": -937,
+      "/supplies": -1187
+    },
+    "GwanbanClass": {
+      "/money": -1875,
+      "/supplies": -3125
+    },
+    "GarudaClass_NEO_ZEON": {
+      "/money": -1500,
+      "/supplies": -3000
+    },
+    "GwadanClass": {
+      "/money": -4125,
+      "/supplies": -7500
+    },
+    "AgamemnonClass": {
+      "/money": -1125,
+      "/supplies": -2250
+    },
+    "ArchangelClass": {
+      "/money": -2250,
+      "/supplies": -3750
+    },
+    "DrakeClass": {
+      "/money": -500,
+      "/supplies": -875
+    },
+    "LaurasiaClass": {
+      "/money": -1125,
+      "/supplies": -2250
+    },
+    "MarseilleIIIClass": {},
+    "NazcaClass": {
+      "/money": -500,
+      "/supplies": -1125
+    },
+    "NelsonClass": {
+      "/money": -500,
+      "/supplies": -1125
+    },
+    "SalamisClassKai_0093_EFSF": {
+      "/money": -1000,
+      "/supplies": -1312
+    },
+    "MusaiClassFinalType_0093_NZN": {
+      "/money": -937,
+      "/supplies": -1187
+    },
+    "EndraClass": {
+      "/money": -1575,
+      "/supplies": -2700
+    },
+    "NahelArgamaClass": {
+      "/money": -4375,
+      "/supplies": -7500
+    }
+  }
 }

@@ -29,12 +29,14 @@ function createAttackPlanner(rules, randomId) {
       aimCell: last.aimCell,
       weapon: last.weapon,
       weapons: last.weapons,
+      combatMode: last.combatMode,
       attacks: orders.map((order) => ({
         target: order.target,
         targetCell: order.targetCell,
         aimCell: order.aimCell,
         weapon: order.weapon,
         weapons: order.weapons,
+        combatMode: order.combatMode,
         order: order.order,
       })),
     };
@@ -102,7 +104,11 @@ function createAttackPlanner(rules, randomId) {
     manualPlans = null,
   ) {
     if (manualPlans !== null) throw Error("当前模式不支持手动选择武器");
-    if (!["melee", "shooting"].includes(combatMode)) throw Error("无效的交战方式");
+    if (!["melee", "shooting", "charge"].includes(combatMode)) throw Error("无效的交战方式");
+    if (combatMode === "charge" && (skillWeapon(attacker, weapon) ||
+        !rules.squadAttackMembers(room.game, attacker).some(unit =>
+          rules.squadMembers(room.game, target).some(enemy => rules.dist(unit, enemy) === 1))))
+      throw Error("突击仅能对相邻敌人使用");
     const members = single || skillWeapon(attacker, weapon) ? [attacker] : rules.squadAttackMembers(room.game, attacker)
       .filter(unit => !unit.embarked?.exposed || !unit.acted || unit.plan || unit.squadOrder);
     if (members.length === 1) return planOne(room, attacker, target, weapon, seat, combatMode);
@@ -529,7 +535,7 @@ function createAttackPlanner(rules, randomId) {
       }
       const plan = rules.firePlan(room.game, reserved, attacker, {
         counter: true,
-        combatMode: "melee",
+        combatMode: rules.counterCombatMode(pending, counterTargetId),
       });
       counterIds.splice(0, counterIds.length, ...plan.weapons.map((w) => w.id));
       if (!counterIds.length) {
@@ -602,7 +608,7 @@ function createAttackPlanner(rules, randomId) {
           (choice?.weaponIds === undefined &&
             !rules.firePlan(staged.game, defender, attacker, {
               counter: true,
-              combatMode: "melee",
+              combatMode: rules.counterCombatMode(request, targetId),
             }).weapons.length))
           ? "defend"
           : requestedResponse;

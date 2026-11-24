@@ -316,6 +316,20 @@ const AttackControls = (() => {
   function reset() {
     current = null;
   }
+  function cycleCombatMode() {
+    const modes = ["melee", "shooting", "charge"];
+    squadCombatMode = modes[(modes.indexOf(squadCombatMode) + 1) % modes.length];
+    if (current) {
+      current.cache = {};
+      const unit = getUnit(current.unitId), target = getUnit(current.targetId);
+      if (!canTarget(unit, target)) {
+        reset();
+        mode = "attack-target";
+      }
+    }
+    update();
+  }
+  const combatModeLabel = () => ({melee:"格斗战",shooting:"射击战",charge:"突击"})[squadCombatMode];
   function draft(unit) {
     if (current && (current.round !== game.round || current.session !== session)) current = null;
     return current?.unitId === unit?.id ? current : null;
@@ -365,9 +379,7 @@ const AttackControls = (() => {
       (!target.embarked || target.embarked.exposed === true) &&
       editable(unit) &&
       members(unit).some((member) =>
-        Rules.automaticWeapons(game, member, target).some(
-          (w) => squadCombatMode !== "shooting" || w.type !== "melee",
-        ),
+        Rules.firePlan(game, member, target, {combatMode:squadCombatMode}).weapons.length > 0,
       )
     );
     if (targetQuery && unit && target) {
@@ -387,6 +399,7 @@ const AttackControls = (() => {
     )
       return;
     reset();
+    squadCombatMode = "melee";
     const order=members(unit).flatMap(member=>Rules.attackOrders(member))[0];
     const target=order && getUnit(order.target);
     if(target && canTarget(unit,target)) {choose(unit,target);return;}
@@ -487,6 +500,14 @@ const AttackControls = (() => {
   }
   function render(panel, unit, canCommand) {
     if (current) current.cache = {};
+    const addCombatControl = () => {
+      if (!unit || Rules.squadEligible(unit)) return;
+      const fight = element("button", "", I18n.text(combatModeLabel()));
+      fight.id = "attackCombatMode";
+      fight.disabled = !canCommand;
+      fight.onclick = cycleCombatMode;
+      panel.append(fight);
+    };
     if(unit && hasPlan(unit) && editable(unit) && Net.active) {
       const remove=element("button","","取消攻击计划");
       remove.id="cancelConfirmedAttack";remove.disabled=!canCommand;
@@ -496,6 +517,7 @@ const AttackControls = (() => {
     if (!target || target.hp <= 0) {
       if (current) reset();
       renderSummary(panel, unit);
+      addCombatControl();
       for (const member of unit ? members(unit) : []) {
         const order = Rules.attackOrders(member)[0],
           plannedTarget = order && getUnit(order.target);
@@ -542,13 +564,14 @@ const AttackControls = (() => {
       }
       return;
     }
+    addCombatControl();
     const editor = element("div", "hud-attack-editor");
     editor.id = "attackEditor";
     const heading = element("div", "hud-attack-heading"),
       list = element("section", "hud-attack-planned");
     heading.append(
       element("strong", "", I18n.text("目标：") + targetLabel(target)),
-      element("p", "helper", "按类型轮数自动使用可用武器，不消耗AP；射击结束后进行格斗。"),
+      element("p", "helper", squadCombatMode === "charge" ? "突击：双方跳过射击，直接进行格斗；仅限相邻敌人。" : "按类型轮数自动使用可用武器，不消耗AP；射击结束后进行格斗。"),
     );
     const queue = [];
     for (const member of members(unit)) {
@@ -597,6 +620,8 @@ const AttackControls = (() => {
   return {
     withTargetQuery,
     memberCard,
+    cycleCombatMode,
+    combatModeLabel,
     editable,
     hasPlan,
     cancelPlan,

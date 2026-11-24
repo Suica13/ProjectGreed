@@ -24,6 +24,6 @@ test("RGC-83 kit selector and weapon cards retain their correct names across lan
   }
   const cannons=await page.evaluate(()=>Object.values(UnitModels).flatMap(m=>m.weapons).filter(WeaponClasses.handheldCannon).map(w=>({hit:w.hit,details:WeaponInfo.card(w).textContent})));
   expect(cannons.length).toBeGreaterThan(0);
-  expect(cannons.every(w=>w.hit===70)).toBe(true);
+  expect(cannons.every(w=>w.hit===75)).toBe(true);
   expect(errors).toEqual([]);
 });

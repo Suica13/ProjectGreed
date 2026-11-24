@@ -1,7 +1,7 @@
 "use strict";
 // Compose catalog loadouts after native models are compiled. Keep each variant's
 // own skeleton, effects and combat stats instead of merging incompatible bones.
-function apply(catalog, families) {
+function apply(catalog, families, adjustments = {units:{}}) {
   const byId = new Map(catalog.prefabs.map((p) => [p.id, p]));
   for (const [variant, entry] of Object.entries(families || {})) {
     const base = byId.get(entry.unitId),
@@ -15,7 +15,9 @@ function apply(catalog, families) {
     const [sourceId, model] = best,
       id = base.id + "__" + entry.kitId;
     const sourceKit = source.weaponKits.find(k => k.id === model.kitId);
-    const originalCost = model.cost - base.stats.cost + ((sourceKit?.conversionBaseCost ?? sourceKit?.cost ?? 0) - (sourceKit?.cost ?? 0));
+    // Preserve explicit editor kit deltas while removing/reapplying global kit costs.
+    const kitDelta = adjustments.units[variant]?.["/weaponKits/" + source.weaponKits.indexOf(sourceKit) + "/cost"] || 0;
+    const originalCost = model.cost - base.stats.cost + ((sourceKit?.conversionBaseCost ?? sourceKit?.cost ?? 0) - (sourceKit?.cost ?? 0)) + kitDelta;
     const kit = {
       id: entry.kitId,
       name: source.name,

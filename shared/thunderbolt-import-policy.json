@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "units": {
+    "RGM_79_TB": {
+      "stats": "RGM_79",
+      "handling": "RGM_79",
+      "shield": "RGM_79"
+    },
+    "MS_06F_TB": {
+      "stats": "MS_06F2",
+      "handling": "MS_06F2"
+    },
+    "MS_06R_TB": {
+      "stats": "RX_78_3",
+      "handling": "RX_78_3",
+      "unshielded": true
+    },
+    "MS_06R_TB_WeaponModeB": {
+      "stats": "RX_78_3",
+      "handling": "RX_78_3",
+      "unshielded": true
+    },
+    "FA_78_1_TB": {
+      "stats": "RX_78_3",
+      "handling": "RX_78_3",
+      "shield": "RX_78_3"
+    },
+    "FA_78_1_TB_WeaponModeB": {
+      "stats": "RX_78_3",
+      "handling": "RX_78_3",
+      "shield": "RX_78_3"
+    },
+    "FA_78_1_TB_NA": {
+      "stats": "RX_78_3",
+      "handling": "RX_78_3",
+      "shield": "RX_78_3"
+    }
+  },
+  "weapons": {
+    "EF_BeamSprayGun": [
+      "RGM_79",
+      "EF_BeamSprayGun"
+    ],
+    "EF_FA_78_1_BR_TB_GM": [
+      "RGM_79",
+      "EF_BeamSprayGun"
+    ],
+    "EF_BeamSaber": [
+      "RGM_79",
+      "EF_BeamSaber_A"
+    ],
+    "EF_BeamSaber_Lv2": [
+      "RX_78_3",
+      "EF_BeamSaber_AF_Fast_A"
+    ],
+    "EF_FA_78_1_BR_TB": [
+      "FA_78_1",
+      "EF_FA_78_1_BR"
+    ],
+    "EF_GroundTypeMissileLauncher_FA_78_1_TB": [
+      "FA_78_1",
+      "EF_FA_78_1_MS"
+    ],
+    "EF_FA_78_1_TB_BackpackMS": [
+      "FA_78_1",
+      "EF_FA_78_1_MS"
+    ],
+    "EF_FA_78_1_TB_BeamCannon": [
+      "FA_78_1",
+      "Common_Cannon"
+    ],
+    "EF_HeadVulcan_Lv2": [
+      "RX_78_3",
+      "Common_DoubleVulcan_MS"
+    ],
+    "Common_Cqb": [
+      "RX_78_3",
+      "Common_Push_A"
+    ],
+    "Common_Cqb_Lv2": [
+      "RX_78_3",
+      "Common_Push_A"
+    ],
+    "ZN_270mmBazooka": [
+      "MS_06F2",
+      "ZN_360mmBazooka"
+    ],
+    "ZN_HeatHawk": [
+      "MS_06F2",
+      "ZN_HeatHawk_A"
+    ],
+    "ZN_120mmMG_D_TB": [
+      "MS_06F2",
+      "ZN_120mmMG"
+    ],
+    "ZN_BeamBazooka": [
+      "MS_09R_CharCustom",
+      "ZN_BeamBazooka"
+    ],
+    "ZN_Panzerfaust": [
+      "MS_06F2",
+      "ZN_Panzerfaust"
+    ],
+    "ZN_360mmBazooka_D_TB": [
+      "MS_06R_2",
+      "ZN_360mmBazooka"
+    ]
+  }
+}

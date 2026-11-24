@@ -57,11 +57,11 @@ test('global rewards and intervention rewards stack for currency, research and p
     const state={objectives:Array.from({length:n},()=>({status:'completed'}))};
     const room={settings:{sweepDifficulty:n,sweepEra:'UC_0079_T1'},game:{contract:state}};
     const normal=C.reward(room,G),oldXP=[500,1000,1500,3000,4000,5000][n-1];
-    assert.equal(normal.experience,oldXP*1.25);
-    assert.equal(normal.money,[2500,4000,6000,9000,12000,15000][n-1]); // settlement adds its existing x1.25 once
+    assert.equal(normal.experience,Math.floor(oldXP*1.25*[1,1,1.2,1.3,1.6,1.9][n-1]));
+    assert.equal(normal.money,[2500,4000,6000,9000,12000,15000][n-1]*[1,1,1.2,1.3,1.6,1.9][n-1]); // settlement adds its existing x1.25 once
     state.noAllies=true;const intervention=C.reward(room,G);
     for(const key of ['money','supplies','technology'])assert.equal(intervention[key],normal[key]*1.25);
-    assert.equal(intervention.experience,Math.floor(oldXP*1.5625));
+    assert.equal(intervention.experience,Math.floor(oldXP*1.25*[1,1,1.2,1.3,1.6,1.9][n-1]*1.25));
     state.objectives.forEach(o=>o.status='failed');assert.equal(C.reward(room,G).money,0);
   }
 });
@@ -112,7 +112,7 @@ for(const faction of ['OMNI','ZAFT','NONE'])for(const difficulty of [2,4,6])
     const unit=f.room.game.units.find(u=>u.ownerSeat===0 || u.owner===0),exit=f.room.game.contract.extractions[0];
     assert(unit);Object.assign(unit,{x:exit.x+1,y:exit.y+1,acted:false,moved:false});
     f.act('contract_extract',{unitId:unit.id});assert.deepEqual(f.errors,[]);assert(f.room.economySettled);
-    const award=f.room.economyAwards.find(a=>a.kind==='result'),bonus=1.25*(faction==='NONE'?1.25:1);
+    const award=f.room.economyAwards.find(a=>a.kind==='result'),bonus=1.25*[1,1,1.2,1.3,1.6,1.9][difficulty-1]*(faction==='NONE'?1.25:1);
     assert.equal(award.money,Math.round([2500,4000,6000,9000,12000,15000][difficulty-1]*bonus/25)*25);
     assert.equal(award.supplies,Math.round([3500,6000,8000,11000,15000,20000][difficulty-1]*bonus/25)*25);
   });

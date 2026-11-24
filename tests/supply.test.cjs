@@ -65,7 +65,7 @@ test("grade boundaries award all new reward types with atomic persistence", () =
       assert.equal(JSON.stringify(after.inventory),JSON.stringify(before.inventory));
       assert(!after.licenses[result.unitId]||before.licenses[result.unitId]);
     }else if(result.pluginId)assert.equal(after.pluginInventory[result.pluginId],1);
-    else if(kind!=="item")assert.equal(after[kind]-before[kind],2000);
+    else if(kind!=="item")assert.equal(after[kind]-before[kind],1000);
     else assert.equal(result.quantity,grade==="A"?10:1);
     assert.equal(JSON.stringify(load(after).E.snapshot()),JSON.stringify(after));
   }
@@ -167,9 +167,32 @@ test("ten draws deduct ten tokens once, preserve full-warehouse rewards, and all
   for(let i=0;i<10;i++) rolls.push(i===0?.999:.01,i===0?.4:0,.999999);
   const before=E.snapshot(),results=E.drawSupply(pool,10),after=E.snapshot();
   assert.equal(results.length,10);assert.equal(after.itemInventory["0079t1-token"],90);
-  assert.equal(results[0].quantity,10000);assert.equal(after.money-before.money,10000);
+  assert.equal(results[0].quantity,3000);assert.equal(after.money-before.money,3000);
   assert.equal([...after.storage.units,...after.storage.deliveries].length - [...before.storage.units,...before.storage.deliveries].length,9);
   assert.equal(after.storage.deliveries.length - before.storage.deliveries.length,9);
+});
+
+test('TB and CB pools use independent giftable tokens, exact grade weights and the agreed rental split',()=>{
+ for(const [id,token]of [['thunderbolt','thunderbolt-token'],['celestial-being','celestial-being-token']]){
+  const {E,rolls}=load(profile());
+  E.creditActivity({id:'new-token',matchId:'new-token',money:0,supplies:0,itemInventory:{[token]:100}});
+  const products=E.supplyProducts(id);
+  assert.deepEqual(Array.from(products,g=>g.weight),[5,15,30,50]);
+  assert(Math.abs(products.flatMap(g=>g.rewards).reduce((s,r)=>s+r.chance,0)-100)<1e-10);
+  if(id==='thunderbolt')assert.deepEqual(Array.from(products[1].rewards,r=>r.chance),[7.5,7.5]);
+  for(const g of products)for(const r of g.rewards){
+   if(r.kind==='item')assert.equal(r.itemId,token);
+   if(['money','supplies'].includes(r.kind))assert.deepEqual([r.min,r.max],[1000,3000]);
+   assert(!r.choices.some(id=>id.endsWith('_MA')||id.endsWith('_NA')||id.endsWith('_WeaponModeB')));
+  }
+  for(const [gradeRoll,rewardRoll,grade,uses]of [[0,0,'S',undefined],[.1,.99,'A',20],[.3,.99,'B',10]]){
+   rolls.push(gradeRoll,rewardRoll,0);const result=E.drawSupply(id,1)[0];assert.equal(result.grade,grade);assert.equal(result.uses,uses);
+   const delivery=E.snapshot().storage.deliveries.at(-1);assert.equal(delivery.unitId,result.unitId);assert.equal(delivery.rentalUses,uses);
+  }
+  rolls.push(.9,54/82-.000001);const tokenResult=E.drawSupply(id,1)[0];assert.equal(tokenResult.itemId,token);
+  const saved=E.snapshot(),reload=load(saved).E;assert.equal(reload.snapshot().itemInventory[token],97);
+  assert.equal(reload.snapshot().itemInventory['0079t1-token'],100);
+ }
 });
 test("invalid requests, insufficient tokens and persistence failure leave all rewards and tokens intact", () => {
   const saved=profile();saved.itemInventory["0079t1-token"]=1;

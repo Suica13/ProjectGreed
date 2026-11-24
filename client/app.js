@@ -1021,6 +1021,7 @@ function renderPanel() {
   if (penalty.resistancePenalty)
     effects.push(I18n.text("四肢损毁：抗性降低") + " " + penalty.resistancePenalty + "%");
   if (u.burning) effects.push(I18n.text("燃烧中"));
+  if (m.gnField) partStatus.append(element("p", "helper", `GN立场 ${Math.round(Math.max(0, Rules.gnFieldHP(u))).toLocaleString()} / ${m.gnField.capacity.toLocaleString()}`));
   if (m.iField)
     partStatus.append(
       element(
@@ -1443,9 +1444,10 @@ function mapRanges(chosen, canMove, deploymentSeat, showAttack = false) {
           }
         : member;
       const weapons = Rules.modelOf(member).weapons.filter(
-        (w) => Rules.canUse(member, w) && (squadCombatMode !== "shooting" || w.type !== "melee"),
+        (w) => Rules.canUse(member, w) && (squadCombatMode !== "shooting" || w.type !== "melee") &&
+          (squadCombatMode !== "charge" || w.type === "melee"),
       );
-      const radius = Math.max(0, ...weapons.map((w) => w.max)),
+      const radius = squadCombatMode === "charge" ? 1 : Math.max(0, ...weapons.map((w) => w.max)),
         size = Rules.dimensions(attackOrigin);
       for (
         let y = Math.max(0, attackOrigin.y - radius);
@@ -1461,6 +1463,7 @@ function mapRanges(chosen, canMove, deploymentSeat, showAttack = false) {
           if (
             weapons.some(
               (w) =>
+                (squadCombatMode !== "charge" || Rules.dist(attackOrigin, cell) === 1) &&
                 Rules.inRange(attackOrigin, cell, w) &&
                 Rules.availableStrikes(attackOrigin, w, cell).length,
             )
@@ -1468,7 +1471,8 @@ function mapRanges(chosen, canMove, deploymentSeat, showAttack = false) {
             attackArea.add(Rules.key(x, y));
         }
       for (const target of game.units)
-        if (weapons.some((w) => Rules.canAttack(game, attackOrigin, target, w)))
+        if ((squadCombatMode !== "charge" || Rules.dist(attackOrigin, target) === 1) &&
+            weapons.some((w) => Rules.canAttack(game, attackOrigin, target, w)))
           attackTargets.add(target.id);
     }
   }
@@ -2293,6 +2297,7 @@ function drawMapFrame(now) {
             formationOffset.scale,
           fieldImpact,
         );
+      if (frameModelOf(u).gnField && combatPose?.gnFieldDefending && ART.effects.GN_Field) SpriteEffects.draw(ctx, "GN_Field", pos.x, pos.y, (tile / Rules.mapCellPixels) * ART.presentation.unitMapScale * frameModelOf(u).presentation.mapScale * formationOffset.scale, Math.min(combatPose.gnFieldTime || 0, ART.effects.GN_Field.duration - .001));
       if (frameModelOf(u).abc && ART.effects.ABC_1) {
         const age = Math.min(MapCombat.coatingImpact(u.id), IrradiationFX.coatingImpact(u.id, now));
         if (age < ART.effects.ABC_1.duration) SpriteEffects.draw(ctx, "ABC_1", pos.x, pos.y,
@@ -2911,13 +2916,13 @@ function beginAttack(a, b, w, weapons = [w]) {
     target: b.id,
     weapon: w.id,
     weapons: weapons.map((w) => w.id),
-    attacks: plannedMembers.map(plan=>({attacker:plan.unit.id,target:b.id,
+    attacks: plannedMembers.map(plan=>({attacker:plan.unit.id,target:b.id,combatMode:squadCombatMode,
       weapon:plan.weapons[0].id,weapons:plan.weapons.map(w=>w.id),
       noCounter:plan.weapons.every(w=>w.noCounter)})),
   };
   phase = "reaction";
   let legal = Rules.squadMembers(game, b).flatMap((member) =>
-    Rules.firePlan(game,member,a,{counter:true,combatMode:"melee"}).weapons,
+    Rules.firePlan(game,member,a,{counter:true,combatMode:Rules.counterCombatMode(pending,a.id)}).weapons,
   );
   response = legal.length ? "counter" : "defend";
   counterId = legal[0]?.id || null;
@@ -2958,7 +2963,7 @@ function counterDraft(unit) {
     : pending.attacker;
   if (draft.autoTargetId !== targetId || draft.autoUnitId !== unit.id) {
     draft.autoIds = Rules.firePlan(game,unit,getUnit(targetId),{
-      counter:true,combatMode:"melee",
+      counter:true,combatMode:Rules.counterCombatMode(pending,targetId),
     }).weapons.map(w=>w.id);
     draft.autoTargetId = targetId; draft.autoUnitId = unit.id;
   }
@@ -3052,7 +3057,7 @@ function renderReaction() {
   const available = (entry) =>
     scope.flatMap((member) =>
       Rules.firePlan(game,member,getUnit(entry.attacker),{
-        counter:true,combatMode:"melee",
+        counter:true,combatMode:Rules.counterCombatMode(pending,entry.attacker),
       }).weapons,
     );
   const legalTargets = legalCounterTargets();
@@ -3167,14 +3172,15 @@ function renderReaction() {
   );
   byId("responseEvade").disabled = scope.some(member => !Rules.canEvade(member));
   const choices = counterChoices();
-  byId("counterAutomaticInfo").textContent = I18n.text("按类型轮数自动使用可用武器；射击结束后进行格斗。");
+  byId("counterAutomaticInfo").textContent = I18n.text(Rules.counterCombatMode(pending,counterTargetId || pending.attacker) === "charge"
+    ? "突击交战：双方跳过射击，直接格斗。" : "按类型轮数自动使用可用武器；射击结束后进行格斗。");
   byId("counterList").replaceChildren();
   for (const member of scope) {
     const choice = choices.find((entry) => entry.unitId === member.id),
       enemy = getUnit(choice.counterTargetId),
       queue =
         choice.response === "counter" ? Rules.firePlan(game, member, enemy, {
-          counter: true, combatMode: "melee",
+          counter: true, combatMode: Rules.counterCombatMode(pending,enemy.id),
         }).weapons : [];
     AttackControls.memberCard(byId("counterList"), member, enemy, queue, { isCounter: true,
       emptyMessage: choice.response === "counter" ? "无可用武器" : "本次不进行反击",
@@ -3187,7 +3193,8 @@ function renderReaction() {
       .append(element("small", "", I18n.text(label)));
   }
   byId("estimate").textContent = I18n.text(
-    response === "counter" ? "射击结束后格斗；仅对前来格斗的敌人回击。" : "本次不进行反击",
+    response === "counter" ? (Rules.counterCombatMode(pending,counterTargetId || pending.attacker) === "charge"
+      ? "突击交战：仅对前来格斗的敌人回击。" : "射击结束后格斗；仅对前来格斗的敌人回击。") : "本次不进行反击",
   );
   byId("incomingEstimate").textContent = I18n.text("来袭单位") + " " + targets.length;
   byId("confirmResponse").disabled = !!Net.awaiting;
@@ -3216,7 +3223,7 @@ function legalCounterTargets() {
       Rules.onMap(enemy) &&
       enemy.team !== defender.team &&
       counterMembers().some((member) => Rules.firePlan(game,member,enemy,{
-        counter:true,combatMode:"melee",
+        counter:true,combatMode:Rules.counterCombatMode(pending,enemy.id),
       }).weapons.length)
     );
   });

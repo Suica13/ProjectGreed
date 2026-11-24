@@ -8,7 +8,19 @@
     "MS_06F_EFSF": "MS_06F",
     "MS_05S": "MS_05",
     "RGM_79G_EarlyDeployment": "RGM_79G",
-    "RGM_79F": "RGM_79_G"
+    "RGM_79F": "RGM_79_G",
+    "RGM_79_TB": "RGM_79",
+    "MS_06F_TB": "MS_06F2",
+    "MS_06R_TB": "RX_78_3",
+    "MS_06R_TB_WeaponModeB": "RX_78_3",
+    "FA_78_1_TB": "RX_78_3",
+    "FA_78_1_TB_WeaponModeB": "RX_78_3",
+    "FA_78_1_TB_NA": "RX_78_3",
+    "GN_001": "RX_78_2",
+    "GN_002": "RGM_79SP2",
+    "GN_003": "MS_07B",
+    "GN_003_MA": "MS_07B",
+    "GN_005": "FA_78_1"
   },
   "timeEnabled": false,
   "productionSecondsPerTurn": 20,
@@ -594,7 +606,19 @@
     "EndraClass": "standard",
     "NahelArgamaClass": "standard",
     "ORX_012": "standard",
-    "ORX_013": "standard"
+    "ORX_013": "standard",
+    "RGM_79_TB": "default",
+    "MS_06F_TB": "default",
+    "MS_06R_TB": "default",
+    "MS_06R_TB_WeaponModeB": "default",
+    "FA_78_1_TB": "default",
+    "FA_78_1_TB_WeaponModeB": "default",
+    "FA_78_1_TB_NA": "default",
+    "GN_001": "default",
+    "GN_002": "default",
+    "GN_003": "default",
+    "GN_003_MA": "default",
+    "GN_005": "default"
   },
   "baseModels": {
     "RGM_79": "RGM_79__machine_gun",
@@ -1177,7 +1201,19 @@
     "EndraClass": "EndraClass__standard",
     "NahelArgamaClass": "NahelArgamaClass__standard",
     "ORX_012": "ORX_012__standard",
-    "ORX_013": "ORX_013__standard"
+    "ORX_013": "ORX_013__standard",
+    "RGM_79_TB": "RGM_79_TB__default",
+    "MS_06F_TB": "MS_06F_TB__default",
+    "MS_06R_TB": "MS_06R_TB__default",
+    "MS_06R_TB_WeaponModeB": "MS_06R_TB_WeaponModeB__default",
+    "FA_78_1_TB": "FA_78_1_TB__default",
+    "FA_78_1_TB_WeaponModeB": "FA_78_1_TB_WeaponModeB__default",
+    "FA_78_1_TB_NA": "FA_78_1_TB_NA__default",
+    "GN_001": "GN_001__default",
+    "GN_002": "GN_002__default",
+    "GN_003": "GN_003__default",
+    "GN_003_MA": "GN_003_MA__default",
+    "GN_005": "GN_005__default"
   },
   "offers": {
     "RGM_79__beam_spray": {

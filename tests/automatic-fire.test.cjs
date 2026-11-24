@@ -99,6 +99,32 @@ function finish(f, response = "defend") {
   return f.planner.resolve(f.room);
 }
 
+test("adjacent charge skips all ranged weapons on both sides and spends melee EN only",()=>{
+ const f=fixture();f.b.x=f.a.x+1;
+ f.model.weapons=[f.make('gun',1,1000,9999),{...f.make('sword',1,1000,1),type:'melee',weaponClass:'melee',projectile:null}];
+ assert(G.firePlan(f.game,f.a,f.b).weapons.some(w=>w.type!=='melee'));
+ f.planner.plan(f.room,f.a,f.b,null,0,'charge');
+ assert.equal(G.attackOrders(f.a)[0].combatMode,'charge');
+ assert.deepEqual(f.room.plans[0].weapons,['sword']);
+ const requests=f.planner.prepare(f.room);
+ assert.equal(G.counterCombatMode(requests[0],f.a.id),'charge');
+ f.planner.choose(f.room,requests[0].id,'counter',[],f.a.id);
+ assert.deepEqual(f.room.responses[0].counterIds,['sword']);
+ const battles=f.planner.resolve(f.room);
+ assert(battles.length>=2);assert(battles.every(b=>b.events.every(e=>e.type==='melee')));
+ assert.equal(f.a.en,9999);assert.equal(f.b.en,9999);
+});
+
+test("charge rejects non-adjacent targets atomically even if a melee weapon has longer range",()=>{
+ const f=fixture();
+ f.model.weapons=[{...f.make('long-sword',1,1000),type:'melee',weaponClass:'melee',projectile:null}];
+ assert(G.firePlan(f.game,f.a,f.b).weapons.length);
+ assert.equal(G.firePlan(f.game,f.a,f.b,{combatMode:'charge'}).weapons.length,0);
+ const before=JSON.stringify([f.a,f.room.plans]);
+ assert.throws(()=>f.planner.plan(f.room,f.a,f.b,null,0,'charge'),/相邻/);
+ assert.equal(JSON.stringify([f.a,f.room.plans]),before);
+});
+
 test("counter selection exposes only attacks from other enemy units", () => {
   const f = fixture();
   const other = structuredClone(f.a);

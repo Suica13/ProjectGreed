@@ -511,8 +511,10 @@ function loadCatalog({
     if (prefab.sourceStats?.technologyEra) prefab.sourceStats.technologyEra = require("../shared/technology-eras.js").normalize(prefab.sourceStats.technologyEra);
     localize.prefab(prefab);
     require("./unit-footprint.cjs").compactShipFootprint(prefab);
-    require("./weapon-balance.cjs").applyWeaponBalance(prefab, conversion, weaponDefinitionsOverride || undefined);
+    require("./weapon-balance.cjs").applyWeaponBalance(prefab, conversion, weaponDefinitionsOverride || undefined, { adjustments });
     Adjust.unit(prefab, adjustments, raw.weapons);
+    require("./gn-charged-snipe.cjs").apply(prefab, conversion, weaponDefinitionsOverride || undefined, adjustments);
+    require("./charged-sniper-policy.cjs").apply(prefab, conversion, adjustments);
     require("../shared/conversion-rules.cjs").roundValues(prefab);
     require("./weapon-level-labels.cjs").applyWeaponLevelLabels(prefab);
     // Skills and weapons share the same 25-point damage quantization policy.
@@ -543,7 +545,7 @@ function loadCatalog({
         .length !== 1
     )
       throw Error("Unit must have exactly one primary faction tag: " + ref);
-    if (!prefab.tags.some((tag) => /^(?:\d{4}(?:T[12])?|(?:UC|CE)_\d{4}_T\d+)$/.test(tag)))
+    if (!prefab.tags.some((tag) => /^(?:\d{4}(?:T[12])?|(?:UC|CE|AD)_\d{4}_T\d+)$/.test(tag)))
       throw Error("Unit must have an era tag: " + ref);
     prefab.unitTags ??= [];
     if (prefab.unitTags.includes("MA"))
@@ -783,8 +785,8 @@ function loadCatalog({
         (field !== "antiDetection" && prefab.stats.sensors[field] < 0)
       )
         throw Error("Invalid sensor status: " + prefab.id + "/" + field);
-    if (prefab.stats.iField) {
-      const f = prefab.stats.iField;
+    for (const kind of ["iField", "gnField"]) if (prefab.stats[kind]) {
+      const f = prefab.stats[kind];
       if (
         !Number.isFinite(f.capacity) ||
         f.capacity <= 0 ||
@@ -792,10 +794,11 @@ function loadCatalog({
         !Number.isFinite(f.recoveryPercent) ||
         f.recoveryPercent < 0 ||
         f.recoveryPercent > 100 ||
-        f.minimumRatio !== -0.25
+        !(f.minimumRatio === -0.25 || (f.minimumRatio === 0 && f.guardOnly === true && f.allDamage === true))
       )
         throw Error("Invalid I-field configuration: " + ref);
     }
+    if (prefab.stats.solarFurnace && (!Number.isFinite(prefab.stats.solarFurnace.enRecoveryPercent) || prefab.stats.solarFurnace.enRecoveryPercent < 0 || prefab.stats.solarFurnace.enRecoveryPercent > 100)) throw Error("Invalid solar furnace: " + prefab.id);
     for (const kind of ["abc", "phaseShift"]) if (prefab.stats[kind]) {
       const coating = prefab.stats[kind];
       if (!Number.isFinite(coating.capacity) || coating.capacity <= 0 ||
@@ -1293,7 +1296,7 @@ function loadCatalog({
         faction: prefab.faction,
         availableFactions: prefab.availableFactions,
         tags: prefab.tags,
-        technologyWeight: require("../shared/technology-eras.js").weight(prefab.sourceStats?.technologyEra || prefab.tags.find(tag => /^(UC|CE)_/.test(tag))),
+        technologyWeight: require("../shared/technology-eras.js").weight(prefab.sourceStats?.technologyEra || prefab.tags.find(tag => /^(UC|CE|AD)_/.test(tag))),
         unitTags: prefab.unitTags || [],
         transport: prefab.transport || { slotCost: 1, loadTags: [] },
         hangars: prefab.hangars || [],
@@ -1417,7 +1420,7 @@ function loadCatalog({
       }
   }
   require("./unit-kit-families.cjs").apply(result,
-    read(path.resolve(__dirname,"../shared/production-catalog.json")).unitFamilies);
+    read(path.resolve(__dirname,"../shared/production-catalog.json")).unitFamilies, adjustments);
   if (!result.prefabs.length) throw Error("No enabled units in catalog");
   return result;
 }

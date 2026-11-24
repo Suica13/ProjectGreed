@@ -16,10 +16,11 @@ const Economy = (() => {
     if (!value || typeof value !== "object" || Array.isArray(value)) throw Error("道具库存无效");
     const result = {};
     for (const [id, count] of Object.entries(value)) {
-      if (!["supply-token", "0079t1-token"].includes(id) || !Number.isSafeInteger(count) || count < 0 || count > 1000000)
+      if (!["supply-token", ...supplyPools.map(pool => pool.tokenId)].includes(id) || !Number.isSafeInteger(count) || count < 0 || count > 1000000)
         throw Error("道具库存无效");
-      result["0079t1-token"] = (result["0079t1-token"] || 0) + count;
-      if (result["0079t1-token"] > 1000000) throw Error("道具库存无效");
+      const key = id === "supply-token" ? "0079t1-token" : id;
+      result[key] = (result[key] || 0) + count;
+      if (result[key] > 1000000) throw Error("道具库存无效");
     }
     return result;
   }
@@ -1002,17 +1003,23 @@ const Economy = (() => {
       if (selected && !selected.has(item.id)) continue;
       const model = plugins.apply(modelsForUnits()[item.unitId + "__" + item.kitId], item.plugins),
         destroyed = item.destroyed || item.hp === 0,
-        parts =
+        damagedParts =
           Object.values(item.brokenParts || {}).some(Boolean) ||
           (model.modules || []).some((part) => (item.moduleHp?.[part.id] ?? part.hp) < part.hp);
-      if (!destroyed && !parts && item.hp >= model.hp && item.en >= model.en) continue;
+      if (!destroyed && !damagedParts && item.hp >= model.hp && item.en >= model.en) continue;
+      const modules = model.modules || [];
+      const partNames = ["head", "backpack", "leftArm", "rightArm", "leftLeg", "rightLeg"];
+      const brokenCount = modules.length
+        ? modules.filter(part => (item.moduleHp?.[part.id] ?? part.hp) <= 0).length
+        : partNames.filter(part => item.brokenParts?.[part]).length;
+      const brokenRatio = brokenCount / (modules.length || partNames.length);
       // Reward-only chassis can lack a production offer. Their maintenance basis
       // follows a configured comparable chassis without granting production access.
       const price = (chassisProductionOffer(item.unitId) ||
         chassisProductionOffer(catalog.repairPriceReferences?.[item.unitId]))?.supplies || 0;
       items.push({
         ...structuredClone(item),
-        supplies: Math.ceil(price * (destroyed ? 0.5 : parts ? 0.25 : 0)),
+        supplies: Math.ceil(price * (destroyed ? 0.5 : 0.25 * brokenRatio)),
       });
     }
     return { items, supplies: items.reduce((sum, item) => sum + item.supplies, 0) };

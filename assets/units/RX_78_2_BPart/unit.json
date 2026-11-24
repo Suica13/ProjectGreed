@@ -607,7 +607,7 @@
     "accuracy": 125,
     "partStructuralStrength": 200,
     "partsBreakable": true,
-    "movementType": "ground",
+    "movementType": "air",
     "adaptability": {
       "ground": 10,
       "space": 100,

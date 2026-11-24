@@ -3464,6 +3464,90 @@
       "role": "normal",
       "method": "platform",
       "source": "Helicopter,Aircraft,MediumUnit"
+    },
+    "GN_001": {
+      "role": "raid",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/GN-001.ini",
+      "nativeId": "GN-001",
+      "nativeCategory": 2
+    },
+    "GN_002": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/GN-002.ini",
+      "nativeId": "GN-002",
+      "nativeCategory": 3
+    },
+    "GN_003": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/GN-003.ini",
+      "nativeId": "GN-003",
+      "nativeCategory": 1
+    },
+    "GN_003_MA": {
+      "role": "general",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/GN-003.ini",
+      "nativeId": "GN-003",
+      "nativeCategory": 1
+    },
+    "GN_005": {
+      "role": "support",
+      "method": "native",
+      "source": "Units/SystemUnits/UnitCard/Single/GN-005.ini",
+      "nativeId": "GN-005",
+      "nativeCategory": 3
+    },
+    "RGM_79_TB": {
+      "role": "general",
+      "method": "native",
+      "source": "GundamWars_Duel_A0/Units/BattleUnits/RGM-79_TB/RGM-79_TB.ini",
+      "nativeId": "RGM-79_TB",
+      "nativeCategory": 1
+    },
+    "MS_06F_TB": {
+      "role": "general",
+      "method": "native",
+      "source": "GundamWars_Duel_A0/Units/BattleUnits/MS-06F_TB/MS-06F_TB.ini",
+      "nativeId": "MS-06F_TB",
+      "nativeCategory": 1
+    },
+    "MS_06R_TB": {
+      "role": "raid",
+      "method": "native",
+      "source": "GundamWars_Duel_A0/Units/BattleUnits/MS-06R_TB/MS-06R_TB.ini",
+      "nativeId": "MS-06R_TB",
+      "nativeCategory": 2
+    },
+    "MS_06R_TB_WeaponModeB": {
+      "role": "raid",
+      "method": "native",
+      "source": "GundamWars_Duel_A0/Units/BattleUnits/MS-06R_TB/MS-06R_TB_WeaponModeB.ini",
+      "nativeId": "MS-06R_TB_WeaponModeB",
+      "nativeCategory": 2
+    },
+    "FA_78_1_TB": {
+      "role": "raid",
+      "method": "native",
+      "source": "GundamWars_Duel_A0/Units/BattleUnits/FA-78-1_TB/FA-78-1_TB.ini",
+      "nativeId": "FA-78-1_TB",
+      "nativeCategory": 2
+    },
+    "FA_78_1_TB_WeaponModeB": {
+      "role": "raid",
+      "method": "native",
+      "source": "GundamWars_Duel_A0/Units/BattleUnits/FA-78-1_TB/FA-78-1_TB_WeaponModeB.ini",
+      "nativeId": "FA-78-1_TB_WeaponModeB",
+      "nativeCategory": 2
+    },
+    "FA_78_1_TB_NA": {
+      "role": "raid",
+      "method": "native",
+      "source": "GundamWars_Duel_A0/Units/BattleUnits/FA-78-1_TB/FA-78-1_TB_NA.ini",
+      "nativeId": "FA-78-1_TB_NA",
+      "nativeCategory": 2
     }
   }
 }

@@ -1,0 +1,906 @@
+{
+  "rules": {
+    "hp": 2,
+    "shield": 2,
+    "move": 2,
+    "uniqueDamage": 3,
+    "mountain": 75
+  },
+  "units": [
+    {
+      "id": "GN_001",
+      "cost": 1250,
+      "hp": 50000,
+      "shield": 0,
+      "move": 6,
+      "reaction": 140,
+      "accuracy": 140,
+      "mountain": 75,
+      "reference": {
+        "cost": 1250,
+        "units": [
+          "RX_121_1_FF_X29A"
+        ],
+        "reaction": 185,
+        "accuracy": 165
+      },
+      "weapons": {
+        "CB_GN_001_BG": {
+          "sharedRef": null,
+          "uniqueDamageScale": 3,
+          "damageComponents": {
+            "beam": 2500
+          },
+          "nativeTiming": {
+            "source": "Units/BattleUnits/Weapon/Beam/CB_GN_001_BG.gw",
+            "barrel": "CB_GN_001_BG",
+            "entry": "action_Weapon0",
+            "cooldown": 0,
+            "duration": 1.1,
+            "firstShot": 0.3,
+            "lastShot": 0.8,
+            "firingEvents": 3,
+            "projectiles": 3,
+            "secondaryProjectiles": 0,
+            "declaredEnergy": 0,
+            "energyMode": "perVolley",
+            "energyPerEmission": 0,
+            "energy": 0,
+            "actions": [
+              "action_Weapon0",
+              "hiddenAction_SetAttackingOn",
+              "hiddenAction_Send_BattleUnitCore_GuardOff",
+              "hiddenAction_SetShootOn",
+              "hiddenAction_CB_GN_001_BG_SetWeaponIndex",
+              "hiddenAction_CB_GN_001_BG_B3_Step_1",
+              "hiddenAction_CB_GN_001_BG_Fire_Step_1",
+              "hiddenAction_CB_GN_001_BG_Fire_Step_2",
+              "hiddenAction_CB_GN_001_BG_Fire_Step_3",
+              "hiddenAction_CB_GN_001_BG_Fire_Step_Final",
+              "hiddenAction_SetAttackingOff",
+              "hiddenAction_SetShootOff",
+              "hiddenAction_SetCqbOff"
+            ]
+          }
+        },
+        "CB_GN_001_Sword_FT": {
+          "sharedRef": null,
+          "uniqueDamageScale": 3,
+          "damageComponents": {
+            "melee": 3150,
+            "meleeShell": 3150
+          },
+          "nativeTiming": {
+            "source": "Units/BattleUnits/Weapon/Cqb/CB_GN_001_Sword_FT.gw",
+            "barrel": "CB_GN_001_Sword_FT",
+            "entry": "action_Weapon1",
+            "cooldown": 0,
+            "duration": 2.1500000000000004,
+            "firstShot": 0.35,
+            "lastShot": 0.95,
+            "firingEvents": 2,
+            "projectiles": 2,
+            "secondaryProjectiles": 0,
+            "declaredEnergy": 0,
+            "energyMode": "perVolley",
+            "energyPerEmission": 0,
+            "energy": 0,
+            "actions": [
+              "action_Weapon1",
+              "hiddenAction_SetAttackingOn",
+              "hiddenAction_Send_BattleUnitCore_GuardOff",
+              "hiddenAction_SetCqbOn",
+              "hiddenAction_SetCqbOn_FindTarget",
+              "hiddenAction_CB_GN_001_Sword_FT_F_SetWeaponIndex",
+              "hiddenAction_CB_GN_001_Sword_FT_Step_1",
+              "hiddenAction_CB_GN_001_Sword_FT_Fire_Step_1",
+              "hiddenAction_CB_GN_001_Sword_FT_Fire_Step_2",
+              "hiddenAction_CB_GN_001_Sword_FT_Fire_Step_3",
+              "hiddenAction_CB_GN_001_Sword_FT_T_SetWeaponIndex",
+              "hiddenAction_SetAttackingCantTurnOn",
+              "hiddenAction_CB_GN_001_Sword_FT_Fire_Step_4",
+              "hiddenAction_CB_GN_001_Sword_FT_Fire_Step_5",
+              "hiddenAction_CB_GN_001_Sword_FT_Fire_Step_Forward",
+              "hiddenAction_CB_GN_001_Sword_FT_Fire_Step_Final",
+              "hiddenAction_SetAttackingOff",
+              "hiddenAction_SetShootOff",
+              "hiddenAction_SetCqbOff",
+              "hiddenAction_SetAttackingCantTurnOff"
+            ]
+          }
+        },
+        "CB_GN_001_GNArmGun": {
+          "sharedRef": null,
+          "uniqueDamageScale": 3,
+          "damageComponents": {
+            "beam": 200
+          },
+          "nativeTiming": {
+            "source": "Units/BattleUnits/Weapon/Beam/CB_GN_001_GNArmGun.gw",
+            "barrel": "CB_GN_001_GNArmGun",
+            "entry": "action_Weapon2",
+            "cooldown": 0,
+            "duration": 1.7249999999999996,
+            "firstShot": 0.3,
+            "lastShot": 1.4249999999999996,
+            "firingEvents": 16,
+            "projectiles": 16,
+            "secondaryProjectiles": 0,
+            "declaredEnergy": 0,
+            "energyMode": "perVolley",
+            "energyPerEmission": 0,
+            "energy": 0,
+            "actions": [
+              "action_Weapon2",
+              "hiddenAction_SetAttackingOn",
+              "hiddenAction_Send_BattleUnitCore_GuardOff",
+              "hiddenAction_SetShootOn",
+              "hiddenAction_CB_GN_001_GNArmGun_SetWeaponIndex",
+              "hiddenAction_CB_GN_001_GNArmGun_B16_Step_1",
+              "hiddenAction_CB_GN_001_GNArmGun_Fire_Step_1",
+              "hiddenAction_CB_GN_001_GNArmGun_Fire_Step_2",
+              "hiddenAction_CB_GN_001_GNArmGun_Fire_Step_3_L",
+              "hiddenAction_CB_GN_001_GNArmGun_Fire_Step_3",
+              "hiddenAction_CB_GN_001_GNArmGun_Fire_Step_Final",
+              "hiddenAction_SetAttackingOff",
+              "hiddenAction_SetShootOff",
+              "hiddenAction_SetCqbOff"
+            ]
+          }
+        },
+        "EF_BeamSaber_Double_DBDF": {
+          "sharedRef": "EF_BeamSaber_Double_DBDF_Yellow__lv2",
+          "uniqueDamageScale": 1,
+          "damageComponents": {
+            "melee": 2437.5,
+            "meleeBeam": 2437.5
+          },
+          "nativeTiming": {
+            "source": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_Double_DBDF_Lv2.gw",
+            "barrel": "EF_BeamSaber_Double_DBDF",
+            "entry": "action_Weapon3",
+            "cooldown": 0,
+            "duration": 2.2,
+            "firstShot": 0.45,
+            "lastShot": 1.2,
+            "firingEvents": 2,
+            "projectiles": 4,
+            "secondaryProjectiles": 0,
+            "declaredEnergy": 0,
+            "energyMode": "perVolley",
+            "energyPerEmission": 0,
+            "energy": 0,
+            "actions": [
+              "action_Weapon3",
+              "hiddenAction_SetAttackingOn",
+              "hiddenAction_Send_BattleUnitCore_GuardOff",
+              "hiddenAction_SetCqbOn",
+              "hiddenAction_SetCqbOn_FindTarget",
+              "hiddenAction_EF_BeamSaber_Double_DBDF_SetWeaponIndex",
+              "hiddenAction_EF_BeamSaber_Double_DBDF_Step_1",
+              "hiddenAction_EF_BeamSaber_Double_DBDF_Fire_Step_1",
+              "hiddenAction_EF_BeamSaber_Double_DBDF_Fire_Step_2",
+              "hiddenAction_EF_BeamSaber_Double_DBDF_Fire_Step_3",
+              "hiddenAction_EF_BeamSaber_Double_DBDF_Fire_Step_4",
+              "hiddenAction_EF_BeamSaber_Double_DBDF_Fire_Step_5",
+              "hiddenAction_EF_BeamSaber_Double_DBDF_Fire_Step_Final",
+              "hiddenAction_SetAttackingOff",
+              "hiddenAction_SetShootOff",
+              "hiddenAction_SetCqbOff"
+            ]
+          }
+        }
+      },
+      "skills": []
+    },
+    {
+      "id": "GN_002",
+      "cost": 1250,
+      "hp": 48000,
+      "shield": 0,
+      "move": 6,
+      "reaction": 140,
+      "accuracy": 150,
+      "mountain": 75,
+      "reference": {
+        "cost": 1250,
+        "units": [
+          "AMX_101K"
+        ],
+        "reaction": 165,
+        "accuracy": 175
+      },
+      "weapons": {
+        "CB_GN_002_BSR": {
+          "sharedRef": null,
+          "uniqueDamageScale": 3,
+          "damageComponents": {
+            "beamAP": 15000
+          },
+          "nativeTiming": {
+            "source": "Units/BattleUnits/Weapon/Beam/CB_GN_002_BSR.gw",
+            "barrel": "CB_GN_002_BSR",
+            "entry": "action_Weapon0",
+            "cooldown": 0,
+            "duration": 1.5,
+            "firstShot": 0.75,
+            "lastShot": 0.75,
+            "firingEvents": 1,
+            "projectiles": 1,
+            "secondaryProjectiles": 0,
+            "declaredEnergy": 0,
+            "energyMode": "perVolley",
+            "energyPerEmission": 0,
+            "energy": 0,
+            "actions": [
+              "action_Weapon0",
+              "hiddenAction_SetAttackingOn",
+              "hiddenAction_Send_BattleUnitCore_GuardOff",
+              "hiddenAction_SetShootOn",
+              "hiddenAction_CB_GN_002_BSR_SetWeaponIndex",
+              "hiddenAction_CB_GN_002_BSR_B1_Step_1",
+              "hiddenAction_CB_GN_002_BSR_Fire_SetAttackingTurnSpeedOn",
+              "hiddenAction_SetAttackingCantMoveOn",
+              "hiddenAction_CB_GN_002_BSR_Fire_Step_HighPowerEffect_1",
+              "hiddenAction_CB_GN_002_BSR_Fire_Step_1",
+              "hiddenAction_CB_GN_002_BSR_Fire_Step_2",
+              "hiddenAction_CB_GN_002_BSR_Fire_Step_Final",
+              "hiddenAction_SetAttackingOff",
+              "hiddenAction_SetShootOff",
+              "hiddenAction_SetCqbOff",
+              "hiddenAction_SetAttackingTurnSpeedOff",
+              "hiddenAction_SetAttackingCantMoveOff"
+            ]
+          }
+        },
+        "EF_BeamSaber_F": {
+          "sharedRef": "EF_BeamSaber_F__lv2",
+          "uniqueDamageScale": 1,
+          "damageComponents": {
+            "melee": 2437.5,
+            "meleeBeam": 2437.5
+          },
+          "nativeTiming": {
+            "source": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_F_Lv2.gw",
+            "barrel": "EF_BeamSaber_F",
+            "entry": "action_Weapon1",
+            "cooldown": 0,
+            "duration": 0.95,
+            "firstShot": 0.35,
+            "lastShot": 0.35,
+            "firingEvents": 1,
+            "projectiles": 1,
+            "secondaryProjectiles": 0,
+            "declaredEnergy": 0,
+            "energyMode": "perVolley",
+            "energyPerEmission": 0,
+            "energy": 0,
+            "actions": [
+              "action_Weapon1",
+              "hiddenAction_SetAttackingOn",
+              "hiddenAction_Send_BattleUnitCore_GuardOff",
+              "hiddenAction_SetCqbOn",
+              "hiddenAction_SetCqbOn_FindTarget",
+              "hiddenAction_EF_BeamSaber_F_SetWeaponIndex",
+              "hiddenAction_EF_BeamSaber_F_Step_1",
+              "hiddenAction_EF_BeamSaber_F_Fire_Step_1",
+              "hiddenAction_EF_BeamSaber_F_Fire_Step_2",
+              "hiddenAction_EF_BeamSaber_F_Fire_Step_Final",
+              "hiddenAction_SetAttackingOff",
+              "hiddenAction_SetShootOff",
+              "hiddenAction_SetCqbOff"
+            ]
+          }
+        },
+        "CB_GN_002_BG_Double": {
+          "sharedRef": null,
+          "uniqueDamageScale": 3,
+          "damageComponents": {
+            "beam": 2000
+          },
+          "nativeTiming": {
+            "source": "Units/BattleUnits/Weapon/Beam/CB_GN_002_BG_Double.gw",
+            "barrel": "CB_GN_002_BG_Double",
+            "entry": "action_Weapon2",
+            "cooldown": 0,
+            "duration": 0.8999999999999999,
+            "firstShot": 0.15,
+            "lastShot": 0.6,
+            "firingEvents": 4,
+            "projectiles": 4,
+            "secondaryProjectiles": 0,
+            "declaredEnergy": 0,
+            "energyMode": "perVolley",
+            "energyPerEmission": 0,
+            "energy": 0,
+            "actions": [
+              "action_Weapon2",
+              "hiddenAction_SetAttackingOn",
+              "hiddenAction_Send_BattleUnitCore_GuardOff",
+              "hiddenAction_SetShootOn",
+              "hiddenAction_CB_GN_002_BG_Double_SetWeaponIndex",
+              "hiddenAction_CB_GN_002_BG_Double_B4_Step_1",
+              "hiddenAction_CB_GN_002_BG_Double_Fire_Step_1",
+              "hiddenAction_CB_GN_002_BG_Double_Fire_Step_2",
+              "hiddenAction_CB_GN_002_BG_Double_Fire_Step_3",
+              "hiddenAction_CB_GN_002_BG_Double_Fire_Step_Sub",
+              "hiddenAction_CB_GN_002_BG_Double_Fire_Step_Final",
+              "hiddenAction_SetAttackingOff",
+              "hiddenAction_SetShootOff",
+              "hiddenAction_SetCqbOff"
+            ]
+          }
+        },
+        "CB_GN_002_MS": {
+          "sharedRef": null,
+          "uniqueDamageScale": 3,
+          "damageComponents": {
+            "shell": 1575
+          },
+          "nativeTiming": {
+            "source": "Units/BattleUnits/Weapon/Shell/CB_GN_002_MS.gw",
+            "barrel": "CB_GN_002_MS",
+            "entry": "action_Weapon3",
+            "cooldown": 0,
+            "duration": 1.5250000000000001,
+            "firstShot": 0.35,
+            "lastShot": 1.225,
+            "firingEvents": 8,
+            "projectiles": 8,
+            "secondaryProjectiles": 0,
+            "declaredEnergy": 0,
+            "energyMode": "perVolley",
+            "energyPerEmission": 0,
+            "energy": 0,
+            "actions": [
+              "action_Weapon3",
+              "hiddenAction_SetAttackingOn",
+              "hiddenAction_Send_BattleUnitCore_GuardOff",
+              "hiddenAction_SetShootOn",
+              "hiddenAction_CB_GN_002_MS_SetWeaponIndex",
+              "hiddenAction_CB_GN_002_MS_B8_Step_1",
+              "hiddenAction_CB_GN_002_MS_Fire_Step_1",
+              "hiddenAction_CB_GN_002_MS_Fire_Step_2",
+              "hiddenAction_CB_GN_002_MS_Fire_Step_3_L",
+              "hiddenAction_CB_GN_002_MS_Fire_Step_3",
+              "hiddenAction_CB_GN_002_MS_Fire_Step_Final",
+              "hiddenAction_SetAttackingOff",
+              "hiddenAction_SetShootOff",
+              "hiddenAction_SetCqbOff"
+            ]
+          }
+        },
+        "CB_GN_002_BSR_Charged": {
+          "sharedRef": null,
+          "uniqueDamageScale": 1,
+          "damageComponents": {
+            "beamAP": 22500
+          },
+          "nativeTiming": {
+            "source": "Units/BattleUnits/Weapon/Beam/CB_GN_002_BSR.gw",
+            "barrel": "CB_GN_002_BSR",
+            "entry": "action_Weapon0",
+            "cooldown": 0,
+            "duration": 1.5,
+            "firstShot": 0.75,
+            "lastShot": 0.75,
+            "firingEvents": 1,
+            "projectiles": 1,
+            "secondaryProjectiles": 0,
+            "declaredEnergy": 0,
+            "energyMode": "perVolley",
+            "energyPerEmission": 0,
+            "energy": 0,
+            "actions": [
+              "action_Weapon0",
+              "hiddenAction_SetAttackingOn",
+              "hiddenAction_Send_BattleUnitCore_GuardOff",
+              "hiddenAction_SetShootOn",
+              "hiddenAction_CB_GN_002_BSR_SetWeaponIndex",
+              "hiddenAction_CB_GN_002_BSR_B1_Step_1",
+              "hiddenAction_CB_GN_002_BSR_Fire_SetAttackingTurnSpeedOn",
+              "hiddenAction_SetAttackingCantMoveOn",
+              "hiddenAction_CB_GN_002_BSR_Fire_Step_HighPowerEffect_1",
+              "hiddenAction_CB_GN_002_BSR_Fire_Step_1",
+              "hiddenAction_CB_GN_002_BSR_Fire_Step_2",
+              "hiddenAction_CB_GN_002_BSR_Fire_Step_Final",
+              "hiddenAction_SetAttackingOff",
+              "hiddenAction_SetShootOff",
+              "hiddenAction_SetCqbOff",
+              "hiddenAction_SetAttackingTurnSpeedOff",
+              "hiddenAction_SetAttackingCantMoveOff"
+            ]
+          }
+        }
+      },
+      "skills": []
+    },
+    {
+      "id": "GN_003",
+      "cost": 1250,
+      "hp": 50000,
+      "shield": 7000,
+      "move": 5,
+      "reaction": 145,
+      "accuracy": 145,
+      "mountain": 75,
+      "reference": {
+        "cost": 1250,
+        "units": [
+          "RGM_86R_FXA_05D"
+        ],
+        "reaction": 180,
+        "accuracy": 165
+      },
+      "weapons": {
+        "CB_GN_003_BMG": {
+          "sharedRef": null,
+          "uniqueDamageScale": 3,
+          "damageComponents": {
+            "beam": 600
+          },
+          "nativeTiming": {
+            "source": "Units/BattleUnits/Weapon/Beam/CB_GN_003_BMG.gw",
+            "barrel": "CB_GN_003_BMG",
+            "entry": "action_Weapon0",
+            "cooldown": 0,
+            "duration": 1.1,
+            "firstShot": 0.3,
+            "lastShot": 0.8,
+            "firingEvents": 8,
+            "projectiles": 8,
+            "secondaryProjectiles": 0,
+            "declaredEnergy": 0,
+            "energyMode": "perVolley",
+            "energyPerEmission": 0,
+            "energy": 0,
+            "actions": [
+              "action_Weapon0",
+              "hiddenAction_SetAttackingOn",
+              "hiddenAction_Send_BattleUnitCore_GuardOff",
+              "hiddenAction_SetShootOn",
+              "hiddenAction_CB_GN_003_BMG_SetWeaponIndex",
+              "hiddenAction_CB_GN_003_BMG_B8_Step_1",
+              "hiddenAction_CB_GN_003_BMG_Fire_Step_1",
+              "hiddenAction_CB_GN_003_BMG_Fire_Step_2",
+              "hiddenAction_CB_GN_003_BMG_Fire_Step_3",
+              "hiddenAction_CB_GN_003_BMG_Fire_Step_4",
+              "hiddenAction_CB_GN_003_BMG_Fire_Step_Final",
+              "hiddenAction_SetAttackingOff",
+              "hiddenAction_SetShootOff",
+              "hiddenAction_SetCqbOff"
+            ]
+          }
+        },
+        "EF_BeamSaber_BF": {
+          "sharedRef": "EF_BeamSaber_BF_B__lv2",
+          "uniqueDamageScale": 1,
+          "damageComponents": {
+            "melee": 2437.5,
+            "meleeBeam": 2437.5
+          },
+          "nativeTiming": {
+            "source": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_BF_Lv2.gw",
+            "barrel": "EF_BeamSaber_BF_A",
+            "entry": "action_Weapon1",
+            "cooldown": 0,
+            "duration": 2,
+            "firstShot": 0.4,
+            "lastShot": 1.3,
+            "firingEvents": 2,
+            "projectiles": 2,
+            "secondaryProjectiles": 0,
+            "declaredEnergy": 0,
+            "energyMode": "perVolley",
+            "energyPerEmission": 0,
+            "energy": 0,
+            "actions": [
+              "action_Weapon1",
+              "hiddenAction_SetAttackingOn",
+              "hiddenAction_Send_BattleUnitCore_GuardOff",
+              "hiddenAction_SetCqbOn",
+              "hiddenAction_SetCqbOn_FindTarget",
+              "hiddenAction_EF_BeamSaber_BF_SetWeaponIndex",
+              "hiddenAction_EF_BeamSaber_BF_Step_1",
+              "hiddenAction_EF_BeamSaber_BF_Fire_Step_1",
+              "hiddenAction_EF_BeamSaber_BF_Fire_Step_2",
+              "hiddenAction_EF_BeamSaber_BF_Fire_Step_3",
+              "hiddenAction_EF_BeamSaber_BF_Fire_Step_4",
+              "hiddenAction_EF_BeamSaber_BF_Fire_Step_5",
+              "hiddenAction_EF_BeamSaber_BF_Fire_Step_Final",
+              "hiddenAction_SetAttackingOff",
+              "hiddenAction_SetShootOff",
+              "hiddenAction_SetCqbOff"
+            ]
+          }
+        },
+        "CB_GN_003_Combo": {
+          "sharedRef": null,
+          "uniqueDamageScale": 3,
+          "damageComponents": {
+            "melee": 2250,
+            "meleeShell": 2250
+          },
+          "nativeTiming": {
+            "source": "Units/BattleUnits/Weapon/Cqb/CB_GN_003_Combo.gw",
+            "barrel": "CB_GN_003_Combo",
+            "entry": "action_Weapon2",
+            "cooldown": 0,
+            "duration": 6.000000000000002,
+            "firstShot": 0.5,
+            "lastShot": 4.500000000000002,
+            "firingEvents": 13,
+            "projectiles": 13,
+            "secondaryProjectiles": 0,
+            "declaredEnergy": 0,
+            "energyMode": "perVolley",
+            "energyPerEmission": 0,
+            "energy": 0,
+            "actions": [
+              "action_Weapon2",
+              "hiddenAction_SetAttackingOn",
+              "hiddenAction_Send_BattleUnitCore_GuardOff",
+              "hiddenAction_SetCqbOn",
+              "hiddenAction_SetCqbOn_FindTarget",
+              "hiddenAction_CB_GN_003_Combo_SetWeaponIndex",
+              "hiddenAction_CB_GN_003_Combo_Step_1",
+              "hiddenAction_CB_GN_003_Combo_Try_Step_1",
+              "hiddenAction_CB_GN_003_Combo_Try_Step_2",
+              "hiddenAction_CB_GN_003_Combo_Try_Step_Final",
+              "hiddenAction_SetAttackingOff",
+              "hiddenAction_SetShootOff",
+              "hiddenAction_SetCqbOff",
+              "hiddenAction_CB_GN_003_Combo_Start",
+              "hiddenAction_CB_GN_003_Combo_Fire_Step_0",
+              "hiddenAction_CB_GN_003_Combo_Fire_Step_1",
+              "hiddenAction_CB_GN_003_Combo_Fire_Step_2",
+              "hiddenAction_CB_GN_003_Combo_Fire_Step_3",
+              "hiddenAction_CB_GN_003_Combo_Fire_Step_4",
+              "hiddenAction_CB_GN_003_Combo_Fire_Step_5",
+              "hiddenAction_CB_GN_003_Combo_Fire_Step_6",
+              "hiddenAction_Send_Enemy_Combo_End",
+              "hiddenAction_Send_Enemy_Combo_End_Step_2",
+              "hiddenAction_Clear_ComboTarget",
+              "hiddenAction_CB_GN_003_Combo_Fire_Step_Final",
+              "hiddenAction_Send_Combo_End"
+            ]
+          }
+        },
+        "Common_ShieldAttack_BL": {
+          "sharedRef": null,
+          "uniqueDamageScale": 3,
+          "damageComponents": {
+            "melee": 3000,
+            "meleeShell": 3000
+          },
+          "nativeTiming": {
+            "source": "Units/BattleUnits/Weapon/Cqb/Common_ShieldAttack_BL.gw",
+            "barrel": "Common_ShieldAttack_BL",
+            "entry": "action_Weapon3",
+            "cooldown": 0,
+            "duration": 1.1,
+            "firstShot": 0.4,
+            "lastShot": 0.4,
+            "firingEvents": 1,
+            "projectiles": 1,
+            "secondaryProjectiles": 0,
+            "declaredEnergy": 0,
+            "energyMode": "perVolley",
+            "energyPerEmission": 0,
+            "energy": 0,
+            "actions": [
+              "action_Weapon3",
+              "hiddenAction_SetAttackingOn",
+              "hiddenAction_Send_BattleUnitCore_GuardOff",
+              "hiddenAction_SetCqbOn",
+              "hiddenAction_SetCqbOn_FindTarget",
+              "hiddenAction_Common_ShieldAttack_BL_SetWeaponIndex",
+              "hiddenAction_Common_ShieldAttack_BL_Step_1",
+              "hiddenAction_Common_ShieldAttack_BL_Fire_Step_1",
+              "hiddenAction_Common_ShieldAttack_BL_Fire_Step_2",
+              "hiddenAction_Common_ShieldAttack_BL_Fire_Step_Final",
+              "hiddenAction_SetAttackingOff",
+              "hiddenAction_SetShootOff",
+              "hiddenAction_SetCqbOff"
+            ]
+          }
+        }
+      },
+      "skills": []
+    },
+    {
+      "id": "GN_003_MA",
+      "cost": 1250,
+      "hp": 50000,
+      "shield": 7000,
+      "move": 7,
+      "reaction": 145,
+      "accuracy": 145,
+      "mountain": 75,
+      "reference": {
+        "cost": 1250,
+        "units": [
+          "RGM_86R_FXA_05D"
+        ],
+        "reaction": 180,
+        "accuracy": 165
+      },
+      "weapons": {
+        "CB_GN_003_BMG": {
+          "sharedRef": null,
+          "uniqueDamageScale": 3,
+          "damageComponents": {
+            "beam": 600
+          },
+          "nativeTiming": {
+            "source": "Units/BattleUnits/Weapon/Beam/CB_GN_003_BMG.gw",
+            "barrel": "CB_GN_003_BMG",
+            "entry": "action_Weapon0",
+            "cooldown": 0,
+            "duration": 1.1,
+            "firstShot": 0.3,
+            "lastShot": 0.8,
+            "firingEvents": 8,
+            "projectiles": 8,
+            "secondaryProjectiles": 0,
+            "declaredEnergy": 0,
+            "energyMode": "perVolley",
+            "energyPerEmission": 0,
+            "energy": 0,
+            "actions": [
+              "action_Weapon0",
+              "hiddenAction_SetAttackingOn",
+              "hiddenAction_Send_BattleUnitCore_GuardOff",
+              "hiddenAction_SetAttackingOn_AimTarget",
+              "hiddenAction_SetShootOn",
+              "hiddenAction_CB_GN_003_BMG_SetWeaponIndex",
+              "hiddenAction_CB_GN_003_BMG_B8_Step_1",
+              "hiddenAction_CB_GN_003_BMG_Fire_Step_1",
+              "hiddenAction_CB_GN_003_BMG_Fire_Step_2",
+              "hiddenAction_CB_GN_003_BMG_Fire_Step_3",
+              "hiddenAction_CB_GN_003_BMG_Fire_Step_4",
+              "hiddenAction_CB_GN_003_BMG_Fire_Step_Final",
+              "hiddenAction_SetAttackingOff",
+              "hiddenAction_SetShootOff",
+              "hiddenAction_SetCqbOff"
+            ]
+          }
+        },
+        "CB_GN_003_GNVulcan": {
+          "sharedRef": null,
+          "uniqueDamageScale": 3,
+          "damageComponents": {
+            "beam": 168.75
+          },
+          "nativeTiming": {
+            "source": "Units/BattleUnits/Weapon/Beam/CB_GN_003_GNVulcan.gw",
+            "barrel": "CB_GN_003_GNVulcan",
+            "entry": "action_Weapon2",
+            "cooldown": 0,
+            "duration": 1.7249999999999996,
+            "firstShot": 0.3,
+            "lastShot": 1.4249999999999996,
+            "firingEvents": 16,
+            "projectiles": 16,
+            "secondaryProjectiles": 0,
+            "declaredEnergy": 0,
+            "energyMode": "perVolley",
+            "energyPerEmission": 0,
+            "energy": 0,
+            "actions": [
+              "action_Weapon2",
+              "hiddenAction_SetAttackingOn",
+              "hiddenAction_Send_BattleUnitCore_GuardOff",
+              "hiddenAction_SetAttackingOn_AimTarget",
+              "hiddenAction_SetShootOn",
+              "hiddenAction_CB_GN_003_GNVulcan_SetWeaponIndex",
+              "hiddenAction_CB_GN_003_GNVulcan_B16_Step_1",
+              "hiddenAction_CB_GN_003_GNVulcan_Fire_Step_1",
+              "hiddenAction_CB_GN_003_GNVulcan_Fire_Step_2",
+              "hiddenAction_CB_GN_003_GNVulcan_Fire_Step_3_L",
+              "hiddenAction_CB_GN_003_GNVulcan_Fire_Step_3",
+              "hiddenAction_CB_GN_003_GNVulcan_Fire_Step_Final",
+              "hiddenAction_SetAttackingOff",
+              "hiddenAction_SetShootOff",
+              "hiddenAction_SetCqbOff"
+            ]
+          }
+        }
+      },
+      "skills": []
+    },
+    {
+      "id": "GN_005",
+      "cost": 1250,
+      "hp": 65000,
+      "shield": 0,
+      "move": 5,
+      "reaction": 125,
+      "accuracy": 140,
+      "mountain": 75,
+      "reference": {
+        "cost": 1250,
+        "units": [
+          "FA_78_2"
+        ],
+        "reaction": 130,
+        "accuracy": 135
+      },
+      "weapons": {
+        "CB_GN_005_GNBazooka": {
+          "sharedRef": null,
+          "uniqueDamageScale": 3,
+          "damageComponents": {
+            "beamAP": 24000
+          },
+          "nativeTiming": {
+            "source": "Units/BattleUnits/Weapon/Beam/CB_GN_005_GNBazooka.gw",
+            "barrel": "CB_GN_005_GNBazooka",
+            "entry": "action_Weapon0",
+            "cooldown": 0,
+            "duration": 1.4,
+            "firstShot": 0.8999999999999999,
+            "lastShot": 0.8999999999999999,
+            "firingEvents": 1,
+            "projectiles": 1,
+            "secondaryProjectiles": 0,
+            "declaredEnergy": 0,
+            "energyMode": "perVolley",
+            "energyPerEmission": 0,
+            "energy": 0,
+            "actions": [
+              "action_Weapon0",
+              "hiddenAction_SetAttackingOn",
+              "hiddenAction_Send_BattleUnitCore_GuardOff",
+              "hiddenAction_SetShootOn",
+              "hiddenAction_CB_GN_005_GNBazooka_SetWeaponIndex",
+              "hiddenAction_CB_GN_005_GNBazooka_B1_Step_1",
+              "hiddenAction_CB_GN_005_GNBazooka_Fire_Step_ChargeEffect_1",
+              "hiddenAction_CB_GN_005_GNBazooka_Fire_Step_SpeedDownL",
+              "hiddenAction_CB_GN_005_GNBazooka_Fire_Step_1",
+              "hiddenAction_CB_GN_005_GNBazooka_Fire_Step_2",
+              "hiddenAction_CB_GN_005_GNBazooka_Fire_Step_3",
+              "hiddenAction_CB_GN_005_GNBazooka_Fire_Step_Final",
+              "hiddenAction_SetAttackingOff",
+              "hiddenAction_SetShootOff",
+              "hiddenAction_SetCqbOff"
+            ]
+          }
+        },
+        "EF_BeamSaber_A": {
+          "sharedRef": "EF_BeamSaber_A__lv2",
+          "uniqueDamageScale": 1,
+          "damageComponents": {
+            "melee": 2437.5,
+            "meleeBeam": 2437.5
+          },
+          "nativeTiming": {
+            "source": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber_A_Lv2.gw",
+            "barrel": "EF_BeamSaber_A",
+            "entry": "action_Weapon1",
+            "cooldown": 0,
+            "duration": 1.2999999999999998,
+            "firstShot": 0.6,
+            "lastShot": 0.6,
+            "firingEvents": 1,
+            "projectiles": 1,
+            "secondaryProjectiles": 0,
+            "declaredEnergy": 0,
+            "energyMode": "perVolley",
+            "energyPerEmission": 0,
+            "energy": 0,
+            "actions": [
+              "action_Weapon1",
+              "hiddenAction_SetAttackingOn",
+              "hiddenAction_Send_BattleUnitCore_GuardOff",
+              "hiddenAction_SetCqbOn",
+              "hiddenAction_SetCqbOn_FindTarget",
+              "hiddenAction_EF_BeamSaber_A_SetWeaponIndex",
+              "hiddenAction_EF_BeamSaber_A_Step_1",
+              "hiddenAction_EF_BeamSaber_A_Fire_Step_1",
+              "hiddenAction_EF_BeamSaber_A_Fire_Step_2",
+              "hiddenAction_EF_BeamSaber_A_Fire_Step_Final",
+              "hiddenAction_SetAttackingOff",
+              "hiddenAction_SetShootOff",
+              "hiddenAction_SetCqbOff"
+            ]
+          }
+        },
+        "CB_GN_005_GNBazooka_BurstMode": {
+          "sharedRef": null,
+          "uniqueDamageScale": 3,
+          "damageComponents": {
+            "beamAP": 956.25
+          },
+          "nativeTiming": {
+            "source": "Units/BattleUnits/Weapon/Beam/CB_GN_005_GNBazooka_BurstMode.gw",
+            "barrel": "CB_GN_005_GNBazooka_BurstMode",
+            "entry": "action_Weapon2",
+            "cooldown": 0,
+            "duration": 5.300000000000001,
+            "firstShot": 0.4,
+            "lastShot": 4.300000000000001,
+            "firingEvents": 40,
+            "projectiles": 40,
+            "secondaryProjectiles": 0,
+            "declaredEnergy": 0,
+            "energyMode": "perVolley",
+            "energyPerEmission": 0,
+            "energy": 0,
+            "actions": [
+              "action_Weapon2",
+              "hiddenAction_SetAttackingOn",
+              "hiddenAction_Send_BattleUnitCore_GuardOff",
+              "hiddenAction_SetShootOn",
+              "hiddenAction_CB_GN_005_GNBazooka_BurstMode_SetWeaponIndex",
+              "hiddenAction_CB_GN_005_GNBazooka_BurstMode_B1_Step_1",
+              "hiddenAction_SetAttackingCantTurnOn",
+              "hiddenAction_CB_GN_005_GNBazooka_BurstMode_Fire_Step_ChargeEffect_1",
+              "hiddenAction_CB_GN_005_GNBazooka_BurstMode_Fire_Step_1",
+              "hiddenAction_CB_GN_005_GNBazooka_BurstMode_Fire_Step_2",
+              "hiddenAction_CB_GN_005_GNBazooka_BurstMode_Fire_Step_BulletEffect_1",
+              "hiddenAction_CB_GN_005_GNBazooka_BurstMode_Fire_Step_3",
+              "hiddenAction_CB_GN_005_GNBazooka_BurstMode_Fire_Step_Final",
+              "hiddenAction_SetAttackingOff",
+              "hiddenAction_SetShootOff",
+              "hiddenAction_SetCqbOff",
+              "hiddenAction_CB_GN_005_GNBazooka_BurstMode_BulletEffect_1_StopPlay",
+              "hiddenAction_SetAttackingCantTurnOff"
+            ]
+          }
+        },
+        "CB_GN_005_BeamCannon": {
+          "sharedRef": null,
+          "uniqueDamageScale": 3,
+          "damageComponents": {
+            "beamAP": 4000
+          },
+          "nativeTiming": {
+            "source": "Units/BattleUnits/Weapon/Beam/CB_GN_005_BeamCannon.gw",
+            "barrel": "CB_GN_005_BeamCannon",
+            "entry": "action_Weapon3",
+            "cooldown": 0,
+            "duration": 1.85,
+            "firstShot": 0.6,
+            "lastShot": 0.6,
+            "firingEvents": 4,
+            "projectiles": 4,
+            "secondaryProjectiles": 0,
+            "declaredEnergy": 0,
+            "energyMode": "perVolley",
+            "energyPerEmission": 0,
+            "energy": 0,
+            "actions": [
+              "action_Weapon3",
+              "hiddenAction_SetAttackingOn",
+              "hiddenAction_Send_BattleUnitCore_GuardOff",
+              "hiddenAction_SetShootOn",
+              "hiddenAction_CB_GN_005_BeamCannon_SetWeaponIndex",
+              "hiddenAction_CB_GN_005_BeamCannon_B2_Step_1",
+              "hiddenAction_SetAttackingCantTurnOn",
+              "hiddenAction_CB_GN_005_BeamCannon_Fire_Step_1",
+              "hiddenAction_CB_GN_005_BeamCannon_Fire_Step_2",
+              "hiddenAction_CB_GN_005_BeamCannon_Fire_Step_3",
+              "hiddenAction_CB_GN_005_BeamCannon_Fire_Step_R2",
+              "hiddenAction_CB_GN_005_BeamCannon_Fire_Step_L",
+              "hiddenAction_CB_GN_005_BeamCannon_Fire_Step_L2",
+              "hiddenAction_CB_GN_005_BeamCannon_Fire_Step_Final",
+              "hiddenAction_SetAttackingOff",
+              "hiddenAction_SetShootOff",
+              "hiddenAction_SetCqbOff",
+              "hiddenAction_SetAttackingCantTurnOff"
+            ]
+          }
+        }
+      },
+      "skills": [
+        {
+          "id": "Irradiation",
+          "damageComponents": {
+            "beamAP": 38250
+          }
+        }
+      ]
+    }
+  ]
+}

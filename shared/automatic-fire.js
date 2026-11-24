@@ -50,6 +50,8 @@ const AutomaticFire = (() => {
     const planned = targets.flatMap((enemy) =>
       G.attackOrders(enemy).map((order) => ({ enemy, order })),
     );
+    const chargeOnly = combatMode === "charge" ||
+      (counter && planned.length > 0 && planned.every(({ order }) => order.combatMode === "charge"));
     const rangedOnly =
       counter &&
       planned.length &&
@@ -63,6 +65,7 @@ const AutomaticFire = (() => {
     const pool = new Map();
     for (const enemy of targets)
       for (const weapon of weapons(G, game, unit, enemy, counter)) {
+        if (chargeOnly && (G.dist(unit, enemy) !== 1 || weapon.type !== "melee")) continue;
         if ((combatMode === "shooting" || rangedOnly) && weapon.type === "melee") continue;
         pool.set(weapon.id, weapon);
       }
@@ -166,12 +169,16 @@ const AutomaticFire = (() => {
       meleeAvailability = new Map();
     const add = (from, to, ids, stance, counter, intent = {}) => {
       if (!from || !to) return;
+      const targetIds = (intent.targetSquad || G.squadMembers(game, to).map(unit => unit.id))
+        .filter(id => intent.combatMode !== "charge" || (find(id) && G.dist(from, find(id)) === 1));
+      if (intent.combatMode === "charge" && !targetIds.length) return;
       const resolved = [...new Set(ids)]
         .map((id) => G.modelOf(from).weapons.find((w) => w.id === id))
         .filter(
           (weapon) =>
             weapon &&
             roundCount(G, game, from, weapon, counter) > 0 &&
+            (intent.combatMode !== "charge" || weapon.type === "melee") &&
             (intent.combatMode !== "shooting" || weapon.type !== "melee"),
         );
       // Reserve a conditional ram fallback. It is checked after ranged EN/part changes,
@@ -211,7 +218,7 @@ const AutomaticFire = (() => {
           duration,
           count,
           rounds: new Map(),
-          targets: intent.targetSquad || G.squadMembers(game, to).map((unit) => unit.id),
+          targets: targetIds,
           volleyTargets: new Map(),
           containerCell: weapon.projectile?.container ? (() => {
             const aim = intent.impactCell || intent.aimCell || G.attackAimCell(game, from, to, [weapon]) || to;
@@ -247,17 +254,18 @@ const AutomaticFire = (() => {
       if (choice.response === "counter") {
         const from = find(choice.intent.target),
           to = find(choice.counterTargetId || choice.intent.attacker);
+        const combatMode = G.counterCombatMode(choice.intent, to?.id);
         if (from && to) counterTargets.set(from.id, to.id);
         add(
           from,
           to,
-          choice.counterIds || G.automaticSquadQueue(game, from, to, true).map((w) => w.id),
+          choice.counterIds || G.firePlan(game, from, to, {counter:true, combatMode}).weapons.map((w) => w.id),
           "counter",
           true,
           {
             automatic: true,
             manual: choice.manualCounter,
-            combatMode: "melee",
+            combatMode,
           },
         );
       }

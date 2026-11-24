@@ -15,11 +15,14 @@
     "sniperRangeBonus": 2,
     "projectileSpeed": 0.1,
     "sniperDamage": 1.5625,
-    "chargedSniperDamage": 1.40625,
+    "chargedSniperDamage": 1.5,
     "penetrationDamagePerCount": 0.15,
     "armorPiercingIgnore": 0.5,
     "shipCannonAccuracy": 0.85,
-    "beamGunKitCostOffset": -25
+    "beamGunKitCostOffset": -25,
+    "mortarHitOffset": 5,
+    "cannonHitOffset": 5,
+    "chargedSniperHit": 95
   },
   "units": {
     "specialCost": 1.1,
@@ -88,7 +91,7 @@
       "maxRange": -1
     },
     "cannon": {
-      "damage": 1,
+      "damage": 1.1,
       "accuracy": 1,
       "en": 1,
       "range": 1,
@@ -165,7 +168,7 @@
       "maxRange": -1
     },
     "mortar": {
-      "damage": 1.5625,
+      "damage": 0.75,
       "accuracy": 1,
       "en": 1,
       "range": 1,
@@ -351,5 +354,12 @@
       "minRange": -1,
       "maxRange": -1
     }
+  },
+  "gbo2": {
+    "hp": 2,
+    "shield": 2,
+    "move": 2,
+    "uniqueDamage": 3,
+    "mountain": 75
   }
 }

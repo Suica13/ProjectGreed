@@ -7,10 +7,10 @@ window.SupplyUI = (() => {
     node.onclick = action;
     return node;
   };
-  function portrait(unitId, featured = false) {
+  function portrait(unitId, featured = false, index = 0, count = 2) {
     const modelId = featured && unitId === "RX_78_5" ? "RX_78_5__kit_0" : Economy.defaultModel(unitId);
     return SupplyDelivery.sprite(modelId, featured
-      ? { angle: unitId === "RX_78_4" ? 270 : 90, shooting: true, pixelRatio: 2 } : {});
+      ? { angle: count === 4 ? [315, 45, 225, 135][index] : index % 2 === 0 ? 270 : 90, shooting: true, pixelRatio: 2 } : {});
   }
   function resultName(result) {
     if (result.itemId) return I18n.text(Economy.supplyPools.find(pool => pool.tokenId === result.itemId).tokenName) + " ×" + result.quantity;
@@ -37,7 +37,7 @@ window.SupplyUI = (() => {
   function showProducts() {
     const dialog = element("dialog", "contact-terminal supply-products"), heading = element("header"), body = element("div", "supply-products-body");
     heading.append(element("h2", "", "商品一览"), button("关闭", () => dialog.close()));
-    body.append(element("p", "muted", "以下百分比均为单次抽取的总概率，类内商品等概率。每次获得一项；十连独立抽取，无额外保底。S、A、B品使用指定单位清单；C品仅包含资金、物资、代币和零件。所有单位均送至保管库，租赁机剩余10次。"));
+    body.append(element("p", "muted", "以下百分比均为单次抽取的总概率，类内商品等概率。每次获得一项；十连独立抽取，无额外保底。S、A、B品使用指定单位清单；C品仅包含资金、物资、代币和零件。所有单位均送至保管库，租赁次数以各商品标注为准。"));
     for (const grade of Economy.supplyProducts(selected)) {
       const section = element("section", "supply-product-grade");
       section.dataset.grade = grade.id;
@@ -93,20 +93,23 @@ window.SupplyUI = (() => {
       const card = button("", () => { selected = entry.id; results = []; render(); }, "supply-pool-card");
       card.dataset.poolId = entry.id;
       card.setAttribute("aria-pressed", String(selected === entry.id));
-      card.append(element("span", "supply-pool-number", "VOL. 01"));
-      for (const unitId of entry.featured) card.append(portrait(unitId, true));
+      card.append(element("span", "supply-pool-number", "VOL. " + String(Economy.supplyPools.indexOf(entry) + 1).padStart(2, "0")));
+      const art = element("div", "supply-card-art"); art.dataset.count = entry.featured.length;
+      entry.featured.forEach((unitId, index) => art.append(portrait(unitId, true, index, entry.featured.length)));
+      card.append(art);
       const label = element("strong", "", entry.name);
       if (entry.machineName !== entry.name) label.append(element("small", "supply-pool-era", entry.machineName));
       card.append(label);
       list.append(card);
     }
-    cover.append(element("small", "supply-kicker", "0079 / SPECIAL SUPPLY"), element("h2", "", pool.name));
-    for (const unitId of pool.featured) {
+    cover.append(element("small", "supply-kicker", pool.machineName + " / SPECIAL SUPPLY"), element("h2", "", pool.name));
+    for (const [index, unitId] of pool.featured.entries()) {
       const unit = element("figure"), model = UnitModels[Economy.defaultModel(unitId)];
-      unit.append(portrait(unitId, true), element("figcaption", "", model.name));
+      unit.append(portrait(unitId, true, index, pool.featured.length), element("figcaption", "", model.name));
       units.append(unit);
     }
-    cover.append(units, element("span", "supply-featured-label", "注目单位 · 高达4号机 / 高达5号机"));
+    cover.append(units, element("span", "supply-featured-label", "注目单位 · " + pool.featured.map(id => UnitModels[Economy.defaultModel(id)].name).join(" / ")));
+    if (pool.featured.length > 2) { units.style.gridTemplateRows = "repeat(2, minmax(0, 1fr))"; units.classList.add("supply-featured-multiple"); }
     const rates = element("div", "supply-rates");
     for (const grade of pool.grades) {
       const badge = element("span", "", grade.id + "品 " + grade.weight + "%");

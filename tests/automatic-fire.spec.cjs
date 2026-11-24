@@ -3,6 +3,11 @@ const { pathToFileURL } = require("node:url");
 const path = require("node:path");
 async function open(page) {
   await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
+  await page.waitForFunction(()=>assetsReady);
+  if(await page.locator('#profileOnboarding').isVisible()){
+    await page.locator('#profileCompanyName').fill('Combat Test PMC');
+    await page.locator('#profileOnboardingConfirm').click();
+  }
   await expect(page.locator("#openSkirmish")).toBeEnabled();
   await page.evaluate(() => {
     Net.leave();
@@ -28,6 +33,28 @@ async function open(page) {
     update();
   });
 }
+
+for(const width of [1440,390])test(`charge mode cycles, skips both shooting phases and resets for a new attack at ${width}px`,async({page})=>{
+ test.setTimeout(90000);
+ await page.setViewportSize({width,height:1000});await open(page);
+ await page.evaluate(()=>AttackControls.start(game.units[0]));
+ await expect(page.locator('#squadCombatMode')).toHaveText('格斗战');
+ await page.locator('#squadCombatMode').click();await expect(page.locator('#squadCombatMode')).toHaveText('射击战');
+ await page.locator('#squadCombatMode').click();await expect(page.locator('#squadCombatMode')).toHaveText('突击');
+ await page.screenshot({path:`tmp/verification/screenshots/charge-controls-${width}.png`});
+ expect(await page.evaluate(()=>{const[a,b]=game.units;return AttackControls.choose(a,b)&&AttackControls.mapDraft(a)[0].order.weapons.every(id=>getWeapon(a,id).type==='melee');})).toBe(true);
+ await expect(page.locator('#attackEditor')).toContainText('双方跳过射击');
+ await page.locator('#confirmAttackQueue').click();
+ expect(await page.evaluate(()=>pending.combatMode)).toBe('charge');
+ expect(await page.evaluate(()=>{const u=getUnit(pending.target);return counterDraft(u).ids.every(id=>getWeapon(u,id).type==='melee');})).toBe(true);
+ await page.locator('#confirmResponse').click();
+ expect(await page.evaluate(()=>battleView.battles.length>0&&battleView.battles.every(b=>b.events.every(e=>e.type==='melee')))).toBe(true);
+ await page.screenshot({path:`tmp/verification/screenshots/charge-${width}.png`});
+ await page.evaluate(()=>{phase='idle';pending=null;battleView=null;byId('reaction').hidden=true;game.units.forEach(u=>{u.acted=false;delete u.plan;});selected=game.units[0].id;squadCombatMode='charge';game.units[1].x=game.units[0].x+2;AttackControls.reset();});
+ expect(await page.evaluate(()=>AttackControls.canTarget(game.units[0],game.units[1]))).toBe(false);
+ await page.evaluate(()=>AttackControls.start(game.units[0]));
+ expect(await page.evaluate(()=>squadCombatMode)).toBe('melee');
+});
 test("attack UI lists automatic weapons without manual controls", async ({ page }) => {
   const errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
@@ -38,7 +65,7 @@ test("attack UI lists automatic weapons without manual controls", async ({ page 
   });
   await expect(page.locator("#attackEditor")).toBeVisible();
   await expect(page.locator("#confirmAttackQueue")).toBeEnabled();
-  expect(await page.locator("#attackEditor .weapon").count()).toBeGreaterThan(0);
+  expect(await page.locator("#attackEditor .weapon-card").count()).toBeGreaterThan(0);
   await expect(page.locator("#attackEditor .weapon-rounds").first()).toBeVisible();
   await expect(page.locator("#attackEditor .weapon-rounds").first()).toHaveText("2");
   await page.evaluate(() => {

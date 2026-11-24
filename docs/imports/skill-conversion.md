@@ -9,4 +9,6 @@
 5. EN容量保持原MOD的100%，不再应用统一减半；武器EN不随容量折半。移动从常规推进速度与当前战术政策核对，反应独立影响回避。视野按原MOD×0.4、雷达÷36、反侦测÷28.8独立换算。
 6. 同类武器固定基础命中由weaponClasses.baseHit维护；舰炮额外命中倍率0.85。原载荷穿甲分量与贯穿附伤不得合并成普通伤害，默认忽略50%百分比抗性。
 
+7. 战斗行动2战斗单位先复用同名共用武器，再应用conversion-rules.json的gbo2专属换算；反应与命中按最终同COST参照，人工差值最后应用。见[天人移植说明](gbo2-gn-level4.md)，不将倍率烘焙进原始载荷。
+
 验证integer-gameplay-values、ap-reference-only、weapon-accuracy-unification、damage-rounding及相关Node/WebSocket回归，再构建客户端。视觉、音效和左右炮口需另行验证。

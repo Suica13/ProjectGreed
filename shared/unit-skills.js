@@ -440,6 +440,7 @@ const UnitSkills = (() => {
         ...(unit.counterTargetId ? { counterTargetId: unit.counterTargetId } : {}),
       };
       const nextModel = modelOf(next);
+      if (nextModel.gnField) next.gnFieldHp = config.inheritResources && oldModel.gnField ? Math.min(nextModel.gnField.capacity, (unit.gnFieldHp ?? oldModel.gnField.capacity) / oldModel.gnField.capacity * nextModel.gnField.capacity) : nextModel.gnField.capacity;
       if (nextModel.iField)
         next.iFieldHp =
           config.inheritResources && oldModel.iField

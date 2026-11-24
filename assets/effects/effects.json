@@ -2215,5 +2215,95 @@
     "drift": 21.0,
     "sounds": [],
     "source": "MOD native melee action: Cqb_Fire_1_Pink_R_L"
+  },
+  "GBO2_Irradiation_Start_Pink": {
+    "texture": "textures/GBO2_Irradiation_Start_Pink.png",
+    "frames": 28,
+    "startFrame": 0,
+    "endFrame": 27,
+    "fps": 14,
+    "scaleFrom": 1,
+    "scaleTo": 1,
+    "alpha": 1,
+    "rotation": 0,
+    "offset": {
+      "x": 0,
+      "y": 0
+    },
+    "drift": 0,
+    "sounds": [],
+    "source": "Resource/Image/Fx/Weapon/Beam/HighMegaCannon/Image/HighMegaCannon_1_Start_Pink.png"
+  },
+  "GBO2_Irradiation_Mid_Pink": {
+    "texture": "textures/GBO2_Irradiation_Mid_Pink.png",
+    "frames": 28,
+    "startFrame": 0,
+    "endFrame": 27,
+    "fps": 14,
+    "scaleFrom": 1,
+    "scaleTo": 1,
+    "alpha": 1,
+    "rotation": 0,
+    "offset": {
+      "x": 0,
+      "y": 0
+    },
+    "drift": 0,
+    "sounds": [],
+    "source": "Resource/Image/Fx/Weapon/Beam/HighMegaCannon/Image/HighMegaCannon_1_Mid_Pink.png"
+  },
+  "GBO2_Irradiation_End_Pink": {
+    "texture": "textures/GBO2_Irradiation_End_Pink.png",
+    "frames": 28,
+    "startFrame": 0,
+    "endFrame": 27,
+    "fps": 14,
+    "scaleFrom": 1,
+    "scaleTo": 1,
+    "alpha": 1,
+    "rotation": 0,
+    "offset": {
+      "x": 0,
+      "y": 0
+    },
+    "drift": 0,
+    "sounds": [],
+    "source": "Resource/Image/Fx/Weapon/Beam/HighMegaCannon/Image/HighMegaCannon_1_End_Pink.png"
+  },
+  "GBO2_Irradiation_Charge_Pink": {
+    "texture": "textures/GBO2_Irradiation_Charge_Pink.png",
+    "frames": 12,
+    "startFrame": 0,
+    "endFrame": 11,
+    "fps": 12,
+    "scaleFrom": 1,
+    "scaleTo": 1,
+    "alpha": 1,
+    "rotation": 0,
+    "offset": {
+      "x": 0,
+      "y": 0
+    },
+    "drift": 0,
+    "sounds": [],
+    "source": "Resource/Image/Fx/Weapon/Beam/Charge/Image/Beam_Charge_1_Pink.png"
+  },
+  "GN_Field": {
+    "texture": "textures/GN_Field_1.png",
+    "frames": 4,
+    "startFrame": 0,
+    "endFrame": 3,
+    "fps": 12,
+    "scaleFrom": 0.6,
+    "scaleTo": 1,
+    "alpha": 0.8,
+    "rotation": 0,
+    "offset": {
+      "x": 0,
+      "y": 0
+    },
+    "drift": 0,
+    "sounds": [],
+    "source": "GundamWars_BattleOperation2_V5/Resource/Image/Fx/Weapon/Sp/Image/GN_Field_1.png"
   }
 }

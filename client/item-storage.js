@@ -42,8 +42,7 @@ window.ItemStorageUI = (() => {
     const owned = category === "parts"
       ? UnitPlugins.catalog.filter(part => (state.pluginInventory[part.id] || 0) > 0)
         .map(part => ({ id: part.id, name: part.name, count: state.pluginInventory[part.id], part }))
-      : category === "items" && (state.itemInventory["0079t1-token"] || 0) > 0
-        ? [{ id: "0079t1-token", name: "0079年代补给代币", count: state.itemInventory["0079t1-token"] }] : [];
+      : category === "items" ? Economy.supplyPools.filter(pool => (state.itemInventory[pool.tokenId] || 0) > 0).map(pool => ({id:pool.tokenId,name:pool.tokenName,count:state.itemInventory[pool.tokenId]})) : [];
     if (!owned.some(item => item.id === selected[category])) selected[category] = owned[0]?.id || null;
     for (const [key, tab] of [["parts", partsTab], ["items", itemsTab], ["materials", materialsTab]])
       tab.setAttribute("aria-pressed", String(category === key));

@@ -4,8 +4,8 @@ const { WebSocket, WebSocketServer } = require("ws");
 const G = require("../shared/rules.js");
 const { createRoomEngine } = require("../shared/room-engine.js");
 
-for (const initialHp of [100000, 1])
-  test(`real WebSocket crossfire is canonical and waits for all playback (HP ${initialHp})`, async (t) => {
+for (const initialHp of [100000, 1]) for (const combatMode of ['melee','charge'])
+  test(`real WebSocket ${combatMode} crossfire is canonical and waits for all playback (HP ${initialHp})`, async (t) => {
     let sequence = 0;
     const frames = [];
     const wire = new WebSocketServer({ host: "127.0.0.1", port: 0 });
@@ -109,9 +109,16 @@ for (const initialHp of [100000, 1])
       characterFaction: "PMC",
     });
     const [a, b] = room.game.units;
-    await act(host, "attack", { unitId: a.id, targetId: b.id });
+    if(combatMode==='charge'){
+      b.x+=1;
+      const state=JSON.stringify([room.plans,a.acted,a.en]);
+      await assert.rejects(act(host,'attack',{unitId:a.id,targetId:b.id,combatMode}),/相邻/);
+      assert.equal(JSON.stringify([room.plans,a.acted,a.en]),state);
+      b.x-=1;
+    }
+    await act(host, "attack", { unitId: a.id, targetId: b.id, combatMode });
     assert.equal(a.actionPoints, 10);
-    const canonical = G.automaticQueue(room.game, a, b).map((w) => w.id);
+    const canonical = G.firePlan(room.game, a, b, {combatMode}).weapons.map((w) => w.id);
     assert.deepEqual(room.plans[0].weapons, canonical);
     const before = JSON.stringify([room.plans, a.actionPoints, a.en]);
     await assert.rejects(
@@ -136,6 +143,7 @@ for (const initialHp of [100000, 1])
     await act(first, "respond", fields, revision);
     assert.equal(room.phase, "playback");
     const after = JSON.stringify(room.game.units.map((u) => [u.hp, u.en]));
+    if(combatMode==='charge')assert(room.combatBatch.every(b=>b.events.every(e=>e.type==='melee')));
     await act(first, "respond", fields, revision);
     assert.equal(JSON.stringify(room.game.units.map((u) => [u.hp, u.en])), after);
     assert(

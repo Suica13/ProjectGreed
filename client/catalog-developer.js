@@ -584,7 +584,7 @@ window.CatalogDeveloper = (() => {
     select(
       identity,
       "主要阵营标签",
-      unit.tags.find((tag) => ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON", "EFSF_0093", "NEO_ZEON_0093", "OMNI", "ZAFT"].includes(tag)),
+      unit.tags.find((tag) => Rules.factions.includes(tag)),
       [
         ["EFSF", "EFSF"],
         ["ZEON", "ZEON"],
@@ -594,7 +594,7 @@ window.CatalogDeveloper = (() => {
       ],
       (value) => {
         unit.tags = unit.tags.filter(
-          (tag) => !["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON", "EFSF_0093", "NEO_ZEON_0093", "OMNI", "ZAFT"].includes(tag),
+          (tag) => !Rules.factions.includes(tag),
         );
         unit.tags.unshift(value);
         unit.faction = value;
@@ -612,12 +612,12 @@ window.CatalogDeveloper = (() => {
       identity,
       "年代标签（逗号分隔）",
       unit.tags
-        .filter((tag) => !["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON", "EFSF_0093", "NEO_ZEON_0093", "OMNI", "ZAFT"].includes(tag))
+        .filter((tag) => !Rules.factions.includes(tag))
         .join(","),
       (value) =>
         (unit.tags = [
           ...unit.tags.filter((tag) =>
-            ["EFSF", "ZEON", "AEUG", "TITANS", "NEO_ZEON", "EFSF_0093", "NEO_ZEON_0093", "OMNI", "ZAFT"].includes(tag),
+            Rules.factions.includes(tag),
           ),
           ...tags(value),
         ]),
@@ -996,7 +996,7 @@ window.CatalogDeveloper = (() => {
       ),
     );
     for (const [group, fields] of Object.entries(rulesSession.fields)) {
-      const grid = section(form, group === "weapons" ? "武器与技能" : "单位基础属性");
+      const grid = section(form, group === "weapons" ? "武器与技能" : group === "gbo2" ? "战斗行动2移植" : "单位基础属性");
       for (const [key, [label, min, max, integer, description]] of Object.entries(fields)) {
         const control = input(
           grid,

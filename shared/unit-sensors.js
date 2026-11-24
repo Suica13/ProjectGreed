@@ -5,6 +5,7 @@ const UnitSensors = {
     const fogMode = (game) =>
       ["full", "visible", "disabled"].includes(game?.fogMode) ? game.fogMode : "full";
     function ranges(unit, game = null) {
+      const solar = unit.sensorArea ? null : modelOf(unit).solarFurnace;
       const base = (unit.sensorArea ? unit.sensors : modelOf(unit).sensors) || {
         sight: 8,
         radar: 10,
@@ -23,8 +24,8 @@ const UnitSensors = {
         sight: Math.round(base.sight * head * sightFactor),
         radar: base.radar * head * radarFactor,
         antiDetection: (base.antiDetection || 0) + (game && minovskyAt(game, unit) ? 5 : 0),
-        stealth: !!base.stealth || (water && !!base.stealthAqua) || (!!unit.opticalCamouflage && unit.en > 0 && modelOf(unit).skills?.some(skill => skill.type === "optical_camouflage")),
-        antiDetect: !!base.antiDetect || (water && !!base.antiDetectAqua),
+        stealth: !!solar?.stealth || !!base.stealth || (water && !!base.stealthAqua) || (!!unit.opticalCamouflage && unit.en > 0 && modelOf(unit).skills?.some(skill => skill.type === "optical_camouflage")),
+        antiDetect: !!solar?.antiDetect || !!base.antiDetect || (water && !!base.antiDetectAqua),
       };
     }
     const footprint = (u) => (u.sensorArea || u.groundTarget ? [{ x: u.x, y: u.y }] : cells(u));

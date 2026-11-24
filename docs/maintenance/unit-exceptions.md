@@ -15,6 +15,8 @@
 
 完整换算说明：[conversion-rules.md](../imports/skill-conversion.md)。
 
+本轮TB与天人数值审计：`52b4f383-6278-4a74-9af2-8be31e16e95d`，详见[TB移植记录](../imports/thunderbolt-duel.md)与[天人移植记录](../imports/gbo2-gn-level4.md)。蓄力狙击统一为完整普通齐射1.5倍、基础命中95%、命中率×2；旧CE单机蓄力伤害差值清理审计：`5f9d61d9-928f-47cf-8e9e-93b0c8c76f24`，射程差值保留。
+
 ## 2. 明确保留的数值例外
 
 | 单位 | 项目 | 当前规则／数值 | 维护入口 |
@@ -404,6 +406,18 @@ RX-77-3两种炮塔贴图按套件显示；GP-02肩部推进器外壳静止／�
 | 米迪亚改、胖叔叔改（MedeaKai、FatUncleKai） | 不受运输机惩罚；当前31500 | 原值+25，当前275 | tools/v17_balance.py |
 
 以上四个家族的部署形态同样具备EN补给，由tools/unit_supply.py按formOf统一维护。
+
+
+
+- 德天使与力天使指定数值、独立GN立场及太阳炉：人工差值审计 `f3f1e8dd-9ab7-4428-adb9-3473fda6c396`，见[天人移植说明](../imports/gbo2-gn-level4.md)。
+
+
+
+- 能天使、主天使MS/MA指定平衡，德天使65000耐久：人工差值审计 `b1f498cd-22b6-4e39-9acb-f2d121072eb6`，MA保留移动+2并与MS对齐抗性，见[天人移植说明](../imports/gbo2-gn-level4.md)。
+
+
+
+- 全装甲高达TB与高机动扎古TB对齐G-3基准，指定武装调整：人工差值审计 `f1238b0e-449e-4389-a7fb-4d18df9a7f1c`，见[TB移植说明](../imports/thunderbolt-duel.md)。力天使蓄力狙击派生自最终步枪与吉姆狙击II倍率，见[天人移植说明](../imports/gbo2-gn-level4.md)。
 
 <!-- catalog-editor-index:start -->
 

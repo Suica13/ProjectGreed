@@ -9,6 +9,8 @@ const fields = {
     nonCounterTargetAccuracy: ["反击时非反击对象的命中倍率",1,5,false,"选择反击后，来自其他单位的最终命中率乘此倍率，最高100%。"],
     shootingDamageOffset: ["射击全局伤害系数增减", -0.99, 10, false, "加到全部武装伤害倍率上，仅射击武器及伤害型射击技能生效；不影响近战与冲撞。"],
     shootingHitOffset: ["射击基础命中增减", -100, 100, false, "分类基础命中直接增减百分点，再应用命中倍率；包含分段射击及照射。"],
+    cannonHitOffset: ["加农炮命中增减", -100, 100, true, "加农炮在命中倍率之后增加的命中百分点；包含舰炮与攻击技能。"],
+    mortarHitOffset: ["迫击炮命中增减", -100, 100, true, "迫击炮在舰炮等命中倍率之后增加的命中百分点；包含迫击炮攻击技能。"],
     handheldCannonHitOffset: ["手持加农炮命中增减", -100, 100, true, "180mm、170mm手持加农炮与马哲拉顶炮额外增加的命中百分点；不包含舰炮、肩炮或坦克炮。"],
     kitCostOffset: ["武器套件COST增减", -10000, 10000, true, "对各套件原始COST加成统一增减，最低0；不改变机体基础COST。"],
     beamGunKitCostOffset: ["光束枪／喷枪套件COST增减", -10000, 10000, true, "仅主武器为光束枪或光束喷枪的套件，在通用套件COST增减之后额外应用；不影响光束步枪。"],
@@ -18,8 +20,9 @@ const fields = {
     shipCannonAccuracy: ["舰炮命中倍率", 0.01, 10, false, "战舰的加农炮、光束炮和迫击炮额外乘此系数；不包含机枪、对空炮、导弹和航空炸弹。"],
     armorPiercingIgnore: ["穿甲无视抗性比例", 0, 1, false, "0.5表示只计算目标50%的对应抗性；固定减伤、盾牌和最终减伤仍正常计算。可由单武器特例覆盖。"],
     penetrationDamagePerCount: ["每次原生贯穿附伤", 0, 10, false, "有衰减且次数大于1的远程弹丸：基础光束/实弹伤害×原次数×本值，追加对应穿甲分量。"],
-    sniperDamage: ["普通狙击伤害倍率", 0.01, 10, false, "仅普通狙击武器，不与蓄力狙击倍率叠加。"],
-    chargedSniperDamage: ["蓄力狙击伤害倍率", 0.01, 10, false, "仅蓄力狙击技能，替代普通狙击倍率。"],
+    sniperDamage: ["普通狙击伤害倍率", 0.01, 10, false, "普通狙击倍率；蓄力以普通齐射为基准同步变化。"],
+    chargedSniperDamage: ["蓄力狙击相对齐射倍率", 0.01, 10, false, "以对应普通武器完整一轮最终齐射伤害为基准。"],
+    chargedSniperHit: ["蓄力狙击基础命中", 0, 100, true, "统一基础命中率，保留原生命中×2。"],
     projectileSpeed: ["原MOD弹速倍率", 0.01, 10, false, "直接乘原生ProjectileSpeed；照射和迫击炮保持原值。"],
     en: ["武器EN消耗倍率", 0.01, 10, false, "消耗向上取整。"],
     rangeBonus: [
@@ -37,6 +40,13 @@ const fields = {
       "代替普通武器额外射程，不重复叠加。",
     ],
     range: ["武器射程倍率", 0.01, 10, false, "最小和最大射程同时换算为整数。"],
+  },
+  gbo2: {
+    hp: ["战斗行动2耐久倍率", 0.01, 10, false, "仅战斗行动2移植单位，在通用换算后叠乘。"],
+    shield: ["战斗行动2盾牌耐久倍率", 0.01, 10, false, "仅战斗行动2移植单位的实体盾牌，不包含GN立场。"],
+    move: ["战斗行动2移动倍率", 0.01, 10, false, "通用移动换算后翻倍，再执行人工差值。"],
+    uniqueDamage: ["战斗行动2独有武装伤害倍率", 0.01, 10, false, "优先沿用同名共用武器；未复用的武器及伤害型技能乘此倍率。"],
+    mountain: ["战斗行动2默认山地适应性", 0, 100, true, "未另行人工指定时采用此百分比。"],
   },
   units: {
     shipAccuracy: ["战舰原MOD命中系数倍率", 0.01, 10, false, "以sourceStats记录的原MOD命中系数为基准，保留既有阵营加成；再应用单位命中倍率和人工差值。"],
@@ -61,14 +71,16 @@ const classFields = {
   rangeBonus: ["分类最大射程增减", -100, 100, true],
 };
 function validate(value) {
+  if (value) value.gbo2 ??= {hp:2,shield:2,move:2,uniqueDamage:3,mountain:75};
   if (value?.units) value.units.shipAccuracy ??= 0.9;
   if (value?.units) value.units.maHP ??= 0.75;
   if (value?.units) value.units.specialCost ??= 1.1;
+  if (value?.weapons) value.weapons.chargedSniperHit ??= 95;
   if (value?.weapons) value.weapons.nonCounterTargetAccuracy ??= 1.1;
   if (value?.weapons) value.weapons.handheldCannonHitOffset ??= 15;
   if (value?.weapons) value.weapons.kitCostOffset ??= -25;
   if (value?.weapons) value.weapons.beamGunKitCostOffset ??= -25;
-  if (value?.weapons) for (const key of ["shootingDamageOffset", "shootingHitOffset", "shipMediumAccuracyBonus"])
+  if (value?.weapons) for (const key of ["shootingDamageOffset", "shootingHitOffset", "shipMediumAccuracyBonus", "mortarHitOffset", "cannonHitOffset"])
     value.weapons[key] ??= 0;
   if (value?.weapons && value.weapons.shipCannonAccuracy === undefined) value.weapons.shipCannonAccuracy = 0.85;
   if (value?.weapons && value.weapons.armorPiercingIgnore === undefined) value.weapons.armorPiercingIgnore = 0.5;
@@ -231,7 +243,8 @@ function globals(prefab, rules) {
     }
     for (const key of ["hit", "baseHit"])
       if (base[key] !== undefined)
-        weapon[key] = Math.max(0, (weapon.baseHitOverride ?? (group.baseHit >= 0 ? group.baseHit : base[key])) + hitOffset) * accuracy;
+        weapon[key] = Math.max(0, Math.max(0, (weapon.baseHitOverride ?? (group.baseHit >= 0 ? group.baseHit : base[key])) + hitOffset) * accuracy +
+          (Classes.classify(weapon) === "mortar" ? w.mortarHitOffset || 0 : Classes.classify(weapon) === "cannon" ? w.cannonHitOffset || 0 : 0));
     if (prefab.stats?.ship) weapon.shipWeapon = true;
     else delete weapon.shipWeapon;
     if (Classes.wristWeapon(weapon))
@@ -291,8 +304,8 @@ function globals(prefab, rules) {
     for (const [index, step] of steps.entries())
       if (step.accuracy !== undefined)
         step.accuracy =
-          Math.max(0, (weapon.baseHitOverride ?? (group.baseHit >= 0 ? group.baseHit : base.stepAccuracy[index])) + hitOffset) *
-          accuracy;
+          Math.max(0, Math.max(0, (weapon.baseHitOverride ?? (group.baseHit >= 0 ? group.baseHit : base.stepAccuracy[index])) + hitOffset) *
+          accuracy + (Classes.classify(weapon) === "mortar" ? w.mortarHitOffset || 0 : Classes.classify(weapon) === "cannon" ? w.cannonHitOffset || 0 : 0));
     weapon.conversionMultipliers = { ...base, damageScale, accuracyScale: accuracy };
   }
   for (const skill of (prefab.skills || []).filter((skill) => !isWeaponSkill(skill)))

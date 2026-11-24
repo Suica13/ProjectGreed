@@ -1,0 +1,986 @@
+{
+  "schemaVersion": 2,
+  "id": "RGM_79_TB",
+  "code": "RGM-79_TB",
+  "source": "GundamWars_Duel_A0/Units/BattleUnits/RGM-79_TB/RGM-79_TB.ini",
+  "materials": {
+    "textures": {
+      "RGM-79_TB_Crotch_1.png": "textures/RGM-79_TB_Crotch_1.png",
+      "RGM-79_TB_Body_1.png": "textures/RGM-79_TB_Body_1.png",
+      "RGM-79_TB_ArmL_1.png": "textures/RGM-79_TB_ArmL_1.png",
+      "RGM-79_TB_ArmR_1.png": "textures/RGM-79_TB_ArmR_1.png",
+      "RGM-79_TB_ShoulderL_1.png": "textures/RGM-79_TB_ShoulderL_1.png",
+      "RGM-79_TB_ShoulderR_1.png": "textures/RGM-79_TB_ShoulderR_1.png",
+      "RGM-79_TB_Head_1.png": "textures/RGM-79_TB_Head_1.png",
+      "RGM-79_TB_Foot_1.png": "textures/RGM-79_TB_Foot_1.png",
+      "RGM-79_TB_LegL_1.png": "textures/RGM-79_TB_LegL_1.png",
+      "RGM-79_TB_LegR_1.png": "textures/RGM-79_TB_LegR_1.png",
+      "EF_BeamSprayGun.png": "textures/EF_BeamSprayGun.png",
+      "EF_BeamSaber.png": "textures/EF_BeamSaber.png",
+      "EF_FA_78_1_BR_TB_GM.png": "textures/EF_FA_78_1_BR_TB_GM.png",
+      "EF_EarlyStandardTypeShield_TB_Green.png": "textures/EF_EarlyStandardTypeShield_TB_Green.png",
+      "MS.png": "textures/MS.png",
+      "Boost_1.png": "textures/Boost_1.png",
+      "BoostReversing_1.png": "textures/BoostReversing_1.png",
+      "TB_RenderedIcon.png": "textures/TB_RenderedIcon.png"
+    },
+    "icon": "TB_RenderedIcon.png"
+  },
+  "skeleton": {
+    "Pelvis": {
+      "x": 0.0,
+      "y": -0.5
+    },
+    "Body": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftArm": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightArm": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftShoulder": {
+      "x": -9.0,
+      "y": 0.0
+    },
+    "RightShoulder": {
+      "x": 9.0,
+      "y": 0.0
+    },
+    "LeftWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "RightWeapon": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment12": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Attachment13": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Head": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "Eye": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "LeftFoot": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "LeftLeg": {
+      "x": -6.0,
+      "y": 0.0,
+      "endDirOffset": -8.0
+    },
+    "RightFoot": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    },
+    "RightLeg": {
+      "x": 6.0,
+      "y": 0.0,
+      "endDirOffset": 8.0
+    }
+  },
+  "layers": [
+    {
+      "name": "LeftFoot",
+      "texture": "RGM-79_TB_Foot_1.png",
+      "bone": "LeftFoot",
+      "order": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "RightFoot",
+      "texture": "RGM-79_TB_Foot_1.png",
+      "bone": "RightFoot",
+      "order": 1.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "LeftLeg",
+      "texture": "RGM-79_TB_LegL_1.png",
+      "bone": "LeftLeg",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "RightLeg",
+      "texture": "RGM-79_TB_LegR_1.png",
+      "bone": "RightLeg",
+      "order": 2.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "Boost",
+      "texture": "Boost_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -9.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "moving": true,
+        "boosting": true
+      }
+    },
+    {
+      "name": "BoostReversing",
+      "texture": "BoostReversing_1.png",
+      "bone": "Body",
+      "order": 4.0,
+      "scale": 2.0,
+      "offset": {
+        "x": -2.5,
+        "y": -14.0
+      },
+      "scaleY": 1.5,
+      "rotation": 0.0,
+      "alpha": 0.75,
+      "frames": 3.0,
+      "frameFps": 12,
+      "frame": 0,
+      "visibleWhen": {
+        "moving": true,
+        "boosting": true
+      }
+    },
+    {
+      "name": "Crotch",
+      "texture": "RGM-79_TB_Crotch_1.png",
+      "bone": "Pelvis",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ArmL",
+      "texture": "RGM-79_TB_ArmL_1.png",
+      "bone": "LeftArm",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ArmR",
+      "texture": "RGM-79_TB_ArmR_1.png",
+      "bone": "RightArm",
+      "order": 5.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "EF_BeamSprayGunR",
+      "texture": "EF_BeamSprayGun.png",
+      "bone": "RightArm",
+      "order": 5.5,
+      "scale": 0.85,
+      "rotation": 0.0,
+      "offset": {
+        "x": 0.0,
+        "y": 13.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": 0
+      }
+    },
+    {
+      "name": "EF_BeamSaberR",
+      "texture": "EF_BeamSaber.png",
+      "bone": "RightWeapon",
+      "order": 5.5,
+      "scale": 0.85,
+      "rotation": -16.0,
+      "frames": 5.0,
+      "frame": 1.0,
+      "offset": {
+        "x": 6.0,
+        "y": 22.0
+      },
+      "visibleWhen": {
+        "weaponDisplayIndex": 1
+      }
+    },
+    {
+      "name": "EF_FA_78_1_BRR",
+      "texture": "EF_FA_78_1_BR_TB_GM.png",
+      "bone": "LeftArm",
+      "order": 5.5,
+      "scale": 0.85,
+      "rotation": 0.0,
+      "offset": {
+        "x": -2.5,
+        "y": 13.0
+      }
+    },
+    {
+      "name": "Body",
+      "texture": "RGM-79_TB_Body_1.png",
+      "bone": "Body",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ShoulderL",
+      "texture": "RGM-79_TB_ShoulderL_1.png",
+      "bone": "LeftShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "ShoulderR",
+      "texture": "RGM-79_TB_ShoulderR_1.png",
+      "bone": "RightShoulder",
+      "order": 6.0,
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "name": "Shield_Back_L",
+      "texture": "EF_EarlyStandardTypeShield_TB_Green.png",
+      "bone": "LeftArm",
+      "order": 6.0,
+      "scale": 1.0,
+      "rotation": -90.0,
+      "offset": {
+        "x": -3.0,
+        "y": -1.0
+      },
+      "visibleWhen": {
+        "shieldVisible": true
+      }
+    },
+    {
+      "name": "Shield_Back_R",
+      "texture": "EF_EarlyStandardTypeShield_TB_Green.png",
+      "bone": "RightArm",
+      "order": 6.0,
+      "scale": 1.0,
+      "rotation": 90.0,
+      "offset": {
+        "x": 3.0,
+        "y": -1.0
+      },
+      "visibleWhen": {
+        "shieldVisible": true
+      }
+    },
+    {
+      "name": "Head",
+      "texture": "RGM-79_TB_Head_1.png",
+      "bone": "Head",
+      "order": 7.0,
+      "offset": {
+        "x": -0.5,
+        "y": 0.0
+      },
+      "visibleWhen": {
+        "visorClosed": false
+      }
+    }
+  ],
+  "animations": {
+    "OnMovingWalk": "../../animations/RGM_79_TB__OnMovingWalk.json",
+    "OnMovingBoost": "../../animations/RGM_79_TB__OnMovingBoost.json",
+    "OnMovingBoostReversing": "../../animations/RGM_79_TB__OnMovingBoostReversing.json",
+    "Common_Daze_A": "../../animations/RGM_79_TB__Common_Daze_A.json",
+    "Common_Stagger_A": "../../animations/RGM_79_TB__Common_Stagger_A.json",
+    "Common_Stun_A": "../../animations/RGM_79_TB__Common_Stun_A.json",
+    "Common_Guard": "../../animations/RGM_79_TB__Common_Guard.json",
+    "Common_SemiAuto_Shoot_A": "../../animations/RGM_79_TB__Common_SemiAuto_Shoot_A.json",
+    "Common_SemiAuto_Shoot_A_L": "../../animations/RGM_79_TB__Common_SemiAuto_Shoot_A_L.json",
+    "Common_Single_DoubleShoot_A": "../../animations/RGM_79_TB__Common_Single_DoubleShoot_A.json",
+    "Common_Melee_A": "../../animations/RGM_79_TB__Common_Melee_A.json",
+    "Common_Melee_A_L": "../../animations/RGM_79_TB__Common_Melee_A_L.json",
+    "Common_Melee_B": "../../animations/RGM_79_TB__Common_Melee_B.json",
+    "Common_Melee_B_L": "../../animations/RGM_79_TB__Common_Melee_B_L.json",
+    "Common_Melee_F": "../../animations/RGM_79_TB__Common_Melee_F.json",
+    "Common_Melee_F_L": "../../animations/RGM_79_TB__Common_Melee_F_L.json",
+    "Common_Melee_TwoHanded_A": "../../animations/RGM_79_TB__Common_Melee_TwoHanded_A.json",
+    "Common_Melee_TwoHanded_A_L": "../../animations/RGM_79_TB__Common_Melee_TwoHanded_A_L.json",
+    "ImportedIdle": "../../animations/ImportedIdle.json"
+  },
+  "stats": {
+    "hp": 26500,
+    "en": 750,
+    "move": 6,
+    "mobility": 115,
+    "cost": 250,
+    "counterLimit": 1,
+    "partStructuralStrength": 120,
+    "adaptability": {
+      "ground": 100,
+      "space": 100,
+      "water": 50,
+      "air": 10,
+      "atmosphere": 0,
+      "mountain": 100,
+      "forest": 75,
+      "snow": 75,
+      "desert": 75,
+      "rubble": 75
+    },
+    "accuracy": 115,
+    "actionPoints": 10,
+    "sensors": {
+      "sight": 8,
+      "radar": 10,
+      "antiDetection": 0,
+      "revealOnDetection": false,
+      "antiDetect": false,
+      "stealth": false,
+      "stealthAqua": false,
+      "antiDetectAqua": false
+    },
+    "speed": 100
+  },
+  "attackBonuses": {
+    "melee": 15,
+    "shooting": 20,
+    "beam": 0,
+    "shell": 0
+  },
+  "defenses": {
+    "beam": {
+      "percent": 5,
+      "flat": 0
+    },
+    "shell": {
+      "percent": 10,
+      "flat": 75
+    },
+    "melee": {
+      "percent": 10,
+      "flat": 100
+    },
+    "dp": {
+      "percent": 10,
+      "flat": 15
+    },
+    "sp": {
+      "percent": 0,
+      "flat": 0
+    }
+  },
+  "shield": {
+    "hp": 4000,
+    "blockChance": 0.35,
+    "coverage": 0.75,
+    "defenses": {
+      "beam": {
+        "percent": 0,
+        "flat": 0
+      },
+      "shell": {
+        "percent": 10,
+        "flat": 25
+      },
+      "melee": {
+        "percent": 5,
+        "flat": 150
+      },
+      "dp": {
+        "percent": 10,
+        "flat": 25
+      }
+    },
+    "requiredParts": []
+  },
+  "sourceStats": {
+    "enBeforeReduction": 750,
+    "enCapacityMultiplier": 1,
+    "hp": 21000,
+    "walkSpeed": 0.65,
+    "boostSpeed": 1.4,
+    "turnSpeed": 1.75,
+    "reaction": 115,
+    "partStructuralStrength": 120,
+    "accuracy": 115,
+    "unitLevel": 1000,
+    "balanceStatus": "native-level",
+    "shooting": 120,
+    "melee": 115,
+    "tacticalMoveBeforeBonus": 5,
+    "adaptability": {
+      "ground": 100,
+      "space": 100,
+      "water": 50,
+      "air": 10,
+      "mountain": 100,
+      "atmosphere": 0
+    },
+    "sensors": {
+      "sight": 20,
+      "radar": 360,
+      "antiDetection": 0
+    },
+    "v17BaseHp": 21000,
+    "technologyEra": "UC_0079_T1",
+    "actionTurnSpeed": 1.75,
+    "mobilityMoveTarget": 6,
+    "nativeDuel": {
+      "hp": 1000.0,
+      "walkSpeed": 0.5,
+      "boostSpeed": 1.0,
+      "turnSpeed": 1.25,
+      "reaction": 0,
+      "shooting": 100.0,
+      "melee": 100.0,
+      "initialization": "unitCategory=1, unitLevel=3,  baseHpMax=4750, baseMoraleMax=1000, baseEnergyMax=1000, baseDpMax=1000,  baseMoveSpeed=0.5, baseTurnSpeed=1.25, baseHeight=1, baseMass=1000, reverseSpeedMultiplier=0.75,  boostMoveSpeed=1.0, boostTurnSpeed=1, boostOverHeatMax=60, boostCoolDownSpeed=1.5,  baseDetectRange=500, baseFogOfWarSightRange=memory.baseDetectRange/25, baseShootLevel=100, baseCqbLevel=100,  baseShellDef=0, baseBeamDef=0, baseCqbDef=0, baseDpDef=0, baseMoraleDef=0, baseSpDef=0,  shieldMax=2500, shieldShellDef=75, shieldBeamDef=75, shieldCqbDef=75, shieldDpDef=75,  groundAdaptability=80, cliftAdaptability=80, waterAdaptability=80, skyAdaptability=80, spaceAdaptability=120, canEnteringAtmosphere=false,  baseActionPoint=3, baseMovePoint=7.5, slgAttackRange=150"
+    },
+    "referenceUnits": {
+      "stats": "RGM_79",
+      "handling": "RGM_79",
+      "shield": "RGM_79"
+    },
+    "technologyWeight": 1,
+    "nativeProductionQuantity": 3,
+    "multiShieldCount": 2
+  },
+  "presentation": {
+    "shield": true,
+    "mapScale": 1,
+    "battleScale": 1,
+    "idle": "ImportedIdle",
+    "move": "OnMovingBoost",
+    "stagger": "Common_Stagger_A",
+    "dodge": "ImportedIdle",
+    "deathEffect": "Explosion_Ground_1",
+    "walk": "OnMovingWalk",
+    "movement": "boost",
+    "thrusters": true
+  },
+  "name": "吉姆[TB]",
+  "localization": {
+    "zh": {
+      "name": "吉姆[TB]"
+    },
+    "en": {
+      "name": "GM [Thunderbolt]"
+    },
+    "ja": {
+      "name": "ジム［TB］"
+    }
+  },
+  "tags": [
+    "EFSF",
+    "UC_0079_T1"
+  ],
+  "unitTags": [
+    "MS"
+  ],
+  "transport": {
+    "slotCost": 2,
+    "loadTags": [
+      "CanLoadInto",
+      "CanUseSFS"
+    ]
+  },
+  "weapons": {
+    "EF_BeamSprayGun": {
+      "ref": "EF_BeamSprayGun__lv1",
+      "overrides": {
+        "hit": 100,
+        "clip": "Common_SemiAuto_Shoot_A",
+        "sound": {
+          "file": "../../sounds/TB_BeamSprayGun_1.ogg",
+          "volume": 0.5
+        },
+        "damagePerShot": 85.0,
+        "attack": {
+          "steps": [
+            {
+              "weaponDisplayIndex": 0,
+              "delay": 0
+            },
+            {
+              "animation": "Common_SemiAuto_Shoot_A",
+              "delay": 0
+            },
+            {
+              "shots": 8,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "delay": 0.0
+            },
+            {
+              "delay": 0.2
+            }
+          ],
+          "startAnimation": null
+        },
+        "projectile": {
+          "texture": "../../projectiles/Beam_1.png",
+          "scale": 1.0,
+          "speed": 7.5,
+          "nativeSpeed": 7.5,
+          "rotation": 0.0,
+          "presentationSource": "GundamWars_BattleOperation2_V5/Resource/Image/Bullet/Beam/Beam_1.png",
+          "presentationSha256": "1c8de19c7101027112bad0a7cd4843beed5f57de6436ae0dd2d21adaa0f560cb"
+        },
+        "damageComponents": {
+          "beam": 85.0
+        },
+        "sourceHit": 100,
+        "category": "beam_spray",
+        "nativePayload": {
+          "DpDamage": 25.0,
+          "BeamDamage": 85.0,
+          "ProjectileSpeed": 7.5,
+          "ProjectileLife": 60.0
+        },
+        "antiSize": {
+          "small": {
+            "damage": 1,
+            "accuracy": 1
+          },
+          "large": {
+            "damage": 1,
+            "accuracy": 1
+          }
+        },
+        "targetModifiers": {
+          "air": 1,
+          "water": 1,
+          "ground": 1,
+          "space": 1
+        },
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Beam/EF_BeamSprayGun.gw",
+          "barrel": "EF_BeamSprayGun",
+          "entry": "action_Weapon0",
+          "cooldown": 0,
+          "duration": 0.2,
+          "firstShot": 0.0,
+          "lastShot": 0.0,
+          "firingEvents": 1,
+          "projectiles": 8,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "action_Weapon0",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SetAttackingOn_ActiveSkills",
+            "hiddenAction_SetShootOn",
+            "hiddenAction_EF_BeamSprayGun_SetWeaponIndex",
+            "hiddenAction_EF_BeamSprayGun_B1_Step_1",
+            "hiddenAction_EF_BeamSprayGun_Fire_Step_1",
+            "hiddenAction_EF_BeamSprayGun_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff",
+            "hiddenAction_SetShootOff"
+          ]
+        },
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/EF_BeamSprayGun.gw",
+          "barrels": [
+            {
+              "id": "EF_BeamSprayGun",
+              "x": 8.0,
+              "y": 16.0
+            }
+          ],
+          "entry": "action_Weapon0"
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "EF_BeamSprayGunR",
+              "point": {
+                "x": -1.176470588235294,
+                "y": -3.5294117647058822
+              }
+            }
+          ]
+        },
+        "requiredParts": [
+          "rightArm"
+        ],
+        "weaponClass": "beam_spray",
+        "thunderboltReference": [
+          "RGM_79",
+          "EF_BeamSprayGun"
+        ],
+        "nativeSourceName": "EF_BeamSprayGun"
+      }
+    },
+    "EF_BeamSaber": {
+      "ref": "EF_BeamSaber_A__lv1",
+      "overrides": {
+        "hit": 100,
+        "sourceHit": 100,
+        "damagePerShot": 900.0,
+        "damageComponents": {
+          "melee": 600.0,
+          "meleeBeam": 300.0
+        },
+        "attack": {
+          "steps": [
+            {
+              "weaponDisplayIndex": 1,
+              "delay": 0
+            },
+            {
+              "animation": "Common_Melee_A",
+              "delay": 0
+            },
+            {
+              "shots": 1,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1,
+              "requiredParts": [
+                "rightArm"
+              ],
+              "swingEffects": [],
+              "delay": 0.7
+            },
+            {
+              "delay": 0.7
+            }
+          ],
+          "startAnimation": null
+        },
+        "partBreakModifier": 1,
+        "sound": {
+          "file": "../../sounds/TB_BeamSaber_1.ogg",
+          "volume": 0.5
+        },
+        "targetModifiers": {
+          "air": 1,
+          "water": 1,
+          "ground": 1,
+          "space": 1
+        },
+        "nativePayload": {
+          "DpDamage": 1000.0,
+          "CqbDamage": 600.0,
+          "CqbBeamDamage": 300.0,
+          "ProjectileSpeed": 5.0,
+          "ProjectileLife": 10.0
+        },
+        "antiSize": {
+          "small": {
+            "damage": 1,
+            "accuracy": 1
+          },
+          "large": {
+            "damage": 1,
+            "accuracy": 1
+          }
+        },
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber.gw",
+          "barrel": "EF_BeamSaber",
+          "entry": "action_Weapon1",
+          "cooldown": 0,
+          "duration": 1.4,
+          "firstShot": 0.7,
+          "lastShot": 0.7,
+          "firingEvents": 1,
+          "projectiles": 1,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "action_Weapon1",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SetAttackingOn_ActiveSkills",
+            "hiddenAction_SetCqbOn",
+            "hiddenAction_EF_BeamSaber_SetWeaponIndex",
+            "hiddenAction_EF_BeamSaber_A_Step_1",
+            "hiddenAction_EF_BeamSaber_Fire_A_Step_1",
+            "hiddenAction_EF_BeamSaber_Fire_A_Step_2",
+            "hiddenAction_EF_BeamSaber_Fire_A_Step_Final",
+            "hiddenAction_SetAttackingOff",
+            "hiddenAction_SetCqbOff"
+          ]
+        },
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Cqb/EF_BeamSaber.gw",
+          "barrels": [
+            {
+              "id": "EF_BeamSaber",
+              "x": 0.0,
+              "y": 0.0
+            }
+          ],
+          "entry": "action_Weapon1"
+        },
+        "localization": {
+          "zh": {
+            "name": "光束军刀"
+          },
+          "ja": {
+            "name": "ビーム・サーベル"
+          },
+          "en": {
+            "name": "Beam Saber"
+          }
+        },
+        "requiredParts": [
+          "rightArm"
+        ],
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "EF_BeamSaberR",
+              "point": {
+                "x": -13.919520004239876,
+                "y": 22.934039030283554
+              }
+            }
+          ]
+        },
+        "weaponClass": "melee",
+        "thunderboltReference": [
+          "RGM_79",
+          "EF_BeamSaber_A"
+        ],
+        "nativeSourceName": "EF_BeamSaber"
+      },
+      "remove": [
+        "swingEffects"
+      ]
+    },
+    "EF_FA_78_1_BR_TB_GM": {
+      "ref": "EF_BeamSprayGun__lv1",
+      "overrides": {
+        "name": "二连装光束步枪",
+        "hit": 100,
+        "clip": "Common_SemiAuto_Shoot_A_L",
+        "sound": {
+          "file": "../../sounds/TB_BeamRifle_1.ogg",
+          "volume": 0.6
+        },
+        "damagePerShot": 325.0,
+        "attack": {
+          "steps": [
+            {
+              "animation": "Common_SemiAuto_Shoot_A_L",
+              "delay": 0
+            },
+            {
+              "shots": 2,
+              "muzzleIndex": 0,
+              "partBreakModifier": 1,
+              "requiredParts": [
+                "leftArm"
+              ],
+              "delay": 0.0
+            },
+            {
+              "delay": 0.2
+            }
+          ],
+          "startAnimation": null
+        },
+        "projectile": {
+          "texture": "../../projectiles/Beam_2.png",
+          "scale": 1.0,
+          "speed": 10.0,
+          "nativeSpeed": 10.0,
+          "rotation": 0.0,
+          "presentationSource": "GundamWars_BattleOperation2_V5/Resource/Image/Bullet/Beam/Beam_2.png",
+          "presentationSha256": "a45dc5d7459906aedc0a4706f996d374dd143f7b809a74fdd551ce09e98a5a3b"
+        },
+        "damageComponents": {
+          "beam": 325.0
+        },
+        "sourceHit": 100,
+        "category": "beam_rifle",
+        "nativePayload": {
+          "DpDamage": 125.0,
+          "BeamDamage": 325.0,
+          "ProjectileSpeed": 10.0,
+          "ProjectileLife": 50.0
+        },
+        "antiSize": {
+          "small": {
+            "damage": 1,
+            "accuracy": 1
+          },
+          "large": {
+            "damage": 1,
+            "accuracy": 1
+          }
+        },
+        "targetModifiers": {
+          "air": 1,
+          "water": 1,
+          "ground": 1,
+          "space": 1
+        },
+        "nativeTiming": {
+          "source": "Units/BattleUnits/Weapon/Beam/EF_FA_78_1_BR_TB_GM.gw",
+          "barrel": "EF_FA_78_1_BR",
+          "entry": "action_Weapon2",
+          "cooldown": 0,
+          "duration": 0.2,
+          "firstShot": 0.0,
+          "lastShot": 0.0,
+          "firingEvents": 1,
+          "projectiles": 2,
+          "secondaryProjectiles": 0,
+          "declaredEnergy": 0.0,
+          "energyMode": "perVolley",
+          "energyPerEmission": 0,
+          "energy": 0,
+          "actions": [
+            "action_Weapon2",
+            "hiddenAction_SetAttackingOn",
+            "hiddenAction_SetAttackingOn_ActiveSkills",
+            "hiddenAction_SetShootOn",
+            "hiddenAction_EF_FA_78_1_BR_SetWeaponIndex",
+            "hiddenAction_EF_FA_78_1_BR_B1_Step_1",
+            "hiddenAction_EF_FA_78_1_BR_Fire_Step_1",
+            "hiddenAction_EF_FA_78_1_BR_Fire_Step_Final",
+            "hiddenAction_SetAttackingOff",
+            "hiddenAction_SetShootOff"
+          ]
+        },
+        "changeHeldWeapon": false,
+        "localization": {
+          "zh": {
+            "name": "二连装光束步枪"
+          },
+          "en": {
+            "name": "Twin Beam Rifle"
+          },
+          "ja": {
+            "name": "二連装ビーム・ライフル"
+          }
+        },
+        "source": {
+          "file": "Units/BattleUnits/Weapon/Beam/EF_FA_78_1_BR_TB_GM.gw",
+          "barrels": [
+            {
+              "id": "EF_FA_78_1_BR",
+              "x": -10.0,
+              "y": 16.0
+            }
+          ],
+          "entry": "action_Weapon2"
+        },
+        "muzzle": {
+          "mounts": [
+            {
+              "layer": "EF_FA_78_1_BRR",
+              "point": {
+                "x": 1.7647058823529416,
+                "y": -3.5294117647058822
+              }
+            }
+          ]
+        },
+        "requiredParts": [
+          "leftArm"
+        ],
+        "weaponClass": "beam_rifle",
+        "thunderboltReference": [
+          "RGM_79",
+          "EF_BeamSprayGun"
+        ],
+        "nativeSourceName": "EF_FA_78_1_BR_TB_GM"
+      },
+      "remove": [
+        "displayIndex"
+      ]
+    }
+  },
+  "skills": [],
+  "hangars": [],
+  "refits": [],
+  "mechanics": [
+    {
+      "id": "DefensiveUp",
+      "status": "review",
+      "source": "Template/Unit/Skills/DefensiveUp.gw",
+      "name": "DefensiveUp"
+    },
+    {
+      "id": "DashAutoDefense",
+      "status": "review",
+      "source": "Template/Unit/Skills/DashAutoDefense.gw",
+      "name": "DashAutoDefense"
+    }
+  ],
+  "formOnly": false,
+  "weaponKits": [
+    {
+      "id": "default",
+      "name": "标准武装",
+      "cost": 75,
+      "weapons": [
+        "EF_BeamSprayGun",
+        "EF_BeamSaber",
+        "EF_FA_78_1_BR_TB_GM"
+      ],
+      "localization": {
+        "zh": {
+          "name": "标准武装"
+        },
+        "en": {
+          "name": "Standard Armament"
+        },
+        "ja": {
+          "name": "標準武装"
+        }
+      }
+    }
+  ]
+}

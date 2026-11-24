@@ -52,6 +52,7 @@ function compile(text, { minimum = 1 } = {}) {
   let section,
     level,
     weight = 8,
+    qualityMultiplier = 1,
     event,
     trigger;
   for (const raw of text.split(/\r?\n/)) {
@@ -67,10 +68,17 @@ function compile(text, { minimum = 1 } = {}) {
       level = levels[heading[1]];
       event = trigger = null;
       weight = 8;
+      qualityMultiplier = 1;
       continue;
     }
     if (!level || !["巡逻队", "驻军", "特殊事件"].includes(section)) continue;
     if (section === "巡逻队") {
+      const quality = /^精锐编队权重倍率 ([\d.]+)$/.exec(line);
+      if (quality) {
+        qualityMultiplier = Number(quality[1]);
+        if (!(qualityMultiplier >= 1 && qualityMultiplier <= 2)) throw Error("Invalid quality multiplier");
+        continue;
+      }
       if (weights[line] !== undefined) {
         weight = weights[line];
         continue;
@@ -86,7 +94,7 @@ function compile(text, { minimum = 1 } = {}) {
         if (count < 1 || count > 60) throw Error("Invalid formation quantity: " + token);
         return Array(count).fill(unitId);
       });
-      level.formations.push({ label: m[1], units, budget: Number(m[2]), weight });
+      level.formations.push({ label: m[1], units, budget: Number(m[2]), weight: weight <= 1 ? weight * qualityMultiplier : weight });
       continue;
     }
     const type = /(salvage|command|factory|capture|upload|radar|defend):?$/.exec(line);

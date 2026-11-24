@@ -41,7 +41,7 @@ function fixture(t, difficulty, { ace = false, multiplier = 1, aiDelayMs = 99999
   return { room, actor, pilot, act, settle, frames };
 }
 
-for (const [difficulty, expected] of [[1,625],[2,1250],[3,1875],[4,3750],[5,5000],[6,6250]])
+for (const [difficulty, expected] of [[1,625],[2,1250],[3,2250],[4,4875],[5,8000],[6,11875]])
   test(`N${difficulty} pays ${expected} XP per deployed PMC/ACE at settlement only`, t => {
     const f = fixture(t, difficulty, { ace: difficulty % 2 === 0 });
     for (const o of f.room.game.contract.objectives) o.status = 'completed';
@@ -69,7 +69,7 @@ test('partial completion scales XP, excludes contact events and retains activity
   f.room.game.contract.objectives.forEach((o, i) => o.status = i === 0 ? 'completed' : 'failed');
   f.room.game.contract.objectives.push({ id: 'contact-extra', contactTaskId: 'extra', status: 'completed' });
   f.settle();
-  assert.equal(f.actor.pilot.experience, 1250);
+  assert.equal(f.actor.pilot.experience, 1500);
 });
 
 test('zero ordinary completion grants no XP even with completed contact event', t => {
