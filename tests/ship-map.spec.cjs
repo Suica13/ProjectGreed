@@ -71,6 +71,7 @@ test("ship range uses destination cells, caches search and invalidates on board 
       drawMap(performance.now());
       const afterOtherMove = calls;
       game.tiles[9][12] = "rock";
+      game.tiles = game.tiles.map(row => row.slice());
       drawMap(performance.now());
       const afterTerrain = calls;
       ship.angle = 0;

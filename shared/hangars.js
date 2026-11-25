@@ -431,7 +431,7 @@ const UnitHangars = {
         !squadFits(members, g) ||
         new Set(members.map((u) => u.id)).size !== members.length
       )
-        throw Error("请选择不超过6台且合计不超过6容量点的出击单位");
+        throw Error("请选择不超过6台且合计不超过12容量点的出击单位");
       const root = members[0],
         carrierId = root.embarked?.carrierId;
       if (

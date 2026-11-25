@@ -512,6 +512,10 @@ function loadCatalog({
     localize.prefab(prefab);
     require("./unit-footprint.cjs").compactShipFootprint(prefab);
     require("./weapon-balance.cjs").applyWeaponBalance(prefab, conversion, weaponDefinitionsOverride || undefined, { adjustments });
+    // Global movement reduction follows import policies and precedes manual offsets.
+    const moveOffset=Math.trunc(((prefab.stats.speed ?? 100)-100)/50);
+    if (!prefab.stats.deployed) prefab.stats.move=Math.max(1,Math.round((prefab.stats.move+moveOffset)*(conversion.units.finalMoveMultiplier ?? .75)))-moveOffset;
+    if (prefab.tags.includes("CB") && prefab.transport) prefab.transport.slotCost=2;
     Adjust.unit(prefab, adjustments, raw.weapons);
     // Form changes preserve existing action state and never end the unit turn.
     for (const skill of prefab.skills || [])
@@ -1288,6 +1292,7 @@ function loadCatalog({
       });
       result.models[id] = {
         ...prefab.stats,
+        partBreakChanceMultiplier: conversion.units.partBreakChanceMultiplier,
         move: prefab.stats.deployed
           ? 0
           : prefab.stats.move + Math.trunc((prefab.stats.speed - 100) / 50),

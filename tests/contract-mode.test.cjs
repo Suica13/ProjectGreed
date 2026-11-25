@@ -91,6 +91,46 @@ function clearEnemies(f) {
   for (const u of f.room.game.units.filter((u) => u.team === 1)) u.hp = 0;
 }
 
+test('three independent Anaheim token commissions create separate N5 objectives and require personal extraction',t=>{
+ const tasks=require('../shared/contact-tasks').tasks.filter(t=>t.tokenUnlock);
+ const f=fixture(t,{difficulty:5,faction:'NONE',contactTasks:tasks.map(t=>({id:t.id,status:'accepted',progress:0}))}),g=f.room.game;
+ const objectives=g.contract.objectives.filter(o=>tasks.some(t=>t.id===o.contactTaskId));assert.equal(objectives.length,3);
+ assert.deepEqual(new Set(objectives.map(o=>o.type)),new Set(['salvage','command','upload']));
+ const command=objectives.find(o=>o.type==='command');assert.equal(command.targets.length,3);
+ assert.deepEqual(command.targets.map(id=>G.modelOf(g.units.find(u=>u.id===id)).prefabId),['RX_79_G','RGM_79_G','RGM_79_G']);
+ for(const o of objectives)o.status='completed';assert.equal(C.commissionProgress(f.room,G,f.member).length,0);
+ moveTo(G,f.actor,g.contract.extractions[0]);f.act(0,'contract_extract',{unitId:f.actor.id});
+ const completed=C.commissionProgress(f.room,G,f.member);assert.deepEqual(new Set(completed.map(r=>r.id)),new Set(tasks.map(t=>t.id)));assert(completed.every(r=>r.amount===1));assert.deepEqual(f.errors,[]);
+});
+
+test('N6 Anaheim full sweep unlock requires all events before the actual extraction action',t=>{
+ const f=fixture(t,{difficulty:6,faction:'NONE',contactTasks:[{id:'anaheim-11',status:'accepted',progress:0}]}),g=f.room.game;
+ assert(!g.contract.objectives.some(o=>o.contactTaskId==='anaheim-11'),'commission reuses existing events');
+ for(const o of g.contract.objectives)o.status='completed';
+ moveTo(G,f.actor,g.contract.extractions[0]);
+ f.act(0,'contract_extract',{unitId:f.actor.id});
+ assert.equal(f.actor.contractAllEventsAtExtraction,true);
+ assert.equal(C.commissionProgress(f.room,G,f.member).find(entry=>entry.id==='anaheim-11')?.amount,1);
+ assert.deepEqual(f.errors,[]);
+});
+
+test('large event airdrops arrive across own turns from distinct directions and cancel on completion',t=>{
+ const f=fixture(t),g=f.room.game,o=g.contract.objectives.find(o=>o.type==='radar');assert(o);
+ const profile=require('../shared/contract-forces').profile(f.room.settings),key='radar.first',original=profile.waves[key];
+ profile.waves[key]=Math.max(original*4,12000);t.after(()=>profile.waves[key]=original);
+ g.contract.objectives=[o];for(const u of g.units)if(u.team===1&&!o.targets.includes(u.id))u.hp=0;
+ moveTo(G,f.actor,{x:o.x+1,y:o.y+1});
+ const drops=()=>g.units.filter(u=>u.contractObjectiveId===o.id&&u.airdropRound!==undefined);
+ const maxFormation=Math.max(...require('../shared/contract-forces').formations(f.room.settings,G).map(formation=>formation.units.length));
+ C.poll(f.room,G);const first=drops();assert(first.length>0&&first.length<=maxFormation);
+ const count=first.length;for(let i=0;i<5;i++)C.poll(f.room,G);assert.equal(drops().length,count);
+ g.round+=2;C.poll(f.room,G);const second=drops().filter(u=>u.airdropRound===g.round);assert(second.length>0);
+ assert(second.length<=maxFormation);assert.notEqual(second[0].airdropDirection,first[0].airdropDirection);
+ g.round+=2;C.poll(f.room,G);const third=drops().filter(u=>u.airdropRound===g.round);assert(third.length>0&&third.length<=maxFormation);
+ assert.equal(new Set([first[0],second[0],third[0]].map(u=>u.airdropDirection)).size,3);
+ const arrived=drops().length;o.status='completed';g.round+=2;C.poll(f.room,G);assert.equal(drops().length,arrived);
+});
+
 for(const [id,faction,difficulty,count,unitId,grade,kitId] of [
  ['efsf-11','ZEON',4,6,'MS_11','elite','kit_1'],
  ['efsf-12','EFSF',5,1,'RX_78XX','veteran','kit_3'],
@@ -668,19 +708,19 @@ test("an actual server-resolved mortar kill carries its weapon into commission c
 });
 test("era budgets scale every difficulty cumulatively while fleet limits and event counts stay fixed", () => {
   const eras = ["UC_0079_T1", "UC_0079_T2", "UC_0087_T1", "UC_0087_T2", "UC_0093_T1"];
-  assert.deepEqual(eras.map(era=>C.config(1,era).costLimit),[2000,3000,4000,4500,6000]);
-  assert.deepEqual([1,2,3,4,5,6].map(n=>C.config(n).costLimit),[2000,3000,4000,6000,8000,10000]);
-  assert.deepEqual([1,2,3,4,5,6].map(n=>C.config(n,"UC_0079_T2").costLimit),[3000,4500,6000,9000,12000,15000]);
+  assert.deepEqual(eras.map(era=>C.config(1,era).costLimit),[3000,4500,6000,6750,9000]);
+  assert.deepEqual([1,2,3,4,5,6].map(n=>C.config(n).costLimit),[3000,4500,6000,9000,12000,15000]);
+  assert.deepEqual([1,2,3,4,5,6].map(n=>C.config(n,"UC_0079_T2").costLimit),[4500,6750,9000,13500,18000,22500]);
   for (let n = 1; n <= 6; n++) {
     for (const [stage, era] of eras.entries()) {
       const d = C.config(n, era), settings = C.roomSettings({ sweepDifficulty: n, sweepEra: era, sweepEnvironment: "ground" });
       const scale=stage>0?1.5*1.25**(stage-1):1;
-      assert.equal(d.costLimit, Math.round(C.config(n).costLimit * scale / 500) * 500);
-      assert.equal(d.costLimit % 500,0);
+      assert.equal(d.costLimit, Math.round(C.config(n).costLimit / 1.5 * scale / 500) * 500 * 1.5);
+      assert.equal(d.costLimit % 250,0);
       assert.equal(settings.costLimit, d.costLimit);
       assert.equal(d.events, n);
       assert.equal(d.fleetLimit, C.config(n).fleetLimit);
-      assert.equal(d.fleetLimit, 2 + Math.floor((n - 1) / 3));
+      assert.equal(d.fleetLimit, 3 + Math.floor((n - 1) / 3));
       if (n > 1) {
         assert(d.width > C.config(n - 1).width);
         assert(d.height > C.config(n - 1).height);
@@ -1101,7 +1141,7 @@ test("contract settings force full fog and enabled pilots even when clients subm
   assert.equal(f.room.game.fogMode, "full");
   assert.equal(f.room.settings.pilotPolicy, "allow");
   assert.deepEqual(C.roomSettings({ ...f.room.settings, fogMode: "disabled", pilotPolicy: "none" }), {
-    costLimit: 10000, mapId: C.mapId("ground", 6), fogMode: "full", pilotPolicy: "allow",
+    costLimit: 15000, mapId: C.mapId("ground", 6), fogMode: "full", pilotPolicy: "allow",
   });
 });
 
@@ -1528,7 +1568,7 @@ test("procedural maps vary by seed, increase by difficulty, and have navigable e
       assert.deepEqual(a, C.generateMap(G.catalog, settings, 910 + difficulty));
       assert.equal(
         C.config(difficulty).costLimit,
-        [2000, 3000, 4000, 6000, 8000, 10000][difficulty - 1],
+        [3000, 4500, 6000, 9000, 12000, 15000][difficulty - 1],
       );
       assert.equal(
         G.fleetLimit({ mode: "sweep", sweepDifficulty: difficulty }),

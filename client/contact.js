@@ -128,7 +128,7 @@ window.ContactUI = (() => {
         I18n.text("合约模式"),
         "N" + task.difficulty + I18n.text("以上"),
         task.era ? task.era.replace("UC_", "").replaceAll("_", "") : ContactTasks.contactId(task)==="anaheim" ? "当前年代" : "0079T1",
-        I18n.text(task.enemyFaction === "NONE" ? "武装介入" : "敌军：" + (Rules.factionInfo[task.enemyFaction || "ZEON"]?.name || task.enemyFaction)),
+        I18n.text(task.anyEnemyFaction ? "阵营不限" : task.enemyFaction === "NONE" ? "武装介入" : "敌军：" + (Rules.factionInfo[task.enemyFaction || "ZEON"]?.name || task.enemyFaction)),
         ...(task.ground ? [I18n.text("地面")] : []),
       ].join(" · "),
       objective:
@@ -324,6 +324,11 @@ window.ContactUI = (() => {
       technology.append(element("p", "", "允许HQ、工厂、巨型工厂、士官学院升级到2级"));
     if(task.pluginUnlocks?.length) technology.append(element("p","contact-plugin-unlocks",
       I18n.text("零件购买权限")+"："+task.pluginUnlocks.map(id=>I18n.text(UnitPlugins.byId.get(id)?.name || id)).join("、")));
+    if(task.serviceUnlock === "pilot_talent_reset") technology.append(element("p","contact-service-unlocks","解锁服务：驾驶员天赋重置（每级消耗1000物资）"));
+    if(task.tokenUnlock) {
+      const pool=Economy.supplyPools.find(pool=>pool.tokenId===task.tokenUnlock);
+      technology.append(element("p","contact-token-unlock","解锁购买："+pool.tokenName+" · 每枚资金 "+formatNumber(task.tokenPrice)));
+    }
     rewards.append(currency, unitRewards(task.inventory), technology);
     const action = button(
       entry?.status === "ready"
@@ -394,6 +399,19 @@ window.ContactUI = (() => {
   function renderShopItems(list) {
     list.replaceChildren();
     const search = query.trim().toLocaleLowerCase();
+    for (const pool of Economy.supplyPools) {
+      const offer = Economy.tokenOffer(trader.id,pool.tokenId);
+      if (!offer || !I18n.text(pool.tokenName).toLocaleLowerCase().includes(search)) continue;
+      const card=element("article","merchant-product merchant-token"),price=element("div","resource-balance");
+      card.dataset.tokenId=pool.tokenId;
+      ProductionUI.resources(price,offer,{compact:true});
+      const purchase=button("购买1枚",()=>buy(()=>Economy.purchaseToken(trader.id,pool.tokenId)),"primary");
+      purchase.disabled=Net.started || !offer.available || !Economy.affordable(offer) || (Economy.snapshot().itemInventory[pool.tokenId]||0)>=1000000;
+      card.append(element("strong","",pool.tokenName),element("small","muted",pool.machineName),price,
+        element("small","merchant-unlock"+(offer.available?"":" is-locked"),"前提任务："+offer.requiredTaskName),
+        element("small","muted","持有 "+(Economy.snapshot().itemInventory[pool.tokenId]||0)+" 枚"),purchase);
+      list.append(card);
+    }
     for (const part of UnitPlugins.catalog.filter((part) =>
       I18n.text(part.name).toLocaleLowerCase().includes(search),
     )) {
@@ -429,7 +447,7 @@ window.ContactUI = (() => {
       bar = element("div", "contact-shop-toolbar"),
       search = element("input"),
       list = element("div", "merchant-products");
-    bar.append(element("strong", "", "购买零件"));
+    bar.append(element("strong", "", trader.id==="anaheim"?"购买零件与补给代币":"购买零件"));
     search.type = "search";
     search.placeholder = I18n.text("搜索");
     search.setAttribute("aria-label", I18n.text("搜索商品"));

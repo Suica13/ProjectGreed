@@ -6,6 +6,9 @@ const file = "shared/conversion-rules.json";
 const Classes = require("./weapon-classes.js");
 const fields = {
   weapons: {
+    rangeEdgeAccuracyPenalty: ["射击射程两端命中损失",0,1,false,"两端按此比例损失命中，至向上取整的中点线性减为0；1～1和1～2豁免。"],
+    primaryMeleeDamage: ["主格斗武器伤害倍率",0.01,10,false,"各套件第一把非冲撞格斗武器；人工差值前应用。"],
+    formationRangeBonus: ["普通武器额外射程", 0, 100, true, "腕部、火神炮与格斗除外；人工差值之前应用，不压缩射程。"],
     nonCounterTargetAccuracy: ["反击时非反击对象的命中倍率",1,5,false,"选择反击后，来自其他单位的最终命中率乘此倍率，最高100%。"],
     shootingDamageOffset: ["射击全局伤害系数增减", -0.99, 10, false, "加到全部武装伤害倍率上，仅射击武器及伤害型射击技能生效；不影响近战与冲撞。"],
     shootingHitOffset: ["射击基础命中增减", -100, 100, false, "分类基础命中直接增减百分点，再应用命中倍率；包含分段射击及照射。"],
@@ -49,6 +52,9 @@ const fields = {
     mountain: ["战斗行动2默认山地适应性", 0, 100, true, "未另行人工指定时采用此百分比。"],
   },
   units: {
+    partBreakChanceMultiplier: ["部位破坏最终概率倍率",0,1,false,"原公式算出的概率乘此值；不改变战舰模块耐久与命中槽位。"],
+    finalMoveMultiplier: ["单位最终基础移动倍率",0.01,10,false,"在移植政策和战舰额外移动后应用，人工差值随后叠加；固定部署单位保持0。"],
+    shipMoveBonus: ["战舰额外移动力",0,100,true,"米迪亚和胖叔叔系列除外；通用倍率后、人工差值前应用。"],
     shipAccuracy: ["战舰原MOD命中系数倍率", 0.01, 10, false, "以sourceStats记录的原MOD命中系数为基准，保留既有阵营加成；再应用单位命中倍率和人工差值。"],
     specialCost: ["特装机基础COST倍率",1,5,false,"原MOD工厂单次生产一台的非战舰单位，基础COST乘倍率并按25取整；套件差价及人工差值随后应用。"],
     hp: ["单位耐久倍率", 0.01, 10, false, "以现有单位基础值换算，向上取整。"],
@@ -72,6 +78,11 @@ const classFields = {
 };
 function validate(value) {
   if (value) value.gbo2 ??= {hp:2,shield:2,move:2,uniqueDamage:3,mountain:75};
+  if (value?.units) value.units.partBreakChanceMultiplier ??= .75;
+  if (value?.units) value.units.finalMoveMultiplier ??= .75;
+  if (value?.weapons) value.weapons.rangeEdgeAccuracyPenalty ??= .2;
+  if (value?.weapons) value.weapons.primaryMeleeDamage ??= 1.25;
+  if (value?.units) value.units.shipMoveBonus ??= 1;
   if (value?.units) value.units.shipAccuracy ??= 0.9;
   if (value?.units) value.units.maHP ??= 0.75;
   if (value?.units) value.units.specialCost ??= 1.1;
@@ -152,6 +163,8 @@ function globals(prefab, rules) {
     kit.cost = Math.max(0, kit.conversionBaseCost + (w.kitCostOffset || 0) +
       (beamGun ? w.beamGunKitCostOffset || 0 : 0));
   }
+  const primaryMelee=new Set((prefab.weaponKits || []).map(kit=>(kit.weapons || []).map(id=>prefab.weapons?.[id])
+    .find(weapon=>weapon?.type === "melee" && Classes.classify(weapon) !== "ram")).filter(Boolean));
   const isWeaponSkill = Classes.isWeaponSkill;
   for (const weapon of [
     ...Object.values(prefab.weapons || {}),
@@ -220,7 +233,8 @@ function globals(prefab, rules) {
         delete payload.penetrationBonus;
       }
     }
-    const damageScale = Math.max(0.01, w.damage + (shooting ? w.shootingDamageOffset || 0 : 0)) * sniperScale;
+    const damageScale = Math.max(0.01, w.damage + (shooting ? w.shootingDamageOffset || 0 : 0)) * sniperScale *
+      (primaryMelee.has(weapon) ? w.primaryMeleeDamage ?? 1.25 : 1);
     const hitOffset = (shooting ? w.shootingHitOffset || 0 : 0) +
       (Classes.handheldCannon(weapon) ? w.handheldCannonHitOffset || 0 : 0);
     scaleDamage(weapon, damageScale / (old?.damageScale || 1));
@@ -299,6 +313,10 @@ function globals(prefab, rules) {
       weapon.min = Math.min(weapon.min, weapon.max);
     if (weapon.minRange !== undefined && weapon.range !== undefined)
       weapon.minRange = Math.min(weapon.minRange, weapon.range);
+    const formationRangeBonus = weapon.type !== "melee" && !Classes.wristWeapon(weapon) && !/腕部|腕式|腕装|wrist|(?:^|_)Arm(?:Vulcan|Cannon|Missile|Gatling)(?:_|$)/i.test((weapon.name || "")+" "+(weapon.sourceName || weapon.id || "")) &&
+      Classes.classify(weapon) !== "small_vulcan" ? (w.formationRangeBonus ?? 1) : 0;
+    for (const key of ["max", "range"])
+      if (Number.isFinite(weapon[key])) weapon[key] += formationRangeBonus;
     const steps = weapon.attack?.steps || [];
     base.stepAccuracy ??= steps.map(step => step.accuracy ?? null);
     for (const [index, step] of steps.entries())
@@ -306,7 +324,7 @@ function globals(prefab, rules) {
         step.accuracy =
           Math.max(0, Math.max(0, (weapon.baseHitOverride ?? (group.baseHit >= 0 ? group.baseHit : base.stepAccuracy[index])) + hitOffset) *
           accuracy + (Classes.classify(weapon) === "mortar" ? w.mortarHitOffset || 0 : Classes.classify(weapon) === "cannon" ? w.cannonHitOffset || 0 : 0));
-    weapon.conversionMultipliers = { ...base, damageScale, accuracyScale: accuracy };
+    weapon.conversionMultipliers = { ...base, damageScale, accuracyScale: accuracy, formationRangeBonus };
   }
   for (const skill of (prefab.skills || []).filter((skill) => !isWeaponSkill(skill)))
     if (skill.damageComponents) {
@@ -316,7 +334,13 @@ function globals(prefab, rules) {
       const baseHit = old?.baseHit ?? skill.baseHit;
       scaleDamage(skill, damageScale / (old?.damageScale || 1));
       if (Number.isFinite(baseHit)) skill.baseHit = Math.max(0, baseHit + (shooting ? w.shootingHitOffset || 0 : 0));
-      skill.conversionMultipliers = { damageScale, ...(Number.isFinite(baseHit) ? {baseHit} : {}) };
+      const range = old?.range ?? skill.range;
+      const formationRangeBonus = shooting && !Classes.wristWeapon(skill) && !/腕部|腕式|腕装|wrist/i.test(skill.name || "") &&
+        Classes.classify(skill) !== "small_vulcan" && Number.isFinite(range) && range > 0
+        ? (w.formationRangeBonus ?? 1) : 0;
+      if (Number.isFinite(range)) skill.range = range + formationRangeBonus;
+      skill.conversionMultipliers = { damageScale, ...(Number.isFinite(baseHit) ? {baseHit} : {}),
+        ...(Number.isFinite(range) ? {range,formationRangeBonus} : {}) };
     }
   if (prefab.sourceStats?.nativeProductionQuantity === 1 && !prefab.stats.ship) {
     const base = prefab.conversionSpecialCostBase ?? prefab.stats.cost;
@@ -358,6 +382,8 @@ function globals(prefab, rules) {
           ? (prefab.stats.ship ? 3 : 1) : 0;
         n = prefab.stats.deployed ? 0 :
           Math.max(1, Math.round((base.move + mobilityOffset - bonus) * rules.units.move) + bonus) - mobilityOffset;
+        if (prefab.stats.ship && !prefab.stats.deployed && !/^(?:Medea|FatUncle)/i.test(prefab.id))
+          n += rules.units.shipMoveBonus ?? 1;
       }
       if (key === "hp") n = Math.max(1, n);
       prefab.stats[field] = n;

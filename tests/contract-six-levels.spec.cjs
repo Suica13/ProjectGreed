@@ -24,7 +24,7 @@ for(const width of [1440,390])test(`online contract T1/T2 settings and T2 N6 dep
   expect(await page.locator('#sweepDifficulty option').evaluateAll(nodes=>nodes.map(node=>({value:node.value,disabled:node.disabled}))))
    .toEqual([1,2,3,4,5,6].map(n=>({value:String(n),disabled:false})));
   expect(await page.locator('#sweepEra option').evaluateAll(nodes=>nodes.filter(n=>!n.disabled).map(n=>n.value))).toEqual(['UC_0079_T1','UC_0079_T2','CE_0071_T1']);
-  for(const [n,cost] of [[1,2000],[2,3000],[3,4000],[4,6000],[5,8000],[6,10000]]){
+  for(const [n,cost] of [[1,3000],[2,4500],[3,6000],[4,9000],[5,12000],[6,15000]]){
    await page.locator('#sweepDifficulty').selectOption(String(n));await idle();
    await expect.poll(()=>page.evaluate(()=>Net.snapshot.settings.sweepDifficulty)).toBe(n);
    await expect(page.locator('#roomCostLimit')).toHaveValue(String(cost));
@@ -32,10 +32,10 @@ for(const width of [1440,390])test(`online contract T1/T2 settings and T2 N6 dep
   }
   await page.locator('#sweepEra').selectOption('UC_0079_T2');await idle();
   await page.locator('#sweepDifficulty').selectOption('1');await idle();
-  await expect(page.locator('#roomCostLimit')).toHaveValue('3000');
+  await expect(page.locator('#roomCostLimit')).toHaveValue('4500');
   await expect(page.locator('#roomUnitLimit')).toHaveValue('2');
   await page.locator('#sweepDifficulty').selectOption('6');await idle();
-  await expect(page.locator('#roomCostLimit')).toHaveValue('15000');
+  await expect(page.locator('#roomCostLimit')).toHaveValue('22500');
   if(width<700)await page.locator('#closeRoomSettingsSheet').click();
   await page.locator('#startRoomGame').click();await expect(page.locator('#confirmFinalFormation')).toBeVisible();
   await page.locator('#confirmFinalFormation').click();

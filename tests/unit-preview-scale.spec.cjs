@@ -5,7 +5,17 @@ for(const width of [1440,390])test('shared map scale and camera across storage, 
  await page.setViewportSize({width,height:960});
  await page.goto(pathToFileURL(path.resolve('public/client.html')).href);
  await page.waitForFunction(()=>assetsReady);
- await page.evaluate(()=>{I18n.setLanguage('zh');Economy.creditActivity({id:'preview-scale-fixture',matchId:'preview-scale-fixture',money:100000,supplies:100000,inventory:{RGM_79:1,MS_06F:1,RX_78GP03D:1,Medea:1,WhiteBase:1}});});
+ if(await page.locator('#profileOnboardingConfirm').isVisible()){
+  await page.locator('#profileCompanyName').fill('预览比例测试');
+  await page.locator('#profileOnboardingConfirm').click();
+ }
+ await page.evaluate(()=>{
+  const p=Economy.snapshot();p.inventory={};p.storage.units=[];p.storage.ships=[];p.storage.deliveries=[];
+  p.baseFacilities.levels={hq:3,factory:3,giantFactory:3,beacon:3,academy:1};
+  localStorage.setItem(Economy.key,SaveCodec.stringify(p));
+ });
+ await page.reload();await page.waitForFunction(()=>assetsReady);
+ await page.evaluate(()=>{I18n.setLanguage('zh');Economy.creditActivity({id:'preview-scale-fixture',matchId:'preview-scale-fixture',money:100000,supplies:100000,inventory:{RGM_79:1,MS_06F:1,RX_78GP03D:1,Medea:1,WhiteBase:1}});Economy.receiveDeliveries();});
  await page.locator('#shellHangar').click();
  await expect(page.locator('.warehouse-card-icon')).toHaveCount(3);
  await expect(page.locator('.warehouse-camera')).toHaveCount(0);
@@ -38,6 +48,7 @@ for(const width of [1440,390])test('shared map scale and camera across storage, 
   return [a,b].map(c=>Number(c.dataset.previewScale)/(Math.min(c.width,c.height)-48)/UnitModels[c.dataset.previewModel].presentation.mapScale/(c.dataset.previewFraming==='card'?Number(c.dataset.cardZoom):UnitPreview.zoom(Warehouse.category(UnitModels[c.dataset.previewModel]))));
  });
  expect(normalized[0]).toBeCloseTo(normalized[1],8);
+ expect(normalized[0]).toBeCloseTo(await page.evaluate(()=>ART.presentation.unitMapScale/160),8);
  await page.screenshot({path:`tmp/verification/screenshots/map-scale-catalog-${width}.png`});
  expect(errors).toEqual([]);
 });

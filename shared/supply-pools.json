@@ -30,7 +30,7 @@
           {
             "kind": "rental",
             "weight": 2,
-            "uses": 10,
+            "uses": 3,
             "unitIds": [
               "RX_78_2_ACE",
               "Thoroughbred",
@@ -58,7 +58,7 @@
           {
             "kind": "rental",
             "weight": 4,
-            "uses": 10,
+            "uses": 3,
             "unitIds": [
               "G_Fighter",
               "RX_78_2_BPart",
@@ -97,7 +97,7 @@
           {
             "kind": "rental",
             "weight": 6,
-            "uses": 10,
+            "uses": 3,
             "unitIds": [
               "MS_06F_EFSF",
               "AMS_Squad",
@@ -200,7 +200,7 @@
               "FA_78_1_TB",
               "MS_06R_TB"
             ],
-            "uses": 20
+            "uses": 5
           }
         ]
       },
@@ -215,7 +215,7 @@
               "RGM_79_TB",
               "MS_06F_TB"
             ],
-            "uses": 20
+            "uses": 5
           },
           {
             "kind": "rental",
@@ -224,7 +224,7 @@
               "FA_78_1_TB",
               "MS_06R_TB"
             ],
-            "uses": 10
+            "uses": 3
           }
         ]
       },
@@ -315,7 +315,7 @@
               "GN_003",
               "GN_005"
             ],
-            "uses": 20
+            "uses": 5
           }
         ]
       },
@@ -332,7 +332,7 @@
               "GN_003",
               "GN_005"
             ],
-            "uses": 10
+            "uses": 3
           }
         ]
       },

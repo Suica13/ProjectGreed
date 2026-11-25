@@ -138,8 +138,11 @@ const WeaponClasses = (() => {
       return 1;
     return roundTable[classify(weapon)] || 1;
   }
+  const ordinaryMelee = weapon => weapon.type === "melee" && classify(weapon) === "melee" &&
+    weapon.slot !== "skill" && !weapon.pilotRequirements?.length && !weapon.special;
   function rounds(weapon) {
-    const configured = weapon.attackRounds ?? baseRounds(weapon);
+    const base = weapon.attackRounds ?? baseRounds(weapon);
+    const configured = base > 0 && ordinaryMelee(weapon) ? base + 1 : base;
     const limit =
       weapon.pilotRequirements?.length || weapon.special?.type === "snipe" ? 1 : Infinity;
     return Math.min(configured, limit, weapon.maxUsesPerTurn ?? Infinity);
@@ -212,6 +215,7 @@ const WeaponClasses = (() => {
   }
   return {
     rounds,
+    ordinaryMelee,
     baseRounds,
     roundTable,
     labels,

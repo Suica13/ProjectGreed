@@ -6,14 +6,14 @@ const BaseFacilities = (() => {
       : require("./base-facility-types.json");
   const definitions = {
     hq: { name: "HQ", maxLevel: 5, description: "HQ等级决定其他建筑的等级上限。" },
-    factory: { name: "工厂", maxLevel: 5, description: "一级提供20个单位格纳库，之后每级增加10格。" },
-    giantFactory: { name: "巨型工厂", maxLevel: 5, description: "一级提供6个舰船格纳库，之后每级增加4格。" },
+    factory: { name: "工厂", maxLevel: 5, description: "初始额外提供10个单位格纳库，每级增加20格。" },
+    giantFactory: { name: "巨型工厂", maxLevel: 5, description: "初始额外提供4个舰船格纳库，每级增加8格。" },
     beacon: {
       name: "信标",
       maxLevel: 3,
       description: "一级提供一般PMC驾驶员，二级解锁ACE驾驶员招募。",
     },
-    academy: { name: "士官学院", maxLevel: 5, description: "每级分别支持10名PMC驾驶员和10名ACE驾驶员；驾驶员等级上限依次为3、4、6、8、12级，5级开放转生。" },
+    academy: { name: "士官学院", maxLevel: 5, description: "初始额外支持PMC和ACE驾驶员各10名，每级各增加20名；等级上限依次为4、6、8、10、12级，4级开放转生。" },
   };
   const initial = () => ({
     version: 2,
@@ -42,18 +42,18 @@ const BaseFacilities = (() => {
     return result;
   }
   const capacity = (state) => ({
-    units: (state.levels.factory + 1) * 10,
-    ships: state.levels.giantFactory * 4 + 2,
+    units: 10 + state.levels.factory * 20,
+    ships: 4 + state.levels.giantFactory * 8,
   });
-  const pilotLimit = (state) => state.levels.academy * 10;
+  const pilotLimit = (state) => 10 + state.levels.academy * 20;
   const crewLevel = (grade) =>
     ({ general: 1, ace: 2 })[grade] ?? Infinity;
   const canRecruit = (state, grade) => state.levels.beacon >= crewLevel(grade);
   function unlock(id, level) {
     if (id === "hq") return "其他建筑等级上限 " + level;
-    if (id === "factory") return "单位格纳库 " + (level + 1) * 10 + " 格";
-    if (id === "giantFactory") return "舰船格纳库 " + (level * 4 + 2) + " 格";
-    if (id === "academy") return "PMC／ACE驾驶员各 " + level * 10 + " 名 · 等级上限 " + [3,4,6,8,12][level-1] + (level===5?" · 开放转生":"");
+    if (id === "factory") return "单位格纳库 " + (10 + level * 20) + " 格";
+    if (id === "giantFactory") return "舰船格纳库 " + (4 + level * 8) + " 格";
+    if (id === "academy") return "PMC／ACE驾驶员各 " + (10 + level * 20) + " 名 · 等级上限 " + [4,6,8,10,12][level-1] + (level>=4?" · 开放转生":"");
     return level === 1
       ? "一般PMC驾驶员（免费配属）"
       : level === 2

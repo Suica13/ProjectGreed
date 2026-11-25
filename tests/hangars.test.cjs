@@ -241,7 +241,7 @@ test("launch locks the carrier undo and reduces passenger AP by 25 percent witho
   assert.equal(G.actionPoints(u), G.actionBudget(u));
 });
 
-test("cargo maintenance restores only HP and EN on own turn and preserves broken parts", () => {
+test("cargo maintenance restores HP, EN and one lost part on each own turn", () => {
   const { g, carrier, u, h } = fixture();
   u.embarked = { carrierId: carrier.id, hangarId: h.id };
   const m = G.modelOf(u);
@@ -255,7 +255,7 @@ test("cargo maintenance restores only HP and EN on own turn and preserves broken
   G.end(g);
   assert.equal(u.hp, m.hp * 0.1 + Math.round(m.hp * 0.25));
   assert.equal(u.en, m.en * 0.5);
-  assert.equal(Object.keys(u.brokenParts).length, 4);
+  assert.equal(Object.keys(u.brokenParts).length, 3);
   G.end(copy);
   G.end(copy);
   assert.deepEqual(copy.units.find((x) => x.id === u.id).brokenParts, u.brokenParts);
@@ -265,13 +265,23 @@ test("cargo maintenance restores only HP and EN on own turn and preserves broken
   G.end(g);
   assert.equal(u.hp, m.hp);
   assert.equal(u.en, m.en);
-  assert.deepEqual(u.brokenParts, { head: true, backpack: true, leftArm: true, rightArm: true });
+  assert.deepEqual(u.brokenParts, { leftArm: true, rightArm: true });
   carrier.hp = 0;
   u.hp = m.hp * 0.5;
   u.en = 0;
   G.end(g);
   G.end(g);
   assert.equal(u.en, 0);
+});
+
+test('closed hangars replace a destroyed shield at 25 percent next own turn and regenerate it gradually',()=>{
+ const {g,carrier,u,h}=fixture(),m=G.modelOf(u);assert(m.shield.hp>0);
+ u.embarked={carrierId:carrier.id,hangarId:h.id};u.shield=0;u.brokenParts={head:true,leftArm:true};
+ G.end(g);assert.equal(u.shield,0);G.end(g);assert.equal(u.shield,Math.round(m.shield.hp*.25));assert.deepEqual(u.brokenParts,{head:true});
+ for(let n=2;n<=4;n++){G.end(g);G.end(g);assert.equal(u.shield,Math.min(m.shield.hp,Math.round(m.shield.hp*.25)*n));}
+ const [id,sfs]=Object.entries(G.models).find(([,model])=>model.hangars?.some(h=>h.kind==='sfs'));
+ carrier.model=id;carrier.hp=sfs.hp;u.embarked={carrierId:carrier.id,hangarId:sfs.hangars.find(h=>h.kind==='sfs').id,exposed:true};
+ u.shield=0;u.brokenParts={head:true};G.end(g);G.end(g);assert.equal(u.shield,0);assert(u.brokenParts.head);
 });
 
 test("AI cargo can relaunch with persistent damaged parts once resources recover", () => {

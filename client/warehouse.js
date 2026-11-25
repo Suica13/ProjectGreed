@@ -8,7 +8,7 @@ window.WarehouseUI = (() => {
     <button id="warehouseDeliveries">保管库</button><strong id="warehouseCapacity"></strong></header>
     <div class="base-page-toolbar" id="warehouseToolbar"><label for="warehouseSearch"><span>搜索</span><input id="warehouseSearch" type="search" placeholder="搜索" /></label><label for="warehouseFaction"><span>阵营筛选</span><select id="warehouseFaction" aria-label="阵营筛选"></select></label><div id="warehouseSortControl"></div></div>
     <div class="warehouse-yard" id="warehouseYard"><div id="warehouseBays"></div></div>
-    <footer><button id="warehouseRepairAll">一键修复</button><div class="warehouse-pagination"><button id="warehousePrevious">上一页</button><span id="warehousePage"></span><button id="warehouseNext">下一页</button></div></footer></section>`;
+    <footer><button id="warehouseRepairAll">一键修复</button><div class="warehouse-pagination"><button id="warehousePrevious">上一页</button><span id="warehousePage"></span><button id="warehouseNext">下一页</button></div><button id="warehouseSquadBonuses">编组加成</button></footer></section>`;
   const dialog = element("dialog", "warehouse-dialog");
   dialog.id = "warehouseDialog";
   dialog.setAttribute("aria-labelledby", "warehouseDialogTitle");
@@ -36,6 +36,14 @@ window.WarehouseUI = (() => {
       if (confirmed && !Net.started && Economy.repairAllStoredUnits(quote)) note("全部单位已修复");
     } catch (error) { note(error.message); }
     finally { repairPending = false;render(); }
+  };
+  byId("warehouseSquadBonuses").onclick = () => {
+    const body = openPanel("编组加成");
+    body.append(element("p","muted","同一单元格内，由同一玩家控制的六台存活单位按类型组成小队时自动生效；封闭格纳库内的单位不计入。主射击武器额外轮次仍消耗EN，并遵守武器可用次数。"));
+    for (const rule of Rules.squadBonusDefinitions) {
+      const row = element("article","warehouse-bonus-row");
+      row.append(element("strong","",rule.name),element("p","",rule.description)); body.append(row);
+    }
   };
   function populateFactions() {
     const select=byId("warehouseFaction"), selected=select.value || "all";
@@ -692,6 +700,21 @@ window.WarehouseUI = (() => {
   function showDeliveries() {
     const body=openPanel(I18n.text("保管库")), list=element("div","warehouse-delivery-list");
     const deliveries=Economy.snapshot().storage.deliveries;
+    const removeRentals = element("button","danger","一键移除租赁机体");
+    removeRentals.id = "warehouseDiscardRentals";
+    const count = deliveries.filter(item=>item.rentalUses && !Economy.isContactLoan(item)).length;
+    removeRentals.disabled = Net.started || !count;
+    removeRentals.onclick = async () => {
+      if (Net.started || removeRentals.disabled) return;
+      removeRentals.disabled = true;
+      try {
+        if (await GameDialog.confirm("将移除保管库中的全部租赁机体（"+count+"台），无法撤销。是否继续？",{title:"移除租赁机体"}) && !Net.started) {
+          Economy.discardRentalDeliveries(deliveries); showDeliveries();
+        }
+      } catch(error) { note(error.message); }
+      finally { removeRentals.disabled = Net.started || !count; }
+    };
+    body.append(removeRentals);
     deliveries.forEach((item,index)=>{
       const id=item.unitId+"__"+item.kitId,model=UnitModels[id],row=element("article","warehouse-delivery-card"),
         image=element("img"),text=element("div"),accept=element("button","primary","接受");

@@ -13,8 +13,8 @@ test('PMC and ACE casualties require material-paid recovery while preserving pro
  }
  const zero=P.battleResult(P.createCustom('custom-revival-zero','Zero'),'loss',0);assert.deepEqual(P.revivalPrice(zero),{money:0,supplies:0});
 });
-test('ACE base COST is reduced by fifty and academy offers ten places per type per level',()=>{
+test('ACE base COST is reduced by fifty and academy offers ten initial plus twenty places per type per level',()=>{
  const totals=P.catalog.aces.map(p=>Object.values(p.maxStats).reduce((a,b)=>a+Math.round(b),0)),low=Math.min(...totals),high=Math.max(...totals);
  P.catalog.aces.forEach((p,i)=>{const previous=high===low?250:Math.max(200,Math.min(300,200+25*Math.round(4*(totals[i]-low)/(high-low))));assert.equal(P.aceBaseCost(p),previous-50);});
- for(let level=1;level<=5;level++){const s=B.initial();s.levels.hq=s.levels.academy=level;assert.equal(B.pilotLimit(B.normalize(s)),10*level);}
+ for(let level=1;level<=5;level++){const s=B.initial();s.levels.hq=s.levels.academy=level;assert.equal(B.pilotLimit(B.normalize(s)),10+20*level);}
 });

@@ -3,8 +3,8 @@ const UnitPreview = (() => {
   // One percentage always means the same world scale. Start ordinary chassis
   // closer, then pull the whole category back if its inventory contains giants.
   const zoomLevels = { units: 1.5, ships: 1 };
-  // The standalone data-only catalog has no battle rules engine.
-  const cellPixels = () => Rules.mapCellPixels || 160;
+  // Preview framing retains the original size independently of battle cells.
+  const cellPixels = () => 160;
   const visibleBounds = new Map();
   const category = (model) =>
     typeof Warehouse !== "undefined" ? Warehouse.category(model) : model.ship ? "ships" : "units";

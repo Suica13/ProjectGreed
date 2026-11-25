@@ -46,7 +46,7 @@ const UnitParts = (() => {
     if (unit.hp <= 0 || damage <= 0 || modifier <= 0) return 0;
     const factor = (damage / model.hp) * 2 * Math.max(0, 1 - unit.hp / model.hp) * modifier;
     return factor > 0
-      ? Math.max(0, 1 - (5 * (model.partStructuralStrength ?? 100)) / 100 / (101 * factor))
+      ? Math.max(0, 1 - (5 * (model.partStructuralStrength ?? 100)) / 100 / (101 * factor)) * (model.partBreakChanceMultiplier ?? 1)
       : 0;
   }
   function random(game) {

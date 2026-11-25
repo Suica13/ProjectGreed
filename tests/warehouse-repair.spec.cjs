@@ -3,11 +3,11 @@ for(const width of [1440,390])test('bulk warehouse repair confirms supplies and 
  test.setTimeout(90000);await page.setViewportSize({width,height:960});const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto(pathToFileURL(path.resolve('public/client.html')).href);await page.waitForFunction(()=>assetsReady);
  await page.locator('#profileCompanyName').fill('Repair PMC');await page.locator('#profileOnboardingConfirm').click();
- const before=await page.evaluate(()=>{I18n.setLanguage('zh');Economy.creditActivity({id:'repair-ui',matchId:'repair-ui',money:100000,supplies:100000,inventory:{RGM_79:3}});
+ const before=await page.evaluate(()=>{I18n.setLanguage('zh');Economy.creditActivity({id:'repair-ui',matchId:'repair-ui',money:100000,supplies:100000,inventory:{RGM_79:3}});Economy.receiveDeliveries();
   const [wreck,parts,free]=Economy.snapshot().storage.units.filter(item=>item.unitId==='RGM_79');
   Economy.creditAward({id:'repair-ui-damage',matchId:'repair-ui-damage',money:0,supplies:0,stockLost:{inventory:{RGM_79:1}},stockLostItems:[{stockId:wreck.id,unitId:wreck.unitId}],stockStates:[{stockId:parts.id,unitId:parts.unitId,kitId:parts.kitId,hp:100,en:0,brokenParts:{head:true,leftArm:true}},{stockId:free.id,unitId:free.unitId,kitId:free.kitId,hp:100,en:0}]});
   return {profile:Economy.snapshot(),quote:Economy.repairQuote(),wreck,productionSupplies:Economy.productionOffer(wreck.unitId,wreck.kitId).supplies};});
- expect(before.quote.items.find(item=>item.id===before.wreck.id).supplies).toBe(Math.ceil(before.productionSupplies/2));
+ expect(before.quote.items.find(item=>item.id===before.wreck.id).supplies).toBe(Math.ceil(before.productionSupplies*.75));
  await page.locator('#shellHangar').click();await expect(page.locator('#warehouseRepairAll')).toBeEnabled();
  await page.locator('#warehouseBays [data-slot="'+before.wreck.slot+'"]').click();
  await expect(page.locator('#warehouseDialog .warehouse-wreck-warning')).toHaveText('机体大破，需要维修（0耐久）');

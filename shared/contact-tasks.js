@@ -424,7 +424,7 @@ const ContactTasks = (() => {
   }
   const active = value => normalize(value).filter(e=>e.status==="accepted").map(e=>e.id);
   function eligible(task, settings) {
-    return task && settings.mode==="sweep" && settings.sweepFaction===(task.enemyFaction || "ZEON") &&
+    return task && settings.mode==="sweep" && (task.anyEnemyFaction || settings.sweepFaction===(task.enemyFaction || "ZEON")) &&
       (!task.era || settings.sweepEra===task.era) &&
       Number(settings.sweepDifficulty)>=task.difficulty && (!task.ground || settings.sweepEnvironment==="ground");
   }
@@ -442,7 +442,7 @@ const ContactTasks = (() => {
   }
   function specialTasks(room) {
     const ids=new Set(room.seats.filter(p=>p&&!p.bot&&p.seat%2===0).flatMap(p=>active(p.contactTasks)));
-    return tasks.filter(t=>t.kind!=="kills" && ids.has(t.id) && eligible(t,room.settings));
+    return tasks.filter(t=>!["kills","all_events"].includes(t.kind) && ids.has(t.id) && eligible(t,room.settings));
   }
   return {planningVersion,tasks,byId,intro,introFor,introPlan,introPlans,available,contactId,contactName,met,planIds,normalize,active,eligible,unlocked,unmetRequirements,isSideTask,specialTasks};
 })();

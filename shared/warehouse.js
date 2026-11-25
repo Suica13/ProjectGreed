@@ -15,8 +15,8 @@ const Warehouse = (() => {
     return {
       version: 1,
       serial: 0,
-      pages: { units: 2, ships: 1 },
-      slots: { units: 20, ships: 6 },
+      pages: { units: 3, ships: 2 },
+      slots: { units: 30, ships: 12 },
       units: [],
       ships: [],
       deliveries: [],
@@ -113,12 +113,12 @@ const Warehouse = (() => {
     for (const kind of ["units", "ships"]) {
       if (
         !Number.isInteger(storage.pages?.[kind]) ||
-        storage.pages[kind] < 1 || storage.pages[kind] > (kind === "units" ? 6 : 5) ||
+        storage.pages[kind] < 1 || storage.pages[kind] > (kind === "units" ? 11 : 5) ||
         !Array.isArray(storage[kind])
       )
         throw Error("仓储页数或格子无效");
       if(storage.slots && (!Number.isInteger(storage.slots[kind]) || storage.slots[kind]<1 ||
-        storage.slots[kind]>(kind==="ships"?20:60)))throw Error("仓储格子上限无效");
+        storage.slots[kind]>(kind==="ships"?44:110)))throw Error("仓储格子上限无效");
       const slots = new Set();
       for (const item of storage[kind]) {
         const model = models[item.unitId + "__" + item.kitId];

@@ -11,7 +11,7 @@ function fixture() {
   Object.assign(enemy,{x:16,y:25});
   return {game,ship,enemy};
 }
-test("AI turns a ship facing away from its goal and retains its legal half move",()=>{
+test("AI ship heading correction consumes its remaining movement",()=>{
   const {game,ship}=fixture(), before=ship.angle;
   const choice=G.aiChoice(game,ship);
   assert(choice.rotation);
@@ -19,10 +19,10 @@ test("AI turns a ship facing away from its goal and retains its legal half move"
   G.previewRotate(game,ship,choice.rotation,0);
   G.confirmMove(game,ship,0);
   assert.notEqual(ship.angle,before);
-  assert(ship.rotated && !ship.moved);
+  assert(ship.rotated && ship.moved);
   assert(!G.aiChoice(game,ship)?.rotation);
-  const full=G.modelOf(ship).move;
-  assert(Math.max(...[...G.reachable(game,ship).values()].map(c=>c.cost))<=full*.5);
+  const point=[...G.reachable(game,ship).values()].find(point=>point.path.length===1);
+  assert(point);assert.throws(()=>G.previewMove(game,ship,point.x,point.y));
 });
 test("already aligned ships advance without wasting their turn on rotation",()=>{
   const {game,ship}=fixture();ship.angle=270;

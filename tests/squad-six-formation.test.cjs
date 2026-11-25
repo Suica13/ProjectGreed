@@ -7,16 +7,16 @@ function fixture(count=7,unitId="Type61") {
  Object.assign(enemy,{x:5,y:9});g.units=[...units,enemy];return {g,units,enemy};
 }
 function stack(g,units){for(let i=0;i<units.length;i++)Object.assign(units[i],{x:5,y:5,squadId:'six',squadSlot:i});}
-test('six one-point units fill six points; seventh and excessive capacity cannot join',()=>{
+test('six actual units fit a cell; seventh cannot join regardless of transport footprint',()=>{
  const {g,units}=fixture();stack(g,units.slice(0,5));
  assert.equal(G.squadCapacity(units[0]),1);assert.equal(G.squadJoinTarget(g,units[5],5,5),units[0]);
  G.joinSquad(g,units[5],units[0]);Object.assign(units[5],{x:5,y:5});
  assert.equal(G.squadMembers(g,units[0]).length,6);assert.equal(G.squadJoinTarget(g,units[6],5,5),null);
  const oldModel=units[0].model;const key='formation-heavy-test';G.models[key]={...G.models[units[0].model],transport:{...G.modelOf(units[0]).transport,slotCost:5}};
- try {units[0].model=key;assert.equal(G.squadFits(units.slice(0,5)),false);}finally{units[0].model=oldModel;delete G.models[key];}
+ try {units[0].model=key;assert.equal(G.squadFits(units.slice(0,5)),true);}finally{units[0].model=oldModel;delete G.models[key];}
  units[2].hp=0;assert(G.squadJoinTarget(g,units[6],5,5));
 });
-test('automatic triangles preserve scale and unique offsets for two through six members',()=>{
+test('two rows preserve scale and unique offsets for two through six members',()=>{
  const {g,units}=fixture(6);
  assert.equal(G.positionSquad,undefined);
  for(let count=2;count<=6;count++){
@@ -24,7 +24,7 @@ test('automatic triangles preserve scale and unique offsets for two through six 
   const offsets=g.units.map(u=>G.squadOffset(g,u,0));
   assert.equal(new Set(offsets.map(o=>o.x+','+o.y)).size,count);
   assert(offsets.every(o=>o.scale===1&&Number.isFinite(o.x)&&Number.isFinite(o.y)));
-  if(count===3)assert(offsets[1].y<offsets[0].y&&offsets[1].y<offsets[2].y);
+  if(count===3)assert(offsets.every(o=>o.y===offsets[0].y));
  }
 });
 test('targeting is uniform across living legal candidates regardless of legacy slot',()=>{
@@ -70,10 +70,10 @@ test('ordinary confirmed plans remain editable and cancellable through the origi
  } finally {units[0].model=original;delete G.models[key];}
 });
 
-test('three ordinary MS exhaust six capacity points despite remaining portrait slots',()=>{
+test('ordinary MS each occupy one of the six unit positions',()=>{
  const {g,units}=fixture(4,'RGM_79');stack(g,units.slice(0,3));
- assert.equal(G.squadCapacity(units[0]),2);
+ assert.equal(G.squadCapacity(units[0]),1);
  assert.equal(G.squadFits(units.slice(0,3)),true);
- assert.equal(G.squadFits(units),false);
- assert.equal(G.squadJoinTarget(g,units[3],5,5),null);
+ assert.equal(G.squadFits(units),true);
+ assert.equal(G.squadJoinTarget(g,units[3],5,5),units[0]);
 });

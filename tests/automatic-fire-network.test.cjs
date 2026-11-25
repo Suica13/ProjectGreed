@@ -57,10 +57,10 @@ for (const initialHp of [100000, 1]) for (const combatMode of ['melee','charge']
       characterFaction: "PMC",
     });
     const room = engine.rooms.get("REVIEW");
-    const act = (ws, action, fields = {}, revision = room.revision) =>
+    const act = (ws, action, fields = {}, revision = room.revision, requestId = null) =>
       new Promise((resolve, reject) => {
         const msg = {
-          id: "request-" + ++sequence,
+          id: requestId || "request-" + ++sequence,
           revision,
           round: room.game.round,
           matchId: room.matchId,
@@ -109,6 +109,16 @@ for (const initialHp of [100000, 1]) for (const combatMode of ['melee','charge']
       characterFaction: "PMC",
     });
     const [a, b] = room.game.units;
+    const partner={...structuredClone(a),id:'swap-partner',squadId:'swap-net',squadSlot:3};
+    a.squadId='swap-net';a.squadSlot=0;room.game.units.push(partner);
+    await assert.rejects(act(first,'swap_squad',{unitId:a.id,otherUnitId:partner.id}),/不能|行动|回合/);
+    const swapRevision=room.revision,swapRequest='swap-'+combatMode+'-'+initialHp;
+    await act(host,'swap_squad',{unitId:a.id,otherUnitId:partner.id},swapRevision,swapRequest);
+    assert.equal(a.squadSlot,3);assert.equal(partner.squadSlot,0);assert.equal(a.acted,false);assert.equal(a.moved,false);
+    await act(host,'swap_squad',{unitId:a.id,otherUnitId:partner.id},swapRevision,swapRequest);
+    assert.equal(a.squadSlot,3);assert.equal(partner.squadSlot,0);
+    await act(host,'swap_squad',{unitId:a.id,otherUnitId:partner.id});
+    assert.equal(a.squadSlot,0);room.game.units=room.game.units.filter(u=>u!==partner);delete a.squadId;
     if(combatMode==='charge'){
       b.x+=1;
       const state=JSON.stringify([room.plans,a.acted,a.en]);

@@ -10,6 +10,7 @@ const AutomaticFire = (() => {
         ? Math.min(1, Classes.rounds(weapon))
         : Classes.rounds(weapon);
     if (count <= 0) return 0;
+    if (weapon.type === "melee") return Math.floor(count * (unit?.forcedExitRound === game.round ? .5 : 1));
     const model = unit ? G.modelOf(unit) : null;
     const mobility = Math.max(0, model?.speed ?? 100) / 100;
     const pilot = model?.pilotModifiers?.attackRounds ?? 1;
@@ -18,7 +19,7 @@ const AutomaticFire = (() => {
       Classes.headVulcan(weapon) || weapon.pilotRequirements?.length
       ? 1 : weapon.maxUsesPerTurn ?? Infinity;
     const scaled = Math.min(limit, Math.max(1, Math.round(count * mobility * pilot)));
-    return Math.floor(scaled * (unit?.forcedExitRound === game.round ? 0.5 : 1));
+    return Math.min(limit, Math.floor(scaled * (unit?.forcedExitRound === game.round ? 0.5 : 1)) + (G.squadPrimaryRounds?.(game,unit,weapon) || 0));
   };
   function weapons(G, game, unit, target, counter = false) {
     if (!unit || !target) return [];
@@ -366,43 +367,42 @@ const AutomaticFire = (() => {
         jobs.push({ kind: "melee-group", at: cursor });
         return;
       }
-      const pair = {
-        id: "melee-" + wave++ + "-" + id,
-        attacker: id,
-        defender: target.id,
-        start: cursor,
-        approach: 0.35,
-        retreat: 0.35,
-      };
-      meleePairs.set(pair.id, pair);
-      const defenderWeapon = weapons(G, game, target, from, true).find((w) => w.type === "melee");
-      const responds =
-        stances.get(target.id) === "counter" &&
-        defenderWeapon &&
-        !defenderWeapon.noCounter &&
-        +(G.modelOf(target).counterLimit ?? 1) > 0 &&
-        !choices.some((c) => c.intent.target === target.id && c.intent.noCounter);
-      // This dedicated reply is independent of the defender's ranged target.
-      const before = runs.length;
-      if (responds)
-        add(target, from, [defenderWeapon.id], "counter", true, {
-          automatic: true,
-          manual: true,
-          reactiveMelee: true,
-          requiresMeleeFrom: id,
-          targetSquad: [id],
-        });
-      const reply = responds ? runs[before] : null;
-      const meleeSteps = queue.flatMap((run) =>
-        Array.from({ length: run.count }, (_, round) => ({ run, round })),
-      );
-      meleeSteps.forEach(({ run, round }, index) => {
-        run.to = target.id;
-        run.targets = [target.id];
-        schedule(run, pair, round, index === meleeSteps.length - 1 && !(index === 0 && reply));
-        if (index === 0 && reply) schedule(reply, pair, 0, meleeSteps.length === 1);
-      });
-      jobs.push({ kind: "melee-group", at: cursor });
+      const state={id,steps:queue.flatMap(run=>Array.from({length:run.count},(_,round)=>({run,round}))),pair:null,replied:new Set()};
+      scheduleMeleeStep(state);
+    }
+    function scheduleMeleeStep(state) {
+      const from=find(state.id);
+      while (state.steps.length && from && G.onMap(from)) {
+        const {run,round}=state.steps.shift();
+        const targets=run.targets.map(find).filter(t=>t && G.onMap(t) && G.canAttack(game,from,t,run.weapon));
+        const target=targets.find(t=>t.id === state.pair?.defender) || targets.find(t=>(t.squadSlot||0)===(from.squadSlot||0)) || targets[0];
+        if (!target) continue;
+        if (!state.pair || state.pair.defender !== target.id) {
+          const previous=state.pair;
+          if(previous)previous.retreat=0;
+          state.pair={id:"melee-"+(wave++)+"-"+state.id,attacker:state.id,defender:target.id,start:cursor,approach:.35,retreat:.35,...(previous?{previousId:previous.id}:{})};
+          meleePairs.set(state.pair.id,state.pair);
+        }
+        run.to=target.id;
+        schedule(run,state.pair,round,false);
+        if (!state.replied.has(target.id)) {
+          state.replied.add(target.id);
+          const replyWeapon=weapons(G,game,target,from,true).find(w=>w.type === "melee");
+          if (stances.get(target.id) === "counter" && replyWeapon && !replyWeapon.noCounter && +(G.modelOf(target).counterLimit??1)>0 &&
+              !choices.some(c=>c.intent.target===target.id && c.intent.noCounter)) {
+            const before=runs.length;
+            add(target,from,[replyWeapon.id],"counter",true,{automatic:true,manual:true,reactiveMelee:true,requiresMeleeFrom:state.id,targetSquad:[state.id]});
+            if(runs[before])schedule(runs[before],state.pair,0,false);
+          }
+        }
+        jobs.push({kind:"melee-step",at:cursor,state});
+        return;
+      }
+      if (state.pair) {
+        cursor+=state.pair.retreat;
+        const last=stageSlots.at(-1);if(last)last.end=Math.max(last.end,cursor);
+      }
+      jobs.push({kind:"melee-group",at:cursor});
     }
     jobs.push({ kind: "melee-group", at: cursor });
     const meleeStageTargets = new Map(),
@@ -434,6 +434,10 @@ const AutomaticFire = (() => {
     // All launches at an equal timestamp precede impacts at that timestamp.
     while (jobs.length) {
       const job = jobs.shift();
+      if (job.kind === "melee-step") {
+        scheduleMeleeStep(job.state);
+        continue;
+      }
       if (job.kind === "melee-group") {
         scheduleMeleeGroup();
         continue;
@@ -479,8 +483,6 @@ const AutomaticFire = (() => {
           (run.weapon.type !== "melee" && (!to || to.hp <= 0))
         )
           continue;
-        if (run.weapon.type === "melee" && run.rounds.has(job.round) && (!to || to.hp <= 0))
-          continue;
         if (
           run.intent.reactiveMelee &&
           !meleeLaunched.has(run.intent.requiresMeleeFrom + ":" + from.id)
@@ -488,7 +490,7 @@ const AutomaticFire = (() => {
           continue;
         if (run.weapon.type === "melee" && !run.intent.reactiveMelee) {
           const occupied = meleeStageTargets.get(job.stageStart) || new Map();
-          if (!run.rounds.has(job.round)) {
+          if (!run.rounds.has(job.round) || !to || !G.onMap(to)) {
             const available = run.targets
               .map(find)
               .filter(
@@ -496,7 +498,7 @@ const AutomaticFire = (() => {
                   target &&
                   G.onMap(target) &&
                   (!occupied.has(target.id) || occupied.get(target.id) === from.id) &&
-                  G.canAttack(game, from, target, run.weapon),
+                  G.canAttack(game, from, target, run.rounds.has(job.round) ? {...run.weapon,en:0,turnUseContinuation:true} : run.weapon),
               );
             to =
               available.find((target) => target.id === run.to) ||
@@ -504,7 +506,11 @@ const AutomaticFire = (() => {
               available[0];
             if (!to) continue;
             run.to = to.id;
-            if (job.meleeExchange && !run.counter) job.meleeExchange.defender = to.id;
+            if (job.meleeExchange && !run.counter && job.meleeExchange.defender !== to.id) {
+              const previous=job.meleeExchange;previous.retreat=0;
+              const pair={...previous,id:previous.id+":follow:"+job.shotIndex,previousId:previous.id,defender:to.id,start:job.start,retreat:.35};
+              meleePairs.set(pair.id,pair);job.meleeExchange=pair;
+            }
           }
           const key = run.from + ":" + to.id;
           if (!meleeAvailability.has(key))
@@ -609,6 +615,15 @@ const AutomaticFire = (() => {
           sequence: ++sequence,
         });
       } else {
+        if (run.weapon.type === "melee" && !run.intent.reactiveMelee && to && to.hp <= 0 && from && G.onMap(from)) {
+          const candidate={...run.weapon,en:0,turnUseContinuation:true};
+          to=run.targets.map(find).find(target=>target && G.onMap(target) && G.canAttack(game,from,target,candidate));
+          if (to && job.meleeExchange) {
+            const previous=job.meleeExchange;previous.retreat=0;
+            const pair={...previous,id:previous.id+":impact-follow:"+job.shotIndex,previousId:previous.id,defender:to.id,start:job.start,retreat:.35};
+            meleePairs.set(pair.id,pair);job.meleeExchange=pair;
+          }
+        }
         if (!to) continue;
         const victims =
           (run.intent.automatic || run.intent.cellBlast) && ["nuke", "blast"].includes(run.weapon.special?.type)
@@ -729,9 +744,16 @@ const AutomaticFire = (() => {
       }
       rounds.get(key).push(battle);
     }
-    for (const pair of meleePairs.values()) {
-      const emitted = battles.filter((b) => b.meleeExchange === pair);
-      pair.end = Math.max(pair.start, ...emitted.map((b) => b._stageEnd)) + 0.35;
+    const lastMeleePair=new Map();
+    for (const pair of [...meleePairs.values()].sort((a,b)=>a.start-b.start)) {
+      const emitted=battles.filter(b=>b.meleeExchange===pair);
+      if(!emitted.length)continue;
+      const previous=lastMeleePair.get(pair.attacker);
+      delete pair.previousId;
+      if(previous){pair.previousId=previous.id;previous.retreat=0;previous.end=previous.attackEnd;}
+      pair.attackEnd=Math.max(pair.start,...emitted.map(b=>b._stageEnd));
+      pair.retreat=.35;pair.end=pair.attackEnd+pair.retreat;
+      lastMeleePair.set(pair.attacker,pair);
     }
     // The scheduler reserves every potential volley before damage/EN/part checks.
     // Remove unused presentation slots after resolving, without changing combat

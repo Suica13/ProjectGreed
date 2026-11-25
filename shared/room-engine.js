@@ -5203,6 +5203,7 @@ function createRoomEngine({
     const pendingMove = room.game.units.find((u) => u.pendingMove?.seat === seat);
     if (
       pendingMove &&
+      !(msg.action === "rotate" && pendingMove.id === msg.unitId && pendingMove.pendingMove.rotation && G.modelOf(pendingMove).ship) &&
       [
         "move",
         "rotate",
@@ -5366,17 +5367,27 @@ function createRoomEngine({
         }
         break;
       }
+        case "swap_squad": {
+          if(room.phase!=="deployment")validateActive(room,seat);
+          const first=ownUnit(room,seat,msg.unitId,true),second=ownUnit(room,seat,msg.otherUnitId,true);
+          if(room.phase==="deployment" && room.campaignBattle && (!first.campaignDeploying || !second.campaignDeploying))
+            throw Error("原战场存活部队不能重新部署");
+          G.swapSquad(room.game,first,second);
+          event={type:"squad_swap",unitId:first.id,otherUnitId:second.id};
+          break;
+        }
       case "rotate": {
         if (room.phase === "deployment") {
           const u = ownUnit(room, seat, msg.unitId);
           if (room.campaignBattle && !u.campaignDeploying)
             throw Error("原战场存活部队不能重新部署");
-          G.rotate(room.game, u, msg.direction);
+          G.rotate(room.game, u, msg.direction, msg.angle === undefined ? null : msg.angle);
           event = { type: "rotate", unitId: u.id };
         } else {
           validateActive(room, seat);
-          const u = ownUnit(room, seat, msg.unitId);
-          G.previewRotate(room.game, u, msg.direction, seat);
+          const u = ownUnit(room, seat, msg.unitId, false, true);
+          G.previewRotate(room.game, u, msg.direction, seat, msg.angle === undefined ? null : msg.angle);
+          if(msg.angle !== undefined)G.confirmMove(room.game,u);
           event = { type: "rotate", unitId: u.id };
         }
         break;

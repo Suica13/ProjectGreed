@@ -750,6 +750,23 @@ const Economy = (() => {
     next.pluginInventory[id] = (next.pluginInventory[id] || 0) + 1;
     return commit(next);
   }
+  function tokenOffer(merchantId, tokenId) {
+    const pool = supplyPools.find(pool => pool.tokenId === tokenId);
+    const task = contacts.tasks.find(task => task.contactId === merchantId && task.tokenUnlock === tokenId);
+    if (merchantId !== "anaheim" || !pool || !task) return null;
+    return {money:task.tokenPrice, tokenId, name:pool.tokenName, requiredTask:task.id, requiredTaskName:task.name,
+      available:state.contactTasks.some(entry=>entry.id===task.id && entry.status==="claimed")};
+  }
+  function purchaseToken(merchantId, tokenId) {
+    const offer = tokenOffer(merchantId, tokenId);
+    if (!offer) throw Error("商人或补给代币不存在");
+    if (!offer.available) throw Error("尚未交付前提任务：" + offer.requiredTaskName);
+    if (!affordable(offer)) return false;
+    if ((state.itemInventory[tokenId] || 0) >= 1000000) throw Error("代币数量已达上限");
+    const next = snapshot(); next.money -= offer.money;
+    next.itemInventory[tokenId] = (next.itemInventory[tokenId] || 0) + 1;
+    return commit(next);
+  }
   function resourceExchangeOffer(merchantId, source, quantity) {
     const rates = merchants.find(merchant => merchant.id === merchantId)?.resourceExchange;
     if (!rates || !["money", "supplies"].includes(source)) throw Error("该商人不提供此兑换服务");
@@ -850,6 +867,36 @@ const Economy = (() => {
     next.storage.deliveries.splice(index, 1);
     return commit(next);
   }
+  function discardRentalDeliveries(expected) {
+    if (JSON.stringify(expected) !== JSON.stringify(state.storage.deliveries)) throw Error("保管库内容已变化，请重新确认");
+    const next = snapshot();
+    next.storage.deliveries = next.storage.deliveries.filter(item => !item.rentalUses || isContactLoan(item));
+    return commit(next);
+  }
+  const canResetPilotTalents = () => state.contactTasks.some(entry => entry.id === "anaheim-11" && entry.status === "claimed");
+  function resetPilotTalents(id, expected) {
+    if (!canResetPilotTalents()) throw Error("交付阿纳海姆委托「重新定价」后解锁天赋重置");
+    const pilotKey = "projectgreed.custom-pilots.v3.shared";
+    const store = JSON.parse(localStorage.getItem(pilotKey));
+    const index = store?.pilots?.findIndex(p => p.id === id) ?? -1;
+    if (index < 0 || JSON.stringify(store.pilots[index]) !== expected) throw Error("驾驶员资料已变化，请重新打开");
+    const pilot = pilots.custom(store.pilots[index]), cost = {supplies:1000 * pilot.level};
+    if (pilot.ace || !pilot.talents.length || pilot.needsRecruitment) throw Error("该驾驶员无法重置天赋");
+    if (!affordable(cost)) return null;
+    const available = pilots.talents.catalog.filter(t => !pilot.talents.includes(t.id));
+    const chosen = [];
+    while (chosen.length < pilot.talentSlotsUnlocked) {
+      const bytes = new Uint32Array(1);
+      if (typeof crypto === "undefined" || !crypto.getRandomValues) throw Error("无法生成天赋，请重试");
+      crypto.getRandomValues(bytes);
+      const bound = Math.floor(0x100000000 / available.length) * available.length;
+      if (bytes[0] >= bound) continue;
+      chosen.push(available.splice(bytes[0] % available.length, 1)[0].id);
+    }
+    const clean = pilots.custom({...pilot, talents:chosen});
+    store.pilots[index] = clean;
+    return transact(cost, {}, [[pilotKey,JSON.stringify(store)]]) ? {pilot:clean,store} : null;
+  }
   function grantPlan(next, planId) {
     const plan = Object.values(tree).flat().find(node=>node.id===planId);
     if (!plan) throw Error("许可计划不存在");
@@ -923,10 +970,11 @@ const Economy = (() => {
   const merchantLevel = id => merchantAffinity(id)>=800?2:1;
   function facilityUpgradeOffer(id) {
     const offer=baseFacilities.upgradeOffer(state.baseFacilities,id);
-    const supported=["hq","factory","giantFactory","academy"].includes(id) && offer.next===2;
-    const unlocked=supported && state.contactTasks.some(e=>["efsf-6","zeon-6"].includes(e.id)&&e.status==="claimed");
+    const beacon = id === "beacon" && offer.next === 2;
+    const supported=beacon || (["hq","factory","giantFactory","academy"].includes(id) && offer.next===2);
+    const unlocked=beacon ? state.baseFacilities.levels.hq >= 2 : supported && state.contactTasks.some(e=>["efsf-6","zeon-6"].includes(e.id)&&e.status==="claimed");
     const money=id==="hq"?20000:10000;
-    return {...offer,unlocked,condition:supported?"完成联邦联络任务：绿色通道，或吉翁联络任务：通行税":id==="beacon"?"信标暂未开放升级":"开发中",money:supported?money:null,supplies:supported?money:null,available:unlocked&&!offer.max&&!offer.hqRequired};
+    return {...offer,unlocked,condition:beacon?"HQ达到2级":supported?"完成联邦联络任务：绿色通道，或吉翁联络任务：通行税":id==="beacon"?"信标暂未开放升级":"开发中",money:supported?money:null,supplies:supported?money:null,available:unlocked&&!offer.max&&!offer.hqRequired};
   }
   function upgradeFacility(id, expected) {
     const offer=facilityUpgradeOffer(id);
@@ -1011,19 +1059,13 @@ const Economy = (() => {
           Object.values(item.brokenParts || {}).some(Boolean) ||
           (model.modules || []).some((part) => (item.moduleHp?.[part.id] ?? part.hp) < part.hp);
       if (!destroyed && !damagedParts && item.hp >= model.hp && item.en >= model.en) continue;
-      const modules = model.modules || [];
-      const partNames = ["head", "backpack", "leftArm", "rightArm", "leftLeg", "rightLeg"];
-      const brokenCount = modules.length
-        ? modules.filter(part => (item.moduleHp?.[part.id] ?? part.hp) <= 0).length
-        : partNames.filter(part => item.brokenParts?.[part]).length;
-      const brokenRatio = brokenCount / (modules.length || partNames.length);
       // Reward-only chassis can lack a production offer. Their maintenance basis
       // follows a configured comparable chassis without granting production access.
       const price = (chassisProductionOffer(item.unitId) ||
         chassisProductionOffer(catalog.repairPriceReferences?.[item.unitId]))?.supplies || 0;
       items.push({
         ...structuredClone(item),
-        supplies: Math.ceil(price * (destroyed ? 0.5 : 0.25 * brokenRatio)),
+        supplies: Math.ceil(price * (destroyed ? 0.75 : 0)),
       });
     }
     return { items, supplies: items.reduce((sum, item) => sum + item.supplies, 0) };
@@ -1216,6 +1258,8 @@ const Economy = (() => {
     pluginQuantity,
     pluginOffer,
     purchasePlugin,
+    tokenOffer,
+    purchaseToken,
     canRecruitCrew: (grade) => baseFacilities.canRecruit(state.baseFacilities, grade),
     customPilotLimit: () => baseFacilities.pilotLimit(state.baseFacilities),
     academyLevel: () => state.baseFacilities.levels.academy,
@@ -1227,6 +1271,9 @@ const Economy = (() => {
     moveStoredUnit,
     receiveDeliveries,
     discardDelivery,
+    discardRentalDeliveries,
+    canResetPilotTalents,
+    resetPilotTalents,
     meetLiaison,
     acceptContactTask,
     completeContactTask,

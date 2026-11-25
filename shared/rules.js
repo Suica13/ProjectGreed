@@ -1536,7 +1536,7 @@ const Tactics = (() => {
       penalty = parts.penalties(base.partsBreakable === false ? {} : unit),
       environment = environmentOf(g, unit),
       adaptability = (base.adaptability?.[environment] ?? 100) / 100,
-      boostMove = (unit.overBoost?.moveBonus ?? 0) + (unit.fullBoost?.moveBonus ?? 0),
+      boostMove = (unit.overBoost?.moveBonus ?? 0) + (unit.fullBoost?.moveBonus ?? 0) + squadBonuses(g,unit).move,
       boostMobility =
         (unit.overBoost?.mobilityMultiplier ?? 1) * (unit.fullBoost?.mobilityMultiplier ?? 1);
     if (
@@ -1545,7 +1545,7 @@ const Tactics = (() => {
       !penalty.resistancePenalty &&
       adaptability === 1 &&
       !unit.overBoost &&
-      !unit.fullBoost
+      !unit.fullBoost && boostMove === 0
     )
       return base;
     return {
@@ -1958,15 +1958,46 @@ const Tactics = (() => {
       )
       .sort((a, b) => (a.squadSlot ?? 0) - (b.squadSlot ?? 0) || a.id.localeCompare(b.id));
   }
+  function formationSlots(g, unit) {
+    const actors=squadAttackMembers(g,unit),used=new Set(),result=new Map();
+    for (const actor of actors) {
+      const wanted=Number.isInteger(actor.squadSlot) && actor.squadSlot>=0 && actor.squadSlot<6 ? actor.squadSlot : 0;
+      const slot=!used.has(wanted) ? wanted : [0,1,2,3,4,5].find(value=>!used.has(value));
+      if(slot!==undefined){used.add(slot);result.set(actor.id,slot);}
+    }
+    return result;
+  }
+  function squadRow(g, unit) {
+    return (formationSlots(g,unit).get(unit.id) ?? unit.squadSlot ?? 0)>=3 ? "rear" : "front";
+  }
+  function squadSize(members, g=null) {
+    const ids=new Set(members.map(u=>u.id));
+    return members.length+(g?.units || []).filter(u=>u.hp>0 && u.embarked?.exposed && ids.has(u.embarked.carrierId) && !ids.has(u.id)).length;
+  }
+  function canSwapSquad(g,first,second=null) {
+    if(!first || g.winner!==null || !onMap(first))return false;
+    const deploying=g.deployment && !g.deployment.every(Boolean);
+    if(deploying ? g.deployment[ownerOf(first)] : !isUnitTurn(g,first))return false;
+    const members=squadAttackMembers(g,first);
+    return members.length>1 && members.length<=6 && (!second || (second.id!==first.id && members.some(u=>u.id===second.id))) &&
+      members.every(u=>!u.acted && !u.plan && !u.pendingMove && u.attackSkillRound!==g.round && controllerOf(g,u)===controllerOf(g,first));
+  }
+  function swapSquad(g,first,second) {
+    if(!canSwapSquad(g,first,second))throw Error("只能交换同一小队内尚未行动、没有待确认操作的单位");
+    const slots=formationSlots(g,first),members=squadAttackMembers(g,first);
+    for(const member of members)member.squadSlot=slots.get(member.id);
+    [first.squadSlot,second.squadSlot]=[second.squadSlot,first.squadSlot];
+  }
   function squadCapacity(unit, g = null) {
     const model = modelOf(unit);
     const sfsHangars = new Set(
       (model.hangars || []).filter((h) => h.kind === "sfs").map((h) => h.id),
     );
-    if (!sfsHangars.size) return Math.max(1, model.transport?.slotCost || 1);
+    const ownPoints=model.tags?.includes("CB") ? 2 : 1;
+    if (!sfsHangars.size) return ownPoints;
     // Squad points are independent of the SFS hull's ship-hangar footprint.
     return (
-      1 +
+      ownPoints +
       (g?.units || [])
         .filter(
           (passenger) =>
@@ -1975,7 +2006,7 @@ const Tactics = (() => {
             sfsHangars.has(passenger.embarked.hangarId),
         )
         .reduce(
-          (sum, passenger) => sum + Math.max(1, modelOf(passenger).transport?.slotCost || 1),
+          (sum, passenger) => sum + (modelOf(passenger).tags?.includes("CB") ? 2 : 1),
           0,
         )
     );
@@ -1998,22 +2029,48 @@ const Tactics = (() => {
       ),
     ];
   }
+  const squadBonusDefinitions = [
+    {id:"general_support",name:"泛用×3＋支援×3",description:"小队主射击武器额外攻击1轮；在通常轮数结算后追加。"},
+    {id:"raid_general",name:"突击×3＋泛用×3",description:"小队回避率增加5个百分点，最终受到的伤害额外降低5%。"},
+    {id:"raid_support",name:"突击×3＋支援×3",description:"小队最终造成的伤害提高5%。"},
+    {id:"general",name:"泛用×6",description:"小队最终受到的伤害额外降低10%。"},
+    {id:"raid",name:"突击×6",description:"小队移动距离增加1格。"},
+    {id:"support",name:"支援×6",description:"小队射击武器最终命中率增加5个百分点。"},
+  ];
+  function squadBonuses(g, unit) {
+    const result = {id:null,rounds:0,evasion:0,reduction:0,damage:0,move:0,accuracy:0};
+    if (!g || !onMap(unit) || unit.facility || unit.visualOnly) return result;
+    const members = squadAttackMembers(g,unit).filter(other=>onMap(other) && !other.facility && !other.visualOnly);
+    if (members.length !== 6) return result;
+    const counts = {general:0,raid:0,support:0};
+    for (const member of members) {
+      const role = models[member.model]?.combatRole;
+      if (!Object.hasOwn(counts,role)) return result;
+      counts[role]++;
+    }
+    if (counts.general===3 && counts.support===3) Object.assign(result,{id:"general_support",rounds:1});
+    else if (counts.raid===3 && counts.general===3) Object.assign(result,{id:"raid_general",evasion:5,reduction:.05});
+    else if (counts.raid===3 && counts.support===3) Object.assign(result,{id:"raid_support",damage:.05});
+    else if (counts.general===6) Object.assign(result,{id:"general",reduction:.1});
+    else if (counts.raid===6) Object.assign(result,{id:"raid",move:1});
+    else if (counts.support===6) Object.assign(result,{id:"support",accuracy:5});
+    return result;
+  }
+  function squadPrimaryRounds(g,unit,weapon) {
+    if (!squadBonuses(g,unit).rounds || weapon.type === "melee" || weapon.slot === "skill") return 0;
+    const ranged = modelOf(unit).weapons.filter(w=>w.type !== "melee" && w.slot !== "skill");
+    const primary = ranged.find(w=>w.slot === "primary") || ranged[0];
+    return primary?.id === weapon.id ? 1 : 0;
+  }
   function squadFits(members, g = null) {
-    if (members.length > 6) return false;
+    if (squadSize(members,g) > 6) return false;
     const costs = members.map((u) => squadCapacity(u, g));
-    // A two-MS SFS is a five-point formation that must operate alone.
-    if (
-      members.length > 1 &&
-      members.some(
-        (u, i) => costs[i] >= 5 && (modelOf(u).hangars || []).some((h) => h.kind === "sfs"),
-      )
-    )
-      return false;
-    return costs.reduce((sum, cost) => sum + cost, 0) <= 6;
+    // Each hull and exposed passenger occupies one of the six unit positions.
+    return costs.reduce((sum, cost) => sum + cost, 0) <= 12;
   }
   const squadEvasion = (g, unit) =>
-    squadEligible(unit)
-      ? Math.round((12 * (6 - Math.min(6, squadMembers(g, unit).length))) / 5)
+    onMap(unit) && canEvade(unit)
+      ? Math.round((12 * (6 - Math.min(6, squadAttackMembers(g, unit).filter(onMap).length))) / 5)
       : 0;
   function squadTarget(g, candidates) {
     return candidates.length ? candidates[Math.floor(random(g) * candidates.length)] : null;
@@ -2068,34 +2125,18 @@ const Tactics = (() => {
       members.findIndex((member) => member.id === unit.id),
     );
     if (members.length < 2) return { x: 0, y: 0, scale: 1 };
-    // Compact triangles are presentation only; every member is equally targetable.
-    const points =
-      members.length === 2
-        ? [
-            [-0.22, 0],
-            [0.22, 0],
-          ]
-        : members.length === 3
-          ? [
-              [-0.3, 0.12],
-              [0, -0.12],
-              [0.3, 0.12],
-            ]
-          : [
-              [0, -0.28],
-              [-0.18, 0],
-              [0.18, 0],
-              [-0.36, 0.28],
-              [0, 0.28],
-              [0.36, 0.28],
-            ];
-    const [x, y] = points[index] || [0, 0];
-    const angle = ((facing ?? members[0].angle ?? 0) * Math.PI) / 180;
-    return {
-      x: x * Math.cos(angle) - y * Math.sin(angle),
-      y: x * Math.sin(angle) + y * Math.cos(angle),
-      scale: 1,
-    };
+    // Three slots per row; swaps alter the same slots used by melee eligibility.
+    const slots=formationSlots(g,unit),slot=slots.get(unit.id) ?? unit.squadSlot ?? index;
+    const ordered=[...members].sort((a,b)=>(slots.get(a.id) ?? a.squadSlot ?? 0)-(slots.get(b.id) ?? b.squadSlot ?? 0));
+    const rank=Math.max(0,ordered.findIndex(member=>member.id===unit.id)),count=ordered.length;
+    let x,y;
+    if(count<=3){x=(rank-(count-1)/2)*.24;y=0;}
+    else if(count===4){[x,y]=[[0,-.16],[-.24,.08],[.24,.08],[0,.28]][rank];}
+    else {const rear=slot>=3,row=ordered.filter(member=>((slots.get(member.id) ?? member.squadSlot ?? 0)>=3)===rear);
+      x=(row.findIndex(member=>member.id===unit.id)-(row.length-1)/2)*.24;y=rear?.18:-.18;}
+    // The leader defines one shared front for all six slots, including playback.
+    const angle=(facing ?? members[0]?.angle ?? unit.angle ?? 0)*Math.PI/180;
+    return {x:x*Math.cos(angle)-y*Math.sin(angle),y:x*Math.sin(angle)+y*Math.cos(angle),scale:1};
   }
   function joinSquad(g, unit, target, members = [unit]) {
     if (squadJoinTarget(g, unit, target.x, target.y, members)?.id !== target.id)
@@ -2192,11 +2233,14 @@ const Tactics = (() => {
         ),
     );
   }
-  function canRotate(g, unit, direction) {
+  function canRotate(g, unit, direction, targetAngle = null) {
+    if (models[unit.model]?.ship && unit.pendingMove?.rotation)
+      unit = {...unit,x:unit.pendingMove.x,y:unit.pendingMove.y,angle:unit.pendingMove.angle,pendingMove:null};
     const deploying = g.deployment && !g.deployment.every(Boolean);
     if (
       !(models[unit.model]?.ship || models[unit.model]?.fixedWeaponFacing) ||
-      ![-1, 1].includes(direction) ||
+      (targetAngle === null ? ![-1, 1].includes(direction) :
+        !(models[unit.model]?.ship || models[unit.model]?.fixedWeaponFacing) || typeof targetAngle !== "number" || !Number.isFinite(targetAngle) || targetAngle < 0 || targetAngle >= 360) ||
       (!onMap(unit) && !(deploying && unit.deploymentStaged && !unit.embarked)) ||
       unit.acted ||
       unit.plan ||
@@ -2206,11 +2250,11 @@ const Tactics = (() => {
     if (
       deploying
         ? g.deployment[ownerOf(unit)]
-        : !isUnitTurn(g, unit) || unit.moved || unit.rotated || g.winner !== null
+        : !isUnitTurn(g, unit) || unit.rotated || (!models[unit.model]?.ship && unit.moved) || g.winner !== null
     )
       return false;
     if (deploying && unit.deploymentStaged) return true;
-    const angle = (((unit.angle + direction * 90) % 360) + 360) % 360;
+    const angle = targetAngle ?? (((unit.angle + direction * 90) % 360) + 360) % 360;
     // Check the entire swept bounding square; rotation cannot clip an asteroid or another unit.
     const size = dimensions(unit),
       next = dimensions(unit, angle),
@@ -2250,27 +2294,30 @@ const Tactics = (() => {
       deploying ? ownerOf(unit) : null,
     );
   }
-  function previewRotate(g, unit, direction, seat = ownerOf(unit)) {
-    if (g.units.some((other) => other.pendingMove?.seat === seat))
+  function previewRotate(g, unit, direction, seat = ownerOf(unit), targetAngle = null) {
+    const previous = unit.pendingMove;
+    if(previous && previous.seat !== seat)throw Error("没有属于你的待确认旋转");
+    if (g.units.some((other) => other.pendingMove?.seat === seat &&
+      !(other.id === unit.id && previous?.rotation && models[unit.model]?.ship && previous.seat === seat)))
       throw Error("请先确认或取消移动");
-    if (!canRotate(g, unit, direction)) throw Error("旋转区域被占用或行动已使用");
+    if (!canRotate(g, unit, direction, targetAngle)) throw Error("旋转区域被占用或行动已使用");
     const pivot = unit.rotationPivot || center(unit);
-    const angle = (((unit.angle + direction * 90) % 360) + 360) % 360;
+    const angle = targetAngle ?? ((((previous?.angle ?? unit.angle) + direction * 90) % 360) + 360) % 360;
     unit.pendingMove = {
       ...anchorAt(unit, pivot.x, pivot.y, angle),
       angle,
       seat,
-      rotation: direction,
+      rotation: direction || 1,
       from: { x: unit.x, y: unit.y },
       path: [],
     };
   }
-  function rotate(g, unit, direction) {
-    if (!canRotate(g, unit, direction)) throw Error("战舰无法转向：行动已使用，或旋转区域被占用");
+  function rotate(g, unit, direction, targetAngle = null) {
+    if (!canRotate(g, unit, direction, targetAngle)) throw Error("战舰无法转向：行动已使用，或旋转区域被占用");
     const deploying = g.deployment && !g.deployment.every(Boolean);
     if (!deploying) {
       for (const other of g.units) if (ownerOf(other) === ownerOf(unit)) other.origin = null;
-      unit.origin = {
+      unit.origin = unit.moved ? null : {
         x: unit.x,
         y: unit.y,
         angle: unit.angle,
@@ -2278,12 +2325,12 @@ const Tactics = (() => {
         ...(unit.rotationPivot ? { rotationPivot: { ...unit.rotationPivot } } : {}),
       };
       unit.rotated = true;
-      unit.moved = !models[unit.model]?.ship;
+      unit.moved = true;
     }
     unit.rotationPivot = unit.rotationPivot || center(unit);
-    const nextAngle = (((unit.angle + direction * 90) % 360) + 360) % 360;
+    const nextAngle = targetAngle ?? (((unit.angle + direction * 90) % 360) + 360) % 360;
     Object.assign(unit, anchorAt(unit, unit.rotationPivot.x, unit.rotationPivot.y, nextAngle));
-    unit.angle = (((unit.angle + direction * 90) % 360) + 360) % 360;
+    unit.angle = nextAngle;
     unit.aimAngle = unit.angle;
     hangars.sync(g);
   }
@@ -2601,8 +2648,7 @@ const Tactics = (() => {
   function reachableSingle(g, u, starts = null, occupancy = movementQuery(g)) {
     if (!onMap(u) || u.embarked) return new Map();
     const startAdaptation = adaptationOf(g, u);
-    const moveLimit = (startAdaptation > 0 ? modelOf(u, g).move / startAdaptation : modelOf(u).move) *
-      (models[u.model]?.ship && u.rotated ? 0.5 : 1);
+    const moveLimit = startAdaptation > 0 ? modelOf(u, g).move / startAdaptation : modelOf(u).move;
     // A search does not mutate the board. Evaluate each destination's expensive
     // collision/terrain/ZOC checks once, even when reached from several edges.
     const stepCosts = new Map();
@@ -2839,7 +2885,7 @@ const Tactics = (() => {
     const from = tile.path.length > 1 ? tile.path[tile.path.length - 2] : u;
     const direction = { ...from, model: undefined };
     faceTarget(direction, { x, y });
-    if (!models[u.model]?.ship) u.angle = direction.angle;
+    u.angle = direction.angle;
     u.x = x;
     u.y = y;
     delete u.rotationPivot;
@@ -2905,9 +2951,7 @@ const Tactics = (() => {
     const tile = reachable(g, u, null, single).get(key(x, y));
     if (!tile?.path.length) throw Error("该位置不可移动");
     const previous = tile.path.at(-2) || u;
-    const angle = models[u.model]?.ship
-      ? u.angle
-      : (Math.atan2(x - previous.x, -(y - previous.y)) * 180) / Math.PI;
+    const angle = (Math.atan2(x - previous.x, -(y - previous.y)) * 180) / Math.PI;
     u.pendingMove = {
       x,
       y,
@@ -2937,7 +2981,7 @@ const Tactics = (() => {
     for (const actor of launchMembers) delete actor.pendingMove;
     try {
       if (pending.rotation) {
-        rotate(g, u, pending.rotation);
+        rotate(g,u,pending.rotation,models[u.model]?.ship ? pending.angle : null);
         u.origin = null;
         return [];
       }
@@ -3265,6 +3309,7 @@ const Tactics = (() => {
     );
   }
   function canAttack(g, a, b, w) {
+    if (w.type === "melee" && squadRow(g,a) === "rear") return false;
     // Most UI/AI target probes are friendly, dead or outside weapon range.
     // Reject those before evaluating pilot rounds, parts and energy modifiers.
     // Ground-target and area-blast paths keep their own range semantics below.
@@ -3453,6 +3498,15 @@ const Tactics = (() => {
   }
   const coatings = typeof ArmorCoatings !== "undefined" ? ArmorCoatings : require("./armor-coatings.js");
   const canEvade = unit => !!unit && !unit.facility && !modelOf(unit).facilityType;
+  function rangeAccuracyFactor(a,b,w){
+    if(w.type === "melee")return 1;
+    const min=w.min??1,max=w.max??min;
+    if(min===1 && max<=2)return 1;
+    const penalty=catalog.conversionRules.weapons.rangeEdgeAccuracyPenalty ?? .2;
+    const d=dist(a,w.aimCell?{...w.aimCell,visualOnly:true}:b),middle=Math.ceil((min+max)/2);
+    if(d<=min || d>=max)return 1-penalty;
+    return 1-penalty*(d<middle?(middle-d)/(middle-min):(d-middle)/(max-middle));
+  }
   function estimate(g, a, b, w, response = "counter", isCounter = false) {
     if (!canEvade(b) && response === "evade") response = "defend";
     w = weaponStats(w, a);
@@ -3509,6 +3563,8 @@ const Tactics = (() => {
       rawHit =
         Math.max(0, baseHit - (response === "evade" ? 15 : 0)) *
         (w.hitScale || 1) *
+        (squadRow(g, a) === "rear" ? .9 : 1) *
+        rangeAccuracyFactor(a,b,w) *
         (attacker.pilotModifiers?.accuracy ?? 1) *
         (1 + attackCommand.communication) * (1 + (attackTalent.accuracy || 0)) / (1 + (attacker.talentEffects?.accuracy || 0)),
       pilotEvasionHit =
@@ -3534,8 +3590,9 @@ const Tactics = (() => {
         ) -
           (canEvade(b) ? (defender.pilotModifiers?.awakeningEvasion ?? 0) + squadEvasion(g, b) : 0),
       ),
-      hit = Math.max(0, Math.min(100, resolvedHit * (w.counterExposureMultiplier ?? 1)) -
-        (canEvade(b) && combatRoleAdvantage(defender, attacker) ? 5 : 0)),
+      hit = Math.max(0, Math.min(100, resolvedHit * (w.counterExposureMultiplier ?? 1) -
+        (canEvade(b) && combatRoleAdvantage(defender, attacker) ? 5 : 0) +
+        (w.type !== "melee" ? squadBonuses(g,a).accuracy : 0) - (canEvade(b) ? squadBonuses(g,b).evasion : 0))),
       defenseMultiplier = response === "defend" ? 1.25 : 1,
       finalDamageMultiplier =
         (1 + (attackTalent[w.type === 'melee' ? 'melee' : 'shooting'] || 0)) *
@@ -3546,7 +3603,8 @@ const Tactics = (() => {
         (defender.pilotModifiers?.defense ?? 1) *
         (1 - defenseCommand.defense) *
         (attacker.pilotModifiers?.[w.type === "melee" ? "melee" : "shooting"] ?? 1) *
-        (1 + attackCommand.attack) * (combatRoleAdvantage(defender, attacker) ? 0.9 : 1),
+        (1 + attackCommand.attack) * (combatRoleAdvantage(defender, attacker) ? 0.9 : 1) *
+        (1 + squadBonuses(g,a).damage) * (1 - squadBonuses(g,b).reduction),
       strikes = availableStrikes(a, w, b);
     // MOD: subtract flat protection per projectile/component, then apply percentage protection.
     const beamScreen = beamDiffusionFactor(
@@ -4188,7 +4246,8 @@ const Tactics = (() => {
         roleMultiplier = combatRoleAdvantage(m, source ? modelOf(source) : null) ? 0.9 : 1;
       const damage = Math.min(
         u.hp,
-        roundDamage(((m.hp * burn.hpPercent) / 100) * (1 - resistance / 100) * roleMultiplier),
+        roundDamage(((m.hp * burn.hpPercent) / 100) * (1 - resistance / 100) * roleMultiplier *
+          (1 + squadBonuses(g,source).damage) * (1 - squadBonuses(g,u).reduction)),
       );
       const before = u.hp;
       u.hp -= damage;
@@ -4310,6 +4369,12 @@ const Tactics = (() => {
         const m = modelOf(u);
         u.hp = Math.min(m.hp, u.hp + Math.round(m.hp * 0.25));
         u.en = Math.min(m.en, u.en + m.en * 0.5);
+        const shieldPart=!(u.shield>0) && (m.shield?.requiredParts || []).find(id=>u.brokenParts?.[id]);
+        const broken=shieldPart || Object.keys(u.brokenParts || {}).find(id=>u.brokenParts[id] &&
+          (Object.hasOwn(parts.names,id) || m.modules?.some(module=>module.id===id)));
+        if(broken){delete u.brokenParts[broken];const module=m.modules?.find(module=>module.id===broken);
+          if(module)u.moduleHp={...u.moduleHp,[broken]:module.hp};}
+        if(parts.shieldUsable(u,m.shield || {}))u.shield=Math.min(m.shield?.hp || 0,(u.shield || 0)+Math.round((m.shield?.hp || 0)*.25));
       }
       const maintenance = modelOf(u).autoRepair;
       if (
@@ -4466,7 +4531,7 @@ const Tactics = (() => {
     if (
       !members.every(squadEligible) ||
       members.length >= 6 ||
-      members.reduce((sum, m) => sum + squadCapacity(m, g), 0) >= 6 ||
+      members.reduce((sum, m) => sum + squadCapacity(m, g), 0) >= 12 ||
       members.some((m) => m.moved || m.acted || m.plan || m.pendingMove)
     )
       return null;
@@ -5066,15 +5131,23 @@ const Tactics = (() => {
     occupies,
     squadMembers,
     squadAttackMembers,
+    squadBonuses,
+    squadBonusDefinitions,
+    squadPrimaryRounds,
     squadEligible,
     squadJoinTarget,
     squadOffset,
     squadCapacity,
+    squadSize,
+    formationSlots,
+    canSwapSquad,
+    swapSquad,
+    squadRow,
     squadFits,
     squadEvasion,
     squadTarget,
     joinSquad,
-    mapCellPixels: 160,
+    mapCellPixels: 320,
     fits,
     canRotate,
     rotate,
@@ -5143,6 +5216,7 @@ const Tactics = (() => {
     },
     partPenalties: parts.penalties,
     brokenWeaponParts: parts.unavailable,
+    rangeAccuracyFactor,
     partBreakChance: parts.chance,
     inRange,
     attackCells,

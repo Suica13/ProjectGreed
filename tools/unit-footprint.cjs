@@ -7,7 +7,7 @@ function compactShipFootprint(prefab) {
   if (!previous) return prefab;
   prefab.sourceStats ||= {};
   prefab.sourceStats.shipFootprintBeforeCompaction ||= { ...previous };
-  prefab.stats.footprint = { width: previous.width > 1 ? 2 : 1, height: 2 };
+  prefab.stats.footprint = { width: 1, height: 1 };
   return prefab;
 }
 module.exports = { compactShipFootprint };

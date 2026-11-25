@@ -182,6 +182,45 @@ const AnaheimContact = (() => {
       ending:
         "备份收到了，原资料库也没了。独家二字，现在总算站得住脚。\n这批账可以结了，后面的货路我还在谈。先让你的人歇口气，等有了准信，我会再联络你。\n当然，希望到时候你还记得老客户的交情。我这里可一直记着你的账。",
     },
+    {
+      id: "anaheim-11", name: "重新定价", difficulty: 6,
+      kind: "all_events", requiresExtraction: true,
+      anyEnemyFaction: true, ground: false, era: null,
+      money: 25000, serviceUnlock: "pilot_talent_reset",
+      objectiveText: "N6合约：完成当局全部事件后成功撤离（年代、阵营与环境不限）",
+      description: "你的人已经替我拿过货、拆过仓库，也证明了他们能活着回来。现在医疗部门想借他们的脑袋做点生意。\n不是开颅，别这么看我。我们能重新建立驾驶习惯，清掉那些早已过时的条件反射。军方把这叫人员优化，我更喜欢叫重新定价。\n先把战区收拾干净，连那些没人愿意接的麻烦也一起处理，再把完整的行动记录带回来。我不想听一个只挑便宜仗打的人告诉我，什么叫潜力。",
+      ending: "整片战区的记录都在这里，人也回来了。医疗部门挑不出借口了。\n训练舱可以给你的人用了。旧习惯会被新的替换，至于换出来的是不是你想要的本事，得让他们自己上手才知道。物资照价结算——我们替你重新估值，可不负责替你押宝。",
+    },
+    {
+      id: "anaheim-token-0079", name: "现货凭证", difficulty: 5, requires: [],
+      kind: "salvage", requiresExtraction: true, money: 10000,
+      tokenUnlock: "0079t1-token", tokenPrice: 10000,
+      eventFaction: "EFSF", wreckUnit: "Type74", eventName: "遗失的补给核销账簿",
+      objectiveText: "0079T1地面 · N5以上武装介入：回收补给核销账簿后成功撤离",
+      description: "有批货已经到了，账上却还挂在前线。仓库不认口头担保，我也不打算替一个失踪的军需官垫钱。\n去把运输车里的核销账簿带回来。别挂任何一边的旗，那两边都有人不希望我查清这笔账。\n只要货能重新入账，我就能给你开常备补给的购买渠道。现金买凭证，凭证领货，往后不必每次都托人捎话。",
+      ending: "账簿对上了，丢的不是货，是有人藏起来的差价。后面的事交给我们的会计。\n你的常备补给账户已经开好。凭证按张卖，钱货两清，别指望我看在交情上替你挑箱子。",
+    },
+    {
+      id: "anaheim-token-thunderbolt", name: "封箱条款", difficulty: 5, requires: [],
+      kind: "command", requiresExtraction: true, money: 10000,
+      tokenUnlock: "thunderbolt-token", tokenPrice: 30000,
+      eventFaction: "EFSF", eventName: "扣押验收副本的护卫队",
+      targetUnit: "RX_79_G",
+      targetUnits: [{unitId:"RX_79_G",kitId:"beam_rifle"},{unitId:"RGM_79_G",kitId:"cannon"},{unitId:"RGM_79_G",kitId:"bazooka"}],
+      targetPilotGrade: "veteran",
+      objectiveText: "0079T1地面 · N5以上武装介入：消灭扣押验收副本的护卫队后成功撤离",
+      description: "有个客户收了我们的密封货箱，又拿验收副本要挟我退一半货款。货他不肯还，钱也想拿，这倒是很有商业头脑。\n副本由一支护卫队保管。切断他们的转交路线，把护卫队处理掉，我们的人会接手剩下的文件。你别代表任何一方出面，我要追的是违约，不想替谁打官司。\n把这笔烂账收干净，我就让你加入那条特别货路。那些箱子从装船起就没安静过，运费自然不会便宜。",
+      ending: "副本收回来了。现在对方可以专心考虑退货，而不是教我怎么做生意。\n雷霆宙域那条货路给你留了账户。买的是提货机会，开出来什么还得看箱子。要是嫌贵，想想替你把货送出那片地方的人。",
+    },
+    {
+      id: "anaheim-token-celestial", name: "匿名账户", difficulty: 5, requires: [],
+      kind: "upload", requiresExtraction: true, money: 10000,
+      tokenUnlock: "celestial-being-token", tokenPrice: 30000,
+      eventFaction: "ZEON", eventName: "匿名供货渠道的中继终端",
+      objectiveText: "0079T1地面 · N5以上武装介入：守住中继终端完成三回合上传后成功撤离",
+      description: "我有位不喜欢署名的供货人。东西不错，规矩不少，连开户资料都不肯走普通线路。\n前线有座还没报废的中继终端。替我接通它，把认证资料完整送出去。传输没结束之前守住现场，别让别人把电源拔了。两边的旗都别挂，匿名账户最怕热心人替它登记身份。\n你不用问货从哪儿来，我也不会问你最后把它交给谁。能守住这种默契，我们才有下一笔生意。",
+      ending: "认证通过了。对方只回了一个账户编号，连句客气话都舍不得给。\n天人补给渠道现在可以替你下单。钱交到我这里，凭证也由我开，至于供货人的名字——你看，账单上有我的签字就够了。",
+    },
   ].map((task, index) => ({
     required: 1,
     inventory: {},
@@ -192,7 +231,7 @@ const AnaheimContact = (() => {
     ...task,
     contactId: "anaheim",
     number: index + 1,
-    requires: index ? [`anaheim-${index}`] : [],
+    requires: task.requires ?? (index ? [`anaheim-${index}`] : []),
   }));
   return { intro, tasks, planningVersion: "1.0" };
 })();

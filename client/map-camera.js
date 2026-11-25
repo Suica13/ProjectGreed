@@ -45,8 +45,8 @@ const MapCamera = (() => {
     );
   }
   function zoomLimit(width, height) {
-    // Keep square cells; one axis reaches 8 columns / 4 rows.
-    return Math.max(fitZoom, Math.max(width / 8, height / 4) / baseTile(width, height));
+    // Keep square cells and allow a close view of four columns / two rows.
+    return Math.max(fitZoom, Math.max(width / 4, height / 2) / baseTile(width, height));
   }
   function maximumZoom(width, height) {
     if (!(width > 0 && height > 0)) {

@@ -13,7 +13,7 @@ const PilotSystem = (() => {
     !aceProfile(value) ||
     faction === "PMC" ||
     (aceProfile(value).availableFactions || [aceProfile(value).faction]).includes(faction);
-  const academyCap = (level=5) => [3,4,6,8,12][Math.max(1,Math.min(5,level))-1];
+  const academyCap = (level=5) => [4,6,8,10,12][Math.max(1,Math.min(5,level))-1];
   const maxLevel = (value, academyLevel=5) => Math.min(academyCap(academyLevel), aceProfile(value)?.maxLevel ?? growthRules.maxLevel + (value?.reincarnations || 0));
   const aceStatCap = (value, key) =>
     aceProfile(value) ? Math.round(aceStatValue(aceProfile(value).maxStats[key], key)) : undefined;
@@ -516,7 +516,7 @@ const PilotSystem = (() => {
     value.level < maxLevel(value,academyLevel) &&
     upgradeCost(value) !== null &&
     value.experience >= experienceRequired(value.level, value);
-  const canReincarnate = (value, academyLevel=5) => academyLevel===5 && !!value?.custom && !aceProfile(value) &&
+  const canReincarnate = (value, academyLevel=5) => academyLevel>=4 && !!value?.custom && !aceProfile(value) &&
     !value.needsRecruitment && (value.reincarnations || 0) < 4 && value.level === maxLevel(value);
   const reincarnationCost = (value) => canReincarnate(value) ? upgradePrices[value.level] * 2 : 0;
   function reincarnate(value, academyLevel=5) {

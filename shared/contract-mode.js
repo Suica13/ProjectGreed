@@ -10,6 +10,7 @@ const ContractMode = (() => {
     space: "assets/maps/covers/contract-space.svg",
   };
   const costs = [2000, 3000, 4000, 6000, 8000, 10000];
+  const playerCostMultiplier = 1.5;
   const ordinaryForceScale = [.5, .6, .65, .7, .7, .75];
   // Full ordinary-objective completion at baseline era and normal settlement rates.
   const completionRewards = [
@@ -25,8 +26,8 @@ const ContractMode = (() => {
   const difficulties = costs.map((costLimit, index) => ({
     id: index + 1,
     name: "N" + (index + 1),
-    costLimit,
-    fleetLimit: 2 + Math.floor(index / 3),
+    costLimit: costLimit * playerCostMultiplier,
+    fleetLimit: 3 + Math.floor(index / 3),
     initialEnemyCount: [9, 12, 18, 24, 30, 36][index],
     patrolLimit: Math.floor([9, 12, 18, 24, 30, 36][index] * 1.5),
     events: index + 1,
@@ -103,12 +104,31 @@ const ContractMode = (() => {
     // T2 scales the baseline by 1.5; subsequent eras keep the 1.25 progression.
     // Round only the final budget, so rounding does not compound between eras.
     const scale = stage > 0 ? 1.5 * 1.25 ** (stage - 1) : 1;
-    return { ...result, costLimit: Math.round(result.costLimit * scale / 500) * 500 };
+    return { ...result, costLimit: Math.round(costs[result.id - 1] * scale / 500) * 500 * playerCostMultiplier };
   }
-  function scenarioConfig(settings) {
+  function scenarioConfig(settings, generation = false) {
     const d = config(settings.sweepDifficulty, settings.sweepEra);
-    return noAllies(settings) ? {...d, events:d.events + 1,
+    const result = noAllies(settings) ? {...d, events:d.events + 1,
       width:Math.ceil(d.width * 1.1), height:Math.ceil(d.height * 1.1)} : d;
+    return generation ? result : {...result,width:Math.ceil(result.width/2),height:Math.ceil(result.height/2)};
+  }
+  function compactMap(map) {
+    const original = map.tiles, width = Math.ceil(map.width/2), height = Math.ceil(map.height/2);
+    const point = value => {
+      const result = {...value,x:Math.floor(value.x/2),y:Math.floor(value.y/2)};
+      if (value.width != null) result.width = Math.ceil((value.x+value.width)/2)-result.x;
+      if (value.height != null) result.height = Math.ceil((value.y+value.height)/2)-result.y;
+      return result;
+    };
+    map.width=width;map.height=height;
+    map.tiles=Array.from({length:height},(_,y)=>Array.from({length:width},(_,x)=>original[y*2][x*2]));
+    map.spawns=map.spawns.map(point);map.deploymentAreas=map.deploymentAreas.map(point);
+    if (map.contractLayout) {
+      const layout=map.contractLayout;
+      map.contractLayout={...layout,entry:point(layout.entry),entries:layout.entries.map(point),
+        extraction:point(layout.extraction),extractions:layout.extractions.map(point),locations:layout.locations.map(point)};
+    }
+    return map;
   }
   function roomSettings(settings) {
     if (settings.sweepEnvironment !== "ground") throw Error("合约模式宇宙作战暂时禁用");
@@ -183,12 +203,12 @@ const ContractMode = (() => {
             },
           );
         }
-        catalog.maps[id] = map;
+        catalog.maps[id] = compactMap(map);
       }
     delete catalog.maps.battlefield_sweep;
   }
   function generateMap(catalog, settings, seed) {
-    const d = scenarioConfig(settings),
+    const d = scenarioConfig(settings, true),
       map = structuredClone(catalog.maps[mapId(settings.sweepEnvironment, d.id)]),
       rng = random(seed ^ 0xa53c9e17),
       w = map.width = d.width,
@@ -304,7 +324,7 @@ const ContractMode = (() => {
       Object.assign(map.spawns[i * 2 + 1], { x: extraction.x + 1 + (i % 3), y: extraction.y + 2 + Math.floor(i / 3) });
     }
     map.contractLayout = { entry, entries, extraction, extractions, locations, biome };
-    return map;
+    return compactMap(map);
   }
   function visualMap(catalog, game) {
     const base = catalog.maps[game.mapId],
@@ -887,6 +907,37 @@ const ContractMode = (() => {
     groupSquads(room, G, ids, point, role, objectiveId);
     return ids;
   }
+  function queueAirborne(room,objectiveId,entries){
+    const b=brain(room.game),state=room.game.contract;
+    b.airborneWaves ||= [];b.dropLastTurn ||= {};b.dropDirections ||= {};
+    let due=Math.max(state.turn,(b.dropLastTurn[objectiveId]??-1)+1,...b.airborneWaves.filter(w=>w.objectiveId===objectiveId).map(w=>w.due+1));
+    for(const entry of entries){const side=b.dropDirections[objectiveId]||0;b.dropDirections[objectiveId]=side+1;
+      b.airborneWaves.push({...entry,objectiveId,faction:room.settings.sweepFaction,due:due++,side:side%4});}
+  }
+  function processAirborne(room,G,log){
+    const game=room.game,b=brain(game),state=game.contract;
+    if(game.team!==0 || !b.airborneWaves?.length)return;
+    const pending=[];
+    for(const wave of b.airborneWaves){
+      const objective=state.objectives.find(o=>o.id===wave.objectiveId);
+      if(!objective || ["completed","failed"].includes(objective.status))continue;
+      if(wave.due>state.turn || b.dropLastTurn[wave.objectiveId]===state.turn){pending.push(wave);continue;}
+      const [dx,dy]=[[1,0],[0,-1],[-1,0],[0,1]][wave.side],point={x:Math.max(1,Math.min(mapWidth(game)-2,objective.x+dx*5)),y:Math.max(1,Math.min(mapHeight(game)-2,objective.y+dy*5))};
+      const ids=factionRoom(room,wave.faction,()=>{
+        if(!wave.formation)return patrol(room,G,point,wave.count,false,"pursuit",wave.objectiveId,true);
+        const spawned=[];for(const model of wave.formation.models){const u=spawn(room,G,model,point,false,true);if(!u)break;spawned.push(u.id);}
+        if(spawned.length!==wave.formation.models.length){game.units=game.units.filter(u=>!spawned.includes(u.id));return [];}
+        groupSquads(room,G,spawned,point,"pursuit",wave.objectiveId);return spawned;
+      });
+      b.dropLastTurn[wave.objectiveId]=state.turn;
+      for(const id of ids){const u=game.units.find(u=>u.id===id);u.airdropRound=game.round;u.airdropDirection=wave.side;}
+      for(const group of b.groups.filter(group=>group.ids.some(id=>ids.includes(id)))){
+        group.goal={x:objective.x,y:objective.y};if(wave.formation)group.budget=wave.formation.budget;
+      }
+      if(ids.length)log("[合约模式] 敌方空降增援分批抵达："+objective.name+"（"+["东","北","西","南"][wave.side]+"侧）。");
+    }
+    b.airborneWaves=pending;
+  }
   function budgetPatrol(room,G,point,amount,elite=false,role="guard",objectiveId=null,reinforcement=false,airborne=false) {
     const state = room.game.contract;
     const slots = reinforcement ? reinforcementSlots(room, objectiveId) : (brain(room.game).fillSlots ?? Infinity);
@@ -894,6 +945,7 @@ const ContractMode = (() => {
     const rng = random(state.seed + ++state.wave * 1979);
     const budget = brain(room.game).fillSlots != null ? Infinity : forces.budget(room,amount,reinforcement);
     const formations = forces.selectCount(room, forces.draw(room.settings,G,rng,budget,slots), reinforcement), ids = [];
+    if(airborne){queueAirborne(room,objectiveId,formations.map(formation=>({formation})));return [];}
     for (const formation of formations) {
       const spawned = [];
       for (const model of formation.models) {
@@ -972,6 +1024,7 @@ const ContractMode = (() => {
     const game = room.game,
       b = brain(game);
     const before = game.units.length;
+    if(airborne && !transport){queueAirborne(room,objective.id,Array.from({length:squads},()=>({count:3})));return 0;}
     for (let i = 0; i < squads; i++) {
       const point = airborne ? { x: objective.x + 5, y: objective.y + (i - 1) * 3 } : edge(room);
       if (!transport) {
@@ -1427,6 +1480,7 @@ const ContractMode = (() => {
     return (state.commissions?.[player.id]||[]).flatMap(id=>{
       const task=contacts.byId.get(id);if(!contacts.eligible(task,room.settings))return [];
       if(task.requiresExtraction && !escaped)return [];
+      if(task.kind==="all_events") return room.game.units.some(u=>G.ownerOf(u)===player.seat && u.hp>0 && u.contractExtracted && u.contractAllEventsAtExtraction) && state.objectives.length > 0 && state.objectives.every(o=>o.status==="completed") ? [{id,amount:1}] : [];
       if(task.kind==="kills")return [{id,amount:(state.contactKillRecords||[]).filter(record=>
         (task.enemyFaction==="NONE" || record.factions.includes(task.enemyFaction||"ZEON")) &&
         (!task.requiredAttackerUnit || record.attackerUnit===task.requiredAttackerUnit) &&
@@ -1651,6 +1705,7 @@ const ContractMode = (() => {
         log("[合约模式] 完成事件：" + o.name);
       }
     }
+    processAirborne(room,G,log);
   }
 
   const mapWidth = (g) => g.tiles[0].length,
@@ -1676,6 +1731,7 @@ const ContractMode = (() => {
           }
       }
       for (const u of game.units.filter((u) => leaving.has(u.id))) {
+        u.contractAllEventsAtExtraction = state.objectives.length > 0 && state.objectives.every(o=>o.status === "completed");
         u.contractExtracted = true;
         u.deploymentStaged = true;
         u.acted = true;

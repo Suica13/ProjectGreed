@@ -1159,7 +1159,13 @@ function renderPanel() {
     b.onclick = fn;
     actions.append(b);
   }
-  if (m.ship || m.fixedWeaponFacing)
+  if(m.ship){
+    const button=element("button","","旋转");button.dataset.shipTurn="open";
+    button.disabled=!canCommand || !Rules.canRotate(game,u,1);
+    button.onclick=()=>BattleHUD.openRotation(u);
+    actions.append(button);
+  }
+  if (!m.ship && m.fixedWeaponFacing)
     for (const [direction, label] of [
       [-1, "左转90°"],
       [1, "右转90°"],
@@ -2047,6 +2053,7 @@ function drawMapFrame(now) {
   let aboveLayerDrawn = false;
   const drawAboveLayer = () =>
     drawVisibleEffects(() => TileMapRenderer.draw(ctx, authoredMap, "above", mapGeo, w, h));
+  window.BattleHUD?.drawRotationCoverage(ctx,mapGeo);
   for (const u of IrradiationFX.units(MapCombat.units(), now).sort(
     (a, b) => Number(!!a.embarked?.exposed) - Number(!!b.embarked?.exposed),
   )) {
@@ -2083,8 +2090,7 @@ function drawMapFrame(now) {
         from.x + (to.x - from.x) * frac + (unitSize.width - 1) / 2,
         from.y + (to.y - from.y) * frac + (unitSize.height - 1) / 2,
       );
-      if (!frameModelOf(u).ship)
-        angle = (Math.atan2(to.x - from.x, -(to.y - from.y)) * 180) / Math.PI;
+      angle = (Math.atan2(to.x - from.x, -(to.y - from.y)) * 180) / Math.PI;
       anim = SpriteRenderer.movement(u.model);
       t = (now - motion.start) / 1000;
     }
@@ -2104,6 +2110,8 @@ function drawMapFrame(now) {
       t = combatPose.time;
     }
     if (!combatPose) angle = PlanningUI.facing(u, angle, frameModelOf(u));
+    const rotationPreview=window.BattleHUD?.rotationAngle(u.id);
+    if(rotationPreview!=null && !combatPose)angle=rotationPreview;
     if (Number.isFinite(frameModelOf(u).presentation.fixedFacing))
       angle = frameModelOf(u).presentation.fixedFacing;
     const skillPose = !combatPose && !unitThumbnails && SkillEffects.pose(u, now);

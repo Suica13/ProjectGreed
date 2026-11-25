@@ -2980,6 +2980,9 @@ const Formation = (() => {
       ? I18n.text("ACE按悟性自动成长，不能手动加点或重置。")
       : I18n.text("使用强化点提升属性，达到等级上限后可转生提高上限。")),
       mechanism("复归费用",I18n.text(pilotEdit.ace?"每级1000物资，保留成长与战绩。":"每级500物资，保留成长与战绩。")));
+    resetTalents.hidden = !Economy.canResetPilotTalents();
+    resetTalents.textContent = "重置天赋 · 物资 " + 1000 * pilotEdit.level;
+    resetTalents.disabled = !!pilotEdit.ace || pilotIsNew || pilotEdit.needsRecruitment || !pilotEdit.talents?.length || !Economy.affordable({supplies:1000 * pilotEdit.level});
     resetTraining.textContent = "重置属性点 · 资金 " + 1000 * pilotEdit.level;
     resetTraining.disabled = !!pilotEdit.ace || pilotIsNew || !Economy.affordable({ money: 1000 * pilotEdit.level });
     byId("customPilotProgress").replaceChildren(
@@ -3212,6 +3215,24 @@ const Formation = (() => {
     } catch (error) {
       note(Economy.errorMessage(error));
     }
+  };
+  const resetTalents = element("button", "", "重置天赋");
+  resetTalents.id = "resetPilotTalents";
+  resetTalents.type = "button";
+  const resetActions = element("div", "pilot-reset-actions");
+  resetTraining.parentElement.append(resetActions);
+  resetActions.append(resetTraining,resetTalents);
+  resetTalents.onclick = async () => {
+    if (!pilotEdit || resetTalents.disabled || Net.started) return;
+    const id = pilotEdit.id, original = pilotOriginal;
+    if (!await GameDialog.confirm("花费 " + 1000 * pilotEdit.level + " 物资重新抽取全部已解锁天赋。保留等级、转生、属性与技能；新天赋不重复且替换现有天赋。是否继续？",{title:"重置驾驶员天赋",confirmText:"重置"})) return;
+    if (!pilotEdit || pilotOriginal !== original || Net.started) return;
+    try {
+      const result = Economy.resetPilotTalents(id,original);
+      if (!result) return note("物资不足");
+      pilotStore = result.store; pilotEdit = result.pilot; pilotOriginal = JSON.stringify(pilotEdit);
+      commitPilot(pilotEdit); renderPilotStats();
+    } catch (error) { note(Economy.errorMessage(error)); }
   };
   function finishPilotEditor() {
     if (!pilotEdit) return;
@@ -3589,19 +3610,11 @@ const Deployment = (() => {
       forms = actor
         ? NormalForms.options(ART, Rules.modelOf(actor).prefabId).filter((f) => f.skillId && ["transform", "armor_purge"].includes(f.type))
         : [];
-    for (const direction of [-1, 1]) {
-      const id = direction < 0 ? "deploymentTurnLeft" : "deploymentTurnRight";
-      let button = byId(id);
-      if (!button) {
-        button = element("button", "", direction < 0 ? "左转90°" : "右转90°");
-        button.id = id;
-        button.dataset.deploymentTurn = String(direction);
-        byId("confirmDeployment").before(button);
-      }
-      button.hidden = phase !== "deployment" || !actor || !(Rules.modelOf(actor).ship || Rules.modelOf(actor).fixedWeaponFacing);
-      button.disabled = !canEditUnit(actor) || !Rules.canRotate(game, actor, direction);
-      button.onclick = () => turn(direction);
-    }
+    let rotate=byId("deploymentRotate");
+    if(!rotate){rotate=element("button","","旋转");rotate.id="deploymentRotate";byId("confirmDeployment").before(rotate);}
+    rotate.hidden=phase!=="deployment" || !actor || !(Rules.modelOf(actor).ship || Rules.modelOf(actor).fixedWeaponFacing);
+    rotate.disabled=!canEditUnit(actor) || !Rules.canRotate(game,actor,1);
+    rotate.onclick=()=>BattleHUD.openRotation(actor);
     transform.hidden =
       phase !== "deployment" || !actor || actor.embarked || !Net.canControl(actor) || !forms.length;
     transform.onclick = () =>

@@ -2,7 +2,7 @@ const { test, expect } = require("@playwright/test");
 const { pathToFileURL } = require("node:url"),
   path = require("node:path");
 for (const width of [1440, 390])
-  test(`Anaheim original dialogue, ten commissions and task-gated shop at ${width}px`, async ({
+  test(`Anaheim original dialogue, fourteen commissions and task-gated shop at ${width}px`, async ({
     page,
   }) => {
     test.setTimeout(90000);
@@ -38,10 +38,10 @@ for (const width of [1440, 390])
     await expect(terminal.locator('[data-plugin-id="frame"] .plugin-origin')).toContainText("前提任务：不问来路");
     await terminal.getByRole("button", { name: "返回", exact: true }).click();
     await terminal.getByRole("button", { name: "任务", exact: true }).click();
-    await expect(terminal.locator("[data-task-id]")).toHaveCount(10);
+    await expect(terminal.locator("[data-task-id]")).toHaveCount(14);
     await terminal.locator('[data-task-id="anaheim-3"]').click();
     await expect(terminal).toContainText("0079T1");
-    await expect(terminal).toContainText("无友军");
+    await expect(terminal).toContainText("武装介入");
     await expect(terminal).toContainText("强化骨架");
     await terminal.locator('[data-task-id="anaheim-1"]').click();
     await page.locator("#contactTaskAction").click();

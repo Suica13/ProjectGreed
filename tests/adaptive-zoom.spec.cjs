@@ -1,6 +1,12 @@
 const { test, expect } = require("@playwright/test");
 const { pathToFileURL } = require("node:url"),
   path = require("node:path");
+async function finishOnboarding(page) {
+  if (await page.locator('#profileOnboardingConfirm').isVisible()) {
+    await page.locator('#profileCompanyName').fill('缩放测试');
+    await page.locator('#profileOnboardingConfirm').click();
+  }
+}
 for (const size of [
   { width: 1600, height: 1000 },
   { width: 390, height: 844 },
@@ -13,6 +19,7 @@ for (const size of [
     await page.setViewportSize(size);
     await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
     await expect.poll(() => page.evaluate(() => assetsReady)).toBe(true);
+    await finishOnboarding(page);
     await page.evaluate(() => {
       Net.leave();
       game = Rules.create(false, 1, [
@@ -48,7 +55,7 @@ for (const size of [
           tile: mapGeo.tile,
           zoom: MapCamera.zoom,
           max: MapCamera.maxZoom,
-          targetTile: Math.max(box.width / 8, box.height / 4),
+          targetTile: Math.max(box.width / 4, box.height / 2),
           percent: MapCamera.zoomPercent,
           cell: cellAt({ clientX: box.left + point.x, clientY: box.top + point.y }),
           x: u.x,
@@ -64,7 +71,7 @@ for (const size of [
       expect(r.cell).toMatchObject({ x: r.x, y: r.y });
     }
     expect(results[2].max).toBeGreaterThan(results[0].max);
-    expect(results[2].max).toBeGreaterThan(5);
+    expect(results[2].tile).toBeGreaterThan(results[2].base);
     await expect(page.locator("#mapZoomIn")).toBeDisabled();
     const pos = await page.evaluate(() => {
       const box = byId("map").getBoundingClientRect(),
@@ -84,6 +91,7 @@ for (const input of ["mouse", "touch"]) {
     await page.setViewportSize({ width: 1600, height: 1000 });
     await page.goto(pathToFileURL(path.resolve("public/client.html")).href);
     await expect.poll(() => page.evaluate(() => assetsReady)).toBe(true);
+    await finishOnboarding(page);
     await page.evaluate(() => {
       Net.leave();
       game = Rules.create(false, 1, [

@@ -251,7 +251,9 @@ const MapCombat = (() => {
       Rules.squadOffset(game, unit, facing, members)
     );
   }
-  function meleeAnchor(pair) {
+  function meleeAnchor(pair,visited = new Set()) {
+    if(visited.has(pair.id))return null;
+    visited.add(pair.id);
     const a = displayed.get(pair.attacker),
       b = displayed.get(pair.defender);
     if (!a || !b) return null;
@@ -261,7 +263,8 @@ const MapCombat = (() => {
         (Rules.center(u).y + 0.5 + formationOffset(u).y + EnvironmentVisuals.pose(u, u).offset) *
         Rules.mapCellPixels,
     });
-    const origin = point(a),
+    const previous=pair.previousId && meleeExchanges.get(pair.previousId),prior=previous && meleeAnchor(previous,visited);
+    const home=prior?.home || point(a),origin=prior?.engaged || home,
       target = point(b),
       distance = Math.hypot(target.x - origin.x, target.y - origin.y);
     const scale = (u) =>
@@ -273,6 +276,7 @@ const MapCombat = (() => {
       ratio = distance ? Math.max(0, 1 - gap / distance) : 0;
     return {
       origin,
+      home,
       target,
       engaged: {
         x: origin.x + (target.x - origin.x) * ratio,
@@ -304,28 +308,23 @@ const MapCombat = (() => {
         if (pose && health(pair.attacker) > 0)
           result.set(pair.attacker, {
             ...pose,
-            x: anchor.origin.x + (dodge?.x || 0),
-            y: anchor.origin.y + (dodge?.y || 0),
+            x: (pair.retreat === 0 ? anchor.engaged : anchor.home).x + (dodge?.x || 0),
+            y: (pair.retreat === 0 ? anchor.engaged : anchor.home).y + (dodge?.y || 0),
           });
         continue;
       }
       const dead = health(pair.attacker) <= 0,
-        approach = pair.approach || 0.35,
-        retreat = pair.retreat || 0.35;
-      let progress = dead
-        ? 1
-        : dodgeClock < pair.start + approach
-          ? (dodgeClock - pair.start) / approach
-          : dodgeClock < pair.end - retreat
-            ? 1
-            : Math.max(0, (pair.end - dodgeClock) / retreat);
-      progress = (1 - Math.cos(Math.PI * Math.max(0, Math.min(1, progress)))) / 2;
-      const pose = result.get(pair.attacker) || {},
-        moving = !dead && progress > 0 && progress < 1;
+        approach = pair.approach ?? .35,retreat = pair.retreat ?? .35,
+        approaching=!dead && dodgeClock<pair.start+approach,
+        returning=!dead && retreat>0 && dodgeClock>=pair.end-retreat;
+      let progress=approaching?(dodgeClock-pair.start)/approach:returning?(dodgeClock-(pair.end-retreat))/retreat:1;
+      progress=(1-Math.cos(Math.PI*Math.max(0,Math.min(1,progress))))/2;
+      const from=approaching?anchor.origin:anchor.engaged,to=approaching?anchor.engaged:returning?anchor.home:anchor.engaged;
+      const pose=result.get(pair.attacker)||{},moving=(approaching||returning)&&progress<1;
       result.set(pair.attacker, {
         ...pose,
-        x: anchor.origin.x + (anchor.engaged.x - anchor.origin.x) * progress + (dodge?.x || 0),
-        y: anchor.origin.y + (anchor.engaged.y - anchor.origin.y) * progress + (dodge?.y || 0),
+        x: from.x + (to.x - from.x) * progress + (dodge?.x || 0),
+        y: from.y + (to.y - from.y) * progress + (dodge?.y || 0),
         dodge,
         angle: anchor.angle,
         aimAngle: anchor.angle,

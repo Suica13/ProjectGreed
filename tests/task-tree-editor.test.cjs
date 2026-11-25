@@ -14,7 +14,7 @@ test("contact exports keep embedded portraits and exclude other contacts", () =>
   assert.equal(output.contacts[0].tasks.length, 11);
   const portrait = output.contacts[0].portrait;
   assert.deepEqual(Buffer.from(portrait.dataUrl.split(",")[1], "base64"), fs.readFileSync(portrait.source));
-  assert.equal(M.bundle(d, statuses, "anaheim").contacts[0].tasks.length, 10);
+  assert.equal(M.bundle(d, statuses, "anaheim").contacts[0].tasks.length, 14);
   assert.throws(() => M.bundle(d, statuses, "missing"));
   d.contacts[0].portrait.dataUrl = "https://example.com/avatar.svg";
   assert(M.validate(d, statuses).some(e => e.includes("头像")));

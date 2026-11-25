@@ -964,6 +964,26 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.ship-rotation-overlay { position:absolute;inset:0;z-index:45;pointer-events:none; }
+.ship-rotation-overlay[hidden] { display:none; }
+.ship-rotation-overlay .ship-rotation-preview { position:absolute;transform:translate(-50%,-50%);display:block;width:220px;height:220px;touch-action:none;cursor:crosshair;pointer-events:auto; }
+.ship-rotation-tools { display:contents; }
+.ship-rotation-tools h3,.ship-rotation-direction,.ship-rotation-tools .ship-arc-details,.ship-rotation-tools .ship-rotation-warning { position:absolute;box-sizing:border-box;border:1px solid #6599b7;background:#142332ed;padding:6px;pointer-events:auto; }
+.ship-rotation-tools h3 { top:96px;right:8px;width:min(300px,calc(100% - 16px));margin:0;font-size:12px; }
+.ship-rotation-direction { bottom:67px;left:50%;transform:translateX(-50%);width:min(280px,calc(100% - 16px)); }
+.ship-rotation-tools input[type="range"] { width:100%; }
+.ship-rotation-tools .ship-rotation-angle { display:flex;justify-content:space-between;font-size:12px; }
+.ship-rotation-tools .ship-rotation-warning { bottom:44px;left:50%;transform:translateX(-50%);width:min(280px,calc(100% - 16px));color:#e7c75f;text-align:center;font-size:11px;margin:0;padding:3px; }
+.ship-rotation-tools .game-dialog-actions { position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:min(280px,calc(100% - 16px));display:flex;gap:6px;pointer-events:auto; }
+.ship-rotation-tools .game-dialog-actions button { flex:1;padding:6px; }
+.ship-arc-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; margin-top: 10px; }
+.ship-arc-groups button { border-left: 3px solid var(--arc-color); padding: 6px; font-size: 12px; }
+.ship-arc-groups button[aria-pressed="true"] { border-color: var(--arc-color); background: #273f50; }
+.ship-arc-details { margin-top: 6px; max-height: 54px; overflow-y: auto; font-size: 10px; line-height: 1.5; }
+.ship-rotation-tools .ship-arc-groups { position:absolute;top:132px;right:8px;width:min(300px,calc(100% - 16px));grid-template-columns:repeat(3,minmax(0,1fr));margin:0;pointer-events:auto; }
+.ship-rotation-tools .ship-arc-groups button { font-size:10px;padding:5px 2px;background:#142332ed; }
+.ship-rotation-tools .ship-arc-groups button[aria-pressed="true"] { background:#31566b; }
+.ship-rotation-tools .ship-arc-details { bottom:119px;right:8px;width:min(280px,calc(100% - 16px));margin:0; }
 #gameScene #hudCancelAction {
   color: #f1b7b0;
   background: #39282a;
@@ -2401,3 +2421,30 @@ body.replay-active #gameScene .hud-terrain-strip {
   #gameScene #deploymentBottomBar { grid-template-columns:minmax(0,1fr) 146px; }
   #gameScene #deploymentBottomBar #deploymentControls button { min-width:0!important; font-size:11px; }
 }
+
+#gameScene .squad-portraits button{position:relative;}
+#gameScene .squad-row-label{position:absolute;right:0;bottom:0;padding:0 2px;background:#132231e8;color:#ffe2a2;font-size:10px;line-height:13px;}
+
+/* Formation portraits and map slots share two explicit rows. */
+#gameScene .squad-portraits{display:grid;grid-template-columns:repeat(3,minmax(30px,48px));gap:4px;}
+#gameScene .battle-squad-strip{left:8px;bottom:8px;transform:none;width:max-content;max-width:calc(100% - 16px);box-sizing:border-box;}
+#gameScene .hud-top-line > .hud-terrain-strip{position:static;grid-column:1/-1;grid-row:2;justify-self:start;max-width:100%;box-sizing:border-box;flex-wrap:wrap;gap:4px 8px;}
+#gameScene .hud-terrain-strip #hoverInfo{white-space:normal;}
+#gameScene .hud-terrain-strip #mapClimateStatus{position:static!important;padding:0;margin:0;background:transparent;font-size:inherit;}
+#gameScene .hud-terrain-strip #mapClimateStatus:empty{display:none;}
+#gameScene #squadSwap{align-self:center;flex:0 0 auto;}
+#gameScene #squadSwap[aria-pressed="true"]{border-color:#ffe19d;background:#574b28;}
+@media(max-width:740px){#gameScene:not([data-deployment="true"]) #hudUnitCommands{bottom:max(calc(var(--hud-dock) + 8px),var(--squad-strip-clearance,0px));}}
+
+/* All-squad and mode controls share the two portrait rows; swap sits beside slot three. */
+#gameScene .battle-squad-strip { --squad-cell:44px; }
+#gameScene .squad-left>strong { max-width:none; }
+#gameScene .squad-members { display:grid; grid-template-columns:var(--squad-cell) calc(var(--squad-cell)*3 + 8px) var(--squad-cell); grid-template-rows:repeat(2,var(--squad-cell)); gap:4px; width:max-content; align-items:stretch; }
+#gameScene .squad-portraits { grid-column:2; grid-row:1 / span 2; grid-template-columns:repeat(3,var(--squad-cell)); grid-template-rows:repeat(2,var(--squad-cell)); gap:4px; }
+#gameScene .squad-members button { box-sizing:border-box; width:var(--squad-cell); height:var(--squad-cell); min-width:0; min-height:0; padding:2px; font-size:11px; line-height:1.1; white-space:normal; overflow:hidden; }
+#gameScene .squad-members img { width:100%; height:100%; object-fit:contain; }
+#gameScene #squadSelectAll { grid-column:1; grid-row:1; align-self:stretch; }
+#gameScene #squadCombatMode { grid-column:1; grid-row:2; height:var(--squad-cell); align-self:stretch; }
+#gameScene #squadSwap { grid-column:3; grid-row:1; align-self:stretch; }
+#gameScene .squad-empty { border-style:dashed; opacity:.45; }
+@media(max-width:600px){#gameScene .battle-squad-strip{--squad-cell:38px;}#gameScene .squad-members button{font-size:10px;}}

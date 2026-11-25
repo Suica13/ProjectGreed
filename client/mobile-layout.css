@@ -543,6 +543,8 @@
 .pilot-training-heading { display:flex; align-items:center; justify-content:space-between; gap:8px; width:100%; }
 .pilot-training-heading h3 { flex:1; white-space:nowrap; }
 #resetPilotTraining { margin-left:auto; max-width:70%; font-size:12px; padding:6px 10px; }
+.pilot-reset-actions { margin-left:auto;display:flex;flex-direction:column;gap:4px; }
+.pilot-reset-actions #resetPilotTraining, #resetPilotTalents { margin:0;max-width:none;font-size:12px;padding:6px 10px; }
 
 #roomSeatResources { display:none; }
 @media(max-width:700px), (max-height:600px) and (orientation:landscape) {

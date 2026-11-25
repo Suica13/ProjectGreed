@@ -111,6 +111,20 @@ test("native break probability uses actual hull damage, post-hit HP, modifier an
   assert.equal(Parts.chance({ hp: 0 }, model, 4000, 1), 0);
 });
 
+test("runtime part-break probability is reduced by 25 percent after the native formula",()=>{
+  const conversion=require('../shared/conversion-rules.cjs'),config=conversion.read();
+  assert.equal(config.units.partBreakChanceMultiplier,.75);
+  assert(Object.values(G.models).every(model=>model.partBreakChanceMultiplier===.75));
+  const model=G.models.RGM_79__machine_gun,baseline={...model,partBreakChanceMultiplier:1};
+  for(const hp of [.15,.5,.8])for(const damage of [.05,.2,.4])for(const modifier of [.5,1,1.5]){
+    const unit={hp:model.hp*hp},before=Parts.chance(unit,baseline,model.hp*damage,modifier),after=Parts.chance(unit,model,model.hp*damage,modifier);
+    assert(Math.abs(after-before*.75)<1e-12);
+    assert.equal(G.partBreakChance(unit,model,model.hp*damage,modifier),after);
+  }
+  const old=structuredClone(config);delete old.units.partBreakChanceMultiplier;assert.equal(conversion.validate(old).units.partBreakChanceMultiplier,.75);
+  const invalid=structuredClone(config);invalid.units.partBreakChanceMultiplier=1.1;assert.throws(()=>conversion.validate(invalid));
+});
+
 test("each native part can break, already broken parts do not reroll and arm damage removes the shield", () => {
   const { b } = pair(),
     model = G.modelOf(b);

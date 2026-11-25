@@ -105,14 +105,14 @@ test("adjacent charge skips all ranged weapons on both sides and spends melee EN
  assert(G.firePlan(f.game,f.a,f.b).weapons.some(w=>w.type!=='melee'));
  f.planner.plan(f.room,f.a,f.b,null,0,'charge');
  assert.equal(G.attackOrders(f.a)[0].combatMode,'charge');
- assert.deepEqual(f.room.plans[0].weapons,['sword']);
+ assert.deepEqual(f.room.plans[0].weapons,['sword','sword']);
  const requests=f.planner.prepare(f.room);
  assert.equal(G.counterCombatMode(requests[0],f.a.id),'charge');
  f.planner.choose(f.room,requests[0].id,'counter',[],f.a.id);
  assert.deepEqual(f.room.responses[0].counterIds,['sword']);
  const battles=f.planner.resolve(f.room);
  assert(battles.length>=2);assert(battles.every(b=>b.events.every(e=>e.type==='melee')));
- assert.equal(f.a.en,9999);assert.equal(f.b.en,9999);
+ assert.equal(f.a.en,9998);assert.equal(f.b.en,9999);
 });
 
 test("charge rejects non-adjacent targets atomically even if a melee weapon has longer range",()=>{
@@ -262,7 +262,7 @@ test("counterfire works with zero attack and counter AP and does not spend eithe
   assert.equal(f.b.actionPoints, 0);
   assert.equal(f.b.counterActionPoints, 0);
 });
-test("all ranged fire precedes melee; every melee weapon attacks once, with one approach", () => {
+test("all ranged fire precedes melee; ordinary melee gains one round with one approach per surviving target", () => {
   const f = fixture();
   f.b.x = f.a.x + 1;
   const sword = {
@@ -281,6 +281,8 @@ test("all ranged fire precedes melee; every melee weapon attacks once, with one 
       [f.b.id, "gun"],
       [f.a.id, "sword"],
       [f.b.id, "sword"],
+      [f.a.id, "sword"],
+      [f.a.id, "second"],
       [f.a.id, "second"],
     ],
   );
@@ -319,7 +321,7 @@ test("defender replies once to each melee attacker even with no AP", () => {
   const battles = finish(f, "counter");
   assert.equal(battles.filter((b) => b.events[0].from === f.b.id).length, 3);
   assert.equal(f.b.en, 9997);
-  const pairs = battles.filter((b) => b.events[0].from !== f.b.id).map((b) => b.meleeExchange);
+  const pairs = [...new Map(battles.filter((b) => b.events[0].from !== f.b.id).map((b) => [b.meleeExchange.id,b.meleeExchange])).values()];
   for (let i = 1; i < pairs.length; i++) assert(pairs[i].start >= pairs[i - 1].end);
 });
 test("compiled melee requirements retain the 125 gate and leave fallback ram exempt", () => {
@@ -348,7 +350,7 @@ test("a usable ordinary melee excludes ram, and shooting mode or range never for
  const ram={...f.make('Common_Push_A',99,1000),type:'melee',weaponClass:'ram',slot:'skill',projectile:null,min:1,max:1};
  const sword={...ram,id:'sword',weaponClass:'melee',slot:'secondary'};
  f.model.weapons=[sword,ram];
- assert.deepEqual(G.firePlan(f.game,f.a,f.b).weapons.map(w=>w.id),['sword']);
+ assert.deepEqual(G.firePlan(f.game,f.a,f.b).weapons.map(w=>w.id),['sword','sword']);
  sword.pilotRequirements=[{stat:'melee',value:999}];
  assert.deepEqual(G.firePlan(f.game,f.a,f.b).weapons.map(w=>w.id),[ram.id]);
  assert.equal(G.firePlan(f.game,f.a,f.b,{combatMode:'shooting'}).weapons.length,0);
@@ -450,6 +452,7 @@ test("ranged rounds alternate between attacker and defender and stop before mele
       [f.b.id, "mg"],
       [f.a.id, "sword"],
       [f.b.id, "sword"],
+      [f.a.id, "sword"],
     ],
   );
 });
