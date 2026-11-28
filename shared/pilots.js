@@ -6,7 +6,10 @@ const PilotSystem = (() => {
   const catalog = typeof PILOT_DATA !== "undefined" ? PILOT_DATA : require("./pilots.json");
   const commanderLeadershipBonus = 25;
   const aceStatValue = (value, key) => key === "leadership" ? Math.round(Math.round(value) * 1.25) : value;
-  const aceById = new Map((catalog.aces || []).map((p) => [p.id, p]));
+  // Native data has no offer for Hardy; this approved game-side baseline survives imports.
+  const acePriceOverrides = { Pilot_ZEON_0079_N_ACE_HRD: { money: 5000, supplies: 2500 } };
+  const aceById = new Map((catalog.aces || []).map((p) => [p.id,
+    acePriceOverrides[p.id] ? {...p,price:acePriceOverrides[p.id]} : p]));
   const aceProfile = (value) =>
     aceById.get(typeof value === "string" ? value : value?.aceId) || null;
   const canAssign = (value, faction) =>
@@ -118,7 +121,7 @@ const PilotSystem = (() => {
   const trainingVersion = growthRules.version;
   const trainingBudget = (level) => growthRules.initialPoints + level * growthRules.pointsPerLevel;
   const statCap = (level) =>
-    Math.min(growthRules.statCap, growthRules.initialStatCap + level * growthRules.statCapPerLevel);
+    level >= 12 ? 225 : Math.min(growthRules.statCap, growthRules.initialStatCap + level * growthRules.statCapPerLevel);
   function baseStats() {
     return {
       shooting: 100,
@@ -252,7 +255,7 @@ const PilotSystem = (() => {
     const price = aceProfile(id)?.price;
     if (!price) return null;
     return Object.fromEntries(
-      ["money", "supplies"].map((key) => [key, Math.ceil(price[key])]),
+      ["money", "supplies"].map((key) => [key, Math.ceil(price[key] * 3)]),
     );
   }
   function recruitAce(id, previous = null) {
@@ -810,6 +813,11 @@ const PilotSystem = (() => {
   function factor(value, weight) {
     return Math.max(0.5, 1 + ((value - 100) * weight) / 100);
   }
+  function weaponDamageModifier(modifiers, weapon) {
+    const base = modifiers?.[weapon.type === "melee" ? "melee" : "shooting"] ?? 1;
+    return ["mortar", "snipe"].includes(weapon.special?.type)
+      ? Math.max(0.5, 1 + (base - 1) * 2) : base;
+  }
   function modifiers(unit, model) {
     const stats = of(unit, model).stats;
     const awakening = stats.awakening >= 100 ? 1.05 : 1;
@@ -865,6 +873,7 @@ const PilotSystem = (() => {
     roll,
     of,
     modifiers,
+    weaponDamageModifier,
     baseStats,
     custom,
     dialogueEvents,

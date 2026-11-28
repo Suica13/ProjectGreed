@@ -672,7 +672,15 @@
     "maps/missions/sleepless_raid.json",
     "maps/missions/shuttle_defense.json",
     "maps/missions/efsf_19.json",
-    "maps/missions/efsf_29.json"
+    "maps/missions/efsf_29.json",
+    "maps/missions/efsf_13.json",
+    "maps/missions/efsf_15.json",
+    "maps/missions/efsf_16.json",
+    "maps/missions/zeon_12.json",
+    "maps/missions/zeon_14.json",
+    "maps/missions/zeon_18.json",
+    "maps/missions/zeon_22.json",
+    "maps/missions/zeon_25.json"
   ],
   "defaultMap": "frontier_1v1"
 }

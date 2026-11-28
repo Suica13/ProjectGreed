@@ -437,6 +437,25 @@ const BattleHUD = (() => {
     byId("hudCancelAction").disabled = !!unit && (!!animating || isBusy(true));
   }
   let swapFrom=null;
+  let selectedMembers = new Set();
+  function resetSquadSelection() { selectedMembers.clear(); }
+  function skillMembers(unit) {
+    if (!unit) return [];
+    const actors = Rules.squadAttackMembers(game, unit);
+    const chosen = actors.filter(member => selectedMembers.has(member.id) && member.hp > 0 &&
+      member.team === game.team && (!Net.active || Net.canControl(member)));
+    return chosen.some(member => member.id === unit.id) ? chosen : [unit];
+  }
+  function toggleMember(member) {
+    if (phase !== "idle" || isBusy() || (Net.active && !Net.canControl(member))) return;
+    const chosen = new Set(selectedMembers);
+    if (chosen.has(member.id)) chosen.delete(member.id);
+    else chosen.add(member.id);
+    const next = chosen.has(selected) ? selected : [...chosen][0] ?? member.id;
+    select(next, {single:true, preserveSquadSelection:true});
+    selectedMembers = chosen;
+    update();
+  }
   function refresh() {
     const active = pageView === "game",
       unit = getUnit(selected),
@@ -470,8 +489,14 @@ const BattleHUD = (() => {
       const members = element("div", "squad-members");
       const all = element("button", "", I18n.text("全队"));
       all.id = "squadSelectAll";
-      all.setAttribute("aria-pressed", String(reacting ? !responseMember : !squadSingleMove));
-      all.onclick = () => (reacting ? selectCounterMember(null) : select(unit.id));
+      all.setAttribute("aria-pressed", String(reacting ? !responseMember : selectedMembers.size ? actors.every(member => selectedMembers.has(member.id)) : !squadSingleMove));
+      all.onclick = () => {
+        if (reacting) return selectCounterMember(null);
+        select(unit.id);
+        if (phase === "idle") selectedMembers = new Set(actors.filter(member =>
+          member.team === game.team && (!Net.active || Net.canControl(member))).map(member => member.id));
+        update();
+      };
       const left = element("div", "squad-left");
       const formation = element("div", "squad-portraits");
       for (const member of actors) {
@@ -480,7 +505,7 @@ const BattleHUD = (() => {
         button.setAttribute(
           "aria-pressed",
           String(
-            reacting ? responseMember === member.id : squadSingleMove && member.id === selected,
+            reacting ? responseMember === member.id : selectedMembers.size ? selectedMembers.has(member.id) : squadSingleMove && member.id === selected,
           ),
         );
         const slot=slots.get(member.id) ?? 0;
@@ -499,7 +524,9 @@ const BattleHUD = (() => {
             if(source===member.id){update();return;}
             if(Net.active)Net.request("swap_squad",{unitId:source,otherUnitId:member.id});
             else {try{Rules.swapSquad(game,getUnit(source),member);update();}catch(error){note(error.message);}}
-          } else reacting ? selectCounterMember(member.id) : select(member.id,{single:true});
+          } else if (reacting) selectCounterMember(member.id);
+          else if (phase === "idle") toggleMember(member);
+          else select(member.id,{single:true});
         };
         formation.append(button);
       }
@@ -521,6 +548,8 @@ const BattleHUD = (() => {
         swap.onclick=()=>{swapFrom=swapFrom ? null : unit.id;update();};members.append(swap);
       }
       left.append(heading, members);
+      if (!reacting && skillMembers(unit).length > 1)
+        left.append(element("small", "muted", `已选${skillMembers(unit).length}台 · 同名技能可一起使用`));
       squadStrip.append(left);
       heading.title = I18n.text("回避加成") + " +" + Rules.squadEvasion(game, squadUnit) + "%";
       if (phase === "idle" && unit.team === game.team && (!Net.active || Net.canControl(unit))) {
@@ -770,6 +799,8 @@ const BattleHUD = (() => {
     updateSquadClearance();
   }
   window.BattleHUD = {
+    skillMembers,
+    resetSquadSelection,
     openRotation,
     drawRotationCoverage,
     rotationAngle: id=>rotationDraft?.id===id?rotationDraft.angle:null,

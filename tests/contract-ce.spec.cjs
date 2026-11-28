@@ -34,10 +34,12 @@ for(const width of [1440,390])test(`CE liaisons unlock, play their intros and ex
     await expect(terminal.locator('[data-task-id]')).toHaveCount(10);
     await terminal.locator(`[data-task-id="${id}-1"]`).click();
     await expect(terminal.locator('.contact-task-detail')).toContainText('CE0071T1');
+    await expect(terminal.locator('.contact-task-detail')).toContainText('N1');
     await expect(terminal.locator('.contact-task-detail')).toContainText(id==='omni'?'扎夫特':'地球联合');
     await expect(page.locator('#contactTaskAction')).toBeEnabled();
     await page.locator('#contactTaskAction').click();
     await terminal.locator(`[data-task-id="${id}-10"]`).click();
+    await expect(terminal.locator('.contact-task-detail')).toContainText('N5');
     await expect(terminal.locator('.contact-task-detail')).toContainText('同一局完成');
     await expect(terminal.locator('.contact-task-detail')).toContainText(id==='omni'?'公司印章':'哈维尔');
     await expect(terminal.locator('.contact-task-detail')).toContainText(id==='omni'?'决斗短剑':'决斗高达');
@@ -49,7 +51,7 @@ for(const width of [1440,390])test(`CE liaisons unlock, play their intros and ex
   expect(errors).toEqual([]);
 });
 
-test('CE era selection starts at N2 and the WebSocket authority rejects N1',async({page})=>{
+test('CE era selection exposes N1 through N10 with authoritative updates',async({page})=>{
   const app=createServer({host:'127.0.0.1',port:0}),address=await app.listen(),base='http://127.0.0.1:'+address.port;
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
   try{
@@ -59,14 +61,13 @@ test('CE era selection starts at N2 and the WebSocket authority rejects N1',asyn
     await page.waitForFunction(()=>Net.snapshot&&!Net.awaiting);
     await expect(page.locator('#sweepEra option[value="CE_0071_T1"]')).toBeEnabled();
     await page.locator('#sweepEra').selectOption('CE_0071_T1');
-    await expect(page.locator('#sweepDifficulty')).toHaveValue('2');
-    await expect(page.locator('#sweepDifficulty option[value="1"]')).toHaveJSProperty('disabled',true);
+    await expect(page.locator('#sweepDifficulty')).toHaveValue('1');
+    await expect(page.locator('#sweepDifficulty option[value="1"]')).toHaveJSProperty('disabled',false);
+    await expect(page.locator('#sweepDifficulty option')).toHaveCount(10);
     await expect(page.locator('#sweepFaction option[value="NONE|NONE"]')).toHaveText('武装介入');
-    const rejected=await page.evaluate(()=>new Promise(resolve=>{
-      const listener=e=>{const m=JSON.parse(e.data);if(m.type==='error'){Net.socket.removeEventListener('message',listener);resolve(m.message);}};
-      Net.socket.addEventListener('message',listener);Net.request('configure_room',{...Net.snapshot.settings,sweepDifficulty:1});
-    }));
-    expect(rejected).toContain('N2');expect(app.rooms.get('CEUI').settings.sweepDifficulty).toBe(2);
+    await page.locator('#sweepDifficulty').selectOption('10');
+    await expect.poll(()=>page.evaluate(()=>Net.snapshot.settings.sweepDifficulty)).toBe(10);
+    expect(app.rooms.get('CEUI').settings.sweepDifficulty).toBe(10);
     await page.locator('#sweepFaction').selectOption('NONE|NONE');
     await expect.poll(()=>page.evaluate(()=>Net.snapshot.settings.sweepFaction)).toBe('NONE');
     expect(errors).toEqual([]);

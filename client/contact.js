@@ -111,7 +111,7 @@ window.ContactUI = (() => {
     return title;
   }
   function taskSummary(task, progress = 0) {
-    if(task.missionId)return {conditions:"任务模式 · N"+task.difficulty+" · "+task.era.replace("UC_","").replaceAll("_","")+" · 接取后解锁关卡",objective:task.objectiveText+"（"+progress+"/"+task.required+"）"};
+    if(task.missionId)return {conditions:"任务模式 · "+task.era.replace("UC_","").replaceAll("_","")+" · 接取后解锁关卡",objective:task.objectiveText+"（"+progress+"/"+task.required+"）"};
     const targets = {
       "efsf-1": "歼灭吉翁军MS",
       "efsf-2": "取回坠落米迪亚残骸中的数据后撤离",
@@ -128,7 +128,7 @@ window.ContactUI = (() => {
       conditions: [
         I18n.text("合约模式"),
         "N" + task.difficulty + I18n.text("以上"),
-        task.era ? task.era.replace("UC_", "").replaceAll("_", "") : ContactTasks.contactId(task)==="anaheim" ? "当前年代" : "0079T1",
+        task.era?.startsWith("UC_0079") ? "0079" : task.era ? task.era.replace("UC_", "").replaceAll("_", "") : ContactTasks.contactId(task)==="anaheim" ? "当前年代" : "0079",
         I18n.text(task.anyEnemyFaction ? "阵营不限" : task.enemyFaction === "NONE" ? "武装介入" : "敌军：" + (Rules.factionInfo[task.enemyFaction || "ZEON"]?.name || task.enemyFaction)),
         ...(task.ground ? [I18n.text("地面")] : task.environment === "space" ? [I18n.text("宇宙")] : []),
       ].join(" · "),
@@ -329,7 +329,8 @@ window.ContactUI = (() => {
     if(task.pluginUnlocks?.length) technology.append(element("p","contact-plugin-unlocks",
       I18n.text("零件购买权限")+"："+task.pluginUnlocks.map(id=>I18n.text(UnitPlugins.byId.get(id)?.name || id)).join("、")));
     if(task.serviceUnlock === "pilot_talent_reset") technology.append(element("p","contact-service-unlocks","解锁服务：驾驶员天赋重置（每级消耗1000物资）"));
-    if(task.serviceUnlock === "parts_0079_t2") technology.append(element("p","contact-service-unlocks","解锁0079T2配件购买：阿纳海姆、联邦与吉翁渠道，仍需对应商人的好感度。"));
+    if(["efsf-29","zeon-25"].includes(task.id)) technology.append(element("p","contact-service-unlocks","解锁LV3设施升级（信标除外；其他设施等级不能超过HQ）"));
+    if(task.serviceUnlock === "parts_0079_t2") technology.append(element("p","contact-service-unlocks","解锁本任务列出的0079T2配件购买，仍需对应商人的好感度。"));
     if(task.tokenUnlock) {
       const pool=Economy.supplyPools.find(pool=>pool.tokenId===task.tokenUnlock);
       technology.append(element("p","contact-token-unlock","解锁购买："+pool.tokenName+" · 每枚资金 "+formatNumber(task.tokenPrice)));

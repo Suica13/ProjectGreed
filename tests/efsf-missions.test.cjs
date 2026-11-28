@@ -1,14 +1,14 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const G=require('../shared/rules'),M=require('../shared/mission-mode'),C=require('../shared/contact-tasks'),codec=require('../shared/save-codec');
 const tasks=C.tasks.filter(t=>t.contactId==='efsf');
-test('T2 tasks rise from N3 to N6 and special-stage budgets match their tier',()=>{
- assert.deepEqual(tasks.filter(t=>t.number>=16).map(t=>t.difficulty),[3,3,3,4,4,4,5,5,5,5,6,6,6,6]);
+test('T2 contracts rise from N5 to N10 while mission budgets are fixed',()=>{
+ assert.deepEqual(tasks.filter(t=>t.number>=16&&!t.missionId).map(t=>t.difficulty),[5,6,6,7,7,8,8,9,9,10,10]);
  for(const t of tasks.filter(t=>t.number>=16&&!t.missionId)){
   const settings={mode:'sweep',sweepEra:t.era,sweepEnvironment:t.environment||'ground',sweepFaction:t.enemyFaction,sweepDifficulty:t.difficulty};
   assert(C.eligible(t,settings),t.id);assert(!C.eligible(t,{...settings,sweepDifficulty:t.difficulty-1}),t.id);
  }
- assert.equal(M.settings(G,'mission_efsf_19').costLimit,13500);
- assert.equal(M.settings(G,'mission_efsf_29').costLimit,22500);
+ assert.equal(M.settings(G,'mission_efsf_19').costLimit,15000);
+ assert.equal(M.settings(G,'mission_efsf_29').costLimit,27000);
  const t=C.byId.get('efsf-20');assert.equal(t.kind,'kills');assert.equal(t.required,60);assert.equal(t.targetCount,undefined);
  for(const status of ['ready','claimed']){const [entry]=C.normalize([{id:t.id,status,progress:1,progressVersion:3}]);assert.equal(entry.status,status);assert.equal(entry.progress,60);}
  const [entry]=C.normalize([{id:t.id,status:'accepted',progress:0,progressVersion:3}]);assert.equal(entry.status,'accepted');assert.equal(entry.progress,0);
@@ -21,8 +21,8 @@ function fixture(n){
  return {room,task,host,player:game.units[0],state:game.mission.commission,poll:()=>M.poll(room,G,()=>{})};
 }
 
-test('29 original-text tasks cover both technology tiers; only two special stages use mission mode',()=>{
- assert.equal(tasks.length,29);assert.deepEqual(tasks.filter(t=>t.missionId).map(t=>t.number),[19,29]);
+test('29 original-text tasks cover both technology tiers; five special stages use mission mode',()=>{
+ assert.equal(tasks.length,29);assert.deepEqual(tasks.filter(t=>t.missionId).map(t=>t.number),[13,15,16,19,29]);
  const ids=new Set([C.introPlan('efsf'),...tasks.flatMap(C.planIds)]);
  for(const node of require('../shared/development-tree.json').EFSF.filter(n=>['UC_0079_T1','UC_0079_T2'].includes(n.era)))assert(ids.has(node.id),node.id);
  for(const t of tasks.filter(t=>t.missionId)){const map=G.getMap(t.missionId);M.validate(map.mission,map,G);assert(!M.commissions.unlocked(map,[]));assert(M.commissions.unlocked(map,[{id:t.id,status:'accepted'}]));const {room}=fixture(t.number);assert.deepEqual(M.reward({...room,game:{...room.game,winner:0}},G),{money:0,supplies:0,inventory:{}});assert.equal(M.technologyReward(room,G),0);}
@@ -88,4 +88,13 @@ test('29 deliveries persist rewards and technology permits once; battle receipt 
  let E=economy();E.meetLiaison('efsf');assert(!C.available(E.snapshot(),'anaheim'));
  for(const t of tasks){E.acceptContactTask(t.id);const before=E.snapshot().money,receipt={id:'test-'+t.id,matchId:'test-'+t.id,money:0,supplies:0,contactProgress:[{id:t.id,amount:t.required,kills:7}]};E.creditAward(receipt);assert.equal(E.snapshot().money,before);assert.equal(E.creditAward(receipt),false);E=economy(E.snapshot());E.completeContactTask(t.id);assert.equal(E.snapshot().money,before+t.money+(t.moneyPerKill||0)*7);assert.throws(()=>E.completeContactTask(t.id));for(const id of C.planIds(t)){const plan=require('../shared/development-tree.json').EFSF.find(n=>n.id===id);for(const unit of plan.unlocks||[])if(Object.values(G.models).some(m=>m.prefabId===unit))assert(E.hasLicense(unit),unit);}if(t.number===15)assert(C.available(E.snapshot(),'anaheim'));}
  assert.equal(E.liaisonAffinity(),2900);assert.equal(E.snapshot().contactTasks.filter(e=>e.status==='claimed').length,29);
+});
+
+test('mission tasks have no N requirement and ignore inherited contract difficulty',()=>{
+ for(const task of C.tasks.filter(t=>t.missionId)){
+  assert.equal(task.difficulty,undefined);
+  for(const difficulty of [undefined,1,10])assert(C.eligible(task,{mode:'mission',mapId:task.missionId,sweepDifficulty:difficulty}));
+  assert(!C.eligible(task,{mode:'mission',mapId:'wrong-map',sweepDifficulty:10}));
+ }
+ for(const file of ['build-liaison-operations.cjs','build-efsf-missions.cjs'])assert(!fs.readFileSync(path.join(__dirname,'../tools',file),'utf8').includes('task.difficulty'));
 });

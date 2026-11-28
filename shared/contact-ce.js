@@ -173,7 +173,8 @@ const CEContacts = (() => {
       ...(stages?{stages:stages.map(combatSpec)}:{}),
       ...(entry.kind!=='kills'?{eventName:entry.eventName||entry.name}:{})};
     task.objectiveText=entry.objectiveText||(stages?'同一局完成：'+stages.map(s=>s.eventName.split(' · ').slice(-1)[0]+(s.eventRequired?'（'+s.eventRequired+'回合）':'')).join('、')+'，并成功撤离':entry.eventName.split(' · ').slice(-1)[0]+'，并成功撤离');
-    task.objective='CE0071T1 · 地面 · N'+entry.difficulty+'以上 · '+task.objectiveText;
+    task.difficulty=entry.difficulty-1;
+    task.objective='CE71 · 地面 · N'+task.difficulty+'以上 · '+task.objectiveText;
     return task;
   }));
   return {contacts,tasks,available,gateTasks};

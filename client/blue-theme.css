@@ -3690,3 +3690,22 @@ body #formationScreen #formationUnits.formation-carrier-view .formation-icon > i
 .unit-preview-camera-controls { position:absolute; bottom:4px; right:4px; display:flex; gap:4px; z-index:2; }
 .unit-preview-camera-controls button { padding:3px 8px; font-size:12px; background:#132533e8; }
 .unit-preview-camera-controls .unit-preview-zoom-label { opacity:1; color:#c7e6fa; }
+
+/* Carrier summaries keep cargo in a separate portrait row. */
+body #formationScreen #formationUnits.formation-carrier-view { grid-template-columns:minmax(0,1fr) !important; }
+#formationUnits .formation-carrier-summary { align-self:start; }
+#formationUnits .formation-cargo-portraits { display:flex; gap:4px; overflow-x:auto; padding:5px; min-height:62px; border-top:1px solid #5a9fc5; align-items:center; }
+#formationUnits .formation-cargo-avatar { position:relative; flex:0 0 54px; width:54px; height:54px; padding:2px; border:1px solid #75c0e4; border-radius:3px; background:#102331; }
+#formationUnits .formation-cargo-avatar > img { width:100%; height:100%; object-fit:contain; }
+#formationUnits .formation-cargo-avatar > .formation-cargo-pilot { position:absolute; right:1px; bottom:1px; width:22px; height:24px; background:#142330; border:1px solid #8abbd5; object-fit:cover; }
+#formationUnits .formation-cargo-avatar small { position:absolute; left:2px; bottom:0; background:#142330d9; color:white; font-size:10px; }
+#formationUnits .formation-cargo-empty-slot { display:grid; place-items:center; border-style:dashed; color:#a9dfff; font-size:32px; line-height:1; }
+#formationUnits .formation-cargo-located { outline:2px solid #ffd783; outline-offset:-2px; box-shadow:inset 0 0 18px #ffd78328; }
+#formationUnits .formation-cargo-empty { color:#a9c9dc; font-size:12px; }
+#formationUnits .formation-carrier-total { display:block; color:#ffe1a2; margin-top:4px; }
+#formationUnits .formation-cargo-heading { display:flex; align-items:center; gap:12px; grid-column:1 / -1; }
+#formationUnits .formation-cargo-heading h3 { margin:0; font-size:15px; }
+body #formationScreen #formationUnits.formation-cargo-page { display:block !important; }
+@media(max-width:720px) {
+  #formationUnits.formation-carrier-view .formation-row-actions > .formation-manage-cargo { grid-column:1 / -1 !important; }
+}

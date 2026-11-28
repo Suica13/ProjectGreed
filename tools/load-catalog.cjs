@@ -174,6 +174,8 @@ function loadCatalog({
             (t) =>
               ![
                 "plain",
+                "road",
+                "residential",
                 "forest",
                 "rubble",
                 "rock",
@@ -869,7 +871,7 @@ function loadCatalog({
       textureKeys[id] = key;
       if (embedAssets)
         result.assets[key] =
-          "data:image/png;base64," + fs.readFileSync(file(base, ref)).toString("base64");
+          "data:image/" + (ref.endsWith(".svg") ? "svg+xml" : "png") + ";base64," + fs.readFileSync(file(base, ref)).toString("base64");
     }
     for (const [alias, target] of Object.entries(prefab.kitAliases || {})) {
       if (

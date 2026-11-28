@@ -96,14 +96,14 @@ test("both runtime force pools exactly match the six-level Markdown source", () 
         assert(f.kits.every((kits) => kits.length));
       }
       assert.equal(profile.garrisons.command,
-        (faction === "EFSF" ? [150, 275, 400, 575, 775, 1050] : [150, 250, 450, 625, 775, 1050])[difficulty - 1]);
+        (faction === "EFSF" ? [150, 275, 400, 575, 775, 1050] : [150, 250, 450, 625, 775, 1050])[Math.min(difficulty,5) - 1]);
       assert.equal(
         profile.waves["defend.first"],
-        (faction === "EFSF" ? [150, 325, 450, 650, 875, 1125] : [150, 300, 500, 700, 875, 1125])[difficulty - 1],
+        (faction === "EFSF" ? [150, 325, 450, 650, 875, 1125] : [150, 300, 500, 700, 875, 1125])[Math.min(difficulty,5) - 1],
       );
       assert.equal(
         profile.waves["defend.followup"],
-        (faction === "EFSF" ? [75, 100, 100, 150, 200, 300] : [75, 75, 125, 175, 200, 300])[difficulty - 1],
+        (faction === "EFSF" ? [75, 100, 100, 150, 200, 300] : [75, 75, 125, 175, 200, 300])[Math.min(difficulty,5) - 1],
       );
     }
 });
@@ -124,18 +124,18 @@ test("budget draws keep whole formations, caps, availability, and rarity separat
   }
   assert.deepEqual(F.draw(settings, G, rng, 1000, 2), []);
   assert.deepEqual(F.draw(settings, G, rng, 50, 9), []);
-  const list = F.formations(settings, G);
+  const list = F.profile(settings).formations;
   assert(
     list.some(
       (f) =>
-        f.units.includes("RX_78_2") && f.units.includes("RX_77_2") && f.units.includes("RX_75"),
+        f.units.includes("RX_78_2") && f.units.includes("RGM_79"),
     ),
   );
   assert(list.filter((f) => f.units.includes("RX_78_2")).every((f) => f.weight === .25 * 1.15));
   assert(
     list
-      .filter((f) => f.units.every((id) => id === "RX_77_2" || id === "RX_75"))
-      .every((f) => f.weight === 1 * 1.15),
+      .filter((f) => f.units.some((id) => id === "RX_77_2" || id === "RX_75"))
+      .every((f) => f.weight === 1.15),
   );
   assert(list.filter((f) => f.units.every((id) => id === "RGM_79")).every((f) => f.weight === (f.units.length===3?8:4)));
 });
@@ -243,26 +243,12 @@ for (const faction of ["EFSF", "ZEON"])
     assert(added.length <= C.config(6).patrolLimit);
     checkPilots(added, 6);
   });
-test("lobby and startup authoritatively reject space contracts without limiting quick battles", (t) => {
-  assert.throws(
-    () => C.roomSettings({ sweepDifficulty: 1, sweepEra: "UC_0079_T1", sweepEnvironment: "space" }),
-    /宇宙.*禁用/,
-  );
-  const f = fixture(t, { difficulty: 1, lobby: true });
-  assert.throws(
-    () => f.act(0, "configure_room", { ...f.room.settings, sweepEnvironment: "space" }),
-    /宇宙.*禁用/,
-  );
-  assert.equal(f.room.settings.sweepEnvironment, "ground");
-  f.room.settings.sweepEnvironment = "space";
-  assert.throws(
-    () =>
-      f.act(0, "start_game", {
-        formation: [{ unitId: "Medea", kitId: "standard", stockId: "stock" }],
-      }),
-    /宇宙.*禁用/,
-  );
-  assert(G.getMap("outer_orbit_5v5").environment === "space");
+test("unified 0079 contracts allow space at the authority boundary", t => {
+ assert.doesNotThrow(()=>C.roomSettings({sweepDifficulty:1,sweepEra:'UC_0079_T1',sweepEnvironment:'space'}));
+ const f=fixture(t,{difficulty:1,lobby:true});
+ f.act(0,'configure_room',{...f.room.settings,sweepEnvironment:'space'});
+ assert.equal(f.room.settings.sweepEnvironment,'space');
+ assert.deepEqual(f.errors,[]);
 });
 test("five-player configured waves keep complete formations below the shared live cap", (t) => {
   const f = fixture(t, { players: 5 }),

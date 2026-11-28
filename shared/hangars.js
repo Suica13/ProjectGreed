@@ -113,7 +113,7 @@ const UnitHangars = {
               : actor,
           ),
         };
-        if (!squadFits(squadMembers(projected, carrier), projected)) return false;
+        if (!squadFits(carrier.embarked ? [carrier] : squadMembers(projected, carrier), projected)) return false;
       }
       return true;
     }
@@ -158,14 +158,15 @@ const UnitHangars = {
         previousCarrierId: previous.carrierId, previousHangarId: previous.hangarId };
     }
     function canEmbark(g, u, carrier, hangarId, deploymentDrop = false) {
-      if (!onMap(u) || !onMap(carrier) || !canLoad(g, u, carrier, hangarId)) return false;
+      const hull = carrier?.embarked && of(carrier).some(h => h.id === hangarId && h.kind === "sfs") ? rootCarrier(g, carrier) : carrier;
+      if (!onMap(u) || !onMap(hull) || !canLoad(g, u, carrier, hangarId)) return false;
       if (deploying(g)) {
         const inDeploymentArea =
           deploymentDrop &&
-          deploymentCells(g, ownerOf(u), carrier).some((cell) =>
-            cells(carrier).some((target) => cell.x === target.x && cell.y === target.y),
+          deploymentCells(g, ownerOf(u), hull).some((cell) =>
+            cells(hull).some((target) => cell.x === target.x && cell.y === target.y),
           );
-        return !g.deployment[ownerOf(u)] && (edgeDistance(carrier, u) === 1 || inDeploymentArea);
+        return !g.deployment[ownerOf(u)] && (edgeDistance(hull, u) === 1 || inDeploymentArea);
       }
       return (
         isUnitTurn(g, u) &&
@@ -175,7 +176,7 @@ const UnitHangars = {
         !u.readySnipe &&
         u.lastLaunchRound !== g.round &&
         !u.pendingMove &&
-        edgeDistance(carrier, u) === 1
+        edgeDistance(hull, u) === 1
       );
     }
     // Reserve every passenger before mutating the real board. Backtracking also

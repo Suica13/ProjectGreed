@@ -5,18 +5,80 @@ const ContractForces = (() => {
       ? CONTRACT_FORCE_POOLS
       : require("./contract-force-pools.json");
   const caches = new WeakMap();
+  const unified0079 = era => ["UC_0079_T1", "UC_0079_T2"].includes(era);
+  const family = era => /^UC_00(?:79|87)_T[12]$/.test(era) ? [era.replace(/T[12]$/, 'T1'),era.replace(/T[12]$/, 'T2')] : [era];
+  const tenLevels = era => unified0079(era) || /^UC_0087_T[12]$/.test(era) || era === 'CE_0071_T1';
+  const t2Share = difficulty => Math.max(0, Math.min(1, (Number(difficulty) - 5) / 5));
+  const enemyEras = settings => Number(settings.sweepDifficulty) >= 6 ? family(settings.sweepEra) : family(settings.sweepEra).slice(0,1);
+  const modelAllowed = (settings, model) => enemyEras(settings).some(era => model.tags?.includes(era));
+  // Rare T2 heavy units keep their roster slots but receive less draw weight.
+  const hullWeight = model => model.tags?.some(tag=>/_T2$/.test(tag)) &&
+    (model.unitTags?.includes("MA") || /^MSN_02(?:_|$)/.test(model.prefabId))
+      ? 0.025 : model.prefabId === "YMS_16M" ? 0.1 : model.unitTags?.includes("MA") ? 0.1 : 1;
+  const marineHull = id => ["MS_14F", "MS_15F"].includes(id);
+  const hullFormation = ([id,kits]) => ({label:id,units:[id,id,id],kits:[kits,kits,kits],budget:75,weight:hullWeight(kits[0])});
+  function lateComposition(selected, available, difficulty) {
+    if (Number(difficulty)<8) return selected;
+    const marines = available.filter(([id])=>marineHull(id));
+    if (!marines.length) return selected;
+    const support = selected.filter(f=>!marineHull(f.units[0]));
+    const total = support.reduce((sum,f)=>sum+f.weight,0);
+    // Preserve marine MS even when a COST percentile would cut them from the pool.
+    return [...support,...marines.map(row=>({...hullFormation(row),weight:total ? total*0.7/0.3/marines.length : 1}))];
+  }
   function aiKitAllowed(model) {
     return !/nuclear|nuke|核弹|核爆/i.test(model.kitId || "") &&
       !(model.weapons || []).some(w => /nuclear|nuke|核弹|核爆/i.test([w.id,w.name,w.category,w.special?.type].join(" "))) &&
       !(model.skills || []).some(s => /nuclear|nuke|核弹|核爆/i.test([s.id,s.type,s.name].join(" ")));
   }
   function profile(settings) {
-    const source = settings.sweepEra === data.era ? data : data.eras?.[settings.sweepEra];
-    if (!source || settings.sweepEnvironment !== source.environment)
+    const unified = unified0079(settings.sweepEra);
+    const space = settings.sweepEnvironment === "space";
+    const source = unified || settings.sweepEra === data.era ? data : data.eras?.[settings.sweepEra] || (space ? data : null);
+    if (!source || (!space && settings.sweepEnvironment !== source.environment))
       return null;
-    return source.factions[settings.sweepFaction]?.[settings.sweepDifficulty] || null;
+    const level = unified ? Math.min(5, settings.sweepDifficulty) : settings.sweepEra === 'CE_0071_T1' ? Math.min(6, Number(settings.sweepDifficulty)+1) : settings.sweepDifficulty;
+    return (source.factions[settings.sweepFaction] || (space ? data.factions.EFSF : null))?.[Math.min(space ? 5 : Infinity, level)] || null;
+  }
+  // Space forces are resolved from the current catalog so new kits retain the
+  // same bans, technology gates and era tags as their ground counterparts.
+  function spaceFormations(settings, G) {
+    let cache = caches.get(G.catalog);
+    if (!cache) caches.set(G.catalog, (cache = new Map()));
+    const key = ["space",settings.sweepEra,settings.sweepFaction,settings.sweepDifficulty].join(":");
+    if (cache.has(key)) return cache.get(key);
+    const eras = family(settings.sweepEra), n = Number(settings.sweepDifficulty);
+    const hulls = new Map();
+    for (const m of Object.values(G.models)) {
+      if (m.formOnly || m.wip || m.facility || m.ship || m.requiredPilotId ||
+          !m.weapons?.length || (G.isFleetCarrier(m) && !m.unitTags?.includes("MA")) ||
+          !aiKitAllowed(m) || !G.aiTechnologyAllows(m,settings.sweepFaction) ||
+          (G.aiUnitBans?.sweep || []).includes(m.prefabId) ||
+          !(m.availableFactions || [m.faction]).includes(settings.sweepFaction) ||
+          !modelAllowed(settings,m) || (m.adaptability?.space || 0)<100) continue;
+      if (!hulls.has(m.prefabId)) hulls.set(m.prefabId,[]);
+      hulls.get(m.prefabId).push(m);
+    }
+    const tier = (era, late) => {
+      const values = [...hulls].filter(([,kits])=>kits[0].tags.includes(era) &&
+        (!late || !kits[0].tags.includes(eras[0])))
+        .sort((a,b)=>Math.min(...a[1].map(m=>m.cost))-Math.min(...b[1].map(m=>m.cost)) || a[0].localeCompare(b[0]));
+      const step = eras.length===1 ? (n-1)/9 : (Math.min(5,late ? n-5 : n)-1)/4;
+      const selected = values.slice(Math.floor(values.length*step*.4), Math.max(1,Math.ceil(values.length*(.4+step*.6))))
+        .map(([id,kits])=>({label:id,units:[id,id,id],kits:[kits,kits,kits],budget:75,
+          weight:hullWeight(kits[0])}));
+      return late ? lateComposition(selected,values,n) : selected;
+    };
+    const early=tier(eras[0],false), late=eras.length>1 && n>=6 ? tier(eras[1],true) : [];
+    const share=late.length ? (early.length ? t2Share(n) : 1) : 0;
+    const normalize=(values,weight)=>{const sum=values.reduce((n,f)=>n+f.weight,0);return values.map(f=>({...f,weight:f.weight/sum*weight}));};
+    const result=[...normalize(early,1-share),...normalize(late,share)].filter(f=>f.weight>0);
+    if (!result.length) throw Error("所选年代和阵营没有可用宇宙兵力");
+    cache.set(key,result);
+    return result;
   }
   function formations(settings, G) {
+    if (settings.sweepEnvironment === "space") return spaceFormations(settings,G);
     const level = profile(settings);
     if (!level) return null;
     let cache = caches.get(G.catalog);
@@ -41,7 +103,7 @@ const ContractForces = (() => {
                   aiKitAllowed(m) &&
                   G.aiTechnologyAllows(m, settings.sweepFaction) &&
                   !(G.aiUnitBans?.sweep || []).includes(id) &&
-                  m.tags?.includes(settings.sweepEra) &&
+                  modelAllowed(settings, m) &&
                   (m.availableFactions || [m.faction]).includes(settings.sweepFaction) &&
                   ((m.adaptability.ground || 0) >= 100 || (m.adaptability.air || 0) >= 100),
               );
@@ -53,7 +115,33 @@ const ContractForces = (() => {
           .filter((formation) => formation.kits.every((kits) => kits.length)),
       );
     }
-    return cache.get(key);
+    const base = cache.get(key);
+    if (!tenLevels(settings.sweepEra) || Number(settings.sweepDifficulty) < 5) return base;
+    const mixedKey = key + ":mixed";
+    if (!cache.has(mixedKey)) {
+      const share = t2Share(settings.sweepDifficulty);
+      const early = base.map(f => ({...f,budget:f.units.length * 25}));
+      const byHull = new Map();
+      const ce = settings.sweepEra === 'CE_0071_T1', baseIds = new Set(base.flatMap(f=>f.units));
+      for (const m of Object.values(G.models)) {
+        if ((ce ? !baseIds.has(m.prefabId) : !m.tags?.includes("UC_0079_T2") || m.tags.includes("UC_0079_T1")) || m.formOnly || m.wip || m.facility || m.ship ||
+          m.requiredPilotId || !aiKitAllowed(m) || !G.aiTechnologyAllows(m,settings.sweepFaction) ||
+          (G.aiUnitBans?.sweep || []).includes(m.prefabId) ||
+          !(m.availableFactions || [m.faction]).includes(settings.sweepFaction) ||
+          Math.max(m.adaptability?.ground || 0,m.adaptability?.air || 0)<100) continue;
+        if (!byHull.has(m.prefabId)) byHull.set(m.prefabId,[]);
+        byHull.get(m.prefabId).push(m);
+      }
+      const hulls = [...byHull].sort((a,b)=>Math.min(...a[1].map(m=>m.cost))-Math.min(...b[1].map(m=>m.cost)));
+      const step = Math.max(0,Number(settings.sweepDifficulty)-6);
+      const selected = hulls.slice(Math.floor(hulls.length*(ce ? .5+step*.1 : step*.1)), ce ? hulls.length : Math.max(1,Math.ceil(hulls.length*(.6+step*.1))))
+        .map(([id,kits])=>({label:id,units:[id,id,id],kits:[kits,kits,kits],budget:75,
+          weight:hullWeight(kits[0])}));
+      const late = lateComposition(selected,hulls,settings.sweepDifficulty);
+      const normalize = (values,weight) => { const sum=values.reduce((n,f)=>n+f.weight,0);return values.map(f=>({...f,weight:f.weight/sum*weight})); };
+      cache.set(mixedKey,[...normalize(early,late.length ? 1-share : 1),...normalize(late,share)].filter(f=>f.weight>0));
+    }
+    return cache.get(mixedKey);
   }
   function weighted(values, rng) {
     let roll = rng() * values.reduce((sum, item) => sum + item.weight, 0);
@@ -130,9 +218,9 @@ const ContractForces = (() => {
       return false;
     });
   }
-  const difficultyScale = difficulty => [1, 1, 1.1, 1.15, 1.15, 1.15][Number(difficulty) - 1] || 1;
+  const difficultyScale = difficulty => [1, 1, 1.1, 1.15, 1.15][Math.min(5,Number(difficulty)) - 1] || 1;
   // Relative pressure within an era, separate from the cost of newer player units.
-  const eraPressure = (era, difficulty = 1) => era === "UC_0079_T2" && Number(difficulty) >= 3 && Number(difficulty) <= 6 ? 1.25 : 1;
+  const eraPressure = (era, difficulty = 1) => tenLevels(era) && Number(difficulty) === 10 ? 1.1 : 1;
   function budget(room, amount, reinforcement = false) {
     const players = room.game.contract.players;
     // Explicit per-event budgets supersede the old generic head-count tuning.
@@ -142,6 +230,6 @@ const ContractForces = (() => {
     const percent = Math.round(difficultyScale(room.settings.sweepDifficulty) * 100);
     return Math.round(amount * multiplier * percent * eraPressure(room.settings.sweepEra, room.settings.sweepDifficulty) / 2500) * 25;
   }
-  return { profile, formations, draw, pick, budget, aiKitAllowed, difficultyScale, eraPressure, countScale, selectCount };
+  return { profile, formations, draw, pick, budget, aiKitAllowed, difficultyScale, eraPressure, countScale, selectCount, unified0079, tenLevels, family, t2Share, enemyEras, modelAllowed };
 })();
 if (typeof module !== "undefined") module.exports = ContractForces;

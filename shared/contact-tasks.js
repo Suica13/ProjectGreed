@@ -67,7 +67,7 @@ const ContactTasks = (() => {
   function eligible(task, settings) {
     if (task?.missionId) return settings.mode === "mission" && settings.mapId === task.missionId;
     return task && settings.mode==="sweep" && (task.anyEnemyFaction || settings.sweepFaction===(task.enemyFaction || "ZEON")) &&
-      (!task.era || settings.sweepEra===task.era) && (!task.environment || settings.sweepEnvironment===task.environment) &&
+      (!task.era || settings.sweepEra===task.era || task.era==="UC_0079_T1"&&settings.sweepEra==="UC_0079_T2") && (!task.environment || settings.sweepEnvironment===task.environment) &&
       Number(settings.sweepDifficulty)>=task.difficulty && (!task.ground || settings.sweepEnvironment==="ground");
   }
   function unlocked(task, entries, intro) {

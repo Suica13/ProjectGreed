@@ -28,9 +28,10 @@ window.MenuShell = (() => {
       if (view === "pilots" || view === "formation") {
         if (pageView !== "formation") {
           leaveEditor();
-          byId("openFormation").click();
+          Formation.open(view === "pilots" ? "pilots" : "units");
         }
-        byId(view === "pilots" ? "formationPilotsTab" : "formationUnitsTab").click();
+        if (pageView === "formation")
+          byId(view === "pilots" ? "formationPilotsTab" : "formationUnitsTab").click();
       } else {
         if (pageView === view) return;
         leaveEditor();
@@ -60,6 +61,15 @@ window.MenuShell = (() => {
     return button;
   }
   function refresh() {
+    const missionUnlocked = Object.values(Rules.catalog.maps).some(map => MissionMode.commissions.unlocked(map, Economy.snapshot().contactTasks));
+    for (const id of ["newRoomMode", "roomBattleMode"]) {
+      const select = byId(id), option = select?.querySelector('option[value="mission"]');
+      if (!option) continue;
+      option.disabled = !missionUnlocked;
+      option.textContent = I18n.text(missionUnlocked ? "任务模式" : "任务模式（需任务解锁）");
+      option.title = missionUnlocked ? "" : I18n.text("接取对应联络人任务后解锁");
+      if (!missionUnlocked && id === "newRoomMode" && select.value === "mission") select.value = "sweep";
+    }
     const inBattle =
       pageView === "game" ||
       (Net.started && Net.snapshot?.phase !== "assembly");

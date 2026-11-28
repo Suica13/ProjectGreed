@@ -46,6 +46,8 @@ window.ClientSettingsLayout = (() => {
   const general = sections.get("general");
   row("settingsLanguage", general);
   row("settingsUnitShadows", general);
+  row("settingsRotationLock", general);
+  general.append(byId("settingsRotationStatus"));
   row("settingsHidePilotDialogue", general);
   for (const name of ["master", "music", "sfx"]) row("volume-" + name, sections.get("audio"));
   sections.get("audio").append(byId("musicPlayer"));

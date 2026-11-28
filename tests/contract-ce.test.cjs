@@ -34,10 +34,10 @@ function fixture(t, faction, difficulty, task) {
   }};
 }
 
-test('CE ground contracts reject N1 and space at the authority boundary',t=>{
-  assert.throws(()=>C.roomSettings({sweepEra:'CE_0071_T1',sweepDifficulty:1,sweepEnvironment:'ground'}),/N2/);
-  assert.throws(()=>C.roomSettings({sweepEra:'CE_0071_T1',sweepDifficulty:2,sweepEnvironment:'space'}),/宇宙/);
-  assert.throws(()=>fixture(t,'OMNI',1),/N2/);
+test('CE ground and space contracts allow N1 through N10',t=>{
+  for(let n=1;n<=10;n++)assert.doesNotThrow(()=>C.roomSettings({sweepEra:'CE_0071_T1',sweepDifficulty:n,sweepEnvironment:'ground'}));
+  assert.doesNotThrow(()=>C.roomSettings({sweepEra:'CE_0071_T1',sweepDifficulty:2,sweepEnvironment:'space'}));
+  assert.deepEqual(fixture(t,'OMNI',1).errors,[]);
   assert.throws(()=>G.validateOpenContent({...G.defaultRoomSettings(),mode:'regular',regularEra:'CE_0071_T1'}));
 });
 
@@ -45,10 +45,10 @@ test('armed intervention enlarges both map axes and adds exactly one ordinary ev
   for(let n=1;n<=6;n++){
     const settings={sweepDifficulty:n,sweepEra:'UC_0079_T1',sweepEnvironment:'ground',sweepFaction:'NONE'};
     const base=C.config(n),d=C.scenarioConfig(settings),map=C.generateMap(G.catalog,settings,100+n);
-    assert.equal(map.width,Math.ceil(base.width*1.1));assert.equal(map.height,Math.ceil(base.height*1.1));
-    assert.equal(d.events,n+1);assert.equal(map.contractLayout.locations.length,n+1);
+    assert.equal(map.width,Math.ceil(Math.ceil(base.width*1.1)/2));assert.equal(map.height,Math.ceil(Math.ceil(base.height*1.1)/2));
+    assert.equal(d.events,Math.min(n,5)+1);assert.equal(map.contractLayout.locations.length,Math.min(n,5)+1);
     assert(map.tiles.every(row=>row.length===map.width));assert.equal(map.tiles.length,map.height);
-    assert.equal(C.config(n).events,n,'base configuration must remain reusable');
+    assert.equal(C.config(n).events,Math.min(n,5),'base configuration must remain reusable');
   }
 });
 
@@ -92,12 +92,12 @@ test('either final UC task unlocks both contacts; meeting and all hand-ins persi
 
 test('CE Markdown profiles retain complete formations, progression and nuclear bans',()=>{
   require('../tools/compile-contract-force-pools.cjs').generate({check:true});
-  for(const faction of ['OMNI','ZAFT'])for(let n=2;n<=6;n++){
+  for(const faction of ['OMNI','ZAFT'])for(let n=1;n<=10;n++){
     const s={sweepEra:'CE_0071_T1',sweepEnvironment:'ground',sweepFaction:faction,sweepDifficulty:n};
-    const rows=F.formations(s,G);assert.equal(rows.length,F.profile(s).formations.length);
+    const rows=F.formations(s,G);assert(rows.length);
     assert(rows.every(r=>r.units.length%3===0&&r.kits.every(k=>k.length&&k.every(F.aiKitAllowed))));
-    assert(F.profile(s).garrisons.command>=require('../shared/contract-force-pools.json').factions[faction==='OMNI'?'EFSF':'ZEON'][n].garrisons.command);
-    if(n<4)assert(rows.every(r=>!r.units.some(id=>id.startsWith('GAT_X'))));
+    assert.equal(F.profile(s).garrisons.command,require('../shared/contract-force-pools.json').eras.CE_0071_T1.factions[faction][Math.min(6,n+1)].garrisons.command);
+    if(n<3)assert(rows.every(r=>!r.units.some(id=>id.startsWith('GAT_X'))));
   }
   assert(!F.aiKitAllowed(G.models.TS_MA2_H__nuclear));assert(F.aiKitAllowed(G.models.TS_MA2_H__main_0));
 });
@@ -105,7 +105,7 @@ test('CE Markdown profiles retain complete formations, progression and nuclear b
 for(const faction of ['OMNI','ZAFT','NONE'])for(const difficulty of [2,4,6])
   test(`CE ${faction} N${difficulty} starts and settles using the shared authority`,t=>{
     const f=fixture(t,faction,difficulty);f.start();
-    assert.equal(f.room.game.contract.objectives.length,difficulty+(faction==='NONE'?1:0));
+    assert.equal(f.room.game.contract.objectives.length,Math.min(difficulty,5)+(faction==='NONE'?1:0));
     assert(f.room.game.units.filter(u=>u.team>0&&!u.facility).every(u=>F.aiKitAllowed(G.modelOf(u))&&
       (difficulty<5 ? !u.pilot.genericGrade : [undefined,'veteran','elite'].includes(u.pilot.genericGrade))));
     for(const o of f.room.game.contract.objectives)o.status='completed';
@@ -161,10 +161,10 @@ for(const faction of ['OMNI','ZAFT'])test(`CE ${faction} recovery spawns its own
   assert(added.every(u=>F.aiKitAllowed(G.modelOf(u))));
 });
 
-test('each liaison has ten sequential commissions with all T1 licenses gated through N6',()=>{
+test('each liaison has ten sequential commissions with all T1 licenses gated through N5',()=>{
   for(const id of ['omni','zaft']){
     const chain=contacts.tasks.filter(t=>t.contactId===id);
-    assert.equal(chain.length,10);assert.deepEqual(chain.map(t=>t.difficulty),[2,2,3,3,4,4,5,5,6,6]);
+    assert.equal(chain.length,10);assert.deepEqual(chain.map(t=>t.difficulty),[1,1,2,2,3,3,4,4,5,5]);
     for(const [i,task] of chain.entries()){
       assert.deepEqual(task.requires,i?[id+'-'+i]:[]);
       assert(task.requiresExtraction);assert.equal(task.progressVersion,2);

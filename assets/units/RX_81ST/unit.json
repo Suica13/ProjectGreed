@@ -23,7 +23,6 @@
       "RX_81_Body_BeamSaberR_1.png": "textures/RX_81_Body_BeamSaberR_1.png",
       "RX_81ST_Body_2.png": "textures/RX_81ST_Body_2.png",
       "RX_81_GG_1.png": "textures/RX_81_GG_1.png",
-      "RX_81_MS_1.png": "textures/RX_81_MS_1.png",
       "EF_GLine_Shield_B.png": "textures/EF_GLine_Shield_B.png",
       "RX_81ST.png": "textures/RX_81ST.png",
       "Boost_1.png": "textures/Boost_1.png",
@@ -175,8 +174,7 @@
       },
       "visibleWhen": {
         "kit": [
-          "kit_0",
-          "kit_2"
+          "kit_0"
         ],
         "weaponDisplayIndex": {
           "not": 0
@@ -370,8 +368,7 @@
       },
       "visibleWhen": {
         "kit": [
-          "kit_0",
-          "kit_2"
+          "kit_0"
         ],
         "weaponDisplayIndex": 0
       },
@@ -397,8 +394,7 @@
       ],
       "visibleWhen": {
         "kit": [
-          "kit_0",
-          "kit_2"
+          "kit_0"
         ],
         "weaponDisplayIndex": 1
       }
@@ -484,17 +480,6 @@
     {
       "name": "Body_GG",
       "texture": "RX_81_GG_1.png",
-      "bone": "Body",
-      "order": 7,
-      "offset": {
-        "x": 0,
-        "y": 0
-      },
-      "visibleWhen": {}
-    },
-    {
-      "name": "Body_MS",
-      "texture": "RX_81_MS_1.png",
       "bone": "Body",
       "order": 7,
       "offset": {
@@ -837,95 +822,6 @@
         }
       }
     },
-    "EF_RX_81_MS": {
-      "ref": "EF_RX_81_MS__lv1",
-      "overrides": {
-        "requiredParts": [
-          "backpack"
-        ],
-        "source": {
-          "file": "Units/BattleUnits/Weapon/Shell/EF_RX_81_MS.gw",
-          "barrels": [
-            {
-              "id": "EF_RX_81_MS",
-              "x": 8,
-              "y": -12
-            },
-            {
-              "id": "EF_RX_81_MS_L",
-              "x": -8,
-              "y": -12
-            }
-          ]
-        },
-        "muzzle": {
-          "mounts": [
-            {
-              "bone": "Body",
-              "offset": {
-                "x": 8,
-                "y": -12
-              }
-            },
-            {
-              "bone": "Body",
-              "offset": {
-                "x": -8,
-                "y": -12
-              }
-            }
-          ]
-        }
-      }
-    },
-    "EF_RX_81_MS_L": {
-      "ref": "EF_RX_81_MS_L__lv1",
-      "overrides": {
-        "requiredParts": [
-          "rightArm"
-        ],
-        "source": {
-          "file": "Units/BattleUnits/Weapon/Shell/EF_RX_81_MS.gw",
-          "barrels": [
-            {
-              "id": "EF_RX_81_MS",
-              "x": 8,
-              "y": -12
-            },
-            {
-              "id": "EF_RX_81_MS_L",
-              "x": -8,
-              "y": -12
-            }
-          ]
-        },
-        "muzzle": {
-          "mounts": [
-            {
-              "bone": "Body",
-              "offset": {
-                "x": 8,
-                "y": -12
-              }
-            },
-            {
-              "bone": "Body",
-              "offset": {
-                "x": -8,
-                "y": -12
-              }
-            }
-          ]
-        },
-        "availability": {
-          "hidden": true,
-          "reasons": [
-            "paired_weapon"
-          ],
-          "mergedInto": "EF_RX_81_MS"
-        }
-      }
-    },
     "EF_GLine_SBR": {
       "ref": "EF_GLine_SBR__lv1",
       "overrides": {
@@ -1211,38 +1107,15 @@
           "name": "ビーム・ライフル装備"
         }
       }
-    },
-    {
-      "id": "kit_2",
-      "name": "光束步枪套件",
-      "cost": 50,
-      "weapons": [
-        "EF_GLine_SBR",
-        "EF_RX_81_MS",
-        "EF_BeamSaber_AF_A",
-        "Common_DoubleVulcan_MS",
-        "EF_BeamSaber_Double_AALDF",
-        "Common_Push_A"
-      ],
-      "localization": {
-        "zh": {
-          "name": "光束步枪套件"
-        },
-        "en": {
-          "name": "Beam Rifle Kit"
-        },
-        "ja": {
-          "name": "ビーム・ライフル装備"
-        }
-      }
     }
   ],
   "description": "真正意义上的量产型高达,性能已经超越了高达",
   "skills": [],
   "kitAliases": {
+    "kit_2": "kit_0",
     "kit_1": "kit_0",
-    "kit_3": "kit_2",
-    "kit_4": "kit_0"
+    "kit_4": "kit_0",
+    "kit_3": "kit_0"
   },
   "nativeLayoutRevision": 1,
   "deferredWeapons": [],
@@ -1336,29 +1209,6 @@
         {
           "id": "EF_RX_81_GG_L",
           "weaponId": "EF_RX_81_GG_L",
-          "muzzleIndex": 1,
-          "requiredParts": [
-            "backpack"
-          ],
-          "limb": null
-        }
-      ]
-    },
-    {
-      "id": "EF_RX_81_MS",
-      "channels": [
-        {
-          "id": "EF_RX_81_MS",
-          "weaponId": "EF_RX_81_MS",
-          "muzzleIndex": 0,
-          "requiredParts": [
-            "backpack"
-          ],
-          "limb": null
-        },
-        {
-          "id": "EF_RX_81_MS_L",
-          "weaponId": "EF_RX_81_MS_L",
           "muzzleIndex": 1,
           "requiredParts": [
             "backpack"

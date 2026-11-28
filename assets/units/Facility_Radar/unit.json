@@ -221,9 +221,10 @@
   },
   "materials": {
     "textures": {
-      "Radar_1_A.png": "textures/Radar_1_A.png"
+      "Radar_1_A.png": "textures/Radar_1_A.png",
+      "portrait.svg": "textures/portrait.svg"
     },
-    "icon": "Radar_1_A.png"
+    "icon": "portrait.svg"
   },
   "layers": [
     {

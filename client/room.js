@@ -497,8 +497,8 @@ const RoomPanel = (() => {
       const fields = element("div", "room-mode-fields");
       sweepOptions.append(fields);
       for (const [key, name, values] of [
-        ["sweepDifficulty", "难度", ContractMode.difficulties.map(d=>String(d.id))],
-        ["sweepEra", "年代", Rules.eras.filter((era) => ContractMode.factionsForEra(Rules, era).length)],
+        ["sweepDifficulty", "难度", ContractMode.difficulties.filter(d=>/^(UC_00(?:79|87)_|CE_0071_)/.test(settings.sweepEra) || d.id<=6).map(d=>String(d.id))],
+        ["sweepEra", "年代", Rules.eras.filter((era) => !["UC_0079_T2","UC_0087_T2"].includes(era) && ContractMode.factionsForEra(Rules, era).length)],
         ["sweepFaction", "指定阵营", ContractMode.factionPairs(Rules, settings.sweepEra).map(pair=>pair.enemyFaction+"|"+pair.alliedFaction)],
       ]) {
         const label = element("label", "", name),
@@ -507,8 +507,8 @@ const RoomPanel = (() => {
         for (const value of values) {
           const pair=key==="sweepFaction"?value.split("|"):null,
             text=pair?pair.map(id=>I18n.text(Rules.factionInfo[id]?.name || id)):null,
-            option=new Option(pair ? (pair[0]==="NONE" ? I18n.text("武装介入") : text[0]+"["+text[1]+"]") : key === "sweepDifficulty" ? I18n.text(ContractMode.config(value).name) : Rules.factionInfo[value]?.name || value, value);
-          option.disabled=key==="sweepEra"&&!Rules.openEras.includes(value)&&value!=="CE_0071_T1" || key==="sweepDifficulty"&&settings.sweepEra==="CE_0071_T1"&&Number(value)<2;
+            option=new Option(pair ? (pair[0]==="NONE" ? I18n.text("武装介入") : text[0]+"["+text[1]+"]") : key === "sweepDifficulty" ? I18n.text(ContractMode.config(value).name) : value==="UC_0079_T1" ? "0079" : value==="UC_0087_T1" ? "0087" : value==="CE_0071_T1" ? "CE71" : Rules.factionInfo[value]?.name || value, value);
+          option.disabled=key==="sweepEra"&&!Rules.openEras.includes(value)&&!["CE_0071_T1","UC_0087_T1"].includes(value);
           select.add(option);
         }
         select.value = key==="sweepFaction" ? settings.sweepFaction+"|"+ContractMode.alliedFaction(Rules,settings) : settings[key];
@@ -519,7 +519,8 @@ const RoomPanel = (() => {
             const sweepFaction=settings.sweepFaction==="NONE" || factions.includes(settings.sweepFaction) ? settings.sweepFaction : factions[0],
               sweepAlliedFaction=ContractMode.alliedFaction(Rules,{...settings,sweepEra:select.value,sweepFaction});
             sendSettings({ sweepEra: select.value, sweepFaction, sweepAlliedFaction,
-              sweepDifficulty:Math.max(select.value==="CE_0071_T1"?2:1,settings.sweepDifficulty) });
+              sweepEnvironment:settings.sweepEnvironment,
+              sweepDifficulty:Math.min(/^(UC_00(?:79|87)_|CE_0071_)/.test(select.value)?10:6,Math.max(1,settings.sweepDifficulty)) });
           } else if(key==="sweepFaction") {
             const [sweepFaction,sweepAlliedFaction]=select.value.split("|");
             sendSettings({sweepFaction,sweepAlliedFaction});
@@ -536,7 +537,7 @@ const RoomPanel = (() => {
         ["space", "宇宙"],
       ]) {
         const option = new Option(I18n.text(name), value);
-        option.disabled = value === "space" && settings.sweepEra !== "UC_0079_T2";
+        option.disabled = false;
         environmentSelect.add(option);
       }
       environmentSelect.value = settings.sweepEnvironment || "ground";

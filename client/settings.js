@@ -2,11 +2,13 @@
 const ClientSettings = (() => {
   const key = "projectgreed.settings";
   const values = { master: 1, music: 1, sfx: 1 };
-  let unitShadows = false, hidePilotDialogue = false;
+  let unitShadows = false, hidePilotDialogue = false, rotationLock = "";
+  const orientations = ["portrait-primary","portrait-secondary","landscape-primary","landscape-secondary"];
   try {
     const saved = JSON.parse(localStorage.getItem(key));
     for (const name of Object.keys(values))
       if (Number.isFinite(saved?.[name])) values[name] = Math.max(0, Math.min(1, saved[name]));
+    rotationLock = orientations.includes(saved?.rotationLock) ? saved.rotationLock : "";
     unitShadows = saved?.unitShadows === true;
     hidePilotDialogue = saved?.hidePilotDialogue === true;
   } catch {}
@@ -14,11 +16,12 @@ const ClientSettings = (() => {
   const language = document.getElementById("settingsLanguage");
   function persist() {
     try {
-      localStorage.setItem(key, JSON.stringify({ ...values, unitShadows, hidePilotDialogue }));
+      localStorage.setItem(key, JSON.stringify({ ...values, unitShadows, hidePilotDialogue, rotationLock }));
     } catch {}
   }
   function render() {
     language.value = I18n.language;
+    document.getElementById("settingsRotationLock").checked = !!rotationLock;
     document.getElementById("settingsUnitShadows").checked = unitShadows;
     document.getElementById("settingsHidePilotDialogue").checked = hidePilotDialogue;
     for (const name of Object.keys(values)) {
@@ -47,6 +50,42 @@ const ClientSettings = (() => {
     hidePilotDialogue = event.target.checked;
     persist();
   });
+  const rotationToggle = document.getElementById("settingsRotationLock");
+  const rotationStatus = document.getElementById("settingsRotationStatus");
+  async function applyRotation(userGesture = false) {
+    rotationToggle.disabled = true;
+    let enteredFullscreen = false;
+    try {
+      if (window.ProjectGreedAndroid?.setRotationLock) {
+        window.ProjectGreedAndroid.setRotationLock(rotationLock);
+      } else if (rotationLock) {
+        if (!screen.orientation?.lock) throw Error("unsupported");
+        if (userGesture && !document.fullscreenElement && document.documentElement.requestFullscreen) {
+          await document.documentElement.requestFullscreen();
+          enteredFullscreen = true;
+        }
+        await screen.orientation.lock(rotationLock);
+      } else screen.orientation?.unlock?.();
+      rotationStatus.textContent = I18n.text(rotationLock ? "已锁定当前屏幕方向" : "锁定当前横屏或竖屏方向；浏览器版可能需要全屏。");
+    } catch {
+      rotationLock = "";
+      if (enteredFullscreen && document.fullscreenElement) await document.exitFullscreen().catch(()=>{});
+      rotationStatus.textContent = I18n.text("当前环境无法锁定屏幕方向，请使用手机系统的旋转锁定。");
+    } finally {
+      persist();render();rotationToggle.disabled = false;
+    }
+  }
+  rotationToggle.addEventListener("change", () => {
+    rotationLock = rotationToggle.checked ? (orientations.includes(screen.orientation?.type) ? screen.orientation.type : innerWidth>innerHeight ? "landscape-primary" : "portrait-primary") : "";
+    void applyRotation(true);
+  });
+  document.addEventListener("fullscreenchange", () => {
+    if (!document.fullscreenElement && !window.ProjectGreedAndroid?.setRotationLock && rotationLock) {
+      rotationLock = "";persist();render();
+      rotationStatus.textContent = I18n.text("已退出全屏，屏幕方向锁定已解除。");
+    }
+  });
+  if (rotationLock || window.ProjectGreedAndroid?.setRotationLock) void applyRotation();
   window.addEventListener("language-change", render);
   document.getElementById("openClientSettings").onclick = () => {
     render();

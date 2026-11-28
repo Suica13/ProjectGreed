@@ -342,7 +342,7 @@ const Tactics = (() => {
     const eras = settings.mode === "battlefield"
       ? [settings.battlefieldEra, ...(settings.battlefieldTeams || []).map(t=>t.era)]
       : [settings.mode === "sweep" ? settings.sweepEra : settings.regularEra];
-    if (eras.some(era=>era && !openEras.includes(era) && !(settings.mode === "sweep" && era === "CE_0071_T1")))
+    if (eras.some(era=>era && !openEras.includes(era) && !(settings.mode === "sweep" && ["CE_0071_T1","UC_0087_T1","UC_0087_T2"].includes(era))))
       throw Error("当前暂时仅开放UC_0079_T1和UC_0079_T2年代");
   }
   function defaultRoomSettings() {
@@ -741,6 +741,7 @@ const Tactics = (() => {
       // An era is the upper bound. Earlier carriers remain usable in later eras,
       // including stages that do not introduce any new carrier models.
       rules.allowedEras = technologyEras.through(era);
+      if (settings.mode === "sweep") rules.allowedEras = ["UC_0079_T1", "UC_0079_T2", "CE_0071_T1", "AD_2307_T1", ...(settings.sweepEra.startsWith('UC_0087') ? ['UC_0087_T1','UC_0087_T2'] : [])];
     }
     rules.characterFaction = ["PMC", ...factions].includes(
       player?.characterFaction,
@@ -1766,6 +1767,8 @@ const Tactics = (() => {
   }
   const terrain = {
     plain: { name: "平地", cost: 1, cover: 0, color: "#243b3d" },
+    road: { name: "道路", cost: 1, cover: 0, color: "#666b70" },
+    residential: { name: "房区", cost: 2, cover: 25, meleeCover: 0, color: "#889aa6" },
     snow: { name: "雪地", cost: 1, cover: 0, color: "#d7e5ee" },
     desert: { name: "沙漠", cost: 1, cover: 0, color: "#c5a86d" },
     highland: { name: "高地", cost: 1, cover: 0, color: "#9c986b" },
@@ -2091,8 +2094,7 @@ const Tactics = (() => {
       !squadEligible(target) ||
       target.team !== unit.team ||
       controllerOf(g, target) !== controllerOf(g, unit) ||
-      environmentOf(g, target) !== environmentOf(g, unit) ||
-      !!target.flying !== !!unit.flying
+      cellEnvironment(g, target.x, target.y) !== cellEnvironment(g, unit.x, unit.y)
     )
       return null;
     const occupants = candidates.filter(
@@ -2488,6 +2490,8 @@ const Tactics = (() => {
       if (settings.mode === "battlefield" && seat < 2) continue;
       // Scripted opponents are placed by MissionMode, not player deployment.
       if (settings.mode === "mission" && seat === 1) continue;
+      // Contract opponents share one scripted force; extra AI seats are ownership only.
+      if (settings.mode === "sweep" && seat > 1 && seatTeam(seat) === 1) continue;
       const seatRules = rulesForSeat(seat);
       formations[seat] = validateFormation(
         formations[seat],
@@ -2530,7 +2534,7 @@ const Tactics = (() => {
         seat,
         false,
       );
-      if (!placements) throw Error("出生区没有足够位置容纳编组，请检查目录配置");
+      if (!placements) throw Error("出生区没有足够位置容纳编组，请检查目录配置（席位 " + seat + "）");
       placements.forEach(({ entry, i, position, heading }) => {
         if (restrictionReason(models[entry.unitId + "__" + entry.kitId], rulesForSeat(seat)))
           throw Error("编组包含不被允许的单位");
@@ -2614,7 +2618,7 @@ const Tactics = (() => {
   function at(g, x, y) {
     return g.units.find((u) => onMap(u) && !u.embarked && occupies(u, x, y));
   }
-  // Approaching an enemy costs ordinary terrain movement; leaving its control zone costs at least three.
+  // Movement costs depend on terrain and adaptation, not nearby enemies.
   function terrainCost(g, u, x, y) {
     const movement = modelOf(u).movementType;
     const tile = g.tiles[y][x];
@@ -2628,12 +2632,9 @@ const Tactics = (() => {
     }
     return terrain[g.tiles[y][x]].cost;
   }
-  function movementCost(g, u, x, y, leavingEnemyControl = false) {
-    const base = terrainCost(g, u, x, y);
-    const cost = leavingEnemyControl ? Math.max(base, 3) : base;
-    return cost;
+  function movementCost(g, u, x, y) {
+    return terrainCost(g, u, x, y);
   }
-  // 按地形消耗搜索可达格子，同时保存各格子的移动路径。
   function reachableSingle(g, u, starts = null, occupancy = movementQuery(g)) {
     if (!onMap(u) || u.embarked) return new Map();
     const startAdaptation = adaptationOf(g, u);
@@ -2641,18 +2642,8 @@ const Tactics = (() => {
     // A search does not mutate the board. Evaluate each destination's expensive
     // collision/terrain/ZOC checks once, even when reached from several edges.
     const stepCosts = new Map();
-    const enemyControl = new Set();
-    for (const enemy of g.units.filter((enemy) => onMap(enemy) && enemy.team !== u.team))
-      for (const cell of cells(enemy))
-        for (const [dx, dy] of [
-          [1, 0],
-          [-1, 0],
-          [0, 1],
-          [0, -1],
-        ])
-          enemyControl.add(key(cell.x + dx, cell.y + dy));
-    function stepCost(x, y, leavingEnemyControl) {
-      const id = key(x, y) + ":" + Number(leavingEnemyControl);
+    function stepCost(x, y) {
+      const id = key(x, y);
       if (!stepCosts.has(id))
         stepCosts.set(
           id,
@@ -2660,7 +2651,7 @@ const Tactics = (() => {
             ? Math.max(
                 ...cells(u, x, y).map(
                   (c) =>
-                    movementCost(g, u, c.x, c.y, leavingEnemyControl) /
+                    movementCost(g, u, c.x, c.y) /
                     (adaptationOf(g, u, c.x, c.y) || 0),
                 ),
               )
@@ -2706,9 +2697,6 @@ const Tactics = (() => {
     while (queue.length) {
       let n = pop();
       if (n.cost !== best.get(key(n.x, n.y)).cost) continue;
-      const leavingEnemyControl = cells(u, n.x, n.y).some((cell) =>
-        enemyControl.has(key(cell.x, cell.y)),
-      );
       for (const [dx, dy] of [
         [1, 0],
         [-1, 0],
@@ -2718,7 +2706,7 @@ const Tactics = (() => {
         let x = n.x + dx,
           y = n.y + dy;
         if (x < 0 || x >= mapWidth(g) || y < 0 || y >= mapHeight(g)) continue;
-        let cost = n.cost + stepCost(x, y, leavingEnemyControl);
+        let cost = n.cost + stepCost(x, y);
         if (cost > moveLimit) continue;
         let k = key(x, y);
         if (best.has(k) && best.get(k).cost <= cost) continue;
@@ -3592,7 +3580,7 @@ const Tactics = (() => {
         (response === "defend" ? 0.75 : 1) *
         (defender.pilotModifiers?.defense ?? 1) *
         (1 - defenseCommand.defense) *
-        (attacker.pilotModifiers?.[w.type === "melee" ? "melee" : "shooting"] ?? 1) *
+        pilots.weaponDamageModifier(attacker.pilotModifiers, w) *
         (1 + attackCommand.attack) * (combatRoleAdvantage(defender, attacker) ? 0.9 : 1) *
         (1 + squadBonuses(g,a).damage) * (1 - squadBonuses(g,b).reduction),
       strikes = availableStrikes(a, w, b);

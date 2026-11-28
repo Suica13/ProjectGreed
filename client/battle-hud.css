@@ -2448,3 +2448,11 @@ body.replay-active #gameScene .hud-terrain-strip {
 #gameScene #squadSwap { grid-column:3; grid-row:1; align-self:stretch; }
 #gameScene .squad-empty { border-style:dashed; opacity:.45; }
 @media(max-width:600px){#gameScene .battle-squad-strip{--squad-cell:38px;}#gameScene .squad-members button{font-size:10px;}}
+@media(max-width:740px){
+  #gameScene .hud-action-band {
+    bottom:calc(12px + var(--squad-strip-height,0px));
+    width:calc(100% - 16px);
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+}

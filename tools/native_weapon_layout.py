@@ -174,11 +174,30 @@ def kit_names(p):
  from weapon_kit_policy import apply_kit_overrides
  return apply_kit_overrides(p)
 
+def fixed_gline_loadout(p):
+ """Keep the designated backpack and migrate legacy kit IDs."""
+ selected={'RX_81ST':'EF_RX_81_GG','RX_81LA':'EF_RX_81_MS','RX_81AS':'Common_Cannon'}.get(p['id'])
+ if not selected:return p
+ kits=p['weaponKits'];kit=next(k for k in kits if selected in k['weapons'])
+ removed={w for w in p['weapons'] if (w.startswith('EF_RX_81_GG') or w.startswith('EF_RX_81_MS') or w=='Common_Cannon') and w not in (selected,selected+'_L')}
+ p['weapons']={k:v for k,v in p['weapons'].items() if k not in removed}
+ p['kitAliases']={k:kit['id'] for k in {*p.get('kitAliases',{}),*(k['id'] for k in kits)} if k!=kit['id']}
+ p['weaponKits']=[kit]
+ p['pairedWeapons']=[v for v in p.get('pairedWeapons',[]) if v['id'] not in removed]
+ texture={'EF_RX_81_GG':'RX_81_GG_1.png','EF_RX_81_MS':'RX_81_MS_1.png','Common_Cannon':'RX_81_CN_1.png'}[selected]
+ discard={'RX_81_GG_1.png','RX_81_MS_1.png','RX_81_CN_1.png'}-{texture}
+ p['layers']=[l for l in p['layers'] if l.get('texture') not in discard]
+ for layer in p['layers']:
+  if 'kit' in layer.get('visibleWhen',{}):layer['visibleWhen']['kit']=[kit['id']]
+ for key in discard:p['materials']['textures'].pop(key,None)
+ p['deferredWeapons']=[w for w in p.get('deferredWeapons',[]) if (w if isinstance(w,str) else w.get('id')) not in removed]
+ return p
+
 def correct(p,row,data):
  from native_passives import apply_command_auras
  apply_command_auras(p,data)
  from v05_balance import apply_balance
- if p.get('nativeLayoutRevision')==1:return kit_names(apply_balance(visibility_and_deferred(p,data),data))
+ if p.get('nativeLayoutRevision')==1:return fixed_gline_loadout(kit_names(apply_balance(visibility_and_deferred(p,data),data)))
  oldkits=copy.deepcopy(p['weaponKits']);tank_turrets(p,data)
  # World-space command/range overlays must never become hull-sized sprite decals.
  p['layers']=[l for l in p['layers'] if '/Ring/' not in section(data,'decal_'+l['name']).get('image','') ] if all('decal_'+l['name'] in data for l in p['layers']) else [l for l in p['layers'] if not any(x in l['name'] for x in ['cmdCom_Range','cmdDef_Range','SupplyRange','ReEntry_Range'])]
@@ -221,7 +240,7 @@ def correct(p,row,data):
    aliases[old['id']]=best['id']
   if aliases:p['kitAliases']=aliases
  p['nativeLayoutRevision']=1
- return kit_names(apply_balance(visibility_and_deferred(p,data),data))
+ return fixed_gline_loadout(kit_names(apply_balance(visibility_and_deferred(p,data),data)))
 
 def main():
  rows=load_source_json((Path(__file__).resolve().parents[1] / 'docs/imports/reports/0079-page-one-manifest.json').read_text(encoding='utf-8'));catalog=load_source_json((ASSETS/'unit-catalog.json').read_text(encoding='utf-8'));byid={r['id']:r for r in rows}

@@ -9,13 +9,14 @@ const ContractMode = (() => {
     ground: "assets/maps/covers/contract-ground.svg",
     space: "assets/maps/covers/contract-space.svg",
   };
-  const costs = [2000, 3000, 4000, 6000, 8000, 10000];
+  const costs = [2000, 3000, 4000, 6000, 8000, 10000, 12000, 14000, 16000, 18000];
   const playerCostMultiplier = 1.5;
-  const ordinaryForceScale = [.5, .6, .65, .7, .7, .75];
+  const ordinaryForceScale = [.5, .6, .65, .7, .7, .7, .7, .7, .7, .7];
   // Full ordinary-objective completion at baseline era and normal settlement rates.
   const completionRewards = [
     [2500, 3500], [4000, 6000], [6000, 8000],
     [9000, 11000], [12000, 15000], [15000, 20000],
+    [18000, 23000], [21000, 26000], [24000, 29000], [27000, 33000],
   ];
   const biomes = [
     { id: "temperate", name: "草原", mapId: "great_plains_5v5" },
@@ -27,12 +28,12 @@ const ContractMode = (() => {
     id: index + 1,
     name: "N" + (index + 1),
     costLimit: costLimit * playerCostMultiplier,
-    fleetLimit: 3 + Math.floor(index / 3),
-    initialEnemyCount: [9, 12, 18, 24, 30, 36][index],
-    patrolLimit: Math.floor([9, 12, 18, 24, 30, 36][index] * 1.5),
-    events: index + 1,
-    width: 60 + Math.floor(index * 8.5),
-    height: 38 + Math.floor(index * 10.75),
+    fleetLimit: 5,
+    initialEnemyCount: [9, 12, 18, 24, 30, 30, 30, 30, 30, 30][index],
+    patrolLimit: Math.floor([9, 12, 18, 24, 30, 30, 30, 30, 30, 30][index] * 1.5),
+    events: Math.min(5, index + 1),
+    width: 60 + Math.floor(Math.min(4,index) * 8.5),
+    height: 38 + Math.floor(Math.min(4,index) * 10.75),
   }));
   const kinds = [
     {
@@ -97,13 +98,14 @@ const ContractMode = (() => {
     };
   }
   function config(value = 1, era = "UC_0079_T1") {
-    const result = difficulties.find((d) => d.id === Number(value));
+    let result = difficulties.find((d) => d.id === Number(value));
     if (!result) throw Error("合约难度无效");
-    if (era === "CE_0071_T1" && result.id < 2) throw Error("CE0071T1合约最低难度为N2");
+    if (!forces.tenLevels(era) && result.id > 6) throw Error("该年代合约最高难度为N6");
+    if (!forces.tenLevels(era) && result.id === 6) result = {...result,initialEnemyCount:36,events:6,width:102,height:91};
     const stage = ["UC_0079_T1", "UC_0079_T2", "UC_0087_T1", "UC_0087_T2", "UC_0093_T1"].indexOf(era);
     // T2 scales the baseline by 1.5; subsequent eras keep the 1.25 progression.
     // Round only the final budget, so rounding does not compound between eras.
-    const scale = stage > 0 ? 1.5 * 1.25 ** (stage - 1) : 1;
+    const scale = forces.unified0079(era) ? 1 : era.startsWith('UC_0087') ? 1.875 : stage > 0 ? 1.5 * 1.25 ** (stage - 1) : 1;
     const relativePressure = forces.eraPressure(era, result.id);
     const initialEnemyCount = Math.round(result.initialEnemyCount * relativePressure);
     return { ...result, relativePressure, initialEnemyCount,
@@ -135,7 +137,7 @@ const ContractMode = (() => {
     return map;
   }
   function roomSettings(settings) {
-    if (settings.sweepEnvironment !== "ground" && settings.sweepEra !== "UC_0079_T2") throw Error("宇宙合约需0079T2年代");
+    if (!["ground", "space"].includes(settings.sweepEnvironment)) throw Error("无效的合约作战环境");
     const d = config(settings.sweepDifficulty, settings.sweepEra);
     return { costLimit: d.costLimit, mapId: mapId(settings.sweepEnvironment, d.id), fogMode: "full", pilotPolicy: "allow" };
   }
@@ -506,7 +508,7 @@ const ContractMode = (() => {
     let cache = pools.get(G.catalog);
     if (!cache) pools.set(G.catalog, (cache = new Map()));
     const { sweepEra: era, sweepFaction: faction, sweepEnvironment: environment } = room.settings,
-      key = era + "|" + faction + "|" + environment;
+      key = era + "|" + faction + "|" + environment + "|" + room.settings.sweepDifficulty;
     if (!cache.has(key)) {
       const result = Object.values(G.models).filter(
         (m) =>
@@ -519,7 +521,7 @@ const ContractMode = (() => {
           !(G.aiUnitBans?.sweep || []).includes(m.prefabId) &&
           !m.ship &&
           (!G.isFleetCarrier(m) || m.unitTags?.includes("MA")) &&
-          m.tags?.includes(era) &&
+          forces.modelAllowed(room.settings, m) &&
           (m.availableFactions || [m.faction]).includes(faction) &&
           m.weapons?.length &&
           suitableEnvironment(m, environment),
@@ -575,6 +577,19 @@ const ContractMode = (() => {
     if (forces.profile(room.settings)) {
       const allowed = new Set(candidates);
       return forces.pick(room.settings,G,rng,model => allowed.has(model));
+    }
+    const family = forces.family(room.settings.sweepEra);
+    if (family.length===2 && room.settings.sweepDifficulty >= 6) {
+      const late = candidates.filter(m=>m.tags.includes(family[1])&&!m.tags.includes(family[0]));
+      const early = candidates.filter(m=>m.tags.includes(family[0]));
+      const chosen = rng()<forces.t2Share(room.settings.sweepDifficulty) ? late : early;
+      candidates = chosen.length ? chosen : late.length ? late : early;
+    }
+    if (room.settings.sweepEra.startsWith('UC_0087')) {
+      const hulls=[...new Set(candidates.map(m=>m.prefabId))].sort((a,b)=>Math.min(...candidates.filter(m=>m.prefabId===a).map(m=>m.cost))-Math.min(...candidates.filter(m=>m.prefabId===b).map(m=>m.cost)));
+      const n=Number(room.settings.sweepDifficulty),step=n<=5?n-1:n-6;
+      const selected=new Set(hulls.slice(Math.floor(hulls.length*step*.1),Math.max(1,Math.ceil(hulls.length*(.6+step*.1)))));
+      candidates=candidates.filter(m=>selected.has(m.prefabId));
     }
     const early = room.settings.sweepEra === "UC_0079_T1" && config(room.settings.sweepDifficulty).id <= 3;
     if (early) candidates = candidates.filter(model => earlyCombatRole(room, model));
@@ -659,10 +674,8 @@ const ContractMode = (() => {
     const state = room.game.contract;
     const scale = (1 + .25 * Math.max(0, state.players - 1)) * (state.noAllies ? 1.25 : 1);
     const d = config(room.settings.sweepDifficulty, room.settings.sweepEra);
-    // T2 uses individual rounding: rounding 22.5 to a three-unit squad would
-    // turn the N3 target into +33%. The fill path bypasses pressure scaling.
-    return d.relativePressure === 1 ? Math.round(d.initialEnemyCount * scale / 3) * 3 :
-      Math.round(config(room.settings.sweepDifficulty).initialEnemyCount * d.relativePressure * scale);
+    const baseline = Math.round((d.relativePressure === 1.1 ? 30 : d.initialEnemyCount) * scale / 3) * 3;
+    return d.relativePressure === 1.1 ? Math.round(baseline * 1.1) : baseline;
   }
   function reinforcementSlots(room, objectiveId = null) {
     // Event garrisons, scripted targets and event reinforcements have separate budgets.
@@ -697,6 +710,14 @@ const ContractMode = (() => {
         if (objective.targets) objective.targets = objective.targets.filter(id => !removed.has(id));
       excess -= removed.size;
     }
+    // N10's ten-percent increment can leave one or two units outside a full squad.
+    while (excess > 0) {
+      const unit = eligible().find(u => !u.contractObjectiveId);
+      if (!unit) break;
+      game.units = game.units.filter(u=>u.id!==unit.id);
+      for (const group of b.groups) group.ids=group.ids.filter(id=>id!==unit.id);
+      b.health.delete(unit.id);excess--;
+    }
     try {
       for (let attempt = 0; eligible().length < target && attempt < 30; attempt++) {
         b.fillSlots = target - eligible().length;
@@ -723,7 +744,7 @@ const ContractMode = (() => {
       aiTechnologyOnly: true,
       unitCostLimit: Infinity,
       characterFaction: noAllies(room.settings) ? factionsForEra(G,room.settings.sweepEra)[0] : room.settings.sweepFaction,
-      aiAllowedEras: [room.settings.sweepEra],
+      aiAllowedEras: forces.enemyEras(room.settings),
       aiBannedUnits: [...(G?.aiUnitBans?.sweep || [])],
       environment: room.settings.sweepEnvironment,
     };
@@ -829,12 +850,13 @@ const ContractMode = (() => {
     game.units.push(u);
     return u;
   }
-  function enemyPilotGrade(difficulty, roll = 1) {
+  function enemyPilotGrade(difficulty, roll = 1, era = "UC_0079_T1") {
     const level = config(difficulty).id;
     if (level < 5) return null;
-    const eliteWeight = (level === 5 ? .05 : .1) * 1.15;
-    const veteranWeight = (level === 5 ? .2 : .3) * 1.15;
-    const total = (level === 5 ? .75 : .6) + eliteWeight + veteranWeight;
+    const unified=forces.tenLevels(era);
+    const eliteWeight = unified ? [.05,.1,.18,.26,.35,.45][Math.min(5,level-5)] : (level===5?.05:.1)*1.15;
+    const veteranWeight = unified ? [.2,.25,.3,.35,.4,.45][Math.min(5,level-5)] : (level===5?.2:.3)*1.15;
+    const total = unified ? 1 : (level===5?.75:.6)+eliteWeight+veteranWeight;
     const eliteChance = eliteWeight / total, veteranChance = veteranWeight / total;
     return roll < eliteChance ? "elite" : roll < eliteChance + veteranChance ? "veteran" : null;
   }
@@ -843,7 +865,7 @@ const ContractMode = (() => {
     let mixed = Math.imul(seed ^ (seed >>> 16), 0x21f0aaad);
     mixed = Math.imul(mixed ^ (mixed >>> 15), 0x735a2d97);
     const roll = ((mixed ^ (mixed >>> 15)) >>> 0) / 4294967296;
-    const grade = elite ? "elite" : enemyPilotGrade(room.settings.sweepDifficulty, roll);
+    const grade = elite ? "elite" : enemyPilotGrade(room.settings.sweepDifficulty, roll, room.settings.sweepEra);
     unit.pilot = {...unit.pilot, genericGrade: grade || undefined,
       ...(grade ? G.pilots.rollGrade(grade, seed, model) : G.pilots.roll(null, seed, 1, 0, model))};
   }
@@ -951,6 +973,12 @@ const ContractMode = (() => {
     const slots = reinforcement ? reinforcementSlots(room, objectiveId) : (brain(room.game).fillSlots ?? Infinity);
     if (!slots) return [];
     const rng = random(state.seed + ++state.wave * 1979);
+    if (brain(room.game).fillSlots != null && slots < 3) {
+      const ids = [], model = pick(room,G,rng);
+      for(let i=0;i<slots;i++){const unit=spawn(room,G,model,point,elite,false);if(unit)ids.push(unit.id);}
+      groupSquads(room,G,ids,point,role,objectiveId);
+      return ids;
+    }
     const budget = brain(room.game).fillSlots != null ? Infinity : forces.budget(room,amount,reinforcement);
     const formations = forces.selectCount(room, forces.draw(room.settings,G,rng,budget,slots), reinforcement), ids = [];
     if(airborne){queueAirborne(room,objectiveId,formations.map(formation=>({formation})));return [];}
@@ -1116,7 +1144,12 @@ const ContractMode = (() => {
   }
   function transportWave(room,G,objective,definition) {
     const game = room.game, rng = brain(game).rng, before = game.units.length;
-    const model = G.models[definition.unitId+"__standard"];
+    const model = room.settings.sweepEnvironment === "space"
+      ? Object.values(G.models).filter(m=>m.ship && !m.wip && !m.formOnly && !m.requiredPilotId &&
+          suitableEnvironment(m,"space") && forces.modelAllowed(room.settings,m) &&
+          (m.availableFactions || [m.faction]).includes(room.settings.sweepFaction) &&
+          m.hangars?.some(h=>h.capacity>=3)).sort((a,b)=>a.cost-b.cost || a.prefabId.localeCompare(b.prefabId))[0]
+      : G.models[definition.unitId+"__standard"];
     if (!model) throw Error("合约追击运输机不可用："+definition.unitId);
     for (const amount of definition.budgets) {
       const slots = reinforcementSlots(room, objective.id);
@@ -1240,9 +1273,15 @@ const ContractMode = (() => {
       objective.coreId = core.id;
       for (const dx of [-2,2]) add(G.models.Facility_MG__standard, {x:objective.x+dx,y:objective.y-2}, "mg");
     }
-    for (let i=0;i<3;i++) {
+    for (let squad=0;squad<2;squad++) {
       const model = pick(friendlyRoom,G,rng,candidates.length ? candidates : pool(friendlyRoom,G));
-      const u = add(model,{x:objective.x-2+i*2,y:objective.y+2});
+      const point = {x:objective.x+(squad ? 2 : -2),y:objective.y+2};
+      const leader = add(model,point);
+      for (let i=1;i<3;i++) {
+        const unit = add(model,point);
+        G.joinSquad(room.game,unit,leader,[unit]);
+        Object.assign(unit,{x:leader.x,y:leader.y});
+      }
     }
   }
   function initialize(room, G, seed, log = () => {}) {
@@ -1288,11 +1327,16 @@ const ContractMode = (() => {
       ? task.stages.map(stage => ({...task, ...stage})) : [task]);
     for (const task of special) {
       const candidates=[];
-      for(let y=9;y<map.height-8;y+=3)for(let x=9;x<map.width-8;x+=3){
+      for(const margin of [9,4]){
+      for(let y=margin;y<map.height-margin+1;y+=2)for(let x=margin;x<map.width-margin+1;x+=2){
         const p={x,y};
-        if([...state.entries,...state.extractions].some(r=>inside(p,{x:r.x-3,y:r.y-3,width:r.width+6,height:r.height+6})))continue;
+        const clearance=margin===9?3:2;
+        if([...state.entries,...state.extractions].some(r=>inside(p,{x:r.x-clearance,y:r.y-clearance,width:r.width+clearance*2,height:r.height+clearance*2})))continue;
+        if(locations.some(q=>distance(p,q)<4))continue;
         const all=[...locations,...[...state.entries,...state.extractions].map(r=>({x:r.x+r.width/2,y:r.y+r.height/2}))];
         candidates.push({p,score:Math.min(...all.map(q=>distance(p,q)))});
+      }
+      if(candidates.length)break;
       }
       candidates.sort((a,b)=>b.score-a.score);
       if(!candidates.length)throw Error("无法放置联络任务事件");
@@ -1335,7 +1379,7 @@ const ContractMode = (() => {
           game.tiles[y][x] = "plain";
       if (definition.type === "defend") friendlyGarrison(room,G,objective);
       if (["factory","radar","enemybase"].includes(definition.type)) {
-        const count = ["radar","enemybase"].includes(definition.type) ? 1 : task?.targetCount || (task?.id === "efsf-5" ? 4 : 2 + Math.floor((d.id - 1) / 4));
+        const count = ["radar","enemybase"].includes(definition.type) ? 1 : task?.targetCount || (task?.id === "efsf-5" ? 4 : 2 + Math.floor((Math.min(5,d.id) - 1) / 4));
         for (let j = 0; j < count; j++) {
           const model = G.models[definition.type === "enemybase" ? "Facility_HQ__standard" : definition.type === "radar" ? "Facility_Radar__standard" : "Facility_Factory__standard"],
             u = spawn(room, G, model, {
@@ -1350,7 +1394,7 @@ const ContractMode = (() => {
           brain(game).health.set(u.id, u.hp);
         }
       }
-      const count = task?.targetUnits?.length || task?.guardCount || (task?.id === "efsf-5" ? 12 : 3 + Math.floor((d.id - 1) / 3));
+      const count = task?.targetUnits?.length || task?.guardCount || (task?.id === "efsf-5" ? 12 : 3 + Math.floor((Math.min(5,d.id) - 1) / 3));
       const guards = (definition.type === "defend" || (!task?.guardBudget && (["efsf-3","efsf-4"].includes(task?.id) || task?.targetUnit))) ? [] : objectiveProfile && (!task || task.guardBudget) ? budgetPatrol(
         room,G,{x:point.x+3,y:point.y+2},task?.guardBudget ?? objectiveProfile.garrisons[definition.type],false,"guard",objective.id
       ) : patrol(
@@ -1438,7 +1482,7 @@ const ContractMode = (() => {
         point,
       );
     }
-    for (let i = 0; i < 1 + Math.floor((d.id - 1) / 3); i++) patrol(room, G, edge(room, true), 3);
+    for (let i = 0; i < 1 + Math.floor((Math.min(5,d.id) - 1) / 3); i++) patrol(room, G, edge(room, true), 3);
     normalizeInitialEnemies(room, G);
     // Other initial patrols/garrisons must not accidentally spawn in a friendly
     // defense area either. Keep their units and relocate only overlapping ones.
@@ -1476,12 +1520,12 @@ const ContractMode = (() => {
       economy = typeof BattleEconomy !== "undefined" ? BattleEconomy : require("./battle-economy.js"),
       share = Math.min(1, completed / Math.max(1, state.objectives.filter(o => !o.contactTaskId).length)),
       [money, supplies] = completionRewards[d - 1],
-      bonus = 1.25 * [1, 1, 1.2, 1.3, 1.6, 1.9][d - 1] * (state.noAllies ? 1.25 : 1);
+      bonus = 1.25 * [1, 1, 1.2, 1.3, 1.6, 1.9, 2, 2.1, 2.2, 2.3][d - 1] * (state.noAllies ? 1.25 : 1);
     return {
       // Settlement applies its multiplier once; the table already includes it.
       money: money * share * era * bonus / economy.completionRewardMultiplier,
       supplies: supplies * share * era * bonus / economy.completionRewardMultiplier,
-      experience: Math.max(0, Math.round([500, 1000, 1500, 3000, 4000, 5000][d - 1] * share * bonus * .5 * experienceMultiplier / 50) * 50),
+      experience: Math.max(0, Math.round([500, 1000, 1500, 3000, 4000, 5000, 6000, 7000, 8000, 9000][d - 1] * share * bonus * .5 * experienceMultiplier / 50) * 50),
       technology: completed * 125 * era * (1 + (d - 1) * 0.25) * bonus,
       inventory: {},
     };

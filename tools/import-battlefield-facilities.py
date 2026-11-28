@@ -55,6 +55,24 @@ def fit_facility(u,dest,kind):
  u['sourceStats']['visual']={'nativeBounds':bounds,'targetCells':cells,'mapScale':u['presentation']['mapScale'],
    'layers':[{'name':layer['name'],'source':layer['source']} for layer in u['layers']]}
 
+def facility_portrait(u,dest):
+ # Compose the actual MOD decals, including the base; a barrel alone is not a portrait.
+ images=[];extents=[]
+ for layer in sorted(u['layers'],key=lambda l:l['order']):
+  image=dest/layer['texture'];width,height,bounds=visible_bounds(image)
+  scale=layer.get('scale',1);bone=u['skeleton'][layer['bone']]
+  offset=layer.get('worldOffset',{});local=layer.get('offset',{})
+  x=bone['x']+offset.get('x',0)+local.get('x',0);y=-bone['y']+offset.get('y',0)-local.get('y',0)
+  extents.append([(bounds[0]-width/2)*scale+x,(bounds[1]-height/2)*scale+y,(bounds[2]-width/2)*scale+x,(bounds[3]-height/2)*scale+y])
+  data=base64.b64encode(image.read_bytes()).decode('ascii')
+  images.append(f'<image x="{-width/2}" y="{-height/2}" width="{width}" height="{height}" transform="translate({x} {y}) rotate({layer.get("rotation",0)}) scale({scale})" href="data:image/png;base64,{data}"/>')
+ bounds=[min(e[0] for e in extents),min(e[1] for e in extents),max(e[2] for e in extents),max(e[3] for e in extents)]
+ size=max(bounds[2]-bounds[0],bounds[3]-bounds[1])*1.15
+ x=(bounds[0]+bounds[2]-size)/2;y=(bounds[1]+bounds[3]-size)/2
+ svg=f'<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="{x} {y} {size} {size}">'+''.join(images)+'</svg>'
+ (dest/'portrait.svg').write_text(svg,encoding='utf-8')
+ u['materials']['textures']['portrait.svg']='textures/portrait.svg';u['materials']['icon']='portrait.svg'
+
 def import_points():
  source=ROOT/'Units/Buildings/StrategicLocation/Mod/StrategicLocation.ini'
  data=load(source); config={}
@@ -96,6 +114,7 @@ def build(suffix,name,source,kind):
    'worldOffset':{'x':float(decal.get('xOffsetAbsolute',0)),'y':float(decal.get('yOffsetAbsolute',0))},
    'source':image.relative_to(MOD).as_posix()})
  fit_facility(u,dest,kind)
+ facility_portrait(u,dest)
  for key,t in d.items():
   if not key.startswith('turret_') or t.get('canShoot')!='true':continue
   spawn=section(d,'projectile_'+t['projectile']).get('spawnUnit','');payload={k:float(v) for k,v in re.findall(r'(\w+)\s*[:=]\s*(-?[\d.]+)',spawn)}

@@ -239,7 +239,12 @@ test("defense has autonomous friendly guards and activates only when PMC approac
   const f=fixture(t),g=f.room.game,o=g.contract.objectives.find(o=>o.type === "defend");
   assert(o && o.coreId);
   const guards=g.units.filter(u=>o.protected.includes(u.id));
-  assert.equal(guards.length,6);
+  assert.equal(guards.length,9);
+  const mobile=guards.filter(u=>!u.facility);
+  assert.equal(mobile.length,6);
+  const squads=[...new Set(mobile.map(u=>u.squadId))];
+  assert.equal(squads.length,2);assert(squads.every(Boolean));
+  for(const id of squads)assert.equal(mobile.filter(u=>u.squadId===id).length,3);
   assert(!g.units.some(u=>u.team===1 && C.defenseCoverage(G,u,o)),'no initial enemies in friendly coverage');
   assert(guards.every(u=>u.team===0 && u.contractAlly && u.missionAutonomous));
   assert(f.room.seats[G.ownerOf(guards[0])].bot);

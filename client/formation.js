@@ -6,6 +6,7 @@ const Formation = (() => {
   let group = PlayerProfile.faction();
   let storageKey = legacyStorageKey + "." + group;
   const sessionSaves = new Map();
+  let carrierPage = null;
   const pilotStorageKey = "projectgreed.custom-pilots.v2.";
   const pilotStores = {};
   const sharedPilotKey = "projectgreed.custom-pilots.v3.shared";
@@ -614,6 +615,8 @@ const Formation = (() => {
     return entry.preload?.carrierIndex === carrierIndex && entry.preload.hangarId === hangarId;
   }
   function removeEntry(i) {
+    if (carrierPage === i) carrierPage = null;
+    else if (carrierPage > i) carrierPage--;
     draft.splice(i, 1);
     for (const entry of draft)
       if (entry.preload) {
@@ -1007,12 +1010,13 @@ const Formation = (() => {
     const skillUnit = originalEntry.customPilot ? {
       model: entry.unitId + "__" + entry.kitId,
       pilot: originalEntry.customPilot,
+      plugins: originalEntry.plugins,
     } : null;
     byId("formationDetailAttributes").replaceChildren(UnitPreview.attributePages(model, "formation", skillUnit));
     const weapons = byId("formationDetailSlots");
     weapons.replaceChildren();
     for (const weapon of model.weapons)
-      weapons.append(WeaponInfo.card(weapon, null, { encyclopediaLink: true }));
+      weapons.append(WeaponInfo.card(weapon, null, { encyclopediaLink: true, unit: skillUnit }));
     if (model.movementType === "air")
       byId("formationDetailMovement").append(element("p", "helper", "空军：可跨越山岩和水域"));
     // Portal above fixed page containers so the preview is never clipped by a page.
@@ -1052,6 +1056,25 @@ const Formation = (() => {
         ? "未许可"
         : null;
     return status ? element("small", "unit-undeveloped", status) : null;
+  }
+  function appendStoredUnitBadges(portrait, item, pilot) {
+    const statuses = element("span", "formation-stock-badges");
+    if (item && Economy.isContactLoan(item))
+      statuses.append(element("span", "formation-task-badge", "任务"));
+    if (item?.rentalUses) {
+      const rental = element("span", "catalog-rental-badge", I18n.text("租赁") + " " + item.rentalUses);
+      rental.title = I18n.text("剩余次数:{count}次").replace("{count}", item.rentalUses);
+      statuses.append(rental);
+    }
+    if (statuses.childElementCount) portrait.append(statuses);
+    if (!pilot) return;
+    const badge = element("span", "catalog-pilot-badge"), avatar = element("img");
+    badge.title = I18n.text("驾驶员") + " · " + I18n.pilotName(pilot);
+    badge.setAttribute("role", "img");
+    badge.setAttribute("aria-label", badge.title);
+    badge.dataset.pilotId = pilot.id;
+    avatar.src = PilotSystem.portrait(pilot); avatar.alt = "";
+    badge.append(avatar); portrait.append(badge);
   }
   function render() {
     saveDraft();
@@ -1152,6 +1175,7 @@ const Formation = (() => {
       image.width = 56;
       image.alt = model.name;
       icon.append(image);
+      appendStoredUnitBadges(icon, stored, entry.customPilot || (stored && storedPilot(stored)));
       const portrait = element("span", "formation-unit-portrait");
       portrait.append(icon);
       const reason = condition === "destroyed" ? "destroyed" : exceedsTechnology(model) ? "technology_limit" : plan.reasons[i];
@@ -1303,7 +1327,7 @@ const Formation = (() => {
       row.append(portrait, label, actions);
       list.append(row);
     });
-    renderFleetHangars(list);
+    renderFleetHangars(list, storedById);
     list.scrollTop = scrollTop;
     if (transportFrameList !== list) {
       transportFrameObserver.disconnect();
@@ -1312,9 +1336,10 @@ const Formation = (() => {
     }
     scheduleTransportFrames();
   }
-  function renderFleetHangars(list) {
-    if (freeFormation()) {
-      list.classList.remove("formation-carrier-view");
+  function renderFleetHangars(list, storedById) {
+    if (freeFormation() && !draft.some(entry => Rules.formationModel(entry).hangars?.length)) {
+      carrierPage = null;
+      list.classList.remove("formation-carrier-view", "formation-cargo-page");
       return;
     }
     list.classList.add("formation-carrier-view");
@@ -1375,12 +1400,91 @@ const Formation = (() => {
         parent.append(hangar);
       }
     }
-    draft.forEach((entry, i) => {
-      if (entry.preload || !Rules.isFleetCarrier(Rules.formationModel(entry))) return;
+    const openCarrier = (i, targetIndex = null) => {
+      carrierPage = i; render(); list.scrollTop = 0;
+      const target = targetIndex === null ? null : list.querySelector(`[data-formation-index="${targetIndex}"]`);
+      if (target) {
+        target.tabIndex = -1;
+        target.classList.add("formation-cargo-located");
+        target.focus({preventScroll:true});
+        target.scrollIntoView({block:"center",inline:"nearest"});
+      } else byId("formationCargoBack")?.focus();
+    };
+    function descendants(index, seen = new Set([index])) {
+      const result = [];
+      draft.forEach((entry, i) => {
+        if (entry.preload?.carrierIndex !== index || seen.has(i)) return;
+        seen.add(i); result.push(i, ...descendants(i, seen));
+      });
+      return result;
+    }
+    list.classList.toggle("formation-cargo-page", carrierPage !== null && !!draft[carrierPage]);
+    if (carrierPage !== null && draft[carrierPage]) {
+      const heading = element("div", "formation-cargo-heading"),
+        back = element("button", "", "返回编组");
+      back.id = "formationCargoBack";
+      back.onclick = () => { const i = carrierPage; carrierPage = null; render(); list.querySelector(`[data-manage-cargo="${i}"]`)?.focus(); };
+      heading.append(back, element("h3", "", Rules.formationModel(draft[carrierPage]).name + " · 预先搭载"));
+      fragment.append(heading);
       const group = element("section", "formation-carrier-group");
-      group.dataset.fleetCarrier = String(i);
-      appendCarrier(i, group);
+      group.dataset.fleetCarrier = String(carrierPage);
+      appendCarrier(carrierPage, group);
       fragment.append(group);
+      list.replaceChildren(fragment);
+      return;
+    }
+    carrierPage = null;
+    draft.forEach((entry, i) => {
+      const model = Rules.formationModel(entry);
+      if (entry.preload || !model.hangars?.length) return;
+      const group = element("section", "formation-carrier-group formation-carrier-summary"), row = cards.get(i),
+        cargo = descendants(i), manage = element("button", "formation-manage-cargo", "预先搭载"),
+        strip = element("div", "formation-cargo-portraits");
+      group.dataset.fleetCarrier = String(i);
+      visited.add(i); cargo.forEach(j => visited.add(j));
+      manage.dataset.manageCargo = String(i);
+      manage.onclick = () => openCarrier(i);
+      row.querySelector(".formation-row-actions").prepend(manage);
+      const total = element("strong", "formation-carrier-total", `总 COST ${cost([entry, ...cargo.map(j => draft[j])])}`);
+      total.title = "含载具、全部搭载单位及驾驶员";
+      row.querySelector(".formation-unit-name").append(total);
+      strip.setAttribute("aria-label", "搭载单位");
+      for (const j of cargo) {
+        const passenger = draft[j], unit = Rules.formationModel(passenger),
+          button = element("button", "formation-cargo-avatar"), image = element("img"), pilot = element("img");
+        button.dataset.cargoIndex = String(j);
+        const pilotName = passenger.customPilot?.name || PilotSystem.defaultName(unit);
+        button.title = `${j + 1}. ${unit.name} · ${pilotName}`;
+        button.setAttribute("aria-label", button.title);
+        image.src = unitIcon(Rules.formationModelId(passenger), passenger.customPilot); image.alt = unit.name;
+        pilot.src = PilotSystem.portrait(passenger.customPilot || { faction: unit.faction });
+        pilot.alt = pilotName; pilot.className = "formation-cargo-pilot";
+        button.append(image, pilot, element("small", "", String(j + 1)));
+        appendStoredUnitBadges(button, storedById.get(passenger.stockId));
+        button.onclick = () => openCarrier(i, j);
+        strip.append(button);
+      }
+      for (const carrierIndex of [i, ...cargo]) {
+        const carrierModel = Rules.formationModel(draft[carrierIndex]);
+        for (const hangar of carrierModel.hangars || []) {
+          const used = draft.filter(e => preloadMatches(e, carrierIndex, hangar.id))
+            .reduce((sum, e) => sum + (hangar.kind === "sfs" ? 1 : Rules.formationModel(e).transport.slotCost || 1), 0);
+          const remaining = Math.max(0, Math.floor(hangar.capacity - used));
+          for (let slot = 0; slot < remaining; slot++) {
+            const empty = element("button", "formation-cargo-avatar formation-cargo-empty-slot", "＋");
+            empty.dataset.emptyCarrier = String(carrierIndex);
+            empty.dataset.emptyHangar = hangar.id;
+            empty.title = `${carrierModel.name} · ${hangarLabel(carrierIndex, hangar.id)} · 空位 ${slot + 1} · 添加预先搭载单位`;
+            empty.setAttribute("aria-label", empty.title);
+            empty.onclick = () => {
+              openCarrier(i, carrierIndex);
+              openPicker({carrierIndex, hangarId:hangar.id}, true);
+            };
+            strip.append(empty);
+          }
+        }
+      }
+      group.append(row, strip); fragment.append(group);
     });
     if (visited.size < draft.length) {
       const remaining = element("section", "formation-unassigned");
@@ -1687,16 +1791,18 @@ const Formation = (() => {
     byId("closeFormationDetail").focus();
     return true;
   }
-  function open() {
-    if (Net.active && Net.snapshot?.loadedSave) {
+  function open(tab = "units") {
+    carrierPage = null;
+    const pilotsOnly = tab === "pilots";
+    if (!pilotsOnly && Net.active && Net.started && Net.snapshot?.loadedSave) {
       note("存档编组不可更改。");
       return;
     }
-    if (Net.active && Net.snapshot?.phase === "assembly" && !canEditRoom()) {
+    if (!pilotsOnly && Net.active && Net.snapshot?.phase === "assembly" && !canEditRoom()) {
       note("确认阶段不可修改编组。");
       return;
     }
-    if (Net.active && ownPlayer()?.formationPreset) {
+    if (!pilotsOnly && Net.active && Net.started && ownPlayer()?.formationPreset) {
       note("房主已指定编组预设，请由房主调整。");
       return;
     }
@@ -1711,7 +1817,7 @@ const Formation = (() => {
         ? Net.snapshot.assembly?.players.find((player) => player.memberId === Net.memberId)
         : null;
     draft = hydratePilots(structuredClone(activePlan?.entries || current()));
-    showFormationTab("units");
+    showFormationTab(pilotsOnly ? "pilots" : "units");
     byId("formationName").value = squads[index].name;
     refreshSelect();
     render();
@@ -1735,6 +1841,7 @@ const Formation = (() => {
     setGroup(next);
   };
   byId("formationSelect").onchange = (e) => {
+    carrierPage = null;
     closeDetail();
     index = Number(e.target.value);
     persist();
@@ -1743,6 +1850,7 @@ const Formation = (() => {
     render();
   };
   byId("newFormation").onclick = () => {
+    carrierPage = null;
     closeDetail();
     squads.push({
       name: `新编组 ${squads.length + 1}`,
@@ -1756,6 +1864,7 @@ const Formation = (() => {
     render();
   };
   byId("deleteFormation").onclick = () => {
+    carrierPage = null;
     if (squads.length <= 1) return;
     closeDetail();
     const removed = index;
@@ -1887,27 +1996,10 @@ const Formation = (() => {
       image.src = unitIcon(item.unitId + "__" + item.kitId);
       image.alt = model.name;
       portrait.append(image);
-      if (item.rentalUses) {
-        const rental = element("span", "catalog-rental-badge",
-          I18n.text("租赁") + " " + item.rentalUses);
-        rental.title = I18n.text("剩余次数:{count}次").replace("{count}", item.rentalUses);
-        portrait.append(rental);
-      }
       const bound = draft.find(entry => entry.stockId === item.id),
         pilot = Object.hasOwn(item, "pilotId") ? storedPilot(item) :
           (bound?.customPilot && !bound.customPilot.hired ? bound.customPilot : null) || storedPilot(item);
-      if (pilot) {
-        const badge = element("span", "catalog-pilot-badge"), avatar = element("img"),
-          name = I18n.pilotName(pilot);
-        badge.title = I18n.text("驾驶员") + " · " + name;
-        badge.setAttribute("role", "img");
-        badge.setAttribute("aria-label", badge.title);
-        badge.dataset.pilotId = pilot.id;
-        avatar.src = PilotSystem.portrait(pilot);
-        avatar.alt = "";
-        badge.append(avatar);
-        portrait.append(badge);
-      }
+      appendStoredUnitBadges(portrait, item, pilot);
       const tags = unitTags(model, { cost: model.cost, kitName: model.kitName, twoRows: true });
       for (const more of tags.querySelectorAll(".unit-tags-more")) more.remove();
       const storedName=element("strong", "", (item.slot + 1) + ". " + model.name);
@@ -2358,7 +2450,7 @@ const Formation = (() => {
     const owned = profile && pilotStore.pilots.find(p=>p.aceId===profile.id);
     if(owned?.needsRecruitment)return !Net.started;
     return (
-      !!profile?.price &&
+      !!PilotSystem.recruitmentPrice(profile?.id) &&
       (owned || activePilots().filter(p=>p.ace).length < Economy.acePilotLimit()) &&
       Economy.canRecruitCrew("ace") &&
       PilotSystem.canAssign({ aceId: profile.id }, group) &&
@@ -2455,7 +2547,7 @@ const Formation = (() => {
           "p",
           "ace-recruit-locked",
           technologies.length
-            ? I18n.text("需要开发科技：") + technologies.map((n) => n.name).join(" / ")
+            ? I18n.text("需要解锁科技：") + technologies.map((n) => n.name).join(" / ")
             : I18n.text("活动获取"),
         ),
       );
@@ -2858,6 +2950,8 @@ const Formation = (() => {
     byId("changeCustomPilotPortrait").hidden = !!pilotEdit.ace;
     byId("customPilotPortraitPicker").hidden = true;
     byId("createPilotConfirm").hidden = !pilotIsNew;
+    byId("dismissCustomPilot").hidden = pilotIsNew;
+    byId("dismissCustomPilot").disabled = Net.started || Net.awaiting || (Net.active && !canEditRoom());
     renderPilotStats();
     pilotEditor.hidden = false;
     byId("formationMain").inert = true;
@@ -3325,6 +3419,37 @@ const Formation = (() => {
   byId("formationUnitsTab").onclick = () => showFormationTab("units");
   byId("formationPilotsTab").onclick = () => showFormationTab("pilots");
   byId("createCustomPilot").onclick = () => editPilot();
+  byId("dismissCustomPilot").onclick = async () => {
+    const button = byId("dismissCustomPilot");
+    if (!pilotEdit || pilotIsNew || button.disabled || Net.started || Net.awaiting || (Net.active && !canEditRoom())) return;
+    savePilotName(true);
+    const id = pilotEdit.id, original = pilotStore.pilots.find(p=>p.id===id);
+    if (!original) return;
+    const signature = JSON.stringify(original);
+    button.disabled = true;
+    try {
+      const message = "确定解雇驾驶员「" + I18n.pilotName(original) + "」？驾驶员将被永久移除。" + (original.ace ? "重新招募此ACE时，经验和成长将从初始状态开始。" : "此操作无法撤销。");
+      if (!await GameDialog.confirm(message, {title:"解雇驾驶员"})) return;
+      if (!pilotEdit || pilotEdit.id!==id || Net.started || Net.awaiting || (Net.active && !canEditRoom())) return;
+      if (JSON.stringify(pilotStore.pilots.find(p=>p.id===id))!==signature) throw Error("驾驶员状态已变化，请重新确认");
+      const next = {...pilotStore,pilots:pilotStore.pilots.filter(p=>p.id!==id)};
+      if (!Economy.dismissPilot(id, [[sharedPilotKey,JSON.stringify(next)]])) return;
+      pilotStore = next;
+      clearTimeout(pilotNameTimer);
+      // Closing must not save identity edits back into a deleted roster record.
+      pilotEdit = null;
+      PilotDialogueEditor.close();
+      pilotEditor.hidden = true;
+      byId("formationMain").inert = false;
+      sessionSaves.clear();
+      draft = hydratePilots(draft);
+      squads = squads.map(s=>({...s,units:hydratePilots(s.units)}));
+      persist(); render(); renderPilotRoster();
+      if (Net.active && canEditRoom()) Net.request("update_formation",{formation:current()});
+      byId("pilotRosterSearch").focus();
+    } catch(error) { note(Economy.errorMessage(error)); }
+    finally { button.disabled = Net.started || Net.awaiting || (Net.active && !canEditRoom()); }
+  };
   byId("finishCustomPilot").onclick = finishPilotEditor;
   const learnPilotSkillButton = element("button", "pilot-skill-button", "6级解锁技能");
   learnPilotSkillButton.id = "learnPilotSkill";
@@ -3521,6 +3646,7 @@ const Formation = (() => {
     presetIndex: () => index,
     selectPreset: (value) => {
       if (!Number.isInteger(value) || value < 0 || value >= squads.length) return false;
+      carrierPage = null;
       index = value;
       persist();
       return true;

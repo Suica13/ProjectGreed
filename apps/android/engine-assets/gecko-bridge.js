@@ -23,6 +23,7 @@
     read: () => call("read", []),
     commit: (value) => call("commit", [value]),
     compatibilityResult: (value) => call("compatibilityResult", [value]),
+    setRotationLock: (direction) => call("setRotationLock", [direction]),
     sceneChanged: (scene, ready) => call("sceneChanged", [scene, ready]),
     openStorageFolder: () => call("openStorageFolder", []),
     chooseStorageFolder: () => call("chooseStorageFolder", []),

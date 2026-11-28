@@ -1,8 +1,8 @@
 /* Liaison battles: independent, casualty-triggered reinforcements on both sides. */
 const fs=require('node:fs'),path=require('node:path'),root=path.resolve(__dirname,'..');
 const M=require('../shared/map-document'),B=require('./rebuild-biome-maps.cjs'),G=require('../shared/rules');
-const Contract=require('../shared/contract-mode');
-const tasks=require('../shared/contact-efsf.json').filter(task=>task.missionId);
+const scenarioCosts={19:15000,29:27000};
+const tasks=require('../shared/contact-efsf.json').filter(task=>[19,29].includes(task.number));
 for(const task of tasks){
  const colony=task.number===29,width=colony?64:44,height=colony?44:64;
  const point=(x,y)=>colony?{x,y}:{x:y,y:63-x};
@@ -16,7 +16,7 @@ for(const task of tasks){
  for(const t of doc.tiles)t.environment='space';
  const c=colony?{kind:'retrieve',label:task.objectiveText,clearTargets:true,deadlineRound:24,nodes:[{id:'engine-a',x:48,y:8,label:'北侧姿态控制'},{id:'engine-b',x:48,y:34,label:'南侧姿态控制'},{id:'bridge',x:56,y:21,label:'修改坠落轨道'}]}:{kind:'kills',label:task.objectiveText,required:1,killReward:true,surviveRound:18,extraction:{x:0,y:4,width:10,height:34}};
  if(c.extraction)c.extraction=region(c.extraction);
- const m={version:1,era:task.era,contactTask:task.id,commission:c,noRewards:true,technologyLimitEnabled:false,technologyLimit:0,scenarioFaction:'EFSF',costLimit:Contract.config(task.difficulty,task.era).costLimit,unitLimit:36,fleetLimit:5,enemyResourcePerPlayer:.25,rewards:{technology:0,money:0,supplies:0,inventory:{}},victory:{type:'commission'},protect:colony?['albion']:[],actors:[],events:[]};
+ const m={version:1,era:task.era,contactTask:task.id,commission:c,noRewards:true,technologyLimitEnabled:false,technologyLimit:0,scenarioFaction:'EFSF',costLimit:scenarioCosts[task.number],unitLimit:36,fleetLimit:5,enemyResourcePerPlayer:.25,rewards:{technology:0,money:0,supplies:0,inventory:{}},victory:{type:'commission'},protect:colony?['albion']:[],actors:[],events:[]};
  const group=(team,wave)=>team===1&&wave===0?'targets':(team?'enemy':'allied')+'-wave-'+wave;
  function actor(id,unitId,x,y,unitGroup,team,initial,extra={}){
   const model=Object.values(G.models).find(m=>m.prefabId===unitId&&!m.formOnly);if(!model)throw Error(unitId);

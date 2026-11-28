@@ -693,6 +693,13 @@ const Economy = (() => {
   }
   function setStoredPlugin(id, slot, pluginId) {
     if (!Number.isInteger(slot) || slot < 0 || slot > 3) throw Error("零件槽位无效");
+    return changeStoredPlugins(id, slot, pluginId);
+  }
+  function clearStoredPlugins(id) {
+    return changeStoredPlugins(id, null, null);
+  }
+  function changeStoredPlugins(id, slot, pluginId) {
+    if (slot !== null && (!Number.isInteger(slot) || slot < 0 || slot > 3)) throw Error("零件槽位无效");
     const next = snapshot(),
       item = [...next.storage.units, ...next.storage.ships].find((item) => item.id === id);
     if (!item) throw Error("库存单位不存在");
@@ -701,10 +708,11 @@ const Economy = (() => {
     const base = modelsForUnits()[item.unitId + "__" + item.kitId],
       previous = plugins.apply(base, item.plugins);
     const slots = plugins.normalize(item.plugins, base);
-    if (pluginId === slots[slot]) return false;
+    if (slot === null ? !slots.some(Boolean) : pluginId === slots[slot]) return false;
     if (pluginId !== null && pluginQuantity(pluginId) < 1)
       throw Error("零件库存不足，请前往联络商人购买");
-    slots[slot] = pluginId;
+    if (slot === null) slots.fill(null);
+    else slots[slot] = pluginId;
     const installed = plugins.normalize(slots, base),
       updated = plugins.apply(base, installed);
     item.plugins = installed;
@@ -794,7 +802,7 @@ const Economy = (() => {
     const merchant = merchants.find(item => item.id === merchantId), part = plugins.byId.get(id);
     if (!merchant?.sellsPlugins || part?.merchant!==merchantId || !["UC_0079_T1","UC_0079_T2"].includes(part.era)) return null;
     if (part.era === "UC_0079_T2") {
-      const task=contacts.tasks.find(task=>task.serviceUnlock==="parts_0079_t2");
+      const task=contacts.tasks.find(task=>task.pluginUnlocks?.includes(id));
       return {money:part.rarity*3000,available:!!task && merchantLevel(merchantId)>=(part.merchantLevel||1) && state.contactTasks.some(entry=>entry.id===task.id&&entry.status==="claimed"),
         requiredTask:task?.id,requiredTaskName:task?.name,requiredLevel:part.merchantLevel||1};
     }
@@ -833,6 +841,13 @@ const Economy = (() => {
         if (other.id !== id && other.pilotId === pilotId) other.pilotId = null;
     item.pilotId = pilotId;
     return commit(next);
+  }
+  function dismissPilot(pilotId, extraWrites = []) {
+    if (typeof pilotId !== "string" || !pilotId) throw Error("驾驶员不存在");
+    const next = snapshot();
+    for (const item of [...next.storage.units, ...next.storage.ships])
+      if (item.pilotId === pilotId) item.pilotId = null;
+    return commit(next, extraWrites);
   }
   function reorderStoredUnits(kind, ids) {
     if (!["units", "ships"].includes(kind)) throw Error("库存分类无效");
@@ -906,6 +921,11 @@ const Economy = (() => {
     store.pilots[index] = clean;
     return transact(cost, {}, [[pilotKey,JSON.stringify(store)]]) ? {pilot:clean,store} : null;
   }
+  // Derive task permits from persisted claims so existing saves gain ACE access too.
+  function hasTechnologyPlan(planId) {
+    if (["efsf","zeon","anaheim","omni","zaft"].some(id=>contacts.met(state,id) && contacts.introPlans(id).includes(planId))) return true;
+    return state.contactTasks.some(entry=>entry.status==="claimed" && contacts.planIds(contacts.byId.get(entry.id)).includes(planId));
+  }
   function grantPlan(next, planId) {
     const plan = Object.values(tree).flat().find(node=>node.id===planId);
     if (!plan) throw Error("许可计划不存在");
@@ -930,10 +950,7 @@ const Economy = (() => {
     for(const [unitId,count] of Object.entries(task.grant||{})) for(let i=0;i<count;i++) {
       const kitId=defaultKit(unitId),model=modelsForUnits()[unitId+"__"+kitId];
       const item={unitId,kitId,...warehouse.condition({},model),...(task.reclaim?{contactLoan:id}:{})};
-      if(warehouse.fits(next.storage,model,modelsForUnits())) {
-        next.storage[warehouse.category(model)].push({...item,id:"stored-"+ ++next.storage.serial,slot:warehouse.freeSlot(next.storage,warehouse.category(model))});
-        next.inventory[unitId]=(next.inventory[unitId]||0)+1;
-      } else next.storage.deliveries.push(item);
+      next.storage.deliveries.push(item);
     }
     return commit(next);
   }
@@ -980,10 +997,10 @@ const Economy = (() => {
   function facilityUpgradeOffer(id) {
     const offer=baseFacilities.upgradeOffer(state.baseFacilities,id);
     const beacon = id === "beacon" && offer.next === 2;
-    const supported=beacon || (["hq","factory","giantFactory","academy"].includes(id) && offer.next===2);
-    const unlocked=beacon ? state.baseFacilities.levels.hq >= 2 : supported && state.contactTasks.some(e=>["efsf-6","zeon-6"].includes(e.id)&&e.status==="claimed");
+    const supported=beacon || (["hq","factory","giantFactory","academy"].includes(id) && [2,3].includes(offer.next));
+    const unlocked=beacon ? state.baseFacilities.levels.hq >= 2 : supported && state.contactTasks.some(e=>(offer.next===3 ? ["efsf-29","zeon-25"] : ["efsf-6","zeon-6"]).includes(e.id)&&e.status==="claimed");
     const money=id==="hq"?20000:10000;
-    return {...offer,unlocked,condition:beacon?"HQ达到2级":supported?"完成联邦联络任务：绿色通道，或吉翁联络任务：通行税":id==="beacon"?"信标暂未开放升级":"开发中",money:supported?money:null,supplies:supported?money:null,available:unlocked&&!offer.max&&!offer.hqRequired};
+    return {...offer,unlocked,condition:beacon?"HQ达到2级":supported?(offer.next===3?"完成联邦联络任务：权必有责，或吉翁联络任务：余烬守望":"完成联邦联络任务：绿色通道，或吉翁联络任务：通行税"):id==="beacon"?"信标暂未开放升级":"开发中",money:supported?money:null,supplies:supported?money:null,available:unlocked&&!offer.max&&!offer.hqRequired};
   }
   function upgradeFacility(id, expected) {
     const offer=facilityUpgradeOffer(id);
@@ -1269,6 +1286,7 @@ const Economy = (() => {
     purchasePlugin,
     tokenOffer,
     purchaseToken,
+    hasTechnologyPlan,
     canRecruitCrew: (grade) => baseFacilities.canRecruit(state.baseFacilities, grade),
     customPilotLimit: () => baseFacilities.pilotLimit(state.baseFacilities),
     academyLevel: () => state.baseFacilities.levels.academy,
@@ -1277,6 +1295,7 @@ const Economy = (() => {
     storageUsage,
     changeStoredKit,
     setStoredPlugin,
+    clearStoredPlugins,
     moveStoredUnit,
     receiveDeliveries,
     discardDelivery,
@@ -1295,6 +1314,7 @@ const Economy = (() => {
     upgradeFacility,
     storedUnits,
     setStoredPilot,
+    dismissPilot,
     reorderStoredUnits,
     transformStock,
     key,

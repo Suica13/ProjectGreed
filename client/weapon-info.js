@@ -138,8 +138,8 @@ const WeaponInfo = (() => {
   }
   // All weapon surfaces use the compiled strikes, including multi-hit and mixed payloads.
   const roundsFor = (weapon, unit) =>
-    unit && typeof game !== "undefined" && Rules.attackRounds
-      ? Rules.attackRounds(game, unit, weapon)
+    unit && Rules.attackRounds
+      ? Rules.attackRounds(typeof game !== "undefined" && game ? game : { round: 0, units: [] }, unit, weapon)
       : WeaponClasses.rounds(weapon);
   function icon(weapon) {
     const kind = WeaponClasses.classify(weapon), image = node("img", "weapon-type-icon");
@@ -164,6 +164,9 @@ const WeaponInfo = (() => {
     const strikes = unit
       ? Rules.availableStrikes(unit, weapon, target)
       : weapon.attack?.strikes || [];
+    const pilotModel = unit ? Rules.modelOf(unit) : null;
+    const pilotDamage = PilotSystem.weaponDamageModifier(pilotModel?.pilotModifiers, weapon) * (1 + (pilotModel?.talentEffects?.[weapon.type === "melee" ? "melee" : "shooting"] || 0)) * (1 + (pilotModel?.talentEffects?.damage || 0));
+    const pilotAccuracy = pilotModel?.pilotModifiers?.accuracy ?? 1;
     const groups = new Map(),
       attributes = new Set();
     let total = 0;
@@ -172,7 +175,7 @@ const WeaponInfo = (() => {
       const damage = Rules.roundDamage(
         (components
           ? Object.values(components).reduce((sum, value) => sum + value, 0)
-          : weapon.damagePerShot || 0) * (strike.damageMultiplier ?? 1),
+          : weapon.damagePerShot || 0) * (strike.damageMultiplier ?? 1) * pilotDamage,
       );
       const key = Number(damage.toFixed(6));
       groups.set(key, (groups.get(key) || 0) + 1);
@@ -218,7 +221,7 @@ const WeaponInfo = (() => {
     const accuracy = node("div", "weapon-accuracy");
     accuracy.append(
       node("span", "weapon-stat-label", "命中率"),
-      node("strong", "weapon-hit-rate", number(forecast?.hit ?? weapon.hit) + "%"),
+      node("strong", "weapon-hit-rate", number(forecast?.hit ?? weapon.hit * pilotAccuracy) + "%"),
     );
     accuracy.append(
       node("span", "weapon-stat-label", "攻击轮数"),
@@ -239,6 +242,12 @@ const WeaponInfo = (() => {
       if (weapon.hit !== baseline.hit) mark(".weapon-hit-rate");
       if (roundsFor(weapon, unit) !== roundsFor(baseline, unit)) mark(".weapon-rounds");
       if (damageSignature(weapon) !== damageSignature(baseline)) mark(".weapon-damage-term b, .weapon-total-damage");
+    }
+    if (unit?.pilot) {
+      if (pilotDamage !== 1) root.querySelectorAll(".weapon-damage-term b, .weapon-total-damage").forEach(n => n.classList.add("plugin-modified-value"));
+      if (pilotAccuracy !== 1) root.querySelector(".weapon-hit-rate").classList.add("plugin-modified-value");
+      root.querySelector(".weapon-rounds").classList.add("plugin-modified-value");
+      root.append(node("small", "weapon-pilot-effects", "已计入驾驶员属性与常驻天赋：伤害 ×" + pilotDamage.toFixed(3) + "，命中 ×" + pilotAccuracy.toFixed(3) + "，轮数按当前机动及射击／格斗计算。实际命中与伤害另受目标、地形和条件技能影响。"));
     }
     if (options.compact) {
       root.classList.add("weapon-summary-compact");
@@ -363,7 +372,7 @@ const WeaponInfo = (() => {
         ),
       );
     body.append(
-      node("p", "weapon-detail-note", "基础伤害未计入目标防护与战斗加成；次数包含多段命中。"),
+      node("p", "weapon-detail-note", "伤害未计入目标防护与条件战斗加成；有驾驶员时包含属性与常驻天赋，次数包含多段命中。"),
     );
     if (weapon.description) body.append(node("p", "", I18n.localized(weapon, "description")));
     const all = (weapon.requiredParts || [])

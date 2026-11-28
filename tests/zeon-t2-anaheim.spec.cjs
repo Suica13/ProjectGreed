@@ -6,8 +6,8 @@ for(const width of [1440,390])test(`Zeon T2 missions and Anaheim T2 purchases pe
  await page.evaluate(()=>{
   I18n.setLanguage('zh');Economy.meetLiaison('zeon');
   const finish=t=>{Economy.acceptContactTask(t.id);Economy.creditAward({id:'ui-'+t.id,matchId:'ui-'+t.id,money:0,supplies:0,contactProgress:[{id:t.id,amount:t.required}]});Economy.completeContactTask(t.id);};
-  ContactTasks.tasks.filter(t=>t.contactId==='zeon'&&t.era==='UC_0079_T1').forEach(finish);
-  Economy.meetLiaison('anaheim');['anaheim-1','anaheim-2','anaheim-3','anaheim-4','anaheim-5','anaheim-6','anaheim-8','anaheim-7','anaheim-9','anaheim-10'].forEach(id=>finish(ContactTasks.byId.get(id)));
+  const pending=ContactTasks.tasks.filter(t=>t.contactId==='zeon'),done=new Set();while(pending.length){const i=pending.findIndex(t=>t.requires.every(id=>done.has(id)));if(i<0)throw Error('task cycle');const task=pending.splice(i,1)[0];finish(task);done.add(task.id);}
+  Economy.meetLiaison('anaheim');['anaheim-1','anaheim-2','anaheim-3','anaheim-4','anaheim-5','anaheim-6','anaheim-8','anaheim-7','anaheim-9','anaheim-13','anaheim-10','anaheim-14'].forEach(id=>finish(ContactTasks.byId.get(id)));
  });
  const open=async id=>{await page.locator('#shellMissions').click();await page.locator('#shellContactMerchants').click();await page.locator(`[data-merchant-id="${id}"] .merchant-portrait`).click();};
  const terminal=page.locator('#merchantTerminal');await open('zeon');await terminal.getByRole('button',{name:'任务',exact:true}).click();

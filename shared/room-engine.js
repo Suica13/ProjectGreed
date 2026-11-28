@@ -2760,7 +2760,7 @@ function createRoomEngine({
         licenses: undefined,
         inventory: undefined,
         characterFaction: null,
-        aiAllowedEras: [room.settings.sweepEra],
+        aiAllowedEras: Contract.enemyRestrictions(room, G).aiAllowedEras,
         aiEarlierCarriers: true,
         unitCostLimit: Contract.enemyLimits(room, G).unitCostLimit,
       });
@@ -4878,6 +4878,9 @@ function createRoomEngine({
           )
             throw Error("合约敌军阵营或年代无效");
           if (settings.mode === "sweep") {
+            // Old T2 room selections now enter the unified 0079 difficulty ladder.
+            if (settings.sweepEra === "UC_0079_T2") settings.sweepEra = "UC_0079_T1";
+            if (settings.sweepEra === "UC_0087_T2") settings.sweepEra = "UC_0087_T1";
             const allies = Contract.factionsForEra(G,settings.sweepEra).filter(f=>f!==settings.sweepFaction);
             if (msg.sweepAlliedFaction !== undefined && !(settings.sweepFaction === "NONE" ? msg.sweepAlliedFaction === "NONE" : allies.includes(msg.sweepAlliedFaction)))
               throw Error("合约我军阵营或年代无效");

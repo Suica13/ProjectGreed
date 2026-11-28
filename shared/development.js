@@ -236,6 +236,7 @@ const Development = (() => {
       if (faction !== "PMC" && !(ace.availableFactions || [ace.faction]).includes(faction))
         return false;
       faction = ace.faction;
+      if (researched === undefined && nodes(faction).some(node=>node.unlocks.includes(prefabId) && economy.hasTechnologyPlan(node.id))) return true;
       const unlocked=researched===undefined?currentResearch():normalizeResearch(researched);
       if(unlocked.units[ace.faction]?.includes(prefabId))return true;
     }

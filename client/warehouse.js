@@ -328,6 +328,7 @@ window.WarehouseUI = (() => {
     sell.id = "warehouseSellUnit";
     sell.type = "button";
     sell.disabled = Net.started || Economy.isContactLoan(item);
+    sell.hidden = Economy.isContactLoan(item);
     if (discard) sell.title = I18n.text("销毁不返还资金或物资");
     if(Economy.isContactLoan(item))sell.title=I18n.text("任务借用机体不能出售或删除，完成任务后自动回收");
     sell.onclick = async () => {
@@ -391,6 +392,16 @@ window.WarehouseUI = (() => {
       button.onclick=()=>showPluginPicker(item,index);grid.append(button);
     });
     slots.append(grid);
+    const removeAll = element("button", "", "一键卸除零件");
+    removeAll.id = "warehouseRemoveAllPlugins";
+    removeAll.disabled = busy || !!item.rentalUses || Economy.isContactLoan(item) || !item.plugins?.some(Boolean);
+    removeAll.onclick = () => {
+      if (Net.started && Net.snapshot?.phase !== "assembly") return;
+      try {
+        if (Economy.clearStoredPlugins(item.id)) { render(); showUnit(currentItem(item)); }
+      } catch (error) { note(error.message); }
+    };
+    slots.append(removeAll);
     bottom.append(basic, slots);
     body.append(info, bottom);
     requestAnimationFrame(refreshPilotName);
@@ -726,6 +737,7 @@ window.WarehouseUI = (() => {
       accept.onclick=()=>{try{if(!Net.started){Economy.receiveDeliveries(index);showDeliveries();}}catch(error){note(error.message);}};
       const remove=element("button","danger","移除"),actions=element("div","warehouse-depot-actions");
       remove.disabled=Net.started || Economy.isContactLoan(item);
+      remove.hidden=Economy.isContactLoan(item);
       if(Economy.isContactLoan(item))remove.title=I18n.text("任务借用机体不能出售或删除，完成任务后自动回收");
       remove.onclick=async()=>{
         if(Net.started || remove.disabled)return;

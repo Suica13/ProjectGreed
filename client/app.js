@@ -1307,11 +1307,12 @@ function renderPanel() {
 }
 let squadSingleMove = false,
   squadCombatMode = "melee";
-function select(id, { single = false } = {}) {
+function select(id, { single = false, preserveSquadSelection = false } = {}) {
   if (pendingMovement()) return;
   if (isBusy()) return;
   let u = getUnit(id);
   if (!u || u.hp <= 0) return;
+  if (!preserveSquadSelection) window.BattleHUD?.resetSquadSelection();
   GameAudio.selectUnit(u);
   selected = id;
   squadSingleMove = single;

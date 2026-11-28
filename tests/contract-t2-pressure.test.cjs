@@ -25,28 +25,27 @@ test('T2 patrol reinforcements retain cumulative rounding and stop at the live c
  const before=g.units.length,quota=g.contract.reinforcementBaseCount;
  for(let turn=0;turn<8;turn++){g.round+=2;C.poll(room,G);}
  assert.equal(g.units.length,before);assert.equal(g.contract.reinforcementBaseCount,quota);
- alive()[0].hp=0;
+ for(const unit of alive().slice(0,3))unit.hp=0;
  for(let turn=0;turn<4;turn++){g.round+=2;C.poll(room,G);}
  assert.equal(alive().length,cap);
 });
-test('same-N T2 pressure is independent of player cost, pilots, rewards and later eras',()=>{
- for(let n=1;n<=6;n++){
+test('legacy T1 and T2 contract keys resolve to the same ten-level ladder',()=>{
+ for(let n=1;n<=10;n++){
   const t1=C.config(n,'UC_0079_T1'),t2=C.config(n,'UC_0079_T2');
-  assert.equal(t2.relativePressure,n>=3?1.25:1);assert.equal(t1.relativePressure,1);
-  assert.equal(t2.initialEnemyCount,Math.round(t1.initialEnemyCount*(n>=3?1.25:1)));
+  assert.equal(t2.relativePressure,n===10?1.1:1);assert.equal(t1.relativePressure,t2.relativePressure);
+  assert.equal(t2.initialEnemyCount,t1.initialEnemyCount);
   assert.equal(t2.patrolLimit,Math.floor(t2.initialEnemyCount*1.5));
  }
- assert.deepEqual([3,4,5,6].map(n=>C.config(n,'UC_0079_T2').costLimit),[9000,13500,18000,22500]);
+ assert.deepEqual([3,4,5,6].map(n=>C.config(n,'UC_0079_T2').costLimit),[6000,9000,12000,15000]);
  for(const era of ['CE_0071_T1','UC_0087_T1','UC_0087_T2','UC_0093_T1'])assert.equal(F.eraPressure(era),1);
  for(const n of [3,4,5,6])for(const players of [1,3,5]){
   const room={settings:{sweepDifficulty:n,sweepEra:'UC_0079_T2'},game:{contract:{players}}};
-  const expected=Math.round(1000*(1+.25*(players-1))*F.difficultyScale(n)*1.25/25)*25;
+  const expected=Math.round(1000*(1+.25*(players-1))*F.difficultyScale(n)/25)*25;
   assert.equal(F.budget(room,1000),expected);assert.equal(F.budget(room,1000,true),expected);
  }
 });
 test('actual T2 spawns apply pressure once, retain native HP and allow partial final squads',t=>{
  for(const environment of ['ground','space'])for(const n of [3,4,5,6])for(const era of ['UC_0079_T1','UC_0079_T2']){
-  if(environment==='space'&&era==='UC_0079_T1')continue; // No T1 space contract in the current lobby.
   const room=battle(t,era,n,environment),enemies=room.game.units.filter(u=>u.team>0&&!u.facility&&!G.modelOf(u).facility);
   assert.equal(enemies.length,C.config(n,era).initialEnemyCount,`${era} ${environment} N${n}`);
   for(const u of enemies)assert.equal(u.hp,G.modelOf(u).hp);

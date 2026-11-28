@@ -26,6 +26,7 @@ public final class MainActivity extends Activity {
     private final Object storageLock = new Object();
     private SharedPreferences preferences;
     private String currentScene = "menu";
+    private int rotationLock = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
     private boolean choosingFolder, storagePromptOpen;
     private static final int PICK_STORAGE = 103;
     private static final int STORAGE_FLAGS = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
@@ -53,6 +54,7 @@ public final class MainActivity extends Activity {
                     case "read": return bridge.read();
                     case "commit": return bridge.commit(args.getString(0));
                     case "compatibilityResult": bridge.compatibilityResult(args.getString(0)); break;
+                    case "setRotationLock": bridge.setRotationLock(args.getString(0)); break;
                     case "sceneChanged": bridge.sceneChanged(args.getString(0),args.getBoolean(1)); break;
                     case "openStorageFolder": bridge.openStorageFolder(); break;
                     case "chooseStorageFolder": bridge.chooseStorageFolder(); break;
@@ -118,6 +120,11 @@ public final class MainActivity extends Activity {
             if (!isFinishing() && !isDestroyed()) new AlertDialog.Builder(this).setMessage(text).setPositiveButton("确定",null).show();
         });
     }
+    private void applyScreenOrientation() {
+        int orientation = rotationLock != ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED ? rotationLock
+            : "game".equals(currentScene) ? ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+        if (getRequestedOrientation() != orientation) setRequestedOrientation(orientation);
+    }
     public final class Bridge {
         public void compatibilityResult(String result) {
             runOnUiThread(()->{
@@ -146,11 +153,22 @@ public final class MainActivity extends Activity {
                 } catch (Exception error) { return "{\"ok\":false,\"error\":\"存档请求无效\"}"; }
             }
         }
+        public void setRotationLock(String direction) {
+            runOnUiThread(()->{
+                switch (direction) {
+                    case "portrait-primary": rotationLock = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT; break;
+                    case "portrait-secondary": rotationLock = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT; break;
+                    case "landscape-primary": rotationLock = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE; break;
+                    case "landscape-secondary": rotationLock = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE; break;
+                    default: rotationLock = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
+                }
+                applyScreenOrientation();
+            });
+        }
         public void sceneChanged(String scene, boolean ready) {
             runOnUiThread(()->{
                 currentScene = scene;
-                int orientation = "game".equals(scene) ? ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-                if (getRequestedOrientation() != orientation) setRequestedOrientation(orientation);
+                applyScreenOrientation();
                 if (ready && "menu".equals(scene)) showStoragePrompt();
             });
         }

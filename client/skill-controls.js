@@ -3,6 +3,57 @@ const SkillControls = (() => {
   let targetDraft = null;
   const reset = () => { targetDraft = null; };
   const activeId = () => (mode.startsWith("skill:") ? mode.slice(6) : null);
+  let batch = null;
+  const members = unit => window.BattleHUD?.skillMembers(unit) || [unit];
+  const matching = (unit, skill) => (skill.slot === "skill" ? Rules.modelOf(unit).weapons : Rules.unitSkills(unit)).find(candidate =>
+    candidate.name === skill.name && candidate.type === skill.type && candidate.owner === skill.owner);
+  const selfTarget = skill => ["pilot_buff", "overdrive", "overboost", "fullboost", "transform",
+    "armor_purge", "flight", "minovsky", "emp", "smoke", "optical_camouflage", "phase_shift"].includes(skill.type) ||
+    skill.selfOnly || (skill.type === "recon" && skill.reconMode !== "camera");
+  function validTarget(unit, skill, cell) {
+    if (skill.slot === "skill") {
+      const target = cell.ground ? Rules.groundTarget(game,unit,cell.x,cell.y) : getUnit(cell.targetId);
+      return !!target && Rules.canAttack(game,unit,cell.aimCell ? {...target,aimCell:cell.aimCell} : target,skill);
+    }
+    const target = selfTarget(skill) ? unit : cell;
+    return Rules.canUseSkill(game, unit, skill.id) && Rules.skillTargets(game, unit, skill.id)
+      .some(c => c.x === target.x && c.y === target.y);
+  }
+  function commonTargets(unit, skill) {
+    if (!skill) return [];
+    return Rules.skillTargets(game, unit, skill.id).filter(cell => members(unit).every(member => {
+      const other = matching(member, skill);
+      return other && validTarget(member, other, cell);
+    }));
+  }
+  async function executeBatch(actors, skill, cell) {
+    if (batch) return;
+    const operation = batch = {session, matchId:Net.snapshot?.matchId, round:game.round, team:game.team,
+      online:Net.active, units:actors.map(actor => actor.id)};
+    reset(); mode = "select"; weaponId = null;
+    try {
+      for (const id of operation.units) {
+        while (batch === operation && session === operation.session && pageView === "game" && Net.active === operation.online && (!Net.active || (!Net.connecting && Net.socket?.readyState === 1)) && game.round === operation.round &&
+          game.team === operation.team && Net.snapshot?.matchId === operation.matchId &&
+          (Net.awaiting || !["idle", "finished"].includes(phase)))
+          await new Promise(resolve => setTimeout(resolve, 100));
+        if (batch !== operation || session !== operation.session || Net.active !== operation.online || (Net.active && (Net.connecting || Net.socket?.readyState !== 1)) || pageView !== "game" || phase !== "idle" ||
+          game.round !== operation.round || game.team !== operation.team || Net.snapshot?.matchId !== operation.matchId) break;
+        const actor = getUnit(id), next = actor && matching(actor, skill);
+        if (!actor || actor.hp <= 0 || actor.team !== game.team ||
+          (Net.active && (!Net.canAct() || !Net.canControl(actor))) || !next || !validTarget(actor, next, cell)) {
+          note("部分选中单位已无法使用该技能，已跳过。"); continue;
+        }
+        const target = selfTarget(next) ? actor : cell;
+        if (next.slot === "skill") {
+          const enemy = cell.ground ? Rules.groundTarget(game,actor,cell.x,cell.y) : getUnit(cell.targetId);
+          beginAttack(actor, cell.aimCell ? {...enemy,aimCell:cell.aimCell} : enemy, next);
+        } else if (Net.active) Net.request("skill", {unitId:actor.id,skillId:next.id,x:target.x,y:target.y});
+        else applied(Rules.useSkill(game,actor,next.id,target.x,target.y));
+      }
+    } catch (error) { note(error.message); }
+    finally { if (batch === operation) batch = null; update(); }
+  }
   function confirmation(unit) {
     const weapon = mode === "target" && unit && getWeapon(unit, weaponId);
     const active = !!unit && (!!activeId() || weapon?.slot === "skill");
@@ -14,15 +65,21 @@ const SkillControls = (() => {
       if (target && draft.aimCell) target = {...target, aimCell:draft.aimCell};
     }
     const legal = !!draft && (draft.kind === "weapon"
-      ? !!target && Rules.canAttack(game, unit, target, weapon)
+      ? !!target && members(unit).every(member => {
+        const other = matching(member,weapon);
+        return other && validTarget(member,other,draft);
+      })
       : Rules.canUseSkill(game, unit, activeId()) &&
-        Rules.skillTargets(game, unit, activeId()).some(cell=>cell.x===draft.x&&cell.y===draft.y));
+        commonTargets(unit, Rules.unitSkills(unit).find(skill=>skill.id===activeId())).some(cell=>cell.x===draft.x&&cell.y===draft.y));
     return {active, draft, target, weapon, ready:legal && phase === "idle" && !isBusy() &&
       (!Net.active || (Net.canAct() && Net.canControl(unit) && !Net.awaiting))};
   }
   function chooseWeaponTarget(unit, target, weapon) {
     if (weapon?.slot !== "skill") return false;
-    if (!Rules.canAttack(game, unit, target, weapon)) return true;
+    const cell={ground:!!target.groundTarget,targetId:target.id,x:target.x,y:target.y,aimCell:target.aimCell};
+    if (!members(unit).every(member => { const other=matching(member,weapon); return other && validTarget(member,other,cell); })) {
+      note("请选择所有选中单位都能攻击的技能目标。"); return true;
+    }
     targetDraft = {kind:"weapon",game,unitId:unit.id,mode,weaponId:weapon.id,targetId:target.id,
       ground:!!target.groundTarget,x:target.x,y:target.y,aimCell:target.aimCell};
     GameAudio.play("lockonSound");
@@ -34,6 +91,7 @@ const SkillControls = (() => {
     if (!selection.ready) return;
     if (selection.draft.kind === "weapon") {
       const {target,weapon}=selection;
+      if (members(unit).length > 1) { void executeBatch(members(unit),weapon,selection.draft); return; }
       reset();
       beginAttack(unit,target,weapon);
       weaponId = null;
@@ -191,10 +249,13 @@ const SkillControls = (() => {
   }
   function render(list, unit, canCommand) {
     for (const weapon of Rules.modelOf(unit).weapons.filter(w => w.slot === "skill")) {
+      const actors = members(unit);
+      if (actors.length > 1 && !actors.every(member => matching(member,weapon))) continue;
       const card = WeaponInfo.card(weapon,null,{unit});
       const use = element("button", "", weapon.special?.type === "snipe" ? "锁定狙击目标" : "使用技能");
       use.dataset.weaponSkill = weapon.id;
-      use.disabled = !canCommand || unit.acted || !!unit.plan ||
+      use.disabled = !!batch || !canCommand || actors.some(member => member.acted || member.plan ||
+        member.attackSkillRound === game.round || !Rules.canUse(member,matching(member,weapon))) || unit.acted || !!unit.plan ||
         unit.attackSkillRound === game.round || !Rules.canUse(unit,weapon);
       use.onclick = () => {
         reset();
@@ -205,9 +266,12 @@ const SkillControls = (() => {
         update();
       };
       card.append(use); list.append(card);
+      if (actors.length > 1) use.textContent = I18n.text("同时使用") + " ×" + actors.length;
     }
     let pilotHeading = false;
     for (const skill of Rules.unitSkills(unit)) {
+      const actors = members(unit);
+      if (actors.length > 1 && !actors.every(member => matching(member, skill))) continue;
       if (skill.owner === "pilot" && !pilotHeading) {
         list.append(element("div", "section-title pilot-skills-heading", "驾驶员技能"));
         pilotHeading = true;
@@ -276,30 +340,18 @@ const SkillControls = (() => {
           element("small", "muted", `${I18n.text("剩余次数")} ${left}/${skill.maxUses}`),
         );
       button.disabled =
+        !!batch ||
         !canCommand ||
         !Rules.canUseSkill(game, unit, skill.id) ||
-        !Rules.skillTargets(game, unit, skill.id).length;
+        !commonTargets(unit, skill).length;
+      if (actors.length > 1) button.append(element("small", "muted", `同时使用 ×${actors.length}`));
       button.onclick = () => {
         reset();
         GameAudio.play("selectWeaponSound");
         AttackControls.reset();
         mode = "skill:" + skill.id;
         weaponId = null;
-        if (
-          [
-            "pilot_buff",
-            "overdrive",
-            "overboost",
-            "fullboost",
-            "transform",
-            "armor_purge",
-            "flight",
-            "minovsky",
-            "emp",
-            "smoke",
-          ].includes(skill.type) ||
-          (skill.type === "recon" && skill.reconMode !== "camera")
-        )
+        if (selfTarget(skill))
           click({ x: unit.x, y: unit.y }, unit, true);
         else update();
       };
@@ -316,7 +368,8 @@ const SkillControls = (() => {
       (Net.active && (!Net.canAct() || !Net.canControl(unit)))
     )
       return new Set();
-    return new Set(Rules.skillTargets(game, unit, activeId()).map((c) => Rules.key(c.x, c.y)));
+    const skill = Rules.unitSkills(unit).find(skill => skill.id === activeId());
+    return new Set((skill ? commonTargets(unit,skill) : []).map((c) => Rules.key(c.x, c.y)));
   }
   function applied(event) {
     reset();
@@ -331,7 +384,8 @@ const SkillControls = (() => {
   function click(cell, unit, immediate = false) {
     const skillId = activeId();
     if (!skillId || !unit) return false;
-    if (!Rules.skillTargets(game, unit, skillId).some((c) => c.x === cell.x && c.y === cell.y)) {
+    const skill = Rules.unitSkills(unit).find(skill => skill.id === skillId);
+    if (!skill || !commonTargets(unit,skill).some((c) => c.x === cell.x && c.y === cell.y)) {
       const target = Rules.at(game, cell.x, cell.y);
       if (target?.team === game.team) select(target.id);
       else note("请选择高亮的合法技能目标。");
@@ -348,6 +402,8 @@ const SkillControls = (() => {
   }
   function execute(cell, unit) {
     const skillId = activeId();
+    const actors = members(unit), skill = Rules.unitSkills(unit).find(skill => skill.id === skillId);
+    if (actors.length > 1 && skill) { void executeBatch(actors,skill,cell); return; }
     reset();
     if (Net.active) {
       Net.request("skill", { unitId: unit.id, skillId, x: cell.x, y: cell.y });

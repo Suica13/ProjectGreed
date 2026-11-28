@@ -44,7 +44,7 @@ for (const sharedId of [false, true])
   });
 
 test("a historical shared ID cannot bypass destination capacity or controller checks",()=>{
-  const {game,allies}=fixture(4);
+  const {game,allies}=fixture(7);
   stack(game,allies.slice(0,2));
   stack(game,allies.slice(2),6,5);
   const before=structuredClone(game);

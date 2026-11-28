@@ -135,6 +135,7 @@ const Net = (() => {
   // One ordered intent stream. Retransmissions keep the exact ID/payload so
   // authority deduplication resolves lost replies without executing an action twice.
   const actionQueue = [];
+  let preparationSession = null;
   let actionTimer = null;
   const profileActions = new Set([
     "set_ready",
@@ -338,6 +339,7 @@ const Net = (() => {
     }
   }
   function leave({ notify = true, forget = true } = {}) {
+    preparationSession = null;
     window.MissionUI?.clear();
     ContractUI.receive({phase:"waiting"});
     window.BattleTaskList?.receive(null);
@@ -658,6 +660,11 @@ const Net = (() => {
     // Resource/loading/playback callbacks may finish after returning or reconnecting.
     // They must never restore a superseded room phase or reopen its modal.
     if (!n.active || !s || s !== n.snapshot) return;
+    const localPage = pageView;
+    const preparationKey = JSON.stringify([n.serverURL,s.room,s.you?.id]);
+    const preservePreparation = (n.applied || preparationSession === preparationKey) &&
+      (window.MenuShell?.isPreparationView(localPage) ?? false) &&
+      (!n.started || n.snapshot?.phase === "assembly");
     if (!s.started) BattleAssets.release();
     else if (s.returnCountdown) BattleAssets.cancel();
     else if (BattleAssets.guard(s, () => applySnapshot(s))) {
@@ -735,10 +742,12 @@ const Net = (() => {
       return;
     }
     if (s.started && s.phase === "assembly") {
+      preparationSession = preparationKey;
       n.assemblyPending = true;
       phase = "assembly";
       battleView = null;
-      if (!n.applied || !preparationView) setPageView("room");
+      if (preservePreparation) { if (pageView !== localPage) setPageView(localPage); }
+      else if (!n.applied || !preparationView) setPageView("room");
       RoomPanel.render(s);
       n.applied = true;
       update();
@@ -764,6 +773,7 @@ const Net = (() => {
       return;
     }
     if (!s.started) {
+      preparationSession = preparationKey;
       MatchResults.reset();
       CombatPlayback.reset();
       PlanningUI.reset();
@@ -778,12 +788,14 @@ const Net = (() => {
       }
       phase = "waiting";
       battleView = null;
-      if (wasStarted || !n.applied || !preparationView) setPageView("room");
+      if (!wasStarted && preservePreparation) { if (pageView !== localPage) setPageView(localPage); }
+      else if (wasStarted || !n.applied || !preparationView) setPageView("room");
       RoomPanel.render(s);
       n.applied = true;
       update();
       return;
     }
+    preparationSession = null;
     if (!wasStarted || n.assemblyPending || pageView === "menu" || byId("finalAssemblyPanel").hidden === false) {
       n.assemblyPending = false;
       byId("finalAssemblyPanel").hidden = true;

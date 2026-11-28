@@ -2420,8 +2420,8 @@
             <h3 id="offlineModeSetupTitle">选择模式</h3>
             <label>离线房间模式<select id="offlineRoomMode">
               <optgroup label="合作模式">
-                <option value="mission">任务模式</option>
                 <option value="sweep">合约模式</option>
+                <option value="mission">任务模式</option>
               </optgroup>
               <optgroup label="战场模式">
                 <option value="battlefield" disabled>雇佣兵战争模式（暂时锁定）</option>
@@ -2598,8 +2598,8 @@
                     <h3 id="roomRulesTitle">房间规则</h3>
                     <div id="roomRulesActions"><label class="room-mode-selector"><span>对战模式</span><select id="roomBattleMode" aria-label="对战模式">
                         <optgroup label="合作模式">
-                <option value="mission">任务模式</option>
                 <option value="sweep">合约模式</option>
+                <option value="mission">任务模式</option>
               </optgroup>
               <optgroup label="战场模式">
                 <option value="battlefield" disabled>雇佣兵战争模式（暂时锁定）</option>
@@ -3373,7 +3373,7 @@
       </div>
       <div id="customPilotPanel" class="formation-detail-overlay" hidden>
         <div class="modal custom-pilot-dialog" role="dialog" aria-modal="true" aria-labelledby="customPilotTitle">
-          <header class="formation-pilot-heading"><div class="pilot-detail-title"><h2 id="customPilotTitle">驾驶员管理</h2><span id="pilotDetailCost" class="unit-summary-tag cost"></span></div><button id="finishCustomPilot" type="button">关闭</button></header>
+          <header class="formation-pilot-heading"><div class="pilot-detail-title"><h2 id="customPilotTitle">驾驶员管理</h2><span id="pilotDetailCost" class="unit-summary-tag cost"></span></div><div class="pilot-detail-actions"><button id="dismissCustomPilot" class="danger" type="button">解雇</button><button id="finishCustomPilot" type="button">关闭</button></div></header>
           <div class="pilot-detail-summary"><div class="pilot-detail-preview" id="pilotDetailPreview"></div><div class="pilot-detail-status" id="pilotDetailStatus">
           <div class="pilot-identity-row">
             <img id="customPilotAvatar" alt="驾驶员头像" />
@@ -5124,8 +5124,8 @@
           /></label>
           <label>新房间模式<select id="newRoomMode">
             <optgroup label="合作模式">
-                <option value="mission">任务模式</option>
                 <option value="sweep">合约模式</option>
+                <option value="mission">任务模式</option>
               </optgroup>
               <optgroup label="战场模式">
                 <option value="battlefield" disabled>雇佣兵战争模式（暂时锁定）</option>
@@ -5161,6 +5161,8 @@
       <label class="settings-toggle"
         ><span>动态单位阴影（地图光照）</span><input id="settingsUnitShadows" type="checkbox"
       /></label>
+      <label class="settings-toggle"><span>锁定手机屏幕旋转</span><input id="settingsRotationLock" type="checkbox" aria-describedby="settingsRotationStatus" /></label>
+      <p id="settingsRotationStatus" class="helper" role="status">锁定当前横屏或竖屏方向；浏览器版可能需要全屏。</p>
       <label class="settings-toggle"><span>隐藏驾驶员对话（包括提示音）</span><input id="settingsHidePilotDialogue" type="checkbox" /></label>
       <label for="settingsLanguage">语言</label>
       <select id="settingsLanguage" data-i18n-ignore aria-label="Language">

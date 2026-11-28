@@ -492,13 +492,12 @@
     "name": "地区巡逻",
     "contactId": "efsf",
     "era": "UC_0079_T1",
-    "kind": "command",
+    "kind": "mission",
     "required": 1,
-    "progressVersion": 3,
+    "progressVersion": 4,
     "requires": [
       "efsf-12"
     ],
-    "difficulty": 3,
     "description": "又有新的任务要你出动了，警官。\r\n听说过【马卡丹】吗？\r\n战前一等一的高级地方，那里就是今天的目的地。\r\n 我们想进去看看情况，但是那里的吉翁佬肯定不会高兴。\r\n把自己当成维持秩序的社区警察，闯进那群吉翁佬的聚会现场，取缔一切犯罪活动！",
     "objective": "以联邦方入场【马卡丹】，击坠吉翁MSx50",
     "ending": "我已经听说你完事的好消息了。干得漂亮，警官！",
@@ -510,7 +509,9 @@
     "eventName": "马卡丹 · 地区巡逻",
     "targetUnit": "MS_06F",
     "targetCount": 50,
-    "ground": true
+    "ground": true,
+    "missionId": "mission_efsf_13",
+    "rulesText": "在马卡丹击坠指定吉翁MS共50台；敌军分批增援。"
   },
   {
     "id": "efsf-14",
@@ -543,13 +544,12 @@
     "name": "特别联络",
     "contactId": "efsf",
     "era": "UC_0079_T1",
-    "kind": "command",
+    "kind": "mission",
     "required": 1,
-    "progressVersion": 3,
+    "progressVersion": 4,
     "requires": [
       "efsf-14"
     ],
-    "difficulty": 3,
     "description": "上面给我下达了一份重要指示，又是最高优先级的那一套陈词滥调。\r\n有个大人物想来这个战区一趟，但现在这里到处都是吉翁佬。\r\n把这些吉翁佬干掉。",
     "objective": "在【马卡丹的中心区】击坠吉翁MSx10",
     "ending": "联邦为你而骄傲！\n那些大人物好像想了解一下我们的麻烦解决者。\n我把你们的通信编码给他们了，好好表现。",
@@ -562,21 +562,22 @@
     "eventName": "马卡丹中心区 · 特别联络",
     "targetUnit": "MS_06F",
     "targetCount": 10,
-    "ground": true
+    "ground": true,
+    "missionId": "mission_efsf_15",
+    "rulesText": "清除马卡丹中心区的10台吉翁MS。"
   },
   {
     "id": "efsf-16",
     "number": 16,
     "name": "踩点行动",
     "contactId": "efsf",
-    "era": "UC_0079_T2",
-    "kind": "recon",
+    "era": "UC_0079_T1",
+    "kind": "mission",
     "required": 1,
-    "progressVersion": 3,
+    "progressVersion": 4,
     "requires": [
       "efsf-15"
     ],
-    "difficulty": 3,
     "description": "嘿，佣兵头子，我这里有个重要的任务给你。\r\n我也不说客套话，这个任务非常危险。\r\n不是所有人都愿意在固定炮台的眼皮子底下冒险。\r\n啊哈，这不就是战斗精神嘛！\r\n之前比这更困难的任务也没能难倒你们。\r\n总之，听好了。我需要了解吉翁佬们的防御情况。\r\n去他们的防线附近，侦察他们的固定炮台位置。",
     "objective": "侦察【战区59】中的吉翁防线，确认防线中固定炮台的位置（０／５）",
     "ending": "现在你已经是踩点之王了！干得漂亮！\n我们这边搞了点一线MS。\n你知道怎么来的，你也知道流程是什么。",
@@ -589,21 +590,23 @@
     "eventName": "战区59 · 踩点行动",
     "eventRequired": 5,
     "reconUnit": "Facility_Cannon",
-    "ground": true
+    "ground": true,
+    "missionId": "mission_efsf_16",
+    "rulesText": "接近并确认5座固定炮台，侦察前不得摧毁目标，之后撤离。"
   },
   {
     "id": "efsf-17",
     "number": 17,
     "name": "叛无所依",
     "contactId": "efsf",
-    "era": "UC_0079_T2",
+    "era": "UC_0079_T1",
     "kind": "command",
     "required": 1,
     "progressVersion": 3,
     "requires": [
       "efsf-16"
     ],
-    "difficulty": 3,
+    "difficulty": 5,
     "description": "别来无恙啊，佣兵头子。\r\n我给你找了个事儿做，去一趟前线。\r\n长话短说，有些混蛋开着我们的MS叛逃了，这可不是个好事儿。\r\n上面的想让这些二五仔们明白这么做的后果。",
     "objective": "击毁叛逃的联邦MS小队\r\n叛变吉姆突击型x3",
     "ending": "真不敢相信我们的战区会发生这种事情！\n噢...我的朋友，我们当然不能让上面知道发生了这种事情。\n那些家伙的MS以后是你们的了，你知道规矩的。",
@@ -623,14 +626,14 @@
     "number": 18,
     "name": "体验独一份",
     "contactId": "efsf",
-    "era": "UC_0079_T2",
+    "era": "UC_0079_T1",
     "kind": "kills",
     "required": 15,
     "progressVersion": 3,
     "requires": [
       "efsf-17"
     ],
-    "difficulty": 3,
+    "difficulty": 6,
     "description": "佣兵头子！上面又想出了个新任务，肯定对你的胃口。\r\n我们战区搞来了点有趣的MS……之前还没有人在前线见到过这种东西，你问我是从哪弄来的？我也不知道，哈哈！\r\n我和你实话实说吧，这MS肯定有搞头。但是如果没有扎实的战斗技巧，这些参数啊数据啊全都只是纸上谈兵而已。\r\n如果你对一款真正独特的MS感兴趣的话，我们倒是可以互相帮助一下。\r\n报酬的事情我会准备好的，没打算拖着你。\r\n＊获得沙漠型吉姆x3＊",
     "objective": "使用沙漠型吉姆磁轨炮套件击坠15架吉翁MS",
     "ending": "怎么说，还不错，对吧？",
@@ -660,7 +663,6 @@
     "requires": [
       "efsf-18"
     ],
-    "difficulty": 4,
     "description": "佣兵头子，你对天上有没有兴趣？\r\n你看现在大部分吉翁佬都已经滚回宇宙了，你们应该上去发挥你们的价值。\r\n我看这战争马上要结束了，去宇宙捞一笔大的吧！\r\n联邦马上要对阿巴瓦库那块大石头进行一次大进攻，我把你们的IFF上传到联邦的敌我识别系统里了。\r\n按击杀数记报酬，怎么样，你要来吗？\r\n＊接取后可进入特殊地图阿巴瓦库＊\r\n＊战斗烈度极高＊",
     "objective": "在阿巴瓦库以联邦方身份尽可能的击杀吉翁势力",
     "ending": "你们居然没死在那里？\n天呐，什么样的疯子肯自愿去那个地方？\n战争快结束了，我们老大打算处理一批MS，低价卖给你们了。\n我有预感，你们接下来还有的忙。",
@@ -677,14 +679,14 @@
     "number": 20,
     "name": "往昔时光",
     "contactId": "efsf",
-    "era": "UC_0079_T2",
+    "era": "UC_0079_T1",
     "kind": "kills",
     "required": 60,
     "progressVersion": 4,
     "requires": [
       "efsf-19"
     ],
-    "difficulty": 4,
+    "difficulty": 6,
     "description": "嘿，佣兵头子，还能打么？行啊。\r\n我这儿有个活，实际上是小事一桩，让你们来算是杀鸡用牛刀，就当是帮我个忙吧。\r\n有架测试机，在SIDE6，这家伙可真是......性能野兽！\r\n那里的大人物打算让你们开着这玩意去把那些在附近宙域的吉翁残党处理掉。\r\n原本的驾驶员？听说退伍了，那种小人物没人会关心的。\r\n＊获得高达NT-1x1＊",
     "objective": "在SIDE6附近宙域击坠吉翁残党x60",
     "ending": "哎，他们说情比金坚，但钱还是得给。\n我帮你争取到了不少好东西朋友，有个部队在SIDE6翻了车。\n他们以后的装备由我的老大管理了，你知道规矩的。",
@@ -700,21 +702,21 @@
     "eventName": "SIDE6附近宙域 · 往昔时光",
     "ground": false,
     "environment": "space",
-    "rulesText": "0079T2宇宙合约N4以上，累计击坠60台吉翁军MS，可分多局完成。"
+    "rulesText": "0079宇宙合约N6以上，累计击坠60台吉翁军MS，可分多局完成。"
   },
   {
     "id": "efsf-21",
     "number": 21,
     "name": "大客户",
     "contactId": "efsf",
-    "era": "UC_0079_T2",
+    "era": "UC_0079_T1",
     "kind": "recon",
     "required": 1,
     "progressVersion": 3,
     "requires": [
       "efsf-20"
     ],
-    "difficulty": 4,
+    "difficulty": 7,
     "description": "我们直接谈生意吧。\r\n我需要知道SIDE3附近的残党位置。\r\n有个大人物想干大事。",
     "objective": "在SIDE3宙域附近侦察吉翁残党（０／１２）",
     "ending": "干得不错！你现在就可以拿钱走人了。",
@@ -734,14 +736,14 @@
     "number": 22,
     "name": "货运延误",
     "contactId": "efsf",
-    "era": "UC_0079_T2",
+    "era": "UC_0079_T1",
     "kind": "escort",
     "required": 1,
     "progressVersion": 3,
     "requires": [
       "efsf-21"
     ],
-    "difficulty": 5,
+    "difficulty": 7,
     "description": "长话短说，我们的运输船被那群残党卡组了。\r\n里面的东西我们希望尽量不要让其他人发现。\r\n所以去吧，联邦的爱国者！",
     "objective": "护送指定哥伦布撤离",
     "ending": "你和那个舰长聊过了是吗？\n要我说，这帮送货的借口是一天比一天多了。",
@@ -760,14 +762,14 @@
     "number": 23,
     "name": "行政干涉",
     "contactId": "efsf",
-    "era": "UC_0079_T2",
+    "era": "UC_0079_T1",
     "kind": "command",
     "required": 1,
     "progressVersion": 3,
     "requires": [
       "efsf-22"
     ],
-    "difficulty": 5,
+    "difficulty": 8,
     "description": "嘿，佣兵头子。\r\n有几个我老大特别上心的MS配属权被隔壁部队抢走了。\r\n那群狗娘养的东西根本什么都不干，你敢相信他们老大是通过卖屁股的方式获得配属权的吗！？\r\n所以我们打算采取一些行动治理一下联邦管理，你们就是我们的宪兵队。\r\n那群家伙最近在暗礁宙域附近，把他们的舰队干掉。",
     "objective": "把目标联邦舰队歼灭",
     "ending": "那群混蛋被干掉了对吧？\n干得好，他们以后会好好活在我们手底下的厕纸里的。\n怎么做到的？我们有自己渠道......朋友。\n反正你知道规矩的。",
@@ -801,14 +803,14 @@
     "number": 24,
     "name": "武装郊游",
     "contactId": "efsf",
-    "era": "UC_0079_T2",
+    "era": "UC_0079_T1",
     "kind": "kills",
     "required": 50,
     "progressVersion": 3,
     "requires": [
       "efsf-23"
     ],
-    "difficulty": 5,
+    "difficulty": 8,
     "description": "佣兵头子，最近我们搞到了不少吉姆改的部署权。\r\n你知道规矩的，你帮我们做点事，我们把装备卖给你。",
     "objective": "歼灭吉翁残党x50",
     "ending": "噢，不错不错。\n看来我们这边又有不少人要升官了。\n这就是站对边的好处。",
@@ -826,14 +828,14 @@
     "number": 25,
     "name": "恐吓者",
     "contactId": "efsf",
-    "era": "UC_0079_T2",
+    "era": "UC_0079_T1",
     "kind": "kills",
     "required": 30,
     "progressVersion": 3,
     "requires": [
       "efsf-24"
     ],
-    "difficulty": 5,
+    "difficulty": 9,
     "description": "你好，最近残党的数量剧增，你注意到了吗？\r\n那些残党无差别围攻所有过路的人，甚至连条件都不谈就开枪乱打。\r\n我们得给这些混蛋们一点教训，让他们听到一里地开外有人就吓尿裤子逃之夭夭。\r\n我来给你提供一些标志性的MS。\r\n你能杀掉多少蠢货就杀多少，只有这样才能逼着他们明白自己惹错了人。\r\n我会通过我的渠道好好宣扬一番，让他们知道自己得罪了谁。\r\n＊获得GLine x8＊",
     "objective": "使用GLine击坠吉翁残党x30",
     "ending": "对了嘛，这就好多了。\n谢谢你，佣兵。兄弟们说到处都变得安静了，看来蠢货们已经明白你的意思了。\n搞到了一点新装备，想要就联系我。",
@@ -855,14 +857,14 @@
     "number": 26,
     "name": "特殊订单",
     "contactId": "efsf",
-    "era": "UC_0079_T2",
+    "era": "UC_0079_T1",
     "kind": "command",
     "required": 1,
     "progressVersion": 3,
     "requires": [
       "efsf-25"
     ],
-    "difficulty": 6,
+    "difficulty": 9,
     "description": "上次那些MS怎么样？性能还不错吧？\r\n老大给我们搞了不少这东西，现在我们可是精锐部队，哈哈哈哈。\r\n你也觉得那几台不够用吧？来听听这次的委托吧！\r\n有群吉翁佬趁着战争结束后的混乱抢了一块地当地头蛇。\r\n似乎战时还是什么王牌叫什么【苍白的卡辛】。\r\n我们本来不想管他们的，但他们最近一直不太老实...\r\n只需要警告一下他们就好了，别伤到了他们的头领。",
     "objective": "击坠两架【苍白的卡辛】小队的MS但不要伤到【苍白的卡辛】",
     "ending": "干得漂亮，这会教会他们谁才是老大。\n想买东西就联系我吧，忠实客户。",
@@ -888,14 +890,14 @@
     "number": 27,
     "name": "先进武器",
     "contactId": "efsf",
-    "era": "UC_0079_T2",
+    "era": "UC_0079_T1",
     "kind": "command",
     "required": 1,
     "progressVersion": 3,
     "requires": [
       "efsf-26"
     ],
-    "difficulty": 6,
+    "difficulty": 10,
     "description": "高达......结束了战争的MS，她很漂亮不是吗？\r\n你事到如今也见过不少高达了，但这一个是特殊的。\r\n好了，长话短说，之前那一伙吉翁佬似乎有一些不是很体面的想法。\r\n把那个【苍白的卡辛】干掉吧，连他的部队一起。\r\n这群混蛋盯上了我们的MS，给他们点好看的。",
     "objective": "击坠【苍白的卡辛】的部队",
     "ending": "干得好，这家伙早该死了。\n过来吧混蛋，让我们一起欣赏一下这个美丽的家伙。\n你要给门票钱。",
@@ -940,14 +942,14 @@
     "number": 28,
     "name": "没日没夜",
     "contactId": "efsf",
-    "era": "UC_0079_T2",
+    "era": "UC_0079_T1",
     "kind": "command",
     "required": 1,
     "progressVersion": 3,
     "requires": [
       "efsf-27"
     ],
-    "difficulty": 6,
+    "difficulty": 10,
     "description": "该死的，那帮吉翁佬就不能老实一点吗？\r\n我们给他们钱，他们象征性的出来兜兜风。\r\n佣兵头子，你来的正好，我们的情报部门终于搞清楚那群混蛋想干嘛了。\r\n那帮混蛋想抢我们的实验型MS，那群王八蛋。\r\n没有人能在我们的辖区搞事，没有人！\r\n宰了他们！",
     "objective": "击坠吉翁残党夺走的高达试作2号机",
     "ending": "那架MS都快烂的只剩骨架了，他们他妈是怎么把那玩意搞走的？\n这是报酬，你还有事要做。",
@@ -981,7 +983,6 @@
     "requires": [
       "efsf-28"
     ],
-    "difficulty": 6,
     "description": "听好了佣兵头子，这次的委托特别重要。\r\n我猜你已经听说了那群残党搞了什么事。\r\n也许你参与其中，但我们不在乎。\r\n这次他们想重演悉尼的灾难，这群该死的恐怖分子。\r\n他们这群混蛋想砸的地方是我们的辖区。\r\n阻止他们那群混蛋！！！",
     "objective": "与现场的联邦军合作阻止殖民卫星坠落\r\n＊特殊关卡＊",
     "ending": "干的好佣兵们，也许这次我应该叫你们大英雄？\n不论如何，你们阻止了这次灾难，但这次真的玩大了。\n需要有人承担这场灾难的责任，不不不，肯定不是你们。\n那支实验部队的舰长被我们推出去担责了。\n放心，我们也不至于那么冷血，他在里面老老实实呆个几年就能出来了。\n那支部队解散了，这些装备配属权回到我们手里了。\n让我们老老实实做生意吧。",

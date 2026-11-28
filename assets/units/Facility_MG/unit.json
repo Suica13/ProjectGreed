@@ -229,9 +229,10 @@
   "materials": {
     "textures": {
       "Turret_MG_1_A.png": "textures/Turret_MG_1_A.png",
-      "Turret_MG_1_B.png": "textures/Turret_MG_1_B.png"
+      "Turret_MG_1_B.png": "textures/Turret_MG_1_B.png",
+      "portrait.svg": "textures/portrait.svg"
     },
-    "icon": "Turret_MG_1_B.png"
+    "icon": "portrait.svg"
   },
   "layers": [
     {

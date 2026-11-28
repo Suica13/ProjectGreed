@@ -106,7 +106,7 @@ const UnitPreview = (() => {
       button.onclick=()=>{
         if(panel===weapons&&!weapons.childElementCount){
           const list=element("div","unit-weapon-list");
-          for(const weapon of model.weapons||[])list.append(WeaponInfo.card(weapon));
+          for(const weapon of model.weapons||[])list.append(WeaponInfo.card(weapon, null, {unit}));
           if(!list.childElementCount)list.append(element("p","muted","无"));
           weapons.append(list);
         }

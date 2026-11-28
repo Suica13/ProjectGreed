@@ -13,24 +13,24 @@ function fixture() {
   Object.assign(b, { x: 5, y: 4 });
   return { game, a, b };
 }
-test("entering the last adjacent cell costs one; continuing past it costs three", () => {
+test("passing enemies uses ordinary terrain costs", () => {
   const { game, a } = fixture(),
     route = G.reachable(game, a);
   assert.equal(route.get("3,4").cost, 1);
   assert.equal(route.get("4,4").cost, 2);
-  assert.equal(route.get("4,3").cost, 5);
-  assert.equal(route.get("5,3").cost, 6);
-  assert.equal(route.get("6,3").cost, 9);
+  assert.equal(route.get("4,3").cost, 3);
+  assert.equal(route.get("5,3").cost, 4);
+  assert.equal(route.get("6,3").cost, 5);
 });
-test("a unit already next to an enemy pays control cost when moving away", () => {
+test("leaving an enemy adjacent cell has no extra cost", () => {
   const { game, a } = fixture();
   a.x = 4;
-  assert.equal(G.reachable(game, a).get("4,3").cost, 3);
+  assert.equal(G.reachable(game, a).get("4,3").cost, 1);
 });
 test("dead enemies and allies do not penalize passing; multiple enemies do not stack", () => {
   const { game, a, b } = fixture();
   game.units.push({ ...b, id: "other", x: 3, y: 3 });
-  assert.equal(G.reachable(game, a).get("4,4").cost, 4);
+  assert.equal(G.reachable(game, a).get("4,4").cost, 2);
   game.units.pop();
   b.hp = 0;
   assert.equal(G.reachable(game, a).get("4,3").cost, 3);

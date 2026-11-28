@@ -230,9 +230,10 @@
     "textures": {
       "Turret_CN_1_A.png": "textures/Turret_CN_1_A.png",
       "Turret_CN_1_B.png": "textures/Turret_CN_1_B.png",
-      "Turret_CN_1_C.png": "textures/Turret_CN_1_C.png"
+      "Turret_CN_1_C.png": "textures/Turret_CN_1_C.png",
+      "portrait.svg": "textures/portrait.svg"
     },
-    "icon": "Turret_CN_1_C.png"
+    "icon": "portrait.svg"
   },
   "layers": [
     {
