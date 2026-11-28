@@ -14,8 +14,8 @@
     "rangeBonus": 1,
     "sniperRangeBonus": 2,
     "projectileSpeed": 0.1,
-    "sniperDamage": 1.5625,
-    "chargedSniperDamage": 1.5,
+    "sniperDamage": 1.953125,
+    "chargedSniperDamage": 2,
     "penetrationDamagePerCount": 0.15,
     "armorPiercingIgnore": 0.5,
     "shipCannonAccuracy": 0.85,
@@ -25,7 +25,8 @@
     "chargedSniperHit": 95,
     "formationRangeBonus": 1,
     "primaryMeleeDamage": 1.25,
-    "rangeEdgeAccuracyPenalty": 0.2
+    "rangeEdgeAccuracyPenalty": 0.2,
+    "shoulderBeamCannonDamage": 1.5
   },
   "units": {
     "specialCost": 1.1,
@@ -38,7 +39,8 @@
     "shipAccuracy": 0.9,
     "shipMoveBonus": 1,
     "finalMoveMultiplier": 0.75,
-    "partBreakChanceMultiplier": 0.75
+    "partBreakChanceMultiplier": 0.75,
+    "maCost": 1.5
   },
   "weaponClasses": {
     "rifle": {

@@ -146,7 +146,7 @@ const SkillControls = (() => {
     ];
   }
   const actionLabel = skill => I18n.text(skill.consumeAction ? "消耗本次行动" : "不消耗行动");
-  function sourceDescription(skill) {
+  function sourceDescription(skill, unit) {
     if (skill.owner === "pilot") {
       if (skill.passive)
         return I18n.text("被动：免除EXAM系统的耐久自损；EN消耗、持续时间和头部损毁解除规则不变。");
@@ -169,14 +169,16 @@ const SkillControls = (() => {
       );
     }
     if (skill.type === "irradiation") {
+      const model = unit ? Rules.modelOf(unit) : null;
+      const damageScale = (1 + (model?.attackBonuses?.shooting || 0) / 100) * PilotSystem.weaponDamageModifier(model?.pilotModifiers, {category:"irradiation", type:"beam"}) * (1 + (model?.talentEffects?.shooting || 0)) * (1 + (model?.talentEffects?.damage || 0));
       if (skill.radial) {
-        const damage = Object.values(skill.damageComponents).reduce((sum, value) => sum + value, 0);
+        const damage = Rules.roundDamage(Object.values(skill.damageComponents).reduce((sum, value) => sum + value, 0) * damageScale);
         return I18n.language === "en" ? `All ports fire together. Radius ${skill.range}; damage ${damage}; accuracy ${skill.baseHit}%. Includes allies. Once per turn.` :
           I18n.language === "ja" ? `全砲門一斉射撃。周囲${skill.range}マス、ダメージ${damage}、命中${skill.baseHit}%。味方を含む。毎ターン1回。` :
           `所有炮门同时射击：周身${skill.range}格，伤害${damage}，命中${skill.baseHit}%，包含友军，每回合一次。`;
       }
-      const damage = Object.values(skill.damageComponents)
-        .reduce((sum, value) => sum + value, 0)
+      const damage = Rules.roundDamage(Object.values(skill.damageComponents)
+        .reduce((sum, value) => sum + value, 0) * damageScale)
         .toLocaleString(undefined, { maximumFractionDigits: 2 });
       {
         const en = Number.isFinite(skill.enCost) ? skill.enCost + " EN" : skill.enCostPercent + "%";
@@ -241,9 +243,9 @@ const SkillControls = (() => {
       actionLabel(skill)
     );
   }
-  function description(skill) {
+  function description(skill, unit) {
     const note = skill.type === "emp" ? " " + I18n.text("AP机制未启用，AP减益暂不影响行动。") : "";
-    return I18n.text(sourceDescription(skill) + note)
+    return I18n.text(sourceDescription(skill, unit) + note)
       .replace(/(?:AP\s*\d+(?:\.\d+)?|\d+(?:\.\d+)?\s*AP)(?:\s*[、,，·与和])?/g, "")
       .replace(/(消耗|消費)\s*[、,，·]/g, "$1 ");
   }
@@ -328,7 +330,7 @@ const SkillControls = (() => {
               ? I18n.localized(skill)
               : skill.name,
         ),
-        element("small", "helper", description(skill)),
+        element("small", "helper", description(skill, unit)),
       );
       if (WeaponClasses.isWeaponSkill(skill)) button.append(WeaponInfo.classBadge(skill));
       const left = Math.max(

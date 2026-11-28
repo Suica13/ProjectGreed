@@ -282,7 +282,7 @@ def configure(prefab, native):
         if "ChestMS_Line" in key:
             weapon["name"] = "胸部有线导弹"
             weapon["localization"] = {"zh": {"name": weapon["name"]}, "en": {"name": "Chest Wire-Guided Missiles"}, "ja": {"name": "胸部有線ミサイル"}}
-        kind = category(key, weapon)
+        kind = "mortar" if prefab["id"] == "RX_78_6" and key.startswith("Common_DoubleCannon_NoStop") else category(key, weapon)
         weapon["category"] = kind
         if kind in RANGES:
             weapon["min"], weapon["max"] = RANGES[kind]

@@ -23,6 +23,7 @@ const fields = {
     shipCannonAccuracy: ["舰炮命中倍率", 0.01, 10, false, "战舰的加农炮、光束炮和迫击炮额外乘此系数；不包含机枪、对空炮、导弹和航空炸弹。"],
     armorPiercingIgnore: ["穿甲无视抗性比例", 0, 1, false, "0.5表示只计算目标50%的对应抗性；固定减伤、盾牌和最终减伤仍正常计算。可由单武器特例覆盖。"],
     penetrationDamagePerCount: ["每次原生贯穿附伤", 0, 10, false, "有衰减且次数大于1的远程弹丸：基础光束/实弹伤害×原次数×本值，追加对应穿甲分量。"],
+    shoulderBeamCannonDamage: ["肩部光束炮伤害倍率",0.01,10,false,"肩部固定光束炮各发及伤害分量的倍率；不包括腹部炮与手持武器。"],
     sniperDamage: ["普通狙击伤害倍率", 0.01, 10, false, "普通狙击倍率；蓄力以普通齐射为基准同步变化。"],
     chargedSniperDamage: ["蓄力狙击相对齐射倍率", 0.01, 10, false, "以对应普通武器完整一轮最终齐射伤害为基准。"],
     chargedSniperHit: ["蓄力狙击基础命中", 0, 100, true, "统一基础命中率，保留原生命中×2。"],
@@ -56,6 +57,7 @@ const fields = {
     finalMoveMultiplier: ["单位最终基础移动倍率",0.01,10,false,"在移植政策和战舰额外移动后应用，人工差值随后叠加；固定部署单位保持0。"],
     shipMoveBonus: ["战舰额外移动力",0,100,true,"米迪亚和胖叔叔系列除外；通用倍率后、人工差值前应用。"],
     shipAccuracy: ["战舰原MOD命中系数倍率", 0.01, 10, false, "以sourceStats记录的原MOD命中系数为基准，保留既有阵营加成；再应用单位命中倍率和人工差值。"],
+    maCost: ["MA COST倍率",0.01,10,false,"MA机体及武器套件COST倍率，按25取整；人工差值随后应用。"],
     specialCost: ["特装机基础COST倍率",1,5,false,"原MOD工厂单次生产一台的非战舰单位，基础COST乘倍率并按25取整；套件差价及人工差值随后应用。"],
     hp: ["单位耐久倍率", 0.01, 10, false, "以现有单位基础值换算，向上取整。"],
     maHP: ["MA耐久倍率", 0.01, 10, false, "仅MA标签单位，在通用耐久倍率后叠乘；人工差值随后应用。"],
@@ -85,6 +87,8 @@ function validate(value) {
   if (value?.units) value.units.shipMoveBonus ??= 1;
   if (value?.units) value.units.shipAccuracy ??= 0.9;
   if (value?.units) value.units.maHP ??= 0.75;
+  if (value?.units) value.units.maCost ??= 1.5;
+  if (value?.weapons) value.weapons.shoulderBeamCannonDamage ??= 1.5;
   if (value?.units) value.units.specialCost ??= 1.1;
   if (value?.weapons) value.weapons.chargedSniperHit ??= 95;
   if (value?.weapons) value.weapons.nonCounterTargetAccuracy ??= 1.1;
@@ -155,6 +159,7 @@ function scaleDamage(weapon, ratio) {
 // Match actual source families, not handheld weapons attached to an arm or ArmBeamSaber.
 function globals(prefab, rules) {
   const w = rules.weapons;
+  const maCost = prefab.unitTags?.includes("MA") ? rules.units.maCost ?? 1.5 : 1;
   for (const kit of prefab.weaponKits || []) {
     kit.conversionBaseCost ??= kit.cost;
     const primary = prefab.weapons?.[kit.weapons?.[0]];
@@ -162,6 +167,7 @@ function globals(prefab, rules) {
       !/BeamRifle/i.test(primary?.sourceName || "");
     kit.cost = Math.max(0, kit.conversionBaseCost + (w.kitCostOffset || 0) +
       (beamGun ? w.beamGunKitCostOffset || 0 : 0));
+    if (maCost !== 1) kit.cost = Math.round(kit.cost * maCost / 25) * 25;
   }
   const primaryMelee=new Set((prefab.weaponKits || []).map(kit=>(kit.weapons || []).map(id=>prefab.weapons?.[id])
     .find(weapon=>weapon?.type === "melee" && Classes.classify(weapon) !== "ram")).filter(Boolean));
@@ -224,7 +230,7 @@ function globals(prefab, rules) {
     const accuracy = w.accuracy * group.accuracy * (shipCannon ? (w.shipCannonAccuracy ?? 0.85) : 1),
       en = w.en * group.en,
       range = group.range;
-    const sniperScale = weapon.special?.type === "snipe" ? w.chargedSniperDamage : Classes.classify(weapon) === "sniper" ? w.sniperDamage : 1;
+    const sniperScale = weapon.special?.type === "snipe" ? w.chargedSniperDamage : (Classes.classify(weapon) === "sniper" || weapon.category === "sniper") ? w.sniperDamage : 1;
     // Remove the previous derived bonus before scaling again (editor previews/reloads).
     for (const payload of [weapon, ...(weapon.attack?.steps || [])]) {
       if (payload.penetrationBonus && payload.damageComponents) {
@@ -234,6 +240,7 @@ function globals(prefab, rules) {
       }
     }
     const damageScale = Math.max(0.01, w.damage + (shooting ? w.shootingDamageOffset || 0 : 0)) * sniperScale *
+      (Classes.shoulderBeamCannon(weapon, prefab) ? w.shoulderBeamCannonDamage ?? 1.5 : 1) *
       (primaryMelee.has(weapon) ? w.primaryMeleeDamage ?? 1.25 : 1);
     const hitOffset = (shooting ? w.shootingHitOffset || 0 : 0) +
       (Classes.handheldCannon(weapon) ? w.handheldCannonHitOffset || 0 : 0);
@@ -342,10 +349,15 @@ function globals(prefab, rules) {
       skill.conversionMultipliers = { damageScale, ...(Number.isFinite(baseHit) ? {baseHit} : {}),
         ...(Number.isFinite(range) ? {range,formationRangeBonus} : {}) };
     }
+  if (prefab.conversionMACostBase != null) prefab.stats.cost = prefab.conversionMACostBase;
   if (prefab.sourceStats?.nativeProductionQuantity === 1 && !prefab.stats.ship) {
     const base = prefab.conversionSpecialCostBase ?? prefab.stats.cost;
     prefab.stats.cost = base === 0 ? 0 : Math.max(25, Math.round(base * rules.units.specialCost / 25) * 25);
     prefab.conversionSpecialCostBase = base;
+  }
+  if (prefab.unitTags?.includes("MA")) {
+    prefab.conversionMACostBase = prefab.stats.cost;
+    prefab.stats.cost = Math.round(prefab.stats.cost * maCost / 25) * 25;
   }
   const fields = {
     hp: "hp",

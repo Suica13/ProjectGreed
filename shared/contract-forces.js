@@ -220,7 +220,7 @@ const ContractForces = (() => {
   }
   const difficultyScale = difficulty => [1, 1, 1.1, 1.15, 1.15][Math.min(5,Number(difficulty)) - 1] || 1;
   // Relative pressure within an era, separate from the cost of newer player units.
-  const eraPressure = (era, difficulty = 1) => tenLevels(era) && Number(difficulty) === 10 ? 1.1 : 1;
+  const eraPressure = (era, difficulty = 1) => tenLevels(era) ? 1 + Math.max(0, Math.min(5, Number(difficulty) - 5)) / 10 : 1;
   function budget(room, amount, reinforcement = false) {
     const players = room.game.contract.players;
     // Explicit per-event budgets supersede the old generic head-count tuning.

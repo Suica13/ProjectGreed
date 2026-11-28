@@ -674,8 +674,8 @@ const ContractMode = (() => {
     const state = room.game.contract;
     const scale = (1 + .25 * Math.max(0, state.players - 1)) * (state.noAllies ? 1.25 : 1);
     const d = config(room.settings.sweepDifficulty, room.settings.sweepEra);
-    const baseline = Math.round((d.relativePressure === 1.1 ? 30 : d.initialEnemyCount) * scale / 3) * 3;
-    return d.relativePressure === 1.1 ? Math.round(baseline * 1.1) : baseline;
+    const baseline = Math.round(d.initialEnemyCount / d.relativePressure * scale / 3) * 3;
+    return Math.round(baseline * d.relativePressure);
   }
   function reinforcementSlots(room, objectiveId = null) {
     // Event garrisons, scripted targets and event reinforcements have separate budgets.

@@ -40,6 +40,17 @@ const WeaponClasses = (() => {
     grenade_launcher: 75, sniper: 100, mortar: 65, remote: 95,
     flamethrower: 85, bomb: 75, nuke: 65, ram: 90,
   };
+  // Fixed shoulder/backpack cannon families; abdomen, waist and handheld cannons are excluded.
+  const shoulderBeamSources = new Set([
+    "EF_RX_77_4_BeamCannon", "EF_RGC_83_DoubleBeamCannon", "EF_FA_78_2_BeamCannon",
+    "ZN_MS_14C_BeamCannon", "EF_RX_78_6_WIP_DoubleBeamCannon", "EF_RX_77D_4_BeamCannon",
+    "AEUG_MSA_003_Cannon_DoubleBeamCannon", "AEUG_MSF_007_DoubleBeamCannon",
+    "AEUG_MSA_004K_BeamCannon", "AEUG_RMS_099B_Red_DoubleBeamCannon",
+    "AEUG_FA_00100S_DoubleBeamCannon", "AEUG_MSA_005K_DoubleBeamCannon",
+    "AEUG_MSA_0011_BeamCannon", "TITANS_RX_121_3C_DoubleBeamCannon", "NZN_AMX_101K_BeamCannon",
+  ]);
+  const shoulderBeamCannon = (weapon, prefab) => shoulderBeamSources.has((weapon.sourceName || weapon.id || "").replace(/_L$/, "")) ||
+    (prefab?.id === "FA_78_1_TB_WeaponModeB" && weapon.sourceName === "Common_Cannon");
   const shipCannon = (weapon, ship) => !!ship &&
     ["cannon", "beam_cannon", "mortar"].includes(classify(weapon)) &&
     weapon.rangeRole !== "ship_anti_air";
@@ -222,6 +233,7 @@ const WeaponClasses = (() => {
     valid,
     baseHits,
     shipCannon,
+    shoulderBeamCannon,
     handheldCannon,
     classify,
     tags,

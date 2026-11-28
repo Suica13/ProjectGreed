@@ -4072,6 +4072,7 @@ const Tactics = (() => {
       .sort((a, b) => dist(unit, a) - dist(unit, b) || a.id.localeCompare(b.id));
     const weapon = {
       id: skill.sourceWeapon,
+      category: "irradiation",
       type: skill.damageType || "beam",
       min: 0,
       max: skill.range,

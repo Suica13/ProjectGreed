@@ -165,7 +165,7 @@ const WeaponInfo = (() => {
       ? Rules.availableStrikes(unit, weapon, target)
       : weapon.attack?.strikes || [];
     const pilotModel = unit ? Rules.modelOf(unit) : null;
-    const pilotDamage = PilotSystem.weaponDamageModifier(pilotModel?.pilotModifiers, weapon) * (1 + (pilotModel?.talentEffects?.[weapon.type === "melee" ? "melee" : "shooting"] || 0)) * (1 + (pilotModel?.talentEffects?.damage || 0));
+    const pilotDamage = (1 + (pilotModel?.attackBonuses?.[weapon.type === "melee" ? "melee" : "shooting"] || 0) / 100) * PilotSystem.weaponDamageModifier(pilotModel?.pilotModifiers, weapon) * (1 + (pilotModel?.talentEffects?.[weapon.type === "melee" ? "melee" : "shooting"] || 0)) * (1 + (pilotModel?.talentEffects?.damage || 0));
     const pilotAccuracy = pilotModel?.pilotModifiers?.accuracy ?? 1;
     const groups = new Map(),
       attributes = new Set();

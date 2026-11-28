@@ -18,7 +18,8 @@ test("handheld cannon bonus excludes mounted cannons; kit discount never stacks 
     for (const kit of prefab.weaponKits) {
       const primary = prefab.weapons[kit.weapons[0]];
       const lightBeam = /Beam(?:Spray)?Gun/i.test(primary?.sourceName || kit.weapons[0] || "") && !/BeamRifle/i.test(primary?.sourceName || "");
-      assert.equal(kit.cost, Math.max(0, kit.conversionBaseCost - 25 - (lightBeam ? 25 : 0)));
+      const baseCost = Math.max(0, kit.conversionBaseCost - 25 - (lightBeam ? 25 : 0));
+      assert.equal(kit.cost, prefab.unitTags?.includes("MA") ? Math.round(baseCost * config.units.maCost / 25) * 25 : baseCost);
     }
   }
   for (const sourceName of ["EF_180mmCannon", "EF_180mmCannon_PR", "EF_170mmCannon", "ZN_MagellaCannon"]) assert(sources.has(sourceName));

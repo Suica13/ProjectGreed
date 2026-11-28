@@ -14,9 +14,9 @@ function battle(era,n,environment,faction){
  assert.deepEqual(errors,[]);assert.equal(room.phase,'deployment');return {room,close:()=>engine.close()};
  }catch(e){engine.close();throw e;}
 }
-test('0087 and CE have ten levels, fixed fleet limits and population plateau',()=>{
+test('0087 and CE have ten levels, fixed fleet limits and population growth',()=>{
  for(const era of ['UC_0087_T1','UC_0087_T2','CE_0071_T1']){
-  assert.deepEqual(C.difficulties.map(d=>C.config(d.id,era).initialEnemyCount),[9,12,18,24,30,30,30,30,30,33]);
+  assert.deepEqual(C.difficulties.map(d=>C.config(d.id,era).initialEnemyCount),[9,12,18,24,30,33,36,39,42,45]);
   for(let n=1;n<=10;n++){assert.equal(C.config(n,era).fleetLimit,5);assert.equal(C.config(n,era).events,Math.min(n,5));}
  }
  for(let n=1;n<=10;n++)assert.deepEqual(C.config(n,'UC_0087_T1'),C.config(n,'UC_0087_T2'));

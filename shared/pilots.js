@@ -815,14 +815,17 @@ const PilotSystem = (() => {
   }
   function weaponDamageModifier(modifiers, weapon) {
     const base = modifiers?.[weapon.type === "melee" ? "melee" : "shooting"] ?? 1;
-    return ["mortar", "snipe"].includes(weapon.special?.type)
-      ? Math.max(0.5, 1 + (base - 1) * 2) : base;
+    const classes = typeof WeaponClasses !== "undefined" ? WeaponClasses : require("./weapon-classes.js");
+    return (["mortar", "sniper", "irradiation"].includes(classes.classify(weapon)) ||
+      ["mortar", "sniper", "irradiation"].includes(weapon.category) || ["mortar", "snipe"].includes(weapon.special?.type))
+      ? (modifiers?.shootingAttribute ?? Math.max(0, 1 + (base - 1) * 4)) : base;
   }
   function modifiers(unit, model) {
     const stats = of(unit, model).stats;
     const awakening = stats.awakening >= 100 ? 1.05 : 1;
     return {
       shooting: factor(stats.shooting, 0.25),
+      shootingAttribute: stats.shooting / 100,
       melee: factor(stats.melee, 0.25),
       defense: Math.max(0.05, 1 - (stats.defense - 100) * 0.001875),
       move: factor(stats.speed, 0.5),

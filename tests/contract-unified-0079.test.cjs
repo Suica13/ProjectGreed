@@ -14,9 +14,9 @@ function battle(n,environment,faction='ZEON',seed=1936384585){
  assert.deepEqual(errors,[]);assert.equal(room.phase,'deployment');return {room,close:()=>engine.close()};
  }catch(e){engine.close();throw e;}
 }
-test('unified ladder has a fixed fleet cap, population plateau and finite rewards',()=>{
+test('unified ladder has a fixed fleet cap, population growth and finite rewards',()=>{
  assert.equal(C.difficulties.length,10);
- assert.deepEqual(C.difficulties.map(d=>C.config(d.id).initialEnemyCount),[9,12,18,24,30,30,30,30,30,33]);
+ assert.deepEqual(C.difficulties.map(d=>C.config(d.id).initialEnemyCount),[9,12,18,24,30,33,36,39,42,45]);
  for(let n=1;n<=10;n++){
   const d=C.config(n);assert.equal(d.fleetLimit,5);assert.equal(d.events,Math.min(n,5));
   const settings={mode:'sweep',sweepEra:'UC_0079_T1',sweepDifficulty:n};
@@ -62,9 +62,9 @@ test('contact gates use unified 0079 and retain accepted progress',()=>{
   assert.equal(T.normalize([saved])[0].progress,saved.progress);
  }
 });
-test('N10 intervention adds ten percent after the intervention population multiplier',()=>{
+test('N10 intervention adds fifty percent after the intervention population multiplier',()=>{
  const counts=[];for(const n of [5,10]){const f=battle(n,'ground','NONE');try{counts.push(f.room.game.units.filter(u=>u.team>0&&!u.facility&&!G.modelOf(u).facility).length);}finally{f.close();}}
- assert.equal(counts[1],Math.round(counts[0]*1.1));
+ assert.equal(counts[1],Math.round(counts[0]*1.5));
 });
 test('ordinary patrols obey the plateau live cap and resume after losses',()=>{
  for(const n of [5,6,9,10]){const f=battle(n,'ground');try{

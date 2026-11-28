@@ -781,6 +781,18 @@
     "Common_DoubleCannon_NoStop": {
       "ref": "Common_DoubleCannon_NoStop__lv2",
       "overrides": {
+        "min": 5,
+        "max": 8,
+        "slot": "skill",
+        "projectile": {
+          "texture": "../../projectiles/Cannon_1.png",
+          "scale": 0.75,
+          "speed": 45,
+          "forwardOffset": -5,
+          "rotation": 0,
+          "motion": "mortar"
+        },
+        "category": "mortar",
         "requiredParts": [
           "backpack"
         ],
@@ -816,12 +828,31 @@
               }
             }
           ]
-        }
+        },
+        "noCounter": true,
+        "maxUsesPerTurn": 1,
+        "special": {
+          "type": "blast",
+          "radius": 0
+        },
+        "description": "迫击炮技能：攻击目标单元格，每回合一次，使用后本回合不能普通攻击。"
       }
     },
     "Common_DoubleCannon_NoStop_L": {
       "ref": "Common_DoubleCannon_NoStop_L__lv2",
       "overrides": {
+        "min": 5,
+        "max": 8,
+        "slot": "skill",
+        "projectile": {
+          "texture": "../../projectiles/Cannon_1.png",
+          "scale": 0.75,
+          "speed": 45,
+          "forwardOffset": -5,
+          "rotation": 0,
+          "motion": "mortar"
+        },
+        "category": "mortar",
         "requiredParts": [
           "backpack"
         ],
@@ -864,7 +895,14 @@
             "paired_weapon"
           ],
           "mergedInto": "Common_DoubleCannon_NoStop"
-        }
+        },
+        "noCounter": true,
+        "maxUsesPerTurn": 1,
+        "special": {
+          "type": "blast",
+          "radius": 0
+        },
+        "description": "迫击炮技能：攻击目标单元格，每回合一次，使用后本回合不能普通攻击。"
       }
     },
     "Common_ArmGL": {

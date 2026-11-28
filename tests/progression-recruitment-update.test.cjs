@@ -19,15 +19,15 @@ test('dismissal clears stock assignments and roster in one rollback-safe transac
  assert.equal(ok.E.snapshot().storage.units[0].pilotId,null);assert.equal(JSON.parse(ok.data.get(pilotKey)).pilots.length,0);
  const bad=load(saved),before=bad.E.snapshot();bad.data.set(pilotKey,JSON.stringify({pilots:[pilot],awards:[]}));bad.fail();assert.throws(()=>bad.E.dismissPilot(pilot.id,[[pilotKey,'{}']]));assert.deepEqual(bad.E.snapshot(),before);assert.equal(JSON.parse(bad.data.get(pilotKey)).pilots.length,1);
 });
-test('actual damage uses double shooting gain for mortar and snipe, normal and melee remain unchanged',()=>{
+test('actual damage uses linear shooting attributes for mortar, ordinary sniper, irradiation and snipe, normal and melee remain unchanged',()=>{
  const e={unitId:'RGM_79',kitId:'machine_gun'},g=G.create(false,1,[[e],[e]],false,{fogMode:'disabled'}),[a,b]=g.units;
  g.tiles.forEach(r=>r.fill('plain'));Object.assign(a,{x:5,y:5});Object.assign(b,{x:6,y:5,pilot:{stats:P.baseStats()}});
  const base=G.modelOf(a).weapons[0];
- for(const kind of ['normal','mortar','snipe','melee']){
-  const w={...base,id:'gain-test',type:kind==='melee'?'melee':'shell',slot:kind==='normal'?'main':'skill',special:['mortar','snipe'].includes(kind)?{type:kind}:undefined,damageComponents:{shell:10000},damagePerShot:10000,attack:{...base.attack,strikes:[{damageComponents:{shell:10000}}]}};
+ for(const kind of ['normal','mortar','sniper','irradiation','snipe','melee']){
+  const w={...base,id:'gain-test',type:kind==='melee'?'melee':'shell',category:kind==='sniper'?'sniper':kind==='irradiation'?'irradiation':base.category,slot:kind==='normal'?'main':'skill',special:['mortar','snipe'].includes(kind)?{type:kind}:undefined,damageComponents:{shell:10000},damagePerShot:10000,attack:{...base.attack,strikes:[{damageComponents:{shell:10000}}]}};
   a.pilot={stats:P.baseStats()};const first=G.estimate(g,a,b,w).damage;
   a.pilot={stats:{...P.baseStats(),shooting:200}};const second=G.estimate(g,a,b,w).damage;
-  assert(first>0,kind);const ratio=kind==='melee'?1:kind==='normal'?1.25:1.5;assert(Math.abs(second/first-ratio)<.01,kind+': '+second/first);
+  assert(first>0,kind);const ratio=kind==='melee'?1:kind==='normal'?1.25:2;assert(Math.abs(second/first-ratio)<.01,kind+': '+second/first);
  }
 });
 test('T2 MA and Zeong weights are rare in ground and space without changing tier shares or population cost',()=>{
