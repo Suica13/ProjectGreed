@@ -320,7 +320,6 @@ const Tactics = (() => {
     return value;
   }
   function validateBattleMode(value = "regular") {
-    if (value === "mission") throw Error("任务模式暂时锁定");
     if (value === "battlefield") throw Error("雇佣兵战争模式暂时锁定");
     if (!["regular", "quick", "battlefield", "sweep", "mission"].includes(value))
       throw Error("对战模式无效");
@@ -335,7 +334,6 @@ const Tactics = (() => {
   }
   const openEras = ["UC_0079_T1", "UC_0079_T2"];
   function validateOpenContent(settings) {
-    if (settings.mode === "mission") throw Error("任务模式暂时锁定");
     if (settings.mode === "battlefield") throw Error("雇佣兵战争模式暂时锁定");
     if (settings.mode === "mission") return;
     if (settings.mode === "battlefield" && settings.costLimit > 7500)
@@ -1220,20 +1218,11 @@ const Tactics = (() => {
     }
     return entries;
   }
-  // 武器应用部位损坏与浮游炮觉醒成长；玩家强度仅影响本体耐久和 EN。
+  // 武器应用部位损坏；觉醒只提供命中与反应加成，武器门槛仍独立校验。
   function weaponStats(weapon, unit) {
     const attackMultiplier = parts.penalties(unit).attackMultiplier,
       previousAttack = weapon.partDamageMultiplier ?? 1;
-    const awakening =
-      weapon.remote && weapon.remote.kind !== "incom"
-        ? pilots.of(unit, models[unit.model]).stats.awakening
-        : 100;
-    const remoteMultiplier =
-      weapon.remote && weapon.remote.kind !== "incom"
-        ? awakening < 100
-          ? Math.max(0.75, awakening / 100)
-          : 1 + (awakening - 100) * weapon.remote.awakeningScale
-        : 1;
+    const remoteMultiplier = 1;
     const previousRemote = weapon.remoteDamageMultiplier ?? 1;
     if (previousRemote === 0 && remoteMultiplier > 0) {
       const original = models[unit.model]?.weapons.find((candidate) => candidate.id === weapon.id);
@@ -3526,7 +3515,8 @@ const Tactics = (() => {
             ? (ground.meleeCover ?? 0)
             : ground.cover,
       reactionPenalty = !canEvade(b) ? 0 :
-        ((defender.mobility / (defender.pilotModifiers?.reaction ?? 1)) *
+        ((defender.mobility / (defender.pilotModifiers?.reaction ?? 1) +
+          (isCounter ? defender.attackReaction || 0 : response === "counter" ? defender.counterReaction || 0 : 0)) *
           (response === "evade" ? 1.25 : 1) -
           100) *
         0.1875,
@@ -3585,16 +3575,16 @@ const Tactics = (() => {
               ? 0.75
               : 1) *
             sensorFactor *
-            (w.type !== "melee" && smokeAt(g, b) ? 0.9 : 1) +
-            (attacker.pilotModifiers?.awakeningHit ?? 0),
+            (w.type !== "melee" && smokeAt(g, b) ? 0.9 : 1),
         ) -
-          (canEvade(b) ? (defender.pilotModifiers?.awakeningEvasion ?? 0) + squadEvasion(g, b) : 0),
+          (canEvade(b) ? squadEvasion(g, b) : 0),
       ),
       hit = Math.max(0, Math.min(100, resolvedHit * (w.counterExposureMultiplier ?? 1) -
         (canEvade(b) && combatRoleAdvantage(defender, attacker) ? 5 : 0) +
         (w.type !== "melee" ? squadBonuses(g,a).accuracy : 0) - (canEvade(b) ? squadBonuses(g,b).evasion : 0))),
       defenseMultiplier = response === "defend" ? 1.25 : 1,
       finalDamageMultiplier =
+        (defender.incomingDamageMultiplier ?? 1) *
         (1 + (attackTalent[w.type === 'melee' ? 'melee' : 'shooting'] || 0)) *
         (1 + (attackTalent.damage || 0)) / (1 + (defenseTalent.defense || 0)) *
         (1 - (defenseTalent.finalReduction || 0)) *
@@ -4375,6 +4365,15 @@ const Tactics = (() => {
         if(broken){delete u.brokenParts[broken];const module=m.modules?.find(module=>module.id===broken);
           if(module)u.moduleHp={...u.moduleHp,[broken]:module.hp};}
         if(parts.shieldUsable(u,m.shield || {}))u.shield=Math.min(m.shield?.hp || 0,(u.shield || 0)+Math.round((m.shield?.hp || 0)*.25));
+      }
+      if (modelOf(u).shipRepair && !battlefieldMode.unrepairable(g, u)) {
+        const damaged = (modelOf(u).modules || []).filter(m => (u.moduleHp?.[m.id] ?? m.hp) < m.hp);
+        for (let i = 0; i < 2 && damaged.length; i++) {
+          g.partSeed = (Math.imul(1664525, g.partSeed ?? g.seed ?? 0) + 1013904223) >>> 0;
+          const [part] = damaged.splice(Math.floor(g.partSeed / 4294967296 * damaged.length), 1);
+          u.moduleHp = { ...u.moduleHp, [part.id]: Math.min(part.hp, (u.moduleHp?.[part.id] || 0) + Math.round(part.hp * .1)) };
+          if (u.moduleHp[part.id] > 0 && u.brokenParts) delete u.brokenParts[part.id];
+        }
       }
       const maintenance = modelOf(u).autoRepair;
       if (

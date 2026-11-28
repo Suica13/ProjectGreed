@@ -16,7 +16,7 @@ test('pilot help describes the revised gains and weapon cards show effective mob
   return {help,rounds:Rules.attackRounds(game,u,w),card:card.textContent};
  });
  await expect(page.locator('#pilotAttributeHelp')).toBeVisible();
- expect(result.help).toContain('131.25%');expect(result.help).toContain('162.5%');
- expect(result.help).toContain('10个百分点');expect(result.help).not.toContain('AP倍率');
- expect(result.rounds).toBe(4);expect(result.card).toMatch(/攻击轮数\s*4/);
+ expect(result.help).toContain('118.75%');expect(result.help).toContain('112.5%');
+ expect(result.help).toContain('各提高5%');expect(result.help).not.toContain('AP倍率');
+ expect(result.rounds).toBe(3);expect(result.card).toMatch(/攻击轮数\s*3/);
 });

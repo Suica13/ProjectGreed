@@ -130,9 +130,9 @@ const extra = {
   },
 };
 const variants = Contacts.tasks
-  .filter((t) => t.eventName)
+  .filter((t) => t.eventName && t.kind !== "mission")
   .map((t) => ({
-    ...Model.clone(base.find((e) => e.type === (t.kind === "enemybase" ? "factory" : t.kind))),
+    ...Model.clone(base.find((e) => e.type === (t.kind === "enemybase" ? "factory" : t.kind)) || base.find(e => e.type === "command")),
     type: t.kind,
     id: t.id,
     name: t.eventName,
@@ -143,5 +143,6 @@ const variants = Contacts.tasks
     rewards: "不增加普通合约事件收益；委托完成条件和交付奖励由联络委托单独判定，不能重复计算。",
     source: `${["omni","zaft"].includes(t.contactId) ? "shared/contact-ce.js" : t.contactId === "zeon" ? "shared/contact-zeon.js" : t.contactId === "anaheim" ? "shared/contact-anaheim.js" : "shared/contact-tasks.js"}：${t.id}；shared/contract-mode.js：initialize / recordDefeat / commissionProgress。`,
     ...extra[t.id],
+    ...(t.contactId === "efsf" ? {completion: t.objectiveText, notes: t.rulesText || "", forces: t.kind === "recon" ? `侦察目标${t.eventRequired}个。` : t.kind === "escort" ? "护送哥伦布运输船抵达撤离区。" : `指定目标按委托配置生成。`, conditions: `已接取${t.id}；${t.era}；${t.environment === "space" ? "宇宙" : "地面"}；N${t.difficulty}以上。`, source: `shared/contact-efsf.json：${t.id}；shared/contract-mode.js。`} : {}),
   }));
 module.exports = { commonRules, events: [...base, ...variants] };

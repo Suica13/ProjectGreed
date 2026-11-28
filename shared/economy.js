@@ -107,15 +107,18 @@ const Economy = (() => {
       units: Math.ceil(capacity.units / warehouse.defaults.unitsPerPage),
       ships: Math.ceil(capacity.ships / warehouse.defaults.shipsPerPage),
     };
-    // Replace only the tagged trial loan; independently owned Goufs stay intact.
+    // Replace tagged trial loans only; independently owned hulls stay intact.
     for (const item of [...(storageInput.units || []), ...(storageInput.ships || []), ...(storageInput.deliveries || [])]) {
-      if (item.contactLoan !== "zeon-5" || item.unitId !== "MS_07B3") continue;
+      const replacement = item.contactLoan === "zeon-5" && item.unitId === "MS_07B3" ? "MS_11S" :
+        item.contactLoan === "anaheim-8" && item.unitId === "RX_79_G" ? "RTX_440" : null;
+      if (!replacement) continue;
+      const previousUnit = item.unitId;
       if (!storageInput.deliveries?.includes(item)) {
-        stock.inventory.MS_07B3 = Math.max(0, (stock.inventory.MS_07B3 || 0) - 1);
-        stock.inventory.MS_11S = (stock.inventory.MS_11S || 0) + 1;
+        stock.inventory[previousUnit] = Math.max(0, (stock.inventory[previousUnit] || 0) - 1);
+        stock.inventory[replacement] = (stock.inventory[replacement] || 0) + 1;
       }
       const old = modelsForUnits()[item.unitId + "__" + item.kitId];
-      item.unitId = "MS_11S";
+      item.unitId = replacement;
       item.kitId = defaultKit(item.unitId);
       const model = modelsForUnits()[item.unitId + "__" + item.kitId];
       item.hp = item.destroyed ? 0 : Math.max(1, Math.round(model.hp * Math.min(1, item.hp / (old?.hp || model.hp))));
@@ -330,6 +333,7 @@ const Economy = (() => {
     for (const result of award.contactProgress || []) {
       const task = contacts.byId.get(result.id), entry = next.contactTasks.find(e=>e.id===result.id);
       if (!task || !entry || entry.status !== "accepted" || !Number.isSafeInteger(result.amount) || result.amount < 0) continue;
+      if(task.moneyPerKill && result.amount>0)entry.rewardKills=Math.max(entry.rewardKills||0,Math.min(768,Math.max(0,Math.floor(result.kills||0))));
       entry.progress = Math.min(task.required, entry.progress + result.amount);
       if (entry.progress >= task.required) entry.status = "ready";
     }
@@ -788,11 +792,16 @@ const Economy = (() => {
   }
   function pluginOffer(merchantId, id) {
     const merchant = merchants.find(item => item.id === merchantId), part = plugins.byId.get(id);
-    if (!merchant?.sellsPlugins || part?.merchant!==merchantId) return null;
+    if (!merchant?.sellsPlugins || part?.merchant!==merchantId || !["UC_0079_T1","UC_0079_T2"].includes(part.era)) return null;
+    if (part.era === "UC_0079_T2") {
+      const task=contacts.tasks.find(task=>task.serviceUnlock==="parts_0079_t2");
+      return {money:part.rarity*3000,available:!!task && merchantLevel(merchantId)>=(part.merchantLevel||1) && state.contactTasks.some(entry=>entry.id===task.id&&entry.status==="claimed"),
+        requiredTask:task?.id,requiredTaskName:task?.name,requiredLevel:part.merchantLevel||1};
+    }
     if (merchantId === "anaheim") {
       const task=contacts.tasks.find(task=>task.contactId==="anaheim" && task.pluginUnlocks?.includes(id));
-      return {money:part.rarity*3000,available:!!task && state.contactTasks.some(entry=>entry.id===task.id&&entry.status==="claimed"),
-        requiredTask:task?.id,requiredTaskName:task?.name,requiredLevel:1};
+      return {money:part.rarity*3000,available:!!task && merchantLevel(merchantId)>=(part.merchantLevel||1) && state.contactTasks.some(entry=>entry.id===task.id&&entry.status==="claimed"),
+        requiredTask:task?.id,requiredTaskName:task?.name,requiredLevel:part.merchantLevel||1};
     }
     return { money: part.rarity * 3000, available: merchantLevel(merchantId)>=(part.merchantLevel||1), requiredLevel:part.merchantLevel||1 };
   }
@@ -903,7 +912,7 @@ const Economy = (() => {
     for (const id of plan.unlocks || []) if (modelsForUnits()[id+"__"+defaultKit(id)] && catalog.baseModels[licenseUnit(id)]) next.licenses[licenseUnit(id)] = true;
   }
   function meetLiaison(id="efsf") {
-    if (!contacts.available(state,id)) throw Error("完成小菜一碟或不可退让后解锁该联络人");
+    if (!contacts.available(state,id)) throw Error(id==="anaheim"?"完成特别联络或不可退让后解锁阿纳海姆":"完成小菜一碟或不可退让后解锁该联络人");
     const plan = contacts.introPlan(id);
     if (!plan && !contacts.introFor(id).length) throw Error("联络人不存在");
     if (contacts.met(state,id)) return false;
@@ -956,7 +965,7 @@ const Economy = (() => {
     const task=contacts.byId.get(id),next=snapshot(),entry=next.contactTasks.find(e=>e.id===id);
     if(!task || entry?.status!=="ready") throw Error("任务尚未完成或已交付");
     reclaimContactLoan(next,entry);
-    entry.status="claimed";next.money+=task.money;
+    entry.status="claimed";next.money+=task.money+(task.moneyPerKill||0)*(entry.rewardKills||0);
     const merchantId=contacts.contactId(task);
     if(merchantId==="efsf")next.contactAffinity += task.affinity || 100;
     else next.merchantAffinities[merchantId]=(next.merchantAffinities[merchantId]||0)+(task.affinity||100);
@@ -967,7 +976,7 @@ const Economy = (() => {
   const liaisonAffinity = () => state.contactAffinity;
   const liaisonLevel = () => liaisonAffinity() >= 800 ? 2 : 1;
   const merchantAffinity = id => id==="efsf"?liaisonAffinity():state.merchantAffinities[id]||0;
-  const merchantLevel = id => merchantAffinity(id)>=800?2:1;
+  const merchantLevel = id => merchantAffinity(id)>=2400?4:merchantAffinity(id)>=1600?3:merchantAffinity(id)>=800?2:1;
   function facilityUpgradeOffer(id) {
     const offer=baseFacilities.upgradeOffer(state.baseFacilities,id);
     const beacon = id === "beacon" && offer.next === 2;

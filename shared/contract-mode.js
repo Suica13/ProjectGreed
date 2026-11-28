@@ -104,7 +104,11 @@ const ContractMode = (() => {
     // T2 scales the baseline by 1.5; subsequent eras keep the 1.25 progression.
     // Round only the final budget, so rounding does not compound between eras.
     const scale = stage > 0 ? 1.5 * 1.25 ** (stage - 1) : 1;
-    return { ...result, costLimit: Math.round(costs[result.id - 1] * scale / 500) * 500 * playerCostMultiplier };
+    const relativePressure = forces.eraPressure(era, result.id);
+    const initialEnemyCount = Math.round(result.initialEnemyCount * relativePressure);
+    return { ...result, relativePressure, initialEnemyCount,
+      patrolLimit: Math.floor(initialEnemyCount * 1.5),
+      costLimit: Math.round(costs[result.id - 1] * scale / 500) * 500 * playerCostMultiplier };
   }
   function scenarioConfig(settings, generation = false) {
     const d = config(settings.sweepDifficulty, settings.sweepEra);
@@ -131,7 +135,7 @@ const ContractMode = (() => {
     return map;
   }
   function roomSettings(settings) {
-    if (settings.sweepEnvironment !== "ground") throw Error("合约模式宇宙作战暂时禁用");
+    if (settings.sweepEnvironment !== "ground" && settings.sweepEra !== "UC_0079_T2") throw Error("宇宙合约需0079T2年代");
     const d = config(settings.sweepDifficulty, settings.sweepEra);
     return { costLimit: d.costLimit, mapId: mapId(settings.sweepEnvironment, d.id), fogMode: "full", pilotPolicy: "allow" };
   }
@@ -637,7 +641,7 @@ const ContractMode = (() => {
     const state = room.game.contract;
     const before = state.enemyBaseCount || 0;
     state.enemyBaseCount = before + count;
-    const multiplier = forces.countScale(room.settings.sweepDifficulty) * forces.difficultyScale(room.settings.sweepDifficulty) * 1.1 * ordinaryForceScale[config(room.settings.sweepDifficulty).id - 1] *
+    const multiplier = forces.eraPressure(room.settings.sweepEra, room.settings.sweepDifficulty) * forces.countScale(room.settings.sweepDifficulty) * forces.difficultyScale(room.settings.sweepDifficulty) * 1.1 * ordinaryForceScale[config(room.settings.sweepDifficulty).id - 1] *
       (1 + 0.25 * Math.max(0, state.players - 1));
     return Math.round(state.enemyBaseCount * multiplier) - Math.round(before * multiplier);
   }
@@ -647,14 +651,18 @@ const ContractMode = (() => {
     if (!available) return 0;
     const before = state.reinforcementBaseCount || 0;
     state.reinforcementBaseCount = before + count;
-    const multiplier = 0.75 * forces.countScale(room.settings.sweepDifficulty) * forces.difficultyScale(room.settings.sweepDifficulty) * 1.1 * ordinaryForceScale[config(room.settings.sweepDifficulty).id - 1] *
+    const multiplier = forces.eraPressure(room.settings.sweepEra, room.settings.sweepDifficulty) * 0.75 * forces.countScale(room.settings.sweepDifficulty) * forces.difficultyScale(room.settings.sweepDifficulty) * 1.1 * ordinaryForceScale[config(room.settings.sweepDifficulty).id - 1] *
       (1 + 0.25 * Math.max(0, state.players - 1));
     return Math.min(available, Math.round((before + count) * multiplier) - Math.round(before * multiplier));
   }
   function initialEnemyTarget(room) {
     const state = room.game.contract;
     const scale = (1 + .25 * Math.max(0, state.players - 1)) * (state.noAllies ? 1.25 : 1);
-    return Math.round(config(room.settings.sweepDifficulty).initialEnemyCount * scale / 3) * 3;
+    const d = config(room.settings.sweepDifficulty, room.settings.sweepEra);
+    // T2 uses individual rounding: rounding 22.5 to a three-unit squad would
+    // turn the N3 target into +33%. The fill path bypasses pressure scaling.
+    return d.relativePressure === 1 ? Math.round(d.initialEnemyCount * scale / 3) * 3 :
+      Math.round(config(room.settings.sweepDifficulty).initialEnemyCount * d.relativePressure * scale);
   }
   function reinforcementSlots(room, objectiveId = null) {
     // Event garrisons, scripted targets and event reinforcements have separate budgets.
@@ -1156,6 +1164,8 @@ const ContractMode = (() => {
   function aiOrder(game, G, actor) {
     if (!game.contract || !actor) return null;
     if (actor.contractAlly) {
+      const escort=game.contract.objectives.find(o=>o.type==="escort" && o.protected.includes(actor.id));
+      if(escort)return {alerted:false,goal:escort.status==="active"?{x:escort.exit.x+Math.floor(escort.exit.width/2),y:escort.exit.y+Math.floor(escort.exit.height/2)}:G.center(actor)};
       const objective = game.contract.objectives.find(o => o.id === actor.contractObjective);
       const contacts = objective && objective.status !== "available" ? near(game, G, objective, 1, 7)
         .filter(u => G.sensors.visible(game, 0, u) || G.sensors.detected(game, 0, u)) : [];
@@ -1295,7 +1305,7 @@ const ContractMode = (() => {
     }
     for (let i = 0; i < d.events + special.length; i++) {
       const task = special[i-d.events],
-        definition = task ? {...kinds.find(k=>k.type===(task.kind==="enemybase"?"factory":task.kind)),type:task.kind,name:task.eventName,
+        definition = task ? {...(kinds.find(k=>k.type===(task.kind==="enemybase"?"factory":task.kind)) || {hint:task.kind==="recon"?"接近并侦察所有标记目标，不能提前击毁。":"接近运输舰开始护送，保护其抵达撤离区。"}),type:task.kind,name:task.eventName,
           ...(task.kind==="enemybase"?{hint:"摧毁重兵防守的敌军基地，并成功撤离。"}:{})} : types[i % types.length],
         point = { ...locations[i] },
         objective = {
@@ -1308,7 +1318,7 @@ const ContractMode = (() => {
           targets: [],
           protected: [],
           destroyed: [],
-          ...(task ? {contactTaskId:task.id} : {}),
+          ...(task ? {contactTaskId:task.id,recoverAfterCombat:!!task.recoverAfterCombat} : {}),
         };
       state.objectives.push(objective);
       const previousSettings=room.settings;
@@ -1360,8 +1370,8 @@ const ContractMode = (() => {
         for(const [j,target] of targets.entries()){
           const model=target.kitId ? G.models[target.unitId+"__"+target.kitId] :
             Object.values(G.models).find(m=>m.prefabId===target.unitId && !m.formOnly && forces.aiKitAllowed(m));
-          if (!model || !forces.aiKitAllowed(model)) throw Error("联络任务目标没有可用的非核弹套件："+target.unitId);
-          const u=spawn(room,G,model,{x:point.x+3,y:point.y+j});
+          if (!model || (!task.scriptedKit && !forces.aiKitAllowed(model))) throw Error("联络任务目标没有可用的非核弹套件："+target.unitId);
+          const u=spawn(room,G,model,{x:point.x+(j%6)*2-5,y:point.y+Math.floor(j/6)*2-5});
           if(!u)throw Error("无法放置联络任务小队");
           if(task.id==="efsf-3" || task.targetPilotGrade || task.targetLeaderPilot) {
             const leader = j === 0 ? task.targetLeaderPilot : null;
@@ -1378,6 +1388,27 @@ const ContractMode = (() => {
       if(task?.id === "efsf-5" || task?.turrets)for(let j=0;j<(task.turrets || 4);j++){
         const u=spawn(room,G,G.models.Facility_MG__standard,{x:point.x+(j%2?5:-5),y:point.y+(j<2?-4:4)});
         if(!u)throw Error("无法放置前线营地炮塔");u.facility={id:u.id,type:"mg",level:1};
+      }
+      if(task?.kind === "recon") {
+        objective.scanned=[];
+        const prefab=G.catalog.prefabs.find(p=>p.id===task.reconUnit),model=G.models[prefab.id+"__"+prefab.weaponKits[0].id];
+        for(let j=0;j<task.eventRequired;j++){
+          const u=spawn(room,G,model,{x:point.x+(j%3)*4-4,y:point.y+Math.floor(j/3)*4-4});
+          if(!u)throw Error("无法放置侦察目标");objective.targets.push(u.id);u.contractObjectiveId=objective.id;
+          if(model.facilityType)u.facility={id:u.id,type:model.facilityType,level:1};
+        }
+      }
+      if(task?.kind === "escort") {
+        const model=G.models[task.escortUnit+"__standard"],u=spawn(room,G,model,point,false,false,0);
+        if(!u)throw Error("无法放置护送运输舰");
+        u.contractObjective=objective.id;objective.protected=[u.id];
+        const goal=state.extractions.slice().sort((a,b)=>distance(a,point)-distance(b,point))[0];
+        objective.exit={...goal};objective.required=1;
+      }
+      if(task?.protectedEnemy){
+        const p=task.protectedEnemy,model=Object.values(G.models).find(m=>m.prefabId===p.unitId && !m.formOnly),u=spawn(room,G,model,{x:point.x-5,y:point.y});
+        if(!u)throw Error("无法放置保护目标");u.pilot.name=p.name;objective.forbidDamage=[u.id];
+        group(room,[u.id],point,"guard",objective.id);
       }
       if(task?.kind === "salvage") {
         const id=task.wreckUnit || (task.id==="efsf-2"?"Medea":"Type74");
@@ -1468,7 +1499,7 @@ const ContractMode = (() => {
     state.contactKillRecords ||= [];
     if(model.unitTags?.includes("MS") && !state.contactKillRecords.some(record=>record.id===to.id))
       state.contactKillRecords.push({id:to.id,factions:model.availableFactions||[model.faction],
-        attackerUnit:G.modelOf(from).prefabId,attackerPlugins:[...(from.plugins || [])],
+        attackerUnit:G.modelOf(from).prefabId,attackerKit:G.modelOf(from).kitId,attackerFactions:G.modelOf(from).availableFactions||[G.modelOf(from).faction],attackerPlugins:[...(from.plugins || [])],
         melee:weapon?.type==="melee",
         artillery:!!weapon && (weapon.slot==="skill" || !!weapon.special) && weaponClasses.classify(weapon)==="mortar"});
     if(/^RX_80PR(?:_|$)/.test(G.modelOf(from).prefabId))to.contactPaleKill=true;
@@ -1483,7 +1514,9 @@ const ContractMode = (() => {
       if(task.kind==="all_events") return room.game.units.some(u=>G.ownerOf(u)===player.seat && u.hp>0 && u.contractExtracted && u.contractAllEventsAtExtraction) && state.objectives.length > 0 && state.objectives.every(o=>o.status==="completed") ? [{id,amount:1}] : [];
       if(task.kind==="kills")return [{id,amount:(state.contactKillRecords||[]).filter(record=>
         (task.enemyFaction==="NONE" || record.factions.includes(task.enemyFaction||"ZEON")) &&
-        (!task.requiredAttackerUnit || record.attackerUnit===task.requiredAttackerUnit) &&
+        (!task.requiredAttackerUnit || [task.requiredAttackerUnit,...(task.alternateAttackerUnits||[])].includes(record.attackerUnit)) &&
+        (!task.requiredAttackerKit || record.attackerKit===task.requiredAttackerKit) &&
+        (!task.requiredAttackerFaction || record.attackerFactions?.includes(task.requiredAttackerFaction)) &&
         (!task.requiredAttackerPlugin || record.attackerPlugins?.includes(task.requiredAttackerPlugin)) &&
         (task.killMethod!=="artillery" || record.artillery) && (task.killMethod!=="melee" || record.melee)).length}];
       const objectives=state.objectives.filter(o=>o.contactTaskId===id),o=objectives[0];
@@ -1607,7 +1640,23 @@ const ContractMode = (() => {
         if (u) b.health.set(id, u.hp);
       }
     for (const o of state.objectives) {
+      if(o.forbidDamage?.some(id=>{const u=game.units.find(u=>u.id===id);return u && (u.hp<G.modelOf(u).hp || u.shield<G.modelOf(u).shield.hp || Object.values(u.brokenParts||{}).some(Boolean));})) {
+        o.status="failed";continue;
+      }
       if (["completed","failed"].includes(o.status)) continue;
+      if(o.type==="recon"){
+        for(const id of o.targets){const u=game.units.find(u=>u.id===id);if(o.scanned.includes(id))continue;
+          if(!u || u.hp<=0){failObjective(state,o);break;}
+          if(near(game,G,u,0,3).some(a=>!a.contractAlly)){startObjective(state,o);o.scanned.push(id);}}
+        o.progress=o.scanned.length;if(o.progress>=o.required)completeObjective(state,o);continue;
+      }
+      if(o.type==="escort"){
+        const u=game.units.find(u=>u.id===o.protected[0]);
+        if(!u || u.hp<=0){failObjective(state,o);continue;}
+        if(o.status==="available" && near(game,G,u,0,3).some(a=>!a.contractAlly))startObjective(state,o);
+        if(o.status==="active" && G.cells(u).every(p=>inside(p,o.exit))){completeObjective(state,o);o.progress=1;u.contractExtracted=true;u.deploymentStaged=true;}
+        continue;
+      }
       if (
         ["factory", "command", "radar", "enemybase"].includes(o.type) &&
         near(game, G, o, 0, o.type === "command" ? 6 : 3).length
@@ -1637,8 +1686,9 @@ const ContractMode = (() => {
           failObjective(state,o);
           log("[合约模式] 事件目标被其他敌军击毁，不计入玩家战果："+o.name);
         } else {
-          completeObjective(state, o);
-          log("[合约模式] 完成事件：" + o.name);
+          if(o.recoverAfterCombat){o.type="salvage";o.status="available";o.hint="敌军已清除，靠近目标并回收文件，再成功撤离。";o.recoverAfterCombat=false;}
+          else completeObjective(state, o);
+          log("[合约模式] 目标清除：" + o.name);
         }
       }
       if (o.type === "radar" && o.status === "active" && !o.responseSent) {

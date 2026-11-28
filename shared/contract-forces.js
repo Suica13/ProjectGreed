@@ -131,6 +131,8 @@ const ContractForces = (() => {
     });
   }
   const difficultyScale = difficulty => [1, 1, 1.1, 1.15, 1.15, 1.15][Number(difficulty) - 1] || 1;
+  // Relative pressure within an era, separate from the cost of newer player units.
+  const eraPressure = (era, difficulty = 1) => era === "UC_0079_T2" && Number(difficulty) >= 3 && Number(difficulty) <= 6 ? 1.25 : 1;
   function budget(room, amount, reinforcement = false) {
     const players = room.game.contract.players;
     // Explicit per-event budgets supersede the old generic head-count tuning.
@@ -138,8 +140,8 @@ const ContractForces = (() => {
     const multiplier = 1 + 0.25 * Math.max(0, players - 1);
     // Use integer percentages so a half-step cannot drift below the rounding boundary.
     const percent = Math.round(difficultyScale(room.settings.sweepDifficulty) * 100);
-    return Math.round(amount * multiplier * percent / 2500) * 25;
+    return Math.round(amount * multiplier * percent * eraPressure(room.settings.sweepEra, room.settings.sweepDifficulty) / 2500) * 25;
   }
-  return { profile, formations, draw, pick, budget, aiKitAllowed, difficultyScale, countScale, selectCount };
+  return { profile, formations, draw, pick, budget, aiKitAllowed, difficultyScale, eraPressure, countScale, selectCount };
 })();
 if (typeof module !== "undefined") module.exports = ContractForces;

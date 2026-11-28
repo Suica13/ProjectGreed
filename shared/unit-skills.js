@@ -261,10 +261,10 @@ const UnitSkills = (() => {
           !/^[A-Za-z0-9_]+$/.test(skill.id) ||
           !skill.name ||
           !Number.isInteger(skill.range) ||
-          skill.range < 1 ||
+          skill.range < (skill.selfOnly ? 0 : 1) ||
           skill.range > 12 ||
           !Number.isFinite(skill.enCost) ||
-          skill.enCost <= 0 ||
+          skill.enCost < (skill.selfOnly ? 0 : 1) ||
           !Number.isInteger(skill.maxUses) ||
           skill.maxUses < 1 ||
           skill.maxUses > 99 ||
@@ -324,7 +324,7 @@ const UnitSkills = (() => {
       cells: unitCells,
     } = G;
     const of = (unit) => [...(modelOf(unit)?.skills || []), ...pilots.skillsOf(unit)].filter(skill => skill.type !== "emp");
-    const usageKey = (unit, skill) => models[unit.model].prefabId + "/" + skill.id;
+    const usageKey = (unit, skill) => skill.id === "plugin_ms_spares" ? skill.id : models[unit.model].prefabId + "/" + skill.id;
     const turnKey = skill => skill.type === "transform" ? "transformation" : skill.type === "flight" ? "flight" : skill.id;
     const energyCost = (unit, skill) =>
       skill.enCost ?? (modelOf(unit).en * skill.enCostPercent) / 100;
@@ -607,12 +607,12 @@ const UnitSkills = (() => {
           .filter(
             (other) =>
               !(game.battlefield && other.facility?.type === "base") &&
-              other !== unit &&
+              (skill.selfOnly ? other === unit : other !== unit) &&
               other.team === unit.team &&
               other.hp > 0 &&
               !other.embarked &&
               dist(unit, other) <= skill.range &&
-              (other.hp < modelOf(other).hp ||
+              ((skill.repairRandomPart && Object.values(other.brokenParts || {}).some(Boolean)) || other.hp < modelOf(other).hp ||
                 other.en < modelOf(other).en ||
                 other.shield < modelOf(other).shield.hp),
           )
@@ -986,7 +986,7 @@ const UnitSkills = (() => {
       if (skill.type === "repair") {
         const target = game.units.find(
           (other) =>
-            other !== unit &&
+            (skill.selfOnly ? other === unit : other !== unit) &&
             other.hp > 0 &&
             !other.embarked &&
             other.team === unit.team &&
@@ -1002,6 +1002,13 @@ const UnitSkills = (() => {
         ])
           target[key] = Math.min(maximum, target[key] + Math.round((maximum * percent) / 100));
         unit.en -= skill.enCost;
+        if (skill.repairRandomPart) {
+          const broken = Object.keys(target.brokenParts || {}).filter(key => target.brokenParts[key]);
+          if (broken.length) {
+            game.partSeed = (Math.imul(1664525, game.partSeed ?? game.seed ?? 0) + 1013904223) >>> 0;
+            delete target.brokenParts[broken[Math.floor(game.partSeed / 4294967296 * broken.length)]];
+          }
+        }
         unit.skillUses = {
           ...unit.skillUses,
           [usageKey(unit, skill)]: (unit.skillUses?.[usageKey(unit, skill)] || 0) + 1,

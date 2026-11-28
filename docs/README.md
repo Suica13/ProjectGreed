@@ -29,6 +29,8 @@
 - [舰队与搭载编组](rules/formation.md)
 - [基地仓储](rules/storage.md)
 - [联络与商人](rules/contact.md)
+- [联邦0079T1／T2委托与特殊关卡](design/efsf-missions.md)
+- [0079T2联邦任务难度评估](design/efsf-t2-difficulty-review.md)
 - [吉翁联络人任务链与策划JSON](design/zeon-contact.md)
 - [阿纳海姆委托与零件购买解锁](design/anaheim-contact.md)
 - [零件图标与生成提示](imports/unit-plugin-icons.md)

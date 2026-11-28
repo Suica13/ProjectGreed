@@ -195,7 +195,7 @@ function createRoomEngine({
     const contract = room.settings.mode === "sweep" && room.game.units.some(u=>u.contractAlly);
     if(!contract && !map.mission?.actors.some(a=>a.autonomous))return;
     const seat=map.spawns.length,id=randomId();
-    const ally={id,name:contract?"合约友军守备队":"奥古任务友军",bot:true,missionAlly:true,seat,characterFaction:"PMC",
+    const ally={id,name:contract?"合约友军守备队":map.mission?.scenarioFaction==="EFSF"?"联邦任务友军":"任务友军",bot:true,missionAlly:true,seat,characterFaction:"PMC",
       ready:true,finalReady:true,requests:new Map(),aiSettings:G.validateAISettings(),
       ws:{room:room.code,memberId:id,seat}};
     room.members.set(id,ally);room.seats[seat]=ally;room.missionAllySeat=seat;
@@ -1325,7 +1325,7 @@ function createRoomEngine({
     }
     refreshHost(room);
     if (room.game.mission && room.started && room.game.mission.fired) {
-      Mission.observe(room);
+      Mission.observe(room, G);
       const host = Mission.commander(room);
       room.game.mission.commanderId=host?.id ?? null;
       if (host?.seat !== null && host?.seat !== undefined)
@@ -1960,6 +1960,7 @@ function createRoomEngine({
   }
   function awardDefeat(room, from, to, defeatedModel, visibleBefore = {}, weapon = null) {
     recordDefeatDialogue(room, from, to, visibleBefore);
+    if (room.game.mission?.commission) { Mission.commissions.recordDefeat(room,G,from,to,defeatedModel,weapon); return; }
     if (room.game.contract) { Contract.recordDefeat(room, G, from, to, defeatedModel, weapon); return; }
     if (room.settings.mode === "battlefield") {
       awardBattlefieldDefeat(room, from, to, defeatedModel);
@@ -2340,7 +2341,7 @@ function createRoomEngine({
         ...(stockLost ? { stockLost } : {}),
         stockStates: survivingStockStates(room, player),
         settledStockIds: Object.values(room.battleRoster || {}).filter(record => record.memberId === player.id && record.stockId).map(record => record.stockId),
-        ...(room.game.contract ? {contactProgress: Contract.commissionProgress(room,G,player)} : {}),
+        ...(room.game.contract ? {contactProgress: Contract.commissionProgress(room,G,player)} : room.game.mission?.commission ? {contactProgress:Mission.commissions.commissionProgress(room,G,player)} : {}),
         destroyedCost,
         ...(missionReward ? {stockGained:{inventory:missionReward.inventory}} : {}),
         money: roundReward(missionReward ? base.money * bonus.money : (won ? base.money : destroyedCost) * rate * battleRate * bonus.money),
@@ -2483,7 +2484,7 @@ function createRoomEngine({
       battleRate *
       (G.modelOf(actor).pilotExperienceMultiplier ?? 1);
     const experiencePoints =
-      room.game.contract ||
+      room.game.contract || room.game.mission?.commission ||
       kind === "loss" ||
       kind === "battle" ||
       beforeLevel >= G.pilots.maxLevel(actor.pilot)
@@ -3005,7 +3006,11 @@ function createRoomEngine({
   function startGame(room) {
     G.validateOpenContent(room.settings);
     if (room.settings.mode === "sweep") Object.assign(room.settings, Contract.roomSettings(room.settings));
-    if (room.settings.mode === "mission") Object.assign(room.settings, Mission.settings(G, room.settings.mapId));
+    if (room.settings.mode === "mission") {
+      for(const player of room.seats.filter(p=>p && !p.bot && p.seat%2===0))
+        Mission.commissions.requireEntry(G.getMap(room.settings.mapId),player.contactTasks);
+      Object.assign(room.settings, Mission.settings(G, room.settings.mapId));
+    }
     if (
       room.started ||
       !room.seats
@@ -4746,7 +4751,7 @@ function createRoomEngine({
                   ? Contract.mapId("space",msg.sweepDifficulty ?? room.settings.sweepDifficulty ?? 1)
                   : Contract.mapId("ground",msg.sweepDifficulty ?? room.settings.sweepDifficulty ?? 1)
                 : nextMode === "mission"
-                  ? requestedMap.mission ? requestedMap.id : Mission.defaultMapId
+                  ? requestedMap.mission ? requestedMap.id : Object.values(G.catalog.maps).find(m=>Mission.commissions.unlocked(m,member.contactTasks))?.id || Mission.defaultMapId
                 : nextMode === "battlefield"
                   ? requestedMap.battlefield
                     ? requestedMap.id
@@ -4919,7 +4924,7 @@ function createRoomEngine({
               settings.technologyLimitMode !== room.settings.technologyLimitMode ||
               settings.technologyLimit !== room.settings.technologyLimit ||
               settings.technologyLimitFaction !== room.settings.technologyLimitFaction;
-            if(settings.mode === "mission") Object.assign(settings,Mission.settings(G,map.id));
+            if(settings.mode === "mission") { Mission.commissions.requireEntry(map,member.contactTasks); Object.assign(settings,Mission.settings(G,map.id)); }
             const eraChanged = settings.regularEra !== room.settings.regularEra ||
               settings.sweepEra !== room.settings.sweepEra ||
               settings.battlefieldEra !== room.settings.battlefieldEra ||
@@ -5811,7 +5816,9 @@ function createRoomEngine({
       };
       room.settings.technologyLimitFaction = msg.technologyLimitFaction ?? "EFSF";
       if(room.settings.mode === "mission") {
-        Object.assign(room.settings,Mission.settings(G));
+        const map=Object.values(G.catalog.maps).find(m=>Mission.commissions.unlocked(m,msg.contactTasks));
+        if(!map) throw Error("请先接取联络人任务，解锁任务关卡");
+        Object.assign(room.settings,Mission.settings(G,map.id));
         room.seats=Array(G.getMap(room.settings.mapId).spawns.length).fill(null);
         room.turnDone=room.seats.map(()=>false);
       }

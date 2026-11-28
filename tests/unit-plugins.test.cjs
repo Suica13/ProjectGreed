@@ -32,7 +32,7 @@ function unlockAnaheim(E, count) {
   }
 }
 test("four empty slots, whitelist, non-warship restrictions and duplicate rejection", () => {
-  assert.equal(P.catalog.length, 33);
+  assert.equal(P.catalog.length, 53);
   assert.deepEqual(P.normalize(undefined, base), [null, null, null, null]);
   for (const slots of [
     ["frame", "frame"],
@@ -42,14 +42,14 @@ test("four empty slots, whitelist, non-warship restrictions and duplicate reject
   ])
     assert.throws(() => P.apply(base, slots));
   assert.throws(() => P.apply(G.models.ColumbusClass__standard, ["water"]));
-  for (const part of P.catalog) assert(P.apply(base, [part.id]));
+  for (const part of P.catalog.filter(p=>P.allowed(p,base))) assert(P.apply(base, [part.id]));
 });
 test("HP, EN, coefficients, command range, armor and COST derive without changing base", () => {
   const original = JSON.stringify(base),
     m = P.apply(base, ["frame", "armor", "generator", "chobham"]);
-  assert.equal(m.hp, base.hp + 25000);
+  assert.equal(m.hp, base.hp + 31000);
   assert.equal(m.en, base.en + 150);
-  assert.equal(m.partStructuralStrength, base.partStructuralStrength + 25);
+  assert.equal(m.partStructuralStrength, base.partStructuralStrength + 30);
   assert.equal(m.speed, base.speed - 15);
   assert.equal(m.mobility, base.mobility - 15);
   assert.equal(m.cost, base.cost + 175);
@@ -127,6 +127,8 @@ test("purchased equipment fits without additional fees, persists and preserves d
     inventory: { RGM_79: 1 },
   });
   unlockAnaheim(E,3);
+  E.receiveDeliveries();
+  E.receiveDeliveries();
   E.purchasePlugin("anaheim", "frame");
   E.purchasePlugin("anaheim", "generator");
   const before = E.snapshot(),
@@ -208,13 +210,13 @@ test("fixed plugin COST is independent of weapon kits, pilots and other plugins"
 test("catalog, task-gated Anaheim, faction merchant levels and era labels follow the revised equipment table", () => {
   assert.deepEqual(
     P.catalog.map((p) => p.number),
-    Array.from({ length: 35 }, (_, i) => i + 1).filter((n) => ![22, 29].includes(n)),
+    Array.from({ length: 58 }, (_, i) => i + 1).filter((n) => ![22, 29, 36, 55, 56].includes(n)),
   );
   const E = economy();
   E.creditActivity({ id: "market", matchId: "market", money: 100000, supplies: 0 });
-  assert.throws(()=>E.purchasePlugin("anaheim","ambac"),/前提任务/);
+  assert.throws(()=>E.purchasePlugin("anaheim","ambac"));
   unlockAnaheim(E,7);
-  assert(E.purchasePlugin("anaheim", "ambac")); // T2 is a label; claimed task is the gate.
+  assert.equal(E.pluginOffer("anaheim", "ambac").available, false);
   assert.equal(E.pluginOffer("efsf", "v_data").available, false);
   const before = JSON.stringify(E.snapshot());
   assert.throws(() => E.purchasePlugin("efsf", "v_data"));
@@ -236,32 +238,33 @@ test("weapon category bonuses reach every actual strike once and preserve native
     all = Object.values(G.models).flatMap((m) => m.weapons),
     sum = (c) => Object.values(c).reduce((a, b) => a + b, 0);
   for (const [plugin, predicate, bonus] of [
-    ["rocket_head", (w) => classes.classify(w) === "bazooka", 1000],
-    ["beam_generator", (w) => classes.classify(w) === "beam_rifle", 1000],
-    ["luna_ammo", (w) => w.type === "shell" && w.damageComponents.shell > 0, 75],
-    ["beam_melee", (w) => w.type === "melee" && w.damageComponents.meleeBeam > 0, 1500],
-    ["heat_melee", (w) => w.type === "melee" && w.damageComponents.meleeShell > 0, 1500],
+    ["rocket_head", (w) => classes.classify(w) === "bazooka", .05],
+    ["beam_generator", (w) => classes.classify(w) === "beam_rifle", .05],
+    ["luna_ammo", (w) => w.type === "shell" && w.damageComponents.shell > 0, 50],
+    ["beam_melee", (w) => w.type === "melee" && w.damageComponents.meleeBeam > 0, .05],
+    ["heat_melee", (w) => w.type === "melee" && w.damageComponents.meleeShell > 0, .05],
     [
       "focus_ring",
       (w) => classes.classify(w) === "beam_cannon" && w.damageComponents.beamAP > 0,
-      2000,
+      .05,
     ],
-    ["aiming_system", (w) => w.damagePerShot > 0, 50],
+    ["aiming_system", (w) => w.damagePerShot > 0, .05],
   ]) {
     const weapon = all.find(predicate);
     assert(weapon, plugin);
     const original = JSON.stringify(weapon),
       changed = P.apply({ ...base, weapons: [weapon] }, [plugin]).weapons[0];
-    assert.equal(changed.damagePerShot, weapon.damagePerShot + bonus, plugin);
+    const adjusted = c => require("../shared/weapon-sequence").roundComponents(c, bonus < 1 ? 1 + bonus : (sum(c) + bonus) / sum(c));
+    assert.deepEqual(changed.damageComponents, adjusted(weapon.damageComponents), plugin);
     for (let i = 0; i < weapon.attack.strikes.length; i++)
       assert.equal(
         sum(changed.attack.strikes[i].damageComponents || changed.damageComponents),
-        sum(weapon.attack.strikes[i].damageComponents || weapon.damageComponents) + bonus,
+        sum(adjusted(weapon.attack.strikes[i].damageComponents || weapon.damageComponents)),
         plugin,
       );
     assert.equal(
       changed.damage,
-      weapon.damage + bonus * weapon.attack.strikes.length * (weapon.hitsPerShot || 1),
+      weapon.attack.strikes.reduce((n,s)=>n+sum(adjusted(s.damageComponents || weapon.damageComponents))*(s.damageMultiplier ?? 1),0) * (weapon.hitsPerShot || 1),
       plugin,
     );
     assert.equal(JSON.stringify(weapon), original);

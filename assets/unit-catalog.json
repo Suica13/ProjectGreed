@@ -670,7 +670,9 @@
     "maps/missions/bunker.json",
     "maps/missions/burning_city.json",
     "maps/missions/sleepless_raid.json",
-    "maps/missions/shuttle_defense.json"
+    "maps/missions/shuttle_defense.json",
+    "maps/missions/efsf_19.json",
+    "maps/missions/efsf_29.json"
   ],
   "defaultMap": "frontier_1v1"
 }

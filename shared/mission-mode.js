@@ -1,7 +1,8 @@
 /* Declarative cooperative missions. Authority owns events and dialogue cursors. */
 const MissionMode = (() => {
   "use strict";
-  const defaultMapId = "mission_white_base";
+  const defaultMapId = "mission_efsf_19";
+  const commissions = typeof MissionCommissions !== "undefined" ? MissionCommissions : require("./mission-commissions.js");
   const eraData = typeof TechnologyEras !== "undefined" ? TechnologyEras : require("./technology-eras.js");
   const eras = eraData.eras;
   const text = (v, max = 2000) => typeof v === "string" && v.length > 0 && v.length <= max;
@@ -113,7 +114,7 @@ const MissionMode = (() => {
     }
     location = "胜败条件";
     if (!Array.isArray(m.protect) || m.protect.some((a) => !actors.has(a))) fail();
-    if (!["all_enemies", "survive", "defeat_actor", "escort", "scripted", "eliminate_group", "extract", "defend_group"].includes(m.victory?.type)) fail();
+    if (!["commission", "all_enemies", "survive", "defeat_actor", "escort", "scripted", "eliminate_group", "extract", "defend_group"].includes(m.victory?.type)) fail();
     if (m.victory.type === "defend_group" &&
         (!Number.isInteger(m.victory.round) || m.victory.round<1 ||
          !m.actors.some(a=>a.team===0 && a.initial && a.group===m.victory.group))) fail();
@@ -342,6 +343,7 @@ const MissionMode = (() => {
         checkReward(r);
       }
     }
+    if (m.victory.type === "commission" && (!m.contactTask || !m.commission)) fail();
     return m;
   }
   function settings(G, mapId) {
@@ -446,6 +448,7 @@ const MissionMode = (() => {
           : {}),
       });
       const model = G.modelOf(u);
+      if(a.name && u.pilot) u.pilot.name=a.name;
       if (model.facilityType && !a.pilotId && armyFactions[a.team])
         u.pilot = G.pilots.roll(a.genericPilot ? "generic:" + a.genericPilot : null,
           room.game.seed, owner, 0, { ...model, faction: armyFactions[a.team] });
@@ -507,6 +510,7 @@ const MissionMode = (() => {
         (p) => p && !p.bot && Number.isInteger(p.seat) && p.seat % 2 === 0,
       ).length,
     };
+    commissions.initialize(room,G);
     room.game.mission.enemyResourceScale =
       1 + Math.max(0, room.game.mission.playerCount - 1) * (m.enemyResourcePerPlayer || 0);
     if (room.game.deployment) room.game.deployment[1] = true;
@@ -582,7 +586,8 @@ const MissionMode = (() => {
   function mActors(room, G) {
     return G.getMap(room.settings.mapId).mission.actors;
   }
-  function observe(room) {
+  function observe(room, G) {
+    if(G) commissions.observe(room,G);
     const s = room.game.mission;
     if (!s?.fired || room.replay) return;
     s.defeatRounds ||= {};
@@ -760,6 +765,7 @@ const MissionMode = (() => {
         if(progress.total>0 && progress.current===progress.total)s.requestedWinner=0;
       }
     }
+    commissions.poll(room,G);
     // Explicit protection and PMC extinction take precedence over victory.
     if (s.protect.some(dead) || (m.victory.type === "defend_group" &&
         !g.units.some(u=>u.missionGroup===m.victory.group && u.hp>0)) || !pmc.some((u) => u.hp > 0)) g.winner = 1;
@@ -827,7 +833,12 @@ const MissionMode = (() => {
     const actor = key => game.units.find(u=>u.missionActor === key);
     const row = (kind, current, total, unitId) => ({kind,current,total,...(unitId?{unitId}:{})});
     const target = mission.victory, victory = [];
-    if(target.type==="extract"){
+    if(target.type === "commission") {
+      const p = commissions.progress({game,settings:{mapId:game.mapId}},G);
+      victory.push({...row("group_targets",p.current,p.total),label:mission.commission.label});
+      if(mission.commission.extraction)victory.push({...row("extraction",p.extracted?1:0,1),label:"完成目标后全队返回西侧撤离区"});
+      if(mission.commission.surviveRound)victory.push({...row("survive",Math.min(game.round,mission.commission.surviveRound),mission.commission.surviveRound),label:"坚守回合"});
+    } else if(target.type==="extract"){
       const group=expectedActors({game,settings:{mapId:game.mapId}},G,target.group);
       victory.push({...row("group_targets",group.filter(a=>actor(a.id)?.hp<=0).length,group.length),label:"摧毁目标米迪亚"});
       const progress=extractionProgress(game,target.region,G);
@@ -874,6 +885,7 @@ const MissionMode = (() => {
   }
   return {
     defaultMapId,
+    commissions,
     validate,
     settings,
     commander,

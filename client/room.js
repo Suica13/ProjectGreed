@@ -405,9 +405,11 @@ const RoomPanel = (() => {
         settings.mode !== "campaign" &&
         settings.mode !== "sweep" &&
         map.scope !== "strategic" &&
+        (settings.mode !== "mission" || MissionMode.commissions.visible(map)) &&
         (map.supportedModes || ["regular", "quick"]).includes(settings.mode || "regular"),
     )) {
-      mapSelect.add(new Option(map.name, map.id));
+      const locked = settings.mode === "mission" && !MissionMode.commissions.unlocked(map,Economy.snapshot().contactTasks);
+      const option=new Option(map.name+(locked?"（未接取任务）":""),map.id);option.disabled=locked;mapSelect.add(option);
     }
     const nextKey = JSON.stringify([snapshot.room, snapshot.you?.id, snapshot.hostId]);
     if (nextKey !== settingsKey) {
@@ -534,11 +536,11 @@ const RoomPanel = (() => {
         ["space", "宇宙"],
       ]) {
         const option = new Option(I18n.text(name), value);
-        option.disabled = value === "space";
+        option.disabled = value === "space" && settings.sweepEra !== "UC_0079_T2";
         environmentSelect.add(option);
       }
-      environmentSelect.value = "ground";
-      environmentSelect.disabled = true;
+      environmentSelect.value = settings.sweepEnvironment || "ground";
+      environmentSelect.disabled = locked;
       environmentSelect.onchange = () =>
         sendSettings({ sweepEnvironment: environmentSelect.value });
       environment.append(environmentSelect);

@@ -517,7 +517,7 @@ test("Anaheim test kills require the fitted part or test hull and only player fi
   const target=unit('MS_06F','target-'+id,2);target.hp=0;C.recordDefeat(f.room,G,from,target,G.modelOf(target));
  }
  const npc=unit('RGM_79','npc',1,['frame']),target=unit('MS_06F','npc-target',2);target.hp=0;C.recordDefeat(f.room,G,npc,target,G.modelOf(target));
- assert.deepEqual(C.commissionProgress(f.room,G,f.member),[{id:'anaheim-3',amount:1},{id:'anaheim-5',amount:1},{id:'anaheim-8',amount:1}]);
+ assert.deepEqual(C.commissionProgress(f.room,G,f.member),[{id:'anaheim-3',amount:1},{id:'anaheim-5',amount:1}]);
 });
 
 test("no-allies patrol cap is shared at 110 percent and patrols stay around their own sites",t=>{

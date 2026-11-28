@@ -20,7 +20,7 @@ const UnitPreview = (() => {
     const unlockText=part.merchant==="anaheim" ? I18n.text("前提任务：")+I18n.text(unlockTask?.name || "委托解锁")
       : I18n.text("好感度等级")+" "+(part.merchantLevel||1);
     info.append(name,element("span","plugin-rarity","★".repeat(part.rarity)),element("span","plugin-effect",part.description),
-      element("small","plugin-origin",[part.era?.replace("UC_0079_T","0079T"),I18n.text(part.nonShip?"非战舰":"所有"),I18n.text(merchants[part.merchant]||""),unlockText].filter(Boolean).join(" · ")));
+      element("small","plugin-origin",[part.era?.replace(/^UC_00(\d+)_T/,"00$1T"),I18n.text(part.applicability || (part.nonShip?"非战舰":"所有")),I18n.text(part.category || ""),I18n.text(merchants[part.merchant]||""),unlockText].filter(Boolean).join(" · ")));
     card.append(visual,info);return card;
   }
   function roleIcon(model) {

@@ -78,10 +78,10 @@ test("wired hands lose only the broken arm volley, and both broken arms prohibit
     assert.equal(G.canUse(a, w), false);
   }
 });
-test("remote base salvo damage follows Awakening, is repeat-safe and leaves hit/AP unchanged", () => {
+test("remote base salvo damage ignores Awakening and is repeat-safe", () => {
   for (const id of Object.keys(expected)) {
     const {g,a,b,w}=fixture(id);
-    for(const [awakening,multiplier] of [[75,.75],[100,1],[150,3],[200,5]]) {
+    for(const [awakening,multiplier] of [[75,1],[100,1],[150,1],[200,1]]) {
       const total = w.attack.strikes.reduce((sum,step)=>sum+Math.round(Object.values(step.damageComponents||w.damageComponents).reduce((n,v)=>n+v,0)*multiplier/25)*25,0);
       a.pilot.stats.awakening=awakening;
       const scaled=G.weaponStats(w,a);

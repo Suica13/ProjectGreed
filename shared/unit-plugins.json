@@ -2,17 +2,19 @@
   {
     "id": "frame",
     "number": 1,
-    "name": "强化骨架",
+    "name": "强化框架",
     "rarity": 1,
     "cost": 50,
-    "description": "HP+5000，零件强度+25",
+    "description": "HP+6000，零件强度+30",
     "effects": {
-      "hp": 5000,
-      "partStrength": 25
+      "hp": 6000,
+      "partStrength": 30
     },
     "era": "UC_0079_T1",
     "merchant": "anaheim",
-    "merchantLevel": 1
+    "merchantLevel": 1,
+    "category": "防御",
+    "applicability": "所有"
   },
   {
     "id": "antenna",
@@ -26,7 +28,9 @@
     },
     "era": "UC_0079_T1",
     "merchant": "anaheim",
-    "merchantLevel": 1
+    "merchantLevel": 1,
+    "category": "辅助",
+    "applicability": "所有"
   },
   {
     "id": "v_data",
@@ -40,7 +44,9 @@
     },
     "era": "UC_0079_T1",
     "merchant": "efsf",
-    "merchantLevel": 2
+    "merchantLevel": 2,
+    "category": "辅助",
+    "applicability": "所有"
   },
   {
     "id": "shield",
@@ -56,7 +62,9 @@
     },
     "era": "UC_0079_T1",
     "merchant": "anaheim",
-    "merchantLevel": 1
+    "merchantLevel": 1,
+    "category": "辅助",
+    "applicability": "非战舰"
   },
   {
     "id": "tem_ray",
@@ -74,7 +82,9 @@
     },
     "era": "UC_0079_T2",
     "merchant": "efsf",
-    "merchantLevel": 2
+    "merchantLevel": 2,
+    "category": "辅助",
+    "applicability": "所有"
   },
   {
     "id": "panoramic",
@@ -90,7 +100,9 @@
     },
     "era": "UC_0079_T2",
     "merchant": "efsf",
-    "merchantLevel": 2
+    "merchantLevel": 2,
+    "category": "辅助",
+    "applicability": "所有"
   },
   {
     "id": "chobham",
@@ -108,7 +120,9 @@
     },
     "era": "UC_0079_T1",
     "merchant": "anaheim",
-    "merchantLevel": 1
+    "merchantLevel": 1,
+    "category": "防御",
+    "applicability": "所有"
   },
   {
     "id": "generator",
@@ -122,7 +136,9 @@
     },
     "era": "UC_0079_T1",
     "merchant": "anaheim",
-    "merchantLevel": 1
+    "merchantLevel": 1,
+    "category": "辅助",
+    "applicability": "所有"
   },
   {
     "id": "water",
@@ -137,7 +153,9 @@
     },
     "era": "UC_0079_T1",
     "merchant": "anaheim",
-    "merchantLevel": 1
+    "merchantLevel": 1,
+    "category": "机动",
+    "applicability": "非战舰"
   },
   {
     "id": "ground",
@@ -152,7 +170,9 @@
     },
     "era": "UC_0079_T1",
     "merchant": "anaheim",
-    "merchantLevel": 1
+    "merchantLevel": 1,
+    "category": "辅助",
+    "applicability": "非战舰"
   },
   {
     "id": "space",
@@ -167,7 +187,9 @@
     },
     "era": "UC_0079_T1",
     "merchant": "anaheim",
-    "merchantLevel": 1
+    "merchantLevel": 1,
+    "category": "机动",
+    "applicability": "非战舰"
   },
   {
     "id": "long_beam",
@@ -181,12 +203,14 @@
     },
     "era": "UC_0079_T1",
     "merchant": "efsf",
-    "merchantLevel": 2
+    "merchantLevel": 2,
+    "category": "辅助",
+    "applicability": "所有"
   },
   {
     "id": "short_beam",
     "number": 13,
-    "name": "缩短型光束收束装置",
+    "name": "截短型光束收束装置",
     "rarity": 1,
     "cost": 25,
     "description": "光束武器命中率+10个百分点，最大射程-1",
@@ -196,7 +220,9 @@
     },
     "era": "UC_0079_T1",
     "merchant": "efsf",
-    "merchantLevel": 2
+    "merchantLevel": 2,
+    "category": "辅助",
+    "applicability": "所有"
   },
   {
     "id": "hover",
@@ -213,7 +239,9 @@
     },
     "era": "UC_0079_T2",
     "merchant": "zeon",
-    "merchantLevel": 2
+    "merchantLevel": 2,
+    "category": "机动",
+    "applicability": "非战舰"
   },
   {
     "id": "ambac",
@@ -221,13 +249,16 @@
     "name": "增设AMBAC喷口",
     "rarity": 2,
     "cost": 100,
-    "description": "全地形适性+25（最高100%）",
+    "description": "全地形适性+25（最大100），机动系数+5",
     "effects": {
-      "adaptability": 25
+      "adaptability": 25,
+      "speed": 5
     },
     "era": "UC_0079_T2",
     "merchant": "anaheim",
-    "merchantLevel": 1
+    "merchantLevel": 1,
+    "category": "机动",
+    "applicability": "所有"
   },
   {
     "id": "armor",
@@ -235,13 +266,15 @@
     "name": "强化装甲",
     "rarity": 2,
     "cost": 25,
-    "description": "HP+5000",
+    "description": "HP+10000",
     "effects": {
-      "hp": 5000
+      "hp": 10000
     },
     "era": "UC_0079_T1",
     "merchant": "anaheim",
-    "merchantLevel": 1
+    "merchantLevel": 1,
+    "category": "防御",
+    "applicability": "所有"
   },
   {
     "id": "magnetic",
@@ -256,7 +289,9 @@
     },
     "era": "UC_0079_T2",
     "merchant": "zeon",
-    "merchantLevel": 2
+    "merchantLevel": 2,
+    "category": "机动",
+    "applicability": "所有"
   },
   {
     "id": "limiter",
@@ -271,7 +306,9 @@
     },
     "era": "UC_0079_T1",
     "merchant": "zeon",
-    "merchantLevel": 2
+    "merchantLevel": 2,
+    "category": "机动",
+    "applicability": "所有"
   },
   {
     "id": "long_sight",
@@ -285,7 +322,9 @@
     },
     "era": "UC_0079_T1",
     "merchant": "anaheim",
-    "merchantLevel": 2
+    "merchantLevel": 2,
+    "category": "辅助",
+    "applicability": "所有"
   },
   {
     "id": "radar",
@@ -299,7 +338,9 @@
     },
     "era": "UC_0079_T1",
     "merchant": "anaheim",
-    "merchantLevel": 2
+    "merchantLevel": 2,
+    "category": "辅助",
+    "applicability": "所有"
   },
   {
     "id": "minovsky",
@@ -313,7 +354,9 @@
     },
     "era": "UC_0079_T2",
     "merchant": "anaheim",
-    "merchantLevel": 2
+    "merchantLevel": 2,
+    "category": "特殊",
+    "applicability": "所有"
   },
   {
     "id": "rocket_head",
@@ -321,13 +364,15 @@
     "name": "高性能火箭弹头",
     "rarity": 1,
     "cost": 50,
-    "description": "火箭筒类武器单发伤害+1000",
+    "description": "火箭筒类武器单发伤害+5%",
     "effects": {
-      "bazookaDamage": 1000
+      "bazookaDamagePercent": 0.05
     },
     "era": "UC_0079_T1",
     "merchant": "zeon",
-    "merchantLevel": 2
+    "merchantLevel": 2,
+    "category": "攻击",
+    "applicability": "所有"
   },
   {
     "id": "beam_generator",
@@ -335,13 +380,15 @@
     "name": "小型化光束武器发生器",
     "rarity": 1,
     "cost": 50,
-    "description": "光束步枪单发伤害+1000",
+    "description": "光束步枪单发伤害+5%",
     "effects": {
-      "beamRifleDamage": 1000
+      "beamRifleDamagePercent": 0.05
     },
     "era": "UC_0079_T1",
     "merchant": "efsf",
-    "merchantLevel": 2
+    "merchantLevel": 2,
+    "category": "攻击",
+    "applicability": "所有"
   },
   {
     "id": "luna_ammo",
@@ -349,13 +396,15 @@
     "name": "月神钛合金弹药",
     "rarity": 2,
     "cost": 50,
-    "description": "实弹类武器单发伤害+75",
+    "description": "实弹类武器伤害+50",
     "effects": {
-      "shellDamage": 75
+      "shellDamage": 50
     },
     "era": "UC_0079_T2",
     "merchant": "zeon",
-    "merchantLevel": 2
+    "merchantLevel": 2,
+    "category": "攻击",
+    "applicability": "所有"
   },
   {
     "id": "long_barrel",
@@ -370,7 +419,9 @@
     },
     "era": "UC_0079_T1",
     "merchant": "anaheim",
-    "merchantLevel": 2
+    "merchantLevel": 2,
+    "category": "攻击",
+    "applicability": "所有"
   },
   {
     "id": "thruster",
@@ -385,7 +436,9 @@
     },
     "era": "UC_0079_T1",
     "merchant": "anaheim",
-    "merchantLevel": 2
+    "merchantLevel": 2,
+    "category": "攻击",
+    "applicability": "所有"
   },
   {
     "id": "concealment",
@@ -401,7 +454,9 @@
     },
     "era": "UC_0079_T2",
     "merchant": "anaheim",
-    "merchantLevel": 2
+    "merchantLevel": 2,
+    "category": "特殊",
+    "applicability": "非战舰"
   },
   {
     "id": "light_armor",
@@ -419,7 +474,9 @@
     },
     "era": "UC_0079_T1",
     "merchant": "anaheim",
-    "merchantLevel": 2
+    "merchantLevel": 2,
+    "category": "防御",
+    "applicability": "非战舰"
   },
   {
     "id": "beam_melee",
@@ -428,13 +485,15 @@
     "rarity": 2,
     "cost": 50,
     "nonShip": true,
-    "description": "光束格斗类武器单发伤害+1500",
+    "description": "光束格斗类武器单发伤害+5%",
     "effects": {
-      "beamMeleeDamage": 1500
+      "beamMeleeDamagePercent": 0.05
     },
     "era": "UC_0079_T1",
     "merchant": "efsf",
-    "merchantLevel": 2
+    "merchantLevel": 2,
+    "category": "攻击",
+    "applicability": "非战舰"
   },
   {
     "id": "heat_melee",
@@ -443,27 +502,31 @@
     "rarity": 2,
     "cost": 50,
     "nonShip": true,
-    "description": "实弹格斗类武器单发伤害+1500",
+    "description": "实弹格斗类武器单发伤害+5%",
     "effects": {
-      "shellMeleeDamage": 1500
+      "shellMeleeDamagePercent": 0.05
     },
     "era": "UC_0079_T1",
     "merchant": "zeon",
-    "merchantLevel": 2
+    "merchantLevel": 2,
+    "category": "攻击",
+    "applicability": "非战舰"
   },
   {
     "id": "focus_ring",
     "number": 33,
     "name": "高精度聚能环",
     "rarity": 2,
-    "cost": 75,
-    "description": "光束穿甲类或光束炮类武器单发伤害+2000（同一武器不重复增加）",
+    "cost": 100,
+    "description": "光束穿甲类或光束炮类武器单发伤害+5%（同一武器不重复增加）",
     "effects": {
-      "focusedBeamDamage": 2000
+      "focusedBeamDamagePercent": 0.05
     },
     "era": "UC_0079_T1",
     "merchant": "efsf",
-    "merchantLevel": 2
+    "merchantLevel": 2,
+    "category": "攻击",
+    "applicability": "所有"
   },
   {
     "id": "aiming_system",
@@ -471,14 +534,16 @@
     "name": "阿纳海姆特供辅助瞄准系统",
     "rarity": 2,
     "cost": 50,
-    "description": "所有武器单发伤害+50，命中率+5个百分点",
+    "description": "所有武器伤害+5%，命中率+5",
     "effects": {
-      "allDamage": 50,
-      "allHit": 5
+      "allHit": 5,
+      "allDamagePercent": 0.05
     },
     "era": "UC_0079_T2",
     "merchant": "anaheim",
-    "merchantLevel": 2
+    "merchantLevel": 2,
+    "category": "辅助",
+    "applicability": "所有"
   },
   {
     "id": "ms_database",
@@ -493,6 +558,356 @@
     },
     "era": "UC_0079_T2",
     "merchant": "anaheim",
-    "merchantLevel": 2
+    "merchantLevel": 2,
+    "category": "特殊",
+    "applicability": "非战舰"
+  },
+  {
+    "id": "anti_beam_coating",
+    "number": 37,
+    "name": "反光束涂层",
+    "rarity": 2,
+    "cost": 250,
+    "era": "UC_0087_T1",
+    "category": "防御",
+    "merchant": "anaheim",
+    "merchantLevel": 3,
+    "applicability": "所有",
+    "description": "增加最大耐久25%的反光束涂层（已有该机制时额外+10%耐久）",
+    "effects": {
+      "coating": 1
+    }
+  },
+  {
+    "id": "artillery_sight",
+    "number": 38,
+    "name": "炮击用观瞄装置",
+    "rarity": 1,
+    "cost": 75,
+    "era": "UC_0079_T1",
+    "category": "攻击",
+    "merchant": "anaheim",
+    "merchantLevel": 2,
+    "applicability": "战舰",
+    "description": "光束炮和实弹炮命中+10",
+    "effects": {
+      "cannonHit": 10
+    },
+    "shipOnly": true
+  },
+  {
+    "id": "internal_arm",
+    "number": 39,
+    "name": "内藏式机械臂",
+    "rarity": 3,
+    "cost": 100,
+    "era": "UC_0087_T1",
+    "category": "攻击",
+    "merchant": "anaheim",
+    "merchantLevel": 3,
+    "applicability": "非战舰",
+    "description": "格斗武器伤害+10%",
+    "effects": {
+      "meleeDamagePercent": 0.1
+    },
+    "nonShip": true
+  },
+  {
+    "id": "large_thruster",
+    "number": 40,
+    "name": "大型推进器",
+    "rarity": 2,
+    "cost": 100,
+    "era": "UC_0079_T2",
+    "category": "机动",
+    "merchant": "anaheim",
+    "merchantLevel": 2,
+    "applicability": "所有",
+    "description": "机动系数+30，反应系数-15，移动+3",
+    "effects": {
+      "speed": 30,
+      "reaction": -15,
+      "move": 3
+    }
+  },
+  {
+    "id": "caseless_ammo",
+    "number": 41,
+    "name": "新型无壳弹药",
+    "rarity": 1,
+    "cost": 25,
+    "era": "UC_0079_T1",
+    "category": "攻击",
+    "merchant": "anaheim",
+    "merchantLevel": 2,
+    "applicability": "非战舰",
+    "description": "头部火神炮系武器获得50%穿甲性能",
+    "effects": {
+      "vulcanPiercing": 0.5
+    },
+    "nonShip": true
+  },
+  {
+    "id": "ms_spares",
+    "number": 42,
+    "name": "MS备用部件",
+    "rarity": 2,
+    "cost": 50,
+    "era": "UC_0079_T1",
+    "category": "特殊",
+    "merchant": "anaheim",
+    "merchantLevel": 2,
+    "applicability": "非战舰",
+    "description": "立即恢复25%耐久，恢复一个随机损毁零件，一局一次",
+    "effects": {
+      "spares": 1
+    },
+    "nonShip": true
+  },
+  {
+    "id": "missile_guidance",
+    "number": 43,
+    "name": "新型导弹诱导系统",
+    "rarity": 2,
+    "cost": 150,
+    "era": "UC_0087_T1",
+    "category": "攻击",
+    "merchant": "anaheim",
+    "merchantLevel": 2,
+    "applicability": "所有",
+    "description": "导弹类武器命中率+10",
+    "effects": {
+      "missileHit": 10
+    }
+  },
+  {
+    "id": "active_suspension",
+    "number": 44,
+    "name": "活动悬挂",
+    "rarity": 1,
+    "cost": 100,
+    "era": "UC_0087_T1",
+    "category": "机动",
+    "merchant": "anaheim",
+    "merchantLevel": 2,
+    "applicability": "非战舰",
+    "description": "反击时反应系数+10",
+    "effects": {
+      "counterReaction": 10
+    },
+    "nonShip": true
+  },
+  {
+    "id": "ship_maintenance",
+    "number": 45,
+    "name": "战舰维修班",
+    "rarity": 2,
+    "cost": 75,
+    "era": "UC_0079_T2",
+    "category": "防御",
+    "merchant": "anaheim",
+    "merchantLevel": 2,
+    "applicability": "战舰",
+    "description": "每回合回复自机随机两个受损部位的10%血量",
+    "effects": {
+      "shipRepair": 1
+    },
+    "shipOnly": true
+  },
+  {
+    "id": "veda",
+    "number": 46,
+    "name": "VEDA辅助操舵系统",
+    "rarity": 3,
+    "cost": 100,
+    "era": "AD_2307_T1",
+    "category": "机动",
+    "merchant": "anaheim",
+    "merchantLevel": 3,
+    "applicability": "CB单位",
+    "description": "机动&反应系数+10",
+    "effects": {
+      "speed": 10,
+      "reaction": 10
+    },
+    "factionOnly": "CB"
+  },
+  {
+    "id": "high_velocity_ammo",
+    "number": 47,
+    "name": "高速穿甲弹",
+    "rarity": 1,
+    "cost": 50,
+    "era": "UC_0079_T2",
+    "category": "攻击",
+    "merchant": "anaheim",
+    "merchantLevel": 2,
+    "applicability": "所有",
+    "description": "实弹机枪命中+10",
+    "effects": {
+      "shellMachineHit": 10
+    }
+  },
+  {
+    "id": "special_explosives",
+    "number": 48,
+    "name": "特殊炸药",
+    "rarity": 1,
+    "cost": 50,
+    "era": "UC_0079_T1",
+    "category": "攻击",
+    "merchant": "anaheim",
+    "merchantLevel": 2,
+    "applicability": "所有",
+    "description": "手榴弹类武器伤害+1500",
+    "effects": {
+      "grenadeDamage": 1500
+    }
+  },
+  {
+    "id": "haro",
+    "number": 49,
+    "name": "哈罗",
+    "rarity": 5,
+    "cost": 350,
+    "era": "UC_0093_T2",
+    "category": "辅助",
+    "merchant": "anaheim",
+    "merchantLevel": 4,
+    "applicability": "所有",
+    "description": "机动&反应&命中系数+10，射击&格斗系数+20",
+    "effects": {
+      "speed": 10,
+      "reaction": 10,
+      "accuracy": 10,
+      "shooting": 20,
+      "melee": 20
+    }
+  },
+  {
+    "id": "motion_memory",
+    "number": 50,
+    "name": "动作记忆装置",
+    "rarity": 1,
+    "cost": 150,
+    "era": "UC_0079_T1",
+    "category": "辅助",
+    "merchant": "anaheim",
+    "merchantLevel": 2,
+    "applicability": "非战舰",
+    "description": "机师经验+25%，机动系数下降10%",
+    "effects": {
+      "experience": 0.25,
+      "speedPercent": -0.1
+    },
+    "nonShip": true
+  },
+  {
+    "id": "high_resolution_display",
+    "number": 51,
+    "name": "高解析度显示面板",
+    "rarity": 2,
+    "cost": 150,
+    "era": "UC_0087_T1",
+    "category": "辅助",
+    "merchant": "anaheim",
+    "merchantLevel": 2,
+    "applicability": "所有",
+    "description": "视野距离+2，最大射程+1",
+    "effects": {
+      "sight": 2,
+      "allRange": 1
+    }
+  },
+  {
+    "id": "armor_monitor",
+    "number": 52,
+    "name": "装甲内环境监测器",
+    "rarity": 1,
+    "cost": 100,
+    "era": "UC_0079_T2",
+    "category": "辅助",
+    "merchant": "anaheim",
+    "merchantLevel": 2,
+    "applicability": "非战舰",
+    "description": "机师经验+15%，耐久-15000",
+    "effects": {
+      "experience": 0.15,
+      "hp": -15000
+    },
+    "nonShip": true
+  },
+  {
+    "id": "brainwave_sensor",
+    "number": 53,
+    "name": "脑波测定器",
+    "rarity": 3,
+    "cost": 150,
+    "era": "UC_0087_T2",
+    "category": "辅助",
+    "merchant": "anaheim",
+    "merchantLevel": 3,
+    "applicability": "非战舰",
+    "description": "驾驶员觉醒+15，反应系数+5，受到伤害+5%",
+    "effects": {
+      "awakening": 15,
+      "reaction": 5,
+      "incomingDamage": 0.05
+    },
+    "nonShip": true
+  },
+  {
+    "id": "linear_seat",
+    "number": 54,
+    "name": "线性座椅",
+    "rarity": 2,
+    "cost": 100,
+    "era": "UC_0087_T1",
+    "category": "辅助",
+    "merchant": "anaheim",
+    "merchantLevel": 3,
+    "applicability": "非战舰",
+    "description": "主动进攻时反应系数+10",
+    "effects": {
+      "attackReaction": 10
+    },
+    "nonShip": true
+  },
+  {
+    "id": "weapon_rack",
+    "number": 57,
+    "name": "武器挂架",
+    "rarity": 2,
+    "cost": 150,
+    "era": "UC_0079_T2",
+    "category": "攻击",
+    "merchant": "anaheim",
+    "merchantLevel": 3,
+    "applicability": "所有",
+    "description": "EN+150，反应系数-15，主要射击武器攻击轮数+1（额外计算）",
+    "effects": {
+      "en": 150,
+      "reaction": -15,
+      "primaryRounds": 1
+    }
+  },
+  {
+    "id": "reserve_magazine",
+    "number": 58,
+    "name": "后备弹舱",
+    "rarity": 2,
+    "cost": 150,
+    "era": "UC_0079_T2",
+    "category": "攻击",
+    "merchant": "anaheim",
+    "merchantLevel": 3,
+    "applicability": "所有",
+    "description": "EN+300，反应&机动-15，实弹加成+5%",
+    "effects": {
+      "en": 300,
+      "reaction": -15,
+      "speed": -15,
+      "shellPercent": 0.05
+    }
   }
 ]

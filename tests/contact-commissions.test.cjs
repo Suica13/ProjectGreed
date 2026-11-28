@@ -67,46 +67,40 @@ function funded() {
   return result;
 }
 
-test("Anaheim mid-0079 commissions require 0079T1 without changing their difficulty gates",()=>{
+test("Anaheim commissions follow their equipment eras and preserve difficulty gates",()=>{
  const C=require('../shared/contact-tasks');
  for(const task of C.tasks.filter(t=>t.contactId==='anaheim')){
-  assert.equal(task.era,'UC_0079_T1');
-  const settings={mode:'sweep',sweepFaction:task.enemyFaction,sweepEnvironment:'ground',sweepEra:'UC_0079_T1',sweepDifficulty:task.difficulty};
+  const settings={mode:'sweep',sweepFaction:task.enemyFaction,sweepEnvironment:'ground',sweepEra:task.era||'UC_0079_T1',sweepDifficulty:task.difficulty};
   assert(C.eligible(task,settings),task.id);
-  assert(!C.eligible(task,{...settings,sweepEra:'UC_0079_T2'}),task.id);
+  if(task.era)assert(!C.eligible(task,{...settings,sweepEra:task.era==='UC_0079_T1'?'UC_0079_T2':'UC_0079_T1'}),task.id);
   assert(!C.eligible(task,{...settings,sweepDifficulty:task.difficulty-1}),task.id);
  }
 });
-
-test("Anaheim commissions unlock every product by claimed task, never by affinity alone",()=>{
+test("Anaheim T1 purchases require both a claimed commission and sufficient affinity",()=>{
  const {E}=funded(),C=require('../shared/contact-tasks'),P=require('../shared/unit-plugins');
- const tasks=C.tasks.filter(t=>t.contactId==='anaheim');assert.equal(tasks.length,10);
- const parts=P.catalog.filter(p=>p.merchant==='anaheim');assert.equal(parts.length,19);
- assert(parts.every(p=>!E.pluginOffer('anaheim',p.id).available));
- assert.throws(()=>E.purchasePlugin('anaheim','frame'),/前提任务/);
- assert(E.meetLiaison('anaheim'));assert.equal(E.snapshot().contactIntro,false);
- assert(C.met(E.snapshot(),'anaheim'));assert.equal(E.meetLiaison('anaheim'),false);
+ const tasks=C.tasks.filter(t=>t.contactId==='anaheim'&&t.number<=6);
+ const parts=P.catalog.filter(p=>p.merchant==='anaheim'&&p.era==='UC_0079_T1');
+ assert(parts.every(p=>!E.pluginOffer('anaheim',p.id).available));E.meetLiaison('anaheim');
  const unlocked=new Set();
  for(const task of tasks){
-  assert(E.acceptContactTask(task.id));
-  if(task.reclaim)assert(E.snapshot().storage.units.some(u=>u.contactLoan===task.id&&u.unitId==='RX_79_G'));
+  E.acceptContactTask(task.id);
   E.creditAward({id:'ae-'+task.id,matchId:'ae-'+task.id,money:0,supplies:0,contactProgress:[{id:task.id,amount:task.required}]});
-  for(const id of task.pluginUnlocks)assert(!E.pluginOffer('anaheim',id).available,'ready is not claimed');
+  for(const id of task.pluginUnlocks)assert(!E.pluginOffer('anaheim',id).available);
   E.completeContactTask(task.id);task.pluginUnlocks.forEach(id=>unlocked.add(id));
-  for(const part of parts)assert.equal(E.pluginOffer('anaheim',part.id).available,unlocked.has(part.id));
+  for(const part of parts)assert.equal(E.pluginOffer('anaheim',part.id).available,unlocked.has(part.id)&&E.merchantLevel('anaheim')>=part.merchantLevel);
  }
- assert.equal(unlocked.size,19);assert.equal(E.merchantAffinity('anaheim'),1000);assert.equal(E.liaisonAffinity(),0);
- assert(E.purchasePlugin('anaheim','ms_database'));assert.equal(E.pluginQuantity('ms_database'),1);
- const restored=load(E.snapshot()).E;assert(restored.pluginOffer('anaheim','ms_database').available);
- assert(!restored.snapshot().storage.units.some(u=>u.contactLoan==='anaheim-8'));
+ assert.equal(unlocked.size,parts.length);
+ const state=E.snapshot();state.merchantAffinities.anaheim=800;
+ const upgraded=load(state).E;assert(upgraded.purchasePlugin('anaheim','ms_spares'));
+ const restored=load(upgraded.snapshot()).E;assert.equal(restored.pluginQuantity('ms_spares'),1);
+ for(const p of P.catalog.filter(p=>p.era!=='UC_0079_T1')){const offer=restored.pluginOffer(p.merchant,p.id);if(p.era==='UC_0079_T2')assert.equal(offer.available,false);else assert.equal(offer,null);}
  const high=restored.snapshot();high.contactTasks=[];high.merchantAffinities.anaheim=10000;
- const locked=load(high).E;assert(!locked.pluginOffer('anaheim','ms_database').available);
- assert.equal(locked.pluginQuantity('ms_database'),1,'owned parts remain available');
+ assert(!load(high).E.pluginOffer('anaheim','ms_spares').available);
 });
 
 test("Anaheim planning JSON round trips every original commission and embedded portrait",()=>{
  const A=require('../shared/contact-anaheim'),M=require('../task-editor/model');
- const doc=JSON.parse(fs.readFileSync('docs/data/contacts/anaheim-1.0.json','utf8'));
+ const doc=JSON.parse(fs.readFileSync('docs/data/contacts/anaheim-1.1.json','utf8'));
  assert.deepEqual(M.validate(doc,require('../task-editor/catalog.cjs')),[]);
  for(const task of A.tasks){const entry=doc.contacts[0].tasks.find(t=>t.id===task.id);assert(entry.text.includes(task.description));assert(entry.text.includes(task.ending));}
  assert.deepEqual(Buffer.from(doc.contacts[0].portrait.dataUrl.split(',')[1],'base64'),fs.readFileSync('assets/ui/contact-ae.png'));
@@ -143,7 +137,7 @@ test("Zeon first contact, progression and affinity are independent from EFSF and
  assert.equal(E.merchantAffinity('anaheim'),0);assert(!E.snapshot().storage.units.some(u=>u.contactLoan==='zeon-5'));
  const unlocked=new Set([C.introPlan('zeon'),...C.tasks.filter(t=>t.contactId==='zeon').flatMap(C.planIds)]);
  for(const plan of require('../shared/development-tree.json').ZEON.filter(p=>p.era==='UC_0079_T1'&&p.points>0))assert.equal(unlocked.has(plan.id),true,plan.id);
- for(const part of require('../shared/unit-plugins').catalog.filter(p=>p.merchant==='zeon')){
+ for(const part of require('../shared/unit-plugins').catalog.filter(p=>p.merchant==='zeon'&&p.era==='UC_0079_T1')){
   assert(E.pluginOffer('zeon',part.id).available);assert.equal(E.pluginOffer('efsf',part.id),null);
  }
  for(const unit of ['MS_06J','MS_06G','MS_09','EMS_10','MS_08TX','ApsarasII','MS_11'])assert(E.hasLicense(unit),unit);
@@ -173,7 +167,7 @@ test("either sixth liaison commission unlocks the same level-two facilities at u
 test("Zeon trial loan returns only the borrowed command Zaku and detaches its pilot and parts",()=>{
  const C=require('../shared/contact-tasks'),state=funded().E.snapshot();state.merchantIntros={zeon:true};
  state.contactTasks=C.tasks.filter(t=>t.contactId==='zeon'&&t.number<5).map(t=>({id:t.id,status:'claimed',progress:t.required}));
- const {E}=load(state);E.creditActivity({id:'owned-gouf',matchId:'owned-gouf',money:0,supplies:0,inventory:{MS_11S:1}});
+ const {E}=load(state);E.creditActivity({id:'owned-gouf',matchId:'owned-gouf',money:0,supplies:0,inventory:{MS_11S:1}});E.receiveDeliveries();
  const owned=E.snapshot().storage.units.find(u=>u.unitId==='MS_11S').id;
  E.acceptContactTask('zeon-5');const next=E.snapshot(),loan=next.storage.units.find(u=>u.contactLoan==='zeon-5');assert(loan);
  assert.throws(()=>E.discardStoredUnit(loan.id),/任务借用/);
@@ -205,9 +199,9 @@ test("existing tagged trial Gouf migrates to the command Zaku without replacing 
 
 test("Zeon planning JSON keeps all runtime dialogue, dependency IDs and the supplied portrait",()=>{
  const Z=require('../shared/contact-zeon'),M=require('../task-editor/model');
- const doc=JSON.parse(fs.readFileSync('docs/data/contacts/zeon-吉翁联络人-1.0.json','utf8'));
+ const doc=JSON.parse(fs.readFileSync('docs/data/contacts/zeon-吉翁联络人-1.1.json','utf8'));
  assert.deepEqual(M.validate(doc,require('../task-editor/catalog.cjs')),[]);
- const contact=doc.contacts[0];assert.equal(contact.id,'zeon');assert.equal(contact.tasks.length,11);
+ const contact=doc.contacts[0];assert.equal(contact.id,'zeon');assert.equal(contact.tasks.length,21);
  for(const task of Z.tasks){const entry=contact.tasks.find(e=>e.id===task.id);assert(entry.text.includes(task.description));assert(entry.text.includes(task.ending));assert.deepEqual(entry.requires,task.requires);}
  assert.deepEqual(Buffer.from(contact.portrait.dataUrl.split(',')[1],'base64'),fs.readFileSync('assets/ui/contact-zeon.png'));
 });

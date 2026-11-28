@@ -28,12 +28,12 @@ for(const width of [1440,390])test(`online contract T1/T2 settings and T2 N6 dep
    await page.locator('#sweepDifficulty').selectOption(String(n));await idle();
    await expect.poll(()=>page.evaluate(()=>Net.snapshot.settings.sweepDifficulty)).toBe(n);
    await expect(page.locator('#roomCostLimit')).toHaveValue(String(cost));
-   await expect(page.locator('#roomUnitLimit')).toHaveValue(n<4?'2':'3');
+   await expect(page.locator('#roomUnitLimit')).toHaveValue(n<4?'3':'4');
   }
   await page.locator('#sweepEra').selectOption('UC_0079_T2');await idle();
   await page.locator('#sweepDifficulty').selectOption('1');await idle();
   await expect(page.locator('#roomCostLimit')).toHaveValue('4500');
-  await expect(page.locator('#roomUnitLimit')).toHaveValue('2');
+  await expect(page.locator('#roomUnitLimit')).toHaveValue('3');
   await page.locator('#sweepDifficulty').selectOption('6');await idle();
   await expect(page.locator('#roomCostLimit')).toHaveValue('22500');
   if(width<700)await page.locator('#closeRoomSettingsSheet').click();
@@ -41,6 +41,8 @@ for(const width of [1440,390])test(`online contract T1/T2 settings and T2 N6 dep
   await page.locator('#confirmFinalFormation').click();
   await expect.poll(()=>page.evaluate(()=>Net.snapshot.phase)).toBe('deployment');
   const room=app.rooms.get('CONTRACT_SIX');
+  expect(room.game.units.filter(u=>u.team>0&&!u.facility&&!G.modelOf(u).facility)).toHaveLength(45);
+  expect(await page.evaluate(()=>ContractMode.config(6,'UC_0079_T2').relativePressure)).toBe(1.25);
   const map=G.catalog.maps[room.game.mapId];
   const edge=area=>area.x===0?'left':area.x+area.width===map.width?'right':area.y===0?'top':'bottom';
   expect(edge(room.game.contract.entries[0])).not.toBe(edge(room.game.contract.entries[1]));

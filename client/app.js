@@ -1842,6 +1842,20 @@ function drawMapFrame(now) {
     ctx.fillStyle="#acd7cc";ctx.fillRect(1,-.3,1.7,.3);
     ctx.restore();
   }
+  const commission = game.mission && Rules.getMap(game.mapId).mission?.commission;
+  if(commission){
+    ctx.save();ctx.font="bold 13px sans-serif";ctx.textAlign="center";
+    for(const node of commission.nodes || []){
+      const done=game.mission.commission?.visited?.includes(node.id);
+      ctx.strokeStyle=done?"#83e6ac":"#f8d16a";ctx.fillStyle=ctx.strokeStyle;ctx.lineWidth=2;
+      ctx.strokeRect(ox+node.x*tile,oy+node.y*tile,tile,tile);
+      ctx.fillText(I18n.text(node.label)+(done?" ✓":""),ox+(node.x+.5)*tile,oy+node.y*tile-5);
+    }
+    if(commission.extraction){const r=commission.extraction;ctx.fillStyle="#60d8a022";ctx.strokeStyle="#7cf1b2";
+      ctx.fillRect(ox+r.x*tile,oy+r.y*tile,r.width*tile,r.height*tile);ctx.strokeRect(ox+r.x*tile,oy+r.y*tile,r.width*tile,r.height*tile);
+      ctx.fillStyle="#bdf4d1";ctx.fillText("撤离区",ox+(r.x+r.width/2)*tile,oy+r.y*tile-5);}
+    ctx.restore();
+  }
   const escortGoal = game.mission && Rules.getMap(game.mapId).mission?.victory;
   if(escortGoal?.type==="extract"){
     const r=escortGoal.region;

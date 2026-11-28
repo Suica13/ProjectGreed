@@ -342,18 +342,252 @@ const ZeonContact = (() => {
   "description": "联邦在我们的进军路线上钉下了一支精锐部队，领头的自称铁壁沃尔克。\n他把占领区叫防线，把拒绝撤走叫守土。他们踩在谁的土地上，难道已经忘了吗？\n那支中队装备陆战型高达，驾驶员都是打过硬仗的人。摧毁他们，不要让这块所谓的铁壁继续挡在公国面前。\n有人劝我绕开，说正面强攻的损失不值得。今天绕开一条线，明天就会有人提议放弃一座城。\n我要这条路打开，也要那些劝退的人亲眼看着它被打开。",
   "ending": "铁壁倒了。那些拿它当借口的人，现在还有什么可说？\n不是我们走得太远，是他们忘了我们为什么出发。\n前线会继续向前，你也一样。别把今天的战果当成可以停下的理由。吉翁万岁。"
 },
+    {
+  "id": "zeon-12",
+  "name": "深水来信",
+  "difficulty": 3,
+  "kind": "salvage",
+  "licensePlan": "Tech_ZEON_0079_T2_NewTypeUnderwaterMSDevelopmentPlan",
+  "money": 31000,
+  "description": "联邦打捞队带走了一份水中机试验记录。把它拿回来，别让我们的航道先被敌人读懂。",
+  "ending": "记录已经送到技术部门。沿岸的部队还在等消息，你带回来的东西会让他们多一条活路。",
+  "required": 1,
+  "inventory": {
+    "MSM_07": 1
+  },
+  "ground": true,
+  "era": "UC_0079_T2",
+  "progressVersion": 1,
+  "requires": [
+    "zeon-11"
+  ],
+  "wreckUnit": "MSM_07",
+  "eventName": "水中机试验记录",
+  "objectiveText": "回收试验记录并撤离"
+},
+    {
+  "id": "zeon-13",
+  "name": "推进的重量",
+  "difficulty": 3,
+  "kind": "kills",
+  "licensePlan": "Tech_ZEON_0079_T2_DomPowerfulPlan",
+  "money": 32000,
+  "description": "前线需要能顶着炮火继续推进的机器。试验队给你留了一台热带型大魔，把真实交战记录带回来，别拿靶场成绩敷衍我。",
+  "ending": "机器收到了，记录也完整。工程师会继续改，前线不能停在原地等他们。",
+  "required": 20,
+  "inventory": {},
+  "ground": true,
+  "era": "UC_0079_T2",
+  "progressVersion": 1,
+  "requires": [
+    "zeon-12"
+  ],
+  "requiredAttackerUnit": "MS_09F_TROP",
+  "grant": {
+    "MS_09F_TROP": 1
+  },
+  "reclaim": {
+    "MS_09F_TROP": 1
+  },
+  "objectiveText": "使用借用热带型大魔累计击毁20台联邦MS"
+},
+    {
+  "id": "zeon-14",
+  "name": "沿岸封锁",
+  "difficulty": 3,
+  "kind": "command",
+  "licensePlan": "Tech_ZEON_0079_T2_UnderwaterMADevelopmentPlan",
+  "money": 33000,
+  "description": "联邦把巡逻队压到了我们的沿岸通道上。清掉他们，让运输队通过。技术人员带着新方案等在后方，不能让他们一直等下去。",
+  "ending": "通道恢复了。新的水中装备会沿着这条线送到部队手里。守住它，比在地图上画一条箭头有用。",
+  "required": 1,
+  "inventory": {},
+  "ground": true,
+  "era": "UC_0079_T2",
+  "progressVersion": 1,
+  "requires": [
+    "zeon-13"
+  ],
+  "targetUnit": "RGM_79_G",
+  "targetCount": 3,
+  "requiresExtraction": true,
+  "objectiveText": "歼灭沿岸联邦MS巡逻队并撤离"
+},
+    {
+  "id": "zeon-15",
+  "name": "竞标之外",
+  "difficulty": 4,
+  "kind": "command",
+  "licensePlan": "Tech_ZEON_0079_T2_NextGenerationMainstayMSBiddingPlan",
+  "money": 35000,
+  "description": "新型主力机的报告堆满了桌子，每一份都说自己的方案最好。联邦的突击队不会等我们争出结果。先把他们挡回去，让工厂有时间把机器送上前线。",
+  "ending": "敌人的推进停了。至于那些竞标报告，我只相信能从战场回来的机器。你会拿到新一批调拨许可。",
+  "required": 1,
+  "inventory": {},
+  "ground": true,
+  "era": "UC_0079_T2",
+  "progressVersion": 1,
+  "requires": [
+    "zeon-14"
+  ],
+  "targetUnit": "RGM_79FP",
+  "targetCount": 3,
+  "requiresExtraction": true,
+  "objectiveText": "歼灭联邦强袭吉姆小队并撤离"
+},
+    {
+  "id": "zeon-16",
+  "name": "另一种答案",
+  "difficulty": 4,
+  "kind": "kills",
+  "licensePlan": "Tech_ZEON_0079_T2_GyanPowerfulPlan",
+  "money": 36000,
+  "description": "主力机的选择已经定了，但另一套方案还没有死。把这台强人带出去，让它在实战里说话。别替设计师争论，战报会替你回答。",
+  "ending": "我看到了记录。这条开发线值得留下，前线需要的不止一种答案。借用机留下，许可归你。",
+  "required": 20,
+  "inventory": {},
+  "ground": true,
+  "era": "UC_0079_T2",
+  "progressVersion": 1,
+  "requires": [
+    "zeon-15"
+  ],
+  "requiredAttackerUnit": "MS_15A",
+  "grant": {
+    "MS_15A": 1
+  },
+  "reclaim": {
+    "MS_15A": 1
+  },
+  "objectiveText": "使用借用强人累计击毁20台联邦MS"
+},
+    {
+  "id": "zeon-17",
+  "name": "统一规格",
+  "difficulty": 4,
+  "kind": "salvage",
+  "licensePlan": "Tech_ZEON_0079_T2_UnitedMaintenancePlan",
+  "money": 37000,
+  "description": "仓库里的零件越来越多，能装到同一台机器上的却越来越少。有人把整备资料留在了撤退线后面。把它取回来，我们不能再让部队因为一个接头停在那里。",
+  "ending": "资料交给整备部门了。少一种不能通用的零件，前线就少一场无谓的等待。接下来这批机器会按新标准交付。",
+  "required": 1,
+  "inventory": {
+    "MS_06FZ": 2
+  },
+  "ground": true,
+  "era": "UC_0079_T2",
+  "progressVersion": 1,
+  "requires": [
+    "zeon-16"
+  ],
+  "wreckUnit": "MS_06FZ",
+  "eventName": "统合整备资料箱",
+  "objectiveText": "回收统合整备资料并撤离"
+},
+    {
+  "id": "zeon-18",
+  "name": "寒流",
+  "difficulty": 5,
+  "kind": "command",
+  "licensePlan": "Tech_ZEON_0079_T2_HygoggDevelopmentPlan",
+  "money": 39000,
+  "description": "联邦的狙击队盯住了试验队的撤离路线。不要让他们把新机的轮廓拍回去。清掉封锁，试验人员会从另一侧离开。",
+  "ending": "试验队已经回来了。他们说低温下的记录还不够，我让他们先看看活着回来的人。新的许可已经办妥。",
+  "required": 1,
+  "inventory": {},
+  "ground": true,
+  "era": "UC_0079_T2",
+  "progressVersion": 1,
+  "requires": [
+    "zeon-17"
+  ],
+  "targetUnit": "RGM_79SP2",
+  "targetCount": 3,
+  "requiresExtraction": true,
+  "objectiveText": "歼灭联邦狙击型MS小队并撤离"
+},
+    {
+  "id": "zeon-19",
+  "name": "防线支点",
+  "difficulty": 5,
+  "kind": "enemybase",
+  "licensePlan": "Tech_ZEON_0079_T2_BaseDefenseMADevelopmentPlan",
+  "money": 41000,
+  "description": "联邦在要塞外围立起了指挥节点。打掉它，让他们的炮火失去统一指挥。我们的防卫机还在部署，给他们争取时间。",
+  "ending": "外围的通讯安静了。防卫机已经进入阵位。你做的是让这些机器来得及开火，不是替谁写一份漂亮的战果报告。",
+  "required": 1,
+  "inventory": {},
+  "ground": false,
+  "era": "UC_0079_T2",
+  "progressVersion": 1,
+  "requires": [
+    "zeon-18"
+  ],
+  "environment": "space",
+  "guardCount": 9,
+  "turrets": 2,
+  "eventName": "联邦前进指挥节点",
+  "requiresExtraction": true,
+  "objectiveText": "摧毁联邦前进指挥节点并撤离"
+},
+    {
+  "id": "zeon-20",
+  "name": "最后的手",
+  "difficulty": 6,
+  "kind": "command",
+  "licensePlan": "Tech_ZEON_0079_T2_ZeongDevelopmentPlan",
+  "money": 44000,
+  "description": "要塞的防线正在收缩，联邦的精锐已经逼近。我们还有最后一批新机，但它们需要时间展开。把突破口堵住，别让那些人直接闯进来。",
+  "ending": "突破口暂时稳住了。新机已经完成出击准备。我不知道还能守多久，但只要通讯还通着，命令就不会停止。",
+  "required": 1,
+  "inventory": {},
+  "ground": false,
+  "era": "UC_0079_T2",
+  "progressVersion": 1,
+  "requires": [
+    "zeon-19"
+  ],
+  "environment": "space",
+  "targetUnit": "RGM_79N",
+  "targetCount": 6,
+  "targetPilotGrade": "elite",
+  "requiresExtraction": true,
+  "objectiveText": "歼灭联邦精锐吉姆特装型部队并撤离"
+},
+    {
+  "id": "zeon-21",
+  "name": "星尘航路",
+  "difficulty": 6,
+  "kind": "upload",
+  "licensePlan": "Tech_ZEON_0079_T2_OperationStardust",
+  "money": 47000,
+  "description": "残存的部队正在重新集结。航路和识别资料还锁在旧中继站里，联邦也在找它。接通线路，把完整资料传回来，再离开那里。不要把活着的人留给一份过期的地图。",
+  "ending": "资料已经送到集结舰队。新的行动会沿着这些航路展开。你完成了这段委托，后面的命令由他们自己承担。",
+  "required": 1,
+  "inventory": {},
+  "ground": false,
+  "era": "UC_0079_T2",
+  "progressVersion": 1,
+  "requires": [
+    "zeon-20"
+  ],
+  "environment": "space",
+  "eventName": "残存舰队航路中继站",
+  "requiresExtraction": true,
+  "objectiveText": "守住中继站完成三回合上传并撤离"
+},
   ].map((task, index) => ({
     ...task,
     contactId: "zeon",
     number: index + 1,
     enemyFaction: task.enemyFaction || "EFSF",
-    era: "UC_0079_T1",
+    era: task.era || "UC_0079_T1",
     affinity: 100,
   }));
   return {
     intro,
     tasks,
-    planningVersion: "1.0",
+    planningVersion: "1.1",
     introPlan: "Tech_ZEON_0079_GroundTypeZakuDevelopmentPlan",
   };
 })();

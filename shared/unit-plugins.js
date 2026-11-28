@@ -8,7 +8,8 @@ const UnitPlugins = (() => {
     originals = new WeakMap();
   const ms = (model) => !model.ship && model.unitTags?.includes("MS");
   const allowed = (part, model) =>
-    !!part && (!part.msOnly || ms(model)) && (!part.nonShip || !model.ship);
+    !!part && (!part.msOnly || ms(model)) && (!part.nonShip || !model.ship) &&
+    (!part.shipOnly || !!model.ship) && (!part.factionOnly || model.faction === part.factionOnly || model.tags?.includes(part.factionOnly));
   function normalize(value, model) {
     if (value === undefined) return [null, null, null, null];
     if (!Array.isArray(value) || value.length > 4) throw Error("零件槽位无效");
@@ -57,7 +58,14 @@ const UnitPlugins = (() => {
       },
       hp: Math.max(1, Math.round(base.hp * (1 + add("hpPercent")) + add("hp"))),
       en: Math.max(0, Math.round(base.en * (1 + add("enPercent")) + add("en"))),
-      speed: Math.max(0, Math.round((base.speed ?? 100) + add("speed"))),
+      speed: Math.max(0, Math.round(((base.speed ?? 100) + add("speed")) * (1 + add("speedPercent")))),
+      pilotExperienceMultiplier: (base.pilotExperienceMultiplier ?? 1) * (1 + add("experience")),
+      pluginAwakening: add("awakening"),
+      counterReaction: add("counterReaction"),
+      attackReaction: add("attackReaction"),
+      incomingDamageMultiplier: 1 + add("incomingDamage"),
+      primaryRoundsBonus: add("primaryRounds"),
+      shipRepair: add("shipRepair"),
       mobility: Math.max(0, Math.round(base.mobility + add("reaction"))),
       accuracy: Math.max(
         0,
@@ -88,6 +96,7 @@ const UnitPlugins = (() => {
       },
       attackBonuses: {
         ...base.attackBonuses,
+        shell: (base.attackBonuses?.shell || 0) + add("shellPercent") * 100,
         shooting: (base.attackBonuses?.shooting || 0) + add("shooting"),
         melee: (base.attackBonuses?.melee || 0) + add("melee"),
       },
@@ -134,22 +143,42 @@ const UnitPlugins = (() => {
           (shell ? add("shellDamage") : 0) +
           (beamMelee ? add("beamMeleeDamage") : 0) +
           (shellMelee ? add("shellMeleeDamage") : 0) +
-          (focused ? add("focusedBeamDamage") : 0);
+          (focused ? add("focusedBeamDamage") : 0) +
+          (melee ? add("meleeDamage") : 0) +
+          (kind === "grenade" ? add("grenadeDamage") : 0);
+      const damagePercent = add("allDamagePercent") +
+        (kind === "bazooka" ? add("bazookaDamagePercent") : 0) +
+        (kind === "beam_rifle" ? add("beamRifleDamagePercent") : 0) +
+        (beamMelee ? add("beamMeleeDamagePercent") : 0) +
+        (shellMelee ? add("shellMeleeDamagePercent") : 0) +
+        (focused ? add("focusedBeamDamagePercent") : 0) +
+        (melee ? add("meleeDamagePercent") : 0);
       const beam =
         source.type !== "melee" &&
         (source.type === "beam" ||
           source.type === "irradiation" ||
           source.damageComponents?.beam > 0 ||
           source.damageComponents?.beamAP > 0);
-      const rangeBonus = (beam ? add("beamRange") : 0) + (machine ? add("machineRange") : 0),
-        hitBonus = add("allHit") + (beam ? add("beamHit") : 0) + (machine ? add("machineHit") : 0);
-      if (!rangeBonus && !hitBonus && !damageBonus) return source;
+      const rangeBonus = add("allRange") + (beam ? add("beamRange") : 0) + (machine ? add("machineRange") : 0),
+        hitBonus = add("allHit") + (beam ? add("beamHit") : 0) + (machine ? add("machineHit") : 0) +
+          (machine && shell ? add("shellMachineHit") : 0) +
+          (["beam_cannon", "cannon"].includes(kind) ? add("cannonHit") : 0) +
+          (kind === "missile" ? add("missileHit") : 0),
+        piercing = classes.headVulcan(source) ? add("vulcanPiercing") : 0;
+      if (!rangeBonus && !hitBonus && !damageBonus && !damagePercent && !piercing) return source;
       const result = { ...source };
       const increase = (values) => {
         const total = Object.values(values || {}).reduce((sum, n) => sum + n, 0);
-        return total > 0 && damageBonus
-          ? policy.roundComponents(values, (total + damageBonus) / total)
+        let result = total > 0 && (damageBonus || damagePercent)
+          ? policy.roundComponents(values, (total * (1 + damagePercent) + damageBonus) / total)
           : values;
+        if (!result) return result;
+        result = { ...result };
+        if (piercing && result.shell) {
+          result.shellAP = (result.shellAP || 0) + result.shell * piercing;
+          result.shell *= 1 - piercing;
+        }
+        return policy.roundComponents(result, 1);
       };
       for (const field of ["max", "range"])
         if (Number.isFinite(source[field]))
@@ -195,6 +224,12 @@ const UnitPlugins = (() => {
     }
     model.weapons = (base.weapons || []).map(weapon);
     model.skills = (base.skills || []).map(weapon);
+    if (add("coating")) model.abc = base.abc
+      ? { ...base.abc, capacity: base.abc.capacity + Math.round(model.hp * .1) }
+      : { capacity: Math.round(model.hp * .25), reductions: { beam: .75, beamAP: .1875, meleeBeam: .375, meleeBeamAP: .1875 } };
+    if (add("spares")) model.skills.push({ id: "plugin_ms_spares", name: "MS备用部件", type: "repair",
+      selfOnly: true, repairRandomPart: true, range: 0, enCost: 0, maxUses: 1, consumeAction: false,
+      hpRecoveryPercent: 25, enRecoveryPercent: 0, shieldRecoveryPercent: 0 });
     const mechanics = [];
     if (
       add("minovsky") &&

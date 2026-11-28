@@ -10,16 +10,24 @@ const AutomaticFire = (() => {
         ? Math.min(1, Classes.rounds(weapon))
         : Classes.rounds(weapon);
     if (count <= 0) return 0;
-    if (weapon.type === "melee") return Math.floor(count * (unit?.forcedExitRound === game.round ? .5 : 1));
     const model = unit ? G.modelOf(unit) : null;
-    const mobility = Math.max(0, model?.speed ?? 100) / 100;
+    const mobility = 1 + (Math.max(0, model?.speed ?? 100) - 100) / 100 * .25;
     const pilot = model?.pilotModifiers?.attackRounds ?? 1;
-    const limit = weapon.type === "melee" || weapon.slot === "skill" ||
+    const attribute = model?.pilotModifiers?.[weapon.type === "melee" ? "meleeRounds" : "shootingRounds"] ?? 1;
+    if (weapon.type === "melee") {
+      const limit = weapon.pilotRequirements?.length ? 1 : weapon.maxUsesPerTurn ?? Infinity;
+      const rounds = counter ? count : Math.min(limit, Math.max(1, Math.round(count * mobility * pilot * attribute)));
+      return Math.floor(rounds * (unit?.forcedExitRound === game.round ? .5 : 1));
+    }
+    const limit = weapon.slot === "skill" ||
       (Classes.wristWeapon(weapon) && !["shell_shotgun", "beam_shotgun"].includes(Classes.classify(weapon))) ||
       Classes.headVulcan(weapon) || weapon.pilotRequirements?.length
       ? 1 : weapon.maxUsesPerTurn ?? Infinity;
-    const scaled = Math.min(limit, Math.max(1, Math.round(count * mobility * pilot)));
-    return Math.min(limit, Math.floor(scaled * (unit?.forcedExitRound === game.round ? 0.5 : 1)) + (G.squadPrimaryRounds?.(game,unit,weapon) || 0));
+    const scaled = Math.min(limit, Math.max(1, Math.round(count * mobility * pilot * attribute)));
+    const ranged = model?.weapons?.filter(w => w.type !== "melee" && w.slot !== "skill") || [];
+    const primary = ranged.find(w => w.slot === "primary") || ranged[0];
+    const extra = primary?.id === weapon.id ? model?.primaryRoundsBonus || 0 : 0;
+    return Math.min(limit, Math.floor(scaled * (unit?.forcedExitRound === game.round ? 0.5 : 1)) + (G.squadPrimaryRounds?.(game,unit,weapon) || 0)) + extra;
   };
   function weapons(G, game, unit, target, counter = false) {
     if (!unit || !target) return [];

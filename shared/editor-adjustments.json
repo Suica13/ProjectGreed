@@ -356,7 +356,22 @@
       "/weapons/Common_ShieldAttack_BL/en": 0,
       "/weapons/Common_ShieldAttack_BL/attackRounds": 0,
       "/weapons/Common_ShieldAttack_BL/damageComponents/melee": -375,
-      "/weapons/Common_ShieldAttack_BL/damageComponents/meleeShell": -375
+      "/weapons/Common_ShieldAttack_BL/damageComponents/meleeShell": -375,
+      "/weapons/CB_GN_003_Combo/damagePerShot": -2250,
+      "/weapons/CB_GN_003_Combo/damageComponents/melee": -1125,
+      "/weapons/CB_GN_003_Combo/damageComponents/meleeShell": -1125,
+      "/weapons/CB_GN_003_Combo/attack/steps/3/damageComponents/meleeAP": -618.75,
+      "/weapons/CB_GN_003_Combo/attack/steps/5/damageComponents/meleeAP": -618.75,
+      "/weapons/CB_GN_003_Combo/attack/steps/7/damageComponents/meleeAP": -618.75,
+      "/weapons/CB_GN_003_Combo/attack/steps/9/damageComponents/meleeAP": -618.75,
+      "/weapons/CB_GN_003_Combo/attack/steps/11/damageComponents/meleeAP": -618.75,
+      "/weapons/CB_GN_003_Combo/attack/steps/13/damageComponents/meleeAP": -618.75,
+      "/weapons/CB_GN_003_Combo/attack/steps/15/damageComponents/meleeAP": -618.75,
+      "/weapons/CB_GN_003_Combo/attack/steps/17/damageComponents/meleeAP": -618.75,
+      "/weapons/CB_GN_003_Combo/attack/steps/19/damageComponents/meleeAP": -618.75,
+      "/weapons/CB_GN_003_Combo/attack/steps/21/damageComponents/meleeAP": -618.75,
+      "/weapons/CB_GN_003_Combo/attack/steps/23/damageComponents/meleeAP": -618.75,
+      "/weapons/CB_GN_003_Combo/attack/steps/26/damageComponents/meleeAP": -3375
     },
     "GN_003_MA": {
       "/stats/cost": 500,

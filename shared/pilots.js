@@ -781,7 +781,7 @@ const PilotSystem = (() => {
   }
   function of(unit, model = null) {
     const base = rawPilot(unit, model);
-    const awakening=talents.effects(base).awakening||0;
+    const awakening=(talents.effects(base).awakening||0) + (model?.pluginAwakening || 0);
     if (!Object.keys(unit.pilotBuffs || {}).length&&!awakening) return base;
     let cached = buffPilotCache.get(unit);
     if (!cached || cached.base !== base || cached.buffs !== unit.pilotBuffs || cached.awakening!==awakening) {
@@ -812,17 +812,17 @@ const PilotSystem = (() => {
   }
   function modifiers(unit, model) {
     const stats = of(unit, model).stats;
-    const awakening = stats.awakening >= 100 ? 10 : 0;
+    const awakening = stats.awakening >= 100 ? 1.05 : 1;
     return {
       shooting: factor(stats.shooting, 0.25),
       melee: factor(stats.melee, 0.25),
-      defense: Math.max(0.05, 1 - (stats.defense - 100) * 0.0025),
+      defense: Math.max(0.05, 1 - (stats.defense - 100) * 0.001875),
       move: factor(stats.speed, 0.5),
-      attackRounds: factor(stats.speed, 0.5),
-      awakeningHit: awakening,
-      awakeningEvasion: awakening,
-      accuracy: factor(stats.accuracy, 0.25),
-      reaction: factor(stats.reaction, 0.25),
+      attackRounds: factor(stats.speed, 0.125),
+      shootingRounds: factor(stats.shooting, 0.25),
+      meleeRounds: factor(stats.melee, 0.25),
+      accuracy: factor(stats.accuracy, 0.1875) * awakening,
+      reaction: factor(stats.reaction, 0.1875) * awakening,
     };
   }
   return {

@@ -9,6 +9,10 @@ const LocalRoom = (() => {
   }
   function open() {
     if (!assetsReady || window.isLayoutPreview || !PlayerProfile.selected()) return;
+    if(byId("offlineRoomMode").value === "mission" && !Object.values(Rules.catalog.maps).some(map=>
+      MissionMode.commissions.unlocked(map,Economy.snapshot().contactTasks))){
+      note("请先接取对应的联络人任务，解锁特殊关卡。");return;
+    }
     Net.leave();
     let engine;
     const socket = {

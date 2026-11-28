@@ -111,6 +111,7 @@ window.ContactUI = (() => {
     return title;
   }
   function taskSummary(task, progress = 0) {
+    if(task.missionId)return {conditions:"任务模式 · N"+task.difficulty+" · "+task.era.replace("UC_","").replaceAll("_","")+" · 接取后解锁关卡",objective:task.objectiveText+"（"+progress+"/"+task.required+"）"};
     const targets = {
       "efsf-1": "歼灭吉翁军MS",
       "efsf-2": "取回坠落米迪亚残骸中的数据后撤离",
@@ -129,7 +130,7 @@ window.ContactUI = (() => {
         "N" + task.difficulty + I18n.text("以上"),
         task.era ? task.era.replace("UC_", "").replaceAll("_", "") : ContactTasks.contactId(task)==="anaheim" ? "当前年代" : "0079T1",
         I18n.text(task.anyEnemyFaction ? "阵营不限" : task.enemyFaction === "NONE" ? "武装介入" : "敌军：" + (Rules.factionInfo[task.enemyFaction || "ZEON"]?.name || task.enemyFaction)),
-        ...(task.ground ? [I18n.text("地面")] : []),
+        ...(task.ground ? [I18n.text("地面")] : task.environment === "space" ? [I18n.text("宇宙")] : []),
       ].join(" · "),
       objective:
         I18n.text(task.objectiveText || targets[task.id] || task.eventName || task.name) +
@@ -300,6 +301,9 @@ window.ContactUI = (() => {
       element("h4", "", "任务目标"),
       objective,
     );
+    if(task.rulesText)detail.append(element("p","contact-task-conditions",task.rulesText));
+    if(task.missionId)detail.append(element("p","contact-mission-entry","对应关卡："+(Rules.catalog.maps[task.missionId]?.name || task.name)+"。接取后从任务模式选择；关卡不发奖励，完成后返回联络人交付。"));
+    if(task.moneyPerKill)detail.append(element("p","", "任务资金奖励：每击坠1架MS +"+task.moneyPerKill+"，交付时统一领取。"));
     if (task.grant) detail.append(element("h4", "", "初始赠送："), unitRewards(task.grant, !!task.reclaim));
     if (task.reclaim) detail.append(element("p", "muted", "临时单位不可装备零件，完成目标后自动回收并解除驾驶员配属。"));
     detail.append(element("h4", "", "任务奖励"));
@@ -325,6 +329,7 @@ window.ContactUI = (() => {
     if(task.pluginUnlocks?.length) technology.append(element("p","contact-plugin-unlocks",
       I18n.text("零件购买权限")+"："+task.pluginUnlocks.map(id=>I18n.text(UnitPlugins.byId.get(id)?.name || id)).join("、")));
     if(task.serviceUnlock === "pilot_talent_reset") technology.append(element("p","contact-service-unlocks","解锁服务：驾驶员天赋重置（每级消耗1000物资）"));
+    if(task.serviceUnlock === "parts_0079_t2") technology.append(element("p","contact-service-unlocks","解锁0079T2配件购买：阿纳海姆、联邦与吉翁渠道，仍需对应商人的好感度。"));
     if(task.tokenUnlock) {
       const pool=Economy.supplyPools.find(pool=>pool.tokenId===task.tokenUnlock);
       technology.append(element("p","contact-token-unlock","解锁购买："+pool.tokenName+" · 每枚资金 "+formatNumber(task.tokenPrice)));
@@ -359,7 +364,7 @@ window.ContactUI = (() => {
             Economy.acceptContactTask(task.id);
             renderTerminal();
             note(
-              task.grant ? "任务已接取，临时单位已发放；机库满员时请到保管库接受。" : "任务已接取",
+              task.grant ? "任务已接取，配发单位已发放；机库满员时请到保管库接受。" : task.missionId ? "任务已接取，对应任务关卡已解锁" : "任务已接取",
             );
           }
         } catch (error) {
@@ -433,7 +438,7 @@ window.ContactUI = (() => {
         element(
           "small",
           "merchant-unlock" + (offer.available ? "" : " is-locked"),
-          offer.requiredTask ? I18n.text("前提任务：") + I18n.text(offer.requiredTaskName) : "需要好感度等级 " + offer.requiredLevel,
+          (offer.requiredTask ? I18n.text("前提任务：") + I18n.text(offer.requiredTaskName) + " · " : "") + "需要好感度等级 " + offer.requiredLevel,
         ),
         element("small", "muted", "可用 " + Economy.pluginQuantity(part.id) + " 件"),
         purchase,

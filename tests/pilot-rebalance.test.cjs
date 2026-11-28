@@ -83,10 +83,10 @@ test("damage attributes use quarter-point gains while other modifiers stay uncha
   for (const [stat, field, weight] of [
     ["shooting", "shooting", 0.25],
     ["melee", "melee", 0.25],
-    ["accuracy", "accuracy", 0.25],
-    ["reaction", "reaction", 0.25],
+    ["accuracy", "accuracy", 0.1875],
+    ["reaction", "reaction", 0.1875],
     ["speed", "move", 0.5],
-    ["speed", "attackRounds", 0.5],
+    ["speed", "attackRounds", 0.125],
   ]) {
     near(P.modifiers(unit({ [stat]: 100 }))[field], 1);
     near(P.modifiers(unit({ [stat]: 110 }))[field], 1 + weight / 10);
@@ -95,9 +95,9 @@ test("damage attributes use quarter-point gains while other modifiers stay uncha
   }
   near(base.shooting, 1);
   near(P.modifiers(unit({ defense: 100 })).defense, 1);
-  near(P.modifiers(unit({ defense: 90 })).defense, 1.025);
-  near(P.modifiers(unit({ defense: 110 })).defense, 0.975);
-  near(P.modifiers(unit({ defense: 200 })).defense, 0.75);
+  near(P.modifiers(unit({ defense: 90 })).defense, 1.01875);
+  near(P.modifiers(unit({ defense: 110 })).defense, 0.98125);
+  near(P.modifiers(unit({ defense: 200 })).defense, 0.8125);
   near(P.modifiers(unit({ speed: 110 })).reaction, 1);
   near(P.modifiers(unit({ awakening: 100 })).shooting, 1);
   near(P.modifiers(unit({ awakening: 100 })).melee, 1);

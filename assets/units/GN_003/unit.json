@@ -796,7 +796,8 @@
         "Common_ShieldAttack_BL"
       ],
       "primary": "CB_GN_003_BMG",
-      "cost": 0
+      "cost": 0,
+      "conversionBaseCost": 0
     }
   ],
   "skills": [
@@ -898,5 +899,6 @@
       "CanUseSFS"
     ]
   },
-  "hangars": []
+  "hangars": [],
+  "faction": "CB"
 }

@@ -104,6 +104,8 @@ async function stop() {
     windowsHide: true,
   });
   await boot();
+  await page.locator("#profileCompanyName").fill("Native smoke test");
+  await page.locator("#profileOnboardingConfirm").click();
   await page.evaluate(() => MenuShell.go("pilots"));
   await page.locator("#createCustomPilot").click();
   await page.locator("#createPilotConfirm").click();

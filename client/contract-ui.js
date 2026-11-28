@@ -363,8 +363,8 @@ const ContractUI = (() => {
       ctx.fillStyle = ctx.strokeStyle;
       ctx.textBaseline = "middle";
       ctx.fillText(o.status === "completed" ? "✓" : o.status === "failed" ? "×" : String(index + 1), x, markerY);
-      if (o.type === "command" && o.status !== "completed")
-        for (const id of o.targets) {
+      if (["command","recon","escort"].includes(o.type) && o.status !== "completed")
+        for (const id of [...o.targets,...(o.forbidDamage || []),...(o.type==="escort"?o.protected:[])]) {
           const target = game.units.find((u) => u.id === id);
           if (
             !target ||
@@ -375,7 +375,7 @@ const ContractUI = (() => {
           const center = Rules.center(target),
             tx = geo.ox + (center.x + 0.5) * geo.tile,
             ty = geo.oy + (center.y + 0.25) * geo.tile,
-            text = I18n.text("目标"),
+            text = I18n.text(o.forbidDamage?.includes(id)?"禁止伤害":o.type==="escort"?"护送":o.type==="recon"?"侦察":"目标"),
             width = Math.max(12, Math.min(54, geo.tile * 0.92)),
             half = width / 2,
             height = Math.min(30, width * 0.8);
